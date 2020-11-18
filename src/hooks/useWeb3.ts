@@ -1,56 +1,87 @@
-import { connectWeb3 } from "services/web3modal"
-import { useState, useEffect } from "react";
-import Web3 from 'web3';
+import { connectWeb3, closeWeb3, getWeb3, getProvider } from "services/web3modal"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppState } from "redux/store";
+import { setWeb3State, setEthAccount, setEthBalance, setChainId } from "redux/actions";
+import { Web3State } from "types/ethereum";
+import { BigNumber } from "@0x/utils";
+
+export enum Web3Status{
+    Not_Connected,
+    Connecting,
+    Connected,
+    Failure
+}
 
 
 export const useWeb3 = () => {
-    const [web3, setWeb3] = useState<undefined | Web3>();
-    const [ethBalance, setEthBalance] = useState<undefined | string>();
-    const [account, setAccount] = useState<undefined | string>();
-    const [chainId, setChainId] = useState<undefined | number>();
+    const dispatch = useDispatch<AppDispatch>();
+    const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(state => state.blockchain.web3State);
+    const ethBalance = useSelector<AppState, AppState['blockchain']['ethBalance']>(state => state.blockchain.ethBalance);
+    const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+    const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
+
+    const onCloseWeb3 = () => {
+        const provider = getProvider();
+        if(provider){
+           closeWeb3();
+           dispatch(setEthAccount(undefined));
+           dispatch(setChainId(undefined));
+           dispatch(setWeb3State(Web3State.NotConnected));
+        }
+            
+    }
 
     const onConnectWeb3 = () => {
+        const web3 = getWeb3();
         if(!web3){
+            dispatch(setWeb3State(Web3State.Connecting));      
             connectWeb3()
             .then((p) => { 
                 subscribeProvider(p);
-                initWeb3(p);
+                dispatch(setWeb3State(Web3State.Done));
             
-            }).catch(console.log);
+            }).catch(()=> {
+                dispatch(setWeb3State(Web3State.Error));
+            });
        }
     }
-    
-    const initWeb3 = (p:any) => {
-        const w3 = new Web3(p)
-        setWeb3(w3);
-        if(w3){
-            w3.eth.getChainId().then((n)=> setChainId(n))
-            w3.eth.getAccounts().then((a)=> setAccount(a[0]));
-        }    
-    }
-    
-    useEffect(()=>{
-        if(account && web3){
-            web3.eth.getBalance(account).then((e)=> setEthBalance(e));
+    useEffect(()=> {
+        const web3 = getWeb3();
+        if(web3State === Web3State.Done && web3 ){
+       
+            web3.eth.getChainId().then((n)=> dispatch(setChainId(n)));
+           
+            web3.eth.getAccounts().then((a)=>  dispatch(setEthAccount(a[0])));
         }
-    },[account, web3])
+    }, [web3State]);
+    
 
-    const subscribeProvider = async (provider: any) => {
-        if (!provider.on) {
+    useEffect(()=>{
+        const web3 = getWeb3();
+        if(account && web3){
+            web3.eth.getBalance(account).then((e)=> 
+            dispatch(setEthBalance(new BigNumber(e))));
+            
+        }
+    }, [account])
+
+    const subscribeProvider = async (pr: any) => {
+        if (!pr.on) {
           return;
         }
-        provider.on("close", () => {
-            setWeb3(undefined);
-            setAccount(undefined);
-            setChainId(undefined);
+        pr.on("close", () => {
+            dispatch(setEthAccount(undefined));
+            dispatch(setChainId(undefined));
+            closeWeb3();
+            dispatch(setWeb3State(Web3State.NotConnected));
          }    
         );
-        provider.on("accountsChanged", async (accounts: string[]) => {
-            console.log(accounts);
-            setAccount(accounts[0]);
+        pr.on("accountsChanged", async (accounts: string[]) => {
+            dispatch(setEthAccount(accounts[0]));
         });
-        provider.on("chainChanged", async (chainId: number) => {
-            setChainId(chainId);
+        pr.on("chainChanged", async (chainId: number) => {
+            dispatch(setChainId(chainId));
         });
     
         /*provider.on("networkChanged", async (networkId: number) => {
@@ -61,6 +92,6 @@ export const useWeb3 = () => {
       };
     
 
-    return {onConnectWeb3, web3, account, chainId, ethBalance }
+    return {onConnectWeb3, getWeb3, account, chainId, ethBalance, web3State, onCloseWeb3, getProvider }
 
 }

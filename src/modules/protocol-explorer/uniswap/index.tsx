@@ -20,10 +20,28 @@ export const uniswapConfigs = [
     ],
   },
   {
+ 
+    routes: [
+      {
+        path: '/protocol-explorer/uniswap/tokens/:address',
+        component: React.lazy(() => import('./tokens')),
+      },
+    ],
+  },
+  {
 
     routes: [
       {
         path: '/protocol-explorer/uniswap/pair-explorer',
+        component: React.lazy(() => import('./pair-explorer')),
+      },
+    ],
+  },
+  {
+
+    routes: [
+      {
+        path: '/protocol-explorer/uniswap/pair-explorer/:pair',
         component: React.lazy(() => import('./pair-explorer')),
       },
     ],

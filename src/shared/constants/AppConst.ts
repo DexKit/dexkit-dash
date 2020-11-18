@@ -4,4 +4,4 @@ export const defaultUser = {
   token: 'access-token',
   photoURL: require('assets/images/avatar/A11.jpg'),
 };
-export const initialUrl = '/dashboards/analytics'; // this url will open after login
+export const initialUrl = '/dashboards/overview'; // this url will open after login

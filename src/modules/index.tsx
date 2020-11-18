@@ -5,7 +5,9 @@ import {createRoutes} from '../@crema/utility/Utils';
 import {dashBoardConfigs} from './dashboard';
 import {errorPagesConfigs} from './errorPages';
 import {authRouteConfig} from './auth';
+import {blockchainConfigs} from './blockchain';
 import {protocolExplorerConfigs} from './protocol-explorer';
+import {myAppsConfigs} from './my-apps';
 import {initialUrl} from '../shared/constants/AppConst';
 
 const routeConfigs = [
@@ -13,6 +15,8 @@ const routeConfigs = [
   ...dashBoardConfigs,
   ...errorPagesConfigs,
   ...protocolExplorerConfigs,
+  ...blockchainConfigs,
+  ...myAppsConfigs,
 ];
 
 const routes = [

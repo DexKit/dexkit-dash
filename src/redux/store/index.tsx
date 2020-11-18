@@ -3,6 +3,14 @@ import thunk from 'redux-thunk';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import reducers from '../reducers';
 
+import { ActionType } from 'typesafe-actions';
+
+import * as actions from './actions';
+
+
+
+
+
 const createBrowserHistory = require('history').createBrowserHistory;
 const history = createBrowserHistory();
 const rootReducer = combineReducers({
@@ -10,9 +18,13 @@ const rootReducer = combineReducers({
   router: connectRouter(history),
 });
 
+export type RootAction = ActionType<typeof actions>;
+
+export type AppDispatch = typeof store.dispatch;
+
 export type AppState = ReturnType<typeof rootReducer>;
 
-export default function configureStore(initialState?: AppState) {
+ function configureStore(initialState?: AppState) {
   const middleware = [thunk, routerMiddleware(history)];
 
   const enhancers = [];
@@ -29,6 +41,12 @@ export default function configureStore(initialState?: AppState) {
   );
 }
 
+const store = configureStore()
+
+export default store;
+
 export {history};
+
+
 
 // export type AppState = ReturnType<typeof rootReducer>;

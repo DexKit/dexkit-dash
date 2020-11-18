@@ -1,18 +1,24 @@
 import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {BuySellDataProps} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+import { useWeb3 } from 'hooks/useWeb3';
+import Button from '@material-ui/core/Button';
+import { useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
 
 interface TabFormProps {
   data: BuySellDataProps;
 }
 
 const TabForm: React.FC<TabFormProps> = ({data}) => {
+  const {onConnectWeb3, getWeb3} = useWeb3();
+  const ethAccount = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
       color: theme.palette.secondary.main,
@@ -35,9 +41,22 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
     },
   }));
   const classes = useStyles();
-  const [inputValue, setValue] = useState(data.value);
-  const [inputPrice, setPrice] = useState(data.price);
-  const [inputAmount, setAmount] = useState(data.amount);
+  const [inputValue, setValue] = useState(2);
+  const [inputPrice] = useState(35);
+  const [inputAmount, setAmount] = useState(70);
+
+  const onChangeHave = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setValue(value)
+    setAmount(value*inputPrice);
+  }
+  const onSendETHtoContract = () => {
+    const web3 = getWeb3();
+    if(web3){
+      web3.eth.sendTransaction({to: '0x', value: 1, gas: 8000000}).then(()=>console.log('Sent'))
+    }
+
+  }
 
   return (
     <Box>
@@ -48,16 +67,20 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
             color='grey.400'
             textAlign='right'
             className={classes.textRes}>
-            <IntlMessages id='dashboard.btc' />
+           ETH
           </Box>
           <TextField
             fullWidth
             variant='outlined'
-            label={<IntlMessages id='common.volume' />}
+            label={'You Have'}
+            type={'number'}
             value={inputValue}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={onChangeHave}
             InputProps={{
               className: classes.inputText,
+              inputProps: { 
+                max: 100, min: 1
+             }
             }}
           />
         </Box>
@@ -67,14 +90,14 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
             color='grey.400'
             textAlign='right'
             className={classes.textRes}>
-            <IntlMessages id='dashboard.btc' />
+           KIT/ETH
           </Box>
           <TextField
             fullWidth
+            disabled
             variant='outlined'
             label={<IntlMessages id='common.price' />}
             value={inputPrice}
-            onChange={(e) => setPrice(e.target.value)}
             InputProps={{
               className: classes.inputText,
             }}
@@ -86,24 +109,28 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
             color='grey.400'
             textAlign='right'
             className={classes.textRes}>
-            <IntlMessages id='dashboard.btc' />
+            KIT
           </Box>
           <TextField
             fullWidth
             variant='outlined'
-            label={<IntlMessages id='common.amount' />}
+            label={'You Get'}
             value={inputAmount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => setAmount(Number(e.target.value))}
             InputProps={{
               className: classes.inputText,
             }}
           />
         </Box>
       </form>
-
-      <Link component='button' className={classes.root} underline='none'>
-        <IntlMessages id='dashboard.buyNow' />
-      </Link>
+      {ethAccount ?
+      <Button color="primary" variant="contained" onClick={onSendETHtoContract}>
+       Mint Now
+      </Button> :  
+      <Button color="primary" variant="outlined" onClick={onConnectWeb3}>
+       Connect Wallet
+      </Button>
+        }
     </Box>
   );
 };

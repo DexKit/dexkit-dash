@@ -3,11 +3,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TabForm from './TabForm';
 import Card from '@material-ui/core/Card';
-import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {Box, makeStyles} from '@material-ui/core';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {BuySellProps} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+
 
 interface Props {
   buySell: BuySellProps;
@@ -71,17 +71,11 @@ const BuyKit: React.FC<Props> = ({buySell}) => {
           className={classes.muiTabsRoot}>
           <Tab
             className={classes.muiTab}
-            label={<IntlMessages id='common.buy' />}
+            label={'Mint Kit'}
             {...a11yProps(0)}
           />
-          <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='common.sell' />}
-            {...a11yProps(1)}
-          />
         </Tabs>
-        {value === 0 && <TabForm data={buySell.buyData} />}
-        {value === 1 && <TabForm data={buySell.sellData} />}
+         <TabForm data={buySell.buyData} />
       </Card>
     </Box>
   );

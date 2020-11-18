@@ -2,32 +2,38 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'connected-react-router';
 import AppLayout from '@crema/core/AppLayout';
-import AuthRoutes from '@crema/utility/AuthRoutes';
 import LocaleProvider from '@crema/utility/LocaleProvider';
 import CremaThemeProvider from '@crema/utility/CremaThemeProvider';
 import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
 
-import configureStore, {history} from './redux/store';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { ApolloProvider } from '@apollo/client';
 
-const store = configureStore();
+import store, {history} from './redux/store';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { client } from 'services/graphql';
+import WalletRoutes from 'services/WalletRoutes';
+import { Web3Manager } from 'shared/components/Web3Manager';
+
 
 const App = () => (
   <ContextProvider>
     <Provider store={store}>
+    <ApolloProvider client={client}>
       <CremaThemeProvider>
         <CremaStyleProvider>
           <LocaleProvider>
             <ConnectedRouter history={history}>
-              <AuthRoutes>
+              <WalletRoutes>
                 <CssBaseline />
+                <Web3Manager/>
                 <AppLayout />
-              </AuthRoutes>
+              </WalletRoutes>
             </ConnectedRouter>
           </LocaleProvider>
         </CremaStyleProvider>
       </CremaThemeProvider>
+      </ApolloProvider>,
     </Provider>
   </ContextProvider>
 );

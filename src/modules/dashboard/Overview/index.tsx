@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import Grid from '@material-ui/core/Grid';
 
 
@@ -10,14 +10,25 @@ import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import PopularCoins from './PopularCoins';
+import PromoCoins from './PromoCoins';
 import BuyKit from './BuyKit';
+import { ThemeMode } from 'shared/constants/AppEnums';
+import AppContext from '@crema/utility/AppContext';
+import AppContextPropsType from 'types/AppContextPropsType';
 
 interface CryptoProps {}
 
-const Crypto: React.FC<CryptoProps> = () => {
+const Overview: React.FC<CryptoProps> = () => {
   const dispatch = useDispatch();
+  
+  const {updateThemeMode} = useContext<AppContextPropsType>(AppContext);
+ 
+
 
   useEffect(() => {
+    if( updateThemeMode){
+      updateThemeMode(ThemeMode.DARK)
+    }
     dispatch(onGetCryptoData());
   }, [dispatch]);
 
@@ -30,15 +41,21 @@ const Crypto: React.FC<CryptoProps> = () => {
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-
-            <Grid item xs={12} md={8}>
-              <PopularCoins popularCoins={cryptoData.popularCoins} />
-            </Grid>
             <Grid item xs={12} md={4}>
               <BuyKit  buySell={cryptoData.buySell}/>
             </Grid>
+            <Grid item xs={12} md={4}>
+              <PopularCoins popularCoins={cryptoData.popularCoins} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <PromoCoins popularCoins={cryptoData.popularCoins} />
+            </Grid>
+            
 
 
+            <Grid item xs={12} md={6}>
+              <LatestNews newsData={cryptoData.newsData} />
+            </Grid>
             <Grid item xs={12} md={6}>
               <LatestNews newsData={cryptoData.newsData} />
             </Grid>
@@ -51,4 +68,4 @@ const Crypto: React.FC<CryptoProps> = () => {
   );
 };
 
-export default Crypto;
+export default Overview;

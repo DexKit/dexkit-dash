@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { useDispatch } from 'react-redux';
-import { onSignOutFirebaseUser } from '../../../redux/actions';
+
 import { useAuthUser } from '../../../@crema/utility/AppHooks';
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
@@ -16,12 +15,13 @@ import AppContextPropsType, {
   CremaTheme,
 } from '../../../types/AppContextPropsType';
 import { useWeb3 } from 'hooks/useWeb3';
+import { tokenAmountInUnits } from 'utils/tokens';
+import { Web3State } from 'types/ethereum';
 
 
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
 
-  const dispatch = useDispatch();
   const user = useAuthUser();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -34,7 +34,7 @@ const WalletInfo = (props: any) => {
     setAnchorEl(null);
   };
 
-  const {web3, onConnectWeb3, account, ethBalance} = useWeb3();
+  const { onConnectWeb3, account, ethBalance, web3State, onCloseWeb3} = useWeb3();
 
   /*const onConnectWallet = () => {
     connectWeb3().then((w: Web3)=>{
@@ -118,7 +118,7 @@ const WalletInfo = (props: any) => {
     <Box
       px={{ xs: 4, xl: 7 }}
       className={clsx(classes.crUserInfo, 'cr-user-info')}>
-      {web3 && <Box display='flex' alignItems='center'>
+      {web3State === Web3State.Done && <Box display='flex' alignItems='center'>
         {user && user.photoURL ? (
           <Avatar className={classes.profilePic} src={user.photoURL} />
         ) : (
@@ -147,25 +147,27 @@ const WalletInfo = (props: any) => {
                 onClose={handleClose}>
                 <MenuItem>My account</MenuItem>
                 <MenuItem
-                  onClick={() => {
-                    if (user) {
-                      dispatch(onSignOutFirebaseUser());
-                    }
-                  }}>
+                  onClick={onCloseWeb3}>
                   Logout
                 </MenuItem>
               </Menu>
             </Box>
           </Box>
           <Box color={grey.A200} className={classes.designation}>
-            {ethBalance}
+            {ethBalance && tokenAmountInUnits(ethBalance)} ETH
           </Box>
         </Box>
       </Box>
       }
-      {!web3 && <Box display='flex' alignItems='center'>
+      {web3State === Web3State.NotConnected && <Box display='flex' alignItems='center'>
          <Button variant="contained" color="primary" onClick={onConnectWeb3}>
              Connect Wallet
+        </Button>
+      </Box>
+      }
+      {web3State === Web3State.Connecting && <Box display='flex' alignItems='center'>
+         <Button variant="contained" color="primary" onClick={onConnectWeb3}>
+             Connecting... Check Wallet
         </Button>
       </Box>
       }

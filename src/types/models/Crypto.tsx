@@ -1,5 +1,14 @@
 import {PaletteColorOptions} from '@material-ui/core';
 
+export interface CryptoGraphData {
+    yearlyData: {month: string; amount: number}[];
+    monthlyData: {date: string; amount: number}[];
+    weeklyData: {day: string; amount: number}[];
+    dailyData: {time: string; amount: number}[];
+  };
+
+
+
 export interface CoinGraphData {
   bitcoin: {
     yearlyData: {month: string; amount: number}[];

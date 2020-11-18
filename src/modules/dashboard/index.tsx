@@ -50,10 +50,29 @@ export const dashBoardConfigs = [
     ],
   },
   {
+    auth: ['wallet'],
     routes: [
       {
         path: '/dashboards/wallet',
         component: React.lazy(() => import('./Wallet')),
+      },
+    ],
+  },
+  {
+    auth: ['wallet'],
+    routes: [
+      {
+        path: '/dashboards/staking',
+        component: React.lazy(() => import('./Staking')),
+      },
+    ],
+  },
+  {
+    auth: ['wallet'],
+    routes: [
+      {
+        path: '/dashboards/kits',
+        component: React.lazy(() => import('./Kits')),
       },
     ],
   },

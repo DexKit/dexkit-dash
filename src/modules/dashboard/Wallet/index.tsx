@@ -27,12 +27,16 @@ const Crypto: React.FC<CryptoProps> = () => {
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={7}>
               <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
             </Grid>
 
-            <Grid item xs={12} md={7}>
-              <Coins coins={cryptoData.popularCoins} />
+            <Grid item xs={12} md={12}>
+              <Coins />
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <Coins  />
             </Grid>
           </GridContainer>
         </Box>

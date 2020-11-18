@@ -37,4 +37,12 @@ export const errorPagesConfigs = [
       },
     ],
   },
+  {
+    routes: [
+      {
+        path: '/connect-wallet',
+        component: React.lazy(() => import('./ConnectWallet')),
+      },
+    ],
+  },
 ];
