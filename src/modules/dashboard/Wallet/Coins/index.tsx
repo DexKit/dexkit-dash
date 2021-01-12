@@ -1,164 +1,61 @@
-import React, { useState } from 'react';
-import { Box, Grid, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, TableSortLabel } from '@material-ui/core';
+import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import CoinStats from './CoinStats';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import Box from '@material-ui/core/Box';
+import { isBreakPointDown } from '../../../../@crema/utility/Utils';
+import {blue, indigo, teal} from '@material-ui/core/colors';
+import {Fonts} from '../../../../shared/constants/AppEnums';
+import {CoinsDataProps} from '../../../../types/models/Crypto';
+import Etherium from 'assets/images/etherium.png'
+import Litcoin from 'assets/images/litcoin.png'
+import Ripple from 'assets/images/ripple.png'
 
-import GridContainer from '../../../../@crema/core/GridContainer';
-import InfoView from '../../../../@crema/core/InfoView';
-
-import { useQuery } from '@apollo/client';
-import { PairDayDataGraphResponse } from 'types/uniswap';
-
-import { Loader } from '@crema';
-import AppCard from '@crema/core/AppCard';
-import AppSelect from '@crema/core/AppSelect';
-import { useIntl } from 'react-intl';
-import { BigNumber } from '@0x/utils';
-import { useStyles } from './index.style';
-
-import { UNISWAP_PAIRS_DAY_DATA } from 'services/graphql/uniswap/gql';
-import { stableSort, getComparator } from 'utils/table';
-
-type Order = 'asc' | 'desc';
-
-interface HeadCell {
-  id: string;
-  label: string;
-  align?: 'left' | 'right';
-  isSort: boolean;
+interface Props {
+  coinsData: CoinsDataProps;
 }
 
-const headCells: HeadCell[] = [
-  { id: 'name', label: 'Name', isSort: false },
-  { id: 'reserveUSD', align: 'left', label: 'Liquidity', isSort: true },
-  { id: 'dailyVolumeUSD', align: 'left', label: 'Volume (24hrs)', isSort: true },
-  { id: 'dailyTxns', align: 'left', label: 'Total Tx\'s', isSort: true },
-];
-
-let lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400;
-const UniswapPairs = () => {
-  const [page, setPage] = useState<number>(0);
-  const [orderBy, setOrderBy] = useState<string>('dailyVolumeUSD');
-  const [orderDirection, setOrderDirection] = useState<Order>('desc');
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const handleSelectionType = (data: any) => {
-    console.log('data: ', data);
-  };
-
-  const getLastDayTimestamp = () => {
-    if(lastDayTimestamp < Math.floor(Date.now() / 1000) - 2*86400 ){
-      lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400
-    }
-    return lastDayTimestamp;
-
-  }
-
-  const { loading, error, data } = useQuery<{ pairDayDatas: PairDayDataGraphResponse[] }>(UNISWAP_PAIRS_DAY_DATA, {
-    variables: {first: 100, skip: 0, timestamp: getLastDayTimestamp(), orderBy: orderBy, orderDirection: orderDirection }
-  });
-  const { messages } = useIntl();
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-  const handleSort = (property: string) => (event: React.MouseEvent<unknown>) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const classes = useStyles();
-
+const Coins: React.FC<Props> = ({coinsData}) => {
   return (
-    <>
-      {data ? (
-        <Box pt={{ xl: 4 }} clone>
-          <GridContainer>
-            <Grid item xs={11} md={11}>
-              <AppCard
-                height={1}
-                title={messages['common.pairs']}
-                action={
-                  <AppSelect
-                    menus={[
-                      messages['dashboard.thisWeek'],
-                      messages['dashboard.lastWeeks'],
-                      messages['dashboard.lastMonth'],
-                    ]}
-                    defaultValue={messages['dashboard.thisWeek']}
-                    onChange={handleSelectionType}
-                  />
-                }>
-                <Box className={classes.tableResponsiveMaterial}>
-                  <Table className='table'>
-                    <TableHead>
-                      <TableRow className={classes.tableRowRoot}>
-                        {headCells.map(h => (
-                          <TableCell align={h.align} className={classes.tableCellRoot}>
-                            {h.isSort && <TableSortLabel
-                              active={orderBy === h.id}
-                              direction={orderBy === h.id ? orderDirection : 'asc'}
-                              onClick={handleSort(h.id)}
-                            >
-                              {h.label}
-                            </TableSortLabel>}
-                            {!h.isSort && h.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {stableSort(data.pairDayDatas, getComparator(orderDirection, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((data) => (
-                          <TableRow key={data.id}>
-                            <TableCell component='th' scope='row' className={classes.tableCell} style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
-                              <Box className={classes.anchar}>
-                                {`${data.token0.symbol}/${data.token1.symbol}`}
-                              
-                              </Box>
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              ${new BigNumber(data.reserveUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              className={classes.tableCell}>
-                              ${new BigNumber(data.dailyVolumeUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              <Box
-                                className={classes.badgeRoot}>
-                                {new BigNumber(data.dailyTxns).toFormat(0)}
-                              </Box>
-                            </TableCell>
-                          </TableRow>))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
-                    component="div"
-                    count={data.pairDayDatas.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
-                </Box>
-              </AppCard>
-            </Grid>
+    <Box>
+      <Box
+        component='h2'
+        color='text.primary'
+        fontSize={16}
+        mb={{xs: 4, sm: 4, xl: 6}}
+        fontWeight={Fonts.BOLD}>
+        <IntlMessages id='dashboard.coins' />
+      </Box>
+      <Grid container spacing={isBreakPointDown('md') ? 4 : 8}>
+        <Grid item xs={12} sm={6}>
+          <CoinStats
+            icon={Etherium}
+            bgColor={blue[500]}
+            data={coinsData.etherium}
+            heading={<IntlMessages id='Marketplace' />}
+          />
+        </Grid>
 
-          </GridContainer>
-        </Box>
-      ) : null}
-      {loading ? <Loader /> : null}
-      {error ? JSON.stringify(error) : null}
+        <Grid item xs={12} sm={6}>
+          <CoinStats
+            icon={Litcoin}
+            bgColor={indigo[700]}
+            data={coinsData.liteCoin}
+            heading={<IntlMessages id='Agregator' />}
+          />
+        </Grid>
 
-      <InfoView />
-    </>
+        <Grid item xs={12} sm={6}>
+          <CoinStats
+            icon={Ripple}
+            bgColor={teal[600]}
+            data={coinsData.ripple}
+            heading={<IntlMessages id='Exchange' />}
+          />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
-export default UniswapPairs;
+export default Coins;

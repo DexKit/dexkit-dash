@@ -8,6 +8,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {TotalBalanceData} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+import Modal from '../Modal'
 
 interface TotalBalanceProps {
   totalBalanceData: TotalBalanceData;
@@ -53,6 +54,18 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
   }));
   const classes = useStyles();
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+ 
+
   return (
     <Box>
       <Box
@@ -88,7 +101,8 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
                 color={indigo[100]}
                 fontSize={{xs: 16, xl: 18}}
                 whiteSpace='nowrap'>
-                <IntlMessages id='dashboard.avlBalance' />
+                {/* <IntlMessages id='dashboard.avlBalance' /> */}
+                KIT
               </Box>
             </Box>
             <Box
@@ -98,18 +112,29 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               mt={{xs: 2, xl: 0}}>
               <Box>
                 <Button className={classes.root}>
-                  <IntlMessages id='common.send' />
+                  <IntlMessages id='common.buy' />
                 </Button>
               </Box>
               <Box ml={3}>
-                <Button className={classes.btnPrimary}>
-                  <IntlMessages id='common.receive' />
+                <Button onClick={handleClickOpen} className={classes.btnPrimary}>
+                  {/* <IntlMessages id='common.transfer' /> */}
+                  Trasnfer
                 </Button>
               </Box>
             </Box>
           </Box>
+          <Box
+            component='p'
+            mb={{xs: 3.5, md: 4, xl: 6}}
+            fontSize={{xs: 16, xl: 18}}
+            color={indigo[100]}>
+            Buy Kits
+          </Box>
+          <Box pt={{xl: 5}}>
+          </Box>
         </Card>
       </Box>
+      <Modal open={open} onClose={handleClose} />
     </Box>
   );
 };

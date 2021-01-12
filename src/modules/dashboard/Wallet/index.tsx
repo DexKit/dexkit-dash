@@ -8,6 +8,10 @@ import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import Coins from './Coins';
+import TopDoctors from './TopDoctors';
+import RecentPatients from './RecentPatients';
+
+import {TOP_DOCTORS, RECENT_PATIENTE} from './MockedData'
 
 interface CryptoProps {}
 
@@ -27,17 +31,24 @@ const Crypto: React.FC<CryptoProps> = () => {
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-            <Grid item xs={12} md={7}>
-              <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
-            </Grid>
+              <Grid item xs={12} md={5}>
+                <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
+              </Grid>
 
-            <Grid item xs={12} md={12}>
-              <Coins />
-            </Grid>
+              <Grid item xs={12} md={7}>
+                <Coins coinsData={cryptoData.coinsData} />
+              </Grid>
 
-            <Grid item xs={12} md={12}>
-              <Coins  />
-            </Grid>
+              <Grid item xs={12} sm={12} md={8}>
+                <RecentPatients recentPatients={RECENT_PATIENTE} />
+              </Grid>
+            
+
+              <Grid item xs={12} sm={12} lg={4}>
+                <TopDoctors data={TOP_DOCTORS} />
+              </Grid>
+
+              
           </GridContainer>
         </Box>
       ) : null}
