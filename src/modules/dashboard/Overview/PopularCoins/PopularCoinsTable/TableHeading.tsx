@@ -44,14 +44,9 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
         <IntlMessages id='common.name' />
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <IntlMessages id='dashboard.marketCap' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
         <IntlMessages id='dashboard.volume24h' />
       </TableCell>
-      <TableCell align='right' className={classes.tableCell}>
-        <IntlMessages id='dashboard.24h' /> %
-      </TableCell>
+ 
     </TableRow>
   );
 };

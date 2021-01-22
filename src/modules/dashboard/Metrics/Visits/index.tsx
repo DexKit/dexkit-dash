@@ -29,7 +29,7 @@ const Visits: React.FC<VisitsProps> = ({data}) => {
       default:
         setGraphData(data.graphData.dataOne);
     }
-  };
+  }
 
   const {messages} = useIntl();
 

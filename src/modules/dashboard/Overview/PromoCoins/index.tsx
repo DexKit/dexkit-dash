@@ -19,7 +19,7 @@ const PromoCoins: React.FC<PopularCoinsProps> = ({popularCoins}) => {
             component='h2'
             fontFamily={Fonts.LIGHT}
             fontSize={{xs: 18, sm: 20, xl: 22}}>
-           Promo Coins
+           Promoted Coins
           </Box>
         </Box>
         <PopularCoinsTable popularCoins={popularCoins} />

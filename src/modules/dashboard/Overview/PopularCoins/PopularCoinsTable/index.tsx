@@ -38,6 +38,8 @@ const PopularCoinsTable: React.FC<PopularCoinsTableProps> = ({
     },
   }));
   const classes = useStyles();
+
+  const newPopularCoins = popularCoins.map(({id, shortName, image, volume, name, color}) => ({id, shortName, image, volume, name, color}))
   return (
     <Box className={classes.tableResponsiveMaterial}>
       <Table>
@@ -45,7 +47,7 @@ const PopularCoinsTable: React.FC<PopularCoinsTableProps> = ({
           <TableHeading />
         </TableHead>
         <TableBody>
-          {popularCoins.map((row) => (
+          {newPopularCoins.map((row) => (
             <TableItem key={row.name} row={row} />
           ))}
         </TableBody>

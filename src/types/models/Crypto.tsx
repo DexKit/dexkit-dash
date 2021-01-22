@@ -80,6 +80,15 @@ export interface PopularCoinsData {
   color: PaletteColorOptions;
 }
 
+export interface NewPopularCoinsData {
+  id: number;
+  name: string;
+  shortName: string;
+  volume: string;
+  image: string;
+  color: PaletteColorOptions;
+}
+
 export interface BalanceCoins {
   id: number;
   name: string;

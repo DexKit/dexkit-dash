@@ -28,7 +28,7 @@ const Overview = () => {
       {analyticsData ? (
         <Box pt={{xl: 4}} clone>
           <GridContainer>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <OrderNTransaction
                 transactionData={analyticsData.transactionData}
               />
