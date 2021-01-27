@@ -76,4 +76,13 @@ export const dashBoardConfigs = [
       },
     ],
   },
+  {
+    auth: ['token'],
+    routes: [
+      {
+        path: '/dashboards/token',
+        component: React.lazy(() => import('./Token')),
+      },
+    ],
+  },
 ];

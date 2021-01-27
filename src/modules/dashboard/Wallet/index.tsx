@@ -8,6 +8,10 @@ import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import Coins from './Coins';
+import RecentPatients from './RecentPatients';
+import SalesState from './SalesState'
+
+import { RECENT_PATIENTE, MOCKET_THING} from './MockedData'
 
 interface CryptoProps {}
 
@@ -27,17 +31,27 @@ const Crypto: React.FC<CryptoProps> = () => {
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-            <Grid item xs={12} md={7}>
-              <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
-            </Grid>
+              <Grid item xs={12} md={5}>
+                <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
+              </Grid>
 
-            <Grid item xs={12} md={12}>
-              <Coins />
-            </Grid>
+              <Grid item xs={12} md={7}>
+                <div/>
+              </Grid>           
 
-            <Grid item xs={12} md={12}>
-              <Coins  />
-            </Grid>
+              <Grid item xs={12} sm={12} md={5}>
+                <RecentPatients recentPatients={RECENT_PATIENTE} />
+              </Grid>
+              <Grid item xs={12} md={7}>
+                <Coins coinsData={cryptoData.coinsData} />
+              </Grid>
+              
+              {MOCKET_THING.map((state, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
+                  <SalesState state={state} />
+                </Grid>
+              ))}
+
           </GridContainer>
         </Box>
       ) : null}

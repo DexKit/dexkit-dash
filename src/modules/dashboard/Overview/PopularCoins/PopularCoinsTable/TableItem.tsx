@@ -7,11 +7,11 @@ import TableRow from '@material-ui/core/TableRow';
 import clsx from 'clsx';
 import {green, red} from '@material-ui/core/colors';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
-import {PopularCoinsData} from '../../../../../types/models/Crypto';
+import { NewPopularCoinsData} from '../../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../../types/AppContextPropsType';
 
 interface TableItemProps {
-  row: PopularCoinsData;
+  row: NewPopularCoinsData;
 }
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
@@ -87,15 +87,15 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           </Box>
         </Box>
       </TableCell>
-      <TableCell
+      {/* <TableCell
         align='left'
         className={clsx(classes.tableCell, classes.fontBold)}>
         ${row.marketCap}
-      </TableCell>
+      </TableCell> */}
       <TableCell align='left' className={classes.tableCell}>
         ${row.volume}
       </TableCell>
-      <TableCell
+      {/* <TableCell
         align='right'
         className={clsx(
           classes.tableCell,
@@ -104,7 +104,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           classes.tableCellColor,
         )}>
         {row.h} %
-      </TableCell>
+      </TableCell> */}
     </TableRow>
   );
 };
