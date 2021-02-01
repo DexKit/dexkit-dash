@@ -72,16 +72,16 @@ export const MOCKET_THING = [
 export const INFOR_CARD = [
     {
         value: "Order history",
-        bgColor: "#49BD65",
-        icon: "/assets/images/dashboard/1_monthly_sales.png",
-        id: 2,
-        type: "Last Month Sale",
-    },
-    {
-        value: "Order history",
-        bgColor: "#49BD65",
+        bgColor: "#0A8FDC",
         icon: "/assets/images/dashboard/1_monthly_sales.png",
         id: 1,
-        type: "Last Month Sale",
+        type: "Click to Open",
+    },
+    {
+        value: "Transation history",
+        bgColor: "#9E49E6",
+        icon: "/assets/images/dashboard/1_monthly_sales.png",
+        id: 2,
+        type: "Click to Open",
     }
 ]

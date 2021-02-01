@@ -49,10 +49,10 @@ const Overview: React.FC<CryptoProps> = () => {
 
             </Grid>
           <Grid item xs={12} md={3}>
-            <GridContainer style={{marginTop: 2}}>
+            <GridContainer >
               <Grid item xs={12} sm={3} md={12}>
               <Grid item xs={12} md={12}>
-                <Paper>
+                <Paper style={{padding: 10}}>
 
             <TextField
             fullWidth
@@ -86,10 +86,7 @@ const Overview: React.FC<CryptoProps> = () => {
             <Grid item xs={12} md={3}>
               <PopularCoins title="Hot Tokens" popularCoins={cryptoData.popularCoins} />
             </Grid>
-           
-
-
-            
+               
           </GridContainer>
         </Box>
       ) : null}

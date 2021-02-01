@@ -8,6 +8,13 @@ interface CoinsInfoProps {
   coins: BalanceCoins[];
 }
 
+const teste : { [key: string]: any } = {
+  0: '1057214 KIT',
+  1: '35.5 ETH',
+  2:'548621 ZRX',
+  3: '1000001 AAVE'
+}
+
 const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
   return (
     <Box
@@ -16,7 +23,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
       display='flex'
       flexWrap='wrap'
       justifyContent='space-between'>
-      {coins.map((coin) => {
+      {coins.map((coin, index) => {
         return (
           <Box mt={{xl: 3}} px={2} key={coin.id}>
             <Box
@@ -25,10 +32,10 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
               fontFamily={Fonts.LIGHT}
               component='h3'
               fontSize={{xs: 18, sm: 20, xl: 22}}>
-              {coin.value}
+              ${coin.value}
             </Box>
             <Box component='p' fontSize={{xs: 16, xl: 18}} color={indigo[200]}>
-              {coin.name}
+            {teste[index]}
             </Box>
           </Box>
         );

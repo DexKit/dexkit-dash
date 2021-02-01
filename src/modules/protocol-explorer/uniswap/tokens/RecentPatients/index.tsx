@@ -16,7 +16,7 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({recentPatients}) => {
       title="Hot Pairs"
       action={
         <>
-      <Button color="secondary">
+      <Button style={{textTransform: 'none'}}  color="secondary">
         View All
       </Button>
         </>

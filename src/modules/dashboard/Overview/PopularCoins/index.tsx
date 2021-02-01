@@ -31,7 +31,7 @@ const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins, title}) => {
           <Box
             component='h2'
             fontFamily={Fonts.LIGHT}
-            fontSize={{xs: 18, sm: 20, xl: 22}}>
+            fontSize={{xs: 14, sm: 18}}>
             {/* <IntlMessages id='dashboard.popularCoins' /> */}
             {title}
           </Box>

@@ -34,7 +34,6 @@ const BuySell: React.FC<Props> = ({buySell}) => {
       padding: 0,
       marginLeft: 8,
       marginRight: 8,
-      fontWeight: 'bold',
       minWidth: 10,
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
@@ -61,34 +60,24 @@ const BuySell: React.FC<Props> = ({buySell}) => {
   };
 
   return (
-    <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height='1' clone>
-      <Card>
+    <Box  py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
+      <Card >
         <Tabs
           value={value}
           onChange={handleChange}
           indicatorColor='primary'
           textColor='primary'
-          
           aria-label='simple tabs example'
           className={classes.muiTabsRoot}>
           <Tab
             className={classes.muiTab}
-            label={<IntlMessages id='Market' />}
+            style={{fontWeight: 'bold'}}
+            label={<IntlMessages id='Send' />}
             {...a11yProps(0)}
           />
-           <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='Limit' />}
-            {...a11yProps(1)}
-          />
-          <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='Stop' />}
-            {...a11yProps(1)}
-          />
+          
         </Tabs>
         {value === 0 && <TabForm data={buySell.buyData} />}
-        {value === 1 && <TabForm data={buySell.sellData} />}
       </Card>
     </Box>
   );

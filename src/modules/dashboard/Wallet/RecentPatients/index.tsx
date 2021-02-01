@@ -3,10 +3,10 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import AppCard from '../../../../@crema/core/AppCard';
 import PatientsTable from './PatientsTable';
-import {RecentPatientData} from '../../../../types/models/HealthCare';
+import { NewPopularCoinsData} from '../../../../types/models/Crypto';
 
 interface RecentPatientsProps {
-  recentPatients: RecentPatientData[];
+  recentPatients: NewPopularCoinsData[];
 }
 
 const RecentPatients: React.FC<RecentPatientsProps> = ({recentPatients}) => {
@@ -35,7 +35,7 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({recentPatients}) => {
       />
         </div>
         
-      <Button color="secondary">
+      <Button style={{textTransform: 'none'}} color="secondary">
         View All
       </Button>
         </>

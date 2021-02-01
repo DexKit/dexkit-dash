@@ -5,10 +5,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import AppTableContainer from '../../../../../@crema/core/AppTableContainer';
-import {RecentPatientData} from '../../../../../types/models/HealthCare';
+import { NewPopularCoinsData} from '../../../../../types/models/Crypto';
 
 interface RecentPatientsProps {
-  recentPatients: RecentPatientData[];
+  recentPatients: NewPopularCoinsData[];
 }
 
 const PatientsTable: React.FC<RecentPatientsProps> = ({recentPatients}) => {

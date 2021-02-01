@@ -18,15 +18,21 @@ const useStyles = makeStyles(() => ({
       },
     },
   },
+  tableCellRoot: {
+    borderBottom: '0 none',
+    fontSize: 16,
+    padding: 8,
+    fontFamily: Fonts.BOLD, 
+  },
 }));
 
 const TableHeading = () => {
   const classes = useStyles();
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell>Pair</TableCell>
-      <TableCell  align="center">Liquidity</TableCell>
-      <TableCell style={{marginRight: 50}} align="center">Volume</TableCell>
+      <TableCell className={classes.tableCellRoot} align='left'>Pair</TableCell>
+      <TableCell className={classes.tableCellRoot}  align="left">Liquidity</TableCell>
+      <TableCell className={classes.tableCellRoot} align='left'  style={{marginRight: 50}} >Volume</TableCell>
     </TableRow>
   );
 };

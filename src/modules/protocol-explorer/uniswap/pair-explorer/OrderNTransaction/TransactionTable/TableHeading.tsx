@@ -19,7 +19,7 @@ const TableHeading: React.FC<Props> = (props) => {
       borderBottom: '0 none',
       fontSize: 16,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -53,9 +53,7 @@ const TableHeading: React.FC<Props> = (props) => {
       <TableCell align='left' className={classes.tableCellRoot}>
       Total
       </TableCell>
-      <TableCell align='center' className={classes.tableCellRoot}>
-       {''} 
-      </TableCell>
+    
     </TableRow>
   );
 };

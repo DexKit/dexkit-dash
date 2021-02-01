@@ -25,7 +25,7 @@ const Overview = () => {
       {analyticsData ? (
         <Box pt={{xl: 4}} clone>
           <GridContainer>   
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={12}>
             <Breadcrumbs aria-label="breadcrumb">
               <Link color="inherit" href="/" >
                 Protocol Explorer
@@ -37,6 +37,10 @@ const Overview = () => {
             </Breadcrumbs>
             <Typography variant="h4"  color="textPrimary">Pool Explorer</Typography>
 
+            </Grid>
+            
+            <Grid item xs={12} md={7}>
+         
             </Grid>
             <Grid item xs={12} md={5}>
           <Paper style={{padding: 10}}>
@@ -77,7 +81,8 @@ const Overview = () => {
           
 
                 
-            </Grid>  
+            </Grid>
+              
             <Grid item xs={12} md={12}>
               <OrderNTransaction
                 transactionData={POOLS}

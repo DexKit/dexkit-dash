@@ -55,16 +55,16 @@ export const RECENT_PATIENTE = [
 export const MOCKET_THING = [
     {
         value: "Order history",
-        bgColor: "#49BD65",
+        bgColor: "#0A8FDC",
         icon: "/assets/images/dashboard/1_monthly_sales.png",
-        id: 2,
+        id: 1,
         type: "Last Month Sale",
     },
     {
         value: "Order history",
-        bgColor: "#49BD65",
+        bgColor: "#9E49E6",
         icon: "/assets/images/dashboard/1_monthly_sales.png",
-        id: 1,
+        id: 2,
         type: "Last Month Sale",
     }
 ]

@@ -21,6 +21,8 @@ interface ReportCardProps {
 const ReportCard: React.FC<ReportCardProps> = ({data}) => {
   const classes = useStyles();
 
+  console.log('data', data)
+
   return (
     <AppCard className='card-hover'>
       <Box display='flex'>

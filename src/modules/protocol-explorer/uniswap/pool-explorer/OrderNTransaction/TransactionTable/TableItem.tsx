@@ -96,13 +96,13 @@ const TableItem: React.FC<Props> = ({data}) => {
           {data.totalValue}
         </Box>
       </TableCell>
-      <TableCell align='right' className={classes.tableCell}>
+      <TableCell align='left' className={classes.tableCell}>
         {data.amount}
       </TableCell>
-      <TableCell align='right' className={classes.tableCell}>
+      <TableCell align='left' className={classes.tableCell}>
       {data.total}
       </TableCell>
-      <TableCell style={{color: getPaymentStatusColor(),}}  align='right' className={classes.tableCell}>
+      <TableCell style={{color: getPaymentStatusColor(),}}  align='left' className={classes.tableCell}>
         {data.poolVariation}%
       </TableCell>
       <TableCell align='right' className={classes.tableCell}>

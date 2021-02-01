@@ -102,7 +102,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
                 fontSize={{xs: 16, xl: 18}}
                 whiteSpace='nowrap'>
                 {/* <IntlMessages id='dashboard.avlBalance' /> */}
-                KIT
+                (500 KITS) Avl. Bal.
               </Box>
             </Box>
             <Box
@@ -112,25 +112,16 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               mt={{xs: 2, xl: 0}}>
               <Box>
                 <Button className={classes.root}>
-                  <IntlMessages id='common.buy' />
+                  Send
                 </Button>
               </Box>
               <Box ml={3}>
                 <Button onClick={handleClickOpen} className={classes.btnPrimary}>
                   {/* <IntlMessages id='common.transfer' /> */}
-                  Trasnfer
+                  Receive
                 </Button>
               </Box>
             </Box>
-          </Box>
-          <Box
-            component='p'
-            mb={{xs: 3.5, md: 4, xl: 6}}
-            fontSize={{xs: 16, xl: 18}}
-            color={indigo[100]}>
-            Buy Kits
-          </Box>
-          <Box pt={{xl: 5}}>
           </Box>
         </Card>
       </Box>

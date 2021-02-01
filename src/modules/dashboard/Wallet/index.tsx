@@ -11,7 +11,7 @@ import Coins from './Coins';
 import RecentPatients from './RecentPatients';
 import SalesState from './SalesState'
 
-import { RECENT_PATIENTE, MOCKET_THING} from './MockedData'
+import { MOCKET_THING} from './MockedData'
 
 interface CryptoProps {}
 
@@ -26,23 +26,25 @@ const Crypto: React.FC<CryptoProps> = () => {
     ({dashboard}) => dashboard,
   );
 
+ 
+
   return (
     <>
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-              <Grid item xs={12} md={5}>
+              <Grid item xs={12} md={6}>
                 <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
               </Grid>
 
-              <Grid item xs={12} md={7}>
+              <Grid item xs={12} md={6}>
                 <div/>
               </Grid>           
 
-              <Grid item xs={12} sm={12} md={5}>
-                <RecentPatients recentPatients={RECENT_PATIENTE} />
+              <Grid item xs={12} sm={12} md={6}>
+                <RecentPatients recentPatients={cryptoData.popularCoins} />
               </Grid>
-              <Grid item xs={12} md={7}>
+              <Grid item xs={12} md={6}>
                 <Coins coinsData={cryptoData.coinsData} />
               </Grid>
               

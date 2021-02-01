@@ -83,39 +83,16 @@ const Crypto: React.FC<CryptoProps> = () => {
                 </Grid>
              
           <GridContainer>
-          <Grid item xs={12} sm={6} md={6} >
-                <SalesState salesState={MOCKET_THING} />
-              </Grid>
-              <Grid item xs={12} sm={6} md={6} >
+          <Grid style={{padding: 5}} item xs={12} sm={6} md={6} >
                 <ProfileCard />
               </Grid>
+          <Grid style={{padding: 5}} item xs={12} sm={6} md={6} >
+                <SalesState salesState={MOCKET_THING} />
+              </Grid>
+              
           </GridContainer>
 
               </Grid>
-             
-
-              
-
-            
-
-                        
-              
-              {/* <Grid item xs={12} sm={6} md={4} >
-                <SalesState salesState={MOCKET_THING} />
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3} >
-                <div></div>
-              </Grid>
-
-              {INFOR_CARD.map((state, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                  <InfoCard state={state} />
-                </Grid>
-              ))} */}
-
-            
-
           </GridContainer>
         </Box>
       ) : null}

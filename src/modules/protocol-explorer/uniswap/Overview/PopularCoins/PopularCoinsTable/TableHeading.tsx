@@ -17,7 +17,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
       borderBottom: '0 none',
       fontSize: 14,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,

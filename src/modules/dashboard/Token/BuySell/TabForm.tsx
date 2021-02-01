@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import Grid from '@material-ui/core/Grid';
+import Grid  from '@material-ui/core/Grid';
 import GridContainer from '../../../../@crema/core/GridContainer';
-
+import { InputAdornment } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
@@ -11,6 +12,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {BuySellDataProps} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+import {ArrowDownwardOutlined} from '@material-ui/icons';
+
 
 interface TabFormProps {
   data: BuySellDataProps;
@@ -28,7 +31,8 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
       },
     },
     textRes: {
-      fontSize: 16,
+      marginBottom: 0,
+      fontSize: 13,
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
       },
@@ -50,7 +54,7 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
         <Box mb={5}>
          
           <GridContainer>
-          <Grid item xs={12} md={9}>
+          <Grid  style={{padding:4}} item xs={12} md={8}>
           <Box
             mb={2}
             color='grey.400'
@@ -60,60 +64,80 @@ const TabForm: React.FC<TabFormProps> = ({data}) => {
           </Box>
           <TextField
           variant='outlined'
-
           fullWidth
             label={<IntlMessages id='You send' />}
             value={inputValue}
             onChange={(e) => setValue(e.target.value)}
             InputProps={{
               className: classes.inputText,
+              endAdornment: <InputAdornment position="end">= $20.5</InputAdornment>,
             }}
           />
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid  style={{padding:4}}item xs={12} md={4}>
           <Box
+            mb={2}
+            color='grey.400'
+            textAlign='left'
+            className={classes.textRes}>
+           Token
+          </Box>
+          <Select
+          fullWidth
+          native
+          variant='outlined'
+          value='KIT'   
+        >
+          <option defaultValue="kit" value={10}>KIT</option>     
+        </Select>
+        </Grid>
+        <Grid  style={{padding: 0, marginTop: 4}} item xs={12} md={8}>
+        <Box
+            mb={2}
+            color='grey.400'
+            textAlign='center'
+            className={classes.textRes}>
+            <IconButton style={{padding: 0}} >
+            <ArrowDownwardOutlined />
+          </IconButton>
+          </Box>
+        </Grid>
+
+        <Grid  style={{padding:4}} item xs={12} md={8}>
+        <Box
             mb={2}
             color='grey.400'
             textAlign='right'
             className={classes.textRes}>
-            <IntlMessages id='dashboard.btc' />
+            <IntlMessages id='(500 KITS) Avl.Bal' />
           </Box>
-          <Select
-          native
-          variant='outlined'
-          value='ten'
-          
-        >
-          <option aria-label="None" value="" />
-          <option value={10}>Ten</option>
-         
-        </Select>
-        </Grid>
-        <Grid item xs={12} md={9}>
-         
           <TextField
           variant='outlined'
-
           fullWidth
-            label={<IntlMessages id='You Receive' />}
-            value={inputValue}
-            onChange={(e) => setValue(e.target.value)}
+            label={<IntlMessages id='You send' />}
+            value={inputPrice}
+            onChange={(e) => setPrice(e.target.value)}
             InputProps={{
               className: classes.inputText,
+              endAdornment: <InputAdornment position="end">= $576.5</InputAdornment>,
             }}
           />
           </Grid>
-          <Grid item xs={12} md={3}>
-         
+          <Grid  style={{padding:4}}item xs={12} md={4}>
+          <Box
+            mb={2}
+            color='grey.400'
+            textAlign='left'
+            className={classes.textRes}>
+            <IntlMessages id='Token' />
+          </Box>
           <Select
+          fullWidth
           native
           variant='outlined'
-          value='ten'
-          
+          value='ETH'   
         >
-          <option aria-label="None" value="" />
-          <option value={10}>Ten</option>
-         
+          <option defaultValue="eth" value={10}>ETH</option>     
         </Select>
         </Grid>
         

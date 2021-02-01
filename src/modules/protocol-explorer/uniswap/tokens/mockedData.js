@@ -1,23 +1,64 @@
-export const MOCK = 
-{
-  id: 1,
-  type: 'This Year Sale Report',
-  value: '$685K+ ',
-  growth: 2.5,
-  icon: '/assets/images/dashboard/icon_revenue.png',
-  strokeColor: '#0A8FDC',
-  graphData: [
-    {month: 'Aug', number: 310},
-    {month: 'Sep', number: 130},
-    {month: 'Oct', number: 350},
-    {month: 'Nov', number: 170},
-    {month: 'Dec', number: 400},
-    {month: 'Nov', number: 170},
-    {month: 'Dec', number: 400},
-    {month: 'Nov', number: 170},
-    {month: 'Dec', number: 400},
-  ],
-}
+export const MOCK = [
+    {
+        id: 1,
+        type: 'Kit',
+        value: '$2.50+ ',
+        growth: 2.5,
+        icon: '/assets/images/dashboard/icon_revenue.png',
+        strokeColor: '#0A8FDC',
+        graphData: [
+          {month: 'Aug', number: 310},
+          {month: 'Sep', number: 130},
+          {month: 'Oct', number: 350},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+        ],
+      },
+      {
+        id: 1,
+        type: 'Kit Liquidy',
+        value: '$685K+ ',
+        growth: 2.5,
+        icon: '/assets/images/dashboard/icon_revenue.png',
+        strokeColor: '#0A8FDC',
+        graphData: [
+          {month: 'Aug', number: 310},
+          {month: 'Sep', number: 130},
+          {month: 'Oct', number: 350},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+        ],
+      },
+      {
+        id: 1,
+        type: 'Kit Volume 24h',
+        value: '$300K+ ',
+        growth: 2.5,
+        icon: '/assets/images/dashboard/icon_revenue.png',
+        strokeColor: '#0A8FDC',
+        graphData: [
+          {month: 'Aug', number: 310},
+          {month: 'Sep', number: 130},
+          {month: 'Oct', number: 350},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+          {month: 'Nov', number: 170},
+          {month: 'Dec', number: 400},
+        ],
+      }      
+      
+      
+]
 
 export const NEWS = [
     {

@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import CoinStats from './CoinStats';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
-import { isBreakPointDown } from '../../../../@crema/utility/Utils';
 import {blue, indigo, teal} from '@material-ui/core/colors';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {CoinsDataProps} from '../../../../types/models/Crypto';
@@ -26,58 +25,73 @@ const Coins: React.FC<Props> = ({coinsData}) => {
         fontWeight={Fonts.BOLD}>
         <IntlMessages id='DEFI ASSETS' />
       </Box>
-      <Grid container spacing={isBreakPointDown('md') ? 4 : 8}>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Etherium}
             bgColor={blue[500]}
             data={coinsData.etherium}
-            heading={<IntlMessages id='Marketplace' />}
+            heading={<IntlMessages id='BTC' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Litcoin}
             bgColor={indigo[700]}
             data={coinsData.liteCoin}
-            heading={<IntlMessages id='Agregator' />}
+            heading={<IntlMessages id='ETH' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Ripple}
             bgColor={teal[600]}
             data={coinsData.ripple}
-            heading={<IntlMessages id='Exchange' />}
+            heading={<IntlMessages id='FTC' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Etherium}
             bgColor={blue[500]}
             data={coinsData.etherium}
-            heading={<IntlMessages id='Marketplace' />}
+            heading={<IntlMessages id='XRP' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Litcoin}
             bgColor={indigo[700]}
             data={coinsData.liteCoin}
-            heading={<IntlMessages id='Agregator' />}
+            heading={<IntlMessages id='BCH' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <CoinStats
             icon={Ripple}
             bgColor={teal[600]}
             data={coinsData.ripple}
-            heading={<IntlMessages id='Exchange' />}
+            heading={<IntlMessages id='LCT' />}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <CoinStats
+            icon={Ripple}
+            bgColor={teal[600]}
+            data={coinsData.ripple}
+            heading={<IntlMessages id='ETC' />}
+          />
+        </Grid><Grid item xs={12} sm={3}>
+          <CoinStats
+            icon={Ripple}
+            bgColor={teal[600]}
+            data={coinsData.ripple}
+            heading={<IntlMessages id='ABC' />}
           />
         </Grid>
       </Grid>

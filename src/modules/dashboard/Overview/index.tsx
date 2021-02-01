@@ -26,6 +26,8 @@ const Overview: React.FC<CryptoProps> = () => {
     ({dashboard}) => dashboard,
   );
 
+  console.log('dashboard', cryptoData)
+
   return (
     <>
       {cryptoData ? (
@@ -41,7 +43,14 @@ const Overview: React.FC<CryptoProps> = () => {
               <ReportCard data={MOCK} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <PopularCoins title="Trending Coins on ZRX" popularCoins={cryptoData.popularCoins} />
+            <GridContainer >
+              <Grid item xs={12} sm={12} md={12}>
+              <PopularCoins title="Trending Coins on ZRX" popularCoins={[cryptoData.popularCoins[0], cryptoData.popularCoins[1]]} />
+              </Grid>
+              <Grid style={{backgroundColor: 'white', borderRadius: 10}} item xs={12} sm={12} md={12}>
+              <RelatedCourses relatedCourses={NEWS} />
+            </Grid>
+            </GridContainer>
             </Grid>
             <Grid item xs={12} md={4}>
             <PopularCoins title="Trending Coins on Uniswap" popularCoins={cryptoData.popularCoins} />
@@ -49,9 +58,7 @@ const Overview: React.FC<CryptoProps> = () => {
             <Grid item xs={12} md={4}>
               <PopularCoins title="Trending Coins on ZRX" popularCoins={cryptoData.popularCoins} />
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <RelatedCourses relatedCourses={NEWS} />
-            </Grid>
+           
           </GridContainer>
         </Box>
       ) : null}

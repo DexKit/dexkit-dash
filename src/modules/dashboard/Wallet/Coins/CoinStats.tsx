@@ -12,6 +12,7 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 const useStyles = makeStyles((theme: CremaTheme) => ({
   statsCard: {
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
+    padding: 10
   },
   root: {
     height: 30,
@@ -19,8 +20,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
     backgroundColor: (props: {bgColor: string}) => props.bgColor,
     [theme.breakpoints.up('md')]: {
-      height: 60,
-      width: 60,
+      height: 45,
+      width: 45,
     },
     [theme.breakpoints.up('xl')]: {
       height: 70,
@@ -52,27 +53,28 @@ const CoinStats: React.FC<CoinStatsProps> = ({
             <img alt='' src={icon} />
           </Avatar>
         </Box>
-
-        <Box position='relative' ml={{xs: 3, xl: 6}}>
-          <Box component='p' fontSize={14} color='text.secondary' mb={2}>
+        <Box style={{marginLeft:5}} >
+          <Box component='p'  fontSize={12} >
             {heading}
           </Box>
           <Box
-            component='h3'
+            component='p'
             display='inline-block'
-            fontWeight={Fonts.MEDIUM}
-            fontSize={14}>
-            ${data.price}
+            fontSize={12}>
+              <p style={{fontWeight: 'bold'}}>${data.price}</p>
           </Box>
           <Box
-            component='span'
+            component='p'
             ml={3}
-            fontSize={15}
+            style={{marginLeft: 0}}
+            textAlign="left"
+            fontSize={12}
             fontWeight={Fonts.MEDIUM}
             color={data.increment > 0.0 ? green[500] : red[500]}>
             {data.increment}%
           </Box>
         </Box>
+        
       </Box>
     </AppCard>
   );

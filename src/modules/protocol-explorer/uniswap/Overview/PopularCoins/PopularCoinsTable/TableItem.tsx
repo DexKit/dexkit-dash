@@ -21,8 +21,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     },
     tableCell: {
       borderBottom: '0 none',
-      fontSize: 14,
-      padding: 8,
+      fontSize: 13,
+      padding: 7,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,

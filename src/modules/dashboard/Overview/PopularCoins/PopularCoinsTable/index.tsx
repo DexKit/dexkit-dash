@@ -21,7 +21,7 @@ const PopularCoinsTable: React.FC<PopularCoinsTableProps> = ({
     },
     tableResponsiveMaterial: {
       minHeight: '.01%',
-      overflowX: 'auto',
+      overflowX: 'hidden',
 
       '@media (max-width: 767px)': {
         width: '100%',

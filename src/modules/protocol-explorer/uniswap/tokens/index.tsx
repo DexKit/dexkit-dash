@@ -95,16 +95,15 @@ const Overview: React.FC<CryptoProps> = () => {
                 <RecentPatients recentPatients={RECENT_PATIENTE} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <PopularCoins title="Trending Coins on ZRX" popularCoins={cryptoData.popularCoins} />
+              <PopularCoins title="Trending " popularCoins={cryptoData.popularCoins} />
             </Grid>
             <Grid item xs={12} md={4} >
-              <ReportCard data={MOCK} />
-              <div style={{marginTop: 33}}>
-              <ReportCard  data={MOCK} />
-              </div>
-              <div style={{marginTop: 33}}>
-              <ReportCard  data={MOCK} />
-              </div>
+              
+              {MOCK.map((data, index) => (
+             <div style={{marginTop: index > 0 ? 36 : '' }}>
+             <ReportCard key={data.id} data={data} />
+             </div>
+              ))}    
             </Grid>
          
            

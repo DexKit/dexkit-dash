@@ -35,6 +35,7 @@ const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins, title}) => {
             {/* <IntlMessages id='dashboard.popularCoins' /> */}
             {title}
           </Box>
+          
           <Box component='span' ml='auto'>
             <Link
               color='secondary'

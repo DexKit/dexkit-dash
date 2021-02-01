@@ -17,7 +17,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
       borderBottom: '0 none',
       fontSize: 14,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -37,7 +37,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
   const classes = useStyles();
   return (
     <TableRow className={classes.borderBottomClass}>
-      <TableCell className={classes.tableCell}>
+      <TableCell  align='left' className={classes.tableCell}>
         <IntlMessages id='common.num' />
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>

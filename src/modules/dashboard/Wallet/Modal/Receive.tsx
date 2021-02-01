@@ -1,6 +1,6 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import TransferForm from '../Form'
+import Form from '../ReceiveForm'
 
 interface TotalBalanceProps {
   open: boolean,
@@ -11,7 +11,7 @@ const FormDialog: React.FC<TotalBalanceProps> = ({open, onClose}) => {
   return (
     <div>
       <Dialog fullWidth maxWidth="xs"  open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-          <TransferForm buySell={
+          <Form buySell={
             {
               buyData: {
                 value: '',

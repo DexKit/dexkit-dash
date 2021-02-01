@@ -14,13 +14,13 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   return (
     <TableRow key={data.name} className='item-hover'>
-      <TableCell component='th' scope='row' className={classes.tableCell}>
+      <TableCell component='th'align='left' scope='row' className={classes.tableCell}>
         {data.id}
       </TableCell>
-      <TableCell align='center' className={classes.tableCell}>
+      <TableCell align='left' className={classes.tableCell}>
         {data.balance}
       </TableCell>
-      <TableCell align='center'>
+      <TableCell align='left'>
        {data.name}
       </TableCell>
     </TableRow>

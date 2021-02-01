@@ -61,7 +61,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles(row);
   return (
     <TableRow className={classes.borderBottomClass}>
-      <TableCell component='th' scope='row' className={classes.tableCell}>
+      <TableCell  align='left' component='th' scope='row' className={classes.tableCell}>
         {row.id}.
       </TableCell>
       <TableCell

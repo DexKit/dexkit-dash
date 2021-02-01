@@ -64,27 +64,23 @@ const TableItem: React.FC<Props> = ({data}) => {
         <Box >{data.pair}</Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        {data.time}
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
       <Chip
         style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}}
         label={data.type}
         clickable
       />
       </TableCell>
+      <TableCell align='left' className={classes.tableCell}>
+        {data.price}
+      </TableCell>
       <TableCell
         align='left'
         className={classes.tableCell}
        >
-        {data.price}
+        {data.amount}
       </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
-        <Box
-          className={classes.badgeRoot}
-         >
-          {data.totalValue}
-        </Box>
+      <TableCell align='left' className={classes.tableCell}>       
+          {data.total}
       </TableCell>
       
     </TableRow>

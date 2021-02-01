@@ -19,7 +19,7 @@ const TableHeading: React.FC<Props> = (props) => {
       borderBottom: '0 none',
       fontSize: 16,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -36,7 +36,6 @@ const TableHeading: React.FC<Props> = (props) => {
       },
     },
   }));
-
   const classes = useStyles(props);
   return (
     <TableRow className={classes.tableRowRoot}>

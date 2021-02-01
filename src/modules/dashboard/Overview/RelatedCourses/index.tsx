@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       marginLeft: -12,
       marginRight: -12,
     },
+  
     '& .slick-slide': {
       '&  img': {
         height: 'auto',
@@ -80,7 +81,7 @@ const RelatedCourses: React.FC<RelatedCoursesProps> = ({relatedCourses}) => {
   };
 
   return (
-    <Paper style={{marginTop: 20, padding: 10}}>
+    <Paper style={{marginTop: 20, padding: 10, backgroundColor: 'white', boxShadow: 'none'}}>
       <Slider className={classes.slideRoot} {...settings}>
         {relatedCourses.map((data, index) => (
           <CourseItem key={index} data={data} />

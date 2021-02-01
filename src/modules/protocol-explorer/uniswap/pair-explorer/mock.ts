@@ -8,7 +8,7 @@ export const POOLS = [
         amount: '0.12544 ETH',
         total: '2,542.5323',
         poolVariation: 0,
-        pair: 'DA/ETH',
+        pair: '1 min',
 
 
     },
@@ -21,7 +21,7 @@ export const POOLS = [
         amount: '0.12544 ETH',
         total: '2,542.5323',
         poolVariation: 0,
-        pair: 'DA/ETH',
+        pair: '5 min',
     },
     {
         id: '3',
@@ -32,7 +32,7 @@ export const POOLS = [
         amount: '0.12544 ETH',
         total: '2,542.5323',
         poolVariation: -5,
-        pair: 'DA/ETH',
+        pair: '10 min',
     },
     {
         id: '4',
@@ -43,6 +43,6 @@ export const POOLS = [
         amount: '0.12544 ETH',
         total: '2,542.5323',
         poolVariation: 10,
-        pair: 'DA/ETH',
+        pair: '1 hour',
     },
 ]
