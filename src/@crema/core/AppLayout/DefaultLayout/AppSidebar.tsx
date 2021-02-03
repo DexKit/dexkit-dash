@@ -12,7 +12,7 @@ import useStyles from './AppSidebar.style';
 import {ThemeStyle} from '../../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
-import WalletInfo from 'shared/components/WalletInfo';
+// import WalletInfo from 'shared/components/WalletInfo';
 
 interface AppSidebarProps {
   position?: 'left' | 'bottom' | 'right' | 'top' | undefined;
@@ -50,11 +50,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
               width='100%'
               color='primary.contrastText'
               className={classes.sidebarBg}>
-              <WalletInfo />
+              {/* <WalletInfo /> */}
               <PerfectScrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
               </PerfectScrollbar>
-              `
             </Box>
           </Box>
         </Drawer>
@@ -62,7 +61,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
       <Hidden mdDown>
         <Box height='100%' className={classes.container}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-            <WalletInfo />
+            {/* <WalletInfo /> */}
             <PerfectScrollbar
               className={clsx(classes.scrollAppSidebar, 'scrollAppSidebar')}>
               <Navigation />

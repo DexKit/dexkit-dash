@@ -1,151 +1,121 @@
-import React, { useState } from 'react';
-import { Box, Grid, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, TableSortLabel } from '@material-ui/core';
-
+import React, {useEffect, } from 'react';
+import Grid from '@material-ui/core/Grid';
+import {useDispatch, useSelector} from 'react-redux';
+import {onGetCryptoData} from '../../../../redux/actions';
 import GridContainer from '../../../../@crema/core/GridContainer';
 import InfoView from '../../../../@crema/core/InfoView';
+import Box from '@material-ui/core/Box';
+import {AppState} from '../../../../redux/store';
+import PopularCoins from './PopularCoins';
+import ReportCard from './ReportCard';
+import RecentPatients from './RecentPatients';
+import { MOCK, RECENT_PATIENTE} from './mockedData'
+import {  Paper, TextField, InputAdornment, Typography, Link, Breadcrumbs, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
+import {SearchRounded} from '@material-ui/icons';
 
-import { useQuery } from '@apollo/client';
-import { TokenDayDataGraphResponse } from 'types/uniswap';
-import { UNISWAP_TOKENS_DAY_DATA } from 'services/graphql/uniswap/gql';
-import { Loader } from '@crema';
-import AppCard from '@crema/core/AppCard';
-import { useIntl } from 'react-intl';
-import { BigNumber } from '@0x/utils';
-import { useStyles } from './index.style';
 
-import { stableSort, getComparator } from 'utils/table';
+interface CryptoProps {}
 
-type Order = 'asc' | 'desc';
-
-interface HeadCell {
-  id: string;
-  label: string;
-  align?: 'left' | 'right';
-  isSort: boolean;
-}
-
-const headCells: HeadCell[] = [
-  { id: 'name', label: 'Name', isSort: false },
-  { id: 'symbol', align: 'left', label: 'Symbol', isSort: false },
-  { id: 'totalLiquidityUSD', align: 'left', label: 'Liquidity', isSort: true },
-  { id: 'dailyVolumeUSD', align: 'left', label: 'Volume (24hrs)', isSort: true },
-  { id: 'priceUSD', align: 'left', label: 'Price', isSort: true },
-];
-let lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400;
-
-const UniswapTokens = () => {
-  const [page, setPage] = useState<number>(0);
-  const [orderBy, setOrderBy] = useState<string>('totalLiquidityUSD');
-  const [orderDirection, setOrderDirection] = useState<Order>('desc');
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
-  const getLastDayTimestamp = () => {
-    if(lastDayTimestamp < Math.floor(Date.now() / 1000) - 2*86400 ){
-      lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400
-    }
-    return lastDayTimestamp;
-
-  }
-
-  const { loading, error, data } = useQuery<{ tokenDayDatas: TokenDayDataGraphResponse[] }>(UNISWAP_TOKENS_DAY_DATA, {
-    variables: {first: 200, skip: 0, timestamp: getLastDayTimestamp(), orderBy: orderBy, orderDirection: orderDirection }
-  });
+const Overview: React.FC<CryptoProps> = () => {
   
-  const { messages } = useIntl();
+  const dispatch = useDispatch();
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-  const handleSort = (property: string) => (event: React.MouseEvent<unknown>) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  useEffect(() => {
+  
+    dispatch(onGetCryptoData());
+  }, [dispatch]);
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const classes = useStyles();
+  const {cryptoData} = useSelector<AppState, AppState['dashboard']>(
+    ({dashboard}) => dashboard,
+  );
 
   return (
     <>
-      {data ? (
-        <Box pt={{ xl: 4 }} clone>
+      {cryptoData ? (
+        <Box pt={{xl: 4}}>
           <GridContainer>
-            <Grid item xs={11} md={11}>
-              <AppCard
-                height={1}
-                title={messages['common.tokens']}
-               >
-                <Box className={classes.tableResponsiveMaterial}>
-                  <Table className='table'>
-                    <TableHead>
-                      <TableRow className={classes.tableRowRoot}>
-                        {headCells.map(h => (
-                          <TableCell align={h.align} className={classes.tableCellRoot}>
-                            {h.isSort && <TableSortLabel
-                              active={orderBy === h.id}
-                              direction={orderBy === h.id ? orderDirection : 'asc'}
-                              onClick={handleSort(h.id)}
-                            >
-                              {h.label}
-                            </TableSortLabel>}
-                            {!h.isSort && h.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {stableSort(data.tokenDayDatas, getComparator(orderDirection, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((data) => (
-                          <TableRow key={data.token.id}>
-                            <TableCell component='th' scope='row' className={classes.tableCell} style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
-                              <Box className={classes.anchar}>{data.token.name}</Box>
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell} style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
-                              {data.token.symbol}
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              ${new BigNumber(data.totalLiquidityUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              className={classes.tableCell}>
-                              ${new BigNumber(data.dailyVolumeUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              <Box
-                                className={classes.badgeRoot}>
-                                ${new BigNumber(data.priceUSD).toFormat(4)}
-                              </Box>
-                            </TableCell>
-                          </TableRow>))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
-                    component="div"
-                    count={data.tokenDayDatas.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
-                </Box>
-              </AppCard>
-            </Grid>
+          <Grid item xs={12} md={12}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link color="inherit" href="/" >
+                Protocol Explorer
+              </Link>
+              <Link color="inherit" href="/getting-started/installation/" >
+                Uniswuap
+              </Link>
+              <Typography color="textPrimary">Token Explorer</Typography>
+            </Breadcrumbs>
+            <Typography variant="h4"  color="textPrimary">Token Explorer</Typography>
 
+          </Grid>
+          <Grid item xs={12} md={8}>
+          <Paper style={{padding: 10}}>
+          <GridContainer>
+
+          <Grid item xs={12} md={8}>
+            <TextField
+            fullWidth
+        id="input-with-icon-textfield"
+        variant='outlined'
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchRounded />
+            </InputAdornment>
+          ),
+        }}
+      />
+      </Grid>
+      <Grid item xs={12} md={4}>
+                <FormControl fullWidth  >
+
+          <InputLabel style={{marginLeft: 20}} id="demo-simple-select-label">Filter</InputLabel>
+          <Select
+            variant='outlined'
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+          >
+            <MenuItem value="">
+              <em>View All</em>
+            </MenuItem>
+          
+          </Select>
+          </FormControl >
+          </Grid>
+          </GridContainer>
+          </Paper>
+          
+
+                
+            </Grid>  
+            <Grid item xs={12} md={4}>
+              
+            </Grid>        
+          
+          <Grid item xs={12} sm={12} md={4}>
+                <RecentPatients recentPatients={RECENT_PATIENTE} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <PopularCoins title="Trending " popularCoins={cryptoData.popularCoins} />
+            </Grid>
+            <Grid item xs={12} md={4} >
+              
+              {MOCK.map((data, index) => (
+             <div style={{marginTop: index > 0 ? 36 : '' }}>
+             <ReportCard key={data.id} data={data} />
+             </div>
+              ))}    
+            </Grid>
+         
+           
           </GridContainer>
         </Box>
       ) : null}
-      {loading ? <Loader /> : null}
-      {error ? JSON.stringify(error) : null}
 
       <InfoView />
     </>
   );
 };
 
-export default UniswapTokens;
+export default Overview;
+
+

@@ -16,8 +16,7 @@ const TransactionTable: React.FC<Props> = ({transactionData}) => {
   const useStyles = makeStyles(() => ({
     tableResponsiveMaterial: {
       minHeight: '.01%',
-      overflowX: 'auto',
-
+      overflowX: 'hidden',
       '@media (max-width: 767px)': {
         width: '100%',
         marginBottom: 15,
@@ -32,8 +31,8 @@ const TransactionTable: React.FC<Props> = ({transactionData}) => {
       },
     },
   }));
+  
   const classes = useStyles();
-
   return (
     <Box className={classes.tableResponsiveMaterial}>
       <Table className='table'>

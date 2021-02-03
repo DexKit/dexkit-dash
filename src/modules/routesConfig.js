@@ -22,13 +22,14 @@ const routesConfig = [
         url: '/dashboards/wallet',
       },
       {
-        id: 'staking',
-        title: 'Staking',
-        messageId: 'sidebar.app.staking',
+        id: 'token',
+        title: 'Token',
+        messageId: 'Token',
         type: 'item',
         icon: 'storage',
-        url: '/dashboards/staking',
+        url: '/dashboards/token',
       },
+      
       {
         id: 'kit',
         title: 'Kit\'s',

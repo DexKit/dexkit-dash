@@ -1,8 +1,5 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, } from 'react';
 import Grid from '@material-ui/core/Grid';
-
-
-import LatestNews from './LatestNews';
 import {useDispatch, useSelector} from 'react-redux';
 import {onGetCryptoData} from '../../../redux/actions';
 import GridContainer from '../../../@crema/core/GridContainer';
@@ -10,25 +7,18 @@ import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import PopularCoins from './PopularCoins';
-import PromoCoins from './PromoCoins';
-import BuyKit from './BuyKit';
-import { ThemeMode } from 'shared/constants/AppEnums';
-import AppContext from '@crema/utility/AppContext';
-import AppContextPropsType from 'types/AppContextPropsType';
+import ReportCard from './ReportCard';
+import RelatedCourses from './RelatedCourses';
+import { MOCK, NEWS} from './mockedData'
 
 interface CryptoProps {}
 
 const Overview: React.FC<CryptoProps> = () => {
-  const dispatch = useDispatch();
   
-  const {updateThemeMode} = useContext<AppContextPropsType>(AppContext);
- 
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if( updateThemeMode){
-      updateThemeMode(ThemeMode.DARK)
-    }
+  
     dispatch(onGetCryptoData());
   }, [dispatch]);
 
@@ -36,29 +26,39 @@ const Overview: React.FC<CryptoProps> = () => {
     ({dashboard}) => dashboard,
   );
 
+  console.log('dashboard', cryptoData)
+
   return (
     <>
       {cryptoData ? (
         <Box pt={{xl: 4}}>
           <GridContainer>
-            <Grid item xs={12} md={4}>
-              <BuyKit  buySell={cryptoData.buySell}/>
+            <Grid item xs={12} md={4} >
+              <ReportCard data={MOCK} />
+            </Grid>
+            <Grid item xs={12} md={4} >
+              <ReportCard data={MOCK} />
+            </Grid>
+            <Grid item xs={12} md={4} >
+              <ReportCard data={MOCK} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <PopularCoins popularCoins={cryptoData.popularCoins} />
+            <GridContainer >
+              <Grid item xs={12} sm={12} md={12}>
+              <PopularCoins title="Trending Coins on ZRX" popularCoins={[cryptoData.popularCoins[0], cryptoData.popularCoins[1]]} />
+              </Grid>
+              <Grid style={{backgroundColor: 'white', borderRadius: 10}} item xs={12} sm={12} md={12}>
+              <RelatedCourses relatedCourses={NEWS} />
+            </Grid>
+            </GridContainer>
             </Grid>
             <Grid item xs={12} md={4}>
-              <PromoCoins popularCoins={cryptoData.popularCoins} />
+            <PopularCoins title="Trending Coins on Uniswap" popularCoins={cryptoData.popularCoins} />
             </Grid>
-            
-
-
-            <Grid item xs={12} md={6}>
-              <LatestNews newsData={cryptoData.newsData} />
+            <Grid item xs={12} md={4}>
+              <PopularCoins title="Trending Coins on ZRX" popularCoins={cryptoData.popularCoins} />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <LatestNews newsData={cryptoData.newsData} />
-            </Grid>
+           
           </GridContainer>
         </Box>
       ) : null}
@@ -69,3 +69,5 @@ const Overview: React.FC<CryptoProps> = () => {
 };
 
 export default Overview;
+
+

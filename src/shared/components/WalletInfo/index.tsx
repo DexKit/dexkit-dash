@@ -124,6 +124,7 @@ const WalletInfo = (props: any) => {
         ) : (
             <Avatar className={classes.profilePic}>{getUserAvatar()}</Avatar>
           )}
+          {console.log('LOGADOOOOOOOOOOOOOOOOOOOOOO', user, account, ethBalance)}
         <Box ml={4} className={clsx(classes.userInfo, 'user-info')}>
           <Box
             display='flex'
@@ -154,25 +155,17 @@ const WalletInfo = (props: any) => {
             </Box>
           </Box>
           <Box color={grey.A200} className={classes.designation}>
-            {ethBalance && tokenAmountInUnits(ethBalance)} ETH
+            {ethBalance && tokenAmountInUnits(ethBalance)} ETH 
           </Box>
         </Box>
       </Box>
       }
-      {web3State === Web3State.NotConnected && <Box display='flex' alignItems='center'>
+      {web3State !== Web3State.Done && <Box display='flex' alignItems='center'>
          <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-             Connect Wallet
+            {web3State === Web3State.Connecting ? 'Connecting... Check Wallet' : 'Connect Wallet'}
         </Button>
       </Box>
       }
-      {web3State === Web3State.Connecting && <Box display='flex' alignItems='center'>
-         <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-             Connecting... Check Wallet
-        </Button>
-      </Box>
-      }
-
-
     </Box>
   );
 };

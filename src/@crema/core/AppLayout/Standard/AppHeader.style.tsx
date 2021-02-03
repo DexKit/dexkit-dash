@@ -102,5 +102,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     display: 'inline-block',
     height: 30,
   },
+  wallet: {
+    verticalAlign: 'middle',
+    display: 'inline-block',
+    height: '100%',
+    width: '28.6%'
+  }
 }));
 export default useStyles;

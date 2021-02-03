@@ -17,7 +17,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
       borderBottom: '0 none',
       fontSize: 14,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -44,14 +44,9 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
         <IntlMessages id='common.name' />
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <IntlMessages id='dashboard.marketCap' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
         <IntlMessages id='dashboard.volume24h' />
       </TableCell>
-      <TableCell align='right' className={classes.tableCell}>
-        <IntlMessages id='dashboard.24h' /> %
-      </TableCell>
+ 
     </TableRow>
   );
 };

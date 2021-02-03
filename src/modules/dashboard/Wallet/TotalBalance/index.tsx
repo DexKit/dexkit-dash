@@ -3,17 +3,31 @@ import {Card} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
+import CoinsInfo from './CoinsInfo';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {TotalBalanceData} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+import Modal from '../Modal'
+import Receive from '../Modal/Receive'
 
 interface TotalBalanceProps {
   totalBalanceData: TotalBalanceData;
 }
 
 const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
+  const [open, setOpen] = React.useState(false);
+  const [receiveModal, setReceive] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
       backgroundColor: 'white',
@@ -61,7 +75,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
         fontSize={{xs: 18, sm: 20, xl: 22}}
         mb={{xs: 4, sm: 4, xl: 6}}
         fontFamily={Fonts.LIGHT}>
-        <IntlMessages id='dashboard.totalBalance' />
+        <IntlMessages id='MY TOTAL BALANCE' />
       </Box>
       <Box
         py={{xs: 5, sm: 5, xl: 5}}
@@ -97,19 +111,32 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button className={classes.root}>
+                <Button onClick={handleClickOpen}  className={classes.root}>
                   <IntlMessages id='common.send' />
                 </Button>
               </Box>
               <Box ml={3}>
-                <Button className={classes.btnPrimary}>
+                <Button onClick={() => setReceive(true)}  className={classes.btnPrimary}>
                   <IntlMessages id='common.receive' />
                 </Button>
               </Box>
             </Box>
           </Box>
+          <Box
+            component='p'
+            mb={{xs: 3.5, md: 4, xl: 6}}
+            fontSize={{xs: 16, xl: 18}}
+            color={indigo[100]}>
+            <IntlMessages id='dashboard.buyCurrency' />
+          </Box>
+          <Box pt={{xl: 5}}>
+            <CoinsInfo coins={totalBalanceData.coins} />
+          </Box>
         </Card>
       </Box>
+      <Modal open={open} onClose={handleClose} />
+      <Receive open={receiveModal} onClose={() => setReceive(false)} />
+
     </Box>
   );
 };

@@ -10,9 +10,10 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 interface PopularCoinsProps {
   popularCoins: PopularCoinsData[];
+  title: string
 }
 
-const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins}) => {
+const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins, title}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     textRes: {
       fontSize: 16,
@@ -30,8 +31,9 @@ const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins}) => {
           <Box
             component='h2'
             fontFamily={Fonts.LIGHT}
-            fontSize={{xs: 18, sm: 20, xl: 22}}>
-            <IntlMessages id='dashboard.popularCoins' />
+            fontSize={{xs: 14, sm: 18}}>
+            {/* <IntlMessages id='dashboard.popularCoins' /> */}
+            {title}
           </Box>
           <Box component='span' ml='auto'>
             <Link

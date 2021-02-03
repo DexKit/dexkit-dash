@@ -77,6 +77,18 @@ export interface TransactionData {
   status: string;
 }
 
+export interface TransactionDataNew {
+  id: string;
+  time: string;
+  type: string;
+  price: string;
+  totalValue: string;
+  amount: string;
+  total: string;
+  pair: string,
+  poolVariation: number
+}
+
 export interface InfoWidgets {
   id: number;
   icon: string;

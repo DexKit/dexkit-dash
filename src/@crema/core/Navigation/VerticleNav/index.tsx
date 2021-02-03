@@ -6,12 +6,13 @@ import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
 import VerticalNavGroup from './VerticalNavGroup';
 import VerticalExternal from './VerticaIExternal';
-
+import AppLogo from 'shared/components/AppLogo';
 interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = () => {
   return (
     <List>
+      <AppLogo justifyContent="center" logo={require('assets/images/logo_white.png')}/>
       {routesConfig.map((item) => (
         <React.Fragment key={item.id}>
           {item.type === 'group' && <VerticalNavGroup item={item} level={0} />}

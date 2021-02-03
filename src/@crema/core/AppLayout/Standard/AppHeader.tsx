@@ -15,8 +15,9 @@ import SearchBar from '../../SearchBar';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
-import AppLogo from '../../../../shared/components/AppLogo';
+// import AppLogo from '../../../../shared/components/AppLogo';
 import clsx from 'clsx';
+import WalletInfo from 'shared/components/WalletInfo';
 
 interface AppHeaderProps {}
 
@@ -70,7 +71,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
           </Hidden>
-          <AppLogo />
+          {/* <AppLogo /> */}
           <Box className={classes.grow} />
           <SearchBar borderLight placeholder='Search…' />
           <Box className={classes.sectionDesktop}>
@@ -87,6 +88,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               color='inherit'>
               <MoreIcon />
             </IconButton>
+          </Box>
+          <Box className={classes.wallet}>
+            <WalletInfo />
           </Box>
         </Toolbar>
       </AppBar>

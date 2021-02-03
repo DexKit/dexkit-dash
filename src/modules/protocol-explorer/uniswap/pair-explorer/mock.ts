@@ -1,0 +1,48 @@
+export const POOLS = [
+    {
+        id: '1',
+        time: '1 min',
+        type: 'Buy',
+        price: '$0.753',
+        totalValue: '$0.753',
+        amount: '0.12544 ETH',
+        total: '2,542.5323',
+        poolVariation: 0,
+        pair: '1 min',
+
+
+    },
+    {
+        id: '2',
+        time: '1 min',
+        type: 'Buy',
+        price: '$0.753',
+        totalValue: '$0.753',
+        amount: '0.12544 ETH',
+        total: '2,542.5323',
+        poolVariation: 0,
+        pair: '5 min',
+    },
+    {
+        id: '3',
+        time: '1 min',
+        type: 'Buy',
+        price: '$0.753',
+        totalValue: '$0.753',
+        amount: '0.12544 ETH',
+        total: '2,542.5323',
+        poolVariation: -5,
+        pair: '10 min',
+    },
+    {
+        id: '4',
+        time: '1 min',
+        type: 'Sell',
+        price: '$0.753',
+        totalValue: '$0.753',
+        amount: '0.12544 ETH',
+        total: '2,542.5323',
+        poolVariation: 10,
+        pair: '1 hour',
+    },
+]
