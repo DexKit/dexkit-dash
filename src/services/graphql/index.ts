@@ -1,6 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { client as bitQueryClient } from './bitquery';
+import { client } from './uniswap';
 
-export const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
-  cache: new InMemoryCache()
-});
+export { client, bitQueryClient };

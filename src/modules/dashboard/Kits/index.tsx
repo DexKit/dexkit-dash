@@ -9,7 +9,6 @@ import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import Coins from './Coins';
 
-
 interface CryptoProps {}
 
 const Crypto: React.FC<CryptoProps> = () => {
@@ -18,6 +17,7 @@ const Crypto: React.FC<CryptoProps> = () => {
   useEffect(() => {
     dispatch(onGetCryptoData());
   }, [dispatch]);
+  
 
   const {cryptoData} = useSelector<AppState, AppState['dashboard']>(
     ({dashboard}) => dashboard,

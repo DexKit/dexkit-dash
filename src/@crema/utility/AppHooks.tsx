@@ -26,7 +26,7 @@ export const useAuthToken = () => {
               },
             });
           }
-          resolve();
+          resolve(null);
         });
         return Promise.resolve();
       });

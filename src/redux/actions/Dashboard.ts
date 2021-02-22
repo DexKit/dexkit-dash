@@ -8,7 +8,11 @@ import {
   GET_CRYPTO_DATA,
   GET_METRICS_DATA,
   GET_WIDGETS_DATA,
+  GET_REPORT_CARDS_ACTIONS,
+  GET_NEWS_DATA
 } from '../../types/actions/Dashboard.action';
+import { OverviewDataProvider } from 'modules/dashboard/Overview';
+import { GetFeed, OverviewDataProviderImp } from 'services/dashboard';
 
 export const onGetAnalyticsData = () => {
   return (dispatch: Dispatch<AppActions>) => {
@@ -97,5 +101,36 @@ export const onGetWidgetsData = () => {
       .catch((error) => {
         dispatch(fetchError(error.message));
       });
+  };
+};
+
+export const onGetReportCardsData = () => {
+  const overviewDataProvider: OverviewDataProvider = new OverviewDataProviderImp();
+  return (dispatch: Dispatch<AppActions>) => {
+    dispatch(fetchStart());
+    overviewDataProvider.getReportCardsData()
+    .then( d => {
+      dispatch({type: GET_REPORT_CARDS_ACTIONS, payload: d});
+      dispatch(fetchSuccess());
+    })
+    .catch( e => {
+      dispatch(fetchError(e.message));
+    })
+  };
+};
+
+export const onGetNewsData = () => {
+  const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+  const url = new URL(`${CORS_PROXY}https://cointelegraph.com/rss`);
+  return (dispatch: Dispatch<AppActions>) => {
+    dispatch(fetchStart());
+    GetFeed(url)
+    .then( feed => {
+      dispatch({type: GET_NEWS_DATA, payload: feed});
+      dispatch(fetchSuccess());
+    })
+    .catch( e => {
+      dispatch(fetchError(e.message));
+    });
   };
 };

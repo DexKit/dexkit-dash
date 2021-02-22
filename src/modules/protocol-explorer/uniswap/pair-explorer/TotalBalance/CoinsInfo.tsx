@@ -7,20 +7,9 @@ import {BalanceCoins} from '../../../../../types/models/Crypto';
 interface CoinsInfoProps {
   coins: BalanceCoins[];
 }
-
-const teste : { [key: string]: any } = {
-  0: 'Total Liquidy',
-  1: 'Daily Volume',
-  2:'Pooled ETH',
-  3: ' Pooled Kit'
-}
-
 // const TAG_NAME = ['Total Liquidy, Daily Volume, Pooled ETH, Pooled Kit']
 
 const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
-
-  const newCoins = coins.map((coin, index) => ({...coin, name: `${index}`}))
-  console.log('COINS', newCoins)
 
   return (
     <Box
@@ -29,7 +18,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
       display='flex'
       flexWrap='wrap'
       justifyContent='space-between'>
-      {newCoins.map(coin => {
+      {coins.map(coin => {
         return (
           <Box mt={{xl: 3}} px={2} key={coin.id}>
             <Box
@@ -41,7 +30,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
               {coin.value}
             </Box>
             <Box component='p' fontSize={14} color={indigo[200]}>
-              {teste[coin.name]}
+              {coin.name}
             </Box>
           </Box>
         );

@@ -38,4 +38,7 @@ export interface MarketData {
       max_supply?: number;
       circulating_supply: number;
       last_updated: Date;
+      sparkline_7d?: {
+        price: number[]
+      }
 }

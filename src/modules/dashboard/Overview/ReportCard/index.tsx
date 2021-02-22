@@ -31,6 +31,9 @@ const ReportCard: React.FC<ReportCardProps> = ({data}) => {
           <Box component='p' color='#737989'>
             {data.type}
           </Box>
+          <Box>
+            <img src={data.icon} alt="currency icon"/>
+          </Box>
         </Box>
         <Box className={classes.chartContainer}>
           <StaticsGraph

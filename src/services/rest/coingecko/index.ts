@@ -11,24 +11,23 @@ const coinGecko = axios.create({
 	},
 });
 
-type errorHandler = (name: any) => void;
-async function getCoingecko(url: string, callbackError: errorHandler): Promise<CoinDetailCoinGecko> {
+async function getCoingecko(url: string): Promise<CoinDetailCoinGecko> {
 	try {
-		const data: CoinDetailCoinGecko = await coinGecko.get(url);
-		return Promise.resolve(data);
+		const response = await coinGecko.get(url);
+		return Promise.resolve(response.data);
 	} catch (e) {
-		return Promise.reject(callbackError(e));
+		return Promise.reject(e);
 	}
 }
 
-export async function getDexkit(callbackError: errorHandler): Promise<CoinDetailCoinGecko> {
-	return getCoingecko('dexkit', callbackError);
+export async function getDexkit(): Promise<CoinDetailCoinGecko> {
+	return getCoingecko('dexkit?sparkline=true');
 }
 
-export async function getBitcoin(callbackError: errorHandler): Promise<CoinDetailCoinGecko> {
-	return getCoingecko('bitcoin', callbackError);
+export async function getBitcoin(): Promise<CoinDetailCoinGecko> {
+	return getCoingecko('bitcoin?sparkline=true');
 }
 
-export async function getEthereum(callbackError: errorHandler): Promise<CoinDetailCoinGecko> {
-	return getCoingecko('ethereum', callbackError);
+export async function getEthereum(): Promise<CoinDetailCoinGecko> {
+	return getCoingecko('ethereum?sparkline=true');
 }

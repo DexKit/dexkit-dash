@@ -5,14 +5,27 @@ import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
 import AppCard from '../../../../../@crema/core/AppCard';
-import {TotalBalanceData} from '../../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../../types/AppContextPropsType';
 import Avatar from '@material-ui/core/Avatar';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LockIcon from '@material-ui/icons/LockRounded'
+import { BalanceCoins } from 'types/models/Crypto';
 
 
-interface TotalBalanceProps {
+export interface TotalBalanceProps {
   totalBalanceData: TotalBalanceData;
+}
+
+export interface TotalBalanceData{
+  quoteAmount: number;
+  quoteAmountInCurrency: number;
+  baseAmount: number;
+  baseAmountInCurrency: number;
+  pairSymbols: {a:string, b: string}; 
+  dailyVolume: number;
+  quotePrice: number;
+  totalLiquidy: number;
+  priceChangePercentage24h: number;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -56,7 +69,32 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
+const coinInfoFactory = (propsData: TotalBalanceData): BalanceCoins[] => {
+  return [
+    { 
+      id: 1,
+      name: 'Total Liquidy',
+      value: propsData.totalLiquidy
+    },
+    {
+      id: 2,
+      name: 'Daily Volume',
+      value: propsData.dailyVolume
+    },
+    {
+      id: 3,
+      name: `Pooled ${propsData.pairSymbols.a.toUpperCase()}`,
+      value: propsData.baseAmount
+    },
+    {
+      id: 4,
+      name: `Pooled ${propsData.pairSymbols.b.toUpperCase()}`,
+      value: propsData.quoteAmount
+    }
+  ];
+}
+
+const TotalBalance: React.FC<TotalBalanceProps> = ({ totalBalanceData }) => {
   const classes = useStyles();
 
   return (
@@ -81,7 +119,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               color='primary.contrastText'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
-              ETH/KIT
+              {totalBalanceData.pairSymbols.a}/{totalBalanceData.pairSymbols.b}
             </Box>
             <Box display='flex'  >
             <Box mr={3} clone>
@@ -93,7 +131,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
           <Box mr={3} clone>
             <Avatar style={{color: '#3F51B5',
               backgroundColor: 'white'}}>
-            <DeleteIcon />
+            <LockIcon />
             </Avatar>
           </Box>
           <Box mr={3} clone>
@@ -111,7 +149,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               style={{color: '#4ee44e', marginTop: 13}}
               fontSize={20}>
                 
-              {totalBalanceData.balance}
+              ${totalBalanceData.quoteAmountInCurrency/totalBalanceData.baseAmountInCurrency}
             </Box>
           </Box>
           <Box display='flex' >
@@ -120,14 +158,14 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
               fontWeight={Fonts.LIGHT}
               style={{color: '#4ee44e'}}
               fontSize={13}>
-              (24h 1,51%)
+              (24h {totalBalanceData.priceChangePercentage24h.toPrecision(2)}%)
             </Box>
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
               style={{color: 'white', marginLeft: 10}}
               fontSize={13}>
-              {totalBalanceData.balance}
+              {totalBalanceData.quotePrice} {totalBalanceData.pairSymbols.a.toUpperCase()}
             </Box>
           </Box>
         </Box>
@@ -139,7 +177,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData}) => {
           <IntlMessages id='Total Liquidy' />
         </Box> */}
         <Box pt={{md: 2, lg: 3, xl: 6}}>
-          <CoinsInfo coins={totalBalanceData.coins} />
+          <CoinsInfo coins={coinInfoFactory(totalBalanceData)} />
         </Box>
       </AppCard>
     </Box>
