@@ -22,13 +22,14 @@ const routesConfig = [
         url: '/dashboards/wallet',
       },
       {
-        id: 'staking',
-        title: 'Staking',
-        messageId: 'sidebar.app.staking',
+        id: 'token',
+        title: 'Token',
+        messageId: 'Token',
         type: 'item',
         icon: 'storage',
-        url: '/dashboards/staking',
+        url: '/dashboards/token',
       },
+      
       {
         id: 'kit',
         title: 'Kit\'s',
@@ -176,22 +177,7 @@ const routesConfig = [
         icon: 'report',
         url: '/my-apps/manage',
       },
-      /*{
-        id: 'aggregator',
-        title: 'Aggregator',
-        messageId: 'sidebar.affiliate.aggregator',
-        type: 'collapse',
-        icon: 'report',
-        children: [
-          {
-            id: 'agg-overview',
-            title: 'Overview',
-            messageId: 'common.overview',
-            type: 'item',
-            url: '/affiliate/aggregator/overview',
-          },
-        ],
-      },
+      /*
       {
         id: 'nft-marketplace',
         title: 'Marketplace',

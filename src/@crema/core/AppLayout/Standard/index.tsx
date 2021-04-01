@@ -22,10 +22,7 @@ const StandardLayout: React.FC<StandardLayoutProps> = (props) => {
   );
 
   return (
-    <Box
-      className={clsx(
-        classes.appMain,
-        layoutType === LayoutType.BOXED ? classes.boxedLayout : '',
+    <Box className={clsx(classes.appMain, layoutType === LayoutType.BOXED ? classes.boxedLayout : '',
         {
           appMainFooter: footer && footerType === 'fluid',
           appMainFixedFooter: footer && footerType === 'fixed',

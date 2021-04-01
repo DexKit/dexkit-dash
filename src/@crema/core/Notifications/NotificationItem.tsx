@@ -2,13 +2,13 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {ListItem, makeStyles} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
-
+import { Notification } from 'types/models/Notification';
 interface NotificationItemProps {
-  item: any;
+  item: Notification;
   listStyle: string;
 }
 
@@ -55,9 +55,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           display='inline-block'
           color='text.primary'
           fontFamily={Fonts.LIGHT}>
-          {item.name}
+          {item.title}
         </Box>
-        {item.message}
+        {item.body ?? ''}
       </Box>
     </ListItem>
   );
@@ -65,6 +65,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
 export default NotificationItem;
 
-NotificationItem.propTypes = {
-  item: PropTypes.object.isRequired,
-};
+// NotificationItem.propTypes = {
+//   item: PropTypes.object.isRequired,
+// };

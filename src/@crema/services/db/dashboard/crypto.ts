@@ -371,7 +371,7 @@ export default {
     },
   ],
   totalBalanceData: {
-    balance: '33692.00',
+    balance: '33694.00',
     coins: [
       {id: 32423, name: 'Bitcoin', value: 9.654},
       {id: 3333, name: 'Monero', value: 76.184},

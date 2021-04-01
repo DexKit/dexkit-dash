@@ -1,10 +1,11 @@
 import {PaletteColorOptions} from '@material-ui/core';
+import { Notification } from './Notification';
 
-export interface RecentActivityData {
-  id: number;
-  image: string;
-  name: string;
-  message: string;
+export interface RecentActivityData extends Notification{
+  // id: number;
+  // image: string;
+  // name: string;
+  // message: string;
 }
 
 export interface CategoriesData {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 
 export const dashBoardConfigs = [
   {
@@ -76,4 +77,32 @@ export const dashBoardConfigs = [
       },
     ],
   },
+  {
+    auth: ['token'],
+    routes: [
+      {
+        path: '/dashboards/token/:token_address',
+        component: React.lazy(() => import('./Token')),
+      },
+    ],
+  },
+  {
+    auth: ['token'],
+    routes: [
+      {
+        path: '/dashboards/token',
+        exact: true,
+        component: () => <Redirect to={`/dashboards/token/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
+      },
+    ],
+  }
+  // {
+  //   auth: ['wizard'],
+  //   routes: [
+  //     {
+  //       path: '/dashboards/wizard/:type?',
+  //       component: React.lazy(() => import('./Wizard')),
+  //     },
+  //   ],
+  // },
 ];

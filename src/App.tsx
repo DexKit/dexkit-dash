@@ -14,6 +14,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { client } from 'services/graphql';
 import WalletRoutes from 'services/WalletRoutes';
 import { Web3Manager } from 'shared/components/Web3Manager';
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css'
 
 
 const App = () => (
@@ -27,6 +29,7 @@ const App = () => (
               <WalletRoutes>
                 <CssBaseline />
                 <Web3Manager/>
+                <ReactNotification />
                 <AppLayout />
               </WalletRoutes>
             </ConnectedRouter>

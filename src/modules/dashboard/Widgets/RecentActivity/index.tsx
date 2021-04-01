@@ -42,12 +42,12 @@ const RecentActivity: React.FC<RecentActivityProps> = ({data}) => {
           </Box>
         </Box>
         <List className={classes.notiList}>
-          {data.map((item) => {
+          {data.map((item, i) => {
             return (
               <NotificationItem
                 listStyle='paddingX'
                 item={item}
-                key={item.id}
+                key={item?.id?.toString() ?? i}
               />
             );
           })}

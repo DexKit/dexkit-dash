@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
-import TotalBalance from './TotalBalance';
+import TotalBalance from 'shared/components/TotalBalance';
 import {useDispatch, useSelector} from 'react-redux';
 import {onGetCryptoData} from '../../../redux/actions';
 import GridContainer from '../../../@crema/core/GridContainer';
@@ -8,7 +8,6 @@ import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
 import Coins from './Coins';
-
 
 interface CryptoProps {}
 
@@ -18,6 +17,7 @@ const Crypto: React.FC<CryptoProps> = () => {
   useEffect(() => {
     dispatch(onGetCryptoData());
   }, [dispatch]);
+  
 
   const {cryptoData} = useSelector<AppState, AppState['dashboard']>(
     ({dashboard}) => dashboard,
@@ -29,7 +29,7 @@ const Crypto: React.FC<CryptoProps> = () => {
         <Box pt={{xl: 4}}>
           <GridContainer>
             <Grid item xs={12} md={7}>
-              <TotalBalance totalBalanceData={cryptoData.totalBalanceData} />
+              <TotalBalance totalBalanceData={cryptoData.totalBalanceData} balances={[]}/>
             </Grid>
 
             <Grid item xs={12} md={12}>

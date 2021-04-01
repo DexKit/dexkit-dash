@@ -1,4 +1,5 @@
 import React from 'react';
+import { wizardConfigs } from './wizard';
 
 export const myAppsConfigs = [
   {
@@ -7,7 +8,8 @@ export const myAppsConfigs = [
       {
         path: '/my-apps/manage',
         component: React.lazy(() => import('./manage')),
-      },
+      }
     ],
   },
+  ...wizardConfigs
 ];

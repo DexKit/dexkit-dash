@@ -49,9 +49,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       transformOrigin={{vertical: 'top', horizontal: 'right'}}
       open={Boolean(mobileMoreAnchorEl)}
       onClose={handleMobileMenuClose}>
-      <MenuItem className={classes.menuItemRoot}>
+      {/* <MenuItem className={classes.menuItemRoot}>
         <HeaderMessages />
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem className={classes.menuItemRoot}>
         <Notifications />
       </MenuItem>

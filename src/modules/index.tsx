@@ -2,21 +2,22 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 
 import {createRoutes} from '../@crema/utility/Utils';
-import {dashBoardConfigs} from './dashboard';
 import {errorPagesConfigs} from './errorPages';
+
 import {authRouteConfig} from './auth';
-import {blockchainConfigs} from './blockchain';
+import {dashBoardConfigs} from './dashboard';
 import {protocolExplorerConfigs} from './protocol-explorer';
 import {myAppsConfigs} from './my-apps';
+// import { historyConfigs } from './history';
 import {initialUrl} from '../shared/constants/AppConst';
 
 const routeConfigs = [
+  ...errorPagesConfigs,
   ...authRouteConfig,
   ...dashBoardConfigs,
-  ...errorPagesConfigs,
   ...protocolExplorerConfigs,
-  ...blockchainConfigs,
   ...myAppsConfigs,
+  // ...historyConfigs
 ];
 
 const routes = [

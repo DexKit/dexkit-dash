@@ -1,164 +1,165 @@
-import React, { useState } from 'react';
-import { Box, Grid, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, TableSortLabel } from '@material-ui/core';
+import React, { useEffect } from 'react';
 
+import Grid from '@material-ui/core/Grid';
+import TotalBalance, { TotalBalanceData } from './TotalBalance';
+import { useDispatch } from 'react-redux';
+import { onGetCryptoData, onGetAnalyticsData } from '../../../../redux/actions';
 import GridContainer from '../../../../@crema/core/GridContainer';
 import InfoView from '../../../../@crema/core/InfoView';
-
+import Box from '@material-ui/core/Box';
+// import { AppState } from '../../../../redux/store';
+import OrderNTransaction from './OrderNTransaction';
+// import { POOLS } from './mock'
+import { Paper, Typography, Link, Breadcrumbs } from '@material-ui/core';
+import { DexTradePoolInfo } from 'types/bitquery/dexTradePoolInfo.interface';
 import { useQuery } from '@apollo/client';
-import { PairDayDataGraphResponse } from 'types/uniswap';
 
+import { BITQUERY_PAIR_EXPLORER, BITQUERY_TRADE_HISTORY } from 'services/graphql/bitquery/gql';
+import { bitQueryClient } from '../../../../services/graphql';
 import { Loader } from '@crema';
-import AppCard from '@crema/core/AppCard';
-import AppSelect from '@crema/core/AppSelect';
-import { useIntl } from 'react-intl';
-import { BigNumber } from '@0x/utils';
-import { useStyles } from './index.style';
+import { TransactionDataNew } from 'types/models/Analytics';
+import { DexTradeTransaction } from 'types/bitquery/dexTradeTransaction.interface';
+import { RouteComponentProps } from 'react-router-dom';
+import { TokenSearch } from 'shared/components/TokenSearch';
+// import { Loader } from '@crema';
 
-import { UNISWAP_PAIRS_DAY_DATA } from 'services/graphql/uniswap/gql';
-import { stableSort, getComparator } from 'utils/table';
 
-type Order = 'asc' | 'desc';
+type CryptoParams = {
+  pair: string;
+};
 
-interface HeadCell {
-  id: string;
-  label: string;
-  align?: 'left' | 'right';
-  isSort: boolean;
+type AddressProp = {
+  address: string;
 }
 
-const headCells: HeadCell[] = [
-  { id: 'name', label: 'Name', isSort: false },
-  { id: 'reserveUSD', align: 'left', label: 'Liquidity', isSort: true },
-  { id: 'dailyVolumeUSD', align: 'left', label: 'Volume (24hrs)', isSort: true },
-  { id: 'dailyTxns', align: 'left', label: 'Total Tx\'s', isSort: true },
-];
+type CryptoProps = RouteComponentProps<CryptoParams>
 
-let lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400;
-const UniswapPairs = () => {
-  const [page, setPage] = useState<number>(0);
-  const [orderBy, setOrderBy] = useState<string>('dailyVolumeUSD');
-  const [orderDirection, setOrderDirection] = useState<Order>('desc');
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const handleSelectionType = (data: any) => {
-    console.log('data: ', data);
-  };
-
-  const getLastDayTimestamp = () => {
-    if(lastDayTimestamp < Math.floor(Date.now() / 1000) - 2*86400 ){
-      lastDayTimestamp = Math.floor(Date.now() / 1000) - 86400
-    }
-    return lastDayTimestamp;
-
-  }
-
-  const { loading, error, data } = useQuery<{ pairDayDatas: PairDayDataGraphResponse[] }>(UNISWAP_PAIRS_DAY_DATA, {
-    variables: {first: 100, skip: 0, timestamp: getLastDayTimestamp(), orderBy: orderBy, orderDirection: orderDirection }
+const parseTradesToTotalBalanceProps = (data: DexTradePoolInfo[]): TotalBalanceData[] => {
+  console.log('parseTradesToTotalBalanceProps', data);
+  return data.map(d => {
+    return {
+      baseAmount: d.baseAmount,
+      baseAmountInCurrency: d.baseAmountInUSD,
+      dailyVolume: d.tradeAmountInUSD,
+      pairSymbols: { a: d.baseCurrency.symbol, b: d.quoteCurrency.symbol },
+      quoteAmount: d.quoteAmount,
+      quoteAmountInCurrency: d.quoteAmountInUSD,
+      priceChangePercentage24h: 1.24,
+      quotePrice: d.quotePrice,
+      totalLiquidy: -1100.0
+    } as TotalBalanceData;
   });
-  const { messages } = useIntl();
+}
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-  const handleSort = (property: string) => (event: React.MouseEvent<unknown>) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+const parseTradesToTransactionDataNew = (data: DexTradeTransaction[]):TransactionDataNew[] =>  {
+  return data.map( (d, i) => {
+    return {
+      id: `${d.transaction.hash}(${i})`,
+      amount: d.tradeAmount.toString(),
+      type: d.side,
+      price: d.quotePrice.toString(),
+      total: d.tradeAmountIsUsd.toString(),
+      time: d.timeInterval.second,
+      pair: d.timeInterval.second,
+      poolVariation: NaN, 
+      totalValue: d.quoteAmountInUsd.toString()
+    } as TransactionDataNew;
+  });
+}
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const classes = useStyles();
+const CustomTotalBalance: React.FC<AddressProp> = (props) => {
+  const { address } = props;
+  const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradePoolInfo[] }}>(BITQUERY_PAIR_EXPLORER, {
+    client: bitQueryClient,
+    variables: {
+      address,
+      exchangeName: "Uniswap",
+      limit: 1
+     }
+  });
+  if (loading) return <Loader/>;
+  if (error) return <><Typography color="error">{JSON.stringify(error)}</Typography></>;
+  const balances = parseTradesToTotalBalanceProps(data?.ethereum?.dexTrades ?? []);
+  const totalBalanceData = balances != null && balances.length > 0 ? balances[0] : undefined;
+  return totalBalanceData ? <TotalBalance totalBalanceData={totalBalanceData} /> : null;
+}
+
+const CustomOrderNTransaction: React.FC<AddressProp> = (props) => {
+  const { address } = props;
+  const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradeTransaction[] }}>(BITQUERY_TRADE_HISTORY, {
+    client: bitQueryClient,
+    variables: {
+      address,
+      exchangeName: "Uniswap",
+      limit: 10
+     }
+  });
+  if (loading) return <Loader/>;
+  if (error) return <><Typography color="error">{JSON.stringify(error)}</Typography></>;
+  const transactions = parseTradesToTransactionDataNew(data?.ethereum?.dexTrades ?? []);
+  return transactions ? <OrderNTransaction transactionData={transactions}/> : null;
+}
+
+const Crypto: React.FC<CryptoProps> = (props) => {
+  const {match: { params }} = props;
+  const { pair: address } = params;
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(onGetCryptoData());
+    dispatch(onGetAnalyticsData());
+  }, [dispatch]);
+
+  // const { cryptoData } = useSelector<AppState, AppState['dashboard']>(
+  //   ({ dashboard }) => dashboard,
+  // );
+
+  // const { analyticsData } = useSelector<AppState, AppState['dashboard']>(
+  //   ({ dashboard }) => dashboard,
+  // );
 
   return (
     <>
-      {data ? (
-        <Box pt={{ xl: 4 }} clone>
-          <GridContainer>
-            <Grid item xs={11} md={11}>
-              <AppCard
-                height={1}
-                title={messages['common.pairs']}
-                action={
-                  <AppSelect
-                    menus={[
-                      messages['dashboard.thisWeek'],
-                      messages['dashboard.lastWeeks'],
-                      messages['dashboard.lastMonth'],
-                    ]}
-                    defaultValue={messages['dashboard.thisWeek']}
-                    onChange={handleSelectionType}
-                  />
-                }>
-                <Box className={classes.tableResponsiveMaterial}>
-                  <Table className='table'>
-                    <TableHead>
-                      <TableRow className={classes.tableRowRoot}>
-                        {headCells.map(h => (
-                          <TableCell align={h.align} className={classes.tableCellRoot}>
-                            {h.isSort && <TableSortLabel
-                              active={orderBy === h.id}
-                              direction={orderBy === h.id ? orderDirection : 'asc'}
-                              onClick={handleSort(h.id)}
-                            >
-                              {h.label}
-                            </TableSortLabel>}
-                            {!h.isSort && h.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {stableSort(data.pairDayDatas, getComparator(orderDirection, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((data) => (
-                          <TableRow key={data.id}>
-                            <TableCell component='th' scope='row' className={classes.tableCell} style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
-                              <Box className={classes.anchar}>
-                                {`${data.token0.symbol}/${data.token1.symbol}`}
-                              
-                              </Box>
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              ${new BigNumber(data.reserveUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              className={classes.tableCell}>
-                              ${new BigNumber(data.dailyVolumeUSD).toFormat(4)}
-                            </TableCell>
-                            <TableCell align='left' className={classes.tableCell}>
-                              <Box
-                                className={classes.badgeRoot}>
-                                {new BigNumber(data.dailyTxns).toFormat(0)}
-                              </Box>
-                            </TableCell>
-                          </TableRow>))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
-                    component="div"
-                    count={data.pairDayDatas.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
-                </Box>
-              </AppCard>
+      <Box pt={{ xl: 4 }}>
+        <GridContainer>
+          <Grid item xs={12} md={12}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link color="inherit" href="/" >
+                Protocol Explorer
+              </Link>
+              <Link color="inherit" href="/getting-started/installation/" >
+                Uniswuap
+              </Link>
+              <Typography color="textPrimary">Pair Explorer</Typography>
+            </Breadcrumbs>
+            <Typography variant="h4" color="textPrimary">Pair Explorer</Typography>
+
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <CustomTotalBalance address={address}/>
+          </Grid>
+
+          <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={12}>
+              <Paper style={{ padding: 10 }}>
+                <TokenSearch />
+              </Paper>
             </Grid>
 
-          </GridContainer>
-        </Box>
-      ) : null}
-      {loading ? <Loader /> : null}
-      {error ? JSON.stringify(error) : null}
+            <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
+              {/* <OrderNTransaction
+                transactionData={POOLS}
+              /> */}
+              <CustomOrderNTransaction address={address}/>
+            </Grid>
+
+          </Grid>
+        </GridContainer>
+      </Box>
 
       <InfoView />
     </>
   );
 };
 
-export default UniswapPairs;
+export default Crypto;

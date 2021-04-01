@@ -11,9 +11,9 @@ import {toggleNavCollapsed} from '../../../../redux/actions';
 import {useDispatch} from 'react-redux';
 import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
-import SearchBar from '../../SearchBar';
+// import SearchBar from '../../SearchBar';
 import useStyles from './AppHeader.style';
-import HeaderMessages from '../../HeaderMessages';
+// import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 import AppLogo from '../../../../shared/components/AppLogo';
 import HeaderUser from '../../../../shared/components/HeaderUser';
@@ -47,9 +47,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       transformOrigin={{vertical: 'top', horizontal: 'right'}}
       open={Boolean(mobileMoreAnchorEl)}
       onClose={handleMobileMenuClose}>
-      <MenuItem className={classes.menuItemRoot}>
+      {/* <MenuItem className={classes.menuItemRoot}>
         <HeaderMessages />
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem className={classes.menuItemRoot}>
         <Notifications />
       </MenuItem>
@@ -73,10 +73,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           </Hidden>
           <AppLogo />
           <Box className={classes.grow} />
-          <SearchBar borderLight placeholder='Search…' />
+          {/* <SearchBar borderLight placeholder='Search…' /> */}
           <Box className={classes.sectionDesktop}>
             <LanguageSwitcher />
-            <HeaderMessages />
+            {/* <HeaderMessages /> */}
             <Notifications />
           </Box>
           <Box className={classes.sectionMobile}>

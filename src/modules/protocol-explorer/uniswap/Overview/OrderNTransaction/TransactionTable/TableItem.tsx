@@ -6,7 +6,6 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import {TransactionData} from '../../../../../../types/models/Analytics';
 import {makeStyles} from '@material-ui/core';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
-
 interface Props {
   data: TransactionData;
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 
 export const uniswapConfigs = [
   {
@@ -15,7 +16,9 @@ export const uniswapConfigs = [
     routes: [
       {
         path: '/protocol-explorer/uniswap/tokens',
-        component: React.lazy(() => import('./tokens')),
+        exact: true,
+        // component: React.lazy(() => import('./tokens')),
+        component: () => <Redirect to={`/protocol-explorer/uniswap/tokens/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
       },
     ],
   },
@@ -33,7 +36,9 @@ export const uniswapConfigs = [
     routes: [
       {
         path: '/protocol-explorer/uniswap/pair-explorer',
-        component: React.lazy(() => import('./pair-explorer')),
+        exact: true,
+        // component: React.lazy(() => import('./pair-explorer')),
+        component: () => <Redirect to={`/protocol-explorer/uniswap/pair-explorer/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
       },
     ],
   },

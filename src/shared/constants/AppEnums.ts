@@ -58,3 +58,12 @@ export enum Fonts {
   BOLD = 'Gilroy-Bold',
   EXTRA_BOLD = 'Gilroy-ExtraBold',
 }
+
+export enum CoinIcons{
+  BITCOIN_WHITE = 'assets/images/bitcoin.png',
+  ETHERIUM = 'assets/images/etherium.png',
+  LITECOIN = 'assets/images/litcoin.png',
+  RIPPLE = 'assets/images/ripple.png'
+}
+
+

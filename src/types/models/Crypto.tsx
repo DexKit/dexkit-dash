@@ -37,11 +37,14 @@ export interface BuySellDataProps {
 }
 
 export interface BuySellProps {
+  address?: string;
   buyData: BuySellDataProps;
   sellData: BuySellDataProps;
 }
 
 export interface CoinData {
+  symbol?: string;
+  name: string;
   price: string;
   increment: number;
 }
@@ -80,9 +83,19 @@ export interface PopularCoinsData {
   color: PaletteColorOptions;
 }
 
+export interface NewPopularCoinsData {
+  id: number;
+  name: string;
+  shortName: string;
+  volume: string;
+  image: string;
+  color: PaletteColorOptions;
+}
+
 export interface BalanceCoins {
   id: number;
   name: string;
+  symbol?: string;
   value: number;
 }
 

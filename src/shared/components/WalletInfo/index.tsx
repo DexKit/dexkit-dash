@@ -93,7 +93,7 @@ const WalletInfo = (props: any) => {
         [theme.breakpoints.up('xl')]: {
           fontSize: 20,
         },
-        color: themeMode === 'light' ? '#313541' : 'white',
+        color: themeMode !== 'light' ? '#313541' : 'white',
       },
       designation: {
         textOverflow: 'ellipsis',
@@ -115,64 +115,41 @@ const WalletInfo = (props: any) => {
   const classes = useStyles(props);
 
   return (
-    <Box
-      px={{ xs: 4, xl: 7 }}
-      className={clsx(classes.crUserInfo, 'cr-user-info')}>
+    <Box px={{ xs: 4, xl: 7 }} className={clsx(classes.crUserInfo, 'cr-user-info')}>
       {web3State === Web3State.Done && <Box display='flex' alignItems='center'>
         {user && user.photoURL ? (
           <Avatar className={classes.profilePic} src={user.photoURL} />
         ) : (
-            <Avatar className={classes.profilePic}>{getUserAvatar()}</Avatar>
-          )}
+          <Avatar className={classes.profilePic}>{getUserAvatar()}</Avatar>
+        )}
+        
         <Box ml={4} className={clsx(classes.userInfo, 'user-info')}>
-          <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='space-between'>
+          <Box display='flex' alignItems='center' justifyContent='space-between'>
             <Box mb={0} className={clsx(classes.userName)}>
               {account}
             </Box>
-            <Box
-              ml={3}
-              className={classes.pointer}
-              color={themeMode === 'light' ? '#313541' : 'white'}>
+            <Box ml={3} className={classes.pointer} color={themeMode !== 'light' ? '#313541' : 'white'}>
               <Box component='span' onClick={handleClick}>
                 <ExpandMoreIcon />
               </Box>
-              <Menu
-                id='simple-menu'
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}>
-                <MenuItem>My account</MenuItem>
-                <MenuItem
-                  onClick={onCloseWeb3}>
-                  Logout
-                </MenuItem>
+              <Menu id='simple-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                <MenuItem>My Wallet</MenuItem>
+                <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
               </Menu>
             </Box>
           </Box>
           <Box color={grey.A200} className={classes.designation}>
-            {ethBalance && tokenAmountInUnits(ethBalance)} ETH
+            {ethBalance && tokenAmountInUnits(ethBalance)} ETH 
           </Box>
         </Box>
       </Box>
       }
-      {web3State === Web3State.NotConnected && <Box display='flex' alignItems='center'>
+      {web3State !== Web3State.Done && <Box display='flex' alignItems='center' justifyContent='center'>
          <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-             Connect Wallet
+            {web3State === Web3State.Connecting ? 'Connecting... Check Wallet' : 'Connect Wallet'}
         </Button>
       </Box>
       }
-      {web3State === Web3State.Connecting && <Box display='flex' alignItems='center'>
-         <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-             Connecting... Check Wallet
-        </Button>
-      </Box>
-      }
-
-
     </Box>
   );
 };

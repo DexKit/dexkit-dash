@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import notification from '../../services/db/notifications/notification';
+// import notification from '../../services/db/notifications/notification';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import {makeStyles, Popover} from '@material-ui/core';
 import List from '@material-ui/core/List';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Scrollbar from '../Scrollbar';
 import IntlMessages from '../../utility/IntlMessages';
 import Hidden from '@material-ui/core/Hidden';
@@ -14,6 +14,9 @@ import clsx from 'clsx';
 import NotificationItem from './NotificationItem';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
+import { useDispatch, useSelector } from 'react-redux';
+import { onNotificationList } from 'redux/actions/Notification';
+import { AppState } from 'redux/store';
 
 interface NotificationsProps {}
 
@@ -23,11 +26,20 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setAnchorNotification,
   ] = React.useState<HTMLButtonElement | null>(null);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(onNotificationList());
+  }, [dispatch]);
+
   const onClickNotificationButton = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     setAnchorNotification(event.currentTarget);
   };
+
+  const { notifications } = useSelector<AppState, AppState['notification']>(
+    ({ notification }) => notification
+  );
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     crPopover: {
@@ -119,7 +131,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
         onClick={onClickNotificationButton}>
         <Badge
           className={classes.badge}
-          badgeContent={notification.length}
+          badgeContent={notifications.filter( notification => notification.check == null).length}
           color='secondary'>
           <NotificationsActiveIcon
             className={clsx(classes.notiIcon, 'notiIcon')}
@@ -150,7 +162,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
         <Box>
           <Box px={5} py={3}>
             <Box component='h5' fontFamily={Fonts.LIGHT}>
-              <IntlMessages id='common.notifications' />({notification.length})
+              <IntlMessages id='common.notifications' />({notifications.length})
             </Box>
           </Box>
           <Scrollbar className='scroll-submenu'>
@@ -159,23 +171,23 @@ const Notifications: React.FC<NotificationsProps> = () => {
               onClick={() => {
                 setAnchorNotification(null);
               }}>
-              {notification.map((item) => (
+              {notifications.map((item, i) => (
                 <NotificationItem
                   listStyle={classes.notificationItem}
-                  key={item.id}
+                  key={item?.id?.toString() ?? i}
                   item={item}
                 />
               ))}
             </List>
           </Scrollbar>
-          <Box mt={2}>
+          {/* <Box mt={2}>
             <Button
               className={classes.btnPopover}
               variant='contained'
               color='primary'>
               <IntlMessages id='common.viewAll' />
             </Button>
-          </Box>
+          </Box> */}
         </Box>
       </Popover>
     </>

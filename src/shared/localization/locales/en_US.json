@@ -397,6 +397,7 @@
   "sidebar.app.metrics": "Metrics",
   "sidebar.app.widgets": "Widgets",
   "sidebar.app.wallet": "Wallet",
+  "sidebar.app.wallet.overview": "Overview",
   "sidebar.app.farming": "Farming",
   "sidebar.apps": "Apps",
   "sidebar.apps.mail": "Mail",
@@ -641,5 +642,7 @@
   "dashboard.analytics.earningByCountries": "Earning by  Countries",
   "dashboard.analytics.pageVisits": "Page Visits",
   "dashboard.analytics.ordersTransaction": "Orders & Transaction",
-  "dashboard.analytics.trafficSource": "Traffic Source"
+  "dashboard.analytics.trafficSource": "Traffic Source",
+  "dashboard.wallet.mybalance": "My Balance",
+  "wizard.title": "Wizard"
 }

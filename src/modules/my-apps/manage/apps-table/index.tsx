@@ -28,7 +28,7 @@ const headCells: HeadCell[] = [
   { id: 'actions', align: 'left', label: 'Actions', isSort: false },
 ];
 
-const data =  [{
+const data = [{
   id: 1,
   name: 'Project',
   domain: 'project.com',
@@ -73,22 +73,22 @@ const AppsTable = () => {
                 title={'My Apps'}
                 action={
                   <>
-                  <div>
-                  <IconButton aria-label="add">
-                     <AddIcon />
-                  </IconButton>
+                    <div>
+                      <IconButton aria-label="add">
+                        <AddIcon />
+                      </IconButton>
 
-                  <AppSelect
-                    menus={[
-                      'ALL',
-                      'Aggregators',
-                      'Exchanges',
-                      'NFT Marketplace',
-                    ]}
-                    defaultValue={'ALL'}
-                    onChange={handleSelectionType}
-                  />
-                  </div>
+                      <AppSelect
+                        menus={[
+                          'ALL',
+                          'Aggregators',
+                          'Exchanges',
+                          'NFT Marketplace',
+                        ]}
+                        defaultValue={'ALL'}
+                        onChange={handleSelectionType}
+                      />
+                    </div>
                   </>
                 }>
                 <Box className={classes.tableResponsiveMaterial}>
@@ -116,22 +116,22 @@ const AppsTable = () => {
                           <TableRow key={data.id}>
                             <TableCell component='th' scope='row' className={classes.tableCell} style={{ overflow: "hidden", textOverflow: "ellipsis", width: '11rem' }}>
                               <Box className={classes.anchar}>
-                                  {data.name}
-                              
+                                {data.name}
+
                               </Box>
                             </TableCell>
                             <TableCell align='left' className={classes.tableCell}>
-                            {data.domain}
+                              {data.domain}
                             </TableCell>
                             <TableCell
                               align='left'
                               className={classes.tableCell}>
-                               {data.collectedFees}
+                              {data.collectedFees}
                             </TableCell>
                             <TableCell align='left' className={classes.tableCell}>
                               <Box
                                 className={classes.badgeRoot}>
-                            
+
                               </Box>
                             </TableCell>
                           </TableRow>))}
@@ -156,9 +156,9 @@ const AppsTable = () => {
       {loading ? <Loader /> : null}
       {error ? JSON.stringify(error) : null}
       <div className={classes.fabButtonDiv}>
-         <Fab color="primary" aria-label="add">
-        <AddIcon />
-      </Fab>
+        <Fab color="primary" aria-label="add">
+          <AddIcon />
+        </Fab>
       </div>
       <InfoView />
     </>

@@ -19,6 +19,8 @@ const SalesState: React.FC<SalesStateProps> = ({salesState, chartData}) => {
     console.log('data: ', data);
   };
   const {messages} = useIntl();
+  console.log('data: ', salesState);
+
   return (
     <AppCard
       title={messages['dashboard.analytics.salesState']}

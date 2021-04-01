@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Card} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
@@ -6,12 +6,38 @@ import Box from '@material-ui/core/Box';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from '../../../../shared/constants/AppEnums';
+import { useHistory } from 'react-router-dom';
 
 import {CremaTheme} from '../../../../types/AppContextPropsType';
+
+import { useWeb3 } from 'hooks/useWeb3';
+import Modal from 'shared/components/Modal';
 
 
 
 const KitLocked: React.FC = () => {
+  const { ethBalance, onActionWeb3Transaction, account } = useWeb3();
+  const [ currentToken ] = useState('0x0000000000000000000000000000000000000000'); //mock token
+  const [open, setOpen] = React.useState(false);
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
+  const handleModalConfirm = async () => {
+    try{
+      const result = await onActionWeb3Transaction({
+        to: currentToken,
+        from: account,
+        value: ethBalance.toNumber()
+      });
+      console.log('transaction result', result);
+    }catch(e){
+      console.error('transaction error', e);
+    }
+  };
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
       backgroundColor: 'white',
@@ -50,7 +76,10 @@ const KitLocked: React.FC = () => {
     },
   }));
   const classes = useStyles();
-
+  const history = useHistory();
+  const onGoToken = () => {
+    history.push(`/dashboards/token/${currentToken}`);
+  }
   return (
     <Box>
       <Box
@@ -78,7 +107,7 @@ const KitLocked: React.FC = () => {
                 color='primary.contrastText'
                 fontFamily={Fonts.LIGHT}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
-                1000 Kit
+                {ethBalance.toNumber()} Kit
               </Box>
               <Box
                 component='span'
@@ -110,12 +139,16 @@ const KitLocked: React.FC = () => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button className={classes.root} size='large'>
+                <Button 
+                className={classes.root} 
+                size='large'
+                onClick={onGoToken}
+                >
                   Buy 
                 </Button>
               </Box>
               <Box ml={3}>
-                <Button className={classes.btnPrimary} size='large'>
+                <Button className={classes.btnPrimary} size='large' onClick={handleModalOpen}>
                  Lock
                 </Button>
               </Box>
@@ -128,6 +161,13 @@ const KitLocked: React.FC = () => {
           </Box>
         </Card>
       </Box>
+      <Modal 
+      open={open} 
+      onClose={handleModalClose} 
+      onConfirm={handleModalConfirm} 
+      address={currentToken} 
+      value={ethBalance.toString()}
+      ></Modal>
     </Box>
   );
 };

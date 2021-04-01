@@ -70,3 +70,16 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### Resources
+- [Icons to tokens and Defi](https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/'+selected?.token0?.id+%27/logo.png)
+
+### Reacjs with firebase push notification:
+- [Firebase app configuration ](https://firebase.google.com/docs/cloud-messaging/js/client)
+- [Service worker with Firebase messaging](https://firebase.google.com/docs/cloud-messaging/js/receive)
+- [Tutorial](https://rharshad.com/web-push-notifications-react-firebase/)
+- [Service worker communication ](https://felixgerschau.com/how-to-communicate-with-service-workers/)
+### Dependencies
+- [Notistack](https://www.npmjs.com/package/notistack): is a notification library which makes it extremely easy to display notifications on your web apps. It is highly customizable and enables you to stack snackbars/toasts on top of one another. 
+- [@transak/transak-sdk](https://integrate.transak.com/Integrate-Transak-f43cbb5dc7fa4d068a044ef9589879bf) transak documentation
+- [transak-npm](https://www.npmjs.com/package/@transak/transak-sdk)
