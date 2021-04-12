@@ -4,12 +4,12 @@ import {makeStyles} from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
-import { OrderByToken } from 'types/app';
-import { Link } from 'react-router-dom';
+import { truncateAddress } from 'utils';
+import { OrderData } from 'types/app';
 
 
 interface TableItemProps {
-  row: OrderByToken;
+  row: OrderData;
 }
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
@@ -41,15 +41,24 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
   return (
     <TableRow className={classes.borderBottomClass}>
+      <TableCell align='left' className={classes.tableCell}>{row.created}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.block}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>${row.buyAmountUsd.toFixed(2)}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.buyToken.symbol}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>${row.sellAmountUsd.toFixed(2)}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.sellToken.symbol}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.protocol}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.exchange}</TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <Link to={`/protocol-explorer/uniswap/token-explorer/${row.token.address}`}>
-          {row.token.symbol}
-        </Link>
+        <a href={`https://etherscan.io/address/${row.contract}`} target="_blank">
+          {truncateAddress(row.contract)}
+        </a>
       </TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.tradeCount}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.amountUsd.toFixed(2)}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.started}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.daysTraded}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>
+        <a href={`https://etherscan.io/tx/${row.hash}`} target="_blank">
+          {truncateAddress(row.hash)}
+        </a>
+      </TableCell>
     </TableRow>
   );
 };

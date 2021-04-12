@@ -110,10 +110,10 @@ const routesConfig = [
           },
           {
             id: 'tokens',
-            title: 'Tokens',
-            messageId: 'common.tokens',
+            title: 'Token Explorer',
+            messageId: 'sidebar.protocols.uniswap.token-explorer',
             type: 'item',
-            url: '/protocol-explorer/uniswap/tokens',
+            url: '/protocol-explorer/uniswap/token-explorer',
           },
           {
             id: 'pool-explorer',

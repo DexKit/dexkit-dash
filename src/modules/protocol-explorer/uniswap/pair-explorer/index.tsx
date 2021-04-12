@@ -75,9 +75,12 @@ const parseTradesToTransactionDataNew = (data: DexTradeTransaction[]):Transactio
 
 const CustomInfo: React.FC<AddressProp> = (props) => {
   const { address } = props;
+  const { chainId } = useWeb3();
+
   const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradePoolInfo[] }}>(BITQUERY_PAIR_EXPLORER, {
     client: bitQueryClient,
     variables: {
+      network: GET_NETWORK_NAME(chainId),
       address,
       exchangeName: "Uniswap",
       limit: 1
@@ -98,6 +101,7 @@ const CustomInfo: React.FC<AddressProp> = (props) => {
 const CustomOrderNTransaction: React.FC<AddressProp> = (props) => {
   const { address } = props;
   const { chainId } = useWeb3();
+
   const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradeTransaction[] }}>(BITQUERY_CONTRACT_ORDERS, {
     client: bitQueryClient,
     variables: {

@@ -15,10 +15,10 @@ export const uniswapConfigs = [
  
     routes: [
       {
-        path: '/protocol-explorer/uniswap/tokens',
+        path: '/protocol-explorer/uniswap/token-explorer',
         exact: true,
         // component: React.lazy(() => import('./tokens')),
-        component: () => <Redirect to={`/protocol-explorer/uniswap/tokens/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
+        component: () => <Redirect to={`/protocol-explorer/uniswap/token-explorer/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
       },
     ],
   },
@@ -26,8 +26,8 @@ export const uniswapConfigs = [
  
     routes: [
       {
-        path: '/protocol-explorer/uniswap/tokens/:address',
-        component: React.lazy(() => import('./tokens')),
+        path: '/protocol-explorer/uniswap/token-explorer/:address',
+        component: React.lazy(() => import('./token-explorer')),
       },
     ],
   },

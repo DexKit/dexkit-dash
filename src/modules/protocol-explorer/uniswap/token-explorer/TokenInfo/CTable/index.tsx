@@ -6,13 +6,14 @@ import {Box, makeStyles, TableCell, TableRow} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
-import { OrderByPairs } from 'types/app';
+import { Token } from 'types/app';
+import { useIntl } from 'react-intl';
 
 interface Props {
-  data: OrderByPairs[];
+  data: Token|undefined;
 }
 
-const OrderTable: React.FC<Props> = ({data}) => {
+const CTable: React.FC<Props> = ({data}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -38,6 +39,8 @@ const OrderTable: React.FC<Props> = ({data}) => {
 
   const classes = useStyles();
 
+  const {messages} = useIntl()
+
   return (
     <Box className={classes.tableResponsiveMaterial}>
       <Table className='table'>
@@ -46,13 +49,17 @@ const OrderTable: React.FC<Props> = ({data}) => {
         </TableHead>
         <TableBody className={classes.borderBottomClass}>
           {
-            data.length > 0 ? (
-              data.map((row, index) => (
-                <TableItem row={row} key={index} />
-              ))
+            data ? (
+              <>
+                <TableItem row={{title: messages['app.symbol'], data: data.symbol}} key={0} />
+                <TableItem row={{title: messages['app.tokenType'], data: data?.type||'-'}} key={1} />
+                <TableItem row={{title: messages['app.name'], data: data.name}} key={2} />
+                <TableItem row={{title: messages['app.numberOfDecimals'], data: data.decimals}} key={3} />
+                <TableItem row={{title: messages['app.annotation'], data: data?.annotation||'-'}} key={4} />
+              </>
             ) : (
               <TableRow className={classes.borderBottomClass}>
-                <TableCell component='th' scope='row' colSpan={9} className={classes.borderBottomClass}>
+                <TableCell component='th' scope='row' colSpan={2} className={classes.borderBottomClass}>
                   Loading...
                 </TableCell>
               </TableRow>
@@ -64,4 +71,4 @@ const OrderTable: React.FC<Props> = ({data}) => {
   );
 };
 
-export default OrderTable;
+export default CTable;

@@ -5,7 +5,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: '/protocol-explorer/uniswap/tokens'
+      href: '/protocol-explorer/uniswap/token-explorer'
   },
   {
       value: "Pool Explorer",

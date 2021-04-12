@@ -6,10 +6,10 @@ import {Box, makeStyles, TableCell, TableRow} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
-import { OrderByPairs } from 'types/app';
+import { OrderData } from 'types/app';
 
 interface Props {
-  data: OrderByPairs[];
+  data: OrderData[];
 }
 
 const OrderTable: React.FC<Props> = ({data}) => {
@@ -46,13 +46,13 @@ const OrderTable: React.FC<Props> = ({data}) => {
         </TableHead>
         <TableBody className={classes.borderBottomClass}>
           {
-            data.length > 0 ? (
+            data.length > 0 ? 
               data.map((row, index) => (
                 <TableItem row={row} key={index} />
               ))
-            ) : (
+             : (
               <TableRow className={classes.borderBottomClass}>
-                <TableCell component='th' scope='row' colSpan={9} className={classes.borderBottomClass}>
+                <TableCell component='th' scope='row' colSpan={10} className={classes.borderBottomClass}>
                   Loading...
                 </TableCell>
               </TableRow>

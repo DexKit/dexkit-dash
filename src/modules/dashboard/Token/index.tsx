@@ -145,7 +145,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
 
               <GridContainer style={{marginTop: 2}}  >
                 <Grid item xs={12} sm={6} md={6}>
-                  <Link to={`/history/order/token/${address}`} style={{textDecoration: 'none'}}>
+                  <Link to={`/history/order/token-explorer/${address}`} style={{textDecoration: 'none'}}>
                     <InfoCard state={{
                       value: "Order history",
                       bgColor: "#0A8FDC",
@@ -156,7 +156,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
                   </Link>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <Link to={`/history/transaction/token/${address}`} style={{textDecoration: 'none'}}>
+                  <Link to={`/history/transaction/token-explorer/${address}`} style={{textDecoration: 'none'}}>
                     <InfoCard state={{
                       value: "Transaction history",
                       bgColor: "#9E49E6",

@@ -11,10 +11,16 @@ export function parseOrderData(data: any): OrderData[] {
         exchange: e.exchange.fullName,
         contract: e.smartContract.address.address,
         protocol: e.protocol,
-        sellAmount: e.sellAmountInUsd,
-        sellSymbol: e.sellCurrency.symbol,
-        buyAmount: e.buyAmountInUsd,
-        buySymbol: e.buyCurrency.symbol,
+        sellAmountUsd: e.sellAmountInUsd,
+        sellToken: {
+          symbol: e.sellCurrency.symbol,
+          address: e.sellCurrency.address
+        },
+        buyAmountUsd: e.buyAmountInUsd,
+        buyToken: {
+          symbol: e.buyCurrency.symbol,
+          address: e.buyCurrency.address
+        },
         created: e.block.timestamp.time
       }  
     })

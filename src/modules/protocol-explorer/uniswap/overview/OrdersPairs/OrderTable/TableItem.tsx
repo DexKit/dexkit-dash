@@ -8,6 +8,7 @@ import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
 import { truncateAddress } from 'utils';
 import { OrderByPairs } from 'types/app';
+import { Link } from 'react-router-dom';
 
 
 interface TableItemProps {
@@ -45,15 +46,15 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     <TableRow className={classes.borderBottomClass}>
       <TableCell component='th' scope='row' className={classes.tableCell}>{row.sellAmount.toFixed(2)}</TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <a href={row.sellToken.address} target="_blank">
+        <Link to={`/protocol-explorer/uniswap/token-explorer/${row.sellToken.address}`}>
           {row.sellToken.symbol}
-        </a>
+        </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>{row.buyAmount.toFixed(2)}</TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <a href={row.buyToken.address} target="_blank">
+        <Link to={`/protocol-explorer/uniswap/token-explorer/${row.buyToken.address}`}>
           {row.buyToken.symbol}
-        </a>
+        </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>{row.tradeCount}</TableCell>
       <TableCell align='left' className={classes.tableCell}>{row.started}</TableCell>

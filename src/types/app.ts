@@ -1,6 +1,12 @@
 import { BigNumber } from '@0x/utils';
 
-export interface Order {
+export enum OrderSide {
+  Sell,
+  Buy,
+  Offer
+}
+
+export interface Order0x {
   chainId: number;
   exchangeAddress: string;
   makerAddress: string;
@@ -19,24 +25,25 @@ export interface Order {
   takerFeeAssetData: string;
 }
 
-export interface SignedOrder extends Order {
+export interface SignedOrder extends Order0x {
   signature: string;
 }
 
-export enum OrderSide {
-  Sell,
-  Buy,
-  Offer
-}
+
 
 export interface Token {
-  address: string;
-  decimals: number;
   name: string;
   symbol: string;
+  address: string;
+  decimals: number;
+
+  type?: string;
+  annotation?: string;
+  balance?: number;
+
   coingecko_id?: string; // coingecko id
   icon?: string;
-  displayDecimals: number;
+  displayDecimals?: number;
   minAmount?: number;
   maxAmount?: number;
   precision?: number;
@@ -61,6 +68,21 @@ export interface TokenBalance {
   token: Token;
 }
 
+export interface TokenStatistic {
+  token: {
+    symbol: string,
+    address: string
+  },
+  transferCount: number,
+  uniqSenders: number,
+  uniqReceiver: number,
+  totalAmount: number,
+  medianTransferAmount: number,
+  averageTransferAmount: number,
+  firstTransferDate: string,
+  lastTransferDate: string,
+  daysTokenTransfered: number,
+}
 
 
 

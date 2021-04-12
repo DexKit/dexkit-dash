@@ -1,15 +1,18 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import TableCell from '@material-ui/core/TableCell';
 import {makeStyles} from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
-import { OrderByToken } from 'types/app';
-import { Link } from 'react-router-dom';
+import { Token } from 'types/app';
 
 
 interface TableItemProps {
-  row: OrderByToken;
+  row: {
+    title: any,
+    data: string|number
+  };
 }
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
@@ -41,15 +44,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
   return (
     <TableRow className={classes.borderBottomClass}>
-      <TableCell align='left' className={classes.tableCell}>
-        <Link to={`/protocol-explorer/uniswap/token-explorer/${row.token.address}`}>
-          {row.token.symbol}
-        </Link>
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.tradeCount}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.amountUsd.toFixed(2)}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.started}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.daysTraded}</TableCell>
+      <TableCell component='th' scope='row' className={classes.tableCell}>{row.title}</TableCell>
+      <TableCell align='left' className={classes.borderBottomClass}>{row.data}</TableCell>
     </TableRow>
   );
 };

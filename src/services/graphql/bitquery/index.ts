@@ -1,8 +1,8 @@
 import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client';
 import { EXCHANGE, NETWORK } from 'shared/constants/Bitquery';
-import { OrderByPairs, OrderByToken, OrderData } from 'types/app';
-import { parseOrderByTokenData, parseOrderData } from 'utils/parse';
-import { parseOrderByPairData } from 'utils/parse/OrderByPair';
+import { OrderByPairs, OrderByToken, OrderData, Token, TokenStatistic } from 'types/app';
+import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData } from 'utils/parse';
+import { parseTokenStatisticsData } from 'utils/parse/TokenStatistics';
 import {
   BITQUERY_PAIR_EXPLORER,
   BITQUERY_CONTRACT_ORDERS,
@@ -13,7 +13,9 @@ import {
   SEARCH,
   BITQUERY_MY_TOKEN_BALANCE_AT,
   BITQUERY_ORDERS_BY_TOKENS,
-  BITQUERY_ORDERS_BY_PAIRS
+  BITQUERY_ORDERS_BY_PAIRS,
+  BITQUERY_TOKEN_INFO,
+  BITQUERY_TOKEN_STATISTICS
 } from './gql';
 
 export const client = new ApolloClient({
@@ -74,6 +76,7 @@ export function getTokenOrders(network: NETWORK, exchangeName: EXCHANGE, address
   }).then(orders => {
     return parseOrderData(orders);
   }).catch(e => {
+    console.log(e);
     return parseOrderData(null);
   });
 }
@@ -98,7 +101,7 @@ export function getMyOrders(network: NETWORK, exchangeName: EXCHANGE, address: s
   });
 }
 
-// melhorar nome da função
+// ok - melhorar nome da função
 export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByPairs[]>
 {
   return client.query({
@@ -118,7 +121,7 @@ export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit
   });  
 }
 
-// melhorar nome da função
+// ok - melhorar nome da função
 export function getOrdersByTokens(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByToken[]>
 {
   return client.query({
@@ -176,11 +179,47 @@ export function getMyTokenBalancesAt<T>(network: string, address: string, till: 
   });
 }
 
-export function search<T>(value: string): Promise<ApolloQueryResult<T>>
+// ok
+export function getTokenInfo(network: NETWORK, address: string): Promise<Token>
+{
+  return client.query({
+    query: BITQUERY_TOKEN_INFO,
+    variables: {
+      network,
+      address
+    }
+  }).then(data => {
+    return parseTokenInfoData(data);
+  }).catch(e => {
+    return parseTokenInfoData(null);
+  });
+}
+
+// ok
+export function getTokenStatistics(network: NETWORK, address: string, from: Date|null, till: Date|null): Promise<TokenStatistic>
+{
+  return client.query({
+    query: BITQUERY_TOKEN_STATISTICS,
+    variables: {
+      network,
+      address,
+      from: from ? from.toISOString() : null,
+      till: till ? till.toISOString() : null
+    }
+  }).then(data => {
+    return parseTokenStatisticsData(data);
+  }).catch(e => {
+    return parseTokenStatisticsData(null);
+  });
+}
+
+//ok
+export function search<T>(/*network: NETWORK, */value: string): Promise<ApolloQueryResult<T>>
 {
   return client.query<T>({
     query: SEARCH,
     variables: {
+      /*network,*/
       value
     }
   });

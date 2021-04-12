@@ -2,7 +2,7 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, TableCell, TableRow} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
@@ -45,9 +45,18 @@ const OrderTable: React.FC<Props> = ({data}) => {
           <TableHeading />
         </TableHead>
         <TableBody className={classes.borderBottomClass}>
-          {data.map((row, index) => (
-            <TableItem row={row} key={index} />
-          ))}
+          {
+            data.length > 0 ? 
+              data.map((row, index) => (
+              <TableItem row={row} key={index} />
+            )) : (
+              <TableRow className={classes.borderBottomClass}>
+                <TableCell component='th' scope='row' colSpan={5} className={classes.borderBottomClass}>
+                  Loading...
+                </TableCell>
+              </TableRow>
+            )
+          }
         </TableBody>
       </Table>
     </Box>

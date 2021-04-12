@@ -12,7 +12,7 @@ const OrderNTransaction: React.FC<Props> = ({transactionData}) => {
   const {messages} = useIntl();
 
   return (
-    <AppCard height={1} title={'Trade History'}>
+    <AppCard height={1} title={messages['app.tradeHistory']}>
       <TransactionTable transactionData={transactionData} />
     </AppCard>
   );
