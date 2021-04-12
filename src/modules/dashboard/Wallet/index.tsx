@@ -31,7 +31,7 @@ import { BalanceCoins, CoinData, TotalBalanceData } from 'types/models/Crypto';
 import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
 import { Link } from 'react-router-dom';
-import { EXCHANGE, GET_NETWORK_NAME, NETWORK } from 'shared/constants/Bitquery';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 
 
@@ -147,8 +147,6 @@ const Wallet: React.FC<WalletProps> = () => {
   }, [myBalancesAt])
 
 
-
-
   const transakAllEvents = useCallback((data: any) => {
     console.log(data);
   }, []);
@@ -221,76 +219,83 @@ const Wallet: React.FC<WalletProps> = () => {
           </GridContainer>
 
           <GridContainer>
-            <Grid item xs={12} md={6}>
-              <TotalBalance balances={myBalances}/>
-            </Grid>
-
-            <Grid item xs={12} md={6} style={{ paddingLeft: 0, paddingRight: 0, }}>
-              <AppCard style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 5 }}>
-                <Box paddingLeft="0" display="flex">
-                  <AppSelect
-                    menus={[
-                      messages['dashboard.wallet.mybalance'],
-                    ]}
-                    defaultValue={messages['dashboard.wallet.mybalance']}
-                    onChange={(e) => console.log('changed')}
-                  />
-
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={(e: any) => { 
-                      if (e) {
-                        setTransakInstance(onBuy(account));
-                      }
-                    }}
-                    size="small"
-                    style={{ marginRight: 5, marginLeft: 'auto' }}
-                    disableElevation>
-                    Buy
-                  </Button>
-                </Box>
-                <Divider style={{marginTop: 5}} />
-                <Box>
-                  <Grid item xs={12} md={12} xl={12}>
-                    <AssetChart data={chartData} />
-                  </Grid>
-                </Box>
-              </AppCard>
-            </Grid>
 
             <Grid item xs={12} md={6}>
-              <AssetTable balances={(myBalances)} />
+              <Grid item xs={12} md={12}>
+                <TotalBalance balances={myBalances}/>
+              </Grid>
+
+              <Grid item xs={12} md={12} style={{ marginTop: 15 }}>
+                <AssetTable balances={(myBalances)} />
+              </Grid>
+
+              <GridContainer style={{marginTop: 2}}>
+                <Grid item xs={12} sm={6} md={6}>
+                  <Link to={`/history/order/account/${account}`} style={{textDecoration: 'none'}}>
+                    <SalesState state={{
+                      value: "Order history",
+                      bgColor: "#0A8FDC",
+                      icon: "/assets/images/dashboard/1_monthly_sales.png",
+                      id: 1,
+                      type: "Click to Open",
+                    }} />
+                  </Link>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={6}>
+                  <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
+                    <SalesState state={{
+                      value: "Transaction history",
+                      bgColor: "#9E49E6",
+                      icon: "/assets/images/dashboard/1_monthly_sales.png",
+                      id: 2,
+                      type: "Click to Open",
+                    }} />
+                  </Link>
+                </Grid>
+              </GridContainer>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Coins {...defiAssets} />
-            </Grid>
+              <Grid item xs={12} md={12} style={{ paddingLeft: 0, paddingRight: 0, }}>
+                <AppCard style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 5 }}>
+                  <Box paddingLeft="0" display="flex">
+                    <AppSelect
+                      menus={[
+                        messages['dashboard.wallet.mybalance'],
+                      ]}
+                      defaultValue={messages['dashboard.wallet.mybalance']}
+                      onChange={(e) => console.log('changed')}
+                    />
 
-            <Grid item xs={12} sm={6} md={3}>
-              <Link to={`/history/order/account/${account}`} style={{textDecoration: 'none'}}>
-                <SalesState state={{
-                  value: "Order history",
-                  bgColor: "#0A8FDC",
-                  icon: "/assets/images/dashboard/1_monthly_sales.png",
-                  id: 1,
-                  type: "Click to Open",
-                }} />
-              </Link>
-            </Grid>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e: any) => { 
+                        if (e) {
+                          setTransakInstance(onBuy(account));
+                        }
+                      }}
+                      size="small"
+                      style={{ marginRight: 5, marginLeft: 'auto' }}
+                      disableElevation>
+                      Buy
+                    </Button>
+                  </Box>
+                  <Divider style={{marginTop: 5}} />
+                  <Box>
+                    <Grid item xs={12} md={12} xl={12}>
+                      <AssetChart data={chartData} />
+                    </Grid>
+                  </Box>
+                </AppCard>
+              </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
-              <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
-                <SalesState state={{
-                  value: "Transaction history",
-                  bgColor: "#9E49E6",
-                  icon: "/assets/images/dashboard/1_monthly_sales.png",
-                  id: 2,
-                  type: "Click to Open",
-                }} />
-              </Link>
+              <Grid item xs={12} md={12}>
+                <Coins {...defiAssets} />
+              </Grid>
             </Grid>
-
+            
           </GridContainer>
         </Box>
       ) : null}
