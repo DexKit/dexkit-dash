@@ -7,7 +7,7 @@ import {
   GET_NEWS_DATA,
   GET_REPORT_CARDS_ACTIONS,
   GET_WIDGETS_DATA,
-  GET_ACCOUNT_BALANCES,
+  GET_DEFI_BALANCES,
   GET_TOKEN_BALANCES,
   GET_TOKEN_BALANCES_AT
 } from '../../types/actions/Dashboard.action';
@@ -20,6 +20,7 @@ import { ReportCards } from 'types/models/Ecommerce';
 import { Feed } from 'types/rss/feed.interface';
 import { ProtocolBalanceInterface } from 'defi-sdk/src/protocols/interfaces';
 import { BitqueryAddress } from 'types/bitquery/address.interface';
+import { MyBalance } from 'types/bitquery/myBalance.interface';
 
 
 export interface DashboardState {
@@ -30,8 +31,8 @@ export interface DashboardState {
   widgetsData: Widgets | null;
   reportCardsData: ReportCards[];
   newsData: Feed | null;
-  accountBalancesData: ProtocolBalanceInterface[];
-  myBalances: BitqueryAddress[];
+  myDefiBalances: ProtocolBalanceInterface[];
+  myBalances: MyBalance[];
   myBalancesAt: BitqueryAddress[];
 }
 const initialState: DashboardState = {
@@ -42,7 +43,7 @@ const initialState: DashboardState = {
   widgetsData: null,
   reportCardsData: [],
   newsData: null,
-  accountBalancesData: [], 
+  myDefiBalances: [], 
   myBalances: [],
   myBalancesAt: []
 };
@@ -87,10 +88,10 @@ export default (state = initialState, action: DashboardActionTypes) => {
         ...state,
         newsData: action.payload
       };
-    case GET_ACCOUNT_BALANCES:
+    case GET_DEFI_BALANCES:
       return {
         ...state,
-        accountBalancesData: action.payload
+        myDefiBalances: action.payload
       };
     case GET_TOKEN_BALANCES:
       return {

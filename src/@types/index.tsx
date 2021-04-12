@@ -1,22 +1,49 @@
+import { BigNumber } from "@0x/utils";
 import { Styles } from "jss";
-
 
 
 export enum Network {
   Mainnet = 1,
   Ropsten = 3,
   Rinkeby = 4,
-  Kovan = 42,
-  Ganache = 50,
+  Kovan   = 42,
+  Ganache = 50
 }
 
 export enum ChainId {
   Mainnet = 1,
   Ropsten = 3,
   Rinkeby = 4,
-  Kovan = 42,
-  Ganache = 1337,
+  Kovan   = 42,
+  Ganache = 1337
 }
+
+export interface TokenList{
+  name: string;
+  timestamp: string;
+  version: {
+    major: number;
+    minor: number;
+    patch: number;
+  };
+  keywords: string[];
+  tokens: TokenInfo[]
+}
+
+export interface TokenInfo{
+  address: string;
+  chainId: number;
+  name: string;
+  symbol: string;
+  decimals: number;
+  logoURI: string;
+}
+
+export interface GasInfo {
+  gasPriceInWei: BigNumber;
+  estimatedTimeMs: number;
+}
+
 
 export interface TokenMetaData {
   addresses: { [key: number]: string };

@@ -1,128 +1,306 @@
 import { gql } from '@apollo/client';
 
 //https://explorer.bitquery.io/graphql
-  export const BITQUERY_PAIR_EXPLORER = gql`
-  query($address: String!, $limit: Int, $exchangeName: String!) {
-    ethereum(network: ethereum) {
-      dexTrades(options: {limit: $limit, desc: "timeInterval.day"},
-        exchangeName: {is: $exchangeName}, 
+export const BITQUERY_PAIR_EXPLORER = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {limit: $limit, desc: "timeInterval.day"}
+        exchangeName: {is: $exchangeName}
         smartContractAddress: {is: $address}
       ) {
         timeInterval {
           day(count: 1)
         }
-        
         baseCurrency {
           symbol
           address
         }
         baseAmount
-        baseAmountInUSD: baseAmount(in:USD)
-        
+        baseAmountInUSD: baseAmount(in: USD)
         quoteCurrency {
           symbol
           address
         }
         quoteAmount
-        quoteAmountInUSD: quoteAmount(in:USD)
-        
+        quoteAmountInUSD: quoteAmount(in: USD)
         trades: count
         quotePrice
-        
         maximum_price: quotePrice(calculate: maximum)
         minimum_price: quotePrice(calculate: minimum)
-        
-        open_price: minimum(of: block get: quote_price)
-        close_price: maximum(of: block get: quote_price)
-        
-        tradeAmount(in:ETH)
-        tradeAmountInUSD: tradeAmount(in:USD)
+        open_price: minimum(of: block, get: quote_price)
+        close_price: maximum(of: block, get: quote_price)
+        tradeAmount(in: ETH)
+        tradeAmountInUSD: tradeAmount(in: USD)
       }
     }
-  }`;
+  }
 
-  export const BITQUERY_TRADE_HISTORY = gql`query ($address: String!, $limit: Int!, $exchangeName: String!) {
-    ethereum(network: ethereum) {
-      dexTrades(options: {limit: $limit, desc: "block.height"}, exchangeName: {is: $exchangeName}, smartContractAddress: {is: $address}) {
+`;
+
+export const BITQUERY_CONTRACT_ORDERS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        smartContractAddress: { is: $address }
+      ) {
+        side
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        tradeIndex
+        protocol
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
         transaction {
           hash
         }
-        exchange {
-          name
-        }
-        tradeIndex
-        date {
-          date
-        }
-        timeInterval {
-          second
-        }
-        block {
-          height
-        }
-        side
-        baseAmount
-        baseAmountInUsd: baseAmount(in: USD)
-        baseCurrency {
-          name
-          symbol
+        buyAmount
+        buyAmountInUsd: buyAmount(in: USD)
+        buyCurrency {
           address
-        }
-        quoteAmount
-        quoteAmountInUsd: quoteAmount(in: USD)
-        quotePrice
-        quoteCurrency {
-          name
           symbol
+        }
+        sellAmount
+        sellAmountInUsd: sellAmount(in: USD)
+        sellCurrency {
           address
+          symbol
         }
         tradeAmount(in: ETH)
         tradeAmountIsUsd: tradeAmount(in: USD)
-        transaction {
-          gasValue
-          gasPrice
-          gas
-        }
       }
     }
-  }  
-  `;
+  }
+`;
 
-  export const BITQUERY_ORDER_HISTORY = gql `query(
-    $address: String!, $limit: Int=10, $exchangeName: String="Uniswap", $baseAmount: String="USD", $quoteAmount: String="USD"
-    ){
-    ethereum {
+export const BITQUERY_TOKEN_ORDERS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
       dexTrades(
-        options: {limit: $limit},
-        exchangeName: {is:$exchangeName}
-        taker: {is: $address}
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        buyCurrency: {is: $address}
       ) {
-        side
-        
-        baseAmount
-        baseAmountInUSD: baseAmount(in:$baseAmount)
-        baseCurrency {
-          name
-          symbol
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
         }
-        
-        quoteAmount
-        quoteAmountInUSD: quoteAmount(in:$quoteAmount)
-        quoteCurrency {
-          name
-          symbol
+        tradeIndex
+        protocol
+        exchange {
+          fullName
         }
-        transaction{
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        transaction {
           hash
         }
+        buyAmount
+        buyAmountInUsd: buyAmount(in: USD)
+        buyCurrency {
+          address
+          symbol
+        }
+        sellAmount
+        sellAmountInUsd: sellAmount(in: USD)
+        sellCurrency {
+          address
+          symbol
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
       }
     }
-  }`;
+  }
+`;
 
-  export const BITQUERY_MY_TOKEN_BALANCE = gql `query (
-    $network: EthereumNetwork!,
-    $address: String!
-  ) {
+export const BITQUERY_MY_ORDERS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        makerOrTaker: { is: $address }
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        tradeIndex
+        protocol
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        transaction {
+          hash
+        }
+        buyAmount
+        buyAmountInUsd: buyAmount(in: USD)
+        buyCurrency {
+          address
+          symbol
+        }
+        sellAmount
+        sellAmountInUsd: sellAmount(in: USD)
+        sellCurrency {
+          address
+          symbol
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+    }
+  }
+`;
+
+export const BITQUERY_ORDERS_BY_TOKENS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: "currencyAmount", limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+      ) {
+        currency: baseCurrency {
+          symbol
+          address
+        }
+        count
+        currencyAmount: baseAmount(in: USD)
+        dates: count(uniq: dates)
+        started: minimum(of: date)
+      }
+    }
+  }
+`
+
+export const BITQUERY_ORDERS_BY_PAIRS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: "count", limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+      ) {
+        sellCurrency {
+          symbol
+          address
+        }
+        sellAmount
+        buyCurrency {
+          symbol
+          address
+        }
+        buyAmount
+        count
+        median_price: price(calculate: median)
+        last_price: maximum(of: block, get: price)
+        dates: count(uniq: dates)
+        started: minimum(of: date)
+      }
+    }
+  }
+`
+
+export const BITQUERY_MY_TRANSFERS = gql`
+  query ($network: EthereumNetwork!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      sender: transfers(
+        options: {desc: "block.height", limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        amount: {gt: 0}
+        sender: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        sender {
+          address
+          annotation
+        }
+        receiver {
+          address
+          annotation
+        }
+        currency {
+          address
+          symbol
+        }
+        amount
+        transaction {
+          hash
+        }
+        external
+      }
+      receiver: transfers(
+        options: {desc: "block.height", limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        amount: {gt: 0}
+        receiver: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        sender {
+          address
+          annotation
+        }
+        receiver {
+          address
+          annotation
+        }
+        currency {
+          address
+          symbol
+        }
+        amount
+        transaction {
+          hash
+        }
+        external
+      }
+    }
+  }
+`;
+
+export const BITQUERY_MY_TOKEN_BALANCE = gql`
+  query ($network: EthereumNetwork!, $address: String!) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
         balances {
@@ -138,16 +316,13 @@ import { gql } from '@apollo/client';
       }
     }
   }
-  `;
+`;
 
-  export const BITQUERY_MY_TOKEN_BALANCE_AT = gql `query (
-    $network: EthereumNetwork!,
-    $address: String!,
-    $date: ISO8601DateTime!
-  ) {
+export const BITQUERY_MY_TOKEN_BALANCE_AT = gql`
+  query ($network: EthereumNetwork!, $address: String!, $till: ISO8601DateTime!) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
-        balances(date: {till: $date}) {
+        balances(date: {till: $till}) {
           currency {
             name
             symbol
@@ -159,10 +334,12 @@ import { gql } from '@apollo/client';
         }
       }
     }
-  }`;
+  }
+`;
 
-  export const SEARCH = gql`query($value: String!) {
-    search(string: $value, network: ethereum){
+export const SEARCH = gql`
+  query($network: EthereumNetwork!, $value: String!) {
+    search(string: $value, network: $network){
       subject {
         ... on Address {
           address
@@ -188,6 +365,7 @@ import { gql } from '@apollo/client';
       }
     }
   }
-  `
+`;
 
+ 
   

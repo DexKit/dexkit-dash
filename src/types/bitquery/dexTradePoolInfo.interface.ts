@@ -1,4 +1,5 @@
 export interface DexTradePoolInfo{
+    address: { address: string };
     timeInterval: Date;
     baseCurrency: { symbol: string, address: string};
     baseAmount: number;

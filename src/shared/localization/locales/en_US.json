@@ -1,4 +1,44 @@
 {
+  "app.block": "Block",
+  "app.hash": "Hash",
+  "app.protocol": "Protocol",
+  "app.amount": "Amount",
+  "app.sellAmount": "Sell Amount",
+  "app.buyAmount": "Buy Amount",
+  "app.token": "Token",
+  "app.sellCurrency": "Sell Currency",
+  "app.buyCurrency": "Buy Currency",
+  "app.exchange": "Exchange",
+  "app.Address": "Address",
+  "app.smartContract": "Smart Contract",
+  "app.started": "Started",
+  "app.created": "Created At",
+  "app.tradesCount": "Trades Count",
+  "app.daysTraded": "Days traded",
+  "app.price": "Price",
+  "app.medianPrice": "Median Price",
+  "app.lastPrice": "Last Price",
+
+  "title.tradesByCurrencies": "Trades By Currencies",
+  "title.tokenOrderPairs": "Token Order Pairs",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   "button.click_me": "Click Me",
   "dashboard.quickStats": "Quick Statistics",
   "dashboard.totalClients": "Total Clients",

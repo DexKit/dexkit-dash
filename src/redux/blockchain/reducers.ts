@@ -1,10 +1,10 @@
+import { BigNumber } from '@0x/utils';
 import { getType } from 'typesafe-actions';
-
 import {RootAction} from '../store';
 import * as actions from '../store/actions';
-import { TokenBalance, Web3State } from 'types/ethereum';
+import { Web3State } from 'types/blockchain';
+import { TokenBalance } from 'types/app';
 import { ZERO } from 'shared/constants/Blockchain';
-import { BigNumber } from '@0x/utils';
 
 export interface BlockchainState {
     readonly ethAccount: string | undefined;

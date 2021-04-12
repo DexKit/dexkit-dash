@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
 import { setWeb3State, setEthAccount, setEthBalance, setChainId } from "redux/actions";
-import { Web3State } from "types/ethereum";
+import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 
 export enum Web3Status {
@@ -51,6 +51,7 @@ export const useWeb3 = () => {
         });
     }
   }
+
   function onActionWeb3Transaction(transactionConfig: TransactionConfig): Promise<TransactionReceipt> {
     return new Promise<TransactionReceipt>((resolve, reject) => {
       const transaction = web3Transaction(transactionConfig);
@@ -82,9 +83,9 @@ export const useWeb3 = () => {
   useEffect(() => {
     const web3 = getWeb3();
     if (account && web3) {
-      web3.eth.getBalance(account).then((e) =>
-        dispatch(setEthBalance(new BigNumber(e))));
-
+      web3.eth.getBalance(account).then((e) =>{
+        dispatch(setEthBalance(new BigNumber(e)))
+      });
     }
   }, [account])
 
@@ -92,6 +93,7 @@ export const useWeb3 = () => {
     if (!pr.on) {
       return;
     }
+    
     pr.on("close", () => {
       dispatch(setEthAccount(undefined));
       dispatch(setChainId(undefined));
@@ -99,9 +101,11 @@ export const useWeb3 = () => {
       dispatch(setWeb3State(Web3State.NotConnected));
     }
     );
+
     pr.on("accountsChanged", async (accounts: string[]) => {
       dispatch(setEthAccount(accounts[0]));
     });
+
     pr.on("chainChanged", async (chainId: number) => {
       dispatch(setChainId(chainId));
     });

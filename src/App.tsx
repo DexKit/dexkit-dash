@@ -6,6 +6,7 @@ import LocaleProvider from '@crema/utility/LocaleProvider';
 import CremaThemeProvider from '@crema/utility/CremaThemeProvider';
 import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
+import { InfoView } from '@crema';
 
 import { ApolloProvider } from '@apollo/client';
 
@@ -30,6 +31,7 @@ const App = () => (
                 <CssBaseline />
                 <Web3Manager/>
                 <ReactNotification />
+                <InfoView />
                 <AppLayout />
               </WalletRoutes>
             </ConnectedRouter>

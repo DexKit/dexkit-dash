@@ -96,7 +96,8 @@ export interface BalanceCoins {
   id: number;
   name: string;
   symbol?: string;
-  value: number;
+  value: number|string;
+  usd?: number;
 }
 
 export interface TotalBalanceData {

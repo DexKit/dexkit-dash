@@ -76,4 +76,5 @@ export interface CoinDetailCoinGecko {
     status_updates: [];
     last_updated: Date;
     tickers: TickerCoingGecko[];
+    sparkline?: any[]
 }

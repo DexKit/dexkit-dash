@@ -1,11 +1,10 @@
 import React from 'react';
-import { Redirect } from 'react-router';
 
 export const historyConfigs = [
   {
     routes: [
       {
-        path: '/history/order/:address',
+        path: '/history/order/:type/:address',
         component: React.lazy(() => import('./Order')),
       },
     ],
@@ -13,12 +12,9 @@ export const historyConfigs = [
   {
     routes: [
       {
-        path: '/history/transaction/:address',
+        path: '/history/transaction/:type/:address',
         component: React.lazy(() => import('./Transaction')),
       },
     ],
-  },
-  {
-    component: () => <Redirect to='/error-pages/error-404' />,
-  },
+  }
 ];

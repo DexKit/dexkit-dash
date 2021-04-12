@@ -48,7 +48,7 @@ const BuySell: React.FC<Props> = ({buySell, balances, onSend}) => {
   const classes = useStyles();
 
   const [value, setValue] = useState(0);
-  const [ address, setAddress ] = useState('');
+  const [address, setAddress] = useState('');
 
   if(buySell.address != null && buySell.address.length > 0){
     setAddress(buySell.address);

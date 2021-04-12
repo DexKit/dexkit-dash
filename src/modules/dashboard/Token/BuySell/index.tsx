@@ -12,15 +12,20 @@ import {BuySellProps} from '../../../../types/models/Crypto';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 import { AppState } from 'redux/store';
 import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
-import TabForm from './TabForm';
+import TabForm from './LimitForm';
 import { useWeb3 } from 'hooks/useWeb3';
+import LimitForm from './LimitForm';
+import MarketForm from './MarketForm';
+// import { tokensToTokenBalances } from 'services/tokens';
+// import { Token } from 'types/ethereum';
 
 
 interface Props {
-  buySell: BuySellProps;
+  actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
-const BuySell: React.FC<Props> = ({buySell}) => {
+
+const BuySell: React.FC<Props> = (props) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     muiTabsRoot: {
       position: 'relative',
@@ -64,6 +69,21 @@ const BuySell: React.FC<Props> = ({buySell}) => {
     ({ configFile }) => configFile
   );
 
+  // const _tokens = configFile?.tokens.filter( _token => {
+  //   return _token.addresses != null && 
+  //   (chainId ?? 1).toString() in _token.addresses && 
+  //     _token.addresses[(chainId ?? 1)] != null && _token.addresses[(chainId ?? 1)]?.length > 0
+  // })
+  // .map( t => {
+  //   return {
+  //     address: t.addresses[(chainId ?? 1)],
+  //     ...t
+  //   } as Token;
+  // })
+  // tokensToTokenBalances(_tokens ?? [], account ?? '', chainId ?? 1)
+  // .then( balances => console.log('balances', balances))
+  // .catch( e => console.error('balances', e))
+
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -83,27 +103,26 @@ const BuySell: React.FC<Props> = ({buySell}) => {
           onChange={handleChange}
           indicatorColor='primary'
           textColor='primary'
-          
-          aria-label='simple tabs example'
           className={classes.muiTabsRoot}>
-          <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='Market' />}
-            {...a11yProps(0)}
-          />
-           <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='Limit' />}
-            {...a11yProps(1)}
-          />
-          <Tab
-            className={classes.muiTab}
-            label={<IntlMessages id='Stop' />}
-            {...a11yProps(1)}
-          />
+          <Tab className={classes.muiTab} label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+          <Tab className={classes.muiTab} label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
         </Tabs>
-        {value === 0 && <TabForm data={buySell.buyData} tokens={configFile?.tokens ?? []} chainId={(new BigNumber(chainId ?? 1)).toNumber()}/>}
-        {value === 1 && <TabForm data={buySell.sellData} tokens={configFile?.tokens ?? []} chainId={(new BigNumber(chainId ?? 1)).toNumber()}/>}
+        {
+          value === 0 && <MarketForm
+          key="MarketForm(0)" 
+          tokens={configFile?.tokens ?? []} 
+          chainId={(new BigNumber(chainId ?? 1)).toNumber()}
+          actionButton={props.actionButton}
+          />
+        }
+        {
+          value === 1 && <LimitForm
+          key="LimitForm(1)"
+          tokens={configFile?.tokens ?? []} 
+          chainId={(new BigNumber(chainId ?? 1)).toNumber()}
+          actionButton={props.actionButton}
+          />
+        }
       </Card>
     </Box>
   );

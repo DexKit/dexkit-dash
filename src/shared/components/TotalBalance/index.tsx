@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {Card} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -12,26 +12,31 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import Modal, { Receive } from './Modal';
 import { useWeb3 } from 'hooks/useWeb3';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
+
+
 interface TotalBalanceProps {
-  totalBalanceData: TotalBalanceData;
   balances: MyBalance[];
 }
 
-const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances}) => {
+const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
+  const { onActionWeb3Transaction, account } = useWeb3();
+
   const [open, setOpen] = React.useState(false);
   const [receiveModal, setReceive] = React.useState(false);
-  const { onActionWeb3Transaction, account } = useWeb3();
-  const [_balances] = React.useState<MyBalance[]>(balances ?? []);
 
-  const handleClickOpen = () => {
+  const usdAvailable = balances.reduce((acc, current) => {
+    return acc += current.valueUsd || 0;
+  }, 0);
+
+  const handleClickOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
-  const handleSend = async ($e: React.MouseEvent<HTMLButtonElement, MouseEvent>, buySell: BuySellProps): Promise<void> => {
+  const handleSend = useCallback(async ($e: React.MouseEvent<HTMLButtonElement, MouseEvent>, buySell: BuySellProps): Promise<void> => {
     try{
       console.log('buySell', buySell);
       const result = await onActionWeb3Transaction({
@@ -43,7 +48,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances})
     }catch(e){
       console.error('transaction error', e);
     }
-  }
+  }, []);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
@@ -82,7 +87,9 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances})
       },
     },
   }));
+
   const classes = useStyles();
+  console.log('TotalBalance loaded');
 
   return (
     <Box>
@@ -103,7 +110,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances})
                 color='primary.contrastText'
                 fontFamily={Fonts.LIGHT}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
-                {totalBalanceData.balance}
+                ${usdAvailable.toFixed(2)}
               </Box>
               <Box
                 component='span'
@@ -111,7 +118,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances})
                 color={indigo[100]}
                 fontSize={{xs: 16, xl: 18}}
                 whiteSpace='nowrap'>
-                ETH
+                Avl. Balance
               </Box>
             </Box>
             <Box
@@ -139,15 +146,17 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({totalBalanceData, balances})
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
           <Box pt={{xl: 5}}>
-            <CoinsInfo coins={totalBalanceData.coins} />
+            <CoinsInfo coins={balances} />
           </Box>
         </Card>
       </Box>
-      <Modal  balances={_balances} open={open} onClose={handleClose} onSend={handleSend} />
+      
+      <Modal  balances={balances} open={open} onClose={handleClose} onSend={handleSend} />
+      
       <Receive open={receiveModal} onClose={() => setReceive(false)} />
 
     </Box>
   );
 };
 
-export default TotalBalance;
+export default React.memo(TotalBalance);

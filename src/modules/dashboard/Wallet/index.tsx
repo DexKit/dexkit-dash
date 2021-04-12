@@ -1,37 +1,38 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useWeb3 } from 'hooks/useWeb3';
 import { AppState } from 'redux/store';
 import { onGetMyTokenBalances, onGetMyTokenBalancesAt, onGetMyDefiBalances } from 'redux/actions';
-import { useWeb3 } from 'hooks/useWeb3';
 
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { Button, Divider } from '@material-ui/core';
 
-import TotalBalance from 'shared/components/TotalBalance';
+import transakSDK from '@transak/transak-sdk';
 
 import { MessageView } from '@crema';
+import AppSelect from '@crema/core/AppSelect';
 import GridContainer from '@crema/core/GridContainer';
-import InfoView from '@crema/core/InfoView';
 import AppCard from '@crema/core/AppCard';
 
 import { useIntl } from 'react-intl';
 
 import Coins, { CoinsProps, Assets, CoinProps } from './Coins';
-import RecentPatients from './RecentPatients';
+import AssetChart from './AssetChart';
+import AssetTable from './AssetTable';
 import SalesState from './SalesState'
 import { ProtocolBalanceInterface, AssetBalanceInterface } from 'defi-sdk/src/protocols/interfaces';
 
+import TotalBalance from 'shared/components/TotalBalance';
+import { Fonts } from 'shared/constants/AppEnums';
+import { getTransak } from 'services/transak/transakClient';
+
+import { BalanceCoins, CoinData, TotalBalanceData } from 'types/models/Crypto';
 import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
-import { BalanceCoins, CoinData, TotalBalanceData } from 'types/models/Crypto';
+import { Link } from 'react-router-dom';
+import { EXCHANGE, GET_NETWORK_NAME, NETWORK } from 'shared/constants/Bitquery';
 
-import transakSDK from '@transak/transak-sdk';
-import { getTransak } from 'services/transak/transakClient';
-import AssetChart from './AssetChart';
-import { Fonts } from 'shared/constants/AppEnums';
-import AppSelect from '@crema/core/AppSelect';
-import { MOCKET_THING } from './MockedData';
 
 
 interface WalletProps { }
@@ -108,40 +109,45 @@ const onBuy = (walletAddress: string, ): transakSDK => {
 const Wallet: React.FC<WalletProps> = () => {
   const dispatch = useDispatch();
   
-  const { account } = useWeb3();
+  const { account, chainId } = useWeb3();
   const { messages } = useIntl();
+
+  // const [assets, setAssets] = useState([] as any);
+
   const [chartData, setChartData] = useState([] as any);
   const [defiAssets, setDefiAssets] = useState({} as CoinsProps);
   const [transakClient, setTransakInstance] = useState<transakSDK>();
 
-  const { accountBalancesData, myBalances, myBalancesAt } = useSelector<AppState, AppState['dashboard']>(
+  const { myDefiBalances, myBalances, myBalancesAt } = useSelector<AppState, AppState['dashboard']>(
     ({ dashboard }) => dashboard,
   );
   
 
   useEffect(() => {
     if (account != null) {
-      dispatch(onGetMyDefiBalances('0x551eefc88397c7372261190ca3ffdd4892056d7d' /*account*/));
-      dispatch(onGetMyTokenBalances('ethereum', '0x551eefc88397c7372261190ca3ffdd4892056d7d' /*account*/));
-      dispatch(onGetMyTokenBalancesAt('ethereum', '0x551eefc88397c7372261190ca3ffdd4892056d7d' /*account*/, 7));
+      dispatch(onGetMyDefiBalances(account));
+      dispatch(onGetMyTokenBalances(GET_NETWORK_NAME(chainId), account));
+      dispatch(onGetMyTokenBalancesAt(GET_NETWORK_NAME(chainId), account, 7));
     }
   }, [dispatch, account]);
 
+  useEffect(() => {
+    setDefiAssets(assets2CoinsProps(myDefiBalances));
+  }, [myDefiBalances]);
 
   useEffect(() => {
-    const data = myBalancesAt.map((e: any) => {
+    const data: any = myBalancesAt.map((e: any) => {
       return {
         name: e.date.getDate().toString(),
-        eth: e.balances['ETH'].value
+        eth: e?.balances['ETH']?.value || 0
       }
     });
 
     setChartData(data);
   }, [myBalancesAt])
 
-  useEffect(() => {
-    setDefiAssets(assets2CoinsProps(accountBalancesData));
-  }, [accountBalancesData]);
+
+
 
   const transakAllEvents = useCallback((data: any) => {
     console.log(data);
@@ -198,7 +204,7 @@ const Wallet: React.FC<WalletProps> = () => {
 
   return (
     <>
-      { accountBalancesData && myBalances ? (
+      { myDefiBalances && myBalances ? (
         <Box pt={{ xl: 4 }}>
 
           <GridContainer>
@@ -216,13 +222,13 @@ const Wallet: React.FC<WalletProps> = () => {
 
           <GridContainer>
             <Grid item xs={12} md={6}>
-              <TotalBalance totalBalanceData={parseTotalBalance(myBalances)} balances={(myBalances[0]?.balances as MyBalance[])}/>
+              <TotalBalance balances={myBalances}/>
             </Grid>
 
             <Grid item xs={12} md={6} style={{ paddingLeft: 0, paddingRight: 0, }}>
               <AppCard style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 5 }}>
                 <Box paddingLeft="0" display="flex">
-                <AppSelect
+                  <AppSelect
                     menus={[
                       messages['dashboard.wallet.mybalance'],
                     ]}
@@ -246,34 +252,48 @@ const Wallet: React.FC<WalletProps> = () => {
                 </Box>
                 <Divider style={{marginTop: 5}} />
                 <Box>
-
                   <Grid item xs={12} md={12} xl={12}>
                     <AssetChart data={chartData} />
                   </Grid>
-
                 </Box>
               </AppCard>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={6}>
-              { myBalances.length > 0 && <RecentPatients recentPatients={(myBalances[0]?.balances as MyBalance[])} /> }
+            <Grid item xs={12} md={6}>
+              <AssetTable balances={(myBalances)} />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <Coins {...defiAssets} />
             </Grid>
 
-            {MOCKET_THING.map((state, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <SalesState state={state} />
-              </Grid>
-            ))}
+            <Grid item xs={12} sm={6} md={3}>
+              <Link to={`/history/order/account/${account}`} style={{textDecoration: 'none'}}>
+                <SalesState state={{
+                  value: "Order history",
+                  bgColor: "#0A8FDC",
+                  icon: "/assets/images/dashboard/1_monthly_sales.png",
+                  id: 1,
+                  type: "Click to Open",
+                }} />
+              </Link>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
+                <SalesState state={{
+                  value: "Transaction history",
+                  bgColor: "#9E49E6",
+                  icon: "/assets/images/dashboard/1_monthly_sales.png",
+                  id: 2,
+                  type: "Click to Open",
+                }} />
+              </Link>
+            </Grid>
 
           </GridContainer>
         </Box>
       ) : null}
-
-      <InfoView />
     </>
   );
 };

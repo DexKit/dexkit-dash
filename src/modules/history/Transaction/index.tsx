@@ -22,7 +22,7 @@ import { getToken } from 'services/rest/coingecko';
 import { CoinDetailCoinGecko } from 'types/coingecko';
 import { Fonts } from 'shared/constants/AppEnums';
 
-const TVChartContainer = React.lazy(() => import('../../../chart/TvChart/tv_chart'));
+const TVChartContainer = React.lazy(() => import('../../../shared/components/chart/TvChart/tv_chart'));
 
 export const marketToString = (currencyPair: CurrencyPair): string => {
   return `${currencyPair.base.toUpperCase()}-${currencyPair.quote.toUpperCase()}`;
@@ -127,7 +127,7 @@ const Crypto: React.FC<CryptoProps> = (props) => {
           <GridContainer>
             <Grid item xs={12} md={5}>
               <Grid item xs={12} md={12}>
-                <TotalBalance totalBalanceData={totalBalanceData} balances={balances} />
+                {/* <TotalBalance balances={balances} /> */}
               </Grid>
                 
               <Grid style={{marginTop: 15}} item xs={12} md={12}>

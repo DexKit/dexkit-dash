@@ -106,7 +106,7 @@ const TabForm: React.FC<TabFormProps> = ({data, balances , onSend}) => {
              balances?.map( (balance, i) => {
               return (
                 <option defaultValue={balance.currency.name} value={i} key={i}>
-                  {balance.currency.name}
+                  {balance.currency.name.toUpperCase()}
                 </option>)  
              })
            }

@@ -1,3 +1,4 @@
+import { BigNumber } from '@0x/utils';
 import { ChainId, Network } from '@types';
 import { CoinIcons } from 'shared/constants/AppEnums';
 
@@ -42,3 +43,12 @@ export const TRADE_API_URL = (chainId: ChainId) => {
             return '';
     }
 };
+
+export const ONE_MINUTE_MS = 1000 * 60;
+export const DEFAULT_ESTIMATED_TRANSACTION_TIME_MS = ONE_MINUTE_MS * 2;
+export const GWEI_IN_WEI = new BigNumber(1000000000);
+export const DEFAULT_GAS_PRICE = GWEI_IN_WEI.multipliedBy(6);
+export const ETH_GAS_STATION_API_BASE_URL = 'https://ethgasstation.info';
+export const TOKEN_CONTRACT_ENDPOINT = 'https://api.coingecko.com/api/v3/coins/ethereum/contract/';
+export const TRANSAK_API_URL = `https://api.transak.com/api/v2/currencies/crypto-currencies`;
+export const  COINGECKO_TOKENS_URL = `https://tokens.coingecko.com/uniswap/all.json`;

@@ -1,5 +1,5 @@
 import { BigNumber } from "@0x/utils";
-import { Token } from "types/ethereum";
+import { Token } from "types/app";
 import { Kit } from "types/models/Kit";
 
 
@@ -13,7 +13,7 @@ const tokens: Token[] = [
 		icon: 'assets/images/etherium.png',
 		price_usd: new BigNumber(500),
 		price_usd_24h_change: new BigNumber(0.00003),
-		c_id: '0x12345678901234567890123456789012'
+		coingecko_id: '0x12345678901234567890123456789012'
 	},
 	{
 		address: '0x765432189012345678901234567234012',
@@ -24,7 +24,7 @@ const tokens: Token[] = [
 		icon: 'assets/images/bitcoin.png',
 		price_usd: new BigNumber(50000),
 		price_usd_24h_change: new BigNumber(1.5),
-		c_id: '0x765432189012345678901234567234012'
+		coingecko_id: '0x765432189012345678901234567234012'
 	},
 	{
 		address: '0x987654322012345678901234567234011',
@@ -35,7 +35,7 @@ const tokens: Token[] = [
 		symbol: 'MON',
 		price_usd: new BigNumber(100),
 		price_usd_24h_change: new BigNumber(0.005),
-		c_id: '0x987654322012345678901234567234011'
+		coingecko_id: '0x987654322012345678901234567234011'
 	},
 ];
 

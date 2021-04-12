@@ -29,7 +29,7 @@ const Crypto: React.FC<CryptoProps> = () => {
         <Box pt={{xl: 4}}>
           <GridContainer>
             <Grid item xs={12} md={7}>
-              <TotalBalance totalBalanceData={cryptoData.totalBalanceData} balances={[]}/>
+              {/* <TotalBalance totalBalanceData={cryptoData.totalBalanceData} balances={[]}/> */}
             </Grid>
 
             <Grid item xs={12} md={12}>

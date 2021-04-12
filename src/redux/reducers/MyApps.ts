@@ -1,5 +1,5 @@
 import { GET_ALL_KITS, GET_ALL_TOKENS, GET_USER_KITS, MyAppsActions } from "types/actions/MyApps.actions";
-import { Token } from "types/ethereum";
+import { Token } from "types/app";
 import { Kit } from "types/models/Kit";
 
 const initialState: {

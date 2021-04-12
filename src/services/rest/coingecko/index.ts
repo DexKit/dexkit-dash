@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CoinDetailCoinGecko } from 'types/coingecko';
+import allSettled from 'utils/allsettled';
 
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/';
 
@@ -33,5 +34,18 @@ export async function getEthereum(): Promise<CoinDetailCoinGecko> {
 }
 
 export async function getToken(address: string): Promise<CoinDetailCoinGecko> {
-	return getCoingecko(`ethereum/contract/${address}`);
+	return getCoingecko(`ethereum/contract/${address.toLowerCase()}?sparkline=true`);
+}
+
+export async function getTokens(address: string[]): Promise<{ [address: string]: CoinDetailCoinGecko }> {
+	const allPromisses = address.map(e => {
+		return (e == '' || e == '-') ? getEthereum() : getToken(e.toLowerCase());
+	});
+
+	const result = (await allSettled(allPromisses)).filter(e => e.loaded);
+	
+	return result.reduce<any>((acc, current) => {
+		acc[current.value.contract_address?.toLowerCase() ?? 'eth'] = current.value;
+		return acc;
+	}, {});
 }

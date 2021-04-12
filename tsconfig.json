@@ -14,7 +14,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveConstEnums": true,
     "removeComments": false,
@@ -35,7 +35,8 @@
     }
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "ignore"
   ],
   "include": [
     "next-env.d.ts",

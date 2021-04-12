@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useHistory } from "react-router-dom";
 import GridContainer from '@crema/core/GridContainer';
 import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 // import { SearchRounded } from '@material-ui/icons';
@@ -7,12 +8,16 @@ import { Currency } from '@types';
 import { Autocomplete } from '@material-ui/lab';
 
 interface TokenSearchProps {
+  url: string,
   positionIcon?: 'start' | 'end';
   filters?: Map<string, string>;
 }
 
 export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
-  const { filters  } = props; 
+  const { filters, url  } = props; 
+
+  const history = useHistory();
+
   const [timeout,  setClearTimeOut] = useState<number>(-1);
   const [founded, setFounded] = useState<Currency[]>();
   const [searchKey, setSearchKey] = useState<string>();
@@ -21,9 +26,12 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
   useEffect(useCallback(() => {
     clearTimeout(timeout as number);
+
     const _timeout: number = setTimeout(() => {
       if(searchKey != null){
+        
         setLoading(true);
+        
         search<{ search: { subject: Currency }[] }>(searchKey).then(result => {
           if(!result.loading && result?.data){
             const founds = result?.data?.search?.map( s => s.subject);
@@ -37,12 +45,14 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
         .finally(() => setLoading(false));
       }
     }, 1200) as unknown as number;
-    console.log('isLoading', isLoading);
+
     setClearTimeOut(_timeout);
   }, [searchKey, timeout, isLoading]), [searchKey]);
 
-  const byby = (c: any) => {
-    console.log(c)
+  const onPairSelected = (currency: Currency|null) => {
+    if (currency) {
+      history.push(`${url}/${currency.address}`);
+    }
   }
 
   return (
@@ -60,7 +70,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
               onChange={($e) => setSearchKey($e.target.value)}
             />
           )}
-          onChange={($e, value) => byby(value)}
+          onChange={($e, value) => onPairSelected(value)}
         />
 
         {/* <TextField

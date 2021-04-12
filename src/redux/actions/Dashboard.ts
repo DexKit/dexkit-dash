@@ -10,17 +10,20 @@ import {
   GET_WIDGETS_DATA,
   GET_REPORT_CARDS_ACTIONS,
   GET_NEWS_DATA,
-  GET_ACCOUNT_BALANCES,
+  GET_DEFI_BALANCES,
   GET_TOKEN_BALANCES,
   GET_TOKEN_BALANCES_AT
 } from 'types/actions/Dashboard.action';
 import { OverviewDataProvider } from 'modules/dashboard/Overview';
 import { GetFeed, OverviewDataProviderImp } from 'services/dashboard';
-import { getDefiBalances } from 'services/defi-protocols-tokens';
+import { getDefiBalances } from 'services/defi';
 import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
 import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { GraphQLError } from 'graphql';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
+import { getToken, getTokens } from 'services/rest/coingecko';
+import allSettled from 'utils/allsettled';
+import { NETWORK } from 'shared/constants/Bitquery';
 
 
 export const onGetAnalyticsData = () => {
@@ -118,7 +121,7 @@ export const onGetMyDefiBalances = (address: string) => {
     dispatch(fetchStart());
     getDefiBalances(address)
     .then( balances => {
-      dispatch({type: GET_ACCOUNT_BALANCES, payload: balances});
+      dispatch({type: GET_DEFI_BALANCES, payload: balances});
       dispatch(fetchSuccess());
     })
     .catch( e => {
@@ -159,15 +162,34 @@ export const onGetNewsData = () => {
   };
 };
 
-export function onGetMyTokenBalances(network: string, address: string){
+export function onGetMyTokenBalances(network: NETWORK, address: string){
   return (dispatch: Dispatch<AppActions>) => {
     dispatch(fetchStart());
-    getMyTokenBalances<{ ethereum: { address: BitqueryAddress[] } }>(network, address)
-    .then( balances => {
-      if(!balances.loading && balances.data){
-        console.log(balances.data.ethereum.address);
-        dispatch({type: GET_TOKEN_BALANCES, payload: balances.data.ethereum.address});
-        dispatch(fetchSuccess());
+    getMyTokenBalances<{ ethereum: { address: BitqueryAddress[] } }>(network, address).then( balances => {
+      if(!balances.loading && balances.data) {
+
+        const addresses = balances.data.ethereum.address[0].balances.map(e => e.currency.address);
+
+        getTokens(addresses).then(tokens => {
+          const all = balances.data.ethereum.address[0].balances.map(e => {
+            const key = e.currency.address == '-' ? 'eth' : e.currency.address;
+
+            const currency = Object.assign({}, e.currency);
+            currency.image = tokens[key]?.image.large;
+
+            return {
+              currency: currency,
+              value: e.value,
+              valueUsd: tokens[key]?.market_data?.current_price?.usd || 0
+            }
+          });
+          
+          dispatch({type: GET_TOKEN_BALANCES, payload: all});
+          dispatch(fetchSuccess());  
+        }).catch (e => {
+          dispatch(fetchError(e.message));
+        });
+
       } else if(balances.errors != null && balances.errors.length > 0){
         dispatch(
           fetchError(
@@ -188,17 +210,17 @@ export function onGetMyTokenBalances(network: string, address: string){
 }
 
 
-export function onGetMyTokenBalancesAt(network: string, address: string, days: number){
+export function onGetMyTokenBalancesAt(network: NETWORK, address: string, days: number){
   return (dispatch: Dispatch<AppActions>) => {
     dispatch(fetchStart());
 
     const datePromises = [];
     
-    const date = new Date();
-    const date1 = new Date();
+    let date = new Date();
+    let date1 = new Date();
 
     for(let i = 1; i < days; i++) {
-      date.setDate(date.getDate() - 1);
+      date = new Date(date.setDate(date.getDate() - 1));
       datePromises.push( getMyTokenBalancesAt<{ ethereum: { address: BitqueryAddress[] } }>(network, address, date) )
     }
 
@@ -214,7 +236,7 @@ export function onGetMyTokenBalancesAt(network: string, address: string, days: n
             return acc;
           }, []);
 
-          date1.setDate(date1.getDate() - 1);
+          date1 = new Date(date1.setDate(date1.getDate() - 1));
           data.push({ balances: d, date: date1 });
         }
 

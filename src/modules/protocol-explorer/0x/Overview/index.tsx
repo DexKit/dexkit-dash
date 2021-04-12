@@ -10,7 +10,7 @@ import {onGetAnalyticsData} from '../../../../redux/actions';
 import {AppState} from '../../../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Grid } from '@material-ui/core';
-import OrderNTransaction from 'modules/dashboard/Analytics/OrderNTransaction';
+// import OrderNTransaction from 'modules/dashboard/Analytics/OrderNTransaction';
 
 const Overview = () => {
   const dispatch = useDispatch();
@@ -29,9 +29,9 @@ const Overview = () => {
         <Box pt={{xl: 4}} clone>
           <GridContainer>
             <Grid item xs={12} md={12}>
-              <OrderNTransaction
+              {/* <OrderNTransaction
                 transactionData={analyticsData.transactionData}
-              />
+              /> */}
             </Grid>
     
           </GridContainer>

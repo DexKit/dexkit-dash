@@ -29,9 +29,7 @@ const FormDialog: React.FC<TotalBalanceProps> = ({open, balances, onClose, onSen
   return (
     <div>
       <Dialog fullWidth maxWidth="xs"  open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-          <TransferForm balances={balances} buySell={buySellData}
-          onSend={onSend}
-          />
+          <TransferForm balances={balances} buySell={buySellData} onSend={onSend} />
       </Dialog>
     </div>
   );

@@ -44,7 +44,7 @@ const Overview = () => {
             </Grid>
             <Grid item xs={12} md={5}>
               <Paper style={{ padding: 10 }}>
-              <TokenSearch />
+              {/* <TokenSearch /> */}
               </Paper>
             </Grid>
 

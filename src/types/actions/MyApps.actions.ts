@@ -1,4 +1,4 @@
-import { Token } from "types/ethereum";
+import { Token } from "types/app";
 import { Kit } from "types/models/Kit";
 
 export const GET_ALL_KITS = 'GET_ALL_KITS';

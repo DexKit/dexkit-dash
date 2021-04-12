@@ -1,4 +1,4 @@
-import { PairDayDataGraphResponse } from "types/uniswap";
+import { PairDayDataGraphResponse } from 'types/uniswap';
 
 const TOKENS = [
 	'Bit',

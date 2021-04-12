@@ -7,6 +7,7 @@ import { ReportCards } from 'types/models/Ecommerce';
 import { Feed } from 'types/rss/feed.interface';
 import { ProtocolBalanceInterface } from 'defi-sdk/src/protocols/interfaces';
 import { BitqueryAddress } from 'types/bitquery/address.interface';
+import { MyBalance } from 'types/bitquery/myBalance.interface';
 
 export const GET_ANALYTICS_DATA = 'GET_ANALYTICS_DATA';
 export const GET_CRM_DATA = 'GET_CRM_DATA';
@@ -15,7 +16,7 @@ export const GET_METRICS_DATA = 'GET_METRICS_DATA';
 export const GET_WIDGETS_DATA = 'GET_WIDGETS_DATA';
 export const GET_REPORT_CARDS_ACTIONS = 'GET_REPORT_CARDS_ACTIONS';
 export const GET_NEWS_DATA = 'GET_NEWS_DATA';
-export const GET_ACCOUNT_BALANCES = 'GET_ACCOUNT_BALANCES';
+export const GET_DEFI_BALANCES = 'GET_DEFI_BALANCES';
 export const GET_TOKEN_BALANCES = 'GET_TOKEN_BALANCES';
 export const GET_TOKEN_BALANCES_AT = 'GET_TOKEN_BALANCES_AT';
 
@@ -54,13 +55,13 @@ export interface GetNewsAction{
   payload: Feed
 }
 export interface GetAccountBalances{
-  type : typeof GET_ACCOUNT_BALANCES;
+  type : typeof GET_DEFI_BALANCES;
   payload: ProtocolBalanceInterface[];
 }
 
 export interface GetMyBalances {
   type: typeof GET_TOKEN_BALANCES;
-  payload: BitqueryAddress[];
+  payload: MyBalance[];
 }
 
 export interface GetMyBalancesAt {

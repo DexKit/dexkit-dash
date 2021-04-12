@@ -5,48 +5,8 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboards/crm',
-        component: React.lazy(() => import('./CRM')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
-        path: '/dashboards/analytics',
-        component: React.lazy(() => import('./Analytics')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
-        path: '/dashboards/crypto',
-        component: React.lazy(() => import('./Crypto')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
-        path: '/dashboards/metrics',
-        component: React.lazy(() => import('./Metrics')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
-        path: '/dashboards/widgets',
-        component: React.lazy(() => import('./Widgets')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
-        path: '/dashboards/overview',
-        component: React.lazy(() => import('./Overview')),
+        path: '/dashboard/overview',
+        component: React.lazy(() => import('./Overview'))
       },
     ],
   },
@@ -54,7 +14,7 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboards/wallet',
+        path: '/dashboard/wallet',
         component: React.lazy(() => import('./Wallet')),
       },
     ],
@@ -63,7 +23,7 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboards/staking',
+        path: '/dashboard/staking',
         component: React.lazy(() => import('./Staking')),
       },
     ],
@@ -72,7 +32,7 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboards/kits',
+        path: '/dashboard/kits',
         component: React.lazy(() => import('./Kits')),
       },
     ],
@@ -81,7 +41,7 @@ export const dashBoardConfigs = [
     auth: ['token'],
     routes: [
       {
-        path: '/dashboards/token/:token_address',
+        path: '/dashboard/token/:address',
         component: React.lazy(() => import('./Token')),
       },
     ],
@@ -90,19 +50,10 @@ export const dashBoardConfigs = [
     auth: ['token'],
     routes: [
       {
-        path: '/dashboards/token',
+        path: '/dashboard/token',
         exact: true,
-        component: () => <Redirect to={`/dashboards/token/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
+        component: () => <Redirect to={`/dashboard/token/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
       },
     ],
   }
-  // {
-  //   auth: ['wizard'],
-  //   routes: [
-  //     {
-  //       path: '/dashboards/wizard/:type?',
-  //       component: React.lazy(() => import('./Wizard')),
-  //     },
-  //   ],
-  // },
 ];

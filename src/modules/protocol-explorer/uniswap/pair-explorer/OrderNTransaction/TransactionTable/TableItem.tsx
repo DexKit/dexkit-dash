@@ -45,10 +45,10 @@ const TableItem: React.FC<Props> = ({data}) => {
   const classes = useStyles();
   const getPaymentTypeColor = () => {
     switch (data.type) {
-      case 'Sell': {
+      case 'SELL': {
         return '#F84E4E';
       }
-      case 'Buy': {
+      case 'BUY': {
         return '#00b400';
       }
       default: {
@@ -63,26 +63,22 @@ const TableItem: React.FC<Props> = ({data}) => {
       <TableCell component='th' scope='row' className={classes.tableCell}>
         <Box >{data.pair}</Box>
       </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>
-      <Chip
-        style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}}
-        label={data.type}
-        clickable
-      />
+      <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.type} clickable />
       </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>
         {data.price}
       </TableCell>
-      <TableCell
-        align='left'
-        className={classes.tableCell}
-       >
+
+      <TableCell align='left' className={classes.tableCell}>
         {data.amount}
       </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>       
-          {data.total}
+        ${data.total}
       </TableCell>
-      
     </TableRow>
   );
 };

@@ -11,7 +11,7 @@ const routesConfig = [
         messageId: 'common.overview',
         type: 'item',
         icon: 'insert_chart',
-        url: '/dashboards/overview',
+        url: '/dashboard/overview',
       },
       {
         id: 'wallet',
@@ -19,7 +19,7 @@ const routesConfig = [
         messageId: 'sidebar.app.wallet',
         type: 'item',
         icon: 'account_balance_wallet',
-        url: '/dashboards/wallet',
+        url: '/dashboard/wallet',
       },
       {
         id: 'token',
@@ -27,7 +27,7 @@ const routesConfig = [
         messageId: 'Token',
         type: 'item',
         icon: 'storage',
-        url: '/dashboards/token',
+        url: '/dashboard/token',
       },
       
       {
@@ -36,7 +36,7 @@ const routesConfig = [
         messageId: 'sidebar.app.kits',
         type: 'item',
         icon: 'build',
-        url: '/dashboards/kits',
+        url: '/dashboard/kits',
       },
 
     /*  {

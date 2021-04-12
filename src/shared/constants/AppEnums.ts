@@ -65,5 +65,3 @@ export enum CoinIcons{
   LITECOIN = 'assets/images/litcoin.png',
   RIPPLE = 'assets/images/ripple.png'
 }
-
-

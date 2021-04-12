@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getContractWrappers, initContractWrappers } from "services/contract_wrappers";
 import { useWeb3 } from "./useWeb3";
-import { Web3State } from "types/ethereum";
+import { Web3State } from "types/blockchain";
 
 
 export const useContractWrapper = () => {

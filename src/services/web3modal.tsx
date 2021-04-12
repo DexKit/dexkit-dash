@@ -7,6 +7,7 @@ import {
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Magic } from 'magic-sdk';
+import { Web3Wrapper } from '@0x/web3-wrapper';
 
 const providerOptions = {
   walletconnect: {
@@ -51,7 +52,7 @@ const closeWeb3 = () => {
   web3Modal.clearCachedProvider();
 }
 
-const getProvider = () => {
+const getProvider = (): any | undefined => {
   if (!provider) {
     return;
   }
@@ -82,4 +83,13 @@ const web3Transaction = (transactionConfig: TransactionConfig): Promise<Transact
   });
 }
 
-export { connectWeb3, getWeb3, closeWeb3, getProvider, web3Modal, web3Transaction }
+const getWeb3Wrapper = () => {
+  const provider = getProvider();
+  if(!provider){
+    return null;
+  }
+  const web3Wrapper = new Web3Wrapper(provider);
+  return web3Wrapper;
+}
+
+export { connectWeb3, getWeb3, closeWeb3, getProvider, getWeb3Wrapper, web3Modal, web3Transaction }

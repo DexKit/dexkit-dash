@@ -7,7 +7,7 @@ export const uniswapConfigs = [
     routes: [
       {
         path: '/protocol-explorer/uniswap/overview',
-        component: React.lazy(() => import('./Overview')),
+        component: React.lazy(() => import('./overview')),
       },
     ],
   },
@@ -38,7 +38,7 @@ export const uniswapConfigs = [
         path: '/protocol-explorer/uniswap/pair-explorer',
         exact: true,
         // component: React.lazy(() => import('./pair-explorer')),
-        component: () => <Redirect to={`/protocol-explorer/uniswap/pair-explorer/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
+        component: () => <Redirect to={`/protocol-explorer/uniswap/pair-explorer/${process.env.REACT_APP_DEFAULT_PAIR}`} />,
       },
     ],
   },
@@ -46,7 +46,7 @@ export const uniswapConfigs = [
 
     routes: [
       {
-        path: '/protocol-explorer/uniswap/pair-explorer/:pair',
+        path: '/protocol-explorer/uniswap/pair-explorer/:address',
         component: React.lazy(() => import('./pair-explorer')),
       },
     ],

@@ -16,7 +16,7 @@ import AppContextPropsType, {
 } from '../../../types/AppContextPropsType';
 import { useWeb3 } from 'hooks/useWeb3';
 import { tokenAmountInUnits } from 'utils/tokens';
-import { Web3State } from 'types/ethereum';
+import { Web3State } from 'types/blockchain';
 
 
 const WalletInfo = (props: any) => {

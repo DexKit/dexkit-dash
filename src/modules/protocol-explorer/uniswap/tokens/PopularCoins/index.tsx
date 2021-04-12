@@ -46,7 +46,7 @@ const PopularCoins: React.FC<PopularCoinsProps> = ({popularCoins, title}) => {
             </Link>
           </Box>
         </Box>
-        <PopularCoinsTable popularCoins={popularCoins} />
+        {/* <PopularCoinsTable popularCoins={popularCoins} /> */}
       </Card>
     </Box>
   );

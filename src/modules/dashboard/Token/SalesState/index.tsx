@@ -157,4 +157,4 @@ const SalesState: React.FC<SalesStateProps> = ({data}) => {
     </AppCard>
   );
 };
-export default SalesState;
+export default React.memo(SalesState);
