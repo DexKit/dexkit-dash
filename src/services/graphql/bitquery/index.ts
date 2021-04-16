@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client';
 import { EXCHANGE, NETWORK } from 'shared/constants/Bitquery';
-import { OrderByPairs, OrderByToken, OrderData, Token, TokenStatistic } from 'types/app';
-import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData } from 'utils/parse';
+import { OrderByPairs, OrderByToken, OrderData, PairInfoExplorer, Token, TokenStatistic, TransferByAddress } from 'types/app';
+import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData, parsePairExplorerData, parseTransferByAddressData } from 'utils/parse';
 import { parseTokenStatisticsData } from 'utils/parse/TokenStatistics';
 import {
   BITQUERY_PAIR_EXPLORER,
@@ -27,121 +27,129 @@ export const client = new ApolloClient({
   }
 });
 
-export function getPairExplorer<T>(network: NETWORK, exchangeName: EXCHANGE, address: string, limit: number): Promise<ApolloQueryResult<T>>
+export function getPairExplorer<T>(network: NETWORK, exchangeName: EXCHANGE, address: string): Promise<PairInfoExplorer>
 {
-  return client.query({
-    query: BITQUERY_PAIR_EXPLORER,
-    variables: {
-      network,
-      exchangeName,
-      address,
-      limit
-    }
-  });
+  const variables: any = {
+    network,
+    exchangeName,
+    address
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+  
+  return client.query({ query: BITQUERY_PAIR_EXPLORER, variables })
+    .then(orders => { return parsePairExplorerData(orders, address, network) })
+    .catch(e => { return parsePairExplorerData(null, address, network) });
 }
 
 export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
 {
-  return client.query({
-    query: BITQUERY_CONTRACT_ORDERS,
-    variables: {
-      network,
-      exchangeName,
-      address,
-      limit,
-      offset,
-      from: from ? from.toISOString() : null,
-      till: till ? till.toISOString() : null
-    }
-  }).then(orders => {
-    return parseOrderData(orders);
-  }).catch(e => {
-    return parseOrderData(null);
-  });
+  const variables: any = {
+    network,
+    exchangeName,
+    address,
+    limit,
+    offset,
+    from: from ? from.toISOString() : null,
+    till: till ? till.toISOString() : null
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+
+  return client.query({ query: BITQUERY_CONTRACT_ORDERS, variables })
+    .then(orders => { return parseOrderData(orders, network) })
+    .catch(e => { return parseOrderData(null, network) });
 }
 
 export function getTokenOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
 {
-  return client.query({
-    query: BITQUERY_TOKEN_ORDERS,
-    variables: {
-      network,
-      exchangeName,
-      address,
-      limit,
-      offset,
-      from: from ? from.toISOString() : null,
-      till: till ? till.toISOString() : null
-    }
-  }).then(orders => {
-    return parseOrderData(orders);
-  }).catch(e => {
-    console.log(e);
-    return parseOrderData(null);
-  });
+  const variables: any = {
+    network,
+    exchangeName,
+    address,
+    limit,
+    offset,
+    from: from ? from.toISOString() : null,
+    till: till ? till.toISOString() : null
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+
+  return client.query({ query: BITQUERY_TOKEN_ORDERS, variables })
+    .then(orders => { return parseOrderData(orders, network) })
+    .catch(e => { return parseOrderData(null, network) });
 }
 
 export function getMyOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
 {
-  return client.query({
-    query: BITQUERY_MY_ORDERS,
-    variables: {
-      network,
-      exchangeName,
-      address,
-      limit,
-      offset,
-      from: from ? from.toISOString() : null,
-      till: till ? till.toISOString() : null
-    }
-  }).then(orders => {
-    return parseOrderData(orders);
-  }).catch(e => {
-    return parseOrderData(null);
-  });
+  const variables: any = {
+    network,
+    exchangeName,
+    address,
+    limit,
+    offset,
+    from: from ? from.toISOString() : null,
+    till: till ? till.toISOString() : null
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+
+  return client.query({ query: BITQUERY_MY_ORDERS, variables })
+    .then(orders => { return parseOrderData(orders, network) })
+    .catch(e => { console.log(e); return parseOrderData(null, network) });
 }
 
 // ok - melhorar nome da função
 export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByPairs[]>
 {
-  return client.query({
-    query: BITQUERY_ORDERS_BY_PAIRS,
-    variables: {
-      network,
-      exchangeName,
-      limit,
-      offset,
-      from: from ? from.toISOString() : null,
-      till: till ? till.toISOString() : null
-    }
-  }).then(orders => {
-    return parseOrderByPairData(orders);
-  }).catch(e => {
-    return parseOrderByPairData(null);
-  });  
+  const variables: any = {
+    network,
+    exchangeName,
+    limit,
+    offset,
+    from: from ? from.toISOString() : null,
+    till: till ? till.toISOString() : null
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+
+  return client.query({ query: BITQUERY_ORDERS_BY_PAIRS, variables })
+    .then(orders => { return parseOrderByPairData(orders) })
+    .catch(e => { return parseOrderByPairData(null) });  
 }
 
 // ok - melhorar nome da função
 export function getOrdersByTokens(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByToken[]>
 {
-  return client.query({
-    query: BITQUERY_ORDERS_BY_TOKENS,
-    variables: {
-      network,
-      exchangeName,
-      limit,
-      offset,
-      from: from ? from.toISOString() : null,
-      till: till ? till.toISOString() : null
-    }
-  }).then(orders => {
-    return parseOrderByTokenData(orders);
-  }).catch(e => {
-    return parseOrderByTokenData(null);
-  });  
+  const variables: any = {
+    network,
+    exchangeName,
+    limit,
+    offset,
+    from: from ? from.toISOString() : null,
+    till: till ? till.toISOString() : null
+  }
+
+  if (exchangeName == EXCHANGE.ALL) {
+    delete variables.exchangeName;
+  }
+
+  return client.query({ query: BITQUERY_ORDERS_BY_TOKENS, variables })
+    .then(orders => { return parseOrderByTokenData(orders) })
+    .catch(e => { return parseOrderByTokenData(null) });  
 }
 
-export function getMyTransfers<T>(network: NETWORK, address: string, limit: number, offset: number, from: Date, till: Date): Promise<ApolloQueryResult<T>>
+export function getMyTransfers(network: NETWORK, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<TransferByAddress[]>
 {
   return client.query({
     query: BITQUERY_MY_TRANSFERS,
@@ -153,7 +161,9 @@ export function getMyTransfers<T>(network: NETWORK, address: string, limit: numb
       from: from ? from.toISOString() : null,
       till: till ? till.toISOString() : null
     }
-  });
+  })
+    .then(orders => { return parseTransferByAddressData(orders, network); })
+    .catch(e => { console.log(e); return parseTransferByAddressData(null, network) });
 }
 
 export function getMyTokenBalances<T>(network: NETWORK, address: string): Promise<ApolloQueryResult<T>>

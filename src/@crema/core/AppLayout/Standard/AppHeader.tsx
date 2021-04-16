@@ -18,12 +18,19 @@ import Notifications from '../../Notifications';
 // import AppLogo from '../../../../shared/components/AppLogo';
 import clsx from 'clsx';
 import WalletInfo from 'shared/components/WalletInfo';
+import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ChainId } from 'types/blockchain';
+
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const {chainId} = useWeb3();
+
   const [
     mobileMoreAnchorEl,
     setMobileMoreAnchorEl,
@@ -61,6 +68,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     <>
       <AppBar color='inherit' className={clsx(classes.appBar, 'app-bar')}>
         <Toolbar className={classes.appToolbar}>
+
           <Hidden lgUp>
             <IconButton
               edge='start'
@@ -71,14 +79,32 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
           </Hidden>
+
           {/* <AppLogo /> */}
+
           <Box className={classes.grow} />
+
           {/* <SearchBar borderLight placeholder='Search…' /> */}
+
           <Box className={classes.sectionDesktop}>
+            {
+              (chainId !== ChainId.Mainnet && chainId != undefined) ? (
+                <Box
+                  className={classes.badgeRoot}
+                  style={{
+                    color: 'rgba(226, 167, 46)',
+                    backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                  }}>
+                  {GET_CHAIN_ID_NAME(chainId)}
+                </Box>
+              ) : null
+            }
+
             <LanguageSwitcher />
             {/* <HeaderMessages /> */}
             <Notifications />
           </Box>
+
           <Box className={classes.sectionMobile}>
             <IconButton
               aria-label='show more'
@@ -89,9 +115,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               <MoreIcon />
             </IconButton>
           </Box>
+
           <Box className={classes.wallet}>
             <WalletInfo />
           </Box>
+
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

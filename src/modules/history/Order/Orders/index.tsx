@@ -25,24 +25,23 @@ const Orders: React.FC<Props> = (props) => {
   // const [dealValue, setDealValue] = useState('allDeals');
   const [tableData, setTableData] = useState<OrderData[]>([]);
  
-  useEffect(useCallback(() => {
+  useEffect(() => {
     if (props.type == 'account') {
-      getMyOrders(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, props.address, 30, 0, null, null)
+      getMyOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
         .then(orders => setTableData(orders))
         .catch(e => console.log(e))
     }
     else if (props.type == 'token') {
-      getTokenOrders(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, props.address, 30, 0, null, null)
+      getTokenOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
         .then(orders => setTableData(orders))
         .catch(e => console.log(e))
     }
     else if (props.type == 'contract') {
-      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, props.address, 30, 0, null, null)
+      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
         .then(orders => setTableData(orders))
         .catch(e => console.log(e))
     }
-
-  }, []), [props.address]);
+  }, [props, chainId]);
 
 
   // const handleChange = (event: React.ChangeEvent<{value: unknown}>) => {

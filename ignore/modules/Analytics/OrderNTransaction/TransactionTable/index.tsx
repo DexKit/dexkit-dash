@@ -41,9 +41,11 @@ const TransactionTable: React.FC<Props> = ({transactionData}) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {transactionData.map((data) => (
-            <TableItem data={data} key={data.id} />
-          ))}
+          {
+            transactionData.map((data) => (
+              <TableItem data={data} key={data.id} />
+            ))
+          }
         </TableBody>
       </Table>
     </Box>

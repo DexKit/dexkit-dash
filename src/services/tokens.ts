@@ -1,7 +1,7 @@
 // import { assetDataUtils } from '@0x/order-utils';
 import { ERC20TokenContract } from '@0x/contract-wrappers';
 import { BigNumber } from '@0x/utils';
-import { ChainId, TokenList } from '@types';
+import { TokenList } from '@types';
 import { 
     COINGECKO_TOKENS_URL, 
     TOKEN_CONTRACT_ENDPOINT, 
@@ -14,6 +14,7 @@ import { getContractWrappers } from './contract_wrappers';
 import { getProvider } from './web3modal';
 import { getMulticall } from './multicall';
 import { getGasEstimationInfoAsync } from './gasPriceEstimation';
+import { ChainId } from 'types/blockchain';
 
 // export const tokensToTokenBalances = async (tokens: Token[], address: string, chainId: number): Promise<TokenBalance[]> => {
 //     const contractWrappers = await getContractWrappers(chainId);

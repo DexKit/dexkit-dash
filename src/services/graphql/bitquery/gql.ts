@@ -2,44 +2,81 @@ import { gql } from '@apollo/client';
 
 //https://explorer.bitquery.io/graphql
 export const BITQUERY_PAIR_EXPLORER = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $address: String!) {
     ethereum(network: $network) {
-      dexTrades(
-        options: {limit: $limit, desc: "timeInterval.day"}
+      data24: dexTrades(
+        options: {limit: 1, asc: "timeInterval.day"}
         exchangeName: {is: $exchangeName}
         smartContractAddress: {is: $address}
       ) {
         timeInterval {
           day(count: 1)
         }
+        trades: count
         baseCurrency {
+          name
           symbol
           address
+          decimals
         }
         baseAmount
-        baseAmountInUSD: baseAmount(in: USD)
         quoteCurrency {
+          name
           symbol
           address
+          decimals
         }
         quoteAmount
-        quoteAmountInUSD: quoteAmount(in: USD)
-        trades: count
-        quotePrice
         maximum_price: quotePrice(calculate: maximum)
         minimum_price: quotePrice(calculate: minimum)
         open_price: minimum(of: block, get: quote_price)
         close_price: maximum(of: block, get: quote_price)
-        tradeAmount(in: ETH)
-        tradeAmountInUSD: tradeAmount(in: USD)
+        tradeAmount(in: USDT)
+      }
+      pooled: address(address: {is: $address}) {
+        balances {
+          currency {
+            symbol
+          }
+          value
+        }
+      }
+      dexTrades(
+        options: {limit: 1, desc: "block.timestamp.time"}
+        exchangeName: {is: $exchangeName}
+        smartContractAddress: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time
+          }
+        }
+        baseCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        quoteCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        quoteAmount
+        quoteAmountInUsd: quoteAmount(in: USD)
+        trades: count
+        quotePrice
       }
     }
   }
-
 `;
 
+// ok
 export const BITQUERY_CONTRACT_ORDERS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -95,8 +132,9 @@ export const BITQUERY_CONTRACT_ORDERS = gql`
   }
 `;
 
+// ok
 export const BITQUERY_TOKEN_ORDERS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -143,14 +181,15 @@ export const BITQUERY_TOKEN_ORDERS = gql`
   }
 `;
 
+// ok
 export const BITQUERY_MY_ORDERS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
-      dexTrades(
+      maker: dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
-        makerOrTaker: { is: $address }
+        maker: {is: $address}
       ) {
         block {
           timestamp {
@@ -160,6 +199,9 @@ export const BITQUERY_MY_ORDERS = gql`
         }
         tradeIndex
         protocol
+        transaction {
+          hash
+        }
         exchange {
           fullName
         }
@@ -169,20 +211,73 @@ export const BITQUERY_MY_ORDERS = gql`
             annotation
           }
         }
+        side
+        baseAmount
+        baseAmountInUsd: buyAmount(in: USD)
+        baseCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: sellAmount(in: USD)
+        quoteCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+      taker: dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        taker: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        date {
+          date
+        }
+        tradeIndex
+        protocol
         transaction {
           hash
         }
-        buyAmount
-        buyAmountInUsd: buyAmount(in: USD)
-        buyCurrency {
-          address
-          symbol
+        exchange {
+          fullName
         }
-        sellAmount
-        sellAmountInUsd: sellAmount(in: USD)
-        sellCurrency {
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        side
+        baseAmount
+        baseAmountInUsd: buyAmount(in: USD)
+        baseCurrency {
+          name
           address
           symbol
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: sellAmount(in: USD)
+        quoteCurrency {
+          name
+          address
+          symbol
+          decimals
         }
         tradeAmount(in: ETH)
         tradeAmountIsUsd: tradeAmount(in: USD)
@@ -191,8 +286,9 @@ export const BITQUERY_MY_ORDERS = gql`
   }
 `;
 
+// ok
 export const BITQUERY_ORDERS_BY_TOKENS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: "currencyAmount", limit: $limit, offset: $offset}
@@ -212,8 +308,9 @@ export const BITQUERY_ORDERS_BY_TOKENS = gql`
   }
 `
 
+// ok
 export const BITQUERY_ORDERS_BY_PAIRS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $exchangeName: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: "count", limit: $limit, offset: $offset}
@@ -240,8 +337,9 @@ export const BITQUERY_ORDERS_BY_PAIRS = gql`
   }
 `
 
+
 export const BITQUERY_MY_TRANSFERS = gql`
-  query ($network: EthereumNetwork!, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query ($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       sender: transfers(
         options: {desc: "block.height", limit: $limit, offset: $offset}
@@ -266,6 +364,8 @@ export const BITQUERY_MY_TRANSFERS = gql`
         currency {
           address
           symbol
+          name
+          decimals
         }
         amount
         transaction {
@@ -296,6 +396,8 @@ export const BITQUERY_MY_TRANSFERS = gql`
         currency {
           address
           symbol
+          name
+          decimals
         }
         amount
         transaction {

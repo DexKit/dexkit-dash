@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<Props> = ({data}) => {
   const classes = useStyles();
+  
   const getPaymentTypeColor = () => {
     switch (data.type) {
       case 'SELL': {
@@ -65,7 +66,7 @@ const TableItem: React.FC<Props> = ({data}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-      <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.type} clickable />
+        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.type} clickable />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>

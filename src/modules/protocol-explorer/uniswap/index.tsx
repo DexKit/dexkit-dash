@@ -3,7 +3,6 @@ import { Redirect } from 'react-router';
 
 export const uniswapConfigs = [
   {
- 
     routes: [
       {
         path: '/protocol-explorer/uniswap/overview',

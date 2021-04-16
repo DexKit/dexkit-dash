@@ -180,7 +180,7 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
             return {
               currency: currency,
               value: e.value,
-              valueUsd: tokens[key]?.market_data?.current_price?.usd || 0
+              valueUsd: (tokens[key]?.market_data?.current_price?.usd || 0) * e.value 
             }
           });
           
@@ -236,8 +236,8 @@ export function onGetMyTokenBalancesAt(network: NETWORK, address: string, days: 
             return acc;
           }, []);
 
-          date1 = new Date(date1.setDate(date1.getDate() - 1));
           data.push({ balances: d, date: date1 });
+          date1 = new Date(date1.setDate(date1.getDate() - 1));
         }
 
         dispatch({type: GET_TOKEN_BALANCES_AT, payload: data});

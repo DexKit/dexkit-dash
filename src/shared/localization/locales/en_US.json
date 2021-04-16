@@ -36,6 +36,12 @@
   "app.lastTransferDate": "Last transfer date",
   "app.daysTokenTransfered": "Days token transfered",
   "app.tradeHistory": "Trade History",
+  "app.side": "Side",
+  "app.pair": "Pair",
+  "app.baseAmount": "Base Amount",
+  "app.quoteAmount": "Quote Amount",
+  "app.receiver": "Receiver",
+  "app.sender": "Sender",
 
   "title.tradesByCurrencies": "Trades By Currencies",
   "title.tokenOrderPairs": "Token Order Pairs",

@@ -42,16 +42,16 @@ const TableHeading: React.FC<Props> = (props) => {
     <TableRow className={classes.tableRowRoot}>
       <TableCell className={classes.tableCellRoot}>Time</TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-      Type
+        Type
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-      Price
+        Price
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-      Amount
+        Amount
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-      Total
+        Total
       </TableCell>
     
     </TableRow>

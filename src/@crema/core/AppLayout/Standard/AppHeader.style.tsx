@@ -107,6 +107,14 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     display: 'inline-block',
     height: '100%',
     width: '28.6%'
+  },
+  badgeRoot: {
+    display: 'flex',
+    padding: '3px 10px',
+    borderRadius: 4,
+    margin: 18,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }));
 export default useStyles;

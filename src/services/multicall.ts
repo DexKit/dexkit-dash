@@ -3,6 +3,7 @@ import { providers } from 'ethers';
 import { MultiCall} from '@indexed-finance/multicall';
 
 let multicall: MultiCall;
+
 export const getMulticall = async () => {
     if (!multicall) {
         const web3Wrapper = await getWeb3Wrapper();

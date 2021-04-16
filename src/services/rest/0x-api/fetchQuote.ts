@@ -2,7 +2,7 @@
 import { ZEROX_API_URL } from 'shared/constants/AppConst';
 import { OrderSide } from 'types/app';
 
-import {  QuoteParams, SwapQuoteResponse } from './types';
+import { QuoteParams, SwapQuoteResponse } from './types';
 
 /**
  * Fetch quote right before confirm, with final validation

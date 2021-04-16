@@ -7,9 +7,9 @@ import {
     LanguageCode,
     widget,
 } from '../charting_library/charting_library.min';
-import { TRADE_API_URL, CHAIN_ID } from '../../../../utils/constants';
+import { TRADE_API_URL } from '../../../../utils/constants';
 import { UDFCompatibleDatafeed } from '../datafeeds/udf/lib/udf-compatible-datafeed';
-import { ChainId } from '@types';
+import { ChainId } from 'types/blockchain';
 
 const ChartContainer = styled.div`
     position: relative;
@@ -50,12 +50,13 @@ function getLanguageFromURL(): LanguageCode | null {
 
 // tslint:disable-next-line: no-default-export
 export default class TVChartContainer extends React.PureComponent<Partial<ChartContainerProps>, ChartContainerState> {
+
     public static defaultProps: ChartContainerProps = {
-        chainId: CHAIN_ID,
+        chainId: 1,
         symbol: 'WETH-DAI',
         interval: 'D',
         containerId: 'tv_chart_container',
-        datafeedUrl: `${TRADE_API_URL(CHAIN_ID)}/candles`,
+        datafeedUrl: `${TRADE_API_URL(1)}/candles`,
         libraryPath: '/charting_library/',
         chartsStorageUrl: 'https://saveload.tradingview.com',
         chartsStorageApiVersion: '1.1',
@@ -65,11 +66,14 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         autosize: true,
         studiesOverrides: {},
     };
+
     public readonly state = {
         symbol: this.props.symbol ? this.props.symbol : 'KIT-WETH',
         ready: false,
     };
+
     private _tvWidget: IChartingLibraryWidget | null = null;
+
 
     public componentDidMount(): void {
         const widgetOptions: ChartingLibraryWidgetOptions = {

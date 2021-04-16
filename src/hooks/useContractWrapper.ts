@@ -10,7 +10,7 @@ export const useContractWrapper = () => {
  
     useEffect(()=>{
         const provider = getProvider();
-        const contractWrappers = getContractWrappers();
+        const contractWrappers = getContractWrappers(chainId);
         if(!contractWrappers && provider && chainId && web3State === Web3State.Done){
             initContractWrappers(provider, chainId)
             setIsContractLoaded(true);

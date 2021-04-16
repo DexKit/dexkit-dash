@@ -1,17 +1,14 @@
-import React, { useCallback } from 'react';
-import {Card} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import IntlMessages from '@crema/utility/IntlMessages';
-import Box from '@material-ui/core/Box';
-import CoinsInfo from './CoinsInfo';
+import React, {useState} from 'react';
+import {Box, Button, Card} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
-import {BuySellProps, TotalBalanceData} from 'types/models/Crypto';
 import {CremaTheme} from 'types/AppContextPropsType';
-import Modal, { Receive } from './Modal';
-import { useWeb3 } from 'hooks/useWeb3';
-import { MyBalance } from 'types/bitquery/myBalance.interface';
+import {MyBalance} from 'types/bitquery/myBalance.interface';
+import CoinsInfo from './CoinsInfo';
+import Receiver from './Receiver';
+import Sender from './Sender';
 
 
 interface TotalBalanceProps {
@@ -19,36 +16,12 @@ interface TotalBalanceProps {
 }
 
 const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
-  const { onActionWeb3Transaction, account } = useWeb3();
-
-  const [open, setOpen] = React.useState(false);
-  const [receiveModal, setReceive] = React.useState(false);
+  const [senderModal, setSenderModal] = useState(false);
+  const [receiverModal, setReceiverModal] = useState(false);
 
   const usdAvailable = balances.reduce((acc, current) => {
     return acc += current.valueUsd || 0;
   }, 0);
-
-  const handleClickOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
-
-  const handleSend = useCallback(async ($e: React.MouseEvent<HTMLButtonElement, MouseEvent>, buySell: BuySellProps): Promise<void> => {
-    try{
-      console.log('buySell', buySell);
-      const result = await onActionWeb3Transaction({
-        to: buySell.address,
-        from: account,
-        value: Number(buySell.buyData.price)*Number(buySell.buyData.amount)
-      });
-      console.log('transaction result', result);
-    }catch(e){
-      console.error('transaction error', e);
-    }
-  }, []);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
@@ -127,12 +100,12 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button onClick={handleClickOpen}  className={classes.root}>
+                <Button onClick={() => setSenderModal(true)}  className={classes.root}>
                   <IntlMessages id='common.send' />
                 </Button>
               </Box>
               <Box ml={3}>
-                <Button onClick={() => setReceive(true)}  className={classes.btnPrimary}>
+                <Button onClick={() => setReceiverModal(true)}  className={classes.btnPrimary}>
                   <IntlMessages id='common.receive' />
                 </Button>
               </Box>
@@ -151,12 +124,12 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
         </Card>
       </Box>
       
-      <Modal  balances={balances} open={open} onClose={handleClose} onSend={handleSend} />
+      <Sender open={senderModal} onClose={() => setSenderModal(false)} balances={balances} />
       
-      <Receive open={receiveModal} onClose={() => setReceive(false)} />
+      <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
 
     </Box>
   );
 };
 
-export default React.memo(TotalBalance);
+export default TotalBalance;

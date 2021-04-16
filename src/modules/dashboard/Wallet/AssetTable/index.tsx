@@ -1,6 +1,6 @@
 import React from 'react';
 import AppCard from '../../../../@crema/core/AppCard';
-import PatientsTable from './PatientsTable';
+import CTable from './CTable';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
 
 
@@ -27,7 +27,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances}) => {
         </Button> */}
         </>
       }>
-      <PatientsTable recentPatients={balances} />
+      <CTable recentPatients={balances} />
     </AppCard>
   );
 };

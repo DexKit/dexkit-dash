@@ -46,11 +46,13 @@ export interface GetSwapQuoteResponseLiquiditySource {
  */
 export interface QuoteParams {
     chainId: ChainId;
+
     baseToken: Token;
 
     quoteToken: Token;
 
     orderSide: OrderSide;
+    
     makerAmount: BigNumber;
 
     // Parameters used to prevalidate quote at final

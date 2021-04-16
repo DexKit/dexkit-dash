@@ -1,4 +1,4 @@
 import { client as bitQueryClient } from './bitquery';
-import { client } from './uniswap';
+import { client as uniswapClient } from './uniswap';
 
-export { client, bitQueryClient };
+export { uniswapClient, bitQueryClient };

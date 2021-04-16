@@ -26,6 +26,31 @@ export const useWeb3 = () => {
   const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
 
+  
+  useEffect(() => {
+    const web3 = getWeb3();
+    if (web3State === Web3State.Done && web3) {
+
+      web3.eth.getChainId().then((n) => {
+        console.log(n);
+        dispatch(setChainId(n));
+      });
+
+      web3.eth.getAccounts().then((a) => dispatch(setEthAccount(a[0])));
+    }
+  }, [web3State]);
+
+
+  useEffect(() => {
+    const web3 = getWeb3();
+    if (account && web3) {
+      web3.eth.getBalance(account).then((e) =>{
+        dispatch(setEthBalance(new BigNumber(e)))
+      });
+    }
+  }, [account])
+
+
   const onCloseWeb3 = () => {
     const provider = getProvider();
     if (provider) {
@@ -68,26 +93,6 @@ export const useWeb3 = () => {
       }
     });
   };
-
-  useEffect(() => {
-    const web3 = getWeb3();
-    if (web3State === Web3State.Done && web3) {
-
-      web3.eth.getChainId().then((n) => dispatch(setChainId(n)));
-
-      web3.eth.getAccounts().then((a) => dispatch(setEthAccount(a[0])));
-    }
-  }, [web3State]);
-
-
-  useEffect(() => {
-    const web3 = getWeb3();
-    if (account && web3) {
-      web3.eth.getBalance(account).then((e) =>{
-        dispatch(setEthBalance(new BigNumber(e)))
-      });
-    }
-  }, [account])
 
   const subscribeProvider = async (pr: any) => {
     if (!pr.on) {

@@ -11,23 +11,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LockIcon from '@material-ui/icons/LockRounded'
 import { BalanceCoins } from 'types/models/Crypto';
 import { Link } from 'react-router-dom';
+import { PairInfoExplorer } from 'types/app';
 
 
-export interface InfoProps {
-  totalBalanceData: InfoData;
-}
-
-export interface InfoData {
-  address: string;
-  quoteAmount: number;
-  quoteAmountInCurrency: number;
-  baseAmount: number;
-  baseAmountInCurrency: number;
-  pairSymbols: {base:string, quote: string}; 
-  dailyVolume: number;
-  quotePrice: number;
-  totalLiquidy: number;
-  priceChangePercentage24h: number;
+export interface Props {
+  totalBalanceData: PairInfoExplorer;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -71,32 +59,32 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const coinInfoFactory = (propsData: InfoData): BalanceCoins[] => {
+const coinInfoFactory = (propsData: PairInfoExplorer): BalanceCoins[] => {
   return [
     { 
       id: 1,
       name: 'Total Liquidy',
-      value: propsData?.totalLiquidy.toFixed(2)  ?? 0
+      value: propsData?.liquidity.toFixed(2)  ?? 0
     },
     {
       id: 2,
       name: 'Daily Volume',
-      value: propsData?.dailyVolume.toFixed(2) ?? 0
+      value: propsData?.volume24.toFixed(2) ?? 0
     },
     {
       id: 3,
-      name: `Pooled ${propsData?.pairSymbols?.base?.toUpperCase() ?? '?'}`,
-      value: propsData?.baseAmount.toFixed(2) ?? 0
+      name: `Pooled ${propsData?.baseToken.symbol ?? '?'}`,
+      value: propsData?.basePooled.toFixed(2) ?? 0
     },
     {
       id: 4,
-      name: `Pooled ${propsData?.pairSymbols?.quote?.toUpperCase() ?? '?'}`,
-      value: propsData?.quoteAmount.toFixed(2) ?? 0
+      name: `Pooled ${propsData?.quoteToken.symbol ?? '?'}`,
+      value: propsData?.quotePooled.toFixed(2) ?? 0
     }
   ];
 }
 
-const Info: React.FC<InfoProps> = ({ totalBalanceData }) => {
+const Info: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -121,16 +109,16 @@ const Info: React.FC<InfoProps> = ({ totalBalanceData }) => {
               color='primary.contrastText'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
-              {totalBalanceData.pairSymbols.base}/{totalBalanceData.pairSymbols.quote}
+              {props.totalBalanceData.baseToken.symbol}/{props.totalBalanceData.quoteToken.symbol}
             </Box>
             <Box display='flex'>
               <Box mr={3} clone>
-                <a href={`https://etherscan.io/address/${totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
+                <a href={`https://etherscan.io/address/${props.totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34 }} src="/images/etherescan.png"></Avatar>
                 </a>             
               </Box>
               <Box mr={3} clone>
-                <a href={`https://info.uniswap.org/pair/${totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
+                <a href={`https://info.uniswap.org/pair/${props.totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}} src="/images/uniswap.png"></Avatar>
                 </a>
               </Box>
@@ -143,7 +131,7 @@ const Info: React.FC<InfoProps> = ({ totalBalanceData }) => {
               style={{color: '#4ee44e', marginTop: 13}}
               fontSize={20}>
                 
-              ${(totalBalanceData.quoteAmountInCurrency/totalBalanceData.baseAmountInCurrency).toFixed(6)}
+              ${props.totalBalanceData.priceUsd.toFixed(4)}
             </Box>
           </Box>
           <Box display='flex' >
@@ -152,14 +140,14 @@ const Info: React.FC<InfoProps> = ({ totalBalanceData }) => {
               fontWeight={Fonts.LIGHT}
               style={{color: '#4ee44e'}}
               fontSize={13}>
-              (24h {totalBalanceData.priceChangePercentage24h.toFixed(2)}%)
+              (24h {props.totalBalanceData.priceChange.toFixed(2)}%)
             </Box>
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
               style={{color: 'white', marginLeft: 10}}
               fontSize={13}>
-              {totalBalanceData.quotePrice.toFixed(8)} {totalBalanceData.pairSymbols.base.toUpperCase()}
+              {props.totalBalanceData.price.toFixed(8)} {props.totalBalanceData.baseToken.symbol}
             </Box>
           </Box>
         </Box>
@@ -171,7 +159,7 @@ const Info: React.FC<InfoProps> = ({ totalBalanceData }) => {
           <IntlMessages id='Total Liquidy' />
         </Box> */}
         <Box pt={{md: 2, lg: 3, xl: 6}}>
-          <CoinsInfo coins={coinInfoFactory(totalBalanceData)} />
+          <CoinsInfo coins={coinInfoFactory(props.totalBalanceData)} />
         </Box>
       </AppCard>
     </Box>

@@ -1,23 +1,6 @@
 import { BigNumber } from "@0x/utils";
 import { Styles } from "jss";
 
-
-export enum Network {
-  Mainnet = 1,
-  Ropsten = 3,
-  Rinkeby = 4,
-  Kovan   = 42,
-  Ganache = 50
-}
-
-export enum ChainId {
-  Mainnet = 1,
-  Ropsten = 3,
-  Rinkeby = 4,
-  Kovan   = 42,
-  Ganache = 1337
-}
-
 export interface TokenList{
   name: string;
   timestamp: string;

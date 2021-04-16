@@ -28,7 +28,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
               fontFamily={Fonts.LIGHT}
               component='h3'
               fontSize={{xs: 18, sm: 20, xl: 22}}>
-              ${coin.valueUsd}
+              ${coin?.valueUsd?.toFixed(2)||0}
             </Box>
             <Box component='p' fontSize={{xs: 16, xl: 18}} color={indigo[200]}>
             {coin.value.toFixed(4) ?? '?'} {coin.currency.symbol ?? '?'}

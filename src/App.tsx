@@ -12,7 +12,7 @@ import { ApolloProvider } from '@apollo/client';
 
 import store, {history} from './redux/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { client } from 'services/graphql';
+// import { client } from 'services/graphql';
 import WalletRoutes from 'services/WalletRoutes';
 import { Web3Manager } from 'shared/components/Web3Manager';
 import ReactNotification from 'react-notifications-component';
@@ -22,7 +22,7 @@ import 'react-notifications-component/dist/theme.css'
 const App = () => (
   <ContextProvider>
     <Provider store={store}>
-    <ApolloProvider client={client}>
+    {/* <ApolloProvider client={client}> */}
       <CremaThemeProvider>
         <CremaStyleProvider>
           <LocaleProvider>
@@ -38,7 +38,7 @@ const App = () => (
           </LocaleProvider>
         </CremaStyleProvider>
       </CremaThemeProvider>
-      </ApolloProvider>,
+      {/* </ApolloProvider>, */}
     </Provider>
   </ContextProvider>
 );

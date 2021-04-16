@@ -1,14 +1,6 @@
 import { BigNumber } from '@0x/utils';
-import { ChainId, Network } from '@types';
 import { CoinIcons } from 'shared/constants/AppEnums';
-
-export const NETWORK_ID: number = Number.parseInt(process.env.REACT_APP_NETWORK_ID as string, 10) || Network.Mainnet;
-
-export const CHAIN_ID: number = process.env.REACT_APP_CHAIN_ID
-    ? Number.parseInt(process.env.REACT_APP_CHAIN_ID as string, 10)
-    : NETWORK_ID === 50
-    ? 1337
-    : NETWORK_ID;
+import { ChainId } from 'types/blockchain';
 
 
 export function matchCoinSymbol(symbol: string): string{

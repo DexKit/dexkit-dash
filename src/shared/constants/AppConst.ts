@@ -24,7 +24,7 @@ export const RELAYER_URL = (chainId: ChainId) => {
   }
 };
 
-export const ZEROX_API_URL = (chainId: ChainId) => {
+export const ZEROX_API_URL = (chainId: ChainId|undefined) => {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'https://api.0x.org/swap/v1/quote';
@@ -36,3 +36,11 @@ export const ZEROX_API_URL = (chainId: ChainId) => {
       return '';
   }
 };
+
+export const ETHERSCAN_API_URL = (chainId: ChainId|undefined) => {
+  switch(chainId) {
+    case ChainId.Mainnet: return 'https://etherscan.io';
+    case ChainId.Kovan: return 'https://kovan.etherscan.io';
+    default: return 'https://etherscan.io';
+  }
+}

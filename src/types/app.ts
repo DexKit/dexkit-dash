@@ -97,10 +97,15 @@ export interface OrderData {
   exchange: string,
   contract: string,
   protocol: string,
-  sellAmountUsd: number,
-  sellToken: Token,
-  buyAmountUsd: number,
-  buyToken: Token,
+  baseAmount: number,
+  baseAmountUsd: number,
+  baseToken: Token,
+  quoteAmount: number,
+  quoteAmountUsd: number,
+  quoteToken: Token,
+  quotePrice: number,
+  tradeAmount: number,
+  tradeAmountUsd: number,
   created: Date
 }
 
@@ -122,4 +127,28 @@ export interface OrderByPairs {
   tradeCount: number,
   daysTraded: number,
   started: string
+}
+
+
+export interface PairInfoExplorer {
+  baseToken: Token,
+  quoteToken: Token,
+  address: string
+  price: number,
+  priceUsd: number,
+  priceChange: number,
+  liquidity: number,
+  volume24: number,
+  basePooled: number,
+  quotePooled: number,  
+}
+
+
+export interface TransferByAddress {
+  sender: string,
+  receiver: string,
+  token: Token,
+  amount: number,
+  hash: string,
+  time: string
 }

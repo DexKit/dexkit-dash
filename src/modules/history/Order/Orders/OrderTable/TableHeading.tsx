@@ -12,14 +12,13 @@ interface TableHeadingProps {}
 const TableHeading: React.FC<TableHeadingProps> = () => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     tableRowRoot: {
-      borderBottom: '0 none',
       color: grey[500],
     },
     tableCellRoot: {
       borderBottom: '0 none',
-      fontSize: 14,
+      fontSize: 16,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -40,35 +39,40 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
   const classes = useStyles();
   return (
     <TableRow className={classes.tableRowRoot}>
-      {/* <TableCell className={classes.tableCellRoot}>
-        <IntlMessages id='app.block' />
-      </TableCell> */}
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.hash' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.protocol' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.sellAmount' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.sellCurrency' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.buyAmount' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.buyCurrency' />
-      </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.exchange' />
       </TableCell>
+
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.smartContract' />
+        <IntlMessages id='app.side' />
       </TableCell>
+      
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.pair' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.baseAmount' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.quoteAmount' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.price' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.tradeAmount' />
+      </TableCell>
+
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.created' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        #
       </TableCell>
     </TableRow>
   );

@@ -41,10 +41,10 @@ const OrderTable: React.FC<Props> = ({data}) => {
   return (
     <Box className={classes.tableResponsiveMaterial}>
       <Table className='table'>
-        <TableHead className={classes.borderBottomClass}>
+        <TableHead>
           <TableHeading />
         </TableHead>
-        <TableBody className={classes.borderBottomClass}>
+        <TableBody>
           {
             data.length > 0 ? 
               data.map((row, index) => (

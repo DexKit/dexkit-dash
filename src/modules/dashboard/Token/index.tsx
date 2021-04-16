@@ -3,25 +3,18 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TotalBalance from 'shared/components/TotalBalance';
 import GridContainer from '../../../@crema/core/GridContainer';
-import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import SalesState from './SalesState'
 import BuySell from './BuySell'
 import InfoCard from './InfoCard'
 import ProfileCard from './ProfileCard'
 
-import { BigNumber } from '@0x/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
-import { BalanceCoins, TotalBalanceData } from 'types/models/Crypto';
 import { CurrencyPair } from '@types';
-// import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import { getToken } from 'services/rest/coingecko';
 import { CoinDetailCoinGecko } from 'types/coingecko';
 import { Fonts } from 'shared/constants/AppEnums';
-import StepModal from 'shared/components/StepModal';
-import StepModalContent from 'shared/components/StepModal/stepModalContent';
 import { useWeb3 } from 'hooks/useWeb3';
 
 const TVChartContainer = React.lazy(() => import('../../../shared/components/chart/TvChart/tv_chart'));
@@ -30,55 +23,27 @@ export const marketToString = (currencyPair: CurrencyPair): string => {
   return `${currencyPair.base.toUpperCase()}-${currencyPair.quote.toUpperCase()}`;
 };
 
-
 type TokenParams = {
   address?: string;
 };
 
 type TokenProps = RouteComponentProps<TokenParams>
 
-
-// function parseTotalBalance(address?: BitqueryAddress[]): TotalBalanceData {
-//   const _balances = address != null ? address
-//     .reduce(
-//       (arr: MyBalance[], e) => {
-//         arr.push(...e.balances as MyBalance[]);
-//         return arr;
-//       }, []
-//     ) : [];
-
-//   const totalBalanceData: TotalBalanceData = {
-//     balance: _balances.reduce(
-//       (totalBalance: BigNumber, b) => totalBalance.plus(b.value ?? 0), new BigNumber(0)
-//     ).toString(),
-//     coins: _balances.map((x, i) => {
-//       const { currency } = x;
-//       return {
-//         id: i,
-//         name: currency.name,
-//         value: x.value,
-//         symbol: currency.symbol
-//       } as BalanceCoins;
-//     })
-//   };
-//   return totalBalanceData;
-// }
-
-
 const Crypto: React.FC<TokenProps> = (props) => {
   const {match: { params }} = props;
   const { address } = params;
 
-  const { account } = useWeb3();
-
   const [balances, setBalances] = useState<MyBalance[]>([]);
   const [info, setInfo] = useState<CoinDetailCoinGecko>();
-  const [modalIsOpen, setOpenModal] = useState<boolean>(false);
 
+  const [openTrade, setOpenTrade] = useState<boolean>(false);
+
+  const [openOrders, setOpenOrders] = useState<boolean>(false);
+  const [openHistory, setOpenHistory] = useState<boolean>(false);
 
   const handleModal = useCallback((event: React.SyntheticEvent<HTMLElement, Event>) => {
     console.log('modal event', event);
-    setOpenModal(false);
+    // setOpenModal(false);
   }, []);
 
   useEffect(useCallback(() => {
@@ -137,17 +102,15 @@ const Crypto: React.FC<TokenProps> = (props) => {
                 
               <Grid style={{ marginTop: 15 }} item xs={12} md={12} key="item-grid-buy-sell">
                 <BuySell 
-                  actionButton={($e) => {
-                    setOpenModal(!modalIsOpen)
-                  }}
+                  actionButton={($e) => { setOpenTrade(!openTrade) }}
                 />
               </Grid>
 
               <GridContainer style={{marginTop: 2}}  >
                 <Grid item xs={12} sm={6} md={6}>
-                  <Link to={`/history/order/token-explorer/${address}`} style={{textDecoration: 'none'}}>
+                  <Link to={`/history/order/token/${address}`} style={{textDecoration: 'none'}}>
                     <InfoCard state={{
-                      value: "Order history",
+                      value: "My Orders",
                       bgColor: "#0A8FDC",
                       icon: "/assets/images/dashboard/1_monthly_sales.png",
                       id: 1,
@@ -156,9 +119,9 @@ const Crypto: React.FC<TokenProps> = (props) => {
                   </Link>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <Link to={`/history/transaction/token-explorer/${address}`} style={{textDecoration: 'none'}}>
+                  <Link to={`/history/transaction/token/${address}`} style={{textDecoration: 'none'}}>
                     <InfoCard state={{
-                      value: "Transaction history",
+                      value: "Trade history",
                       bgColor: "#9E49E6",
                       icon: "/assets/images/dashboard/1_monthly_sales.png",
                       id: 2,
@@ -186,15 +149,6 @@ const Crypto: React.FC<TokenProps> = (props) => {
                 </Grid>  
               </GridContainer>
             </Grid>
-
-            <GridContainer key="grid-child-2">
-              <Grid style={{ padding: 5 }} item xs={12} sm={6} md={6} key="grid-item-cards">
-                {/* <ProfileCard /> */}
-              </Grid>
-              <Grid style={{ padding: 5 }} item xs={12} sm={6} md={6} key="grid-item-sale-state">
-                {/* <SalesState salesState={MOCKET_THING} /> */}
-              </Grid>
-            </GridContainer>
           </GridContainer>
         </Box>
       

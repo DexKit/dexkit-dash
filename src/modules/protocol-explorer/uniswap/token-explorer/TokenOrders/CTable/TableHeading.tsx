@@ -12,12 +12,11 @@ interface TableHeadingProps {}
 const TableHeading: React.FC<TableHeadingProps> = () => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     tableRowRoot: {
-      borderBottom: '0 none',
       color: grey[500],
     },
     tableCellRoot: {
       borderBottom: '0 none',
-      fontSize: 14,
+      fontSize: 16,
       padding: 8,
       fontFamily: Fonts.LIGHT,
       '&:first-child': {

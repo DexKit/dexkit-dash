@@ -1,14 +1,15 @@
 import { ChainId } from "types/blockchain";
 
 export enum EXCHANGE {
-  UNISWAP = 'Uniswap'
+  UNISWAP = 'Uniswap',
+  ZEROX = 'ZeroX',
+  ALL = ''
 }
 
 export enum NETWORK {
   ETHEREUM = 'ethereum',
   BSC = 'bsc',
-  BSCTEST = 'bsc_testnet',
-  ALL = ''
+  BSCTEST = 'bsc_testnet'
 }
 
 export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
@@ -17,13 +18,10 @@ export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
     case ChainId.Ropsten:
     case ChainId.Rinkeby:
     case ChainId.Kovan:
-    case ChainId.Goerli:
-      return NETWORK.ETHEREUM;
-    case ChainId.Binance:
-      return NETWORK.BSC;
-    case ChainId.BinanceTest:
-      return NETWORK.BSCTEST;
-    default:
-      return NETWORK.ALL;
+    case ChainId.Goerli: return NETWORK.ETHEREUM;
+    case ChainId.Binance: return NETWORK.BSC;
+    case ChainId.BinanceTest: return NETWORK.BSCTEST;
+    default: return NETWORK.ETHEREUM;
   }
 }
+

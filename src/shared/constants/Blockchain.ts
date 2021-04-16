@@ -11,15 +11,21 @@ export const GWEI_IN_WEI = new BigNumber(1000000000);
 
 export const DEFAULT_GAS_PRICE = GWEI_IN_WEI.multipliedBy(6);
 
-export const GET_CHAIN_ID_NAME = (chainId: ChainId) => {
-  switch (chainId) {
+export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
+  const id = Number(chainId);
+
+  switch (id) {
     case ChainId.Mainnet:
       return 'Mainnet';
     case ChainId.Kovan:
       return 'Kovan';
     case ChainId.Ropsten:
       return 'Ropsten';
+    case ChainId.Binance:
+      return 'BSC';
+    case ChainId.BinanceTest:
+      return 'BSC Test';
     default:
-      return 'Unknown';
+    return undefined;
   }
 };
