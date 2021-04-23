@@ -1,13 +1,14 @@
 import { NETWORK } from "shared/constants/Bitquery";
 import { OrderData } from "types/app";
 
-export function parseOrderData(data: any, network: NETWORK): OrderData[] {
-  console.log(data);
+export function parseOrderAccountData(data: any, network: NETWORK): OrderData[] {
 
-  if (data && data.data[network].dexTrades && data.data[network].dexTrades.length > 0) {
-    const trades = data.data[network].dexTrades;
+  if (data && (data.data[network].maker.length > 0 || data.data[network].taker.length > 0)) {
+    const makerTrades: any[] = data.data[network].maker;
+    const takerTrades: any[] = data.data[network].taker;
 
-    return trades.map((e: any) => {
+    return makerTrades.concat(takerTrades).sort((a, b) => (a.block.height - b.block.height))
+      .map<OrderData>((e) => {
         return {
           hash: e.transaction.hash,
           block: e.block.height,

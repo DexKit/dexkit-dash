@@ -56,27 +56,21 @@ export const Kit: React.FC<KitProps> = (props) => {
   // const classes = useStyles({ bgColor: color });
   return (
     <ListItem>
+      
       <ListItemAvatar>
         <Avatar>
           <FolderIcon />
         </Avatar>
       </ListItemAvatar>
-      <ListItemText
-        primary={name}
-        secondary={value}
-      />
+
+      <ListItemText primary={name} secondary={value} />
+      
       <ListItemSecondaryAction>
-        {/* <IconButton edge="end" aria-label="delete" onClick={($e) => action($e)}>
-          <DeleteIcon />
-        </IconButton> */}
-        <Button 
-        variant="outlined"
-        color={button.color}
-        onClick={($e) => button.action($e)}
-        >
+        <Button variant="outlined" color={button.color} onClick={($e) => button.action($e)}>
           {button.title}
         </Button>
       </ListItemSecondaryAction>
+
     </ListItem>
   );
 }

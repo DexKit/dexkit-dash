@@ -1,34 +1,18 @@
 import React from 'react';
-import AppCard from '../../../../../@crema/core/AppCard';
-import AppSelect from '../../../../../@crema/core/AppSelect';
 import {useIntl} from 'react-intl';
-import {TransactionDataNew} from '../../../../../types/models/Analytics';
+import {MintBurn} from 'types/app';
+import AppCard from '../../../../../@crema/core/AppCard';
 import TransactionTable from './TransactionTable';
 
 interface Props {
-  transactionData: TransactionDataNew[];
+  transactionData: MintBurn[];
 }
 
 const OrderNTransaction: React.FC<Props> = ({transactionData}) => {
-  const handleSelectionType = (data: any) => {
-    console.log('data: ', data);
-  };
+ 
   const {messages} = useIntl();
   return (
-    <AppCard
-      height={1}
-      title={"Pool"}
-      action={
-        <AppSelect
-          menus={[
-            'Last hour',
-            messages['dashboard.lastWeeks'],
-            messages['dashboard.lastMonth'],
-          ]}
-          defaultValue={'Last hour'}
-          onChange={handleSelectionType}
-        />
-      }>
+    <AppCard height={1} title={messages["app.pool"]}>
       <TransactionTable transactionData={transactionData} />
     </AppCard>
   );

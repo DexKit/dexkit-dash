@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   props?: any;
@@ -40,18 +41,23 @@ const TableHeading: React.FC<Props> = (props) => {
   const classes = useStyles(props);
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell className={classes.tableCellRoot}>Time</TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Type
+        <IntlMessages id='app.time' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Price
+        <IntlMessages id='app.type' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Amount
+        <IntlMessages id='app.price' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Total
+        <IntlMessages id='app.baseAmount' />
+      </TableCell>
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.quoteAmount' />
+      </TableCell>
+      <TableCell align='left' className={classes.tableCellRoot}>
+      <IntlMessages id='app.tradeAmount' />
       </TableCell>
     
     </TableRow>

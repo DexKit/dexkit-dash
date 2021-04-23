@@ -1,6 +1,7 @@
 import { useWeb3 } from 'hooks/useWeb3';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import { onGetAllKits, onGetUserKits } from 'redux/actions/MyApps';
 import { AppState } from 'redux/store';
 import { Card, CardContent, CardHeader, IconButton, List, makeStyles } from '@material-ui/core';
@@ -11,6 +12,7 @@ import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
 import { BigNumber } from "@0x/utils";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   statsCard: {
@@ -50,7 +52,8 @@ interface KitMarketProps {
 }
 
 function generate(element: any) {
-  const { data, icon, color }: { data: { kitsData: KytType[], userkits: KytType[] }, icon: any, color: string} = element;
+  const { data, icon, color, history }: { data: { kitsData: KytType[], userkits: KytType[] }, icon: any, color: string, history: any} = element;
+
   return (data?.kitsData ?? []).map((element) => {
     // React.cloneElement(element, {
     //   key: value,
@@ -61,67 +64,58 @@ function generate(element: any) {
     const exist = (data.userkits ?? []).findIndex( _u => _u.name === element.name) >= 0 ;
     const button = {
       color: exist ?  'secondary' : 'primary' as "inherit" | "primary" | "secondary" | "default" | undefined,
-      action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => console.log(`clicou; ${$e}`),
+      action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => history.push(`/my-apps/wizard/${element.name.toLowerCase()}`),
       title: exist ? 'REMOVE -': 'ADD +'
     }
+
     return (<Kit
       key={element.c_id}
       icon={element.icon ?? icon}
       color={color}
-      value={value ?? 0.0}
+      // value={value ?? 0.0}
+      value={''}
       name={element.name}
       button={button}
     />);
   });
 }
-const KitMarket: React.FC<KitMarketProps> = ({
-  // data,
-  icon,
-  bgColor,
-  heading
-}) => {
+
+
+const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
+  const classes = useStyles({bgColor});
 
   const { account } = useWeb3();
+  const history = useHistory();
+
   const dispatch = useDispatch();
+
+  const { kitsData, userkits } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
+
   useEffect(() => {
     dispatch(onGetAllKits());
     dispatch(onGetUserKits(account ?? '0x000000000000000000000000000000000'));
   }, [dispatch]);
 
-
-  const {
-    kitsData, 
-    userkits, 
-    // tokenData
-  } = useSelector<AppState, AppState['myApps']>(
-    ({myApps}) => myApps
-  );
-
-  console.log('userkits', userkits);
-
-  
-  const classes = useStyles({bgColor});
   return (
-    // <AppCard 
-    // title={heading}
     <Card>
+      
       <CardHeader
         className={clsx(classes.statsCard, 'card-hover')}
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        // action={
+        //   <IconButton aria-label="settings">
+        //     <MoreVertIcon />
+        //   </IconButton>
+        // }
         title={heading}
       />
+
       <CardContent className={classes.cardContent}>
         <List dense={true}>
-          {generate({ data: { kitsData, userkits}, icon, bgColor})}
+          {generate({ data: { kitsData, userkits}, icon, bgColor, history})}
         </List>
       </CardContent>
-    </Card>
     
-    // </AppCard>
+    </Card>
   );
 }
 

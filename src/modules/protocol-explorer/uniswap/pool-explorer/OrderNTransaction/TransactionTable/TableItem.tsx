@@ -2,12 +2,12 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {TransactionDataNew} from '../../../../../../types/models/Analytics';
 import {makeStyles, Button, Chip} from '@material-ui/core';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
+import { MintBurn } from 'types/app';
 
 interface Props {
-  data: TransactionDataNew;
+  data: MintBurn;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       padding: 16,
     },
   },
+  center: {
+    textAlign: 'center'
+  },
   anchar: {
     color: theme.palette.primary.main,
     borderBottom: `1px solid ${theme.palette.primary.main}`,
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     padding: '3px 10px',
     borderRadius: 4,
     display: 'inline-block',
-  },
+  }
 }));
 
 const TableItem: React.FC<Props> = ({data}) => {
@@ -57,10 +60,10 @@ const TableItem: React.FC<Props> = ({data}) => {
     }
   };
   const getPaymentStatusColor = () => {
-    if(data.poolVariation > 0){
+    if(data.variation > 0){
       return '#00b400';
     }
-    if(data.poolVariation < 0){
+    else if(data.variation < 0){
       return '#F84E4E';
     }
     else {
@@ -68,54 +71,56 @@ const TableItem: React.FC<Props> = ({data}) => {
     }
   };
 
+  const timeFn = data.time.split(' ')
+
   return (
-    <TableRow key={data.id}>
+    <TableRow key={data.hash}>
+      
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box >{data.pair}</Box>
+        <Box>{timeFn[0]}</Box>
+        <Box>{timeFn[1]}</Box>
       </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>
-        {data.time}
+        <Chip
+          style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}}
+          label={data.type}
+          clickable
+        />
       </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>
-      <Chip
-        style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}}
-        label={data.type}
-        clickable
-      />
+        {data.amount0.toFixed(2)} {data.baseToken.symbol}
       </TableCell>
-      <TableCell
-        align='left'
-        className={classes.tableCell}
-       >
-        {data.price}
-      </TableCell>
+
       <TableCell align='left' className={classes.tableCell}>
-        <Box
-          className={classes.badgeRoot}
-         >
-          {data.totalValue}
+        {data.amount1.toFixed(2)} {data.quoteToken.symbol}
+      </TableCell>
+
+
+
+      <TableCell align='left' className={classes.tableCell}>
+        <Box className={classes.badgeRoot}
+          style={{
+            color: getPaymentStatusColor(),
+            backgroundColor: getPaymentStatusColor() + '44',
+          }}>
+            {data.variation.toFixed(2)}%
+          </Box>
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCell}>
+        <Box className={classes.badgeRoot}>
+          {data.reserve0.toFixed(2)} {data.baseToken.symbol}
         </Box>
       </TableCell>
+      
       <TableCell align='left' className={classes.tableCell}>
-        {data.amount}
+        <Box className={classes.badgeRoot}>
+          {data.reserve1.toFixed(2)} {data.quoteToken.symbol}
+        </Box>
       </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
-      {data.total}
-      </TableCell>
-      <TableCell style={{color: getPaymentStatusColor(),}}  align='left' className={classes.tableCell}>
-        {data.poolVariation}%
-      </TableCell>
-      <TableCell align='right' className={classes.tableCell}>
-      <Button variant="outlined" style={{marginRight: 10}}    >
-        Buy
-      </Button>
-      <Button variant="outlined" style={{marginRight: 10}}  color="primary" >
-        Add
-      </Button>
-      <Button variant="outlined" color="secondary" >
-        Remove
-      </Button>
-      </TableCell>
+      
     </TableRow>
   );
 };

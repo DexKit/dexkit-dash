@@ -26,7 +26,7 @@ export function matchCoinSymbol(symbol: string): string{
 export const TRADE_API_URL = (chainId: ChainId) => {
     switch (chainId) {
         case ChainId.Mainnet:
-            return 'https://api.dexkit.com/v4';
+            return 'https://query.dexkit.com/v4';
         case ChainId.Ropsten:
             return '';
         case ChainId.Kovan:

@@ -179,6 +179,7 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
 
             return {
               currency: currency,
+              history: e.history,
               value: e.value,
               valueUsd: (tokens[key]?.market_data?.current_price?.usd || 0) * e.value 
             }

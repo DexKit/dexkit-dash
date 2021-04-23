@@ -22,109 +22,42 @@ import { RouteComponentProps } from 'react-router-dom';
 import { TokenSearch } from 'shared/components/TokenSearch';
 import { EXCHANGE, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { useWeb3 } from 'hooks/useWeb3';
-import { PairInfoExplorer } from 'types/app';
+import { OrderData, PairInfoExplorer } from 'types/app';
 import { parsePairExplorerData } from 'utils/parse';
+import { getContractOrders, getPairExplorer } from 'services/graphql/bitquery';
+import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
+
 
 const TVChartContainer = React.lazy(() => import('../../../../shared/components/chart/TvChart/tv_chart'));
 
-type PairExplorerParams = {
-  address: string;
-};
-
-type AddressProp = {
+type PropsParams = {
   address: string;
 }
 
-type PairExplorerProps = RouteComponentProps<PairExplorerParams>
+type Props = RouteComponentProps<PropsParams>
 
 
-const parseTradesToInfoProps = (data: any, address: string): PairInfoExplorer[] => {
-  console.log('parseTradesToInfoProps', data);
-  // return data.map(d => {
-  //   return {
-  //     address: address,
-  //     baseAmount: d.baseAmount,
-  //     baseAmountInCurrency: d.baseAmountInUSD,
-  //     dailyVolume: d.tradeAmountInUSD,
-  //     pairSymbols: { base: d.baseCurrency.symbol, quote: d.quoteCurrency.symbol },
-  //     quoteAmount: d.quoteAmount,
-  //     quoteAmountInCurrency: d.quoteAmountInUSD,
-  //     priceChangePercentage24h: 1.24,
-  //     quotePrice: d.quotePrice,
-  //     totalLiquidy: 0
-  //   } as InfoData;
-  // });
-  return [];
-}
-
-const parseTradesToTransactionDataNew = (data: DexTradeTransaction[]):TransactionDataNew[] =>  {
-  console.log(data);
-  return data.map( (d, i) => {
-    return {
-      id: `${d.transaction.hash}(${i})`,
-      amount: d.tradeAmount.toFixed(8),
-      type: d.side,
-      price: d.quotePrice.toFixed(4),
-      total: d.tradeAmountIsUsd.toFixed(2),
-      time: d.timeInterval.second,
-      pair: d.timeInterval.second,
-      poolVariation: NaN, 
-      totalValue: d.quoteAmountInUsd.toFixed(6)
-    } as TransactionDataNew;
-  });
-}
-
-const CustomInfo: React.FC<AddressProp> = (props) => {
-  const { address } = props;
-  const { chainId } = useWeb3();
-
-  const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradePoolInfo[] }}>(BITQUERY_PAIR_EXPLORER, {
-    client: bitQueryClient,
-    variables: {
-      network: GET_NETWORK_NAME(chainId),
-      address,
-      exchangeName: "Uniswap"
-     }
-  });
-
-  if (loading) return <Loader/>;
-  if (error) return <><Typography color="error">{JSON.stringify(error)}</Typography></>;
-
-  const totalBalanceData = parsePairExplorerData(data, address, GET_NETWORK_NAME(chainId));
-
-  return totalBalanceData ? (<>
-    <Info totalBalanceData={totalBalanceData} />
-    <Grid item xs={12} md={12} style={{marginTop: 44, height: 450}}>
-      <TVChartContainer symbol={`${totalBalanceData.baseToken.symbol}-${totalBalanceData.quoteToken.symbol}`} chainId={1} />
-    </Grid></>
-  ) : null;
-}
-
-const CustomOrderNTransaction: React.FC<AddressProp> = (props) => {
-  const { address } = props;
-  const { chainId } = useWeb3();
-
-  const { loading, error, data } = useQuery<{ ethereum: { dexTrades: DexTradeTransaction[] }}>(BITQUERY_CONTRACT_ORDERS, {
-    client: bitQueryClient,
-    variables: {
-      network: GET_NETWORK_NAME(chainId),
-      address,
-      limit: 9,
-      offset: 0
-     }
-  });
-  if (loading) return <Loader/>;
-  if (error) return <><Typography color="error">{JSON.stringify(error)}</Typography></>;
-  const transactions = parseTradesToTransactionDataNew(data?.ethereum?.dexTrades ?? []);
-  return transactions ? <OrderNTransaction transactionData={transactions}/> : null;
-}
-
-const PairExplorer: React.FC<PairExplorerProps> = (props) => {
+const PairExplorer: React.FC<Props> = (props) => {
   const {match: { params }} = props;
+  const {address} = params;
 
-  const { address } = params;
+  const { chainId } = useWeb3();
 
-  console.log(address);
+
+  const [infoData, setInfoData] = useState<PairInfoExplorer>();
+  const [tableData, setTableData] = useState<OrderData[]>([]);
+
+  useEffect(() => {
+    if (address) {
+      getPairExplorer(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, address, GET_DEFAULT_QUOTE(chainId))
+        .then(info => { setInfoData(info) })
+        .catch(e => console.log(e))
+
+      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, address, GET_DEFAULT_QUOTE(chainId), 7, 0, null, null)
+        .then(orders => { setTableData(orders)})
+        .catch(e => console.log(e))
+    }
+  }, [address, chainId]);
 
   return (
     <>
@@ -144,7 +77,13 @@ const PairExplorer: React.FC<PairExplorerProps> = (props) => {
           </Grid>
           
           <Grid item xs={12} md={5}>
-            <CustomInfo address={address} />
+            {
+              infoData && <>
+              <Info data={infoData} />
+              <Grid item xs={12} md={12} style={{marginTop: 44, height: 450}}>
+                <TVChartContainer symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`} chainId={1} />
+              </Grid></>
+            }
           </Grid>
 
           <Grid item xs={12} md={7}>
@@ -155,7 +94,7 @@ const PairExplorer: React.FC<PairExplorerProps> = (props) => {
             </Grid>
 
             <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
-              <CustomOrderNTransaction address={address}/>
+              <OrderNTransaction transactionData={tableData} />
             </Grid>
 
           </Grid>

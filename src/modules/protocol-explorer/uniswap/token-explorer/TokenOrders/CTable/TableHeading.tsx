@@ -43,31 +43,19 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
         <IntlMessages id='app.timestamp' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.block' />
+        <IntlMessages id='app.pair' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.buyAmount' />
+        <IntlMessages id='app.basePrice' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.buyCurrency' />
+        <IntlMessages id='app.quotePrice' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.sellAmount' />
+        <IntlMessages id='app.total' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.sellCurrency' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.protocol' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.exchange' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.smartContract' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.hash' />
+        #
       </TableCell>
     </TableRow>
   );

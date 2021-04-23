@@ -23,6 +23,7 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({
     if (item.url) return item.url;
     return '/';
   };
+  
   return (
     <Link
       href={getUrl()}

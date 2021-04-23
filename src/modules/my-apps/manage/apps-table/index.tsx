@@ -67,30 +67,31 @@ const AppsTable = () => {
       {data ? (
         <Box pt={{ xl: 4 }} clone>
           <GridContainer>
-            <Grid item xs={11} md={11}>
+            <Grid item xs={12} md={12}>
               <AppCard
                 height={1}
                 title={'My Apps'}
-                action={
-                  <>
-                    <div>
-                      <IconButton aria-label="add">
-                        <AddIcon />
-                      </IconButton>
+                // action={
+                //   <>
+                //     <div>
+                //       <IconButton aria-label="add">
+                //         <AddIcon />
+                //       </IconButton>
 
-                      <AppSelect
-                        menus={[
-                          'ALL',
-                          'Aggregators',
-                          'Exchanges',
-                          'NFT Marketplace',
-                        ]}
-                        defaultValue={'ALL'}
-                        onChange={handleSelectionType}
-                      />
-                    </div>
-                  </>
-                }>
+                //       <AppSelect
+                //         menus={[
+                //           'ALL',
+                //           'Aggregators',
+                //           'Exchanges',
+                //           'NFT Marketplace',
+                //         ]}
+                //         defaultValue={'ALL'}
+                //         onChange={handleSelectionType}
+                //       />
+                //     </div>
+                //   </>
+                // }
+                >
                 <Box className={classes.tableResponsiveMaterial}>
                   <Table className='table'>
                     <TableHead>
@@ -149,18 +150,13 @@ const AppsTable = () => {
                 </Box>
               </AppCard>
             </Grid>
-
           </GridContainer>
         </Box>
       ) : null}
+      
       {loading ? <Loader /> : null}
+
       {error ? JSON.stringify(error) : null}
-      <div className={classes.fabButtonDiv}>
-        <Fab color="primary" aria-label="add">
-          <AddIcon />
-        </Fab>
-      </div>
-      <InfoView />
     </>
   );
 };

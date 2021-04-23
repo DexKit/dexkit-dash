@@ -7,15 +7,15 @@ import { search } from 'services/graphql/bitquery';
 import { Currency } from '@types';
 import { Autocomplete } from '@material-ui/lab';
 import { useWeb3 } from 'hooks/useWeb3';
-import {GET_NETWORK_NAME} from '../../constants/Bitquery';
 interface TokenSearchProps {
   url: string,
+  type?: 'token' | 'pair',
   positionIcon?: 'start' | 'end';
   filters?: Map<string, string>;
 }
 
 export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
-  const { filters, url  } = props; 
+  const { filters, url } = props; 
 
   const history = useHistory();
   const {chainId} = useWeb3();
@@ -27,14 +27,16 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
 
   useEffect(useCallback(() => {
+    
     clearTimeout(timeout as number);
 
     const _timeout: number = setTimeout(() => {
-      if(searchKey != null){
-        
+      if(searchKey != null) {
+
         setLoading(true);
-        
-        search<{ search: { subject: Currency }[] }>(/*GET_NETWORK_NAME(chainId),*/ searchKey).then(result => {
+
+        search<{ search: { subject: Currency }[] }>(searchKey).then(result => {
+
           if(!result.loading && result?.data){
             const founds = result?.data?.search?.map( s => s.subject);
             setFounded(founds);

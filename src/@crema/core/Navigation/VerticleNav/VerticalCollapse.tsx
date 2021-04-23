@@ -15,6 +15,7 @@ import useStyles from './VerticalCollapase.style';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
 
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
@@ -80,7 +81,15 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
         component='li'
         className={clsx(classes.navItem, open && 'open')}
         onClick={handleClick}>
-        {item.icon && (
+        {item.icon == 'uniswap' ? (
+          <Box component='span' mr={6}>
+            <Icon
+              color='action'
+              className={clsx('nav-item-icon', classes.listIcon)}>
+              <UniswapLogo />
+            </Icon>
+          </Box>
+        ):(
           <Box component='span' mr={6}>
             <Icon
               color='action'

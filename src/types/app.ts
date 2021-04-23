@@ -40,7 +40,7 @@ export interface Token {
   type?: string;
   annotation?: string;
   balance?: number;
-
+  addresses?: any;
   coingecko_id?: string; // coingecko id
   icon?: string;
   displayDecimals?: number;
@@ -106,7 +106,7 @@ export interface OrderData {
   quotePrice: number,
   tradeAmount: number,
   tradeAmountUsd: number,
-  created: Date
+  created: string
 }
 
 export interface OrderByToken {
@@ -139,6 +139,7 @@ export interface PairInfoExplorer {
   priceChange: number,
   liquidity: number,
   volume24: number,
+  volume24InUsd: number
   basePooled: number,
   quotePooled: number,  
 }
@@ -151,4 +152,18 @@ export interface TransferByAddress {
   amount: number,
   hash: string,
   time: string
+}
+
+export interface MintBurn {
+  baseToken: Token,
+  quoteToken: Token,
+  hash: string,
+  block: number
+  type: string,
+  time: string,
+  amount0: number,
+  amount1: number,
+  reserve0: number,
+  reserve1: number,
+  variation: number
 }

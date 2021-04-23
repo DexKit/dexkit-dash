@@ -73,7 +73,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       
       <TableCell align='left' className={classes.tableCell}>{row.quoteAmount.toFixed(4)} {row.quoteToken.symbol}</TableCell>
       
-      <TableCell align='left' className={classes.tableCell}>{row.quotePrice}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.quotePrice.toFixed(4)}</TableCell>
 
       <TableCell align='left' className={classes.tableCell}>${row.tradeAmountUsd.toFixed(2)}</TableCell>
       

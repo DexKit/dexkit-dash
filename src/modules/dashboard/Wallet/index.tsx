@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWeb3 } from 'hooks/useWeb3';
 import { AppState } from 'redux/store';
-import { onGetMyTokenBalances, onGetMyTokenBalancesAt, onGetMyDefiBalances } from 'redux/actions';
+import { onGetMyTokenBalances, onGetMyDefiBalances } from 'redux/actions';
 
 import { Grid, Box, Divider } from '@material-ui/core';
 
@@ -32,48 +32,9 @@ import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import {parseDefiAssets} from '../../../utils/parse'
 import Transak from 'shared/components/Transak';
 
-interface WalletProps { }
+interface Props { }
 
-function parseTotalBalance(address?: BitqueryAddress[]): TotalBalanceData {
-  const _balances = address != null ? address.reduce((arr: MyBalance[], e) => {
-      arr.push(...e.balances as MyBalance[]);
-      return arr;
-    }, []
-  ) : [];
-  
-  const totalBalanceData: TotalBalanceData = {
-    balance: _balances.filter(e => e.currency.symbol == 'ETH')[0]?.value.toString() || '0',
-    // balance: _balances.reduce((totalBalance: BigNumber, b) => totalBalance.plus(b.value ?? 0), new BigNumber(0)).toString(),
-    coins: _balances.map((x, i) => {
-      const { currency } = x;
-      return {
-        id: i,
-        name: currency.name,
-        value: x.value,
-        symbol: currency.symbol
-      } as BalanceCoins;
-    })
-  };
-  return totalBalanceData;
-}
-
-
-
-const onBuy = (walletAddress: string, ): transakSDK => {
-    const transak = getTransak(
-      walletAddress,
-      '#0A8FDC',
-      '',
-      'GBP',
-      undefined,
-      '450px',
-      '400px'
-    );
-    transak.init();
-    return transak;
-}
-
-const Wallet: React.FC<WalletProps> = () => {
+const Wallet: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   
   const { account, chainId } = useWeb3();
@@ -83,16 +44,30 @@ const Wallet: React.FC<WalletProps> = () => {
   const [defiAssets, setDefiAssets] = useState({} as CoinsProps);
   const [transakClient, setTransakInstance] = useState<transakSDK>();
 
-  const { myDefiBalances, myBalances, myBalancesAt } = useSelector<AppState, AppState['dashboard']>(
+  const { myDefiBalances, myBalances } = useSelector<AppState, AppState['dashboard']>(
     ({ dashboard }) => dashboard,
   );
   
+  const updateChart = (name: string) => {
+    const findToken = myBalances.filter(e => e.currency.name == name);
+
+    if (findToken.length > 0) {
+      const cData = findToken[0].history?.map(e => {
+        return {
+          name: new Date(e.timestamp),
+          value: e.value
+        }
+      })
+      setChartData(cData);
+    } else {
+      setChartData([]);
+    }
+  }
 
   useEffect(() => {
     if (account != null) {
       dispatch(onGetMyDefiBalances(account));
       dispatch(onGetMyTokenBalances(GET_NETWORK_NAME(chainId), account));
-      dispatch(onGetMyTokenBalancesAt(GET_NETWORK_NAME(chainId), account, 7));
     }
   }, [dispatch, account]);
 
@@ -101,16 +76,8 @@ const Wallet: React.FC<WalletProps> = () => {
   }, [myDefiBalances]);
 
   useEffect(() => {
-    const data: any = myBalancesAt.map((e: any) => {
-      return {
-        name: e.date.getDate().toString(),
-        eth: e?.balances['ETH']?.value || 0
-      }
-    });
-
-    setChartData(data);
-  }, [myBalancesAt])
-
+    updateChart('Ether');
+  }, [myBalances]);
 
   const transakAllEvents = useCallback((data: any) => {
     console.log(data);
@@ -213,16 +180,16 @@ const Wallet: React.FC<WalletProps> = () => {
               <AppCard style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 5 }}>
                 <Box paddingLeft="0" display="flex">
                   <AppSelect
-                    menus={[
-                      messages['dashboard.wallet.mybalance'],
-                    ]}
-                    defaultValue={messages['dashboard.wallet.mybalance']}
-                    onChange={(e) => console.log('changed')}
+                    menus={myBalances.map(e => e.currency.name)}
+                    defaultValue={'Ether'}
+                    onChange={(e) => {updateChart(e)}}
                   />
 
                   {/* <Transak /> */}
                 </Box>
+
                 <Divider style={{marginTop: 5}} />
+
                 <Box>
                   <Grid item xs={12} md={12} xl={12}>
                     <AssetChart data={chartData} />
@@ -230,7 +197,6 @@ const Wallet: React.FC<WalletProps> = () => {
                 </Box>
               </AppCard>
             </Grid>
-
             {
               myDefiBalances.length > 0 && 
               <Grid item xs={12} md={12} style={{ marginTop: 15 }}>

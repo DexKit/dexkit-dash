@@ -18,7 +18,7 @@ import { Collection, GeneralConfig, TokenMetaData } from '@types';
 import { AppState } from 'redux/store';
 import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
 import { GridContainer } from '@crema';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Breadcrumbs, Grid, Link } from '@material-ui/core';
 import { Fonts } from 'shared/constants/AppEnums';
 
 import { useWeb3 } from 'hooks/useWeb3';
@@ -326,16 +326,13 @@ export default function VerticalLinearStepper() {
     <div className={classes.root}>
 
       <GridContainer>
-            <Grid item xs={12} md={12}>
-              <Box
-                component='h2'
-                color='text.primary'
-                fontSize={{xs: 18, sm: 20, xl: 22}}
-                mb={{xs: 4, sm: 4, xl: 6}}
-                fontFamily={Fonts.LIGHT}>
-                  MARKETPLACE SETUP
-              </Box>
-            </Grid>
+        <Grid item xs={12} md={12}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" href="/my-apps/manage">My Apps</Link>
+            <Typography color="textPrimary">Wizard</Typography>
+          </Breadcrumbs>
+          <Typography variant="h4" color="textPrimary">MARKETPLACE</Typography>
+        </Grid>
       </GridContainer>
 
       <Stepper activeStep={activeStep} orientation="vertical">

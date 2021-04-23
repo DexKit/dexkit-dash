@@ -15,6 +15,10 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import { TokenMetaData } from '@types';
 import SelectToken from './SelectToken';
+import { fetchQuote } from 'services/rest/0x-api';
+import { OrderSide } from 'types/app';
+import { BigNumber, fromTokenUnitAmount, toTokenUnitAmount } from '@0x/utils';
+import { useWeb3 } from 'hooks/useWeb3';
 
 
 interface Props {
@@ -53,18 +57,45 @@ const MarketForm: React.FC<Props> = (props) => {
   const [tokenFrom, setTokenFrom] = useState<TokenMetaData>();
   const [tokenTo, setTokenTo] = useState<TokenMetaData>();
 
-  const onChange = ( $e: React.ChangeEvent<
-    {
-      name?: string | undefined;
-      value: unknown;
-    }
-  >, 
-  child: React.ReactNode,
-  setState: React.Dispatch<React.SetStateAction<TokenMetaData | undefined>>
-  ) => {
+  const {account, chainId} = useWeb3();
+
+  const onChange = ( $e: React.ChangeEvent<{ name?: string | undefined; value: unknown;}>, child: React.ReactNode, setState: React.Dispatch<React.SetStateAction<TokenMetaData | undefined>>) => {
     const address = $e.target.value;
     const _token = props.tokens.find(t => Object.values(t.addresses)[0] === address);
     setState(_token);
+  }
+
+  const onFetch = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    console.log(value);
+
+    console.log(tokenFrom)
+    console.log(tokenTo)
+    
+    if (tokenFrom && tokenTo && chainId) {
+      console.log('aqui')
+      fetchQuote({
+        chainId: chainId,
+        baseToken: tokenFrom,
+        quoteToken: tokenTo,
+        orderSide: OrderSide.Buy,
+        makerAmount: fromTokenUnitAmount(value, tokenFrom?.decimals||18) ,
+
+        // Parameters used to prevalidate quote at final
+        allowedSlippage: new BigNumber(0.5),
+        ethAccount: account,
+        buyTokenPercentage: undefined,
+        feeRecipient: undefined,
+        affiliateAddress: undefined,
+        intentOnFill: false
+      }).then(e => {
+        console.log(e);
+      }).catch(e => {
+        console.log(e);
+      });
+
+    }
   }
 
   return (
@@ -77,8 +108,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 variant='outlined'
                 fullWidth
                 label={<IntlMessages id='You send' />}
-                value={inputValue}
-                onChange={(e) => setValue(parseFloat(e.target.value))}
+                onChange={(e) => onFetch(e)}
               />
             </Grid>
             

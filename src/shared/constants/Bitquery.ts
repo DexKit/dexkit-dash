@@ -1,8 +1,11 @@
 import { ChainId } from "types/blockchain";
 
 export enum EXCHANGE {
+  // ethereum
   UNISWAP = 'Uniswap',
-  ZEROX = 'ZeroX',
+  ZEROX = 'Zerox Exchange',
+  //bsc
+  PANCAKE = 'Pancake',
   ALL = ''
 }
 

@@ -99,7 +99,7 @@ const routesConfig = [
         title: 'Uniswap',
         messageId: 'sidebar.protocols.uniswap',
         type: 'collapse',
-        icon: 'report',
+        icon: 'uniswap',
         children: [
           {
             id: 'overview',

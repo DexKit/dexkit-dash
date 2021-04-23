@@ -2,12 +2,13 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {TransactionDataNew} from '../../../../../../types/models/Analytics';
 import {makeStyles, Chip} from '@material-ui/core';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
+import { OrderData } from 'types/app';
+import { Link } from 'react-router-dom';
 
 interface Props {
-  data: TransactionDataNew;
+  data: OrderData;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -45,7 +46,7 @@ const TableItem: React.FC<Props> = ({data}) => {
   const classes = useStyles();
   
   const getPaymentTypeColor = () => {
-    switch (data.type) {
+    switch (data.side) {
       case 'SELL': {
         return '#F84E4E';
       }
@@ -57,28 +58,36 @@ const TableItem: React.FC<Props> = ({data}) => {
       }
     }
   };
+
+  
+  const createdFn = data.created.split(' ')
  
 
   return (
-    <TableRow key={data.id}>
+    <TableRow key={data.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box >{data.pair}</Box>
+        <Box>{createdFn[0]}</Box>
+        <Box>{createdFn[1]}</Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.type} clickable />
+        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.side} clickable />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {data.price}
+        ${(data.quoteAmountUsd / data.baseAmountUsd).toFixed(2)}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {data.amount}
+        {data.baseAmount.toFixed(4)} <Link to={`/protocol-explorer/uniswap/token-explorer/${data.baseToken.address}`}>{data.baseToken.symbol}</Link>
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCell}>
+        {data.quoteAmount.toFixed(4)} <Link to={`/protocol-explorer/uniswap/token-explorer/${data.quoteToken.address}`}>{data.quoteToken.symbol}</Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>       
-        ${data.total}
+        ${data.tradeAmountUsd.toFixed(2)}
       </TableCell>
     </TableRow>
   );

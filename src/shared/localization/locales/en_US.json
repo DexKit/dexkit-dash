@@ -25,6 +25,8 @@
   "app.annotation": "Annotation",
   "app.property": "Property",
   "app.value": "Value",
+  "app.type": "Type",
+  "app.time": "Time",
   "app.timestamp": "Timestamp",
   "app.transferCount": "Transfer Count",
   "app.uniqSenders": "Uniq Senders",
@@ -42,6 +44,17 @@
   "app.quoteAmount": "Quote Amount",
   "app.receiver": "Receiver",
   "app.sender": "Sender",
+  "app.poolVariation": "Pool Variation",
+  "app.baseRemaining": "Base Remaining",
+  "app.quoteRemaining": "Quote Remaining",
+  "app.tradeAmount": "Trade Amount",
+  "app.quotePrice": "Quote Price",
+  "app.basePrice": "Base Price",
+  "app.total": "Base Price",
+  "app.pool": "Pool",
+  "app.kitMarket": "Kit Market",
+
+
 
   "title.tradesByCurrencies": "Trades By Currencies",
   "title.tokenOrderPairs": "Token Order Pairs",

@@ -1,10 +1,10 @@
 import React from 'react';
-import TableCell from '@material-ui/core/TableCell';
-import {makeStyles} from '@material-ui/core';
-import TableRow from '@material-ui/core/TableRow';
+import { useWeb3 } from 'hooks/useWeb3';
+import {TableRow, TableCell, makeStyles} from '@material-ui/core';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
-import { truncateAddress } from 'utils';
 import { OrderData } from 'types/app';
+import { ETHERSCAN_API_URL } from 'shared/constants/AppConst';
+import SearchIcon from '@material-ui/icons/Search';
 
 
 interface TableItemProps {
@@ -44,25 +44,18 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
 
   return (
     <TableRow key={row.hash}>
       <TableCell scope='row' className={classes.tableCell}>{row.created}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.block}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>$</TableCell>
-      <TableCell align='left' className={classes.tableCell}></TableCell>
-      <TableCell align='left' className={classes.tableCell}>$</TableCell>
-      <TableCell align='left' className={classes.tableCell}></TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.protocol}</TableCell>
-      <TableCell align='left' className={classes.tableCell}>{row.exchange}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{row.baseToken.symbol}/{row.quoteToken.symbol}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>${row.baseAmountUsd.toFixed(2)} ({row.baseToken.symbol})</TableCell>
+      <TableCell align='left' className={classes.tableCell}>${row.quoteAmountUsd.toFixed(2)} ({row.quoteToken.symbol})</TableCell>
+      <TableCell align='left' className={classes.tableCell}>${row.tradeAmountUsd.toFixed(2)}</TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        <a href={`https://etherscan.io/address/${row.contract}`} target="_blank">
-          {truncateAddress(row.contract)}
-        </a>
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
-        <a href={`https://etherscan.io/tx/${row.hash}`} target="_blank">
-          {truncateAddress(row.hash)}
+        <a href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`} target="_blank">
+          <SearchIcon />
         </a>
       </TableCell>
     </TableRow>

@@ -2,7 +2,8 @@ import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client';
 import { EXCHANGE, NETWORK } from 'shared/constants/Bitquery';
 import { OrderByPairs, OrderByToken, OrderData, PairInfoExplorer, Token, TokenStatistic, TransferByAddress } from 'types/app';
 import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData, parsePairExplorerData, parseTransferByAddressData } from 'utils/parse';
-import { parseTokenStatisticsData } from 'utils/parse/TokenStatistics';
+import { parseMintBurnData, parseOrderAccountData, parseTokenStatisticsData } from 'utils/parse';
+import { parseEventContractData } from 'utils/parse/ContractEvent';
 import {
   BITQUERY_PAIR_EXPLORER,
   BITQUERY_CONTRACT_ORDERS,
@@ -15,7 +16,10 @@ import {
   BITQUERY_ORDERS_BY_TOKENS,
   BITQUERY_ORDERS_BY_PAIRS,
   BITQUERY_TOKEN_INFO,
-  BITQUERY_TOKEN_STATISTICS
+  BITQUERY_TOKEN_STATISTICS,
+  BITQUERY_MINT_BURN,
+  BITQUERY_ORDERS_BY_HASH,
+  BITQUERY_CONTRACT_EVENT_BY_HASH
 } from './gql';
 
 export const client = new ApolloClient({
@@ -27,12 +31,13 @@ export const client = new ApolloClient({
   }
 });
 
-export function getPairExplorer<T>(network: NETWORK, exchangeName: EXCHANGE, address: string): Promise<PairInfoExplorer>
+export function getPairExplorer(network: NETWORK, exchangeName: EXCHANGE, pairAddress: string, quoteAddress: string|null): Promise<PairInfoExplorer>
 {
   const variables: any = {
     network,
     exchangeName,
-    address
+    pairAddress,
+    quoteAddress
   }
 
   if (exchangeName == EXCHANGE.ALL) {
@@ -40,16 +45,17 @@ export function getPairExplorer<T>(network: NETWORK, exchangeName: EXCHANGE, add
   }
   
   return client.query({ query: BITQUERY_PAIR_EXPLORER, variables })
-    .then(orders => { return parsePairExplorerData(orders, address, network) })
-    .catch(e => { return parsePairExplorerData(null, address, network) });
+    .then(orders => { console.log(orders); return parsePairExplorerData(orders, pairAddress, network) })
+    .catch(e => { console.log(e); return parsePairExplorerData(null, pairAddress, network) });
 }
 
-export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
+export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
 {
   const variables: any = {
     network,
     exchangeName,
     address,
+    quoteAddress,
     limit,
     offset,
     from: from ? from.toISOString() : null,
@@ -103,11 +109,10 @@ export function getMyOrders(network: NETWORK, exchangeName: EXCHANGE, address: s
   }
 
   return client.query({ query: BITQUERY_MY_ORDERS, variables })
-    .then(orders => { return parseOrderData(orders, network) })
-    .catch(e => { console.log(e); return parseOrderData(null, network) });
+    .then(orders => { return parseOrderAccountData(orders, network) })
+    .catch(e => { return parseOrderAccountData(null, network) });
 }
 
-// ok - melhorar nome da função
 export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByPairs[]>
 {
   const variables: any = {
@@ -128,7 +133,6 @@ export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit
     .catch(e => { return parseOrderByPairData(null) });  
 }
 
-// ok - melhorar nome da função
 export function getOrdersByTokens(network: NETWORK, exchangeName: EXCHANGE, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderByToken[]>
 {
   const variables: any = {
@@ -147,6 +151,17 @@ export function getOrdersByTokens(network: NETWORK, exchangeName: EXCHANGE, limi
   return client.query({ query: BITQUERY_ORDERS_BY_TOKENS, variables })
     .then(orders => { return parseOrderByTokenData(orders) })
     .catch(e => { return parseOrderByTokenData(null) });  
+}
+
+export function getOrderByHash(network: NETWORK, address: string) {
+  const variables: any = {
+    network,
+    address
+  }
+
+  return client.query({ query: BITQUERY_ORDERS_BY_HASH, variables })
+    .then(orders => { return parseOrderData(orders, network) })
+    .catch(e => { return parseOrderData(null, network) });  
 }
 
 export function getMyTransfers(network: NETWORK, address: string, limit: number, offset: number, from: Date|null, till: Date|null): Promise<TransferByAddress[]>
@@ -189,7 +204,6 @@ export function getMyTokenBalancesAt<T>(network: string, address: string, till: 
   });
 }
 
-// ok
 export function getTokenInfo(network: NETWORK, address: string): Promise<Token>
 {
   return client.query({
@@ -205,7 +219,6 @@ export function getTokenInfo(network: NETWORK, address: string): Promise<Token>
   });
 }
 
-// ok
 export function getTokenStatistics(network: NETWORK, address: string, from: Date|null, till: Date|null): Promise<TokenStatistic>
 {
   return client.query({
@@ -223,7 +236,42 @@ export function getTokenStatistics(network: NETWORK, address: string, from: Date
   });
 }
 
-//ok
+export async function getPool(network: NETWORK, exchangeName: EXCHANGE, pairAddress: string, quoteAddress: string|null, limit: number) {
+
+  try {
+    const pair = (await getContractOrders(network, exchangeName,pairAddress, quoteAddress, 1, 0, null, null))[0];
+
+    let data: any = await client.query({
+      query: BITQUERY_MINT_BURN,
+      variables: {
+        network,
+        address: pairAddress,
+        limit
+      } 
+    });
+
+    const list = parseMintBurnData(data, pairAddress, network);
+
+    const mintHash: string[] = list.mint.map(e => e.hash);
+    const burnHash: string[] = list.burn.map(e => e.hash);
+
+    data = await client.query({
+      query: BITQUERY_CONTRACT_EVENT_BY_HASH,
+      variables: {
+        network,
+        address: pairAddress,
+        hash: mintHash.concat(burnHash)
+      }
+    });
+
+    return parseEventContractData(data, list.mint, list.burn, network, pair);
+  } catch(e) {
+    console.log(e)
+    return [];
+  };
+
+}
+
 export function search<T>(/*network: NETWORK, */value: string): Promise<ApolloQueryResult<T>>
 {
   return client.query<T>({

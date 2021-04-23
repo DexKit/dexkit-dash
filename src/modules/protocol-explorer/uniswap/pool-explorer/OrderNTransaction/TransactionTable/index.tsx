@@ -6,10 +6,10 @@ import {Box, makeStyles} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors';
-import {TransactionDataNew} from '../../../../../../types/models/Analytics';
+import {MintBurn} from 'types/app';
 
 interface Props {
-  transactionData: TransactionDataNew[];
+  transactionData: MintBurn[];
 }
 
 const TransactionTable: React.FC<Props> = ({transactionData}) => {
@@ -42,7 +42,7 @@ const TransactionTable: React.FC<Props> = ({transactionData}) => {
         </TableHead>
         <TableBody>
           {transactionData.map((data) => (
-            <TableItem data={data} key={data.id} />
+            <TableItem data={data} key={data.hash} />
           ))}
         </TableBody>
       </Table>

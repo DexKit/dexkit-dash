@@ -13,6 +13,7 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 import { getContractOrders, getMyOrders, getTokenOrders } from 'services/graphql/bitquery';
 import { EXCHANGE, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { OrderData } from 'types/app';
+import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
 
 interface Props {
   address: string,
@@ -37,7 +38,7 @@ const Orders: React.FC<Props> = (props) => {
         .catch(e => console.log(e))
     }
     else if (props.type == 'contract') {
-      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
+      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, GET_DEFAULT_QUOTE(chainId), 30, 0, null, null)
         .then(orders => setTableData(orders))
         .catch(e => console.log(e))
     }

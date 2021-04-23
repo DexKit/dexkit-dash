@@ -5,9 +5,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
-  props?: any;
 }
 
 const TableHeading: React.FC<Props> = (props) => {
@@ -40,30 +40,26 @@ const TableHeading: React.FC<Props> = (props) => {
   const classes = useStyles(props);
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell className={classes.tableCellRoot}>Pair</TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Time
+        <IntlMessages id='app.time' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Type
+        <IntlMessages id='app.type' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Price
+        <IntlMessages id='app.baseAmount' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-       Total Value
+        <IntlMessages id='app.quoteAmount' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Amount
+      <IntlMessages id='app.poolVariation' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-       Total
+        <IntlMessages id='app.baseRemaining' />
       </TableCell>
       <TableCell align='left' className={classes.tableCellRoot}>
-        Pool Variation
-      </TableCell>
-      <TableCell align='center' className={classes.tableCellRoot}>
-        Actions
+        <IntlMessages id='app.quoteRemaining' />
       </TableCell>
     </TableRow>
   );

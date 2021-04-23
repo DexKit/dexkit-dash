@@ -13,8 +13,6 @@ import { TokenSearch } from 'shared/components/TokenSearch';
 import { truncateAddress } from 'utils';
 import TokenOrders from './TokenOrders';
 
-
-
 type TokenParams = {
   address: string;
 };
@@ -22,7 +20,7 @@ type TokenParams = {
 type TokenProps = RouteComponentProps<TokenParams>
 
 const TokenExplorer: React.FC<TokenProps> = (props) => {
-  const {match: { params }} = props;
+  const { match: { params } } = props;
   const { address } = params;
 
   return (
@@ -34,7 +32,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
               <Breadcrumbs aria-label="breadcrumb">
                 <Link color="inherit" href="/protocol-explorer/uniswap/overview">Protocol Explorer</Link>
                 <Link color="inherit" href="/protocol-explorer/uniswap/overview">Uniswap</Link>
-                <Link color="inherit" href="/protocol-explorer/uniswap/overview">Token Explorer</Link>
+                <Typography color="textPrimary">Token Explorer</Typography>
                 <Typography color="textPrimary">{truncateAddress(address)}</Typography>
               </Breadcrumbs>
               <Typography variant="h4"  color="textPrimary">Token Explorer</Typography>

@@ -3,38 +3,41 @@ import { PairInfoExplorer } from "types/app";
 
 export function parsePairExplorerData(data: any, address: string, network: NETWORK): PairInfoExplorer {
 
-  console.log('query', data);
+  console.log(data);
 
-  if (data && data[network]) {
-    const d24 = data[network].data24[0];
-    const info = data[network].dexTrades[0];
-    const pooled = data[network].pooled[0].balances;
+  if (data && data.data[network]) {
+    const d24Current = data.data[network].data24[0];
+    const d24Yesterday = data.data[network].data24[1];
+    const pooled = data.data[network].pooled[0].balances || [];
 
-    console.log('24', d24);
-    console.log('info', info);
-    console.log('pooled', pooled);
+    const basePerDolar = d24Current.baseAmountInUsd / d24Current.baseAmount;
+    const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;
+
+    const basePooled: number  = pooled.filter((e: any) => e.currency.symbol == d24Current.baseCurrency.symbol)[0].value;
+    const quotePooled: number = pooled.filter((e: any) => e.currency.symbol == d24Current.quoteCurrency.symbol)[0].value;
 
     return {
       baseToken: {
-        address: info.baseCurrency.address,
-        name: info.baseCurrency.name,
-        symbol: info.baseCurrency.symbol,
-        decimals: info.baseCurrency.decimals
+        address: d24Current.baseCurrency.address,
+        name: d24Current.baseCurrency.name,
+        symbol: d24Current.baseCurrency.symbol,
+        decimals: d24Current.baseCurrency.decimals
       },
       quoteToken: {
-        address: info.quoteCurrency.address,
-        name: info.quoteCurrency.name,
-        symbol: info.quoteCurrency.symbol,
-        decimals: info.quoteCurrency.decimals
+        address: d24Current.quoteCurrency.address,
+        name: d24Current.quoteCurrency.name,
+        symbol: d24Current.quoteCurrency.symbol,
+        decimals: d24Current.quoteCurrency.decimals
       },
       address,
-      price: 0, //info.quotePrice,
-      priceUsd: 0, //info.quotePrice, //?
-      priceChange: 0,
-      liquidity: 0,
-      volume24: d24.tradeAmount,
-      basePooled: pooled.filter((e: any) => e.currency.symbol == info.baseCurrency.symbol)[0].value,
-      quotePooled: pooled.filter((e: any) => e.currency.symbol == info.quoteCurrency.symbol)[0].value, 
+      price: d24Current.quotePrice,
+      priceUsd: (d24Current.quotePrice * quotePerDolar),
+      priceChange: ((d24Current.quotePrice * 100) / d24Yesterday.quotePrice) - 100,
+      liquidity: ((basePooled * basePerDolar) + (quotePooled * quotePerDolar)),
+      volume24: d24Current.tradeAmount,
+      volume24InUsd: d24Current.tradeAmountInUsd,
+      basePooled: basePooled,
+      quotePooled: quotePooled, 
     }
   }
 
@@ -57,6 +60,7 @@ export function parsePairExplorerData(data: any, address: string, network: NETWO
     priceChange: 0,
     liquidity: 0,
     volume24: 0,
+    volume24InUsd: 0,
     basePooled: 0,
     quotePooled: 0,  
   }

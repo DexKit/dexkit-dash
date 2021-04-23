@@ -41,22 +41,22 @@ const tokens: Token[] = [
 
 const kits: Kit[] = [
 	{
-		c_id: '0x987654322012345678901234567234011',
-		icon: 'assets/images/dashboard/1_sales_icon.png',
+		c_id: '0',
+		icon: 'assets/images/metricsIcons/order.png',
 		name: 'Aggregator',
 		price_usd: new BigNumber(Math.random() * 100),
 		price_usd_24h_change: new BigNumber(Math.random())
 	},
 	{
-		c_id: '0x765432189012345678901234567234012',
-		icon: 'assets/images/dashboard/commission_sale.png',
+		c_id: '1',
+		icon: 'assets/images/metricsIcons/revenue.png',
 		name: 'Marketplace',
 		price_usd: new BigNumber(Math.random() * 100),
 		price_usd_24h_change: new BigNumber(Math.random())
 	},
 	{
-		c_id: '0x12345678901234567890123456789012',
-		icon: 'assets/images/metricsIcons/revenue.png.png',
+		c_id: '2',
+		icon: 'assets/images/metricsIcons/visits.png',
 		name: 'Exchange',
 		price_usd: new BigNumber(Math.random() * 100),
 		price_usd_24h_change: new BigNumber(Math.random())

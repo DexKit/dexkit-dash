@@ -1,4 +1,3 @@
-import { BigNumber } from "@0x/utils";
 import { Currency } from "./currency.interface";
 
 export interface MyBalance {
@@ -8,5 +7,7 @@ export interface MyBalance {
   value: number;
 
   valueUsd?: number;
+
+  history?: {timestamp: Date, value: number}[];
 
 } 

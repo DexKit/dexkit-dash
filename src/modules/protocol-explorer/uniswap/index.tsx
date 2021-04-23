@@ -42,7 +42,6 @@ export const uniswapConfigs = [
     ],
   },
   {
-
     routes: [
       {
         path: '/protocol-explorer/uniswap/pair-explorer/:address',
@@ -50,11 +49,21 @@ export const uniswapConfigs = [
       },
     ],
   },
-  {
  
+  {
     routes: [
       {
         path: '/protocol-explorer/uniswap/pool-explorer',
+        exact: true,
+        // component: React.lazy(() => import('./pool-explorer')),
+        component: () => <Redirect to={`/protocol-explorer/uniswap/pool-explorer/${process.env.REACT_APP_DEFAULT_PAIR}`} />,
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/protocol-explorer/uniswap/pool-explorer/:address',
         component: React.lazy(() => import('./pool-explorer')),
       },
     ],

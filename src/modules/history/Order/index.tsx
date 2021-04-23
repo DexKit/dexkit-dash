@@ -2,7 +2,6 @@ import React from 'react';
 import {Grid, Box, Breadcrumbs, Typography, Link} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {RouteComponentProps} from 'react-router-dom';
-import { Fonts } from 'shared/constants/AppEnums';
 import Orders from './Orders';
 
 

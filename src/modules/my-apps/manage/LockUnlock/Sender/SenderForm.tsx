@@ -9,7 +9,6 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalance} from 'types/bitquery/myBalance.interface';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import AddIcon from '@material-ui/icons/Add';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
@@ -54,10 +53,6 @@ const SenderForm: React.FC<Props> = (props) => {
   const handleCopy = async () => {
     const cpy: any = await navigator.clipboard.readText();
     setAddress(cpy);
-  }
-  
-  const handleMax = async () => {
-    setAmount(selected.value.toString());
   }
 
   const handleToken = (idx: any) => {
@@ -107,7 +102,7 @@ const SenderForm: React.FC<Props> = (props) => {
               { selected?.value ? `${selected.value.toFixed(6)} ${selected.currency?.symbol} ($${selected.valueUsd?.toFixed(2)})` : `0` }
             </Box>
           }
-          {/* <TextField
+          <TextField
             fullWidth
             variant='outlined'
             label={<IntlMessages id='Amount' />}
@@ -116,27 +111,8 @@ const SenderForm: React.FC<Props> = (props) => {
             InputProps={{
               className: classes.inputText,
             }}
-          /> */}
-          <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-from"><IntlMessages id='From' /></InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-from"
-              fullWidth
-              type={'text'}
-              label={<IntlMessages id='Amount' />}
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={handleMax} edge="end">
-                    <AddIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+          />
         </Box>
-
         <Box mb={5}>
           <FormControl className={clsx(classes.inputText)} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-to"><IntlMessages id='To' /></InputLabel>

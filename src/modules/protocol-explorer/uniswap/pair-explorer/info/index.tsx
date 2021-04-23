@@ -1,21 +1,19 @@
 import React from 'react';
+import { useWeb3 } from 'hooks/useWeb3';
 import Box from '@material-ui/core/Box';
-import CoinsInfo from './CoinsInfo';
+import Avatar from '@material-ui/core/Avatar';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
 import AppCard from '../../../../../@crema/core/AppCard';
 import {CremaTheme} from '../../../../../types/AppContextPropsType';
-import Avatar from '@material-ui/core/Avatar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LockIcon from '@material-ui/icons/LockRounded'
 import { BalanceCoins } from 'types/models/Crypto';
-import { Link } from 'react-router-dom';
 import { PairInfoExplorer } from 'types/app';
-
+import {ETHERSCAN_API_URL, UNISWAP_INFO_API_URL, DEXTOOLS_API_URL} from '../../../../../shared/constants/AppConst';
+import CoinsInfo from './CoinsInfo';
 
 export interface Props {
-  totalBalanceData: PairInfoExplorer;
+  data: PairInfoExplorer;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -64,12 +62,12 @@ const coinInfoFactory = (propsData: PairInfoExplorer): BalanceCoins[] => {
     { 
       id: 1,
       name: 'Total Liquidy',
-      value: propsData?.liquidity.toFixed(2)  ?? 0
+      value: `$${propsData?.liquidity.toFixed(0)}`  ?? `$0`
     },
     {
       id: 2,
       name: 'Daily Volume',
-      value: propsData?.volume24.toFixed(2) ?? 0
+      value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`
     },
     {
       id: 3,
@@ -86,82 +84,92 @@ const coinInfoFactory = (propsData: PairInfoExplorer): BalanceCoins[] => {
 
 const Info: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
+
+  const color = props.data.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
+
+  
 
   return (
     <Box>
+
       <Box
         component='h2'
         color='text.primary'
         fontSize={16}
         className={classes.textUppercase}
-        mb={{xs: 4, sm: 4, xl: 6}}
         fontWeight={Fonts.BOLD}>
       </Box>
+
       <AppCard style={{backgroundColor: indigo[500]}}>
-        <Box
-          mb={{xs: 3, md: 6, xl: 8}}
-          display='flex'
-          flexDirection={{xs: 'column', xl: 'row'}}
-          alignItems={{xl: 'center'}}>
+        <Box display='flex' flexDirection='column'>
+
           <Box display='flex' flexDirection='row' justifyContent='space-between'>
             <Box
               component='h3'
               color='primary.contrastText'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
-              {props.totalBalanceData.baseToken.symbol}/{props.totalBalanceData.quoteToken.symbol}
+              {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
             </Box>
+            
             <Box display='flex'>
-              <Box mr={3} clone>
-                <a href={`https://etherscan.io/address/${props.totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
+              <Box mr={3}>
+                <a href={`${ETHERSCAN_API_URL(chainId)}/address/${props.data.address}`} target="_blank">
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34 }} src="/images/etherescan.png"></Avatar>
                 </a>             
               </Box>
-              <Box mr={3} clone>
-                <a href={`https://info.uniswap.org/pair/${props.totalBalanceData.address}`} target="_blank" rel="noopener noreferrer">
+              <Box mr={3}>
+                <a href={`${UNISWAP_INFO_API_URL}/pair/${props.data.address}`} target="_blank">
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}} src="/images/uniswap.png"></Avatar>
                 </a>
               </Box>
-            </Box>
+              <Box mr={3}>
+                <a href={`${DEXTOOLS_API_URL}/app/uniswap/pair-explorer/${props.data.address}`} target="_blank">
+                  <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}} src="/images/dextools.png"></Avatar>
+                </a>
+              </Box>
+              <Box mr={3}>
+                <a href={`/dashboard/token/${props.data.address}`}>
+                  <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}}>T</Avatar>
+                </a>
+              </Box>
+            </Box>    
           </Box>
+
           <Box display='flex' alignItems='center'>
             <Box
               component='h3'
               fontWeight={Fonts.MEDIUM}
-              style={{color: '#4ee44e', marginTop: 13}}
+              style={{color: color, marginTop: 13}}
               fontSize={20}>
-                
-              ${props.totalBalanceData.priceUsd.toFixed(4)}
+              ${props.data.priceUsd.toFixed(4)}
             </Box>
           </Box>
           <Box display='flex' >
-          <Box
+            <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
-              style={{color: '#4ee44e'}}
+              style={{color: color}}
               fontSize={13}>
-              (24h {props.totalBalanceData.priceChange.toFixed(2)}%)
+              (24h {props.data.priceChange.toFixed(2)}%)
             </Box>
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
               style={{color: 'white', marginLeft: 10}}
               fontSize={13}>
-              {props.totalBalanceData.price.toFixed(8)} {props.totalBalanceData.baseToken.symbol}
+              {props.data.price.toFixed(8)} {props.data.quoteToken.symbol}
             </Box>
           </Box>
-        </Box>
-        {/* <Box
-          component='p'
-          mb={{xs: 3.5, md: 4, xl: 6}}
-          fontSize={16}
-          color={indigo[100]}>
-          <IntlMessages id='Total Liquidy' />
-        </Box> */}
-        <Box pt={{md: 2, lg: 3, xl: 6}}>
-          <CoinsInfo coins={coinInfoFactory(props.totalBalanceData)} />
+
+          <Box pt={{md: 2, lg: 3, xl: 6}}>
+            <CoinsInfo coins={coinInfoFactory(props.data)} />
+          </Box>
+
         </Box>
       </AppCard>
+
     </Box>
   );
 };
