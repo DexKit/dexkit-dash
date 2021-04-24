@@ -7,12 +7,14 @@ import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors';
 import {MintBurn} from 'types/app';
+import Loader from '@crema/core/Loader';
 
 interface Props {
   transactionData: MintBurn[];
+  isLoading: boolean;
 }
 
-const TransactionTable: React.FC<Props> = ({transactionData}) => {
+const TransactionTable: React.FC<Props> = ({transactionData, isLoading}) => {
   const useStyles = makeStyles(() => ({
     tableResponsiveMaterial: {
       minHeight: '.01%',
@@ -41,9 +43,12 @@ const TransactionTable: React.FC<Props> = ({transactionData}) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {transactionData.map((data) => (
-            <TableItem data={data} key={data.hash} />
-          ))}
+          {
+          isLoading ?
+          <Loader/>:
+            transactionData.map((data) => (
+              <TableItem data={data} key={data.hash} />
+            ))}
         </TableBody>
       </Table>
     </Box>

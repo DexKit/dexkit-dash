@@ -16,7 +16,7 @@ import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
-
+import {ReactComponent as ZRXprotocolLogo} from 'assets/images/zrxprotocol.svg';
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
     return isUrlInChildren(item, pathname);
@@ -73,6 +73,18 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   const handleClick = () => {
     setOpen(!open);
   };
+  const getIcon = (icon: string | undefined) => {
+    switch (icon) {
+      case 'uniswap':
+        return   <UniswapLogo />
+      case 'zrxprotocol':
+        return  <ZRXprotocolLogo/>
+    
+      default:
+       return icon;
+    }
+  }
+
 
   return (
     <>
@@ -81,23 +93,14 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
         component='li'
         className={clsx(classes.navItem, open && 'open')}
         onClick={handleClick}>
-        {item.icon == 'uniswap' ? (
-          <Box component='span' mr={6}>
-            <Icon
-              color='action'
-              className={clsx('nav-item-icon', classes.listIcon)}>
-              <UniswapLogo />
-            </Icon>
-          </Box>
-        ):(
-          <Box component='span' mr={6}>
-            <Icon
-              color='action'
-              className={clsx('nav-item-icon', classes.listIcon)}>
-              {item.icon}
-            </Icon>
-          </Box>
-        )}
+      
+        <Box component='span' mr={6}>
+          <Icon
+            color='action'
+            className={clsx('nav-item-icon', classes.listIcon)}>
+            {getIcon(item.icon)}
+          </Icon>
+        </Box>
         <ListItemText
           classes={{primary: clsx('nav-item-text', classes.listItemText)}}
           primary={<IntlMessages id={item.messageId} />}

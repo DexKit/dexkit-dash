@@ -70,6 +70,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
           getOptionLabel={(option) => `${option.name} (${option.symbol}) - ${option.address.slice(0, 12)}...`}
           renderInput={(params) => (
             <TextField {...params} 
+              placeholder={'Search by name, symbol or paste address'}
               variant="outlined"
               onChange={($e) => setSearchKey($e.target.value)}
             />

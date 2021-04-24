@@ -11,13 +11,6 @@ import { setWeb3State, setEthAccount, setEthBalance, setChainId } from "redux/ac
 import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 
-export enum Web3Status {
-  Not_Connected,
-  Connecting,
-  Connected,
-  Failure
-}
-
 
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -81,13 +74,13 @@ export const useWeb3 = () => {
     return new Promise<TransactionReceipt>((resolve, reject) => {
       const transaction = web3Transaction(transactionConfig);
       if (transaction != null) {
-        dispatch(setWeb3State(Web3State.Connecting));
+     //   dispatch(setWeb3State(Web3State.Connecting));
         transaction.then(transaction => {
-          dispatch(setWeb3State(Web3State.Done));
+       //   dispatch(setWeb3State(Web3State.Done));
           resolve(transaction)
         })
         .catch(e => {
-          dispatch(setWeb3State(Web3State.Error));
+         // dispatch(setWeb3State(Web3State.Error));
           reject(e);
         });
       }

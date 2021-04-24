@@ -50,9 +50,15 @@
   "app.tradeAmount": "Trade Amount",
   "app.quotePrice": "Quote Price",
   "app.basePrice": "Base Price",
-  "app.total": "Base Price",
+  "app.total": "Total Amount",
   "app.pool": "Pool",
   "app.kitMarket": "Kit Market",
+  "app.topPairs": "Top Pairs",
+
+  "app.baseAmount24": "Base Amount (24hrs)",
+  "app.quoteAmount24": "Quote Amount (24hrs)",
+  "app.volume24": "Volume (24hrs)",
+  "app.trades24": "Trades (24hrs)",
 
 
 

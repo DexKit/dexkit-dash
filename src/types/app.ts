@@ -145,6 +145,20 @@ export interface PairInfoExplorer {
 }
 
 
+export interface TokenPair {
+  baseToken: Token,
+  quoteToken: Token,
+  address: string
+  price: number,
+  priceUsd: number,
+  volume24: number,
+  volume24InUsd: number
+  quoteVolume24: number,
+  baseVolume24: number,  
+  trades: number,
+}
+
+
 export interface TransferByAddress {
   sender: string,
   receiver: string,

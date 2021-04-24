@@ -13,6 +13,7 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 import { getMyTransfers } from 'services/graphql/bitquery';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { TransferByAddress } from 'types/app';
+import Loader from '@crema/core/Loader';
 
 interface Props {
   address: string,
@@ -24,12 +25,18 @@ const Orders: React.FC<Props> = (props) => {
 
   // const [dealValue, setDealValue] = useState('allDeals');
   const [tableData, setTableData] = useState<TransferByAddress[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
  
   useEffect(() => {
     if (props.type == 'account') {
+      setIsLoading(true);
       getMyTransfers(GET_NETWORK_NAME(chainId), props.address, 30, 0, null, null)
-        .then(orders => setTableData(orders))
-        .catch(e => console.log(e))
+        .then(orders => {
+      
+          setTableData(orders)
+          setIsLoading(false);
+        })
+        .catch(e =>  setIsLoading(false))
     }
   }, [props, chainId]);
 
@@ -81,7 +88,7 @@ const Orders: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
+  <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
       <Card>
         <Box mb={4} display='flex' alignItems='center'>
           {/* <Box mt={{xl: 1}}>
@@ -111,7 +118,7 @@ const Orders: React.FC<Props> = (props) => {
             </Link>
           </Box> */}
         </Box>
-        <OrderTable data={tableData} />
+        <OrderTable data={tableData} isLoading={isLoading} />
       </Card>
     </Box>
   );

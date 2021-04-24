@@ -8,7 +8,7 @@ export function parseTransferByAddressData(data: any, network: NETWORK): Transfe
     const receiver: any[] = data.data[network].receiver;
 
     return sender.concat(receiver)
-      .sort((a, b) => a.block.height - b.block.height)
+      .sort((a, b) => b.block.height - a.block.height)
       .map(e => {
         return {
           sender: e.sender.address,

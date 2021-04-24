@@ -2,31 +2,28 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, TableCell, TableRow} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors';
-import {PopularCoinsData} from '../../../../../../types/models/Crypto';
+import { TokenPair } from 'types/app';
 
-interface PopularCoinsTableProps {
-  popularCoins: PopularCoinsData[];
+interface Props {
+  data: TokenPair[];
 }
 
-const PopularCoinsTable: React.FC<PopularCoinsTableProps> = ({
-  popularCoins,
-}) => {
+const OrderTable: React.FC<Props> = ({data}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
     },
     tableResponsiveMaterial: {
       minHeight: '.01%',
-      overflowX: 'hidden',
+      overflowX: 'auto',
 
       '@media (max-width: 767px)': {
         width: '100%',
         marginBottom: 15,
-        overflowX: 'hidden',
         overflowY: 'hidden',
         border: `1px solid ${grey[300]}`,
         '& > table': {
@@ -38,23 +35,33 @@ const PopularCoinsTable: React.FC<PopularCoinsTableProps> = ({
       },
     },
   }));
+
   const classes = useStyles();
 
-  const newPopularCoins = popularCoins.map(({id, shortName, image, volume, name, color}) => ({id, shortName, image, volume, name, color}))
   return (
     <Box className={classes.tableResponsiveMaterial}>
-      <Table>
-        <TableHead className={classes.borderBottomClass}>
+      <Table className='table'>
+        <TableHead>
           <TableHeading />
         </TableHead>
         <TableBody>
-          {newPopularCoins.map((row) => (
-            <TableItem key={row.name} row={row} />
-          ))}
+          {
+            data.length > 0 ? 
+              data.sort((a,b) => b.volume24InUsd - a.volume24InUsd).map((row, index) => (
+                <TableItem row={row} key={index} />
+              ))
+             : (
+              <TableRow className={classes.borderBottomClass}>
+                <TableCell component='th' scope='row' colSpan={10} className={classes.borderBottomClass}>
+                  Loading...
+                </TableCell>
+              </TableRow>
+            )
+          }
         </TableBody>
       </Table>
     </Box>
   );
 };
 
-export default PopularCoinsTable;
+export default OrderTable;

@@ -27,7 +27,7 @@ const TokenOrders: React.FC<Props> = (props) => {
 
   return (
     <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
-      <AppCard contentStyle={{paddingLeft: 0, paddingRight: 0,}} title={messages['title.orderList']}>
+      <AppCard contentStyle={{paddingLeft: 0, paddingRight: 0,}} title={messages['app.tradeHistory']}>
         <CTable data={tableData} />
       </AppCard>
     </Box>

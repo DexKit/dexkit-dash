@@ -6,14 +6,15 @@ import { OrderData } from 'types/app';
 
 interface Props {
   transactionData: OrderData[];
+  isLoading: boolean;
 }
 
-const OrderNTransaction: React.FC<Props> = ({transactionData}) => {
+const OrderNTransaction: React.FC<Props> = ({transactionData, isLoading}) => {
   const {messages} = useIntl();
 
   return (
     <AppCard height={1} title={messages['app.tradeHistory']}>
-      <TransactionTable transactionData={transactionData} />
+      <TransactionTable transactionData={transactionData} isLoading={isLoading} />
     </AppCard>
   );
 };

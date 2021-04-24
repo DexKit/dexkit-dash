@@ -15,6 +15,11 @@ import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
 import { fromTokenUnitAmount } from '@0x/utils';
 import { isAddress } from '@ethersproject/address';
+import { useToken } from 'hooks/useToken';
+import { isNativeCoin} from 'utils/tokens';
+import { ChainId } from 'types/blockchain';
+import { ethers } from 'ethers';
+import Web3 from 'web3';
 
 interface Props {
   balances: MyBalance[];
@@ -45,7 +50,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {account, onActionWeb3Transaction} = useWeb3();
+  const {account, onActionWeb3Transaction, chainId} = useWeb3();
+  const {onTransferToken} = useToken();
 
   const [amount, setAmount] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -66,12 +72,21 @@ const SenderForm: React.FC<Props> = (props) => {
 
   const handleSend = () => {
     console.log(selected.value);
+    if(!account){
+      return
+    }
+    console.log(selected.currency)
+
     try {
-      onActionWeb3Transaction({
-        to: address,
-        from: account,
-        value: fromTokenUnitAmount(amount, selected.currency.decimals).toString()
-      });
+      if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
+          onActionWeb3Transaction({
+            to: address,
+            from: account,
+            value: Web3.utils.toWei(amount),
+          });
+      }else{
+        onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), selected.currency)
+      }
     } catch (e) {
       console.log(e);
     }

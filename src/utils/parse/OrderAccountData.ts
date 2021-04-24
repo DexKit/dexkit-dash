@@ -7,7 +7,7 @@ export function parseOrderAccountData(data: any, network: NETWORK): OrderData[] 
     const makerTrades: any[] = data.data[network].maker;
     const takerTrades: any[] = data.data[network].taker;
 
-    return makerTrades.concat(takerTrades).sort((a, b) => (a.block.height - b.block.height))
+    return makerTrades.concat(takerTrades).sort((a, b) => (b.block.height - a.block.height))
       .map<OrderData>((e) => {
         return {
           hash: e.transaction.hash,

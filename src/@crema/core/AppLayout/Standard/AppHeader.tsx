@@ -88,7 +88,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
           <Box className={classes.sectionDesktop}>
             {
-              (chainId !== ChainId.Mainnet && chainId != undefined) ? (
+              (chainId !== ChainId.Mainnet && chainId !== undefined) ? (
                 <Box
                   className={classes.badgeRoot}
                   style={{

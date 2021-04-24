@@ -1,14 +1,21 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import TableCell from '@material-ui/core/TableCell';
-import IntlMessages from '../../../../../../@crema/utility/IntlMessages';
-import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core';
+import TableRow from '@material-ui/core/TableRow';
 import {Fonts} from '../../../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
+import { Token } from 'types/app';
 
-interface TableHeadingPorps {}
 
-const TableHeading: React.FC<TableHeadingPorps> = () => {
+interface TableItemProps {
+  row: {
+    title: any,
+    data: string|number
+  };
+}
+
+const TableItem: React.FC<TableItemProps> = ({row}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -16,8 +23,8 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
     tableCell: {
       borderBottom: '0 none',
       fontSize: 14,
+      fontFamily: Fonts.MEDIUM,
       padding: 8,
-      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -32,23 +39,15 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
         fontSize: 18,
         padding: 16,
       },
-    },
+    }
   }));
   const classes = useStyles();
   return (
     <TableRow className={classes.borderBottomClass}>
-      <TableCell  align='left' className={classes.tableCell}>
-        <IntlMessages id='common.num' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
-        <IntlMessages id='common.name' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCell}>
-        <IntlMessages id='dashboard.volume24h' />
-      </TableCell>
- 
+      <TableCell component='th' scope='row' className={classes.tableCell}>{row.title}</TableCell>
+      <TableCell align='left' className={classes.borderBottomClass}>{row.data}</TableCell>
     </TableRow>
   );
 };
 
-export default TableHeading;
+export default TableItem;

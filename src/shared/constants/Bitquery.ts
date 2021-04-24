@@ -4,10 +4,28 @@ export enum EXCHANGE {
   // ethereum
   UNISWAP = 'Uniswap',
   ZEROX = 'Zerox Exchange',
+  CURVE = 'Curve',
+  BALANCER = 'Balancer',
+  BANCOR_NETWORK = 'Bancor Network',
+  KYBER_NETWORK = 'Kyber Network',
   //bsc
   PANCAKE = 'Pancake',
   ALL = ''
 }
+
+export enum PROTOCOL {
+  // ethereum
+  UNISWAP_V2 = 'Uniswap v2',
+  ZEROX_V3 = 'Zerox Exchange v3',
+  BANCOR_V2 = 'Bancor Network v2',
+  CURVE = 'Curve',
+  BALANCER =  'Balancer Pool Token',
+  DODO =  'DODO',
+  //bsc
+  PANCAKE = 'Pancake',
+  ALL = ''
+}
+
 
 export enum NETWORK {
   ETHEREUM = 'ethereum',

@@ -2,6 +2,7 @@ import { NETWORK } from "shared/constants/Bitquery";
 import { OrderData } from "types/app";
 
 export function parseOrderData(data: any, network: NETWORK): OrderData[] {
+  console.log("Order data parsed");
   console.log(data);
 
   if (data && data.data[network].dexTrades && data.data[network].dexTrades.length > 0) {

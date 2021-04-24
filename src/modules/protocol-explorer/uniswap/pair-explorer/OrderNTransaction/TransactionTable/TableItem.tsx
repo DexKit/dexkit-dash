@@ -6,6 +6,7 @@ import {makeStyles, Chip} from '@material-ui/core';
 import {CremaTheme} from '../../../../../../types/AppContextPropsType';
 import { OrderData } from 'types/app';
 import { Link } from 'react-router-dom';
+import { database } from 'firebase';
 
 interface Props {
   data: OrderData;
@@ -47,10 +48,10 @@ const TableItem: React.FC<Props> = ({data}) => {
   
   const getPaymentTypeColor = () => {
     switch (data.side) {
-      case 'SELL': {
+      case 'BUY': {
         return '#F84E4E';
       }
-      case 'BUY': {
+      case 'SELL': {
         return '#00b400';
       }
       default: {
@@ -61,7 +62,7 @@ const TableItem: React.FC<Props> = ({data}) => {
 
   
   const createdFn = data.created.split(' ')
- 
+
 
   return (
     <TableRow key={data.hash}>
@@ -71,11 +72,11 @@ const TableItem: React.FC<Props> = ({data}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.side} clickable />
+        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={data.side === 'SELL' ? 'BUY' : 'SELL'} clickable />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        ${(data.quoteAmountUsd / data.baseAmountUsd).toFixed(2)}
+        ${(data.baseAmountUsd/data.baseAmount).toFixed(2)}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>

@@ -1,21 +1,15 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 
 export const zrxprotocolConfigs = [
   {
-
+ 
     routes: [
       {
-        path: '/protocol-explorer/0x-protocol/overview',
-        component: React.lazy(() => import('./Overview')),
-      },
-    ],
-  },
-  {
-
-    routes: [
-      {
-        path: '/protocol-explorer/0x-protocol/tokens',
-        component: React.lazy(() => import('./tokens')),
+        path: '/protocol-explorer/0x-protocol/token-explorer',
+        exact: true,
+        // component: React.lazy(() => import('./tokens')),
+        component: () => <Redirect to={`/protocol-explorer/0x-protocol/token-explorer/${process.env.REACT_APP_DEFAULT_TOKEN}`} />,
       },
     ],
   },
@@ -23,8 +17,8 @@ export const zrxprotocolConfigs = [
  
     routes: [
       {
-        path: '/protocol-explorer/0x-protocol/trades',
-        component: React.lazy(() => import('./trades')),
+        path: '/protocol-explorer/0x-protocol/token-explorer/:address',
+        component: React.lazy(() => import('./token-explorer')),
       },
     ],
   },

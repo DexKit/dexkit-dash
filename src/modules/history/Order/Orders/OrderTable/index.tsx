@@ -7,12 +7,14 @@ import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
 import { OrderData } from 'types/app';
+import Loader from '@crema/core/Loader';
 
 interface Props {
   data: OrderData[];
+  isLoading: boolean;
 }
 
-const OrderTable: React.FC<Props> = ({data}) => {
+const OrderTable: React.FC<Props> = ({data, isLoading}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -45,9 +47,10 @@ const OrderTable: React.FC<Props> = ({data}) => {
           <TableHeading />
         </TableHead>
         <TableBody className={classes.borderBottomClass}>
-          {data.map((row, index) => (
-            <TableItem row={row} key={index} />
-          ))}
+          {isLoading  ? <Loader/> : 
+              data.map((row, index) => (
+              <TableItem row={row} key={index} />
+            ))}
         </TableBody>
       </Table>
     </Box>

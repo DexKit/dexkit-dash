@@ -78,7 +78,7 @@ const TokenComponent: React.FC<TokenComponentProps> = (props) => {
 					value={decimals}
 					onChange={
 						($e) => {
-							const value = $e.target.value != null && $e.target.value != '' ? 
+							const value = $e.target.value !== null && $e.target.value !== '' ? 
 							$e.target.value : '18';
 
 							data.decimals = parseInt(value);

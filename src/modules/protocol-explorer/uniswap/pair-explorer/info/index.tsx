@@ -125,12 +125,12 @@ const Info: React.FC<Props> = (props) => {
                 </a>
               </Box>
               <Box mr={3}>
-                <a href={`${DEXTOOLS_API_URL}/app/uniswap/pair-explorer/${props.data.address}`} target="_blank">
+                <a href={`${DEXTOOLS_API_URL}/app/uniswap/pair-explorer/${props.data.address}`} target="_blank" rel="noopener nofollow noreferrer">
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}} src="/images/dextools.png"></Avatar>
                 </a>
               </Box>
               <Box mr={3}>
-                <a href={`/dashboard/token/${props.data.address}`}>
+                <a href={`/dashboard/token/${props.data.baseToken.address}`}>
                   <Avatar style={{color: '#3F51B5', backgroundColor: 'white', width: 34, height: 34}}>T</Avatar>
                 </a>
               </Box>

@@ -2,6 +2,34 @@ import { gql } from '@apollo/client';
 
 //https://explorer.bitquery.io/graphql
 
+
+export const BITQUERY_LAST_TRADE_PAIR_EXPLORER = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
+    ethereum(network: $network) {
+      data: dexTrades(
+        options: {limit: 1, desc: "block.height"}
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {is: $baseAddress}
+        quoteCurrency: {is: $quoteAddress}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        protocol
+        smartContract{
+          address {
+            address
+           }
+        }
+      }
+    }
+  }
+`;
+
+
 // DONE
 export const BITQUERY_PAIR_EXPLORER = gql`
   query ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
@@ -48,6 +76,94 @@ export const BITQUERY_PAIR_EXPLORER = gql`
             symbol
           }
           value
+        }
+      }
+    }
+  }
+`;
+
+export const BITQUERY_TOKEN_EXPLORER = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
+    ethereum(network: $network) {
+      data24: dexTrades(
+        options: {limit: 2, desc: "timeInterval.day"}
+        exchangeName: {is: $exchangeName}
+        smartContractAddress: {is: $pairAddress}
+        baseCurrency: {is: $quoteAddress}
+      ) {
+        timeInterval {
+          day(count: 1)
+        }
+        trades: count
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        baseCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: quoteAmount(in: USD)
+        quoteCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+        maximum_price: quotePrice(calculate: maximum)
+        minimum_price: quotePrice(calculate: minimum)
+        open_price: minimum(of: block, get: quote_price)
+        close_price: maximum(of: block, get: quote_price)
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+      }
+    }
+  }
+`;
+
+export const BITQUERY_TOKEN_PAIRS = gql`
+  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime) {
+    ethereum(network: $network) {
+      data24: dexTrades(
+        options: {limit: 10, desc: "tradeAmountInUsd"}
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {is: $baseAddress}
+        date: {since: $from}
+      ) {
+        trades: count
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        baseCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: quoteAmount(in: USD)
+        quoteCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        protocol
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+        maximum_price: quotePrice(calculate: maximum)
+        minimum_price: quotePrice(calculate: minimum)
+        open_price: minimum(of: block, get: quote_price)
+        close_price: maximum(of: block, get: quote_price)
+        tradeAmount(in: ETH)
+        smartContract{
+          address {
+            address
+           }
         }
       }
     }
@@ -116,6 +232,7 @@ export const BITQUERY_CONTRACT_ORDERS = gql`
   }
 `;
 
+
 export const BITQUERY_TOKEN_ORDERS = gql`
   query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
@@ -153,6 +270,7 @@ export const BITQUERY_TOKEN_ORDERS = gql`
           name
           symbol
         }
+        side
         quoteAmount
         quoteAmountInUsd: quoteAmount(in: USD)
         quoteCurrency {
@@ -286,6 +404,7 @@ export const BITQUERY_ORDERS_BY_TOKENS = gql`
         }
         count
         currencyAmount: baseAmount(in: USD)
+        tradeAmountInUsd: tradeAmount(in: USD)
         dates: count(uniq: dates)
         started: minimum(of: date)
       }

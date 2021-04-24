@@ -25,22 +25,31 @@ const Orders: React.FC<Props> = (props) => {
 
   // const [dealValue, setDealValue] = useState('allDeals');
   const [tableData, setTableData] = useState<OrderData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
  
   useEffect(() => {
+    const setOrders = (orders: OrderData[]) => {
+      setTableData(orders);
+      setIsLoading(false)
+    }
+
     if (props.type == 'account') {
+      setIsLoading(true);
       getMyOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
-        .then(orders => setTableData(orders))
-        .catch(e => console.log(e))
+        .then(setOrders)
+        .catch(e => setIsLoading(false))
     }
     else if (props.type == 'token') {
+      setIsLoading(true);
       getTokenOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
-        .then(orders => setTableData(orders))
-        .catch(e => console.log(e))
+        .then(setOrders)
+        .catch(e => setIsLoading(false))
     }
     else if (props.type == 'contract') {
+      setIsLoading(true);
       getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, GET_DEFAULT_QUOTE(chainId), 30, 0, null, null)
-        .then(orders => setTableData(orders))
-        .catch(e => console.log(e))
+        .then(setOrders)
+        .catch(e => setIsLoading(false))
     }
   }, [props, chainId]);
 
@@ -122,7 +131,7 @@ const Orders: React.FC<Props> = (props) => {
             </Link>
           </Box> */}
         </Box>
-        <OrderTable data={tableData} />
+        <OrderTable data={tableData} isLoading={isLoading}/>
       </Card>
     </Box>
   );
