@@ -36,7 +36,7 @@ const SalesState: React.FC<SalesStateProps> = ({data}) => {
                     <Box component='h4' display='inline-block' fontWeight={Fonts.BOLD} style={{padding: 0}} mb={0.5} fontSize={13}>
                       ${data?.market_data?.market_cap?.usd ?? '-'}
                     </Box>
-                    <Box component='p' color='text.secondary' fontSize={11}>Marked Cap</Box>
+                    <Box component='p' color='text.secondary' fontSize={11}>Market Cap</Box>
                   </Box>
                 </Box>
           </Box>

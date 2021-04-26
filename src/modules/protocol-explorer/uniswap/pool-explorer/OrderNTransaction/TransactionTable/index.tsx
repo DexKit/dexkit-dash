@@ -2,7 +2,7 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, TablePagination} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors';
@@ -12,9 +12,14 @@ import Loader from '@crema/core/Loader';
 interface Props {
   transactionData: MintBurn[];
   isLoading: boolean;
+  total: number;
+  page: number;
+  perPage: number;
+  onChangePage: (newPage: number) => void;
+  onChangePerPage: (newPerPage: number) => void;
 }
 
-const TransactionTable: React.FC<Props> = ({transactionData, isLoading}) => {
+const TransactionTable: React.FC<Props> = ({transactionData, isLoading, total, page, perPage, onChangePage, onChangePerPage}) => {
   const useStyles = makeStyles(() => ({
     tableResponsiveMaterial: {
       minHeight: '.01%',
@@ -43,14 +48,21 @@ const TransactionTable: React.FC<Props> = ({transactionData, isLoading}) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {
-          isLoading ?
-          <Loader/>:
-            transactionData.map((data) => (
+          {transactionData.length && transactionData.map((data) => (
               <TableItem data={data} key={data.hash} />
             ))}
+            {isLoading &&  <Loader/>}
         </TableBody>
       </Table>
+      <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={total}
+              rowsPerPage={perPage}
+              page={page}
+              onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
+              onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangePerPage(parseInt(event.target.value, 10))}
+          />
     </Box>
   );
 };

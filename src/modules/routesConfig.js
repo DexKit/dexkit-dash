@@ -30,7 +30,7 @@ const routesConfig = [
         url: '/dashboard/token',
       },
       
-      {
+     /*  {
         id: 'kit',
         title: 'Kit\'s',
         messageId: 'sidebar.app.kits',
@@ -39,7 +39,7 @@ const routesConfig = [
         url: '/dashboard/kits',
       },
 
-    /*  {
+     {
         id: 'dashboards',
         title: 'Dashboards',
         messageId: 'sidebar.app.dashboard',
@@ -140,10 +140,77 @@ const routesConfig = [
         children: [
           {
             id: '0x-tokens',
-            title: 'Tokens',
-            messageId: 'common.tokens',
+            title: 'Token Explorer',
+            messageId: 'sidebar.protocols.uniswap.token-explorer',
             type: 'item',
             url: '/protocol-explorer/0x-protocol/token-explorer',
+          },
+          {
+            id: '0x-pairs',
+            title: 'Pair Explorer',
+            messageId: 'sidebar.protocols.uniswap.pair-explorer',
+            type: 'item',
+            url: '/protocol-explorer/0x-protocol/pair-explorer',
+          },
+        ],
+      },
+      {
+        id: 'balancer',
+        title: 'Balancer',
+        messageId: 'sidebar.protocols.balancer',
+        type: 'collapse',
+        icon: 'balancer',
+        children: [
+          {
+            id: 'balancer-tokens',
+            title: 'Token Explorer',
+            messageId: 'sidebar.protocols.uniswap.token-explorer',
+            type: 'item',
+            url: '/protocol-explorer/balancer/token-explorer',
+          },
+          {
+            id: 'balancer-pairs',
+            title: 'Pair Explorer',
+            messageId: 'sidebar.protocols.uniswap.pair-explorer',
+            type: 'item',
+            url: '/protocol-explorer/balancer/pair-explorer',
+          },
+        ],
+      },
+      {
+        id: 'sushiswap',
+        title: 'Sushiswap',
+        messageId: 'sidebar.protocols.sushiswap',
+        type: 'collapse',
+        icon: 'sushiswap',
+        children: [
+          {
+            id: 'overview',
+            title: 'Overview',
+            messageId: 'common.overview',
+            type: 'item',
+            url: '/protocol-explorer/sushiswap/overview',
+          },
+          {
+            id: 'tokens',
+            title: 'Token Explorer',
+            messageId: 'sidebar.protocols.uniswap.token-explorer',
+            type: 'item',
+            url: '/protocol-explorer/sushiswap/token-explorer',
+          },
+          {
+            id: 'pool-explorer',
+            title: 'Pool Explorer',
+            messageId: 'sidebar.protocols.uniswap.pool-explorer',
+            type: 'item',
+            url: '/protocol-explorer/sushiswap/pool-explorer',
+          },
+          {
+            id: 'pair-explorer',
+            title: 'Pair Explorer',
+            messageId: 'sidebar.protocols.uniswap.pair-explorer',
+            type: 'item',
+            url: '/protocol-explorer/sushiswap/pair-explorer',
           },
         ],
       },
@@ -266,7 +333,7 @@ const routesConfig = [
         messageId: 'sidebar.app.exchange',
         type: 'external',
         icon: 'show_chart',
-        url: 'https://swap.dexkit.com/#/swap',
+        url: 'https://exchange.dexkit.com',
       },
       {
         id: 'swap',
@@ -282,7 +349,7 @@ const routesConfig = [
         messageId: 'sidebar.app.marketplace',
         type: 'external',
         icon: 'storefront',
-        url: 'https://swap.dexkit.com/#/swap',
+        url: 'https://demo.nft.dexkit.com',
       },
       {
         id: 'farming',
@@ -290,7 +357,7 @@ const routesConfig = [
         messageId: 'sidebar.app.farming',
         type: 'external',
         icon: 'fastfood',
-        url: 'https://swap.dexkit.com/#/swap',
+        url: 'https://farm.dexkit.com',
       },
     ],
   },

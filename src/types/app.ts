@@ -130,7 +130,7 @@ export interface OrderByPairs {
 }
 
 
-export interface PairInfoExplorer {
+export interface AMMPairInfoExplorer {
   baseToken: Token,
   quoteToken: Token,
   address: string
@@ -142,6 +142,20 @@ export interface PairInfoExplorer {
   volume24InUsd: number
   basePooled: number,
   quotePooled: number,  
+}
+
+export interface PairInfoExplorer {
+  baseToken: Token,
+  quoteToken: Token,
+  address: string
+  price: number,
+  priceUsd: number,
+  priceChange: number,
+  volume24: number,
+  volume24InUsd: number
+  totalTrades: number;
+  baseAmount: number;
+  quoteAmount: number;
 }
 
 

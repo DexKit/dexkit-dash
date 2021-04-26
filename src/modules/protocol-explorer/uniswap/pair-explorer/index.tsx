@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import Info from './info';
-import { useDispatch } from 'react-redux';
-import { onGetCryptoData, onGetAnalyticsData } from '../../../../redux/actions';
+import Info from './info-amm';
 import GridContainer from '../../../../@crema/core/GridContainer';
 import InfoView from '../../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 
-import OrderNTransaction from './OrderNTransaction';
 import { Paper, Typography, Link, Breadcrumbs } from '@material-ui/core';
 
 import { Loader } from '@crema';
 import { RouteComponentProps } from 'react-router-dom';
-import { EXCHANGE, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useWeb3 } from 'hooks/useWeb3';
-import { OrderData, PairInfoExplorer } from 'types/app';
-import { getContractOrders, getPairExplorer, getLastTradeByPair } from 'services/graphql/bitquery';
-import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
+import { EXCHANGE} from 'shared/constants/Bitquery';
+
 import { TokenSearchByList } from 'shared/components/TokenSearchByList';
-import Web3 from 'web3';
+
+import { useAMMPairTrades } from 'hooks/useAMMPairTrades';
+import { useAMMPairExplorer } from 'hooks/useAMMPairExplorer';
+import AMMTradeHistory from './AMMTradeHistory';
+import InfoAMM from './info-amm';
 
 
 
@@ -35,45 +33,15 @@ type Props = RouteComponentProps<PropsParams>
 const PairExplorer: React.FC<Props> = (props) => {
   const {match: { params }} = props;
   const {address} = params;
+  const { isLoadingTrades, 
+          trades, 
+          totalTrades, 
+          page, 
+          rowsPerPage, 
+          onChangePage, 
+          onChangeRowsPerPage} = useAMMPairTrades(address, EXCHANGE.UNISWAP);
 
-  const { chainId } = useWeb3();
-
-  const [isLoadingInfo, setIsLoadingInfo] = useState(false);
-  const [isLoadingTrades, setIsLoadingTrades] = useState(false);
-  const [infoData, setInfoData] = useState<PairInfoExplorer>();
-  const [tableData, setTableData] = useState<OrderData[]>([]);
-
- const fetchPairData = (pairAddress: string) =>{ 
-   setIsLoadingInfo(true);
-    setIsLoadingTrades(true);
-     getPairExplorer(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, pairAddress, GET_DEFAULT_QUOTE(chainId))
-        .then(info => { setInfoData(info);  setIsLoadingInfo(false) })
-        .catch(e => setIsLoadingInfo(false))
-
-      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, pairAddress, GET_DEFAULT_QUOTE(chainId), 7, 0, null, null)
-        .then(orders => { setTableData(orders);   setIsLoadingTrades(false); console.log(orders)})
-        .catch(e =>   setIsLoadingTrades(false))
-
- }
-
-  useEffect(() => {
-    if (Web3.utils.isAddress(address)) {
-      fetchPairData(address);
-    }else{
-      // We received a different url structure, parse and get pairAddress
-      // TODO: investigate better ways to fetch pair
-      const splitAddress = address.split('-');
-      if(splitAddress.length > 1 && chainId){
-        const baseAddress = splitAddress[0];
-        getLastTradeByPair(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, baseAddress, GET_DEFAULT_QUOTE(chainId))
-        .then(pair => fetchPairData(pair))
-      }
-
-    }
-
-
-
-  }, [address, chainId]);
+  const {isLoadingInfo, infoData} = useAMMPairExplorer(address, EXCHANGE.UNISWAP)
 
   const getPairTitle = () => {
     if(infoData){
@@ -91,7 +59,7 @@ const PairExplorer: React.FC<Props> = (props) => {
               <Link color="inherit" href="/" >
                 Protocol Explorer
               </Link>
-              <Link color="inherit" href="/getting-started/installation/" >
+              <Link color="inherit" href="/protocol-explorer/uniswap/overview" >
                 Uniswap
               </Link>
               <Typography color="textPrimary">Pair Explorer</Typography>
@@ -109,7 +77,7 @@ const PairExplorer: React.FC<Props> = (props) => {
               isLoadingInfo ? <Loader/> :
               (infoData && 
               <Paper style={{ marginTop: 20 }}>
-                 <Info  data={infoData} /> 
+                 <InfoAMM  data={infoData} /> 
               </Paper>)
             }
           </Grid>
@@ -125,11 +93,17 @@ const PairExplorer: React.FC<Props> = (props) => {
           </Grid>
             
          
-
-
-         
           <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
-              <OrderNTransaction transactionData={tableData} isLoading={isLoadingTrades} />
+              <AMMTradeHistory 
+                transactionData={trades} 
+                isLoading={isLoadingTrades} 
+                total={totalTrades} 
+                page={page}
+                perPage={rowsPerPage}
+                onChangePage={onChangePage}
+                onChangePerPage={onChangeRowsPerPage}
+                    
+              />
           </Grid>
 
 

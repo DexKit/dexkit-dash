@@ -39,9 +39,6 @@ const Crypto: React.FC<TokenProps> = (props) => {
 
   const [openTrade, setOpenTrade] = useState<boolean>(false);
 
-  const [openOrders, setOpenOrders] = useState<boolean>(false);
-  const [openHistory, setOpenHistory] = useState<boolean>(false);
-
   const handleModal = useCallback((event: React.SyntheticEvent<HTMLElement, Event>) => {
     console.log('modal event', event);
     // setOpenModal(false);
@@ -90,7 +87,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
                 fontSize={{xs: 18, sm: 20, xl: 22}}
                 mb={{xs: 4, sm: 4, xl: 6}}
                 fontFamily={Fonts.LIGHT}>
-                {info?.name} Token
+                {info?.name} Token {info?.contract_address ? `- ${info?.contract_address}`: null}
               </Box>
             </Grid>
           </GridContainer>

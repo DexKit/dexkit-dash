@@ -1,17 +1,17 @@
-import React, {useEffect, useState } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import GridContainer from '../../../../@crema/core/GridContainer';
 import Box from '@material-ui/core/Box';
-import TokenInfo from './TokenInfo';
-import TokenStatistics from './TokenStatistics';
+
 
 import {  Paper, Typography, Link, Breadcrumbs } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router-dom';
-import { TokenSearch } from 'shared/components/TokenSearch';
+
 import { truncateAddress } from 'utils';
 import TokenOrders from './TokenOrders';
 import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 import TokenPairs from './TokenPairs';
+import { EXCHANGE } from 'shared/constants/Bitquery';
 
 type TokenParams = {
   address: string;
@@ -57,7 +57,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
             </Grid> */}
             
             <Grid item xs={12} sm={12} md={12}>
-              <TokenOrders address={address} />
+              <TokenOrders address={address} exchange={EXCHANGE.UNISWAP}/>
             </Grid>
 
           </GridContainer>

@@ -2,6 +2,8 @@ import { BigNumber } from '@0x/utils';
 import { isWeth } from './knownTokens';
 import { ChainId } from 'types/blockchain';
 import { TokenInfo } from '@types';
+import Web3 from 'web3';
+import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
 
 
 export const tokenAmountInUnitsToBigNumber = (amount: BigNumber, decimals: number): BigNumber => {
@@ -77,3 +79,17 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
           return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     }
 }
+
+export const extractPairFromAddress = (address: string, chainId: ChainId) => {
+    const splittedAddress = address.split('-');
+    let baseAddress = splittedAddress[0] || GET_DEFAULT_QUOTE(chainId) as string;
+    let quoteAddress = null;
+    if(splittedAddress.length > 1){
+      baseAddress = splittedAddress[0];
+      quoteAddress = splittedAddress[1];
+      if(!Web3.utils.isAddress(quoteAddress)){
+        quoteAddress = GET_DEFAULT_QUOTE(chainId);
+      }
+    }
+    return {baseAddress, quoteAddress};
+  }

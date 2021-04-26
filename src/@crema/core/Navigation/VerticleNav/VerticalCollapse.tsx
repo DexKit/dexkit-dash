@@ -17,6 +17,8 @@ import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
 import {ReactComponent as ZRXprotocolLogo} from 'assets/images/zrxprotocol.svg';
+import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
+import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
     return isUrlInChildren(item, pathname);
@@ -79,6 +81,10 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
         return   <UniswapLogo />
       case 'zrxprotocol':
         return  <ZRXprotocolLogo/>
+      case 'sushiswap':
+          return  <SushiLogo/>
+      case 'balancer':
+          return  <BalancerLogo/>
     
       default:
        return icon;

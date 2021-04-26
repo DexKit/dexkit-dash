@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import GridContainer from '../../../../@crema/core/GridContainer';
-import InfoView from '../../../../@crema/core/InfoView';
-import { AppState } from '../../../../redux/store';
-import { useSelector } from 'react-redux';
+
 import { Box, Grid, Paper, Typography, Link, Breadcrumbs } from '@material-ui/core';
-import OrderNTransaction from './OrderNTransaction';
-import { getPool, getPairExplorer } from 'services/graphql/bitquery';
-import { EXCHANGE, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+
+import { EXCHANGE } from 'shared/constants/Bitquery';
 import { useWeb3 } from 'hooks/useWeb3';
 import { RouteComponentProps } from 'react-router';
-import { MintBurn, PairInfoExplorer } from 'types/app';
-import { TokenSearch } from 'shared/components/TokenSearch';
-import { UNISWAP_ETH_PRICE } from 'services/graphql/uniswap/gql';
-import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
+import { MintBurn } from 'types/app';
+
 import { truncateAddress } from 'utils';
 import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 import { Loader } from '@crema';
-import Info from '../pair-explorer/info';
+import Info from '../pair-explorer/info-amm';
+import { useAMMPairExplorer } from 'hooks/useAMMPairExplorer';
+import AMMPoolHistory from './OrderNTransaction';
+import { useAMMPoolHistory } from 'hooks/useAMMPoolHistory';
 
 
 type PropsParams = {
@@ -29,24 +27,12 @@ const PoolExplorer: React.FC<Props> = (props) => {
   const { match: { params } } = props;
   const { address } = params;
 
-  const {chainId} = useWeb3();
-  const [tableData, setTableData] = useState<MintBurn[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingInfo, setIsLoadingInfo] = useState(false);
-  const [infoData, setInfoData] = useState<PairInfoExplorer>();
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPool(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, address, GET_DEFAULT_QUOTE(chainId), 5)
-      .then(orders => { setTableData(orders); setIsLoading(false) })
-      .catch(e => setIsLoading(false))
-
-    getPairExplorer(GET_NETWORK_NAME(chainId), EXCHANGE.UNISWAP, address, GET_DEFAULT_QUOTE(chainId))
-      .then(info => { setInfoData(info);  setIsLoadingInfo(false) })
-      .catch(e => console.log(e))
+ 
+  const {isLoadingInfo, infoData} = useAMMPairExplorer(address, EXCHANGE.UNISWAP)
+  const {poolHistory, isLoading, totalEvents, onChangePage, onChangeRowsPerPage, page, rowsPerPage } = useAMMPoolHistory(address, EXCHANGE.UNISWAP);
 
 
-  }, [address, chainId]);
 
   return (
     <Box pt={{ xl: 4 }} clone>
@@ -74,7 +60,15 @@ const PoolExplorer: React.FC<Props> = (props) => {
         </Grid>
 
         <Grid item xs={12} md={12}>
-          <OrderNTransaction transactionData={tableData} isLoading={isLoading}/>
+          <AMMPoolHistory 
+            transactionData={poolHistory} 
+            isLoading={isLoading}
+            total={totalEvents} 
+            page={page}
+            perPage={rowsPerPage}
+            onChangePage={onChangePage}
+            onChangePerPage={onChangeRowsPerPage}
+          />
         </Grid>
 
       </GridContainer>

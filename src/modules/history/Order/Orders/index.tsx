@@ -2,15 +2,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Card, makeStyles} from '@material-ui/core';
 import { useWeb3 } from 'hooks/useWeb3';
 import OrderTable from './OrderTable';
-import Select from '@material-ui/core/Select';
-import Link from '@material-ui/core/Link';
-import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import Box from '@material-ui/core/Box';
 import {grey} from '@material-ui/core/colors';
-import {Fonts} from '../../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
-import { getContractOrders, getMyOrders, getTokenOrders } from 'services/graphql/bitquery';
+import { getContractOrders, getMyOrders, getTokenTrades } from 'services/graphql/bitquery';
 import { EXCHANGE, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { OrderData } from 'types/app';
 import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
@@ -41,7 +37,7 @@ const Orders: React.FC<Props> = (props) => {
     }
     else if (props.type == 'token') {
       setIsLoading(true);
-      getTokenOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, 30, 0, null, null)
+      getTokenTrades(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, null, 30, 0, null, null)
         .then(setOrders)
         .catch(e => setIsLoading(false))
     }

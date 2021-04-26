@@ -620,6 +620,8 @@
   "sidebar.protocols": "Protocol Explorer",
   "sidebar.protocols.uniswap": "Uniswap",
   "sidebar.protocols.0x": "0x Protocol",
+  "sidebar.protocols.balancer": "Balancer",
+  "sidebar.protocols.sushiswap": "SushiSwap",
   "sidebar.protocols.uniswap.token-explorer": "Token Explorer",
   "sidebar.protocols.uniswap.pool-explorer": "Pool Explorer",
   "sidebar.protocols.uniswap.pair-explorer": "Pair Explorer",

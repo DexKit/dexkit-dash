@@ -7,13 +7,7 @@ export function parsePairExplorerData(data: any, address: string, network: NETWO
     const d24Current = data.data[network].data24[0];
     const d24Yesterday = data.data[network].data24[1];
     if(d24Current && d24Yesterday){
-      const pooled = data.data[network].pooled[0].balances || [];
-
-      const basePerDolar = d24Current.baseAmountInUsd/ d24Current.baseAmount;
       const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;
-
-      const basePooled: number  = pooled.filter((e: any) => e.currency.symbol == d24Current.baseCurrency.symbol)[0].value;
-      const quotePooled: number = pooled.filter((e: any) => e.currency.symbol == d24Current.quoteCurrency.symbol)[0].value;
 
       return {
         baseToken: {
@@ -32,11 +26,12 @@ export function parsePairExplorerData(data: any, address: string, network: NETWO
         price: d24Current.quotePrice,
         priceUsd: (d24Current.quotePrice * quotePerDolar),
         priceChange: ((d24Current.quotePrice * 100) / d24Yesterday.quotePrice) - 100,
-        liquidity: ((basePooled * basePerDolar) + (quotePooled * quotePerDolar)),
         volume24: d24Current.tradeAmount,
         volume24InUsd: d24Current.tradeAmountInUsd,
-        basePooled: basePooled,
-        quotePooled: quotePooled, 
+        baseAmount: d24Current.baseAmount,
+        quoteAmount: d24Current.quoteAmount,
+        totalTrades: d24Current.trades
+  
       }
    }
   }
@@ -58,11 +53,11 @@ export function parsePairExplorerData(data: any, address: string, network: NETWO
     price: 0,
     priceUsd: 0,
     priceChange: 0,
-    liquidity: 0,
     volume24: 0,
     volume24InUsd: 0,
-    basePooled: 0,
-    quotePooled: 0,  
+    baseAmount: 0,
+    quoteAmount: 0,
+    totalTrades: 0
   }
   
 }

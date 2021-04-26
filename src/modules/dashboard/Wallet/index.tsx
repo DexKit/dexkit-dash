@@ -8,7 +8,7 @@ import { Grid, Box, Divider } from '@material-ui/core';
 
 import transakSDK from '@transak/transak-sdk';
 
-import { MessageView } from '@crema';
+import { MessageView, InfoView } from '@crema';
 import AppSelect from '@crema/core/AppSelect';
 import GridContainer from '@crema/core/GridContainer';
 import AppCard from '@crema/core/AppCard';
@@ -207,6 +207,7 @@ const Wallet: React.FC<Props> = (props) => {
           
         </GridContainer>
       </Box>
+      <InfoView />
     </>
   );
 };

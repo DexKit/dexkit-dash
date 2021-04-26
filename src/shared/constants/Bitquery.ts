@@ -3,6 +3,7 @@ import { ChainId } from "types/blockchain";
 export enum EXCHANGE {
   // ethereum
   UNISWAP = 'Uniswap',
+  SUSHISWAP = 'SushiSwap',
   ZEROX = 'Zerox Exchange',
   CURVE = 'Curve',
   BALANCER = 'Balancer',
