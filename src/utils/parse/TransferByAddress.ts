@@ -1,18 +1,19 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { TransferByAddress } from "types/app";
 
 export function parseTransferByAddressData(data: any, network: NETWORK): TransferByAddress[] {
 
   if (data && data.data[network]) {
-    const sender: any[] = data.data[network].sender;
-    const receiver: any[] = data.data[network].receiver;
-
+    const sender: any[] = data.data[network].sender.map((e: any) => {return {...e, type:'Send'}});
+    const receiver: any[] = data.data[network].receiver.map((e: any) => {return {...e, type:'Receive'}});
+        
     return sender.concat(receiver)
-      .sort((a, b) => a.block.height - b.block.height)
+      .sort((a, b) => b.block.height - a.block.height)
       .map(e => {
         return {
           sender: e.sender.address,
           receiver: e.receiver.address,
+          type: e.type,
           token: {
             address: e.currency.address,
             name: e.currency.name,
@@ -20,6 +21,7 @@ export function parseTransferByAddressData(data: any, network: NETWORK): Transfe
             decimals: e.currency.decimals
           },
           amount: e.amount,
+          amountUsd: e.amountInUsd,
           hash: e.transaction.hash,
           time: e.block.timestamp.time
         }

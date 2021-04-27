@@ -59,9 +59,22 @@ export enum Fonts {
   EXTRA_BOLD = 'Gilroy-ExtraBold',
 }
 
-export enum CoinIcons{
+export enum CoinIcons {
   BITCOIN_WHITE = 'assets/images/bitcoin.png',
   ETHERIUM = 'assets/images/etherium.png',
   LITECOIN = 'assets/images/litcoin.png',
   RIPPLE = 'assets/images/ripple.png'
+}
+
+export enum EXCHANGE {
+  UNISWAP = 'uniswap',
+  ZEROX = 'zerox',
+  PANCAKE = 'pancake',
+  ALL = 'all'
+}
+
+export enum NETWORK {
+  ETHEREUM = 'ethereum',
+  BSC = 'bsc',
+  BSCTEST = 'bsc_testnet'
 }

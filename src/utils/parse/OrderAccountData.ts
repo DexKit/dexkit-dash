@@ -1,4 +1,4 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { OrderData } from "types/app";
 
 export function parseOrderAccountData(data: any, network: NETWORK): OrderData[] {

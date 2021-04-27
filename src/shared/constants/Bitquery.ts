@@ -1,19 +1,5 @@
 import { ChainId } from "types/blockchain";
-
-export enum EXCHANGE {
-  // ethereum
-  UNISWAP = 'Uniswap',
-  ZEROX = 'Zerox Exchange',
-  //bsc
-  PANCAKE = 'Pancake',
-  ALL = ''
-}
-
-export enum NETWORK {
-  ETHEREUM = 'ethereum',
-  BSC = 'bsc',
-  BSCTEST = 'bsc_testnet'
-}
+import { EXCHANGE, NETWORK } from "./AppEnums";
 
 export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
   switch (chainId) {
@@ -28,3 +14,11 @@ export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_EXCHANGE_NAME = (exchange: EXCHANGE) => {
+  switch (exchange) {
+    case EXCHANGE.UNISWAP: return 'Uniswap';
+    case EXCHANGE.ZEROX: return 'Zerox Exchange';
+    case EXCHANGE.PANCAKE: return 'Pancake';
+    default: return '';
+  }
+}

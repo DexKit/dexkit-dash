@@ -1,73 +1,90 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
 import GridContainer from '@crema/core/GridContainer';
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
-// import { SearchRounded } from '@material-ui/icons';
+import { Avatar, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { search } from 'services/graphql/bitquery';
-import { Currency } from '@types';
 import { Autocomplete } from '@material-ui/lab';
 import { useWeb3 } from 'hooks/useWeb3';
+import { useTokens } from 'hooks/useTokens';
+import { Pair, Token } from 'types/app';
+import { EXCHANGE } from 'shared/constants/AppEnums';
+import { useNetwork } from 'hooks/useNetwork';
+
 interface TokenSearchProps {
-  url: string,
-  type?: 'token' | 'pair',
+  exchangeName?: EXCHANGE;
+  type?: 'token' | 'pair';
   positionIcon?: 'start' | 'end';
   filters?: Map<string, string>;
 }
 
 export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
-  const { filters, url } = props; 
 
   const history = useHistory();
-  const {chainId} = useWeb3();
+  const network = useNetwork();
+  const tokens  = useTokens(network);
 
-  const [timeout,  setClearTimeOut] = useState<number>(-1);
-  const [founded, setFounded] = useState<Currency[]>();
+  const [timeout, setClearTimeOut] = useState<number>(-1);
+  const [founded, setFounded] = useState<Pair[]>();
   const [searchKey, setSearchKey] = useState<string>();
   const [isLoading, setLoading] = useState<boolean>(false);
 
-
   useEffect(useCallback(() => {
-    
     clearTimeout(timeout as number);
 
     const _timeout: number = setTimeout(() => {
       if(searchKey != null) {
-
         setLoading(true);
 
-        search<{ search: { subject: Currency }[] }>(searchKey).then(result => {
+        const tokensFounded: Token[] = tokens.filter(e => {
+          return (
+            e.symbol.toLowerCase().search(searchKey) != -1 ||
+            e.name.toLowerCase().search(searchKey) != -1 ||
+            e.address.toLowerCase().search(searchKey) != -1
+          )
+        });
 
-          if(!result.loading && result?.data){
-            const founds = result?.data?.search?.map( s => s.subject);
-            setFounded(founds);
-          }
-          else if(!result.loading && result?.errors != null && result?.errors.length > 0){
-            console.error('search errors', result.errors);
-          }
-        })
-        .catch( error => console.error('search', error))
-        .finally(() => setLoading(false));
+        console.log(props);
+        console.log(tokensFounded);
+ 
+        if (props.type == undefined || props.type == 'token') {
+          setFounded(tokensFounded.map(e => { return { address: e.address, token0: e, token1: e } }));
+        }
+        else if (props.exchangeName && tokensFounded.length > 0) {   
+          console.log('aqui')       
+          search(network, props.exchangeName, tokensFounded.map(e => e.address.toLowerCase()))
+            .then(result => { console.log(tokensFounded); setFounded(result) })
+            .catch(error => console.error('search', error))
+        } else {
+          setFounded([]);
+        }
+
+        setLoading(false);
       }
     }, 1200) as unknown as number;
 
     setClearTimeOut(_timeout);
   }, [searchKey, timeout, isLoading]), [searchKey]);
 
-  const onPairSelected = (currency: Currency|null) => {
+
+  const onPairSelected = (currency: Pair|null) => {
     if (currency) {
-      history.push(`${url}/${currency.address}`);
+      history.push(`${currency.address}`);
     }
   }
+
 
   return (
     <GridContainer>
 
-      <Grid item xs={12} md={filters != null ? 8 : 12}>
+      <Grid item xs={12} md={props.filters != null ? 8 : 12}>
 
         <Autocomplete
           id="combo-box-search"
+          placeholder={(props.type == 'pair') ? `Find Pair by name, symbol and address...` : `Find Token by name, symbol and address...`}
           options={founded || []}
-          getOptionLabel={(option) => `${option.name} (${option.symbol}) - ${option.address.slice(0, 12)}...`}
+          getOptionLabel={(option) => (props.type == 'pair') ? 
+            `${option.token0.symbol}/${option.token1.symbol} - ${option.address.slice(0, 16)}...` : 
+            `${option.token0.name} (${option.token0.symbol}) - ${option.address.slice(0, 16)}...` }
           renderInput={(params) => (
             <TextField {...params} 
               variant="outlined"
@@ -90,7 +107,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
           }}
         /> */}
       </Grid>
-      { filters && <Grid item xs={12} md={4}>
+      { props.filters && <Grid item xs={12} md={4}>
         <FormControl fullWidth  >
           <InputLabel style={{ marginLeft: 20 }} id="demo-simple-select-label">Filter</InputLabel>
           <Select
@@ -102,7 +119,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
               <em>View All</em>
             </MenuItem>
             {
-              filters.forEach((value, key) => (
+              props.filters.forEach((value, key) => (
                 <MenuItem value={value}>
                   <em>{key}</em>
                 </MenuItem>

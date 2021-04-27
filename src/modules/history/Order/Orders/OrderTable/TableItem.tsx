@@ -64,7 +64,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       <TableCell align='left' className={classes.tableCell}>{row.exchange}</TableCell>
       
       <TableCell align='left' className={classes.tableCell}>
-        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={row.side} clickable />
+        <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={row.side} />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>{row.baseToken.symbol}/{row.quoteToken.symbol}</TableCell>

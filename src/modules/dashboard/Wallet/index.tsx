@@ -18,19 +18,15 @@ import { useIntl } from 'react-intl';
 import DefiCoins, { CoinsProps } from './DefiCoins';
 import AssetChart from './AssetChart';
 import AssetTable from './AssetTable';
-import SalesState from './SalesState'
+import HistoryState from './HistoryState'
 
 import TotalBalance from 'shared/components/TotalBalance';
-import { Fonts } from 'shared/constants/AppEnums';
-import { getTransak } from 'services/transak/transakClient';
 
-import { BalanceCoins, TotalBalanceData } from 'types/models/Crypto';
-import { BitqueryAddress } from 'types/bitquery/address.interface';
-import { MyBalance } from 'types/bitquery/myBalance.interface';
 import { Link } from 'react-router-dom';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import {parseDefiAssets} from '../../../utils/parse'
 import Transak from 'shared/components/Transak';
+import PageTitle from 'shared/components/PageTitle';
 
 interface Props { }
 
@@ -40,6 +36,9 @@ const Wallet: React.FC<Props> = (props) => {
   const { account, chainId } = useWeb3();
   const { messages } = useIntl();
 
+  const [chartName, setChartName] = useState<string>('Ether');
+  const [chartDays, setChartDays] = useState<number>(30);
+
   const [chartData, setChartData] = useState([] as any);
   const [defiAssets, setDefiAssets] = useState({} as CoinsProps);
   const [transakClient, setTransakInstance] = useState<transakSDK>();
@@ -48,17 +47,32 @@ const Wallet: React.FC<Props> = (props) => {
     ({ dashboard }) => dashboard,
   );
   
-  const updateChart = (name: string) => {
-    const findToken = myBalances.filter(e => e.currency.name == name);
+  const updateChart = () => {
+    const findToken = myBalances.filter(e => e.currency.name == chartName);
 
     if (findToken.length > 0) {
-      const cData = findToken[0].history?.map(e => {
-        return {
-          name: new Date(e.timestamp),
-          value: e.value
+      const hist = findToken[0].history as {[key: string]: number};
+
+      if (hist) {
+        const today = new Date();
+        const cData: any[] = [];
+        
+        for (let i = 0; i < chartDays; i++) {
+          const key = today.toDateString();
+
+          if (hist[key]) {
+            cData.push({ name: key, value: hist[key] })
+          } else {
+            cData.push({ name: key, value: 0 })
+          }
+          
+          today.setDate(today.getDate() - 1);
         }
-      })
-      setChartData(cData);
+
+        setChartData(cData.reverse());
+      } else {
+        setChartData([]);
+      }
     } else {
       setChartData([]);
     }
@@ -76,8 +90,10 @@ const Wallet: React.FC<Props> = (props) => {
   }, [myDefiBalances]);
 
   useEffect(() => {
-    updateChart('Ether');
-  }, [myBalances]);
+    if (chartName && chartDays) {
+      updateChart();
+    }
+  }, [myBalances, chartName, chartDays]);
 
   const transakAllEvents = useCallback((data: any) => {
     console.log(data);
@@ -124,18 +140,13 @@ const Wallet: React.FC<Props> = (props) => {
     <>
       <Box pt={{ xl: 4 }}>
 
-        <GridContainer>
-          <Grid item xs={12} md={12}>
-            <Box
-              component='h2'
-              color='text.primary'
-              fontSize={{xs: 18, sm: 20, xl: 22}}
-              mb={{xs: 4, sm: 4, xl: 6}}
-              fontFamily={Fonts.LIGHT}>
-                MY TOTAL BALANCE
-            </Box>
-          </Grid>
-        </GridContainer>
+        <PageTitle
+          history={[
+            {url:'/', name: 'Dashboard'}
+          ]}
+          active={'Wallet'}
+          title={'Wallet'}
+        />
 
         <GridContainer>
 
@@ -151,7 +162,7 @@ const Wallet: React.FC<Props> = (props) => {
             <GridContainer style={{marginTop: 2}}>
               <Grid item xs={12} sm={6} md={6}>
                 <Link to={`/history/order/account/${account}`} style={{textDecoration: 'none'}}>
-                  <SalesState state={{
+                  <HistoryState state={{
                     value: "Order history",
                     bgColor: "#0A8FDC",
                     icon: "/assets/images/dashboard/1_monthly_sales.png",
@@ -163,7 +174,7 @@ const Wallet: React.FC<Props> = (props) => {
 
               <Grid item xs={12} sm={6} md={6}>
                 <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
-                  <SalesState state={{
+                  <HistoryState state={{
                     value: "Transaction history",
                     bgColor: "#9E49E6",
                     icon: "/assets/images/dashboard/1_monthly_sales.png",
@@ -178,11 +189,16 @@ const Wallet: React.FC<Props> = (props) => {
           <Grid item xs={12} md={6}>
             <Grid item xs={12} md={12} style={{ paddingLeft: 0, paddingRight: 0, }}>
               <AppCard style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 5 }}>
-                <Box paddingLeft="0" display="flex">
+                <Box paddingLeft="5px" paddingRight="5px" display="flex" justifyContent={'space-between'}>
                   <AppSelect
                     menus={myBalances.map(e => e.currency.name)}
                     defaultValue={'Ether'}
-                    onChange={(e) => {updateChart(e)}}
+                    onChange={(e) => setChartName(e)}/>
+
+                  <AppSelect
+                    menus={['7 days', '15 days', '30 days']}
+                    defaultValue={'30 days'}
+                    onChange={(e) => { setChartDays(Number(e.split(' ')[0])) }}
                   />
 
                   {/* <Transak /> */}
@@ -198,7 +214,6 @@ const Wallet: React.FC<Props> = (props) => {
               </AppCard>
             </Grid>
             {
-              myDefiBalances.length > 0 && 
               <Grid item xs={12} md={12} style={{ marginTop: 15 }}>
                 <DefiCoins {...defiAssets} />
               </Grid>

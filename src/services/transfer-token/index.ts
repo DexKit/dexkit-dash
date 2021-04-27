@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { Contract, ContractOptions } from 'web3-eth-contract';
 import { web3Transaction, getWeb3 } from '../web3modal';
 
 export const MIN_ABI: AbiItem[] = [
@@ -31,9 +30,9 @@ export const MIN_ABI: AbiItem[] = [
 /**
  * get token contract
  */
-export function getContractToken(tokenAddress: string, web3: Web3, contractOptions?: ContractOptions): Contract {
-  return new Contract(MIN_ABI, tokenAddress, contractOptions);
-}
+// export function getContractToken(tokenAddress: string, contractOptions?: ContractOptions): Contract {
+ 
+// }
 
 /**
  * 
@@ -42,39 +41,28 @@ export function getContractToken(tokenAddress: string, web3: Web3, contractOptio
  * @param value value to send
  * @param contract token contract
  */
-export async function sendTransaction(from: string, to: string, value: number, contract?: Contract): Promise<string | undefined> {
+export async function sendTransaction(from: string, to: string, amount: string, contractAddress?: string): Promise<any | undefined> {
   const web3: Web3 = getWeb3() as Web3;
+
   if (web3 == null) {
     return Promise.reject('Web3 not provider');
   }
-  const numDecimals: number = contract != null ? Number(await (
-    new Promise((resolve, reject) => {
-      contract?.methods.decimals()
-        .call(
-          function (error: any, d: number) {
-            resolve((error) ? 18 : d);
-          }
-        );
-    }))) : 18;
-  const transformedValue = value * (Math.pow(10, numDecimals));
-  if (contract == null) {
-    const trans = await web3Transaction({
-      from,
-      to,
-      value: transformedValue
-    });
+
+  if (contractAddress == null) {
+    const trans = await web3Transaction({from, to, value: amount});
     return trans?.transactionHash;
   } else {
-    // call transfer function
     return new Promise<string>((resolve, reject) => {
-      contract.methods
-        .transfer(to, transformedValue, (error: any, txHash: string) => {
-          // it returns tx hash because sending tx
-          if (error != null) {
-            return reject(error);
-          }
-          return resolve(txHash);
-        });
+      let contract = new web3.eth.Contract(MIN_ABI, contractAddress);
+
+      contract.methods.transfer(to, amount).send({from: from})
+      .once('transactionHash', (hash: string) => {
+        resolve(hash);
+      })
+      .once('error', (error: any) => {
+        reject(error)
+      });
+
     });
   }
 }

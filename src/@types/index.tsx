@@ -206,23 +206,23 @@ export interface PartialTheme {
   componentsTheme?: Partial<ThemeProperties>;
   modalTheme?: Partial<Styles>;
 }
-
+export interface SocialNetworks {
+  facebook_url?: string;
+  reddit_url?: string;
+  twitter_url?: string;
+  telegram_url?: string;
+  discord_url?: string;
+  bitcointalk_url?: string;
+  youtube_url?: string;
+  medium_url?: string;
+}
 export interface GeneralConfig {
   title?: string;
   icon?: string;
   domain?: string;
   feeRecipient?: string;
   feePercentage?: number;
-  social?: {
-      facebook_url?: string;
-      reddit_url?: string;
-      twitter_url?: string;
-      telegram_url?: string;
-      discord_url?: string;
-      bitcointalk_url?: string;
-      youtube_url?: string;
-      medium_url?: string;
-  };
+  social?: SocialNetworks;
 }
 
 export interface ConfigFile {

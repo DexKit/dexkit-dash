@@ -19,9 +19,9 @@
   "app.medianPrice": "Median Price",
   "app.lastPrice": "Last Price",
   "app.symbol": "Symbol",
-  "app.tokenType": "Token Type",
+  "app.tokenType": "Type",
   "app.name": "Name",
-  "app.numberOfDecimals": "Number Of Decimals",
+  "app.numberOfDecimals": "Decimals",
   "app.annotation": "Annotation",
   "app.property": "Property",
   "app.value": "Value",
@@ -44,39 +44,28 @@
   "app.quoteAmount": "Quote Amount",
   "app.receiver": "Receiver",
   "app.sender": "Sender",
+  "app.all": "All",
+  "app.receive": "Receive",
+  "app.send": "Send",
+  "app.buy": "Buy",
+  "app.sell": "Sell",
+  "app.add": "Add",
+  "app.remove": "Remove",
   "app.poolVariation": "Pool Variation",
   "app.baseRemaining": "Base Remaining",
   "app.quoteRemaining": "Quote Remaining",
   "app.tradeAmount": "Trade Amount",
   "app.quotePrice": "Quote Price",
   "app.basePrice": "Base Price",
-  "app.total": "Base Price",
+  "app.total": "Total",
   "app.pool": "Pool",
   "app.kitMarket": "Kit Market",
-
-
 
   "title.tradesByCurrencies": "Trades By Currencies",
   "title.tokenOrderPairs": "Token Order Pairs",
   "title.tokenInfo": "Token Info",
   "title.tokenStatistics": "Token Statistics",
   "title.orderList": "Order List",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   "button.click_me": "Click Me",
   "dashboard.quickStats": "Quick Statistics",
@@ -612,11 +601,13 @@
   "sidebar.pages.errorPages.maintenance": "Maintenance",
   "sidebar.pages.errorPages.comingSoon": "Coming Soon",
   "sidebar.protocols": "Protocol Explorer",
+  "sidebar.protocols.all": "All Protocols",
   "sidebar.protocols.uniswap": "Uniswap",
+  "sidebar.protocols.pancake": "Pancake",
   "sidebar.protocols.0x": "0x Protocol",
-  "sidebar.protocols.uniswap.token-explorer": "Token Explorer",
-  "sidebar.protocols.uniswap.pool-explorer": "Pool Explorer",
-  "sidebar.protocols.uniswap.pair-explorer": "Pair Explorer",
+  "sidebar.protocols.token-explorer": "Token Explorer",
+  "sidebar.protocols.pool-explorer": "Pool Explorer",
+  "sidebar.protocols.pair-explorer": "Pair Explorer",
   "sidebar.affiliate": "Affiliates",
   "sidebar.affiliate.aggregator": "Aggregators",
   "sidebar.affiliate.nft-marketplace": "Marketplace",

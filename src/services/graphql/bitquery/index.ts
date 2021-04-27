@@ -1,7 +1,8 @@
 import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client';
-import { EXCHANGE, NETWORK } from 'shared/constants/Bitquery';
+import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
+import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 import { OrderByPairs, OrderByToken, OrderData, PairInfoExplorer, Token, TokenStatistic, TransferByAddress } from 'types/app';
-import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData, parsePairExplorerData, parseTransferByAddressData } from 'utils/parse';
+import { parseTokenInfoData, parseOrderByPairData, parseOrderByTokenData, parseOrderData, parsePairExplorerData, parseTransferByAddressData, parseSearchData } from 'utils/parse';
 import { parseMintBurnData, parseOrderAccountData, parseTokenStatisticsData } from 'utils/parse';
 import { parseEventContractData } from 'utils/parse/ContractEvent';
 import {
@@ -11,7 +12,6 @@ import {
   BITQUERY_MY_ORDERS,
   BITQUERY_MY_TRANSFERS,
   BITQUERY_MY_TOKEN_BALANCE,
-  SEARCH,
   BITQUERY_MY_TOKEN_BALANCE_AT,
   BITQUERY_ORDERS_BY_TOKENS,
   BITQUERY_ORDERS_BY_PAIRS,
@@ -19,7 +19,8 @@ import {
   BITQUERY_TOKEN_STATISTICS,
   BITQUERY_MINT_BURN,
   BITQUERY_ORDERS_BY_HASH,
-  BITQUERY_CONTRACT_EVENT_BY_HASH
+  BITQUERY_CONTRACT_EVENT_BY_HASH,
+  BITQUERY_SEARCH
 } from './gql';
 
 export const client = new ApolloClient({
@@ -35,7 +36,7 @@ export function getPairExplorer(network: NETWORK, exchangeName: EXCHANGE, pairAd
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     pairAddress,
     quoteAddress
   }
@@ -43,17 +44,17 @@ export function getPairExplorer(network: NETWORK, exchangeName: EXCHANGE, pairAd
   if (exchangeName == EXCHANGE.ALL) {
     delete variables.exchangeName;
   }
-  
+
   return client.query({ query: BITQUERY_PAIR_EXPLORER, variables })
-    .then(orders => { console.log(orders); return parsePairExplorerData(orders, pairAddress, network) })
-    .catch(e => { console.log(e); return parsePairExplorerData(null, pairAddress, network) });
+    .then(orders => { return parsePairExplorerData(orders, pairAddress, network) })
+    .catch(e => { return parsePairExplorerData(null, pairAddress, network) });
 }
 
 export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     address,
     quoteAddress,
     limit,
@@ -75,7 +76,7 @@ export function getTokenOrders(network: NETWORK, exchangeName: EXCHANGE, address
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     address,
     limit,
     offset,
@@ -96,7 +97,7 @@ export function getMyOrders(network: NETWORK, exchangeName: EXCHANGE, address: s
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     address,
     limit,
     offset,
@@ -117,7 +118,7 @@ export function getOrdersByPairs(network: NETWORK, exchangeName: EXCHANGE, limit
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     limit,
     offset,
     from: from ? from.toISOString() : null,
@@ -137,7 +138,7 @@ export function getOrdersByTokens(network: NETWORK, exchangeName: EXCHANGE, limi
 {
   const variables: any = {
     network,
-    exchangeName,
+    exchangeName: GET_EXCHANGE_NAME(exchangeName),
     limit,
     offset,
     from: from ? from.toISOString() : null,
@@ -239,7 +240,7 @@ export function getTokenStatistics(network: NETWORK, address: string, from: Date
 export async function getPool(network: NETWORK, exchangeName: EXCHANGE, pairAddress: string, quoteAddress: string|null, limit: number) {
 
   try {
-    const pair = (await getContractOrders(network, exchangeName,pairAddress, quoteAddress, 1, 0, null, null))[0];
+    const pair = (await getContractOrders(network, exchangeName, pairAddress, quoteAddress, 1, 0, null, null))[0];
 
     let data: any = await client.query({
       query: BITQUERY_MINT_BURN,
@@ -272,13 +273,17 @@ export async function getPool(network: NETWORK, exchangeName: EXCHANGE, pairAddr
 
 }
 
-export function search<T>(/*network: NETWORK, */value: string): Promise<ApolloQueryResult<T>>
-{
-  return client.query<T>({
-    query: SEARCH,
+export function search(network: NETWORK, exchangeName: EXCHANGE, addresses: string[]) {
+  return client.query({
+    query: BITQUERY_SEARCH,
     variables: {
-      /*network,*/
-      value
+      network,
+      exchangeName: GET_EXCHANGE_NAME(exchangeName),
+      addresses
     }
+  }).then(data => {
+    return parseSearchData(data, network);
+  }).catch(e => {
+    return parseSearchData(null, network);
   });
 }

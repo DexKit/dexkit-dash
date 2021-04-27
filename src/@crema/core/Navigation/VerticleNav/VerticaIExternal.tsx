@@ -5,7 +5,7 @@ import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
-import {NavItemProps} from '../../../../modules/routesConfig';
+import { NavItemProps } from '../../../../modules/routesConfig';
 
 
 interface VerticalExternalProps{

@@ -1,11 +1,10 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { OrderData } from "types/app";
 
 export function parseOrderData(data: any, network: NETWORK): OrderData[] {
-  console.log(data);
-
-  if (data && data.data[network].dexTrades && data.data[network].dexTrades.length > 0) {
-    const trades = data.data[network].dexTrades;
+  // if (data && data.data[network].dexTrades && data.data[network].dexTrades.length > 0) {
+  if (data && data.data.ethereum.dexTrades && data.data.ethereum.dexTrades.length > 0) {
+    const trades = data.data.ethereum.dexTrades;
 
     return trades.map((e: any) => {
         return {

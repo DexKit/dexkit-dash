@@ -1,6 +1,7 @@
 import { WETH9Contract } from "@0x/contract-wrappers";
 import { BigNumber } from "@0x/utils";
 import { ChainId } from "types/blockchain";
+import { EXCHANGE } from "./AppEnums";
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -42,6 +43,6 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
       return 'BSC';
     case ChainId.BinanceTest:
       return 'BSC Test';
-      return undefined;
+    default: return undefined;
   }
 };

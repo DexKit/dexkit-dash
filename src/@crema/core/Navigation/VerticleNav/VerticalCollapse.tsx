@@ -1,4 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Collapse,
   Icon,
@@ -13,9 +17,9 @@ import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalCollapase.style';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
-import {NavItemProps} from '../../../../modules/routesConfig';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
+import { NavItemProps } from '../../../../modules/routesConfig';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import IconComponent from '../Icon';
 
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
@@ -59,9 +63,9 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   history,
   level,
 }) => {
-  const classes = useStyles({level});
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-  const {pathname} = location;
+  const classes = useStyles({ level });
+  const { theme } = useContext<AppContextPropsType>(AppContext);
+  const { pathname } = location;
   const [open, setOpen] = useState(() => needsToBeOpened(pathname, item));
 
   useEffect(() => {
@@ -81,25 +85,11 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
         component='li'
         className={clsx(classes.navItem, open && 'open')}
         onClick={handleClick}>
-        {item.icon == 'uniswap' ? (
-          <Box component='span' mr={6}>
-            <Icon
-              color='action'
-              className={clsx('nav-item-icon', classes.listIcon)}>
-              <UniswapLogo />
-            </Icon>
-          </Box>
-        ):(
-          <Box component='span' mr={6}>
-            <Icon
-              color='action'
-              className={clsx('nav-item-icon', classes.listIcon)}>
-              {item.icon}
-            </Icon>
-          </Box>
-        )}
+        <Box component='span' mr={6}>
+          <IconComponent icon={item.icon} classes={classes} />
+        </Box>
         <ListItemText
-          classes={{primary: clsx('nav-item-text', classes.listItemText)}}
+          classes={{ primary: clsx('nav-item-text', classes.listItemText) }}
           primary={<IntlMessages id={item.messageId} />}
         />
         <Box p={0} clone>
@@ -108,8 +98,8 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
               {open
                 ? 'expand_more'
                 : theme.direction === 'ltr'
-                ? 'chevron_right'
-                : 'chevron_left'}
+                  ? 'chevron_right'
+                  : 'chevron_left'}
             </Icon>
           </IconButton>
         </Box>

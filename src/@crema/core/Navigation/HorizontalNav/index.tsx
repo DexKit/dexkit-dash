@@ -5,15 +5,16 @@ import HorizontalItem from './HorizontalItem';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 
-import routesConfig from '../../../../modules/routesConfig';
+import useRoutesConfig from '../../../../modules/routesConfig';
 import Box from '@material-ui/core/Box';
 
 interface HorizontalNavProps {}
 
 const HorizontalNav: React.FC<HorizontalNavProps> = () => {
+  const  items  = useRoutesConfig();
   return (
     <List className='navbarNav'>
-      {routesConfig.map((item) => (
+      {items.map((item) => (
         <React.Fragment key={item.id}>
           {item.type === 'group' && (
             <HorizontalGroup item={item} nestedLevel={0} />

@@ -1,14 +1,13 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { PairInfoExplorer } from "types/app";
 
 export function parsePairExplorerData(data: any, address: string, network: NETWORK): PairInfoExplorer {
 
-  console.log(data);
-
-  if (data && data.data[network]) {
-    const d24Current = data.data[network].data24[0];
-    const d24Yesterday = data.data[network].data24[1];
-    const pooled = data.data[network].pooled[0].balances || [];
+  // if (data && data.data[network]) {
+  if (data && data.data.ethereum) {
+    const d24Current = data.data.ethereum.data24[0];
+    const d24Yesterday = data.data.ethereum.data24[1];
+    const pooled = data.data.ethereum.pooled[0].balances || [];
 
     const basePerDolar = d24Current.baseAmountInUsd / d24Current.baseAmount;
     const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;

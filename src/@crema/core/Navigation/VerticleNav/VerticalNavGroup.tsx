@@ -5,7 +5,7 @@ import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalNavGroup.style';
-import {NavItemProps} from '../../../../modules/routesConfig';
+import { NavItemProps } from '../../../../modules/routesConfig';
 import VerticalExternal from './VerticaIExternal';
 
 interface VerticalNavGroupProps {

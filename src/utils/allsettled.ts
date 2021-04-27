@@ -1,4 +1,3 @@
-
 const allSettled = function(promises: Promise<any>[]) {
   return Promise.all(
     promises.map((promise, i) =>
@@ -15,5 +14,4 @@ const allSettled = function(promises: Promise<any>[]) {
   );
 };
 
-// Export the function
 export default allSettled;

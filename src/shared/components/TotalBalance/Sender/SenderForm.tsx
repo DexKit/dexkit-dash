@@ -15,7 +15,8 @@ import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
 import { fromTokenUnitAmount } from '@0x/utils';
 import { isAddress } from '@ethersproject/address';
-
+import CallReceivedIcon from '@material-ui/icons/CallReceived';
+import { sendTransaction } from 'services/transfer-token';
 interface Props {
   balances: MyBalance[];
 }
@@ -65,13 +66,20 @@ const SenderForm: React.FC<Props> = (props) => {
   }
 
   const handleSend = () => {
-    console.log(selected.value);
     try {
-      onActionWeb3Transaction({
-        to: address,
-        from: account,
-        value: fromTokenUnitAmount(amount, selected.currency.decimals).toString()
-      });
+      if (account) {
+        if (selected.currency.symbol == 'ETH') {
+          sendTransaction(account, address, fromTokenUnitAmount(amount, selected.currency.decimals).toString())
+        } else {
+          sendTransaction(account, address, fromTokenUnitAmount(amount, selected.currency.decimals).toString(), selected.currency.address);
+        }
+      }
+      
+      // onActionWeb3Transaction({
+      //   to: address,
+      //   from: account,
+      //   value: fromTokenUnitAmount(amount, selected.currency.decimals).toString()
+      // });
     } catch (e) {
       console.log(e);
     }
@@ -118,9 +126,9 @@ const SenderForm: React.FC<Props> = (props) => {
             }}
           /> */}
           <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-from"><IntlMessages id='From' /></InputLabel>
+            <InputLabel htmlFor="outlined-adornment-amount"><IntlMessages id='Amount' /></InputLabel>
             <OutlinedInput
-              id="outlined-adornment-from"
+              id="outlined-adornment-amount"
               fullWidth
               type={'text'}
               label={<IntlMessages id='Amount' />}
@@ -129,7 +137,7 @@ const SenderForm: React.FC<Props> = (props) => {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton onClick={handleMax} edge="end">
-                    <AddIcon />
+                    <CallReceivedIcon />
                   </IconButton>
                 </InputAdornment>
               }

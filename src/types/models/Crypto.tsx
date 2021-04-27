@@ -47,6 +47,7 @@ export interface CoinData {
   name: string;
   price: string;
   increment: number;
+  image?: string;
 }
 
 export interface CoinsDataProps {

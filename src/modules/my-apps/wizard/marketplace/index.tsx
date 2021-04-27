@@ -60,6 +60,8 @@ export interface WizardProps {
   form: FormData;
   //method to change form values
   changeIssuerForm: (key: string, value: any) => void;
+  validator: (isValid: boolean) => void;
+  isValid: boolean;
 }
 
 interface SubmitProps {
@@ -78,7 +80,7 @@ function getSteps() {
 }
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps) {
-  const {form, changeIssuerForm} = wizardProps;
+  const {form, changeIssuerForm, validator, isValid} = wizardProps;
   const data = form.get(Object.values(WizardData)[step])?.valueOf() as string;
 
   switch (step) {
@@ -103,7 +105,9 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
           title={label}
           fields={fields} 
           changeIssuerForm={changeIssuerForm}
+          validator={validator}
           form={form}
+          isValid={isValid}
         />
       )
     }
@@ -114,9 +118,11 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       return (
         <CollectionsForm 
         title={label} 
-        collections={ collections ?? []} 
+        collections={ collections ?? []}
         changeIssuerForm={changeIssuerForm}
+        validator={validator} 
         form={form}
+        isValid={isValid}
         />
       );
     }
@@ -126,9 +132,11 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       return (
         <TokensForm 
           title={label} 
-          tokens={ tokens ?? []} 
+          tokens={ tokens ?? []}
           changeIssuerForm={changeIssuerForm}
+          validator={validator}
           form={form}
+          isValid={isValid}
         />
       );
     }
@@ -166,12 +174,6 @@ const SubmitComponent: React.FC<SubmitProps> = (props) => {
         var json = JSON.stringify(object);
 
         console.log(json);
-
-
-
-
-
-
         try {
           if (account) {
             const ethAccount = account ;
@@ -223,21 +225,12 @@ const SubmitComponent: React.FC<SubmitProps> = (props) => {
         } catch (error) {
           throw new Error(error.message);
         }
-
-
-
-
-
-
-
         // const configData: ConfigRelayerData = {
         //   config: json,
         //   message,
         //   signature,
         //   owner,
         // };
-        
-
         console.log('sucess!', data);
         setLoading(false);
       },2000);
@@ -278,7 +271,8 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
 }
 
 export default function VerticalLinearStepper() {
-  const [form, setForm] = useState(new FormData()) ;
+  const [form, setForm] = useState(new FormData());
+  const [isValid, setValid] = useState(false);
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -296,6 +290,10 @@ export default function VerticalLinearStepper() {
     setActiveStep(0);
   };
 
+  const validator = useCallback((_isValid: boolean) => {
+    setValid(_isValid);
+    console.log('setValid', _isValid);
+  }, []);
   const updateForm = useCallback(
     (key: string, value: any) => {
       const dataType = Object.values(WizardData).find( e => e === key);
@@ -340,12 +338,12 @@ export default function VerticalLinearStepper() {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(activeStep, label, { form, changeIssuerForm: updateForm })}
+              {getStepContent(activeStep, label, { form, changeIssuerForm: updateForm, validator, isValid })}
               <ButtonNavigation
                 ButtonBackText="Back"
                 ButtonNextText={activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                 handleBack={activeStep === 0 ? undefined : handleBack}
-                handleNext={activeStep >= steps.length ? undefined : handleNext} />
+                handleNext={activeStep >= steps.length || !isValid ? undefined : handleNext} />
             </StepContent>
           </Step>
         ))}
