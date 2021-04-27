@@ -28,7 +28,7 @@ const Overview: React.FC<CryptoProps> = () => {
   useEffect(() => {
     dispatch(onGetReportCardsData());
     dispatch(onGetCryptoData());
-    dispatch(onGetNewsData());
+ //   dispatch(onGetNewsData());
   }, [dispatch]);
 
   const { cryptoData, reportCardsData, newsData } = useSelector<AppState, AppState['dashboard']>(
@@ -49,11 +49,11 @@ const Overview: React.FC<CryptoProps> = () => {
             <Grid item xs={12} md={4} >
               {reportCardsData[2] && < ReportCard data={reportCardsData[2]} />}
             </Grid>
-            <Grid item xs={12} md={4}>
+             {/* <Grid item xs={12} md={4}>
               <GridContainer >
-               {/* <Grid item xs={12} sm={12} md={12}>
+              <Grid item xs={12} sm={12} md={12}>
                   <PopularCoins title="Trending Coins on ZRX" popularCoins={[cryptoData.popularCoins[0], cryptoData.popularCoins[1]]} />
-                </Grid> */}
+                </Grid> 
                 <Grid style={{ backgroundColor: 'white', borderRadius: 10 }} item xs={12} sm={12} md={12}>
                   {newsData && <RelatedCourses relatedCourses={
                     newsData.items.map((item, index) => {
@@ -68,7 +68,7 @@ const Overview: React.FC<CryptoProps> = () => {
                   } />}
                 </Grid>
               </GridContainer>
-            </Grid>
+            </Grid>*/}
             
             <Grid item xs={12} md={4}>
                 <ProtocolNavigationUniswap />

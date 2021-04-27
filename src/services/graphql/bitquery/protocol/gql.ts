@@ -2,7 +2,7 @@ import { gql } from "@apollo/client/core";
 
 
 export const BITQUERY_TOKEN_PAIRS = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime, $limit: Number!  ) {
+  query GetTokenPairs($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime, $limit: Int!  ) {
     ethereum(network: $network) {
        dexTrades(
         options: {limit: $limit, desc: "tradeAmountInUsd"}
@@ -29,7 +29,7 @@ export const BITQUERY_TOKEN_PAIRS = gql`
           decimals
         }
         exchange{
-            fullname
+            fullName
         }
         protocol
         tradeAmount(in: ETH)
@@ -50,7 +50,7 @@ export const BITQUERY_TOKEN_PAIRS = gql`
 
 
 export const BITQUERY_PAIR_TRADES = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetPairTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -113,7 +113,7 @@ export const BITQUERY_PAIR_TRADES = gql`
 
 
 export const BITQUERY_TOTAL_TOKEN_TRADES = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetTotalTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
       dexTrades(
         date: {since: $from, till: $till}

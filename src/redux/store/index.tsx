@@ -24,7 +24,7 @@ export type AppDispatch = typeof store.dispatch;
 
 export type AppState = ReturnType<typeof rootReducer>;
 
- function configureStore(initialState?: AppState) {
+function configureStore() {
   const middleware = [thunk, routerMiddleware(history)];
 
   const enhancers = [];
@@ -36,7 +36,6 @@ export type AppState = ReturnType<typeof rootReducer>;
 
   return createStore(
     rootReducer,
-    initialState,
     compose(applyMiddleware(...middleware), ...enhancers),
   );
 }

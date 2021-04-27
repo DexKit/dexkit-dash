@@ -1,5 +1,17 @@
 import { ChainId } from "types/blockchain";
 
+export enum EthereumNetwork {
+  bsc = "bsc",
+  bsc_testnet = "bsc_testnet",
+  celo_alfajores = "celo_alfajores",
+  celo_baklava = "celo_baklava",
+  celo_rc1 = "celo_rc1",
+  ethclassic = "ethclassic",
+  ethclassic_reorg = "ethclassic_reorg",
+  ethereum = "ethereum",
+  goerli = "goerli",
+}
+
 export enum EXCHANGE {
   // ethereum
   UNISWAP = 'Uniswap',
@@ -44,6 +56,19 @@ export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
     case ChainId.Binance: return NETWORK.BSC;
     case ChainId.BinanceTest: return NETWORK.BSCTEST;
     default: return NETWORK.ETHEREUM;
+  }
+}
+
+export const GET_BITQUERY_NETWORK_NAME = (chainId: ChainId|undefined): EthereumNetwork => {
+  switch (chainId) {
+    case ChainId.Mainnet:
+    case ChainId.Ropsten:
+    case ChainId.Rinkeby:
+    case ChainId.Kovan:
+    case ChainId.Goerli: return EthereumNetwork.ethereum;
+    case ChainId.Binance: return EthereumNetwork.bsc;
+    case ChainId.BinanceTest: return EthereumNetwork.bsc_testnet;
+    default: return EthereumNetwork.ethereum;
   }
 }
 

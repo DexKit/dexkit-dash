@@ -6,8 +6,6 @@ import { PairInfoExplorer } from "types/app";
 import { useChainId } from "./useChainId";
 import { getPairExplorer } from "services/graphql/bitquery/protocol";
 
-
-
 /**
  * hook to use to fetch related AMM protocols data
  * @param address 
@@ -18,9 +16,9 @@ export const usePairExplorer = (baseAddress: string , quoteAddress: string | nul
 
     const [isLoadingInfo, setIsLoadingInfo] = useState(false);
     const [infoData, setInfoData] = useState<PairInfoExplorer>();
- 
-     
-       useEffect(() => {
+
+   
+    useEffect(() => {
         setIsLoadingInfo(true);
         getPairExplorer(GET_NETWORK_NAME(currentChainId), exchange, baseAddress, quoteAddress)
             .then(info => { setInfoData(info);  setIsLoadingInfo(false) })

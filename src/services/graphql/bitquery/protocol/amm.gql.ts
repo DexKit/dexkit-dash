@@ -6,8 +6,8 @@
 import { gql } from "@apollo/client/core";
 
 
- export const BITQUERY_CONTRACT_ORDERS = gql`
- query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+export const BITQUERY_CONTRACT_ORDERS = gql`
+ query GetContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
    ethereum(network: $network) {
      dexTrades(
        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -69,7 +69,7 @@ import { gql } from "@apollo/client/core";
 `;
 
 export const BITQUERY_TOTAL_CONTRACT_ORDERS = gql`
- query ($network: EthereumNetwork!, $exchangeName: String, $address: String!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+ query GetTotalContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
    ethereum(network: $network) {
      dexTrades(
        date: {since: $from, till: $till}
@@ -84,7 +84,7 @@ export const BITQUERY_TOTAL_CONTRACT_ORDERS = gql`
 
 
 export const BITQUERY_TOKEN_EXPLORER = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
+  query GetTokenExplorer($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
     ethereum(network: $network) {
       data24: dexTrades(
         options: {limit: 2, desc: "timeInterval.day"}
@@ -128,7 +128,7 @@ export const BITQUERY_TOKEN_EXPLORER = gql`
 
 
 export const BITQUERY_TOTAL_CONTRACT_EVENTS = gql`
-query ($network: EthereumNetwork!, $address: String, $events: [String!]) {
+query GetTotalContractEvents($network: EthereumNetwork!, $address: String, $events: [String!]) {
   ethereum(network: $network) {
     smartContractEvents(
       smartContractAddress: {is: $address}
@@ -143,7 +143,7 @@ query ($network: EthereumNetwork!, $address: String, $events: [String!]) {
 
 // DONE
 export const BITQUERY_AMM_PAIR_EXPLORER = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
+  query GetAMMPairExplorer ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
     ethereum(network: $network) {
       data24: dexTrades(
         options: {limit: 2, desc: "timeInterval.day"}
@@ -195,7 +195,7 @@ export const BITQUERY_AMM_PAIR_EXPLORER = gql`
 
 
 export const BITQUERY_PAIR_EXPLORER = gql`
-  query ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
+  query GetPairExplorer ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
     ethereum(network: $network) {
       data24: dexTrades(
         options: {limit: 2, desc: "timeInterval.day"}
