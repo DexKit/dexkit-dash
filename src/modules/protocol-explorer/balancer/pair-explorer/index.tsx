@@ -57,7 +57,7 @@ const PairExplorer: React.FC<Props> = (props) => {
               <Link color="inherit" href="/" >
                 Protocol Explorer
               </Link>
-              <Link color="inherit" href="/getting-started/installation/" >
+              <Link color="inherit" href="/protocol-explorer/balancer/pair-explorer" >
                Balancer Protocol
               </Link>
               <Typography color="textPrimary">Pair Explorer</Typography>

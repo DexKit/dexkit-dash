@@ -133,7 +133,7 @@ const SenderForm: React.FC<Props> = (props) => {
             }}
           /> */}
           <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-from"><IntlMessages id='From' /></InputLabel>
+            <InputLabel htmlFor="outlined-adornment-from"><IntlMessages id='Amount' /></InputLabel>
             <OutlinedInput
               id="outlined-adornment-from"
               fullWidth

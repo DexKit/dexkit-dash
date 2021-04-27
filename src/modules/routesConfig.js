@@ -101,13 +101,13 @@ const routesConfig = [
         type: 'collapse',
         icon: 'uniswap',
         children: [
-          {
+       /*   {
             id: 'overview',
             title: 'Overview',
             messageId: 'common.overview',
             type: 'item',
             url: '/protocol-explorer/uniswap/overview',
-          },
+          },*/
           {
             id: 'tokens',
             title: 'Token Explorer',
@@ -184,13 +184,13 @@ const routesConfig = [
         type: 'collapse',
         icon: 'sushiswap',
         children: [
-          {
+       /*   {
             id: 'overview',
             title: 'Overview',
             messageId: 'common.overview',
             type: 'item',
             url: '/protocol-explorer/sushiswap/overview',
-          },
+          },*/
           {
             id: 'tokens',
             title: 'Token Explorer',

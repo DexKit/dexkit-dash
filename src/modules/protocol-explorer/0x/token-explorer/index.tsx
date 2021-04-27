@@ -48,8 +48,8 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           <GridContainer>
             <Grid item xs={12} md={12}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="/protocol-explorer/0x-protocol/overview">Protocol Explorer</Link>
-                <Link color="inherit" href="/protocol-explorer/0x-protocol/overview">ZRX Protocol</Link>
+                <Link color="inherit" href="/protocol-explorer/0x-protocol/token-explorer">Protocol Explorer</Link>
+                <Link color="inherit" href="/protocol-explorer/0x-protocol/token-explorer">ZRX Protocol</Link>
                 <Typography color="textPrimary">Token Explorer</Typography>
                 <Typography color="textPrimary">{truncateAddress(address)}</Typography>
               </Breadcrumbs>

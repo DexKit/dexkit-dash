@@ -21,7 +21,7 @@ const routeConfigs = [
 const routes = [
   ...createRoutes(routeConfigs),
   { path: '/', exact: true, component: () => <Redirect to={initialUrl} />, },
-  { component: () => <Redirect to='/error-pages/error-404' /> },
+  { component: () => <Redirect to='/dashboard/overview' /> },
 ];
 
 export default routes;

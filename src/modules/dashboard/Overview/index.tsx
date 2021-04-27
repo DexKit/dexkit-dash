@@ -14,6 +14,10 @@ import ProtocolNavigationUniswap from './ProtocolNavigation/uniswap';
 import ProtocolNavigationZRXProtocol from './ProtocolNavigation/zrxprotocol';
 import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
+import { makeStyles } from '@material-ui/core';
+import { CremaTheme } from 'types/AppContextPropsType';
+import { grey } from '@material-ui/core/colors';
+import { Fonts } from 'shared/constants/AppEnums';
 
 
 export interface OverviewDataProvider {
@@ -27,29 +31,28 @@ const Overview: React.FC<CryptoProps> = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(onGetReportCardsData());
-    dispatch(onGetCryptoData());
- //   dispatch(onGetNewsData());
+    //  dispatch(onGetCryptoData());
+    //   dispatch(onGetNewsData());
   }, [dispatch]);
 
-  const { cryptoData, reportCardsData, newsData } = useSelector<AppState, AppState['dashboard']>(
+  const { reportCardsData } = useSelector<AppState, AppState['dashboard']>(
     ({ dashboard }) => dashboard
   );
 
   return (
     <>
-      {cryptoData ? (
-        <Box pt={{ xl: 4 }}>
-          <GridContainer>
-            <Grid item xs={12} md={4} >
-              {reportCardsData[0] && < ReportCard data={reportCardsData[0]} />}
-            </Grid>
-            <Grid item xs={12} md={4} >
-              {reportCardsData[1] && < ReportCard data={reportCardsData[1]} />}
-            </Grid>
-            <Grid item xs={12} md={4} >
-              {reportCardsData[2] && < ReportCard data={reportCardsData[2]} />}
-            </Grid>
-             {/* <Grid item xs={12} md={4}>
+      <Box pt={{ xl: 4 }}>
+        <GridContainer>
+          <Grid item xs={12} md={4}>
+            {reportCardsData[0] && < ReportCard data={reportCardsData[0]} />}
+          </Grid>
+          <Grid item xs={12} md={4} >
+            {reportCardsData[1] && < ReportCard data={reportCardsData[1]} />}
+          </Grid>
+          <Grid item xs={12} md={4} >
+            {reportCardsData[2] && < ReportCard data={reportCardsData[2]} />}
+          </Grid>
+          {/* <Grid item xs={12} md={4}>
               <GridContainer >
               <Grid item xs={12} sm={12} md={12}>
                   <PopularCoins title="Trending Coins on ZRX" popularCoins={[cryptoData.popularCoins[0], cryptoData.popularCoins[1]]} />
@@ -69,29 +72,28 @@ const Overview: React.FC<CryptoProps> = () => {
                 </Grid>
               </GridContainer>
             </Grid>*/}
-            
-            <Grid item xs={12} md={4}>
-                <ProtocolNavigationUniswap />
-            </Grid>
-            <Grid item xs={12} md={4}>
-                <ProtocolNavigationZRXProtocol />
-            </Grid>
 
-            <Grid item xs={12} md={4}>
-                <ProtocolNavigationSushiSwap />
-            </Grid>
-            <Grid item xs={12} md={4}>
-                <ProtocolNavigationBalancer />
-            </Grid>
-            {/*<Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}>
+            <ProtocolNavigationUniswap />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <ProtocolNavigationZRXProtocol />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <ProtocolNavigationSushiSwap />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <ProtocolNavigationBalancer />
+          </Grid>
+          {/*<Grid item xs={12} md={4}>
               <PopularCoins title="Trending Coins on Uniswap" popularCoins={cryptoData.popularCoins} />
             </Grid>
             <Grid item xs={12} md={4}>
               <PopularCoins title="Trending Coins on ZRX" popularCoins={cryptoData.popularCoins} />
             </Grid> */}
-          </GridContainer>
-        </Box>
-      ) : null}
+        </GridContainer>
+      </Box>
       <InfoView />
     </>
   );

@@ -30,8 +30,8 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           <GridContainer>
             <Grid item xs={12} md={12}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="/protocol-explorer/sushiwap/overview">Protocol Explorer</Link>
-                <Link color="inherit" href="/protocol-explorer/sushiwap/overview">SushiSwap</Link>
+                <Link color="inherit" href="/protocol-explorer/sushiwap/token-explorer">Protocol Explorer</Link>
+                <Link color="inherit" href="/protocol-explorer/sushiwap/token-explorer">SushiSwap</Link>
                 <Typography color="textPrimary">Token Explorer</Typography>
                 <Typography color="textPrimary">{truncateAddress(address)}</Typography>
               </Breadcrumbs>

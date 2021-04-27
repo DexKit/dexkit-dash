@@ -59,7 +59,7 @@ const PairExplorer: React.FC<Props> = (props) => {
               <Link color="inherit" href="/" >
                 Protocol Explorer
               </Link>
-              <Link color="inherit" href="/protocol-explorer/sushiwap/overview" >
+              <Link color="inherit" href="/protocol-explorer/sushiwap/pair-explorer" >
                SushiSwap
               </Link>
               <Typography color="textPrimary">Pair Explorer</Typography>

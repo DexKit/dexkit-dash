@@ -2,14 +2,14 @@ import React from 'react';
 import { Redirect } from 'react-router';
 
 export const sushiswapConfigs = [
-  {
+  /*{
     routes: [
       {
         path: '/protocol-explorer/sushiswap/overview',
         component: React.lazy(() => import('./overview')),
       },
     ],
-  },
+  },*/
   {
  
     routes: [

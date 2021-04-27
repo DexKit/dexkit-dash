@@ -39,8 +39,8 @@ const PoolExplorer: React.FC<Props> = (props) => {
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/protocol-explorer/uniswap/overview">Protocol Explorer</Link>
-            <Link color="inherit" href="/protocol-explorer/uniswap/overview">Uniswap</Link>
+            <Link color="inherit" href="/protocol-explorer/uniswap/pool-explorer">Protocol Explorer</Link>
+            <Link color="inherit" href="/protocol-explorer/uniswap/pool-explorer">Uniswap</Link>
             <Typography color="textPrimary">Pool Explorer</Typography>
             <Typography color="textPrimary">{truncateAddress(address)}</Typography>
           </Breadcrumbs>

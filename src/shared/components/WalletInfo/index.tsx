@@ -17,7 +17,7 @@ import AppContextPropsType, {
 import { useWeb3 } from 'hooks/useWeb3';
 import { tokenAmountInUnits } from 'utils/tokens';
 import { Web3State } from 'types/blockchain';
-
+import { isMobile } from 'web3modal';
 
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
@@ -146,7 +146,7 @@ const WalletInfo = (props: any) => {
       }
       {web3State !== Web3State.Done && <Box display='flex' alignItems='center' justifyContent='center'>
          <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-            {web3State === Web3State.Connecting ? 'Connecting... Check Wallet' : 'Connect Wallet'}
+            {web3State === Web3State.Connecting ? (isMobile() ? 'Connecting...' : 'Connecting... Check Wallet') : (isMobile() ? 'Connect' : 'Connect Wallet')}
         </Button>
       </Box>
       }
