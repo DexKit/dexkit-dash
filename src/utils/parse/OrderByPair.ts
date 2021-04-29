@@ -1,8 +1,12 @@
 import { OrderByPairs } from "types/app";
 
 export function parseOrderByPairData(data: any): OrderByPairs[] {
+  console.log(data);
+
   if (data && data.data.ethereum.dexTrades && data.data.ethereum.dexTrades.length > 0) {
+    
     const trades = data.data.ethereum.dexTrades;
+    
     return trades.map((e: any) => {
       return {
         sellToken: {
@@ -21,7 +25,8 @@ export function parseOrderByPairData(data: any): OrderByPairs[] {
         daysTraded: e.dates,
         started: e.started
       }  
-    })
+    });
   }
+
   return [];
 }

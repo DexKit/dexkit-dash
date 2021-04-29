@@ -2,10 +2,36 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 
 import {Box, Grid} from '@material-ui/core';
-import {Fonts} from '../../../../shared/constants/AppEnums';
-import { INFOR_CARD } from 'modules/protocol-explorer/uniswap/overview/Data';
-import InfoCard from 'modules/protocol-explorer/uniswap/overview/InfoCard';
-import Uniswap from 'assets/images/uniswap.png';
+import {Fonts, EXCHANGE} from '../../../../shared/constants/AppEnums';
+import InfoCard from 'shared/components/InfoCard';
+
+export const INFOR_CARD = [
+  {
+      value: "Token Explorer",
+      bgColor: "#49BD65",
+      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      id: 2,
+      type: "Last Month Sale",
+      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`
+  },
+  {
+      value: "Pool Explorer",
+      bgColor: "#009dc4",
+      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      id: 2,
+      type: "Last Month Sale",
+      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pool-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
+  },
+  {
+      value: "Pair Explorer",
+      bgColor: "black",
+      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      id: 3,
+      type: "Last Month Sale",
+      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
+  },
+
+]
 
 
 const ProtocolNavigationUniswap = () => {

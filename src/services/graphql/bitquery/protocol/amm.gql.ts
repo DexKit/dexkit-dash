@@ -236,3 +236,4 @@ export const BITQUERY_PAIR_EXPLORER = gql`
     }
   }
 `;
+

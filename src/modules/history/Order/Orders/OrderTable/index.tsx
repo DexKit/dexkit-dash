@@ -2,19 +2,24 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, TablePagination} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
-import { OrderData } from 'types/app';
 import Loader from '@crema/core/Loader';
+import { OrderData } from 'types/app';
 
 interface Props {
   data: OrderData[];
   isLoading: boolean;
+  total: number;
+  page: number;
+  perPage: number;
+  onChangePage: (newPage: number) => void;
+  onChangePerPage: (newPerPage: number) => void;
 }
 
-const OrderTable: React.FC<Props> = ({data, isLoading}) => {
+const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onChangePage, onChangePerPage}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -53,6 +58,15 @@ const OrderTable: React.FC<Props> = ({data, isLoading}) => {
             ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={total}
+        rowsPerPage={perPage}
+        page={page}
+        onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
+        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangePerPage(parseInt(event.target.value, 10))}
+      />
     </Box>
   );
 };

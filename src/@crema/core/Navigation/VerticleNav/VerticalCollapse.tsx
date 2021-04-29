@@ -1,4 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Collapse,
   Icon,
@@ -19,6 +23,8 @@ import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
 import {ReactComponent as ZRXprotocolLogo} from 'assets/images/zrxprotocol.svg';
 import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
 import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
+import IconComponent from '../Icon';
+
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
     return isUrlInChildren(item, pathname);
@@ -61,9 +67,9 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   history,
   level,
 }) => {
-  const classes = useStyles({level});
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-  const {pathname} = location;
+  const classes = useStyles({ level });
+  const { theme } = useContext<AppContextPropsType>(AppContext);
+  const { pathname } = location;
   const [open, setOpen] = useState(() => needsToBeOpened(pathname, item));
 
   useEffect(() => {
@@ -99,16 +105,11 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
         component='li'
         className={clsx(classes.navItem, open && 'open')}
         onClick={handleClick}>
-      
         <Box component='span' mr={6}>
-          <Icon
-            color='action'
-            className={clsx('nav-item-icon', classes.listIcon)}>
-            {getIcon(item.icon)}
-          </Icon>
+          <IconComponent icon={item.icon} classes={classes} />
         </Box>
         <ListItemText
-          classes={{primary: clsx('nav-item-text', classes.listItemText)}}
+          classes={{ primary: clsx('nav-item-text', classes.listItemText) }}
           primary={<IntlMessages id={item.messageId} />}
         />
         <Box p={0} clone>
@@ -117,8 +118,8 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
               {open
                 ? 'expand_more'
                 : theme.direction === 'ltr'
-                ? 'chevron_right'
-                : 'chevron_left'}
+                  ? 'chevron_right'
+                  : 'chevron_left'}
             </Icon>
           </IconButton>
         </Box>

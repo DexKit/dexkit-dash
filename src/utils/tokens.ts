@@ -3,7 +3,7 @@ import { isWeth } from './knownTokens';
 import { ChainId } from 'types/blockchain';
 import { TokenInfo } from '@types';
 import Web3 from 'web3';
-import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
+import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
 
 
 export const tokenAmountInUnitsToBigNumber = (amount: BigNumber, decimals: number): BigNumber => {
@@ -81,6 +81,10 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
 }
 
 export const extractPairFromAddress = (address: string, chainId: ChainId) => {
+    if(!address){
+      return {baseAddress: GET_DEFAULT_BASE(chainId) as string, quoteAddress:  GET_DEFAULT_QUOTE(chainId) as string};
+    }
+
     const splittedAddress = address.split('-');
     let baseAddress = splittedAddress[0] || GET_DEFAULT_QUOTE(chainId) as string;
     let quoteAddress = null;

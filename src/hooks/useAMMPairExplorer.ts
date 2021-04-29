@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { getLastTradeByPair } from "services/graphql/bitquery";
-import { GET_NETWORK_NAME, EXCHANGE, GET_BITQUERY_NETWORK_NAME } from "shared/constants/Bitquery";
+import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { AMMPairInfoExplorer } from "types/app";
 import { GET_DEFAULT_QUOTE } from "shared/constants/Blockchain";
 import Web3 from "web3";
 import { useChainId } from "./useChainId";
-import { GetAMMPairExplorer, GetAMMPairExplorerVariables } from "services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer";
-import { useQuery } from "@apollo/client/react/hooks/useQuery";
+
 import { getAMMPairExplorer } from "services/graphql/bitquery/protocol";
-import { BITQUERY_AMM_PAIR_EXPLORER } from "services/graphql/bitquery/protocol/amm.gql";
+import { EXCHANGE } from "shared/constants/AppEnums";
+
 
 
 

@@ -126,3 +126,44 @@ export const BITQUERY_TOTAL_TOKEN_TRADES = gql`
     }
   }
 `;
+
+export const BITQUERY_PAIR_EXPLORER_24 = gql`
+  query GetPairExplorer24 ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String! $from: ISO8601DateTime) {
+    ethereum(network: $network) {
+      data24: dexTrades(
+        date: {since: $from}
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {is: $baseAddress}
+        quoteCurrency: {is: $quoteAddress}
+      ) {
+  
+        trades: count
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        baseCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: quoteAmount(in: USD)
+        quoteCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+        maximum_price: quotePrice(calculate: maximum)
+        minimum_price: quotePrice(calculate: minimum)
+        open_price: minimum(of: block, get: quote_price)
+        close_price: maximum(of: block, get: quote_price)
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+      }
+    }
+  }
+`;

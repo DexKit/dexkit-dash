@@ -1,2 +1,2 @@
-export * from './exchanges.interface';
 export * from './coin.interface';
+export * from './exchanges.interface';

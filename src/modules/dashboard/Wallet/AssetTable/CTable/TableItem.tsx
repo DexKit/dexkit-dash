@@ -1,19 +1,12 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-import { green, grey } from '@material-ui/core/colors';
-import { Fonts } from '../../../../../shared/constants/AppEnums';
 import clsx from 'clsx';
-// import AppMenu from '../../../../../@crema/core/AppMenu';
-import Avatar from '@material-ui/core/Avatar';
+import { useHistory } from "react-router-dom";
+import { makeStyles, Box, TableCell, TableRow, Button, Avatar} from '@material-ui/core';
+import { green, grey } from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';
-import { CremaTheme } from '../../../../../types/AppContextPropsType';
+import { Fonts } from 'shared/constants/AppEnums';
+import { CremaTheme } from 'types/AppContextPropsType';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
-import { ethers } from 'ethers';
 
 interface TableItemProps {
   data: MyBalance;
@@ -91,15 +84,12 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           <Box component='span' mt={3} mr={1} fontWeight={700}>
             {data.currency.name}
           </Box>
-          <Box color='grey.500' ml={1} mt={3}>
-            ({data.currency.name})
-          </Box>
         </Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <div>{data.value} {data.currency.symbol}</div>
         <Box color='grey.500'>${data?.valueUsd?.toFixed(2)}</Box>
+        <Box>{data.value} {data.currency.symbol}</Box>
       </TableCell>
 
       <TableCell align='center' className={classes.tableCell}>

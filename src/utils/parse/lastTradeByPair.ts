@@ -1,4 +1,5 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
+
 
 export function parseLastTradeByPair(data: any, address: string, network: NETWORK): string {
 

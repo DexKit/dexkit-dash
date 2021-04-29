@@ -1,13 +1,13 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { PairInfoExplorer } from "types/app";
 
 export function parsePairExplorerData(data: any, address: string, network: NETWORK): PairInfoExplorer {
 
-  if (data && data.data[network]) {
-    const d24Current = data.data[network].data24[0];
-    const d24Yesterday = data.data[network].data24[1];
-    if(d24Current && d24Yesterday){
-      const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;
+  // if (data && data.data[network]) {
+  if (data && data.data.ethereum) {
+    const d24Current = data.data.ethereum.data24[0];
+    const d24Yesterday = data.data.ethereum.data24[1];
+    const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;
 
       return {
         baseToken: {
@@ -30,12 +30,10 @@ export function parsePairExplorerData(data: any, address: string, network: NETWO
         volume24InUsd: d24Current.tradeAmountInUsd,
         baseAmount: d24Current.baseAmount,
         quoteAmount: d24Current.quoteAmount,
-        totalTrades: d24Current.trades
-  
+        totalTrades: d24Current.trades,
       }
    }
-  }
-
+  
   return {
     baseToken: {
       address: '0x',

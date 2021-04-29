@@ -1,4 +1,4 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { MintBurn } from "types/app";
 
 export function parseMintBurnData(data: any, address: string|null, network: NETWORK): { mint: MintBurn[], burn: MintBurn[] } {

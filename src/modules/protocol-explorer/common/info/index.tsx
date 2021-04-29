@@ -76,12 +76,12 @@ const coinInfoFactory = (propsData: PairInfoExplorer): BalanceCoins[] => {
     },
     {
       id: 3,
-      name: `Amount ${propsData?.baseToken.symbol ?? '?'}`,
+      name: `Amount ${propsData?.baseToken.symbol ?? '?'} (24 hrs)`,
       value: propsData?.baseAmount.toFixed(2) ?? 0
     },
     {
       id: 4,
-      name: `Amount ${propsData?.quoteToken.symbol ?? '?'}`,
+      name: `Amount ${propsData?.quoteToken.symbol ?? '?'} (24 hrs)`,
       value: propsData?.quoteAmount.toFixed(2) ?? 0
     }
   ];

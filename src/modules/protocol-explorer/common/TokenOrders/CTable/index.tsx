@@ -7,10 +7,11 @@ import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {grey} from '@material-ui/core/colors/index';
 import { OrderData } from 'types/app';
-import { EXCHANGE } from 'shared/constants/Bitquery';
+import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
 
 interface Props {
   data: OrderData[];
+  networkName: NETWORK;
   isLoading: boolean;
   type: 'pair'| 'token';
   exchange: EXCHANGE;
@@ -21,7 +22,7 @@ interface Props {
   onChangePerPage: (newPerPage: number) => void;
 }
 
-const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onChangePage, onChangePerPage, type, exchange}) => {
+const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onChangePage, onChangePerPage, type, exchange,  networkName}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -51,12 +52,12 @@ const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onC
     <Box className={classes.tableResponsiveMaterial}>
       <Table className='table'>
         <TableHead>
-          <TableHeading type={type} />
+          <TableHeading type={type} exchange={exchange}/>
         </TableHead>
         <TableBody>
           {(data.length > 1) &&  
               data.map((row, index) => (
-                <TableItem row={row} key={index} exchange={exchange} type={type} />
+                <TableItem row={row} key={index} exchange={exchange} type={type}  networkName={networkName} />
               ))}
            
             {isLoading &&  <TableRow className={classes.borderBottomClass}>
@@ -64,8 +65,6 @@ const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onC
                   Loading...
                 </TableCell>
               </TableRow>}
-        
-          
         </TableBody>
       </Table>
       <TablePagination

@@ -29,8 +29,6 @@ export interface SignedOrder extends Order0x {
   signature: string;
 }
 
-
-
 export interface Token {
   name: string;
   symbol: string;
@@ -54,6 +52,12 @@ export interface Token {
   listed?: boolean;
   isStableCoin?: boolean;
   tags?: string[];
+}
+
+export interface Pair {
+  address: string;
+  token0: Token;
+  token1: Token;
 }
 
 export interface TokenPrice {
@@ -147,7 +151,7 @@ export interface AMMPairInfoExplorer {
 export interface PairInfoExplorer {
   baseToken: Token,
   quoteToken: Token,
-  address: string
+  address: string,
   price: number,
   priceUsd: number,
   priceChange: number,
@@ -170,14 +174,17 @@ export interface TokenPair {
   quoteVolume24: number,
   baseVolume24: number,  
   trades: number,
+  protocol: string,
 }
 
 
 export interface TransferByAddress {
   sender: string,
   receiver: string,
+  type: string,
   token: Token,
   amount: number,
+  amountUsd: number,
   hash: string,
   time: string
 }

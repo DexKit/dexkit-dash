@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useHistory } from 'react-router';
 import {Box, Button, Card} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalance} from 'types/bitquery/myBalance.interface';
 import CoinsInfo from './CoinsInfo';
+import { Fonts } from 'shared/constants/AppEnums';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {

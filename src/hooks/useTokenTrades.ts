@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { getTokenTrades} from "services/graphql/bitquery";
-import { GET_NETWORK_NAME, EXCHANGE } from "shared/constants/Bitquery";
+import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { OrderData } from "types/app";
 
 import useInterval from "./useInterval";
 import { getTotalTokenTrades } from "services/graphql/bitquery/protocol";
 import { useChainId } from "./useChainId";
+import { EXCHANGE } from "shared/constants/AppEnums";
 
 
 

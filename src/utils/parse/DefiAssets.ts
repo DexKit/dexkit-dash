@@ -29,6 +29,7 @@ export function parseDefiAssets(accountBalances: ProtocolBalanceInterface[]): Co
       })
     );
   });
+  
   return {
     assets
   } as CoinsProps

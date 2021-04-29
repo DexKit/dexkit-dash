@@ -3,6 +3,7 @@ import { CremaTheme } from "types/AppContextPropsType"
 import { grey } from "@material-ui/core/colors"
 import { Fonts } from "shared/constants/AppEnums";
 
+
 export const useStyles = makeStyles((theme: CremaTheme) => ({
     tableResponsiveMaterial: {
         minHeight: '.01%',

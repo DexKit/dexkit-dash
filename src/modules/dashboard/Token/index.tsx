@@ -15,7 +15,6 @@ import { CurrencyPair } from '@types';
 import { getToken } from 'services/rest/coingecko';
 import { CoinDetailCoinGecko } from 'types/coingecko';
 import { Fonts } from 'shared/constants/AppEnums';
-import { useWeb3 } from 'hooks/useWeb3';
 import Loader from '@crema/core/Loader';
 
 const TVChartContainer = React.lazy(() => import('../../../shared/components/chart/TvChart/tv_chart'));

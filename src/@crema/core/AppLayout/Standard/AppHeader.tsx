@@ -18,9 +18,9 @@ import Notifications from '../../Notifications';
 // import AppLogo from '../../../../shared/components/AppLogo';
 import clsx from 'clsx';
 import WalletInfo from 'shared/components/WalletInfo';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
 import { ChainId } from 'types/blockchain';
+import { useWeb3 } from 'hooks/useWeb3';
+import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
 
 
 interface AppHeaderProps {}

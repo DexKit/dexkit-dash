@@ -2,8 +2,8 @@ import React from 'react';
 import Card from '@material-ui/core/Card';
 
 import {Box, Grid} from '@material-ui/core';
-import {Fonts} from '../../../../shared/constants/AppEnums';
-import InfoCard from 'modules/protocol-explorer/uniswap/overview/InfoCard';
+import {Fonts, EXCHANGE} from '../../../../shared/constants/AppEnums';
+import InfoCard from 'shared/components/InfoCard';
 
 
 const INFOR_CARD = [
@@ -13,7 +13,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: '/protocol-explorer/balancer/token-explorer'
+      href: `ethereum/protocol-explorer/${EXCHANGE.BALANCER}/token-explorer`
   },
   {
       value: "Pair Explorer",
@@ -21,7 +21,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 3,
       type: "Last Month Sale",
-      href: '/protocol-explorer/balancer/pair-explorer'
+      href: `ethereum/protocol-explorer/${EXCHANGE.BALANCER}//pair-explorer`
   },
 
 ]

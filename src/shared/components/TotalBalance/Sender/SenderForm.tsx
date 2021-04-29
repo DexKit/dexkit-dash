@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import TextField from '@material-ui/core/TextField';
+
 import IntlMessages from '@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -9,7 +9,6 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalance} from 'types/bitquery/myBalance.interface';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import AddIcon from '@material-ui/icons/Add';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
@@ -18,8 +17,9 @@ import { isAddress } from '@ethersproject/address';
 import { useToken } from 'hooks/useToken';
 import { isNativeCoin} from 'utils/tokens';
 import { ChainId } from 'types/blockchain';
-import { ethers } from 'ethers';
 import Web3 from 'web3';
+
+import CallReceivedIcon from '@material-ui/icons/CallReceived';
 
 interface Props {
   balances: MyBalance[];
@@ -71,12 +71,10 @@ const SenderForm: React.FC<Props> = (props) => {
   }
 
   const handleSend = () => {
-    console.log(selected.value);
+   
     if(!account){
       return
     }
-    console.log(selected.currency)
-
     try {
       if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
           onActionWeb3Transaction({
@@ -133,9 +131,9 @@ const SenderForm: React.FC<Props> = (props) => {
             }}
           /> */}
           <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-from"><IntlMessages id='Amount' /></InputLabel>
+            <InputLabel htmlFor="outlined-adornment-amount"><IntlMessages id='Amount' /></InputLabel>
             <OutlinedInput
-              id="outlined-adornment-from"
+              id="outlined-adornment-amount"
               fullWidth
               type={'text'}
               label={<IntlMessages id='Amount' />}
@@ -144,7 +142,7 @@ const SenderForm: React.FC<Props> = (props) => {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton onClick={handleMax} edge="end">
-                    <AddIcon />
+                    <CallReceivedIcon />
                   </IconButton>
                 </InputAdornment>
               }

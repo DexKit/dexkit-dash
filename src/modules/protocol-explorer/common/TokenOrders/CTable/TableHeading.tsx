@@ -5,13 +5,14 @@ import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import { CremaTheme } from 'types/AppContextPropsType';
-import { Fonts } from 'shared/constants/AppEnums';
+import { Fonts, EXCHANGE } from 'shared/constants/AppEnums';
 
 interface TableHeadingProps {
   type: 'pair' | 'token';
+  exchange: EXCHANGE
 }
 
-const TableHeading: React.FC<TableHeadingProps> = ({type}) => {
+const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     tableRowRoot: {
       color: grey[500],
@@ -20,7 +21,7 @@ const TableHeading: React.FC<TableHeadingProps> = ({type}) => {
       borderBottom: '0 none',
       fontSize: 16,
       padding: 8,
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       '&:first-child': {
         [theme.breakpoints.up('xl')]: {
           paddingLeft: 4,
@@ -62,6 +63,9 @@ const TableHeading: React.FC<TableHeadingProps> = ({type}) => {
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.total' />
       </TableCell>
+      {exchange === EXCHANGE.ALL && <TableCell align='left' className={classes.tableCellRoot}>
+         <IntlMessages id='app.protocol' />
+      </TableCell>}
       <TableCell align='left' className={classes.tableCellRoot}>
         #
       </TableCell>

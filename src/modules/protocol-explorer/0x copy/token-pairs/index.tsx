@@ -14,9 +14,10 @@ import { useStyles } from './index.style';
 import { BITQUERY_TOKEN_PAIRS } from 'services/graphql/bitquery/protocol/gql';
 import { Link } from 'react-router-dom';
 import { useWeb3 } from 'hooks/useWeb3';
-import { GET_NETWORK_NAME, EXCHANGE } from 'shared/constants/Bitquery';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { TokenPair } from 'types/bitquery/protocol';
 import { client } from 'services/graphql/bitquery';
+import { EXCHANGE } from 'shared/constants/AppEnums';
 
 
 type Order = 'asc' | 'desc';

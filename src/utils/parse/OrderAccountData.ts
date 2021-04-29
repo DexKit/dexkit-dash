@@ -1,13 +1,15 @@
-import { NETWORK } from "shared/constants/Bitquery";
+import { NETWORK } from "shared/constants/AppEnums";
 import { OrderData } from "types/app";
 
-export function parseOrderAccountData(data: any, network: NETWORK): OrderData[] {
+export function parseOrderAccountData(data: any, network: NETWORK): {orders: OrderData[], total: number} {
 
   if (data && (data.data[network].maker.length > 0 || data.data[network].taker.length > 0)) {
     const makerTrades: any[] = data.data[network].maker;
     const takerTrades: any[] = data.data[network].taker;
-
-    return makerTrades.concat(takerTrades).sort((a, b) => (b.block.height - a.block.height))
+    const total = data.data[network].makerCount[0].count + data.data[network].takerCount[0].count;
+    const allOrders = makerTrades.concat(takerTrades);
+    return {orders: allOrders.sort((a, b) => (b.block.height - a.block.height))
+      // API is returning both sides, filtering by hash
       .map<OrderData>((e) => {
         return {
           hash: e.transaction.hash,
@@ -36,9 +38,9 @@ export function parseOrderAccountData(data: any, network: NETWORK): OrderData[] 
           tradeAmount: e.tradeAmount,
           tradeAmountUsd: e.tradeAmountIsUsd,
           created: e.block.timestamp.time
-        }  
-      });
+        }}), total}   
+     
   }
   
-  return [];
+  return {orders: [], total: 0};
 }

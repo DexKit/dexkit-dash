@@ -25,7 +25,6 @@ export const useWeb3 = () => {
     if (web3State === Web3State.Done && web3) {
 
       web3.eth.getChainId().then((n) => {
-        console.log(n);
         dispatch(setChainId(n));
       });
 

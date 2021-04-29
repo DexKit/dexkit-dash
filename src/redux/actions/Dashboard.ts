@@ -17,13 +17,14 @@ import {
 import { OverviewDataProvider } from 'modules/dashboard/Overview';
 import { GetFeed, OverviewDataProviderImp } from 'services/dashboard';
 import { getDefiBalances } from 'services/defi';
-import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
+
 import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { GraphQLError } from 'graphql';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
-import { getToken, getTokens } from 'services/rest/coingecko';
-import allSettled from 'utils/allsettled';
-import { NETWORK } from 'shared/constants/Bitquery';
+import { getTokens } from 'services/rest/coingecko';
+import { NETWORK } from 'shared/constants/AppEnums';
+import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
+
 
 
 export const onGetAnalyticsData = () => {
@@ -125,6 +126,7 @@ export const onGetMyDefiBalances = (address: string) => {
       dispatch(fetchSuccess());
     })
     .catch( e => {
+      console.log(e);
       dispatch(fetchError(e.message));
     })
   }
@@ -177,9 +179,23 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
             const currency = Object.assign({}, e.currency);
             currency.image = tokens[key]?.image.large;
 
+            let history;
+
+            if (e.history) {
+              history = (e.history as []).reduce<{[key: string]: number}>((acc: any, item: any) => {
+                const key = (new Date(item.timestamp)).toDateString();
+                if (acc[key]) {
+                  acc[key] = acc[key] + item.value;
+                } else {
+                  acc[key] = item.value;
+                }
+                return acc;
+              }, {});  
+            }
+
             return {
               currency: currency,
-              history: e.history,
+              history: history || {},
               value: e.value,
               valueUsd: (tokens[key]?.market_data?.current_price?.usd || 0) * e.value 
             }

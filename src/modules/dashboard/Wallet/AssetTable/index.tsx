@@ -27,7 +27,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances}) => {
         </Button> */}
         </>
       }>
-      <CTable recentPatients={balances} />
+      <CTable balances={balances} />
     </AppCard>
   );
 };

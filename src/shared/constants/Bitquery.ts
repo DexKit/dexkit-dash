@@ -1,50 +1,8 @@
 import { ChainId } from "types/blockchain";
-
-export enum EthereumNetwork {
-  bsc = "bsc",
-  bsc_testnet = "bsc_testnet",
-  celo_alfajores = "celo_alfajores",
-  celo_baklava = "celo_baklava",
-  celo_rc1 = "celo_rc1",
-  ethclassic = "ethclassic",
-  ethclassic_reorg = "ethclassic_reorg",
-  ethereum = "ethereum",
-  goerli = "goerli",
-}
-
-export enum EXCHANGE {
-  // ethereum
-  UNISWAP = 'Uniswap',
-  SUSHISWAP = 'SushiSwap',
-  ZEROX = 'Zerox Exchange',
-  CURVE = 'Curve',
-  BALANCER = 'Balancer',
-  BANCOR_NETWORK = 'Bancor Network',
-  KYBER_NETWORK = 'Kyber Network',
-  //bsc
-  PANCAKE = 'Pancake',
-  ALL = ''
-}
-
-export enum PROTOCOL {
-  // ethereum
-  UNISWAP_V2 = 'Uniswap v2',
-  ZEROX_V3 = 'Zerox Exchange v3',
-  BANCOR_V2 = 'Bancor Network v2',
-  CURVE = 'Curve',
-  BALANCER =  'Balancer Pool Token',
-  DODO =  'DODO',
-  //bsc
-  PANCAKE = 'Pancake',
-  ALL = ''
-}
+import { EXCHANGE, NETWORK, EthereumNetwork } from "./AppEnums";
 
 
-export enum NETWORK {
-  ETHEREUM = 'ethereum',
-  BSC = 'bsc',
-  BSCTEST = 'bsc_testnet'
-}
+
 
 export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
   switch (chainId) {
@@ -72,3 +30,13 @@ export const GET_BITQUERY_NETWORK_NAME = (chainId: ChainId|undefined): EthereumN
   }
 }
 
+export const GET_EXCHANGE_NAME = (exchange: EXCHANGE) => {
+  switch (exchange) {
+    case EXCHANGE.UNISWAP: return 'Uniswap';
+    case EXCHANGE.ZEROX: return 'Zerox Exchange';
+    case EXCHANGE.BALANCER: return 'Balancer';
+    case EXCHANGE.SUSHISWAP: return 'SushiSwap';
+    case EXCHANGE.PANCAKE: return 'Pancake';
+    default: return '';
+  }
+}

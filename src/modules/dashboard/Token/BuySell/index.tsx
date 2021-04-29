@@ -13,7 +13,7 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 import { AppState } from 'redux/store';
 import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
 import { useWeb3 } from 'hooks/useWeb3';
-import LimitForm from './LimitForm';
+import LimitForm from './LimitForm'
 import MarketForm from './MarketForm';
 // import { tokensToTokenBalances } from 'services/tokens';
 // import { Token } from 'types/ethereum';

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { getLastTradeByPair, getPool } from "services/graphql/bitquery";
-import { GET_NETWORK_NAME, EXCHANGE } from "shared/constants/Bitquery";
+import { GET_NETWORK_NAME} from "shared/constants/Bitquery";
 import {  MintBurn } from "types/app";
 import { GET_DEFAULT_QUOTE } from "shared/constants/Blockchain";
 import Web3 from "web3";
 import useInterval from "./useInterval";
 import { getContractTotalEvents } from "services/graphql/bitquery/protocol";
 import { useChainId } from "./useChainId";
-
+import { EXCHANGE } from "shared/constants/AppEnums";
 
 
 /**

@@ -1,6 +1,7 @@
 import { WETH9Contract } from "@0x/contract-wrappers";
 import { BigNumber } from "@0x/utils";
 import { ChainId } from "types/blockchain";
+import { EXCHANGE } from "./AppEnums";
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -28,6 +29,22 @@ export const GET_DEFAULT_QUOTE = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_DEFAULT_BASE = (chainId: ChainId|undefined) => {
+  const id = Number(chainId);
+
+  switch(id) {
+    case ChainId.Mainnet:
+    case ChainId.Rinkeby:
+    case ChainId.Kovan:
+    case ChainId.Goerli:
+    case ChainId.Ropsten:
+        return '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4';
+    default:
+      return null;
+    
+  }
+}
+
 export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
   const id = Number(chainId);
 
@@ -42,6 +59,6 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
       return 'BSC';
     case ChainId.BinanceTest:
       return 'BSC Test';
-      return undefined;
+    default: return undefined;
   }
 };

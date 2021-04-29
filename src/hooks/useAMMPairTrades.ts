@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import { useWeb3 } from "./useWeb3";
 import { getLastTradeByPair, getContractOrders, getTotalContractOrders } from "services/graphql/bitquery";
-import { GET_NETWORK_NAME, EXCHANGE } from "shared/constants/Bitquery";
+import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { OrderData } from "types/app";
 import { GET_DEFAULT_QUOTE } from "shared/constants/Blockchain";
 import Web3 from "web3";
 import useInterval from "./useInterval";
 import { useChainId } from "./useChainId";
-
+import { EXCHANGE } from "shared/constants/AppEnums";
 
 
 /**

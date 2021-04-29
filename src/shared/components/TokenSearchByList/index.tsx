@@ -36,7 +36,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
       if(tokenList && searchKey){
         if(Web3.utils.isAddress(searchKey)){
           setLoading(true);
-          search<{ search: { subject: Currency }[] }>(searchKey).then(result => {
+         /* search<{ search: { subject: Currency }[] }>(searchKey).then(result => {
   
             if(!result.loading && result?.data){
               const founds = result?.data?.search?.map( s => s.subject);
@@ -47,7 +47,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
             }
           })
           .catch( error => console.error('search', error))
-          .finally(() => setLoading(false));
+          .finally(() => setLoading(false));*/
         }else{
           const searchTokens = filterTokensInfoByString(tokenList.tokens, searchKey)
           setFounded(searchTokens);

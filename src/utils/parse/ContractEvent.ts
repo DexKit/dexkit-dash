@@ -1,5 +1,5 @@
-import { fromTokenUnitAmount, toTokenUnitAmount } from "@0x/utils";
-import { NETWORK } from "shared/constants/Bitquery";
+import { toTokenUnitAmount } from "@0x/utils";
+import { NETWORK } from "shared/constants/AppEnums";
 import { MintBurn, OrderData } from "types/app";
 
 function getVariation(isAdd: boolean, amount: number, reserve: number) {

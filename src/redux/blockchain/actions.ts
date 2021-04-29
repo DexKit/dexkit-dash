@@ -1,7 +1,7 @@
 import { BigNumber } from "@0x/utils";
 import { Web3State } from "types/blockchain";
-import { TokenBalance } from "types/app";
 import { createAction } from 'typesafe-actions';
+import { TokenBalance } from "types/app";
 
 export const setEthAccount = createAction('blockchain/ETH_ACCOUNT_set')<string | undefined>();
 

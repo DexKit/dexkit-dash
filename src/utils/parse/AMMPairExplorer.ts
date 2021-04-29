@@ -1,5 +1,6 @@
-import { NETWORK } from "shared/constants/Bitquery";
+
 import { AMMPairInfoExplorer } from "types/app";
+import { NETWORK } from "shared/constants/AppEnums";
 
 export function parseAMMPairExplorerData(data: any, address: string, network: NETWORK): AMMPairInfoExplorer {
 
