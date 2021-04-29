@@ -13,6 +13,7 @@ import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 import { TokenSearch } from 'shared/components/TokenSearch';
 import TokenOrders from 'modules/protocol-explorer/common/TokenOrders';
 import TokenPairs from 'modules/protocol-explorer/common/TokenPairs';
+import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 
 type TokenParams = {
   address: string;
@@ -46,7 +47,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
         <GridContainer>
            <Grid item xs={12} md={12}>
                 <Paper style={{padding: 10}}>
-                <TokenSearch type={'token'} />
+                <TokenSearchByList type={'token'} exchangeName={exchange} />
               </Paper>
             </Grid>
 

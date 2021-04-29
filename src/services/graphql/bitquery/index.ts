@@ -19,12 +19,15 @@ import {
   BITQUERY_TOKEN_PAIRS,
   BITQUERY_LAST_TRADE_PAIR_EXPLORER,
   BITQUERY_TOKEN_TRADES,
-  BITQUERY_SEARCH
+  BITQUERY_SEARCH,
+  SEARCH_BY_ADDRESS
 } from './gql';
 import { parseTokenPairsData } from 'utils/parse/TokenPairs';
 import { parseLastTradeByPair } from 'utils/parse/lastTradeByPair';
 import { BITQUERY_CONTRACT_ORDERS, BITQUERY_TOTAL_CONTRACT_ORDERS } from './protocol/amm.gql';
 import { NETWORK, EXCHANGE } from 'shared/constants/AppEnums';
+
+import {searchByAddress as searchByAddressInterface} from './__generated__/searchByAddress';
 
 export const client = new ApolloClient({
   uri: 'https://dexkit.graphql.bitquery.io',
@@ -350,4 +353,14 @@ export function search(network: NETWORK, exchangeName: EXCHANGE, addresses: stri
   }).catch(e => {
     return parseSearchData(null, network);
   });
+}
+
+export function searchByAddress(value: string, network: NETWORK){
+  return client.query<searchByAddressInterface>({
+    query: SEARCH_BY_ADDRESS,
+    variables: {
+      network,
+      value
+    }
+  })
 }

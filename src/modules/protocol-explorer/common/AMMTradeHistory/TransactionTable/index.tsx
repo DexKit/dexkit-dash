@@ -54,10 +54,9 @@ const TransactionTable: React.FC<Props> = ({ transactionData, isLoading, total, 
             transactionData.map((data) => (
               <TableItem data={data} key={data.hash} exchange={exchange} networkName={networkName} />
             ))}
-
-          {isLoading && <Loader />}
         </TableBody>
       </Table>
+      {isLoading && <Loader />}
       <TablePagination
         rowsPerPageOptions={[10, 25, 50]}
         component="div"

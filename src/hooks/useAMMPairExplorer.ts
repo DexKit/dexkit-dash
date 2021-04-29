@@ -50,7 +50,7 @@ export const useAMMPairExplorer = (address: string, exchange: EXCHANGE) =>{
            }
          }
      
-       }, [address, currentChainId]);
+       }, [address, currentChainId, exchange]);
 
 
     return {isLoadingInfo, infoData}

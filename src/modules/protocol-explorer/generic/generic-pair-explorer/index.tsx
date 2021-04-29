@@ -22,9 +22,7 @@ type Props = RouteComponentProps<PropsParams> & PropsWithChildren<PropsParams>;
 const GenericPairExplorer: React.FC<Props> = (props) => {
   const {match: { params }} = props;
   const {networkName, exchange, address} = params;
-  console.log(exchange);
   if(exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP){
-    console.log('I am here');
     return <PairExplorerAMM   address={address} exchange={exchange} networkName={networkName}/> 
   }else{
     return <PairExplorer address={address} exchange={exchange} networkName={networkName}/> 

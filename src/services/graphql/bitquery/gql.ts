@@ -481,35 +481,35 @@ export const BITQUERY_MY_TOKEN_BALANCE_AT = gql`
   }
 `;
 
-// export const SEARCH = gql`
-//   query($value: String!) {
-//     search(string: $value){
-//       subject {
-//         ... on Address {
-//           address
-//           annotation
-//         }
-//         ... on Currency {
-//           symbol
-//           name
-//           address
-//           tokenId
-//           tokenType
-//           decimals
-//         }
-//         ... on SmartContract {
-//           address
-//           annotation
-//           contractType
-//           protocol
-//         }
-//         ... on TransactionHash {
-//           hash
-//         }
-//       }
-//     }
-//   }
-// `;
+ export const SEARCH_BY_ADDRESS = gql`
+   query searchByAddress($value: String!, $network: Network!) {
+     search(string: $value, network: $network ){
+       subject {
+         ... on Address {
+           address
+           annotation
+         }
+        ... on Currency {
+           symbol
+           name
+           currencyAddress: address
+           tokenId
+           tokenType
+           decimals
+         }
+         ... on SmartContract {
+           contractAdress: address
+           annotation
+           contractType
+           protocol
+       }
+         ... on TransactionHash {
+           hash
+         }
+       }
+     }
+   }
+ `;
 
 export const BITQUERY_SEARCH = gql`
   query BitquerySearch($network: EthereumNetwork!, $exchangeName: String!, $addresses: [String!]) {

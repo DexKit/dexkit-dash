@@ -100,6 +100,7 @@ export interface GetMyTransfers_ethereum_sender {
    */
   currency: GetMyTransfers_ethereum_sender_currency | null;
   amount: number | null;
+  amountInUsd: number | null;
   /**
    * Transaction where transfer happened
    */
@@ -201,6 +202,7 @@ export interface GetMyTransfers_ethereum_receiver {
    */
   currency: GetMyTransfers_ethereum_receiver_currency | null;
   amount: number | null;
+  amountInUsd: number | null;
   /**
    * Transaction where transfer happened
    */
@@ -209,6 +211,16 @@ export interface GetMyTransfers_ethereum_receiver {
    * External transfer executed explicitly by tx sender. Internal transfers executed by smart contracts.
    */
   external: boolean | null;
+}
+
+export interface GetMyTransfers_ethereum_receiverCount {
+  __typename: "EthereumTransfers";
+  count: number | null;
+}
+
+export interface GetMyTransfers_ethereum_senderCount {
+  __typename: "EthereumTransfers";
+  count: number | null;
 }
 
 export interface GetMyTransfers_ethereum {
@@ -221,6 +233,14 @@ export interface GetMyTransfers_ethereum {
    * Currency Transfers
    */
   receiver: GetMyTransfers_ethereum_receiver[] | null;
+  /**
+   * Currency Transfers
+   */
+  receiverCount: GetMyTransfers_ethereum_receiverCount[] | null;
+  /**
+   * Currency Transfers
+   */
+  senderCount: GetMyTransfers_ethereum_senderCount[] | null;
 }
 
 export interface GetMyTransfers {

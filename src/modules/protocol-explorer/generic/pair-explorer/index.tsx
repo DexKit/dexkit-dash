@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import GridContainer from '../../../../@crema/core/GridContainer';
@@ -18,6 +18,7 @@ import { TokenSearch } from 'shared/components/TokenSearch';
 import { Loader } from '@crema';
 import TokenOrders from 'modules/protocol-explorer/common/TokenOrders';
 import Info from 'modules/protocol-explorer/common/info';
+import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 
 
 
@@ -59,7 +60,7 @@ const PairExplorer = (props: Props) => {
               <Grid item xs={12} md={12}>
                   <Paper style={{ padding: 10 }}>
                     {
-                      exchange && <TokenSearch exchangeName={exchange} type={'pair'} />
+                      exchange && <TokenSearchByList exchangeName={exchange} type={'pair'} />
                     }
                   </Paper>
                 </Grid>

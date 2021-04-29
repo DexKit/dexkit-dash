@@ -307,6 +307,16 @@ export interface GetMyOrders_ethereum_taker {
   tradeAmountIsUsd: number | null;
 }
 
+export interface GetMyOrders_ethereum_makerCount {
+  __typename: "EthereumDexTrades";
+  count: number | null;
+}
+
+export interface GetMyOrders_ethereum_takerCount {
+  __typename: "EthereumDexTrades";
+  count: number | null;
+}
+
 export interface GetMyOrders_ethereum {
   __typename: "Ethereum";
   /**
@@ -317,6 +327,14 @@ export interface GetMyOrders_ethereum {
    * Trades on Ethereum DEX Smart Contracts
    */
   taker: GetMyOrders_ethereum_taker[] | null;
+  /**
+   * Trades on Ethereum DEX Smart Contracts
+   */
+  makerCount: GetMyOrders_ethereum_makerCount[] | null;
+  /**
+   * Trades on Ethereum DEX Smart Contracts
+   */
+  takerCount: GetMyOrders_ethereum_takerCount[] | null;
 }
 
 export interface GetMyOrders {

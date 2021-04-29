@@ -52,7 +52,7 @@ export const useAMMPairTrades = (address: string, exchange: EXCHANGE) =>{
             .then(pair => fetchPairData(pair, rowsPerPage, page*rowsPerPage))
           }
         }    
-      }, [address, currentChainId, page, rowsPerPage, fetchData]);
+      }, [address, currentChainId, page, rowsPerPage, fetchData, exchange]);
 
     const onChangePage = (page: number)=> {
       setPage(page);

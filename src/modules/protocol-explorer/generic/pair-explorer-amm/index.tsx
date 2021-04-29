@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -17,6 +17,7 @@ import { TokenSearch } from 'shared/components/TokenSearch';
 import { Loader } from '@crema';
 import InfoAMM from 'modules/protocol-explorer/common/info-amm';
 import AMMTradeHistory from 'modules/protocol-explorer/common/AMMTradeHistory';
+import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 
 const TVChartContainer = React.lazy(() => import('../../../../shared/components/chart/TvChart/tv_chart'));
 
@@ -66,7 +67,7 @@ const PairExplorerAMM = (props: Props) => {
             <Grid item xs={12} md={12}>
                 <Paper style={{ padding: 10 }}>
                   {
-                    exchange && <TokenSearch exchangeName={exchange} type={'pair'} />
+                    exchange && <TokenSearchByList exchangeName={exchange} type={'pair'} />
                   }
                 </Paper>
               </Grid>

@@ -15,6 +15,7 @@ import { useAMMPoolHistory } from 'hooks/useAMMPoolHistory';
 import Loader from '@crema/core/Loader';
 import InfoAMM from 'modules/protocol-explorer/common/info-amm';
 import AMMPoolHistory from 'modules/protocol-explorer/common/AMMPoolHistory';
+import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 
 type PropsParams = {
   address: string;
@@ -62,7 +63,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
 
         <Grid item xs={12} md={5}>
           <Paper style={{ padding: 10 }}>
-            <TokenSearch type={'pair'} exchangeName={exchange} />
+          <TokenSearchByList exchangeName={exchange} type={'pool'} />
           </Paper>
         </Grid>
 
