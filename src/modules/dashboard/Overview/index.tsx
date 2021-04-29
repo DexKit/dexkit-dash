@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { onGetReportCardsData } from '../../../redux/actions';
+import { onGetReportCardsData, onGetNewsData } from '../../../redux/actions';
 import GridContainer from '../../../@crema/core/GridContainer';
-import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import { AppState } from '../../../redux/store';
 import ReportCard from './ReportCard';
@@ -13,6 +12,8 @@ import ProtocolNavigationUniswap from './ProtocolNavigation/uniswap';
 import ProtocolNavigationZRXProtocol from './ProtocolNavigation/zrxprotocol';
 import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
+import RelatedCourses from './RelatedCourses';
+import { RelatedCoursesData } from 'types/models/Academy';
 
 
 export interface OverviewDataProvider {
@@ -27,11 +28,11 @@ const Overview: React.FC<CryptoProps> = () => {
   useEffect(() => {
     dispatch(onGetReportCardsData());
     //  dispatch(onGetCryptoData());
-    //   dispatch(onGetNewsData());
+    // dispatch(onGetNewsData());
   }, [dispatch]);
 
-  const { reportCardsData } = useSelector<AppState, AppState['dashboard']>(
-    ({ dashboard }) => dashboard
+  const { reportCardsData/*, newsData*/ } = useSelector<AppState, AppState['dashboard']>(
+    ({ dashboard}) => dashboard
   );
 
   return (
@@ -47,6 +48,21 @@ const Overview: React.FC<CryptoProps> = () => {
           <Grid item xs={12} md={4} >
             {reportCardsData[2] && < ReportCard data={reportCardsData[2]} />}
           </Grid>
+        
+ 
+            {/*<Grid style={{ backgroundColor: 'white', borderRadius: 10 }} item xs={12} sm={12} md={4}>
+              {newsData && <RelatedCourses relatedCourses={
+                newsData.items.map((item, index) => {
+                  return {
+                    id: index,
+                    image: item?.enclosure?.url,
+                    title: item.title,
+                    author: item.creator,
+                    views: '15'
+                  } as RelatedCoursesData
+                })
+              } />}
+            </Grid>*/}
           {/* <Grid item xs={12} md={4}>
               <GridContainer >
               <Grid item xs={12} sm={12} md={12}>

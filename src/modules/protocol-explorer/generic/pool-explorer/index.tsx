@@ -44,7 +44,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
 
       <PageTitle
         history={
-          exchange == EXCHANGE.ALL ? [
+          exchange === EXCHANGE.ALL ? [
             {url:`/${networkName}/protocol-explorer/${exchange}/overview`, name: 'Protocol Explorer'}
           ]:[
             {url:`/${networkName}/protocol-explorer/${exchange}/overview`, name: 'Protocol Explorer'},

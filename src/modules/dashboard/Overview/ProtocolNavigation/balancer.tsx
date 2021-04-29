@@ -13,7 +13,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.BALANCER}/token-explorer`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.BALANCER}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_TOKEN}`
   },
   {
       value: "Pair Explorer",
@@ -21,7 +21,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 3,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.BALANCER}//pair-explorer`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.BALANCER}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`
   },
 
 ]

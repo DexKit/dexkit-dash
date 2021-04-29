@@ -12,7 +12,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/token-explorer`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_TOKEN}`
   },
   {
       value: "Pool Explorer",
@@ -20,7 +20,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pool-explorer`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pool-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`
   },
   {
       value: "Pair Explorer",
@@ -28,7 +28,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 3,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pair-explorer`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`
   },
 
 ]

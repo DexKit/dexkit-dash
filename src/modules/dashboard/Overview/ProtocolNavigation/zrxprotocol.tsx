@@ -13,7 +13,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_TOKEN_ZRX_PROTOCOL}`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_TOKEN_ZRX_PROTOCOL}`
   },
   {
       value: "Pair Explorer",
@@ -21,7 +21,7 @@ const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 3,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_ZRX_PAIR}`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_ZRX_PAIR}`
   },
 
 ]

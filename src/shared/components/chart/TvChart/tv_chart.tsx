@@ -54,7 +54,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
     public static defaultProps: ChartContainerProps = {
         chainId: 1,
         symbol: 'WETH-DAI',
-        interval: 'D',
+        interval: '60',
         containerId: 'tv_chart_container',
         datafeedUrl: `${TRADE_API_URL(1)}/candles`,
         libraryPath: '/charting_library/',
@@ -90,7 +90,6 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
                 'left_toolbar',
                 'context_menus',
                 'control_bar',
-                'timeframes_toolbar',
             ],
             enabled_features: [],
             charts_storage_url: this.props.chartsStorageUrl,

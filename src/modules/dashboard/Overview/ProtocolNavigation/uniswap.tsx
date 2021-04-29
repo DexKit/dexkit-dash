@@ -12,7 +12,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`
   },
   {
       value: "Pool Explorer",
@@ -20,7 +20,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 2,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pool-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pool-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
   },
   {
       value: "Pair Explorer",
@@ -28,7 +28,7 @@ export const INFOR_CARD = [
       icon: "/assets/images/dashboard/1_monthly_sales.png",
       id: 3,
       type: "Last Month Sale",
-      href: `ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
+      href: `/ethereum/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}`
   },
 
 ]

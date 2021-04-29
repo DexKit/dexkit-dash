@@ -148,7 +148,7 @@ export const onGetReportCardsData = () => {
 };
 
 export const onGetNewsData = () => {
-  // const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+ //  const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
   const CORS_PROXY = "";
   const url = new URL(`${CORS_PROXY}https://cointelegraph.com/rss`);
   return (dispatch: Dispatch<AppActions>) => {
