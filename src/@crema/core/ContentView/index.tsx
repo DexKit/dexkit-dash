@@ -10,6 +10,8 @@ import AppFooter from '../AppLayout/AppFooter';
 import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
+import { isMobile } from 'web3modal';
+import Container from '@material-ui/core/Container';
 
 interface TransitionWrapperProps {
   children: ReactNode;
@@ -40,19 +42,35 @@ interface ContentViewProps {
 }
 
 const ContentView: React.FC<ContentViewProps> = () => {
-  return (
-    <Scrollbar>
-      <Box
-        display='flex'
-        flex={1}
-        flexDirection='column'
-        className='main-content-view'>
-        <Suspense>
-          <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
-        </Suspense>
-      </Box>
-      <AppFooter />
-    </Scrollbar>
+  return isMobile() ?
+      ( 
+        <Container maxWidth="sm" style={{overflow:'auto', height:'100%', position: 'relative'}}>
+            <Box
+              display='flex'
+              flex={1}
+              flexDirection='column'
+              className='main-content-view'
+              
+              >
+              <Suspense>
+                <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
+              </Suspense>
+            </Box>
+            <AppFooter />
+          </Container>
+    ) : ( 
+          <Scrollbar>
+            <Box
+              display='flex'
+              flex={1}
+              flexDirection='column'
+              className='main-content-view'>
+              <Suspense>
+                <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
+              </Suspense>
+            </Box>
+            <AppFooter />
+        </Scrollbar>
   );
 };
 

@@ -177,7 +177,7 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
             const key = e.currency.address == '-' ? 'eth' : e.currency.address;
 
             const currency = Object.assign({}, e.currency);
-            currency.image = tokens[key]?.image.large;
+            currency.image = tokens[key]?.image;
 
             let history;
 
@@ -197,7 +197,7 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
               currency: currency,
               history: history || {},
               value: e.value,
-              valueUsd: (tokens[key]?.market_data?.current_price?.usd || 0) * e.value 
+              valueUsd: (tokens[key]?.current_price || 0) * e.value 
             }
           });
           

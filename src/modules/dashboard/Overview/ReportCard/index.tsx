@@ -24,18 +24,26 @@ const ReportCard: React.FC<ReportCardProps> = ({data}) => {
   return (
     <AppCard className='card-hover'>
       <Box display='flex'>
-        <Box flex={1} pr={3}>
+        <Box pr={3}>
           <Box mb={0.5} component='h3' fontSize={20}>
             {data.value}
           </Box>
           <Box component='p' color='#737989'>
             {data.type}
           </Box>
-          <Box>
-            <img src={data.icon} alt="currency icon"/>
+          <Box style={{maxHeight:'25px', maxWidth: '25px'}}>
+            <img src={data.icon} height={'25px'} width={'25px'} alt="currency icon"/>
           </Box>
         </Box>
-        <Box className={classes.chartContainer}>
+        <Box className={classes.chartContainer} flex={1} pl={1}>
+        <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            fontWeight={Fonts.BOLD}
+            color={data.strokeColor}>
+            Last 7 days
+          </Box>
           <StaticsGraph
             id={data.id}
             graphData={data.graphData}

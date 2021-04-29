@@ -2,10 +2,9 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles, TableCell, TableRow, TablePagination} from '@material-ui/core';
+import {Box, makeStyles, TableCell, TableRow, TablePagination, TableContainer} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import {grey} from '@material-ui/core/colors/index';
 import { OrderData } from 'types/app';
 import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
 
@@ -35,7 +34,6 @@ const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onC
         width: '100%',
         marginBottom: 15,
         overflowY: 'hidden',
-        border: `1px solid ${grey[300]}`,
         '& > table': {
           marginBottom: 0,
           '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
@@ -50,32 +48,34 @@ const OrderTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onC
 
   return (
     <Box className={classes.tableResponsiveMaterial}>
-      <Table className='table'>
-        <TableHead>
-          <TableHeading type={type} exchange={exchange}/>
-        </TableHead>
-        <TableBody>
-          {(data.length > 1) &&  
-              data.map((row, index) => (
-                <TableItem row={row} key={index} exchange={exchange} type={type}  networkName={networkName} />
-              ))}
-           
-            {isLoading &&  <TableRow className={classes.borderBottomClass}>
-                <TableCell component='th' scope='row' colSpan={10} className={classes.borderBottomClass}>
-                  Loading...
-                </TableCell>
-              </TableRow>}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={total}
-        rowsPerPage={perPage}
-        page={page}
-        onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
-        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangePerPage(parseInt(event.target.value, 10))}
-      />
+      <TableContainer>
+        <Table className='table'>
+          <TableHead>
+            <TableHeading type={type} exchange={exchange}/>
+          </TableHead>
+          <TableBody>
+            {(data.length > 1) &&  
+                data.map((row, index) => (
+                  <TableItem row={row} key={index} exchange={exchange} type={type}  networkName={networkName} />
+                ))}
+            
+              {isLoading &&  <TableRow className={classes.borderBottomClass}>
+                  <TableCell component='th' scope='row' colSpan={10} className={classes.borderBottomClass}>
+                    Loading...
+                  </TableCell>
+                </TableRow>}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50]}
+          component="div"
+          count={total}
+          rowsPerPage={perPage}
+          page={page}
+          onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
+          onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangePerPage(parseInt(event.target.value, 10))}
+        />
+      </TableContainer>
     </Box>
   );
 };

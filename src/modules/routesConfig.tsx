@@ -54,7 +54,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'Token',
             type: 'item',
             icon: 'storage',
-            url: '/dashboard/token',
+            url: `dashboard/token/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
           },
   
          /* {

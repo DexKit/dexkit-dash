@@ -5,7 +5,6 @@ import TableBody from '@material-ui/core/TableBody';
 import {Box, makeStyles, TablePagination} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import {grey} from '@material-ui/core/colors';
 import {MintBurn} from 'types/app';
 import Loader from '@crema/core/Loader';
 import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
@@ -32,7 +31,6 @@ const TransactionTable: React.FC<Props> = ({transactionData, isLoading, total, p
         width: '100%',
         marginBottom: 15,
         overflowY: 'hidden',
-        border: `1px solid ${grey[300]}`,
         '& > table': {
           marginBottom: 0,
           '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {

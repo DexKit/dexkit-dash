@@ -1,23 +1,18 @@
 import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { onGetCryptoData, onGetNewsData, onGetReportCardsData } from '../../../redux/actions';
+import { onGetReportCardsData } from '../../../redux/actions';
 import GridContainer from '../../../@crema/core/GridContainer';
 import InfoView from '../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 import { AppState } from '../../../redux/store';
 import ReportCard from './ReportCard';
-import RelatedCourses from './RelatedCourses';
 import { ReportCards } from 'types/models/Ecommerce';
-import { RelatedCoursesData } from 'types/models/Academy';
+
 import ProtocolNavigationUniswap from './ProtocolNavigation/uniswap';
 import ProtocolNavigationZRXProtocol from './ProtocolNavigation/zrxprotocol';
 import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
-import { makeStyles } from '@material-ui/core';
-import { CremaTheme } from 'types/AppContextPropsType';
-import { grey } from '@material-ui/core/colors';
-import { Fonts } from 'shared/constants/AppEnums';
 
 
 export interface OverviewDataProvider {
@@ -94,7 +89,6 @@ const Overview: React.FC<CryptoProps> = () => {
             </Grid> */}
         </GridContainer>
       </Box>
-      <InfoView />
     </>
   );
 };

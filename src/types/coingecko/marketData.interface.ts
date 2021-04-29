@@ -1,5 +1,5 @@
 export interface MarketData {
-    current_price: { [key: string]: number };
+      current_price: { [key: string]: number };
       roi: any;
       ath: { [key: string]: number };
       ath_change_percentage: { [key: string]: number };
