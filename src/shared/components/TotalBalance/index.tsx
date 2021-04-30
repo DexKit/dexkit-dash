@@ -9,8 +9,9 @@ import {MyBalance} from 'types/bitquery/myBalance.interface';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
+import SendIcon from '@material-ui/icons/Send';
 
-
+import CallReceivedIcon from '@material-ui/icons/CallReceived';
 interface TotalBalanceProps {
   balances: MyBalance[];
 }
@@ -25,13 +26,15 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
-      backgroundColor: 'white',
-      color: 'black',
-      fontFamily: Fonts.LIGHT,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+      fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 96,
       fontSize: 16,
-      '&:hover, &:focus': {backgroundColor: 'white', color: 'black'},
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.dark,
+        color: 'white'},
       lineHeight: '16px',
       [theme.breakpoints.up('sm')]: {
         lineHeight: '20px',
@@ -43,12 +46,12 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
     btnPrimary: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 96,
       fontSize: 16,
       '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         color: 'white',
       },
       lineHeight: '16px',
@@ -69,7 +72,6 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
       <Box
         py={{xs: 5, sm: 5, xl: 5}}
         px={{xs: 6, sm: 6, xl: 6}}
-        style={{backgroundColor: indigo[500]}}
         clone>
         <Card>
           <Box
@@ -80,8 +82,8 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
             <Box display='flex' alignItems='center'>
               <Box
                 component='h3'
-                color='primary.contrastText'
-                fontFamily={Fonts.LIGHT}
+                color='black'
+                fontFamily={Fonts.BOLD}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
                 ${usdAvailable.toFixed(2)}
               </Box>
@@ -101,12 +103,12 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
               mt={{xs: 2, xl: 0}}>
               <Box>
                 <Button onClick={() => setSenderModal(true)}  className={classes.root}>
-                  <IntlMessages id='common.send' />
+                  <IntlMessages id='common.send' /> {'   '}<SendIcon/> 
                 </Button>
               </Box>
               <Box ml={3}>
                 <Button onClick={() => setReceiverModal(true)}  className={classes.btnPrimary}>
-                  <IntlMessages id='common.receive' />
+                  <IntlMessages id='common.receive' />{' '} <CallReceivedIcon/>
                 </Button>
               </Box>
             </Box>

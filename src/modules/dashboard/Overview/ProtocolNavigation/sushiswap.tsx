@@ -1,31 +1,37 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 
-import {Box, Grid} from '@material-ui/core';
+import {Box, Grid, Typography} from '@material-ui/core';
 import {Fonts, EXCHANGE} from '../../../../shared/constants/AppEnums';
 import InfoCard from 'shared/components/InfoCard';
+import IconComponent from '@crema/core/Navigation/Icon';
+import { IconProps } from "modules/routesConfig";
+
+import ExploreIcon from '@material-ui/icons/Explore';
+import MoneyIcon from '@material-ui/icons/Money';
+import PoolIcon from '@material-ui/icons/Pool';
 
 export const INFOR_CARD = [
   {
       value: "Token Explorer",
-      bgColor: "#49BD65",
-      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      bgColor: "#f3773d",
+      icon: <MoneyIcon style={{fill: "white"}}/>,
       id: 2,
       type: "Last Month Sale",
       href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_TOKEN}`
   },
   {
       value: "Pool Explorer",
-      bgColor: "#009dc4",
-      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      bgColor: "#f3773d",
+      icon: <PoolIcon style={{fill: "white"}}/>,
       id: 2,
       type: "Last Month Sale",
       href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pool-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`
   },
   {
       value: "Pair Explorer",
-      bgColor: "black",
-      icon: "/assets/images/dashboard/1_monthly_sales.png",
+      bgColor: "#f3773d",
+      icon: <ExploreIcon style={{fill: "white"}}/>,
       id: 3,
       type: "Last Month Sale",
       href: `/ethereum/protocol-explorer/${EXCHANGE.SUSHISWAP}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`
@@ -34,20 +40,29 @@ export const INFOR_CARD = [
 ]
 
 const ProtocolNavigationSushiSwap = () => {
+  const sushiIcon: IconProps = {
+    src: 'sushiswap.svg',
+    type: 'svg'
+  }
+
+
   return (
     <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height='1' clone>
       <Card>
-        <Box mb={4} display='flex' alignItems='center'>
-          <Box
-            component='h2'
-            fontFamily={Fonts.LIGHT}
-            fontSize={{xs: 18, sm: 20, xl: 22}}>
-           SushiSwap Protocol
+         <Box display='flex' alignItems='center' mb={2}>
+            <Box mr={5} clone alignSelf='flex-start'>
+                <IconComponent icon={sushiIcon} classes={{}}/>
+            </Box>
+            <Box ml={2}>
+              <Typography component='h5' variant='inherit' color='inherit'>
+                SushiSwap Protocol
+              </Typography>
+            
+            </Box>
           </Box>
-        </Box>
         {INFOR_CARD.map((state, index) => (
                 <Grid item xs={12} sm={3} md={12} key={index} style={{marginBottom: "15px"}}>
-                  <InfoCard state={state} />
+                  <InfoCard state={state} icon={state.icon} />
                 </Grid>
               ))}
       </Card>

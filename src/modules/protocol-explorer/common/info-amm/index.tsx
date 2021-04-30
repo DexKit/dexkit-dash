@@ -2,7 +2,7 @@ import React from 'react';
 import { useWeb3 } from 'hooks/useWeb3';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import {indigo} from '@material-ui/core/colors';
+import {orange} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 
 import { BalanceCoins } from 'types/models/Crypto';
@@ -106,13 +106,13 @@ const InfoAMM: React.FC<Props> = (props) => {
         fontWeight={Fonts.BOLD}>
       </Box>
 
-      <AppCard style={{backgroundColor: indigo[500]}}>
+      <AppCard>
         <Box display='flex' flexDirection='column'>
 
           <Box display='flex' flexDirection='row' justifyContent='space-between'>
             <Box
               component='h3'
-              color='primary.contrastText'
+              color='black'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
               {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
@@ -144,10 +144,10 @@ const InfoAMM: React.FC<Props> = (props) => {
 
           <Box display='flex' alignItems='center'>
             <Box
-              component='h3'
-              fontWeight={Fonts.MEDIUM}
+              component='h2'
+              fontWeight={Fonts.BOLD}
               style={{color: color, marginTop: 13}}
-              fontSize={20}>
+              fontSize={24}>
               ${props.data.priceUsd.toFixed(4)}
             </Box>
           </Box>
@@ -162,7 +162,7 @@ const InfoAMM: React.FC<Props> = (props) => {
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
-              style={{color: 'white', marginLeft: 10}}
+              style={{color: 'black', marginLeft: 10}}
               fontSize={13}>
               {props.data.price.toFixed(8)} {props.data.quoteToken.symbol}
             </Box>

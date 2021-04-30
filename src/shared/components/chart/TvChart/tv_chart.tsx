@@ -87,9 +87,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
             locale: getLanguageFromURL() || 'en',
             disabled_features: [
                 'use_localstorage_for_settings',
-                'left_toolbar',
                 'context_menus',
-                'control_bar',
             ],
             enabled_features: [],
             charts_storage_url: this.props.chartsStorageUrl,

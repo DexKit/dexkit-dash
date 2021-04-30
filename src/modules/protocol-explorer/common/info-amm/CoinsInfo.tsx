@@ -23,7 +23,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins}) => {
           <Box mt={{xl: 3}} px={2} key={coin.id}>
             <Box
               mb={{xs: 0, sm: 0, xl: 3}}
-              color='primary.contrastText'
+              color='black'
               fontWeight={Fonts.BOLD}
               component='h3'
               fontSize={20}>

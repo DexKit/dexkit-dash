@@ -16,7 +16,7 @@ const Navigation: React.FC<NavigationProps> = () => {
 
   return (
     <List>
-      <AppLogo justifyContent="center" logo={require('assets/images/logo_white.png')}/>
+      {/*<AppLogo justifyContent="center" logo={require('assets/images/logo_white.png')}/>*/}
       {items.map((item) => (
         <React.Fragment key={item.id}>
           {item.type === 'group' && <VerticalNavGroup item={item} level={0} />}

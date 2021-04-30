@@ -100,19 +100,19 @@ const Info: React.FC<Props> = (props) => {
 
       <Box
         component='h2'
-        color='text.primary'
+        color='black'
         fontSize={16}
         className={classes.textUppercase}
         fontWeight={Fonts.BOLD}>
       </Box>
 
-      <AppCard style={{backgroundColor: indigo[500]}}>
+      <AppCard>
         <Box display='flex' flexDirection='column'>
 
           <Box display='flex' flexDirection='row' justifyContent='space-between'>
             <Box
               component='h3'
-              color='primary.contrastText'
+              color='black'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
               {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
@@ -135,7 +135,7 @@ const Info: React.FC<Props> = (props) => {
           <Box display='flex' alignItems='center'>
             <Box
               component='h3'
-              fontWeight={Fonts.MEDIUM}
+              fontWeight={Fonts.BOLD}
               style={{color: color, marginTop: 13}}
               fontSize={20}>
               ${props.data.priceUsd.toFixed(4)}
@@ -152,7 +152,7 @@ const Info: React.FC<Props> = (props) => {
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
-              style={{color: 'white', marginLeft: 10}}
+              style={{color: 'black', marginLeft: 10}}
               fontSize={13}>
               {props.data.price.toFixed(8)} {props.data.quoteToken.symbol}
             </Box>

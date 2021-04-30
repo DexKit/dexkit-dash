@@ -98,7 +98,7 @@ const Wallet: React.FC<Props> = (props) => {
   }, [myBalances, chartName, chartDays]);
 
   const transakAllEvents = useCallback((data: any) => {
-
+    console.log(data);
   }, []);
   
   const transakCloseEvents = useCallback((data: any) => {

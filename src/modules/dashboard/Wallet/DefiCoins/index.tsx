@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GridContainer } from '@crema';
 import IntlMessages from '@crema/utility/IntlMessages';
-import { Grid, Box, Link, Typography } from '@material-ui/core';
+import { Grid, Box, Link, Typography, Paper } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 import { CoinData } from 'types/models/Crypto';
 import { matchCoinSymbol } from 'utils/constants';
@@ -40,6 +40,7 @@ const DefiCoins: React.FC<CoinsProps> = ({ assets }) => {
   }, [assets])
 
   return (
+    <Paper>
     <Box key="defi-assets">
       <Box display='flex' alignItems='center'>
         <Box
@@ -83,6 +84,7 @@ const DefiCoins: React.FC<CoinsProps> = ({ assets }) => {
       }
       </GridContainer>
     </Box>
+    </Paper>
   )
 };
 

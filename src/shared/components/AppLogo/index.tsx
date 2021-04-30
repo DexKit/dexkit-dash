@@ -24,6 +24,8 @@ const AppLogo: React.FC<AppLogoProps> = props => {
     );
   const useStyles = makeStyles(() => ({
     logoRoot: {
+      marginTop: '5px',
+      marginLeft: '2px',
       display: 'flex',
       flexDirection: 'row',
       cursor: 'pointer',
@@ -31,7 +33,7 @@ const AppLogo: React.FC<AppLogoProps> = props => {
       justifyContent: props.justifyContent
     },
     logo: {
-      height: 36,
+      height: 28,
       marginRight: 10,
     },
   }));

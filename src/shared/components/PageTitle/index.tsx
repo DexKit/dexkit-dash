@@ -11,17 +11,21 @@ interface Props {
 const PageTitle: React.FC<Props> = (props) => { 
 
   return (
+    
     <GridContainer>
       <Grid item xs={12} md={12}>
+     
         <Breadcrumbs aria-label="breadcrumb">
           {
             props.history.map(e => <Link key={e.name} color="inherit" href={e.url}>{e.name}</Link>)
           }
           <Typography color="textPrimary">{props.active}</Typography>
         </Breadcrumbs>
+   
         <Typography variant="h4" color="textPrimary">{props.title}</Typography>
       </Grid>
     </GridContainer>
+    
   );
 
 }
