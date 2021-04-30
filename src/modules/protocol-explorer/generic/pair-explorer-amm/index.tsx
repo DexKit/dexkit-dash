@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -7,17 +7,19 @@ import InfoView from '../../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 
 import { Paper } from '@material-ui/core';
-import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
+import { EXCHANGE, NETWORK, ThemeMode } from 'shared/constants/AppEnums';
 import { useAMMPairTrades } from 'hooks/useAMMPairTrades';
 import { useAMMPairExplorer } from 'hooks/useAMMPairExplorer';
 import PageTitle from 'shared/components/PageTitle';
 import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 import { truncateAddress } from 'utils';
 import { TokenSearch } from 'shared/components/TokenSearch';
-import { Loader } from '@crema';
+import { Loader, AppContext,  } from '@crema';
 import InfoAMM from 'modules/protocol-explorer/common/info-amm';
 import AMMTradeHistory from 'modules/protocol-explorer/common/AMMTradeHistory';
 import { TokenSearchByList } from 'shared/components/TokenSearchByList';
+import AppContextPropsType from 'types/AppContextPropsType';
+
 
 const TVChartContainer = React.lazy(() => import('../../../../shared/components/chart/TvChart/tv_chart'));
 
@@ -46,6 +48,11 @@ const PairExplorerAMM = (props: Props) => {
     onChangeRowsPerPage} = useAMMPairTrades(address, exchange);
 
  const {isLoadingInfo, infoData} = useAMMPairExplorer(address, exchange)
+  const {
+    theme,
+  } = useContext<AppContextPropsType>(AppContext);
+
+  const isDark = theme.palette.type === ThemeMode.DARK;
 
   return (
     <>
@@ -84,7 +91,7 @@ const PairExplorerAMM = (props: Props) => {
             <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
             {(infoData && 
                 <Grid item xs={12} md={12} style={{ height: 450}}>
-                  <TVChartContainer symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`} chainId={1} />
+                  <TVChartContainer symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`} chainId={1} darkMode={isDark} />
                 </Grid>
               )}
             </Grid>

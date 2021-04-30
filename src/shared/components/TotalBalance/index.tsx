@@ -82,7 +82,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
             <Box display='flex' alignItems='center'>
               <Box
                 component='h3'
-                color='black'
+                color='text.primary'
                 fontFamily={Fonts.BOLD}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
                 ${usdAvailable.toFixed(2)}

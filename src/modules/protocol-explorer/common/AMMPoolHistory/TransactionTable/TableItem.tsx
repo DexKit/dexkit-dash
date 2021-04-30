@@ -78,7 +78,7 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
   const timeFn = data.time.split(' ')
 
   return (
-    <TableRow key={data.hash}>
+    <TableRow hover role='checkbox' tabIndex={-1} key={data.hash}>
       
       <TableCell component='th' scope='row' className={classes.tableCell}>
         <Box>{timeFn[0]}</Box>

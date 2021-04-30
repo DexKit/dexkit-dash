@@ -34,6 +34,7 @@ export interface ChartContainerProps {
     autosize: ChartingLibraryWidgetOptions['autosize'];
     studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides'];
     containerId: ChartingLibraryWidgetOptions['container_id'];
+    darkMode: boolean; 
 }
 
 export interface ChartContainerState {
@@ -64,6 +65,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         userId: 'dexkit',
         fullscreen: false,
         autosize: true,
+        darkMode: false,
         studiesOverrides: {},
     };
 
@@ -97,20 +99,10 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
             fullscreen: this.props.fullscreen,
             autosize: this.props.autosize,
             studies_overrides: this.props.studiesOverrides,
-            theme: 'Dark',
+            theme: this.props.darkMode ? 'Dark' : 'Light',
             //custom_css_url: '/charting_library/static/tradingview.css',
         };
 
-        const themeName = 'LIGHT_THEME';
-        /*if (themeName === 'DARK_THEME') {
-            widgetOptions.theme = 'Dark';
-            widgetOptions.overrides = {
-                'paneProperties.background': '#111',
-            };
-        } else*/
-        if (themeName === 'LIGHT_THEME') {
-            widgetOptions.theme = 'Light';
-        }
 
         const tvWidget = new widget(widgetOptions);
         this._tvWidget = tvWidget;
@@ -128,15 +120,19 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         }
     }
 
-    public componentDidUpdate(): void {
+    public componentDidUpdate(prevProps: ChartContainerProps ): void {
         if (this._tvWidget !== null && this.state.ready) {
             if (this.props.symbol !== this.state.symbol) {
                 const symbol = this.props.symbol ? this.props.symbol : 'WETH-DAI';
                 if (symbol) {
                     this.setState({ symbol });
                     // tslint:disable-next-line: no-empty
-                    this._tvWidget.setSymbol(symbol, 'D', () => {});
+                    this._tvWidget.setSymbol(symbol, this.props.interval || '60', () => {});
                 } 
+            }
+            if (this.props.darkMode !== prevProps.darkMode) {
+                const theme = this.props.darkMode ? 'Dark' : 'Light'
+                this._tvWidget.changeTheme(theme)
             }
         }
     }

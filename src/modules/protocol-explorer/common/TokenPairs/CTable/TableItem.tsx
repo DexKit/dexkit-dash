@@ -47,7 +47,7 @@ const TableItem: React.FC<TableItemProps> = ({ row, exchange, networkName }) => 
 
 
   return (
-    <TableRow key={row.address}>
+    <TableRow hover role='checkbox' tabIndex={-1} key={row.address}>
       <TableCell align='left' className={classes.tableCell}><Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>{row.baseToken.symbol}/{row.quoteToken.symbol}</Link></TableCell>
       <TableCell align='left' className={classes.tableCell}>${(row.priceUsd).toFixed(2)}</TableCell>
       <TableCell align='left' className={classes.tableCell}> {row.baseVolume24.toFixed(3)} <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.baseToken, exchange)}> {row.baseToken.symbol} </Link></TableCell>

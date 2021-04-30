@@ -20,6 +20,7 @@ import WalletInfo from 'shared/components/WalletInfo';
 import { ChainId } from 'types/blockchain';
 import { useWeb3 } from 'hooks/useWeb3';
 import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
 
 interface AppHeaderProps {}
 
@@ -57,6 +58,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         <Notifications />
       </MenuItem>
       <LanguageSwitcher />
+      <ThemeModeSwitcher />
     </Menu>
   );
 
@@ -80,6 +82,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           {/* <SearchBar borderLight placeholder='Search…' />*/}
           <Box className={classes.sectionDesktop}>
             <LanguageSwitcher />
+            <ThemeModeSwitcher />
           {/*  <HeaderMessages />*/}
             <Notifications />
             {

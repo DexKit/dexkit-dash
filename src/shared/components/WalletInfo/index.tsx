@@ -93,7 +93,7 @@ const WalletInfo = (props: any) => {
         [theme.breakpoints.up('xl')]: {
           fontSize: 20,
         },
-        color: themeMode !== 'light' ? '#313541' : 'white',
+        color: 'text.primary',
       },
       designation: {
         textOverflow: 'ellipsis',
@@ -128,7 +128,7 @@ const WalletInfo = (props: any) => {
             <Box mb={0} className={clsx(classes.userName)}>
               {account}
             </Box>
-            <Box ml={3} className={classes.pointer} color={themeMode !== 'light' ? '#313541' : 'white'}>
+            <Box ml={3} className={classes.pointer} color={'text.primary'}>
               <Box component='span' onClick={handleClick}>
                 <ExpandMoreIcon />
               </Box>

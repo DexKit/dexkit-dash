@@ -12,12 +12,12 @@ import { Fonts } from 'shared/constants/AppEnums';
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     backgroundColor: 'white',
-    color: 'black',
+    color: 'text.primary',
     fontFamily: Fonts.LIGHT,
     textTransform: 'capitalize',
     width: 96,
     fontSize: 16,
-    '&:hover, &:focus': {backgroundColor: 'white', color: 'black'},
+    '&:hover, &:focus': {backgroundColor: 'white', color: 'text.primary'},
     lineHeight: '16px',
     [theme.breakpoints.up('sm')]: {
       lineHeight: '20px',

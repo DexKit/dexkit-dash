@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useContext } from 'react';
 // import { useHistory, useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import TotalBalance from 'shared/components/TotalBalance';
@@ -14,8 +14,10 @@ import { MyBalance } from 'types/bitquery/myBalance.interface';
 import { CurrencyPair } from '@types';
 import { getToken } from 'services/rest/coingecko';
 import { CoinDetailCoinGecko } from 'types/coingecko';
-import { Fonts } from 'shared/constants/AppEnums';
+import { Fonts, ThemeMode } from 'shared/constants/AppEnums';
 import Loader from '@crema/core/Loader';
+import AppContextPropsType from 'types/AppContextPropsType';
+import { AppContext } from '@crema';
 
 const TVChartContainer = React.lazy(() => import('../../../shared/components/chart/TvChart/tv_chart'));
 
@@ -32,6 +34,10 @@ type TokenProps = RouteComponentProps<TokenParams>
 const Crypto: React.FC<TokenProps> = (props) => {
   const {match: { params }} = props;
   const { address } = params;
+
+  const {
+    theme,
+  } = useContext<AppContextPropsType>(AppContext);
 
   const [balances, setBalances] = useState<MyBalance[]>([]);
   const [info, setInfo] = useState<CoinDetailCoinGecko>();
@@ -71,7 +77,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
     }
   }, []), []);
 
-
+  const isDark = theme.palette.type === ThemeMode.DARK;
   return (
     <>
       { balances ? (
@@ -133,7 +139,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
             <Grid item xs={12} md={7}>
               <GridContainer>
                 <Grid style={{padding: 5, height: '400px'}} item xs={12} sm={12} md={12}>
-                  <TVChartContainer symbol={`${info?.symbol.toUpperCase()}-WETH`} chainId={1} />
+                  <TVChartContainer symbol={`${info?.symbol.toUpperCase()}-WETH`} chainId={1} darkMode={isDark}/>
                 </Grid>
               </GridContainer>
              

@@ -73,7 +73,7 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
 
 
   return (
-    <TableRow key={data.hash}>
+    <TableRow hover role='checkbox' tabIndex={-1} key={data.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
         <Box>{createdFn[0]}</Box>
         <Box>{createdFn[1]}</Box>

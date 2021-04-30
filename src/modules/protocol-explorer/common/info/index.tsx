@@ -23,12 +23,12 @@ export interface Props {
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     backgroundColor: 'white',
-    color: 'black',
+    color: 'text.primary',
     fontFamily: Fonts.LIGHT,
     textTransform: 'capitalize',
     width: 96,
     fontSize: 16,
-    '&:hover, &:focus': {backgroundColor: 'white', color: 'black'},
+    '&:hover, &:focus': {backgroundColor: 'white', color: 'text.primary'},
     lineHeight: '16px',
     [theme.breakpoints.up('sm')]: {
       lineHeight: '20px',
@@ -100,7 +100,7 @@ const Info: React.FC<Props> = (props) => {
 
       <Box
         component='h2'
-        color='black'
+        color='text.primary'
         fontSize={16}
         className={classes.textUppercase}
         fontWeight={Fonts.BOLD}>
@@ -112,7 +112,7 @@ const Info: React.FC<Props> = (props) => {
           <Box display='flex' flexDirection='row' justifyContent='space-between'>
             <Box
               component='h3'
-              color='black'
+              color='text.primary'
               fontWeight={Fonts.BOLD}
               fontSize={20}>
               {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
@@ -152,7 +152,7 @@ const Info: React.FC<Props> = (props) => {
             <Box
               component='h3'
               fontWeight={Fonts.LIGHT}
-              style={{color: 'black', marginLeft: 10}}
+              style={{color: 'text.primary', marginLeft: 10}}
               fontSize={13}>
               {props.data.price.toFixed(8)} {props.data.quoteToken.symbol}
             </Box>

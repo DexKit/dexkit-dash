@@ -367,7 +367,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
            },
          ],
        },*/
-      {
+       {
         id: 'apps',
         title: 'Apps',
         messageId: 'sidebar.externallinks',
@@ -379,7 +379,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.exchange',
             type: 'external',
             icon: 'show_chart',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://exchange.dexkit.com',
           },
           {
             id: 'swap',
@@ -395,7 +395,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.marketplace',
             type: 'external',
             icon: 'storefront',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://demo.nft.dexkit.com',
           },
           {
             id: 'farming',
@@ -403,7 +403,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.farming',
             type: 'external',
             icon: 'fastfood',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://farm.dexkit.com',
           },
         ],
       },
