@@ -8,13 +8,12 @@ import { BigNumber } from '@0x/utils';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {Fonts} from '../../../../shared/constants/AppEnums';
-import {BuySellProps} from '../../../../types/models/Crypto';
+
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 import { AppState } from 'redux/store';
 import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
-import TabForm from './LimitForm';
 import { useWeb3 } from 'hooks/useWeb3';
-import LimitForm from './LimitForm';
+import LimitForm from './LimitForm'
 import MarketForm from './MarketForm';
 // import { tokensToTokenBalances } from 'services/tokens';
 // import { Token } from 'types/ethereum';

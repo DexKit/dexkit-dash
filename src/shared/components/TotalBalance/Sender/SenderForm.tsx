@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import TextField from '@material-ui/core/TextField';
+
 import IntlMessages from '@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -9,14 +9,18 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalance} from 'types/bitquery/myBalance.interface';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import AddIcon from '@material-ui/icons/Add';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
 import { fromTokenUnitAmount } from '@0x/utils';
 import { isAddress } from '@ethersproject/address';
+import { useToken } from 'hooks/useToken';
+import { isNativeCoin} from 'utils/tokens';
+import { ChainId } from 'types/blockchain';
+import Web3 from 'web3';
+
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import { sendTransaction } from 'services/transfer-token';
+
 interface Props {
   balances: MyBalance[];
 }
@@ -46,7 +50,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {account, onActionWeb3Transaction} = useWeb3();
+  const {account, onActionWeb3Transaction, chainId} = useWeb3();
+  const {onTransferToken} = useToken();
 
   const [amount, setAmount] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -66,20 +71,20 @@ const SenderForm: React.FC<Props> = (props) => {
   }
 
   const handleSend = () => {
+   
+    if(!account){
+      return
+    }
     try {
-      if (account) {
-        if (selected.currency.symbol == 'ETH') {
-          sendTransaction(account, address, fromTokenUnitAmount(amount, selected.currency.decimals).toString())
-        } else {
-          sendTransaction(account, address, fromTokenUnitAmount(amount, selected.currency.decimals).toString(), selected.currency.address);
-        }
+      if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
+          onActionWeb3Transaction({
+            to: address,
+            from: account,
+            value: Web3.utils.toWei(amount),
+          });
+      }else{
+        onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), selected.currency)
       }
-      
-      // onActionWeb3Transaction({
-      //   to: address,
-      //   from: account,
-      //   value: fromTokenUnitAmount(amount, selected.currency.decimals).toString()
-      // });
     } catch (e) {
       console.log(e);
     }

@@ -29,6 +29,22 @@ export const GET_DEFAULT_QUOTE = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_DEFAULT_BASE = (chainId: ChainId|undefined) => {
+  const id = Number(chainId);
+
+  switch(id) {
+    case ChainId.Mainnet:
+    case ChainId.Rinkeby:
+    case ChainId.Kovan:
+    case ChainId.Goerli:
+    case ChainId.Ropsten:
+        return '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4';
+    default:
+      return null;
+    
+  }
+}
+
 export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
   const id = Number(chainId);
 

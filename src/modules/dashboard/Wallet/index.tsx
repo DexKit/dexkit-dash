@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useWeb3 } from 'hooks/useWeb3';
 import { AppState } from 'redux/store';
 import { onGetMyTokenBalances, onGetMyDefiBalances } from 'redux/actions';
 
@@ -8,7 +7,7 @@ import { Grid, Box, Divider } from '@material-ui/core';
 
 import transakSDK from '@transak/transak-sdk';
 
-import { MessageView } from '@crema';
+import { MessageView, InfoView } from '@crema';
 import AppSelect from '@crema/core/AppSelect';
 import GridContainer from '@crema/core/GridContainer';
 import AppCard from '@crema/core/AppCard';
@@ -23,10 +22,13 @@ import HistoryState from './HistoryState'
 import TotalBalance from 'shared/components/TotalBalance';
 
 import { Link } from 'react-router-dom';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+
 import {parseDefiAssets} from '../../../utils/parse'
 import Transak from 'shared/components/Transak';
+import { useWeb3 } from 'hooks/useWeb3';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import PageTitle from 'shared/components/PageTitle';
+
 
 interface Props { }
 
@@ -51,19 +53,22 @@ const Wallet: React.FC<Props> = (props) => {
     const findToken = myBalances.filter(e => e.currency.name == chartName);
 
     if (findToken.length > 0) {
-      const hist = findToken[0].history as {[key: string]: number};
+      const hist = findToken[0].history as {[key: string]: {today: number, yesterday: number}};
 
       if (hist) {
         const today = new Date();
         const cData: any[] = [];
+
+        let lastValue: any = 0;;
         
         for (let i = 0; i < chartDays; i++) {
           const key = today.toDateString();
 
           if (hist[key]) {
-            cData.push({ name: key, value: hist[key] })
+            lastValue = hist[key].yesterday;
+            cData.push({ name: key, value: hist[key].today })
           } else {
-            cData.push({ name: key, value: 0 })
+            cData.push({ name: key, value: lastValue})
           }
           
           today.setDate(today.getDate() - 1);
@@ -100,13 +105,12 @@ const Wallet: React.FC<Props> = (props) => {
   }, []);
   
   const transakCloseEvents = useCallback((data: any) => {
-    console.log(data);
     transakClient?.close();
     setTransakInstance(undefined);
   }, [transakClient]);
 
   const transakSucessEvents = useCallback((data: any) => {
-    console.log(data);
+ 
     transakClient?.close();
     setTransakInstance(undefined);
   }, [transakClient]);
@@ -115,7 +119,7 @@ const Wallet: React.FC<Props> = (props) => {
   useEffect(useCallback(
     () => {
       if(transakClient != null) {
-        console.log('inicializando eventos do transakSDK');
+        // console.log('inicializando eventos do transakSDK');
         // transakClient.on(transakClientALL_EVENTS, transakAllEvents);
         // transakClient.on(transakClient.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
         // transakClient.on(transakClient.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
@@ -164,7 +168,7 @@ const Wallet: React.FC<Props> = (props) => {
                 <Link to={`/history/order/account/${account}`} style={{textDecoration: 'none'}}>
                   <HistoryState state={{
                     value: "Order history",
-                    bgColor: "#0A8FDC",
+                    bgColor: "#ff7149",
                     icon: "/assets/images/dashboard/1_monthly_sales.png",
                     id: 1,
                     type: "Click to Open",
@@ -176,7 +180,7 @@ const Wallet: React.FC<Props> = (props) => {
                 <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
                   <HistoryState state={{
                     value: "Transaction history",
-                    bgColor: "#9E49E6",
+                    bgColor: "#c52b00",
                     icon: "/assets/images/dashboard/1_monthly_sales.png",
                     id: 2,
                     type: "Click to Open",
@@ -222,6 +226,7 @@ const Wallet: React.FC<Props> = (props) => {
           
         </GridContainer>
       </Box>
+      <InfoView />
     </>
   );
 };

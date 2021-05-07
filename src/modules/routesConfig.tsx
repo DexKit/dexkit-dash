@@ -5,6 +5,7 @@ export interface IconProps {
   src: string;
   type: 'svg' | 'png' | 'jpg';
 }
+
 export interface NavItemProps {
   id: string;
   messageId: string;
@@ -53,17 +54,17 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'Token',
             type: 'item',
             icon: 'storage',
-            url: '/dashboard/token',
+            url: `/dashboard/token/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
           },
   
-          {
+         /* {
             id: 'kit',
             title: 'Kit\'s',
             messageId: 'sidebar.app.kits',
             type: 'item',
             icon: 'build',
             url: '/dashboard/kits',
-          },
+          },*/
         ],
       },
       {
@@ -79,13 +80,13 @@ const useRoutesConfig = (): NavItemProps[]  => {
             type: 'collapse',
             icon: 'all inclusive',
             children: [
-              {
+             /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/overview`,
-              },
+              },*/
               {
                 id: 'tokens',
                 title: 'Token Explorer',
@@ -93,13 +94,13 @@ const useRoutesConfig = (): NavItemProps[]  => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer`,
               },
-              {
+             /* {
                 id: 'pool-explorer',
                 title: 'Pool Explorer',
                 messageId: 'sidebar.protocols.pool-explorer',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pool-explorer`,
-              },
+              },*/
               {
                 id: 'pair-explorer',
                 title: 'Pair Explorer',
@@ -120,13 +121,13 @@ const useRoutesConfig = (): NavItemProps[]  => {
               type: 'svg'
             },
             children: [
-              {
+            /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
-              },
+              },*/
               {
                 id: 'tokens',
                 title: 'Token Explorer',
@@ -150,6 +151,46 @@ const useRoutesConfig = (): NavItemProps[]  => {
               },
             ],
           },
+          {
+            id: 'sushiswap',
+            title: 'SushiSwap',
+            messageId: 'sidebar.protocols.sushiswap',
+            type: 'collapse',
+            icon: {
+              src: 'sushiswap.svg',
+              type: 'svg'
+            },
+            children: [
+            /*  {
+                id: 'overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
+              },*/
+              {
+                id: 'tokens',
+                title: 'Token Explorer',
+                messageId: 'sidebar.protocols.token-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.SUSHISWAP}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_TOKEN}`,
+              },
+              {
+                id: 'pool-explorer',
+                title: 'Pool Explorer',
+                messageId: 'sidebar.protocols.pool-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.SUSHISWAP}/pool-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`,
+              },
+              {
+                id: 'pair-explorer',
+                title: 'Pair Explorer',
+                messageId: 'sidebar.protocols.pair-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.SUSHISWAP}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_SUSHI_PAIR}`,
+              },
+            ],
+          },
 
           {
             id: '0x-protocol',
@@ -161,27 +202,62 @@ const useRoutesConfig = (): NavItemProps[]  => {
               type: 'svg'
             },
             children: [
-              {
+             /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/overview`,
-              },
+              },*/
               {
                 id: '0x-tokens',
-                title: 'Tokens',
-                messageId: 'common.tokens',
+                title: 'Token Explorer',
+                messageId: 'sidebar.protocols.token-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/tokens`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${process.env.REACT_APP_DEFAULT_ETH_TOKEN_ZRX_PROTOCOL}`,
               },
               {
-                id: 'trades',
-                title: 'Trades',
-                messageId: 'common.trades',
+                id: '0x-pair-explorer',
+                title: 'Pair Explorer',
+                messageId: 'sidebar.protocols.pair-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/trades`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_ZRX_PAIR}`,
               },
+              
+            ],
+          },
+          {
+            id: 'balancer',
+            title: 'Balancer',
+            messageId: 'sidebar.protocols.balancer',
+            type: 'collapse',
+            icon: {
+              src: 'balancer.svg',
+              type: 'svg'
+            },
+            children: [
+             /* {
+                id: 'overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/overview`,
+              },*/
+              {
+                id: 'balancer-tokens',
+                title: 'Token Explorer',
+                messageId: 'sidebar.protocols.token-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.BALANCER}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
+              },
+              {
+                id: 'balancer-pair-explorer',
+                title: 'Pair Explorer',
+                messageId: 'sidebar.protocols.pair-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.BALANCER}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
+              },
+              
             ],
           },
         ],
@@ -291,7 +367,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
            },
          ],
        },*/
-      {
+       {
         id: 'apps',
         title: 'Apps',
         messageId: 'sidebar.externallinks',
@@ -303,7 +379,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.exchange',
             type: 'external',
             icon: 'show_chart',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://exchange.dexkit.com',
           },
           {
             id: 'swap',
@@ -319,7 +395,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.marketplace',
             type: 'external',
             icon: 'storefront',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://demo.nft.dexkit.com',
           },
           {
             id: 'farming',
@@ -327,7 +403,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.farming',
             type: 'external',
             icon: 'fastfood',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://farm.dexkit.com',
           },
         ],
       },
@@ -628,7 +704,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
            },
          ],
        },*/
-      {
+       {
         id: 'apps',
         title: 'Apps',
         messageId: 'sidebar.externallinks',
@@ -640,7 +716,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.exchange',
             type: 'external',
             icon: 'show_chart',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://exchange.dexkit.com',
           },
           {
             id: 'swap',
@@ -656,7 +732,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.marketplace',
             type: 'external',
             icon: 'storefront',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://demo.nft.dexkit.com',
           },
           {
             id: 'farming',
@@ -664,7 +740,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             messageId: 'sidebar.app.farming',
             type: 'external',
             icon: 'fastfood',
-            url: 'https://swap.dexkit.com/#/swap',
+            url: 'https://farm.dexkit.com',
           },
         ],
       },

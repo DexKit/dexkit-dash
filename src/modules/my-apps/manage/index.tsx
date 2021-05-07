@@ -11,9 +11,9 @@ import TotalRewards from './TotalRewards';
 import KitMarket from './kit-market';
 import Ripple from 'assets/images/ripple.png'
 import { onGetMyTokenBalances } from 'redux/actions';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { useWeb3 } from 'hooks/useWeb3';
 import LockUnlock from './LockUnlock';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 const MyApps: React.FC = () => {
   const dispatch = useDispatch();

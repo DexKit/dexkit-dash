@@ -44,3 +44,4 @@ export const ETH_GAS_STATION_API_BASE_URL = 'https://ethgasstation.info';
 export const TOKEN_CONTRACT_ENDPOINT = 'https://api.coingecko.com/api/v3/coins/ethereum/contract/';
 export const TRANSAK_API_URL = `https://api.transak.com/api/v2/currencies/crypto-currencies`;
 export const COINGECKO_TOKENS_URL = `https://tokens.coingecko.com/uniswap/all.json`;
+export const OPENSEA_REST_API = `https://api.opensea.io/api/v1`;

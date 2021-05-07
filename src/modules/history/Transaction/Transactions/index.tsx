@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles, Box, Card, Select} from '@material-ui/core';
 import {useIntl} from 'react-intl';
-import {useWeb3} from 'hooks/useWeb3';
+
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {TransferByAddress} from 'types/app';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {getMyTransfers} from 'services/graphql/bitquery';
 import TransactionTable from './TransactionTable';
+import { useWeb3 } from 'hooks/useWeb3';
+import { TransferByAddress } from 'types/app';
+import { getMyTransfers } from 'services/graphql/bitquery';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   selectBox: {
@@ -51,6 +52,12 @@ const Transactions: React.FC<Props> = (props) => {
   const [filterValue, setFilterValue] = useState('all');
   const [data, setData] = useState<TransferByAddress[]>([]);
   const [tableData, setTableData] = useState<TransferByAddress[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [total, setTotal] = useState<number>(0);
+
 
   const handleChange = (event: React.ChangeEvent<{value: unknown}>) => {
     setFilterValue(event.target.value as string);
@@ -68,14 +75,17 @@ const Transactions: React.FC<Props> = (props) => {
  
   useEffect(() => {
     if (props.type == 'account') {
-      getMyTransfers(GET_NETWORK_NAME(chainId), props.address, 15, 0, null, null)
-        .then(orders => {
-          setData(orders);
-          setTableData(orders);
+      setIsLoading(true)
+      getMyTransfers(GET_NETWORK_NAME(chainId), props.address, rowsPerPage, page*rowsPerPage, null, null)
+        .then(data => {
+          setTotal(data.total)
+          setData(data.transfers);
+          setTableData(data.transfers);
+          setIsLoading(false)
         })
-        .catch(e => console.log(e))
+        .catch(e => setIsLoading(false))
     }
-  }, [props, chainId]);
+  }, [props, chainId, page, rowsPerPage]);
 
   return (
     <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
@@ -99,7 +109,17 @@ const Transactions: React.FC<Props> = (props) => {
             </Select>
           </Box>
         </Box>
-        <TransactionTable data={tableData} />
+        <TransactionTable 
+            data={tableData} 
+            isLoading={isLoading} 
+            total={total}
+            page={page}
+            perPage={rowsPerPage}
+            onChangePage={(newPage)=> setPage(newPage)}
+            onChangePerPage={(newPerPage)=> setRowsPerPage(newPerPage)} 
+        
+        
+        />
       </Card>
     </Box>
   );

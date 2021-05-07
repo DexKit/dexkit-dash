@@ -106,5 +106,25 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: '2.5rem',
     height: '2.5rem',
   },
+  wallet: {
+    verticalAlign: 'middle',
+    display: 'inline-block',
+    height: '100%',
+    width: '28.6%',
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
+  },
+  badgeRoot: {
+    display: 'flex',
+    padding: '3px 10px',
+    borderRadius: 4,
+    margin: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 export default useStyles;

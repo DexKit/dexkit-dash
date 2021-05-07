@@ -1,29 +1,66 @@
 import React from 'react';
-import { GridContainer } from "@crema";
-import { Breadcrumbs, Grid, Link, Typography } from "@material-ui/core";
+import {GridContainer} from '@crema';
+import {
+  Breadcrumbs,
+  Grid,
+  Link,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 interface Props {
-  history: {url: string, name: string}[];
+  history: {url: string; name: string}[];
   active: string;
   title: string;
 }
 
-const PageTitle: React.FC<Props> = (props) => { 
+const PageTitle: React.FC<Props> = (props) => {
+  const useStyles = makeStyles((theme: CremaTheme) => ({
+    breadcrumbs: {
+      fontSize: '16px',
+      [theme.breakpoints.down('sm')]: {
+        fontSize: '15px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        fontSize: '13px',
+      },
+    },
+    title: {
+      marginTop: '10px',
+      fontSize: '24px',
+      fontWeight: 600,
+      [theme.breakpoints.down('sm')]: {
+        fontSize: '22px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        fontSize: '20px',
+      },
+    },
+  }));
+
+  const classes = useStyles();
 
   return (
     <GridContainer>
       <Grid item xs={12} md={12}>
-        <Breadcrumbs aria-label="breadcrumb">
-          {
-            props.history.map(e => <Link key={e.name} color="inherit" href={e.url}>{e.name}</Link>)
-          }
-          <Typography color="textPrimary">{props.active}</Typography>
+        <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
+          {props.history.map((e) => (
+            <Link key={e.name} color='inherit' href={e.url}>
+              {e.name}
+            </Link>
+          ))}
+          <Typography className={classes.breadcrumbs} color='textPrimary'>
+            {props.active}
+          </Typography>
         </Breadcrumbs>
-        <Typography variant="h4" color="textPrimary">{props.title}</Typography>
+
+        <Typography className={classes.title} color='textPrimary'>
+          {props.title}
+        </Typography>
       </Grid>
     </GridContainer>
   );
-
-}
+};
 
 export default PageTitle;

@@ -9,12 +9,16 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import GeneralForm from './generalForm';
-import ThemeForm from './themeForm';
-import CollectionsForm from './collectionsForm';
-import { Collection } from '@types';
 import { AppState } from 'redux/store';
 import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
+import { AggregatorConfig, AggregatorGeneralConfig, AggregatorLinks, AggregatorWallet, TokenFeeProgramConfig } from '@types';
+
+import TokensForm from './token';
+import GeneralForm from './general';
+import ThemeForm from './themeForm';
+import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+import { GridContainer } from '@crema';
+import { Breadcrumbs, Grid, Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,31 +40,69 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function getSteps() {
-  return ['Select  App', 'Configure APP', 'Confirm and Deploy'];
+  return ['General',  'Tokens', 'Links', 'Wallets and Deploy'];
 }
 
-export enum WizardData{
-  CONTACT= 'contact',
-  THEME = 'theme',
-  COLLECTIONS = 'collections'
+export enum WizardData {
+  GENERAL = 'general',
+  TOKENS = 'token_fee_program',
+  CONTACT = 'links',
+  WALLET = 'wallets',
+}
+export interface WizardProps {
+  config: AggregatorConfig;
+  //method to change form values
+  changeIssuerForm: (key: WizardData, value: any) => void;
+  validator: (isValid: boolean) => void;
+  isValid: boolean;
 }
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps) {
-  const {form, changeIssuerForm} = wizardProps;
+  const {config, changeIssuerForm, validator, isValid} = wizardProps;
   switch (step) {
     case 0:
-      return <GeneralForm title={label} />;
+      const initState: AggregatorGeneralConfig = {
+        name: '',
+        logo: '',
+        logo_dark: '',
+        domain: '',
+        feeRecipient: '',
+        buyTokenPercentage: '0',
+        brand_color: '#FFFF',
+        brand_color_dark: '#313541',
+        support_bsc: false,
+        bsc_as_default: false,
+        fee_waive_for_default_token: false,
+        is_dark_mode: false,
+        hide_powered_by_dexkit: false,
+        default_token_list: '',
+        affiliateAddress: '',
+        default_token_address: '',
+        default_token_address_bsc: '',
+      };
+      const data: AggregatorGeneralConfig = config != null && 'name' in config ? { ...config} as AggregatorGeneralConfig : initState;
+      type k = keyof typeof data;
+      const _isValid = Object.keys(data).reduce((acu, cur) => acu && data[cur as k] == true, true);
+      return (
+      <GeneralForm 
+        title={label}
+        data={data}
+        changeIssuerForm={changeIssuerForm}
+        validator={validator}
+        isValid={_isValid ?? isValid} 
+      />
+    );
     case 1:
       return <ThemeForm themeName={'Tema teste'}/>;
     case 2:{
-      const data = form.get(Object.values(WizardData)[step])?.valueOf() as string;
-      const collections: Collection[] = JSON.parse(data) as Collection[];
       return (
-        <CollectionsForm 
-        title={label} 
-        collections={ collections ?? []} 
-        changeIssuerForm={changeIssuerForm}
-        form={form}
+        <TokensForm 
+          title={label} 
+          data={ config.token_fee_program ?? []} 
+          changeIssuerForm={changeIssuerForm}
+          config={config}
+          validator={validator}
+          isValid={isValid}
         />
       );
     }
@@ -75,15 +117,9 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
   }
 
 }
-
-export interface WizardProps {
-  form: FormData;
-  //method to change form values
-  changeIssuerForm: (key: string, value: any) => void;
-}
-
 interface SubmitProps{
-  data: FormData | Object;
+  data: AggregatorConfig;
+  valid: boolean;
 }
 
 interface ButtonNavigationProps {
@@ -96,20 +132,22 @@ interface ButtonNavigationProps {
 const SubmitComponent: React.FC<SubmitProps> = (props) => {
   const classes = useStyles();
   const [isLoading, setLoading] = useState(false);
-  const { data } = props;
+  const { data, valid } = props;
   const submit = ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
     //send data
-    if(!isLoading){
+    if(!isLoading && valid && Object.keys(data).length > 0){
       setLoading(true);
       setTimeout(function(){
         console.log('sucess!', data);
         setLoading(false);
       },2000);
+    } else if(!valid){
+      //mostra uma mensagem de alerta
     }
   }
   return (
     <Button
-      disabled={isLoading}
+      disabled={isLoading || !valid}
       variant="contained"
       color="primary"
       onClick={submit}
@@ -123,7 +161,7 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
   const { handleBack, handleNext, ButtonBackText, ButtonNextText } = props;
   const classes = useStyles();
   return (
-    <div className={classes.actionsContainer}>
+    <div className={classes.actionsContainer}>      
       <div>
         <Button
           disabled={handleBack == null}
@@ -147,7 +185,8 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
 }
 
 export default function VerticalLinearStepper() {
-  const [form, setForm] = useState(new FormData()) ;
+  const [data, setData] = useState<AggregatorConfig>();
+  const [isValid, setValid] = useState(false);
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -165,45 +204,79 @@ export default function VerticalLinearStepper() {
     setActiveStep(0);
   };
 
-  const updateForm = useCallback(
-    (key: string, value: any) => {
+  const validator = useCallback((_isValid: boolean) => {
+    setValid(_isValid);
+  }, [setValid]);
+
+  const updateData = 
+    (
+      key: WizardData,
+      value: AggregatorGeneralConfig | TokenFeeProgramConfig[] | AggregatorLinks | AggregatorWallet
+    ) => {
       const dataType = Object.values(WizardData).find( e => e === key);
-      if(dataType != null){
-        form.set(key, JSON.stringify(value));
-        setForm(form);
-      }
+      // console.log('updateData', data);
+      switch(dataType){
+        case WizardData.GENERAL: {
+          if(data == null){
+            setData({ ...value } as AggregatorConfig);
+          } else{
+            type k = keyof typeof value;
+            Object.keys(value)
+            .forEach( _key => {
+              data[(_key as k) ] = value[(_key as k)]
+            });
+            setData(data);
+          }
+          console.log('updateData', data);
+          break;
+        }
+        case WizardData.CONTACT: 
+        case WizardData.TOKENS:
+        case WizardData.WALLET: {
+          if(data != null){
+            setData({
+              ...data,
+              [key]: value
+            })
+          }
+        }
+      };
     }
-    , [form, setForm]);
 
   useEffect(() => {
     dispatch(onGetConfigFile());
   }, [ dispatch ]);
-
-  useEffect(() => {
-    Object.values(WizardData)
-    .forEach( t => form.append(t, '[]'));
-    setForm(form);
-  }, []);
 
   const { configFile } = useSelector<AppState, AppState['configFile']>(
     ({ configFile }) => configFile
   );
 
   console.log('configFile', configFile);
-
   return (
     <div className={classes.root}>
+
+      <GridContainer>
+        <Grid item xs={12} md={12}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" href="/my-apps/exchange">My Apps</Link>
+            <Typography color="textPrimary">Wizard</Typography>
+          </Breadcrumbs>
+          <Typography variant="h4" color="textPrimary">AGGREGATOR</Typography>
+        </Grid>
+      </GridContainer>
+
+
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(activeStep, label, { form, changeIssuerForm: updateForm })}
+              {getStepContent(activeStep, label, { config: (data ?? {}) as AggregatorConfig, changeIssuerForm: updateData, validator, isValid })}
               <ButtonNavigation
                 ButtonBackText="Back"
                 ButtonNextText={activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                 handleBack={activeStep === 0 ? undefined : handleBack}
-                handleNext={activeStep >= steps.length ? undefined : handleNext} />
+                handleNext={activeStep >= steps.length || !isValid ? undefined : handleNext} />
             </StepContent>
           </Step>
         ))}
@@ -214,7 +287,7 @@ export default function VerticalLinearStepper() {
           <Button onClick={handleReset} className={classes.button}>
             Reset
           </Button>
-          <SubmitComponent data={form} />
+          <SubmitComponent data={(data ?? {}) as AggregatorConfig} valid={isValid}/>
         </Paper>
       )}
     </div>

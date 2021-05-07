@@ -216,6 +216,56 @@ export interface SocialNetworks {
   youtube_url?: string;
   medium_url?: string;
 }
+
+export interface TokenFeeProgramConfig{
+  token_address: string;
+  token_amount: string;
+  buyTokenPercentage: string;
+}
+
+export interface AggregatorLinks{
+  about?: string,
+  code?: string,
+  docs?: string,
+  discord?: string,
+  telegram?: string,
+  analytics?: string
+}
+
+export interface AggregatorWallet{
+  fortmatic?: string,
+  portis?: string; 
+}
+
+type AllValues<T> = {
+  [P in keyof T]: { key: P, value: T[P] }
+}[keyof T];
+
+export interface AggregatorGeneralConfig{
+    name: string;
+    logo: string;
+    logo_dark: string;
+    domain: string;
+    feeRecipient: string;
+    buyTokenPercentage: string;
+    brand_color: string;
+    brand_color_dark: string;
+    support_bsc?: boolean;
+    bsc_as_default?: boolean;
+    fee_waive_for_default_token?: boolean;
+    is_dark_mode?: boolean;
+    hide_powered_by_dexkit?: boolean;
+    default_token_list?: string;
+    affiliateAddress: string;
+    default_token_address?: string;
+    default_token_address_bsc?: string;
+}
+
+export interface AggregatorConfig extends AggregatorGeneralConfig {
+  token_fee_program?: TokenFeeProgramConfig[];
+  links?: AggregatorLinks;
+  wallets?: AggregatorWallet;
+}
 export interface GeneralConfig {
   title?: string;
   icon?: string;

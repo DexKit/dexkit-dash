@@ -66,15 +66,62 @@ export enum CoinIcons {
   RIPPLE = 'assets/images/ripple.png'
 }
 
-export enum EXCHANGE {
-  UNISWAP = 'uniswap',
-  ZEROX = 'zerox',
-  PANCAKE = 'pancake',
-  ALL = 'all'
-}
 
 export enum NETWORK {
   ETHEREUM = 'ethereum',
   BSC = 'bsc',
   BSCTEST = 'bsc_testnet'
+}
+
+export enum EthereumNetwork {
+  bsc = "bsc",
+  bsc_testnet = "bsc_testnet",
+  celo_alfajores = "celo_alfajores",
+  celo_baklava = "celo_baklava",
+  celo_rc1 = "celo_rc1",
+  ethclassic = "ethclassic",
+  ethclassic_reorg = "ethclassic_reorg",
+  ethereum = "ethereum",
+  goerli = "goerli",
+}
+
+export enum EXCHANGE {
+  // ethereum
+  UNISWAP = 'Uniswap',
+  SUSHISWAP = 'SushiSwap',
+  ZEROX = 'Zerox Exchange',
+  CURVE = 'Curve',
+  BALANCER = 'Balancer',
+  BANCOR_NETWORK = 'Bancor Network',
+  KYBER_NETWORK = 'Kyber Network',
+  //bsc
+  PANCAKE = 'Pancake',
+  ALL = 'all'
+}
+
+export enum EXCHANGE_NAME_ON_URL {
+  // ethereum
+  UNISWAP = 'uniswap',
+  SUSHISWAP = 'sushiswap',
+  ZEROX = '0x-protocol',
+  CURVE = 'curve',
+  BALANCER = 'balancer',
+  BANCOR_NETWORK = 'bancor-network',
+  KYBER_NETWORK = 'kyber-network',
+  //bsc
+  PANCAKE = 'pancake',
+  ALL = 'all'
+}
+
+export enum PROTOCOL {
+  // ethereum
+  UNISWAP_V2 = 'Uniswap v2',
+  ZEROX_V3 = 'Zerox Exchange v3',
+  BANCOR_V2 = 'Bancor Network v2',
+  CURVE = 'Curve',
+  BALANCER =  'Balancer Pool Token',
+  DODO =  'DODO',
+  //bsc
+  PANCAKE = 'Pancake',
+  ALL = ''
 }

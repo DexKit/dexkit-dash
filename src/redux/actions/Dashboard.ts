@@ -17,12 +17,14 @@ import {
 import { OverviewDataProvider } from 'modules/dashboard/Overview';
 import { GetFeed, OverviewDataProviderImp } from 'services/dashboard';
 import { getDefiBalances } from 'services/defi';
-import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
+
 import { BitqueryAddress } from 'types/bitquery/address.interface';
 import { GraphQLError } from 'graphql';
 import { MyBalance } from 'types/bitquery/myBalance.interface';
 import { getTokens } from 'services/rest/coingecko';
 import { NETWORK } from 'shared/constants/AppEnums';
+import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
+
 
 
 export const onGetAnalyticsData = () => {
@@ -146,7 +148,7 @@ export const onGetReportCardsData = () => {
 };
 
 export const onGetNewsData = () => {
-  // const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+ //  const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
   const CORS_PROXY = "";
   const url = new URL(`${CORS_PROXY}https://cointelegraph.com/rss`);
   return (dispatch: Dispatch<AppActions>) => {
@@ -169,23 +171,28 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
       if(!balances.loading && balances.data) {
 
         const addresses = balances.data.ethereum.address[0].balances.map(e => e.currency.address);
-
         getTokens(addresses).then(tokens => {
           const all = balances.data.ethereum.address[0].balances.map(e => {
             const key = e.currency.address == '-' ? 'eth' : e.currency.address;
 
             const currency = Object.assign({}, e.currency);
-            currency.image = tokens[key]?.image.large;
+            currency.image = tokens[key]?.image;
 
             let history;
 
             if (e.history) {
-              history = (e.history as []).reduce<{[key: string]: number}>((acc: any, item: any) => {
+              history = (e.history as []).reduce<{[key: string]: {today: number, yesterday: number}}>((acc: any, item: any) => {
                 const key = (new Date(item.timestamp)).toDateString();
+                const yesterday = item.value - item.transferAmount;
+
                 if (acc[key]) {
-                  acc[key] = acc[key] + item.value;
+                  acc[key].value = acc[key].value + item.value;
+                  acc[key].yesterday = yesterday;
                 } else {
-                  acc[key] = item.value;
+                  acc[key] = {
+                    today: item.value,
+                    yesterday: yesterday
+                  }
                 }
                 return acc;
               }, {});  
@@ -195,7 +202,7 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
               currency: currency,
               history: history || {},
               value: e.value,
-              valueUsd: (tokens[key]?.market_data?.current_price?.usd || 0) * e.value 
+              valueUsd: (tokens[key]?.current_price || 0) * e.value 
             }
           });
           

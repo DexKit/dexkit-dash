@@ -7,16 +7,9 @@ import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction } from "s
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
-import { setWeb3State, setEthAccount, setEthBalance, setChainId } from "redux/actions";
+import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber } from "redux/actions";
 import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
-
-export enum Web3Status {
-  Not_Connected,
-  Connecting,
-  Connected,
-  Failure
-}
 
 
 export const useWeb3 = () => {
@@ -25,15 +18,20 @@ export const useWeb3 = () => {
   const ethBalance = useSelector<AppState, AppState['blockchain']['ethBalance']>(state => state.blockchain.ethBalance);
   const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
+  const blocknumber = useSelector<AppState, AppState['blockchain']['blocknumber']>(state => state.blockchain.blocknumber)
 
   
   useEffect(() => {
     const web3 = getWeb3();
+    const provider = getProvider();
+    
     if (web3State === Web3State.Done && web3) {
 
       web3.eth.getChainId().then((n) => {
         dispatch(setChainId(n));
       });
+
+      // subscribeProvider(provider);
 
       web3.eth.getAccounts().then((a) => dispatch(setEthAccount(a[0])));
     }
@@ -65,6 +63,7 @@ export const useWeb3 = () => {
     const web3 = getWeb3();
     if (!web3) {
       dispatch(setWeb3State(Web3State.Connecting));
+
       connectWeb3()
         .then((p) => {
           subscribeProvider(p);
@@ -80,13 +79,13 @@ export const useWeb3 = () => {
     return new Promise<TransactionReceipt>((resolve, reject) => {
       const transaction = web3Transaction(transactionConfig);
       if (transaction != null) {
-        dispatch(setWeb3State(Web3State.Connecting));
+     //   dispatch(setWeb3State(Web3State.Connecting));
         transaction.then(transaction => {
-          dispatch(setWeb3State(Web3State.Done));
+       //   dispatch(setWeb3State(Web3State.Done));
           resolve(transaction)
         })
         .catch(e => {
-          dispatch(setWeb3State(Web3State.Error));
+         // dispatch(setWeb3State(Web3State.Error));
           reject(e);
         });
       }
@@ -114,6 +113,12 @@ export const useWeb3 = () => {
       dispatch(setChainId(chainId));
     });
 
+
+    pr.on("block", (blocknumber: number) => {
+      console.log('blocknumber', blocknumber);
+      dispatch(setBlockNumber(blocknumber));
+    });
+
     /*provider.on("networkChanged", async (networkId: number) => {
       const chainId = await web3.eth.chainId();
       await this.setState({ chainId, networkId });
@@ -122,6 +127,6 @@ export const useWeb3 = () => {
   };
 
 
-  return { onConnectWeb3, getWeb3, account, chainId, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction }
+  return { onConnectWeb3, getWeb3, account, chainId, blocknumber, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction }
 
 }

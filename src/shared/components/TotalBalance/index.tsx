@@ -9,8 +9,9 @@ import {MyBalance} from 'types/bitquery/myBalance.interface';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
+import SendIcon from '@material-ui/icons/Send';
 
-
+import CallReceivedIcon from '@material-ui/icons/CallReceived';
 interface TotalBalanceProps {
   balances: MyBalance[];
 }
@@ -20,18 +21,21 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
   const [receiverModal, setReceiverModal] = useState(false);
 
   const usdAvailable = balances.reduce((acc, current) => {
-    return acc += current.valueUsd || 0;
+    return (acc += current.valueUsd || 0);
   }, 0);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
-      backgroundColor: 'white',
-      color: 'black',
-      fontFamily: Fonts.LIGHT,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+      fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 96,
       fontSize: 16,
-      '&:hover, &:focus': {backgroundColor: 'white', color: 'black'},
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.dark,
+        color: 'white',
+      },
       lineHeight: '16px',
       [theme.breakpoints.up('sm')]: {
         lineHeight: '20px',
@@ -43,12 +47,31 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
     btnPrimary: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
-      fontFamily: Fonts.LIGHT,
+      fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 96,
       fontSize: 16,
       '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
+        color: 'white',
+      },
+      lineHeight: '16px',
+      [theme.breakpoints.up('sm')]: {
+        lineHeight: '20px',
+      },
+      [theme.breakpoints.up('xl')]: {
+        lineHeight: '26px',
+      },
+    },
+    btnSecondary: {
+      backgroundColor: theme.palette.secondary.main,
+      color: 'white',
+      fontFamily: Fonts.BOLD,
+      textTransform: 'capitalize',
+      width: 96,
+      fontSize: 16,
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.secondary.dark,
         color: 'white',
       },
       lineHeight: '16px',
@@ -62,26 +85,24 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
   }));
 
   const classes = useStyles();
-  console.log('TotalBalance loaded');
 
   return (
     <Box>
-      <Box
-        py={{xs: 5, sm: 5, xl: 5}}
-        px={{xs: 6, sm: 6, xl: 6}}
-        style={{backgroundColor: indigo[500]}}
-        clone>
+      <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
         <Card>
           <Box
-            mb={{xs: 3, md: 6, xl: 8}}
+            mb={3}
             display='flex'
-            flexDirection={{xs: 'column', xl: 'row'}}
-            alignItems={{xl: 'center'}}>
-            <Box display='flex' alignItems='center'>
+            // flexDirection={{xs: 'column', xl: 'row'}}
+            alignItems={{xl: 'center'}}
+            flexDirection={'row'}
+            flexWrap={'wrap'}
+            justifyContent={'space-between'}>
+            <Box display='flex' alignItems='center' mr={2}>
               <Box
                 component='h3'
-                color='primary.contrastText'
-                fontFamily={Fonts.LIGHT}
+                color='text.primary'
+                fontFamily={Fonts.BOLD}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
                 ${usdAvailable.toFixed(2)}
               </Box>
@@ -100,13 +121,16 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button onClick={() => setSenderModal(true)}  className={classes.root}>
-                  <IntlMessages id='common.send' />
+                <Button
+                  onClick={() => setSenderModal(true)}
+                  className={classes.root}>
+                  <IntlMessages id='common.send' /> {'   '}
+                  <SendIcon />
                 </Button>
               </Box>
               <Box ml={3}>
-                <Button onClick={() => setReceiverModal(true)}  className={classes.btnPrimary}>
-                  <IntlMessages id='common.receive' />
+                <Button onClick={() => setReceiverModal(true)}  className={classes.btnSecondary}>
+                  <IntlMessages id='common.receive' />{' '} <CallReceivedIcon/>
                 </Button>
               </Box>
             </Box>
@@ -118,16 +142,19 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
             color={indigo[100]}>
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
-          <Box pt={{xl: 5}}>
+          <Box pt={{lg: 5}}>
             <CoinsInfo coins={balances} />
           </Box>
         </Card>
       </Box>
-      
-      <Sender open={senderModal} onClose={() => setSenderModal(false)} balances={balances} />
-      
-      <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
 
+      <Sender
+        open={senderModal}
+        onClose={() => setSenderModal(false)}
+        balances={balances}
+      />
+
+      <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
     </Box>
   );
 };

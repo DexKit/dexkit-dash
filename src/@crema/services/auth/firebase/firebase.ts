@@ -16,9 +16,11 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+
+
 // const analytics = firebase.analytics();
 const auth = firebase.auth();
-const messaging = firebase.messaging();
+//const messaging = firebase.messaging();
 
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 const githubAuthProvider = new firebase.auth.GithubAuthProvider();
@@ -27,19 +29,19 @@ const twitterAuthProvider = new firebase.auth.TwitterAuthProvider();
 
 const getPushNotificationToken = async (serviceWorkerRegistration?: ServiceWorkerRegistration) => {
   const item = localStorage.getItem('notification-token');
-  const token = item == null || item?.length == 0 ?
+  /*const token = item == null || item?.length == 0 ?
     await messaging.getToken({
       vapidKey: process.env.REACT_APP_FIREBASE_VAPIDKEY,
       // serviceWorkerRegistration
-    }) : item;
-  console.log('token', token);
-  localStorage.setItem('notification-token', token);
-  return token;
+    }) : item;*/
+ /* console.log('token', token);
+  localStorage.setItem('notification-token', token);*/
+  return '';
 }
 
 export {
   auth,
-  messaging,
+ // messaging,
   googleAuthProvider,
   githubAuthProvider,
   facebookAuthProvider,

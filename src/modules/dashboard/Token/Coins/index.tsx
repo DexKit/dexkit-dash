@@ -30,7 +30,7 @@ const Coins: React.FC<Props> = ({coinsData}) => {
         <Grid item xs={12} sm={4}>
           <CoinStats
             icon={Etherium}
-            bgColor={blue[500]}
+            bgColor={'#ff7149'}
             data={coinsData.etherium}
             heading={<IntlMessages id='Marketplace' />}
           />

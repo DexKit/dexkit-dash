@@ -49,7 +49,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   component='p'
                   color={grey[500]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 11, sm: 12, xl: 13}}>
+                  fontSize={{xs: 12, sm: 12, xl: 13}}>
                   {messages['app.transferCount']}
                 </Box>
                 <Box
@@ -58,7 +58,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   style={{padding: 0}}
                   color={grey[700]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 14, sm: 16, xl: 18}}>
+                  fontSize={{xs: 16, sm: 16, xl: 18}}>
                   {data.transferCount}
                 </Box>
               </Box>
@@ -84,7 +84,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   component='p'
                   color={grey[500]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 11, sm: 12, xl: 13}}>
+                  fontSize={{xs: 12, sm: 12, xl: 13}}>
                   {messages['app.uniqSenders']}
                 </Box>
                 <Box
@@ -93,7 +93,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   style={{padding: 0}}
                   color={grey[700]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 14, sm: 16, xl: 18}}>
+                  fontSize={{xs: 16, sm: 16, xl: 18}}>
                   {data.uniqSenders}
                 </Box>
               </Box>
@@ -119,7 +119,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   component='p'
                   color={grey[500]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 11, sm: 12, xl: 13}}>
+                  fontSize={{xs: 12, sm: 12, xl: 13}}>
                   {messages['app.uniqReceivers']}
                 </Box>
                 <Box
@@ -128,7 +128,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   style={{padding: 0}}
                   color={grey[700]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 14, sm: 16, xl: 18}}>
+                  fontSize={{xs: 16, sm: 16, xl: 18}}>
                   {data.uniqReceiver}
                 </Box>
               </Box>
@@ -154,7 +154,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   component='p'
                   color={grey[500]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 11, sm: 12, xl: 13}}>
+                  fontSize={{xs: 12, sm: 12, xl: 13}}>
                   {messages['app.totalAmount']}
                 </Box>
                 <Box
@@ -163,7 +163,7 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
                   style={{padding: 0}}
                   color={grey[700]}
                   fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 14, sm: 16, xl: 18}}>
+                  fontSize={{xs: 16, sm: 16, xl: 18}}>
                   {data.totalAmount}
                 </Box>
               </Box>

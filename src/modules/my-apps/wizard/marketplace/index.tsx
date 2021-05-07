@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -15,11 +15,8 @@ import CollectionsForm from './collectionsForm';
 import TokensForm from './tokensForm';
 
 import { Collection, GeneralConfig, TokenMetaData } from '@types';
-import { AppState } from 'redux/store';
-import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
 import { GridContainer } from '@crema';
-import { Box, Breadcrumbs, Grid, Link } from '@material-ui/core';
-import { Fonts } from 'shared/constants/AppEnums';
+import { Breadcrumbs, Grid, Link } from '@material-ui/core';
 
 import { useWeb3 } from 'hooks/useWeb3';
 
@@ -27,6 +24,7 @@ import { eip712Utils } from '@0x/order-utils';
 import { MetamaskSubprovider } from '@0x/subproviders';
 import { EIP712TypedData } from '@0x/types';
 import { Web3Wrapper } from '@0x/web3-wrapper';
+import { onGetConfigFile } from 'redux/actions';
 
 
 
@@ -101,7 +99,8 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
 
       const fields: GeneralConfig = JSON.parse(data || JSON.stringify(social)) as GeneralConfig;
       return (
-        <GeneralForm 
+        <GeneralForm
+          key={'generalForm'} 
           title={label}
           fields={fields} 
           changeIssuerForm={changeIssuerForm}
@@ -117,6 +116,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       const collections: Collection[] = JSON.parse(data) as Collection[];
       return (
         <CollectionsForm 
+        key={'collectionsForm'}
         title={label} 
         collections={ collections ?? []}
         changeIssuerForm={changeIssuerForm}
@@ -130,7 +130,8 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       const data = form.get(Object.values(WizardData)[step])?.valueOf() as string;
       const tokens: TokenMetaData[] = JSON.parse(data) as TokenMetaData[];
       return (
-        <TokensForm 
+        <TokensForm
+          key={"tokensForm"} 
           title={label} 
           tokens={ tokens ?? []}
           changeIssuerForm={changeIssuerForm}
@@ -173,7 +174,6 @@ const SubmitComponent: React.FC<SubmitProps> = (props) => {
         });
         var json = JSON.stringify(object);
 
-        console.log(json);
         try {
           if (account) {
             const ethAccount = account ;
@@ -231,7 +231,6 @@ const SubmitComponent: React.FC<SubmitProps> = (props) => {
         //   signature,
         //   owner,
         // };
-        console.log('sucess!', data);
         setLoading(false);
       },2000);
     }
@@ -292,8 +291,8 @@ export default function VerticalLinearStepper() {
 
   const validator = useCallback((_isValid: boolean) => {
     setValid(_isValid);
-    console.log('setValid', _isValid);
-  }, []);
+  }, [setValid]);
+  
   const updateForm = useCallback(
     (key: string, value: any) => {
       const dataType = Object.values(WizardData).find( e => e === key);
@@ -314,11 +313,9 @@ export default function VerticalLinearStepper() {
     setForm(form);
   }, []);
 
-  const { configFile } = useSelector<AppState, AppState['configFile']>(
-    ({ configFile }) => configFile
-  );
-
-  console.log('configFile', configFile);
+  // const { configFile } = useSelector<AppState, AppState['configFile']>(
+  //   ({ configFile }) => configFile
+  // );
 
   return (
     <div className={classes.root}>
@@ -351,7 +348,7 @@ export default function VerticalLinearStepper() {
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>Reset</Button>
+          <Button onClick={handleReset} className={classes.button}>Review</Button>
           <SubmitComponent data={form} />
         </Paper>
       )}

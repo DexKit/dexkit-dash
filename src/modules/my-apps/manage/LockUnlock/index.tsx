@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useHistory } from 'react-router';
 import {Box, Button, Card} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
@@ -51,34 +51,62 @@ interface Props {
   balances: MyBalance[];
 }
 
-const LockUnlock: React.FC<Props> = (props) => {
+const LockUnlock: React.FC<Props> = ({balances}) => {
   // const [senderModal, setSenderModal] = useState(false);
   // const [receiverModal, setReceiverModal] = useState(false);
 
   const history = useHistory();
   const classes = useStyles();
 
+  const [kit, setKit] = useState<MyBalance[]>([]);
+  const [usd, setUsd] = useState<number>(0);
+
+  useEffect(() => {
+    const search = balances.filter(e => e.currency.symbol == 'KIT');
+
+    if (search.length > 0) {
+      setKit(search);
+      setUsd(search[0].valueUsd||0);
+    } else {
+      setKit([
+        {
+          currency: {
+            address: '',
+            decimals: 18,
+            name: 'DexKit',
+            symbol: 'KIT',
+            tokenType: ''
+          },
+          value: 0,
+          valueUsd: 0
+        }
+      ])
+    }
+  }, [balances]);
 
   return (
-    <Box>
+    <>
       <Box
         py={{xs: 5, sm: 5, xl: 5}}
         px={{xs: 6, sm: 6, xl: 6}}
-        style={{backgroundColor: indigo[500]}}
+        style={{backgroundColor: indigo[500], height: '100%'}}
         clone>
         <Card>
           <Box
-            mb={{xs: 3, md: 6, xl: 8}}
+            mb={3}
             display='flex'
-            flexDirection={{xs: 'column', xl: 'row'}}
-            alignItems={{xl: 'center'}}>
-            <Box display='flex' alignItems='center'>
+            // flexDirection={{xs: 'column', xl: 'row'}}
+            flexDirection={'row'}
+            flexWrap={'wrap'}
+            alignItems={{xl: 'center'}}
+            justifyContent={'space-between'}>
+            <Box display='flex' alignItems='center' mr={2}>
               <Box
                 component='h3'
                 color='primary.contrastText'
                 fontFamily={Fonts.LIGHT}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
-                ${props.balances[0]?.valueUsd?.toFixed(2) || 0}
+                ${usd.toFixed(2)}
               </Box>
               <Box
                 component='span'
@@ -95,24 +123,27 @@ const LockUnlock: React.FC<Props> = (props) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button onClick={() => { history.push('/dashboard/token/') }} className={classes.root}>
+                <Button
+                  onClick={() => {
+                    history.push('/dashboard/token/');
+                  }}
+                  className={classes.root}>
                   <IntlMessages id='common.buy' />
                 </Button>
               </Box>
             </Box>
           </Box>
 
-          <Box pt={{xl: 5}}>
-            <CoinsInfo coins={props.balances} />
+          <Box pt={{lg: 5}}>
+            <CoinsInfo coins={kit} />
           </Box>
         </Card>
       </Box>
-      
-      {/* <Sender open={senderModal} onClose={() => setSenderModal(false)} balances={balances} /> */}
-      
-      {/* <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} /> */}
 
-    </Box>
+      {/* <Sender open={senderModal} onClose={() => setSenderModal(false)} balances={balances} /> */}
+
+      {/* <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} /> */}
+    </>
   );
 };
 

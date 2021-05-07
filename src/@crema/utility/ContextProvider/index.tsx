@@ -32,8 +32,8 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
     if (themeMode === ThemeMode.DARK) {
       currentTheme.palette.type = ThemeMode.DARK;
       currentTheme.palette.background = {
-        paper: '#313541',
-        default: '#393D4B',
+        paper: '#181a1f',
+        default: '#1d2125',
       };
       currentTheme.palette.text = {
         primary: 'rgba(255, 255, 255, 0.87)',

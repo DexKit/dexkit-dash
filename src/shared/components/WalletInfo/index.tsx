@@ -17,7 +17,7 @@ import AppContextPropsType, {
 import { useWeb3 } from 'hooks/useWeb3';
 import { tokenAmountInUnits } from 'utils/tokens';
 import { Web3State } from 'types/blockchain';
-
+import { isMobile } from 'web3modal';
 
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
@@ -58,7 +58,7 @@ const WalletInfo = (props: any) => {
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {
       crUserInfo: {
-        backgroundColor: 'rgba(0,0,0,.08)',
+        backgroundColor: theme.palette.background.default,
         paddingTop: 9,
         paddingBottom: 9,
         minHeight: 56,
@@ -93,7 +93,7 @@ const WalletInfo = (props: any) => {
         [theme.breakpoints.up('xl')]: {
           fontSize: 20,
         },
-        color: themeMode !== 'light' ? '#313541' : 'white',
+        color: 'text.primary',
       },
       designation: {
         textOverflow: 'ellipsis',
@@ -128,7 +128,7 @@ const WalletInfo = (props: any) => {
             <Box mb={0} className={clsx(classes.userName)}>
               {account}
             </Box>
-            <Box ml={3} className={classes.pointer} color={themeMode !== 'light' ? '#313541' : 'white'}>
+            <Box ml={3} className={classes.pointer} color={'text.primary'}>
               <Box component='span' onClick={handleClick}>
                 <ExpandMoreIcon />
               </Box>
@@ -146,7 +146,7 @@ const WalletInfo = (props: any) => {
       }
       {web3State !== Web3State.Done && <Box display='flex' alignItems='center' justifyContent='center'>
          <Button variant="contained" color="primary" onClick={onConnectWeb3}>
-            {web3State === Web3State.Connecting ? 'Connecting... Check Wallet' : 'Connect Wallet'}
+            {web3State === Web3State.Connecting ? (isMobile() ? 'Connecting...' : 'Connecting... Check Wallet') : (isMobile() ? 'Connect' : 'Connect Wallet')}
         </Button>
       </Box>
       }

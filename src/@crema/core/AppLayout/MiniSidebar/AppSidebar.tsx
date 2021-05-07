@@ -10,6 +10,7 @@ import useStyles from './AppSidebar.style';
 import {AppState} from '../../../../redux/store';
 import {Hidden} from '@material-ui/core';
 import clsx from 'clsx';
+import AppLogo from 'shared/components/AppLogo';
 
 interface AppSidebarProps {
   position?: 'left' | 'bottom' | 'right' | 'top' | undefined;
@@ -38,7 +39,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
           style={{position: 'absolute'}}>
           <Box height='100%' className={classes.miniSidebar}>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-              <UserInfo />
+            <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
+             {/*  <UserInfo />*/}
               <PerfectScrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
               </PerfectScrollbar>
@@ -49,7 +51,9 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
       <Hidden mdDown>
         <Box height='100%' className={clsx(classes.miniSidebar, 'app-sidebar')}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-            <UserInfo />
+         {/*   <UserInfo />*/}
+           <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
+
             <PerfectScrollbar className={classes.scrollAppSidebar}>
               <Navigation />
             </PerfectScrollbar>

@@ -13,10 +13,10 @@ import './shared/styles/index.css';
 import './assets/vendors/country-flag/sprite-flags-24x24.css';
 import App from './App';
 import '@crema/services';
-import { 
+/*import { 
   getPushNotificationToken, 
-  // messaging 
-} from '@crema/services/auth/firebase/firebase';
+   messaging 
+} from '@crema/services/auth/firebase/firebase';*/
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { onNotification, addNotification} from 'services/notification';
@@ -37,13 +37,13 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 const onSucessRegistration = (registration: ServiceWorkerRegistration): void => {
-  getPushNotificationToken(registration)
+ /* getPushNotificationToken(registration)
     .then(token => {
       console.log('token notification', token);
       // messaging.onBackgroundMessage((payload) => {
       //   console.log('Received background message ', payload);
       // });
-    })
+    })*/
 };
 
 const broadcast = new BroadcastChannel('push-notification-channel');

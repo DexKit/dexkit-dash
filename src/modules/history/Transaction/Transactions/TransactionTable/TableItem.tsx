@@ -1,16 +1,16 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import {Box, Chip, makeStyles} from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
+import { Chip, makeStyles} from '@material-ui/core';
+
 import TableRow from '@material-ui/core/TableRow';
-import clsx from 'clsx';
-import {Fonts} from '../../../../../shared/constants/AppEnums';
+
 import {CremaTheme} from '../../../../../types/AppContextPropsType';
-import { truncateAddress } from 'utils';
+
+import SearchIcon from '@material-ui/icons/Search';
 import { TransferByAddress } from 'types/app';
 import { useWeb3 } from 'hooks/useWeb3';
-import { ETHERSCAN_API_URL } from '../../../../../shared/constants/AppConst';
-import SearchIcon from '@material-ui/icons/Search';
+import { truncateAddress } from 'utils';
+import { ETHERSCAN_API_URL } from 'shared/constants/AppConst';
 
 
 interface TableItemProps {

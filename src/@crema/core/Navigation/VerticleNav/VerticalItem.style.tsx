@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         textTransform: 'uppercase',
       },
       '&.active': {
-        backgroundColor: 'rgba(0,0,0,.08)',
+        backgroundColor: 'rgba(0,0,0,1)',
         pointerEvents: 'none',
         transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
         '& .nav-item-text': {

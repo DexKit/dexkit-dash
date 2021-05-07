@@ -1,6 +1,7 @@
 import React from 'react';
 // import { CustomRedirect } from './CustomRedirect';
 
+
 export const genericConfigs = [
   {
     routes: [
@@ -51,7 +52,7 @@ export const genericConfigs = [
     routes: [
       {
         path: '/:networkName/protocol-explorer/:exchange/pair-explorer/:address',
-        component: React.lazy(() => import('./pair-explorer')),
+        component: React.lazy(() => import('./generic-pair-explorer')),
         exatch: true
       },
     ],
@@ -61,7 +62,7 @@ export const genericConfigs = [
     routes: [
       {
         path: '/:networkName/protocol-explorer/:exchange/pair-explorer',
-        component: React.lazy(() => import('./pair-explorer')),
+        component: React.lazy(() => import('./generic-pair-explorer')),
       },
     ],
   },

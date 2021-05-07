@@ -39,7 +39,7 @@ export function parseEventContractData(data: any, mint: MintBurn[], burn: MintBu
       return e;
     });
 
-    return all.sort((a,b) => a.block - b.block)
+    return all.sort((a,b) => b.block - a.block)
   }
 
   return [];

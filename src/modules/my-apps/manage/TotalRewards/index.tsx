@@ -5,10 +5,9 @@ import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import {blue, indigo, teal} from '@material-ui/core/colors';
 import {Fonts} from '../../../../shared/constants/AppEnums';
-import Etherium from 'assets/images/etherium.png'
-import Litcoin from 'assets/images/litcoin.png'
-import Ripple from 'assets/images/ripple.png'
-
+import Etherium from 'assets/images/etherium.png';
+import Litcoin from 'assets/images/litcoin.png';
+import Ripple from 'assets/images/ripple.png';
 
 const Coins: React.FC = () => {
   return (
@@ -21,41 +20,41 @@ const Coins: React.FC = () => {
         fontWeight={Fonts.BOLD}>
         <IntlMessages id='Current Collected Total Rewards' />
       </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={3} md={6}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={4} md={6}>
           <CoinStats
             icon={Etherium}
             bgColor={blue[500]}
             data={{
               name: 'Etherium',
               price: '12.0',
-              increment: 0.2
+              increment: 0.2,
             }}
             heading={<IntlMessages id='Aggregator' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={3} md={6}>
+        <Grid item xs={12} sm={4} md={6}>
           <CoinStats
             icon={Litcoin}
             bgColor={indigo[700]}
             data={{
               name: 'Litcoin',
               price: '10.0',
-              increment: -0.2
+              increment: -0.2,
             }}
             heading={<IntlMessages id='Marketplace' />}
           />
         </Grid>
 
-        <Grid item xs={12} sm={3} md={6}>
+        <Grid item xs={12} sm={4} md={6}>
           <CoinStats
             icon={Ripple}
             bgColor={teal[600]}
             data={{
               name: 'Ripple',
               price: '4.0',
-              increment: 0.8
+              increment: 0.8,
             }}
             heading={<IntlMessages id='Exchange' />}
           />

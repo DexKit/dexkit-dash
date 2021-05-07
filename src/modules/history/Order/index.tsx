@@ -2,8 +2,8 @@ import React from 'react';
 import {Grid, Box} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {RouteComponentProps} from 'react-router-dom';
-import PageTitle from 'shared/components/PageTitle';
 import Orders from './Orders';
+import PageTitle from 'shared/components/PageTitle';
 
 
 type Params = {

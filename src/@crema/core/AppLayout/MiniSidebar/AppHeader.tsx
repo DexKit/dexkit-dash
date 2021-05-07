@@ -10,16 +10,22 @@ import LanguageSwitcher from '../../LanguageSwitcher';
 import {toggleNavCollapsed} from '../../../../redux/actions';
 import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
-import SearchBar from '../../SearchBar';
+
 import useStyles from './AppHeader.style';
-import HeaderMessages from '../../HeaderMessages';
+
 import Notifications from '../../Notifications';
-import AppLogo from '../../../../shared/components/AppLogo';
+
 import {Hidden} from '@material-ui/core';
+import WalletInfo from 'shared/components/WalletInfo';
+import { ChainId } from 'types/blockchain';
+import { useWeb3 } from 'hooks/useWeb3';
+import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
+  const {chainId} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [
@@ -45,13 +51,14 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       transformOrigin={{vertical: 'top', horizontal: 'right'}}
       open={Boolean(mobileMoreAnchorEl)}
       onClose={handleMobileMenuClose}>
-      <MenuItem className={classes.menuItemRoot}>
+      {/*<MenuItem className={classes.menuItemRoot}>
         <HeaderMessages />
-      </MenuItem>
+      </MenuItem>*/}
       <MenuItem className={classes.menuItemRoot}>
         <Notifications />
       </MenuItem>
       <LanguageSwitcher />
+      <ThemeModeSwitcher />
     </Menu>
   );
 
@@ -70,13 +77,26 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
             </IconButton>
           </Hidden>
 
-          <AppLogo />
+         {/* <AppLogo />*/}
           <Box className={classes.grow} />
-          <SearchBar borderLight placeholder='Search…' />
+          {/* <SearchBar borderLight placeholder='Search…' />*/}
           <Box className={classes.sectionDesktop}>
             <LanguageSwitcher />
-            <HeaderMessages />
+            <ThemeModeSwitcher />
+          {/*  <HeaderMessages />*/}
             <Notifications />
+            {
+              (chainId !== ChainId.Mainnet && chainId !== undefined) ? (
+                <Box
+                  className={classes.badgeRoot}
+                  style={{
+                    color: 'rgba(226, 167, 46)',
+                    backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                  }}>
+                  {GET_CHAIN_ID_NAME(chainId)}
+                </Box>
+              ) : null
+            }
           </Box>
           <Box className={classes.sectionMobile}>
             <IconButton
@@ -88,6 +108,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               <MoreIcon />
             </IconButton>
           </Box>
+          <Box className={classes.wallet}>
+            <WalletInfo />
+          </Box>
+
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

@@ -43,7 +43,7 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({
         primary={<IntlMessages id={item.messageId} />}
         classes={{primary: 'nav-item-text'}}
       />
-      <Box component='span' mr={6}>
+      <Box component='span' mr={6} className={'nav-item-text'}>
           <Icon
             className={clsx(classes.listIcon, 'nav-item-icon')}
             color='action'>
@@ -56,7 +56,7 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({
         classes={{primary: 'nav-item-text'}}
      />*/}
       {item.count && (
-        <Box mr={4} clone>
+        <Box mr={4} clone >
           <Badge count={item.count} color={item.color} />
         </Box>
       )}

@@ -8,6 +8,6 @@ export interface MyBalance {
 
   valueUsd?: number;
 
-  history?: {timestamp: Date, value: number}[] | {[key: string]: number};
+  history?: {timestamp: Date, value: number, transferAmount: number}[] | {[key: string]: {today: number, yesterday: number}};
 
 } 

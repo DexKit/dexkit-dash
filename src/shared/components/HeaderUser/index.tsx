@@ -44,7 +44,7 @@ const HeaderUser = (props: any) => {
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {
       crHeaderUser: {
-        backgroundColor: props.header ? 'transparent' : 'rgba(0,0,0,.08)',
+        backgroundColor: props.header ? 'transparent' : 'rgba(0,0,0,1)',
         paddingTop: 9,
         paddingBottom: 9,
         minHeight: 56,

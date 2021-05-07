@@ -1,15 +1,23 @@
 import React from 'react';
-import {makeStyles, Box, Table, TableHead, TableBody} from '@material-ui/core';
+import {makeStyles, Box, Table, TableHead, TableBody, TablePagination} from '@material-ui/core';
 import {grey} from '@material-ui/core/colors/index';
-import {TransferByAddress} from 'types/app';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
+import Loader from '@crema/core/Loader';
+import { TransferByAddress } from 'types/app';
+
 
 interface Props {
   data: TransferByAddress[];
+  isLoading: boolean;
+  total: number;
+  page: number;
+  perPage: number;
+  onChangePage: (newPage: number) => void;
+  onChangePerPage: (newPerPage: number) => void;
 }
 
-const TransactionTable: React.FC<Props> = ({data}) => {
+const TransactionTable: React.FC<Props> = ({data, isLoading, total, page, perPage, onChangePage, onChangePerPage}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -45,10 +53,22 @@ const TransactionTable: React.FC<Props> = ({data}) => {
         </TableHead>
 
         <TableBody className={classes.borderBottomClass}>
-          {data.map((row, index) => (<TableItem row={row} key={index} />))}
+          {isLoading  && <Loader/>}  
+           { data.length> 1 && data.map((row, index) => (
+            <TableItem row={row} key={index} />
+          ))}
         </TableBody>
         
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={total}
+        rowsPerPage={perPage}
+        page={page}
+        onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
+        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangePerPage(parseInt(event.target.value, 10))}
+      />
 
     </Box>
   );

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
 import GridContainer from '@crema/core/GridContainer';
-import { Avatar, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import {  FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { search } from 'services/graphql/bitquery';
 import { Autocomplete } from '@material-ui/lab';
-import { useWeb3 } from 'hooks/useWeb3';
 import { useTokens } from 'hooks/useTokens';
 import { Pair, Token } from 'types/app';
 import { EXCHANGE } from 'shared/constants/AppEnums';
@@ -87,6 +86,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
             `${option.token0.name} (${option.token0.symbol}) - ${option.address.slice(0, 16)}...` }
           renderInput={(params) => (
             <TextField {...params} 
+              placeholder={'Search by name, symbol or paste address'}
               variant="outlined"
               onChange={($e) => setSearchKey($e.target.value)}
             />

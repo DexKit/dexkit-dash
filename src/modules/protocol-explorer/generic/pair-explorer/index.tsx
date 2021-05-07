@@ -1,58 +1,48 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import Info from './info';
 import GridContainer from '../../../../@crema/core/GridContainer';
 import InfoView from '../../../../@crema/core/InfoView';
 import Box from '@material-ui/core/Box';
 
-import OrderNTransaction from './OrderNTransaction';
-import { Paper, Typography, Link, Breadcrumbs } from '@material-ui/core';
-import { RouteComponentProps } from 'react-router-dom';
-import { TokenSearch } from 'shared/components/TokenSearch';
-import { GET_EXCHANGE_NAME, GET_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useWeb3 } from 'hooks/useWeb3';
-import { OrderData, PairInfoExplorer } from 'types/app';
-import { getContractOrders, getPairExplorer } from 'services/graphql/bitquery';
-import { GET_DEFAULT_QUOTE } from 'shared/constants/Blockchain';
-import { EXCHANGE, NETWORK } from 'shared/constants/AppEnums';
-import { truncateAddress } from 'utils';
+
+import { Paper } from '@material-ui/core';
+import { EXCHANGE, NETWORK, ThemeMode } from 'shared/constants/AppEnums';
+import { useChainId } from 'hooks/useChainId';
+import { extractPairFromAddress } from 'utils/tokens';
+import { usePairExplorer } from 'hooks/usePairExplorer';
 import PageTitle from 'shared/components/PageTitle';
+import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
+import { truncateAddress } from 'utils';
+import { TokenSearch } from 'shared/components/TokenSearch';
+import { Loader, AppContext } from '@crema';
+import TokenOrders from 'modules/protocol-explorer/common/TokenOrders';
+import Info from 'modules/protocol-explorer/common/info';
+import { TokenSearchByList } from 'shared/components/TokenSearchByList';
+import AppContextPropsType from 'types/AppContextPropsType';
+
 
 
 const TVChartContainer = React.lazy(() => import('../../../../shared/components/chart/TvChart/tv_chart'));
 
-type PropsParams = {
+type Props = {
   address: string;
   exchange: EXCHANGE;
   networkName: NETWORK;
 }
 
 
-type Props = RouteComponentProps<PropsParams> & PropsWithChildren<PropsParams>;
+const PairExplorer = (props: Props) => {
+  const {networkName, exchange, address} = props;
 
+  const {currentChainId} = useChainId();
+  const {baseAddress, quoteAddress} = extractPairFromAddress(address, currentChainId);
 
-const PairExplorer: React.FC<Props> = (props) => {
-  const {match: { params }} = props;
-  const {networkName, exchange, address} = params;
-
-  const { chainId } = useWeb3();
-
-  const [infoData, setInfoData] = useState<PairInfoExplorer>();
-  const [tableData, setTableData] = useState<OrderData[]>([]);
-
-
-  useEffect(() => {
-    if (address) {
-      getPairExplorer(GET_NETWORK_NAME(chainId), exchange, address, GET_DEFAULT_QUOTE(chainId))
-        .then(info => { setInfoData(info) })
-        .catch(e => console.log(e))
-
-      getContractOrders(GET_NETWORK_NAME(chainId), exchange, address, GET_DEFAULT_QUOTE(chainId), 7, 0, null, null)
-        .then(orders => { setTableData(orders)})
-        .catch(e => console.log(e))
-    }
-  }, [address, chainId]);
+  const {isLoadingInfo, infoData} = usePairExplorer(baseAddress, quoteAddress, exchange)
+  const {
+    theme,
+  } = useContext<AppContextPropsType>(AppContext);
+  const isDark = theme.palette.type === ThemeMode.DARK;
 
   return (
     <>
@@ -72,30 +62,37 @@ const PairExplorer: React.FC<Props> = (props) => {
         
         <GridContainer>
           <Grid item xs={12} md={5}>
-            {
-              infoData && <>
-                <Info data={infoData} />
-                <Grid item xs={12} md={12} style={{marginTop: 44, height: 450}}>
-                  <TVChartContainer symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`} chainId={1} />
+              <Grid item xs={12} md={12}>
+                  <Paper style={{ padding: 10 }}>
+                    {
+                      exchange && <TokenSearchByList exchangeName={exchange} type={'pair'} />
+                    }
+                  </Paper>
                 </Grid>
-              </>
-            }
-          </Grid>
-
-          <Grid item xs={12} md={7}>
-            <Grid item xs={12} md={12}>
-              <Paper style={{ padding: 10 }}>
-                {
-                  exchange && <TokenSearch exchangeName={exchange} type={'pair'} />
-                }
-              </Paper>
+              {
+                isLoadingInfo ? <Loader/> :
+                (infoData && 
+                <Paper style={{ marginTop: 20 }}>
+                  <Info  data={infoData} /> 
+                </Paper>)
+              }
             </Grid>
-
+        
+            <Grid item xs={12} md={7}>
+              <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
+              {(infoData && 
+                  <Grid item xs={12} md={12} style={{ height: 450}}>
+                    <TVChartContainer symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`} chainId={1} darkMode={isDark} />
+                  </Grid>
+                )}
+              </Grid>
+            </Grid>
+              
+          
             <Grid style={{ marginTop: 20 }} item xs={12} md={12}>
-              <OrderNTransaction transactionData={tableData} exchange={exchange} network={networkName} />
+              <TokenOrders networkName={networkName} baseAddress={baseAddress} quoteAddress={quoteAddress} exchange={exchange} type={'pair'} />
             </Grid>
 
-          </Grid>
         </GridContainer>
       </Box>
 

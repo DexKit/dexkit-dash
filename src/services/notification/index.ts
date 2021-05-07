@@ -1,6 +1,6 @@
 import { store } from 'react-notifications-component';
 import { Notification } from 'types/models/Notification';
-import { messaging } from '@crema/services/auth/firebase/firebase';
+//import { messaging } from '@crema/services/auth/firebase/firebase';
 
 export enum NotificationType {
   ERROR = 'danger',
@@ -44,10 +44,10 @@ export function addNotification(
 }
 
 export function onNotification(callbackEvent: (args: any) => void){
-  messaging.onMessage(payload => {
+  //messaging.onMessage(payload => {
     // const notification: Notification = Object.assign({} as Notification, payload);
-    callbackEvent(payload);
-  });
+   // callbackEvent(payload);
+  //});
 }
 
 export function getNotification(id: string | number | Symbol): Notification | undefined{

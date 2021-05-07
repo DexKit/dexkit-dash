@@ -5,6 +5,7 @@ import Etherium from 'assets/images/etherium.png';
 import { useHistory } from 'react-router-dom';
 
 export interface Props {
+  icon?: string;
   state: {
     id: number;
     type: string;
@@ -15,7 +16,7 @@ export interface Props {
   }
 }
 
-const InfoCard: React.FC<Props> = ({state}) => {
+const InfoCard: React.FC<Props> = ({state, icon = Etherium}) => {
   const { bgColor, value, href } = state;
   const history = useHistory();
 
@@ -27,7 +28,7 @@ const InfoCard: React.FC<Props> = ({state}) => {
     >
       <Box display='flex' alignItems='center'>
         <Box mr={3} clone alignSelf='flex-start'>
-          <img src={Etherium} alt='icon' />
+          <img src={icon} alt='icon' />
         </Box>
         <Box flex={1} color='white'>
           <Typography component='h5' variant='inherit' color='inherit'>

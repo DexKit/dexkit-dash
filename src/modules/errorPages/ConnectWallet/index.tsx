@@ -9,6 +9,7 @@ import {makeStyles} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import { useWeb3 } from 'hooks/useWeb3';
 
+
 interface ComingSoonProps {}
 
 
