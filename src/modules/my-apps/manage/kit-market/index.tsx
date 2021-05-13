@@ -2,16 +2,16 @@ import { useWeb3 } from 'hooks/useWeb3';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
-import { onGetAllKits, onGetUserKits } from 'redux/actions/MyApps';
 import { AppState } from 'redux/store';
-import { Card, CardContent, CardHeader, IconButton, List, makeStyles } from '@material-ui/core';
+import { Card, CardContent, CardHeader,  List, makeStyles } from '@material-ui/core';
 import { Kit } from './kit';
 import { Kit as KytType } from 'types/models/Kit';
 import clsx from 'clsx';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
 import { BigNumber } from "@0x/utils";
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { onGetAllKits, onGetUserKits } from 'redux/myApps/thunks';
+
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -89,11 +89,11 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
 
   const dispatch = useDispatch();
 
-  const { kitsData, userkits } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
+  const { kitsData, userKits } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
 
   useEffect(() => {
     dispatch(onGetAllKits());
-    dispatch(onGetUserKits(account ?? '0x000000000000000000000000000000000'));
+   // dispatch(onGetUserKits(account ?? '0x000000000000000000000000000000000'));
   }, [dispatch]);
 
   return (
@@ -111,7 +111,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
 
       <CardContent className={classes.cardContent}>
         <List dense={true}>
-          {generate({ data: { kitsData, userkits}, icon, bgColor, history})}
+          {generate({ data: { kitsData, userKits}, icon, bgColor, history})}
         </List>
       </CardContent>
     

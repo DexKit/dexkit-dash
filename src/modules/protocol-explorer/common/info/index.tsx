@@ -2,7 +2,6 @@ import React from 'react';
 
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {BalanceCoins} from 'types/models/Crypto';

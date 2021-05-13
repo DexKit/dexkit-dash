@@ -14,6 +14,7 @@ import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
 import RelatedCourses from './RelatedCourses';
 import {RelatedCoursesData} from 'types/models/Academy';
+import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 
 export interface OverviewDataProvider {
   getReportCardsData(): Promise<ReportCards[]>;
@@ -34,18 +35,27 @@ const Overview: React.FC<CryptoProps> = () => {
     AppState['dashboard']
   >(({dashboard}) => dashboard);
 
+  const skeleton = 
+    <>
+    <Skeleton style={{marginBottom: 6}} variant='rect' />
+    <Skeleton style={{marginBottom: 6}} variant='rect' />
+    <Skeleton style={{marginBottom: 6}} variant='rect' />
+    </>
+  
+
+
   return (
     <>
       <Box pt={{xl: 4}}>
         <GridContainer>
           <Grid item xs={12} md={4}>
-            {reportCardsData[0] && <ReportCard data={reportCardsData[0]} />}
+            {reportCardsData[0] ? <ReportCard data={reportCardsData[0]} /> : skeleton}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[1] && <ReportCard data={reportCardsData[1]} />}
+            {reportCardsData[1] ? <ReportCard data={reportCardsData[1]} /> : skeleton}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[2] && <ReportCard data={reportCardsData[2]} />}
+            {reportCardsData[2] ? <ReportCard data={reportCardsData[2]} /> : skeleton}
           </Grid>
 
           {/*<Grid style={{ backgroundColor: 'white', borderRadius: 10 }} item xs={12} sm={12} md={4}>

@@ -36,7 +36,7 @@ export const BITQUERY_TOKEN_PAIRS = gql`
   query GetTokenPairs1($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime) {
     ethereum(network: $network) {
       data24: dexTrades(
-        options: {limit: 10, desc: "tradeAmountInUsd"}
+        options: {limit: 10, desc: ["tradeAmountInUsd"]}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
         date: {since: $from}
@@ -66,7 +66,6 @@ export const BITQUERY_TOKEN_PAIRS = gql`
         minimum_price: quotePrice(calculate: minimum)
         open_price: minimum(of: block, get: quote_price)
         close_price: maximum(of: block, get: quote_price)
-        tradeAmount(in: ETH)
         smartContract{
           address {
             address
@@ -80,13 +79,14 @@ export const BITQUERY_TOKEN_PAIRS = gql`
 
 
 export const BITQUERY_TOKEN_TRADES = gql`
-  query GetTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $limit: Int!, $offset: Int!) {
+  query GetTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $limit: Int!, $offset: Int!, $tradeAmount: Float) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
         quoteCurrency: {is: $quoteAddress}
+        tradeAmountUsd: {gt: $tradeAmount}
       ) {
         tradeIndex
         block {
@@ -443,7 +443,7 @@ export const BITQUERY_MY_TOKEN_BALANCE = gql`
   query GetMyTokenBalance($network: EthereumNetwork!, $address: String!) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
-        balances {
+        balances{
           currency {
             name
             symbol

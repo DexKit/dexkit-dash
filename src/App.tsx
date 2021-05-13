@@ -6,9 +6,9 @@ import LocaleProvider from '@crema/utility/LocaleProvider';
 import CremaThemeProvider from '@crema/utility/CremaThemeProvider';
 import CremaStyleProvider from '@crema/utility/CremaStyleProvider';
 import ContextProvider from '@crema/utility/ContextProvider';
-import { InfoView, ThemeSetting } from '@crema';
+import { InfoView } from '@crema';
 
-import { ApolloProvider } from '@apollo/client';
+
 
 import store, {history} from './redux/store';
 import CssBaseline from '@material-ui/core/CssBaseline';

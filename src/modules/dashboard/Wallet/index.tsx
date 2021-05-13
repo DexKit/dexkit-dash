@@ -24,10 +24,9 @@ import TotalBalance from 'shared/components/TotalBalance';
 import { Link } from 'react-router-dom';
 
 import {parseDefiAssets} from '../../../utils/parse'
-import Transak from 'shared/components/Transak';
 import { useWeb3 } from 'hooks/useWeb3';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
-import PageTitle from 'shared/components/PageTitle';
+import PageTitle from './PageTitle';
 
 
 interface Props { }
@@ -50,7 +49,7 @@ const Wallet: React.FC<Props> = (props) => {
   );
   
   const updateChart = () => {
-    const findToken = myBalances.filter(e => e.currency.name == chartName);
+    const findToken = myBalances.filter(e => e.currency.name === chartName);
 
     if (findToken.length > 0) {
       const hist = findToken[0].history as {[key: string]: {today: number, yesterday: number}};
@@ -84,11 +83,11 @@ const Wallet: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    if (account != null) {
+    if (account && chainId) {
       dispatch(onGetMyDefiBalances(account));
       dispatch(onGetMyTokenBalances(GET_NETWORK_NAME(chainId), account));
     }
-  }, [dispatch, account]);
+  }, [dispatch, account, chainId]);
 
   useEffect(() => {
     setDefiAssets(parseDefiAssets(myDefiBalances));
@@ -160,7 +159,7 @@ const Wallet: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid item xs={12} md={12} style={{ marginTop: 15 }}>
-              <AssetTable balances={(myBalances)} />
+              <AssetTable balances={(myBalances.filter(b=> b.value > 0))} />
             </Grid>
 
             <GridContainer style={{marginTop: 2}}>

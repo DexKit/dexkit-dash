@@ -13,8 +13,8 @@ export function parseAMMPairExplorerData(data: any, address: string, network: NE
       const basePerDolar = d24Current.baseAmountInUsd/ d24Current.baseAmount;
       const quotePerDolar = d24Current.quoteAmountInUsd / d24Current.quoteAmount;
 
-      const basePooled: number  = pooled.filter((e: any) => e.currency.symbol == d24Current.baseCurrency.symbol)[0].value;
-      const quotePooled: number = pooled.filter((e: any) => e.currency.symbol == d24Current.quoteCurrency.symbol)[0].value;
+      const basePooled: number  = pooled.filter((e: any) => e.currency.symbol === d24Current.baseCurrency.symbol)[0].value;
+      const quotePooled: number = pooled.filter((e: any) => e.currency.symbol === d24Current.quoteCurrency.symbol)[0].value;
 
       return {
         baseToken: {

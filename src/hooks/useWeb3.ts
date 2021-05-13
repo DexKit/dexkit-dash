@@ -7,7 +7,7 @@ import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction } from "s
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
-import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber } from "redux/actions";
+import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber, setEthAccounts } from "redux/actions";
 import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 
@@ -17,6 +17,7 @@ export const useWeb3 = () => {
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(state => state.blockchain.web3State);
   const ethBalance = useSelector<AppState, AppState['blockchain']['ethBalance']>(state => state.blockchain.ethBalance);
   const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+  const accounts = useSelector<AppState, AppState['blockchain']['ethAccounts']>(state => state.blockchain.ethAccounts);
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
   const blocknumber = useSelector<AppState, AppState['blockchain']['blocknumber']>(state => state.blockchain.blocknumber)
 
@@ -33,7 +34,10 @@ export const useWeb3 = () => {
 
       // subscribeProvider(provider);
 
-      web3.eth.getAccounts().then((a) => dispatch(setEthAccount(a[0])));
+      web3.eth.getAccounts().then((a) => {
+        dispatch(setEthAccount(a[0]));
+        dispatch(setEthAccounts(a))
+      });
     }
   }, [web3State]);
 
@@ -58,6 +62,16 @@ export const useWeb3 = () => {
     }
 
   }
+
+  
+  const onSetDefaultAccount = (index: number) => {
+    const web3 = getWeb3();
+    if (web3 && accounts) {
+      web3.eth.defaultAccount = accounts[index];
+      dispatch(setEthAccount(accounts[index]));
+    }
+  }
+
 
   const onConnectWeb3 = () => {
     const web3 = getWeb3();
@@ -99,6 +113,7 @@ export const useWeb3 = () => {
     
     pr.on("close", () => {
       dispatch(setEthAccount(undefined));
+      dispatch(setEthAccounts([]));
       dispatch(setChainId(undefined));
       closeWeb3();
       dispatch(setWeb3State(Web3State.NotConnected));
@@ -107,6 +122,7 @@ export const useWeb3 = () => {
 
     pr.on("accountsChanged", async (accounts: string[]) => {
       dispatch(setEthAccount(accounts[0]));
+      dispatch(setEthAccounts(accounts));
     });
 
     pr.on("chainChanged", async (chainId: number) => {
@@ -127,6 +143,6 @@ export const useWeb3 = () => {
   };
 
 
-  return { onConnectWeb3, getWeb3, account, chainId, blocknumber, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction }
+  return { onConnectWeb3, getWeb3, account, chainId, blocknumber, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction, onSetDefaultAccount }
 
 }

@@ -55,7 +55,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
         </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        ${row.priceUsd.toFixed(2)}
+        ${row.closePriceUsd.toFixed(2)}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {' '}

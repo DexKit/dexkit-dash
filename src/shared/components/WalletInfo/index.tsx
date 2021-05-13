@@ -18,6 +18,7 @@ import { useWeb3 } from 'hooks/useWeb3';
 import { tokenAmountInUnits } from 'utils/tokens';
 import { Web3State } from 'types/blockchain';
 import { isMobile } from 'web3modal';
+import { truncateAddress } from 'utils';
 
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
@@ -126,7 +127,7 @@ const WalletInfo = (props: any) => {
         <Box ml={4} className={clsx(classes.userInfo, 'user-info')}>
           <Box display='flex' alignItems='center' justifyContent='space-between'>
             <Box mb={0} className={clsx(classes.userName)}>
-              {account}
+              {account && truncateAddress(account)}
             </Box>
             <Box ml={3} className={classes.pointer} color={'text.primary'}>
               <Box component='span' onClick={handleClick}>

@@ -293,6 +293,7 @@
   "faq.pricing": "Pricing",
   "faq.licenseTypes": "License Types",
   "faq.support": "Support",
+  "common.buyKit": "Buy KIT",
   "common.tokens": "Tokens",
   "common.token": "Token",
   "common.pairs": "Pairs",
@@ -727,5 +728,6 @@
   "dashboard.analytics.ordersTransaction": "Orders & Transaction",
   "dashboard.analytics.trafficSource": "Traffic Source",
   "dashboard.wallet.mybalance": "My Balance",
-  "wizard.title": "Wizard"
+  "wizard.title": "Wizard",
+  "wizard.launch": "Launch your"
 }

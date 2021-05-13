@@ -1,9 +1,13 @@
 import { Dispatch } from 'redux';
 import { AppActions } from 'types';
-import { fetchError, fetchStart, fetchSuccess } from './Common';
+
 import Api from '@crema/services/ApiConfig';
-import { GET_ALL_KITS, GET_ALL_TOKENS, GET_USER_KITS } from 'types/actions/MyApps.actions';
 import { BigNumber } from '@0x/utils';
+import { fetchStart, fetchSuccess, fetchError } from 'redux/actions';
+import { setAllKits, setAllTokens, setUserKits } from './actions';
+import { Kit } from 'types/models/Kit';
+
+
 
 export const onGetAllKits = () => {
   return (dispatch: Dispatch<AppActions>) => {
@@ -12,7 +16,7 @@ export const onGetAllKits = () => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(fetchSuccess());
-          dispatch({ type: GET_ALL_KITS, payload: data.data });
+          dispatch(setAllKits(data.data as Kit[]));
         } else {
           dispatch(fetchError('Something went wrong, Please try again!'));
         }
@@ -30,7 +34,7 @@ export const onGetAllTokens = () => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(fetchSuccess());
-          dispatch({ type: GET_ALL_TOKENS, payload: data.data });
+          dispatch(setAllTokens(data.data));
         } else {
           dispatch(fetchError('Something went wrong, Please try again!'));
         }
@@ -48,7 +52,7 @@ export const onGetUserKits = (kit_address: string | BigNumber) => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(fetchSuccess());
-          dispatch({ type: GET_USER_KITS, payload: data.data });
+          dispatch(setUserKits(data.data));
         } else {
           dispatch(fetchError('Something went wrong, Please try again!'));
         }

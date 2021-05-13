@@ -14,6 +14,7 @@ import { onGetMyTokenBalances } from 'redux/actions';
 import { useWeb3 } from 'hooks/useWeb3';
 import LockUnlock from './LockUnlock';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import Alert from '@material-ui/lab/Alert';
 
 const MyApps: React.FC = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,11 @@ const MyApps: React.FC = () => {
   return (
     <>
       <Box pt={{ xl: 4 }}>
+         <Box pb={2}>
+              <Alert severity="warning">This feature is still under high development, You will need KIT to use this. Check our live updates to see when this feature
+                will be enable for everyone!
+            </Alert>
+         </Box>
         <GridContainer>
 
           <Grid item xs={12} md={6}>
@@ -48,7 +54,7 @@ const MyApps: React.FC = () => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <KitMarket icon={Ripple} bgColor={teal[900]} data={{ price: 4.0, increment: 0.8 }} heading={<IntlMessages id='app.kitMarket' />} />
+            <KitMarket icon={Ripple} bgColor={teal[900]} data={{ price: 4.0, increment: 0.8 }} heading={<IntlMessages id='wizard.launch' />} />
           </Grid>
 
         </GridContainer>

@@ -27,8 +27,8 @@ const Coins: React.FC = () => {
             bgColor={blue[500]}
             data={{
               name: 'Etherium',
-              price: '12.0',
-              increment: 0.2,
+              price: '0',
+              increment: 0,
             }}
             heading={<IntlMessages id='Aggregator' />}
           />
@@ -40,8 +40,8 @@ const Coins: React.FC = () => {
             bgColor={indigo[700]}
             data={{
               name: 'Litcoin',
-              price: '10.0',
-              increment: -0.2,
+              price: '0',
+              increment: 0,
             }}
             heading={<IntlMessages id='Marketplace' />}
           />
@@ -53,8 +53,8 @@ const Coins: React.FC = () => {
             bgColor={teal[600]}
             data={{
               name: 'Ripple',
-              price: '4.0',
-              increment: 0.8,
+              price: '0',
+              increment: 0,
             }}
             heading={<IntlMessages id='Exchange' />}
           />

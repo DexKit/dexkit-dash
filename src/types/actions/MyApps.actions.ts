@@ -20,4 +20,9 @@ export interface GetAllTokens {
 	payload: Token[];
 }
 
-export type MyAppsActions = GetAllKits | GetUserKits | GetAllTokens;
+export interface ActionCreator {
+	type: string;
+	payload: any
+}
+
+export type MyAppsActions = GetAllKits | GetUserKits | GetAllTokens | ActionCreator;

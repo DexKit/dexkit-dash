@@ -3,14 +3,17 @@ import {GridContainer} from '@crema';
 import {
   Breadcrumbs,
   Grid,
-  Link,
   makeStyles,
+  Link as MaterialLink,
   Typography,
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
+import { Link } from 'react-router-dom';
+
+
 
 interface Props {
-  history: {url: string; name: string}[];
+  history: {url: string; name: string, symbol?: string}[];
   active: string;
   title: string;
 }
@@ -46,7 +49,7 @@ const PageTitle: React.FC<Props> = (props) => {
       <Grid item xs={12} md={12}>
         <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
           {props.history.map((e) => (
-            <Link key={e.name} color='inherit' href={e.url}>
+            <Link key={e.name} color='inherit' to={e.url} component={MaterialLink}>
               {e.name}
             </Link>
           ))}

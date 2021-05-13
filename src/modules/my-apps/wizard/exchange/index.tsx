@@ -18,6 +18,8 @@ import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
 import { GridContainer } from '@crema';
 import { Breadcrumbs, Grid, Link } from '@material-ui/core';
 import TokensForm from './tokensForm';
+import { SubmitComponent } from '../shared/submit';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -137,32 +139,7 @@ interface ButtonNavigationProps {
   ButtonBackText: string;
 }
 
-const SubmitComponent: React.FC<SubmitProps> = (props) => {
-  const classes = useStyles();
-  const [isLoading, setLoading] = useState(false);
-  const { data } = props;
-  const submit = ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
-    //send data
-    if(!isLoading){
-      setLoading(true);
-      setTimeout(function(){
-        console.log('sucess!', data);
-        setLoading(false);
-      },2000);
-    }
-  }
-  return (
-    <Button
-      disabled={isLoading}
-      variant="contained"
-      color="primary"
-      onClick={submit}
-      className={classes.button}
-    >
-      Submit
-    </Button>
-  )
-}
+
 const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
   const { handleBack, handleNext, ButtonBackText, ButtonNextText } = props;
   const classes = useStyles();
@@ -196,7 +173,7 @@ export default function VerticalLinearStepper() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
-  const dispatch = useDispatch();
+
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -225,9 +202,6 @@ export default function VerticalLinearStepper() {
     }
     , [form, setForm]);
 
-  useEffect(() => {
-    dispatch(onGetConfigFile());
-  }, [ dispatch ]);
 
   useEffect(() => {
     Object.values(WizardData)
@@ -235,11 +209,8 @@ export default function VerticalLinearStepper() {
     setForm(form);
   }, []);
 
-  const { configFile } = useSelector<AppState, AppState['configFile']>(
-    ({ configFile }) => configFile
-  );
+  const history = useHistory();
 
-  console.log('configFile', configFile);
 
   return (
     <div className={classes.root}>
@@ -247,7 +218,7 @@ export default function VerticalLinearStepper() {
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/my-apps/exchange">My Apps</Link>
+            <Link color="inherit" onClick={()=> history.push('/my-apps/manage')}>My Apps</Link>
             <Typography color="textPrimary">Wizard</Typography>
           </Breadcrumbs>
           <Typography variant="h4" color="textPrimary">EXCHANGE</Typography>
@@ -275,7 +246,7 @@ export default function VerticalLinearStepper() {
           <Button onClick={handleReset} className={classes.button}>
             Reset
           </Button>
-          <SubmitComponent data={form} />
+          <SubmitComponent data={form} type={'DEX'} />
         </Paper>
       )}
     </div>

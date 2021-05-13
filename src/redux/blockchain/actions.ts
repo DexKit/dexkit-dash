@@ -5,6 +5,8 @@ import { TokenBalance } from "types/app";
 
 export const setEthAccount = createAction('blockchain/ETH_ACCOUNT_set')<string | undefined>();
 
+export const setEthAccounts = createAction('blockchain/ETH_ACCOUNTS_set')<string[] | undefined>();
+
 export const setBlockNumber = createAction('blockchain/BLOCKNUMBER_set')<number>();
 
 export const setChainId = createAction('blockchain/CHAIN_ID_set')<number | undefined>();

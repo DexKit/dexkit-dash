@@ -62,7 +62,7 @@ interface ComponentsThemeProps {
 const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
 	const { name, label, className } = props;
 	const [color, setColor] = useState('#fff');
-	const [expanded, setExpanded] = React.useState(false);
+	const [expanded, setExpanded] = React.useState(true);
 	const handleChange = (panel: React.ChangeEvent<any>, expanded: boolean) => {
 		setExpanded(expanded);
 	};

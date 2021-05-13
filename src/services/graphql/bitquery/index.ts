@@ -135,8 +135,8 @@ export function getTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAdd
   }
 
   return client.query({ query: BITQUERY_TOKEN_TRADES, variables })
-    .then(orders => { console.log(orders); return parseOrderData(orders, network) })
-    .catch(e => {console.log(e); return parseOrderData(null, network) });
+    .then(orders => {  return parseOrderData(orders, network) })
+    .catch(e => { return parseOrderData(null, network) });
 }
 
 export function getTokenPairs(network: NETWORK, exchangeName: EXCHANGE, baseAddress: string): Promise<TokenPair[]>
@@ -255,7 +255,7 @@ export function getMyTokenBalances<T>(network: NETWORK, address: string): Promis
     query: BITQUERY_MY_TOKEN_BALANCE,
     variables: {
       network,
-      address
+      address, 
     }
   });
 }

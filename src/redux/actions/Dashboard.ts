@@ -24,9 +24,11 @@ import { MyBalance } from 'types/bitquery/myBalance.interface';
 import { getTokens } from 'services/rest/coingecko';
 import { NETWORK } from 'shared/constants/AppEnums';
 import { getMyTokenBalances, getMyTokenBalancesAt } from 'services/graphql/bitquery';
-
-
-
+//
+// DEV: this workaround is to avoid error: Uncaught TypeError: Do not know how to serialize a BigInt
+// Consider move to another place if better
+// @ts-ignore
+BigInt.prototype.toJSON = function() { return this.toString(); };
 export const onGetAnalyticsData = () => {
   return (dispatch: Dispatch<AppActions>) => {
     dispatch(fetchStart());
@@ -117,17 +119,21 @@ export const onGetWidgetsData = () => {
   };
 };
 
+
+
 export const onGetMyDefiBalances = (address: string) => {
   return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
+  //  dispatch(fetchStart());
     getDefiBalances(address)
     .then( balances => {
       dispatch({type: GET_DEFI_BALANCES, payload: balances});
-      dispatch(fetchSuccess());
+    //  dispatch(fetchSuccess());
     })
     .catch( e => {
-      console.log(e);
-      dispatch(fetchError(e.message));
+     // console.log(JSON.stringify(e));
+      
+      // @TODO: Change this to a app hook and refetch after some time on error
+    //  dispatch(fetchError(e.message));
     })
   }
 }
@@ -205,10 +211,11 @@ export function onGetMyTokenBalances(network: NETWORK, address: string){
               valueUsd: (tokens[key]?.current_price || 0) * e.value 
             }
           });
-          
+       
           dispatch({type: GET_TOKEN_BALANCES, payload: all});
           dispatch(fetchSuccess());  
         }).catch (e => {
+        //   dispatch(fetchSuccess());  
           dispatch(fetchError(e.message));
         });
 

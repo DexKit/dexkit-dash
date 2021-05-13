@@ -170,6 +170,8 @@ export interface TokenPair {
   price: number,
   priceUsd: number,
   volume24: number,
+  closePrice: number,
+  closePriceUsd: number,
   volume24InUsd: number
   quoteVolume24: number,
   baseVolume24: number,  

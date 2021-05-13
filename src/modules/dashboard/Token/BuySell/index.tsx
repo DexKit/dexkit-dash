@@ -64,8 +64,8 @@ const BuySell: React.FC<Props> = (props) => {
     dispatch(onGetConfigFile());
   }, [ dispatch ]);
 
-  const { configFile } = useSelector<AppState, AppState['configFile']>(
-    ({ configFile }) => configFile
+  const { configFile  } = useSelector<AppState, AppState['configFile']>(
+    ({ configFile }) => configFile 
   );
 
   // const _tokens = configFile?.tokens.filter( _token => {
@@ -109,6 +109,7 @@ const BuySell: React.FC<Props> = (props) => {
         {
           value === 0 && <MarketForm
           key="MarketForm(0)" 
+           //@ts-ignore
           tokens={configFile?.tokens ?? []} 
           chainId={(new BigNumber(chainId ?? 1)).toNumber()}
           actionButton={props.actionButton}
@@ -117,6 +118,7 @@ const BuySell: React.FC<Props> = (props) => {
         {
           value === 1 && <LimitForm
           key="LimitForm(1)"
+          //@ts-ignore
           tokens={configFile?.tokens ?? []} 
           chainId={(new BigNumber(chainId ?? 1)).toNumber()}
           actionButton={props.actionButton}

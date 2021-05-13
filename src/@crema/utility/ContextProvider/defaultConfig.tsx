@@ -17,10 +17,10 @@ const defaultConfig: any = {
     spacing: 4,
     direction: 'ltr', //ltr, rtl
     palette: {
-      type: ThemeMode.LIGHT,
+      type: ThemeMode.DARK,
       background: {
-        paper: '#FFFFFF',
-        default: '#f4f5f7',
+        paper: '#181a1f',
+        default: '#1d2125',
       //  default: '#fafbfc',
       },
       primary: {
@@ -39,10 +39,10 @@ const defaultConfig: any = {
         black: '#fff',
       },
       text: {
-        primary: 'rgba(0, 0, 0, 0.87)',
-        secondary: 'rgba(0, 0, 0, 0.54)',
-        disabled: 'rgba(0, 0, 0, 0.38)',
-        hint: 'rgba(0, 0, 0, 0.38)',
+        primary: 'rgba(255, 255, 255, 0.87)',
+        secondary: 'rgba(255, 255, 255, 0.67)',
+        disabled: 'rgba(255, 255, 255, 0.38)',
+        hint: 'rgba(255, 255, 255, 0.38)',
       },
     },
     status: {

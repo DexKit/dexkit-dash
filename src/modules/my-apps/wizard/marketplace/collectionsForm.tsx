@@ -115,6 +115,32 @@ const CollectionComponent: React.FC<CollectionComponentProps> = (props) => {
     <>
       <Grid item xs={12} md={6} sm={6}>
         <TextField
+          key={`collection(${index}).slug`}
+          id={`collection(${index}).slug`}
+          value={slug}
+          onBlur={() => {
+            if(!slugValidator(slug)){
+              setErrors({...errors, slug: 'Slug is invalid!'})
+            }else{
+              setErrors({...errors, slug: undefined})
+            }
+          }}
+          onChange={
+            ($e) => {
+              data.slug = $e.target.value
+              setSlug(data.slug);
+              onChange($e, data, index);
+            }
+          }
+          helperText={!valid ? errors?.slug : undefined}
+          error={errors?.slug != null}
+          fullWidth
+          label="slug"
+          variant="outlined"
+        />
+      </Grid>
+      <Grid item xs={12} md={6} sm={6}>
+        <TextField
           key={`collection(${index}).name`}
           id={`collection(${index}).name`}
           value={name}
@@ -159,32 +185,6 @@ const CollectionComponent: React.FC<CollectionComponentProps> = (props) => {
           error={errors?.imageUrl != null}
           fullWidth
           label="image"
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12} md={6} sm={6}>
-        <TextField
-          key={`collection(${index}).slug`}
-          id={`collection(${index}).slug`}
-          value={slug}
-          onBlur={() => {
-            if(!slugValidator(slug)){
-              setErrors({...errors, slug: 'Slug is invalid!'})
-            }else{
-              setErrors({...errors, slug: undefined})
-            }
-          }}
-          onChange={
-            ($e) => {
-              data.slug = $e.target.value
-              setSlug(data.slug);
-              onChange($e, data, index);
-            }
-          }
-          helperText={!valid ? errors?.slug : undefined}
-          error={errors?.slug != null}
-          fullWidth
-          label="slug"
           variant="outlined"
         />
       </Grid>

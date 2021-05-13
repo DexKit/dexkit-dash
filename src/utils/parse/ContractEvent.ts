@@ -14,9 +14,9 @@ export function parseEventContractData(data: any, mint: MintBurn[], burn: MintBu
   if (data && data.data[network]) {
     const events = data.data[network].smartContractEvents;
 
-    const mintEvents: any[] = events.filter((e: any) => e.smartContractEvent.name == "Mint")[0].arguments;
-    const burnEvents: any[] = events.filter((e: any) => e.smartContractEvent.name == "Burn")[0].arguments;
-    const reserveEvents: any[] = events.filter((e: any) => e.smartContractEvent.name == "Sync")[0].arguments;
+    const mintEvents: any[] = events.filter((e: any) => e.smartContractEvent.name === "Mint")[0].arguments;
+    const burnEvents: any[] = events.filter((e: any) => e.smartContractEvent.name === "Burn")[0].arguments;
+    const reserveEvents: any[] = events.filter((e: any) => e.smartContractEvent.name === "Sync")[0].arguments;
 
     mint.map((e, index) => {
       e.amount0 = toTokenUnitAmount(mintEvents[(index*3)+1].value, pair.baseToken.decimals).toNumber();

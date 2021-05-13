@@ -31,6 +31,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   const [fields, setFields] = useState<GeneralConfig>(startData);
   const [valid, setValid] = useState<boolean>(startValidation);
 
+
   const changeFields = (
     $event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     key: string,
@@ -185,6 +186,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           label='Title'
           variant='outlined'
           value={fields.title}
+          required
           helperText={!valid ? errors?.title : undefined}
           error={errors?.title != null}
           onBlur={($e) => {
@@ -204,6 +206,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           label='Icon'
           variant='outlined'
           value={fields.icon}
+          required
           helperText={!valid ? errors?.icon : undefined}
           error={errors?.icon != null}
           onBlur={($e) => {
@@ -223,6 +226,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           label='Domain'
           variant='outlined'
           value={fields.domain}
+          required
           helperText={!valid ? errors?.domain : undefined}
           error={errors?.domain != null}
           onBlur={($e) => {
@@ -241,6 +245,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           fullWidth
           label='Fee Address'
           variant='outlined'
+          required
           value={fields.feeRecipient}
           helperText={!valid ? errors?.feeRecipient : undefined}
           error={errors?.feeRecipient != null}
@@ -260,6 +265,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           fullWidth
           label='Fee Percentage'
           variant='outlined'
+          required
           value={fields.feePercentage}
           helperText={!valid ? errors?.feePercentage : undefined}
           error={errors?.feePercentage != null}

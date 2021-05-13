@@ -21,11 +21,10 @@ const ThemeModeSwitcher = () => {
     theme,
     updateThemeMode,
   } = useContext<AppContextPropsType>(AppContext);
-  console.log(themeMode);
+
   const onClickThemeButton = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-       console.log(themeMode);
         const changedTheme = theme.palette.type === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
         updateThemeMode!(changedTheme);
   };

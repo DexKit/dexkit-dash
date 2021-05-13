@@ -89,7 +89,7 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
       <Box
         py={{xs: 5, sm: 5, xl: 5}}
         px={{xs: 6, sm: 6, xl: 6}}
-        style={{backgroundColor: indigo[500], height: '100%'}}
+        style={{height: '100%'}}
         clone>
         <Card>
           <Box
@@ -124,11 +124,13 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
               mt={{xs: 2, xl: 0}}>
               <Box>
                 <Button
+                  variant="contained"
+                  color={'primary'}
                   onClick={() => {
-                    history.push('/dashboard/token/');
+                    history.push(`/dashboard/token/0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4`);
                   }}
                   className={classes.root}>
-                  <IntlMessages id='common.buy' />
+                  <IntlMessages id='common.buyKit' />
                 </Button>
               </Box>
             </Box>

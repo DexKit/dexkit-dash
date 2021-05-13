@@ -12,6 +12,10 @@ export const wizardConfigs = [
         component: React.lazy(() => import('./exchange')),
       },
       {
+        path: '/my-apps/wizard/marketplace/:slug',
+        component: React.lazy(() => import('./marketplace')),
+      },
+      {
         path: '/my-apps/wizard/marketplace',
         component: React.lazy(() => import('./marketplace')),
       }

@@ -275,11 +275,32 @@ export interface GeneralConfig {
   social?: SocialNetworks;
 }
 
-export interface ConfigFile {
+export interface AuthorMarketplace {
+  name?: string;
+  description?: string;
+  image?: string;
+  address?: string[];
+}
+
+
+
+
+export interface ConfigFileExchange {
   tokens: TokenMetaData[];
   pairs: CurrencyPairMetaData[];
   marketFilters?: Filter[];
   wallets?: WalletsConfig;
+  theme_name?: string;
+  layout?: string;
+  theme?: PartialTheme;
+  theme_light?: PartialTheme;
+  theme_dark?: PartialTheme;
+  general?: GeneralConfig;
+}
+
+export interface ConfigFileMarketplace {
+  tokens: TokenMetaData[];
+  collections: Collection[];
   theme_name?: string;
   layout?: string;
   theme?: PartialTheme;
@@ -308,7 +329,7 @@ export interface Collection {
   imageUrl: string;
   name: string;
   slug: string;
- }
+}
 
 
-
+export type ConfigFile  = ConfigFileExchange | ConfigFileMarketplace | AggregatorConfig;

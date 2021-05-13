@@ -94,7 +94,7 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
             defiData
               .slice(0, defiData.length > 9 ? 9 : defiData.length)
               .map(({token, coinsDataProps: coin}: CoinProps, index) => (
-                <Grid item xs={4} sm={4}>
+                <Grid item xs={4} sm={4} key={index}>
                   <CoinStats
                     key={index}
                     token={token}

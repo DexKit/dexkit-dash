@@ -3,9 +3,10 @@ import Common from './Common';
 import FirebaseAuth from './FirebaseAuth';
 import Dashboard from './Dashboard';
 import blockchain from '../blockchain/reducers';
-import MyApps from './MyApps';
+
 import Notification from './Notification';
 import ConfigFile from './ConfigFile';
+import { myAppsReducer } from 'redux/myApps/reducers';
 
 const reducers = {
   settings: Settings,
@@ -13,7 +14,7 @@ const reducers = {
   dashboard: Dashboard,
   common: Common,
   blockchain: blockchain,
-  myApps: MyApps,
+  myApps: myAppsReducer,
   notification: Notification,
   configFile: ConfigFile
 };

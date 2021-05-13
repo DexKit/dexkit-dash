@@ -9,6 +9,7 @@ import { ZERO } from 'shared/constants/Blockchain';
 
 export interface BlockchainState {
     readonly ethAccount: string | undefined;
+    readonly ethAccounts: string[] | undefined;
     readonly blocknumber: number;
     readonly chainId: number | undefined;
     readonly web3State: Web3State;
@@ -19,6 +20,7 @@ export interface BlockchainState {
 
 const initialBlockchainState: BlockchainState = {
     ethAccount: undefined,
+    ethAccounts: [],
     web3State: Web3State.NotConnected,
     tokenBalances: [],
     ethBalance: ZERO,
@@ -31,10 +33,12 @@ const initialBlockchainState: BlockchainState = {
     },*/
 };
 
-export default function(state: BlockchainState = initialBlockchainState, action: RootAction): BlockchainState {
+export default function(state: BlockchainState = initialBlockchainState, action: any): BlockchainState {
     switch (action.type) {
         case getType(actions.setEthAccount):
             return { ...state, ethAccount: action.payload };
+        case getType(actions.setEthAccounts):
+            return { ...state, ethAccounts: action.payload };
         case getType(actions.setWeb3State):
             return { ...state, web3State: action.payload };
         case getType(actions.setBlockNumber):

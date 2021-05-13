@@ -14,16 +14,19 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import {Loader, GridContainer, InfoView} from '@crema';
-import AppCard from '@crema/core/AppCard';
-import AppSelect from '@crema/core/AppSelect';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
+import {Loader} from '@crema';
+
 
 import {useStyles} from './index.style';
 
 import {stableSort, getComparator} from 'utils/table';
+import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
+import { useWeb3 } from 'hooks/useWeb3';
+import EditIcon from '@material-ui/icons/Edit';
+import LaunchIcon from '@material-ui/icons/Launch';
+import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router-dom';
+import { WhitelabelTypes } from 'types/myApps';
 
 type Order = 'asc' | 'desc';
 
@@ -35,9 +38,10 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  {id: 'name', label: 'Name', isSort: false},
+  {id: 'slug', label: 'Id', isSort: false},
   {id: 'domain', align: 'left', label: 'Domain', isSort: true},
-  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
+  {id: 'type', align: 'left', label: 'Type', isSort: false},
+//  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
   {id: 'actions', align: 'left', label: 'Actions', isSort: false},
 ];
 
@@ -55,10 +59,14 @@ const AppsTable = () => {
   const [orderBy, setOrderBy] = useState<string>('collectedFees');
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const { account } = useWeb3();
+  const {configs, loading} = useMyAppsConfig(account);
+  const history = useHistory();
+
   const handleSelectionType = (data: any) => {
     console.log('data: ', data);
   };
-  const loading = false;
+//  const loading = false;
   const error = false;
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -79,10 +87,31 @@ const AppsTable = () => {
     setPage(0);
   };
   const classes = useStyles();
+  const onEditConfig = (slug: string) => {
+    history.push(`/my-apps/wizard/marketplace/${slug}`);
+
+  }
+
+  const onOpenApp = (slug: string, type: WhitelabelTypes) => {
+    switch (type) {
+      case 'DEX':
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        break;
+      case 'MARKETPLACE':
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        break;
+      case 'AGGREGATOR':
+        window.open(`https://swap.dexkit.com/#/swap?id=${slug}`) 
+        break;
+      default:
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        break;
+    }
+  }
 
   return (
     <>
-      {data ? (
+      {configs && configs.length > 0 ? (
         // <Box pt={{ xl: 4 }} clone>
         //   <GridContainer>
         //     <Grid item xs={12} md={12}>
@@ -137,10 +166,10 @@ const AppsTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {stableSort(data, getComparator(orderDirection, orderBy))
+                {stableSort(configs, getComparator(orderDirection, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((data) => (
-                    <TableRow key={data.id}>
+                  .map((config, index) => (
+                    <TableRow key={index}>
                       <TableCell
                         component='th'
                         scope='row'
@@ -150,16 +179,23 @@ const AppsTable = () => {
                           textOverflow: 'ellipsis',
                           width: '11rem',
                         }}>
-                        <Box className={classes.anchar}>{data.name}</Box>
+                        <Box className={classes.anchar}>{config.slug}</Box>
                       </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
-                        {data.domain}
+                        {config.domain}
                       </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
-                        {data.collectedFees}
+                        {config.type}
                       </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
-                        <Box className={classes.badgeRoot}></Box>
+                        <Box className={classes.badgeRoot}>
+                            <IconButton aria-label="edit" onClick={() => onEditConfig(config.slug)}>
+                              <EditIcon/>
+                           </IconButton>
+                           <IconButton aria-label="launch" onClick={() => onOpenApp(config.slug, config.type)}>
+                               <LaunchIcon/>
+                           </IconButton>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -176,7 +212,7 @@ const AppsTable = () => {
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
-          <TablePagination
+           <TablePagination
             className={classes.paginationMobile}
             rowsPerPageOptions={[]}
             component='div'
@@ -186,11 +222,27 @@ const AppsTable = () => {
             onChangePage={handleChangePage}
           />
         </Paper>
-      ) : //       </AppCard>
-      //     </Grid>
-      //   </GridContainer>
-      // </Box>
-      null}
+
+
+      ) :
+      <Paper className={classes.paper}>
+          <Toolbar className={classes.toolbar}>
+            <Typography variant='h5'>My Apps</Typography>
+          </Toolbar>
+            <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '60px 0px',
+                  }}>
+                  <Typography>You don't have Apps yet </Typography>
+              </Grid>
+          </Paper>
+          }
 
       {loading ? <Loader /> : null}
 

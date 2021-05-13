@@ -20,11 +20,12 @@ import { Breadcrumbs, Grid, Link } from '@material-ui/core';
 
 import { useWeb3 } from 'hooks/useWeb3';
 
-import { eip712Utils } from '@0x/order-utils';
-import { MetamaskSubprovider } from '@0x/subproviders';
-import { EIP712TypedData } from '@0x/types';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { onGetConfigFile } from 'redux/actions';
+
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
+import CoinStats from 'modules/dashboard/Token/Coins/CoinStats';
+import { SubmitComponent } from '../shared/submit';
+
 
 
 
@@ -62,9 +63,7 @@ export interface WizardProps {
   isValid: boolean;
 }
 
-interface SubmitProps {
-  data: FormData | Object;
-}
+
 
 interface ButtonNavigationProps {
   handleBack?: ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => void;
@@ -111,18 +110,18 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       )
     }
     case 1:
-      return <ThemeForm themeName={'Tema teste'}/>;
+      return <ThemeForm themeName={''}/>;
     case 2:{
       const collections: Collection[] = JSON.parse(data) as Collection[];
       return (
         <CollectionsForm 
-        key={'collectionsForm'}
-        title={label} 
-        collections={ collections ?? []}
-        changeIssuerForm={changeIssuerForm}
-        validator={validator} 
-        form={form}
-        isValid={isValid}
+          key={'collectionsForm'}
+          title={label} 
+          collections={ collections ?? []}
+          changeIssuerForm={changeIssuerForm}
+          validator={validator} 
+          form={form}
+          isValid={isValid}
         />
       );
     }
@@ -142,111 +141,12 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       );
     }
     default:
-      return ( <Typography>{ 'Unknown step' }</Typography> )
+     break;
   }
 
 }
 
-const SubmitComponent: React.FC<SubmitProps> = (props) => {
-  const classes = useStyles();
 
-  const { chainId, account, getProvider } = useWeb3();
-
-  const [isLoading, setLoading] = useState(false);
-  const { data } = props;
-  const submit = ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
-    //send data
-    if(!isLoading){
-      setLoading(true);
-      setTimeout(function(){
-
-        let object: any = {};
-        (data as FormData).forEach((value, key) => {
-            // Reflect.has in favor of: object.hasOwnProperty(key)
-            if(!Reflect.has(object, key)){
-                object[key] = value;
-                return;
-            }
-            if(!Array.isArray(object[key])){
-                object[key] = [object[key]];    
-            }
-            object[key].push(value);
-        });
-        var json = JSON.stringify(object);
-
-        try {
-          if (account) {
-            const ethAccount = account ;
-            const provider = new MetamaskSubprovider(getProvider());
-        
-            const msgParams: EIP712TypedData = {
-              types: {
-                EIP712Domain: [
-                  { name: 'name', type: 'string' },
-                  { name: 'version', type: 'string' },
-                  { name: 'chainId', type: 'uint256' },
-                  { name: 'verifyingContract', type: 'address' },
-                ],
-                Message: [
-                  { name: 'message', type: 'string' },
-                  { name: 'terms', type: 'string' },
-                ],
-              },
-              primaryType: 'Message',
-              domain: {
-                name: 'Veridex',
-                version: '1',
-                chainId: chainId || 1,
-                verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
-              },
-              message: {
-                message: 'I want to create/edit this Marketplace',
-                terms: 'Powered by DexKit',
-              },
-            };
-        
-            const web3Metamask = new Web3Wrapper(provider);
-        
-            const typedData = eip712Utils.createTypedData(
-              msgParams.primaryType,
-              msgParams.types,
-              msgParams.message,
-              // @ts-ignore
-              msgParams.domain,
-            );
-        
-            web3Metamask.signTypedDataAsync(ethAccount.toLowerCase(), typedData).then(signature => {
-              console.log(signature);
-              console.log(JSON.stringify(typedData));
-              console.log(ethAccount);
-              // { signature, message: JSON.stringify(typedData), owner: ethAccount };
-            }) 
-          }
-        } catch (error) {
-          throw new Error(error.message);
-        }
-        // const configData: ConfigRelayerData = {
-        //   config: json,
-        //   message,
-        //   signature,
-        //   owner,
-        // };
-        setLoading(false);
-      },2000);
-    }
-  }
-  return (
-    <Button
-      disabled={isLoading}
-      variant="contained"
-      color="primary"
-      onClick={submit}
-      className={classes.button}
-    >
-      Submit
-    </Button>
-  )
-}
 
 const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
   const { handleBack, handleNext, ButtonBackText, ButtonNextText } = props;
@@ -269,13 +169,58 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
   )
 }
 
-export default function VerticalLinearStepper() {
+type MarketplaceParams = {
+  slug: string;
+};
+
+type MarketplaceProps = RouteComponentProps<MarketplaceParams >
+
+export default function VerticalLinearStepper(props: MarketplaceProps) {
+  const {match: { params }} = props;
+  const { slug } = params;
+  const { account } = useWeb3();
+  const { configs } = useMyAppsConfig(account)
+
+
   const [form, setForm] = useState(new FormData());
   const [isValid, setValid] = useState(false);
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    Object.values(WizardData)
+    .forEach( t => form.append(t, '[]'));
+    setForm(form);
+  }, []);
+
+  const updateForm = useCallback(
+    (key: string, value: any) => {
+      const dataType = Object.values(WizardData).find( e => e === key);
+      if(dataType != null){
+        form.set(key, JSON.stringify(value));
+        setForm(form);
+      }
+    }
+    , [form, setForm]);
+
+  useEffect(()=> {
+    if(slug && configs){
+      const configResponseString = configs.find(c=> c.slug === slug);
+      if(configResponseString){
+        const config = JSON.parse(configResponseString.config)
+        const keys = Object.values(WizardData);
+        keys.forEach(k => {
+          if(config[k]){
+            updateForm(k, config[k] );
+          }
+        })
+        
+      }
+    }
+  }, [slug, configs])
+
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -292,26 +237,14 @@ export default function VerticalLinearStepper() {
   const validator = useCallback((_isValid: boolean) => {
     setValid(_isValid);
   }, [setValid]);
-  
-  const updateForm = useCallback(
-    (key: string, value: any) => {
-      const dataType = Object.values(WizardData).find( e => e === key);
-      if(dataType != null){
-        form.set(key, JSON.stringify(value));
-        setForm(form);
-      }
-    }
-    , [form, setForm]);
+  const history = useHistory();
 
-  useEffect(() => {
+
+  /*useEffect(() => {
     dispatch(onGetConfigFile());
-  }, [ dispatch ]);
+  }, [ dispatch ]);*/
 
-  useEffect(() => {
-    Object.values(WizardData)
-    .forEach( t => form.append(t, '[]'));
-    setForm(form);
-  }, []);
+ 
 
   // const { configFile } = useSelector<AppState, AppState['configFile']>(
   //   ({ configFile }) => configFile
@@ -323,10 +256,10 @@ export default function VerticalLinearStepper() {
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/my-apps/manage">My Apps</Link>
+            <Link color="inherit" onClick={()=> history.push('/my-apps/manage')}>My Apps</Link>
             <Typography color="textPrimary">Wizard</Typography>
           </Breadcrumbs>
-          <Typography variant="h4" color="textPrimary">MARKETPLACE</Typography>
+          <Typography variant="h4" color="textPrimary">MARKETPLACE {slug ? `- Editing ${slug}` : ''}</Typography>
         </Grid>
       </GridContainer>
 
@@ -349,7 +282,7 @@ export default function VerticalLinearStepper() {
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
           <Button onClick={handleReset} className={classes.button}>Review</Button>
-          <SubmitComponent data={form} />
+          <SubmitComponent data={form} type={'MARKETPLACE'}/>
         </Paper>
       )}
     </div>

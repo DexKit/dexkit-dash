@@ -9,16 +9,17 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import { AppState } from 'redux/store';
-import { onGetConfigFile } from 'redux/actions/ConfigFile.actions';
+
 import { AggregatorConfig, AggregatorGeneralConfig, AggregatorLinks, AggregatorWallet, TokenFeeProgramConfig } from '@types';
 
 import TokensForm from './token';
 import GeneralForm from './general';
 import ThemeForm from './themeForm';
-import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+
 import { GridContainer } from '@crema';
 import { Breadcrumbs, Grid, Link } from '@material-ui/core';
+import { SubmitComponent } from '../shared/submit';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -129,34 +130,8 @@ interface ButtonNavigationProps {
   ButtonBackText: string;
 }
 
-const SubmitComponent: React.FC<SubmitProps> = (props) => {
-  const classes = useStyles();
-  const [isLoading, setLoading] = useState(false);
-  const { data, valid } = props;
-  const submit = ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
-    //send data
-    if(!isLoading && valid && Object.keys(data).length > 0){
-      setLoading(true);
-      setTimeout(function(){
-        console.log('sucess!', data);
-        setLoading(false);
-      },2000);
-    } else if(!valid){
-      //mostra uma mensagem de alerta
-    }
-  }
-  return (
-    <Button
-      disabled={isLoading || !valid}
-      variant="contained"
-      color="primary"
-      onClick={submit}
-      className={classes.button}
-    >
-      Submit
-    </Button>
-  )
-}
+
+
 const ButtonNavigation: React.FC<ButtonNavigationProps> = (props) => {
   const { handleBack, handleNext, ButtonBackText, ButtonNextText } = props;
   const classes = useStyles();
@@ -227,7 +202,7 @@ export default function VerticalLinearStepper() {
             });
             setData(data);
           }
-          console.log('updateData', data);
+  
           break;
         }
         case WizardData.CONTACT: 
@@ -242,23 +217,16 @@ export default function VerticalLinearStepper() {
         }
       };
     }
+    const history = useHistory();
 
-  useEffect(() => {
-    dispatch(onGetConfigFile());
-  }, [ dispatch ]);
 
-  const { configFile } = useSelector<AppState, AppState['configFile']>(
-    ({ configFile }) => configFile
-  );
-
-  console.log('configFile', configFile);
   return (
     <div className={classes.root}>
 
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/my-apps/exchange">My Apps</Link>
+          <Link color="inherit" onClick={()=> history.push('/my-apps/manage')}>My Apps</Link>
             <Typography color="textPrimary">Wizard</Typography>
           </Breadcrumbs>
           <Typography variant="h4" color="textPrimary">AGGREGATOR</Typography>
@@ -287,7 +255,7 @@ export default function VerticalLinearStepper() {
           <Button onClick={handleReset} className={classes.button}>
             Reset
           </Button>
-          <SubmitComponent data={(data ?? {}) as AggregatorConfig} valid={isValid}/>
+          <SubmitComponent data={data as Object} type={'AGGREGATOR'}/>
         </Paper>
       )}
     </div>
