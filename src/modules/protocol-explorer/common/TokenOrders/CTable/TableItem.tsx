@@ -1,13 +1,22 @@
 import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import Box from '@material-ui/core/Box';
-import {TableRow, TableCell, makeStyles, Chip, Link} from '@material-ui/core';
+import {
+  TableRow,
+  TableCell,
+  makeStyles,
+  Chip,
+  Link,
+  Avatar,
+} from '@material-ui/core';
 import {OrderData} from 'types/app';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import SearchIcon from '@material-ui/icons/Search';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
-import {EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
+import TokenLogo from 'shared/components/TokenLogo';
+import {useNetwork} from 'hooks/useNetwork';
 
 interface TableItemProps {
   row: OrderData;
@@ -72,6 +81,7 @@ const TableItem: React.FC<TableItemProps> = ({
   };
 
   const createdFn = row.created.split(' ');
+  const netName = useNetwork();
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={row.hash}>
@@ -87,9 +97,14 @@ const TableItem: React.FC<TableItemProps> = ({
       </TableCell>
       {type === 'token' && (
         <TableCell align='left' className={classes.tableCell}>
-          <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
-            {row.baseToken.symbol}/{row.quoteToken.symbol}
-          </Link>
+          <Box display='flex' alignItems='center'>
+            <TokenLogo
+              token0={row.baseToken.address}
+              token1={row.quoteToken.address}></TokenLogo>
+            <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
+              {row.baseToken.symbol}/{row.quoteToken.symbol}
+            </Link>
+          </Box>
         </TableCell>
       )}
       <TableCell align='left' className={classes.tableCell}>
@@ -120,11 +135,40 @@ const TableItem: React.FC<TableItemProps> = ({
         </TableCell>
       )}
       <TableCell align='left' className={classes.tableCell}>
-        <a
-          href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
-          target='_blank'>
-          <SearchIcon />
-        </a>
+        <Box display='flex' alignItems='center'>
+          <a
+            href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
+            target='_blank'>
+            {netName == NETWORK.ETHEREUM ? (
+              <Avatar
+                style={{
+                  color: '#3F51B5',
+                  backgroundColor: 'white',
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                  marginBottom: '5px',
+                }}
+                src='/images/etherescan.png'></Avatar>
+            ) : (
+              <Avatar
+                style={{
+                  color: '#3F51B5',
+                  backgroundColor: 'white',
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                  marginBottom: '5px',
+                }}
+                src='/images/bscscan-logo-circle.png'></Avatar>
+            )}
+          </a>
+          <a
+            href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
+            target='_blank'>
+            <SearchIcon />
+          </a>
+        </Box>
       </TableCell>
     </TableRow>
   );

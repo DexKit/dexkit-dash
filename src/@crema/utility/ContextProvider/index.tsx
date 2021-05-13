@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import defaultConfig from './defaultConfig';
 import AppContext from '../AppContext';
 import PropTypes from 'prop-types';
@@ -66,6 +66,10 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
     updateTheme(theme);
     setRtl(rtl);
   };
+
+  useEffect(() => {
+    updateThemeMode(ThemeMode.DARK);
+  }, []);
 
   return (
     <AppContext.Provider

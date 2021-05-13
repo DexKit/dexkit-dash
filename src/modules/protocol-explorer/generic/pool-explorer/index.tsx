@@ -18,7 +18,7 @@ import AMMPoolHistory from 'modules/protocol-explorer/common/AMMPoolHistory';
 import { TokenSearchByList } from 'shared/components/TokenSearchByList';
 
 type PropsParams = {
-  address: string;
+  address : string;
   exchange: EXCHANGE;
   networkName: NETWORK;
 }
@@ -52,6 +52,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
           ]}
         active={`Pool Explorer`}
         title={exchange == EXCHANGE.ALL ? `Pool Explorer` : `Pool Explorer ${truncateAddress(address)}`}
+        address={address}
       />
 
       <GridContainer>

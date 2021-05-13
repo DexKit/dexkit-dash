@@ -39,13 +39,19 @@ const Overview: React.FC<CryptoProps> = () => {
       <Box pt={{xl: 4}}>
         <GridContainer>
           <Grid item xs={12} md={4}>
-            {reportCardsData[0] && <ReportCard data={reportCardsData[0]} />}
+            {reportCardsData[0] && (
+              <ReportCard data={reportCardsData[0]} timeout={0} />
+            )}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[1] && <ReportCard data={reportCardsData[1]} />}
+            {reportCardsData[1] && (
+              <ReportCard data={reportCardsData[1]} timeout={500} />
+            )}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[2] && <ReportCard data={reportCardsData[2]} />}
+            {reportCardsData[2] && (
+              <ReportCard data={reportCardsData[2]} timeout={1000} />
+            )}
           </Grid>
 
           {/*<Grid style={{ backgroundColor: 'white', borderRadius: 10 }} item xs={12} sm={12} md={4}>

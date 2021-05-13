@@ -1,10 +1,11 @@
 import React from 'react';
 import {TableRow, TableCell, makeStyles, Link} from '@material-ui/core';
-
+import Box from '@material-ui/core/Box';
 import {TokenPair} from 'types/app';
 import {EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
+import TokenLogo from 'shared/components/TokenLogo';
 interface TableItemProps {
   row: TokenPair;
   exchange: EXCHANGE;
@@ -50,9 +51,14 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={row.address}>
       <TableCell align='left' className={classes.tableCell}>
-        <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
-          {row.baseToken.symbol}/{row.quoteToken.symbol}
-        </Link>
+        <Box display='flex' alignItems='center'>
+          <TokenLogo
+            token0={row.baseToken.address}
+            token1={row.quoteToken.address}></TokenLogo>
+          <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
+            {row.baseToken.symbol}/{row.quoteToken.symbol}
+          </Link>
+        </Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         ${row.priceUsd.toFixed(2)}

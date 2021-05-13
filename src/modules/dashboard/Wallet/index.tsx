@@ -180,7 +180,7 @@ const Wallet: React.FC<Props> = (props) => {
                 <Link to={`/history/transaction/account/${account}`} style={{textDecoration: 'none'}}>
                   <HistoryState state={{
                     value: "Transaction history",
-                    bgColor: "#c52b00",
+                    bgColor: "#420e00",
                     icon: "/assets/images/dashboard/1_monthly_sales.png",
                     id: 2,
                     type: "Click to Open",

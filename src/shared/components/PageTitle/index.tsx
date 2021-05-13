@@ -8,11 +8,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
+import ButtonCopy from '../ButtonCopy';
 
 interface Props {
   history: {url: string; name: string}[];
   active: string;
   title: string;
+  address?: string;
 }
 
 const PageTitle: React.FC<Props> = (props) => {
@@ -57,6 +59,7 @@ const PageTitle: React.FC<Props> = (props) => {
 
         <Typography className={classes.title} color='textPrimary'>
           {props.title}
+          {props.address ? <ButtonCopy copyText={props.address}  titleText='Copied to clipbord !'></ButtonCopy> : null  }
         </Typography>
       </Grid>
     </GridContainer>

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Box} from '@material-ui/core';
 import AppCard from '../../../../@crema/core/AppCard';
-import Etherium from 'assets/images/dashboard/1_sales_icon.png'
-import Revenue from 'assets/images/dashboard/1_revenue_icon.png'
+import Etherium from 'assets/images/dashboard/sales.svg'
+import Revenue from 'assets/images/dashboard/revenue.svg'
 
 export interface SalesStateProps {
   state: {

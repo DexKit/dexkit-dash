@@ -45,6 +45,23 @@ export const GET_DEFAULT_BASE = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_DEFAULT_TOKEN_NETTOWRK = (chainId: ChainId|undefined) => {
+  const id = Number(chainId);
+
+  switch(id) {
+    case ChainId.Binance:
+      return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case ChainId.Mainnet:
+      return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    case ChainId.Rinkeby:
+    case ChainId.Kovan:
+    case ChainId.Goerli:
+    case ChainId.Ropsten:
+    default:
+      return null;
+  }
+}
+
 export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
   const id = Number(chainId);
 

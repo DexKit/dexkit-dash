@@ -17,7 +17,7 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
       <Box
         py={{xs: 5, sm: 5, xl: 5}}
         px={{xs: 6, sm: 6, xl: 6}}
-        style={{backgroundColor: indigo[500], height: '100%'}}
+        style={{height: '100%'}}
         clone>
         <Card>
           <Box
@@ -30,7 +30,6 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
                   <Box
                     mb={2}
                     component='h3'
-                    color='primary.contrastText'
                     fontFamily={Fonts.LIGHT}
                     fontSize={{xs: 20, sm: 22, xl: 24}}>
                     {data.name}
@@ -41,7 +40,6 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
                     <Box
                       mb={3}
                       component='div'
-                      color={indigo[200]}
                       fontSize={{xs: 12, sm: 13, xl: 14}}
                       whiteSpace='wrap'
                       textAlign='justify'
@@ -54,14 +52,12 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
                 <Grid item xs={4}>
                   <Box
                     component='strong'
-                    color='primary.contrastText'
                     fontSize={{xs: 14, sm: 16, xl: 18}}
                     whiteSpace='nowrap'>
                     {data.symbol}
                   </Box>
                   <Box
                     component='div'
-                    color={indigo[200]}
                     fontSize={{xs: 12, sm: 13, xl: 14}}
                     whiteSpace='nowrap'>
                     {messages['app.symbol']}
@@ -70,14 +66,12 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
                 <Grid item xs={4}>
                   <Box
                     component='strong'
-                    color='primary.contrastText'
                     fontSize={{xs: 14, sm: 16, xl: 18}}
                     whiteSpace='nowrap'>
                     {data.type || '-'}
                   </Box>
                   <Box
                     component='div'
-                    color={indigo[200]}
                     fontSize={{xs: 12, sm: 13, xl: 14}}
                     whiteSpace='nowrap'>
                     {messages['app.tokenType']}
@@ -86,14 +80,12 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
                 <Grid item xs={4}>
                   <Box
                     component='strong'
-                    color='primary.contrastText'
                     fontSize={{xs: 14, sm: 16, xl: 18}}
                     whiteSpace='nowrap'>
                     {data.decimals}
                   </Box>
                   <Box
                     component='div'
-                    color={indigo[200]}
                     fontSize={{xs: 12, sm: 13, xl: 14}}
                     whiteSpace='nowrap'>
                     {messages['app.numberOfDecimals']}
@@ -103,7 +95,6 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
             ) : (
               <Box
                 component='h3'
-                color='primary.contrastText'
                 fontFamily={Fonts.LIGHT}
                 fontSize={{xs: 20, sm: 22, xl: 24}}>
                 Loading...

@@ -1,6 +1,5 @@
-import React, { useEffect, useContext } from 'react';
+import React, {useEffect, useContext} from 'react';
 import IconButton from '@material-ui/core/IconButton';
-
 
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
@@ -8,34 +7,26 @@ import {makeStyles} from '@material-ui/core';
 
 import clsx from 'clsx';
 
-import AppContextPropsType, {CremaTheme} from '../../../types/AppContextPropsType';
+import AppContextPropsType, {
+  CremaTheme,
+} from '../../../types/AppContextPropsType';
 
-import { AppContext } from '@crema';
-import { ThemeMode } from 'shared/constants/AppEnums';
-
-
+import {AppContext} from '@crema';
+import {ThemeMode} from 'shared/constants/AppEnums';
 
 const ThemeModeSwitcher = () => {
-  const {
-    themeMode,
-    theme,
-    updateThemeMode,
-  } = useContext<AppContextPropsType>(AppContext);
+  const {themeMode, theme, updateThemeMode} = useContext<AppContextPropsType>(
+    AppContext,
+  );
   console.log(themeMode);
-  const onClickThemeButton = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-       console.log(themeMode);
-        const changedTheme = theme.palette.type === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
-        updateThemeMode!(changedTheme);
+  const onClickThemeButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(themeMode);
+    const changedTheme =
+      theme.palette.type === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
+    updateThemeMode!(changedTheme);
   };
 
-  const isLight = theme.palette.type === ThemeMode.LIGHT;
-
-
-
-
-
+  const isLight = theme.palette.type === ThemeMode.DARK;
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     notiBtn: {
@@ -89,15 +80,15 @@ const ThemeModeSwitcher = () => {
     <>
       <IconButton
         className={clsx(classes.notiBtn, 'notiBtn')}
-        aria-label={isLight ? 'Dark Theme': 'Light Theme'}
+        aria-label={isLight ? 'Dark Theme' : 'Light Theme'}
         color='inherit'
         onClick={onClickThemeButton}>
-      {!isLight &&   <Brightness7Icon
-            className={clsx(classes.notiIcon, 'notiIcon')}
-          />}
-       {isLight &&   <Brightness2Icon
-                className={clsx(classes.notiIcon, 'notiIcon')}
-           />}
+        {!isLight && (
+          <Brightness7Icon className={clsx(classes.notiIcon, 'notiIcon')} />
+        )}
+        {isLight && (
+          <Brightness2Icon className={clsx(classes.notiIcon, 'notiIcon')} />
+        )}
       </IconButton>
     </>
   );

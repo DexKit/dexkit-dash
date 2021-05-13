@@ -25,8 +25,6 @@ export const useChainId = () =>{
         }
     }, [chainId, userChainId])
 
-      
-
     return {currentChainId, isMismatch, setUserChainId}
 
 }
