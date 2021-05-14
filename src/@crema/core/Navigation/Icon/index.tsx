@@ -10,9 +10,10 @@ export interface IconComponentProps {
   icon?: string | IconProps;
   classes: ClassNameMap;
 }
-const IconComponent: React.FC<IconComponentProps> = ({ icon, classes }) => {
+const IconComponent: React.FC<IconComponentProps> = (props) => {
   const [type, setType] = useState<string>();
   const [src, setSrc] = useState<string>();
+  const {icon, classes} = props;
   useEffect(() => {
     if (icon != null) {
       const _type = typeof icon === 'string' ? icon?.split('.')[0] : icon.type;
@@ -30,7 +31,9 @@ const IconComponent: React.FC<IconComponentProps> = ({ icon, classes }) => {
     return (
       <Icon
         color='action'
-        className={clsx('nav-item-icon', classes.listIcon)}>
+        className={clsx('nav-item-icon', classes.listIcon)}
+        {...props}
+        >
         {src}
       </Icon>
     )
@@ -39,9 +42,12 @@ const IconComponent: React.FC<IconComponentProps> = ({ icon, classes }) => {
     <Icon
       color='action'
       className={clsx('nav-item-icon', classes.listIcon)}
+      {...props}
     >
       <img src={require(`assets/images/${src}.${type}`)} />
     </Icon>
   )
 }
+
+
 export default IconComponent;

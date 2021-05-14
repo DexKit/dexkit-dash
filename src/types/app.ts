@@ -177,6 +177,7 @@ export interface TokenPair {
   baseVolume24: number,  
   trades: number,
   protocol: string,
+  exchange: string,
 }
 
 

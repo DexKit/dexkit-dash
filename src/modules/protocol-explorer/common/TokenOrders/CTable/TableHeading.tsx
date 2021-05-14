@@ -49,55 +49,53 @@ const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
 
   return (
     <TableRow className={classes.tableRowRoot}>
-      <Tooltip title={messages['app.timestamp']} placement='top'>
+    
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.timestamp' />
         </TableCell>
-      </Tooltip>
+   
 
-      <Tooltip title={messages['app.type']} placement='top'>
+    
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.type' />
         </TableCell>
-      </Tooltip>
+    
       {type === 'token' && (
-        <Tooltip title={messages['app.pair']} placement='top'>
+       
           <TableCell align='left' className={classes.tableCellRoot}>
             <IntlMessages id='app.pair' />
           </TableCell>
-        </Tooltip>
+
       )}
 
-      <Tooltip title={messages['app.price']} placement='top'>
+    
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.price' />
         </TableCell>
-      </Tooltip>
 
-      <Tooltip title={messages['app.baseAmount']} placement='top'>
+
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.baseAmount' />
         </TableCell>
-      </Tooltip>
+ 
 
-      <Tooltip title={messages['app.quoteAmount']} placement='top'>
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.quoteAmount' />
         </TableCell>
-      </Tooltip>
-
-      <Tooltip title={messages['app.total']} placement='top'>
+   
+    
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.total' />
         </TableCell>
-      </Tooltip>
+
 
       {exchange === EXCHANGE.ALL && (
-        <Tooltip title={messages['app.protocol']} placement='top'>
+  
           <TableCell align='left' className={classes.tableCellRoot}>
-            <IntlMessages id='app.protocol' />
+            <IntlMessages id='app.exchange' />
           </TableCell>
-        </Tooltip>
       )}
       <TableCell align='left' className={classes.tableCellRoot}></TableCell>
     </TableRow>

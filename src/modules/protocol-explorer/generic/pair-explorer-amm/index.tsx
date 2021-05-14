@@ -104,7 +104,7 @@ const PairExplorerAMM = (props: Props) => {
               {infoData && (
                 <Grid item xs={12} md={12} style={{height: 450}}>
                   <TVChartContainer
-                    symbol={`${infoData?.baseToken.symbol}-${infoData?.quoteToken.symbol}`}
+                    symbol={`${infoData?.baseToken.symbol}-USD`}
                     chainId={1}
                     darkMode={isDark}
                   />

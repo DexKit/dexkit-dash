@@ -43,7 +43,7 @@ export const ETHERSCAN_API_URL = (chainId: ChainId|undefined) => {
   }
 }
 
-export const UNISWAP_INFO_API_URL = 'https://info.uniswap.org';
+export const UNISWAP_INFO_API_URL = 'https://v2.info.uniswap.org';
 
 export const SUSHISWAP_INFO_API_URL = 'https://analytics.sushi.com';
 

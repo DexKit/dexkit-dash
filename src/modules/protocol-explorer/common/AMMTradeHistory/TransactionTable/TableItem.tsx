@@ -2,7 +2,7 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {makeStyles, Chip, Link, Avatar} from '@material-ui/core';
+import {makeStyles, Chip, Link, Avatar,  Tooltip} from '@material-ui/core';
 import {OrderData} from 'types/app';
 
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
@@ -12,6 +12,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {NETWORK, EXCHANGE} from 'shared/constants/AppEnums';
 import { useNetwork } from 'hooks/useNetwork';
+import { useIntl } from 'react-intl';
 
 interface Props {
   data: OrderData;
@@ -70,14 +71,15 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
     }
   };
 
-  const createdFn = data.created.split(' ');
+  const createdFn = new Date(data.created)
   const netName = useNetwork();
+  const {messages} = useIntl();
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={data.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box>{createdFn[0]}</Box>
-        <Box>{createdFn[1]}</Box>
+        <Box>{createdFn.toLocaleDateString()}</Box>
+        <Box>{createdFn.toLocaleTimeString()}</Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
@@ -113,6 +115,7 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
+        <Tooltip title={messages['app.viewTx']} placement='top'>
           <a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${data.hash}`}
             target='_blank'>
@@ -140,11 +143,12 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
                 src='/images/bscscan-logo-circle.png'></Avatar>
             )}
           </a>
-          <a
+          </Tooltip>
+         {/* <a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${data.hash}`}
             target='_blank'>
             <SearchIcon />
-          </a>
+         </a>*/}
         </Box>
       </TableCell>
     </TableRow>

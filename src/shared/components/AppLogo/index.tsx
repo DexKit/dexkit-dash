@@ -12,6 +12,7 @@ export interface AppLogoProps {
   themeMode?:ThemeMode;
   justifyContent?: 'center' | 'left' | 'right' |  'start' | 'end';
   logo?: string;
+  collapsed?: boolean;
 }
 const AppLogo: React.FC<AppLogoProps> = props => {
   // const {themeMode} = useContext<AppContextPropsType>(AppContext);
@@ -46,6 +47,7 @@ const AppLogo: React.FC<AppLogoProps> = props => {
         src={ logoSrc }
         alt='crema-logo'
       />
+      {props.collapsed ? 'DexKit' : ''}
     </Box>
   );
 };

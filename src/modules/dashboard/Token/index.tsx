@@ -22,6 +22,12 @@ import {Button, makeStyles, Tooltip} from '@material-ui/core';
 import {truncateAddress} from 'utils';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ButtonCopy from 'shared/components/ButtonCopy';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useDispatch, useSelector } from 'react-redux';
+import { onGetMyTokenBalances } from 'redux/actions';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { AppState } from 'redux/store';
+import TokenLogo from 'shared/components/TokenLogo';
 
 const TVChartContainer = React.lazy(
   () => import('../../../shared/components/chart/TvChart/tv_chart'),
@@ -54,10 +60,21 @@ const Crypto: React.FC<TokenProps> = (props) => {
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
 
-  const [balances, setBalances] = useState<MyBalance[]>([]);
+  const {  myBalances } = useSelector<AppState, AppState['dashboard']>(
+    ({ dashboard }) => dashboard,
+  );
   const [info, setInfo] = useState<CoinDetailCoinGecko>();
 
   const [openTrade, setOpenTrade] = useState<boolean>(false);
+  const { account, chainId } = useWeb3();
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    if (account && chainId) {
+      dispatch(onGetMyTokenBalances(GET_NETWORK_NAME(chainId), account));
+    }
+  }, [dispatch, account, chainId]);
+
 
   const handleModal = useCallback(
     (event: React.SyntheticEvent<HTMLElement, Event>) => {
@@ -103,23 +120,32 @@ const Crypto: React.FC<TokenProps> = (props) => {
 
   return (
     <>
-      {balances ? (
+      { myBalances ? (
         <>
           <Box pt={{xl: 4}}>
             <GridContainer>
               <Grid item xs={12} md={12}>
-                <Box
-                  className={classes.contractAddress}
-                  component='h2'
-                  color='text.primary'
-                  fontSize={{sm: 20, xl: 22}}
-                  mb={{xs: 0, sm: 2}}
-                  fontFamily={Fonts.LIGHT}>
-                  {info?.name} Token{' '}
-                  {info?.contract_address
-                    ? `- ${truncateAddress(info?.contract_address)}`
-                    : null}
-                <ButtonCopy copyText={address!}  titleText='Copied token address to clipbord !'></ButtonCopy>
+               <Box
+                display={'flex'}
+                alignItems={'center'}  
+                >
+                    <Box mr={1}>
+                      { info?.contract_address && <TokenLogo token0={info?.contract_address}/>}
+                    </Box>
+                  <Box
+                    className={classes.contractAddress}
+                    component='h2'
+                    color='text.primary'
+                    fontSize={{sm: 20, xl: 22}}
+                    mb={{xs: 0, sm: 2}}
+                    fontFamily={Fonts.LIGHT}>
+                    
+                      {info?.name} {' '}
+                      {info?.contract_address
+                        ? `- ${truncateAddress(info?.contract_address)}`
+                        : null}
+                    <ButtonCopy copyText={address!}  titleText='Copied token address to clipboard !'></ButtonCopy>
+                  </Box>
                 </Box>
               </Grid>
             </GridContainer>
@@ -127,7 +153,8 @@ const Crypto: React.FC<TokenProps> = (props) => {
             <GridContainer>
               <Grid item xs={12} md={5}>
                 <Grid item xs={12} md={12}>
-                  <TotalBalance balances={balances} />
+               { (address && info?.symbol) && 
+                     <TotalBalance  balances={myBalances} featuredTokenBalance={{address: address, symbol: info?.symbol}} />}
                 </Grid>
 
                 <Grid
@@ -181,7 +208,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
                 <GridContainer>
                   <Grid style={{height: '400px'}} item xs={12} sm={12} md={12}>
                     <TVChartContainer
-                      symbol={`${info?.symbol.toUpperCase()}-WETH`}
+                      symbol={`${info?.symbol.toUpperCase()}-USD`}
                       chainId={1}
                       darkMode={isDark}
                     />

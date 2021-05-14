@@ -75,13 +75,13 @@ const TableItem: React.FC<Props> = ({data, networkName, exchange}) => {
     }
   };
 
-  const timeFn = data.time.split(' ');
+  const timeFn = new Date(data.time);
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={data.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box>{timeFn[0]}</Box>
-        <Box>{timeFn[1]}</Box>
+        <Box>{timeFn.toLocaleDateString()}</Box>
+        <Box>{timeFn.toLocaleTimeString()}</Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>

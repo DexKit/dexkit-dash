@@ -9,7 +9,7 @@ import {IconProps} from 'modules/routesConfig';
 import ExploreIcon from '@material-ui/icons/Explore';
 import MoneyIcon from '@material-ui/icons/Money';
 
-const INFOR_CARD = [
+export const INFOR_CARD = [
   {
     value: 'Token Explorer',
     bgColor: '#ff7149',

@@ -14,6 +14,7 @@ import {Fonts} from 'shared/constants/AppEnums';
 import AppCard from '@crema/core/AppCard';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import TokenLogo from 'shared/components/TokenLogo';
+import { Tooltip } from '@material-ui/core';
 
 export interface Props {
   data: PairInfoExplorer;
@@ -122,6 +123,7 @@ const Info: React.FC<Props> = (props) => {
             </Box>
             <Box display='flex'>
               <Box mr={3}>
+              <Tooltip title={'View on Explorer'} placement='top'>
                 <a
                   href={`${ETHERSCAN_API_URL(currentChainId)}/address/${
                     props.data.address
@@ -136,8 +138,10 @@ const Info: React.FC<Props> = (props) => {
                     }}
                     src='/images/etherescan.png'></Avatar>
                 </a>
+                </Tooltip>
               </Box>
               <Box mr={3}>
+              <Tooltip title={'View on DexKit'} placement='top'>
                 <a href={`/dashboard/token/${props.data.baseToken.address}`}>
                   <Avatar
                     style={{
@@ -149,6 +153,7 @@ const Info: React.FC<Props> = (props) => {
                     T
                   </Avatar>
                 </a>
+                </Tooltip>
               </Box>
             </Box>
           </Box>

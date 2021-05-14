@@ -1,3 +1,4 @@
+import { TokenInfo } from '@types';
 import axios from 'axios';
 import { Token } from 'types/app';
 
@@ -16,19 +17,29 @@ const binanceTokens = axios.create({
 		'Access-Control-Allow-Origin': '*',
 	},
 });
-
-export async function getEthereumTokens(): Promise<Token[]> {
+// We cache tokens here
+let ethTokens: TokenInfo[] | undefined
+export async function getEthereumTokens(): Promise<TokenInfo[]> {
+	if(ethTokens){
+		return ethTokens;
+	}
 	try {
 		const response = await ethereumTokens.get('/uniswap/all.json');
+		ethTokens = response.data.tokens;
 		return Promise.resolve(response.data.tokens);
 	} catch (e) {
 		return Promise.reject(e);
 	}
 }
-
-export async function getBinanceTokens(): Promise<Token[]> {
+// We cache tokens here
+let binTokens: TokenInfo[] | undefined
+export async function getBinanceTokens(): Promise<TokenInfo[]> {
+	if(binTokens){
+		return binTokens;
+	}
 	try {
 		const response = await binanceTokens.get('/pancakeswap/pancake-swap-interface-v1/master/src/constants/token/pancakeswap.json');
+		binTokens = response.data.tokens;
 		return Promise.resolve(response.data.tokens);
 	} catch (e) {
 		return Promise.reject(e);

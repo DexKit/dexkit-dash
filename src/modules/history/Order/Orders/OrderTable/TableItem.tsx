@@ -1,14 +1,17 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import { Chip, makeStyles} from '@material-ui/core';
+import { Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
 
 import TableRow from '@material-ui/core/TableRow';
 
 import {CremaTheme} from '../../../../../types/AppContextPropsType';
-import SearchIcon from '@material-ui/icons/Search';
 import { OrderData } from 'types/app';
 import { useWeb3 } from 'hooks/useWeb3';
 import { ETHERSCAN_API_URL } from 'shared/constants/AppConst';
+import ExchangeLogo from 'shared/components/ExchangeLogo';
+import { useNetwork } from 'hooks/useNetwork';
+import { useIntl } from 'react-intl';
+import { NETWORK } from 'shared/constants/AppEnums';
 
 interface TableItemProps {
   row: OrderData;
@@ -56,10 +59,14 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     }
   };
 
+  const netName = useNetwork();
+  const {messages} = useIntl();
+
+
   return (
     <TableRow key={row.hash} className={classes.borderBottomClass}>
       
-      <TableCell align='left' className={classes.tableCell}>{row.exchange}</TableCell>
+      <TableCell align='left' className={classes.tableCell}><ExchangeLogo exchange={row.exchange}/></TableCell>
       
       <TableCell align='left' className={classes.tableCell}>
         <Chip style={ {backgroundColor:getPaymentTypeColor(), color: 'white'}} label={row.side} />
@@ -75,12 +82,38 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
 
       <TableCell align='left' className={classes.tableCell}>${row.tradeAmountUsd.toFixed(2)}</TableCell>
       
-      <TableCell align='left' className={classes.tableCell}>{row.created}</TableCell>
+      <TableCell align='left' className={classes.tableCell}>{new Date(row.created).toLocaleString()}</TableCell>
       
       <TableCell align='left' className={classes.tableCell}>
-        <a href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`} target="_blank">
-          <SearchIcon />
-        </a>
+      <Tooltip title={messages['app.viewTx']} placement='top'>
+          <a
+            href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
+            target='_blank'>
+            {netName == NETWORK.ETHEREUM ? (
+              <Avatar
+                style={{
+                  color: '#3F51B5',
+                  backgroundColor: 'white',
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                  marginBottom: '5px',
+                }}
+                src='/images/etherescan.png'></Avatar>
+            ) : (
+              <Avatar
+                style={{
+                  color: '#3F51B5',
+                  backgroundColor: 'white',
+                  width: '20px',
+                  height: '20px',
+                  marginRight: '5px',
+                  marginBottom: '5px',
+                }}
+                src='/images/bscscan-logo-circle.png'></Avatar>
+            )}
+          </a>
+          </Tooltip>
       </TableCell>
 
     </TableRow>

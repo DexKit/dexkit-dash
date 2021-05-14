@@ -78,7 +78,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
             title: 'All Protocols',
             messageId: 'sidebar.protocols.all',
             type: 'collapse',
-            icon: 'all inclusive',
+            icon: 'AllInclusive',
             children: [
              /* {
                 id: 'overview',
@@ -92,7 +92,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
                 title: 'Token Explorer',
                 messageId: 'sidebar.protocols.token-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
               },
              /* {
                 id: 'pool-explorer',
@@ -106,7 +106,7 @@ const useRoutesConfig = (): NavItemProps[]  => {
                 title: 'Pair Explorer',
                 messageId: 'sidebar.protocols.pair-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pair-explorer`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
               },
             ],
           },

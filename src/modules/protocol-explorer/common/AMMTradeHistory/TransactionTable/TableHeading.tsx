@@ -48,36 +48,35 @@ const TableHeading: React.FC<Props> = (props) => {
 
   return (
     <TableRow className={classes.tableRowRoot}>
-      <Tooltip title={messages['app.time']} placement='top'>
+    
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.time' />
         </TableCell>
-      </Tooltip>
-      <Tooltip title={messages['app.type' ]} placement='top'>
-        <TableCell align='left' className={classes.tableCellRoot}>
+   
+    <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.type' />
         </TableCell>
-      </Tooltip>
-      <Tooltip title={messages['app.price' ]} placement='top'>
+
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.price' />
         </TableCell>
-      </Tooltip>
-      <Tooltip title={messages['app.baseAmount' ]} placement='top'>
+
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.baseAmount' />
         </TableCell>
-      </Tooltip>
-      <Tooltip title={messages['app.quoteAmount' ]} placement='top'>
+
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.quoteAmount' />
         </TableCell>
-      </Tooltip>
-      <Tooltip title={messages['app.tradeAmount' ]} placement='top'>
+
+     
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.tradeAmount' />
         </TableCell>
-      </Tooltip>
+
       <TableCell align='left' className={classes.tableCellRoot}></TableCell>
     </TableRow>
   );

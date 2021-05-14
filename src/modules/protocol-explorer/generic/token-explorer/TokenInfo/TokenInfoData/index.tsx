@@ -4,6 +4,7 @@ import {indigo} from '@material-ui/core/colors/index';
 import {Token} from 'types/app';
 import {useIntl} from 'react-intl';
 import {Fonts} from 'shared/constants/AppEnums';
+import TokenLogo from 'shared/components/TokenLogo';
 
 interface Props {
   data: Token | undefined;
@@ -27,12 +28,15 @@ const TokenInfoData: React.FC<Props> = ({data}) => {
             {data ? (
               <Grid container>
                 <Grid item xs={12}>
-                  <Box
-                    mb={2}
-                    component='h3'
-                    fontFamily={Fonts.LIGHT}
-                    fontSize={{xs: 20, sm: 22, xl: 24}}>
-                    {data.name}
+                   <Box  display='flex'  alignItems={'center'} mb={2}> 
+                    <TokenLogo token0={data.address}></TokenLogo>
+                    <Box
+                      component='h3'
+                      pl={2}
+                      fontFamily={Fonts.LIGHT}
+                      fontSize={{xs: 20, sm: 22, xl: 24}}>   
+                      {data.name}
+                    </Box>
                   </Box>
                 </Grid>
                 {data.annotation && (

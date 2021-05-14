@@ -20,7 +20,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
   const history = useHistory();
   const network = useNetwork();
-  const tokens  = useTokens(network);
+  const tokens  = useTokens();
 
   const [timeout, setClearTimeOut] = useState<number>(-1);
   const [founded, setFounded] = useState<Pair[]>();
@@ -42,9 +42,6 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
           )
         });
 
-        console.log(props);
-        console.log(tokensFounded);
- 
         if (props.type == undefined || props.type == 'token') {
           setFounded(tokensFounded.map(e => { return { address: e.address, token0: e, token1: e } }));
         }

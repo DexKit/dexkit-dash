@@ -6,6 +6,7 @@ import {utils} from 'ethers';
 import { NETWORK } from 'shared/constants/AppEnums';
 import { GET_DEFAULT_TOKEN_NETTOWRK } from 'shared/constants/Blockchain';
 import { useChainId } from 'hooks/useChainId';
+import { useTokens } from 'hooks/useTokens';
 
 const useStyles = makeStyles(() => ({
   pair: {
@@ -37,10 +38,10 @@ interface Props {
 const TokenLogo: React.FC<Props> = (props) => {
 
   const {currentChainId} = useChainId();
+  
   const network = useNetwork();
   const classes = useStyles();
-
-  console.log(props);
+ // const tokens = useTokens()
 
   const provToken0 = props.token0 === '-' ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId) : props.token0;
   const provToken1 = props.token1 === '-' ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId) : props.token1;
@@ -48,22 +49,46 @@ const TokenLogo: React.FC<Props> = (props) => {
   const token0 = provToken0 && utils.isAddress(provToken0||'') ? utils.getAddress(provToken0) : '';
   const token1 = provToken1 && utils.isAddress(provToken1||'') ? utils.getAddress(provToken1) : '';
 
-  const networkName = (network == NETWORK.ETHEREUM) ? 'ethereum' : 'smartchain';
+  const networkName = (network === NETWORK.ETHEREUM) ? 'ethereum' : 'smartchain';
 
   const noFoundSrc = require('assets/images/logo-not-found.png');
+  const dexkitLogo = require('assets/images/dexkit-logo.png');
 
-  function addDefaultSrc(ev: any){
+  function addDefaultSrc(ev: any, token: string){
+    if(!token){
+      ev.target.src = noFoundSrc;
+      return;
+    }
+     // Add fallback for KIT token
+     if(token.toLowerCase() === (process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN as string).toLowerCase() 
+     || token.toLowerCase() === (process.env.REACT_APP_DEFAULT_BSC_KIT_TOKEN as string).toLowerCase()){
+        ev.target.src = dexkitLogo;
+        return;
+      }
+
+    /*if(tokens){
+      const tk = tokens.find((t) => t.address.toLowerCase() === token.toLowerCase())
+      if(tk && tk.logoURI){
+        ev.target.src = tk.logoURI
+        return;
+      }
+    }*/
+    
+
+   
+
+
     ev.target.src = noFoundSrc;
   }
 
   return (
     props.token1 ? (
       <Box className={classes.pair}>
-        <img className={classes.iconLeft} onError={addDefaultSrc} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token0}/logo.png`} />
-        <img className={classes.iconRight} onError={addDefaultSrc} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token1}/logo.png`} />
+        <img className={classes.iconLeft} onError={(ev) => addDefaultSrc(ev, token0)} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token0}/logo.png`} />
+        <img className={classes.iconRight} onError={(ev) => addDefaultSrc(ev, token1)} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token1}/logo.png`} />
       </Box>
     ) : (
-      <img className={classes.iconLeft} onError={addDefaultSrc} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token0}/logo.png`} />
+      <img className={classes.iconLeft} onError={(ev) => addDefaultSrc(ev, token0)} loading="lazy" src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${token0}/logo.png`} />
     )
   );
 };

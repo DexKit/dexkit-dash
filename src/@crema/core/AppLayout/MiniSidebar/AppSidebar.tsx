@@ -39,7 +39,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
           style={{position: 'absolute'}}>
           <Box height='100%' className={classes.miniSidebar}>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-            <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
+            <AppLogo justifyContent="center" collapsed={navCollapsed} logo={require('assets/images/dexkit-logo.png') }/>
              {/*  <UserInfo />*/}
               <PerfectScrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
@@ -52,7 +52,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
         <Box height='100%' className={clsx(classes.miniSidebar, 'app-sidebar')}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
          {/*   <UserInfo />*/}
-           <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
+           <AppLogo justifyContent="center" logo={require('assets/images/dexkit-logo.png')}/>
 
             <PerfectScrollbar className={classes.scrollAppSidebar}>
               <Navigation />

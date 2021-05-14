@@ -2,7 +2,6 @@ import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import {orange} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {BalanceCoins} from 'types/models/Crypto';
@@ -14,6 +13,7 @@ import AppCard from '@crema/core/AppCard';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import {GET_DEXTOOLS_URL, GET_AMM_ANALYTICS} from 'utils/protocol';
 import TokenLogo from 'shared/components/TokenLogo';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export interface Props {
   data: AMMPairInfoExplorer;
@@ -125,6 +125,7 @@ const InfoAMM: React.FC<Props> = (props) => {
             </Box>
             <Box display='flex'>
               <Box mr={3}>
+              <Tooltip title={'View Pair on Explorer'} placement='top'>
                 <a
                   href={`${ETHERSCAN_API_URL(chainId)}/address/${
                     props.data.address
@@ -140,23 +141,27 @@ const InfoAMM: React.FC<Props> = (props) => {
                     }}
                     src='/images/etherescan.png'></Avatar>
                 </a>
+                </Tooltip>
               </Box>
               {analytics && (
                 <Box mr={3}>
-                  <a href={analytics.url} target='_blank' rel='noreferrer'>
-                    <Avatar
-                      style={{
-                        color: '#3F51B5',
-                        backgroundColor: 'white',
-                        width: 34,
-                        height: 34,
-                      }}
-                      src={analytics.icon}></Avatar>
-                  </a>
+                   <Tooltip title={`View Analytics on ${props.exchange}`} placement='top'>
+                    <a href={analytics.url} target='_blank' rel='noreferrer'>
+                      <Avatar
+                        style={{
+                          color: '#3F51B5',
+                          backgroundColor: 'white',
+                          width: 34,
+                          height: 34,
+                        }}
+                        src={analytics.icon}></Avatar>
+                    </a>
+                  </Tooltip>
                 </Box>
               )}
               {dextoolsURL && (
                 <Box mr={3}>
+                   <Tooltip title={'View On DexTools'} placement='top'>
                   <a
                     href={dextoolsURL}
                     target='_blank'
@@ -170,9 +175,11 @@ const InfoAMM: React.FC<Props> = (props) => {
                       }}
                       src='/images/dextools.png'></Avatar>
                   </a>
+                  </Tooltip>
                 </Box>
               )}
               <Box mr={3}>
+              <Tooltip title={'View On DexKit'} placement='top'>
                 <a href={`/dashboard/token/${props.data.baseToken.address}`}>
                   <Avatar
                     style={{
@@ -184,6 +191,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                     T
                   </Avatar>
                 </a>
+                </Tooltip>
               </Box>
             </Box>
           </Box>

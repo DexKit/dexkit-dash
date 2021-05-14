@@ -155,7 +155,7 @@ const Wallet: React.FC<Props> = (props) => {
 
           <Grid item xs={12} md={6}>
             <Grid item xs={12} md={12}>
-              <TotalBalance balances={myBalances}/>
+              <TotalBalance balances={myBalances} />
             </Grid>
 
             <Grid item xs={12} md={12} style={{ marginTop: 15 }}>

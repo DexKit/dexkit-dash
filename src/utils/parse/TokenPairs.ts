@@ -24,7 +24,7 @@ export function parseTokenPairsData(data: any, address: string, network: NETWORK
         },
         address: d.smartContract.address.address,
         price: d.quotePrice,
-        closePrice: d.close_price,
+        closePrice: Number(d.close_price),
         closePriceUsd:  (d.close_price * quotePerDolar),
         priceUsd: (d.quotePrice * quotePerDolar),
         priceChange: 0, 
@@ -34,6 +34,7 @@ export function parseTokenPairsData(data: any, address: string, network: NETWORK
         baseVolume24: d.baseAmount,
         trades: d.trades,
         protocol: d.protocol,
+        exchange: d.exchange.name,
       }
     })
   }
@@ -61,7 +62,8 @@ export function parseTokenPairsData(data: any, address: string, network: NETWORK
     baseVolume24: 0,
     quoteVolume24: 0,
     trades: 0,
-    protocol:''
+    protocol:'',
+    exchange: ''
   }]
   
 }
@@ -71,7 +73,7 @@ export function parseTokenPairDailyData(data: any, address: string, network: NET
   if (data && data.data[network] && data.data[network].data24.length > 0) {
       const d = data.data[network].data24[0];
       const quotePerDolar = d.quoteAmountInUsd / d.quoteAmount;
-      const priceChange = d.open_price !== 0 ? (d.close_price - d.open_price)/ (d.open_price) : 0;
+      const priceChange = Number(d.open_price) !== 0 ? (Number(d.close_price) - Number(d.open_price))/ (Number(d.open_price)) : 0;
 
       return {
         baseToken: {
@@ -87,8 +89,8 @@ export function parseTokenPairDailyData(data: any, address: string, network: NET
           decimals: d.quoteCurrency.decimals
         },
         address: ' ',
-        price: d.quotePrice,
-        priceUsd: (d.quotePrice * quotePerDolar),
+        price: Number(d.close_price),
+        priceUsd: (Number(d.close_price) * quotePerDolar),
         priceChange: priceChange,
         volume24: d.tradeAmount,
         volume24InUsd: d.tradeAmountInUsd,

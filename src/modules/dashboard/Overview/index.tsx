@@ -13,6 +13,7 @@ import ProtocolNavigationZRXProtocol from './ProtocolNavigation/zrxprotocol';
 import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
+import Protocols from './Protocols';
 
 export interface OverviewDataProvider {
   getReportCardsData(): Promise<ReportCards[]>;
@@ -93,7 +94,9 @@ const Overview: React.FC<CryptoProps> = () => {
                 </Grid>
               </GridContainer>
             </Grid>*/}
-
+          {/*<Grid item xs={12} md={6}>
+            <Protocols />
+          </Grid> */}
           <Grid item xs={12} md={4}>
             <ProtocolNavigationUniswap />
           </Grid>

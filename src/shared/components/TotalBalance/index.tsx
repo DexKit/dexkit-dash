@@ -10,15 +10,21 @@ import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
 import CallMadeIcon from '@material-ui/icons/CallMade';
-
+import { isMobile } from 'web3modal';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import { useWeb3 } from 'hooks/useWeb3';
+import { Web3State } from 'types/blockchain';
 interface TotalBalanceProps {
   balances: MyBalance[];
+  featuredTokenBalance?: {symbol: string, address: string};
 }
 
-const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
+const TotalBalance: React.FC<TotalBalanceProps> = ({balances, featuredTokenBalance}) => {
   const [senderModal, setSenderModal] = useState(false);
   const [receiverModal, setReceiverModal] = useState(false);
+
+  const { onConnectWeb3, account, ethBalance, web3State, onCloseWeb3} = useWeb3();
 
   const usdAvailable = balances.reduce((acc, current) => {
     return (acc += current.valueUsd || 0);
@@ -87,6 +93,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
   const classes = useStyles();
 
   return (
+    account ?  
     <Box>
       <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
         <Card>
@@ -143,7 +150,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
           <Box pt={{lg: 5}}>
-            <CoinsInfo coins={balances} />
+            <CoinsInfo coins={balances} coinFeatured={featuredTokenBalance}/>
           </Box>
         </Card>
       </Box>
@@ -155,7 +162,25 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
       />
 
       <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
-    </Box>
+    </Box> : 
+      <Box>
+      <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
+        <Card>
+          <Box
+            mb={3}
+            display='flex'
+            // flexDirection={{xs: 'column', xl: 'row'}}
+            alignItems={{xl: 'center'}}
+            flexDirection={'row'}
+            flexWrap={'wrap'}
+            justifyContent={'center'}>
+               <Button variant="contained" color="primary" onClick={onConnectWeb3}  endIcon={   <AccountBalanceWalletIcon/>}>
+                 {web3State === Web3State.Connecting ? (isMobile() ? 'Connecting...' : 'Connecting... Check Wallet') : (isMobile() ? 'Connect' : 'Connect Wallet')}
+              </Button>
+          </Box>
+        </Card>
+      </Box>
+    </Box>  
   );
 };
 

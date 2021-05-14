@@ -6,6 +6,8 @@ import {EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import TokenLogo from 'shared/components/TokenLogo';
+import {isMobile} from 'web3modal';
+import ExchangeLogo from 'shared/components/ExchangeLogo';
 interface TableItemProps {
   row: TokenPair;
   exchange: EXCHANGE;
@@ -52,9 +54,9 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
     <TableRow hover role='checkbox' tabIndex={-1} key={row.address}>
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
-          <TokenLogo
+        {!isMobile() && <TokenLogo
             token0={row.baseToken.address}
-            token1={row.quoteToken.address}></TokenLogo>
+            token1={row.quoteToken.address}></TokenLogo>}
           <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
             {row.baseToken.symbol}/{row.quoteToken.symbol}
           </Link>
@@ -89,7 +91,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
       </TableCell>
       {exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCell}>
-          {row.protocol}
+           <ExchangeLogo exchange={row.exchange}/>
         </TableCell>
       )}
     </TableRow>

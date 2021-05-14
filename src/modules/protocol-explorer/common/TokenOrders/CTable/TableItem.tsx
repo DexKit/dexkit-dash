@@ -8,6 +8,7 @@ import {
   Chip,
   Link,
   Avatar,
+  Tooltip,
 } from '@material-ui/core';
 import {OrderData} from 'types/app';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
@@ -17,6 +18,9 @@ import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {EthereumNetwork, EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useNetwork} from 'hooks/useNetwork';
+import { useIntl } from 'react-intl';
+import {isMobile} from 'web3modal';
+import ExchangeLogo from 'shared/components/ExchangeLogo';
 
 interface TableItemProps {
   row: OrderData;
@@ -80,14 +84,15 @@ const TableItem: React.FC<TableItemProps> = ({
     }
   };
 
-  const createdFn = row.created.split(' ');
+  const createdFn = new Date(row.created)
   const netName = useNetwork();
+  const {messages} = useIntl();
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1} key={row.hash}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box>{createdFn[0]}</Box>
-        <Box>{createdFn[1]}</Box>
+        <Box>{createdFn.toLocaleDateString()}</Box>
+        <Box>{createdFn.toLocaleTimeString()}</Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         <Chip
@@ -98,9 +103,9 @@ const TableItem: React.FC<TableItemProps> = ({
       {type === 'token' && (
         <TableCell align='left' className={classes.tableCell}>
           <Box display='flex' alignItems='center'>
-            <TokenLogo
+          {!isMobile() && <TokenLogo
               token0={row.baseToken.address}
-              token1={row.quoteToken.address}></TokenLogo>
+              token1={row.quoteToken.address}></TokenLogo>}
             <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
               {row.baseToken.symbol}/{row.quoteToken.symbol}
             </Link>
@@ -131,11 +136,12 @@ const TableItem: React.FC<TableItemProps> = ({
       </TableCell>
       {exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCell}>
-          {row.protocol}
+          <ExchangeLogo exchange={row.exchange}/>
         </TableCell>
       )}
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
+        <Tooltip title={messages['app.viewTx']} placement='top'>
           <a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
             target='_blank'>
@@ -163,11 +169,12 @@ const TableItem: React.FC<TableItemProps> = ({
                 src='/images/bscscan-logo-circle.png'></Avatar>
             )}
           </a>
-          <a
+          </Tooltip>
+          {/*<a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
             target='_blank'>
             <SearchIcon />
-          </a>
+          </a>*/}
         </Box>
       </TableCell>
     </TableRow>

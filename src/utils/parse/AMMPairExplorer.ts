@@ -30,9 +30,9 @@ export function parseAMMPairExplorerData(data: any, address: string, network: NE
           decimals: d24Current.quoteCurrency.decimals
         },
         address,
-        price: d24Current.quotePrice,
-        priceUsd: (d24Current.quotePrice * quotePerDolar),
-        priceChange: ((d24Current.quotePrice * 100) / d24Yesterday.quotePrice) - 100,
+        price: Number(d24Current.close_price),
+        priceUsd: ( Number(d24Current.close_price) * quotePerDolar),
+        priceChange: ((Number(d24Current.close_price)* 100) / Number(d24Yesterday.close_price)) - 100,
         liquidity: ((basePooled * basePerDolar) + (quotePooled * quotePerDolar)),
         volume24: d24Current.tradeAmount,
         volume24InUsd: d24Current.tradeAmountInUsd,

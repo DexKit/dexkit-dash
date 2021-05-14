@@ -13,6 +13,7 @@ import {
   ClickAwayListener,
   MenuList,
   MenuItem,
+  Box,
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import { Link } from 'react-router-dom';
@@ -20,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import { truncateAddress } from 'utils';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import ButtonCopy from 'shared/components/ButtonCopy';
 
 
 interface Props {
@@ -40,7 +42,6 @@ const PageTitle: React.FC<Props> = (props) => {
       },
     },
     title: {
-      marginTop: '10px',
       fontSize: '24px',
       fontWeight: 600,
       [theme.breakpoints.down('sm')]: {
@@ -111,7 +112,7 @@ const PageTitle: React.FC<Props> = (props) => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          {(ethAccounts && ethAccounts?.length > 0) && truncateAddress(ethAccounts[0]) }
+          {(ethAccounts && ethAccounts?.length > 0) && truncateAddress(ethAccounts[0]) } <ButtonCopy copyText={ethAccounts[0]}  titleText='Copied to clipbord !'></ButtonCopy>
         </Button>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
@@ -123,7 +124,7 @@ const PageTitle: React.FC<Props> = (props) => {
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     {ethAccounts.map((a,i) => 
-                      <MenuItem onClick={(e) => handleClose(e,i)}>{truncateAddress(a)}</MenuItem>
+                      <MenuItem onClick={(e) => handleClose(e,i)}>{truncateAddress(a)} <ButtonCopy copyText={a}  titleText='Copied to clipbord !'></ButtonCopy></MenuItem>
                     )}
                   </MenuList>
                 </ClickAwayListener>
@@ -136,13 +137,17 @@ const PageTitle: React.FC<Props> = (props) => {
 
         {(ethAccounts && ethAccounts?.length === 1) &&   
            <Typography className={classes.breadcrumbs} color='textPrimary'>
-            {truncateAddress(ethAccounts[0])}
+            {truncateAddress(ethAccounts[0])} <ButtonCopy copyText={ethAccounts[0]}  titleText='Copied to clipbord !'></ButtonCopy>
           </Typography>}
         </Breadcrumbs> 
-
-        <Typography className={classes.title} color='textPrimary'>
-         <AccountBalanceWalletIcon/> Wallet
-        </Typography>
+        <Box display={'flex'}   alignItems={'center'}   >
+          <Box pr={2}>
+            <AccountBalanceWalletIcon color={'primary'}/> 
+           </Box>
+          <Typography className={classes.title} color='textPrimary'>
+             Wallet
+          </Typography>
+        </Box>
       </Grid>
     </GridContainer>
   );

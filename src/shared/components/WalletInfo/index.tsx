@@ -19,6 +19,7 @@ import { tokenAmountInUnits } from 'utils/tokens';
 import { Web3State } from 'types/blockchain';
 import { isMobile } from 'web3modal';
 import { truncateAddress } from 'utils';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
@@ -146,7 +147,7 @@ const WalletInfo = (props: any) => {
       </Box>
       }
       {web3State !== Web3State.Done && <Box display='flex' alignItems='center' justifyContent='center'>
-         <Button variant="contained" color="primary" onClick={onConnectWeb3}>
+         <Button variant="contained" color="primary" onClick={onConnectWeb3} endIcon={ <AccountBalanceWalletIcon/>}>
             {web3State === Web3State.Connecting ? (isMobile() ? 'Connecting...' : 'Connecting... Check Wallet') : (isMobile() ? 'Connect' : 'Connect Wallet')}
         </Button>
       </Box>

@@ -60,6 +60,9 @@ export const BITQUERY_TOKEN_PAIRS = gql`
           decimals
         }
         protocol
+        exchange{
+          name
+        }
         tradeAmount(in: ETH)
         tradeAmountInUsd: tradeAmount(in: USD)
         maximum_price: quotePrice(calculate: maximum)

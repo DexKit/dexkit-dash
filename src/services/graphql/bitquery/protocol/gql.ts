@@ -5,7 +5,7 @@ export const BITQUERY_TOKEN_PAIRS = gql`
   query GetTokenPairs($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime, $limit: Int!  ) {
     ethereum(network: $network) {
        dexTrades(
-        options: {limit: $limit, desc: ["block.height","tradeAmountInUsd"]}
+        options: {limit: $limit, desc: ["tradeAmountInUsd"]}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
         date: {since: $from}
@@ -131,7 +131,6 @@ export const BITQUERY_PAIR_EXPLORER_24 = gql`
   query GetPairExplorer24 ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String! $from: ISO8601DateTime) {
     ethereum(network: $network) {
       data24: dexTrades(
-        options: {desc: ["block.height", "tradeIndex"]}
         date: {since: $from}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
@@ -162,7 +161,6 @@ export const BITQUERY_PAIR_EXPLORER_24 = gql`
         minimum_price: quotePrice(calculate: minimum)
         open_price: minimum(of: block, get: quote_price)
         close_price: maximum(of: block, get: quote_price)
-        tradeAmount(in: ETH)
         tradeAmountInUsd: tradeAmount(in: USD)
       }
     }

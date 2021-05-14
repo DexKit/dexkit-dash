@@ -13,6 +13,7 @@ import { filterTokensInfoByString, getNativeCoinWrapped } from 'utils/tokens';
 import { ChainId } from 'types/blockchain';
 import { useNetwork } from 'hooks/useNetwork';
 import { EXCHANGE } from 'shared/constants/AppEnums';
+import { useTokens } from 'hooks/useTokens';
 
 interface TokenSearchProps {
   exchangeName: EXCHANGE;
@@ -26,7 +27,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
   const network = useNetwork();
   const history = useHistory();
   const { chainId } = useWeb3();
-  const tokenList = useTokenList();
+  const tokens = useTokens();
 
   const [founded, setFounded] = useState<Currency[]>();
   const [searchKey, setSearchKey] = useState<string>('');
@@ -34,7 +35,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
 
 
   useEffect(() => {
-      if(tokenList && searchKey){
+      if(tokens && searchKey){
         if(Web3.utils.isAddress(searchKey)){
           setLoading(true);
           searchByAddress(searchKey, network ).then(result => {
@@ -59,7 +60,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
           .catch( error => console.error('search', error))
           .finally(() => setLoading(false));
         }else{
-          const searchTokens = filterTokensInfoByString(tokenList.tokens, searchKey).slice(0, 10)
+          const searchTokens = filterTokensInfoByString(tokens, searchKey).slice(0, 10)
           setFounded(searchTokens);
 
         }
@@ -68,7 +69,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
    
 
     
-  }, [searchKey, tokenList]);
+  }, [searchKey, tokens]);
 
   const onPairSelected = (currency: Currency|null) => {
     const url = `/${network}/protocol-explorer/${exchangeName}`

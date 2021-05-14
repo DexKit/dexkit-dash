@@ -1,5 +1,6 @@
 {
   "app.block": "Block",
+  "app.viewTx": "View TX",
   "app.hash": "Hash",
   "app.protocol": "Protocol",
   "app.amount": "Amount",

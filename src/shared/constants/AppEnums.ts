@@ -88,12 +88,18 @@ export enum EthereumNetwork {
 export enum EXCHANGE {
   // ethereum
   UNISWAP = 'Uniswap',
+  UNISWAP_V2_BRACKET = '<Uniswap v2>',
   SUSHISWAP = 'SushiSwap',
   ZEROX = 'Zerox Exchange',
+  ZEROX_V2 = '<Zerox Exchange v2>',
+  ZEROX_V3 = '<Zerox Exchange v3>',
+  MATCHA = 'Matcha',
+  BAMBOO_RELAY = 'Bamboo Relay',
   CURVE = 'Curve',
   BALANCER = 'Balancer',
   BANCOR_NETWORK = 'Bancor Network',
   KYBER_NETWORK = 'Kyber Network',
+  MOONISWAP = 'Mooniswap',
   //bsc
   PANCAKE = 'Pancake',
   ALL = 'all'
@@ -116,11 +122,15 @@ export enum EXCHANGE_NAME_ON_URL {
 export enum PROTOCOL {
   // ethereum
   UNISWAP_V2 = 'Uniswap v2',
+  UNISWAP = 'Uniswap',
   ZEROX_V3 = 'Zerox Exchange v3',
+  ZEROX_V2 = 'Zerox Exchange v2',
+  ZEROX = 'Zerox Exchange',
   BANCOR_V2 = 'Bancor Network v2',
   CURVE = 'Curve',
   BALANCER =  'Balancer Pool Token',
-  DODO =  'DODO',
+  MOONISWAP = 'Mooniswap',
+  DODO =  'Dodo',
   //bsc
   PANCAKE = 'Pancake',
   ALL = ''

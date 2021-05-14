@@ -224,7 +224,7 @@ const TokensForm: React.FC<Props> = (props) => {
   const { changeIssuerForm, validator, isValid: startValidation } = props;
   const [tokens, setTokens] = useState(props.tokens ?? []);
   const networkName = useNetwork();
-  const listToken = useTokens(networkName);
+  const listToken = useTokens();
   useEffect(() => {
     if (tokens == null || tokens?.length === 0) {
       addToken();

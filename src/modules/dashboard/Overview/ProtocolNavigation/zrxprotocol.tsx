@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import Card from '@material-ui/core/Card';
 
-import {Box, Fade, Grid, Typography, Zoom} from '@material-ui/core';
-import {Fonts, EXCHANGE} from '../../../../shared/constants/AppEnums';
+import {Box, Fade, Grid, Typography} from '@material-ui/core';
+import { EXCHANGE} from '../../../../shared/constants/AppEnums';
 import InfoCard from 'shared/components/InfoCard';
 import IconComponent from '@crema/core/Navigation/Icon';
 import {IconProps} from 'modules/routesConfig';
 
-import ExploreIcon from '@material-ui/icons/Explore';
+
 import MoneyIcon from '@material-ui/icons/Money';
 
-const INFOR_CARD = [
+export const INFOR_CARD = [
   {
     value: 'Token Explorer',
     bgColor: '#ff7149',
