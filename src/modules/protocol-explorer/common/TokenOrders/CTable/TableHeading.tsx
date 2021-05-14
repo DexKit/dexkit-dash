@@ -6,6 +6,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts, EXCHANGE} from 'shared/constants/AppEnums';
+import {useIntl} from 'react-intl';
+import {Tooltip} from '@material-ui/core';
 
 interface TableHeadingProps {
   type: 'pair' | 'token';
@@ -43,40 +45,61 @@ const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
   }));
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.timestamp' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.type' />
-      </TableCell>
+      <Tooltip title={messages['app.timestamp']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.timestamp' />
+        </TableCell>
+      </Tooltip>
+
+      <Tooltip title={messages['app.type']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.type' />
+        </TableCell>
+      </Tooltip>
       {type === 'token' && (
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.pair' />
-        </TableCell>
+        <Tooltip title={messages['app.pair']} placement='top'>
+          <TableCell align='left' className={classes.tableCellRoot}>
+            <IntlMessages id='app.pair' />
+          </TableCell>
+        </Tooltip>
       )}
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.price' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.quoteAmount' />
-      </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.total' />
-      </TableCell>
+
+      <Tooltip title={messages['app.price']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.price' />
+        </TableCell>
+      </Tooltip>
+
+      <Tooltip title={messages['app.baseAmount']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.baseAmount' />
+        </TableCell>
+      </Tooltip>
+
+      <Tooltip title={messages['app.quoteAmount']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.quoteAmount' />
+        </TableCell>
+      </Tooltip>
+
+      <Tooltip title={messages['app.total']} placement='top'>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.total' />
+        </TableCell>
+      </Tooltip>
+
       {exchange === EXCHANGE.ALL && (
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.protocol' />
-        </TableCell>
+        <Tooltip title={messages['app.protocol']} placement='top'>
+          <TableCell align='left' className={classes.tableCellRoot}>
+            <IntlMessages id='app.protocol' />
+          </TableCell>
+        </Tooltip>
       )}
-      <TableCell align='left' className={classes.tableCellRoot}>
-        #
-      </TableCell>
+      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
     </TableRow>
   );
 };

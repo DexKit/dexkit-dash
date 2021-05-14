@@ -18,8 +18,10 @@ import {Fonts, ThemeMode} from 'shared/constants/AppEnums';
 import Loader from '@crema/core/Loader';
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
-import classes from '*.module.css';
-import {makeStyles} from '@material-ui/core';
+import {Button, makeStyles, Tooltip} from '@material-ui/core';
+import {truncateAddress} from 'utils';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import ButtonCopy from 'shared/components/ButtonCopy';
 
 const TVChartContainer = React.lazy(
   () => import('../../../shared/components/chart/TvChart/tv_chart'),
@@ -111,12 +113,13 @@ const Crypto: React.FC<TokenProps> = (props) => {
                   component='h2'
                   color='text.primary'
                   fontSize={{sm: 20, xl: 22}}
-                  mb={{xs: 0, sm: 4, xl: 6}}
+                  mb={{xs: 0, sm: 2}}
                   fontFamily={Fonts.LIGHT}>
                   {info?.name} Token{' '}
                   {info?.contract_address
-                    ? `- ${info?.contract_address}`
+                    ? `- ${truncateAddress(info?.contract_address)}`
                     : null}
+                <ButtonCopy copyText={address!}  titleText='Copied token address to clipbord !'></ButtonCopy>
                 </Box>
               </Grid>
             </GridContainer>
@@ -148,7 +151,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
                       <InfoCard
                         state={{
                           value: 'My Orders',
-                          bgColor: '#0A8FDC',
+                          bgColor: theme.palette.primary.main,
                           icon: '/assets/images/dashboard/1_monthly_sales.png',
                           id: 1,
                           type: 'Click to Open',
@@ -163,7 +166,7 @@ const Crypto: React.FC<TokenProps> = (props) => {
                       <InfoCard
                         state={{
                           value: 'Trade history',
-                          bgColor: '#9E49E6',
+                          bgColor: theme.palette.secondary.main,
                           icon: '/assets/images/dashboard/1_monthly_sales.png',
                           id: 2,
                           type: 'Click to Open',

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {useDispatch, useSelector} from 'react-redux';
-import {onGetReportCardsData, onGetNewsData} from '../../../redux/actions';
+import {onGetReportCardsData} from '../../../redux/actions';
 import GridContainer from '../../../@crema/core/GridContainer';
 import Box from '@material-ui/core/Box';
 import {AppState} from '../../../redux/store';
@@ -12,8 +12,6 @@ import ProtocolNavigationUniswap from './ProtocolNavigation/uniswap';
 import ProtocolNavigationZRXProtocol from './ProtocolNavigation/zrxprotocol';
 import ProtocolNavigationSushiSwap from './ProtocolNavigation/sushiswap';
 import ProtocolNavigationBalancer from './ProtocolNavigation/balancer';
-import RelatedCourses from './RelatedCourses';
-import {RelatedCoursesData} from 'types/models/Academy';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 
 export interface OverviewDataProvider {
@@ -49,13 +47,17 @@ const Overview: React.FC<CryptoProps> = () => {
       <Box pt={{xl: 4}}>
         <GridContainer>
           <Grid item xs={12} md={4}>
-            {reportCardsData[0] ? <ReportCard data={reportCardsData[0]} /> : skeleton}
+            {reportCardsData[0] ? 
+              <ReportCard data={reportCardsData[0]} timeout={0}   /> : skeleton}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[1] ? <ReportCard data={reportCardsData[1]} /> : skeleton}
+            {reportCardsData[1] ? 
+              <ReportCard data={reportCardsData[1]} timeout={500} /> : skeleton}
           </Grid>
           <Grid item xs={12} md={4}>
-            {reportCardsData[2] ? <ReportCard data={reportCardsData[2]} /> : skeleton}
+            {reportCardsData[2] ? 
+              <ReportCard data={reportCardsData[2]} timeout={1000} /> : skeleton}
+            
           </Grid>
 
           {/*<Grid style={{ backgroundColor: 'white', borderRadius: 10 }} item xs={12} sm={12} md={4}>

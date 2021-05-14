@@ -1,9 +1,6 @@
 import { ChainId } from "types/blockchain";
 import { EXCHANGE, NETWORK, EthereumNetwork } from "./AppEnums";
 
-
-
-
 export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
   switch (chainId) {
     case ChainId.Mainnet:

@@ -5,19 +5,20 @@ import {TokenStatistic} from 'types/app';
 import {useIntl} from 'react-intl';
 import {Fonts} from 'shared/constants/AppEnums';
 import Revenue from 'assets/images/metricsIcons/revenue.png';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 interface Props {
   data: TokenStatistic | undefined;
 }
 
 const TokenStatisticsData: React.FC<Props> = ({data}) => {
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles((theme: CremaTheme) => ({
     avatar: {
       width: 50,
       height: 50,
       padding: '10px',
       borderRadius: '4px',
-      backgroundColor: indigo[500],
+      backgroundColor: theme.palette.primary.main,
     },
   }));
 
@@ -30,144 +31,140 @@ const TokenStatisticsData: React.FC<Props> = ({data}) => {
       {data ? (
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Box
-              padding={3}
-              display='flex'
-              alignItems='center'
-              bgcolor='#FFFFFF'
-              borderRadius={5}
-              boxShadow={1}>
-              <Avatar
-                className={classes.avatar}
-                src={Revenue}
-                alt='icon'
-                variant='square'
-              />
-              <Box position='relative' ml={2}>
-                <Box
-                  mb={1}
-                  component='p'
-                  color={grey[500]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 12, sm: 12, xl: 13}}>
-                  {messages['app.transferCount']}
-                </Box>
-                <Box
-                  component='h4'
-                  display='inline-block'
-                  style={{padding: 0}}
-                  color={grey[700]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 16, sm: 16, xl: 18}}>
-                  {data.transferCount}
+            <Card>
+              <Box
+                padding={3}
+                display='flex'
+                alignItems='center'
+                borderRadius={5}
+                boxShadow={1}>
+                <Avatar
+                  className={classes.avatar}
+                  src={Revenue}
+                  alt='icon'
+                  variant='square'
+                />
+                <Box position='relative' ml={2}>
+                  <Box
+                    mb={1}
+                    component='p'
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 12, sm: 12, xl: 13}}>
+                    {messages['app.transferCount']}
+                  </Box>
+                  <Box
+                    component='h4'
+                    display='inline-block'
+                    style={{padding: 0}}
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 16, sm: 16, xl: 18}}>
+                    {data.transferCount}
+                  </Box>
                 </Box>
               </Box>
-            </Box>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Box
-              padding={3}
-              display='flex'
-              alignItems='center'
-              bgcolor='#FFFFFF'
-              borderRadius={5}
-              boxShadow={1}>
-              <Avatar
-                className={classes.avatar}
-                src={Revenue}
-                alt='icon'
-                variant='square'
-              />
-              <Box position='relative' ml={2}>
-                <Box
-                  mb={1}
-                  component='p'
-                  color={grey[500]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 12, sm: 12, xl: 13}}>
-                  {messages['app.uniqSenders']}
-                </Box>
-                <Box
-                  component='h4'
-                  display='inline-block'
-                  style={{padding: 0}}
-                  color={grey[700]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 16, sm: 16, xl: 18}}>
-                  {data.uniqSenders}
+            <Card>
+              <Box
+                padding={3}
+                display='flex'
+                alignItems='center'
+                borderRadius={5}
+                boxShadow={1}>
+                <Avatar
+                  className={classes.avatar}
+                  src={Revenue}
+                  alt='icon'
+                  variant='square'
+                />
+                <Box position='relative' ml={2}>
+                  <Box
+                    mb={1}
+                    component='p'
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 12, sm: 12, xl: 13}}>
+                    {messages['app.uniqSenders']}
+                  </Box>
+                  <Box
+                    component='h4'
+                    display='inline-block'
+                    style={{padding: 0}}
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 16, sm: 16, xl: 18}}>
+                    {data.uniqSenders}
+                  </Box>
                 </Box>
               </Box>
-            </Box>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Box
-              padding={3}
-              display='flex'
-              alignItems='center'
-              bgcolor='#FFFFFF'
-              borderRadius={5}
-              boxShadow={1}>
-              <Avatar
-                className={classes.avatar}
-                src={Revenue}
-                alt='icon'
-                variant='square'
-              />
-              <Box position='relative' ml={2}>
-                <Box
-                  mb={1}
-                  component='p'
-                  color={grey[500]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 12, sm: 12, xl: 13}}>
-                  {messages['app.uniqReceivers']}
-                </Box>
-                <Box
-                  component='h4'
-                  display='inline-block'
-                  style={{padding: 0}}
-                  color={grey[700]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 16, sm: 16, xl: 18}}>
-                  {data.uniqReceiver}
+            <Card>
+              <Box
+                padding={3}
+                display='flex'
+                alignItems='center'
+                borderRadius={5}
+                boxShadow={1}>
+                <Avatar
+                  className={classes.avatar}
+                  src={Revenue}
+                  alt='icon'
+                  variant='square'
+                />
+                <Box position='relative' ml={2}>
+                  <Box
+                    mb={1}
+                    component='p'
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 12, sm: 12, xl: 13}}>
+                    {messages['app.uniqReceivers']}
+                  </Box>
+                  <Box
+                    component='h4'
+                    display='inline-block'
+                    style={{padding: 0}}
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 16, sm: 16, xl: 18}}>
+                    {data.uniqReceiver}
+                  </Box>
                 </Box>
               </Box>
-            </Box>
+            </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Box
-              padding={3}
-              display='flex'
-              alignItems='center'
-              bgcolor='#FFFFFF'
-              borderRadius={5}
-              boxShadow={1}>
-              <Avatar
-                className={classes.avatar}
-                src={Revenue}
-                alt='icon'
-                variant='square'
-              />
-              <Box position='relative' ml={2}>
-                <Box
-                  mb={1}
-                  component='p'
-                  color={grey[500]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 12, sm: 12, xl: 13}}>
-                  {messages['app.totalAmount']}
-                </Box>
-                <Box
-                  component='h4'
-                  display='inline-block'
-                  style={{padding: 0}}
-                  color={grey[700]}
-                  fontWeight={Fonts.BOLD}
-                  fontSize={{xs: 16, sm: 16, xl: 18}}>
-                  {data.totalAmount}
+            <Card>
+              <Box
+                padding={3}
+                display='flex'
+                alignItems='center'
+                borderRadius={5}
+                boxShadow={1}>
+                <Avatar
+                  className={classes.avatar}
+                  src={Revenue}
+                  alt='icon'
+                  variant='square'
+                />
+                <Box position='relative' ml={2}>
+                  <Box
+                    mb={1}
+                    component='p'
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 12, sm: 12, xl: 13}}>
+                    {messages['app.totalAmount']}
+                  </Box>
+                  <Box
+                    component='h4'
+                    display='inline-block'
+                    style={{padding: 0}}
+                    fontWeight={Fonts.BOLD}
+                    fontSize={{xs: 16, sm: 16, xl: 18}}>
+                    {data.totalAmount}
+                  </Box>
                 </Box>
               </Box>
-            </Box>
+            </Card>
           </Grid>
         </Grid>
       ) : (

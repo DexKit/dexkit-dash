@@ -9,7 +9,7 @@ import {MyBalance} from 'types/bitquery/myBalance.interface';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
-import SendIcon from '@material-ui/icons/Send';
+import CallMadeIcon from '@material-ui/icons/CallMade';
 
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 interface TotalBalanceProps {
@@ -125,7 +125,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
                   onClick={() => setSenderModal(true)}
                   className={classes.root}>
                   <IntlMessages id='common.send' /> {'   '}
-                  <SendIcon />
+                  <CallMadeIcon />
                 </Button>
               </Box>
               <Box ml={3}>

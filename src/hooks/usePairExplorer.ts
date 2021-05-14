@@ -19,10 +19,12 @@ export const usePairExplorer = (baseAddress: string , quoteAddress: string | nul
 
    
     useEffect(() => {
-        setIsLoadingInfo(true);
-        getTokenPairDaily(GET_NETWORK_NAME(currentChainId), exchange, baseAddress, quoteAddress)
-            .then(info => {console.log(info); setInfoData(info);  setIsLoadingInfo(false) })
-            .catch(e => {console.log(e); setIsLoadingInfo(false)})
+        if (baseAddress != null && quoteAddress != null && currentChainId != null) {
+            setIsLoadingInfo(true);
+            getTokenPairDaily(GET_NETWORK_NAME(currentChainId), exchange, baseAddress, quoteAddress)
+                .then(info => {console.log(info); setInfoData(info);  setIsLoadingInfo(false) })
+                .catch(e => {console.log(e); setIsLoadingInfo(false)})
+        }
      
        }, [baseAddress, quoteAddress, currentChainId]);
 

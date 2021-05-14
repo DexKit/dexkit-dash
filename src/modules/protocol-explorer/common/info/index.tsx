@@ -13,6 +13,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 import AppCard from '@crema/core/AppCard';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
+import TokenLogo from 'shared/components/TokenLogo';
 
 export interface Props {
   data: PairInfoExplorer;
@@ -106,15 +107,19 @@ const Info: React.FC<Props> = (props) => {
             display='flex'
             flexDirection='row'
             justifyContent='space-between'>
-            <Box
-              component='h3'
-              color='text.primary'
-              fontWeight={Fonts.BOLD}
-              fontSize={20}
-              mr={2}>
-              {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
+            <Box display='flex' alignItems='center'>
+              <TokenLogo
+                token0={props.data.baseToken.address}
+                token1={props.data.quoteToken.address}></TokenLogo>
+              <Box
+                component='h3'
+                color='text.primary'
+                fontWeight={Fonts.BOLD}
+                fontSize={20}
+                mr={2}>
+                {props.data.baseToken.symbol}/{props.data.quoteToken.symbol}
+              </Box>
             </Box>
-
             <Box display='flex'>
               <Box mr={3}>
                 <a
