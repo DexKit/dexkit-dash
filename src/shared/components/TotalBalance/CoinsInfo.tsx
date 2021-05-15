@@ -13,6 +13,7 @@ const CoinsInfo: React.FC<CoinsInfoProps> = ({coins, coinFeatured}) => {
   const totalDisplayCoins = coinFeatured ? 3 : 4
 
   const coinsFn = coins
+    .filter(c => c.value > 0)
     .filter(c=> c.currency.address.toLowerCase() !== coinFeatured?.address.toLowerCase())
     .sort((a, b) => (b?.valueUsd ?? 0) - (a?.valueUsd ?? 0))
     .slice(0, coins.length > totalDisplayCoins ? totalDisplayCoins : coins.length);

@@ -148,6 +148,7 @@
     "tslint-react": "^5.0.0",
     "typesafe-actions": "^5.1.0",
     "typescript": "3.8.3",
+    "use-debounce": "^6.0.1",
     "use-http": "^1.0.15",
     "use-url-search-params": "^2.3.13",
     "validator": "^13.6.0",

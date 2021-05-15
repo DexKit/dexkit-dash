@@ -18,7 +18,7 @@ import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalCollapase.style';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {NavItemProps} from '../../../../modules/routesConfig';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
 import {ReactComponent as ZRXprotocolLogo} from 'assets/images/0x.svg';
 import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
@@ -55,22 +55,23 @@ const isUrlInChildren = (parent: any, url: string) => {
   return false;
 };
 
-interface VerticalCollapseProps extends RouteComponentProps<any> {
+interface VerticalCollapseProps{
   item: NavItemProps;
   level: number;
 }
 
 const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   item,
-  location,
-  match,
-  history,
-  level,
+  level
 }) => {
   const classes = useStyles({ level });
   const { theme } = useContext<AppContextPropsType>(AppContext);
+  const location = useLocation();
   const { pathname } = location;
+
   const [open, setOpen] = useState(() => needsToBeOpened(pathname, item));
+
+  
 
   useEffect(() => {
     if (needsToBeOpened(pathname, item)) {
@@ -131,9 +132,6 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
             <React.Fragment key={item.id}>
               {item.type === 'collapse' && (
                 <VerticalCollapse
-                  location={location}
-                  match={match}
-                  history={history}
                   item={item}
                   level={level + 1}
                 />
@@ -150,4 +148,4 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   );
 };
 
-export default withRouter(VerticalCollapse);
+export default VerticalCollapse;

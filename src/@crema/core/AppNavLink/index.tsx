@@ -7,11 +7,13 @@ interface AppNavLinkProps {
 
   [x: string]: any;
 }
-
-const AppNavLink: React.FC<AppNavLinkProps> = ({to, children, ...rest}) => (
-  <Link to={to} {...rest}>
+// It was giving this error
+// https://material-ui.com/guides/composition/#caveat-with-refs
+const AppNavLink: React.FC<AppNavLinkProps> = React.forwardRef(({to, children, ...rest}, ref) => (
+  //@ts-ignore
+  <Link to={to} {...rest} ref={ref}>
     <>{children}</>
   </Link>
-);
+));
 
 export default AppNavLink;

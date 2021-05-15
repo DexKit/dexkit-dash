@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getLastTradeByPair, getContractOrders, getTotalContractOrders } from "services/graphql/bitquery";
 import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { OrderData } from "types/app";
@@ -7,6 +7,9 @@ import Web3 from "web3";
 import useInterval from "./useInterval";
 import { useChainId } from "./useChainId";
 import { EXCHANGE } from "shared/constants/AppEnums";
+import { FilterContext } from "providers/protocol/filterContext";
+import { getFilterValueById } from "utils/filters";
+import useDebounce from "./useDebounce";
 
 
 /**
@@ -16,6 +19,14 @@ import { EXCHANGE } from "shared/constants/AppEnums";
  */
 export const useAMMPairTrades = (address: string, exchange: EXCHANGE) =>{
     const {currentChainId } = useChainId()
+    const {
+      filters
+    } = useContext(FilterContext);
+
+    const from = getFilterValueById('from', filters);
+    const to = getFilterValueById('to', filters);
+    const tradeAmount = getFilterValueById('tradeAmount', filters);
+   // const [tradeAmount] = useDebounce(tradeAm, 1000);
 
     const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState<number>(25);
@@ -30,11 +41,11 @@ export const useAMMPairTrades = (address: string, exchange: EXCHANGE) =>{
     const [isLoadingTrades, setIsLoadingTrades] = useState(false);
     const fetchPairData = (pairAddress: string, limit: number, offset: number) => { 
         setIsLoadingTrades(true);
-        getContractOrders(GET_NETWORK_NAME(currentChainId), exchange, pairAddress, GET_DEFAULT_QUOTE(currentChainId), limit, offset, null, null)
+        getContractOrders(GET_NETWORK_NAME(currentChainId), exchange, pairAddress, GET_DEFAULT_QUOTE(currentChainId), limit, offset, from, to, tradeAmount)
         .then(orders => { setTrades(orders);   setIsLoadingTrades(false)})
         .catch(e =>   setIsLoadingTrades(false))
 
-        getTotalContractOrders(GET_NETWORK_NAME(currentChainId), exchange, pairAddress, GET_DEFAULT_QUOTE(currentChainId), limit, offset, null, null)
+        getTotalContractOrders(GET_NETWORK_NAME(currentChainId), exchange, pairAddress, GET_DEFAULT_QUOTE(currentChainId), limit, offset, from, to, tradeAmount)
         .then(result => setTotalTrades(result.totalTrades));
 
       }
@@ -52,7 +63,7 @@ export const useAMMPairTrades = (address: string, exchange: EXCHANGE) =>{
             .then(pair => fetchPairData(pair, rowsPerPage, page*rowsPerPage))
           }
         }    
-      }, [address, currentChainId, page, rowsPerPage, fetchData, exchange]);
+      }, [address, currentChainId, page, rowsPerPage, fetchData, exchange, from, to, tradeAmount]);
 
     const onChangePage = (page: number)=> {
       setPage(page);

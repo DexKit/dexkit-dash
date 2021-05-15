@@ -113,13 +113,17 @@ export const BITQUERY_PAIR_TRADES = gql`
 
 
 export const BITQUERY_TOTAL_TOKEN_TRADES = gql`
-  query GetTotalTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetTotalTokenTrades($network: EthereumNetwork!, 
+  $exchangeName: String, 
+  $baseAddress: String, 
+  $quoteAddress: String, $from: ISO8601DateTime, $till: ISO8601DateTime, $tradeAmount: Float) {
     ethereum(network: $network) {
       dexTrades(
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
         quoteCurrency: {is: $quoteAddress}
+        tradeAmountUsd: {gt: $tradeAmount}
       ) {
         totalTrades: count 
       }

@@ -45,3 +45,4 @@ export async function getBinanceTokens(): Promise<TokenInfo[]> {
 		return Promise.reject(e);
 	}
 }
+

@@ -66,7 +66,7 @@ export function getLastTradeByPair(network: NETWORK, exchangeName: EXCHANGE, bas
 }
 
 
-export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
+export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null,tradeAmount: string | null): Promise<OrderData[]>
 {
   const variables: any = {
     network,
@@ -75,8 +75,9 @@ export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, addr
     quoteAddress,
     limit,
     offset,
-    from: from ? from.toISOString() : null,
-    till: till ? till.toISOString() : null
+    from: from ? new Date(from).toISOString() : null,
+    till: till ? new Date(till).toISOString() : null,
+    tradeAmount: tradeAmount ? Number(tradeAmount) : null,
   }
 
   if (exchangeName === EXCHANGE.ALL) {
@@ -88,20 +89,21 @@ export function getContractOrders(network: NETWORK, exchangeName: EXCHANGE, addr
     .catch(e => { return parseOrderData(null, network) });
 }
 
-export function getTotalContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null): Promise<{totalTrades: number}>
+export function getTotalContractOrders(network: NETWORK, exchangeName: EXCHANGE, address: string, quoteAddress: string|null, limit: number, offset: number, from: Date|null, till: Date|null, tradeAmount: string | null): Promise<{totalTrades: number}>
 {
   const variables: any = {
     network,
     exchangeName: GET_EXCHANGE_NAME(exchangeName),
     address,
-    from: from ? from.toISOString() : null,
-    till: till ? till.toISOString() : null
+    from: from ? new Date(from).toISOString() : null,
+    till: till ? new Date(till).toISOString() : null,
+    tradeAmount: tradeAmount ? Number(tradeAmount) : null,
   }
 
   if (exchangeName === EXCHANGE.ALL) {
     delete variables.exchangeName;
   }
-  console.log(JSON.stringify(variables));
+  
 
   return client.query({ query: BITQUERY_TOTAL_CONTRACT_ORDERS, variables })
     .then(data => { console.log(data); return {totalTrades: data.data[network].dexTrades[0].totalTrades} })
@@ -110,7 +112,7 @@ export function getTotalContractOrders(network: NETWORK, exchangeName: EXCHANGE,
 
 
 
-export function getTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAddress: string| null, quoteAddress: string | null, limit: number, offset: number, from: Date|null, till: Date|null): Promise<OrderData[]>
+export function getTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAddress: string| null, quoteAddress: string | null, limit: number, offset: number, from: Date|null, till: Date|null, tradeAmount: string | null): Promise<OrderData[]>
 {
   const variables: any = {
     network,
@@ -119,8 +121,9 @@ export function getTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAdd
     quoteAddress,
     limit,
     offset,
-    from: from ? from.toISOString() : null,
-    till: till ? till.toISOString() : null
+    from: from ? new Date(from).toISOString() : null,
+    till: till ? new Date(till).toISOString() : null,
+    tradeAmount: tradeAmount ? Number(tradeAmount) : null,
   }
 
   if (exchangeName === EXCHANGE.ALL) {
@@ -307,7 +310,7 @@ export function getTokenStatistics(network: NETWORK, address: string, from: Date
 export async function getPool(network: NETWORK, exchangeName: EXCHANGE, pairAddress: string, quoteAddress: string|null, limit: number, offset: number) {
 
   try {
-    const pair = (await getContractOrders(network, exchangeName, pairAddress, quoteAddress, 1, 0, null, null))[0];
+    const pair = (await getContractOrders(network, exchangeName, pairAddress, quoteAddress, 1, 0, null, null, null))[0];
 
     let data: any = await client.query({
       query: BITQUERY_MINT_BURN,

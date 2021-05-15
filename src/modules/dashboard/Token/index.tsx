@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useContext} from 'react';
+import React, {useCallback, useEffect, useState, useContext, Suspense} from 'react';
 // import { useHistory, useLocation } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import TotalBalance from 'shared/components/TotalBalance';
@@ -28,6 +28,7 @@ import { onGetMyTokenBalances } from 'redux/actions';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { AppState } from 'redux/store';
 import TokenLogo from 'shared/components/TokenLogo';
+import { Skeleton } from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
   () => import('../../../shared/components/chart/TvChart/tv_chart'),
@@ -118,6 +119,17 @@ const Crypto: React.FC<TokenProps> = (props) => {
 
   const isDark = theme.palette.type === ThemeMode.DARK;
 
+  const skeleton = 
+    <>
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    </>
+
   return (
     <>
       { myBalances ? (
@@ -207,11 +219,13 @@ const Crypto: React.FC<TokenProps> = (props) => {
               <Grid item xs={12} md={7}>
                 <GridContainer>
                   <Grid style={{height: '400px'}} item xs={12} sm={12} md={12}>
+                  <Suspense fallback={skeleton}>
                     <TVChartContainer
                       symbol={`${info?.symbol.toUpperCase()}-USD`}
                       chainId={1}
                       darkMode={isDark}
                     />
+                    </Suspense>
                   </Grid>
                 </GridContainer>
 

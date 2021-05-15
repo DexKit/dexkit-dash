@@ -31,7 +31,7 @@ const LeftSidebarLayout: React.FC<LeftSidebarLayoutProps> = (props) => {
           appMainFixedFooter: footer && footerType === 'fixed',
         },
       )}>
-      <AppSidebar />
+     <AppSidebar />
 
       <Box className={classes.mainContent}>
         <Hidden mdDown>

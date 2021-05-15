@@ -85,7 +85,6 @@ const TableItem: React.FC<TableItemProps> = ({
   };
 
   const createdFn = new Date(row.created)
-  const netName = useNetwork();
   const {messages} = useIntl();
 
   return (
@@ -105,7 +104,7 @@ const TableItem: React.FC<TableItemProps> = ({
           <Box display='flex' alignItems='center'>
           {!isMobile() && <TokenLogo
               token0={row.baseToken.address}
-              token1={row.quoteToken.address}></TokenLogo>}
+          token1={row.quoteToken.address}></TokenLogo>}
             <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row)}>
               {row.baseToken.symbol}/{row.quoteToken.symbol}
             </Link>
@@ -145,7 +144,7 @@ const TableItem: React.FC<TableItemProps> = ({
           <a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}
             target='_blank'>
-            {netName == NETWORK.ETHEREUM ? (
+            {networkName == NETWORK.ETHEREUM ? (
               <Avatar
                 style={{
                   color: '#3F51B5',

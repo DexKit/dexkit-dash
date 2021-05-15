@@ -5,7 +5,7 @@ import { parseOrderData, parsePairExplorerData } from "utils/parse";
 import { BITQUERY_PAIR_TRADES, BITQUERY_TOTAL_TOKEN_TRADES, BITQUERY_PAIR_EXPLORER_24 } from "./gql";
 import { BITQUERY_TOTAL_CONTRACT_EVENTS, BITQUERY_PAIR_EXPLORER, BITQUERY_AMM_PAIR_EXPLORER } from "./amm.gql";
 import { parseAMMPairExplorerData } from "utils/parse/AMMPairExplorer";
-import { parseTokenPairsData, parseTokenPairDailyData } from 'utils/parse/TokenPairs';
+import {  parseTokenPairDailyData } from 'utils/parse/TokenPairs';
 
 
 
@@ -53,15 +53,16 @@ export function getContractTotalEvents(network: NETWORK, exchangeName: EXCHANGE,
 }
 
 
-export function getTotalTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAddress: string| null, quoteAddress: string |null,  from: Date|null, till: Date|null): Promise<{totalTrades: number}>
+export function getTotalTokenTrades(network: NETWORK, exchangeName: EXCHANGE, baseAddress: string| null, quoteAddress: string |null,  from: Date|null, till: Date|null, tradeAmount: string|null): Promise<{totalTrades: number}>
 {
   const variables: any = {
     network,
     exchangeName,
     baseAddress,
     quoteAddress,
-    from: from ? from.toISOString() : null,
-    till: till ? till.toISOString() : null
+    from: from ? new Date(from).toISOString() : null,
+    till: till ? new Date(till).toISOString() : null,
+    tradeAmount: tradeAmount ? Number(tradeAmount) : null,
   }
 
   if (exchangeName === EXCHANGE.ALL) {

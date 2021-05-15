@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {Suspense, useContext} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import GridContainer from '../../../../@crema/core/GridContainer';
@@ -13,12 +13,15 @@ import {usePairExplorer} from 'hooks/usePairExplorer';
 import PageTitle from 'shared/components/PageTitle';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {truncateAddress} from 'utils';
-import {TokenSearch} from 'shared/components/TokenSearch';
 import {Loader, AppContext} from '@crema';
 import TokenOrders from 'modules/protocol-explorer/common/TokenOrders';
 import Info from 'modules/protocol-explorer/common/info';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import AppContextPropsType from 'types/AppContextPropsType';
+import FilterList from 'shared/components/Filter/list';
+import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import FilterMenu from 'shared/components/Filter/menu';
+import { Skeleton } from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
   () => import('../../../../shared/components/chart/TvChart/tv_chart'),
@@ -47,8 +50,22 @@ const PairExplorer = (props: Props) => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
 
+  const skeleton = 
+  <>
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+  </>
+
+
+
   return (
     <>
+      <TokenFilterProvider >
       <Box pt={{xl: 4}}>
         <PageTitle
           address={address}
@@ -103,15 +120,23 @@ const PairExplorer = (props: Props) => {
             <Grid style={{marginTop: 20}} item xs={12} md={12}>
               {infoData && (
                 <Grid item xs={12} md={12} style={{height: 450}}>
-                  <TVChartContainer
-                    symbol={`${infoData?.baseToken.symbol}-USD`}
-                    chainId={1}
-                    darkMode={isDark}
-                  />
+                  <Suspense fallback={skeleton}>
+                    <TVChartContainer
+                      symbol={`${infoData?.baseToken.symbol}-USD`}
+                      chainId={1}
+                      darkMode={isDark}
+                    />
+                  </Suspense>
                 </Grid>
               )}
             </Grid>
           </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+                <Box display={'flex'} justifyContent={'flex-end'}>
+                  <FilterList />
+                  <FilterMenu />
+                </Box>
+            </Grid>
 
           <Grid style={{marginTop: 20}} item xs={12} md={12}>
             <TokenOrders
@@ -124,8 +149,9 @@ const PairExplorer = (props: Props) => {
           </Grid>
         </GridContainer>
       </Box>
-
+      </TokenFilterProvider>
       <InfoView />
+
     </>
   );
 };

@@ -1,12 +1,19 @@
 import React from 'react';
-import IconComponent from '@crema/core/Navigation/Icon';
+import {makeStyles} from '@material-ui/core/styles';
 import { EXCHANGE } from 'shared/constants/AppEnums';
 import Tooltip from '@material-ui/core/Tooltip';
 import Icon from '@material-ui/core/Icon';
 
 import clsx from "clsx";
 
-
+const useStyles = makeStyles(() => ({
+  icon: {
+   
+    width: '20px',
+    height: '20px',
+  }
+  
+}));
 
 
 
@@ -15,7 +22,7 @@ interface Props {
 }
 
 const ExchangeLogo = (props:Props) => {
-
+  const classes = useStyles();
   switch (props.exchange) {
     case EXCHANGE.UNISWAP:
     case EXCHANGE.UNISWAP_V2_BRACKET:
@@ -24,7 +31,7 @@ const ExchangeLogo = (props:Props) => {
                     color='action'
                     className={clsx('nav-item-icon', {})}
                   >
-                    <img src={require(`assets/images/uniswap.png`)} />
+                    <img className={classes.icon}  src={require(`assets/images/uniswap.png`)} />
                   </Icon>
            </Tooltip>
     case EXCHANGE.ZEROX:
@@ -37,7 +44,7 @@ const ExchangeLogo = (props:Props) => {
                     color='action'
                     className={clsx('nav-item-icon', {})}
                   >
-                    <img src={require(`assets/images/0x.svg`)} />
+                    <img className={classes.icon} src={require(`assets/images/0x.svg`)} />
                   </Icon>
                </Tooltip>
     case EXCHANGE.BALANCER:
@@ -46,7 +53,7 @@ const ExchangeLogo = (props:Props) => {
                     color='action'
                     className={clsx('nav-item-icon', {})}
                   >
-                    <img src={require(`assets/images/balancer.svg`)} />
+                    <img className={classes.icon} src={require(`assets/images/balancer.svg`)} />
                   </Icon>
             </Tooltip>
     case EXCHANGE.MOONISWAP:
@@ -55,7 +62,7 @@ const ExchangeLogo = (props:Props) => {
                     color='action'
                     className={clsx('nav-item-icon', {})}
                   >
-                    <img src={require(`assets/images/mooniswap.svg`)} />
+                    <img className={classes.icon} src={require(`assets/images/mooniswap.svg`)} />
                   </Icon>
            </Tooltip>
     case EXCHANGE.SUSHISWAP:  
@@ -64,7 +71,7 @@ const ExchangeLogo = (props:Props) => {
                     color='action'
                     className={clsx('nav-item-icon', {})}
                   >
-                    <img src={require(`assets/images/sushiswap.svg`)} />
+                    <img className={classes.icon} src={require(`assets/images/sushiswap.svg`)} />
                   </Icon>
               </Tooltip>
 

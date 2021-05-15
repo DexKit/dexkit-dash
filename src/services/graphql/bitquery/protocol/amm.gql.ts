@@ -7,7 +7,9 @@ import { gql } from "@apollo/client/core";
 
 
 export const BITQUERY_CONTRACT_ORDERS = gql`
- query GetContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+ query GetContractOrders($network: EthereumNetwork!, 
+ $exchangeName: String, $address: String!, 
+ $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $tradeAmount: Float) {
    ethereum(network: $network) {
      dexTrades(
        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -15,6 +17,7 @@ export const BITQUERY_CONTRACT_ORDERS = gql`
        exchangeName: {is: $exchangeName}
        smartContractAddress: {is: $address }
        quoteCurrency: {is: $quoteAddress}
+       tradeAmountUsd: {gt: $tradeAmount}
      ) {
        timeInterval {
          second
@@ -69,12 +72,13 @@ export const BITQUERY_CONTRACT_ORDERS = gql`
 `;
 
 export const BITQUERY_TOTAL_CONTRACT_ORDERS = gql`
- query GetTotalContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+ query GetTotalContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $from: ISO8601DateTime, $till: ISO8601DateTime, $tradeAmount: Float) {
    ethereum(network: $network) {
      dexTrades(
        date: {since: $from, till: $till}
        exchangeName: {is: $exchangeName}
        smartContractAddress: {is: $address }
+       tradeAmountUsd: {gt: $tradeAmount}
      ) {
        totalTrades: count
      }

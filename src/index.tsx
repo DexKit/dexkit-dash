@@ -22,11 +22,14 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { onNotification, addNotification} from 'services/notification';
 
 
+
+
 ReactGA.initialize(process.env.REACT_APP_ANALYTICS || '');
 
 history.listen((his: any) => {
     ReactGA.pageview(his.pathname + his.search);
 });
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

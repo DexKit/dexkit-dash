@@ -82,7 +82,10 @@ export const BITQUERY_TOKEN_PAIRS = gql`
 
 
 export const BITQUERY_TOKEN_TRADES = gql`
-  query GetTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $limit: Int!, $offset: Int!, $tradeAmount: Float) {
+  query GetTokenTrades($network: EthereumNetwork!,
+   $exchangeName: String,
+   $from: ISO8601DateTime, $till: ISO8601DateTime
+    $baseAddress: String, $quoteAddress: String, $limit: Int!, $offset: Int!, $tradeAmount: Float) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -90,6 +93,7 @@ export const BITQUERY_TOKEN_TRADES = gql`
         baseCurrency: {is: $baseAddress}
         quoteCurrency: {is: $quoteAddress}
         tradeAmountUsd: {gt: $tradeAmount}
+        date: {since: $from, till: $till}
       ) {
         tradeIndex
         block {

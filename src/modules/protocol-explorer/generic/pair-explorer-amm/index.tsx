@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {Suspense, useContext} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -19,6 +19,10 @@ import InfoAMM from 'modules/protocol-explorer/common/info-amm';
 import AMMTradeHistory from 'modules/protocol-explorer/common/AMMTradeHistory';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import AppContextPropsType from 'types/AppContextPropsType';
+import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import FilterList from 'shared/components/Filter/list';
+import FilterMenu from 'shared/components/Filter/menu';
+import { Skeleton } from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
   () => import('../../../../shared/components/chart/TvChart/tv_chart'),
@@ -47,9 +51,20 @@ const PairExplorerAMM = (props: Props) => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
 
   const isDark = theme.palette.type === ThemeMode.DARK;
+  const skeleton = 
+    <>
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+    </>
 
   return (
     <>
+     <TokenFilterProvider >
       <Box pt={{xl: 4}}>
         <PageTitle
           address={address}
@@ -103,15 +118,22 @@ const PairExplorerAMM = (props: Props) => {
             <Grid style={{marginTop: 20}} item xs={12} md={12}>
               {infoData && (
                 <Grid item xs={12} md={12} style={{height: 450}}>
-                  <TVChartContainer
-                    symbol={`${infoData?.baseToken.symbol}-USD`}
-                    chainId={1}
-                    darkMode={isDark}
-                  />
+                   <Suspense fallback={skeleton}>
+                    <TVChartContainer
+                      symbol={`${infoData?.baseToken.symbol}-USD`}
+                      chainId={1}
+                      darkMode={isDark}
+                    />
+                  </Suspense>
                 </Grid>
               )}
             </Grid>
           </Grid>
+
+          <Box display={'flex'} justifyContent={'flex-end'}>
+                  <FilterList />
+                  <FilterMenu />
+            </Box>
 
           <Grid style={{marginTop: 20}} item xs={12} md={12}>
             <AMMTradeHistory
@@ -128,6 +150,7 @@ const PairExplorerAMM = (props: Props) => {
           </Grid>
         </GridContainer>
       </Box>
+      </TokenFilterProvider>
 
       <InfoView />
     </>

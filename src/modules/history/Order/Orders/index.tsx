@@ -89,13 +89,13 @@ const Orders: React.FC<Props> = (props) => {
     }
     else if (props.type == 'token') {
       setIsLoading(true);
-      getTokenTrades(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, null, 30, 0, null, null)
+      getTokenTrades(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, null, 30, 0, null, null, null)
         .then(setOrders)
         .catch(e => setIsLoading(false))
     }
     else if (props.type == 'contract') {
       setIsLoading(true);
-      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, GET_DEFAULT_QUOTE(chainId), 30, 0, null, null)
+      getContractOrders(GET_NETWORK_NAME(chainId), EXCHANGE.ALL, props.address, GET_DEFAULT_QUOTE(chainId), 30, 0, null, null, null)
         .then(setOrders)
         .catch(e => setIsLoading(false))
     }

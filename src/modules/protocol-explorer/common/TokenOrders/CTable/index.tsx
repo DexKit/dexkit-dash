@@ -76,6 +76,17 @@ const OrderTable: React.FC<Props> = ({
   }));
 
   const classes = useStyles();
+  const tableItems = React.useMemo(()=> {
+    return data.map((row, index) => (
+      <TableItem
+        row={row}
+        key={index}
+        exchange={exchange}
+        type={type}
+        networkName={networkName}
+      />
+    ))},[data, exchange, networkName])
+
 
   return (
     <>
@@ -85,16 +96,7 @@ const OrderTable: React.FC<Props> = ({
             <TableHeading type={type} exchange={exchange} />
           </TableHead>
           <TableBody>
-            {data.length > 1 &&
-              data.map((row, index) => (
-                <TableItem
-                  row={row}
-                  key={index}
-                  exchange={exchange}
-                  type={type}
-                  networkName={networkName}
-                />
-              ))}
+            {data.length > 1 && tableItems}
 
             {isLoading && (
               <TableRow className={classes.borderBottomClass}>
@@ -134,7 +136,7 @@ const OrderTable: React.FC<Props> = ({
         onChangePage={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
-      />
+      /> 
     </>
   );
 };
