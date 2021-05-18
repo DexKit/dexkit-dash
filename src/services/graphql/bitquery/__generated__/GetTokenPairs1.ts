@@ -49,6 +49,14 @@ export interface GetTokenPairs1_ethereum_data24_quoteCurrency {
   decimals: number;
 }
 
+export interface GetTokenPairs1_ethereum_data24_exchange {
+  __typename: "EthereumDex";
+  /**
+   * Name for known exchanges
+   */
+  name: string | null;
+}
+
 export interface GetTokenPairs1_ethereum_data24_smartContract_address {
   __typename: "Address";
   /**
@@ -85,6 +93,10 @@ export interface GetTokenPairs1_ethereum_data24 {
    * Protocol name of the smart contract
    */
   protocol: string | null;
+  /**
+   * Identification of admin / manager / factory of smart contract, executing trades
+   */
+  exchange: GetTokenPairs1_ethereum_data24_exchange | null;
   tradeAmount: number | null;
   tradeAmountInUsd: number | null;
   maximum_price: number | null;

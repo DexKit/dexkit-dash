@@ -79,3 +79,4 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
     default: return undefined;
   }
 };
+

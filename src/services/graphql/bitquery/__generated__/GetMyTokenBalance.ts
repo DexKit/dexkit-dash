@@ -35,6 +35,10 @@ export interface GetMyTokenBalance_ethereum_address_balances_history {
    * Block timestamp
    */
   timestamp: any | null;
+  /**
+   * Transfer amount ( positive inbound, negative outbound)
+   */
+  transferAmount: number | null;
   value: number | null;
 }
 

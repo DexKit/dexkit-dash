@@ -5,11 +5,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import AppTableContainer from '../../../../../@crema/core/AppTableContainer';
-import {MyBalance} from 'types/bitquery/myBalance.interface';
+import { MyBalance } from 'types/bitquery/myBalance.interface';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
-import {Box, makeStyles} from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {grey} from '@material-ui/core/colors';
+import { Box, makeStyles } from '@material-ui/core';
+import { CremaTheme } from 'types/AppContextPropsType';
+import { grey } from '@material-ui/core/colors';
 
 interface Props {
   balances: MyBalance[];
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const CTable: React.FC<Props> = ({balances}) => {
+const CTable: React.FC<Props> = ({ balances }) => {
   const [perPage, setPerPage] = React.useState(8);
   const [page, setPage] = React.useState(0);
 
@@ -59,6 +59,7 @@ const CTable: React.FC<Props> = ({balances}) => {
           </TableHead>
           <TableBody>
             {balances
+              .sort((a, b) => (b?.valueUsd ?? 0) - (a?.valueUsd ?? 0))
               .slice(page * perPage, (page + 1) * perPage)
               .map((data: MyBalance) => (
                 <TableItem data={data} key={data.currency.address} />

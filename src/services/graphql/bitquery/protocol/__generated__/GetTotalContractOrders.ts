@@ -35,4 +35,5 @@ export interface GetTotalContractOrdersVariables {
   address: string;
   from?: any | null;
   till?: any | null;
+  tradeAmount?: number | null;
 }

@@ -36,4 +36,5 @@ export interface GetTotalTokenTradesVariables {
   quoteAddress?: string | null;
   from?: any | null;
   till?: any | null;
+  tradeAmount?: number | null;
 }

@@ -3,13 +3,13 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../__generated__/globalTypes";
+import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetAffiliateTrades
+// GraphQL query operation: GetTotalAffiliateTrades
 // ====================================================
 
-export interface GetAffiliateTrades_ethereum_transfers_currency {
+export interface GetTotalAffiliateTrades_ethereum_transfers_currency {
   __typename: "Currency";
   /**
    * Token Smart Contract Address
@@ -29,33 +29,33 @@ export interface GetAffiliateTrades_ethereum_transfers_currency {
   decimals: number;
 }
 
-export interface GetAffiliateTrades_ethereum_transfers {
+export interface GetTotalAffiliateTrades_ethereum_transfers {
   __typename: "EthereumTransfers";
   amountUSD: number | null;
   amount: number | null;
   /**
    * Currency of transfer
    */
-  currency: GetAffiliateTrades_ethereum_transfers_currency | null;
+  currency: GetTotalAffiliateTrades_ethereum_transfers_currency | null;
   count: number | null;
 }
 
-export interface GetAffiliateTrades_ethereum {
+export interface GetTotalAffiliateTrades_ethereum {
   __typename: "Ethereum";
   /**
    * Currency Transfers
    */
-  transfers: GetAffiliateTrades_ethereum_transfers[] | null;
+  transfers: GetTotalAffiliateTrades_ethereum_transfers[] | null;
 }
 
-export interface GetAffiliateTrades {
+export interface GetTotalAffiliateTrades {
   /**
    * Ethereum Mainnet / Classic Chain Datasets
    */
-  ethereum: GetAffiliateTrades_ethereum | null;
+  ethereum: GetTotalAffiliateTrades_ethereum | null;
 }
 
-export interface GetAffiliateTradesVariables {
+export interface GetTotalAffiliateTradesVariables {
   network: EthereumNetwork;
   sender: string;
   receiver: string;

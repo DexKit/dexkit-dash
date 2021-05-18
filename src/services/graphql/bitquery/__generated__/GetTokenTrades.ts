@@ -169,8 +169,11 @@ export interface GetTokenTrades {
 export interface GetTokenTradesVariables {
   network: EthereumNetwork;
   exchangeName?: string | null;
+  from?: any | null;
+  till?: any | null;
   baseAddress?: string | null;
   quoteAddress?: string | null;
   limit: number;
   offset: number;
+  tradeAmount?: number | null;
 }
