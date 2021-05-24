@@ -36,13 +36,12 @@
   ],
   "exclude": [
     "node_modules",
-    "ignore"
+    "src/@crema",
+    "oldCode"
   ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "src/@crema/core/Navigation/VerticleNav/VerticalIExternaltsx",
-    "@types/"
+    "**/*.tsx"
   ]
 }

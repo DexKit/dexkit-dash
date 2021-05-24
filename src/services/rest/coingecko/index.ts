@@ -1,8 +1,6 @@
 import axios from 'axios';
+import { COINGECKO_URL } from 'shared/constants/AppConst';
 import { CoinDetailCoinGecko, CoinItemCoinGecko, CoinListItemCoingecko } from 'types/coingecko';
-import allSettled from 'utils/allsettled';
-
-const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/';
 
 const coinGecko = axios.create({
 	baseURL: COINGECKO_URL,

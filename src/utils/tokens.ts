@@ -1,7 +1,6 @@
 import { BigNumber } from '@0x/utils';
 import { isWeth } from './knownTokens';
 import { ChainId } from 'types/blockchain';
-import { TokenInfo } from '@types';
 import Web3 from 'web3';
 import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
 
@@ -43,11 +42,11 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
     }
 }
 
-export const filterTokensInfoByString = (tokens: TokenInfo[], str: string): TokenInfo[] => {
-    return tokens.filter(token => {
-        return token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 || token.name.toLowerCase().indexOf(str.toLowerCase()) !== -1;
-    });
-};
+// export const filterTokensInfoByString = (tokens: TokenInfo[], str: string): TokenInfo[] => {
+//     return tokens.filter(token => {
+//         return token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 || token.name.toLowerCase().indexOf(str.toLowerCase()) !== -1;
+//     });
+// };
 
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {

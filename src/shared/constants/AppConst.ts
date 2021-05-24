@@ -11,6 +11,8 @@ export const SECONDS_IN_A_DAY = new BigNumber(60 * 60 * 24);
 
 export const QUOTE_ORDER_EXPIRATION_BUFFER_MS = ONE_SECOND_MS * 30; // Ignore orders that expire in 30 seconds
 
+export const POLL_INTERVAL = 10000;
+
 // export const RELAYER_URL = (chainId: ChainId) => {
 //   switch (chainId) {
 //     case ChainId.Mainnet:
@@ -24,8 +26,10 @@ export const QUOTE_ORDER_EXPIRATION_BUFFER_MS = ONE_SECOND_MS * 30; // Ignore or
 //   }
 // };
 
-export const ZEROX_API_URL = (chainId: ChainId|undefined) => {
-  switch (chainId) {
+export const ZRX_TRACKER_URL = 'https://api.0xtracker.com';
+
+export const ZRX_API_URL = (chainId: ChainId|undefined) => {
+  switch (Number(chainId)) {
     case ChainId.Mainnet:
       return 'https://api.0x.org';//'/swap/v1/quote'
     case ChainId.Kovan:
@@ -48,3 +52,7 @@ export const UNISWAP_INFO_API_URL = 'https://info.uniswap.org';
 export const SUSHISWAP_INFO_API_URL = 'https://analytics.sushi.com';
 
 export const DEXTOOLS_API_URL = 'https://www.dextools.io';
+
+export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins';
+
+export const COINGECKO_CONTRACT_URL = 'https://api.coingecko.com/api/v3/coins/ethereum/contract';

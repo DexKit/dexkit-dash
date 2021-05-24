@@ -3,12 +3,14 @@ import {GridContainer} from '@crema';
 import {
   Breadcrumbs,
   Grid,
+  Box,
   Link,
   makeStyles,
   Typography,
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import ButtonCopy from '../ButtonCopy';
+import { truncateAddress } from 'utils';
 
 interface Props {
   history: {url: string; name: string}[];
@@ -27,6 +29,10 @@ const PageTitle: React.FC<Props> = (props) => {
       [theme.breakpoints.down('xs')]: {
         fontSize: '13px',
       },
+    },
+    boxTitle: {
+      display: 'flex',
+      alignItems: 'baseline'
     },
     title: {
       marginTop: '10px',
@@ -57,10 +63,21 @@ const PageTitle: React.FC<Props> = (props) => {
           </Typography>
         </Breadcrumbs>
 
-        <Typography className={classes.title} color='textPrimary'>
-          {props.title}
-          {props.address ? <ButtonCopy copyText={props.address}  titleText='Copied to clipbord !'></ButtonCopy> : null  }
-        </Typography>
+        <Box className={classes.boxTitle}>
+          <Typography className={classes.title} color='textPrimary'>
+            {props.title}
+          </Typography>
+          {
+            props.address ? (
+              <>
+                <Typography className={classes.title} color='textPrimary'>
+                  &nbsp;{`${truncateAddress(props.address)}`}
+                </Typography>
+                <ButtonCopy copyText={props.address} titleText='Copied to clipbord !' />
+              </>
+            ) : null 
+          }
+        </Box>
       </Grid>
     </GridContainer>
   );

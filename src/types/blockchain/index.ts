@@ -21,12 +21,12 @@ export enum Web3State {
     Locked = 'Locked',
 }
 
-export interface BlockchainState {
-    readonly ethAccount: string;
-    readonly blocknumber: number;
-    readonly chainId: number;
-    readonly web3State: Web3State;
-    readonly tokenBalances: TokenBalance[];
-    readonly ethBalance: BigNumber;
-    readonly wethTokenBalance: TokenBalance | null;
-}
+// export interface BlockchainState {
+//     readonly ethAccount: string;
+//     readonly blockNumber: number;
+//     readonly chainId: number;
+//     readonly web3State: Web3State;
+//     readonly tokenBalances: TokenBalance[];
+//     readonly ethBalance: BigNumber;
+//     readonly wethTokenBalance: TokenBalance | null;
+// }

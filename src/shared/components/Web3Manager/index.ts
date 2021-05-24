@@ -5,17 +5,15 @@ import { isMobile } from 'web3modal';
 
 
 export const Web3Manager = () => {
-    const { onConnectWeb3 } = useWeb3();
-    const {web3, ethereum} = window
-    // Try to connect once at begin, check if provider is available and try
-    // to connect
-    useEffect(() =>{
-        if(web3Modal.cachedProvider || (isMobile() && (web3 || ethereum))){
-          onConnectWeb3();
-        }
+  const { onConnectWeb3 } = useWeb3();
+  const {web3, ethereum} = window;
 
-    }, [])
-  
+  // Try to connect once at begin, check if provider is available and try to connect
+  useEffect(() =>{
+    if(web3Modal.cachedProvider || (isMobile() && (web3 || ethereum))){
+      onConnectWeb3();
+    }
+  }, [])
 
-    return null;
+  return null;
 }

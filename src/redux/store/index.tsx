@@ -5,11 +5,7 @@ import reducers from '../reducers';
 
 import { ActionType } from 'typesafe-actions';
 
-import * as actions from './actions';
-
-
-
-
+import * as actions from '../actions';
 
 const createBrowserHistory = require('history').createBrowserHistory;
 const history = createBrowserHistory();
@@ -45,7 +41,5 @@ const store = configureStore()
 export default store;
 
 export {history};
-
-
 
 // export type AppState = ReturnType<typeof rootReducer>;

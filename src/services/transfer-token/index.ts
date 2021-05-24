@@ -4,7 +4,6 @@ import { web3Transaction, getWeb3 } from '../web3modal';
 import { BigNumber } from '@0x/utils';
 import { ContractOptions, Contract } from 'web3-eth-contract';
 
-
 export const MIN_ABI: AbiItem[] = [
   // transfer
   {

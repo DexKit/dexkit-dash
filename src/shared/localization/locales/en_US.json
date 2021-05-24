@@ -62,6 +62,9 @@
   "app.kitMarket": "Kit Market",
   "app.topPairs": "Top Pairs",
 
+  "app.youSend": "You Send",
+  "app.youReceive": "You Receive",
+
   "app.baseAmount24": "Base Amount (24hrs)",
   "app.quoteAmount24": "Quote Amount (24hrs)",
   "app.volume24": "Volume (24hrs)",
@@ -72,6 +75,10 @@
   "title.tokenInfo": "Token Info",
   "title.tokenStatistics": "Token Statistics",
   "title.orderList": "Order List",
+
+  "wizard.launch": "Wizard Launch",
+
+  "common.buyKit": "Buy Kit",
 
   "button.click_me": "Click Me",
   "dashboard.quickStats": "Quick Statistics",

@@ -21,7 +21,6 @@ const InfoView: React.FC<InfoViewProps> = () => {
   return (
     <>
       {loading && <Loader />}
-
       {message && showMessage()}
       {error && showError()}
     </>

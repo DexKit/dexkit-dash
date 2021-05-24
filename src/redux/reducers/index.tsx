@@ -1,21 +1,15 @@
-import Settings from './Setting';
-import Common from './Common';
-import FirebaseAuth from './FirebaseAuth';
-import Dashboard from './Dashboard';
-import blockchain from '../blockchain/reducers';
-import MyApps from './MyApps';
-import Notification from './Notification';
-import ConfigFile from './ConfigFile';
+import Common from '../_common/reducers';
+import Settings from '../_settings/reducers';
+import Notification from '../_notification/reducers';
+import Blockchain from '../_blockchain/reducers';
+import MyApps from '../_myapps/reducers';
 
 const reducers = {
-  settings: Settings,
-  auth: FirebaseAuth,
-  dashboard: Dashboard,
   common: Common,
-  blockchain: blockchain,
-  myApps: MyApps,
+  settings: Settings,
   notification: Notification,
-  configFile: ConfigFile
+  blockchain: Blockchain,
+  myApps: MyApps,
 };
 
 export default reducers;

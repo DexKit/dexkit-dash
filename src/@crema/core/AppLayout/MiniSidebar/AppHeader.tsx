@@ -7,7 +7,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {toggleNavCollapsed} from '../../../../redux/_settings/actions';
 import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
 

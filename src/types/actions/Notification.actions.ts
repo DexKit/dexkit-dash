@@ -1,4 +1,5 @@
 import { Notification } from 'types/models/Notification';
+
 export enum NotificationAction {
   GET_NOTIFICATION = 'GET_NOTIFICATION',
   ADD_NOTIFICATION = 'ADD_NOTIFICATION',

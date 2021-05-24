@@ -66,13 +66,6 @@ export enum CoinIcons {
   RIPPLE = 'assets/images/ripple.png'
 }
 
-
-export enum NETWORK {
-  ETHEREUM = 'ethereum',
-  BSC = 'bsc',
-  BSCTEST = 'bsc_testnet'
-}
-
 export enum EthereumNetwork {
   bsc = "bsc",
   bsc_testnet = "bsc_testnet",
@@ -86,16 +79,14 @@ export enum EthereumNetwork {
 }
 
 export enum EXCHANGE {
-  // ethereum
-  UNISWAP = 'Uniswap',
-  SUSHISWAP = 'SushiSwap',
-  ZEROX = 'Zerox Exchange',
-  CURVE = 'Curve',
-  BALANCER = 'Balancer',
-  BANCOR_NETWORK = 'Bancor Network',
-  KYBER_NETWORK = 'Kyber Network',
-  //bsc
-  PANCAKE = 'Pancake',
+  UNISWAP = 'uniswap',
+  SUSHISWAP = 'sushiswap',
+  ZEROX = '0x-protocol',
+  CURVE = 'curve',
+  BALANCER = 'balancer',
+  BANCOR_NETWORK = 'bancor-network',
+  KYBER_NETWORK = 'kyber-network',
+  PANCAKE = 'pancake',
   ALL = 'all'
 }
 

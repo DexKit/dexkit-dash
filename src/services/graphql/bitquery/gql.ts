@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-//https://explorer.bitquery.io/graphql
-
 export const BITQUERY_LAST_TRADE_PAIR_EXPLORER = gql`
   query GetLastTradePairExplorer($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
     ethereum(network: $network) {

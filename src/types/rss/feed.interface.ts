@@ -3,13 +3,13 @@ import { FeedItem } from "./feedItem.interface";
 
 export interface Feed {
 	items: FeedItem[];
-	feedUrl: string | URL;
+	feedUrl: string;
 	image: FeedImage;
 	paginationLinks: any;
 	title: string;
 	description: string;
 	generator: string;
-	link: string | URL;
+	link: string;
 	language: string;
 	lastBuildDate: string;
 }

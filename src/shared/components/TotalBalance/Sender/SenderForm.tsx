@@ -7,22 +7,23 @@ import Select from '@material-ui/core/Select';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {MyBalance} from 'types/bitquery/myBalance.interface';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
 import { fromTokenUnitAmount } from '@0x/utils';
 import { isAddress } from '@ethersproject/address';
-import { useToken } from 'hooks/useToken';
 import { isNativeCoin} from 'utils/tokens';
 import { ChainId } from 'types/blockchain';
 import Web3 from 'web3';
 
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import { useTransfer } from 'hooks/useTransfer';
+import { Currency } from 'types/myApps';
 
 interface Props {
-  balances: MyBalance[];
+  balances: GetMyBalance_ethereum_address_balances[];
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -51,11 +52,11 @@ const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {account, onActionWeb3Transaction, chainId} = useWeb3();
-  const {onTransferToken} = useToken();
+  const {onTransferToken} = useTransfer();
 
   const [amount, setAmount] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [selected, setSelected] = useState<MyBalance>(props.balances[0]||undefined);
+  const [selected, setSelected] = useState<GetMyBalance_ethereum_address_balances>(props.balances[0]||undefined);
 
   const handleCopy = async () => {
     const cpy: any = await navigator.clipboard.readText();
@@ -63,7 +64,9 @@ const SenderForm: React.FC<Props> = (props) => {
   }
   
   const handleMax = async () => {
-    setAmount(selected.value.toString());
+    if (selected && selected.value) {
+      setAmount(selected.value.toString());
+    }
   }
 
   const handleToken = (idx: any) => {
@@ -71,22 +74,26 @@ const SenderForm: React.FC<Props> = (props) => {
   }
 
   const handleSend = () => {
-   
-    if(!account){
-      return
-    }
-    try {
-      if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
-          onActionWeb3Transaction({
-            to: address,
-            from: account,
-            value: Web3.utils.toWei(amount),
-          });
-      }else{
-        onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), selected.currency)
+    if (account && selected && selected.currency) {
+      try {
+        if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
+            onActionWeb3Transaction({
+              to: address,
+              from: account,
+              value: Web3.utils.toWei(amount),
+            });
+        } else if (selected.currency.address && selected.currency.name && chainId != null) {
+          onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), {
+            address: selected.currency.address,
+            decimals: selected.currency.decimals,
+            name: selected.currency.name,
+            symbol: selected.currency.symbol,
+            chainId: chainId
+          })
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   }
 
@@ -103,7 +110,7 @@ const SenderForm: React.FC<Props> = (props) => {
           >
           {
             props?.balances?.map((balance, i) => {
-              return (<option defaultValue={balance.currency.name} value={i} key={i}>{`${balance.currency.name.toUpperCase()} (${balance.currency.symbol.toUpperCase()})`}</option>)
+              return (<option defaultValue={balance?.currency?.name || ''} value={i} key={i}>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>)
             })
           }
         </Select>
@@ -117,7 +124,7 @@ const SenderForm: React.FC<Props> = (props) => {
               textAlign='right'
               className={classes.textRes}
             >
-              { selected?.value ? `${selected.value.toFixed(6)} ${selected.currency?.symbol} ($${selected.valueUsd?.toFixed(2)})` : `0` }
+              { selected?.value ? `${selected.value.toFixed(6)} ${selected.currency?.symbol} ($${selected.valueInUsd?.toFixed(2)})` : `0` }
             </Box>
           }
           {/* <TextField
@@ -178,11 +185,11 @@ const SenderForm: React.FC<Props> = (props) => {
             variant="contained" 
             color="primary"
             onClick={handleSend}
-            disabled={!isAddress(address) || selected.value < parseFloat(amount) || parseFloat(amount) == 0 || amount == ''}
+            disabled={!isAddress(address) || ((selected?.value||0) < parseFloat(amount)) || parseFloat(amount) == 0 || amount == ''}
           >
             {
               address == '' || amount == '0' ? 'Send' : (
-                !isAddress(address) ? 'Invalid Address' : ( selected.value < parseFloat(amount) ? 'Insufficient funds' : 'Send')
+                !isAddress(address) ? 'Invalid Address' : ((selected?.value||0) < parseFloat(amount) ? 'Insufficient funds' : 'Send')
               )
             }
           </Button>

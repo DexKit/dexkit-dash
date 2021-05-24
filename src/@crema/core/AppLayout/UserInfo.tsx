@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {useDispatch} from 'react-redux';
-import {onSignOutFirebaseUser} from '../../../redux/actions';
+// import {onSignOutFirebaseUser} from '../../../redux/FirebaseAuth/actions';
 import {useAuthUser} from '../../utility/AppHooks';
 import AppContext from '../../utility/AppContext';
 import {makeStyles} from '@material-ui/core';
@@ -83,14 +83,14 @@ const UserInfo: React.FC<UserInfoProps> = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}>
           <MenuItem>My account</MenuItem>
-          <MenuItem
+          {/* <MenuItem
             onClick={() => {
               if (user) {
                 dispatch(onSignOutFirebaseUser());
               }
             }}>
             Logout
-          </MenuItem>
+          </MenuItem> */} 
         </Menu>
       </Box>
     </Box>

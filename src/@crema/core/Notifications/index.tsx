@@ -1,22 +1,17 @@
-import React, { useEffect } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-// import notification from '../../services/db/notifications/notification';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import React, {useEffect} from 'react';
+import clsx from 'clsx';
+import {useDispatch, useSelector} from 'react-redux';
 import {makeStyles, Popover} from '@material-ui/core';
-import List from '@material-ui/core/List';
-import Box from '@material-ui/core/Box';
-// import Button from '@material-ui/core/Button';
+import {Box, Button, Badge, List, Hidden} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import Scrollbar from '../Scrollbar';
 import IntlMessages from '../../utility/IntlMessages';
-import Hidden from '@material-ui/core/Hidden';
-import clsx from 'clsx';
 import NotificationItem from './NotificationItem';
-import {Fonts} from '../../../shared/constants/AppEnums';
-import {CremaTheme} from '../../../types/AppContextPropsType';
-import { useDispatch, useSelector } from 'react-redux';
-import { onNotificationList } from 'redux/actions/Notification';
-import { AppState } from 'redux/store';
+import {Fonts} from 'shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {onNotificationList} from 'redux/_notification/actions';
+import {AppState} from 'redux/store';
 
 interface NotificationsProps {}
 
@@ -133,9 +128,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
           className={classes.badge}
           badgeContent={notifications.filter( notification => notification.check == null).length}
           color='secondary'>
-          <NotificationsActiveIcon
-            className={clsx(classes.notiIcon, 'notiIcon')}
-          />
+          <NotificationsActiveIcon className={clsx(classes.notiIcon, 'notiIcon')} />
         </Badge>
         <Hidden mdUp>
           <Box ml={4} fontSize={16} color='text.secondary' component='span'>
@@ -166,7 +159,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
             </Box>
           </Box>
           <Scrollbar className='scroll-submenu'>
-            <List
+             <List
               className={classes.list}
               onClick={() => {
                 setAnchorNotification(null);
@@ -178,16 +171,16 @@ const Notifications: React.FC<NotificationsProps> = () => {
                   item={item}
                 />
               ))}
-            </List>
+            </List> 
           </Scrollbar>
-          {/* <Box mt={2}>
+          <Box mt={2}>
             <Button
               className={classes.btnPopover}
               variant='contained'
               color='primary'>
               <IntlMessages id='common.viewAll' />
             </Button>
-          </Box> */}
+          </Box>
         </Box>
       </Popover>
     </>

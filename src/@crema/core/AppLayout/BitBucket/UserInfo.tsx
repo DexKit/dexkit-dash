@@ -82,14 +82,14 @@ const UserInfo: React.FC<UserInfoProps> = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}>
           <MenuItem>My account</MenuItem>
-          <MenuItem
+          {/* <MenuItem
             onClick={() => {
               if (user) {
                 dispatch(onSignOutFirebaseUser());
               }
             }}>
             Logout
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       </Box>
     </Box>

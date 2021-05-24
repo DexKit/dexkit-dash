@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {toggleNavCollapsed} from '../../../../redux/_settings/actions';
 import {useDispatch} from 'react-redux';
 import Hidden from '@material-ui/core/Hidden';
 import HorizontalNav from '../../Navigation/HorizontalNav';

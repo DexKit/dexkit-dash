@@ -3,7 +3,7 @@ import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
-import { NETWORK } from 'shared/constants/AppEnums';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { GET_DEFAULT_TOKEN_NETTOWRK } from 'shared/constants/Blockchain';
 import { useChainId } from 'hooks/useChainId';
 
@@ -40,15 +40,13 @@ const TokenLogo: React.FC<Props> = (props) => {
   const network = useNetwork();
   const classes = useStyles();
 
-  console.log(props);
-
   const provToken0 = props.token0 === '-' ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId) : props.token0;
   const provToken1 = props.token1 === '-' ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId) : props.token1;
 
   const token0 = provToken0 && utils.isAddress(provToken0||'') ? utils.getAddress(provToken0) : '';
   const token1 = provToken1 && utils.isAddress(provToken1||'') ? utils.getAddress(provToken1) : '';
 
-  const networkName = (network == NETWORK.ETHEREUM) ? 'ethereum' : 'smartchain';
+  const networkName = (network == EthereumNetwork.ethereum) ? 'ethereum' : 'smartchain';
 
   const noFoundSrc = require('assets/images/logo-not-found.png');
 

@@ -1,32 +1,27 @@
-import { useSelector } from "react-redux"
-import { AppState } from "redux/store"
-import { useEffect, useState } from "react"
-import { getCoingeckoTokenList } from "services/tokens"
-import { ChainId } from "types/blockchain"
-import { TokenList } from "@types"
+import { useEffect, useState } from "react";
+import { getBinanceTokens, getEthereumTokens } from "services/rest/tokens";
+import { EthereumNetwork } from "shared/constants/AppEnums";
+import { Token } from "types/app";
+import { useNetwork } from "./useNetwork";
 
-
-let tokenList: TokenList ; 
 export const useTokenList = () => {
-   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId);
-   const [tl, setTl] = useState(tokenList);
+  // const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId);
+  const networkName = useNetwork();
+  const [tokens, setTokens] = useState<Token[]>([]);
 
-   useEffect(() => {
-        if(!tokenList){
-            getCoingeckoTokenList()
-            .then(t => setTl(t))
-        }
-    }, [])
+  useEffect(() => {
+    console.log('opa');
+    if (networkName === EthereumNetwork.bsc) {
+      getBinanceTokens()
+        .then(e  => setTokens(e))
+        .catch(e => setTokens([]));
+    }
+    else {
+      getEthereumTokens()
+        .then(e  => setTokens(e))
+        .catch(e => setTokens([]));
+    }
+  }, [networkName]);
 
-
-   useEffect(() => {
-       if(chainId === ChainId.Mainnet){
-            getCoingeckoTokenList()
-            .then(t => setTl(t))
-       }
-    
-   }, [chainId])
-
-   return tl;
-
+  return tokens;
 }

@@ -1,9 +1,18 @@
 import { BigNumber } from '@0x/utils';
+import { GetTransactionList_ethereum_sender_block, GetTransactionList_ethereum_sender_currency, GetTransactionList_ethereum_sender_receiver, GetTransactionList_ethereum_sender_sender, GetTransactionList_ethereum_sender_transaction } from 'services/graphql/bitquery/history/__generated__/GetTransactionList';
 
 export enum OrderSide {
   Sell,
   Buy,
   Offer
+}
+
+export enum Steps {
+  APPROVE,
+  CONVERT,
+  ORDER,
+  ERROR,
+  DONE
 }
 
 export interface Order0x {
@@ -34,36 +43,11 @@ export interface Token {
   symbol: string;
   address: string;
   decimals: number;
-
-  type?: string;
-  annotation?: string;
-  balance?: number;
-  addresses?: any;
-  coingecko_id?: string; // coingecko id
-  icon?: string;
-  displayDecimals?: number;
-  minAmount?: number;
-  maxAmount?: number;
-  precision?: number;
-  website?: string;
-  description?: string;
-  price_usd?: BigNumber | null;
-  price_usd_24h_change?: BigNumber | null;
-  listed?: boolean;
-  isStableCoin?: boolean;
-  tags?: string[];
-}
-
-export interface Pair {
-  address: string;
-  token0: Token;
-  token1: Token;
-}
-
-export interface TokenPrice {
-  c_id: string; // coingecko id
-  price_usd: BigNumber;
-  price_usd_24h_change: BigNumber;
+  displayDecimals?: 4,
+	icon?: string;
+  price_usd?: BigNumber;
+	price_usd_24h_change?: BigNumber;
+	coingecko_id?: string;
 }
 
 export interface TokenBalance {
@@ -72,133 +56,19 @@ export interface TokenBalance {
   token: Token;
 }
 
-export interface TokenStatistic {
-  token: {
-    symbol: string,
-    address: string
-  },
-  transferCount: number,
-  uniqSenders: number,
-  uniqReceiver: number,
-  totalAmount: number,
-  medianTransferAmount: number,
-  averageTransferAmount: number,
-  firstTransferDate: string,
-  lastTransferDate: string,
-  daysTokenTransfered: number,
+export interface GasInfo {
+  gasPriceInWei: BigNumber;
+  estimatedTimeMs: number;
 }
 
-
-
-
-
-
-// TABLES
-export interface OrderData {
-  hash: string,
-  block: number,
-  side: string,
-  exchange: string,
-  contract: string,
-  protocol: string,
-  baseAmount: number,
-  baseAmountUsd: number,
-  baseToken: Token,
-  quoteAmount: number,
-  quoteAmountUsd: number,
-  quoteToken: Token,
-  quotePrice: number,
-  tradeAmount: number,
-  tradeAmountUsd: number,
-  created: string
-}
-
-export interface OrderByToken {
-  token: Token,
-  tradeCount: number,
-  amountUsd: number,
-  daysTraded: number,
-  started: string,
-}
-
-export interface OrderByPairs {
-  sellAmount: number,
-  sellToken: Token,
-  buyAmount: number,
-  buyToken: Token,
-  medianPrice: number,
-  lastPrice: number,
-  tradeCount: number,
-  daysTraded: number,
-  started: string
-}
-
-
-export interface AMMPairInfoExplorer {
-  baseToken: Token,
-  quoteToken: Token,
-  address: string
-  price: number,
-  priceUsd: number,
-  priceChange: number,
-  liquidity: number,
-  volume24: number,
-  volume24InUsd: number
-  basePooled: number,
-  quotePooled: number,  
-}
-
-export interface PairInfoExplorer {
-  baseToken: Token,
-  quoteToken: Token,
-  address: string,
-  price: number,
-  priceUsd: number,
-  priceChange: number,
-  volume24: number,
-  volume24InUsd: number
-  totalTrades: number;
-  baseAmount: number;
-  quoteAmount: number;
-}
-
-
-export interface TokenPair {
-  baseToken: Token,
-  quoteToken: Token,
-  address: string
-  price: number,
-  priceUsd: number,
-  volume24: number,
-  volume24InUsd: number
-  quoteVolume24: number,
-  baseVolume24: number,  
-  trades: number,
-  protocol: string,
-}
-
-
-export interface TransferByAddress {
-  sender: string,
-  receiver: string,
-  type: string,
-  token: Token,
-  amount: number,
-  amountUsd: number,
-  hash: string,
-  time: string
-}
-
-export interface MintBurn {
-  baseToken: Token,
-  quoteToken: Token,
-  hash: string,
-  block: number
-  type: string,
-  time: string,
-  amount0: number,
-  amount1: number,
-  reserve0: number,
-  reserve1: number,
-  variation: number
+export interface ITransactionList {
+  block: GetTransactionList_ethereum_sender_block | null;
+  sender: GetTransactionList_ethereum_sender_sender | null;
+  receiver: GetTransactionList_ethereum_sender_receiver | null;
+  currency: GetTransactionList_ethereum_sender_currency | null;
+  amount: number | null;
+  amountInUsd: number | null;
+  transaction: GetTransactionList_ethereum_sender_transaction | null;
+  external: boolean | null;
+  type: string;
 }

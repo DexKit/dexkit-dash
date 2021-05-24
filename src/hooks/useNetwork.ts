@@ -1,15 +1,17 @@
-import { useWeb3 } from "./useWeb3";
-import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { useEffect, useState } from "react";
-import { NETWORK } from "shared/constants/AppEnums";
 import { BigNumber } from "@0x/utils";
+import { useChainId } from "./useChainId";
+import { EthereumNetwork } from "shared/constants/AppEnums";
+import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 
-export const useNetwork = (): NETWORK => {
-  const { chainId } = useWeb3();
-  const [ networkName, setNetworkName] = useState(GET_NETWORK_NAME(chainId));
+export const useNetwork = (): EthereumNetwork => {
+  const { currentChainId } = useChainId();
+  const [networkName, setNetworkName] = useState<EthereumNetwork>(GET_NETWORK_NAME(currentChainId));
+
   useEffect(() => {
-    const aux = new BigNumber(chainId ?? 1).toNumber();
+    const aux = new BigNumber(currentChainId ?? 1).toNumber();
     setNetworkName(GET_NETWORK_NAME(aux));
-  }, [chainId]);
+  }, [currentChainId]);
+
   return networkName;
 }

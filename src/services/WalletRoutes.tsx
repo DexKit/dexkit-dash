@@ -2,7 +2,7 @@ import React, {ReactNode, useContext, useEffect} from 'react';
 import {useHistory, useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {setInitialPath} from '../redux/actions';
+import {setInitialPath} from '../redux/_settings/actions';
 import {matchRoutes} from 'react-router-config';
 import AppContext from '../@crema/utility/AppContext';
 import {AppState} from '../redux/store';
@@ -19,9 +19,7 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   const {routes} = useContext<AppContextPropsType>(AppContext);
 
   const ethAccount = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
-  const {initialPath} = useSelector<AppState, AppState['settings']>(
-    ({settings}) => settings,
-  );
+  const {initialPath} = useSelector<AppState, AppState['settings']>(({settings}) => settings);
   const currentRoute = matchRoutes(routes, pathname)[0].route;
 
   useEffect(() => {

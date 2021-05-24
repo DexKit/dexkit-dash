@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import UserInfo from '../../../../shared/components/UserInfo';
 import Navigation from '../../Navigation/VerticleNav';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {toggleNavCollapsed} from '../../../../redux/_settings/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import clsx from 'clsx';
 import Box from '@material-ui/core/Box';

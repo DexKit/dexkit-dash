@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import {useDispatch} from 'react-redux';
-import {onSignOutFirebaseUser} from '../../../redux/actions';
+//// import {onSignOutFirebaseUser} from '../../../redux/FirebaseAuth/actions';
 import {useAuthUser} from '../../../@crema/utility/AppHooks';
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
@@ -139,14 +139,14 @@ const HeaderUser = (props: any) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}>
                 <MenuItem>My account</MenuItem>
-                <MenuItem
+                {/* <MenuItem
                   onClick={() => {
                     if (user) {
                       dispatch(onSignOutFirebaseUser());
                     }
                   }}>
                   Logout
-                </MenuItem>
+                </MenuItem> */}
               </Menu>
             </Box>
           </Box>

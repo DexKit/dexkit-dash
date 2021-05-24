@@ -1,21 +1,8 @@
 import { ChainId } from "types/blockchain";
-import { EXCHANGE, NETWORK, EthereumNetwork } from "./AppEnums";
+import { EthereumNetwork, EXCHANGE } from "./AppEnums";
 
 export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
-  switch (chainId) {
-    case ChainId.Mainnet:
-    case ChainId.Ropsten:
-    case ChainId.Rinkeby:
-    case ChainId.Kovan:
-    case ChainId.Goerli: return NETWORK.ETHEREUM;
-    case ChainId.Binance: return NETWORK.BSC;
-    case ChainId.BinanceTest: return NETWORK.BSCTEST;
-    default: return NETWORK.ETHEREUM;
-  }
-}
-
-export const GET_BITQUERY_NETWORK_NAME = (chainId: ChainId|undefined): EthereumNetwork => {
-  switch (chainId) {
+  switch (Number(chainId)) {
     case ChainId.Mainnet:
     case ChainId.Ropsten:
     case ChainId.Rinkeby:

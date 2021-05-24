@@ -2,12 +2,12 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 
 import {createRoutes} from '../@crema/utility/Utils';
-import {errorPagesConfigs} from './errorPages';
+import {errorPagesConfigs} from './ErrorPages';
 
-import {dashBoardConfigs} from './dashboard';
-import {protocolExplorerConfigs} from './protocol-explorer';
-import {myAppsConfigs} from './my-apps';
-import {historyConfigs} from './history';
+import {dashBoardConfigs} from './Dashboard';
+import {myAppsConfigs} from './MyApps';
+import {protocolExplorerConfigs} from './ProtocolExplorer';
+import {historyConfigs} from './History';
 import {initialUrl} from '../shared/constants/AppConst';
 
 const routeConfigs = [
@@ -15,13 +15,13 @@ const routeConfigs = [
   ...dashBoardConfigs,
   ...protocolExplorerConfigs,
   ...myAppsConfigs,
-  ...historyConfigs
+  ...historyConfigs,
 ];
 
 const routes = [
   ...createRoutes(routeConfigs),
-  { path: '/', exact: true, component: () => <Redirect to={initialUrl} />, },
-  { component: () => <Redirect to='/dashboard/overview' /> },
+  {path: '/', exact: true, component: () => <Redirect to={initialUrl} />},
+  {component: () => <Redirect to='/dashboard/overview' />},
 ];
 
 export default routes;

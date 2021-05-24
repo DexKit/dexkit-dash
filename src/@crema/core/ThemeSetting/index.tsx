@@ -111,6 +111,7 @@ const ThemeSetting: React.FC<ThemeSettingProps> = (props) => {
   const onLayoutChange = (layoutType: LayoutType) => {
     updateLayoutStyle!(layoutType);
   };
+
   const onNavStyleChange = (navStyle: NavStyle) => {
     changeNavStyle!(navStyle);
   };
@@ -118,6 +119,7 @@ const ThemeSetting: React.FC<ThemeSettingProps> = (props) => {
   const onChangeRtlSetting = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRTL!(event.target.checked);
   };
+
   const updateThemeColors = (colorSet: any) => {
     theme.palette.primary.main = colorSet.PrimaryColor;
     theme.palette.secondary.main = colorSet.SecondaryColor;
@@ -126,6 +128,7 @@ const ThemeSetting: React.FC<ThemeSettingProps> = (props) => {
     updatePrimaryColor!(colorSet.PrimaryColor);
     updateSecondaryColor!(colorSet.SecondaryColor);
   };
+  
   const classes = useStyles(props);
 
   return (

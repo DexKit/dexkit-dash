@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 
-import { useAuthUser } from '../../../@crema/utility/AppHooks';
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
 import { makeStyles, Button } from '@material-ui/core';
@@ -22,8 +21,6 @@ import { isMobile } from 'web3modal';
 const WalletInfo = (props: any) => {
   const { themeMode } = useContext<AppContextPropsType>(AppContext);
 
-  const user = useAuthUser();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,18 +39,16 @@ const WalletInfo = (props: any) => {
     
       // setIsWeb3(true);
     })
-
-
   }*/
 
-  const getUserAvatar = () => {
-    if (user && user.displayName) {
-      return user.displayName.charAt(0).toUpperCase();
-    }
-    if (user && user.email) {
-      return user.email.charAt(0).toUpperCase();
-    }
-  };
+  // const getUserAvatar = () => {
+  //   if (user && user.displayName) {
+  //     return user.displayName.charAt(0).toUpperCase();
+  //   }
+  //   if (user && user.email) {
+  //     return user.email.charAt(0).toUpperCase();
+  //   }
+  // };
 
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {
@@ -117,11 +112,12 @@ const WalletInfo = (props: any) => {
   return (
     <Box px={{ xs: 4, xl: 7 }} className={clsx(classes.crUserInfo, 'cr-user-info')}>
       {web3State === Web3State.Done && <Box display='flex' alignItems='center'>
-        {user && user.photoURL ? (
+        
+        {/* {user && user.photoURL ? (
           <Avatar className={classes.profilePic} src={user.photoURL} />
         ) : (
           <Avatar className={classes.profilePic}>{getUserAvatar()}</Avatar>
-        )}
+        )} */}
         
         <Box ml={4} className={clsx(classes.userInfo, 'user-info')}>
           <Box display='flex' alignItems='center' justifyContent='space-between'>

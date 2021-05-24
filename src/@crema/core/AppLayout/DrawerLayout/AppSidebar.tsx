@@ -3,7 +3,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Drawer from '@material-ui/core/Drawer';
 import UserInfo from '../../../../shared/components/UserInfo';
 import Navigation from '../../Navigation/VerticleNav';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {toggleNavCollapsed} from '../../../../redux/_settings/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppSidebar.style';

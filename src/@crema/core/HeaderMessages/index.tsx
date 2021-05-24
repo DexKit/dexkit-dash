@@ -2,7 +2,7 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import SmsIcon from '@material-ui/icons/Sms';
-import messages from '../../services/db/messages/messages';
+// import messages from '../../services/db/messages/messages';
 import {makeStyles} from '@material-ui/core';
 import MessageItem from './MessageItem';
 import Popover from '@material-ui/core/Popover';
@@ -118,12 +118,12 @@ const HeaderMessages: React.FC<HeaderMessagesProps> = () => {
         aria-label='show 4 new mails'
         color='inherit'
         onClick={onClickMessagesButton}>
-        <Badge
+        {/* <Badge
           className={classes.badgeStyle}
           badgeContent={messages.length}
           color='secondary'>
           <SmsIcon className={clsx(classes.smsIcon, 'smsIcon')} />
-        </Badge>
+        </Badge> */}
         <Hidden mdUp>
           <Box ml={4} fontSize={16} color='text.secondary' component='span'>
             <IntlMessages id='dashboard.messages' />
@@ -146,13 +146,13 @@ const HeaderMessages: React.FC<HeaderMessagesProps> = () => {
         }}
         onClose={() => setAnchorMessages(null)}>
         <Box>
-          <Box px={5} py={3}>
+          {/* <Box px={5} py={3}>
             <Box component='h5' fontFamily={Fonts.LIGHT}>
               <IntlMessages id='dashboard.messages' />({messages.length})
             </Box>
-          </Box>
-          <Scrollbar className='scroll-submenu'>
-            <List
+          </Box> */}
+          {/* <Scrollbar className='scroll-submenu'>
+             <List
               className={classes.listRoot}
               onClick={() => {
                 setAnchorMessages(null);
@@ -164,8 +164,8 @@ const HeaderMessages: React.FC<HeaderMessagesProps> = () => {
                   item={item}
                 />
               ))}
-            </List>
-          </Scrollbar>
+            </List> 
+          </Scrollbar> */}
           <Box mt={2}>
             <Button
               className={classes.btnPopover}

@@ -1,4 +1,5 @@
 import { BigNumber } from '@0x/utils';
+import { GasInfo } from 'types/app';
 
 import { 
     DEFAULT_ESTIMATED_TRANSACTION_TIME_MS, 
@@ -7,7 +8,6 @@ import {
     ETH_GAS_STATION_API_BASE_URL 
 } from 'utils/constants';
 // import { getLogger } from '../util/logger';
-import { GasInfo } from '@types';
 
 interface EthGasStationResult {
     average: number;

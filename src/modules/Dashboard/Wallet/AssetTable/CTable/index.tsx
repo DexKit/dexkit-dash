@@ -1,0 +1,94 @@
+import React from 'react';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableHeading from './TableHeading';
+import TableItem from './TableItem';
+import AppTableContainer from '../../../../../@crema/core/AppTableContainer';
+import TablePagination from '@material-ui/core/TablePagination/TablePagination';
+import {Box, makeStyles} from '@material-ui/core';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {grey} from '@material-ui/core/colors';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+
+interface Props {
+  balances: GetMyBalance_ethereum_address_balances[];
+}
+
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  tableResponsiveMaterial: {
+    width: '100%',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    whiteSpace: 'nowrap',
+    '@media (max-width: 767px)': {
+      borderTop: `1px solid ${grey[300]}`,
+      '& > table': {
+        marginBottom: 0,
+        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
+          whiteSpace: 'nowrap',
+        },
+      },
+    },
+  },
+  paginationDesktop: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
+  paginationMobile: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
+  },
+}));
+
+const CTable: React.FC<Props> = ({balances}) => {
+  const [perPage, setPerPage] = React.useState(8);
+  const [page, setPage] = React.useState(0);
+
+  const classes = useStyles();
+
+  return (
+    <>
+      <Box className={classes.tableResponsiveMaterial}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableHeading />
+          </TableHead>
+          <TableBody>
+            {balances
+              .slice(page * perPage, (page + 1) * perPage)
+              .map((data: GetMyBalance_ethereum_address_balances) => (
+                <TableItem data={data} key={data.currency?.address} />
+              ))}
+          </TableBody>
+        </Table>
+      </Box>
+      <TablePagination
+        className={classes.paginationDesktop}
+        rowsPerPageOptions={[8, 15, 20]}
+        component='div'
+        count={balances.length}
+        rowsPerPage={perPage}
+        page={page}
+        onChangePage={(_event: unknown, newPage: number) => setPage(newPage)}
+        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setPerPage(parseInt(event.target.value, 10))
+        }
+      />
+      <TablePagination
+        className={classes.paginationMobile}
+        rowsPerPageOptions={[]}
+        component='div'
+        count={balances.length}
+        rowsPerPage={15}
+        page={page}
+        onChangePage={(_event: unknown, newPage: number) => setPage(newPage)}
+      />
+    </>
+  );
+};
+
+export default CTable;

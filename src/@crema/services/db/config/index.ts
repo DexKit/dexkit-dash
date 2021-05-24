@@ -1,1 +1,0 @@
-export { default as ConfigFile } from './config.json';

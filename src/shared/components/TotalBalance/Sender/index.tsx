@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Box, Dialog, Tabs, Tab, Card, makeStyles} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {MyBalance} from 'types/bitquery/myBalance.interface';
 import SenderForm from './SenderForm';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
 interface Props {
   open: boolean;
-  balances: MyBalance[];
+  balances: GetMyBalance_ethereum_address_balances[];
   onClose: () => void;
 }
 

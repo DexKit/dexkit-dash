@@ -18,15 +18,14 @@ const ThemeModeSwitcher = () => {
   const {themeMode, theme, updateThemeMode} = useContext<AppContextPropsType>(
     AppContext,
   );
-  console.log(themeMode);
+
   const onClickThemeButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(themeMode);
     const changedTheme =
       theme.palette.type === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT;
     updateThemeMode!(changedTheme);
   };
 
-  const isLight = theme.palette.type === ThemeMode.DARK;
+  const isLight = theme.palette.type === ThemeMode.LIGHT;
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     notiBtn: {
@@ -83,10 +82,9 @@ const ThemeModeSwitcher = () => {
         aria-label={isLight ? 'Dark Theme' : 'Light Theme'}
         color='inherit'
         onClick={onClickThemeButton}>
-        {!isLight && (
+        {isLight ? (
           <Brightness7Icon className={clsx(classes.notiIcon, 'notiIcon')} />
-        )}
-        {isLight && (
+        ) : (
           <Brightness2Icon className={clsx(classes.notiIcon, 'notiIcon')} />
         )}
       </IconButton>

@@ -5,24 +5,48 @@ import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {MyBalance} from 'types/bitquery/myBalance.interface';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
 import CallMadeIcon from '@material-ui/icons/CallMade';
-
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-interface TotalBalanceProps {
-  balances: MyBalance[];
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+
+interface Props {
+  balances: GetMyBalance_ethereum_address_balances[];
+  only?: String | undefined;
 }
 
-const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
+const TotalBalance: React.FC<Props> = ({balances, only}) => {
   const [senderModal, setSenderModal] = useState(false);
   const [receiverModal, setReceiverModal] = useState(false);
 
-  const usdAvailable = balances.reduce((acc, current) => {
-    return (acc += current.valueUsd || 0);
-  }, 0);
+  let tokens: GetMyBalance_ethereum_address_balances[] = [];
+
+  if (only) {
+    tokens = balances?.filter(e => e.currency?.symbol.toLowerCase() == only.toLowerCase()) || [];
+
+    if (tokens.length ==0) {
+      tokens.push({
+        __typename: 'EthereumBalance',
+        currency: {
+          __typename: 'Currency',
+          address: '',
+          decimals: 0,
+          name: '',
+          symbol: only.toUpperCase(),
+        },
+        value: 0,
+        valueInUsd: 0
+      })
+    }
+  } else {
+    tokens = balances;
+  }
+
+  const usdAvailable = tokens?.reduce((acc, current) => {
+    return (acc += current.valueInUsd || 0);
+  }, 0) || 0;
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
@@ -143,7 +167,7 @@ const TotalBalance: React.FC<TotalBalanceProps> = ({balances}) => {
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
           <Box pt={{lg: 5}}>
-            <CoinsInfo coins={balances} />
+            <CoinsInfo coins={balances||[]} />
           </Box>
         </Card>
       </Box>
