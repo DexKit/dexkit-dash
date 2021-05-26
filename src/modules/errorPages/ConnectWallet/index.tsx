@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import {makeStyles} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import { useWeb3 } from 'hooks/useWeb3';
-
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 interface ComingSoonProps {}
 
@@ -57,7 +57,8 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             fontFamily={Fonts.LIGHT}>
            You need to connect your wallet to check this page
           </Box>
-          <Box mx='auto' mb={5} maxWidth={384}>        
+          <Box mx='auto' mb={5} maxWidth={384} display={'flex'} alignItems={'center'}>   
+          <AccountBalanceWalletIcon color={'primary'} style={{fontSize:'128px', marginRight: '35px'}}/>     
                   <Button
                     variant='contained'
                     color='primary'
@@ -68,11 +69,12 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
                    Connect Wallet
                   </Button>  
           </Box>
-          <Box mb={5} maxWidth={{xs: 300, sm: 400, xl: 672}} width='100%'>
-            <img
-              src={require('assets/images/errorPageImages/comingsoon.png')}
-              alt='404'
-            />
+          <Box mb={5} maxWidth={{xs: 300, sm: 400, xl: 672}} width='100%' display={'flex'}>
+            
+            {/*<img
+              src={require('assets/images/errorPageImages/connect-wallet.png')}
+              alt='Connect Wallet'
+            />*/}
           </Box>
         </Box>
         <InfoView />

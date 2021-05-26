@@ -9,10 +9,18 @@ const WETH: TokenInfo = {
     decimals: 18,
     logoURI: ''
 }
+
+const DEXKIT_ETH: TokenInfo = {
+    address: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
+    chainId: ChainId.Mainnet,
+    name: 'DexKit',
+    symbol: 'KIT',
+    decimals: 18,
+    logoURI: ''
+}
 // a list of tokens by chain
 type ChainTokenList = {
-    
-    readonly [chainId in ChainId]: TokenInfo[]
+    readonly [chainId in ChainId]: TokenInfo
   }
 
 /*const WETH_ONLY: ChainTokenList = {
@@ -20,4 +28,7 @@ type ChainTokenList = {
 
 }*/
 
+export const DEXKIT: Partial<ChainTokenList> = {
+    [ChainId.Mainnet]: DEXKIT_ETH,
+}
 

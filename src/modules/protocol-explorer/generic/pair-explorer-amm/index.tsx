@@ -13,15 +13,12 @@ import {useAMMPairExplorer} from 'hooks/useAMMPairExplorer';
 import PageTitle from 'shared/components/PageTitle';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {truncateAddress} from 'utils';
-import {TokenSearch} from 'shared/components/TokenSearch';
 import {Loader, AppContext} from '@crema';
 import InfoAMM from 'modules/protocol-explorer/common/info-amm';
 import AMMTradeHistory from 'modules/protocol-explorer/common/AMMTradeHistory';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import AppContextPropsType from 'types/AppContextPropsType';
 import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
-import FilterList from 'shared/components/Filter/list';
-import FilterMenu from 'shared/components/Filter/menu';
 import { Skeleton } from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
@@ -130,10 +127,6 @@ const PairExplorerAMM = (props: Props) => {
             </Grid>
           </Grid>
 
-          <Box display={'flex'} justifyContent={'flex-end'}>
-                  <FilterList />
-                  <FilterMenu />
-            </Box>
 
           <Grid style={{marginTop: 20}} item xs={12} md={12}>
             <AMMTradeHistory

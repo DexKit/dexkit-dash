@@ -26,6 +26,7 @@ const PageTitle: React.FC<Props> = (props) => {
       fontSize: '16px',
       [theme.breakpoints.down('sm')]: {
         fontSize: '15px',
+        marginTop: '20px',
       },
       [theme.breakpoints.down('xs')]: {
         fontSize: '13px',
@@ -55,7 +56,7 @@ const PageTitle: React.FC<Props> = (props) => {
               {e.name}
             </Link>
           ))}
-          <Typography className={classes.breadcrumbs} color='textPrimary'>
+          <Typography  color='textPrimary'>
             {props.active}
           </Typography>
         </Breadcrumbs>

@@ -4,6 +4,7 @@ import {MintBurn} from 'types/app';
 import TransactionTable from './TransactionTable';
 import AppCard from '@crema/core/AppCard';
 import {EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
+import PoolIcon from '@material-ui/icons/Pool';
 import {
   Box,
   makeStyles,
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       fontSize: 18,
     },
   },
+  toolbarIcon: {
+    marginRight: '3px'
+  }
 }));
 
 interface Props {
@@ -120,9 +124,10 @@ const AMMPoolHistory: React.FC<Props> = (props: Props) => {
           justifyContent='space-between'
           alignItems='center'
           style={{width: '100%'}}>
-          <Box>
-            <Typography variant='h5'>{messages['app.pool']}</Typography>
-          </Box>
+          <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
+                <PoolIcon color={'primary'} className={classes.toolbarIcon}/>
+                <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.pool']}</Typography>
+            </Box>
           <Box>
             <Select
               className={classes.selectBox}

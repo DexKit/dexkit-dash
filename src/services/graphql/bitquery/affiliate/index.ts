@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client/core";
 
 export const BITQUERY_AFFILIATE_TRADES = gql`
-query GetAffiliateTrades($network: EthereumNetwork!, $limit: Int!, $offset: Int!, $sender: String!, $receiver: String!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+query GetAffiliateTrades($network: EthereumNetwork!, $limit: Int!, $offset: Int!, $sender: String!, $receiver: String!, $from: ISO8601DateTime, $till: ISO8601DateTime, $tradeAmount: Float) {
     ethereum(network: $network) {
       transfers(
        options: {desc: "block.height", limit: $limit, offset: $offset}
        date: {since: $from, till: $till}
-       amount: {gt: 0},
+       amount: {gt: $tradeAmount},
        sender: {is: $sender} 
        receiver: {is: $receiver}) 
        {
@@ -41,11 +41,11 @@ query GetAffiliateTrades($network: EthereumNetwork!, $limit: Int!, $offset: Int!
 
   // limit 10
 export const BITQUERY_TOTAL_AFFILIATE_TRADES = gql`
-query GetTotalAffiliateTrades($network: EthereumNetwork!, $sender: String!, $receiver: String!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+query GetTotalAffiliateTrades($network: EthereumNetwork!, $sender: String!, $receiver: String!, $from: ISO8601DateTime, $till: ISO8601DateTime, $tradeAmount: Float) {
   ethereum(network: $network) {
     transfers(
       date: {since: $from, till: $till}
-      amount: {gt: 0}
+      amount: {gt: $tradeAmount}
       sender: {is: $sender}
       receiver: {is: $receiver}
     ) {
@@ -57,7 +57,7 @@ query GetTotalAffiliateTrades($network: EthereumNetwork!, $sender: String!, $rec
         symbol
         decimals
       }
-      count(uniq: transfers)
+      count
     }
   }
 }

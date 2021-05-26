@@ -16,7 +16,6 @@ export interface SalesStateProps {
 
 const SalesState: React.FC<SalesStateProps> = ({state}) => {
   const {bgColor, type, value, id} = state;
-  console.log('id', id)
 
   return (
     <AppCard

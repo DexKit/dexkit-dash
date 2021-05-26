@@ -1,7 +1,8 @@
-import { WETH9Contract } from "@0x/contract-wrappers";
+
 import { BigNumber } from "@0x/utils";
 import { ChainId } from "types/blockchain";
-import { EXCHANGE } from "./AppEnums";
+import { EthereumNetwork } from "./AppEnums";
+
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -80,3 +81,16 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
   }
 };
 
+
+export const GET_CHAIN_ID_BY_BITQUERY_NETWORK = (network: EthereumNetwork) => {
+
+    switch (network) {
+      case EthereumNetwork.ethereum:
+        return ChainId.Mainnet;
+      case EthereumNetwork.bsc:
+        return ChainId.Binance;
+      default: return undefined;
+    }
+
+
+}

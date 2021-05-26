@@ -63,9 +63,9 @@ const FilterMenu = () => {
         onClose={handleCloseMenu}
         TransitionComponent={Fade}
       >
-          {filters && filters.filter(f=> !f.enable).map(f => 
-                 <MenuItem onClick={()=> handleCloseFilter(f.onEnable)}>{f.label}</MenuItem>)}
-          {(filters && filters.filter(f=> !f.enable).length === 0) &&  <MenuItem onClick={onClearAll}>Clear All</MenuItem>}
+          {filters && filters.filter(f=> !f.enable).map((f, i) => 
+                 <MenuItem onClick={()=> handleCloseFilter(f.onEnable)} key={i}>{f.label}</MenuItem>)}
+          {(filters && filters.filter(f=> !f.enable).length === 0) &&  <MenuItem onClick={onClearAll} key={'clear-all'}>Clear All</MenuItem>}
 
 
       </Menu>

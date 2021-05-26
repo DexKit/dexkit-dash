@@ -6,7 +6,14 @@ export const truncateAddress = (address: string) => {
   }else{
     return '';
   }
- 
+};
+
+export const truncateURL = (url: string) => {
+  if(url){
+    return `${url.slice(0, 20)}...${url.slice(url.length - 10)}`;
+  }else{
+    return '';
+  }
 };
 export function capitalize(str: string, separator: string = ' ', separatorToJoinString: string = ' ') {
   return str?.split(separator)

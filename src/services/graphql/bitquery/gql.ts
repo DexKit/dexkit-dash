@@ -469,6 +469,24 @@ export const BITQUERY_MY_TOKEN_BALANCE = gql`
   }
 `;
 
+export const BITQUERY_MY_TOKEN_BALANCE_WITHOUT_HISTORY = gql`
+  query GetMyTokenBalanceWithoutHistory($network: EthereumNetwork!, $address: String!) {
+    ethereum(network: $network) {
+      address(address: {is: $address}) {
+        balances{
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+        }
+      }
+    }
+  }
+`;
+
 // trash
 export const BITQUERY_MY_TOKEN_BALANCE_AT = gql`
   query GetMyTokenBalanceAT($network: EthereumNetwork!, $address: String!, $till: ISO8601DateTime!) {

@@ -7,6 +7,7 @@ import {errorPagesConfigs} from './errorPages';
 import {dashBoardConfigs} from './dashboard';
 import {protocolExplorerConfigs} from './protocol-explorer';
 import {myAppsConfigs} from './my-apps';
+import {affiliateConfigs} from './affiliate';
 import {historyConfigs} from './history';
 import {initialUrl} from '../shared/constants/AppConst';
 
@@ -15,7 +16,8 @@ const routeConfigs = [
   ...dashBoardConfigs,
   ...protocolExplorerConfigs,
   ...myAppsConfigs,
-  ...historyConfigs
+  ...historyConfigs,
+  ...affiliateConfigs
 ];
 
 const routes = [

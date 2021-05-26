@@ -12,6 +12,7 @@ export const Web3Manager = () => {
     useEffect(() =>{
         if(web3Modal.cachedProvider || (isMobile() && (web3 || ethereum))){
           onConnectWeb3();
+          console.log('called');
         }
 
     }, [])

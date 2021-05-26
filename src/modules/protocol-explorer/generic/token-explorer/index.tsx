@@ -83,11 +83,11 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <TokenInfo address={address} />
+                <TokenInfo address={baseAddress} />
               </Grid>
 
               <Grid item xs={12} md={6}>
-               <TokenStatistics address={address} />
+               <TokenStatistics address={baseAddress} />
               </Grid>
 
               <Grid item xs={12} sm={12} md={12}>
@@ -96,12 +96,6 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                   exchange={exchange}
                   networkName={networkName}
                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={12}>
-                <Box display={'flex'} justifyContent={'flex-end'}>
-                  <FilterList />
-                  <FilterMenu />
-                </Box>
               </Grid>
 
               <Grid item xs={12} sm={12} md={12}>

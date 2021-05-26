@@ -130,4 +130,5 @@ export interface GetAffiliateTradesVariables {
   receiver: string;
   from?: any | null;
   till?: any | null;
+  tradeAmount?: number | null;
 }

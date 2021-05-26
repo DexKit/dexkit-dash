@@ -30,7 +30,7 @@ import { NETWORK, EXCHANGE } from 'shared/constants/AppEnums';
 import {searchByAddress as searchByAddressInterface} from './__generated__/searchByAddress';
 
 export const client = new ApolloClient({
-  uri: 'https://dexkit.graphql.bitquery.io',
+  uri: 'https://graphql.bitquery.io',
   cache: new InMemoryCache(),
   headers: {
     'User-Agent': 'Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20100101 Firefox/10.0',
@@ -277,6 +277,8 @@ export function getMyTokenBalancesAt<T>(network: string, address: string, till: 
 
 export function getTokenInfo(network: NETWORK, address: string): Promise<Token>
 {
+  console.log(network);
+  console.log(address);
   return client.query({
     query: BITQUERY_TOKEN_INFO,
     variables: {
@@ -284,8 +286,10 @@ export function getTokenInfo(network: NETWORK, address: string): Promise<Token>
       address
     }
   }).then(data => {
+    console.log(data);
     return parseTokenInfoData(data);
   }).catch(e => {
+    console.log(e);
     return parseTokenInfoData(null);
   });
 }

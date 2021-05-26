@@ -131,12 +131,6 @@ const PairExplorer = (props: Props) => {
               )}
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-                <Box display={'flex'} justifyContent={'flex-end'}>
-                  <FilterList />
-                  <FilterMenu />
-                </Box>
-            </Grid>
 
           <Grid style={{marginTop: 20}} item xs={12} md={12}>
             <TokenOrders

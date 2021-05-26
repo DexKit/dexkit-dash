@@ -4,7 +4,7 @@ import {
   // PromiEvent 
 } from 'web3-core';
 import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction } from "services/web3modal"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
 import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber, setEthAccounts } from "redux/actions";
@@ -12,6 +12,11 @@ import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 
 
+// @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
+// the app to break as wallet was being called multiple times. useState inside the hook was not working as solution
+let loadingAccount = false;
+let loadingChainId = false;
+let loadingEthBalance = false;
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(state => state.blockchain.web3State);
@@ -21,33 +26,35 @@ export const useWeb3 = () => {
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
   const blocknumber = useSelector<AppState, AppState['blockchain']['blocknumber']>(state => state.blockchain.blocknumber)
 
-  
   useEffect(() => {
     const web3 = getWeb3();
     const provider = getProvider();
     
-    if (web3State === Web3State.Done && web3) {
-
-      web3.eth.getChainId().then((n) => {
-        dispatch(setChainId(n));
-      });
-
+    if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
       // subscribeProvider(provider);
-
+      loadingAccount = true;
       web3.eth.getAccounts().then((a) => {
         dispatch(setEthAccount(a[0]));
         dispatch(setEthAccounts(a))
-      });
+      }).finally(() => loadingAccount = false);
     }
+    if (web3State === Web3State.Done && web3 && !chainId && !loadingChainId) {
+      loadingChainId = true;
+      web3.eth.getChainId().then((n) => {
+        dispatch(setChainId(n));
+      }).finally(() =>  loadingChainId = false);
+    }
+
   }, [web3State]);
 
 
   useEffect(() => {
     const web3 = getWeb3();
-    if (account && web3) {
+    if (account && web3 && !loadingEthBalance && !ethBalance) {
+      loadingEthBalance = true;
       web3.eth.getBalance(account).then((e) =>{
         dispatch(setEthBalance(new BigNumber(e)))
-      });
+      }).finally(() => loadingEthBalance = false);
     }
   }, [account])
 

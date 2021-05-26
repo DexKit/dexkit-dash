@@ -311,6 +311,54 @@ const useRoutesConfig = (): NavItemProps[]  => {
           },*/
         ],
       },
+      {
+        id: 'affiliate',
+        title: 'Affiliates',
+        messageId: 'sidebar.affiliate',
+        type: 'group',
+        children: [
+          {
+            id: 'become-affiliate',
+            title: 'Become Affiliate',
+            messageId: 'sidebar.affiliate.become-affiliate',
+            type: 'item',
+            icon: 'groupWork',
+            url: '/affiliate/overview',
+          },
+        /*  {
+            id: 'nft-marketplace',
+            title: 'Marketplace',
+            messageId: 'sidebar.affiliate.nft-marketplace',
+            type: 'collapse',
+            icon: 'store_mall_directory',
+            children: [
+              {
+                id: 'nft-marketplace-overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: '/affiliate/nft-marketplace/overview',
+              },
+            ],
+          },
+          {
+            id: 'erc20-exchange',
+            title: 'Exchange',
+            messageId: 'sidebar.affiliate.erc20-exchange',
+            type: 'collapse',
+            icon: 'timeline',
+            children: [
+              {
+                id: 'erc20-exchange-overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: '/affiliate/nft-marketplace/overview',
+              },
+            ],
+          },*/
+        ],
+      },
       /* {
          id: 'affiliate',
          title: 'Affiliates',
@@ -648,29 +696,29 @@ const useRoutesConfig = (): NavItemProps[]  => {
           },*/
         ],
       },
-      /* {
+       {
          id: 'affiliate',
          title: 'Affiliates',
          messageId: 'sidebar.affiliate',
          type: 'group',
          children: [
            {
-             id: 'aggregator',
-             title: 'Aggregator',
-             messageId: 'sidebar.affiliate.aggregator',
+             id: 'become-affiliate',
+             title: 'Become Affiliate',
+             messageId: 'sidebar.affiliate.become-affiliate',
              type: 'collapse',
              icon: 'report',
              children: [
                {
-                 id: 'agg-overview',
+                 id: 'affiliate-overview',
                  title: 'Overview',
                  messageId: 'common.overview',
                  type: 'item',
-                 url: '/affiliate/aggregator/overview',
+                 url: '/affiliate/overview',
                },
              ],
            },
-           {
+         /*  {
              id: 'nft-marketplace',
              title: 'Marketplace',
              messageId: 'sidebar.affiliate.nft-marketplace',
@@ -701,9 +749,9 @@ const useRoutesConfig = (): NavItemProps[]  => {
                  url: '/affiliate/nft-marketplace/overview',
                },
              ],
-           },
+           },*/
          ],
-       },*/
+       },
        {
         id: 'apps',
         title: 'Apps',

@@ -1,25 +1,20 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import TransactionTable from './TransactionTable';
-import {OrderData} from 'types/app';
-import AppCard from '@crema/core/AppCard';
-import {NETWORK, EXCHANGE} from 'shared/constants/AppEnums';
-import {Box, Hidden, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
+import { GetAffiliateTrades } from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
-
 interface Props {
-  transactionData: OrderData[];
+  transactionData: GetAffiliateTrades | undefined;
   isLoading: boolean;
   page: number;
   total: number;
   perPage: number;
   onChangePage: (newPage: number) => void;
   onChangePerPage: (newPerPage: number) => void;
-  networkName: NETWORK;
-  exchange: EXCHANGE;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -32,12 +27,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
   },
-  toolbarIcon: {
-    marginRight: '3px'
-  }
 }));
 
-const AMMTradeHistory: React.FC<Props> = (props: Props) => {
+const AffiliateHistory: React.FC<Props> = (props: Props) => {
   const {messages} = useIntl();
 
   const classes = useStyles();
@@ -46,16 +38,14 @@ const AMMTradeHistory: React.FC<Props> = (props: Props) => {
     // <AppCard height={1} title={messages['app.tradeHistory']}>
     <Paper className={classes.paper}>
       <Toolbar className={classes.toolbar}>
-         <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
-              <SwapHorizontalCircleIcon color={'primary'} className={classes.toolbarIcon}/>
+          <Box display={'flex'} justifyContent={'flex-start'}     alignItems={'center'}>
+              <SwapHorizontalCircleIcon color={'primary'}/>
               <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
           </Box>
-          <Hidden mdDown>
-            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                <FilterList />
-                <FilterMenu />
-            </Box>
-          </Hidden>
+          <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+              <FilterList />
+              <FilterMenu />
+          </Box>
       </Toolbar>
       <TransactionTable {...props} />
     </Paper>
@@ -63,4 +53,4 @@ const AMMTradeHistory: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default AMMTradeHistory;
+export default AffiliateHistory;

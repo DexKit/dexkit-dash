@@ -25,7 +25,7 @@ export const useAMMPairExplorer = (address: string, exchange: EXCHANGE) =>{
     const [infoData, setInfoData] = useState<AMMPairInfoExplorer>();
 
     // TODO: USE this instead of old way of doing things
-    /*const {data} = useQuery<GetAMMPairExplorer, GetAMMPairExplorerVariables >(BITQUERY_AMM_PAIR_EXPLORER, 
+    /* const {data} = useQuery<GetAMMPairExplorer, GetAMMPairExplorerVariables >(BITQUERY_AMM_PAIR_EXPLORER, 
       {variables: {network: GET_BITQUERY_NETWORK_NAME(currentChainId), exchangeName: exchange, pairAddress:address, quoteAddress: GET_DEFAULT_QUOTE(currentChainId) as string  }})*/
 
     

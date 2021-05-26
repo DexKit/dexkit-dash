@@ -4,6 +4,7 @@ import { ChainId } from 'types/blockchain';
 import { TokenInfo } from '@types';
 import Web3 from 'web3';
 import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
+import { NETWORK } from 'shared/constants/AppEnums';
 
 
 export const tokenAmountInUnitsToBigNumber = (amount: BigNumber, decimals: number): BigNumber => {
@@ -96,4 +97,10 @@ export const extractPairFromAddress = (address: string, chainId: ChainId) => {
       }
     }
     return {baseAddress, quoteAddress};
+  }
+
+
+
+  export const GET_TRADE_TOKEN_URL = (address: string, network: NETWORK) => {
+    return `/${network}/dashboard/token/${address}`
   }

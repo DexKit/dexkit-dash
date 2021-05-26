@@ -15,8 +15,12 @@ import {
   Paper,
   Toolbar,
   Typography,
+  Hidden,
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
+import FilterMenu from 'shared/components/Filter/menu';
+import FilterList from 'shared/components/Filter/list';
+import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 
 interface Props {
   baseAddress: string | null;
@@ -43,11 +47,16 @@ interface Props {
 const useStyles = makeStyles((theme: CremaTheme) => ({
   toolbar: {
     padding: '0 24px',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
   },
+  toolbarIcon: {
+    marginRight: '3px'
+  }
 }));
 
 const TokenOrders: React.FC<Props> = (props) => {
@@ -97,7 +106,16 @@ const TokenOrders: React.FC<Props> = (props) => {
     // >
     <Paper className={classes.paper}>
       <Toolbar className={classes.toolbar}>
-        <Typography variant='h5'>{messages['app.tradeHistory']}</Typography>
+          <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
+              <SwapHorizontalCircleIcon color={'primary'} className={classes.toolbarIcon}/>
+              <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
+          </Box>
+          <Hidden mdDown>
+            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                <FilterList />
+                <FilterMenu />
+            </Box>
+          </Hidden>
       </Toolbar>
       <CTable
         data={trades}

@@ -49,9 +49,9 @@ const onSucessRegistration = (registration: ServiceWorkerRegistration): void => 
     })*/
 };
 
-const broadcast = new BroadcastChannel('push-notification-channel');
+/*const broadcast = new BroadcastChannel('push-notification-channel');
 
-// Listen to the response
+
 broadcast.onmessage = (event) => {
   console.log('app event', event);
   const {
@@ -73,7 +73,7 @@ serviceWorkerRegistration.register({
 onNotification((payload) => {
   console.log('messaging received with focus', payload);
   addNotification(payload);
-})
+})*/
 
 // messaging.onMessage((payload) => {
 //   console.log('messaging received with focus', payload);

@@ -10,6 +10,7 @@ import {EXCHANGE, NETWORK} from 'shared/constants/AppEnums';
 import AppCard from '@crema/core/AppCard';
 import {makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 interface Props {
   address: string;
@@ -25,6 +26,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
   },
+  toolbarIcon: {
+    marginRight: '3px'
+  }
 }));
 
 const TokenPairs: React.FC<Props> = (props) => {
@@ -47,7 +51,10 @@ const TokenPairs: React.FC<Props> = (props) => {
     //   <AppCard contentStyle={{paddingLeft: 0, paddingRight: 0,}} title={messages['app.topPairs']}>
     <Paper className={classes.paper}>
       <Toolbar className={classes.toolbar}>
-        <Typography variant='h5'>{messages['app.topPairs']}</Typography>
+           <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
+              <EmojiEventsIcon color={'primary'} className={classes.toolbarIcon}/>
+              <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.topPairs']}</Typography>
+          </Box>
       </Toolbar>
       <CTable
         data={tableData}

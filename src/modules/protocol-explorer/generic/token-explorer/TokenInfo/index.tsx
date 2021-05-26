@@ -21,8 +21,9 @@ const TokenInfo: React.FC<Props> = (props) => {
 
   useEffect(() => {
     setTableData(undefined);
+    console.log(props.address)
     getTokenInfo(GET_NETWORK_NAME(chainId), props.address)
-      .then((data) => setTableData(data))
+      .then((data) => {setTableData(data); console.log(data)})
       .catch((e) => console.log(e));
   }, [props.address]);
 

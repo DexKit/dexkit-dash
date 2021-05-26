@@ -12,7 +12,7 @@ const FilterList = () => {
       } = useContext(FilterContext);
   return (
         <>
-            {filters && filters.map( (f) => {
+            {filters && filters.map( (f, i) => {
                     switch (f.type) {
                         case 'datetime':
                             return <DateAndTimePickerFilterField {...f}/>;    
