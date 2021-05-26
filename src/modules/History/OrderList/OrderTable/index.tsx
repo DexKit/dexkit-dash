@@ -3,13 +3,14 @@ import {makeStyles, Box, Table, TableHead, TableBody, TablePagination} from '@ma
 import {grey} from '@material-ui/core/colors/index';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import { ITransactionList } from "types/app";
+import { IOrderList } from "types/app";
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 
 interface Props {
   networkName: EthereumNetwork,
-  data: ITransactionList[] | undefined;
+  data: IOrderList[] | undefined;
+  totalRows: number | undefined;
   currentPage: number
   rowsPerPage: number;
   rowsPerPageOptions: number[];
@@ -17,7 +18,7 @@ interface Props {
   onChangeRowsPerPage: (newPerPage: number) => void;
 }
 
-const TransactionTable: React.FC<Props> = ({networkName, data, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage}) => {
+const TransactionTable: React.FC<Props> = ({networkName, data, totalRows, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage}) => {
   const useStyles = makeStyles(() => ({
     borderBottomClass: {
       borderBottom: '0 none',
@@ -64,7 +65,7 @@ const TransactionTable: React.FC<Props> = ({networkName, data, currentPage, rows
       
       <TablePagination
         component="div"
-        count={-1}
+        count={totalRows||0}
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}

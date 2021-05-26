@@ -83,7 +83,12 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
       )
     case 1:
       const themeName = form?.theme_name ?? '';
-      return <ThemeForm themeName={themeName}/>;
+      const theme = form?.theme;
+      return (<ThemeForm 
+        themeName={themeName}
+        theme={theme}
+        changeIssuerForm={changeIssuerForm}
+      />);
     case 2: {
       const tokens: TokenMetaData[] = data as TokenMetaData[];
       return (

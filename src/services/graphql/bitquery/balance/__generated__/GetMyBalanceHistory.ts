@@ -20,6 +20,10 @@ export interface GetMyBalanceHistory_ethereum_address_balances_history {
    */
   transferAmount: number | null;
   value: number | null;
+  /**
+   * Block number (height) in blockchain
+   */
+  block: number;
 }
 
 export interface GetMyBalanceHistory_ethereum_address_balances_currency {

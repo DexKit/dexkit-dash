@@ -28,7 +28,16 @@ export const historyConfigs = [
       },
     ],
   },
-  
+
+  {
+    routes: [
+      {
+        path: '/:networkName/history/transaction/view/:hash',
+        component: React.lazy(() => import('./TransactionView')),
+      },
+    ],
+  },
+
   {
     routes: [
       {
@@ -41,9 +50,9 @@ export const historyConfigs = [
   {
     routes: [
       {
-        path: '/:networkName/history/transaction/view/:hash',
-        component: React.lazy(() => import('./TransactionView')),
+        path: '/:networkName/history/order/list/:address',
+        component: React.lazy(() => import('./OrderList')),
       },
     ],
-  }
+  },
 ];

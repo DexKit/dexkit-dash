@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   Autocomplete,
   createFilterOptions,
@@ -18,15 +18,28 @@ interface Props {
 }
 
 const useStyles = makeStyles({
-  root: {
-    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-      border: 'none',
+  textField: {
+    '& .MuiOutlinedInput-root': {
+      paddingLeft: '55px',
     },
+    // '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+    //   border: 'none',
+    // },
   },
 });
 
 const SelectBox = styled.div`
-  padding: 0 8px;
+  display: flex;
+  position: relative;
+
+  & img {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
+
+  /* padding: 0 8px;
   overflow: hidden;
   border-style: solid;
   border-width: 1px;
@@ -35,7 +48,16 @@ const SelectBox = styled.div`
   border-color: rgba(255, 255, 255, 0.23);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
+`;
+
+const SelectOption = styled.div`
+  display: flex;
+  align-items: center;
+
+  & img {
+    margin-right: 10px;
+  }
 `;
 
 const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
@@ -48,25 +70,6 @@ const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
 
   const filterOptions = (options: any, state: FilterOptionsState<any>): any => {
     return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT + 1);
-  };
-
-  const [found, setFound] = useState<Token[]>();
-
-  useEffect(() => {
-    if (found == null) {
-      setFound(options);
-    }
-  }, []);
-
-  const search = (value: string) => {
-    const list = options.filter(
-      (e) =>
-        e.symbol.toLowerCase() === value.toLowerCase() ||
-        e.address.toLowerCase().includes(value.toLowerCase()) ||
-        e.name.toLowerCase().includes(value.toLowerCase()),
-    );
-
-    setFound(list);
   };
 
   return (
@@ -86,39 +89,21 @@ const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
             setInputValue(newInputValue);
           }}
           getOptionLabel={(e) => `${e.symbol} - ${truncateAddress(e.address)}`}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder={'Search by name, symbol or paste address'}
-              variant='outlined'
-              // onChange={($e) => search($e.target.value)}
-            />
-          )}
-        />
-      )}
-
-      {id && options && selected && found && (
-        <Autocomplete
-          id={id}
-          closeIcon={false}
-          options={found || []}
-          defaultValue={selected}
           renderOption={(option) => (
-            <React.Fragment>
+            <SelectOption>
               <TokenLogo token0={option.address} />
               {option.name}
-            </React.Fragment>
+            </SelectOption>
           )}
-          getOptionLabel={(e) => `${e.symbol} - ${truncateAddress(e.address)}`}
           renderInput={(params) => (
             <SelectBox>
-              <TokenLogo token0={selected.address}></TokenLogo>
+              <TokenLogo token0={selected.address} />
               <TextField
                 {...params}
                 placeholder={'Search by name, symbol or paste address'}
                 variant='outlined'
-                onChange={($e) => search($e.target.value)}
-                className={classes.root}
+                className={classes.textField}
+                // onChange={($e) => search($e.target.value)}
               />
             </SelectBox>
           )}

@@ -1,4 +1,5 @@
 const allSettled = function(promises: Promise<any>[]) {
+
   return Promise.all(
     promises.map((promise, i) =>
       promise
@@ -12,6 +13,7 @@ const allSettled = function(promises: Promise<any>[]) {
         }))
     )
   );
+  
 };
 
 export default allSettled;

@@ -2,12 +2,12 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, Box, Card } from '@material-ui/core';
 import { GridContainer } from '@crema';
-import { useTransactionList } from 'hooks/history/useTransactionList';
+import { useOrderList } from 'hooks/history/useOrderList';
 import { useStyles } from './index.style';
 import PageTitle from 'shared/components/PageTitle';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
-import TransactionTable from './TransactionTable';
+import OrderTable from './OrderTable';
 import { useNetwork } from 'hooks/useNetwork';
 
 type Params = {
@@ -16,14 +16,17 @@ type Params = {
 
 type Props = RouteComponentProps<Params>
 
-const TransactionList: React.FC<Props> = (props) => { 
+const OrderList: React.FC<Props> = (props) => { 
   const {match: { params }} = props;
   const {address} = params;
   
   const classes = useStyles();
 
   const networkName = useNetwork();
-  const {loading, error, data, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage} = useTransactionList({address});
+  const {loading, error, data, totalRows, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage} = useOrderList({address});
+
+  console.log('error', error)
+  console.log('data', data)
 
   return (
     <Box pt={{xl: 4}}>
@@ -33,8 +36,8 @@ const TransactionList: React.FC<Props> = (props) => {
           {url:'/', name: 'Dashboard'},
           {url:'/dashboard/wallet', name: 'Wallet'}
         ]}
-        active={'Transaction History'}
-        title={'Transaction History'}
+        active={'Order History'}
+        title={'Order History'}
       />
 
       <GridContainer>
@@ -61,15 +64,16 @@ const TransactionList: React.FC<Props> = (props) => {
                 </Box>
               </Box>
               { loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
-                <TransactionTable 
+                <OrderTable
                   networkName={networkName}
                   data={data} 
+                  totalRows={totalRows}
                   currentPage={currentPage}
                   rowsPerPage={rowsPerPage}
                   rowsPerPageOptions={rowsPerPageOptions}
                   onChangePage={(newPage)=> onChangePage(newPage)}
                   onChangeRowsPerPage={(perPage)=> onChangeRowsPerPage(perPage)} 
-               />
+                />
               )}
             </Card>
           </Box>
@@ -80,4 +84,4 @@ const TransactionList: React.FC<Props> = (props) => {
   );
 };
 
-export default TransactionList;
+export default OrderList;

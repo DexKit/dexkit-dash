@@ -40,27 +40,35 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.created' />
+        <IntlMessages id='app.exchange' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.sender' />
-      </TableCell>
-
-      <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.type' />
+        <IntlMessages id='app.side' />
       </TableCell>
       
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.receiver' />
+        <IntlMessages id='app.pair' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.amount' />
+        <IntlMessages id='app.baseAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.total' />
+        <IntlMessages id='app.quoteAmount' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.price' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.tradeAmount' />
+      </TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.created' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}></TableCell>

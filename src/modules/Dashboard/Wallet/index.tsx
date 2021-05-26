@@ -10,6 +10,8 @@ import { useIntl } from 'react-intl';
 
 import InfoCard from './InfoCard'
 
+import DefiCoins, { CoinsProps } from './DefiCoins';
+
 import PageTitle from 'shared/components/PageTitle';
 import { Link } from 'react-router-dom';
 import { useWeb3 } from 'hooks/useWeb3';
@@ -22,6 +24,7 @@ import { useNetwork } from 'hooks/useNetwork';
 import Transak from 'shared/components/Transak';
 import { useBalanceChart } from 'hooks/balance/useBalanceChart';
 import AssetChart from './AssetChart';
+import { useDefi } from 'hooks/useDefi';
 
 
 interface Props { }
@@ -29,6 +32,7 @@ interface Props { }
 const Wallet: React.FC<Props> = (props) => {
   const { messages } = useIntl();
   const { account } = useWeb3();
+  const { defiBalance } = useDefi(account);
   const { loading, error, data } = useBalance();
   const { loading: loadingChart, error: errorChart, data: dataChart, handleSelectDay, handleSelectToken } = useBalanceChart();
 
@@ -124,7 +128,7 @@ const Wallet: React.FC<Props> = (props) => {
           </Grid>
           {
             <Grid item xs={12} md={12} style={{ marginTop: 15 }}>
-              {/* <DefiCoins {...defiAssets} /> */}
+              <DefiCoins {...defiBalance} />
             </Grid>
           }
         </Grid>

@@ -1,1 +1,0 @@
-export const ZRXTRACKER_URL  = 'https://api.0xtracker.com';

@@ -14,10 +14,11 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectToken from './SelectToken';
 import {ModalOrderData} from 'types/models/ModalOrderData';
-import { useZerox } from 'hooks/useZerox';
+import { fetchQuote } from 'services/rest/0x-api';
 
 interface Props {
   account: string | undefined;
+  chainId: number | undefined;
   tokenAddress: string;
   select0: Token[];
   select1: Token[];
@@ -25,13 +26,7 @@ interface Props {
 }
 
 const MarketForm: React.FC<Props> = (props) => {
-  const {
-    account,
-    tokenAddress,
-    select0,
-    select1,
-    actionButton,
-  } = props;
+  const {account, chainId, tokenAddress, select0, select1, actionButton} = props;
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
@@ -67,8 +62,6 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const {fetchQuote} = useZerox()
-
   const [target, setTarget] = useState<string>();
 
   const [inputFrom, setInputFrom] = useState<number>(0);
@@ -81,14 +74,17 @@ const MarketForm: React.FC<Props> = (props) => {
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const value = Number(e.target.value);
-    if (tokenFrom && tokenTo) {
+    if (tokenFrom && tokenTo && chainId) {
       setInputFrom(value);
 
-      console.log('--------------------------------------------------------------');
+      console.log(
+        '--------------------------------------------------------------',
+      );
       console.log(tokenFrom);
       console.log(tokenTo);
 
       fetchQuote({
+        chainId: chainId,
         baseToken: tokenFrom,
         quoteToken: tokenTo,
         orderSide: OrderSide.Sell,
@@ -103,7 +99,9 @@ const MarketForm: React.FC<Props> = (props) => {
       })
         .then((e) => {
           console.log(e);
-          setInputTo(toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber());
+          setInputTo(
+            toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
+          );
           setTarget(e.allowanceTarget);
         })
         .catch((e) => {
@@ -218,17 +216,21 @@ const MarketForm: React.FC<Props> = (props) => {
               />
             </Grid>
 
-            <Grid style={{padding: 0, marginTop: 4}} item xs={12} md={8}>
-              <Box
-                mb={2}
-                color='grey.400'
-                textAlign='center'
-                className={classes.textRes}>
-                {/* <IconButton style={{padding: 0}} > */}
-                <ArrowDownwardOutlined />
-                {/* </IconButton> */}
-              </Box>
+            <Grid style={{padding: 0, marginTop: 4}} item xs={12} md={6}>
+              <Grid xs={12}>
+                <Box
+                  mb={2}
+                  color='grey.400'
+                  textAlign='center'
+                  className={classes.textRes}>
+                  {/* <IconButton style={{padding: 0}} > */}
+                  <ArrowDownwardOutlined />
+                  {/* </IconButton> */}
+                </Box>
+              </Grid>
             </Grid>
+
+            <Grid xs={12} md={6} />
 
             <Grid
               style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}

@@ -12,7 +12,7 @@ import {ChainId} from 'types/blockchain';
 import {OrderSide, Steps, Token} from 'types/app';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import { useZerox } from 'hooks/useZerox';
+import { fetchQuote } from 'services/rest/0x-api';
 
 interface Props {
   step: Steps | undefined;
@@ -30,7 +30,6 @@ interface Props {
 const OrderStep: React.FC<Props> = (props) => {
   const {step, token0, token1, amount, account, chainId, loading, onClose, onNext, onLoading} = props;
   const {getContractWrappers} = useContractWrapper();
-  const {fetchQuote} = useZerox();
 
   const [quote, setQuote] = useState<any>();
   const [buyAmount, setBuyAmount] = useState(0);
@@ -44,6 +43,7 @@ const OrderStep: React.FC<Props> = (props) => {
       fetchQuote({
         baseToken: token0,
         quoteToken: token1,
+        chainId: chainId,
         orderSide: OrderSide.Sell,
         makerAmount: amount,
         // Parameters used to prevalidate quote at final

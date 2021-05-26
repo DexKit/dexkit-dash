@@ -1,8 +1,7 @@
 import { gql } from "@apollo/client/core";
 
-
 export const BITQUERY_TRANSACTION_INFO = gql`
-  query GetTrasactionInfo($network: EthereumNetwork!, $hash: String!) {
+  query GetTransactionInfo($network: EthereumNetwork!, $hash: String!) {
     ethereum(network: $network) {
       transactions(
         txHash: {is: $hash}
@@ -122,7 +121,6 @@ export const BITQUERY_ORDER_INFO = gql`
   }  
 `;
 
-
 export const BITQUERY_TRANSACTION_LIST = gql`
   query GetTransactionList($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
     ethereum(network: $network) {
@@ -200,6 +198,124 @@ export const BITQUERY_TRANSACTION_LIST = gql`
       senderCount: transfers(
         date: {since: $from, till: $till}
         receiver: {is: $address}
+      ) {
+        count
+      }
+    }
+  }
+`;
+
+export const BITQUERY_ORDER_LIST = gql`
+  query GetOrderList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      maker: dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        maker: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        tradeIndex
+        protocol
+        transaction {
+          hash
+        }
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        side
+        baseAmount
+        baseAmountInUsd: buyAmount(in: USD)
+        baseCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: sellAmount(in: USD)
+        quoteCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+      taker: dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        taker: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        date {
+          date
+        }
+        tradeIndex
+        protocol
+        transaction {
+          hash
+        }
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        side
+        baseAmount
+        baseAmountInUsd: buyAmount(in: USD)
+        baseCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: sellAmount(in: USD)
+        quoteCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+      makerCount: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        maker: {is: $address}
+      ) {
+        count
+      }
+      takerCount: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        taker: {is: $address}
       ) {
         count
       }

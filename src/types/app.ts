@@ -1,5 +1,7 @@
 import { BigNumber } from '@0x/utils';
+import { GetOrderList_ethereum_maker_baseCurrency, GetOrderList_ethereum_maker_block, GetOrderList_ethereum_maker_exchange, GetOrderList_ethereum_maker_quoteCurrency, GetOrderList_ethereum_maker_smartContract, GetOrderList_ethereum_maker_transaction } from 'services/graphql/bitquery/history/__generated__/GetOrderList';
 import { GetTransactionList_ethereum_sender_block, GetTransactionList_ethereum_sender_currency, GetTransactionList_ethereum_sender_receiver, GetTransactionList_ethereum_sender_sender, GetTransactionList_ethereum_sender_transaction } from 'services/graphql/bitquery/history/__generated__/GetTransactionList';
+import { TradeSide } from '../../__generated__/globalTypes';
 
 export enum OrderSide {
   Sell,
@@ -71,4 +73,25 @@ export interface ITransactionList {
   transaction: GetTransactionList_ethereum_sender_transaction | null;
   external: boolean | null;
   type: string;
+}
+
+
+
+export interface IOrderList {
+  block: GetOrderList_ethereum_maker_block | null;
+  tradeIndex: string | null;
+  protocol: string | null;
+  transaction: GetOrderList_ethereum_maker_transaction | null;
+  exchange: GetOrderList_ethereum_maker_exchange | null;
+  smartContract: GetOrderList_ethereum_maker_smartContract | null;
+  side: TradeSide | null;
+  baseAmount: number | null;
+  baseAmountInUsd: number | null;
+  baseCurrency: GetOrderList_ethereum_maker_baseCurrency | null;
+  quotePrice: number | null;
+  quoteAmount: number | null;
+  quoteAmountInUsd: number | null;
+  quoteCurrency: GetOrderList_ethereum_maker_quoteCurrency | null;
+  tradeAmount: number | null;
+  tradeAmountIsUsd: number | null;
 }

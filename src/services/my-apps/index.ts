@@ -13,6 +13,8 @@ export const sendConfig = async (formData: any) => {
     body: JSON.stringify(formData),
   }
 
+  console.log('POST DATA', init);
+
   const url = `${MY_APPS_ENDPOINT}/v4/config`;
   return await fetch(url, init)
 }

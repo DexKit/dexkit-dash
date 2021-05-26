@@ -52,11 +52,11 @@ const Token: React.FC<Props> = (props) => {
   const isDark = theme.palette.type === ThemeMode.DARK;
 
   useEffect(() => {
-    if (data) {
-      if (data.symbol.toUpperCase() == 'WETH') {
-        setChartSymbol(`${data.symbol.toUpperCase()}-USDT`);
+    if (data && data.symbol) {
+      if (data.symbol?.toUpperCase() == 'WETH') {
+        setChartSymbol(`${data.symbol?.toUpperCase()}-USDT`);
       } else {
-        setChartSymbol(`${data.symbol.toUpperCase()}-WETH`);
+        setChartSymbol(`${data.symbol?.toUpperCase()}-WETH`);
       }
     }
   }, [data]);

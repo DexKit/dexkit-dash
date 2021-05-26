@@ -120,6 +120,7 @@ const BuySell: React.FC<Props> = ({tokenAddress}) => {
           {currentTab === 0 && (
             <MarketForm
               key='MarketForm'
+              chainId={chainId}
               account={account}
               tokenAddress={tokenAddress}
               select0={selects}
