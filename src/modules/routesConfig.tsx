@@ -24,6 +24,7 @@ const useRoutesConfig = (): NavItemProps[] => {
   let items: NavItemProps[] = [];
 
   if (networkName === EthereumNetwork.ethereum) {
+
     items = [
       {
         id: 'dashboard',
@@ -53,10 +54,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             messageId: 'Token',
             type: 'item',
             icon: 'storage',
-            url: `/dashboard/token/0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4`,
+            url: `/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
           },
-
-          /* {
+  
+         /* {
             id: 'kit',
             title: 'Kit\'s',
             messageId: 'sidebar.app.kits',
@@ -77,9 +78,9 @@ const useRoutesConfig = (): NavItemProps[] => {
             title: 'All Protocols',
             messageId: 'sidebar.protocols.all',
             type: 'collapse',
-            icon: 'all inclusive',
+            icon: 'AllInclusive',
             children: [
-              /* {
+             /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -91,9 +92,9 @@ const useRoutesConfig = (): NavItemProps[] => {
                 title: 'Token Explorer',
                 messageId: 'sidebar.protocols.token-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
               },
-              /* {
+             /* {
                 id: 'pool-explorer',
                 title: 'Pool Explorer',
                 messageId: 'sidebar.protocols.pool-explorer',
@@ -105,7 +106,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 title: 'Pair Explorer',
                 messageId: 'sidebar.protocols.pair-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pair-explorer`,
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
               },
             ],
           },
@@ -117,10 +118,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'uniswap.svg',
-              type: 'svg',
+              type: 'svg'
             },
             children: [
-              /*  {
+            /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -157,10 +158,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'sushiswap.svg',
-              type: 'svg',
+              type: 'svg'
             },
             children: [
-              /*  {
+            /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -198,10 +199,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: '0x.svg',
-              type: 'svg',
+              type: 'svg'
             },
             children: [
-              /* {
+             /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -222,6 +223,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_ZRX_PAIR}`,
               },
+              
             ],
           },
           {
@@ -231,10 +233,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'balancer.svg',
-              type: 'svg',
+              type: 'svg'
             },
             children: [
-              /* {
+             /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -255,6 +257,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.BALANCER}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
               },
+              
             ],
           },
         ],
@@ -275,6 +278,54 @@ const useRoutesConfig = (): NavItemProps[] => {
           },
           /*
           {
+            id: 'nft-marketplace',
+            title: 'Marketplace',
+            messageId: 'sidebar.affiliate.nft-marketplace',
+            type: 'collapse',
+            icon: 'store_mall_directory',
+            children: [
+              {
+                id: 'nft-marketplace-overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: '/affiliate/nft-marketplace/overview',
+              },
+            ],
+          },
+          {
+            id: 'erc20-exchange',
+            title: 'Exchange',
+            messageId: 'sidebar.affiliate.erc20-exchange',
+            type: 'collapse',
+            icon: 'timeline',
+            children: [
+              {
+                id: 'erc20-exchange-overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: '/affiliate/nft-marketplace/overview',
+              },
+            ],
+          },*/
+        ],
+      },
+      {
+        id: 'affiliate',
+        title: 'Affiliates',
+        messageId: 'sidebar.affiliate',
+        type: 'group',
+        children: [
+          {
+            id: 'become-affiliate',
+            title: 'Become Affiliate',
+            messageId: 'sidebar.affiliate.become-affiliate',
+            type: 'item',
+            icon: 'groupWork',
+            url: '/affiliate/overview',
+          },
+        /*  {
             id: 'nft-marketplace',
             title: 'Marketplace',
             messageId: 'sidebar.affiliate.nft-marketplace',
@@ -364,7 +415,7 @@ const useRoutesConfig = (): NavItemProps[] => {
            },
          ],
        },*/
-      {
+       {
         id: 'apps',
         title: 'Apps',
         messageId: 'sidebar.externallinks',
@@ -405,7 +456,8 @@ const useRoutesConfig = (): NavItemProps[] => {
         ],
       },
     ];
-  } else {
+  }
+  else {
     items = [
       {
         id: 'dashboard',
@@ -437,10 +489,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             icon: 'storage',
             url: '/dashboard/token',
           },
-
+  
           {
             id: 'kit',
-            title: "Kit's",
+            title: 'Kit\'s',
             messageId: 'sidebar.app.kits',
             type: 'item',
             icon: 'build',
@@ -560,7 +612,7 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'uniswap.svg',
-              type: 'svg',
+              type: 'svg'
             },
             children: [
               {
@@ -592,7 +644,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 url: `/${networkName}/protocol-explorer/pancake/pair-explorer`,
               },
             ],
-          },
+          }
         ],
       },
       {
@@ -644,29 +696,29 @@ const useRoutesConfig = (): NavItemProps[] => {
           },*/
         ],
       },
-      /* {
+       {
          id: 'affiliate',
          title: 'Affiliates',
          messageId: 'sidebar.affiliate',
          type: 'group',
          children: [
            {
-             id: 'aggregator',
-             title: 'Aggregator',
-             messageId: 'sidebar.affiliate.aggregator',
+             id: 'become-affiliate',
+             title: 'Become Affiliate',
+             messageId: 'sidebar.affiliate.become-affiliate',
              type: 'collapse',
              icon: 'report',
              children: [
                {
-                 id: 'agg-overview',
+                 id: 'affiliate-overview',
                  title: 'Overview',
                  messageId: 'common.overview',
                  type: 'item',
-                 url: '/affiliate/aggregator/overview',
+                 url: '/affiliate/overview',
                },
              ],
            },
-           {
+         /*  {
              id: 'nft-marketplace',
              title: 'Marketplace',
              messageId: 'sidebar.affiliate.nft-marketplace',
@@ -697,10 +749,10 @@ const useRoutesConfig = (): NavItemProps[] => {
                  url: '/affiliate/nft-marketplace/overview',
                },
              ],
-           },
+           },*/
          ],
-       },*/
-      {
+       },
+       {
         id: 'apps',
         title: 'Apps',
         messageId: 'sidebar.externallinks',

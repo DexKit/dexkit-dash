@@ -47,6 +47,24 @@ export const ETHERSCAN_API_URL = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_ZRX_FLASH_WALLET = (chainId: ChainId|undefined) => {
+  const id = Number(chainId);
+
+  switch (id) {
+    case ChainId.Mainnet:
+      return '0x22F9dCF4647084d6C31b2765F6910cd85C178C18';
+    case ChainId.Kovan:
+      return '0x22F9dCF4647084d6C31b2765F6910cd85C178C18';
+    case ChainId.Ropsten:
+      return '0x22F9dCF4647084d6C31b2765F6910cd85C178C18';
+    case ChainId.Binance:
+      return '0x22F9dCF4647084d6C31b2765F6910cd85C178C18';
+    case ChainId.BinanceTest:
+      return '0x22F9dCF4647084d6C31b2765F6910cd85C178C18';
+    default: return undefined;
+  }
+};
+
 export const UNISWAP_INFO_API_URL = 'https://info.uniswap.org';
 
 export const SUSHISWAP_INFO_API_URL = 'https://analytics.sushi.com';

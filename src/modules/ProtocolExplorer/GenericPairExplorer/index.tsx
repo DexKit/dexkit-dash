@@ -4,13 +4,13 @@ import {RouteComponentProps} from 'react-router-dom';
 import {Box} from '@material-ui/core';
 import InfoView from '../../../@crema/core/InfoView';
 
-import {truncateAddress} from 'utils';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
-import PageTitle from 'shared/components/PageTitle';
 
 import PairExplorerAMM from './PairExplorerAMM';
 import PairExplorer from './PairExplorer';
+import PageTitle from 'shared/components/PageTitle';
+import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
+import { truncateAddress } from 'utils';
 
 type Params = {
   address: string;
@@ -31,32 +31,26 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
     <>
       <Box pt={{xl: 4}}>
         <PageTitle
-          address={address}
-          history={
-            exchange === EXCHANGE.ALL
-              ? [
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/overview`,
-                    name: 'Protocol Explorer',
-                  },
-                ]
-              : [
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/overview`,
-                    name: 'Protocol Explorer',
-                  },
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer`,
-                    name: GET_EXCHANGE_NAME(exchange),
-                  },
-                ]
-          }
-          active={`Pair Explorer`}
-          title={
-            exchange === EXCHANGE.ALL
-              ? `Pair Explorer`
-              : `Pair Explorer ${truncateAddress(address)}`
-          }
+          breadcrumbs={{
+            history: exchange === EXCHANGE.ALL ? [
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/overview`,
+                name: 'Pair Explorer',
+              },
+            ] : [
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
+                name: 'Pair Explorer',
+              },
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
+                name: GET_EXCHANGE_NAME(exchange),
+              },
+            ],
+            active: {name: 'Pair Explorer'}
+          }}
+          title={{name: 'Pair Explorer'}}
+          subtitle={{name: truncateAddress(address), hasCopy: address}}
         />
 
         {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP ? (

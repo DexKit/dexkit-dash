@@ -63,7 +63,7 @@ export const Kit: React.FC<KitProps> = (props) => {
         </Avatar>
       </ListItemAvatar>
 
-      <ListItemText primary={name} secondary={value} />
+      <ListItemText primary={name} secondary={`${value} KIT`} />
       
       <ListItemSecondaryAction>
         <Button variant="outlined" color={button.color} onClick={($e) => button.action($e)}>

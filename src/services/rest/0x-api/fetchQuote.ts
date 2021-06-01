@@ -2,22 +2,33 @@
 import { ZRX_API_URL } from 'shared/constants/AppConst';
 import { OrderSide } from 'types/app';
 
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+
 import { QuoteParams, SwapQuoteResponse } from './types';
 
 /**
  * Fetch quote right before confirm, with final validation
  * @param quoteParams
  */
-export async function fetchQuote(quoteParams: QuoteParams): Promise<SwapQuoteResponse> {
+export async function fetchQuote(quoteParams: QuoteParams, network: EthereumNetwork): Promise<SwapQuoteResponse> {
   const params = new Map<string, string>();
 
   const isSell = quoteParams.orderSide === OrderSide.Sell ? true : false;
 
-  const baseTokenAddress  = quoteParams.baseToken.symbol.toUpperCase()  === 'WETH' ? 'ETH' : quoteParams.baseToken.address;
-  const quoteTokenAddress = quoteParams.quoteToken.symbol.toUpperCase() === 'WETH' ? 'ETH' : quoteParams.quoteToken.address;
+  const currency =
+    network === EthereumNetwork.ethereum ? 'ETH' : 'BNB';
 
-  const sellTokenAddress = isSell ? baseTokenAddress  : quoteTokenAddress;
-  const buyTokenAddress  = isSell ? quoteTokenAddress : baseTokenAddress;
+  const wrapper =
+    network === EthereumNetwork.ethereum ? 'WETH' : 'WBNB';
+
+  const baseName = quoteParams.baseToken.symbol.toUpperCase();
+  const quoteName = quoteParams.quoteToken.symbol.toUpperCase();
+
+  const baseTokenAddress = (baseName === wrapper || baseName === currency) ? currency : quoteParams.baseToken.address;
+  const quoteTokenAddress = (quoteName === wrapper || quoteName === currency) ? currency : quoteParams.quoteToken.address;
+
+  const sellTokenAddress = isSell ? baseTokenAddress : quoteTokenAddress;
+  const buyTokenAddress = isSell ? quoteTokenAddress : baseTokenAddress;
 
   const currencyAmount = quoteParams.makerAmount;
 
@@ -35,7 +46,8 @@ export async function fetchQuote(quoteParams: QuoteParams): Promise<SwapQuoteRes
   }
 
   if (quoteParams.allowedSlippage) {
-    params.set('slippagePercentage', quoteParams.allowedSlippage.div(10000).toString())
+    // params.set('slippagePercentage', quoteParams.allowedSlippage.div(10000).toString())
+    params.set('slippagePercentage', quoteParams.allowedSlippage.toString())
   }
 
   if (quoteParams.feeRecipient) {
@@ -57,20 +69,22 @@ export async function fetchQuote(quoteParams: QuoteParams): Promise<SwapQuoteRes
     params.set('skipValidation', 'true');
   }
 
-  let url = ZRX_API_URL(quoteParams.chainId)+'/swap/v1/quote?';
+  let url = ZRX_API_URL(quoteParams.chainId) + '/swap/v1/quote?';
 
   for (let [key, value] of params) {
     url += `${key}=${value}&`;
   }
 
   console.log(url);
-  
-  try {
-    const quote = await fetch(url);
-    return (await quote.json())
-    
-  } catch (e) {
-    console.log()
-    throw new Error('Swap will fail. Do you have enough ETH for the transaction? Leave at least 0.03 ETH on your wallet for swaps. Contact support if error persists');
+
+  const quote = await fetch(url);
+
+  const json = await quote.json();
+
+  if (json.code) {
+    throw new Error(json.reason);
+  } else {
+    return json;
   }
+
 }

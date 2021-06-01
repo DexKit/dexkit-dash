@@ -5,9 +5,10 @@ import { BITQUERY_BALANCE_INFO } from "services/graphql/bitquery/balance/gql";
 import { useNetwork } from "hooks/useNetwork";
 import { getTokens } from "services/rest/coingecko";
 import { client } from "services/graphql";
+import { TooFewBrokerAssetsProvidedError } from "@0x/utils/lib/src/revert_errors/broker/revert_errors";
 
 export const useBalance = () => {
-  const {account} = useWeb3();
+  const { account } = useWeb3();
   const network = useNetwork();
 
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,8 @@ export const useBalance = () => {
 
   useEffect(() => {
     if (account) {
+      setLoading(true);
+
       client.query<GetMyBalance, GetMyBalanceVariables>({
         query: BITQUERY_BALANCE_INFO,
         variables: {
@@ -23,40 +26,46 @@ export const useBalance = () => {
           address: account
         }
       })
-      .then(balances => {
-        const addresses = balances.data.ethereum?.address[0].balances?.map(t => t.currency?.address?.toLowerCase()||'');
+        .then(balances => {
+          const addresses = balances.data.ethereum?.address[0].balances?.map(t => t.currency?.address?.toLowerCase() || '').filter(e => e !== '-');
 
-        if (addresses) {
-          getTokens(addresses)
-            .then(coingeckoList => {
+          if (addresses) {
+            getTokens(addresses).then(coingeckoList => {
               const dataFn = balances.data.ethereum?.address[0].balances?.map(t => {
+
+                //   const addr = (t.currency?.address == '-') ? 'eth' : t?.currency?.address?.toLowerCase();
+
+                const addr = t.currency?.address;
+
                 return <GetMyBalance_ethereum_address_balances>{
                   currency: {
-                    ...t.currency
+                    ...t.currency,
+                    address: addr
                   },
                   value: t.value,
-                  valueInUsd: (t.value||0) * (coingeckoList[t?.currency?.address?.toLowerCase()||'']?.current_price||0)
+                  // enquanto não vem a solução pela bitquery
+                  valueInUsd: (t.value || 0) * (coingeckoList[addr || '']?.current_price || 0)
                 }
               });
               setData(dataFn ?? []);
             })
-            .catch(e => setError(e))
-            .finally(() => setLoading(false))
-        } else {
-          setData([]);
-        }
-      })
-      .catch(e => {
-        setError(e);
-        setLoading(false);
-      });
+              .catch(e => setError(e))
+              .finally(() => setLoading(false))
+          } else {
+            setData([]);
+          }
+        })
+        .catch(e => {
+          console.info(e);
+          setError(e);
+          setLoading(false);
+        });
     } else {
       setLoading(true)
       setError(undefined)
       setData([]);
     }
   }, [account]);
-  
+
   return { loading, error, data };
 }
- 

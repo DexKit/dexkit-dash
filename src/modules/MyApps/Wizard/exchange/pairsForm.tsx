@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Grid,
@@ -26,6 +26,7 @@ const CustomGrid = withStyles((theme) => ({
 type ConfigError = {
   [Property in keyof ConfigPairMetaData]: string;
 }
+
 interface error {
   base?: string;
   quote?: string;
@@ -43,6 +44,7 @@ interface PairComponentProps {
   isValid: boolean;
   tokens: Token[];
   chainId: ChainId;
+  editable?: boolean;
 }
 
 type ConfigPairLabels = {
@@ -89,7 +91,7 @@ const labels = {
 } as ConfigPairLabels;
 
 const PairComponent: React.FC<PairComponentProps> = (props) => {
-  const { index, data, onChange, validator, isValid, tokens, chainId } = props;
+  const { index, data, onChange, validator, isValid, editable } = props;
   const [base, setBase] = useState(data?.base);
   const [quote, setQuote] = useState(data?.quote);
   const [config, setConfig] = useState(data?.config);
@@ -146,8 +148,10 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
           quote: _quote,
           config: _config
         };
-        const e = new Event('input', { bubbles: true })
-        onChange(e as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, _pair, index);
+        if(Boolean(editable)){
+          const e = new Event('input', { bubbles: true })
+          onChange(e as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, _pair, index);
+        }
       }
       setErrors(_errors);
     }
@@ -167,7 +171,6 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
     if (errors != null) {
       const _valid = Object.values(errors).reduce((pre, cur) => pre && cur == null, true) &&
         Object.values(errors?.config ?? {}).reduce((pre, cur) => pre && cur == null, true);
-      console.log('valid', _valid);
       setValid(_valid);
     }
   }, [errors]);
@@ -325,11 +328,12 @@ interface PairsFormProps {
   title: string;
   chainId: ChainId;
   pairs?: CurrencyPairMetaData[];
+  editable?: boolean;
 }
 
 type Props = PairsFormProps & WizardProps;
 const PairsForm: React.FC<Props> = (props) => {
-  const { changeIssuerForm, validator, isValid: startValidation, chainId } = props;
+  const { changeIssuerForm, validator, isValid: startValidation, chainId, editable } = props;
   const [pairs, setPairs] = useState(props.pairs ?? []);
   const listToken = useTokenList();
 
@@ -417,6 +421,7 @@ const PairsForm: React.FC<Props> = (props) => {
               isValid={startValidation}
               chainId={chainId}
               tokens={listToken}
+              editable={editable}
             />
           </>
         )) : null

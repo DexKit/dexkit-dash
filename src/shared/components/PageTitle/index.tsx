@@ -10,16 +10,20 @@ import {
 } from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import ButtonCopy from '../ButtonCopy';
-import { truncateAddress } from 'utils';
+import TokenLogo from '../TokenLogo';
+// import {truncateAddress} from 'utils';
 
 interface Props {
-  history: {url: string; name: string}[];
-  active: string;
-  title: string;
-  address?: string;
+  breadcrumbs?: {
+    history: {url: string; name: string; hasCopy?: string}[];
+    active: {name: string; hasCopy?: string};
+  };
+  title: {name: string; hasCopy?: string};
+  subtitle?: {name: string; hasCopy?: string};
+  icon?: string;
 }
 
-const PageTitle: React.FC<Props> = (props) => {
+const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     breadcrumbs: {
       fontSize: '16px',
@@ -32,10 +36,10 @@ const PageTitle: React.FC<Props> = (props) => {
     },
     boxTitle: {
       display: 'flex',
-      alignItems: 'baseline'
+      alignItems: 'flex-end',
     },
     title: {
-      marginTop: '10px',
+      marginTop: '5px',
       fontSize: '24px',
       fontWeight: 600,
       [theme.breakpoints.down('sm')]: {
@@ -52,31 +56,55 @@ const PageTitle: React.FC<Props> = (props) => {
   return (
     <GridContainer>
       <Grid item xs={12} md={12}>
-        <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
-          {props.history.map((e) => (
-            <Link key={e.name} color='inherit' href={e.url}>
-              {e.name}
-            </Link>
-          ))}
-          <Typography className={classes.breadcrumbs} color='textPrimary'>
-            {props.active}
-          </Typography>
-        </Breadcrumbs>
+        {breadcrumbs && (
+          <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
+            {breadcrumbs.history.map((e) => (
+              <Link key={e.name} color='inherit' href={e.url}>
+                {e.name}
+                {e.hasCopy !== undefined && (
+                  <ButtonCopy
+                    copyText={e.hasCopy}
+                    titleText='Copied to clipboard!'></ButtonCopy>
+                )}
+              </Link>
+            ))}
+
+            {breadcrumbs.active && (
+              <Typography className={classes.breadcrumbs} color='textPrimary'>
+                {breadcrumbs.active.name}
+                {breadcrumbs.active.hasCopy !== undefined && (
+                  <ButtonCopy
+                    copyText={breadcrumbs.active.hasCopy}
+                    titleText='Copied to clipboard!'></ButtonCopy>
+                )}
+              </Typography>
+            )}
+          </Breadcrumbs>
+        )}
 
         <Box className={classes.boxTitle}>
+          {icon && <Box mr={5}>{<TokenLogo token0={icon} />}</Box>}
+
           <Typography className={classes.title} color='textPrimary'>
-            {props.title}
+            {title.name}
+            {title.hasCopy !== undefined && (
+              <ButtonCopy
+                copyText={title.hasCopy}
+                titleText='Copied to Clipboard!'
+              />
+            )}
           </Typography>
-          {
-            props.address ? (
-              <>
-                <Typography className={classes.title} color='textPrimary'>
-                  &nbsp;{`${truncateAddress(props.address)}`}
-                </Typography>
-                <ButtonCopy copyText={props.address} titleText='Copied to clipbord !' />
-              </>
-            ) : null 
-          }
+
+          {subtitle && (
+            <Typography className={classes.title} color='textPrimary'>
+              &nbsp;-&nbsp;{subtitle.name}
+              {subtitle.hasCopy !== undefined && (
+                <ButtonCopy
+                  copyText={subtitle.hasCopy}
+                  titleText='Copied to clipboard !'></ButtonCopy>
+              )}
+            </Typography>
+          )}
         </Box>
       </Grid>
     </GridContainer>

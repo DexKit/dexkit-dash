@@ -37,7 +37,8 @@
   "exclude": [
     "node_modules",
     "src/@crema",
-    "oldCode"
+    "oldCode",
+    "merge"
   ],
   "include": [
     "next-env.d.ts",

@@ -5,10 +5,26 @@ import { WizardData, WizardProps } from '..';
 import { ItemComponent } from './generalItem';
 import { capitalize } from 'utils/text';
 import { CustomLabel } from 'shared/components/Wizard/Label';
+import { error } from '../../shared';
 
-interface error {
-  [key: string]: string | undefined;
-}
+const helpText = new Map<keyof GeneralConfigAggregator, string>();
+helpText.set("name", 'enter a name that has not yet been used in other projects as the title of the current project.');
+helpText.set('logo', '');
+helpText.set('logo_dark', '');
+helpText.set('domain', '');
+helpText.set('feeRecipient', '');
+helpText.set('affiliateAddress', '');
+helpText.set('brand_color', '');
+helpText.set('brand_color_dark', '');
+helpText.set('bsc_as_default', '');
+helpText.set('buyTokenPercentage', '');
+helpText.set('default_token_address', '');
+helpText.set('default_token_address_bsc', '');
+helpText.set('default_token_list', '');
+helpText.set('fee_waive_for_default_token', '');
+helpText.set('hide_powered_by_dexkit', '');
+helpText.set('is_dark_mode', '');
+helpText.set('support_bsc', '');
 
 interface GeneralFormProps extends Omit<WizardProps, 'config'>{
   title: string
@@ -20,7 +36,7 @@ type Props = GeneralFormProps;
 type k = keyof GeneralConfigAggregator;
 
 const GeneralForm: React.FC<Props> = (props) => {
-  const { data: startData, changeIssuerForm, validator, isValid: startValidation } = props;
+  const { data: startData, changeIssuerForm, validator, isValid: startValidation, editable } = props;
   const [errors, setErrors] = useState<error>();
   const [fields, setFields] = useState({ ...startData } as GeneralConfigAggregator);
   const [valid, setValid] = useState<Map<string, boolean>>(new Map<string, boolean>());
@@ -30,21 +46,24 @@ const GeneralForm: React.FC<Props> = (props) => {
     key: string,
     type: 'string' | 'number' | 'boolean'
   ) => {
-    console.log('changeFields', {key, type});
-    setFields({
-      ...fields,
-      [key]: type === 'string' ? $event.target.value :
-        (type === 'number' ? Number($event.target.value) : Boolean($event.target.value))
-    });
-  }, [fields, setFields]);
+    if(Boolean(editable)){
+      setFields({
+        ...fields,
+        [key]: type === 'string' ? $event.target.value :
+          (type === 'number' ? Number($event.target.value) : Boolean($event.target.value))
+      });
+    }
+  }, [fields, setFields, editable]);
 
   const keys = useMemo(() => {
-    return Object.keys(fields) as k[];
+    const exclude = ['is_dark_mode', 'brand_color', 'brand_color_dark'];
+    return Object.keys(fields)
+    .filter( f => exclude.every( x => x !== f)) as k[];
   }, [fields]);
 
   useEffect(() => {
     const map = new Map<string, boolean>();
-    const _errors: error = Object.keys(fields ?? {}).reduce((pre, cur) => {
+    const _errors: error = keys.reduce((pre, cur) => {
       map.set(cur, startValidation);
       return {
         ...pre,
@@ -53,19 +72,16 @@ const GeneralForm: React.FC<Props> = (props) => {
     }, {} as error);
     setErrors(_errors);
     setValid(map);
-    console.log('GeneralForm loaded!', valid);
   }, []);
 
   useEffect(() => {
-    console.log('fields', fields);
-    console.log('fields are validate?', valid);
-    changeIssuerForm(WizardData.GENERAL, fields);
-  }, [fields, changeIssuerForm]);
+    if(Boolean(editable)){
+      changeIssuerForm(WizardData.GENERAL, fields);
+    }
+  }, [fields, changeIssuerForm, editable]);
 
   useEffect(() => {
-    console.log('valid', valid);
     const _isValid = [...valid.values()].reduce((acu, cur) => acu && cur, true);
-    console.log('generalForm is valid?', _isValid);
     validator(_isValid);
   }, [valid, validator]);
 
@@ -86,6 +102,7 @@ const GeneralForm: React.FC<Props> = (props) => {
             value={fields[key]} 
             isValid={valid.get(key) ?? false}
             key={key}
+            helpText={helpText.get(key) ?? ''}
           />
         ))
       }

@@ -15,15 +15,18 @@ import {
   GeneralConfigAggregator, 
   AggregatorLinks, 
   AggregatorWallet, 
-  TokenFeeProgramConfig 
+  TokenFeeProgramConfig, 
+  AggregatorTheme
 } from 'types/myApps';
 
 import TokensForm from './token';
 import GeneralForm from './general';
-import ThemeForm from '../shared/themeForm';
+import ThemeForm from './theme';
 import { GridContainer } from '@crema';
 import { SubmitComponent } from '../shared/submit';
 import { NavigationButton } from '../shared/navigationButton';
+import LinksForm from './links';
+import WalletsForm from './wallets';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export enum WizardData {
   GENERAL = 'general',
   TOKENS = 'token_fee_program',
+  THEME = 'theme',
   CONTACT = 'links',
   WALLET = 'wallets',
 }
@@ -58,10 +62,11 @@ export interface WizardProps {
   changeIssuerForm: (key: WizardData, value: any) => void;
   validator: (isValid: boolean) => void;
   isValid: boolean;
+  editable?: boolean
 }
 
 function getSteps() {
-  return ['General',  'Tokens', 'Links', 'Wallets and Deploy'];
+  return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
 }
 
 const initConfig: GeneralConfigAggregator = {
@@ -85,10 +90,9 @@ const initConfig: GeneralConfigAggregator = {
 };
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps) {
-  const {config, changeIssuerForm, validator, isValid} = wizardProps;
+  const {config, changeIssuerForm, validator, isValid, editable} = wizardProps;
   switch (step) {
     case 0:
-
       const data: ConfigFileAggregator = config != null && 'name' in config ? { ...config} as GeneralConfigAggregator : initConfig;
       type k = keyof typeof data;
       const _isValid = Object.keys(data).reduce((acu, cur) => acu && data[cur as k] == true, true);
@@ -102,16 +106,65 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
       />
     );
     case 1:
-      return <ThemeForm themeName={'Tema teste'}/>;
+      const theme: AggregatorTheme = {
+        brand_color: config?.brand_color,
+        brand_color_dark: config?.brand_color_dark,
+        is_dark_mode: config?.is_dark_mode ?? true
+      };
+      return (<ThemeForm 
+        theme={theme}
+        changeIssuerForm={changeIssuerForm}
+        editable={editable}
+      />);
     case 2:{
       return (
         <TokensForm 
           title={label} 
-          data={ config.token_fee_program ?? []} 
+          // data={ config.token_fee_program ?? []} 
+          data={[]} 
           changeIssuerForm={changeIssuerForm}
           config={config}
           validator={validator}
           isValid={isValid}
+          editable={editable}
+        />
+      );
+    }
+    case 3:{
+      const data = config?.links ?? 
+      {
+        about: undefined,
+        analytics: undefined,
+        code: undefined,
+        discord: undefined,
+        docs: undefined,
+        telegram: undefined
+      } as AggregatorLinks;
+      return (
+        <LinksForm 
+          changeIssuerForm={changeIssuerForm}
+          data={data}
+          config={config}
+          validator={validator}
+          isValid={isValid}
+          editable={editable}
+        />
+      );
+    }
+    case 4:{
+      const data = config?.wallets ?? 
+      {
+        fortmatic: undefined,
+        portis: undefined
+      } as AggregatorWallet;
+      return (
+        <WalletsForm 
+          changeIssuerForm={changeIssuerForm}
+          data={data}
+          config={config}
+          validator={validator}
+          isValid={isValid}
+          editable={editable}
         />
       );
     }
@@ -131,6 +184,8 @@ export default function VerticalLinearStepper() {
   const [data, setData] = useState<ConfigFileAggregator>({ ...initConfig});
   const [isValid, setValid] = useState(false);
   const classes = useStyles();
+  const [editable, setEditable] = React.useState(true);
+  const [preview, setPreview] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
@@ -154,10 +209,8 @@ export default function VerticalLinearStepper() {
     (
       key: WizardData,
       value: GeneralConfigAggregator | TokenFeeProgramConfig[] | AggregatorLinks | AggregatorWallet
-      // value: Partial<ConfigFileAggregator>
     ) => {
       const dataType = Object.values(WizardData).find( e => e === key);
-      // console.log('updateData', data);
       switch(dataType){
         case WizardData.GENERAL: {
           if(data == null){
@@ -170,17 +223,36 @@ export default function VerticalLinearStepper() {
             });
             setData(data);
           }
-          console.log('updateData', data);
           break;
         }
-        case WizardData.CONTACT: 
-        case WizardData.TOKENS:
+        case WizardData.THEME: {
+          if(data != null){
+            const theme = value as AggregatorTheme;
+            data.is_dark_mode = theme.is_dark_mode;
+            data.brand_color = theme.brand_color;
+            data.brand_color_dark = theme.brand_color_dark;
+            setData(data);
+          }
+          break;
+        }
+        case WizardData.CONTACT: {
+          if(data != null){
+            data.links = value as AggregatorLinks;
+            setData(data);
+          }
+          break;
+        }
+        case WizardData.TOKENS: {
+          if(data != null){
+            data.token_fee_program = value as TokenFeeProgramConfig[];
+            setData(data);
+          }
+          break;
+        }
         case WizardData.WALLET: {
           if(data != null){
-            setData({
-              ...data,
-              [key]: value
-            })
+            data.wallets = value as AggregatorWallet;
+            setData(data);
           }
         }
       };
@@ -199,13 +271,18 @@ export default function VerticalLinearStepper() {
         </Grid>
       </GridContainer>
 
-
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(activeStep, label, { config: (data ?? {}) as ConfigFileAggregator, changeIssuerForm: updateData, validator, isValid })}
+              {
+                getStepContent(
+                  activeStep, 
+                  label, 
+                  { config: (data ?? {}) as ConfigFileAggregator, changeIssuerForm: updateData, validator, isValid, editable }
+                )
+              }
               <NavigationButton
                 ButtonBackText="Back"
                 ButtonNextText={activeStep === steps.length - 1 ? 'Finish' : 'Next'}
@@ -221,13 +298,13 @@ export default function VerticalLinearStepper() {
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
           <Button onClick={handleReset} className={classes.button}>
-            Reset
+            Review
           </Button>
           <SubmitComponent 
             data={(data ?? {}) as ConfigFileAggregator} 
             text="Submit"
             valid={isValid}
-            type={'MARKETPLACE'}
+            type={'AGGREGATOR'}
           />
         </Paper>
       )}

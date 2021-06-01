@@ -1,6 +1,60 @@
 import { gql } from '@apollo/client';
 
-export const t = () => {};
+export const SEARCH_BY_ADDRESS = gql`
+   query SearchByAddress($value: String!, $network: Network!) {
+     search(string: $value, network: $network ){
+       subject {
+         ... on Address {
+           address
+           annotation
+         }
+        ... on Currency {
+           symbol
+           name
+           currencyAddress: address
+           tokenId
+           tokenType
+           decimals
+         }
+         ... on SmartContract {
+           contractAdress: address
+           annotation
+           contractType
+           protocol
+       }
+         ... on TransactionHash {
+           hash
+         }
+       }
+     }
+   }
+ `;
+
+export const BITQUERY_SEARCH = gql`
+  query BitquerySearch($network: EthereumNetwork!, $exchangeName: String!, $addresses: [String!]) {
+    ethereum(network: $network) {
+      dexTrades(exchangeName: {is: $exchangeName}, baseCurrency: {in: $addresses}) {
+        baseCurrency {
+          address
+          decimals
+          symbol
+          name
+        }
+        quoteCurrency {
+          address
+          decimals
+          symbol
+          name
+        }
+        smartContract {
+          address {
+            address
+          }
+        }
+      }
+    }
+  }
+`
 
 // export const BITQUERY_LAST_TRADE_PAIR_EXPLORER = gql`
 //   query GetLastTradePairExplorer($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {

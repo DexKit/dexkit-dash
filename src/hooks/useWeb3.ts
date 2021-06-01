@@ -1,42 +1,63 @@
-import { TransactionConfig, TransactionReceipt } from 'web3-core';
-import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction } from "services/web3modal"
-import { useEffect } from "react";
+import {
+  TransactionConfig,
+  TransactionReceipt,
+  // PromiEvent 
+} from 'web3-core';
+import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction, getWeb3Wrapper } from "services/web3modal"
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
-import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber } from "redux/_blockchain/actions";
+import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber, setEthAccounts } from "redux/actions";
 import { Web3State } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 
 
+// @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
+// the app to break as wallet was being called multiple times. useState inside the hook was not working as solution
+let loadingAccount = false;
+let loadingChainId = false;
+let loadingEthBalance = false;
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(state => state.blockchain.web3State);
   const ethBalance = useSelector<AppState, AppState['blockchain']['ethBalance']>(state => state.blockchain.ethBalance);
   const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+  const accounts = useSelector<AppState, AppState['blockchain']['ethAccounts']>(state => state.blockchain.ethAccounts);
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
-  const blockNumber = useSelector<AppState, AppState['blockchain']['blockNumber']>(state => state.blockchain.blockNumber)
+  const blocknumber = useSelector<AppState, AppState['blockchain']['blockNumber']>(state => state.blockchain.blockNumber)
+
 
   useEffect(() => {
     const web3 = getWeb3();
     const provider = getProvider();
     
-    if (web3State === Web3State.Done && web3) {
+    if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
+      // subscribeProvider(provider);
+      loadingAccount = true;
+      web3.eth.getAccounts().then((a) => {
+        dispatch(setEthAccount(a[0]));
+        dispatch(setEthAccounts(a))
+      }).finally(() => loadingAccount = false);
+    }
+    if (web3State === Web3State.Done && web3 && !chainId && !loadingChainId) {
+      loadingChainId = true;
       web3.eth.getChainId().then((n) => {
         dispatch(setChainId(n));
-      });
-      web3.eth.getAccounts().then((a) => dispatch(setEthAccount(a[0])));
+      }).finally(() =>  loadingChainId = false);
     }
+
   }, [web3State]);
 
 
   useEffect(() => {
     const web3 = getWeb3();
-    if (account && web3) {
-      web3.eth.getBalance(account).then((e) => {
-        dispatch(setEthBalance(new BigNumber(e)));
-      });
+    if (account && web3 && !loadingEthBalance && !ethBalance) {
+      loadingEthBalance = true;
+      web3.eth.getBalance(account).then((e) =>{
+        dispatch(setEthBalance(new BigNumber(e)))
+      }).finally(() => loadingEthBalance = false);
     }
-  }, [account]);
+  }, [account])
 
 
   const onCloseWeb3 = () => {
@@ -47,7 +68,18 @@ export const useWeb3 = () => {
       dispatch(setChainId(undefined));
       dispatch(setWeb3State(Web3State.NotConnected));
     }
+
   }
+
+  
+  const onSetDefaultAccount = (index: number) => {
+    const web3 = getWeb3();
+    if (web3 && accounts) {
+      web3.eth.defaultAccount = accounts[index];
+      dispatch(setEthAccount(accounts[index]));
+    }
+  }
+
 
   const onConnectWeb3 = () => {
     const web3 = getWeb3();
@@ -65,16 +97,24 @@ export const useWeb3 = () => {
     }
   }
 
+
   function onActionWeb3Transaction(transactionConfig: TransactionConfig): Promise<TransactionReceipt> {
     return new Promise<TransactionReceipt>((resolve, reject) => {
       const transaction = web3Transaction(transactionConfig);
       if (transaction != null) {
-        transaction
-          .then(transaction => { resolve(transaction) })
-          .catch(e => { reject(e); });
+     //   dispatch(setWeb3State(Web3State.Connecting));
+        transaction.then(transaction => {
+       //   dispatch(setWeb3State(Web3State.Done));
+          resolve(transaction)
+        })
+        .catch(e => {
+         // dispatch(setWeb3State(Web3State.Error));
+          reject(e);
+        });
       }
     });
   };
+
 
   const subscribeProvider = async (pr: any) => {
     if (!pr.on) {
@@ -83,23 +123,27 @@ export const useWeb3 = () => {
     
     pr.on("close", () => {
       dispatch(setEthAccount(undefined));
+      dispatch(setEthAccounts([]));
       dispatch(setChainId(undefined));
       closeWeb3();
       dispatch(setWeb3State(Web3State.NotConnected));
-    });
+    }
+    );
 
     pr.on("accountsChanged", async (accounts: string[]) => {
       dispatch(setEthAccount(accounts[0]));
+      dispatch(setEthAccounts(accounts));
     });
 
     pr.on("chainChanged", async (chainId: number) => {
       dispatch(setChainId(chainId));
     });
 
-    // pr.on("block", (blockNumber: number) => {
-    //   console.log('blockNumber', blockNumber);
-    //   dispatch(setBlockNumber(blockNumber));
-    // });
+
+    pr.on("block", (blocknumber: number) => {
+      console.log('blocknumber', blocknumber);
+      dispatch(setBlockNumber(blocknumber));
+    });
 
     /*provider.on("networkChanged", async (networkId: number) => {
       const chainId = await web3.eth.chainId();
@@ -108,5 +152,7 @@ export const useWeb3 = () => {
     });*/
   };
 
-  return { onConnectWeb3, getWeb3, account, chainId, blockNumber, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction }
+  
+  return { onConnectWeb3, getWeb3, account, chainId, blocknumber, ethBalance, web3State, onCloseWeb3, getProvider, onActionWeb3Transaction, onSetDefaultAccount }
+
 }

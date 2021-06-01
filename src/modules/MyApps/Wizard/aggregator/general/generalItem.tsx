@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
+  Box,
   Checkbox, 
   CircularProgress, 
   FormControlLabel, 
@@ -11,6 +12,7 @@ import { GeneralConfigAggregator } from 'types/myApps';
 import { capitalize, urlValidator } from 'utils/text';
 import { isAddress } from 'ethers/lib/utils';
 import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+import { InfoComponent } from '../../shared/Buttons/infoComponent';
 
 interface error {
   [key: string]: string | undefined;
@@ -21,6 +23,7 @@ type k = keyof GeneralConfigAggregator;
 interface ItemComponentProps {
   fieldName: k;
   label: string | React.ReactElement;
+  placeholder?: string;
   value?: string | boolean;
   validator: (isValid: boolean) => void;
   changeField: (
@@ -29,11 +32,21 @@ interface ItemComponentProps {
     type: 'string' | 'number' | 'boolean'
   ) => void;
   isValid: boolean;
+  helpText: string;
 }
 type TypeElement = 'checkbox' | 'url' | 'percentage' | 'color' | 'address' | 'text';
 
 export const ItemComponent: React.FC<ItemComponentProps> = (
-  { fieldName, value: initialValue, changeField, validator, isValid: startValidation, label}: ItemComponentProps
+  { 
+    fieldName, 
+    value: initialValue, 
+    changeField, 
+    validator, 
+    isValid: startValidation, 
+    label,
+    placeholder,
+    helpText
+  }: ItemComponentProps
 ) => {
   const [error, setError] = useState<error>({[fieldName]: undefined});
   const [valid, setValid] = useState<boolean>(startValidation);
@@ -43,12 +56,10 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
 
 
   useEffect(() => {
-    console.log('error',error);
     setValid(error[fieldName] == null);
   }, [error, fieldName]);
 
   useEffect(() => {
-    console.log('component vaild', valid);
     validator(valid);
   }, [valid, validator]);
 
@@ -91,7 +102,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             label={capitalize(fieldName,'_')}
             labelPlacement="end"
           />
-          
+          {/* <InfoComponent text={helpText}/> */}
         </Grid>
       );
     case 'url': {
@@ -122,7 +133,14 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             }
             fullWidth
             label={label}
+            // placeholder={placeholder}
+            placeholder={placeholder ?? `https://any-url-for-${fieldName}.com`}
+            InputLabelProps={{
+              // shrink: placeholder != null,
+              shrink: true,
+            }}
             variant="outlined"
+            InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
           />
         </Grid>
       );
@@ -133,8 +151,20 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             type="number"
             value={value}
+            inputProps={
+              {
+                min: 0.0,
+                max: 100,
+                step: 0.1
+              }
+            }
             InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>
+              endAdornment: (
+                <Box component="span">
+                  <InputAdornment position="end" style={{ marginInline: '7px'}}>%</InputAdornment>
+                  <InfoComponent text={helpText}/>
+                </Box>
+              )
             }}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
@@ -158,6 +188,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             }
             fullWidth
             label={label}
+            placeholder={placeholder ?? '0-100%'}
             variant="outlined"
           />
         </Grid>
@@ -190,6 +221,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             fullWidth
             label={capitalize(fieldName,'_')}
             variant="outlined"
+            InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
           />
         </Grid>
       );
@@ -204,7 +236,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error!= null ? error[fieldName] : undefined}
             error={(error != null && error[fieldName]) as boolean}
-            placeholder={ZERO_ADDRESS.toString()}
+            placeholder={placeholder ?? ZERO_ADDRESS.toString()}
             onBlur={() => {
               if (value == null || !isAddress(value.toString().trim())) {
                 setError({ [fieldName]: `${capitalize(fieldName, '_')} address is invalid!` })
@@ -218,9 +250,14 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
                 changeField($e, fieldName, 'string');
               }
             }
+            InputLabelProps={{
+              // shrink: placeholder != null,
+              shrink: true,
+            }}
             fullWidth
             label={label}
             variant="outlined"
+            InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
           />
         </Grid>
       );
@@ -254,6 +291,12 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             fullWidth
             label={label}
             variant="outlined"
+            placeholder={placeholder ?? 'enter text'}
+            InputLabelProps={{
+              // shrink: placeholder != null,
+              shrink: true,
+            }}
+            InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
           />
         </Grid>
       );

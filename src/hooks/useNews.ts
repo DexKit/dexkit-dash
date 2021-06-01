@@ -13,8 +13,8 @@ function useNews({limit}: Props) {
   const [data, setData] = useState<FeedItem[]>();
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+  
+  const CORS_PROXY = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'https://cors-anywhere.herokuapp.com/' : '';
   const url = new URL(`${CORS_PROXY}https://cointelegraph.com.br/rss`);
 
 	useEffect(useCallback(() => {

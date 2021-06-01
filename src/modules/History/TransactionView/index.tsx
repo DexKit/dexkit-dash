@@ -28,13 +28,13 @@ const TransactionView: React.FC<Props> = (props) => {
   return (
     <Box pt={{xl: 4}}>
 
-      <PageTitle
+      {/* <PageTitle
         history={[
           { url:'', name: networkName}
         ]}
         active={'Transaction'}
         title={`Transaction ${truncateAddress(hash)}`}
-      />
+      /> */}
 
       {
         loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (

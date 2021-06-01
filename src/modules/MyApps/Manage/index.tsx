@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import {Grid, Box} from '@material-ui/core';
@@ -17,27 +17,43 @@ import Alert from '@material-ui/lab/Alert';
 import { useBalance } from 'hooks/balance/useBalance';
 import ErrorView from 'modules/Common/ErrorView';
 import LoadingView from 'modules/Common/LoadingView';
+// import { setInsufficientAmountAlert } from 'redux/actions';
 
 const MyApps: React.FC = () => {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3();
-  const { loading, error, data } = useBalance();
+  const { loading, error, data: balances } = useBalance();
+  // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
   
-
+  const { insufficientAmountAlert } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
+  
+  // useEffect(() => {
+  //   if (balances == null || balances.length === 0){
+  //     // setAlertBalance(true);
+  //     dispatch(setInsufficientAmountAlert(true));
+  //   }
+  // }, [balances, dispatch]);
+  
   return (
     <>
       <Box pt={{ xl: 4 }}>
          <Box pb={2}>
-              <Alert severity="warning">This feature is still under high development, You will need KIT to use this. Check our live updates to see when this feature
-                will be enable for everyone!
+            <Alert severity="warning">
+              This feature is still under high development, You will need KIT to use this. Check our live updates to see when this feature will be enable for everyone!
             </Alert>
+            {
+              insufficientAmountAlert && 
+              <Alert severity="warning">
+                You don't have the amount of sufficient kit to keep run your apps, which can cause them to be automatically deactivated.
+              </Alert>
+            }
          </Box>
         <GridContainer>
 
           <Grid item xs={12} md={6}>
             {
               loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
-                <LockUnlock balances={data} />
+                <LockUnlock balances={balances} />
               )
             }
           </Grid>
@@ -56,8 +72,6 @@ const MyApps: React.FC = () => {
 
         </GridContainer>
       </Box>
-
-
       <InfoView />
     </>
   );

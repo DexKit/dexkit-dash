@@ -9,13 +9,11 @@ import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 
+import TokenPairs from 'modules/ProtocolExplorer/Common/TokenPairs';
+import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
+import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import TokenInfo from './TokenInfo';
 import TokenStatistics from './TokenStatistics';
-
-// import {TokenSearch} from 'shared/components/TokenSearch';
-// import TokenOrders from 'modules/protocol-explorer/common/TokenOrders';
-// import TokenPairs from 'modules/protocol-explorer/common/TokenPairs';
-// import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 
 type Params = {
   address: string;
@@ -42,52 +40,46 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
     <>
       <Box pt={{xl: 4}}>
         <PageTitle
-          address={address}
-          history={
-            exchange === EXCHANGE.ALL
-              ? [
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/overview`,
-                    name: 'Protocol Explorer',
-                  },
-                ]
-              : [
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/overview`,
-                    name: 'Protocol Explorer',
-                  },
-                  {
-                    url: `/${networkName}/protocol-explorer/${exchange}/token-explorer`,
-                    name: GET_EXCHANGE_NAME(exchange),
-                  },
-                ]
-          }
-          active={`Token Explorer`}
-          title={
-            exchange === EXCHANGE.ALL
-              ? `Token Explorer`
-              : `Token Explorer ${truncateAddress(address)}`
-          }
+          breadcrumbs={{
+            history: exchange === EXCHANGE.ALL ? [
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                name: 'Protocol Explorer',
+              },
+            ] : [
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                name: 'Protocol Explorer',
+              },
+              {
+                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                name: GET_EXCHANGE_NAME(exchange),
+              },
+            ],
+            active: {name: 'Token Explorer'}
+          }}
+          title={{name: 'Token Explorer'}}
+          subtitle={{name: truncateAddress(baseAddress), hasCopy: baseAddress}}
         />
 
         <GridContainer>
-          {/* <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={12}>
             <Paper style={{padding: 10}}>
               <TokenSearchByList type={'token'} exchangeName={exchange} />
             </Paper>
-          </Grid> */}
-
-          <Grid item xs={12} md={6}>
-            <TokenInfo address={address} />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <TokenStatistics address={address} />
+            <TokenInfo address={baseAddress} />
           </Grid>
 
-          {/* <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} md={6}>
+            <TokenStatistics address={baseAddress} />
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12}>
             <TokenPairs
-              address={baseAddress}
+              baseAddress={baseAddress}
               exchange={exchange}
               networkName={networkName}
             />
@@ -101,7 +93,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
               exchange={exchange}
               type={'token'}
             />
-          </Grid> */}
+          </Grid>
         </GridContainer>
       </Box>
     </>

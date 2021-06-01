@@ -8,6 +8,7 @@ import {dashBoardConfigs} from './Dashboard';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';
 import {historyConfigs} from './History';
+import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
 
 const routeConfigs = [
@@ -16,6 +17,7 @@ const routeConfigs = [
   ...protocolExplorerConfigs,
   ...myAppsConfigs,
   ...historyConfigs,
+  ...affiliateConfigs
 ];
 
 const routes = [

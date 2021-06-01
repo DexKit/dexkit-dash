@@ -10,7 +10,7 @@ export const BITQUERY_TOKEN_PAIRS = gql`
   ) {
     ethereum(network: $network) {
       dexTrades(
-        options: {limit: $limit, desc: "tradeAmountInUsd"}
+        options: {limit: $limit, desc: ["tradeAmountInUsd"]}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
         date: {since: $from}
@@ -150,8 +150,8 @@ export const BITQUERY_TOTAL_TOKEN_TRADES = gql`
   }
 `;
 
-export const BITQUERY_PAIR_EXPLORER_24 = gql`
-  query GetPairExplorer24(
+export const BITQUERY_PAIR_EXPLORER = gql`
+  query GetPairExplorer(
     $network: EthereumNetwork!
     $exchangeName: String
     $baseAddress: String!
@@ -159,7 +159,7 @@ export const BITQUERY_PAIR_EXPLORER_24 = gql`
     $from: ISO8601DateTime
   ) {
     ethereum(network: $network) {
-      data24: dexTrades(
+      dexTrades(
         date: {since: $from}
         exchangeName: {is: $exchangeName}
         baseCurrency: {is: $baseAddress}
@@ -246,4 +246,69 @@ export const BITQUERY_TOKEN_STATISTICS = gql`
       }
     }
   }
+`;
+
+export const BITQUERY_TOKEN_TRADES = gql`
+query GetTokenTrades(
+  $network: EthereumNetwork!,
+  $exchangeName: String,
+  $from: ISO8601DateTime,
+  $till: ISO8601DateTime,
+  $baseAddress: String,
+  $quoteAddress: String,
+  $limit: Int!,
+  $offset: Int!,
+  $tradeAmount: Float
+) {
+   ethereum(network: $network) {
+     dexTrades(
+       options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+       exchangeName: {is: $exchangeName}
+       baseCurrency: {is: $baseAddress}
+       quoteCurrency: {is: $quoteAddress}
+       tradeAmountUsd: {gt: $tradeAmount}
+       date: {since: $from, till: $till}
+     ) {
+       tradeIndex
+       block {
+         timestamp {
+           time(format: "%Y-%m-%d %H:%M:%S")
+         }
+         height
+       }
+       protocol
+       exchange {
+         fullName
+       }
+       smartContract {
+         address {
+           address
+           annotation
+         }
+       }
+       transaction {
+         hash
+       }
+       baseAmount
+       baseAmountInUsd: baseAmount(in: USD)
+       baseCurrency {
+         address
+         decimals
+         name
+         symbol
+       }
+       side
+       quoteAmount
+       quoteAmountInUsd: quoteAmount(in: USD)
+       quoteCurrency {
+         address
+         decimals
+         name
+         symbol
+       }
+       tradeAmount(in: ETH)
+       tradeAmountIsUsd: tradeAmount(in: USD)
+     }
+   }
+ }
 `;

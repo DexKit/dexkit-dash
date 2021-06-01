@@ -5,9 +5,10 @@ export type  WhitelabelTypes =  'DEX' | 'MARKETPLACE' | 'AGGREGATOR'
 
 export interface ConfigResponse {
     slug: string,
-    config: any,
+    config: string,
     domain: string,
     type: WhitelabelTypes,
+    active?: boolean
 }
 
 
@@ -248,6 +249,12 @@ export interface ThemeProperties {
     telegram?: string,
     analytics?: string
   }
+
+  export interface AggregatorTheme {
+    is_dark_mode: boolean;
+    brand_color: string;
+    brand_color_dark: string;
+  }
   
   export interface AggregatorWallet{
     fortmatic?: string,
@@ -267,10 +274,10 @@ export interface ThemeProperties {
       buyTokenPercentage: string;
       brand_color: string;
       brand_color_dark: string;
+      is_dark_mode?: boolean;
       support_bsc?: boolean;
       bsc_as_default?: boolean;
       fee_waive_for_default_token?: boolean;
-      is_dark_mode?: boolean;
       hide_powered_by_dexkit?: boolean;
       default_token_list?: string;
       affiliateAddress: string;

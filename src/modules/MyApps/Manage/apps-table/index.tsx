@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -15,18 +17,22 @@ import {
 } from '@material-ui/core';
 
 import {Loader} from '@crema';
-
+import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 
 import {useStyles} from './index.style';
+
+import EditIcon from '@material-ui/icons/Edit';
+import LaunchIcon from '@material-ui/icons/Launch';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 import {stableSort, getComparator} from 'utils/table';
 import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
 import { useWeb3 } from 'hooks/useWeb3';
-import EditIcon from '@material-ui/icons/Edit';
-import LaunchIcon from '@material-ui/icons/Launch';
-import IconButton from '@material-ui/core/IconButton';
-import { useHistory } from 'react-router-dom';
+import { onAddNotification, setInsufficientAmountAlert } from 'redux/actions';
 import { WhitelabelTypes } from 'types/myApps';
+import { useBalance } from 'hooks/balance/useBalance';
+// import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
 
@@ -42,6 +48,7 @@ const headCells: HeadCell[] = [
   {id: 'domain', align: 'left', label: 'Domain', isSort: true},
   {id: 'type', align: 'left', label: 'Type', isSort: false},
 //  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
+  {id: 'expireds', align: 'left', label: 'Status', isSort: false},
   {id: 'actions', align: 'left', label: 'Actions', isSort: false},
 ];
 
@@ -59,15 +66,39 @@ const AppsTable = () => {
   const [orderBy, setOrderBy] = useState<string>('collectedFees');
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [showDialog, setShowDialog] = useState(false);
   const { account } = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
+  const { error, data: balances } = useBalance();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const apps = configs?.filter( config => config?.active) ?? [];
+    const kitsCost = apps.reduce((cost, app) => {
+      if(app.type === 'DEX'){
+        return cost + Number(process.env.REACT_APP_APP_COST_KIT_EXCHANGE);
+      }
+      if(app.type === 'AGGREGATOR'){
+        return cost + Number(process.env.REACT_APP_APP_COST_KIT_AGGREGATOR);
+      }
+      if(app.type === 'MARKETPLACE'){
+        return cost + Number(process.env.REACT_APP_APP_COST_KIT_MARKETPLACE); 
+      }
+      return cost;
+      
+    }, 0);
+    const kitBalance = balances?.filter( b => b?.currency?.symbol?.toUpperCase() === 'KIT') ?? [];
+    const kitAmount = kitBalance.reduce((amount, k) => {
+      const value = Number(k.value);
+      return isFinite(value) && !isNaN(value) ? amount + value : amount;
+    }, 0);
+    dispatch(setInsufficientAmountAlert(kitAmount < kitsCost));
+  }, [configs, balances, dispatch])
 
   const handleSelectionType = (data: any) => {
     console.log('data: ', data);
   };
-//  const loading = false;
-  const error = false;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -89,7 +120,6 @@ const AppsTable = () => {
   const classes = useStyles();
   const onEditConfig = (slug: string) => {
     history.push(`/my-apps/wizard/marketplace/${slug}`);
-
   }
 
   const onOpenApp = (slug: string, type: WhitelabelTypes) => {
@@ -107,6 +137,24 @@ const AppsTable = () => {
         window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
         break;
     }
+  }
+
+  const onDeleteApp = (slug: string, type: WhitelabelTypes) => {
+    const index = configs?.findIndex( c => c?.slug?.toLowerCase() === slug.toLowerCase() && 
+      c?.type?.toLowerCase() === type.toLowerCase()) ?? -1;
+    if(index >= 0){
+      //TODO: chamar o end-point da API
+      // const notification: Notification = {
+        //   title: `${slug} app deleted`,
+        //   body: `deleted ${slug} app successfully`,
+        //   timestamp: (new Date()).getTime(),
+        // };
+        const config = configs?.splice(index, 1)[0];
+        console.log('removed', config);
+      const notification = new Notification(`${slug} app deleted`, { body: `deleted ${slug} app successfully` });
+      dispatch(onAddNotification(notification));
+    }
+
   }
 
   return (
@@ -187,16 +235,46 @@ const AppsTable = () => {
                       <TableCell align='left' className={classes.tableCell}>
                         {config.type}
                       </TableCell>
+                      <TableCell
+                        component='th'
+                        scope='row'
+                        className={classes.tableCell}
+                        style={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          width: '6rem',
+                        }}>
+                        <Box className={classes.anchar}>{config?.active}</Box>
+                      </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
                         <Box className={classes.badgeRoot}>
                             <IconButton aria-label="edit" onClick={() => onEditConfig(config.slug)}>
                               <EditIcon/>
                            </IconButton>
                            <IconButton aria-label="launch" onClick={() => onOpenApp(config.slug, config.type)}>
-                               <LaunchIcon/>
+                              <LaunchIcon/>
+                           </IconButton>
+                           <IconButton 
+                           aria-label="remove" 
+                           onClick={($e) => {
+                             $e.stopPropagation();
+                             setShowDialog(true) 
+                            //  onDeleteApp(config.slug, config.type)
+                          }}>
+                              <DeleteIcon/>
                            </IconButton>
                         </Box>
                       </TableCell>
+                      <ConfirmationDialog 
+                        title={`Want to confirm the exclusion of the "${config.slug}" app?`}
+                        dialogTitle={'Confirm app exclusion'}
+                        open={showDialog}
+                        onConfirm={() => { 
+                          onDeleteApp(config.slug, config.type)
+                          setShowDialog(!showDialog);
+                        }}
+                        onDeny={(x) => setShowDialog(x)}
+                      />
                     </TableRow>
                   ))}
               </TableBody>
@@ -221,8 +299,8 @@ const AppsTable = () => {
             page={page}
             onChangePage={handleChangePage}
           />
-        </Paper>
 
+        </Paper>
 
       ) :
       <Paper className={classes.paper}>
@@ -242,7 +320,7 @@ const AppsTable = () => {
                   <Typography>You don't have Apps yet </Typography>
               </Grid>
           </Paper>
-          }
+      }
 
       {loading ? <Loader /> : null}
 

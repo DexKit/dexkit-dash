@@ -14,6 +14,7 @@ interface Props {
   id: string;
   selected: Token | undefined;
   options: Token[];
+  disabled?: boolean;
   onChange: ($token: Token | undefined) => void;
 }
 
@@ -60,7 +61,13 @@ const SelectOption = styled.div`
   }
 `;
 
-const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
+const SelectToken: React.FC<Props> = ({
+  id,
+  selected,
+  options,
+  disabled,
+  onChange,
+}) => {
   const classes = useStyles();
 
   const [inputValue, setInputValue] = React.useState('');
@@ -74,30 +81,15 @@ const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
 
   return (
     <>
-      {id && options && selected && (
+      {options.length === 0 ? (
         <Autocomplete
-          id={id}
           closeIcon={false}
-          filterOptions={filterOptions}
-          options={options.filter(
-            (option) => option.symbol || option.address || option.name,
-          )}
-          value={selected}
+          disabled={disabled}
+          options={[]}
           onChange={(event, value) => onChange(value ?? undefined)}
           inputValue={inputValue}
-          onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          getOptionLabel={(e) => `${e.symbol} - ${truncateAddress(e.address)}`}
-          renderOption={(option) => (
-            <SelectOption>
-              <TokenLogo token0={option.address} />
-              {option.name}
-            </SelectOption>
-          )}
           renderInput={(params) => (
             <SelectBox>
-              <TokenLogo token0={selected.address} />
               <TextField
                 {...params}
                 placeholder={'Search by name, symbol or paste address'}
@@ -108,23 +100,47 @@ const SelectToken: React.FC<Props> = ({id, selected, options, onChange}) => {
             </SelectBox>
           )}
         />
+      ) : (
+        id &&
+        selected && (
+          <Autocomplete
+            id={id}
+            closeIcon={false}
+            disabled={disabled || false}
+            filterOptions={filterOptions}
+            options={options.filter(
+              (option) => option.symbol || option.address || option.name,
+            )}
+            value={selected}
+            onChange={(event, value) => onChange(value ?? undefined)}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            getOptionLabel={(e) =>
+              `${e.symbol} - ${truncateAddress(e.address)}`
+            }
+            renderOption={(option) => (
+              <SelectOption>
+                <TokenLogo token0={option.address} />
+                {option.name}
+              </SelectOption>
+            )}
+            renderInput={(params) => (
+              <SelectBox>
+                <TokenLogo token0={selected.address} />
+                <TextField
+                  {...params}
+                  placeholder={'Search by name, symbol or paste address'}
+                  variant='outlined'
+                  className={classes.textField}
+                  // onChange={($e) => search($e.target.value)}
+                />
+              </SelectBox>
+            )}
+          />
+        )
       )}
-
-      {/* <Select
-        fullWidth
-        native
-        variant='outlined'
-        onChange={onChange}
-        value={selected != null ? selected.address.toLowerCase() : undefined}
-      >
-        {
-          options.map( _token => (
-            <option key={`${id}-${_token.symbol}`} value={_token.address.toLowerCase()}>
-              {_token.symbol.toUpperCase()}
-            </option>
-          ))
-        }
-      </Select> */}
     </>
   );
 };

@@ -8,20 +8,24 @@ import {
   makeStyles,
   MenuItem,
   Select,
-  Typography
+  Typography,
+  Button
 } from '@material-ui/core';
-import ComponentTheme, { AccordionDetails } from './componentTheme';
+import ComponentTheme  from './componentTheme';
+import { AccordionDetails } from './Accordion';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { ConfigFileExchange, ConfigFileMarketplace, PartialTheme, ThemeProperties } from 'types/myApps';
-import { isUndefined } from 'node:util';
 import { ColorResult } from 'react-color';
+
+import ColorSets from 'shared/constants/ColorSets';
 
 type ConfigFileWithTheme = ConfigFileExchange | ConfigFileMarketplace;
 interface ThemeFormProps {
   themeName: string;
   theme?: PartialTheme;
   changeIssuerForm?: (key: keyof ConfigFileWithTheme, value: any) => void;
+  editable?: boolean;
 }
 
 
@@ -32,6 +36,15 @@ const components: Map<string, keyof ThemeProperties> = new Map<string, keyof The
   ['Top Bar Background', 'topbarBackgroundColor'],
   ['Inactive Tab Background', 'inactiveTabBackgroundColor'],
   ['Text Input Background', 'textInputBackgroundColor']
+]);
+
+const defaultValues: Map<keyof ThemeProperties, string> = new Map<keyof ThemeProperties, string>([
+  ['background', ColorSets[0].PrimaryColor],
+  ['cardBackgroundColor', ColorSets[1].PrimaryColor],
+  ['cardHeaderBackgroundColor', ColorSets[2].PrimaryColor],
+  ['topbarBackgroundColor', ColorSets[3].PrimaryColor],
+  ['inactiveTabBackgroundColor', ColorSets[4].PrimaryColor],
+  ['textInputBackgroundColor', ColorSets[5].PrimaryColor]
 ]);
 
 interface ThemeOptions {
@@ -61,9 +74,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const ThemeForm: React.FC<ThemeFormProps> = (props) => {
   const classes = useStyles();
-  const { themeName, theme:startTheme, changeIssuerForm } = props;
+  const { themeName, theme:startTheme, changeIssuerForm, editable } = props;
   const [theme, setTheme] = useState(startTheme);
-  const [selectedOption, setSelectedOption] = useState(themeName === 'DARK_THEME' ? themesOptions[0] : themesOptions[1]);
+  const [selectedOption, setSelectedOption] = useState(themesOptions[0]);
+  const [componentes, setComponentes] = useState(components);
   // const themeNameForm = themeName === 'DARK_THEME' ? 'theme_dark' : 'theme_light';
 
   const onChange = (event: React.ChangeEvent<
@@ -77,23 +91,12 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
     const themeNameFormOptions = themeIndex > 0 ? themesOptions[themeIndex] : themesOptions[0];
     setSelectedOption(themeNameFormOptions);
   };
-  useEffect(() => {
-    if(theme == null || Object.keys(theme).length === 0){
-      const _theme = Array.from(components.values())
-      .reduce((obj, key,i) => { 
-        return {
-          ...obj,
-          [key]: undefined,
-        }
-      }, { } as ThemeProperties);
-      setTheme({ 
-        componentsTheme: _theme
-      });
-    }
-  }, []);
+
   const getValue = (k: string) => {
+    const property = componentes.get(k);
+    const defaultColor = property != null ? defaultValues.get(property) ?? '#FFFFFF' : '#FFFFFF' ;
     let value: ColorResult = {
-       hex: '#FFFFFF', 
+       hex: defaultColor, 
        hsl: {
         h:0,
         s: 0,
@@ -104,18 +107,53 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
          g: 255,
          r: 255,
        }
-    };;
-    const property = components.get(k);
+    };
     if(theme != null && 
       theme?.componentsTheme != null && 
       property != null
     ){
-      value.hex = theme.componentsTheme[property] ?? '#FFFFFF';
+      value.hex = theme.componentsTheme[property] ?? defaultColor;
     }
     return value;
   }
+
+  const resetAll = () => {
+    if(theme != null){
+      componentes.forEach((property, key) => {
+        if(theme?.componentsTheme != null){
+          const _valor = defaultValues.get(property);
+          console.log(key, _valor);
+          console.log('valor antes', theme.componentsTheme[property]);
+          theme.componentsTheme[property] = _valor;
+          console.log('valor depois', theme.componentsTheme[property]);
+        }
+      });
+      setTheme({ ...theme});
+      setComponentes(new Map<string, keyof ThemeProperties>(componentes.entries()))
+    }
+    if(changeIssuerForm != null){
+      console.log('aqui')
+      changeIssuerForm('theme', theme);
+      changeIssuerForm(selectedOption.value, theme);
+    }
+  } 
+  useEffect(() => {
+    if(theme == null || Object.keys(theme).length === 0){
+      const _theme = Array.from(componentes.values())
+      .reduce((obj, key,i) => {
+        return {
+          ...obj,
+          [key]: defaultValues.get(key),
+        }
+      }, { } as ThemeProperties);
+      setTheme({ 
+        componentsTheme: _theme
+      });
+    }
+  }, []);
+  
   return (
-    <Accordion>
+    <Accordion defaultExpanded>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
@@ -128,27 +166,29 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
       <AccordionDetails>
         <Box component="section" width="100%" className={classes.section}>
           <InputLabel >
-            <span>Style Themes:</span>
-            <Select value={selectedOption.value} onChange={onChange} className={classes.select}>
+            <span>Select themes to edit:</span>
+            <Select value={selectedOption.value} onChange={onChange} className={classes.select} disabled={!Boolean(editable)}>
               {
                 themesOptions.map((opt, i) => <MenuItem key={i} value={opt.value}>{opt.label}</MenuItem>)
               }
             </Select>
           </InputLabel>
+          <Button color="primary" onClick={resetAll}> Reset All</Button>
         </Box>
         <Box component="section" className={classes.section}>
           <GridContainer>
             {
-              Array.from(components.keys())
+              theme?.componentsTheme ? Array.from(componentes.keys())
                 .map(k =>
                   <ComponentTheme
                     label={k}
-                    className={components.get(k) as string}
+                    key={componentes.get(k) as string}
+                    className={componentes.get(k) as string}
                     name={`${selectedOption.value}.componentsTheme`}
                     themeName={themeName}
                     value={getValue(k)}
                     onChange={($e, value) => {
-                      const property = components.get(k);
+                      const property = componentes.get(k);
                       if(
                         theme != null && 
                         theme?.componentsTheme != null && 
@@ -161,8 +201,10 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                         changeIssuerForm(selectedOption.value, theme);
                       }
                     }}
+                    editable={Boolean(editable)}
+                    help={'Incluir as descrições a respeito sobre essa propriedade. Por favor, não esquecer isso aqui!'}
                   />
-                )
+                ) : null
             }
           </GridContainer>
         </Box>

@@ -39,8 +39,20 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
           style={{position: 'absolute'}}>
           <Box height='100%' className={classes.miniSidebar}>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-            <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
-             {/*  <UserInfo />*/}
+              <Box
+                style={{display: 'flex'}}
+                justifyContent='center'
+                alignContent='center'>
+                <AppLogo
+                  justifyContent='center'
+                  logo={require('assets/images/logo_white_kit.png')}
+                />
+              </Box>
+
+              {/*  <UserInfo />*/}
+
+              <Box />
+
               <PerfectScrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
               </PerfectScrollbar>
@@ -51,8 +63,17 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
       <Hidden mdDown>
         <Box height='100%' className={clsx(classes.miniSidebar, 'app-sidebar')}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-         {/*   <UserInfo />*/}
-           <AppLogo justifyContent="center" logo={require('assets/images/logo_white_kit.png')}/>
+            {/*   <UserInfo />*/}
+
+            <AppLogo
+              justifyContent='center'
+              logo={require('assets/images/logo_white_kit.png')}
+            />
+
+            <AppLogo
+              justifyContent='center'
+              logo={require('assets/images/dexkit_logo.png')}
+            />
 
             <PerfectScrollbar className={classes.scrollAppSidebar}>
               <Navigation />

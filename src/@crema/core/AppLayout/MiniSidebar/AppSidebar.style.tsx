@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       paddingLeft: 0,
       paddingTop: 0,
       paddingBottom: 0,
+      marginTop: 16,
       maxHeight: '100vh',
       position: 'relative',
       top: 0,
@@ -64,6 +65,13 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         },
       },
 
+      '& > div > div:first-child': {
+        display: 'none',
+      },
+      '& > div > div:nth-child(2)': {
+        display: 'flex',
+      },
+
       '&:hover': {
         [theme.breakpoints.up('lg')]: {
           width: '21.6rem',
@@ -80,6 +88,13 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           '& .nav-item-icon': {
             marginLeft: '0 !important',
           },
+
+          '& > div > div:first-child': {
+            display: 'flex',
+          },
+          '& > div > div:nth-child(2)': {
+            display: 'none',
+          },
         },
       },
     },
@@ -92,7 +107,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           : '#313541',
     },
     scrollAppSidebar: {
-      paddingTop: 8,
+      paddingTop: 12,
       paddingBottom: 20,
       height: 'calc(100vh - 58px) !important',
 

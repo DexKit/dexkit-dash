@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, ButtonProps } from '@material-ui/core';
 import transakSDK from '@transak/transak-sdk';
 import { useWeb3 } from 'hooks/useWeb3';
 
-interface Props {
+interface Props extends ButtonProps{
 }
 
 const Transak: React.FC<Props> = (props) => {
@@ -70,6 +70,7 @@ const Transak: React.FC<Props> = (props) => {
       size="small"
       disableElevation
       disabled={transakClient == null}
+      { ... props }
     >
       Buy
     </Button>

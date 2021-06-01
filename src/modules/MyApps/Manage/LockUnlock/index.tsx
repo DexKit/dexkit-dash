@@ -8,6 +8,7 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import CoinsInfo from './CoinsInfo';
+import Transak from 'shared/components/Transak';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -101,21 +102,22 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
             alignItems={{xl: 'center'}}
             justifyContent={'space-between'}>
             <Box display='flex' alignItems='center' mr={2}>
-              <Box
+              {/* <Box
                 component='h3'
                 color='primary.contrastText'
                 fontFamily={Fonts.LIGHT}
                 fontSize={{xs: 18, sm: 20, xl: 22}}>
                 ${usd.toFixed(2)}
-              </Box>
-              <Box
+              </Box> */}
+              {/* <Box
                 component='span'
                 ml={3}
                 color={indigo[100]}
                 fontSize={{xs: 16, xl: 18}}
                 whiteSpace='nowrap'>
                 Avl. Balance
-              </Box>
+              </Box> */}
+              <CoinsInfo coins={kit} />
             </Box>
             <Box
               display='flex'
@@ -123,28 +125,31 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                <Button
+                {/* <Button
                   variant="contained"
                   color={'primary'}
                   onClick={() => {
-                    history.push(`/dashboard/token/0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4`);
+                    history.push(`/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`);
                   }}
                   className={classes.root}>
                   <IntlMessages id='common.buyKit' />
-                </Button>
+                </Button> */}
+                <Transak 
+                variant="contained"
+                color={'primary'}
+                size="medium"
+                className={classes.root}
+                />
               </Box>
             </Box>
           </Box>
 
-          <Box pt={{lg: 5}}>
+          {/* <Box pt={{lg: 5}}>
             <CoinsInfo coins={kit} />
-          </Box>
+          </Box> */}
         </Card>
       </Box>
-
-      {/* <Sender open={senderModal} onClose={() => setSenderModal(false)} balances={balances} /> */}
-
-      {/* <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} /> */}
+      
     </>
   );
 };

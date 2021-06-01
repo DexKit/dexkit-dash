@@ -59,26 +59,27 @@ const Overview: React.FC<Props> = () => {
           <InfoToken data={btcData} timeout={1000} />
         </Grid>
 
-        <Grid item xs={12} lg={8}>
+        {/* <Grid item xs={12} lg={8}> */}
+        <Grid item xs={12}>
           <GridContainer>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <ProtocolNavigationUniswap />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <ProtocolNavigationSushiSwap />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <ProtocolNavigationZRXProtocol />
-            </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
+              <Box marginBottom={8}>
+                <ProtocolNavigationZRXProtocol />
+              </Box>
               <ProtocolNavigationBalancer />
             </Grid>
           </GridContainer>
         </Grid>
 
-        <Grid item xs={12} lg={4}>
+        {/* <Grid item xs={12} lg={4}>
           <News />
-        </Grid>
+        </Grid> */}
       </GridContainer>
     </Box>
   );

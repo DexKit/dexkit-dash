@@ -145,7 +145,7 @@ query GetTotalContractEvents($network: EthereumNetwork!, $address: String, $even
 export const BITQUERY_AMM_PAIR_EXPLORER = gql`
   query GetAMMPairExplorer ($network: EthereumNetwork!, $exchangeName: String, $pairAddress: String!, $quoteAddress: String!) {
     ethereum(network: $network) {
-      data24: dexTrades(
+      dexTrades(
         options: {limit: 2, desc: "timeInterval.day"}
         exchangeName: {is: $exchangeName}
         smartContractAddress: {is: $pairAddress}
@@ -194,46 +194,109 @@ export const BITQUERY_AMM_PAIR_EXPLORER = gql`
 `;
 
 
-export const BITQUERY_PAIR_EXPLORER = gql`
-  query GetPairExplorer ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
+// export const BITQUERY_PAIR_EXPLORER = gql`
+//   query GetPairExplorer ($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
+//     ethereum(network: $network) {
+//       data24: dexTrades(
+//         options: {limit: 2, desc: "timeInterval.day"}
+//         exchangeName: {is: $exchangeName}
+//         baseCurrency: {is: $baseAddress}
+//         quoteCurrency: {is: $quoteAddress}
+//       ) {
+//         timeInterval {
+//           day(count: 1)
+//         }
+//         trades: count
+//         baseAmount
+//         baseAmountInUsd: baseAmount(in: USD)
+//         baseCurrency {
+//           name
+//           symbol
+//           address
+//           decimals
+//         }
+//         quotePrice
+//         quoteAmount
+//         quoteAmountInUsd: quoteAmount(in: USD)
+//         quoteCurrency {
+//           name
+//           symbol
+//           address
+//           decimals
+//         }
+//         tradeAmount(in: ETH)
+//         tradeAmountInUsd: tradeAmount(in: USD)
+//         maximum_price: quotePrice(calculate: maximum)
+//         minimum_price: quotePrice(calculate: minimum)
+//         open_price: minimum(of: block, get: quote_price)
+//         close_price: maximum(of: block, get: quote_price)
+//         tradeAmount(in: ETH)
+//         tradeAmountInUsd: tradeAmount(in: USD)
+//       }
+//     }
+//   }
+// `;
+
+export const BITQUERY_MINT_BURN = gql`
+  query GetMintBurn($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!) {
     ethereum(network: $network) {
-      data24: dexTrades(
-        options: {limit: 2, desc: "timeInterval.day"}
-        exchangeName: {is: $exchangeName}
-        baseCurrency: {is: $baseAddress}
-        quoteCurrency: {is: $quoteAddress}
+      mint: smartContractEvents(
+        smartContractAddress: {is: $address}
+        smartContractEvent: {is: "Mint"}
+        options: {limit: $limit, desc: "block.height", offset: $offset}
       ) {
-        timeInterval {
-          day(count: 1)
+        block {
+          height
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
         }
-        trades: count
-        baseAmount
-        baseAmountInUsd: baseAmount(in: USD)
-        baseCurrency {
-          name
-          symbol
-          address
-          decimals
+        transaction {
+          hash
         }
-        quotePrice
-        quoteAmount
-        quoteAmountInUsd: quoteAmount(in: USD)
-        quoteCurrency {
-          name
-          symbol
-          address
-          decimals
+        arguments {
+          argument
+          argumentType
+          value
         }
-        tradeAmount(in: ETH)
-        tradeAmountInUsd: tradeAmount(in: USD)
-        maximum_price: quotePrice(calculate: maximum)
-        minimum_price: quotePrice(calculate: minimum)
-        open_price: minimum(of: block, get: quote_price)
-        close_price: maximum(of: block, get: quote_price)
-        tradeAmount(in: ETH)
-        tradeAmountInUsd: tradeAmount(in: USD)
+      }
+      burn: smartContractEvents(
+        smartContractAddress: {is: $address}
+        smartContractEvent: {is: "Burn"}
+        options: {limit: $limit, desc: "block.height"}
+      ) {
+        block {
+          height
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+        }
+        transaction {
+          hash
+        }
+        arguments {
+          argument
+          argumentType
+          value
+        }
       }
     }
   }
 `;
 
+export const BITQUERY_CONTRACT_EVENT_BY_HASH = gql`
+query GetContractEventByHash($network: EthereumNetwork!, $address: String, $hash: [String!]) {
+  ethereum(network: $network) {
+    smartContractEvents(txHash: {in: $hash}, smartContractAddress: {is: $address}) {
+      arguments {
+        argument
+        value
+        argumentType
+      }
+      smartContractEvent {
+        name
+      }
+    }
+  }
+}
+`;

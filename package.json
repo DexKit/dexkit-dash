@@ -41,6 +41,7 @@
     "autosuggest-highlight": "^3.1.1",
     "aws-amplify": "^2.2.6",
     "axios": "^0.21.1",
+    "axios-cache-adapter": "^2.7.3",
     "axios-mock-adapter": "^1.19.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "clsx": "^1.1.1",

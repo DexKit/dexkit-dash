@@ -53,7 +53,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
   const [currentStep, setCurrentStep] = useState<Steps>();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error|string>();
+  const [error, setError] = useState<Error | string>();
 
   useEffect(() => {
     if (open) {
@@ -74,20 +74,20 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     }
   }, [open]);
 
-  const handleNext = (hasNext: boolean, errorMesage?: Error|string) => {
+  const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
     if (hasNext) {
-      console.log('next is not a error')
+      console.log('next is not a error');
       const idx = stepsIdx + 1;
       if (idx < steps.length) {
-        console.log('next has next step')
+        console.log('next has next step');
         setStepsIdx(idx);
         setCurrentStep(steps[idx]);
       } else {
         setCurrentStep(Steps.DONE);
-        console.log('next done')
+        console.log('next done');
       }
     } else {
-      console.log('next is an error')
+      console.log('next is an error');
       setError(errorMesage);
       setCurrentStep(Steps.ERROR);
     }
@@ -104,9 +104,8 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
           open={open}
           onClose={onClose}
           aria-labelledby='form-dialog-title'>
+          {loading && <LoadingStep />}
 
-          {loading && (<LoadingStep />)}
-          
           {currentStep === Steps.APPROVE && (
             <ApproveStep
               step={currentStep}
@@ -136,7 +135,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
               onClose={onClose}
               onNext={handleNext}
               onLoading={handleLoading}
-              />
+            />
           )}
 
           {currentStep === Steps.ERROR && (

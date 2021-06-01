@@ -10,6 +10,7 @@ interface MyAppsState {
   kitsData: Kit[] | undefined;
   userKits: Kit[] | undefined;
   tokenData: Token[] | undefined;
+  insufficientAmountAlert: boolean;
 }
 
 const initialState: MyAppsState = {
@@ -17,6 +18,7 @@ const initialState: MyAppsState = {
   kitsData: [],
   userKits: [],
   tokenData: [],
+  insufficientAmountAlert: true
 };
 
 export default (
@@ -32,6 +34,8 @@ export default (
       return {...state, kitsData: action.payload};
     case getType(actions.setAllTokens):
       return {...state, tokenData: action.payload};
+    case getType(actions.setInsufficientAmountAlert):
+      return {...state, insufficientAmountAlert: action.payload };
     default:
       return state;
   }

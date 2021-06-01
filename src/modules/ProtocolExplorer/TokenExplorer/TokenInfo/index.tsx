@@ -5,6 +5,7 @@ import {Box, Card, Grid} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
+import TokenLogo from 'shared/components/TokenLogo';
 
 interface Props {
   address: string;
@@ -33,15 +34,18 @@ const TokenInfo: React.FC<Props> = (props) => {
               <ErrorView message={error.message} />
             ) : (
               <>
-                {data?.ethereum?.address.map((e) => (
-                  <Grid container>
+                {data?.ethereum?.address.map((e, index) => (
+                  <Grid key={index} container>
                     <Grid item xs={12}>
-                      <Box
-                        mb={2}
-                        component='h3'
-                        fontFamily={Fonts.LIGHT}
-                        fontSize={{xs: 20, sm: 22, xl: 24}}>
-                        {e.smartContract?.currency?.name}
+                      <Box  display='flex' alignItems={'center'} mb={2}> 
+                        <TokenLogo token0={e.address}></TokenLogo>
+                        <Box
+                          component='h3'
+                          pl={2}
+                          fontFamily={Fonts.LIGHT}
+                          fontSize={{xs: 20, sm: 22, xl: 24}}>   
+                          {e.smartContract?.currency?.name}
+                          </Box>
                       </Box>
                     </Grid>
                     {e.annotation && (

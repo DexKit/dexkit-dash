@@ -9,12 +9,12 @@ import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 // GraphQL query operation: GetAMMPairExplorer
 // ====================================================
 
-export interface GetAMMPairExplorer_ethereum_data24_timeInterval {
+export interface GetAMMPairExplorer_ethereum_dexTrades_timeInterval {
   __typename: "TimeInterval";
   day: string;
 }
 
-export interface GetAMMPairExplorer_ethereum_data24_baseCurrency {
+export interface GetAMMPairExplorer_ethereum_dexTrades_baseCurrency {
   __typename: "Currency";
   /**
    * Currency name
@@ -34,7 +34,7 @@ export interface GetAMMPairExplorer_ethereum_data24_baseCurrency {
   decimals: number;
 }
 
-export interface GetAMMPairExplorer_ethereum_data24_quoteCurrency {
+export interface GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency {
   __typename: "Currency";
   /**
    * Currency name
@@ -54,26 +54,26 @@ export interface GetAMMPairExplorer_ethereum_data24_quoteCurrency {
   decimals: number;
 }
 
-export interface GetAMMPairExplorer_ethereum_data24 {
+export interface GetAMMPairExplorer_ethereum_dexTrades {
   __typename: "EthereumDexTrades";
   /**
    * Time interval
    */
-  timeInterval: GetAMMPairExplorer_ethereum_data24_timeInterval | null;
+  timeInterval: GetAMMPairExplorer_ethereum_dexTrades_timeInterval | null;
   trades: number | null;
   baseAmount: number | null;
   baseAmountInUsd: number | null;
   /**
    * Base currency
    */
-  baseCurrency: GetAMMPairExplorer_ethereum_data24_baseCurrency | null;
+  baseCurrency: GetAMMPairExplorer_ethereum_dexTrades_baseCurrency | null;
   quotePrice: number | null;
   quoteAmount: number | null;
   quoteAmountInUsd: number | null;
   /**
    * Quote currency
    */
-  quoteCurrency: GetAMMPairExplorer_ethereum_data24_quoteCurrency | null;
+  quoteCurrency: GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency | null;
   tradeAmount: number | null;
   tradeAmountInUsd: number | null;
   maximum_price: number | null;
@@ -112,7 +112,7 @@ export interface GetAMMPairExplorer_ethereum {
   /**
    * Trades on Ethereum DEX Smart Contracts
    */
-  data24: GetAMMPairExplorer_ethereum_data24[] | null;
+  dexTrades: GetAMMPairExplorer_ethereum_dexTrades[] | null;
   /**
    * Basic information about address ( or smart contract )
    */

@@ -1,9 +1,9 @@
-import { useWeb3 } from 'hooks/useWeb3';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
-import { Card, CardContent, CardHeader,  List, makeStyles } from '@material-ui/core';
+import { useWeb3 } from 'hooks/useWeb3';
+import { Card, CardContent, CardHeader, List, makeStyles } from '@material-ui/core';
 import { Kit } from './kit';
 import { Kit as KytType } from 'types/models/Kit';
 import clsx from 'clsx';
@@ -11,6 +11,9 @@ import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
 import { BigNumber } from "@0x/utils";
 import { onGetAllKits, onGetUserKits } from 'redux/_myapps/thunks';
+import ConfirmationDialog from '@crema/core/ConfirmationDialog';
+import { WhitelabelTypes } from 'types/myApps';
+import { useSufficientBalance } from 'hooks/balance/useSufficientBalance';
 
 
 
@@ -22,14 +25,14 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
     padding: "20px 24px"
   },
-  cardContent:{
+  cardContent: {
     padding: "0px 24px 20px 24px"
   },
   root: {
     height: 30,
     width: 30,
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
-    backgroundColor: (props: {bgColor: string}) => props.bgColor,
+    backgroundColor: (props: { bgColor: string }) => props.bgColor,
     [theme.breakpoints.up('md')]: {
       height: 45,
       width: 45,
@@ -81,12 +84,27 @@ interface KitMarketProps {
 // }
 
 
-const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
-  const classes = useStyles({bgColor});
+const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
+  const classes = useStyles({ bgColor });
 
   // const { account } = useWeb3();
   const history = useHistory();
+  const [amount, setAmount] = useState(0);
+  const { data: balance } = useSufficientBalance(amount, {
+    symbol: 'KIT',
+    address: process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
+    decimals: 18,
+    name: 'DexKit',
+    __typename: 'Currency'
+  });
+  const [showDialog, setShowDialog] = useState(false);
+  const [urlRedirect, setUrlRedirect] = useState('#');
 
+  useEffect(() => {
+    if(balance != null && !balance.isSufficientAmount){
+      setShowDialog(true);
+    }
+  }, [urlRedirect]);
   // const dispatch = useDispatch();
 
   // const { kitsData, userKits } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
@@ -96,66 +114,107 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
   //  // dispatch(onGetUserKits(account ?? '0x000000000000000000000000000000000'));
   // }, [dispatch]);
 
+  const [allKitValues] = useState([
+    Number(process.env.REACT_APP_APP_COST_KIT_AGGREGATOR),
+    Number(process.env.REACT_APP_APP_COST_KIT_EXCHANGE),
+    Number(process.env.REACT_APP_APP_COST_KIT_MARKETPLACE)
+  ]);
+
+  const buttonAction = (url: string, type: WhitelabelTypes) => {
+    switch(type){
+      case 'AGGREGATOR': {
+        setAmount(allKitValues[0]);
+        break;
+      }
+      case 'DEX': {
+        setAmount(allKitValues[1]);
+        break;
+      }
+      case 'MARKETPLACE':{
+        setAmount(allKitValues[2]);
+        break;
+      }
+    }
+    setUrlRedirect(url);
+    setShowDialog(true);
+  }
+
+  const confimDialog = useCallback(() => {
+    history.push(urlRedirect);
+    setShowDialog(false);
+  }, [setShowDialog, history, urlRedirect]);
+
+  const cancelDialg = useCallback((x: boolean) =>  setShowDialog(false) , [setShowDialog]);
+
   return (
-    <Card>
-      
-      <CardHeader
-        className={clsx(classes.statsCard, 'card-hover')}
-        // action={
-        //   <IconButton aria-label="settings">
-        //     <MoreVertIcon />
-        //   </IconButton>
-        // }
-        title={heading}
+    <>
+      <Card>
+
+        <CardHeader
+          className={clsx(classes.statsCard, 'card-hover')}
+          // action={
+          //   <IconButton aria-label="settings">
+          //     <MoreVertIcon />
+          //   </IconButton>
+          // }
+          title={heading}
+        />
+
+        <CardContent className={classes.cardContent}>
+          <List dense={true}>
+            {/* {generate({ data: { kitsData, userKits}, icon, bgColor, history})} */}
+
+            <Kit
+              key={'agg'}
+              icon={icon}
+              color={bgColor}
+              value={allKitValues[0]}
+              name={'Aggregator'}
+              button={{
+                color: 'secondary',
+                action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/aggregator`, 'AGGREGATOR'),
+                title: 'ADD +'
+              }}
+            />
+
+            <Kit
+              key={'exg'}
+              icon={icon}
+              color={bgColor}
+              value={allKitValues[1]}
+              name={'Exchange'}
+              button={{
+                color: 'secondary',
+                action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/exchange`, 'DEX'),
+                title: 'ADD +'
+              }}
+            />
+
+            <Kit
+              key={'market'}
+              icon={icon}
+              color={bgColor}
+              value={allKitValues[2]}
+              name={'Marketplace'}
+              button={{
+                color: 'secondary',
+                action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/marketplace`, 'MARKETPLACE'),
+                title: 'ADD +'
+              }}
+            />
+
+          </List>
+        </CardContent>
+
+      </Card>
+      <ConfirmationDialog
+        title={`You do not have enough kit to perform this functionality. Do you still want to continue?`}
+        dialogTitle={'Kit amount insufficient'}
+        open={showDialog}
+        onConfirm={confimDialog}
+        onDeny={cancelDialg}
       />
-
-      <CardContent className={classes.cardContent}>
-        <List dense={true}>
-          {/* {generate({ data: { kitsData, userKits}, icon, bgColor, history})} */}
-
-          <Kit
-            key={'agg'}
-            icon={icon}
-            color={bgColor}
-            value={'Aggregator'}
-            name={'Aggregator'}
-            button={{
-              color: 'secondary',
-              action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => history.push(`/my-apps/wizard/aggregator`),
-              title: 'ADD +'
-            }}
-          />
-          
-          <Kit
-            key={'exg'}
-            icon={icon}
-            color={bgColor}
-            value={'Exchange'}
-            name={'Exchange'}
-            button={{
-              color: 'secondary',
-              action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => history.push(`/my-apps/wizard/exchange`),
-              title: 'ADD +'
-            }}
-          />
-          
-          <Kit
-            key={'market'}
-            icon={icon}
-            color={bgColor}
-            value={'Marketplace'}
-            name={'Marketplace'}
-            button={{
-              color: 'secondary',
-              action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => history.push(`/my-apps/wizard/marketplace`),
-              title: 'ADD +'
-            }}
-          />
-          
-        </List>
-      </CardContent>
-    
-    </Card>
+    </>
   );
 }
 

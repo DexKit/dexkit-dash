@@ -64,7 +64,6 @@ export async function sendTransaction(from: string, to: string, amount: string, 
       .once('error', (error: any) => {
         reject(error)
       });
-
     });
   }
 }

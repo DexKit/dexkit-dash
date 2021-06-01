@@ -30,24 +30,24 @@ export const protocolExplorerConfigs = [
     ],
   },
 
-  //   {
-  //     routes: [
-  //       {
-  //         path:
-  //           '/:networkName/protocol-explorer/:exchange/pool-explorer/:address',
-  //         component: React.lazy(() => import('./pool-explorer')),
-  //       },
-  //     ],
-  //   },
+  {
+    routes: [
+      {
+        path:
+          '/:networkName/protocol-explorer/:exchange/pool-explorer/:address',
+        component: React.lazy(() => import('./PoolExplorer')),
+      },
+    ],
+  },
 
-  //   {
-  //     routes: [
-  //       {
-  //         path: '/:networkName/protocol-explorer/:exchange/pool-explorer',
-  //         component: React.lazy(() => import('./pool-explorer')),
-  //       },
-  //     ],
-  //   },
+  {
+    routes: [
+      {
+        path: '/:networkName/protocol-explorer/:exchange/pool-explorer',
+        component: React.lazy(() => import('./PoolExplorer')),
+      },
+    ],
+  },
 
   {
     routes: [

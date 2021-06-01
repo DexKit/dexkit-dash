@@ -21,6 +21,9 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import { useTransfer } from 'hooks/useTransfer';
 import { Currency } from 'types/myApps';
+import { NotificationType } from 'services/notification';
+import { useDispatch } from 'react-redux';
+import { onAddNotification } from 'redux/actions';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -50,9 +53,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const {account, onActionWeb3Transaction, chainId} = useWeb3();
-  const {onTransferToken} = useTransfer();
+  const {onTransfer} = useTransfer();
 
   const [amount, setAmount] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -76,21 +80,39 @@ const SenderForm: React.FC<Props> = (props) => {
   const handleSend = () => {
     if (account && selected && selected.currency) {
       try {
-        if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
-            onActionWeb3Transaction({
-              to: address,
-              from: account,
-              value: Web3.utils.toWei(amount),
-            });
-        } else if (selected.currency.address && selected.currency.name && chainId != null) {
-          onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), {
+
+        if (selected.currency.address && selected.currency.name && chainId) {
+          onTransfer(account, address, amount, {
             address: selected.currency.address,
             decimals: selected.currency.decimals,
             name: selected.currency.name,
             symbol: selected.currency.symbol,
             chainId: chainId
-          })
+          });
         }
+
+        // if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
+        //     onActionWeb3Transaction({
+        //       to: address,
+        //       from: account,
+        //       value: Web3.utils.toWei(amount),
+        //     })
+        // } else if (selected.currency.address && selected.currency.name && chainId != null) {
+        //   onTransferToken(account, address, fromTokenUnitAmount(amount, selected.currency.decimals), {
+        //     address: selected.currency.address,
+        //     decimals: selected.currency.decimals,
+        //     name: selected.currency.name,
+        //     symbol: selected.currency.symbol,
+        //     chainId: chainId
+        //   }).then((c: any) => {
+        //     const notification = new Notification('Success', { body: 'Sent with success' });
+        //     dispatch(onAddNotification(notification));
+        //   })
+        //   .catch(() => {
+        //     const notification = new Notification('Error', { body: 'Error sending' });
+        //     dispatch(onAddNotification(notification, NotificationType.ERROR));
+        //   })
+        // }
       } catch (e) {
         console.log(e);
       }

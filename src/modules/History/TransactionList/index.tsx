@@ -28,14 +28,14 @@ const TransactionList: React.FC<Props> = (props) => {
   return (
     <Box pt={{xl: 4}}>
       
-      <PageTitle
+      {/* <PageTitle
         history={[
           {url:'/', name: 'Dashboard'},
           {url:'/dashboard/wallet', name: 'Wallet'}
         ]}
         active={'Transaction History'}
         title={'Transaction History'}
-      />
+      /> */}
 
       <GridContainer>
         <Grid item xs={12} md={12}>

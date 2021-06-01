@@ -70,6 +70,14 @@
   "app.volume24": "Volume (24hrs)",
   "app.trades24": "Trades (24hrs)",
 
+  "app.maker": "Maker",
+  "app.makerAmount": "Maker Amount",
+  "app.taker": "Taker",
+  "app.takerAmount": "Taker Amount",
+  "app.expiry": "Expiry",
+
+  "app.connectWallet": "You need to connect your wallet to check this page",
+
   "title.tradesByCurrencies": "Trades By Currencies",
   "title.tokenOrderPairs": "Token Order Pairs",
   "title.tokenInfo": "Token Info",
@@ -627,6 +635,7 @@
   "sidebar.protocols.pool-explorer": "Pool Explorer",
   "sidebar.protocols.pair-explorer": "Pair Explorer",
   "sidebar.affiliate": "Affiliates",
+  "sidebar.affiliate.become-affiliate": "Become Affiliate",
   "sidebar.affiliate.aggregator": "Aggregators",
   "sidebar.affiliate.nft-marketplace": "Marketplace",
   "sidebar.affiliate.erc20-exchange": "Exchanges",

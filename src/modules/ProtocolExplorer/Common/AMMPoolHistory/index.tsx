@@ -1,0 +1,87 @@
+import React, {useState, useEffect} from 'react';
+import {useIntl} from 'react-intl';
+// import {MintBurn} from 'types/app';
+import {useAMMPoolHistory} from 'hooks/protocolExplorer/useAMMPoolHistory';
+import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import {Box, Paper, Select, Toolbar, Typography} from '@material-ui/core';
+import PoolIcon from '@material-ui/icons/Pool';
+import LoadingView from 'modules/Common/LoadingView';
+import ErrorView from 'modules/Common/ErrorView';
+import AMMPoolHistoryTable from './AMMPoolHistoryTable';
+import {useStyles} from './index.style';
+import { GetAMMPairExplorer_ethereum_dexTrades_baseCurrency, GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
+import AppCard from '@crema/core/AppCard';
+
+interface Props {
+  networkName: EthereumNetwork;
+  exchange: EXCHANGE;
+  address: string;
+  baseCurrency: GetAMMPairExplorer_ethereum_dexTrades_baseCurrency;
+  quoteCurrency: GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency;
+}
+
+const AMMPoolHistory: React.FC<Props> = (props: Props) => {
+  const {networkName, exchange, address, baseCurrency, quoteCurrency} = props;
+  const {messages} = useIntl();
+  const classes = useStyles();
+
+  const {
+    loading,
+    error,
+    data,
+    currentPage,
+    rowsPerPage,
+    rowsPerPageOptions,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useAMMPoolHistory({networkName, exchange, address, baseCurrency, quoteCurrency});
+
+  return (
+    <Paper className={classes.paper}>
+      <Toolbar className={classes.toolbar}>
+        <Box
+          display='flex'
+          justifyContent='space-between'
+          alignItems='center'
+          style={{width: '100%'}}>
+            <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
+              <PoolIcon color={'primary'} className={classes.toolbarIcon}/>
+              <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.pool']}</Typography>
+            </Box>
+          {/* <Box>
+            <Select
+              className={classes.selectBox}
+              value={filterValue}
+              onChange={handleChange}
+              disableUnderline={true}>
+              <option value='all' className={classes.selectOption}>
+                {messages['app.all']}
+              </option>
+              <option value='add' className={classes.selectOption}>
+                {messages['app.add']}
+              </option>
+              <option value='remove' className={classes.selectOption}>
+                {messages['app.remove']}
+              </option>
+            </Select>
+          </Box> */}
+        </Box>
+      </Toolbar>
+      {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
+        <AMMPoolHistoryTable
+          networkName={networkName}
+          data={data}
+          exchange={exchange}
+          totalRows={100}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
+          onChangePage={(newPage) => onChangePage(newPage)}
+          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+        />
+      )}
+    </Paper>
+  );
+};
+
+export default AMMPoolHistory;

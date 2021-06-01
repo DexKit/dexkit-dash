@@ -25,6 +25,7 @@ import Transak from 'shared/components/Transak';
 import { useBalanceChart } from 'hooks/balance/useBalanceChart';
 import AssetChart from './AssetChart';
 import { useDefi } from 'hooks/useDefi';
+import { truncateAddress } from 'utils';
 
 
 interface Props { }
@@ -42,11 +43,14 @@ const Wallet: React.FC<Props> = (props) => {
     <Box pt={{ xl: 4 }}>
 
       <PageTitle
-        history={[
-          {url:'/', name: 'Dashboard'}
-        ]}
-        active={'Wallet'}
-        title={'Wallet'}
+        breadcrumbs={{
+          history: [
+            {url:'/' , name: 'Dashboard'},
+            {url:'/dashboard/wallet', name: 'Wallet'}
+          ],
+          active: {name: `${truncateAddress(account)}`, hasCopy: account}
+        }}
+        title={{name: 'Wallet'}}
       />
 
       <GridContainer>

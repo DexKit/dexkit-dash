@@ -1,0 +1,85 @@
+import React from 'react';
+import {
+  makeStyles,
+  Box,
+  Table,
+  TableHead,
+  TableBody,
+  TablePagination,
+} from '@material-ui/core';
+import {grey} from '@material-ui/core/colors/index';
+import TableHeading from './TableHeading';
+import TableItem from './TableItem';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useStyles} from './index.style';
+
+interface Props {
+  networkName: EthereumNetwork;
+  data: any[] | undefined;
+  totalRows: number;
+  currentPage: number;
+  rowsPerPage: number;
+  rowsPerPageOptions: number[];
+  onChangePage: (newPage: number) => void;
+  onChangeRowsPerPage: (newPerPage: number) => void;
+}
+
+const TradeTable: React.FC<Props> = ({
+  networkName,
+  data,
+  totalRows,
+  currentPage,
+  rowsPerPage,
+  rowsPerPageOptions,
+  onChangePage,
+  onChangeRowsPerPage,
+}) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <Box className={classes.tableResponsiveMaterial}>
+        <Table stickyHeader>
+          <TableHead className={classes.borderBottomClass}>
+            <TableHeading />
+          </TableHead>
+
+          <TableBody className={classes.borderBottomClass}>
+            {data &&
+              data.map((row, index) => (
+                <TableItem row={row} networkName={networkName} key={index} />
+              ))}
+          </TableBody>
+        </Table>
+      </Box>
+
+      <TablePagination
+        className={classes.paginationDesktop}
+        component='div'
+        count={totalRows || 0}
+        page={currentPage}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={rowsPerPageOptions}
+        onChangePage={(event: unknown, newPage: number) =>
+          onChangePage(newPage)
+        }
+        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChangeRowsPerPage(parseInt(event.target.value, 10))
+        }
+      />
+      <TablePagination
+        className={classes.paginationMobile}
+        component='div'
+        count={totalRows || 0}
+        page={currentPage}
+        rowsPerPage={25}
+        rowsPerPageOptions={[]}
+        onChangePage={(event: unknown, newPage: number) =>
+          onChangePage(newPage)
+        }
+      />
+    </>
+  );
+};
+
+export default TradeTable;

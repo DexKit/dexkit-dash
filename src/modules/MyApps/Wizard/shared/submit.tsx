@@ -101,18 +101,13 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
             );
 
             web3Metamask.signTypedDataAsync(ethAccount.toLowerCase(), typedData).then(signature => {
-
-              console.log(config)
-
               const dataToSend = {
                 signature,
                 type: type,
-                config: config,
-                message: typedData,
+                config: JSON.stringify(config),
+                message: JSON.stringify(typedData),
                 owner: ethAccount
               }
-              
-              console.log(dataToSend)
 
               //console.log(JSON.stringify(json))
               sendConfig(dataToSend)

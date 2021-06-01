@@ -1,7 +1,7 @@
 import React from 'react';
 import {makeStyles, styled, Tooltip} from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 interface ButtonCopyProps {
   copyText: string;
@@ -10,11 +10,11 @@ interface ButtonCopyProps {
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   copyIcon: {
-    marginLeft: '5px',
+    marginLeft: '12px',
     cursor: 'pointer',
-    '&:hover':{
+    '&:hover': {
       color: theme.palette.primary.dark,
-     }
+    },
   },
 }));
 

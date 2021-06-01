@@ -20,34 +20,32 @@ type dataProtocolPair = {
 export const GET_PROTOCOL_PAIR_URL = (
   network: EthereumNetwork,
   exchange: EXCHANGE,
-  data: dataProtocolPair,
+  address: string | null | undefined,
+  baseAddress: string | null | undefined,
+  quoteAddress: string | null | undefined,
 ) => {
   switch (exchange) {
     case EXCHANGE.UNISWAP:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${
-        data?.contract || data?.address
-      }`;
+      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${address}`;
     case EXCHANGE.ZEROX:
-      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${data.baseToken.address}-${data.quoteToken.address}`;
+      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${baseAddress}-${quoteAddress}`;
     default:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${
-        data?.contract || data?.address
-      }`;
+      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${address}`;
   }
 };
 
 export const GET_PROTOCOL_TOKEN_URL = (
   network: EthereumNetwork,
-  token: Token,
+  address: string | null | undefined,
   exchange: EXCHANGE,
 ) => {
   switch (exchange) {
     case EXCHANGE.UNISWAP:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${token.address}`;
+      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${address}`;
     case EXCHANGE.ZEROX:
-      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${token.address}`;
+      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${address}`;
     default:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${token.address}`;
+      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${address}`;
   }
 };
 

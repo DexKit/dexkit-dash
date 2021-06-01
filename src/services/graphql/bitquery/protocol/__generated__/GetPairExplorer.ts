@@ -9,12 +9,7 @@ import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 // GraphQL query operation: GetPairExplorer
 // ====================================================
 
-export interface GetPairExplorer_ethereum_data24_timeInterval {
-  __typename: "TimeInterval";
-  day: string;
-}
-
-export interface GetPairExplorer_ethereum_data24_baseCurrency {
+export interface GetPairExplorer_ethereum_dexTrades_baseCurrency {
   __typename: "Currency";
   /**
    * Currency name
@@ -34,7 +29,7 @@ export interface GetPairExplorer_ethereum_data24_baseCurrency {
   decimals: number;
 }
 
-export interface GetPairExplorer_ethereum_data24_quoteCurrency {
+export interface GetPairExplorer_ethereum_dexTrades_quoteCurrency {
   __typename: "Currency";
   /**
    * Currency name
@@ -54,26 +49,22 @@ export interface GetPairExplorer_ethereum_data24_quoteCurrency {
   decimals: number;
 }
 
-export interface GetPairExplorer_ethereum_data24 {
+export interface GetPairExplorer_ethereum_dexTrades {
   __typename: "EthereumDexTrades";
-  /**
-   * Time interval
-   */
-  timeInterval: GetPairExplorer_ethereum_data24_timeInterval | null;
   trades: number | null;
   baseAmount: number | null;
   baseAmountInUsd: number | null;
   /**
    * Base currency
    */
-  baseCurrency: GetPairExplorer_ethereum_data24_baseCurrency | null;
+  baseCurrency: GetPairExplorer_ethereum_dexTrades_baseCurrency | null;
   quotePrice: number | null;
   quoteAmount: number | null;
   quoteAmountInUsd: number | null;
   /**
    * Quote currency
    */
-  quoteCurrency: GetPairExplorer_ethereum_data24_quoteCurrency | null;
+  quoteCurrency: GetPairExplorer_ethereum_dexTrades_quoteCurrency | null;
   tradeAmount: number | null;
   tradeAmountInUsd: number | null;
   maximum_price: number | null;
@@ -87,7 +78,7 @@ export interface GetPairExplorer_ethereum {
   /**
    * Trades on Ethereum DEX Smart Contracts
    */
-  data24: GetPairExplorer_ethereum_data24[] | null;
+  dexTrades: GetPairExplorer_ethereum_dexTrades[] | null;
 }
 
 export interface GetPairExplorer {
@@ -102,4 +93,5 @@ export interface GetPairExplorerVariables {
   exchangeName?: string | null;
   baseAddress: string;
   quoteAddress: string;
+  from?: any | null;
 }

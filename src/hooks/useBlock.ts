@@ -12,8 +12,6 @@ function useBlock({date}: Props) {
   const [block30Days, setBlock30Days] = useState<number>();
   const [blocks, setBlocks] = useState<number[]>();
 
-  
-
   useEffect(() => {
     if (date != null) {
       
@@ -21,7 +19,6 @@ function useBlock({date}: Props) {
   }, [date]);
 
   return {blockCurrent, block07Days, block15Days, block30Days, blocks}
-
 }
 
 export default useBlock;

@@ -173,14 +173,14 @@ const Notifications: React.FC<NotificationsProps> = () => {
               ))}
             </List> 
           </Scrollbar>
-          <Box mt={2}>
+          {/* <Box mt={2}>
             <Button
               className={classes.btnPopover}
               variant='contained'
               color='primary'>
               <IntlMessages id='common.viewAll' />
             </Button>
-          </Box>
+          </Box> */}
         </Box>
       </Popover>
     </>

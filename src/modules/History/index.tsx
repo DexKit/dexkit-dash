@@ -1,25 +1,6 @@
 import React from 'react';
 
 export const historyConfigs = [
-  // {
-  //   routes: [
-  //     {
-  //       path: '/history/order/:type/:address',
-  //       component: React.lazy(() => import('./OrderList')),
-  //     },
-  //   ],
-  // },
-  
-  // {
-  //   routes: [
-  //     {
-  //       path: '/history/transaction/:type/:address',
-  //       component: React.lazy(() => import('./TransactionList')),
-  //     },
-  //   ],
-  // },
-  
-  
   {
     routes: [
       {
@@ -52,6 +33,28 @@ export const historyConfigs = [
       {
         path: '/:networkName/history/order/list/:address',
         component: React.lazy(() => import('./OrderList')),
+      },
+    ],
+  },
+
+  
+
+
+
+  {
+    routes: [
+      {
+        path: '/:networkName/history/trade/list/:address',
+        component: React.lazy(() => import('./TradeHistory')),
+      },
+    ],
+  },
+
+  {
+    routes: [
+      {
+        path: '/:networkName/history/myorders/list/:address',
+        component: React.lazy(() => import('./MyOrdersHistory')),
       },
     ],
   },

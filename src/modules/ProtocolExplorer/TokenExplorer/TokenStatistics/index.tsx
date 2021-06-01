@@ -26,8 +26,8 @@ const TokenStatistics: React.FC<Props> = (props) => {
         <ErrorView message={error.message} />
       ) : (
         <>
-          {data?.ethereum?.transfers?.map((e) => (
-            <Grid container spacing={3}>
+          {data?.ethereum?.transfers?.map((e, index) => (
+            <Grid key={index} container spacing={3}>
               <Grid item xs={12} sm={6}>
                 <Card>
                   <Box

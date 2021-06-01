@@ -51,13 +51,15 @@ let coingeckoIdTokens: CoinListItemCoingecko[];
 
 export async function getTokens(address: string[]): Promise<{ [address: string]:  CoinItemCoinGecko}> {
 
-	if(!coingeckoIdTokens){
+	if(!coingeckoIdTokens) {
 		coingeckoIdTokens = await getAllCoinsId();
 	}
-	const geckoData  = coingeckoIdTokens.filter(c=> c.platforms.ethereum).map(c=> { return {address: c.platforms.ethereum?.toLowerCase() as string, id: c.id }});
+
+	const geckoData = coingeckoIdTokens.filter(c=> c.platforms.ethereum).map(c=> { return {address: c.platforms.ethereum?.toLowerCase() as string, id: c.id }});
+
 	// get only coins with active coingecko id
 	const geckoIds = geckoData.filter(a=> address.map(ad=>ad.toLowerCase()).includes(a.address.toLowerCase())).map(a=> a.id);
-	const concatId = `ethereum,${geckoIds.reduce((p,c)=> `${p},${c}`)}`;
+	const concatId = `ethereum,${geckoIds.reduce((p,c)=> `${p},${c}`,'')}`;
 	const coinsUsd = await getCoinsData(concatId);
 	//const coinsNative = await getCoinsData(concatId, 'eth');
 

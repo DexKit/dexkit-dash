@@ -8,8 +8,7 @@ import AppTableContainer from '../../../../../@crema/core/AppTableContainer';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import {Box, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {grey} from '@material-ui/core/colors';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     overflowY: 'hidden',
     whiteSpace: 'nowrap',
     '@media (max-width: 767px)': {
-      borderTop: `1px solid ${grey[300]}`,
+      borderTop: `1px solid ${theme.palette.divider}`,
       '& > table': {
         marginBottom: 0,
         '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {

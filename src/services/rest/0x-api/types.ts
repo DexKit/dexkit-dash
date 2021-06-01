@@ -51,7 +51,7 @@ export interface QuoteParams {
     orderSide: OrderSide;
     makerAmount: BigNumber;
     // Parameters used to prevalidate quote at final
-    allowedSlippage: BigNumber;
+    allowedSlippage: number;
     ethAccount: string | null | undefined;
     buyTokenPercentage: string | undefined;
     feeRecipient: string | undefined;

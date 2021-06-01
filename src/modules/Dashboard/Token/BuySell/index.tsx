@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
@@ -14,16 +13,18 @@ import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
 import BigNumber from 'bignumber.js';
-import {Token} from 'types/app';
-import {useBalance} from 'hooks/balance/useBalance';
+// import {Token} from 'types/app';
 import {ModalOrderData} from 'types/models/ModalOrderData';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {Token} from 'types/app';
 
 interface Props {
   tokenAddress: string;
+  balances: GetMyBalance_ethereum_address_balances[];
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
-const BuySell: React.FC<Props> = ({tokenAddress}) => {
+const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     muiTabsRoot: {
       position: 'relative',
@@ -58,9 +59,9 @@ const BuySell: React.FC<Props> = ({tokenAddress}) => {
 
   const {chainId, account} = useWeb3();
 
-  // const { data: select0 } = useBalance()
+  const [select0, setSelect0] = useState<Token[]>([]);
 
-  const selects = useTokenList();
+  const select1 = useTokenList();
 
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -75,6 +76,19 @@ const BuySell: React.FC<Props> = ({tokenAddress}) => {
     token0: {address: '', name: '', symbol: '', decimals: 18},
     token1: {address: '', name: '', symbol: '', decimals: 18},
   });
+
+  useEffect(() => {
+    setSelect0(
+      balances.map((e) => {
+        return {
+          name: e.currency?.name || '',
+          symbol: e.currency?.symbol || '',
+          address: e.currency?.address || '',
+          decimals: e.currency?.decimals || 18,
+        } as Token;
+      }),
+    );
+  }, [balances]);
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
     setCurrentTab(newValue);
@@ -123,8 +137,9 @@ const BuySell: React.FC<Props> = ({tokenAddress}) => {
               chainId={chainId}
               account={account}
               tokenAddress={tokenAddress}
-              select0={selects}
-              select1={selects}
+              balances={balances}
+              select0={select0}
+              select1={select1}
               actionButton={handleTradeOpen}
             />
           )}

@@ -4,6 +4,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import BigNumber from 'bignumber.js';
+import {useStyles} from './index.style';
+import {Typography} from '@material-ui/core';
 
 interface Props {
   amount: BigNumber;
@@ -12,7 +14,9 @@ interface Props {
 }
 
 const ConvertStep: React.FC<Props> = (props) => {
-  const { onClose, onNext } = props
+  const {onClose, onNext} = props;
+
+  const classes = useStyles();
 
   const handleAction = () => {
     try {
@@ -20,20 +24,30 @@ const ConvertStep: React.FC<Props> = (props) => {
     } catch (e) {
       onNext(e);
     }
-  }
+  };
 
   return (
     <>
-      <DialogTitle id="form-dialog-title">ETH to WETH</DialogTitle>
-      <DialogContent>
-        
-      </DialogContent>
+      <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
+        <Typography style={{fontWeight: 600}} variant='h5' align='center'>
+          ETH to WETH
+        </Typography>
+      </DialogTitle>
+      <DialogContent dividers></DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">Cancel</Button>
-        <Button onClick={handleAction} color="primary">Convert</Button>
+        <Button color='primary' size='large' onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          variant='contained'
+          color='primary'
+          size='large'
+          onClick={handleAction}>
+          Convert
+        </Button>
       </DialogActions>
     </>
   );
-}
+};
 
-export default ConvertStep
+export default ConvertStep;

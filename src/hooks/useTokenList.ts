@@ -10,7 +10,6 @@ export const useTokenList = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
 
   useEffect(() => {
-    console.log('opa');
     if (networkName === EthereumNetwork.bsc) {
       getBinanceTokens()
         .then(e  => setTokens(e))
@@ -18,7 +17,16 @@ export const useTokenList = () => {
     }
     else {
       getEthereumTokens()
-        .then(e  => setTokens(e))
+        .then(e  => {
+          e.push({
+            address: '',
+            decimals: 18,
+            name: 'Ethereum',
+            symbol: 'ETH'
+          });
+
+          setTokens(e);
+        })
         .catch(e => setTokens([]));
     }
   }, [networkName]);

@@ -1,71 +1,48 @@
 import React, { useState } from 'react';
 import {
   Grid,
-  Typography
+  Typography,
+  Box
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { makeStyles } from '@material-ui/core/styles';
+
 import { ColorInput } from 'shared/components/ColorInput';
 import { ColorResult } from 'react-color';
+import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
 
-const Accordion = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
+const dexkitLogo = require('assets/images/dexkit-logo.png');
 
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
-  },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
 
-export const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-}))(MuiAccordionDetails);
+const useStyles = makeStyles((theme) => ({
+  root: (props:{color: string}) => ({
+    width: '2rem',
+    marginInline: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: props.color
+  }),
+  image:{
+    maxWidth: 230,
+    maxHeight: 230
+  }
+}));
 
 interface ComponentsThemeProps {
   label: string;
   name: string;
   themeName: string;
   className: string;
-  value?: ColorResult;
+  value: ColorResult;
   onChange?: ($e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
+  editable?: boolean;
+  help?: string;
 }
 const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
-  const { name, label, className, onChange, value } = props;
-  const [color, setColor] = useState(value?.hex ?? '#fff');
+  const { name, label, className, onChange, value, editable, help } = props;
+  const [color, setColor] = useState(value.hex);
   const [expanded, setExpanded] = React.useState(false);
+  const classes = useStyles({ color });
   const handleChange = (panel: React.ChangeEvent<any>, expanded: boolean) => {
     setExpanded(expanded);
   };
@@ -73,20 +50,34 @@ const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
     <>
       <Grid item xs={12} md={6} sm={6}>
         <Accordion square expanded={expanded} onChange={handleChange}>
-          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+          <AccordionSummary 
+           aria-controls="panel1d-content" 
+           id="panel1d-header"
+           expandIcon={<ExpandMoreIcon />}
+          >
             <Typography>{label}</Typography>
+            <span className={classes.root}></span>
           </AccordionSummary>
           <AccordionDetails>
-            <ColorInput
-              value={color}
-              onChange={(_color, $event) => {
-                setColor(_color.hex);
-                if (onChange != null) {
-                  onChange($event, _color.hex)
-                }
-              }}
-              key={`${name}.${className}`}
-            />
+            <Box flex={1} display={'flex'}>
+              <ColorInput
+                value={color}
+                onChange={(_color, $event) => {
+                  if(Boolean(editable)){
+                    setColor(_color.hex);
+                  }
+                  if (onChange != null && Boolean(editable)) {
+                    onChange($event, _color.hex)
+                  }
+                }}
+                key={`${name}.${className}`}
+                disabled={!Boolean(editable)}
+              />
+              <Box margin={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
+                <Typography>{ help }</Typography>
+                <img loading="lazy" className={classes.image} src={dexkitLogo} alt="layout property demo"/>
+              </Box>
+            </Box>
           </AccordionDetails>
         </Accordion>
       </Grid>
