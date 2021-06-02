@@ -74,7 +74,7 @@ const TokenPage: React.FC<Props> = (props) => {
       if (data.symbol?.toUpperCase() === 'WETH') {
         setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
       } else {
-        setChartSymbol(`${data.symbol?.toUpperCase()}-WETH`);
+        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
       }
     }
   }, [data]);

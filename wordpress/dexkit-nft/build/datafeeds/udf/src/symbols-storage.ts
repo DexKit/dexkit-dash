@@ -73,6 +73,7 @@ function extractField<Field extends keyof ExchangeDataResponseSymbolData>(data: 
 	const value: ExchangeDataResponse[keyof ExchangeDataResponseSymbolData] = data[field];
 
 	if (Array.isArray(value) && (!valueIsArray || Array.isArray(value[0]))) {
+		//@ts-ignore
 		return value[arrayIndex];
 	}
 

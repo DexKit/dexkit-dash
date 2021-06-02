@@ -14,6 +14,7 @@ import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import TokenInfo from './TokenInfo';
 import TokenStatistics from './TokenStatistics';
+import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
 
 type Params = {
   address: string;
@@ -63,6 +64,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
         />
 
         <GridContainer>
+        <TokenFilterProvider>
           <Grid item xs={12} md={12}>
             <Paper style={{padding: 10}}>
               <TokenSearchByList type={'token'} exchangeName={exchange} />
@@ -86,14 +88,16 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={12}>
-            <TokenOrders
-              networkName={networkName}
-              baseAddress={baseAddress}
-              quoteAddress={null}
-              exchange={exchange}
-              type={'token'}
-            />
+      
+              <TokenOrders
+                networkName={networkName}
+                baseAddress={baseAddress}
+                quoteAddress={null}
+                exchange={exchange}
+                type={'token'}
+              /> 
           </Grid>
+          </TokenFilterProvider>
         </GridContainer>
       </Box>
     </>

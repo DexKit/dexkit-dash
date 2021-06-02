@@ -11,6 +11,7 @@ import PairExplorer from './PairExplorer';
 import PageTitle from 'shared/components/PageTitle';
 import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 import { truncateAddress } from 'utils';
+import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
 
 type Params = {
   address: string;
@@ -52,7 +53,7 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
           title={{name: 'Pair Explorer'}}
           subtitle={{name: truncateAddress(address), hasCopy: address}}
         />
-
+        <TokenFilterProvider>
         {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP ? (
           <PairExplorerAMM
             address={address}
@@ -66,6 +67,7 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
             networkName={networkName}
           />
         )}
+        </TokenFilterProvider>
       </Box>
 
       <InfoView />

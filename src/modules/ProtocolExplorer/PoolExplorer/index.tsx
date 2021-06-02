@@ -13,6 +13,7 @@ import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import InfoAMM from '../Common/InfoAMM';
 import AMMPoolHistory from '../Common/AMMPoolHistory';
+import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
 
 // import {TokenSearch} from 'shared/components/TokenSearch';
 // import {useAMMPoolHistory} from 'hooks/useAMMPoolHistory';
@@ -58,6 +59,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
       />
 
       <GridContainer>
+      <TokenFilterProvider>
         <Grid item xs={12} md={7}>
           {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
             data && (
@@ -73,6 +75,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
         </Grid>
 
         <Grid item xs={12} md={12}>
+      
           {data && <AMMPoolHistory
             networkName={networkName}
             address={address}
@@ -80,7 +83,9 @@ const PoolExplorer: React.FC<Props> = (props) => {
             baseCurrency={data.baseCurrency}
             quoteCurrency={data.quoteCurrency}
           />}
+         
         </Grid>
+        </TokenFilterProvider>
       </GridContainer>
     </Box>
   );

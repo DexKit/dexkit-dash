@@ -65,7 +65,7 @@ const PairExplorer = (props: Props) => {
               data && (
                 <Grid item xs={12} md={12} style={{height: 450}}>
                   <TVChartContainer
-                    symbol={`${data.baseCurrency?.symbol}-${data.quoteCurrency?.symbol}`}
+                    symbol={`${data.baseCurrency?.symbol}-USD`}
                     chainId={1}
                     darkMode={isDark}
                   />

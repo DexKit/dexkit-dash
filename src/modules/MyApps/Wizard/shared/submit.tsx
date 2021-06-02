@@ -13,7 +13,7 @@ import { Web3Wrapper } from '@0x/web3-wrapper';
 
 import { sendConfig } from 'services/my-apps';
 import { NotificationType } from 'services/notification';
-import { ConfigFile, ConfigFileMarketplace, WhitelabelTypes } from 'types/myApps';
+import { ConfigFile, WhitelabelTypes } from 'types/myApps';
 import { onAddNotification } from 'redux/actions';
 
 interface SubmitProps {
