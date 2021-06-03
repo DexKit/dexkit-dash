@@ -52,6 +52,21 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             valueInUsd: 0,
           },
         ]);
+      }else{
+        setTokens([
+          {
+            __typename: 'EthereumBalance',
+            currency: {
+              __typename: 'Currency',
+              address: only.address,
+              decimals: 18,
+              name: only.name || '',
+              symbol: only.symbol || '',
+            },
+            value: dataFn[0].value ?? 0,
+            valueInUsd: dataFn[0].valueInUsd ?? 0,
+          },
+        ]);
       }
     } else {
       setTokens(balances);

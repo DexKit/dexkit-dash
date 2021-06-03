@@ -15,7 +15,7 @@ import SelectToken from './SelectToken';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {unitsInTokenAmount} from 'utils';
+import {isNativeCoin, unitsInTokenAmount} from 'utils';
 import {Web3State} from 'types/blockchain';
 import { useNetwork } from 'hooks/useNetwork';
 
@@ -80,6 +80,12 @@ const LimitForm: React.FC<Props> = (props) => {
         fontSize: 18,
       },
     },
+    amountTotal: {
+      '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'underline'
+      }
+    },
     inputText: {
       fontFamily: Fonts.MEDIUM,
       width: '100%',
@@ -106,6 +112,24 @@ const LimitForm: React.FC<Props> = (props) => {
     setAmountFrom(0);
     setAmountTo(0);
   }
+  const setMax = () => {
+    if(tokenBalance && tokenBalance.value){
+        // If is native coin we not allow user to max all of it, and leave some for gas
+          if(isNativeCoin(tokenBalance.currency?.symbol ?? '', chainId ?? 1)){
+            if(tokenBalance?.value > 0.03){
+              setAmountFrom(tokenBalance?.value - 0.03);
+              setAmountTo((tokenBalance?.value - 0.03) * price);
+        
+            }
+          }else{
+            setAmountFrom(tokenBalance?.value ?? 0)
+            setAmountTo(tokenBalance?.value  * price);
+         } 
+     }
+  }
+
+
+
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
@@ -190,9 +214,14 @@ const LimitForm: React.FC<Props> = (props) => {
                 color='grey.400'
                 textAlign='right'
                 className={classes.textRes}>
+                  <span 
+                  onClick={setMax}
+                  className={classes.amountTotal}
+                  >
                 {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
                   tokenBalance?.value?.toFixed(4) || 0
                 } ${tokenBalance?.currency?.symbol || ''})`}
+                </span>
               </Box>
             </Grid> 
             {errorMessage && (
@@ -211,6 +240,7 @@ const LimitForm: React.FC<Props> = (props) => {
               <TextField
                 variant='outlined'
                 fullWidth
+                value={amountFrom}
                 label={<IntlMessages id='app.youSend' />}
                 onChange={handleInputChange}
               />
@@ -329,7 +359,7 @@ const LimitForm: React.FC<Props> = (props) => {
         color='primary'
         onClick={handleTrade}
         disabled={
-          (tokenBalance?.value || 0) * 0.7 <= amountFrom || amountTo === 0
+          (tokenBalance?.value || 0)  < amountFrom || amountTo === 0
         }>
         <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
         <Box fontSize='large' fontWeight='bold'>

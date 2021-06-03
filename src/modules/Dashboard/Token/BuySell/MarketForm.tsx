@@ -15,9 +15,10 @@ import SelectToken from './SelectToken';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {unitsInTokenAmount} from 'utils';
+import {isNativeCoin, unitsInTokenAmount} from 'utils';
 import {Web3State} from 'types/blockchain';
 import { useNetwork } from 'hooks/useNetwork';
+import { useChainId } from 'hooks/useChainId';
 
 interface Props {
   account: string | undefined;
@@ -67,23 +68,38 @@ const MarketForm: React.FC<Props> = (props) => {
     },
     btnPrimary: {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: 'text.primary',
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.dark,
-        color: 'white',
+        color: 'text.primary',
       },
     },
     textRes: {
       marginBottom: 0,
       fontSize: 13,
+
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
-      },
+      }
+    },
+
+    amountTotal: {
+      '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'underline'
+      }
     },
     inputText: {
       fontFamily: Fonts.MEDIUM,
       width: '100%',
     },
+    toText: {
+      '&:disabled': {
+        color: 'text.primary'
+      }
+    }
+
+
   }));
 
   const classes = useStyles();
@@ -102,21 +118,32 @@ const MarketForm: React.FC<Props> = (props) => {
     setAmountFrom(0);
     setAmountTo(0);
   }
+  const setMax = () => {
+    if(tokenBalance && tokenBalance.value){
+        // If is native coin we not allow user to max all of it, and leave some for gas
+          if(isNativeCoin(tokenBalance.currency?.symbol ?? '', chainId ?? 1)){
+            if(tokenBalance?.value > 0.03){
+              setAmountFrom(tokenBalance?.value - 0.03);
+              onFetch(tokenBalance?.value - 0.03)
+            }
+          }else{
 
+            setAmountFrom(tokenBalance?.value ?? 0)
+            onFetch(tokenBalance?.value ?? 0)
+         } 
+     }
+  }
 
   useEffect(() => {
     setTokenBalance(balances.find((e) => e.currency?.symbol === tokenFrom?.symbol));
   }, [tokenFrom])
 
 
-  const onFetch = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const value = Number(e.target.value);
+  const onFetch = (newValue: number) => {
+    const value = Number(newValue);
 
     if (tokenFrom && tokenTo && chainId) {
       setAmountFrom(value);
-
-      console.log(tokenFrom);
-      console.log(tokenTo);
 
       fetchQuote({
         chainId: chainId,
@@ -142,6 +169,11 @@ const MarketForm: React.FC<Props> = (props) => {
           console.log(e);
         });
     }
+  };
+
+  const onChangeFrom = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    onFetch(value);
   };
 
   const handleTrade = () => {
@@ -172,7 +204,7 @@ const MarketForm: React.FC<Props> = (props) => {
     disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
-  }
+  } 
 
 
   return (
@@ -185,10 +217,15 @@ const MarketForm: React.FC<Props> = (props) => {
                 mb={2}
                 color='grey.400'
                 textAlign='right'
+               
                 className={classes.textRes}>
+                  <span  
+                    onClick={setMax}
+                    className={classes.amountTotal}>
                 {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
                   tokenBalance?.value?.toFixed(4) || 0
                 } ${tokenBalance?.currency?.symbol || ''})`}
+                </span>
               </Box>
             </Grid> 
             {errorMessage && (
@@ -207,8 +244,9 @@ const MarketForm: React.FC<Props> = (props) => {
               <TextField
                 variant='outlined'
                 fullWidth
+                value={amountFrom}
                 label={<IntlMessages id='app.youSend' />}
-                onChange={(e) => onFetch(e)}
+                onChange={(e) => onChangeFrom(e)}
               />
             </Grid>
 
@@ -249,6 +287,7 @@ const MarketForm: React.FC<Props> = (props) => {
               md={6}>
               <TextField
                 variant='outlined'
+                className={classes.toText}
                 fullWidth
                 label={<IntlMessages id='app.youReceive' />}
                 value={amountTo}
@@ -283,7 +322,7 @@ const MarketForm: React.FC<Props> = (props) => {
         color='primary'
         onClick={handleTrade}
         disabled={
-          (tokenBalance?.value || 0) * 0.7 <= amountFrom || amountTo === 0
+          (tokenBalance?.value || 0) < amountFrom || amountTo === 0
         }>
         <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
         <Box fontSize='large' fontWeight='bold'>

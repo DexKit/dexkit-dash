@@ -206,13 +206,14 @@ export const BITQUERY_TRANSACTION_LIST = gql`
 `;
 
 export const BITQUERY_ORDER_LIST = gql`
-  query GetOrderList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetOrderList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $baseCurrency: String) {
     ethereum(network: $network) {
       maker: dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
         maker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
       ) {
         block {
           timestamp {
@@ -260,6 +261,7 @@ export const BITQUERY_ORDER_LIST = gql`
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
         taker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
       ) {
         block {
           timestamp {
@@ -309,6 +311,7 @@ export const BITQUERY_ORDER_LIST = gql`
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
         maker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
       ) {
         count
       }
@@ -316,6 +319,7 @@ export const BITQUERY_ORDER_LIST = gql`
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
         taker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
       ) {
         count
       }

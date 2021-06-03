@@ -352,4 +352,5 @@ export interface GetOrderListVariables {
   offset: number;
   from?: any | null;
   till?: any | null;
+  baseCurrency?: string | null;
 }

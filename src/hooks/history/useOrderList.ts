@@ -11,9 +11,10 @@ import { IOrderList } from "types/app";
 
 interface Props {
   address: string;
+  baseCurrency?: string;
 }
 
-export const useOrderList = ({address}: Props) =>{
+export const useOrderList = ({address, baseCurrency}: Props) =>{
 
   const { currentChainId } = useChainId();
 
@@ -25,6 +26,7 @@ export const useOrderList = ({address}: Props) =>{
   const { loading, error, data: dataFn } = useQuery<GetOrderList, GetOrderListVariables>(BITQUERY_ORDER_LIST, {
     variables: {
       network: GET_NETWORK_NAME(currentChainId),
+      baseCurrency,
       // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
       address: address,
       limit: Math.floor(rowsPerPage/2),

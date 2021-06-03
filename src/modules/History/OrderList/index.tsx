@@ -11,6 +11,7 @@ import LoadingTable from 'modules/Common/LoadingTable';
 
 type Params = {
   address: string;
+  token: string;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -19,8 +20,8 @@ const OrderList: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
-  const {address} = params;
-
+  const {address, token} = params;
+  console.log(token);
   const classes = useStyles();
 
   const networkName = useNetwork();
@@ -34,7 +35,7 @@ const OrderList: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useOrderList({address});
+  } = useOrderList({address, baseCurrency: token});
 
   console.log('error', error);
   console.log('data', data);
@@ -60,7 +61,7 @@ const OrderList: React.FC<Props> = (props) => {
                 alignItems='center'
                 style={{width: '100%'}}>
                 <Box>
-                  <Typography variant='h5'>Order List</Typography>
+                  <Typography variant='h5'>Trade History</Typography>
                 </Box>
                 {/* <Select
                     className={classes.selectBox}

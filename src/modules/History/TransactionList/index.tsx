@@ -43,7 +43,7 @@ const TransactionList: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url:'/', name: 'Dashboard'},
-            {url:'/dashboard/wallet', name: 'Wallet'}
+            {url: '/ethereum/dashboard/wallet', name: 'Wallet'}
           ],
           active: {name: 'Transaction History'}
         }}

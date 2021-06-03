@@ -78,7 +78,7 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [data]);
 
   const infoMyOrders = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?makerAddress=${account}`,
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?trader=${account}`,
     [account],
   );
 
@@ -154,7 +154,7 @@ const TokenPage: React.FC<Props> = (props) => {
                   <Link
                     className={classes.btnSecondary}
                     component={RouterLink}
-                    to={`/${networkName}/history/trade/list/${address}`}
+                    to={`/${networkName}/history/order/list/${account}/token/${address}`}
                     style={{textDecoration: 'none'}}>
                     <InfoCard
                       state={{

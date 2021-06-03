@@ -118,7 +118,7 @@ const SelectToken: React.FC<Props> = ({
               setInputValue(newInputValue);
             }}
             getOptionLabel={(e) =>
-              `${e.symbol} - ${truncateAddress(e.address)}`
+              `${e.symbol}`
             }
             renderOption={(option) => (
               <SelectOption>
@@ -128,10 +128,10 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <SelectBox>
-                <TokenLogo token0={selected.address} />
+                <TokenLogo token0={selected.address} />          
                 <TextField
                   {...params}
-                  placeholder={'Search by name, symbol or paste address'}
+                  placeholder={selected ? selected.symbol : 'Search by name, symbol or paste address'}
                   variant='outlined'
                   className={classes.textField}
                   // onChange={($e) => search($e.target.value)}

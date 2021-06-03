@@ -1,5 +1,6 @@
 import React from 'react';
 import {GridContainer} from '@crema';
+import {Link as RouterLink} from 'react-router-dom';
 import {
   Breadcrumbs,
   Grid,
@@ -59,7 +60,7 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon}) => {
         {breadcrumbs && (
           <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
             {breadcrumbs.history.map((e) => (
-              <Link key={e.name} color='inherit' href={e.url}>
+              <Link key={e.name} color='inherit' to={e.url} component={RouterLink}>
                 {e.name}
                 {e.hasCopy !== undefined && (
                   <ButtonCopy

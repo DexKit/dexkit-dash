@@ -3,7 +3,6 @@ import {isWeth} from './knownTokens';
 import {ChainId} from 'types/blockchain';
 import Web3 from 'web3';
 import {GET_DEFAULT_QUOTE, GET_DEFAULT_BASE} from 'shared/constants/Blockchain';
-import {TokenInfo} from 'types/myApps';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { Token } from 'types/app';
 
@@ -49,10 +48,12 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
     case ChainId.Goerli:
     case ChainId.Rinkeby:
     case ChainId.Ganache:
-      return symbol.toLowerCase() === 'eth';
+      const isETH = symbol.toLowerCase() === 'eth'
+      return isETH;
     case ChainId.BinanceTest:
     case ChainId.Binance:
-      return symbol.toLowerCase() === 'bnb';
+      const isBNB = symbol.toLowerCase() === 'bnb'
+      return isBNB;
   }
 };
 

@@ -102,11 +102,11 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url: '/', name: 'Dashboard'},
-            {url: '/dashboard/token', name: 'Token'},
+            {url: '/ethereum/dashboard/token', name: 'Token'},
           ],
-          active: {name: 'My Order History'},
+          active: {name: 'My Active Orders'},
         }}
-        title={{name: 'My Order History'}}
+        title={{name: 'My Active Orders'}}
       />
 
       <GridContainer>
