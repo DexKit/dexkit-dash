@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useWeb3 } from "hooks/useWeb3";
-import { GetMyBalance, GetMyBalanceVariables, GetMyBalance_ethereum_address_balances } from "services/graphql/bitquery/balance/__generated__/GetMyBalance";
-import { BITQUERY_BALANCE_BLOCK, BITQUERY_BALANCE_HISTORY, BITQUERY_BALANCE_INFO } from "services/graphql/bitquery/balance/gql";
+
+import { BITQUERY_BALANCE_BLOCK, BITQUERY_BALANCE_HISTORY } from "services/graphql/bitquery/balance/gql";
 import { useNetwork } from "hooks/useNetwork";
-import { getTokens } from "services/rest/coingecko";
 import { client } from "services/graphql";
 import { GetBalanceBlock, GetBalanceBlockVariables } from "services/graphql/bitquery/balance/__generated__/GetBalanceBlock";
 import { GetMyBalanceHistory, GetMyBalanceHistoryVariables } from "services/graphql/bitquery/balance/__generated__/GetMyBalanceHistory";
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import { ChartTick } from "types/app";
 
 export const useBalanceChart = (balances: GetMyBalance_ethereum_address_balances[]) => {
@@ -15,7 +15,7 @@ export const useBalanceChart = (balances: GetMyBalance_ethereum_address_balances
 
   const [block, setBlock] = useState<number>();
 
-  const [selectDay, setSelectDay] = useState(90);
+  const [selectDay, setSelectDay] = useState(7);
   const [selectToken, setSelectToken] = useState<string>('ETH');
 
   const [allData, setAllData] = useState<{ [idx: string]: ChartTick[] }>({});

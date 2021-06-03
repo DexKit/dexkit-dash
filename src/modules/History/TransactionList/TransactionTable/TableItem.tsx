@@ -1,6 +1,7 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import {Chip, Link, makeStyles} from '@material-ui/core';
+import { Chip, Link, makeStyles} from '@material-ui/core';
+import {Link as RouterLink} from 'react-router-dom';
 
 import TableRow from '@material-ui/core/TableRow';
 
@@ -90,8 +91,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <Link
-          href={`/${networkName}/history/transaction/view/${row.transaction?.hash}`}>
+        <Link to={`/${networkName}/history/transaction/view/${row.transaction?.hash}`} component={RouterLink}>
           <SearchIcon />
         </Link>
       </TableCell>

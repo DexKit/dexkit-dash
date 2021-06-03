@@ -34,16 +34,22 @@ import {Skeleton} from '@material-ui/lab';
 interface Props {}
 
 const Wallet: React.FC<Props> = (props) => {
-  const { messages } = useIntl();
-  const { account } = useWeb3();
-  const { defiBalance } = useDefi(account);
-  const { loading, error, data } = useBalance();
-  const { loading: loadingChart, error: errorChart, data: dataChart, handleSelectDay, handleSelectToken } = useBalanceChart(data);
+  const {messages} = useIntl();
+  const {account} = useWeb3();
+  const {defiBalance} = useDefi(account);
+  const {loading, error, data} = useBalance();
+  const {
+    loading: loadingChart,
+    error: errorChart,
+    data: dataChart,
+    handleSelectDay,
+    handleSelectToken,
+  } = useBalanceChart(data);
 
   const networkName = useNetwork();
 
   const classes = useStyles();
-  
+
   const {theme} = useContext<AppContextPropsType>(AppContext);
 
   return (
@@ -148,7 +154,7 @@ const Wallet: React.FC<Props> = (props) => {
                         '90 days',
                         '180 days',
                       ]}
-                      defaultValue={'30 days'}
+                      defaultValue={'7 days'}
                       onChange={(e) => {
                         handleSelectDay(Number(e.split(' ')[0]));
                       }}
@@ -160,7 +166,7 @@ const Wallet: React.FC<Props> = (props) => {
                   <Divider style={{marginTop: 5}} />
 
                   <Box>
-                    <Grid item xs={12} md={12} xl={12} style={{ padding: 10 }}>
+                    <Grid item xs={12} md={12} xl={12} style={{padding: 10}}>
                       <AssetChart data={dataChart} />
                     </Grid>
                   </Box>
