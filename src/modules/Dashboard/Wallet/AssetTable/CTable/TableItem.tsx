@@ -108,7 +108,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           variant='contained'
           color='primary'
           onClick={() => {
-            history.push('/dashboard/token/' + data.currency?.address);
+            history.push('/ethereum/dashboard/token/' + data.currency?.address);
           }}>
           Trade
         </Button>

@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
 import {Grid, Box, Link} from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
@@ -80,8 +81,8 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [data]);
 
   const infoMyOrders = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`,
-    [address],
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?makerAddress=${account}`,
+    [account],
   );
 
   const infoTradeHistory = useFetch(
@@ -131,7 +132,8 @@ const TokenPage: React.FC<Props> = (props) => {
                 <Box className='card-hover'>
                   <Link
                     className={classes.btnPrimary}
-                    href={`/${networkName}/history/myorders/list/${address}`}
+                    component={RouterLink}
+                    to={`/${networkName}/history/myorders/list/${address}`}
                     style={{textDecoration: 'none'}}>
                     <InfoCard
                       state={{
@@ -149,7 +151,8 @@ const TokenPage: React.FC<Props> = (props) => {
                 <Box className='card-hover'>
                   <Link
                     className={classes.btnSecondary}
-                    href={`/${networkName}/history/trade/list/${address}`}
+                    component={RouterLink}
+                    to={`/${networkName}/history/trade/list/${address}`}
                     style={{textDecoration: 'none'}}>
                     <InfoCard
                       state={{

@@ -112,7 +112,7 @@ const Wallet: React.FC<Props> = (props) => {
 
                     <AppSelect
                       menus={['7 days', '15 days', '30 days', '60 days', '90 days', '180 days']}
-                      defaultValue={'30 days'}
+                      defaultValue={'7 days'}
                       onChange={(e) => { handleSelectDay(Number(e.split(' ')[0])) }}
                     />
 
