@@ -5,7 +5,6 @@ import { BITQUERY_BALANCE_INFO } from "services/graphql/bitquery/balance/gql";
 import { useNetwork } from "hooks/useNetwork";
 import { getTokens } from "services/rest/coingecko";
 import { client } from "services/graphql";
-import { TooFewBrokerAssetsProvidedError } from "@0x/utils/lib/src/revert_errors/broker/revert_errors";
 
 export const useBalance = () => {
   const { account } = useWeb3();

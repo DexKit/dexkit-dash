@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { GridContainer } from '@crema';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -18,15 +19,20 @@ import {
   TokenFeeProgramConfig, 
   AggregatorTheme
 } from 'types/myApps';
+import { ChainId } from 'types/blockchain';
 
-import TokensForm from './token';
+import { WizardProps } from '../shared';
+
+import { SubmitComponent } from '../shared/Buttons/submit';
+import { NavigationButton } from '../shared/Buttons/navigationButton';
+
+import TokensForm from '../shared/Token/tokensForm';
 import GeneralForm from './general';
 import ThemeForm from './theme';
-import { GridContainer } from '@crema';
-import { SubmitComponent } from '../shared/submit';
-import { NavigationButton } from '../shared/navigationButton';
 import LinksForm from './links';
 import WalletsForm from './wallets';
+import { useWeb3 } from 'hooks/useWeb3';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,14 +62,14 @@ export enum WizardData {
   CONTACT = 'links',
   WALLET = 'wallets',
 }
-export interface WizardProps {
-  config: ConfigFileAggregator;
-  //method to change form values
-  changeIssuerForm: (key: WizardData, value: any) => void;
-  validator: (isValid: boolean) => void;
-  isValid: boolean;
-  editable?: boolean
-}
+// export interface WizardProps {
+//   config: ConfigFileAggregator;
+//   //method to change form values
+//   changeIssuerForm: (key: WizardData, value: any) => void;
+//   validator: (isValid: boolean) => void;
+//   isValid: boolean;
+//   editable?: boolean
+// }
 
 function getSteps() {
   return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
@@ -89,7 +95,7 @@ const initConfig: GeneralConfigAggregator = {
   default_token_address_bsc: '',
 };
 
-function getStepContent(step: number, label: string, wizardProps: WizardProps) {
+function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileAggregator, WizardData>, chainId: ChainId) {
   const {config, changeIssuerForm, validator, isValid, editable} = wizardProps;
   switch (step) {
     case 0:
@@ -121,12 +127,13 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps) {
         <TokensForm 
           title={label} 
           // data={ config.token_fee_program ?? []} 
-          data={[]} 
+          // data={[]} 
           changeIssuerForm={changeIssuerForm}
           config={config}
           validator={validator}
           isValid={isValid}
           editable={editable}
+          chainId={chainId}
         />
       );
     }
@@ -189,6 +196,8 @@ export default function VerticalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
+  const { chainId } = useWeb3();
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -207,7 +216,7 @@ export default function VerticalLinearStepper() {
 
   const updateData = 
     (
-      key: WizardData,
+      key: WizardData | "editable",
       value: GeneralConfigAggregator | TokenFeeProgramConfig[] | AggregatorLinks | AggregatorWallet
     ) => {
       const dataType = Object.values(WizardData).find( e => e === key);
@@ -280,7 +289,8 @@ export default function VerticalLinearStepper() {
                 getStepContent(
                   activeStep, 
                   label, 
-                  { config: (data ?? {}) as ConfigFileAggregator, changeIssuerForm: updateData, validator, isValid, editable }
+                  { config: (data ?? {}) as ConfigFileAggregator, changeIssuerForm: updateData, validator, isValid, editable },
+                  Number(chainId ?? ChainId.Mainnet)
                 )
               }
               <NavigationButton

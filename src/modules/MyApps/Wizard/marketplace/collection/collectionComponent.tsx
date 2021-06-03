@@ -12,7 +12,9 @@ import { isAddress } from '@ethersproject/address';
 import { getCollectionInfo } from 'services/rest/opensea';
 import { urlValidator } from 'utils/text';
 import { CustomLabel } from 'shared/components/Wizard/Label';
-import { error } from '../../shared';
+import { error, getHelpText, fillError } from '../../shared';
+import { HELP_TEXT_COLLECTIONS } from '../helpText';
+import { InfoComponent } from '../../shared/Buttons/infoComponent';
 
 interface CollectionComponentProps {
   index: number;
@@ -57,10 +59,22 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
   const [valid, setValid] = useState<boolean>(startValidation);
   const [searchfailed, setSearchFailed] = useState<string>();
   const addressInput = React.useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // const _error = fillError(errors, undefined);
+    // console.log('error', _error);
+    const _valid = nameValidator(name) && addressValidator(address) && _urlValidator(imageUrl)
+      && slugValidator(slug) && descriptionValidator(description);
+    // setErrors(_error);
+    setValid(_valid);
+    validator(_valid);
+  },[]);
 
   useEffect(() => {
     setSearchFailed(undefined);
     if (isAddress(address)) {
+      setLoading(true);
       getCollectionInfo(address)
         .then(asset => {
           const collection = asset?.collection;
@@ -104,7 +118,8 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
         })
         .catch(e => {
           setSearchFailed('Collection search failed!');
-        });
+        })
+        .finally(() => setLoading(false));
     }
   }, [address]);
   useEffect(() => {
@@ -115,8 +130,16 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
   }, [errors]);
 
   useEffect(() => {
-    validator(valid);
+    if(errors != null){
+      validator(valid);
+    }
   }, [valid, validator]);
+
+  useEffect(() => {
+    if(searchfailed != null){
+      setErrors({ ...errors, address: searchfailed});
+    }
+  }, [searchfailed])
 
   return (
     <>
@@ -162,9 +185,10 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
           helperText={!valid ? errors?.address : undefined}
           error={errors?.address != null}
           fullWidth
-          label={<CustomLabel text="address" required={true} />}
+          label={<CustomLabel text="Address" required={true} />}
           variant="outlined"
-          disabled={!Boolean(editable)}
+          disabled={Boolean(editable) ? loading : true}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_COLLECTIONS, 'address', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -191,9 +215,10 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
           }
           helperText={!valid ? errors?.name : undefined}
           error={errors?.name != null}
-          fullWidth label={`name`}
+          fullWidth label={`Name`}
           variant="outlined"
           disabled
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_COLLECTIONS, 'name', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -225,9 +250,10 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
           helperText={!valid ? errors?.imageUrl : undefined}
           error={errors?.imageUrl != null}
           fullWidth
-          label="image"
+          label="Image"
           variant="outlined"
           disabled
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_COLLECTIONS, 'imageUrl', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -258,9 +284,10 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
           helperText={!valid ? errors?.slug : undefined}
           error={errors?.slug != null}
           fullWidth
-          label="slug"
+          label="Slug"
           disabled
           variant="outlined"
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_COLLECTIONS, 'slug', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={12}>
@@ -292,11 +319,14 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
           error={errors?.description != null}
           fullWidth
           disabled
-          label="description"
+          label="Description"
           variant="outlined"
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_COLLECTIONS, 'description', 0)}/>)}}
         />
       </Grid>
-      { searchfailed && <MessageView variant='warning' message={searchfailed} />}
+      <Grid item xs={12} md={12}>
+        { searchfailed && <MessageView variant='warning' message={searchfailed} />}
+      </Grid>
     </>
   )
 }

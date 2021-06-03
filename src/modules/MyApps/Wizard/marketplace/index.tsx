@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+
+import { Box, Breadcrumbs, Grid, IconButton, Link } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { GridContainer } from '@crema';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -9,10 +13,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
-import GeneralForm from './generalForm';
-import ThemeForm from '../shared/themeForm';
-import CollectionsForm from './collection/collectionsForm';
-
 import { 
   Collection, 
   ConfigFileMarketplace, 
@@ -20,17 +20,22 @@ import {
   SocialNetworks, 
   TokenMetaData
 } from 'types/myApps';
-import { GridContainer } from '@crema';
-import { Box, Breadcrumbs, Grid, IconButton, Link } from '@material-ui/core';
-
-import { RouteComponentProps } from 'react-router-dom';
- import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
-import { useWeb3 } from 'hooks/useWeb3';
-import { SubmitComponent } from '../shared/submit';
 import { ChainId } from 'types/blockchain';
-import { NavigationButton } from '../shared/navigationButton';
+
+import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
+import { useWeb3 } from 'hooks/useWeb3';
+import { SubmitComponent } from '../shared/Buttons/submit';
+import { NavigationButton } from '../shared/Buttons/navigationButton';
 import LoadingView from 'modules/Common/LoadingView';
-import TokensForm from './token/tokensForm';
+
+import { WizardProps } from '../shared';
+
+import GeneralForm from './generalForm';
+import ThemeForm from '../shared/Theme/themeForm';
+import CollectionsForm from './collection/collectionsForm';
+import TokensForm from '../shared/Token/tokensForm';
+
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,21 +64,21 @@ export enum WizardData {
   TOKENS = 'tokens'
 }
 
-export interface WizardProps {
-  form: ConfigFileMarketplace;
-  //method to change form values
-  changeIssuerForm: (key: keyof ConfigFileMarketplace | 'editable', value: any) => void;
-  validator: (isValid: boolean) => void;
-  isValid: boolean;
-  editable?: boolean
-}
+// export interface WizardProps {
+//   form: ConfigFileMarketplace;
+//   //method to change form values
+//   changeIssuerForm: (key: keyof ConfigFileMarketplace | 'editable', value: any) => void;
+//   validator: (isValid: boolean) => void;
+//   isValid: boolean;
+//   editable?: boolean
+// }
 
 function getSteps() {
   return ['General',  'Theme', 'Collections', 'Tokens and Deploy'];
 }
 
-function getStepContent(step: number, label: string, wizardProps: WizardProps, chainId: ChainId) {
-  const {form, changeIssuerForm, validator, isValid, editable } = wizardProps;
+function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileMarketplace, keyof ConfigFileMarketplace>, chainId: ChainId) {
+  const {config: form, changeIssuerForm, validator, isValid, editable } = wizardProps;
   const k = Object.values(WizardData)[step];
   const data = form[k];
   switch (step) {
@@ -87,7 +92,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
           fields={fields} 
           changeIssuerForm={changeIssuerForm}
           validator={validator}
-          form={form}
+          config={form}
           isValid={isValid}
           editable={editable}
         />
@@ -111,7 +116,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
         collections={ collections ?? []}
         changeIssuerForm={changeIssuerForm}
         validator={validator} 
-        form={form}
+        config={form}
         isValid={isValid}
         editable={editable}
         />
@@ -126,7 +131,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
           tokens={ tokens ?? []}
           changeIssuerForm={changeIssuerForm}
           validator={validator}
-          form={form}
+          config={form}
           isValid={isValid}
           chainId={chainId}
           editable={editable}
@@ -156,9 +161,15 @@ const initSocial = {
 } as SocialNetworks;
 
 const initConfig = {
-  // collections: [],
-  // tokens: [],
+  collections: [],
+  tokens: [],
+
   general: {
+    domain: undefined,
+    feePercentage: undefined,
+    feeRecipient: undefined,
+    icon: undefined,
+    title: undefined,
     social: initSocial
   },
   theme: undefined
@@ -279,8 +290,8 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
                 getStepContent(
                   activeStep, 
                   label, 
-                  { form , changeIssuerForm: updateForm, validator, isValid, editable }, 
-                  (chainId ?? ChainId.Mainnet)
+                  { config: form , changeIssuerForm: updateForm, validator, isValid, editable }, 
+                  (Number(chainId ?? ChainId.Mainnet))
                 ) : 
                 ( 
                   <Box m="auto" padding="5rem" textAlign="center">

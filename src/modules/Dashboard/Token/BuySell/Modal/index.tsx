@@ -17,7 +17,7 @@ import ApproveStep from './ApproveStep';
 import {useBalance} from 'hooks/balance/useBalance';
 import BigNumber from 'bignumber.js';
 import ConvertStep from './ConvertStep';
-import OrderStep from './OrderStep';
+import MarketStep from './MarketStep';
 import {Box} from '@material-ui/core';
 import DoneStep from './DoneStep';
 
@@ -61,11 +61,11 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       setLoading(true);
 
       if (isMarket) {
-        stepsFn = [Steps.APPROVE, Steps.ORDER];
+        stepsFn = [Steps.APPROVE, Steps.MARKET];
         setSteps(stepsFn);
         setCurrentStep(stepsFn[0]);
       } else {
-        stepsFn = [Steps.APPROVE, Steps.CONVERT, Steps.ORDER];
+        stepsFn = [Steps.APPROVE, Steps.LIMIT];
         setSteps(stepsFn);
         setCurrentStep(stepsFn[0]);
       }
@@ -123,8 +123,8 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
           {/* {currentStep === Steps.CONVERT && <ConvertStep amount={amount} onClose={handleClose} onNext={handleNext}/>} */}
 
-          {currentStep === Steps.ORDER && (
-            <OrderStep
+          {currentStep === Steps.MARKET && (
+            <MarketStep
               step={currentStep}
               token0={token0}
               token1={token1}

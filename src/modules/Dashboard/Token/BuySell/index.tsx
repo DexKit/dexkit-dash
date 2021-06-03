@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, Fade, makeStyles} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {Fonts} from '../../../../shared/constants/AppEnums';
@@ -17,6 +17,8 @@ import BigNumber from 'bignumber.js';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {Token} from 'types/app';
+import LimitForm from './LimitForm';
+import { history } from 'redux/store';
 
 interface Props {
   tokenAddress: string;
@@ -63,6 +65,10 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
   const select1 = useTokenList();
 
+  const [tokenFrom, setTokenFrom] = useState<Token>()
+
+  const [tokenTo, setTokenTo] = useState<Token>()
+
   const [currentTab, setCurrentTab] = useState(0);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -78,17 +84,57 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
   });
 
   useEffect(() => {
-    setSelect0(
-      balances.map((e) => {
+    if (select1 && balances){
+      const balancesFn = balances.map((e) => {
         return {
           name: e.currency?.name || '',
           symbol: e.currency?.symbol || '',
           address: e.currency?.address || '',
           decimals: e.currency?.decimals || 18,
         } as Token;
-      }),
-    );
-  }, [balances]);
+      });
+      
+      setSelect0(balancesFn);
+
+      if (tokenFrom == undefined) {
+        const _token = balancesFn.find((t) => t.symbol.toUpperCase() === 'ETH' || t.symbol.toUpperCase() === 'WETH');
+        setTokenFrom(_token);
+        console.log('setTokenFrom', _token);
+      }
+
+      if (tokenTo == undefined) {
+        const _token = select1.find((t) => t.address.toLowerCase() === tokenAddress.toLowerCase());
+        setTokenTo(_token);
+        console.log('setTokenTo', _token);
+      }
+    }
+  }, [select1, balances]);
+
+  const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
+    if (token) {
+      if (type === 'from') {
+        if (tokenTo && token.address.toLowerCase() === tokenTo.address.toLowerCase()) {
+          const aux = tokenFrom;
+          setTokenFrom(tokenTo);
+          setTokenTo(aux);
+          
+          history.push(token.address);
+        } else {
+          setTokenFrom(token);
+        }
+      } else {
+        if (tokenFrom && token.address.toLowerCase() === tokenFrom.address.toLowerCase()) {
+          const aux = tokenTo;
+          setTokenTo(tokenFrom);
+          setTokenFrom(aux);
+        } else {
+          setTokenTo(token);
+        }
+
+        history.push(token.address);
+      }
+    }
+  };
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
     setCurrentTab(newValue);
@@ -112,47 +158,55 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
   return (
     <>
-      <Box
-        py={{xs: 5, sm: 5, xl: 5}}
-        px={{xs: 6, sm: 6, xl: 6}}
-        height='1'
-        clone>
-        <Card>
-          <Tabs
-            value={currentTab}
-            onChange={handleChangeTab}
-            indicatorColor='primary'
-            textColor='primary'
-            className={classes.muiTabsRoot}>
-            <Tab
-              className={classes.muiTab}
-              label={<IntlMessages id='Market' />}
-              {...a11yProps(0)}
-            />
-            {/* <Tab className={classes.muiTab} label={<IntlMessages id='Limit' />} {...a11yProps(1)} /> */}
-          </Tabs>
-          {currentTab === 0 && (
-            <MarketForm
-              key='MarketForm'
-              chainId={chainId}
-              account={account}
-              tokenAddress={tokenAddress}
-              balances={balances}
-              select0={select0}
-              select1={select1}
-              actionButton={handleTradeOpen}
-            />
-          )}
-          {/* {
-            value === 1 && <LimitForm
-            key="LimitForm(1)"
-            tokens={configFile?.tokens ?? []} 
-            chainId={(new BigNumber(chainId ?? 1)).toNumber()}
-            actionButton={props.actionButton}
-            />
-          } */}
-        </Card>
-      </Box>
+      <Fade in={true} timeout={1000}>
+        <Box
+          py={{xs: 5, sm: 5, xl: 5}}
+          px={{xs: 6, sm: 6, xl: 6}}
+          height='1'
+          clone>
+          <Card>
+            <Tabs
+              value={currentTab}
+              onChange={handleChangeTab}
+              indicatorColor='primary'
+              textColor='primary'
+              className={classes.muiTabsRoot}>
+              <Tab className={classes.muiTab} label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+              <Tab className={classes.muiTab} label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+            </Tabs>
+            {currentTab === 0 && (
+              <MarketForm
+                key='MarketForm'
+                chainId={chainId}
+                account={account}
+                tokenAddress={tokenAddress}
+                balances={balances}
+                select0={select0}
+                select1={select1}
+                tokenFrom={tokenFrom}
+                tokenTo={tokenTo}
+                onChangeToken={handleChangeToken}
+                onTrade={handleTradeOpen}
+              />
+            )}
+            {currentTab === 1 && (
+              <LimitForm
+                key='LimitForm'
+                chainId={chainId}
+                account={account}
+                tokenAddress={tokenAddress}
+                balances={balances}
+                select0={select0}
+                select1={select1}
+                tokenFrom={tokenFrom}
+                tokenTo={tokenTo}
+                onChangeToken={handleChangeToken}
+                onTrade={handleTradeOpen}
+              />
+            )}
+          </Card>
+        </Box>
+      </Fade>
 
       {account && (
         <OrderDialog

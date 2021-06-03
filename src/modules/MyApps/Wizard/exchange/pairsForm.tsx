@@ -1,33 +1,59 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState, SyntheticEvent, memo } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Grid,
   TextField,
-  IconButton,
-  Divider,
-  withStyles
+  Accordion,
+  AccordionDetails,
+  AccordionActions,
+  Typography,
+  makeStyles
 } from '@material-ui/core';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import { ConfigPairMetaData, CurrencyPairMetaData } from 'types/myApps';
-import { WizardProps } from '.';
-import { useTokenList } from 'hooks/useTokenList';
-import { Token } from 'types/app';
-import { ChainId } from 'types/blockchain';
-import { CustomLabel } from 'shared/components/Wizard/Label';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
+import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 
-const CustomGrid = withStyles((theme) => ({
-  root: {
-    padding: `${theme.spacing(0)} !important;`,
-    margin: theme.spacing(1, 0)
-  }
-}))(Grid);
+import { AccordionSummary } from '../shared/Accordion';
+import { CustomIconButton } from '../shared/Buttons';
+import { truncateAddress } from 'utils/text';
+import { Token } from 'types/app';
+import { ConfigFileExchange, ConfigPairMetaData, CurrencyPairMetaData } from 'types/myApps';
+import { ChainId } from 'types/blockchain';
+import { useTokenList } from 'hooks/useTokenList';
+import { CustomLabel } from 'shared/components/Wizard/Label';
+import { WizardProps } from '../shared';
+import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+import { isAddress } from 'ethers/lib/utils';
+import { InfoComponent } from '../shared/Buttons/infoComponent';
+import { HELP_TEXT_PAIR, HELP_TEXT_PAIR_CONFIG } from './helpText';
+import { getHelpText } from '../shared';
+import { useBlokchain } from 'hooks/useBlokchain';
+import { MessageView } from '@crema';
+
+const useStyle = makeStyles((theme) => ({
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+    textAlign: 'center',
+    display: 'inline-flex',
+    alignSelf: 'center'
+  },
+}));
+
+interface AccordionLabel {
+  base: string;
+  quote: string;
+  address: string;
+}
 
 type ConfigError = {
   [Property in keyof ConfigPairMetaData]: string;
 }
 
 interface error {
+  address?: string;
   base?: string;
   quote?: string;
   config: ConfigError;
@@ -90,12 +116,22 @@ const labels = {
   quotePrecision: 'Quote Precision'
 } as ConfigPairLabels;
 
+const placeholders = {
+  basePrecision: '18',
+  maxAmount: '20',
+  minAmount: '0.1',
+  pricePrecision: '4',
+  quotePrecision: '18'
+}
+
 const PairComponent: React.FC<PairComponentProps> = (props) => {
   const { index, data, onChange, validator, isValid, editable } = props;
+  const [address, setAddress] = useState(data?.address);
   const [base, setBase] = useState(data?.base);
   const [quote, setQuote] = useState(data?.quote);
   const [config, setConfig] = useState(data?.config);
   const [errors, setErrors] = useState<error>({
+    address: undefined,
     base: undefined,
     quote: undefined,
     config: {
@@ -108,7 +144,9 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   } as error);
   const [pair, setPair] = useState(data);
   const [valid, setValid] = useState<boolean>(isValid);
-  // type KeysEnum<T> = { [P in keyof Required<T>]: true };
+  const [searchfailed, setSearchFailed] = useState<string>();
+  const { onGetPair } = useBlokchain();
+  const [loading, setLoading] = useState(false);
 
   const maxAmountError = useCallback((): string | undefined => {
     if (positiveValidator(config?.minAmount)) {
@@ -124,47 +162,87 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
     return 'min amount is invalid!'
   }, [config]);
 
+  const findPair = useCallback((): Promise<{ token0: Token | undefined, token1: Token | undefined } | undefined> => {
+    if (address != null && isAddress(address)) {
+      return onGetPair(address);
+    }
+    return Promise.resolve(undefined);
+  }, [onGetPair, address])
+
   useEffect(() => {
-    if (errors == null) {
-      const _base = base ?? pair.base;
-      const _quote = quote ?? pair.quote;
-      const _config = config ?? pair.config;
-      const configErros = {
-        basePrecision: decimalsValidator(_config?.basePrecision) ? undefined : 'base precision is invalid!',
-        quotePrecision: decimalsValidator(_config?.pricePrecision) ? undefined : 'quote precision is invalid!',
-        pricePrecision: decimalsValidator(_config?.pricePrecision) ? undefined : 'price precision is invalid!',
-        maxAmount: maxAmountError(),
-        minAmount: minAmountError()
-      } as ConfigError;
-      const _errors = {
-        base: baseValidator(_base) ? undefined : 'base name is invalid!',
-        quote: quoteValiation(_quote, _base) ? undefined : 'quote name is invalid!',
-        config: configErros
-      } as error;
-      const _valid = Object.values(_errors).reduce((pre, cur) => pre && cur == null, true);
-      if (_valid) {
-        const _pair: CurrencyPairMetaData = {
-          base: _base,
-          quote: _quote,
-          config: _config
-        };
-        if(Boolean(editable)){
-          const e = new Event('input', { bubbles: true })
-          onChange(e as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, _pair, index);
-        }
-      }
-      setErrors(_errors);
+    if (!Boolean(editable) || !loading) {
+      return;
+    }
+    if (errors == null || (errors != null && errors['address'] == null)) {
+      setLoading(true);
+      setSearchFailed(undefined);
+      findPair()
+        .then(tokens => {
+          let tokenBase: Token | undefined;
+          let tokenQuote: Token | undefined;
+
+          if (tokens != null) {
+            tokenBase = tokens?.token0;
+            tokenQuote = tokens?.token1;
+          }
+          if (tokenBase == null || tokenQuote == null) {
+            setSearchFailed('Pair not found!');
+          }
+          const _config = {
+            ...(config ?? pair.config),
+            basePrecision: ((config?.basePrecision ?? pair.config?.basePrecision) ?? tokenBase?.displayDecimals),
+            quotePrecision: ((config?.quotePrecision ?? pair.config?.quotePrecision) ?? tokenQuote?.displayDecimals),
+          }
+          const _address = address ?? pair.address;
+          const _base = tokenBase?.name ?? base ?? pair.base;
+          const _quote = tokenQuote?.name ?? quote ?? pair.quote;
+          setBase(_base)
+          setQuote(_quote)
+          setConfig(_config)
+          const configErros = {
+            basePrecision: decimalsValidator(_config?.basePrecision) ? undefined : 'base precision is invalid!',
+            quotePrecision: decimalsValidator(_config?.pricePrecision) ? undefined : 'quote precision is invalid!',
+            pricePrecision: decimalsValidator(_config?.pricePrecision) ? undefined : 'price precision is invalid!',
+            maxAmount: maxAmountError(),
+            minAmount: minAmountError()
+          } as ConfigError;
+          const _errors = {
+            base: baseValidator(_base) ? undefined : 'base name is invalid!',
+            quote: quoteValiation(_quote, _base) ? undefined : 'quote name is invalid!',
+            config: configErros
+          } as error;
+          const _valid = Object.values(_errors).reduce((pre, cur) => pre && cur == null, true);
+          if (_valid) {
+            const _pair: CurrencyPairMetaData = {
+              address: _address,
+              base: _base,
+              quote: _quote,
+              config: _config
+            };
+            if (Boolean(editable)) {
+              const e = new Event('input', { bubbles: true })
+              onChange(e as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, _pair, index);
+            }
+          }
+          setErrors(_errors);
+
+        })
+        .catch(e => {
+          setSearchFailed('Pair search failed!');
+        })
+        .finally(() => setLoading(false));
+
     }
   }, [config]);
 
   useEffect(() => {
-
     setPair({
+      address,
       base,
       quote,
       config
     });
-  }, [base, quote, config]);
+  }, [address, base, quote, config]);
 
   useEffect(() => {
     console.log('errors', errors);
@@ -179,35 +257,83 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
     validator(valid);
   }, [valid, validator]);
 
+  useEffect(() => {
+    setErrors({ ...errors, address: searchfailed });
+  }, [searchfailed]);
+  const exclude = ['pricePrecision'];
+  const otherFields = Object.keys(config ?? {})
+  // .filter( f => exclude.every( x => x !== f));
   return (
     <>
+      <Grid item xs={12} md={6} sm={6}>
+        <TextField
+          type="text"
+          value={address}
+          key={`pair(${index}).address`}
+          id={`pair(${index}).address`}
+          helperText={!valid ? errors?.address : undefined}
+          error={errors?.address != null}
+          placeholder={ZERO_ADDRESS.toString()}
+          onBlur={
+            () => {
+              if (address == null || isAddress(address.toString().trim())) {
+                errors.address = undefined;
+                setErrors({ ...errors })
+              }
+              else
+                setErrors({ ...errors, address: 'Pair address is invalid!' })
+            }
+          }
+          onChange={
+            ($e) => {
+              setAddress($e.target.value);
+              onChange($e, { ...pair, address }, index);
+            }
+          }
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
+          fullWidth
+          label={<CustomLabel text="Pair address" required={true} />}
+          variant="outlined"
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR, 'address', 0)} />) }}
+          disabled={loading}
+        />
+      </Grid>
       <Grid item xs={12} md={6} sm={6}>
         <TextField
           key={`pair(${index}).base`}
           id={`pair(${index}).base`}
           value={base}
-          onBlur={
-            () => {
-              if (baseValidator(base)) {
-                errors.base = undefined;
-                setErrors({ ...errors })
-              }
-              else
-                setErrors({ ...errors, base: 'base precision is invalid!' })
-            }
-          }
-          onChange={
-            ($e) => {
-              setBase($e.target.value);
-              onChange($e, { ...pair, base }, index);
-            }
-          }
-          placeholder={''}
+          placeholder={'ETH'}
+          // onBlur={
+          //   () => {
+          //     if (baseValidator(base)) {
+          //       errors.base = undefined;
+          //       setErrors({ ...errors })
+          //     }
+          //     else
+          //       setErrors({ ...errors, base: 'base precision is invalid!' })
+          //   }
+          // }
+          // onChange={
+          //   ($e) => {
+          //     setBase($e.target.value);
+          //     onChange($e, { ...pair, base }, index);
+          //   }
+          // }
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           helperText={!valid ? errors?.base : undefined}
           error={errors?.base != null}
           label={<CustomLabel text="Base" required={true} />}
           fullWidth
           variant="outlined"
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR, 'base', 0)} />) }}
+          disabled
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -215,31 +341,37 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
           key={`pair(${index}).quote`}
           id={`pair(${index}).quote`}
           value={quote}
-          onBlur={
-            () => {
-              if (quoteValiation(quote, base))
-                setErrors({ ...errors, quote: undefined })
-              else
-                setErrors({ ...errors, quote: 'quote name is invalid!' })
-            }
-          }
-          onChange={
-            ($e) => {
-              setQuote($e.target.value);
-              onChange($e, { ...pair, quote: $e.target.value }, index);
-            }
-          }
+          placeholder={'DAI'}
+          // onBlur={
+          //   () => {
+          //     if (quoteValiation(quote, base))
+          //       setErrors({ ...errors, quote: undefined })
+          //     else
+          //       setErrors({ ...errors, quote: 'quote name is invalid!' })
+          //   }
+          // }
+          // onChange={
+          //   ($e) => {
+          //     setQuote($e.target.value);
+          //     onChange($e, { ...pair, quote: $e.target.value }, index);
+          //   }
+          // }
           helperText={!valid ? errors?.quote : undefined}
           error={errors?.quote != null}
           label={<CustomLabel text="Quote" required={true} />}
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           fullWidth
           variant="outlined"
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR, 'quote', 0)} />) }}
+          disabled
         />
       </Grid>
       {
         config ? (
-          Object.keys(config)
-            ?.map((key => {
+          otherFields?.map((key => {
               type k = keyof ConfigPairMetaData;
               const _key: k = key as k;
               const hasProperty = !isObjectNullOrEmpty(errors) && checkProperty<ConfigError>(errors?.config, _key);
@@ -250,6 +382,7 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
                     key={`pair(${index}).${key}`} id={`pair(${index}).${key}`}
                     fullWidth
                     label={<CustomLabel text={labels[_key]} required={true} />}
+                    placeholder={placeholders[_key]}
                     variant='outlined'
                     value={config[_key]}
                     inputProps={
@@ -295,7 +428,7 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
                         const _valid = positiveValidator(Number(config[_key]));
                         console.log('_valid', _valid);
                         errors.config[_key] = _valid ? undefined : `${_key} precision is invalid!`;
-                        if(errors.config[_key] != null ){
+                        if (errors.config[_key] != null) {
                           setErrors({ ...errors });
                         }
                       }
@@ -311,12 +444,21 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
                       });
                       onChange($e, { ...pair }, index);
                     }}
+                    InputLabelProps={{
+                      // shrink: placeholder != null,
+                      shrink: true,
+                    }}
+                    InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR_CONFIG, _key, 0)} />) }}
+                    disabled={loading}
                   />
                 </Grid>
               )
             }))
         ) : null
       }
+      <Grid item xs={12} md={12}>
+        {searchfailed && <MessageView variant='warning' message={searchfailed} />}
+      </Grid>
 
     </>
   )
@@ -331,9 +473,10 @@ interface PairsFormProps {
   editable?: boolean;
 }
 
-type Props = PairsFormProps & WizardProps;
+type Props = PairsFormProps & WizardProps<ConfigFileExchange, keyof ConfigFileExchange>;
 const PairsForm: React.FC<Props> = (props) => {
   const { changeIssuerForm, validator, isValid: startValidation, chainId, editable } = props;
+  const classes = useStyle();
   const [pairs, setPairs] = useState(props.pairs ?? []);
   const listToken = useTokenList();
 
@@ -348,14 +491,21 @@ const PairsForm: React.FC<Props> = (props) => {
       }
     }, [pairs, changeIssuerForm]);
 
-  const addPair = useCallback((index?: number) => {
+  const addPair = useCallback((index?: number, $e?: SyntheticEvent) => {
+    if ($e != null) {
+      $e.preventDefault();
+      $e.stopPropagation();
+    }
+    if (!Boolean(editable) && pairs?.length > 0) {
+      return;
+    }
     const newItem = {
       base: '',
       quote: '',
       config: {
         basePrecision: 18,
         quotePrecision: 18,
-        maxAmount: 1,
+        maxAmount: 20,
         minAmount: 0,
         pricePrecision: 4
       }
@@ -367,7 +517,7 @@ const PairsForm: React.FC<Props> = (props) => {
       return;
     }
     setPairs([...(pairs ?? []), newItem]);
-  }, [pairs, setPairs]);
+  }, [pairs, setPairs, editable]);
 
   useEffect(() => {
     changeIssuerForm('pairs', [...pairs]);
@@ -380,53 +530,143 @@ const PairsForm: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const remPair = useCallback((index: number) => {
+  const remPair = useCallback((index: number, $e?: SyntheticEvent) => {
+    if ($e != null) {
+      $e.preventDefault();
+      $e.stopPropagation();
+    }
+    if (!Boolean(editable)) {
+      return;
+    }
     if (index >= 0 && index < pairs?.length) {
       pairs.splice(index, 1);
       const _pairs = [...pairs];
       setPairs(_pairs);
     }
-  }, [pairs, setPairs]);
+  }, [pairs, setPairs, editable]);
+
+  const sortPair = useCallback((index: number, action: 'UP' | 'DOWN', $e?: SyntheticEvent) => {
+    if ($e != null) {
+      $e.preventDefault();
+      $e.stopPropagation();
+    }
+    if (!Boolean(editable)) {
+      return;
+    }
+    const direction = action === 'UP' ? -1 : 0;
+    const removed = pairs.splice(index + direction, 1);
+    if (action === 'UP') {
+      pairs.splice(index, 0, ...removed);
+    } else {
+      pairs.splice(index + 1, 0, ...removed);
+    }
+    const _pairs = [...pairs];
+    setPairs(_pairs);
+  }, [pairs, setPairs, editable]);
+
+  const AccordionLabelComponente = memo((props: AccordionLabel) => {
+    const {base, quote, address } = props;
+    const text =  base && quote ? `${base}/${quote} ${truncateAddress(address)}` :
+    `${truncateAddress(address)}`;
+    return (
+      <Typography className={classes.heading} variant="subtitle2" component="h2">
+        {text}
+      </Typography>
+    )
+  });
 
   return (
     <GridContainer>
       {
         pairs != null ? pairs.map((pair: CurrencyPairMetaData, i: number) => (
-          <>
-            {
-              i > 0 && (
-                <CustomGrid item xs={12} md={12} sm={12}>
-                  <Divider></Divider>
-                </CustomGrid>
-              )
-            }
-            <Grid item xs={12} md={12} sm={12} style={{ textAlign: 'right' }}>
-              <IconButton aria-label="add" onClick={() => addPair(i)}>
-                <AddCircleOutlineOutlinedIcon fontSize="small" />
-              </IconButton>
-              {
-                i > 0 && (
-                  <IconButton aria-label="delete">
-                    <DeleteOutlinedIcon onClick={() => remPair(i)} fontSize="small" />
-                  </IconButton>
-                )
-              }
-            </Grid>
-            <PairComponent
-              key={Math.round(Math.random() * 1000 + i)}
-              index={i}
-              data={pair}
-              onChange={onChange}
-              validator={validator}
-              isValid={startValidation}
-              chainId={chainId}
-              tokens={listToken}
-              editable={editable}
-            />
-          </>
+          <Grid item xs={12} md={12} sm={12}>
+            <Accordion defaultExpanded={!Boolean(pair?.address)}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-label="Expand"
+                aria-controls={`accordion-summary-${i}`}
+                id={`accordion-summary-${i}`}
+              >
+                <AccordionLabelComponente
+                  address={pair.address}
+                  base={pair.base}
+                  quote={pair.quote}
+                  key={'accordioLabel'} 
+                />
+                <AccordionActions>
+                  <CustomIconButton aria-label={`add(${i})`} onClick={($e) => addPair(i, $e)} disabled={Boolean(editable) ? !startValidation : true}>
+                    <AddCircleOutlineOutlinedIcon fontSize="small" />
+                  </CustomIconButton>
+                  {
+                    i > 0 ? (
+                      <>
+                        <CustomIconButton
+                          key={`delete(${(new Date()).getTime()})`}
+                          aria-label={`delete(${i})`}
+                          disabled={!Boolean(editable)}
+                          onClick={($e) => remPair(i, $e)}
+                        >
+                          <DeleteOutlinedIcon fontSize="small" />
+                        </CustomIconButton>
+                        <CustomIconButton
+                          key={`up(${i})`}
+                          aria-label={`up(${i})`}
+                          onClick={($e) => sortPair(i, 'UP', $e)}
+                          disabled={!Boolean(editable)}
+                        >
+                          <ArrowUpwardOutlinedIcon fontSize="small" />
+                        </CustomIconButton>
+                        <CustomIconButton
+                          key={`down(${i})`} aria-label={`down(${i})`}
+                          disabled={Boolean(editable) ? Boolean(i >= pairs?.length - 1) : true}
+                          onClick={($e) => sortPair(i, 'DOWN', $e)}
+                        >
+                          <ArrowDownwardOutlinedIcon fontSize="small" />
+                        </CustomIconButton>
+                      </>
+
+                    ) :
+                      (
+                        <>
+                          <CustomIconButton
+                            key={`up(${i})`}
+                            aria-label={`up(${i})`}
+                            disabled={true}
+                          >
+                            <ArrowUpwardOutlinedIcon fontSize="small" />
+                          </CustomIconButton>
+                          <CustomIconButton
+                            key={`down(${i})`} aria-label={`down(${i})`}
+                            disabled={Boolean(editable) ? Boolean(i >= pairs?.length - 1) : true}
+                            onClick={($e) => sortPair(i, 'DOWN', $e)}
+                          >
+                            <ArrowDownwardOutlinedIcon fontSize="small" />
+                          </CustomIconButton>
+                        </>
+                      )
+                  }
+                </AccordionActions>
+              </AccordionSummary>
+              <AccordionDetails>
+                <GridContainer>
+                  <PairComponent
+                    key={Math.round(Math.random() * 1000 + i)}
+                    index={i}
+                    data={pair}
+                    onChange={onChange}
+                    validator={validator}
+                    isValid={startValidation}
+                    chainId={chainId}
+                    tokens={listToken}
+                    editable={editable}
+                  />
+                </GridContainer>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
         )) : null
       }
-    </GridContainer>
+    </GridContainer >
   );
 }
 

@@ -14,7 +14,7 @@ import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import TokenInfo from './TokenInfo';
 import TokenStatistics from './TokenStatistics';
-import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 
 type Params = {
   address: string;
@@ -42,61 +42,63 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
       <Box pt={{xl: 4}}>
         <PageTitle
           breadcrumbs={{
-            history: exchange === EXCHANGE.ALL ? [
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
-                name: 'Protocol Explorer',
-              },
-            ] : [
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
-                name: 'Protocol Explorer',
-              },
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
-                name: GET_EXCHANGE_NAME(exchange),
-              },
-            ],
-            active: {name: 'Token Explorer'}
+            history:
+              exchange === EXCHANGE.ALL
+                ? [
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                      name: 'Protocol Explorer',
+                    },
+                  ]
+                : [
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                      name: 'Protocol Explorer',
+                    },
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/token-explorer/${baseAddress}`,
+                      name: GET_EXCHANGE_NAME(exchange),
+                    },
+                  ],
+            active: {name: 'Token Explorer'},
           }}
           title={{name: 'Token Explorer'}}
           subtitle={{name: truncateAddress(baseAddress), hasCopy: baseAddress}}
         />
 
         <GridContainer>
-        <TokenFilterProvider>
-          <Grid item xs={12} md={12}>
-            <Paper style={{padding: 10}}>
-              <TokenSearchByList type={'token'} exchangeName={exchange} />
-            </Paper>
-          </Grid>
+          <TokenFilterProvider>
+            <Grid item xs={12} md={12}>
+              <Paper style={{padding: 10}}>
+                <TokenSearchByList type={'token'} exchangeName={exchange} />
+              </Paper>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <TokenInfo address={baseAddress} />
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <TokenInfo address={baseAddress} />
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <TokenStatistics address={baseAddress} />
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <TokenStatistics address={baseAddress} />
+            </Grid>
 
-          <Grid item xs={12} sm={12} md={12}>
-            <TokenPairs
-              baseAddress={baseAddress}
-              exchange={exchange}
-              networkName={networkName}
-            />
-          </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <TokenPairs
+                baseAddress={baseAddress}
+                exchange={exchange}
+                networkName={networkName}
+              />
+            </Grid>
 
-          <Grid item xs={12} sm={12} md={12}>
-      
+            <Grid item xs={12} sm={12} md={12}>
               <TokenOrders
                 networkName={networkName}
                 baseAddress={baseAddress}
                 quoteAddress={null}
                 exchange={exchange}
                 type={'token'}
-              /> 
-          </Grid>
+              />
+            </Grid>
           </TokenFilterProvider>
         </GridContainer>
       </Box>

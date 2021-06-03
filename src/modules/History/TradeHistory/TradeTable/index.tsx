@@ -1,13 +1,11 @@
 import React from 'react';
 import {
-  makeStyles,
   Box,
   Table,
   TableHead,
   TableBody,
   TablePagination,
 } from '@material-ui/core';
-import {grey} from '@material-ui/core/colors/index';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -36,6 +34,19 @@ const TradeTable: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
+  let paginatedRows: any = [];
+  const currentRow = currentPage * rowsPerPage;
+
+  for (let i = currentRow; i < currentRow + rowsPerPage; i++) {
+    if (data) {
+      if (data.length > i) {
+        paginatedRows.push(
+          <TableItem row={data[i]} networkName={networkName} key={i} />,
+        );
+      }
+    }
+  }
+
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
@@ -45,10 +56,11 @@ const TradeTable: React.FC<Props> = ({
           </TableHead>
 
           <TableBody className={classes.borderBottomClass}>
-            {data &&
+            {/* {data &&
               data.map((row, index) => (
                 <TableItem row={row} networkName={networkName} key={index} />
-              ))}
+              ))} */}
+            {paginatedRows}
           </TableBody>
         </Table>
       </Box>
@@ -56,7 +68,7 @@ const TradeTable: React.FC<Props> = ({
       <TablePagination
         className={classes.paginationDesktop}
         component='div'
-        count={totalRows || 0}
+        count={totalRows}
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
@@ -65,17 +77,6 @@ const TradeTable: React.FC<Props> = ({
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
           onChangeRowsPerPage(parseInt(event.target.value, 10))
-        }
-      />
-      <TablePagination
-        className={classes.paginationMobile}
-        component='div'
-        count={totalRows || 0}
-        page={currentPage}
-        rowsPerPage={25}
-        rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
-          onChangePage(newPage)
         }
       />
     </>

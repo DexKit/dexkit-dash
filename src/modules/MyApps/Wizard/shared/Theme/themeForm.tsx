@@ -11,8 +11,9 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
+import { HELP_TEXT_THEME } from '.';
 import ComponentTheme  from './componentTheme';
-import { AccordionDetails } from './Accordion';
+import { AccordionDetails } from '../Accordion';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { ConfigFileExchange, ConfigFileMarketplace, PartialTheme, ThemeProperties } from 'types/myApps';
@@ -202,7 +203,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                       }
                     }}
                     editable={Boolean(editable)}
-                    help={'Incluir as descrições a respeito sobre essa propriedade. Por favor, não esquecer isso aqui!'}
+                    help={HELP_TEXT_THEME}
                   />
                 ) : null
             }

@@ -1,78 +1,81 @@
 import React from 'react';
-import {makeStyles, Box, Table, TableHead, TableBody, TablePagination} from '@material-ui/core';
-import {grey} from '@material-ui/core/colors/index';
+import {
+  Box,
+  Table,
+  TableHead,
+  TableBody,
+  TablePagination,
+} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import { ITransactionList } from "types/app";
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-
+import {ITransactionList} from 'types/app';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useStyles} from './index.style';
 
 interface Props {
-  networkName: EthereumNetwork,
+  networkName: EthereumNetwork;
   data: ITransactionList[] | undefined;
-  currentPage: number
+  currentPage: number;
   rowsPerPage: number;
   rowsPerPageOptions: number[];
   onChangePage: (newPage: number) => void;
   onChangeRowsPerPage: (newPerPage: number) => void;
 }
 
-const TransactionTable: React.FC<Props> = ({networkName, data, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage}) => {
-  const useStyles = makeStyles(() => ({
-    borderBottomClass: {
-      borderBottom: '0 none',
-    },
-    tableResponsiveMaterial: {
-      minHeight: '.01%',
-      overflowX: 'auto',
-
-      '@media (max-width: 767px)': {
-        width: '100%',
-        marginBottom: 15,
-        overflowY: 'hidden',
-        border: `1px solid ${grey[300]}`,
-        '& > table': {
-          marginBottom: 0,
-          '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
-            whiteSpace: 'nowrap',
-          },
-        },
-      },
-    },
-  }));
-
-  console.log(data);
-
+const TransactionTable: React.FC<Props> = ({
+  networkName,
+  data,
+  currentPage,
+  rowsPerPage,
+  rowsPerPageOptions,
+  onChangePage,
+  onChangeRowsPerPage,
+}) => {
   const classes = useStyles();
-  
+
   return (
-    <Box className={classes.tableResponsiveMaterial}>
+    <>
+      <Box className={classes.tableResponsiveMaterial}>
+        <Table stickyHeader>
+          <TableHead className={classes.borderBottomClass}>
+            <TableHeading />
+          </TableHead>
 
-      <Table className='table'>
+          <TableBody className={classes.borderBottomClass}>
+            {data &&
+              data.map((row, index) => (
+                <TableItem row={row} networkName={networkName} key={index} />
+              ))}
+          </TableBody>
+        </Table>
+      </Box>
 
-        <TableHead className={classes.borderBottomClass}>
-          <TableHeading />
-        </TableHead>
-
-        <TableBody className={classes.borderBottomClass}>
-          {
-            data && data.map((row, index) => (<TableItem row={row} networkName={networkName} key={index} />))
-          }
-        </TableBody>
-        
-      </Table>
-      
       <TablePagination
-        component="div"
+        className={classes.paginationDesktop}
+        component='div'
         count={-1}
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) => onChangePage(newPage)}
-        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) => onChangeRowsPerPage(parseInt(event.target.value, 10))}
+        onChangePage={(event: unknown, newPage: number) =>
+          onChangePage(newPage)
+        }
+        onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChangeRowsPerPage(parseInt(event.target.value, 10))
+        }
       />
-
-    </Box>
+      <TablePagination
+        className={classes.paginationMobile}
+        component='div'
+        count={-1}
+        page={currentPage}
+        rowsPerPage={25}
+        rowsPerPageOptions={[]}
+        onChangePage={(event: unknown, newPage: number) =>
+          onChangePage(newPage)
+        }
+      />
+    </>
   );
 };
 

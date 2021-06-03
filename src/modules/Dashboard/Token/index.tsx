@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
-import {Grid, Box, Link} from '@material-ui/core';
+import {Grid, Box, Link, Fade} from '@material-ui/core';
 
 import {RouteComponentProps} from 'react-router-dom';
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
@@ -25,6 +25,7 @@ import {Token} from 'types/app';
 import {truncateAddress} from 'utils';
 import {useBlokchain} from 'hooks/useBlokchain';
 import {useChainId} from 'hooks/useChainId';
+import {Skeleton} from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
   () => import('shared/components/chart/TvChart/tv_chart'),
@@ -71,21 +72,22 @@ const TokenPage: React.FC<Props> = (props) => {
         decimals: 0,
       });
 
-      if (data.symbol?.toUpperCase() === 'WETH') {
-        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
-      } else {
-        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
-      }
+      setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
     }
   }, [data]);
 
   const infoMyOrders = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`,
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?trader=${account?.toLowerCase()}`,
+    [account],
+  );
+
+  const infoMakerTradeHistory = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?makerToken=${address}`,
     [address],
   );
 
-  const infoTradeHistory = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?makerToken=${address}`,
+  const infoTakerTradeHistory = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?takerToken=${address}`,
     [address],
   );
 
@@ -95,7 +97,7 @@ const TokenPage: React.FC<Props> = (props) => {
 
   const tradeHistory =
     'Trade History' +
-    (infoTradeHistory.data ? ' (' + infoTradeHistory.data.total + ')' : '');
+    ((infoMakerTradeHistory.data && infoTakerTradeHistory.data) ? ' (' + (infoMakerTradeHistory.data.total + infoTakerTradeHistory.data.total) + ')' : '');
 
   return (
     <>
@@ -131,7 +133,7 @@ const TokenPage: React.FC<Props> = (props) => {
                 <Box className='card-hover'>
                   <Link
                     className={classes.btnPrimary}
-                    href={`/${networkName}/history/myorders/list/${address}`}
+                    href={`/${networkName}/history/myorders/list/${account}`}
                     style={{textDecoration: 'none'}}>
                     <InfoCard
                       state={{
@@ -168,36 +170,34 @@ const TokenPage: React.FC<Props> = (props) => {
 
           <Grid item xs={12} md={7}>
             <GridContainer>
-              <Grid style={{height: '400px'}} item xs={12} sm={12} md={12}>
-                {!chartSymbol ? (
-                  <LoadingView />
-                ) : (
-                  <TVChartContainer
-                    symbol={chartSymbol}
-                    chainId={chainId}
-                    darkMode={isDark}
-                  />
-                )}
-              </Grid>
+              <Fade in={true} timeout={1000}>
+                <Grid style={{height: '400px'}} item xs={12} sm={12} md={12}>
+                  {!chartSymbol ? (
+                    <Skeleton variant='rect' height={370} />
+                  ) : (
+                    <TVChartContainer
+                      symbol={chartSymbol}
+                      chainId={chainId}
+                      darkMode={isDark}
+                    />
+                  )}
+                </Grid>
+              </Fade>
             </GridContainer>
 
             <GridContainer style={{marginTop: 15}}>
               <Grid item xs={12} sm={6} md={6}>
-                {loading ? (
-                  <LoadingView />
-                ) : error ? (
+                {error ? (
                   <ErrorView message={error.message} />
                 ) : (
-                  <CoingeckoProfile data={data} />
+                  <CoingeckoProfile data={data} loading={loading} />
                 )}
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
-                {loading ? (
-                  <LoadingView />
-                ) : error ? (
+                {error ? (
                   <ErrorView message={error.message} />
                 ) : (
-                  <CoingeckoMarket data={data} />
+                  <CoingeckoMarket data={data} loading={loading} />
                 )}
               </Grid>
             </GridContainer>

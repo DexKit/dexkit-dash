@@ -9,7 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { ColorInput } from 'shared/components/ColorInput';
 import { ColorResult } from 'react-color';
-import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
+import { Accordion, AccordionDetails, AccordionSummary } from '../Accordion';
+import { HelpText, getHelpText } from '..';
+import { ThemeProperties } from 'types/myApps';
 
 const dexkitLogo = require('assets/images/dexkit-logo.png');
 
@@ -36,7 +38,7 @@ interface ComponentsThemeProps {
   value: ColorResult;
   onChange?: ($e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
   editable?: boolean;
-  help?: string;
+  help: HelpText<Partial<ThemeProperties>>;
 }
 const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
   const { name, label, className, onChange, value, editable, help } = props;
@@ -74,7 +76,7 @@ const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
                 disabled={!Boolean(editable)}
               />
               <Box margin={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                <Typography>{ help }</Typography>
+                <Typography>{ getHelpText(help, className, 0) }</Typography>
                 <img loading="lazy" className={classes.image} src={dexkitLogo} alt="layout property demo"/>
               </Box>
             </Box>

@@ -3,13 +3,14 @@ import {useAMMPairExplorer} from 'hooks/protocolExplorer/useAMMPairExplorer';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
 import GridContainer from '../../../../@crema/core/GridContainer';
-import {Grid, Paper} from '@material-ui/core';
+import {Fade, Grid, Paper} from '@material-ui/core';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import InfoAMM from 'modules/ProtocolExplorer/Common/InfoAMM';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import AMMTradeHistory from 'modules/ProtocolExplorer/Common/AMMTradeHistory';
+import {Skeleton} from '@material-ui/lab';
 // import {useAMMPairTrades} from 'hooks/useAMMPairTrades';
 // import PageTitle from 'shared/components/PageTitle';
 // import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
@@ -46,26 +47,39 @@ const PairExplorerAMM = (props: Props) => {
             </Paper>
           </Grid>
           <Paper style={{marginTop: 20}}>
-            {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : ( 
-              data && (<InfoAMM data={data} exchange={exchange} address={address} />)
+            {error ? (
+              <ErrorView message={error.message} />
+            ) : (
+              <InfoAMM
+                data={data}
+                exchange={exchange}
+                address={address}
+                loading={loading}
+              />
             )}
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={7}>
-          <Grid item xs={12} md={12}>
-            {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-              data && (
-                <Grid item xs={12} md={12} style={{height: 450}}>
-                  <TVChartContainer
-                    symbol={`${data.baseCurrency?.symbol}-${data.quoteCurrency?.symbol}`}
-                    chainId={1}
-                    darkMode={isDark}
-                  />
-                </Grid>
-              )
-            )}
-          </Grid>
+          <Fade in={true} timeout={1000}>
+            <Grid item xs={12} md={12}>
+              {loading ? (
+                <Skeleton variant='rect' height={370} />
+              ) : error ? (
+                <ErrorView message={error.message} />
+              ) : (
+                data && (
+                  <Grid item xs={12} md={12} style={{height: 450}}>
+                    <TVChartContainer
+                      symbol={`${data.baseCurrency?.symbol}-${data.quoteCurrency?.symbol}`}
+                      chainId={1}
+                      darkMode={isDark}
+                    />
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </Fade>
         </Grid>
 
         <Grid style={{marginTop: 20}} item xs={12} md={12}>

@@ -19,7 +19,7 @@ import {fetchQuote} from 'services/rest/0x-api';
 import {useStyles} from './index.style';
 import styled from 'styled-components';
 import {useWeb3} from 'hooks/useWeb3';
-import {useNetwork} from 'hooks/useNetwork';
+import { useNetwork } from 'hooks/useNetwork';
 
 interface Props {
   step: Steps | undefined;
@@ -42,7 +42,7 @@ const ContentWrapper = styled.div`
   padding: 1rem;
 `;
 
-const OrderStep: React.FC<Props> = (props) => {
+const MarketStep: React.FC<Props> = (props) => {
   const {
     step,
     token0,
@@ -64,29 +64,27 @@ const OrderStep: React.FC<Props> = (props) => {
   const [slippage, setSlippage] = useState(0.03);
 
   const classes = useStyles();
-  const network = useNetwork();
+
+  const networkName = useNetwork();
 
   useEffect(() => {
-    if (step === Steps.ORDER) {
-      console.log('START ORDER');
+    if (step === Steps.MARKET) {
+      console.log('START MARKET');
 
-      fetchQuote(
-        {
-          baseToken: token0,
-          quoteToken: token1,
-          chainId: chainId,
-          orderSide: OrderSide.Sell,
-          makerAmount: amount,
-          // Parameters used to prevalidate quote at final
-          allowedSlippage: slippage,
-          ethAccount: props.account,
-          buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
-          intentOnFill: true,
-        },
-        network,
-      )
+      fetchQuote({
+        baseToken: token0,
+        quoteToken: token1,
+        chainId: chainId,
+        orderSide: OrderSide.Sell,
+        makerAmount: amount,
+        // Parameters used to prevalidate quote at final
+        allowedSlippage: slippage,
+        ethAccount: props.account,
+        buyTokenPercentage: undefined,
+        feeRecipient: undefined,
+        affiliateAddress: undefined,
+        intentOnFill: true
+      }, networkName)
         .then((e) => {
           setQuote(e);
           setSellAmount(
@@ -113,7 +111,7 @@ const OrderStep: React.FC<Props> = (props) => {
   const handleAction = () => {
     try {
       onLoading(true);
-
+      
       if (account == null) {
         return Promise.reject('Account address cannot be null or empty');
       }
@@ -147,7 +145,7 @@ const OrderStep: React.FC<Props> = (props) => {
         <>
           <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
             <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-              Order
+              Market Order
             </Typography>
           </DialogTitle>
           <DialogContent dividers>
@@ -189,15 +187,15 @@ const OrderStep: React.FC<Props> = (props) => {
                   <Typography>Slipage</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Box display='flex' justifyContent={'flex-end'}>
+                  <Box display="flex" justifyContent={'flex-end'}>
                     <TextField
-                      id='slippage_inp'
-                      variant='outlined'
-                      type='number'
-                      inputProps={{min: 0, max: 1, step: 0.01}}
+                      id="slippage_inp"
+                      variant="outlined"
+                      type="number"
+                      inputProps={{ min: 0, max: 1, step: 0.01}}
                       value={slippage}
                       onChange={(e) => {
-                        setSlippage(Number(e.target.value));
+                        setSlippage(Number(e.target.value))
                       }}
                     />
                   </Box>
@@ -223,4 +221,4 @@ const OrderStep: React.FC<Props> = (props) => {
   );
 };
 
-export default OrderStep;
+export default MarketStep;

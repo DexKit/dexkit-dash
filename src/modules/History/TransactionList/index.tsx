@@ -1,49 +1,68 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { Grid, Box, Card } from '@material-ui/core';
-import { GridContainer } from '@crema';
-import { useTransactionList } from 'hooks/history/useTransactionList';
-import { useStyles } from './index.style';
-import PageTitle from 'shared/components/PageTitle';
-import LoadingView from 'modules/Common/LoadingView';
+import {RouteComponentProps} from 'react-router-dom';
+import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {GridContainer} from '@crema';
+import {useTransactionList} from 'hooks/history/useTransactionList';
+import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import TransactionTable from './TransactionTable';
-import { useNetwork } from 'hooks/useNetwork';
+import {useNetwork} from 'hooks/useNetwork';
+import LoadingTable from 'modules/Common/LoadingTable';
+import PageTitle from 'shared/components/PageTitle';
 
 type Params = {
-  address: string
+  address: string;
 };
 
-type Props = RouteComponentProps<Params>
+type Props = RouteComponentProps<Params>;
 
-const TransactionList: React.FC<Props> = (props) => { 
-  const {match: { params }} = props;
+const TransactionList: React.FC<Props> = (props) => {
+  const {
+    match: {params},
+  } = props;
   const {address} = params;
-  
+
   const classes = useStyles();
 
   const networkName = useNetwork();
-  const {loading, error, data, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage} = useTransactionList({address});
+  const {
+    loading,
+    error,
+    data,
+    currentPage,
+    rowsPerPage,
+    rowsPerPageOptions,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTransactionList({address});
 
   return (
     <Box pt={{xl: 4}}>
-      
-      {/* <PageTitle
-        history={[
-          {url:'/', name: 'Dashboard'},
-          {url:'/dashboard/wallet', name: 'Wallet'}
-        ]}
-        active={'Transaction History'}
-        title={'Transaction History'}
-      /> */}
+
+      <PageTitle
+        breadcrumbs={{
+          history: [
+            {url:'/', name: 'Dashboard'},
+            {url:'/dashboard/wallet', name: 'Wallet'}
+          ],
+          active: {name: 'Transaction History'}
+        }}
+        title={{name: 'Transaction History'}}
+      />
 
       <GridContainer>
         <Grid item xs={12} md={12}>
-          <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
-            <Card>
-              <Box mb={4} display='flex' justifyContent='flex-end' alignItems='center'>
-                <Box mt={{xl: 1}}>
-                  {/* <Select
+          <Paper className={classes.paper}>
+            <Toolbar className={classes.toolbar}>
+              <Box
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+                style={{width: '100%'}}>
+                <Box>
+                  <Typography variant='h5'>Transaction List</Typography>
+                </Box>
+                {/* <Select
                     className={classes.selectBox}
                     value={filterValue}
                     onChange={handleChange}
@@ -58,24 +77,26 @@ const TransactionList: React.FC<Props> = (props) => {
                       {messages['app.receive']}
                     </option>
                   </Select> */}
-                </Box>
               </Box>
-              { loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
-                <TransactionTable 
-                  networkName={networkName}
-                  data={data} 
-                  currentPage={currentPage}
-                  rowsPerPage={rowsPerPage}
-                  rowsPerPageOptions={rowsPerPageOptions}
-                  onChangePage={(newPage)=> onChangePage(newPage)}
-                  onChangeRowsPerPage={(perPage)=> onChangeRowsPerPage(perPage)} 
-               />
-              )}
-            </Card>
-          </Box>
+            </Toolbar>
+            {loading ? (
+              <LoadingTable columns={6} rows={10} />
+            ) : error ? (
+              <ErrorView message={error.message} />
+            ) : (
+              <TransactionTable
+                networkName={networkName}
+                data={data}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangePage={(newPage) => onChangePage(newPage)}
+                onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+              />
+            )}
+          </Paper>
         </Grid>
-      </GridContainer>  
-
+      </GridContainer>
     </Box>
   );
 };

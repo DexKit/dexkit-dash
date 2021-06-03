@@ -1,10 +1,15 @@
-import { makeStyles } from "@material-ui/core"
-import { CremaTheme } from "types/AppContextPropsType"
-import { grey } from "@material-ui/core/colors"
-import { Fonts } from "shared/constants/AppEnums";
+import {makeStyles} from '@material-ui/core';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 export const useStyles = makeStyles((theme: CremaTheme) => ({
+  toolbar: {
+    padding: '0 24px',
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
   row: {
-    display: 'flex'
+    display: 'flex',
   },
 }));

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Box} from '@material-ui/core';
+import {Box, Fade} from '@material-ui/core';
 import AppCard from '../../../../@crema/core/AppCard';
-import Etherium from 'assets/images/dashboard/sales.svg'
-import Revenue from 'assets/images/dashboard/revenue.svg'
+import Etherium from 'assets/images/dashboard/sales.svg';
+import Revenue from 'assets/images/dashboard/revenue.svg';
 
 interface Props {
   state: {
@@ -11,30 +11,28 @@ interface Props {
     value: string;
     bgColor: string;
     icon?: string;
-  }
+  };
 }
 
 const InfoCard: React.FC<Props> = ({state}) => {
   const {bgColor, type, value, id} = state;
-  
+
   return (
-    <AppCard
-      height={1}
-      style={{backgroundColor: bgColor}}
-      className='card-hover'
-    >
-      <Box display='flex' alignItems='center'>
-        <Box mr={3} clone alignSelf='flex-start'>
-          <img width="15%" src={id === 1 ? Etherium : Revenue} alt='icon' />
-        </Box>
-        <Box flex={1} fontSize={14} fontWeight="bold"color='white'>
-          <p>{value}</p>
-          <Box mt={0.5}>
-            <p style={{fontWeight: 'normal', fontSize: 13}}>{type}</p>
+    <Fade in={true} timeout={1000}>
+      <AppCard height={1} style={{backgroundColor: bgColor}}>
+        <Box display='flex' alignItems='center'>
+          <Box mr={5} clone alignSelf='flex-start'>
+            <img width='12%' src={id === 1 ? Etherium : Revenue} alt='icon' />
+          </Box>
+          <Box flex={1} fontSize={18} fontWeight='bold' color='white'>
+            <p>{value}</p>
+            <Box mt={0.5}>
+              <p style={{fontWeight: 'normal', fontSize: 13}}>{type}</p>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </AppCard>
+      </AppCard>
+    </Fade>
   );
 };
 

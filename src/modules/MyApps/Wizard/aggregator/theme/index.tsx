@@ -10,7 +10,7 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
-import ComponentTheme from '../../shared/componentTheme';
+import ComponentTheme from '../../shared/Theme/componentTheme';
 import { AccordionDetails } from '../../shared/Accordion';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CremaTheme } from 'types/AppContextPropsType';
@@ -18,6 +18,7 @@ import { AggregatorTheme } from 'types/myApps';
 import { ColorResult } from 'react-color';
 
 import ColorSets from 'shared/constants/ColorSets';
+import { HELP_TEXT_THEME } from '../../shared/Theme';
 import { WizardData } from '..';
 
 interface ThemeFormProps {
@@ -181,7 +182,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                       }
                     }}
                     editable={Boolean(editable)}
-                    help={'Incluir as descrições a respeito sobre essa propriedade. Por favor, não esquecer isso aqui!'}
+                    help={HELP_TEXT_THEME}
                   />
                 ) : null
             }

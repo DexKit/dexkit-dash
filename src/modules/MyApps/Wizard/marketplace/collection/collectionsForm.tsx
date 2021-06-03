@@ -15,8 +15,8 @@ import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { Collection } from 'types/myApps';
-import { WizardProps } from '..';
+import { Collection, ConfigFileMarketplace } from 'types/myApps';
+import { WizardProps } from '../../shared';
 import { AccordionSummary } from '../../shared/Accordion';
 import { CollectionComponent } from './collectionComponent';
 import { CustomIconButton } from '../../shared/Buttons';
@@ -46,7 +46,7 @@ interface CollectionsFormProps {
   isValid: boolean;
 }
 
-type Props = CollectionsFormProps & WizardProps;
+type Props = CollectionsFormProps & WizardProps<ConfigFileMarketplace, keyof ConfigFileMarketplace>;
 
 const CollectionsForm: React.FC<Props> = (props) => {
   const { changeIssuerForm, validator, isValid: startValidation, editable } = props;

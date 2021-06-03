@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -8,10 +10,6 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-
-import GeneralForm from './generalForm';
-import ThemeForm from '../shared/themeForm';
-
 import { 
   ConfigFileExchange, 
   GeneralConfig, 
@@ -22,15 +20,21 @@ import {
 import { GridContainer } from '@crema';
 import { Box, Breadcrumbs, Grid, IconButton, Link } from '@material-ui/core';
 
-import { RouteComponentProps } from 'react-router-dom';
- import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
-import { useWeb3 } from 'hooks/useWeb3';
-import { SubmitComponent } from '../shared/submit';
 import { ChainId } from 'types/blockchain';
-import { NavigationButton } from '../shared/navigationButton';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
+import { SubmitComponent } from '../shared/Buttons/submit';
+import { NavigationButton } from '../shared/Buttons/navigationButton';
 import LoadingView from 'modules/Common/LoadingView';
-import TokensForm from './token/tokensForm';
+import { WizardProps } from '../shared';
+
+import GeneralForm from './generalForm';
+import ThemeForm from '../shared/Theme/themeForm';
 import PairsForm from './pairsForm';
+import TokensForm from '../shared/Token/tokensForm';
+
+
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,27 +63,26 @@ export enum WizardData {
   PAIRS = 'pairs'
 }
 
-export interface WizardProps {
-  form: ConfigFileExchange;
-  //method to change form values
-  changeIssuerForm: (key: keyof ConfigFileExchange | 'editable', value: any) => void;
-  validator: (isValid: boolean) => void;
-  isValid: boolean;
-  editable?: boolean
-}
+// export interface WizardProps {
+//   form: ConfigFileExchange;
+//   //method to change form values
+//   changeIssuerForm: (key: keyof ConfigFileExchange | 'editable', value: any) => void;
+//   validator: (isValid: boolean) => void;
+//   isValid: boolean;
+//   editable?: boolean
+// }
 
 function getSteps() {
   return ['General',  'Theme', 'Tokens', 'Pairs and Deploy'];
 }
 
-function getStepContent(step: number, label: string, wizardProps: WizardProps, chainId: ChainId) {
-  const {form, changeIssuerForm, validator, isValid, editable } = wizardProps;
+function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileExchange, keyof ConfigFileExchange>, chainId: ChainId) {
+  const {config: form, changeIssuerForm, validator, isValid, editable } = wizardProps;
   const k = Object.values(WizardData)[step];
   const data = form[k];
   switch (step) {
     case 0: {
       const fields: GeneralConfig = data as GeneralConfig;
-      console.log(`getStepContent.editable(${step})`, editable);
       return (
         <GeneralForm
           key={'generalForm'} 
@@ -87,7 +90,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
           fields={fields} 
           changeIssuerForm={changeIssuerForm}
           validator={validator}
-          form={form}
+          config={form}
           isValid={isValid}
           editable={editable}
         />
@@ -111,7 +114,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
           tokens={ tokens ?? []}
           changeIssuerForm={changeIssuerForm}
           validator={validator}
-          form={form}
+          config={form}
           isValid={isValid}
           chainId={chainId}
           editable={editable}
@@ -126,7 +129,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps, c
         pairs={ pairs ?? []}
         changeIssuerForm={changeIssuerForm}
         validator={validator} 
-        form={form}
+        config={form}
         isValid={isValid}
         chainId={chainId}
         editable={editable}
@@ -156,12 +159,24 @@ const initSocial = {
 } as SocialNetworks;
 
 const initConfig = {
-  // collections: [],
-  // tokens: [],
+  wallets: undefined,
+  pairs:[],
+  tokens:[],
+  marketFilters:[],
   general: {
+    domain: undefined,
+    feePercentage: undefined,
+    feeRecipient: undefined,
+    icon: undefined,
+    title: undefined,
     social: initSocial
   },
-  theme: undefined
+  theme: undefined,
+  theme_name: undefined,
+  layout: undefined,
+  theme_light: undefined,
+  theme_dark: undefined
+
 } as ConfigFileExchange;
 
 export default function VerticalLinearStepper(props: MarketplaceProps) {
@@ -197,7 +212,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
     useEffect(() => {
       if(editable && configs != null){
         const index = configs.findIndex( 
-          (c,i) => c.type === 'MARKETPLACE' && 
+          (c,i) => c.type === 'DEX' && 
           c.slug?.toLowerCase() === slug?.toLowerCase() && 
           configs[i]?.config != null
         );
@@ -252,7 +267,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
             <Link color="inherit" onClick={()=> history.push('/my-apps/manage')}>My Apps</Link>
             <Typography color="textPrimary">Wizard</Typography>
           </Breadcrumbs>
-          <Typography variant="h4" color="textPrimary">MARKETPLACE {slug ? `- Editing ${slug}` : ''}</Typography>
+          <Typography variant="h4" color="textPrimary">Exchange {slug ? `- Editing ${slug}` : ''}</Typography>
         </Grid>
       </GridContainer>
 
@@ -279,8 +294,8 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
                 getStepContent(
                   activeStep, 
                   label, 
-                  { form , changeIssuerForm: updateForm, validator, isValid, editable }, 
-                  (chainId ?? ChainId.Mainnet)
+                  { config: form , changeIssuerForm: updateForm, validator, isValid, editable }, 
+                  (Number(chainId ?? ChainId.Mainnet))
                 ) : 
                 ( 
                   <Box m="auto" padding="5rem" textAlign="center">

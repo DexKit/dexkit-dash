@@ -1,22 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import { Grid, TextField } from '@material-ui/core';
-import { AggregatorLinks } from 'types/myApps';
+import { ConfigFileAggregator, AggregatorLinks } from 'types/myApps';
 import { capitalize } from 'utils';
 import { urlValidator } from 'utils/text';
-import { WizardData, WizardProps } from '..';
+import { WizardData } from '..';
+import { WizardProps } from '../../shared';
 import { error } from '../../shared';
 import { InfoComponent } from '../../shared/Buttons/infoComponent';
-
-
-const infoText = new Map<keyof AggregatorLinks, string>();
-infoText.set('about', 'enter the site content information about the project');
-infoText.set('code', 'url link to project code');
-infoText.set('docs', 'url link to project documentation');
-infoText.set('discord', 'url link to the project channel on the discord platform');
-infoText.set('telegram', 'url link to group on telegram');
-infoText.set('analytics', '');
-
+import { HELP_TEXT_LINKS } from '../helpText';
+import { getHelpText } from '../../shared';
 
 const placeholders = new Map<keyof AggregatorLinks, string>();
 placeholders.set('about', 'https://aboutproject.com');
@@ -30,7 +23,7 @@ placeholders.set('analytics', 'https://analytics.google.com');
 interface LinksFormProps {
   data: AggregatorLinks;
 }
-type Props = LinksFormProps & WizardProps;
+type Props = LinksFormProps & WizardProps<ConfigFileAggregator, WizardData>;
 const LinksForm: React.FC<Props> = (props) => {
   const { data: startData, changeIssuerForm, validator, isValid: startValidation, editable } = props;
   const [errors, setErrors] = useState<error>();
@@ -86,7 +79,9 @@ const LinksForm: React.FC<Props> = (props) => {
   return (
     <GridContainer>
       {
-        Object.keys(fields ?? {}).map((key: string, i) => (
+        Object.keys(fields ?? {}).map((key: string, i) => {
+          const helpText = getHelpText(HELP_TEXT_LINKS, key, 0);
+          return (
           <Grid item xs={12} md={6} sm={6} key={i}>
             <TextField
               type="url"
@@ -116,11 +111,11 @@ const LinksForm: React.FC<Props> = (props) => {
                 shrink: true,
               }}
               placeholder={placeholders.get(key as keyof AggregatorLinks)}
-              InputProps={{ endAdornment: (<InfoComponent text={infoText.get(key as keyof AggregatorLinks)}/>)}}
+              InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
               disabled={!Boolean(editable)}
             />
           </Grid>
-        ))
+        )})
       }
 
     </GridContainer>

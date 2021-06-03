@@ -74,6 +74,7 @@ export interface ConfigResponse {
   }
   
   export interface CurrencyPairMetaData {
+    address: string; //endereco do pair?
     base: string;
     quote: string;
     config?: ConfigPairMetaData;

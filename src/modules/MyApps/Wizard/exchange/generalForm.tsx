@@ -5,33 +5,27 @@ import {
   TextField, 
 } from '@material-ui/core';
 
-import { GeneralConfig, SocialNetworks} from 'types/myApps';
-import {WizardProps} from '.';
-import {WizardData} from './index';
+import { ConfigFileExchange, GeneralConfig, SocialNetworks} from 'types/myApps';
+import { WizardProps } from '../shared';
 import isURL from 'validator/lib/isURL';
 import {isAddress} from '@ethersproject/address';
 import {capitalize} from 'utils/text';
 import  { CustomLabel } from 'shared/components/Wizard/Label';
 import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import { error } from '../shared/';
+import { HELP_TEXT } from './helpText';
+import { getHelpText } from '../shared';
 import { InfoComponent } from '../shared/Buttons/infoComponent';
+import { WizardData } from '.';
 
 interface GeneralFormProps {
   title: string;
   fields: GeneralConfig;
 }
 
-type Props = GeneralFormProps & WizardProps;
+type Props = GeneralFormProps & WizardProps<ConfigFileExchange, keyof ConfigFileExchange>;
 
 // const contactsType = ['Telegram Url', 'Twitter Url', 'Facebook Url', 'Discord Url', 'Reddit Url', 'BitcoinTalk Url']
-
-const helpText = new Map<keyof GeneralConfig, string>();
-helpText.set("title", 'enter a name that has not yet been used in other projects as the title of the current project.');
-helpText.set('icon', '');
-helpText.set('domain', '');
-helpText.set('feePercentage', '');
-helpText.set('feeRecipient', '');
-
 
 const GeneralForm: React.FC<Props> = (props) => {
   const {
@@ -113,7 +107,7 @@ const GeneralForm: React.FC<Props> = (props) => {
             break;
           }
         }
-        const _valid = Object.keys(errors)
+        const _valid = Object.keys(fields)
           .filter((k) => !(`${k}` in (fields?.social ?? {})))
           .reduce((pre, cur): boolean => {
             type k = keyof typeof fields;
@@ -187,7 +181,7 @@ const GeneralForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if(Boolean(editable)){
-      changeIssuerForm(WizardData.GENERAL, fields);
+      changeIssuerForm(WizardData.GENERAL as keyof ConfigFileExchange, fields);
     }
   }, [fields, changeIssuerForm, editable]);
 
@@ -228,7 +222,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           $e.preventDefault()
         }}
         disabled={!Boolean(editable)}
-        InputProps={{ endAdornment: (<InfoComponent text={helpText.get('title')}/>)}}
+        InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'title', 0)}/>)}}
       />
       </Grid>
       <Grid item xs={12} md={6} sm={6} key="icon">
@@ -264,7 +258,7 @@ const GeneralForm: React.FC<Props> = (props) => {
             changeFields($e, 'icon');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={helpText.get('icon')}/>)}}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'icon', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6} key="domain">
@@ -296,7 +290,7 @@ const GeneralForm: React.FC<Props> = (props) => {
             changeFields($e, 'domain');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={helpText.get('domain')}/>)}}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'domain', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6} key="feeRecipient">
@@ -328,7 +322,7 @@ const GeneralForm: React.FC<Props> = (props) => {
             changeFields($e, 'feeRecipient');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={helpText.get('feeRecipient')}/>)}}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'feeRecipient', 0)}/>)}}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6} key="feePercentage">
@@ -370,7 +364,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           // InputProps={{
           //   endAdornment: <InputAdornment position="end">%</InputAdornment>,
           // }}
-          InputProps={{ endAdornment: (<InfoComponent text={helpText.get('feePercentage')}/>)}}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'feePercentage', 0)}/>)}}
         />
 
       </Grid>
@@ -401,7 +395,7 @@ const GeneralForm: React.FC<Props> = (props) => {
               changeSocialFields($e, key);
             }}
             disabled={!Boolean(editable)}
-            InputProps={{ endAdornment: (<InfoComponent text={`enter with a valid ${capitalize(`${key.replace('_', ' ').toLowerCase()}`)}`}/>)}}
+            InputProps={{ endAdornment: (<InfoComponent text={`Enter with a valid ${capitalize(`${key.replace('_', ' ').toLowerCase()}`)}`}/>)}}
           />
         </Grid>
       ))}

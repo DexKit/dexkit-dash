@@ -3,12 +3,12 @@ import {useIntl} from 'react-intl';
 import {useTokenPairs} from 'hooks/protocolExplorer/useTokenPairs';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 
-import {Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, Fade, Paper, Toolbar, Typography} from '@material-ui/core';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenPairsTable from './TokenPairsTable';
 import {useStyles} from './index.style';
+import LoadingTable from 'modules/Common/LoadingTable';
 
 interface Props {
   baseAddress: string;
@@ -42,26 +42,40 @@ const TokenPairs: React.FC<Props> = (props) => {
   // }, [address]);
 
   return (
-    <Paper className={classes.paper}>
-      <Toolbar className={classes.toolbar}>
-        <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
-          <EmojiEventsIcon color={'primary'} className={classes.toolbarIcon}/>
-          <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.topPairs']}</Typography>
-        </Box>
-      </Toolbar>
-      {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-        <TokenPairsTable
-          networkName={networkName}
-          data={data}
-          exchange={exchange}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onChangePage={(newPage) => onChangePage(newPage)}
-          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-        />
-      )}
-    </Paper>
+    <Fade in={true} timeout={1000}>
+      <Paper className={classes.paper}>
+        <Toolbar className={classes.toolbar}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-start'}
+            alignItems={'center'}>
+            <EmojiEventsIcon
+              color={'primary'}
+              className={classes.toolbarIcon}
+            />
+            <Typography variant='h5' display={'block'} align={'center'}>
+              {messages['app.topPairs']}
+            </Typography>
+          </Box>
+        </Toolbar>
+        {loading ? (
+          <LoadingTable columns={7} rows={3} />
+        ) : error ? (
+          <ErrorView message={error.message} />
+        ) : (
+          <TokenPairsTable
+            networkName={networkName}
+            data={data}
+            exchange={exchange}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangePage={(newPage) => onChangePage(newPage)}
+            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+          />
+        )}
+      </Paper>
+    </Fade>
   );
 };
 

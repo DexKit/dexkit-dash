@@ -3,7 +3,7 @@ import {useChainId} from 'hooks/useChainId';
 import {usePairExplorer} from 'hooks/protocolExplorer/usePairExplorer';
 import {extractPairFromAddress} from 'utils/tokens';
 import GridContainer from '../../../../@crema/core/GridContainer';
-import {Grid, Paper} from '@material-ui/core';
+import {Fade, Grid, Paper} from '@material-ui/core';
 import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
@@ -12,6 +12,7 @@ import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
 import Info from 'modules/ProtocolExplorer/Common/Info';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
+import {Skeleton} from '@material-ui/lab';
 
 const TVChartContainer = React.lazy(
   () => import('../../../../shared/components/chart/TvChart/tv_chart'),
@@ -42,7 +43,7 @@ const PairExplorer = (props: Props) => {
   const isDark = theme.palette.type === ThemeMode.DARK;
 
   return (
-    <>      
+    <>
       <GridContainer>
         <Grid item xs={12} md={5}>
           <Grid item xs={12} md={12}>
@@ -53,26 +54,34 @@ const PairExplorer = (props: Props) => {
             </Paper>
           </Grid>
           <Paper style={{marginTop: 20}}>
-            {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-              data && <Info data={data} />
+            {error ? (
+              <ErrorView message={error.message} />
+            ) : (
+              <Info data={data} loading={loading} />
             )}
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={7}>
-          <Grid item xs={12} md={12}>
-            {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-              data && (
-                <Grid item xs={12} md={12} style={{height: 450}}>
-                  <TVChartContainer
-                    symbol={`${data.baseCurrency?.symbol}-USD`}
-                    chainId={1}
-                    darkMode={isDark}
-                  />
-                </Grid>
-              )
-            )}
-          </Grid>
+          <Fade in={true} timeout={1000}>
+            <Grid item xs={12} md={12}>
+              {loading ? (
+                <Skeleton variant='rect' height={370} />
+              ) : error ? (
+                <ErrorView message={error.message} />
+              ) : (
+                data && (
+                  <Grid item xs={12} md={12} style={{height: 450}}>
+                    <TVChartContainer
+                      symbol={`${data.baseCurrency?.symbol}-USD`}
+                      chainId={1}
+                      darkMode={isDark}
+                    />
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </Fade>
         </Grid>
 
         <Grid style={{marginTop: 20}} item xs={12} md={12}>
@@ -84,7 +93,6 @@ const PairExplorer = (props: Props) => {
             type={'pair'}
           />
         </Grid>
-
       </GridContainer>
     </>
   );

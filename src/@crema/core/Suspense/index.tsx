@@ -6,7 +6,8 @@ interface SuspenseProps {
 }
 
 const Suspense: React.FC<SuspenseProps> = ({children}) => {
-  return <React.Suspense fallback={<Loader />}>{children}</React.Suspense>;
+  // return <React.Suspense fallback={<Loader />}>{children}</React.Suspense>;
+  return <React.Suspense fallback={<></>}>{children}</React.Suspense>;
 };
 
 export default Suspense;

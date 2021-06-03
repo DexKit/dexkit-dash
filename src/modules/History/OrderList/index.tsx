@@ -1,36 +1,46 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { Grid, Box, Card } from '@material-ui/core';
-import { GridContainer } from '@crema';
-import { useOrderList } from 'hooks/history/useOrderList';
-import { useStyles } from './index.style';
-import PageTitle from 'shared/components/PageTitle';
-import LoadingView from 'modules/Common/LoadingView';
+import {RouteComponentProps} from 'react-router-dom';
+import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {GridContainer} from '@crema';
+import {useOrderList} from 'hooks/history/useOrderList';
+import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import OrderTable from './OrderTable';
-import { useNetwork } from 'hooks/useNetwork';
+import {useNetwork} from 'hooks/useNetwork';
+import LoadingTable from 'modules/Common/LoadingTable';
 
 type Params = {
-  address: string
+  address: string;
 };
 
-type Props = RouteComponentProps<Params>
+type Props = RouteComponentProps<Params>;
 
-const OrderList: React.FC<Props> = (props) => { 
-  const {match: { params }} = props;
+const OrderList: React.FC<Props> = (props) => {
+  const {
+    match: {params},
+  } = props;
   const {address} = params;
-  
+
   const classes = useStyles();
 
   const networkName = useNetwork();
-  const {loading, error, data, totalRows, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage} = useOrderList({address});
+  const {
+    loading,
+    error,
+    data,
+    totalRows,
+    currentPage,
+    rowsPerPage,
+    rowsPerPageOptions,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useOrderList({address});
 
-  console.log('error', error)
-  console.log('data', data)
+  console.log('error', error);
+  console.log('data', data);
 
   return (
     <Box pt={{xl: 4}}>
-      
       {/* <PageTitle
         history={[
           {url:'/', name: 'Dashboard'},
@@ -42,11 +52,17 @@ const OrderList: React.FC<Props> = (props) => {
 
       <GridContainer>
         <Grid item xs={12} md={12}>
-          <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
-            <Card>
-              <Box mb={4} display='flex' justifyContent='flex-end' alignItems='center'>
-                <Box mt={{xl: 1}}>
-                  {/* <Select
+          <Paper className={classes.paper}>
+            <Toolbar className={classes.toolbar}>
+              <Box
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+                style={{width: '100%'}}>
+                <Box>
+                  <Typography variant='h5'>Order List</Typography>
+                </Box>
+                {/* <Select
                     className={classes.selectBox}
                     value={filterValue}
                     onChange={handleChange}
@@ -61,25 +77,27 @@ const OrderList: React.FC<Props> = (props) => {
                       {messages['app.receive']}
                     </option>
                   </Select> */}
-                </Box>
               </Box>
-              { loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
-                <OrderTable
-                  networkName={networkName}
-                  data={data} 
-                  totalRows={totalRows}
-                  currentPage={currentPage}
-                  rowsPerPage={rowsPerPage}
-                  rowsPerPageOptions={rowsPerPageOptions}
-                  onChangePage={(newPage)=> onChangePage(newPage)}
-                  onChangeRowsPerPage={(perPage)=> onChangeRowsPerPage(perPage)} 
-                />
-              )}
-            </Card>
-          </Box>
+            </Toolbar>
+            {loading ? (
+              <LoadingTable columns={8} rows={10} />
+            ) : error ? (
+              <ErrorView message={error.message} />
+            ) : (
+              <OrderTable
+                networkName={networkName}
+                data={data}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangePage={(newPage) => onChangePage(newPage)}
+                onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+              />
+            )}
+          </Paper>
         </Grid>
-      </GridContainer>  
-
+      </GridContainer>
     </Box>
   );
 };

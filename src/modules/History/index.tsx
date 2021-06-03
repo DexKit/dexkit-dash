@@ -37,10 +37,6 @@ export const historyConfigs = [
     ],
   },
 
-  
-
-
-
   {
     routes: [
       {

@@ -9,6 +9,7 @@ import {IconProps} from 'modules/routesConfig';
 
 import ExploreIcon from '@material-ui/icons/Explore';
 import MoneyIcon from '@material-ui/icons/Money';
+import {useStyles} from './index.style';
 
 const INFOR_CARD = [
   {
@@ -36,6 +37,8 @@ const ProtocolNavigationZRXProtocol = () => {
   };
 
   const [shouldRender, setShouldRender] = useState(false);
+
+  const classes = useStyles();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,7 +74,8 @@ const ProtocolNavigationZRXProtocol = () => {
                   sm={6}
                   md={12}
                   key={index}
-                  style={{marginBottom: '7px'}}>
+                  style={{marginBottom: '7px'}}
+                  className={classes.btnPrimary}>
                   <InfoCard state={state} icon={state.icon} />
                 </Grid>
               ))}

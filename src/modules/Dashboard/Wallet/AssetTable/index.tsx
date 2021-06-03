@@ -1,12 +1,14 @@
 import React from 'react';
 import AppCard from '../../../../@crema/core/AppCard';
 import CTable from './CTable';
-import {makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Fade, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import LoadingTable from 'modules/Common/LoadingTable';
 
 interface AssetTableProps {
   balances: GetMyBalance_ethereum_address_balances[];
+  loading?: boolean;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const AssetTable: React.FC<AssetTableProps> = ({balances}) => {
+const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const classes = useStyles();
 
   return (
@@ -40,12 +42,18 @@ const AssetTable: React.FC<AssetTableProps> = ({balances}) => {
     //     </>
     //   }>
     //  </AppCard>
-    <Paper className={classes.paper}>
-      <Toolbar className={classes.toolbar}>
-        <Typography variant='h5'>My Assets</Typography>
-      </Toolbar>
-      <CTable balances={balances} />
-    </Paper>
+    <Fade in={true} timeout={1000}>
+      <Paper className={classes.paper}>
+        <Toolbar className={classes.toolbar}>
+          <Typography variant='h5'>My Assets</Typography>
+        </Toolbar>
+        {loading ? (
+          <LoadingTable columns={3} rows={3} />
+        ) : (
+          <CTable balances={balances} />
+        )}
+      </Paper>
+    </Fade>
   );
 };
 

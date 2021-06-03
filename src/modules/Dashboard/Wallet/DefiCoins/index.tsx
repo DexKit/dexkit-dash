@@ -9,6 +9,7 @@ import {
   Paper,
   makeStyles,
   Toolbar,
+  Fade,
 } from '@material-ui/core';
 import {blue} from '@material-ui/core/colors';
 import {CoinData} from 'types/models/Crypto';
@@ -55,25 +56,27 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
   const classes = useStyles();
 
   return (
-    <Paper>
-      <Box key='defi-assets'>
-        <Toolbar className={classes.toolbar}>
-          <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            style={{width: '100%'}}>
-            <Box>
-              <Typography variant='h5'>Defi Assets</Typography>
-            </Box>
-            {/* <Box>
+    <Box className='card-hover'>
+      <Fade in={true} timeout={1000}>
+        <Paper>
+          <Box key='defi-assets'>
+            <Toolbar className={classes.toolbar}>
+              <Box
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+                style={{width: '100%'}}>
+                <Box>
+                  <Typography variant='h5'>Defi Assets</Typography>
+                </Box>
+                {/* <Box>
               <Link color='secondary' component='button' underline='none'>
                 <IntlMessages id='common.viewAll' />
               </Link>
             </Box> */}
-          </Box>
-        </Toolbar>
-        {/* <Box display='flex' alignItems='center'>
+              </Box>
+            </Toolbar>
+            {/* <Box display='flex' alignItems='center'>
           <Box
             component='h2'
             color='text.primary'
@@ -89,39 +92,41 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
           </Box>
         </Box> */}
 
-        <GridContainer>
-          {defiData.length > 0 ? (
-            defiData
-              .slice(0, defiData.length > 9 ? 9 : defiData.length)
-              .map(({token, coinsDataProps: coin}: CoinProps, index) => (
-                <Grid item xs={4} sm={4}>
-                  <CoinStats
-                    key={index}
-                    token={token}
-                    icon={matchCoinSymbol(coin.symbol ?? '')}
-                    bgColor={blue[500]}
-                    data={coin}
-                    heading={coin.name}
-                  />
+            <GridContainer>
+              {defiData.length > 0 ? (
+                defiData
+                  .slice(0, defiData.length > 9 ? 9 : defiData.length)
+                  .map(({token, coinsDataProps: coin}: CoinProps, index) => (
+                    <Grid item xs={4} sm={4}>
+                      <CoinStats
+                        key={index}
+                        token={token}
+                        icon={matchCoinSymbol(coin.symbol ?? '')}
+                        bgColor={blue[500]}
+                        data={coin}
+                        heading={coin.name}
+                      />
+                    </Grid>
+                  ))
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '60px 0px',
+                  }}>
+                  <Typography>You don't have DEFI Assets</Typography>
                 </Grid>
-              ))
-          ) : (
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '60px 0px',
-              }}>
-              <Typography>You don't have DEFI Assets</Typography>
-            </Grid>
-          )}
-        </GridContainer>
-      </Box>
-    </Paper>
+              )}
+            </GridContainer>
+          </Box>
+        </Paper>
+      </Fade>
+    </Box>
   );
 };
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {Grid, Box, Card, Paper, Toolbar, Typography} from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {useStyles} from './index.style';
 import PageTitle from 'shared/components/PageTitle';
@@ -12,8 +12,9 @@ import {RouteComponentProps} from 'react-router';
 import TradeTable from './TradeTable';
 import usePagination from 'hooks/usePagination';
 import LoadingTable from '../../Common/LoadingTable';
-import { toTokenUnitAmount } from '@0x/utils';
-import { useTokenList } from 'hooks/useTokenList';
+import {toTokenUnitAmount} from '@0x/utils';
+import {useTokenList} from 'hooks/useTokenList';
+import {truncateAddress} from 'utils';
 
 type Params = {
   address: string;
@@ -27,9 +28,9 @@ const TradeHistory: React.FC<Props> = (props) => {
   } = props;
   const {address} = params;
 
-  const networkName = useNetwork();
-
   const {currentChainId} = useChainId();
+
+  const networkName = useNetwork();
 
   const tokenList = useTokenList();
 
@@ -42,48 +43,110 @@ const TradeHistory: React.FC<Props> = (props) => {
   } = usePagination();
 
   const [data, setData] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
 
-  // sell
-  const {loading, error, data: dataFn} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${currentPage+1}&perPage=${rowsPerPage}?makerToken=${address}`,
+  const {
+    loading: loadingMaker,
+    error: errorMaker,
+    data: dataMaker,
+  } = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
+      currentPage + 1
+    }&perPage=${rowsPerPage / 2}&makerToken=${address}`,
     [address, currentPage, rowsPerPage],
   );
 
-  // BUY JUNTAR COM O DE CIMA e colocar um novo campo  SIDE ou TYPE "badge" com valores BUY e SELL
-  // DEIXAR A LÒGICA AQUI OU COLOCAR EM UM HOOK
-  // const {loading, error, data: dataBuy} = useFetch(
-  //   `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${currentPage+1}&perPage=${rowsPerPage}?takerToken=${address}`,
-  //   [address, currentPage, rowsPerPage],
-  // );
+  const {
+    loading: loadingTaker,
+    error: errorTaker,
+    data: dataTaker,
+  } = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
+      currentPage + 1
+    }&perPage=${rowsPerPage / 2}&takerToken=${address}`,
+    [address, currentPage, rowsPerPage],
+  );
 
   useEffect(() => {
-    if (dataFn && dataFn?.records) {
-      const newData = dataFn.records.map((e: any) => {
-        console.log(e);
-        e.order['makerAmountFn'] = toTokenUnitAmount(e.order.makerAmount, tokenList.find(t => t.address == e.order.makerToken)?.decimals||18).toString();
-        e.order['takerAmountFn'] = toTokenUnitAmount(e.order.takerAmount, tokenList.find(t => t.address == e.order.takerToken)?.decimals||18).toString();
-        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(e.metaData.remainingFillableTakerAmount, tokenList.find(t => t.address == e.order.takerToken)?.decimals||18).toString();
+    if (dataMaker && dataTaker && tokenList.length > 0) {
+      const newDataMaker = dataMaker.records.map((e: any) => {
+        const makerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+        );
+        const takerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+        );
+
+        e.order['side'] = 'SELL';
+        e.order['makerTokenFn'] = makerToken;
+        e.order['takerTokenFn'] = takerToken;
+        e.order['makerAmountFn'] = toTokenUnitAmount(
+          e.order.makerAmount,
+          makerToken?.decimals || 18,
+        ).toString();
+        e.order['takerAmountFn'] = toTokenUnitAmount(
+          e.order.takerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
+          e.metaData.remainingFillableTakerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+
         return e;
       });
 
-      setData(newData);
+      const newDataTaker = dataTaker.records.map((e: any) => {
+        const makerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+        );
+        const takerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+        );
+
+        e.order['side'] = 'BUY';
+        e.order['makerTokenFn'] = makerToken;
+        e.order['takerTokenFn'] = takerToken;
+        e.order['makerAmountFn'] = toTokenUnitAmount(
+          e.order.makerAmount,
+          makerToken?.decimals || 18,
+        ).toString();
+        e.order['takerAmountFn'] = toTokenUnitAmount(
+          e.order.takerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
+          e.metaData.remainingFillableTakerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+
+        return e;
+      });
+
+      setData(newDataMaker.concat(newDataTaker));
+      setTotalRows(dataMaker.total + dataTaker.total);
     } else {
-      setData([])
+      setData([]);
     }
-  }, [dataFn]);
+  }, [dataMaker, dataTaker, tokenList]);
 
   const classes = useStyles();
 
+  console.log(data);
+
   return (
     <Box pt={{xl: 4}}>
-      {/* <PageTitle
-        history={[
-          {url:'/', name: 'Dashboard'},
-          {url:'/dashboard/token', name: 'Token'}
-        ]}
-        active={'Trade History'}
-        title={'Trade History'}
-      /> */}
+      <PageTitle
+        breadcrumbs={{
+          history: [
+            {url: '/', name: 'Dashboard'},
+            {url: '/dashboard/token', name: 'Token'},
+          ],
+          active: {name: 'Trade History'},
+        }}
+        title={{name: 'Trade History'}}
+        subtitle={{name: truncateAddress(address), hasCopy: address}}
+      />
 
       <GridContainer>
         <Grid item xs={12} md={12}>
@@ -114,22 +177,24 @@ const TradeHistory: React.FC<Props> = (props) => {
                   </Select> */}
               </Box>
             </Toolbar>
-            {/* {loading ? (
-              <LoadingTable rowCount={10} />
-            ) : error ? (
-              <ErrorView message={error.message} />
+            {loadingMaker || loadingTaker ? (
+              <LoadingTable columns={5} rows={10} />
+            ) : errorMaker || errorTaker ? (
+              <ErrorView
+                message={errorMaker ? errorMaker.message : errorTaker.message}
+              />
             ) : (
               <TradeTable
                 networkName={networkName}
-                data={data.records}
-                totalRows={data.total}
+                data={data}
+                totalRows={totalRows}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 rowsPerPageOptions={rowsPerPageOptions}
                 onChangePage={(newPage) => onChangePage(newPage)}
                 onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
               />
-            )} */}
+            )}
           </Paper>
         </Grid>
       </GridContainer>

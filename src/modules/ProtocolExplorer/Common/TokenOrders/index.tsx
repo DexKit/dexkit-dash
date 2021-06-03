@@ -1,15 +1,15 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
-import {Box, Hidden, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, Fade, Hidden, Paper, Toolbar, Typography} from '@material-ui/core';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
 import FilterList from 'shared/components/Filter/list';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenOrdersTable from './TokenOrdersTable';
 import {useStyles} from './index.style';
+import LoadingTable from 'modules/Common/LoadingTable';
 
 interface Props {
   baseAddress: string | null;
@@ -67,34 +67,51 @@ const TokenOrders: React.FC<Props> = (props) => {
       }*/
 
     // >
-    <Paper className={classes.paper}>
-      <Toolbar className={classes.toolbar}>
-          <Box display={'flex'} justifyContent={'flex-start'}  alignItems={'center'}>
-              <SwapHorizontalCircleIcon color={'primary'} className={classes.toolbarIcon}/>
-              <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
+    <Fade in={true} timeout={1000}>
+      <Paper className={classes.paper}>
+        <Toolbar className={classes.toolbar}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-start'}
+            alignItems={'center'}>
+            <SwapHorizontalCircleIcon
+              color={'primary'}
+              className={classes.toolbarIcon}
+            />
+            <Typography variant='h5' display={'block'} align={'center'}>
+              {messages['app.tradeHistory']}
+            </Typography>
           </Box>
           <Hidden mdDown>
-            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}>
               <FilterList />
               <FilterMenu />
             </Box>
           </Hidden>
-      </Toolbar>
+        </Toolbar>
 
-      {loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-        <TokenOrdersTable
-          networkName={networkName}
-          data={data}
-          exchange={exchange}
-          type={type}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onChangePage={(newPage) => onChangePage(newPage)}
-          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-        />
-      )}
-    </Paper>
+        {loading ? (
+          <LoadingTable columns={8} rows={10} />
+        ) : error ? (
+          <ErrorView message={error.message} />
+        ) : (
+          <TokenOrdersTable
+            networkName={networkName}
+            data={data}
+            exchange={exchange}
+            type={type}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangePage={(newPage) => onChangePage(newPage)}
+            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+          />
+        )}
+      </Paper>
+    </Fade>
     // </AppCard>
     // </Box>
   );

@@ -53,32 +53,10 @@ export enum OrderSide {
 export enum Steps {
   APPROVE,
   CONVERT,
-  ORDER,
+  MARKET,
+  LIMIT,
   ERROR,
   DONE,
-}
-
-export interface Order0x {
-  chainId: number;
-  exchangeAddress: string;
-  makerAddress: string;
-  takerAddress: string;
-  feeRecipientAddress: string;
-  senderAddress: string;
-  makerAssetAmount: BigNumber;
-  takerAssetAmount: BigNumber;
-  makerFee: BigNumber;
-  takerFee: BigNumber;
-  expirationTimeSeconds: BigNumber;
-  salt: BigNumber;
-  makerAssetData: string;
-  takerAssetData: string;
-  makerFeeAssetData: string;
-  takerFeeAssetData: string;
-}
-
-export interface SignedOrder extends Order0x {
-  signature: string;
 }
 
 export interface Token {
@@ -149,4 +127,9 @@ export interface MintBurn {
   reserve0: number,
   reserve1: number,
   variation: number
+}
+
+export interface ChartTick {
+  date: Date,
+  value: number
 }

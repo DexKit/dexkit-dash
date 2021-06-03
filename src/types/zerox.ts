@@ -1,6 +1,6 @@
+import { SignedOrder } from '@0x/order-utils';
 import { BigNumber } from '@0x/utils';
-import { SignedOrder, OrderSide, Token } from 'types/app';
-import { ChainId } from 'types/blockchain';
+import { OrderSide, Token } from 'types/app';
 
 
 export interface SwapQuoteResponse extends SwapQuoteResponsePartialTransaction, SwapQuoteResponsePrice {

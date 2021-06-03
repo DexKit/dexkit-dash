@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import { Grid, TextField } from '@material-ui/core';
-import { AggregatorWallet } from 'types/myApps';
+import { AggregatorWallet, ConfigFileAggregator } from 'types/myApps';
 import { capitalize } from 'utils';
-import { WizardData, WizardProps } from '..';
-import { error } from '../../shared';
+import { WizardData } from '..';
+import { error, WizardProps } from '../../shared';
 import { InfoComponent } from '../../shared/Buttons/infoComponent';
 
 const infoText = new Map<keyof AggregatorWallet, string>();
@@ -19,7 +19,7 @@ placeholders.set('portis', '');
 interface WalletFormProps {
   data: AggregatorWallet;
 }
-type Props = WalletFormProps & WizardProps;
+type Props = WalletFormProps & WizardProps<ConfigFileAggregator, WizardData>;
 const WalletsForm: React.FC<Props> = (props) => {
   const { data: startData, changeIssuerForm, validator, isValid: startValidation, editable } = props;
   const [errors, setErrors] = useState<error>();

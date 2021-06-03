@@ -1,32 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import GridContainer from '@crema/core/GridContainer';
-import { GeneralConfigAggregator } from 'types/myApps';
-import { WizardData, WizardProps } from '..';
+import { ConfigFileAggregator, GeneralConfigAggregator } from 'types/myApps';
+import { WizardData } from '..';
+import { WizardProps} from '../../shared';
 import { ItemComponent } from './generalItem';
 import { capitalize } from 'utils/text';
 import { CustomLabel } from 'shared/components/Wizard/Label';
 import { error } from '../../shared';
+import { HELP_TEXT } from '../helpText';
+import { getHelpText } from '../../shared';
 
-const helpText = new Map<keyof GeneralConfigAggregator, string>();
-helpText.set("name", 'enter a name that has not yet been used in other projects as the title of the current project.');
-helpText.set('logo', '');
-helpText.set('logo_dark', '');
-helpText.set('domain', '');
-helpText.set('feeRecipient', '');
-helpText.set('affiliateAddress', '');
-helpText.set('brand_color', '');
-helpText.set('brand_color_dark', '');
-helpText.set('bsc_as_default', '');
-helpText.set('buyTokenPercentage', '');
-helpText.set('default_token_address', '');
-helpText.set('default_token_address_bsc', '');
-helpText.set('default_token_list', '');
-helpText.set('fee_waive_for_default_token', '');
-helpText.set('hide_powered_by_dexkit', '');
-helpText.set('is_dark_mode', '');
-helpText.set('support_bsc', '');
-
-interface GeneralFormProps extends Omit<WizardProps, 'config'>{
+interface GeneralFormProps extends Omit<WizardProps<ConfigFileAggregator, WizardData>, 'config'>{
   title: string
   data: GeneralConfigAggregator;
 }
@@ -84,11 +68,13 @@ const GeneralForm: React.FC<Props> = (props) => {
     const _isValid = [...valid.values()].reduce((acu, cur) => acu && cur, true);
     validator(_isValid);
   }, [valid, validator]);
-
   return (
     <GridContainer>
       {
-        keys.map(key => (
+        keys.map(key => 
+        {
+          const helpText = getHelpText(HELP_TEXT, key, 0);
+          return (
           <ItemComponent
             label={<CustomLabel required={true}>{capitalize(key,'_')}</CustomLabel>} 
             fieldName={key} 
@@ -102,9 +88,9 @@ const GeneralForm: React.FC<Props> = (props) => {
             value={fields[key]} 
             isValid={valid.get(key) ?? false}
             key={key}
-            helpText={helpText.get(key) ?? ''}
+            helpText={helpText}
           />
-        ))
+        )})
       }
     </GridContainer>
   );

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Card} from '@material-ui/core';
+import {Box, Button, Card, Fade} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -13,6 +13,7 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
+import {OnlyOwnerError} from '@0x/utils/lib/src/revert_errors/utils/ownable_revert_errors';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 interface Props {
@@ -55,7 +56,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
     } else {
       setTokens(balances);
     }
-  }, [only]);
+  }, [only, balances]);
 
   useEffect(() => {
     setUsdAvailable(
@@ -121,93 +122,99 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
 
   return (
     <Box className='card-hover'>
-      <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-        <Card>
-          <Box
-            display='flex'
-            // flexDirection={{xs: 'column', xl: 'row'}}
-            alignItems={{xl: 'center'}}
-            flexDirection={'row'}
-            flexWrap={'wrap'}
-            justifyContent={'space-between'}>
-            {loading ? (
-              <>
-                <Skeleton variant='rect' width='40%' height={20} />
-                <Box display='flex' alignItems='end'>
-                  <Skeleton
-                    variant='rect'
-                    width={106}
-                    height={40}
-                    style={{marginRight: 10}}
-                  />
-                  <Skeleton variant='rect' width={106} height={40} />
-                </Box>
-              </>
-            ) : (
-              <>
-                <Box display='flex' alignItems='baseline' mr={2}>
-                  <Box
-                    component='h3'
-                    color='text.primary'
-                    fontFamily={Fonts.BOLD}
-                    fontSize={{xs: 20, sm: 22, xl: 24}}>
-                    ${onlyTokenValueInUsd || usdAvailable.toFixed(2)}
+      <Fade in={true} timeout={1000}>
+        <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
+          <Card>
+            <Box
+              display='flex'
+              // flexDirection={{xs: 'column', xl: 'row'}}
+              alignItems={{xl: 'center'}}
+              flexDirection={'row'}
+              flexWrap={'wrap'}
+              justifyContent={'space-between'}>
+              {loading ? (
+                <>
+                  <Skeleton variant='rect' width='40%' height={20} />
+                  <Box display='flex' alignItems='end'>
+                    <Skeleton
+                      variant='rect'
+                      width={106}
+                      height={40}
+                      style={{marginRight: 10}}
+                    />
+                    <Skeleton variant='rect' width={106} height={40} />
                   </Box>
-                  <Box
-                    component='span'
-                    ml={3}
-                    color={indigo[100]}
-                    fontSize={{xs: 16, xl: 18}}
-                    whiteSpace='nowrap'>
-                    {onlyTokenValue || 'Avl. Balance'}
+                </>
+              ) : (
+                <>
+                  <Box display='flex' alignItems='baseline' mr={2}>
+                    <Box
+                      component='h3'
+                      color='text.primary'
+                      fontFamily={Fonts.BOLD}
+                      fontSize={{xs: 20, sm: 22, xl: 24}}>
+                      ${onlyTokenValueInUsd || usdAvailable.toFixed(2)}
+                    </Box>
+                    <Box
+                      component='span'
+                      ml={3}
+                      color={indigo[100]}
+                      fontSize={{xs: 16, xl: 18}}
+                      whiteSpace='nowrap'>
+                      {onlyTokenValue || 'Avl. Balance'}
+                    </Box>
                   </Box>
-                </Box>
 
-                <Box
-                  display='flex'
-                  alignItems='center'
-                  ml={{xs: 0, xl: 'auto'}}
-                  mt={{xs: 2, lg: 0}}>
-                  <Box>
-                    <Button
-                      onClick={() => setSenderModal(true)}
-                      className={classes.btnPrimary}>
-                      <IntlMessages id='common.send' />
-                      <CallMadeIcon style={{marginLeft: 5}} />
-                    </Button>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    ml={{xs: 0, xl: 'auto'}}
+                    mt={{xs: 2, lg: 0}}>
+                    <Box>
+                      <Button
+                        onClick={() => setSenderModal(true)}
+                        className={classes.btnPrimary}>
+                        <IntlMessages id='common.send' />
+                        <CallMadeIcon style={{marginLeft: 5}} />
+                      </Button>
+                    </Box>
+                    <Box ml={3}>
+                      <Button
+                        onClick={() => setReceiverModal(true)}
+                        className={classes.btnSecondary}>
+                        <IntlMessages id='common.receive' />
+                        <CallReceivedIcon style={{marginLeft: 5}} />
+                      </Button>
+                    </Box>
                   </Box>
-                  <Box ml={3}>
-                    <Button
-                      onClick={() => setReceiverModal(true)}
-                      className={classes.btnSecondary}>
-                      <IntlMessages id='common.receive' />
-                      <CallReceivedIcon style={{marginLeft: 5}} />
-                    </Button>
-                  </Box>
-                </Box>
-              </>
-            )}
-          </Box>
-          {/* <Box
+                </>
+              )}
+            </Box>
+            {/* <Box
             component='p'
             mb={{xs: 3.5, md: 4, xl: 6}}
             fontSize={{xs: 16, xl: 18}}
             color={indigo[100]}>
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
-          {!only && tokens.length > 0 && (
-            <>
-              {loading ? (
-                <Skeleton variant='rect' width='100%' height={40} />
-              ) : (
+            {loading ? (
+              <Skeleton
+                style={{marginTop: 10}}
+                variant='rect'
+                width='100%'
+                height={40}
+              />
+            ) : (
+              !only &&
+              tokens.length > 0 && (
                 <Box pt={{lg: 5}}>
-                  <CoinsInfo coins={tokens || []} />
+                  <CoinsInfo coins={tokens} />
                 </Box>
-              )}
-            </>
-          )}
-        </Card>
-      </Box>
+              )
+            )}
+          </Card>
+        </Box>
+      </Fade>
 
       <Sender
         open={senderModal}

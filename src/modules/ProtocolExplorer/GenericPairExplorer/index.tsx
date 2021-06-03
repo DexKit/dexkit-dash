@@ -9,9 +9,9 @@ import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import PairExplorerAMM from './PairExplorerAMM';
 import PairExplorer from './PairExplorer';
 import PageTitle from 'shared/components/PageTitle';
-import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
-import { truncateAddress } from 'utils';
-import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
+import {truncateAddress} from 'utils';
+import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 
 type Params = {
   address: string;
@@ -33,40 +33,44 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
       <Box pt={{xl: 4}}>
         <PageTitle
           breadcrumbs={{
-            history: exchange === EXCHANGE.ALL ? [
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/overview`,
-                name: 'Pair Explorer',
-              },
-            ] : [
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
-                name: 'Pair Explorer',
-              },
-              {
-                url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
-                name: GET_EXCHANGE_NAME(exchange),
-              },
-            ],
-            active: {name: 'Pair Explorer'}
+            history:
+              exchange === EXCHANGE.ALL
+                ? [
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/overview`,
+                      name: 'Pair Explorer',
+                    },
+                  ]
+                : [
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
+                      name: 'Pair Explorer',
+                    },
+                    {
+                      url: `/${networkName}/protocol-explorer/${exchange}/pair-explorer/${address}`,
+                      name: GET_EXCHANGE_NAME(exchange),
+                    },
+                  ],
+            active: {name: 'Pair Explorer'},
           }}
           title={{name: 'Pair Explorer'}}
           subtitle={{name: truncateAddress(address), hasCopy: address}}
         />
+
         <TokenFilterProvider>
-        {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP ? (
-          <PairExplorerAMM
-            address={address}
-            exchange={exchange}
-            networkName={networkName}
-          />
-        ) : (
-          <PairExplorer
-            address={address}
-            exchange={exchange}
-            networkName={networkName}
-          />
-        )}
+          {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP ? (
+            <PairExplorerAMM
+              address={address}
+              exchange={exchange}
+              networkName={networkName}
+            />
+          ) : (
+            <PairExplorer
+              address={address}
+              exchange={exchange}
+              networkName={networkName}
+            />
+          )}
         </TokenFilterProvider>
       </Box>
 

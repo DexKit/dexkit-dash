@@ -15,8 +15,8 @@ import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { AccordionSummary } from '../../shared/Accordion';
-import { CustomIconButton } from '../../shared/Buttons';
+import { AccordionSummary } from '../Accordion';
+import { CustomIconButton } from '../Buttons';
 import { TokenComponent } from './tokenComponent';
 import { truncateAddress } from 'utils/text';
 import { TokenMetaData } from 'types/myApps';

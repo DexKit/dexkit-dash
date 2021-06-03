@@ -6,6 +6,7 @@
   "app.sellAmount": "Sell Amount",
   "app.buyAmount": "Buy Amount",
   "app.token": "Token",
+  "app.filled": "Filled",
   "app.sellCurrency": "Sell Currency",
   "app.buyCurrency": "Buy Currency",
   "app.exchange": "Exchange",

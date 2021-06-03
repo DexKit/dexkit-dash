@@ -73,17 +73,6 @@ const TokenOrdersTable: React.FC<Props> = ({
           onChangeRowsPerPage(parseInt(event.target.value, 10))
         }
       />
-      <TablePagination
-        className={classes.paginationMobile}
-        rowsPerPageOptions={[]}
-        component='div'
-        count={-1}
-        rowsPerPage={25}
-        page={currentPage}
-        onChangePage={(event: unknown, newPage: number) =>
-          onChangePage(newPage)
-        }
-      />
     </>
   );
 };

@@ -6,11 +6,12 @@ import AppCard from '@crema/core/AppCard';
 import {Fonts} from 'shared/constants/AppEnums';
 import {ReportCards} from 'types/models/Ecommerce';
 import StaticsGraph from './StaticsGraph';
-import { getDexkit } from 'services/rest/coingecko';
+import {getDexkit} from 'services/rest/coingecko';
 import useFetch from 'use-http';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
-import { COINGECKO_URL } from 'shared/constants/AppConst';
+import {COINGECKO_URL} from 'shared/constants/AppConst';
+import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles({
   chartContainer: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  data: ReportCards|undefined;
+  data: ReportCards | undefined;
   timeout: number;
 }
 
@@ -41,16 +42,16 @@ const InfoToken: React.FC<Props> = ({data, timeout}) => {
 
   return (
     <Box className='card-hover'>
-      {
-        data ? (
-          <Grow
-            in={shouldRender}
-            mountOnEnter={true}
-            unmountOnExit={true}
-            timeout={500}>
-            <AppCard>
-              <Box display='flex'>
-                <Box pr={3}>
+      <Grow
+        in={shouldRender}
+        mountOnEnter={true}
+        unmountOnExit={true}
+        timeout={500}>
+        <AppCard>
+          <Box display='flex'>
+            <Box pr={3}>
+              {data ? (
+                <>
                   <Box mb={0.5} component='h3' fontSize={20}>
                     {data.value}
                   </Box>
@@ -65,8 +66,26 @@ const InfoToken: React.FC<Props> = ({data, timeout}) => {
                       alt='currency icon'
                     />
                   </Box>
-                </Box>
-                <Box className={classes.chartContainer} flex={1} pl={1}>
+                </>
+              ) : (
+                <>
+                  <Skeleton
+                    variant='text'
+                    width={100}
+                    style={{marginBottom: 1}}
+                  />
+                  <Skeleton
+                    variant='text'
+                    width={100}
+                    style={{marginBottom: 2}}
+                  />
+                  <Skeleton variant='circle' width={25} height={25} />
+                </>
+              )}
+            </Box>
+            <Box className={classes.chartContainer} flex={1} pl={1}>
+              {data ? (
+                <>
                   <Box
                     display='flex'
                     alignItems='center'
@@ -93,12 +112,22 @@ const InfoToken: React.FC<Props> = ({data, timeout}) => {
                     )}
                     {data.growth.toFixed(2)}%
                   </Box>
+                </>
+              ) : (
+                <Box display='flex' flexDirection='column' alignItems='center'>
+                  <Skeleton
+                    variant='text'
+                    width={80}
+                    style={{marginBottom: 5}}
+                  />
+                  <Skeleton variant='rect' width='100%' height={50} />
+                  <Skeleton variant='text' width={80} style={{marginTop: 5}} />
                 </Box>
-              </Box>
-            </AppCard>
-          </Grow>
-        ) : ( <LoadingView /> )
-      }
+              )}
+            </Box>
+          </Box>
+        </AppCard>
+      </Grow>
     </Box>
   );
 };

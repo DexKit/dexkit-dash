@@ -8,8 +8,12 @@ import { isAddress } from '@ethersproject/address';
 import { Token } from 'types/app';
 import { ChainId } from 'types/blockchain';
 import { CustomLabel } from 'shared/components/Wizard/Label';
-import { error } from '../../shared';
+import { error } from '..';
 import { useBlokchain } from 'hooks/useBlokchain';
+import { HELP_TEXT_TOKEN } from './helpText';
+import { getHelpText } from '../';
+import { InfoComponent } from '../Buttons/infoComponent';
+import { MessageView } from '@crema';
 
 interface TokenComponentProps {
   index: number;
@@ -46,22 +50,35 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
   const [address, setAddress] = useState(data.address);
   const [errors, setErrors] = useState<error>();
   const [valid, setValid] = useState<boolean>(isValid);
+  const [loading, setLoading] = useState(false);
+  const [searchfailed, setSearchFailed] = useState<string>();
   const { onGetToken } = useBlokchain();
 
   const findToken = useCallback((): Promise<Token | undefined> => {
-    
+    if(address == null || !isAddress(address)){
+      return Promise.resolve(undefined);
+    }
     const token = tokens.find(t => t.address.toLowerCase() === address.toLowerCase());
     if(token != null){
       return Promise.resolve(token);
     }
-    return onGetToken(address.toLowerCase());
-  }, [tokens, address])
+    return onGetToken(address?.toLowerCase());
+  }, [tokens, address, onGetToken]);
 
   useEffect(() => {
+    const _valid = nameValidator(name) && addressValidator(address) && decimalsValidator(decimals)
+    && uniqueCheck(address);
+    setValid(_valid);
+    validator(_valid);
+  }, []);
+
+  useEffect(() => {
+    setSearchFailed(undefined);
     if (!Boolean(editable)) {
       return;
     }
     if (errors == null || (errors != null && errors['address'] == null)) {
+      setLoading(false)
       findToken()
       .then( token => {
         if (token != null) {
@@ -96,6 +113,10 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
           setErrors(_errors);
         }
       })
+      .catch(e => {
+        setSearchFailed('Token search failed!');
+      })
+      .finally(() => setLoading(false))
     }
   }, [address]);
 
@@ -107,8 +128,16 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
   }, [errors]);
 
   useEffect(() => {
-    validator(valid);
+    if (errors != null) {
+      validator(valid);
+    }
   }, [valid, validator]);
+
+  useEffect(() => {
+    if(searchfailed != null){
+      setErrors({ ...errors, address: searchfailed});
+    }
+  }, [searchfailed])
 
   return (
     <>
@@ -148,9 +177,14 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
           helperText={!valid ? errors?.address : undefined}
           error={errors?.address != null}
           fullWidth
-          label={<CustomLabel text="address" required={true} />}
+          label={<CustomLabel text="Address" required={true} />}
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           variant="outlined"
-          disabled={!Boolean(editable)}
+          disabled={Boolean(editable) ? loading : true}
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_TOKEN, 'address', 0)} />) }}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -180,9 +214,16 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
           }
           helperText={!valid ? errors?.name : undefined}
           error={errors?.name != null}
-          fullWidth label={`name`}
+          fullWidth 
+          label={`Name`}
           variant="outlined"
+          placeholder={'Name'}
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           disabled
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_TOKEN, 'name', 0)} />) }}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -214,9 +255,15 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
           helperText={!valid ? errors?.symbol : undefined}
           error={errors?.symbol != null}
           fullWidth
-          label="symbol"
+          label="Symbol"
+          placeholder={'Symbol'}
           variant="outlined"
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           disabled
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_TOKEN, 'symbol', 0)} />) }}
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
@@ -250,14 +297,22 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
             }
           }
           helperText={!valid ? errors?.decimals : undefined}
+          placeholder={'18'}
           error={errors?.decimals != null}
           fullWidth
-          label="decimals"
+          label="Decimals"
           variant="outlined"
+          InputLabelProps={{
+            // shrink: placeholder != null,
+            shrink: true,
+          }}
           disabled
+          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_TOKEN, 'decimals', 0)} />) }}
         />
       </Grid>
-
+      <Grid item xs={12} md={12}>
+        { searchfailed && <MessageView variant='warning' message={searchfailed} />}
+      </Grid>
     </>
   )
 }

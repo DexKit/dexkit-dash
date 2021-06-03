@@ -8,8 +8,9 @@ import {CremaTheme} from 'types/AppContextPropsType';
 
 import SearchIcon from '@material-ui/icons/Search';
 import {useWeb3} from 'hooks/useWeb3';
-import {truncateAddress} from 'utils';
+import {GET_EXCHANGE_FROM_URL, GET_PROTOCOL_TOKEN_URL, truncateAddress} from 'utils';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 
 interface TableItemProps {
   row: any;
@@ -48,23 +49,22 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
   return (
     <TableRow key={row.transaction?.hash} className={classes.borderBottomClass}>
       <TableCell align='left' className={classes.tableCell}>
-        {truncateAddress(row.order.maker)}
+        {Number(row.order.makerAmountFn).toFixed(2)}
+        {' '}{row.order?.makerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {row.order.makerAmount}
+        {Number(row.order.takerAmountFn).toFixed(2)}
+        {' '}{row.order?.takerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {truncateAddress(row.order.taker)}
+        {Number(row.metaData.remainingFillableTakerAmountFn).toFixed(2)}
+        {' '}{row.order?.takerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {row.order.takerAmount}
-      </TableCell>
-
-      <TableCell align='left' className={classes.tableCell}>
-        {new Date(row.order.expiry * 1000).toUTCString()}
+        {new Date(row.order.expiry * 1000).toLocaleDateString()}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>

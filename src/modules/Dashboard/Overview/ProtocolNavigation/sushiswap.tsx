@@ -10,6 +10,7 @@ import {IconProps} from 'modules/routesConfig';
 import ExploreIcon from '@material-ui/icons/Explore';
 import MoneyIcon from '@material-ui/icons/Money';
 import PoolIcon from '@material-ui/icons/Pool';
+import {useStyles} from './index.style';
 
 export const INFOR_CARD = [
   {
@@ -46,6 +47,8 @@ const ProtocolNavigationSushiSwap = () => {
 
   const [shouldRender, setShouldRender] = useState(false);
 
+  const classes = useStyles();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShouldRender(true);
@@ -80,7 +83,8 @@ const ProtocolNavigationSushiSwap = () => {
                   sm={6}
                   md={12}
                   key={index}
-                  style={{marginBottom: '7px'}}>
+                  style={{marginBottom: '7px'}}
+                  className={classes.btnPrimary}>
                   <InfoCard state={state} icon={state.icon} />
                 </Grid>
               ))}

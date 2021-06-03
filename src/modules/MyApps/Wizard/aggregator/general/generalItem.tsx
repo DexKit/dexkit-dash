@@ -117,7 +117,8 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             error={(error != null && error[fieldName] != null) as boolean}
             onBlur={() => {
               const url = value != null ? value as string :  '';
-              const _error = url.length > 0 ? ( !urlValidator(url) ? `${capitalize(fieldName, '_', ' ')} is invalid!` : undefined ) : `${capitalize(fieldName, '_', ' ')} is invalid!`;
+              const _error = url.length > 0 ? ( !urlValidator(url) ? `${capitalize(fieldName, '_', ' ')} is invalid!` : undefined ) : 
+                `${capitalize(fieldName, '_', ' ')} is invalid!`;
               if (error != null) {
                 setError({[fieldName]: _error})
               } else {

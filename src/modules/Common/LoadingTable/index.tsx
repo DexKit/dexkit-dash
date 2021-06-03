@@ -1,23 +1,17 @@
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow} from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 
 interface Props {
-  rowCount: number;
+  columns: number;
+  rows: number;
 }
 
 const LoadingTable: React.FC<Props> = (props) => {
-  const {rowCount} = props;
+  const {columns, rows} = props;
   let tableBodyRow = [];
-  const cellCount = 5;
 
-  for (let i = 0; i < cellCount; i++) {
+  for (let i = 0; i < columns; i++) {
     tableBodyRow.push(
       <TableCell style={{paddingTop: 12, paddingBottom: 12}}>
         <Skeleton variant='text' />
@@ -27,33 +21,13 @@ const LoadingTable: React.FC<Props> = (props) => {
 
   let tableBodyRows = [];
 
-  for (let i = 0; i < rowCount; i++) {
+  for (let i = 0; i < rows; i++) {
     tableBodyRows.push(<TableRow>{tableBodyRow}</TableRow>);
   }
 
   return (
     <>
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell width='15%'>
-              <Skeleton variant='text' />
-            </TableCell>
-            <TableCell width='22%'>
-              <Skeleton variant='text' />
-            </TableCell>
-            <TableCell width='15%'>
-              <Skeleton variant='text' />
-            </TableCell>
-            <TableCell width='20%'>
-              <Skeleton variant='text' />
-            </TableCell>
-            <TableCell>
-              <Skeleton variant='text' />
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
         <TableBody>{tableBodyRows}</TableBody>
       </Table>
     </>

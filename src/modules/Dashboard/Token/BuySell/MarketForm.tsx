@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {history} from 'redux/store';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 
@@ -27,7 +26,10 @@ interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
   select1: Token[];
-  actionButton: (data: ModalOrderData) => void;
+  tokenFrom: Token | undefined;
+  tokenTo: Token | undefined;
+  onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
+  onTrade: (data: ModalOrderData) => void;
 }
 
 const MarketForm: React.FC<Props> = (props) => {
@@ -38,9 +40,12 @@ const MarketForm: React.FC<Props> = (props) => {
     balances,
     select0,
     select1,
-    actionButton,
+    tokenFrom,
+    tokenTo,
+    onChangeToken,
+    onTrade,
   } = props;
-
+ 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
       color: theme.palette.secondary.main,
@@ -84,25 +89,27 @@ const MarketForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {web3State} = useWeb3();
-
-  const [allowanceTarget, setAllowanceTarget] = useState<string>();
-
+  
   const network = useNetwork();
 
-  const [
-    tokenBalance,
-    setTokenBalance,
-  ] = useState<GetMyBalance_ethereum_address_balances>();
+  const [tokenBalance, setTokenBalance] = useState<GetMyBalance_ethereum_address_balances>();
 
   const [amountFrom, setAmountFrom] = useState<number>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
+  const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
-  const [tokenFrom, setTokenFrom] = useState<Token>();
-  const [tokenTo, setTokenTo] = useState<Token>();
+  const resetAmount = () => {
+    setAmountFrom(0);
+    setAmountTo(0);
+  }
 
-  const onFetch = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
+
+  useEffect(() => {
+    setTokenBalance(balances.find((e) => e.currency?.symbol === tokenFrom?.symbol));
+  }, [tokenFrom])
+
+
+  const onFetch = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const value = Number(e.target.value);
 
     if (tokenFrom && tokenTo && chainId) {
@@ -137,84 +144,9 @@ const MarketForm: React.FC<Props> = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (select0 && select1) {
-      if (tokenFrom == null) {
-        const _token = props.select0.find(
-          (t) =>
-            t.symbol.toUpperCase() === 'ETH' ||
-            t.symbol.toUpperCase() === 'WETH',
-        );
-        setTokenFrom(_token);
-        setTokenBalance(
-          balances.find((e) => e.currency?.symbol === _token?.symbol),
-        );
-        console.log('setTokenFrom', _token);
-      }
-
-      if (tokenTo == null) {
-        const _token = props.select1.find(
-          (t) => t.address.toLowerCase() === props.tokenAddress.toLowerCase(),
-        );
-        setTokenTo(_token);
-        console.log('setTokenTo', _token);
-      }
-    }
-  }, [select0, select1]);
-
-  useEffect(() => {
-    if (tokenFrom && tokenTo) {
-      if (tokenFrom.symbol === 'ETH' || tokenFrom.symbol === 'WETH') {
-        if (tokenAddress.toLowerCase() !== tokenTo.address.toLowerCase()) {
-          history.push(tokenTo.address);
-        }
-      } else {
-        if (tokenAddress.toLowerCase() !== tokenFrom.address.toLowerCase()) {
-          history.push(tokenFrom.address);
-        }
-      }
-    }
-  }, [tokenFrom, tokenTo]);
-
-  const changeToken = (token: Token | undefined, type: 'from' | 'to') => {
-    if (token) {
-      if (type === 'from') {
-        if (tokenTo && token.address === tokenTo.address) {
-          setTokenBalance(
-            balances.find((e) => e.currency?.symbol === tokenTo?.symbol),
-          );
-
-          const aux = tokenFrom;
-          setTokenFrom(tokenTo);
-          setTokenTo(aux);
-        } else {
-          setTokenBalance(
-            balances.find((e) => e.currency?.symbol === token?.symbol),
-          );
-          setTokenFrom(token);
-        }
-      } else {
-        if (tokenFrom && token.address === tokenFrom.address) {
-          setTokenBalance(
-            balances.find((e) => e.currency?.symbol === tokenTo?.symbol),
-          );
-
-          const aux = tokenTo;
-          setTokenTo(tokenFrom);
-          setTokenFrom(aux);
-        } else {
-          setTokenBalance(
-            balances.find((e) => e.currency?.symbol === token?.symbol),
-          );
-          setTokenTo(token);
-        }
-      }
-    }
-  };
-
   const handleTrade = () => {
     if (tokenFrom && tokenTo && account && allowanceTarget) {
-      actionButton({
+      onTrade({
         isMarket: true,
         amount: unitsInTokenAmount(
           amountFrom.toString(),
@@ -242,12 +174,13 @@ const MarketForm: React.FC<Props> = (props) => {
     errorMessage = 'No available balance for chosen token';
   }
 
+
   return (
     <Box>
       <form noValidate autoComplete='off'>
         <Box className={classes.boxContainer}>
           <GridContainer>
-            {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <Box
                 mb={2}
                 color='grey.400'
@@ -257,7 +190,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   tokenBalance?.value?.toFixed(4) || 0
                 } ${tokenBalance?.currency?.symbol || ''})`}
               </Box>
-            </Grid> */}
+            </Grid> 
             {errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
@@ -287,9 +220,11 @@ const MarketForm: React.FC<Props> = (props) => {
               <SelectToken
                 id={'marketSel0'}
                 selected={tokenFrom}
-                options={props.select0}
+                options={select0}
                 disabled={disabled}
-                onChange={($token) => changeToken($token, 'from')}
+                onChange={($token) => {
+                  onChangeToken($token, 'from')
+                }}
               />
             </Grid>
 
@@ -329,9 +264,11 @@ const MarketForm: React.FC<Props> = (props) => {
               <SelectToken
                 id={'marketSel1'}
                 selected={tokenTo}
-                options={props.select1}
+                options={select1}
                 disabled={disabled}
-                onChange={($token) => changeToken($token, 'to')}
+                onChange={($token) => {
+                  onChangeToken($token, 'to')
+                }}
               />
             </Grid>
           </GridContainer>
