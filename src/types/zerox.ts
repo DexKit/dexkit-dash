@@ -57,3 +57,12 @@ export interface QuoteParams {
   affiliateAddress: string | undefined;
   intentOnFill: boolean;
 }
+
+export interface BuildLimitOrderParams {
+  account: string;
+  amount: BigNumber;
+  baseToken: Token;
+  exchangeAddress: string;
+  price: BigNumber;
+  quoteToken: Token;
+}

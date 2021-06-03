@@ -5,7 +5,14 @@ import { EXCHANGE } from "./AppEnums";
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
+export const STAKING_POOL = process.env.REACT_APP_DEXKIT_POOL || "0x0000000000000000000000000000000000000000000000000000000000000010";
+
+export const FEE_RECIPIENT = process.env.REACT_APP_FEE_RECIPIENT || ZERO_ADDRESS;
+
+export const TAKER_FEE_PERCENTAGE: string = process.env.REACT_APP_TAKER_FEE_PERCENTAGE || '0';
+
 export const UNLIMITED_ALLOWANCE_IN_BASE_UNITS = new BigNumber(2).pow(256).minus(1);
+
 
 export const ZERO = new BigNumber(0);
 
