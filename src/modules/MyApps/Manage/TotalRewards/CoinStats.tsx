@@ -52,7 +52,7 @@ const CoinStats: React.FC<CoinStatsProps> = ({
     <AppCard className={clsx(classes.statsCard, 'card-hover')}>
       <Box padding={{xs: 3, md: 5, lg: 3}} display='flex' alignItems='center'>
         <Avatar className={classes.root}>
-          <img alt='' src={icon} />
+          <img alt='' src={icon} width='35px' height='35px' />
         </Avatar>
         <Box ml={2}>
           <Box

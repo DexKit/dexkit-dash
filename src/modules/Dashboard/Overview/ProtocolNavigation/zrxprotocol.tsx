@@ -14,7 +14,7 @@ import {useStyles} from './index.style';
 const INFOR_CARD = [
   {
     value: 'Token Explorer',
-    bgColor: '#ff7149',
+    bgColor: '#1d2125',
     icon: <MoneyIcon style={{fill: 'white'}} />,
     id: 2,
     type: 'Last Month Sale',
@@ -22,7 +22,7 @@ const INFOR_CARD = [
   },
   {
     value: 'Pair Explorer',
-    bgColor: '#ff7149',
+    bgColor: '#1d2125',
     icon: <MoneyIcon style={{fill: 'white'}} />,
     id: 3,
     type: 'Last Month Sale',

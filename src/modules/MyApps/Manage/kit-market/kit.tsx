@@ -1,42 +1,24 @@
 import { 
   Avatar, 
-  Button, 
-  // IconButton,
+  Button,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  // makeStyles 
 } from "@material-ui/core";
-import FolderIcon from '@material-ui/icons/Folder';
-// import DeleteIcon from '@material-ui/icons/Delete';
 import React from "react";
+import {makeStyles} from '@material-ui/core';
 import { BigNumber } from "@0x/utils";
-// import { Fonts } from "shared/constants/AppEnums";
-// import { CremaTheme } from "types/AppContextPropsType";
+import { CremaTheme } from "types/AppContextPropsType";
 
-
-
-// const useStyles = makeStyles((theme: CremaTheme) => ({
-//   statsCard: {
-//     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
-//     padding: 10
-//   },
-//   root: {
-//     height: 30,
-//     width: 30,
-//     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
-//     backgroundColor: (props: { bgColor: string }) => props.bgColor,
-//     [theme.breakpoints.up('md')]: {
-//       height: 45,
-//       width: 45,
-//     },
-//     [theme.breakpoints.up('xl')]: {
-//       height: 70,
-//       width: 70,
-//     },
-//   },
-// }));
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  root: {
+    height: 50,
+    width: 50,
+    borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
+    backgroundColor: (props: {bgColor: string}) => props.bgColor,
+  },
+}));
 
 interface KitProps {
   icon: string;
@@ -48,18 +30,18 @@ interface KitProps {
   };
   value: number | string | BigNumber;
   color?: string;
+  bgColor: string;
 }
 
 export const Kit: React.FC<KitProps> = (props) => {
-  const { name, value, button } = props;
-  // const color = props.color ?? '#989898';
-  // const classes = useStyles({ bgColor: color });
+  const { name, value, button, bgColor, icon } = props;
+  const classes = useStyles({bgColor});
   return (
     <ListItem>
       
       <ListItemAvatar>
-        <Avatar>
-          <FolderIcon />
+      <Avatar className={classes.root}>
+          <img alt='' src={icon} width='35px' height='35px' />
         </Avatar>
       </ListItemAvatar>
 

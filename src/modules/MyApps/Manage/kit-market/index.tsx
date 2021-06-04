@@ -1,20 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from 'redux/store';
-import { useWeb3 } from 'hooks/useWeb3';
 import { Card, CardContent, CardHeader, List, makeStyles } from '@material-ui/core';
 import { Kit } from './kit';
-import { Kit as KytType } from 'types/models/Kit';
 import clsx from 'clsx';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
-import { BigNumber } from "@0x/utils";
-import { onGetAllKits, onGetUserKits } from 'redux/_myapps/thunks';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import { WhitelabelTypes } from 'types/myApps';
 import { useSufficientBalance } from 'hooks/balance/useSufficientBalance';
-
+import Aggregator from 'assets/images/aggregator.png';
+import Marketplace from 'assets/images/marketplace.png';
+import Exchange from 'assets/images/exchange.png';
+import {blue, indigo, teal} from '@material-ui/core/colors';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -166,7 +163,8 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
 
             <Kit
               key={'agg'}
-              icon={icon}
+              icon={Aggregator}
+              bgColor={blue[500]}
               color={bgColor}
               value={allKitValues[0]}
               name={'Aggregator'}
@@ -179,8 +177,9 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
 
             <Kit
               key={'exg'}
-              icon={icon}
+              icon={Exchange}
               color={bgColor}
+              bgColor={teal[600]}
               value={allKitValues[1]}
               name={'Exchange'}
               button={{
@@ -192,8 +191,9 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
 
             <Kit
               key={'market'}
-              icon={icon}
+              icon={Marketplace}
               color={bgColor}
+              bgColor={indigo[700]}
               value={allKitValues[2]}
               name={'Marketplace'}
               button={{

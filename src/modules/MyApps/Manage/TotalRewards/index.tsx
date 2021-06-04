@@ -5,9 +5,9 @@ import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import {blue, indigo, teal} from '@material-ui/core/colors';
 import {Fonts} from '../../../../shared/constants/AppEnums';
-import Etherium from 'assets/images/etherium.png';
-import Litcoin from 'assets/images/litcoin.png';
-import Ripple from 'assets/images/ripple.png';
+import Aggregator from 'assets/images/aggregator.png';
+import Marketplace from 'assets/images/marketplace.png';
+import Exchange from 'assets/images/exchange.png';
 
 const Coins: React.FC = () => {
   return (
@@ -23,10 +23,10 @@ const Coins: React.FC = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4} md={6}>
           <CoinStats
-            icon={Etherium}
+            icon={Aggregator}
             bgColor={blue[500]}
             data={{
-              name: 'Etherium',
+              name: 'Aggregator',
               price: '0',
               increment: 0,
             }}
@@ -36,10 +36,10 @@ const Coins: React.FC = () => {
 
         <Grid item xs={12} sm={4} md={6}>
           <CoinStats
-            icon={Litcoin}
+            icon={Marketplace}
             bgColor={indigo[700]}
             data={{
-              name: 'Litcoin',
+              name: 'Marketplace',
               price: '0',
               increment: 0,
             }}
@@ -49,10 +49,10 @@ const Coins: React.FC = () => {
 
         <Grid item xs={12} sm={4} md={6}>
           <CoinStats
-            icon={Ripple}
+            icon={Exchange}
             bgColor={teal[600]}
             data={{
-              name: 'Ripple',
+              name: 'Exchange',
               price: '0',
               increment: 0,
             }}
