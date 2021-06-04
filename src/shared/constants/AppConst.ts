@@ -42,6 +42,7 @@ export const ZRX_API_URL = (chainId: ChainId|undefined) => {
 export const ETHERSCAN_API_URL = (chainId: ChainId|undefined) => {
   switch(chainId) {
     case ChainId.Mainnet: return 'https://etherscan.io';
+    case ChainId.Binance: return 'https://bscscan.com/';
     case ChainId.Kovan: return 'https://kovan.etherscan.io';
     default: return 'https://etherscan.io';
   }

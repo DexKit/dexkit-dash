@@ -32,7 +32,7 @@ const TradeHistory: React.FC<Props> = (props) => {
 
   const networkName = useNetwork();
 
-  const tokenList = useTokenList();
+  const tokenList = useTokenList(networkName);
 
   const {
     currentPage,

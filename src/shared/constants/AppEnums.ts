@@ -95,6 +95,7 @@ export enum EXCHANGE {
   MOONISWAP = 'Mooniswap',
   //bsc
   PANCAKE = 'Pancake',
+  PANCAKEV2 = 'Pancake v2',
   ALL = 'all'
 }
 

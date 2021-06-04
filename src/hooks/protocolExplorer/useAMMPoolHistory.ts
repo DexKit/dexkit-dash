@@ -20,8 +20,6 @@ interface Props {
   quoteCurrency: GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency;
 }
 export const useAMMPoolHistory = ({networkName, exchange, address, baseCurrency, quoteCurrency}: Props) => {
-  const {currentChainId} = useChainId();
-
   const {
     currentPage,
     rowsPerPage,

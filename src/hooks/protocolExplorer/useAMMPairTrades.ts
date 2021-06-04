@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
 import usePagination from 'hooks/usePagination';
 import {
   GetContractOrders,
@@ -9,8 +8,8 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {extractPairFromAddress} from 'utils';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
+import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {BITQUERY_CONTRACT_ORDERS} from 'services/graphql/bitquery/protocol/amm.gql';
 
@@ -20,9 +19,10 @@ interface Props {
   address: string;
 }
 export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
-  const {currentChainId} = useChainId();
+  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
 
-  const {quoteAddress} = extractPairFromAddress(address, currentChainId);
+  const {quoteAddress} = extractPairFromAddress(address, chainId);
+  console.log(quoteAddress);
 
   const {
     currentPage,
@@ -40,10 +40,10 @@ export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
     GetContractOrdersVariables
   >(BITQUERY_CONTRACT_ORDERS, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       exchangeName: GET_EXCHANGE_NAME(exchange),
       address: address,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(currentChainId) as string),
+      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
     },

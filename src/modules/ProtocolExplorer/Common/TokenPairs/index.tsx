@@ -32,7 +32,7 @@ const TokenPairs: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTokenPairs({exchange, baseAddress});
+  } = useTokenPairs({exchange, baseAddress, networkName});
 
   // useEffect(() => {
   //   setTableData([]);

@@ -5,14 +5,16 @@ import {useTokenList} from 'hooks/useTokenList';
 import usePagination from 'hooks/usePagination';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {toTokenUnitAmount} from '@0x/utils';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 interface Props {
   address: string;
 }
 
 export const useMyOrdersHistory = ({address}: Props) => {
-  const tokenList = useTokenList();
   const {currentChainId} = useChainId();
+  const tokenList = useTokenList(GET_NETWORK_NAME(currentChainId));
+
 
   const {
     currentPage,

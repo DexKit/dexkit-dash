@@ -31,6 +31,7 @@ import { HELP_TEXT_PAIR, HELP_TEXT_PAIR_CONFIG } from './helpText';
 import { getHelpText } from '../shared';
 import { useBlokchain } from 'hooks/useBlokchain';
 import { MessageView } from '@crema';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 const useStyle = makeStyles((theme) => ({
   heading: {
@@ -478,7 +479,7 @@ const PairsForm: React.FC<Props> = (props) => {
   const { changeIssuerForm, validator, isValid: startValidation, chainId, editable } = props;
   const classes = useStyle();
   const [pairs, setPairs] = useState(props.pairs ?? []);
-  const listToken = useTokenList();
+  const listToken = useTokenList(GET_NETWORK_NAME(chainId));
 
   const onChange = useCallback(
     ($event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

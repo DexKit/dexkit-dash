@@ -2,7 +2,7 @@ import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenInfo} from 'hooks/protocolExplorer/useTokenInfo';
 import {Box, Card, Fade, Grid} from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenLogo from 'shared/components/TokenLogo';
@@ -11,12 +11,13 @@ import LoadingInfo from './LoadingInfo';
 
 interface Props {
   address: string;
+  networkName: EthereumNetwork;
 }
 
 const TokenInfo: React.FC<Props> = (props) => {
-  const {address} = props;
+  const {address, networkName} = props;
   const {messages} = useIntl();
-  const {loading, error, data} = useTokenInfo({address});
+  const {loading, error, data} = useTokenInfo({address, networkName});
 
   return (
     <Box className='card-hover'>

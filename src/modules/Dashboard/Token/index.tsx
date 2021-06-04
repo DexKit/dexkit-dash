@@ -4,7 +4,7 @@ import {Grid, Box, Link, Fade} from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
-import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
+import AppContextPropsType from 'types/AppContextPropsType';
 import {useStyles} from './index.style';
 import {AppContext} from '@crema';
 import useFetch from 'use-http';
@@ -14,7 +14,6 @@ import {COINGECKO_CONTRACT_URL, ZRX_API_URL} from 'shared/constants/AppConst';
 import {ThemeMode} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import InfoCard from 'shared/components/InfoCard';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import CoingeckoProfile from './CoingeckoProfile';
 import CoingeckoMarket from './CoingeckoMarket';
@@ -24,7 +23,6 @@ import TotalBalance from 'shared/components/TotalBalance';
 import {useBalance} from 'hooks/balance/useBalance';
 import {Token} from 'types/app';
 import {truncateAddress} from 'utils';
-import {useBlokchain} from 'hooks/useBlokchain';
 import {useChainId} from 'hooks/useChainId';
 import {Skeleton} from '@material-ui/lab';
 
@@ -82,23 +80,14 @@ const TokenPage: React.FC<Props> = (props) => {
     [account],
   );
 
-  const infoMakerTradeHistory = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?makerToken=${address}`,
-    [address],
-  );
 
-  const infoTakerTradeHistory = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?takerToken=${address}`,
-    [address],
-  );
 
   const myOrders =
     'My Orders' +
     (infoMyOrders.data ? ' (' + infoMyOrders.data.total + ')' : '');
 
-  const tradeHistory =
-    'Trade History' +
-    ((infoMakerTradeHistory.data && infoTakerTradeHistory.data) ? ' (' + (infoMakerTradeHistory.data.total + infoTakerTradeHistory.data.total) + ')' : '');
+
+  const tradeHistory = 'Trade History';
 
   return (
     <>

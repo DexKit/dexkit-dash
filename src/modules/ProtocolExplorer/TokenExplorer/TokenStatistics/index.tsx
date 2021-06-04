@@ -2,7 +2,7 @@ import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenStatistics} from 'hooks/protocolExplorer/useTokenStatistics';
 import {Avatar, Box, Card, Fade, Grid} from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ErrorView from 'modules/Common/ErrorView';
 import Revenue from 'assets/images/metricsIcons/revenue.png';
 import {useStyles} from './index.style';
@@ -10,12 +10,13 @@ import LoadingStatistics from './LoadingStatistics';
 
 interface Props {
   address: string;
+  networkName: EthereumNetwork;
 }
 
 const TokenStatistics: React.FC<Props> = (props) => {
-  const {address} = props;
+  const {address, networkName} = props;
   const {messages} = useIntl();
-  const {loading, error, data} = useTokenStatistics({address});
+  const {loading, error, data} = useTokenStatistics({address, networkName});
   const classes = useStyles();
 
   return (

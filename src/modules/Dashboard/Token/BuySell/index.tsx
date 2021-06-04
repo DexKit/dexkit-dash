@@ -19,6 +19,7 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';
 import { history } from 'redux/store';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 interface Props {
   tokenAddress: string;
@@ -63,7 +64,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
-  const select1 = useTokenList();
+  const select1 = useTokenList(GET_NETWORK_NAME(chainId));
 
   const [tokenFrom, setTokenFrom] = useState<Token>()
 

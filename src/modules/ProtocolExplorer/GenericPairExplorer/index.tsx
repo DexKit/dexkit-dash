@@ -58,7 +58,7 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
         />
 
         <TokenFilterProvider>
-          {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP ? (
+          {exchange === EXCHANGE.UNISWAP || exchange === EXCHANGE.SUSHISWAP || exchange === EXCHANGE.PANCAKEV2 ? (
             <PairExplorerAMM
               address={address}
               exchange={exchange}

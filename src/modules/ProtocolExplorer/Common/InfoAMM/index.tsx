@@ -1,7 +1,7 @@
 import React from 'react';
 import {useChainId} from 'hooks/useChainId';
 import {BalanceCoins} from 'types/models/Crypto';
-import {EXCHANGE, Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, Fonts} from 'shared/constants/AppEnums';
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
@@ -12,9 +12,11 @@ import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
 import {Fade, Tooltip} from '@material-ui/core';
 import LoadingInfoAMM from './LoadingInfoAMM';
+import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 
 export interface Props {
   data?: any;
+  networkName: EthereumNetwork;
   exchange: EXCHANGE;
   address: string;
   loading: boolean;
@@ -46,8 +48,8 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 };
 
 const InfoAMM: React.FC<Props> = (props) => {
-  const {data, exchange, address, loading} = props;
-  const {currentChainId} = useChainId();
+  const {data, exchange, address, loading,  networkName} = props;
+  const currentChainId = GET_CHAIN_FROM_NETWORK(networkName);
   const classes = useStyles();
 
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';

@@ -9,15 +9,16 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
 import {BITQUERY_TOKEN_PAIRS} from 'services/graphql/bitquery/protocol/gql';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
+import { EthereumNetwork } from '../../../__generated__/globalTypes';
 
 interface Props {
+  networkName: EthereumNetwork;
   baseAddress: string;
   exchange: EXCHANGE;
 }
-export const useTokenPairs = ({baseAddress, exchange}: Props) => {
-  const {currentChainId} = useChainId();
+export const useTokenPairs = ({baseAddress, exchange, networkName}: Props) => {
 
   const {
     currentPage,
@@ -33,7 +34,7 @@ export const useTokenPairs = ({baseAddress, exchange}: Props) => {
   
   const {loading, error, data: dataFn} = useQuery<GetTokenPairs, GetTokenPairsVariables>(BITQUERY_TOKEN_PAIRS, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       exchangeName: exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       baseAddress: baseAddress,
       limit: rowsPerPage,

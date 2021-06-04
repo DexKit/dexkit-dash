@@ -8,6 +8,8 @@ import ErrorView from 'modules/Common/ErrorView';
 import OrderTable from './OrderTable';
 import {useNetwork} from 'hooks/useNetwork';
 import LoadingTable from 'modules/Common/LoadingTable';
+import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
+import { useIntl } from 'react-intl';
 
 type Params = {
   address: string;
@@ -21,7 +23,7 @@ const OrderList: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, token} = params;
-  console.log(token);
+  const {messages} = useIntl();
   const classes = useStyles();
 
   const networkName = useNetwork();
@@ -61,7 +63,10 @@ const OrderList: React.FC<Props> = (props) => {
                 alignItems='center'
                 style={{width: '100%'}}>
                 <Box>
-                  <Typography variant='h5'>Trade History</Typography>
+                  <Box display={'flex'} justifyContent={'flex-start'}     alignItems={'center'}>
+                      <SwapHorizontalCircleIcon color={'primary'}/>
+                      <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
+                  </Box>
                 </Box>
                 {/* <Select
                     className={classes.selectBox}

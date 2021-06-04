@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
 import usePagination from 'hooks/usePagination';
 import {
   GetTokenTrades,
@@ -9,21 +8,25 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {BITQUERY_TOKEN_TRADES} from 'services/graphql/bitquery/protocol/gql';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import { EthereumNetwork } from '../../../__generated__/globalTypes';
+
 
 interface Props {
   baseAddress: string | null;
   quoteAddress: string | null;
   exchange: EXCHANGE;
+  networkName: EthereumNetwork;
 }
 export const useTokenTrades = ({
   baseAddress,
   quoteAddress,
   exchange,
+  networkName,
 }: Props) => {
-  const {currentChainId} = useChainId();
+  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
 
   const {
     currentPage,
@@ -39,10 +42,10 @@ export const useTokenTrades = ({
 
   const {loading, error, data: dataFn} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network:  networkName,
       exchangeName: GET_EXCHANGE_NAME(exchange) == '' ? undefined : GET_EXCHANGE_NAME(exchange),
       baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(currentChainId) as string),
+      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
     },

@@ -21,6 +21,7 @@ export const GET_EXCHANGE_NAME = (exchange: EXCHANGE) => {
     case EXCHANGE.BALANCER: return 'Balancer';
     case EXCHANGE.SUSHISWAP: return 'SushiSwap';
     case EXCHANGE.PANCAKE: return 'Pancake';
+    case EXCHANGE.PANCAKEV2: return 'Pancake v2'
     default: return '';
   }
 }

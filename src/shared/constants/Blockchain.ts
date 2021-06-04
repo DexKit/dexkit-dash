@@ -1,7 +1,8 @@
-import { WETH9Contract } from "@0x/contract-wrappers";
+
 import { BigNumber } from "@0x/utils";
 import { ChainId } from "types/blockchain";
-import { EXCHANGE } from "./AppEnums";
+import { EthereumNetwork } from "./AppEnums";
+
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -30,6 +31,8 @@ export const GET_DEFAULT_QUOTE = (chainId: ChainId|undefined) => {
     case ChainId.Goerli:
     case ChainId.Ropsten:
         return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    case ChainId.Binance:
+        return '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c';
     default:
       return null;
     
@@ -46,6 +49,8 @@ export const GET_DEFAULT_BASE = (chainId: ChainId|undefined) => {
     case ChainId.Goerli:
     case ChainId.Ropsten:
         return '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4';
+    case ChainId.Binance:
+      return '0x314593fa9a2fa16432913dbccc96104541d32d11';
     default:
       return null;
     
@@ -84,5 +89,16 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId|undefined) => {
     case ChainId.BinanceTest:
       return 'BSC Test';
     default: return undefined;
+  }
+};
+
+export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
+ 
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      return ChainId.Mainnet;
+    case EthereumNetwork.bsc:
+      return ChainId.Binance;
+    default:  return ChainId.Mainnet;
   }
 };

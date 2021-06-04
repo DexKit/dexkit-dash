@@ -191,6 +191,46 @@ const useRoutesConfig = (): NavItemProps[] => {
               },
             ],
           },
+          {
+            id: 'pancakeswap',
+            title: 'PancakeSwap',
+            messageId: 'sidebar.protocols.pancakeswap',
+            type: 'collapse',
+            icon: {
+              src: 'pancake.png',
+              type: 'png'
+            },
+            children: [
+            /*  {
+                id: 'overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
+              },*/
+              {
+                id: 'tokens',
+                title: 'Token Explorer',
+                messageId: 'sidebar.protocols.token-explorer',
+                type: 'item',
+                url: `/bsc/protocol-explorer/${EXCHANGE.PANCAKEV2}/token-explorer/${process.env.REACT_APP_BSC_DEFAULT_TOKEN}`,
+              },
+              {
+                id: 'pool-explorer',
+                title: 'Pool Explorer',
+                messageId: 'sidebar.protocols.pool-explorer',
+                type: 'item',
+                url: `/bsc/protocol-explorer/${EXCHANGE.PANCAKEV2}/pool-explorer/${process.env.REACT_APP_BSC_DEFAULT_PAIR}`,
+              },
+              {
+                id: 'pair-explorer',
+                title: 'Pair Explorer',
+                messageId: 'sidebar.protocols.pair-explorer',
+                type: 'item',
+                url: `/bsc/protocol-explorer/${EXCHANGE.PANCAKEV2}/pair-explorer/${process.env.REACT_APP_BSC_DEFAULT_PAIR}`,
+              },
+            ],
+          },
 
           {
             id: '0x-protocol',

@@ -11,6 +11,7 @@ import { IOSSwitchComponent } from 'shared/components/Inputs/iOsSwitchComponent'
 import { ColpaseTokenComponent } from './colapseTokenComponent';
 import { TokenListComponent } from './tokenListComponent';
 import { WizardProps } from '..';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 interface TokensFormProps {
   title: string;
@@ -25,7 +26,7 @@ function TokensForm<T,K>(props: Props<T,K>){
   
   const [tokens, setTokens] = useState(props.tokens ?? []);
   const [multipleTokens, setMultipleTokens] = useState(false);
-  const listToken = useTokenList();
+  const listToken = useTokenList(GET_NETWORK_NAME(chainId));
   useEffect(() => {
     if (tokens == null || tokens?.length === 0) {
       addToken();

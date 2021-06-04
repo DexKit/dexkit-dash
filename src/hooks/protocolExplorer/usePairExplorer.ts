@@ -1,18 +1,20 @@
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
 
 import {BITQUERY_PAIR_EXPLORER} from 'services/graphql/bitquery/protocol/gql';
 import { GetPairExplorer, GetPairExplorerVariables, GetPairExplorer_ethereum_dexTrades } from 'services/graphql/bitquery/protocol/__generated__/GetPairExplorer';
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import { useEffect, useState } from 'react';
+import { EthereumNetwork } from '../../../__generated__/globalTypes';
+import { getChainId } from 'web3modal';
 
 interface Props {
   baseAddress: string;
   quoteAddress: string | null;
+  networkName: EthereumNetwork;
   exchange: EXCHANGE;
 }
 
@@ -20,17 +22,18 @@ export const usePairExplorer = ({
   exchange,
   baseAddress,
   quoteAddress,
+  networkName,
 }: Props) => {
-  const {currentChainId} = useChainId();
+  const chainId = getChainId(networkName);
   const [data, setData] = useState<GetPairExplorer_ethereum_dexTrades | any>();
   const [yesterday, setYesterday] = useState<Date>(new Date(new Date().getTime() - 24 * 3600 * 1000));
 
   const {loading, error, data: dataFn} = useQuery<GetPairExplorer, GetPairExplorerVariables>(BITQUERY_PAIR_EXPLORER, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       exchangeName: exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(currentChainId) as string),
+      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       from: yesterday
     },
     pollInterval: POLL_INTERVAL,

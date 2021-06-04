@@ -27,6 +27,7 @@ import { Token } from 'types/app';
 import { TokenMetaData } from 'types/myApps';
 import { ChainId } from 'types/blockchain';
 import { InfoComponent } from '../Buttons/infoComponent';
+import { useNetwork } from 'hooks/useNetwork';
 
 const placeHolder = `${truncateAddress(ZERO_ADDRESS.toString())};${truncateAddress('0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4')};${truncateAddress('0xacaca5b8805636608e14c64b0bfffc2deb2c6cec')};${truncateAddress('0x6b175474e89094c44da98b954eedeac495271d0f')};...`;
 
@@ -52,7 +53,8 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
   const [valid, setValid] = useState(false);
   const [addresses, setAddress] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const listToken = useTokenList();
+  const networkName = useNetwork();
+  const listToken = useTokenList(networkName);
   const { onGetToken } = useBlokchain();
   const helpText = 'Enter the addresses of the tokens by secing them through ";"';
 

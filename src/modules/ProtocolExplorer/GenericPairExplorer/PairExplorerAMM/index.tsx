@@ -7,7 +7,6 @@ import {Fade, Grid, Paper} from '@material-ui/core';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
 import InfoAMM from 'modules/ProtocolExplorer/Common/InfoAMM';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import AMMTradeHistory from 'modules/ProtocolExplorer/Common/AMMTradeHistory';
 import {Skeleton} from '@material-ui/lab';
@@ -30,7 +29,7 @@ type Props = {
 const PairExplorerAMM = (props: Props) => {
   const {networkName, exchange, address} = props;
 
-  const {loading, error, data} = useAMMPairExplorer({exchange, address});
+  const {loading, error, data} = useAMMPairExplorer({exchange, address, networkName});
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
@@ -42,7 +41,7 @@ const PairExplorerAMM = (props: Props) => {
           <Grid item xs={12} md={12}>
             <Paper style={{padding: 10}}>
               {exchange && (
-                <TokenSearchByList exchangeName={exchange} type={'pair'} />
+                <TokenSearchByList exchangeName={exchange} type={'pair'} networkName={networkName}/>
               )}
             </Paper>
           </Grid>
@@ -52,6 +51,7 @@ const PairExplorerAMM = (props: Props) => {
             ) : (
               <InfoAMM
                 data={data}
+                networkName={networkName}
                 exchange={exchange}
                 address={address}
                 loading={loading}
@@ -71,7 +71,7 @@ const PairExplorerAMM = (props: Props) => {
                 data && (
                   <Grid item xs={12} md={12} style={{height: 450}}>
                     <TVChartContainer
-                      symbol={`${data.baseCurrency?.symbol}-${data.quoteCurrency?.symbol}`}
+                      symbol={`${data.baseCurrency?.symbol}-USD`}
                       chainId={1}
                       darkMode={isDark}
                     />

@@ -33,7 +33,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
   } = props;
   const {networkName, exchange, address} = params;
 
-  const {loading, error, data} = useAMMPairExplorer({exchange, address});
+  const {loading, error, data} = useAMMPairExplorer({exchange, address, networkName});
 
   return (
     <Box pt={{xl: 4}}>
@@ -70,6 +70,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
               <ErrorView message={error.message} />
             ) : (
               <InfoAMM
+                networkName={networkName}
                 data={data}
                 exchange={exchange}
                 address={address}
@@ -80,7 +81,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
 
           <Grid item xs={12} md={5}>
             <Paper style={{padding: 10}}>
-              <TokenSearchByList exchangeName={exchange} type={'pool'} />
+              <TokenSearchByList exchangeName={exchange} type={'pool'} networkName={networkName} />
             </Paper>
           </Grid>
 

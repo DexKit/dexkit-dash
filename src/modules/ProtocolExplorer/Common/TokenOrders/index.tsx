@@ -33,7 +33,7 @@ const TokenOrders: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTokenTrades({baseAddress, quoteAddress, exchange});
+  } = useTokenTrades({baseAddress, quoteAddress, exchange, networkName});
 
   return (
     // <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>

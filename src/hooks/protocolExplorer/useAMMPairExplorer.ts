@@ -9,25 +9,26 @@ import {
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import { useEffect, useState } from 'react';
+import { EthereumNetwork } from '../../../__generated__/globalTypes';
 
 interface Props {
+  networkName: EthereumNetwork;
   address: string;
   exchange: EXCHANGE;
 }
 
-export const useAMMPairExplorer = ({exchange, address}: Props) => {
-  const {currentChainId} = useChainId();
+export const useAMMPairExplorer = ({exchange, address, networkName}: Props) => {
+  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
   const [data, setData] = useState<any>();
-
   const {loading, error, data: dataFn} = useQuery<GetAMMPairExplorer, GetAMMPairExplorerVariables>(BITQUERY_AMM_PAIR_EXPLORER, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       exchangeName: exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       pairAddress: address,
-      quoteAddress: GET_DEFAULT_QUOTE(currentChainId) as string,
+      quoteAddress: GET_DEFAULT_QUOTE(chainId) as string,
     },
     pollInterval: POLL_INTERVAL,
   });

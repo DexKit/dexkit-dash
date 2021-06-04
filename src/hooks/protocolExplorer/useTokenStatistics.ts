@@ -9,20 +9,21 @@ import {
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import { EthereumNetwork } from '../../../__generated__/globalTypes';
 
 interface Props {
   address: string;
+  networkName: EthereumNetwork;
 }
 
-export const useTokenStatistics = ({address}: Props) => {
-  const {currentChainId} = useChainId();
+export const useTokenStatistics = ({address, networkName}: Props) => {
 
   const {loading, error, data} = useQuery<
     GetTokenStatistics,
     GetTokenStatisticsVariables
   >(BITQUERY_TOKEN_STATISTICS, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       address: address,
     },
     pollInterval: POLL_INTERVAL,

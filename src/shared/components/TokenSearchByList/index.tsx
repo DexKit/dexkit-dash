@@ -2,11 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import Web3 from 'web3';
 import {useWeb3} from 'hooks/useWeb3';
-import {useNetwork} from 'hooks/useNetwork';
 import {useTokenList} from 'hooks/useTokenList';
 // import {searchByAddress} from 'services/graphql/bitquery';
 import {ChainId} from 'types/blockchain';
-import {EXCHANGE} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {filterTokensInfoByString, getNativeCoinWrapped} from 'utils/tokens';
 import {
   FormControl,
@@ -22,20 +21,21 @@ import { Token } from 'types/app';
 import { SearchByAddress, SearchByAddressVariables } from 'services/graphql/bitquery/__generated__/SearchByAddress';
 import { SEARCH_BY_ADDRESS } from 'services/graphql/bitquery/gql';
 import { client } from 'services/graphql';
+import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 
 interface TokenSearchProps {
   exchangeName: EXCHANGE;
+  networkName: EthereumNetwork;
   type?: 'token' | 'pair' | 'pool';
   positionIcon?: 'start' | 'end';
   filters?: Map<string, string>;
 }
 
 export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
-  const {filters, exchangeName, type = 'token'} = props;
-  const network = useNetwork();
+  const {filters, exchangeName, type = 'token', networkName} = props;
   const history = useHistory();
-  const {chainId} = useWeb3();
-  const tokenList = useTokenList();
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
+  const tokenList = useTokenList(networkName);
 
   const [found, setFound] = useState<Token[]>();
   const [searchKey, setSearchKey] = useState<string>('');
@@ -56,7 +56,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
       if (Web3.utils.isAddress(searchKey)) {
 
         setLoading(true);
-        searchByAddress(searchKey, network)
+        searchByAddress(searchKey, networkName)
           .then((result: any) => {
             if (!result.loading && result?.data) {
               const founds = result?.data?.search?.map((s: any) => s.subject);
@@ -93,7 +93,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
   }, [searchKey, tokenList]);
 
   const onPairSelected = (currency: Token | null) => {
-    const url = `/${network}/protocol-explorer/${exchangeName}`;
+    const url = `/${networkName}/protocol-explorer/${exchangeName}`;
     if (currency && type === 'token') {
       history.push(`${url}/token-explorer/${currency.address}`);
     }
