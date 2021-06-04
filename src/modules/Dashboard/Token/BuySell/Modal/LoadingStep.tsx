@@ -5,6 +5,7 @@ import {
   DialogTitle,
   Typography,
   CircularProgress,
+  Button,
 } from '@material-ui/core';
 import {useStyles} from './index.style';
 
@@ -12,17 +13,15 @@ interface Props {}
 
 const LoadingStep: React.FC<Props> = (props) => {
   const classes = useStyles();
+
   return (
     <>
-      <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
-        <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-          Wait please
-        </Typography>
-      </DialogTitle>
-      <DialogContent className={classes.dialogBox}>
-        <CircularProgress size="100px" />
-      </DialogContent>
-      <DialogActions></DialogActions>
+      <Typography align='center' style={{paddingBottom: 10}}>
+        Please wait
+      </Typography>
+      <Button fullWidth color='primary' size='large' disabled>
+        <CircularProgress style={{alignSelf: 'center'}} size='40px' />
+      </Button>
     </>
   );
 };

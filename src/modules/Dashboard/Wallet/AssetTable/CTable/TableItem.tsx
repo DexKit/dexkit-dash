@@ -105,8 +105,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           Send
         </Button> */}
         <Button
-          variant='contained'
-          color='primary'
+          variant='outlined'
           onClick={() => {
             history.push('/ethereum/dashboard/token/' + data.currency?.address);
           }}>

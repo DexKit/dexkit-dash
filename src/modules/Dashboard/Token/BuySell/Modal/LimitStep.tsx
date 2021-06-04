@@ -9,6 +9,8 @@ import {
   Input,
   TextField,
   Box,
+  CircularProgress,
+  IconButton,
 } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import {ChainId} from 'types/blockchain';
@@ -20,6 +22,7 @@ import {useStyles} from './index.style';
 import styled from 'styled-components';
 import {useWeb3} from 'hooks/useWeb3';
 import {useNetwork} from 'hooks/useNetwork';
+import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
 interface Props {
   step: Steps | undefined;
@@ -29,6 +32,7 @@ interface Props {
   account: string;
   chainId: ChainId;
   loading: boolean;
+  children?: React.ReactNode;
   onClose: () => void;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
@@ -51,6 +55,7 @@ const LimitStep: React.FC<Props> = (props) => {
     account,
     chainId,
     loading,
+    children,
     onClose,
     onNext,
     onLoading,
@@ -67,7 +72,7 @@ const LimitStep: React.FC<Props> = (props) => {
   const network = useNetwork();
 
   useEffect(() => {
-    if (step === Steps.LIMIT) {
+    if (step !== Steps.DONE) {
       console.log('START ORDER');
 
       fetchQuote(
@@ -141,54 +146,106 @@ const LimitStep: React.FC<Props> = (props) => {
     }
   };
 
+  const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);
+
+  const invertPrice = () => {
+    setIsPriceInverted(!isPriceInverted);
+  };
+
+  let displayPrice;
+  let firstSymbol;
+  let secondSymbol;
+
+  if (isPriceInverted) {
+    displayPrice = quote ? 1 / quote.price : 0;
+    firstSymbol = token0.symbol;
+    secondSymbol = token1.symbol;
+  } else {
+    displayPrice = quote?.price || 0;
+    firstSymbol = token1.symbol;
+    secondSymbol = token0.symbol;
+  }
+
   return (
     <>
-      {!loading && (
-        <>
-          <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
-            <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-              Order
-            </Typography>
-          </DialogTitle>
-          <DialogContent dividers>
-            <ContentWrapper>
+      {/* <DialogTitle style={{paddingTop: 0}} id='form-dialog-title'>
+        <Typography
+          className={classes.textSecondary}
+          variant='h6'
+          align='center'>
+          Order
+        </Typography>
+      </DialogTitle> */}
+      <DialogContent className={classes.dialogContent}>
+        {loading ? (
+          <CircularProgress style={{alignSelf: 'center'}} size='100px' />
+        ) : (
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Grid item xs={12}>
+              <Typography
+                variant='h6'
+                className={classes.textSecondary}
+                align='center'>
+                You are sending
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                className={classes.valueSend}
+                variant='h6'
+                align='center'>{`${sellAmount} ${token0.symbol}`}</Typography>
+            </Grid>
+
+            <Grid item xs={12}>
               <Grid
                 container
-                direction='row'
                 justify='center'
                 alignItems='center'
-                spacing={3}>
-                <Grid item xs={12} sm={6}>
-                  <Typography>From</Typography>
+                spacing={3}
+                className={classes.contentBox}>
+                <Grid item xs={12} sm={3}>
+                  <Typography className={classes.textSecondary}>
+                    At Price
+                  </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography align='right'>{`${sellAmount} ${token0.symbol}`}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography>To</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography align='right'>{`${buyAmount} ${token1.symbol}`}</Typography>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <Typography>Price</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography align='right'>{`${quote?.price} ${token1.symbol} per ${token0.symbol}`}</Typography>
+                <Grid item xs={12} sm={9}>
+                  <Typography className={classes.textPrimary} align='right'>
+                    {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
+                    <IconButton
+                      style={{marginLeft: 5}}
+                      size='small'
+                      onClick={invertPrice}>
+                      <SyncAltIcon fontSize='small' />
+                    </IconButton>
+                  </Typography>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <Typography>Estimated Fee</Typography>
+                <Grid item xs={12} sm={4}>
+                  <Typography className={classes.textSecondary}>
+                    You Receive
+                  </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography align='right'>{`${fee} ETH`}</Typography>
+                <Grid item xs={12} sm={8}>
+                  <Typography
+                    className={classes.textPrimary}
+                    align='right'>{`${buyAmount} ${token1.symbol}`}</Typography>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <Typography>Slipage</Typography>
+                <Grid item xs={12} sm={5}>
+                  <Typography className={classes.textSecondary}>
+                    Estimated Fee
+                  </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={7}>
+                  <Typography
+                    className={classes.textPrimary}
+                    align='right'>{`${fee} ETH`}</Typography>
+                </Grid>
+
+                <Grid item xs={12} sm={5}>
+                  <Typography>Slippage</Typography>
+                </Grid>
+                <Grid item xs={12} sm={7}>
                   <Box display='flex' justifyContent={'flex-end'}>
                     <TextField
                       id='slippage_inp'
@@ -203,22 +260,31 @@ const LimitStep: React.FC<Props> = (props) => {
                   </Box>
                 </Grid>
               </Grid>
-            </ContentWrapper>
-          </DialogContent>
-          <DialogActions>
-            <Button color='primary' size='large' onClick={onClose}>
-              Cancel
-            </Button>
+            </Grid>
+          </Grid>
+        )}
+      </DialogContent>
+      <DialogActions className={classes.dialogActions}>
+        {step === Steps.MARKET && (
+          <>
+            {/* <Button color='primary' size='large' onClick={onClose}>
+                  Cancel
+                </Button> */}
+            <Typography align='center' style={{paddingBottom: 10}}>
+              Would you like to confirm your order?
+            </Typography>
             <Button
+              fullWidth
               variant='contained'
               color='primary'
               size='large'
               onClick={handleAction}>
               Confirm
             </Button>
-          </DialogActions>
-        </>
-      )}
+          </>
+        )}
+        {children}
+      </DialogActions>
     </>
   );
 };

@@ -1,8 +1,8 @@
-import {BigNumber} from '@0x/utils';
-import {isWeth} from './knownTokens';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from '@0x/utils';
+import { isWeth } from './knownTokens';
+import { ChainId } from 'types/blockchain';
 import Web3 from 'web3';
-import {GET_DEFAULT_QUOTE, GET_DEFAULT_BASE} from 'shared/constants/Blockchain';
+import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { Token } from 'types/app';
 
@@ -115,7 +115,7 @@ export const extractPairFromAddress = (address: string, chainId: ChainId) => {
       quoteAddress = GET_DEFAULT_QUOTE(chainId);
     }
   }
-  return {baseAddress, quoteAddress};
+  return { baseAddress, quoteAddress };
 };
 
 export const GET_TRADE_TOKEN_URL = (address: string, network: EthereumNetwork) => {

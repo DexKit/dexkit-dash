@@ -27,6 +27,7 @@ export const historyConfigs = [
       },
     ],
   },
+
   {
     routes: [
       {
@@ -35,16 +36,6 @@ export const historyConfigs = [
       },
     ],
   },
-
-  {
-    routes: [
-      {
-        path: '/:networkName/history/order/list/:address',
-        component: React.lazy(() => import('./OrderList')),
-      },
-    ],
-  },
- 
 
   {
     routes: [

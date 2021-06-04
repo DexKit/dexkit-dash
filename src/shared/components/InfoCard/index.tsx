@@ -1,7 +1,8 @@
 import React from 'react';
 import {Box, Fade, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
-import Etherium from 'assets/images/etherium.png';
+import Trade from 'assets/images/dashboard/trade.svg';
+import History from 'assets/images/dashboard/history.svg';
 import {useHistory} from 'react-router-dom';
 
 export interface Props {
@@ -16,8 +17,8 @@ export interface Props {
   };
 }
 
-const InfoCard: React.FC<Props> = ({state, icon = Etherium}) => {
-  const {bgColor, value, href} = state;
+const InfoCard: React.FC<Props> = ({state}) => {
+  const {bgColor, value, href, id} = state;
   const history = useHistory();
   return (
     <Fade in={true} timeout={1000}>
@@ -27,9 +28,9 @@ const InfoCard: React.FC<Props> = ({state, icon = Etherium}) => {
         style={{backgroundColor: bgColor, cursor: 'pointer'}}>
         <Box display='flex' alignItems='center'>
           <Box mr={3} clone alignSelf='flex-start'>
-            {typeof icon === 'string' ? <img src={icon} alt='icon' /> : icon}
+          <img width='12%' src={id === 1 ? History : Trade } alt='icon' />
           </Box>
-          <Box flex={1} color='white'>
+          <Box flex={1} color='#F15A2B'>
             <Typography component='h5' variant='inherit' color='inherit'>
               {value}
             </Typography>

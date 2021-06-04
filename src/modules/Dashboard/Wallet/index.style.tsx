@@ -4,13 +4,13 @@ import {CremaTheme} from 'types/AppContextPropsType';
 export const useStyles = makeStyles((theme: CremaTheme) => ({
   btnPrimary: {
     '&:hover > div, &:focus > div': {
-      backgroundColor: `${theme.palette.primary.dark} !important`,
+      // backgroundColor: `${theme.palette.primary.dark} !important`,
       color: 'white',
     },
   },
   btnSecondary: {
     '&:hover > div, &:focus > div': {
-      backgroundColor: `${theme.palette.secondary.dark} !important`,
+      // backgroundColor: `${theme.palette.secondary.dark} !important`,
       color: 'white',
     },
   },

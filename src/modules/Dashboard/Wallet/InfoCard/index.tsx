@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Fade} from '@material-ui/core';
 import AppCard from '../../../../@crema/core/AppCard';
-import Etherium from 'assets/images/dashboard/sales.svg';
+import Sales from 'assets/images/dashboard/sales.svg';
 import Revenue from 'assets/images/dashboard/revenue.svg';
 
 interface Props {
@@ -22,13 +22,13 @@ const InfoCard: React.FC<Props> = ({state}) => {
       <AppCard height={1} style={{backgroundColor: bgColor}}>
         <Box display='flex' alignItems='center'>
           <Box mr={5} clone alignSelf='flex-start'>
-            <img width='12%' src={id === 1 ? Etherium : Revenue} alt='icon' />
+            <img width='12%' src={id === 1 ? Sales : Revenue} alt='icon' />
           </Box>
-          <Box flex={1} fontSize={18} fontWeight='bold' color='white'>
+          <Box flex={1} fontSize={18} fontWeight='bold' color='#F15A2B'>
             <p>{value}</p>
-            <Box mt={0.5}>
+            {/* <Box mt={0.5}>
               <p style={{fontWeight: 'normal', fontSize: 13}}>{type}</p>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </AppCard>

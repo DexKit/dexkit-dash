@@ -14,7 +14,6 @@ export const TAKER_FEE_PERCENTAGE: string = process.env.REACT_APP_TAKER_FEE_PERC
 
 export const UNLIMITED_ALLOWANCE_IN_BASE_UNITS = new BigNumber(2).pow(256).minus(1);
 
-
 export const ZERO = new BigNumber(0);
 
 export const GWEI_IN_WEI = new BigNumber(1000000000);

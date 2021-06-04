@@ -13,6 +13,7 @@ import { Web3Wrapper } from '@0x/web3-wrapper';
 
 import { sendConfig } from 'services/my-apps';
 import { NotificationType } from 'services/notification';
+import { Notification as CustomNotification} from 'types/models/Notification';
 import { ConfigFile, WhitelabelTypes } from 'types/myApps';
 import { onAddNotification } from 'redux/actions';
 
@@ -112,13 +113,19 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
               //console.log(JSON.stringify(json))
               sendConfig(dataToSend)
                 .then((c: any) => {
-                  const notification = new Notification('Config Accepted', { body: 'Config created' });
-                  dispatch(onAddNotification(notification));
-                  // history.push(`/my-apps/manage`);
+                  const notification: CustomNotification = {
+                    title: 'Config Accepted', 
+                     body: 'Config created' 
+                  };
+                  dispatch(onAddNotification([notification]));
+                  history.push(`/my-apps/manage`);
                 })
                 .catch(() => {
-                  const notification = new Notification('Error', { body: 'Config error! Do you have KIT?' });
-                  dispatch(onAddNotification(notification, NotificationType.ERROR));
+                  const notification: CustomNotification = {
+                    title: 'Error', 
+                    body: 'Config error! Do you have KIT?' 
+                  };
+                  dispatch(onAddNotification([notification], NotificationType.ERROR));
                 })
             })
           }

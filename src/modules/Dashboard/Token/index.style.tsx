@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     },
 
     '&:hover > div, &:focus > div': {
-      backgroundColor: `${theme.palette.primary.dark} !important`,
+      // backgroundColor: `${theme.palette.primary.dark} !important`,
       color: 'white',
     },
   },
@@ -27,7 +27,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     },
 
     '&:hover > div, &:focus > div': {
-      backgroundColor: `${theme.palette.secondary.dark} !important`,
+      // backgroundColor: `${theme.palette.secondary.dark} !important`,
       color: 'white',
     },
   },

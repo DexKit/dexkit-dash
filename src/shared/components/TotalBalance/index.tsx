@@ -52,7 +52,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             valueInUsd: 0,
           },
         ]);
-      }else{
+      } else {
         setTokens([
           {
             __typename: 'EthereumBalance',
@@ -83,15 +83,16 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     btnPrimary: {
-      backgroundColor: theme.palette.primary.main,
       color: 'white',
+      borderColor: 'white',
       fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 106,
       fontSize: 16,
       '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-        color: 'white',
+        // backgroundColor: theme.palette.primary.dark,
+        color: '#F15A2B',
+        borderColor: '#F15A2B',
       },
       lineHeight: '16px',
       [theme.breakpoints.up('sm')]: {
@@ -102,15 +103,16 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
       },
     },
     btnSecondary: {
-      backgroundColor: theme.palette.secondary.main,
-      color: 'white',
+      color: '#F15A2B',
+      borderColor: '#F15A2B',
       fontFamily: Fonts.BOLD,
       textTransform: 'capitalize',
       width: 106,
       fontSize: 16,
       '&:hover, &:focus': {
-        backgroundColor: theme.palette.secondary.dark,
+        // backgroundColor: theme.palette.secondary.dark,
         color: 'white',
+        borderColor: 'white',
       },
       lineHeight: '16px',
       [theme.breakpoints.up('sm')]: {
@@ -187,6 +189,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                     mt={{xs: 2, lg: 0}}>
                     <Box>
                       <Button
+                        variant='outlined'
                         onClick={() => setSenderModal(true)}
                         className={classes.btnPrimary}>
                         <IntlMessages id='common.send' />
@@ -195,6 +198,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                     </Box>
                     <Box ml={3}>
                       <Button
+                        variant='outlined'
                         onClick={() => setReceiverModal(true)}
                         className={classes.btnSecondary}>
                         <IntlMessages id='common.receive' />

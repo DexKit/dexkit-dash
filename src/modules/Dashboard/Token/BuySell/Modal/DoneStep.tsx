@@ -17,24 +17,13 @@ interface Props {
   onClose: () => void;
 }
 
-const ContentWrapper = styled.div`
-  width: 200px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  // border: 1px solid rgba(0, 0, 0, 0.12);
-  padding: 1rem;
-`;
-
 const DoneStep: React.FC<Props> = (props) => {
   const {step, onLoading, onClose} = props;
 
   const classes = useStyles();
 
   useEffect(() => {
-    if (step == Steps.DONE) {
+    if (step === Steps.DONE) {
       console.log('START DONE');
       onLoading(false);
     }
@@ -42,24 +31,15 @@ const DoneStep: React.FC<Props> = (props) => {
 
   return (
     <>
-      <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
-        <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-          Finished
-        </Typography>
-      </DialogTitle>
-      <DialogContent dividers>
-        <ContentWrapper>
-          <Typography align='center'>
-            <CheckCircleOutlineIcon style={{width: 80, height: 80}} />
-          </Typography>
-          <Typography align='center'>Order Completed!</Typography>
-        </ContentWrapper>
-      </DialogContent>
-      <DialogActions>
-        <Button color='primary' size='large' onClick={onClose}>
-          Close
-        </Button>
-      </DialogActions>
+      <Typography align='center' style={{paddingBottom: 10}}>
+        Order completed!
+      </Typography>
+      <Button fullWidth color='primary' size='large' onClick={onClose}>
+        <CheckCircleOutlineIcon
+          style={{width: 40, height: 40, paddingRight: 10}}
+        />
+        Close
+      </Button>
     </>
   );
 };

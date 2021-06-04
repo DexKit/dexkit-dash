@@ -46,7 +46,7 @@ const MarketForm: React.FC<Props> = (props) => {
     onChangeToken,
     onTrade,
   } = props;
- 
+
   const useStyles = makeStyles((theme: CremaTheme) => ({
     root: {
       color: theme.palette.secondary.main,
@@ -105,10 +105,13 @@ const MarketForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {web3State} = useWeb3();
-  
+
   const network = useNetwork();
 
-  const [tokenBalance, setTokenBalance] = useState<GetMyBalance_ethereum_address_balances>();
+  const [
+    tokenBalance,
+    setTokenBalance,
+  ] = useState<GetMyBalance_ethereum_address_balances>();
 
   const [amountFrom, setAmountFrom] = useState<number>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
@@ -135,9 +138,10 @@ const MarketForm: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
-    setTokenBalance(balances.find((e) => e.currency?.symbol === tokenFrom?.symbol));
-  }, [tokenFrom])
-
+    setTokenBalance(
+      balances.find((e) => e.currency?.symbol === tokenFrom?.symbol),
+    );
+  }, [tokenFrom]);
 
   const onFetch = (newValue: number) => {
     const value = Number(newValue);
@@ -145,20 +149,26 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenFrom && tokenTo && chainId) {
       setAmountFrom(value);
 
-      fetchQuote({
-        chainId: chainId,
-        baseToken: tokenFrom,
-        quoteToken: tokenTo,
-        orderSide: OrderSide.Sell,
-        makerAmount: fromTokenUnitAmount(value, tokenFrom.decimals),
-        // Parameters used to prevalidate quote at final
-        allowedSlippage: 0.03,
-        ethAccount: props.account,
-        buyTokenPercentage: undefined,
-        feeRecipient: undefined,
-        affiliateAddress: undefined,
-        intentOnFill: false,
-      }, network)
+      console.log(tokenFrom);
+      console.log(tokenTo);
+
+      fetchQuote(
+        {
+          chainId: chainId,
+          baseToken: tokenFrom,
+          quoteToken: tokenTo,
+          orderSide: OrderSide.Sell,
+          makerAmount: fromTokenUnitAmount(value, tokenFrom.decimals),
+          // Parameters used to prevalidate quote at final
+          allowedSlippage: 0.03,
+          ethAccount: props.account,
+          buyTokenPercentage: undefined,
+          feeRecipient: undefined,
+          affiliateAddress: undefined,
+          intentOnFill: false,
+        },
+        network,
+      )
         .then((e) => {
           setAmountTo(
             toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
@@ -206,7 +216,6 @@ const MarketForm: React.FC<Props> = (props) => {
     errorMessage = 'No available balance for chosen token';
   } 
 
-
   return (
     <Box>
       <form noValidate autoComplete='off'>
@@ -227,7 +236,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 } ${tokenBalance?.currency?.symbol || ''})`}
                 </span>
               </Box>
-            </Grid> 
+            </Grid>
             {errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
@@ -261,7 +270,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 options={select0}
                 disabled={disabled}
                 onChange={($token) => {
-                  onChangeToken($token, 'from')
+                  onChangeToken($token, 'from');
                 }}
               />
             </Grid>
@@ -306,7 +315,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 options={select1}
                 disabled={disabled}
                 onChange={($token) => {
-                  onChangeToken($token, 'to')
+                  onChangeToken($token, 'to');
                 }}
               />
             </Grid>

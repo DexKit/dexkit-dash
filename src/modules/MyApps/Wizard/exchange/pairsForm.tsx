@@ -14,6 +14,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
+import { MessageView } from '@crema';
 
 import { AccordionSummary } from '../shared/Accordion';
 import { CustomIconButton } from '../shared/Buttons';
@@ -27,11 +28,11 @@ import { WizardProps } from '../shared';
 import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import { isAddress } from 'ethers/lib/utils';
 import { InfoComponent } from '../shared/Buttons/infoComponent';
-import { HELP_TEXT_PAIR, HELP_TEXT_PAIR_CONFIG } from './helpText';
+import { HELP_TEXT_PAIR } from './helpText';
 import { getHelpText } from '../shared';
 import { useBlokchain } from 'hooks/useBlokchain';
-import { MessageView } from '@crema';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { PairItemComponent } from './pairItem';
 
 const useStyle = makeStyles((theme) => ({
   heading: {
@@ -236,6 +237,68 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
     }
   }, [config]);
 
+  const _onBlur = ($e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+     key: string | keyof ConfigPairMetaData, errors: error, hasProperty: boolean,
+    config: ConfigPairMetaData, setConfig: React.Dispatch<React.SetStateAction<ConfigPairMetaData | undefined>>
+    , setErrors:  React.Dispatch<React.SetStateAction<error>>) => 
+  {
+    if (key === 'minAmount') {
+      const msgError = minAmountError();
+      if (hasProperty && msgError == null) {
+        errors.config.minAmount = undefined;
+        setErrors({ ...errors })
+      }
+      else {
+        errors.config = {
+          ...errors?.config,
+          minAmount: msgError
+        }
+        setErrors({ ...errors })
+      }
+    } else if (key === 'maxAmount') {
+      const msgError = maxAmountError();
+      if (hasProperty && msgError == null) {
+        errors.config.maxAmount = undefined;
+        setErrors({ ...errors })
+      }
+      else {
+        errors.config = {
+          ...errors?.config,
+          maxAmount: msgError
+        }
+        setErrors({ ...errors })
+      }
+    } else {
+      type _k = keyof typeof config;
+      const num = Number($e.target.value);
+      console.log(`${key}`, num);
+      setConfig({
+        ...config,
+        [key]: num
+      });
+      const _valid = positiveValidator(num);
+      errors.config = {
+        ...errors.config,
+        [key]: _valid ? undefined : `${key} precision is invalid!`
+      }
+      if (errors?.config[key as _k] != null) {
+        setErrors({ ...errors });
+      }
+    }
+  };
+
+  const _onChange = ($e: any, key: string, pair: CurrencyPairMetaData, config: ConfigPairMetaData,
+    setConfig: React.Dispatch<React.SetStateAction<ConfigPairMetaData | undefined>>) => {
+    const _config = {
+      ...config,
+      [key]: $e.target.value
+    };
+    pair.config = _config;
+    setConfig({
+      ..._config
+    });
+  };
+
   useEffect(() => {
     setPair({
       address,
@@ -261,9 +324,10 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   useEffect(() => {
     setErrors({ ...errors, address: searchfailed });
   }, [searchfailed]);
+
   const exclude = ['pricePrecision'];
   const otherFields = Object.keys(config ?? {})
-  // .filter( f => exclude.every( x => x !== f));
+  .filter( f => exclude.every( x => x !== f));
   return (
     <>
       <Grid item xs={12} md={6} sm={6}>
@@ -292,7 +356,6 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
             }
           }
           InputLabelProps={{
-            // shrink: placeholder != null,
             shrink: true,
           }}
           fullWidth
@@ -303,29 +366,31 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
         />
       </Grid>
       <Grid item xs={12} md={6} sm={6}>
+      <PairItemComponent
+        key={`pricePrecision`}
+        index={index}
+        label={labels['pricePrecision']}
+        placeholder={placeholders['pricePrecision']}
+        value={config?.pricePrecision}
+        helperText={errors.config['pricePrecision']}
+        error={errors?.config['pricePrecision'] != null}
+        onBlur={($e) => {
+          _onBlur($e, 'pricePrecision', errors, true, config ?? {}, setConfig, setErrors);
+        }}
+        onChange={($e) => {
+          _onChange($e, 'pricePrecision', pair, config ?? {}, setConfig);
+          onChange($e, { ...pair }, index);
+        }}
+        disabled={loading}
+      />
+      </Grid>
+      <Grid item xs={12} md={6} sm={6}>
         <TextField
           key={`pair(${index}).base`}
           id={`pair(${index}).base`}
           value={base}
           placeholder={'ETH'}
-          // onBlur={
-          //   () => {
-          //     if (baseValidator(base)) {
-          //       errors.base = undefined;
-          //       setErrors({ ...errors })
-          //     }
-          //     else
-          //       setErrors({ ...errors, base: 'base precision is invalid!' })
-          //   }
-          // }
-          // onChange={
-          //   ($e) => {
-          //     setBase($e.target.value);
-          //     onChange($e, { ...pair, base }, index);
-          //   }
-          // }
           InputLabelProps={{
-            // shrink: placeholder != null,
             shrink: true,
           }}
           helperText={!valid ? errors?.base : undefined}
@@ -343,25 +408,10 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
           id={`pair(${index}).quote`}
           value={quote}
           placeholder={'DAI'}
-          // onBlur={
-          //   () => {
-          //     if (quoteValiation(quote, base))
-          //       setErrors({ ...errors, quote: undefined })
-          //     else
-          //       setErrors({ ...errors, quote: 'quote name is invalid!' })
-          //   }
-          // }
-          // onChange={
-          //   ($e) => {
-          //     setQuote($e.target.value);
-          //     onChange($e, { ...pair, quote: $e.target.value }, index);
-          //   }
-          // }
           helperText={!valid ? errors?.quote : undefined}
           error={errors?.quote != null}
           label={<CustomLabel text="Quote" required={true} />}
           InputLabelProps={{
-            // shrink: placeholder != null,
             shrink: true,
           }}
           fullWidth
@@ -377,14 +427,12 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
               const _key: k = key as k;
               const hasProperty = !isObjectNullOrEmpty(errors) && checkProperty<ConfigError>(errors?.config, _key);
               return (
-                <Grid item xs={12} md={6} sm={6}>
-                  <TextField
-                    type="number"
-                    key={`pair(${index}).${key}`} id={`pair(${index}).${key}`}
-                    fullWidth
-                    label={<CustomLabel text={labels[_key]} required={true} />}
+                <Grid item xs={12} md={6} sm={6} key={`pair(${index}).${key}`}>
+                  <PairItemComponent
+                    key={`pair(${index}).${key}`}
+                    index={index}
+                    label={labels[_key]}
                     placeholder={placeholders[_key]}
-                    variant='outlined'
                     value={config[_key]}
                     inputProps={
                       {
@@ -393,63 +441,15 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
                         step: _key === 'maxAmount' || _key === 'minAmount' ? Math.pow(10, -(Math.max(Math.min(config?.pricePrecision ?? 4, 8), 4))) : 1
                       }
                     }
-                    // InputProps={{
-                    //   endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                    // }}
                     helperText={hasProperty ? errors.config[_key] : undefined}
                     error={hasProperty && errors?.config[_key] != null}
                     onBlur={($e) => {
-                      if (_key === 'minAmount') {
-                        const msgError = minAmountError();
-                        if (hasProperty && msgError == null) {
-                          errors.config.minAmount = undefined;
-                          setErrors({ ...errors })
-                        }
-                        else {
-                          errors.config = {
-                            ...errors?.config,
-                            minAmount: msgError
-                          }
-                          setErrors({ ...errors })
-                        }
-                      } else if (_key === 'maxAmount') {
-                        const msgError = maxAmountError();
-                        if (hasProperty && msgError == null) {
-                          errors.config.maxAmount = undefined;
-                          setErrors({ ...errors })
-                        }
-                        else {
-                          errors.config = {
-                            ...errors?.config,
-                            maxAmount: msgError
-                          }
-                          setErrors({ ...errors })
-                        }
-                      } else {
-                        const _valid = positiveValidator(Number(config[_key]));
-                        console.log('_valid', _valid);
-                        errors.config[_key] = _valid ? undefined : `${_key} precision is invalid!`;
-                        if (errors.config[_key] != null) {
-                          setErrors({ ...errors });
-                        }
-                      }
+                      _onBlur($e, key, errors, hasProperty, config, setConfig, setErrors);
                     }}
                     onChange={($e) => {
-                      const _config = {
-                        ...config,
-                        [_key]: $e.target.value
-                      };
-                      pair.config = _config;
-                      setConfig({
-                        ..._config
-                      });
+                      _onChange($e, _key, pair, config, setConfig);
                       onChange($e, { ...pair }, index);
                     }}
-                    InputLabelProps={{
-                      // shrink: placeholder != null,
-                      shrink: true,
-                    }}
-                    InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR_CONFIG, _key, 0)} />) }}
                     disabled={loading}
                   />
                 </Grid>
