@@ -149,9 +149,6 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenFrom && tokenTo && chainId) {
       setAmountFrom(value);
 
-      console.log(tokenFrom);
-      console.log(tokenTo);
-
       fetchQuote(
         {
           chainId: chainId,
@@ -182,7 +179,10 @@ const MarketForm: React.FC<Props> = (props) => {
   };
 
   const onChangeFrom = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    let value = Number(e.target.value);
+    if(value < 0){
+      value = 0;
+    }
     onFetch(value);
   };
 
@@ -252,8 +252,9 @@ const MarketForm: React.FC<Props> = (props) => {
               md={6}>
               <TextField
                 variant='outlined'
-                fullWidth
+                type='number'
                 value={amountFrom}
+                fullWidth
                 label={<IntlMessages id='app.youSend' />}
                 onChange={(e) => onChangeFrom(e)}
               />

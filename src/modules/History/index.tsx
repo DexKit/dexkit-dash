@@ -27,12 +27,28 @@ export const historyConfigs = [
       },
     ],
   },
+  {
+    routes: [
+      {
+        path: '/:networkName/history/order/list/:address',
+        component: React.lazy(() => import('./TradeHistory')),
+      },
+    ],
+  },
 
   {
     routes: [
       {
         path: '/:networkName/history/order/list/:address/token/:token',
-        component: React.lazy(() => import('./OrderList')),
+        component: React.lazy(() => import('./TradeHistory')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/:networkName/history/trade/list/:address/token/:token',
+        component: React.lazy(() => import('./TradeHistory')),
       },
     ],
   },

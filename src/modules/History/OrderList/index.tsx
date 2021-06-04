@@ -1,57 +1,154 @@
-import React from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
-import {useOrderList} from 'hooks/history/useOrderList';
 import {useStyles} from './index.style';
+import PageTitle from 'shared/components/PageTitle';
 import ErrorView from 'modules/Common/ErrorView';
-import OrderTable from './OrderTable';
 import {useNetwork} from 'hooks/useNetwork';
-import LoadingTable from 'modules/Common/LoadingTable';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
-import { useIntl } from 'react-intl';
+import useFetch from 'use-http';
+import {ZRX_API_URL} from 'shared/constants/AppConst';
+import {useChainId} from 'hooks/useChainId';
+import {RouteComponentProps} from 'react-router';
+import TradeTable from './TradeTable';
+import usePagination from 'hooks/usePagination';
+import LoadingTable from '../../Common/LoadingTable';
+import {toTokenUnitAmount} from '@0x/utils';
+import {useTokenList} from 'hooks/useTokenList';
+import {truncateAddress} from 'utils';
+import { isAddress } from 'web3-utils';
 
 type Params = {
   address: string;
-  token: string;
 };
 
 type Props = RouteComponentProps<Params>;
 
-const OrderList: React.FC<Props> = (props) => {
+const TradeHistory: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
-  const {address, token} = params;
-  const {messages} = useIntl();
-  const classes = useStyles();
+  const {address} = params;
+
+  const {currentChainId} = useChainId();
 
   const networkName = useNetwork();
+
+  const tokenList = useTokenList(networkName);
+
   const {
-    loading,
-    error,
-    data,
-    totalRows,
     currentPage,
     rowsPerPage,
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useOrderList({address, baseCurrency: token});
+  } = usePagination();
 
-  console.log('error', error);
-  console.log('data', data);
+  const [data, setData] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
+
+  const {
+    loading: loadingMaker,
+    error: errorMaker,
+    data: dataMaker,
+  } = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
+      currentPage + 1
+    }&perPage=${rowsPerPage / 2}&makerToken=${address}`,
+    [address, currentPage, rowsPerPage],
+  );
+
+  const {
+    loading: loadingTaker,
+    error: errorTaker,
+    data: dataTaker,
+  } = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
+      currentPage + 1
+    }&perPage=${rowsPerPage / 2}&takerToken=${address}`,
+    [address, currentPage, rowsPerPage],
+  );
+
+  useEffect(() => {
+    if (dataMaker && dataTaker && tokenList.length > 0) {
+      const newDataMaker = dataMaker.records.map((e: any) => {
+        const makerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+        );
+        const takerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+        );
+
+        e.order['side'] = 'SELL';
+        e.order['makerTokenFn'] = makerToken;
+        e.order['takerTokenFn'] = takerToken;
+        e.order['makerAmountFn'] = toTokenUnitAmount(
+          e.order.makerAmount,
+          makerToken?.decimals || 18,
+        ).toString();
+        e.order['takerAmountFn'] = toTokenUnitAmount(
+          e.order.takerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
+          e.metaData.remainingFillableTakerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+
+        return e;
+      });
+
+      const newDataTaker = dataTaker.records.map((e: any) => {
+        const makerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+        );
+        const takerToken = tokenList.find(
+          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+        );
+
+        e.order['side'] = 'BUY';
+        e.order['makerTokenFn'] = makerToken;
+        e.order['takerTokenFn'] = takerToken;
+        e.order['makerAmountFn'] = toTokenUnitAmount(
+          e.order.makerAmount,
+          makerToken?.decimals || 18,
+        ).toString();
+        e.order['takerAmountFn'] = toTokenUnitAmount(
+          e.order.takerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
+          e.metaData.remainingFillableTakerAmount,
+          takerToken?.decimals || 18,
+        ).toString();
+
+        return e;
+      });
+
+      setData(newDataMaker.concat(newDataTaker));
+      setTotalRows(dataMaker.total + dataTaker.total);
+    } else {
+      setData([]);
+    }
+  }, [dataMaker, dataTaker, tokenList]);
+
+  const classes = useStyles();
+
+  console.log(data);
 
   return (
     <Box pt={{xl: 4}}>
-      {/* <PageTitle
-        history={[
-          {url:'/', name: 'Dashboard'},
-          {url:'/dashboard/wallet', name: 'Wallet'}
-        ]}
-        active={'Order History'}
-        title={'Order History'}
-      /> */}
+      <PageTitle
+        breadcrumbs={{
+          history: [
+            {url: '/', name: 'Dashboard'},
+            {url: `/${networkName}/dashboard/token/${address}`, name: 'Token'},
+          ],
+          active: {name: 'Order List'},
+        }}
+        title={{name: 'Order List'}}
+        subtitle={{name: truncateAddress(address), hasCopy: address}}
+      />
+
 
       <GridContainer>
         <Grid item xs={12} md={12}>
@@ -63,10 +160,7 @@ const OrderList: React.FC<Props> = (props) => {
                 alignItems='center'
                 style={{width: '100%'}}>
                 <Box>
-                  <Box display={'flex'} justifyContent={'flex-start'}     alignItems={'center'}>
-                      <SwapHorizontalCircleIcon color={'primary'}/>
-                      <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
-                  </Box>
+                  <Typography variant='h5'>Order List</Typography>
                 </Box>
                 {/* <Select
                     className={classes.selectBox}
@@ -85,12 +179,14 @@ const OrderList: React.FC<Props> = (props) => {
                   </Select> */}
               </Box>
             </Toolbar>
-            {loading ? (
-              <LoadingTable columns={8} rows={10} />
-            ) : error ? (
-              <ErrorView message={error.message} />
+            {loadingMaker || loadingTaker ? (
+              <LoadingTable columns={5} rows={10} />
+            ) : errorMaker || errorTaker ? (
+              <ErrorView
+                message={errorMaker ? errorMaker.message : errorTaker.message}
+              />
             ) : (
-              <OrderTable
+              <TradeTable
                 networkName={networkName}
                 data={data}
                 totalRows={totalRows}
@@ -108,4 +204,4 @@ const OrderList: React.FC<Props> = (props) => {
   );
 };
 
-export default OrderList;
+export default TradeHistory;

@@ -102,7 +102,7 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const {web3State} = useWeb3();
+  const { web3State } = useWeb3();
 
   const network = useNetwork();
 
@@ -191,11 +191,17 @@ const LimitForm: React.FC<Props> = (props) => {
   };
 
   const handleInputChange = (event: any) => {
-    setAmountFrom(event.target.value);
-    setAmountTo(event.target.value * price);
+   let value = Number(event.target.value);
+   if(value < 0){
+     value = 0;
+   }
+
+    setAmountFrom(value);
+    setAmountTo(value * price);
   };
 
   const handlePriceChange = (event: any) => {
+    
     setPrice(event.target.value);
     setAmountTo(amountFrom * event.target.value);
   };
@@ -257,6 +263,7 @@ const LimitForm: React.FC<Props> = (props) => {
               md={6}>
               <TextField
                 variant='outlined'
+                type='number'
                 fullWidth
                 value={amountFrom}
                 label={<IntlMessages id='app.youSend' />}

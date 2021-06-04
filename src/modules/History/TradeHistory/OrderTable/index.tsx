@@ -5,8 +5,11 @@ import {
   TableHead,
   TableBody,
   TablePagination,
+  Typography,
+  TableRow,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
+import TableCell from '@material-ui/core/TableCell';
 import TableItem from './TableItem';
 import {IOrderList} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -34,7 +37,7 @@ const TransactionTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
-
+  console.log(data);
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
@@ -50,6 +53,10 @@ const TransactionTable: React.FC<Props> = ({
               ))}
           </TableBody>
         </Table>
+        {(data && data.length === 0) &&
+          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
+                        You don't have trades yet
+          </Typography>}
       </Box>
 
       <TablePagination

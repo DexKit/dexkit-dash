@@ -5,6 +5,7 @@ import {
   TableHead,
   TableBody,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
@@ -62,8 +63,14 @@ const MyOrdersTable: React.FC<Props> = ({
                 <TableItem row={row} networkName={networkName} key={index} />
               ))} */}
             {paginatedRows}
+
+            
           </TableBody>
         </Table>
+          {(data && data.length === 0) &&
+          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
+                        You don't have active orders for this token
+          </Typography>}
       </Box>
 
       <TablePagination

@@ -1,23 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {useMyOrdersHistory} from 'hooks/history/useMyOrdersHistory';
+
 import {Grid, Box, Card, Paper, Toolbar, Typography} from '@material-ui/core';
+import {COINGECKO_CONTRACT_URL} from 'shared/constants/AppConst';
 import {GridContainer} from '@crema';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import useFetch from 'use-http';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
-import {useChainId} from 'hooks/useChainId';
+import { useChainId} from 'hooks/useChainId';
 import {useNetwork} from 'hooks/useNetwork';
 import {RouteComponentProps} from 'react-router';
 import MyOrdersTable from './MyOrdersTable';
 import usePagination from 'hooks/usePagination';
 import {useStyles} from './index.style';
 import LoadingTable from '../../Common/LoadingTable';
-import {SignedOrder} from '@0x/types';
-import {useBlokchain} from 'hooks/useBlokchain';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
 import PageTitle from 'shared/components/PageTitle';
+import { truncateAddress } from 'utils/text';
+import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
 
 type Params = {
   address: string;
@@ -95,6 +95,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   }, [dataFn, tokenList]);
 
   const classes = useStyles();
+  const token = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${address}`, {}, [address]);
 
   return (
     <Box pt={{xl: 4}}>
@@ -102,12 +103,19 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url: '/', name: 'Dashboard'},
-            {url: '/ethereum/dashboard/token', name: 'Token'},
+            {url: `/${networkName}/dashboard/token/${address}`, name: 'Token'},
           ],
           active: {name: 'My Active Orders'},
         }}
         title={{name: 'My Active Orders'}}
       />
+      {token.data && (
+          <PageTitle
+            title={{name: token.data.name}}
+            subtitle={{name: truncateAddress(address), hasCopy: address}}
+            icon={address}
+          />
+        )}
 
       <GridContainer>
         <Grid item xs={12} md={12}>

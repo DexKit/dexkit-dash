@@ -15,7 +15,7 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/:networkName/dashboard/wallet',
+        path: '/dashboard/wallet',
         component: React.lazy(() => import('./Wallet')),
       },
     ],

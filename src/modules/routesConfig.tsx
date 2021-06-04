@@ -46,7 +46,7 @@ const useRoutesConfig = (): NavItemProps[] => {
             messageId: 'sidebar.app.wallet',
             type: 'item',
             icon: 'account_balance_wallet',
-            url: `/${networkName}/dashboard/wallet`,
+            url: `/dashboard/wallet`,
           },
           {
             id: 'token',

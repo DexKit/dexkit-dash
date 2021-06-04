@@ -143,7 +143,7 @@ const TokenPage: React.FC<Props> = (props) => {
                   <Link
                     className={classes.btnSecondary}
                     component={RouterLink}
-                    to={`/${networkName}/history/order/list/${account}/token/${address}`}
+                    to={`/${networkName}/history/trade/list/${account}/token/${address}`}
                     style={{textDecoration: 'none'}}>
                     <InfoCard
                       state={{

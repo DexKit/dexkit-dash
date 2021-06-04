@@ -5,6 +5,7 @@ import {
   TableHead,
   TableBody,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
@@ -48,6 +49,10 @@ const TransactionTable: React.FC<Props> = ({
               ))}
           </TableBody>
         </Table>
+        {(data && data.length === 0) &&
+          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
+                        You don't have transactions yet on this wallet
+          </Typography>}
       </Box>
 
       <TablePagination

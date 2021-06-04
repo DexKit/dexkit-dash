@@ -101,8 +101,6 @@ const MarketStep: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (step !== Steps.DONE) {
-      console.log('START MARKET');
-
       fetchQuote(
         {
           baseToken: token0,
