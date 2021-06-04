@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
+import CloseIcon from '@material-ui/icons/Close';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -18,8 +19,11 @@ import {useBalance} from 'hooks/balance/useBalance';
 import BigNumber from 'bignumber.js';
 import ConvertStep from './ConvertStep';
 import MarketStep from './MarketStep';
-import {Box} from '@material-ui/core';
+import {Box, IconButton, Typography} from '@material-ui/core';
 import DoneStep from './DoneStep';
+import {useStyles} from './index.style';
+import LimitStep from './LimitStep';
+import ProgressBar from './PogressBar';
 
 interface OrderProps {
   open: boolean;
@@ -45,6 +49,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     onClose,
   } = props;
 
+  const classes = useStyles();
   const {chainId, account} = useWeb3();
   const {data} = useBalance();
 
@@ -97,16 +102,15 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     setLoading(value);
   };
 
-  return (
-    <>
-      {account && chainId && (
-        <Dialog
-          open={open}
-          onClose={onClose}
-          aria-labelledby='form-dialog-title'>
-          {loading && <LoadingStep />}
+  let step;
 
-          {currentStep === Steps.APPROVE && (
+  if (account && chainId) {
+    if (loading) {
+      step = <LoadingStep />;
+    } else {
+      switch (currentStep) {
+        case Steps.APPROVE:
+          step = (
             <ApproveStep
               step={currentStep}
               token={token0}
@@ -119,11 +123,57 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
               onNext={handleNext}
               onLoading={handleLoading}
             />
-          )}
+          );
+          break;
+        case Steps.ERROR:
+          step = (
+            <ErrorStep
+              step={currentStep}
+              error={error}
+              onClose={onClose}
+              onLoading={handleLoading}
+            />
+          );
+          break;
+        case Steps.DONE:
+          step = (
+            <DoneStep
+              step={currentStep}
+              onClose={onClose}
+              onLoading={handleLoading}
+            />
+          );
+          break;
+      }
+    }
+  }
+
+  return (
+    <>
+      {account && chainId && (
+        <Dialog
+          fullWidth
+          maxWidth='sm'
+          open={open}
+          onClose={onClose}
+          aria-labelledby='form-dialog-title'>
+          <DialogTitle id='form-dialog-title' className={classes.dialogTitle}>
+            <Typography align='right'>
+              <IconButton aria-label='close' onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Typography>
+            <Typography
+              className={classes.textPrimary}
+              variant='h5'
+              align='center'>
+              Review {isMarket ? 'Market' : 'Limit'} Order
+            </Typography>
+          </DialogTitle>
 
           {/* {currentStep === Steps.CONVERT && <ConvertStep amount={amount} onClose={handleClose} onNext={handleNext}/>} */}
 
-          {currentStep === Steps.MARKET && (
+          {isMarket ? (
             <MarketStep
               step={currentStep}
               token0={token0}
@@ -134,25 +184,25 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
               loading={loading}
               onClose={onClose}
               onNext={handleNext}
-              onLoading={handleLoading}
-            />
-          )}
-
-          {currentStep === Steps.ERROR && (
-            <ErrorStep
+              onLoading={handleLoading}>
+              {step}
+              <ProgressBar steps={steps} currentStepIndex={stepsIdx} />
+            </MarketStep>
+          ) : (
+            <LimitStep
               step={currentStep}
-              error={error}
+              token0={token0}
+              token1={token1}
+              amount={amount}
+              account={account}
+              chainId={chainId}
+              loading={loading}
               onClose={onClose}
-              onLoading={handleLoading}
-            />
-          )}
-
-          {currentStep === Steps.DONE && (
-            <DoneStep
-              step={currentStep}
-              onClose={onClose}
-              onLoading={handleLoading}
-            />
+              onNext={handleNext}
+              onLoading={handleLoading}>
+              {step}
+              <ProgressBar steps={steps} currentStepIndex={stepsIdx} />
+            </LimitStep>
           )}
         </Dialog>
       )}

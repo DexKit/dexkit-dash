@@ -24,7 +24,7 @@ const ErrorStep: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    if (step == Steps.ERROR && error) {
+    if (step === Steps.ERROR && error) {
       console.log('START ERROR');
 
       if (error) {
@@ -40,17 +40,12 @@ const ErrorStep: React.FC<Props> = (props) => {
 
   return (
     <>
-      <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
-        <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-          Error
-        </Typography>
-      </DialogTitle>
-      <DialogContent dividers>{message}</DialogContent>
-      <DialogActions>
-        <Button color='primary' size='large' onClick={onClose}>
-          Close
-        </Button>
-      </DialogActions>
+      <Typography align='center' style={{paddingBottom: 10}}>
+        {message}
+      </Typography>
+      <Button fullWidth color='primary' size='large' onClick={onClose}>
+        Close
+      </Button>
     </>
   );
 };

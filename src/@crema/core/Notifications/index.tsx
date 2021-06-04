@@ -10,7 +10,7 @@ import IntlMessages from '../../utility/IntlMessages';
 import NotificationItem from './NotificationItem';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {onNotificationList} from 'redux/_notification/actions';
+import { onNotificationList, onCheckNotification, onCheckAllNotification } from 'redux/_notification/actions';
 import {AppState} from 'redux/store';
 
 interface NotificationsProps {}
@@ -32,7 +32,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setAnchorNotification(event.currentTarget);
   };
 
-  const { notifications } = useSelector<AppState, AppState['notification']>(
+  const { notifications, selected } = useSelector<AppState, AppState['notification']>(
     ({ notification }) => notification
   );
 
@@ -166,6 +166,10 @@ const Notifications: React.FC<NotificationsProps> = () => {
               }}>
               {notifications.map((item, i) => (
                 <NotificationItem
+                  onClick={() => {
+                    dispatch(onCheckNotification(Number(item.id)))
+                  }}
+                  id={Number(item?.id ?? i)}
                   listStyle={classes.notificationItem}
                   key={item?.id?.toString() ?? i}
                   item={item}
@@ -177,7 +181,11 @@ const Notifications: React.FC<NotificationsProps> = () => {
             <Button
               className={classes.btnPopover}
               variant='contained'
-              color='primary'>
+              color='primary'
+              onClick={() => {
+                dispatch(onCheckAllNotification())
+              }}
+              >
               <IntlMessages id='common.viewAll' />
             </Button>
           </Box> */}

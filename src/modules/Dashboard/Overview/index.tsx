@@ -1,4 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import { useDispatch } from 'react-redux';
+
 import Grid from '@material-ui/core/Grid';
 import GridContainer from '../../../@crema/core/GridContainer';
 import Box from '@material-ui/core/Box';
@@ -11,6 +13,9 @@ import News from 'shared/components/News/';
 import InfoToken from './InfoToken';
 import {ReportCards} from 'types/models/Ecommerce';
 import {getOverviewCoinsData} from 'services/rest/coingecko';
+import { Button } from '@material-ui/core';
+import { onAddNotification } from 'redux/actions';
+import { Notification } from 'types/models/Notification';
 
 interface Props {}
 
@@ -18,6 +23,7 @@ const Overview: React.FC<Props> = () => {
   const [ethData, setEthData] = useState<ReportCards>();
   const [kitData, setKitData] = useState<ReportCards>();
   const [btcData, setBtcData] = useState<ReportCards>();
+  const dispatch = useDispatch();
 
   useEffect(
     useCallback(() => {
@@ -79,7 +85,25 @@ const Overview: React.FC<Props> = () => {
 
         {/* <Grid item xs={12} lg={4}>
           <News />
+        </Grid>
         </Grid> */}
+        {/*TODO: remover isso aqui após os testes de notificação */}
+        {/* <Grid>
+          <Button 
+          onClick={
+            () => {
+              const notification: Notification = { 
+                title: 'Config Accepted', 
+                 body: 'Config created' 
+              };
+              dispatch(onAddNotification([notification]));
+            }
+          }
+          >
+            Enviar notificação
+          </Button>
+        </Grid> */}
+
       </GridContainer>
     </Box>
   );

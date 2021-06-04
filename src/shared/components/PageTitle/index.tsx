@@ -60,7 +60,11 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon}) => {
         {breadcrumbs && (
           <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
             {breadcrumbs.history.map((e) => (
-              <Link key={e.name} color='inherit' to={e.url} component={RouterLink}>
+              <Link
+                key={e.name}
+                color='inherit'
+                to={e.url}
+                component={RouterLink}>
                 {e.name}
                 {e.hasCopy !== undefined && (
                   <ButtonCopy

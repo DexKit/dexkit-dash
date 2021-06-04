@@ -152,7 +152,7 @@ const AppsTable = () => {
         const config = configs?.splice(index, 1)[0];
         console.log('removed', config);
       const notification = new Notification(`${slug} app deleted`, { body: `deleted ${slug} app successfully` });
-      dispatch(onAddNotification(notification));
+      dispatch(onAddNotification([notification]));
     }
 
   }

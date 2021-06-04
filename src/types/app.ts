@@ -41,8 +41,11 @@ import {
   GetContractOrders_ethereum_dexTrades_timeInterval,
   GetContractOrders_ethereum_dexTrades_transaction,
 } from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
-import { ChainId } from './blockchain';
-import { GetAMMPairExplorer_ethereum_dexTrades_baseCurrency, GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
+import {ChainId} from './blockchain';
+import {
+  GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
+  GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
+} from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
 
 export enum OrderSide {
   Sell,
@@ -51,12 +54,12 @@ export enum OrderSide {
 }
 
 export enum Steps {
-  APPROVE,
-  CONVERT,
-  MARKET,
-  LIMIT,
-  ERROR,
-  DONE,
+  APPROVE = 'Approval',
+  CONVERT = 'Conversion',
+  MARKET = 'Market',
+  LIMIT = 'Limit',
+  ERROR = 'Error',
+  DONE = 'Done',
 }
 
 export interface Token {
@@ -116,20 +119,20 @@ export interface IOrderList {
 }
 
 export interface MintBurn {
-  baseCurrency: GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
-  quoteCurrency: GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
-  hash: string,
-  block: number
-  type: string,
-  time: string,
-  amount0: number,
-  amount1: number,
-  reserve0: number,
-  reserve1: number,
-  variation: number
+  baseCurrency: GetAMMPairExplorer_ethereum_dexTrades_baseCurrency;
+  quoteCurrency: GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency;
+  hash: string;
+  block: number;
+  type: string;
+  time: string;
+  amount0: number;
+  amount1: number;
+  reserve0: number;
+  reserve1: number;
+  variation: number;
 }
 
 export interface ChartTick {
-  date: Date,
-  value: number
+  date: Date;
+  value: number;
 }

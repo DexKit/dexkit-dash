@@ -4,7 +4,15 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {makeStyles, Grid, Box, Button, TextField, Select, MenuItem} from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  Box,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {Fonts} from 'shared/constants/AppEnums';
@@ -17,7 +25,7 @@ import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoin, unitsInTokenAmount} from 'utils';
 import {Web3State} from 'types/blockchain';
-import { useNetwork } from 'hooks/useNetwork';
+import {useNetwork} from 'hooks/useNetwork';
 
 interface Props {
   account: string | undefined;
@@ -98,8 +106,11 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const network = useNetwork();
 
-  const [tokenBalance, setTokenBalance] = useState<GetMyBalance_ethereum_address_balances>();
-  
+  const [
+    tokenBalance,
+    setTokenBalance,
+  ] = useState<GetMyBalance_ethereum_address_balances>();
+
   const [amountFrom, setAmountFrom] = useState<number>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
 
@@ -133,21 +144,26 @@ const LimitForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
-      setTokenBalance(balances.find((e) => e.currency?.symbol === tokenFrom?.symbol));
+      setTokenBalance(
+        balances.find((e) => e.currency?.symbol === tokenFrom?.symbol),
+      );
 
-      fetchQuote({
-        chainId: chainId,
-        baseToken: tokenFrom,
-        quoteToken: tokenTo,
-        orderSide: OrderSide.Sell,
-        makerAmount: fromTokenUnitAmount(1, tokenFrom.decimals),
-        allowedSlippage: 0.03,
-        ethAccount: account,
-        buyTokenPercentage: undefined,
-        feeRecipient: undefined,
-        affiliateAddress: undefined,
-        intentOnFill: false,
-      }, network)
+      fetchQuote(
+        {
+          chainId: chainId,
+          baseToken: tokenFrom,
+          quoteToken: tokenTo,
+          orderSide: OrderSide.Sell,
+          makerAmount: fromTokenUnitAmount(1, tokenFrom.decimals),
+          allowedSlippage: 0.03,
+          ethAccount: account,
+          buyTokenPercentage: undefined,
+          feeRecipient: undefined,
+          affiliateAddress: undefined,
+          intentOnFill: false,
+        },
+        network,
+      )
         .then((e) => {
           setPrice(toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber());
         })
@@ -155,14 +171,16 @@ const LimitForm: React.FC<Props> = (props) => {
           console.log(e);
         });
     }
-  }, [tokenFrom, tokenTo, chainId, account])
-
+  }, [tokenFrom, tokenTo, chainId, account]);
 
   const handleTrade = () => {
     if (tokenFrom && tokenTo) {
       onTrade({
         isMarket: false,
-        amount: unitsInTokenAmount(amountFrom.toString(), tokenFrom?.decimals || 18),
+        amount: unitsInTokenAmount(
+          amountFrom.toString(),
+          tokenFrom?.decimals || 18,
+        ),
         token0: tokenFrom,
         token1: tokenTo,
         account: 'account',
@@ -175,12 +193,12 @@ const LimitForm: React.FC<Props> = (props) => {
   const handleInputChange = (event: any) => {
     setAmountFrom(event.target.value);
     setAmountTo(event.target.value * price);
-  }
-  
+  };
+
   const handlePriceChange = (event: any) => {
     setPrice(event.target.value);
     setAmountTo(amountFrom * event.target.value);
-  }
+  };
 
   const handleExpiryInputChange = (event: any) => {
     setExpiryInput(event.target.value);
@@ -223,7 +241,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 } ${tokenBalance?.currency?.symbol || ''})`}
                 </span>
               </Box>
-            </Grid> 
+            </Grid>
             {errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
@@ -257,7 +275,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 options={select0}
                 disabled={disabled}
                 onChange={($token) => {
-                  onChangeToken($token, 'from')
+                  onChangeToken($token, 'from');
                 }}
               />
             </Grid>
@@ -301,12 +319,11 @@ const LimitForm: React.FC<Props> = (props) => {
                 options={select1}
                 disabled={disabled}
                 onChange={($token) => {
-                  onChangeToken($token, 'to')
+                  onChangeToken($token, 'to');
                 }}
               />
             </Grid>
 
-            
             <Grid
               style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
               item
@@ -341,12 +358,13 @@ const LimitForm: React.FC<Props> = (props) => {
               xs={12}
               md={3}>
               <Select value={expirySelect} onChange={handleExpirySelectChange}>
-                <MenuItem value={5184000} selected={true}>Days</MenuItem>
+                <MenuItem value={5184000} selected={true}>
+                  Days
+                </MenuItem>
                 <MenuItem value={3600}>Minutes</MenuItem>
                 <MenuItem value={1}>Seconds</MenuItem>
               </Select>
             </Grid>
-
           </GridContainer>
         </Box>
       </form>

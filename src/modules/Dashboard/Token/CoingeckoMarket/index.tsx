@@ -6,10 +6,10 @@ import {Fonts} from 'shared/constants/AppEnums';
 // import Revenue from 'assets/images/dashboard/auther_sales.png';
 // import SalesIcon from 'assets/images/dashboard/all_time_sales.png';
 // import Comission from 'assets/images/dashboard/commission_sale.png';
-import OrderIcon from 'assets/images/metricsIcons/order.png';
-import VisitsIcon from 'assets/images/metricsIcons/visits.png';
-import RevenueIcon from 'assets/images/metricsIcons/revenue.png';
-import TrafficIcon from 'assets/images/metricsIcons/webtraffic.png';
+import VolumeIcon from 'assets/images/metricsIcons/volume.png';
+import MarkitIcon from 'assets/images/metricsIcons/market-cap.png';
+import LowIcon from 'assets/images/metricsIcons/low-price.png';
+import HighIcon from 'assets/images/metricsIcons/high-price.png';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {useStyles} from './index.style';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -40,7 +40,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
                   <Skeleton variant='circle' width={38} height={38} />
                 ) : (
                   <Avatar
-                    src={VisitsIcon}
+                    src={MarkitIcon}
                     alt='icon'
                     style={{height: 38, width: 38}}
                   />
@@ -82,7 +82,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
                   <Skeleton variant='circle' width={38} height={38} />
                 ) : (
                   <Avatar
-                    src={RevenueIcon}
+                    src={LowIcon}
                     alt='icon'
                     style={{height: 38, width: 38}}
                   />
@@ -124,7 +124,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
                   <Skeleton variant='circle' width={38} height={38} />
                 ) : (
                   <Avatar
-                    src={OrderIcon}
+                    src={VolumeIcon}
                     alt='icon'
                     style={{height: 38, width: 38}}
                   />
@@ -166,7 +166,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
                   <Skeleton variant='circle' width={38} height={38} />
                 ) : (
                   <Avatar
-                    src={TrafficIcon}
+                    src={HighIcon}
                     alt='icon'
                     style={{height: 38, width: 38}}
                   />

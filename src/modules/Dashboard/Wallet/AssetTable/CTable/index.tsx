@@ -58,7 +58,7 @@ const CTable: React.FC<Props> = ({balances}) => {
           </TableHead>
           <TableBody>
             {balances
-              .filter(b => b.value)
+              .filter((b) => b.value)
               .slice(page * perPage, (page + 1) * perPage)
               .map((data: GetMyBalance_ethereum_address_balances) => (
                 <TableItem data={data} key={data.currency?.address} />

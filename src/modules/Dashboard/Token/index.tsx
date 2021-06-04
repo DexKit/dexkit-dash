@@ -140,7 +140,7 @@ const TokenPage: React.FC<Props> = (props) => {
                     <InfoCard
                       state={{
                         value: myOrders,
-                        bgColor: theme.palette.primary.main,
+                        bgColor: theme.palette.sidebar.bgColor,
                         icon: '/assets/images/dashboard/1_monthly_sales.png',
                         id: 1,
                         type: 'Click to Open',
@@ -159,7 +159,7 @@ const TokenPage: React.FC<Props> = (props) => {
                     <InfoCard
                       state={{
                         value: tradeHistory,
-                        bgColor: theme.palette.secondary.main,
+                        bgColor: theme.palette.sidebar.bgColor,
                         icon: '/assets/images/dashboard/1_monthly_sales.png',
                         id: 2,
                         type: 'Click to Open',

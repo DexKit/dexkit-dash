@@ -93,7 +93,7 @@ const Wallet: React.FC<Props> = (props) => {
                   <InfoCard
                     state={{
                       value: 'Order History',
-                      bgColor: theme.palette.primary.main,
+                      bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 1,
                       type: 'Click to Open',
@@ -112,7 +112,7 @@ const Wallet: React.FC<Props> = (props) => {
                   <InfoCard
                     state={{
                       value: 'Transaction History',
-                      bgColor: theme.palette.secondary.main,
+                      bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 2,
                       type: 'Click to Open',

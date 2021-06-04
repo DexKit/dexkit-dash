@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import {Box, Button, Card} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import CoinsInfo from './CoinsInfo';
 import Transak from 'shared/components/Transak';
 
@@ -63,11 +63,11 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
   const [usd, setUsd] = useState<number>(0);
 
   useEffect(() => {
-    const search = balances.filter(e => e.currency?.symbol == 'KIT');
+    const search = balances.filter((e) => e.currency?.symbol == 'KIT');
 
     if (search.length > 0) {
       setKit(search);
-      setUsd(search[0].valueInUsd||0);
+      setUsd(search[0].valueInUsd || 0);
     } else {
       setKit([
         {
@@ -76,12 +76,12 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
             decimals: 18,
             name: 'DexKit',
             symbol: 'KIT',
-            tokenType: ''
+            tokenType: '',
           },
           value: 0,
-          valueUsd: 0
-        }
-      ])
+          valueUsd: 0,
+        },
+      ]);
     }
   }, [balances]);
 
@@ -134,11 +134,10 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
                   className={classes.root}>
                   <IntlMessages id='common.buyKit' />
                 </Button> */}
-                <Transak 
-                variant="contained"
-                color={'primary'}
-                size="medium"
-                className={classes.root}
+                <Transak
+                  variant='outlined'
+                  size='medium'
+                  className={classes.root}
                 />
               </Box>
             </Box>
@@ -149,7 +148,6 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
           </Box> */}
         </Card>
       </Box>
-      
     </>
   );
 };

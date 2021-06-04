@@ -92,7 +92,9 @@ const ApproveStep: React.FC<Props> = (props) => {
       onLoading(true);
 
       if (allowanceTarget == null) {
-        return Promise.reject('Token address for approval cannot be null or empty');
+        return Promise.reject(
+          'Token address for approval cannot be null or empty',
+        );
       }
       if (account == null) {
         return Promise.reject('Account address cannot be null or empty');
@@ -100,7 +102,7 @@ const ApproveStep: React.FC<Props> = (props) => {
 
       const gasInfo = await getGasEstimationInfoAsync();
       const contractWrappers = getContractWrappers(chainId);
-      const web3Wrapper = getWeb3Wrapper()
+      const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();
 
       if (provider == null || web3Wrapper == null) {
@@ -112,21 +114,27 @@ const ApproveStep: React.FC<Props> = (props) => {
       console.log('Account', account);
       console.log('AllowanceTarget', allowanceTarget);
       console.log('Amount', amount.toString());
-      console.log('GasInfo Estimated Time Ms', gasInfo.estimatedTimeMs.toString());
+      console.log(
+        'GasInfo Estimated Time Ms',
+        gasInfo.estimatedTimeMs.toString(),
+      );
       console.log('GasInfo Price In Wei', gasInfo.gasPriceInWei.toString());
 
       const maxApproval = new BigNumber(2).pow(256).minus(1);
 
-      console.log('approve  ',token);
+      console.log('approve  ', token);
 
       const erc20Token = new ERC20TokenContract(token.address, provider);
-      const tx = await erc20Token.approve(allowanceTarget, maxApproval).sendTransactionAsync({from: account});
+      const tx = await erc20Token
+        .approve(allowanceTarget, maxApproval)
+        .sendTransactionAsync({from: account});
 
       console.log('approve tx', tx);
 
-      web3Wrapper.awaitTransactionSuccessAsync(tx)
-      .then(() => onNext(true))
-      .catch((e) => onNext(false, e))
+      web3Wrapper
+        .awaitTransactionSuccessAsync(tx)
+        .then(() => onNext(true))
+        .catch((e) => onNext(false, e));
     } catch (e) {
       onNext(false, e);
     }
@@ -134,28 +142,17 @@ const ApproveStep: React.FC<Props> = (props) => {
 
   return (
     <>
-      {!loading && (
-        <>
-          <DialogTitle className={classes.dialogTitle} id='form-dialog-title'>
-            <Typography style={{fontWeight: 600}} variant='h5' align='center'>
-              Approve
-            </Typography>
-          </DialogTitle>
-          <DialogContent dividers></DialogContent>
-          <DialogActions>
-            <Button color='primary' size='large' onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              variant='contained'
-              color='primary'
-              size='large'
-              onClick={handleAction}>
-              Approve
-            </Button>
-          </DialogActions>
-        </>
-      )}
+      <Typography align='center' style={{paddingBottom: 10}}>
+        Would you like to approve wETH?
+      </Typography>
+      <Button
+        fullWidth
+        variant='contained'
+        color='primary'
+        size='large'
+        onClick={handleAction}>
+        Approve
+      </Button>
     </>
   );
 };
