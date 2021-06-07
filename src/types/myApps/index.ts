@@ -61,6 +61,7 @@ export interface ConfigResponse {
     description?: string;
     website?: string;
     verisafe_sticker?: string;
+    unified_cryptoasset_id?: number;
     mainnetAddress?: string;
     isStableCoin?: boolean;
   }
@@ -347,13 +348,15 @@ export interface ThemeProperties {
   
   export interface Collection {
     id: string;
-    assetCount: number | null | undefined;
+    assetCount?: number | null ;
     description?: string;
     hidden?: boolean;
     address: string;
     imageUrl: string;
     name: string;
     slug: string;
+    symbol?: string;
+    type?: string;
   }
   
   

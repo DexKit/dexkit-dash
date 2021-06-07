@@ -55,6 +55,7 @@ export enum OrderSide {
 
 export enum Steps {
   APPROVE = 'Approval',
+  APPROVE_WRAPPER = 'Approval Wrapper',
   CONVERT = 'Conversion',
   MARKET = 'Market',
   LIMIT = 'Limit',

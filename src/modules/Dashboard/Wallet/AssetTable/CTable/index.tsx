@@ -7,7 +7,7 @@ import TableItem from './TableItem';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import {Box, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { MyBalances } from 'types/blockchain';
+import {MyBalances} from 'types/blockchain';
 
 interface Props {
   balances: MyBalances[];

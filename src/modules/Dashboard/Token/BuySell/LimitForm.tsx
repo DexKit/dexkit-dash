@@ -28,8 +28,8 @@ import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 
 interface Props {
-  account: string | undefined;
   chainId: number | undefined;
+  account: string | undefined;
   tokenAddress: string;
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
@@ -42,8 +42,8 @@ interface Props {
 
 const LimitForm: React.FC<Props> = (props) => {
   const {
-    account,
     chainId,
+    account,
     tokenAddress,
     balances,
     select0,
@@ -113,16 +113,16 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const [amountFrom, setAmountFrom] = useState<number>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
-
   const [price, setPrice] = useState<number>(0);
-
   const [expiryInput, setExpiryInput] = useState<number>(1);
-  const [expirySelect, setExpirySelect] = useState<number>(5184000);
+  const [expirySelect, setExpirySelect] = useState<number>(86400);
+  const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
   const resetAmount = () => {
     setAmountFrom(0);
     setAmountTo(0);
   }
+
   const setMax = () => {
     if(tokenBalance && tokenBalance.value){
         // If is native coin we not allow user to max all of it, and leave some for gas
@@ -138,9 +138,6 @@ const LimitForm: React.FC<Props> = (props) => {
          } 
      }
   }
-
-
-
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
@@ -166,6 +163,7 @@ const LimitForm: React.FC<Props> = (props) => {
       )
         .then((e) => {
           setPrice(toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber());
+          setAllowanceTarget(e.allowanceTarget);
         })
         .catch((e) => {
           console.log(e);
@@ -173,19 +171,19 @@ const LimitForm: React.FC<Props> = (props) => {
     }
   }, [tokenFrom, tokenTo, chainId, account]);
 
+  
   const handleTrade = () => {
-    if (tokenFrom && tokenTo) {
+    if (tokenFrom && tokenTo && account && allowanceTarget) {
       onTrade({
         isMarket: false,
-        amount: unitsInTokenAmount(
-          amountFrom.toString(),
-          tokenFrom?.decimals || 18,
-        ),
-        token0: tokenFrom,
-        token1: tokenTo,
-        account: 'account',
-        allowanceTarget: '',
+        account: account,
+        allowanceTarget: allowanceTarget,
+        tokenFrom: tokenFrom,
+        tokenTo: tokenTo,
+        amountFrom: amountFrom,
+        amountTo: amountTo,
         price: price,
+        expiry: (expiryInput * expirySelect)
       });
     }
   };
@@ -365,10 +363,8 @@ const LimitForm: React.FC<Props> = (props) => {
               xs={12}
               md={3}>
               <Select value={expirySelect} onChange={handleExpirySelectChange}>
-                <MenuItem value={5184000} selected={true}>
-                  Days
-                </MenuItem>
-                <MenuItem value={3600}>Minutes</MenuItem>
+                <MenuItem value={86400} selected={true}>Days</MenuItem>
+                <MenuItem value={60}>Minutes</MenuItem>
                 <MenuItem value={1}>Seconds</MenuItem>
               </Select>
             </Grid>

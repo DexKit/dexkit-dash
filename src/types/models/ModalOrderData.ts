@@ -5,16 +5,20 @@ export interface ModalOrderData {
 
   isMarket: boolean;
 
-  amount: BigNumber;
-
-  token0: Token;
-
-  token1: Token;
-
   account: string;
 
   allowanceTarget: string;
 
+  tokenFrom: Token;
+
+  tokenTo: Token;
+
+  amountFrom: number;
+
+  amountTo: number;
+
   price: number;
+
+  expiry: number
 
 }

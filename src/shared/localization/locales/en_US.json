@@ -78,6 +78,9 @@
   "app.takerAmount": "Taker Amount",
   "app.expiry": "Expiry",
 
+  "app.from": "from",
+  "app.to": "to",
+
   "app.connectWallet": "You need to connect your wallet to check this page",
 
   "title.tradesByCurrencies": "Trades By Currencies",

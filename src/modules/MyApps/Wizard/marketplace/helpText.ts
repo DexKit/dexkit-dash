@@ -29,3 +29,7 @@ export const HELP_TEXT_COLLECTIONS: HelpText<Collection> = {
   assetCount: [] as string[],
   hidden: [] as string[]
 }
+
+export const HELP_TEXT_ARTIST_COLLECTIONS: HelpText<{[key: string]: string[]}> = {
+  address: ['Enter an artist\'s address to filter the collections']
+}

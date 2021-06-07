@@ -14,8 +14,9 @@ function useNews({limit}: Props) {
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   
-  const CORS_PROXY = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'https://cors-anywhere.herokuapp.com/' : '';
-  const url = new URL(`${CORS_PROXY}https://cointelegraph.com.br/rss`);
+  // const CORS_PROXY = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'https://cors-anywhere.herokuapp.com/' : '';
+  // const url = new URL(`${CORS_PROXY}https://cointelegraph.com.br/rss`);
+  const url = new URL(process.env.REACT_APP_NEWS_URL||'https://cointelegraph.com.br/rss');
 
 	useEffect(useCallback(() => {
     const parser = new Parser<Feed, FeedItem>({

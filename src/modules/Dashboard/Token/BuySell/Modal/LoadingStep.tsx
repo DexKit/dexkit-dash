@@ -1,25 +1,28 @@
 import React from 'react';
-import {
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-  Typography,
-  CircularProgress,
-  Button,
-} from '@material-ui/core';
-import {useStyles} from './index.style';
+import {Typography, CircularProgress, Button} from '@material-ui/core';
+// import {useStyles} from './index.style';
 
-interface Props {}
+interface Props {
+  currentStepIndex: number;
+}
 
 const LoadingStep: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const {currentStepIndex} = props;
+  // const classes = useStyles();
 
   return (
     <>
-      <Typography align='center' style={{paddingBottom: 10}}>
-        Please wait
-      </Typography>
-      <Button fullWidth color='primary' size='large' disabled>
+      {currentStepIndex !== -1 && (
+        <Typography align='center' style={{paddingBottom: 10}}>
+          Please confirm on your wallet
+        </Typography>
+      )}
+      <Button
+        style={{margin: 0}}
+        fullWidth
+        color='primary'
+        size='large'
+        disabled>
         <CircularProgress style={{alignSelf: 'center'}} size='40px' />
       </Button>
     </>

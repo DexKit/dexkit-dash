@@ -60,9 +60,9 @@ export interface QuoteParams {
 
 export interface BuildLimitOrderParams {
   account: string;
-  amount: BigNumber;
+  amount: number;
   baseToken: Token;
   exchangeAddress: string;
-  price: BigNumber;
+  price: number;
   quoteToken: Token;
 }

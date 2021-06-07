@@ -1,39 +1,34 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import CloseIcon from '@material-ui/icons/Close';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Steps, Token} from 'types/app';
 import {useWeb3} from 'hooks/useWeb3';
-import {getContractWrappers} from 'services/contract_wrappers';
-import {ERC20TokenContract} from '@0x/contract-wrappers';
-import {getProvider} from 'services/web3modal';
-import {ethers} from 'ethers';
-import LoadingStep from './LoadingStep';
-import ErrorStep from './ErrorStep';
-import ApproveStep from './ApproveStep';
 import {useBalance} from 'hooks/balance/useBalance';
-import BigNumber from 'bignumber.js';
-import ConvertStep from './ConvertStep';
-import MarketStep from './MarketStep';
-import {Box, IconButton, Typography} from '@material-ui/core';
-import DoneStep from './DoneStep';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import {Steps, Token} from 'types/app';
+import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
-import LimitStep from './LimitStep';
-import ProgressBar from './PogressBar';
+import { useNetwork } from 'hooks/useNetwork';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { getNativeCoinWrapped, getNativeCoinWrappedAddress } from 'utils';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
 interface OrderProps {
   open: boolean;
   isMarket: boolean;
-  amount: BigNumber;
-  token0: Token;
-  token1: Token;
+  balances: GetMyBalance_ethereum_address_balances[];
   account: string;
   allowanceTarget: string;
+  tokenFrom: Token;
+  tokenTo: Token;
+  amountFrom: number;
+  amountTo: number;
   price: number;
+  expiry: number;
   onClose: () => void;
 }
 
@@ -41,52 +36,83 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
   const {
     open,
     isMarket,
-    amount,
-    token0,
-    token1,
+    balances,
     allowanceTarget,
+    tokenFrom,
+    tokenTo,
+    amountFrom,
+    amountTo,
     price,
+    expiry,
     onClose,
   } = props;
 
   const classes = useStyles();
+  const networkName = useNetwork();
   const {chainId, account} = useWeb3();
-  const {data} = useBalance();
 
   const [steps, setSteps] = useState<Steps[]>([]);
-  const [stepsIdx, setStepsIdx] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<Steps>();
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(-1);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | string>();
+  
+  const [isConvert, setIsConvert] = useState<boolean>(false);
+  const [tokenWrapper, setTokenWrapper] = useState<Token>({address:'', decimals:0, name:'',symbol:''});
 
   useEffect(() => {
-    if (open) {
-      let stepsFn: Steps[] = [];
+    if (open && tokenFrom && tokenTo && networkName && chainId) {
       setLoading(true);
+      let stepsFn: Steps[] = [];
 
-      if (isMarket) {
+      setTokenWrapper({
+        address: getNativeCoinWrappedAddress(chainId),
+        decimals: 18,
+        name: '',
+        symbol: getNativeCoinWrapped(chainId).toUpperCase(),
+      });
+
+      if (
+        (((tokenFrom.symbol == 'ETH' && tokenTo.symbol == 'WETH') || (tokenFrom.symbol == 'WETH' && tokenTo.symbol == 'ETH')) && networkName == EthereumNetwork.ethereum) ||
+        (((tokenFrom.symbol == 'BNB' && tokenTo.symbol == 'WBNB') || (tokenFrom.symbol == 'WBNB' && tokenTo.symbol == 'BNB')) && networkName == EthereumNetwork.bsc)
+      ) {
+        setIsConvert(true);
+        stepsFn = [Steps.APPROVE, Steps.CONVERT];
+      } else if (isMarket) {
         stepsFn = [Steps.APPROVE, Steps.MARKET];
-        setSteps(stepsFn);
-        setCurrentStep(stepsFn[0]);
-      } else {
+      } else {       
+        // if (
+        //   ((tokenFrom.symbol == 'ETH' || tokenFrom.symbol == 'WETH') && networkName == EthereumNetwork.ethereum) ||
+        //   ((tokenFrom.symbol == 'BNB' || tokenFrom.symbol == 'WBNB') && networkName == EthereumNetwork.bsc)  
+        // ) {
+        //   stepsFn = [Steps.APPROVE, Steps.CONVERT, Steps.LIMIT];
+        // } else {
+        //   stepsFn = [Steps.APPROVE, Steps.LIMIT];
+        // }
         stepsFn = [Steps.APPROVE, Steps.LIMIT];
-        setSteps(stepsFn);
-        setCurrentStep(stepsFn[0]);
       }
 
-      setStepsIdx(0);
+      setSteps(stepsFn);
+      setCurrentStep(stepsFn[0]);
+      setCurrentStepIndex(-1);
     }
-  }, [open]);
+  }, [open, tokenFrom, tokenTo, networkName, chainId]);
 
   const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
+    if (currentStepIndex === -1) {
+      setCurrentStepIndex(0);
+    }
+
     if (hasNext) {
       console.log('next is not a error');
-      const idx = stepsIdx + 1;
-      if (idx < steps.length) {
+
+      const nextStepIndex = currentStepIndex + 1;
+      setCurrentStepIndex(nextStepIndex);
+
+      if (nextStepIndex < steps.length) {
         console.log('next has next step');
-        setStepsIdx(idx);
-        setCurrentStep(steps[idx]);
+        setCurrentStep(steps[nextStepIndex]);
       } else {
         setCurrentStep(Steps.DONE);
         console.log('next done');
@@ -99,54 +125,21 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
   };
 
   const handleLoading = (value: boolean) => {
+    if (currentStepIndex === -1) {
+      setCurrentStepIndex(0);
+    }
+
     setLoading(value);
   };
 
-  let step;
+  const handleShift = (step: Steps) => {
+    const tempSteps = [...steps];
 
-  if (account && chainId) {
-    if (loading) {
-      step = <LoadingStep />;
-    } else {
-      switch (currentStep) {
-        case Steps.APPROVE:
-          step = (
-            <ApproveStep
-              step={currentStep}
-              token={token0}
-              amount={amount}
-              allowanceTarget={allowanceTarget}
-              account={account}
-              chainId={chainId}
-              loading={loading}
-              onClose={onClose}
-              onNext={handleNext}
-              onLoading={handleLoading}
-            />
-          );
-          break;
-        case Steps.ERROR:
-          step = (
-            <ErrorStep
-              step={currentStep}
-              error={error}
-              onClose={onClose}
-              onLoading={handleLoading}
-            />
-          );
-          break;
-        case Steps.DONE:
-          step = (
-            <DoneStep
-              step={currentStep}
-              onClose={onClose}
-              onLoading={handleLoading}
-            />
-          );
-          break;
-      }
-    }
-  }
+    tempSteps.shift();
+
+    setSteps(tempSteps);
+    setCurrentStep(tempSteps[0]);
+  };
 
   return (
     <>
@@ -158,52 +151,50 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
           onClose={onClose}
           aria-labelledby='form-dialog-title'>
           <DialogTitle id='form-dialog-title' className={classes.dialogTitle}>
-            <Typography align='right'>
-              <IconButton aria-label='close' onClick={onClose}>
-                <CloseIcon />
-              </IconButton>
-            </Typography>
-            <Typography
-              className={classes.textPrimary}
-              variant='h5'
-              align='center'>
-              Review {isMarket ? 'Market' : 'Limit'} Order
-            </Typography>
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='space-between'>
+              <Typography style={{width: 48, height: 48}} />
+              <Typography
+                className={classes.textPrimary}
+                variant='h5'
+                align='center'>
+                {
+                  isConvert ? 'Convert' : ('Review ' + (isMarket ? 'Market' : 'Limit') + ' Order')
+                }
+              </Typography>
+              <Typography align='right'>
+                <IconButton aria-label='close' onClick={onClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Typography>
+            </Box>
           </DialogTitle>
 
-          {/* {currentStep === Steps.CONVERT && <ConvertStep amount={amount} onClose={handleClose} onNext={handleNext}/>} */}
-
-          {isMarket ? (
-            <MarketStep
-              step={currentStep}
-              token0={token0}
-              token1={token1}
-              amount={amount}
-              account={account}
-              chainId={chainId}
-              loading={loading}
-              onClose={onClose}
-              onNext={handleNext}
-              onLoading={handleLoading}>
-              {step}
-              <ProgressBar steps={steps} currentStepIndex={stepsIdx} />
-            </MarketStep>
-          ) : (
-            <LimitStep
-              step={currentStep}
-              token0={token0}
-              token1={token1}
-              amount={amount}
-              account={account}
-              chainId={chainId}
-              loading={loading}
-              onClose={onClose}
-              onNext={handleNext}
-              onLoading={handleLoading}>
-              {step}
-              <ProgressBar steps={steps} currentStepIndex={stepsIdx} />
-            </LimitStep>
-          )}
+          <OrderContent
+            isMarket={isMarket}
+            isConvert={isConvert}
+            balances={balances}
+            steps={steps}
+            currentStep={currentStep}
+            currentStepIndex={currentStepIndex}
+            tokenWrapper={tokenWrapper}
+            tokenFrom={tokenFrom}
+            tokenTo={tokenTo}
+            amountFrom={amountFrom}
+            allowanceTarget={allowanceTarget}
+            price={price}
+            expiry={expiry}
+            account={account}
+            chainId={chainId}
+            loading={loading}
+            error={error}
+            onClose={onClose}
+            onNext={handleNext}
+            onLoading={handleLoading}
+            onShifting={handleShift}
+          />
         </Dialog>
       )}
     </>

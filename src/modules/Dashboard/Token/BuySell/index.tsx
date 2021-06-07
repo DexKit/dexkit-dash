@@ -18,8 +18,8 @@ import {ModalOrderData} from 'types/models/ModalOrderData';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';
-import { history } from 'redux/store';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import {history} from 'redux/store';
+import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 
 interface Props {
   tokenAddress: string;
@@ -66,26 +66,28 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
   const select1 = useTokenList(GET_NETWORK_NAME(chainId));
 
-  const [tokenFrom, setTokenFrom] = useState<Token>()
+  const [tokenFrom, setTokenFrom] = useState<Token>();
 
-  const [tokenTo, setTokenTo] = useState<Token>()
+  const [tokenTo, setTokenTo] = useState<Token>();
 
   const [currentTab, setCurrentTab] = useState(0);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [modalData, setModalData] = useState<ModalOrderData>({
+    isMarket: true,
     account: '',
     allowanceTarget: '',
-    amount: new BigNumber(0),
-    isMarket: true,
+    tokenFrom: {address: '', name: '', symbol: '', decimals: 18},
+    tokenTo: {address: '', name: '', symbol: '', decimals: 18},
+    amountFrom: 0,
+    amountTo: 0,
     price: 0,
-    token0: {address: '', name: '', symbol: '', decimals: 18},
-    token1: {address: '', name: '', symbol: '', decimals: 18},
+    expiry: 0,
   });
 
   useEffect(() => {
-    if (select1 && balances){
+    if (select1 && balances) {
       const balancesFn = balances.map((e) => {
         return {
           name: e.currency?.name || '',
@@ -94,17 +96,23 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
           decimals: e.currency?.decimals || 18,
         } as Token;
       });
-      
+
       setSelect0(balancesFn);
 
       if (tokenFrom == undefined) {
-        const _token = balancesFn.find((t) => t.symbol.toUpperCase() === 'ETH' || t.symbol.toUpperCase() === 'WETH');
+        const _token = balancesFn.find(
+          (t) =>
+            t.symbol.toUpperCase() === 'ETH' ||
+            t.symbol.toUpperCase() === 'WETH',
+        );
         setTokenFrom(_token);
         console.log('setTokenFrom', _token);
       }
 
       if (tokenTo == undefined) {
-        const _token = select1.find((t) => t.address.toLowerCase() === tokenAddress.toLowerCase());
+        const _token = select1.find(
+          (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
+        );
         setTokenTo(_token);
         console.log('setTokenTo', _token);
       }
@@ -114,17 +122,23 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
   const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
     if (token) {
       if (type === 'from') {
-        if (tokenTo && token.address.toLowerCase() === tokenTo.address.toLowerCase()) {
+        if (
+          tokenTo &&
+          token.address.toLowerCase() === tokenTo.address.toLowerCase()
+        ) {
           const aux = tokenFrom;
           setTokenFrom(tokenTo);
           setTokenTo(aux);
-          
+
           history.push(token.address);
         } else {
           setTokenFrom(token);
         }
       } else {
-        if (tokenFrom && token.address.toLowerCase() === tokenFrom.address.toLowerCase()) {
+        if (
+          tokenFrom &&
+          token.address.toLowerCase() === tokenFrom.address.toLowerCase()
+        ) {
           const aux = tokenTo;
           setTokenTo(tokenFrom);
           setTokenFrom(aux);
@@ -172,8 +186,16 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
               indicatorColor='primary'
               textColor='primary'
               className={classes.muiTabsRoot}>
-              <Tab className={classes.muiTab} label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-              <Tab className={classes.muiTab} label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+              <Tab
+                className={classes.muiTab}
+                label={<IntlMessages id='Market' />}
+                {...a11yProps(0)}
+              />
+              <Tab
+                className={classes.muiTab}
+                label={<IntlMessages id='Limit' />}
+                {...a11yProps(1)}
+              />
             </Tabs>
             {currentTab === 0 && (
               <MarketForm
@@ -213,12 +235,15 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
         <OrderDialog
           open={modalOpen}
           isMarket={modalData.isMarket}
-          amount={modalData.amount}
-          token0={modalData.token0}
-          token1={modalData.token1}
+          balances={balances}
           account={account}
           allowanceTarget={modalData.allowanceTarget}
+          tokenFrom={modalData.tokenFrom}
+          tokenTo={modalData.tokenTo}
+          amountFrom={modalData.amountFrom}
+          amountTo={modalData.amountTo}
           price={modalData.price}
+          expiry={modalData.expiry}
           onClose={handleTradeClose}
         />
       )}

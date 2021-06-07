@@ -3,7 +3,6 @@ import {CremaTheme} from 'types/AppContextPropsType';
 
 export const useStyles = makeStyles((theme: CremaTheme) => ({
   dialogTitle: {
-    marginBottom: 10,
     // width: '98vw',
     // maxWidth: '600px',
     // backgroundColor: theme.palette.primary.main,
@@ -13,7 +12,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     overflow: 'hidden',
     // height: '98vh',
     // maxHeight: '330px',
-    minHeight: '330px',
+    minHeight: '400px',
     display: 'flex',
     justifyContent: 'center',
     alighItem: 'center',
@@ -44,7 +43,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   valueSend: {
     marginBottom: 20,
     fontWeight: 600,
-    color: 'rgb(248, 78, 78)',
+    // color: 'rgb(248, 78, 78)',
   },
   valueReceive: {
     fontWeight: 600,
@@ -57,5 +56,6 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     flexWrap: 'nowrap',
     padding: '20px 0 10px',
     gap: 5,
+    marginLeft: '0 !important',
   },
 }));

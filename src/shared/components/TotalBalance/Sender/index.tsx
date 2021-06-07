@@ -73,7 +73,6 @@ const Sender: React.FC<Props> = (props) => {
               />
             </Tabs>
 
-
             <SenderForm balances={props.balances} />
 
           </Card>

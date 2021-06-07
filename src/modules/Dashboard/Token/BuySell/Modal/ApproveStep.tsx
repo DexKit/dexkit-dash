@@ -1,8 +1,5 @@
 import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
 import {ERC20TokenContract} from '@0x/contract-wrappers';
@@ -11,63 +8,73 @@ import BigNumber from 'bignumber.js';
 import {ethers} from 'ethers';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
-import {useStyles} from './index.style';
 import {Typography} from '@material-ui/core';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import { NotificationType } from 'services/notification';
+// import {useStyles} from './index.style';
+import { useDispatch } from 'react-redux';
+import { Notification} from 'types/models/Notification';
+import { onAddNotification } from 'redux/actions';
+import { truncateAddress } from 'utils';
 
 interface Props {
   step: Steps | undefined;
-  token: Token;
-  amount: BigNumber;
+  tokenFrom: Token;
+  amountFrom: number;
   allowanceTarget: string;
   account: string;
   chainId: ChainId;
-  loading: boolean;
-  onClose: () => void;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
+  onShifting: (step: Steps) => void;
 }
 
 const ApproveStep: React.FC<Props> = (props) => {
   const {
     step,
-    token,
-    amount,
+    tokenFrom,
+    amountFrom,
     allowanceTarget,
     chainId,
     account,
-    loading,
-    onClose,
     onNext,
     onLoading,
+    onShifting,
   } = props;
 
+  // const classes = useStyles();
+  const dispatch = useDispatch();
   const {getContractWrappers} = useContractWrapper();
+
+  const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   const isApprove = async () => {
     console.log('Verificando');
 
-    if (token.symbol == 'ETH' || token.symbol == 'WETH') {
+    if (tokenFrom.symbol === 'ETH' || tokenFrom.symbol === 'WETH') {
       console.log('É ETH, pular para o próximo step');
       return true;
     }
 
     const contractWrappers = await getContractWrappers(chainId);
     const erc20Token = new ERC20TokenContract(
-      token.address,
+      tokenFrom.address,
       contractWrappers?.getProvider() ?? getProvider(),
     );
+
     const allowance = await erc20Token
       .allowance(account, allowanceTarget)
       .callAsync();
-    const isApproved = allowance.isGreaterThan(amount);
+    const isApproved = allowance.isGreaterThan(amountFn);
+
     console.log('allowance:', allowance.toString());
-    console.log('amount:', amount.toString());
-    console.log('token:', token);
+    console.log('amount:', amountFrom);
+    console.log('amountFn:', amountFn.toString());
+    console.log('token:', tokenFrom);
     console.log('isApproved', isApproved);
+
     return isApproved;
   };
-
-  const classes = useStyles();
 
   useEffect(() => {
     if (step === Steps.APPROVE) {
@@ -76,8 +83,8 @@ const ApproveStep: React.FC<Props> = (props) => {
       isApprove()
         .then((value) => {
           if (value) {
-            console.log('Passa para proximo passo step');
-            onNext(true);
+            console.log('Elimina passo Approve pois já está aprovado');
+            onShifting(step);
           } else {
             console.log('Fica para aprovar');
             onLoading(false);
@@ -110,10 +117,11 @@ const ApproveStep: React.FC<Props> = (props) => {
       }
 
       console.log('Provider', provider);
-      console.log('Token', token);
+      console.log('Token', tokenFrom);
       console.log('Account', account);
       console.log('AllowanceTarget', allowanceTarget);
-      console.log('Amount', amount.toString());
+      console.log('Amount', amountFrom.toString());
+      console.log('AmountFn', amountFn.toString());
       console.log(
         'GasInfo Estimated Time Ms',
         gasInfo.estimatedTimeMs.toString(),
@@ -122,9 +130,9 @@ const ApproveStep: React.FC<Props> = (props) => {
 
       const maxApproval = new BigNumber(2).pow(256).minus(1);
 
-      console.log('approve  ', token);
+      console.log('approve', tokenFrom);
 
-      const erc20Token = new ERC20TokenContract(token.address, provider);
+      const erc20Token = new ERC20TokenContract(tokenFrom.address, provider);
       const tx = await erc20Token
         .approve(allowanceTarget, maxApproval)
         .sendTransactionAsync({from: account});
@@ -135,17 +143,22 @@ const ApproveStep: React.FC<Props> = (props) => {
         .awaitTransactionSuccessAsync(tx)
         .then(() => onNext(true))
         .catch((e) => onNext(false, e));
+
+      const notification: Notification = { title: 'Approve', body: truncateAddress(tx) };
+      dispatch(onAddNotification([notification], NotificationType.SUCCESS));  
     } catch (e) {
-      onNext(false, e);
+      console.log('Erro ', e);
+      onNext(false, e.message);
     }
   };
 
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to approve wETH?
+        Would you like to approve {tokenFrom.symbol}?
       </Typography>
       <Button
+        style={{margin: 0}}
         fullWidth
         variant='contained'
         color='primary'

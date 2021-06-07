@@ -458,7 +458,7 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
         ) : null
       }
       <Grid item xs={12} md={12}>
-        {searchfailed && <MessageView variant='warning' message={searchfailed} />}
+        {searchfailed && <MessageView variant='warning' message={searchfailed} anchorOrigin={{vertical: 'bottom', horizontal: 'right' }}/>}
       </Grid>
 
     </>

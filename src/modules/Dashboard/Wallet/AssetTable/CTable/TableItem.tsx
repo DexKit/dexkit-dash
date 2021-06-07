@@ -1,14 +1,22 @@
 import React from 'react';
 import clsx from 'clsx';
 import {useHistory} from 'react-router-dom';
-import {makeStyles, Box, TableCell, TableRow, Button, Avatar, Chip, Tooltip} from '@material-ui/core';
+import {
+  makeStyles,
+  Box,
+  TableCell,
+  TableRow,
+  Button,
+  Avatar,
+  Chip,
+  Tooltip,
+} from '@material-ui/core';
 import {green, grey} from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import TokenLogo from 'shared/components/TokenLogo';
-
-import { MyBalances } from 'types/blockchain';
+import {MyBalances} from 'types/blockchain';
 
 interface TableItemProps {
   data: MyBalances;
@@ -65,12 +73,11 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
   const history = useHistory();
 
   const getNetworkLink = (d: MyBalances) => {
-    if(d.network === EthereumNetwork.bsc){
-     return `/${EthereumNetwork.bsc}/dashboard/token/`
+    if (d.network === EthereumNetwork.bsc) {
+      return `/${EthereumNetwork.bsc}/dashboard/token/`;
     }
-    return `/${EthereumNetwork.ethereum}/dashboard/token/`
-
-  }
+    return `/${EthereumNetwork.ethereum}/dashboard/token/`;
+  };
 
   return (
     <TableRow key={data.currency?.address} className='item-hover' hover>
@@ -81,6 +88,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           <Box mr={{xs: 3, xl: 5}}>
             {data.currency?.address ? (
               <TokenLogo token0={data.currency?.address} />
+            ) : (
               // data.currency?.address == '-' ? (
               //   <Avatar className={classes.avatar} src={data.currency?.address}>
               //     {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'} alt='' /> */}
@@ -90,19 +98,20 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
               //     {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/' + ethers.utils.getAddress(data.currency.address.toLowerCase()) + '/logo.png'} alt='' /> */}
               //   </Avatar>
               // )
-            ) : (
               <Avatar className={classes.avatar}>
                 <PageviewIcon />
               </Avatar>
             )}
           </Box>
           <Box component='span' mr={1} fontWeight={700}>
+            <Box>{data.currency?.name}</Box>
             <Box>
-                  {data.currency?.name}   
-            </Box>
-            <Box>
-               { data.network === EthereumNetwork.bsc && <Chip size="small" label="BSC"/>}
-               { data.network === EthereumNetwork.ethereum &&  <Chip size="small" label="ETH"/>}
+              {data.network === EthereumNetwork.bsc && (
+                <Chip size='small' label='BSC' />
+              )}
+              {data.network === EthereumNetwork.ethereum && (
+                <Chip size='small' label='ETH' />
+              )}
             </Box>
           </Box>
         </Box>

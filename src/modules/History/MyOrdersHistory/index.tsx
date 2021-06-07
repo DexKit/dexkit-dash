@@ -18,6 +18,7 @@ import {useTokenList} from 'hooks/useTokenList';
 import PageTitle from 'shared/components/PageTitle';
 import { truncateAddress } from 'utils/text';
 import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
+import { useWeb3 } from 'hooks/useWeb3';
 
 type Params = {
   address: string;
@@ -33,6 +34,8 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const {address} = params;
 
   const networkName = useNetwork();
+
+  const {account} = useWeb3();
 
   const tokenList = useTokenList(networkName);
 
@@ -50,11 +53,8 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const [totalRows, setTotalRows] = useState(0);
 
   const {loading, error, data: dataFn} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
-      currentPage + 1
-    }&perPage=${rowsPerPage}&trader=${address.toLowerCase()}`,
-    [address, currentPage, rowsPerPage],
-  );
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${currentPage + 1}&perPage=${rowsPerPage}&trader=${account?.toLowerCase()}`
+  , [account, currentPage, rowsPerPage]);
 
   useEffect(() => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
@@ -110,12 +110,12 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         title={{name: 'My Active Orders'}}
       />
       {token.data && (
-          <PageTitle
-            title={{name: token.data.name}}
-            subtitle={{name: truncateAddress(address), hasCopy: address}}
-            icon={address}
-          />
-        )}
+        <PageTitle
+          title={{name: token.data.name}}
+          subtitle={{name: truncateAddress(address), hasCopy: address}}
+          icon={address}
+        />
+      )}
 
       <GridContainer>
         <Grid item xs={12} md={12}>

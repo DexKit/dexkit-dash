@@ -68,7 +68,7 @@ const TokenLogo: React.FC<Props> = (props) => {
       : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
 
   const getIconUrl = (address: string) => {
-    if(address.toLowerCase() === '-') {
+    if(address.toLowerCase() === '') {
       return currencyLogo;
     }
     if (

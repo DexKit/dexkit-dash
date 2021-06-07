@@ -1,4 +1,7 @@
+import { ContractInfo } from "./contractInfo.interface";
+
 export interface CollectionInfo{
+  primary_asset_contracts: ContractInfo[];
   banner_image_url?: string;
   chat_url?: string;
   created_date: Date;

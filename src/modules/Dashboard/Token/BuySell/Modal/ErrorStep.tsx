@@ -8,7 +8,10 @@ import {
 } from '@material-ui/core';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
-
+import { onAddNotification } from 'redux/actions';
+import { NotificationType } from 'services/notification';
+import { useDispatch } from 'react-redux';
+import { Notification} from 'types/models/Notification';
 interface Props {
   step: Steps | undefined;
   error: Error | string | undefined;
@@ -18,6 +21,7 @@ interface Props {
 
 const ErrorStep: React.FC<Props> = (props) => {
   const {step, error, onLoading, onClose} = props;
+  const dispatch = useDispatch();
 
   const [message, setMessage] = useState<string>('');
 
@@ -30,8 +34,14 @@ const ErrorStep: React.FC<Props> = (props) => {
       if (error) {
         if (error instanceof Error) {
           setMessage(error.message);
+
+          const notification: Notification = { title: 'Error', body: error.message };
+          dispatch(onAddNotification([notification], NotificationType.ERROR));
         } else if (typeof error === 'string') {
           setMessage(error);
+
+          const notification: Notification = { title: 'Error', body: error };
+          dispatch(onAddNotification([notification], NotificationType.ERROR));
         }
       }
       onLoading(false);
@@ -43,7 +53,13 @@ const ErrorStep: React.FC<Props> = (props) => {
       <Typography align='center' style={{paddingBottom: 10}}>
         {message}
       </Typography>
-      <Button fullWidth color='primary' size='large' onClick={onClose}>
+      <Button
+        style={{margin: 0}}
+        fullWidth
+        variant='outlined'
+        color='primary'
+        size='large'
+        onClick={onClose}>
         Close
       </Button>
     </>

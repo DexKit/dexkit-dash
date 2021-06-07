@@ -25,7 +25,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
   const [senderModal, setSenderModal] = useState(false);
   const [receiverModal, setReceiverModal] = useState(false);
   const [tokens, setTokens] = useState<
-   MyBalances[]
+    MyBalances[]
   >([]);
   const [usdAvailable, setUsdAvailable] = useState<number>(0);
 
@@ -239,7 +239,6 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
       <Sender
         open={senderModal}
         onClose={() => setSenderModal(false)}
-        // We support only for now Ethereum tokens
         balances={tokens.filter(t => t.network === EthereumNetwork.ethereum)}
       />
 

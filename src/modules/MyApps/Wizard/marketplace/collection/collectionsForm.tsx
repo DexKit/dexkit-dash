@@ -1,33 +1,20 @@
-import React, { useCallback, useEffect, useState, SyntheticEvent } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Grid,
-  Typography,
-  Accordion,
-  // AccordionSummary,
-  AccordionDetails,
-  AccordionActions,
   makeStyles,
+  FormControlLabel,
 } from '@material-ui/core';
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
-import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
-import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 import { Collection, ConfigFileMarketplace } from 'types/myApps';
 import { WizardProps } from '../../shared';
-import { AccordionSummary } from '../../shared/Accordion';
-import { CollectionComponent } from './collectionComponent';
-import { CustomIconButton } from '../../shared/Buttons';
-import { truncateAddress } from 'utils/text';
 
-// const CustomGrid = withStyles((theme) => ({
-//   root: {
-//     padding: `${theme.spacing(0)} !important;`,
-//     margin: theme.spacing(1, 0)
-//   }
-// }))(Grid);
+import { ArtistCollectionsSearch } from './artistCollectionsSearch';
+import { CollectionInfo } from 'types/opensea/collectionInfo.interface';
+import { collectionInfo2Collection, collection2CollectionInfo } from 'utils/collections';
+import { IOSSwitchComponent } from 'shared/components/Inputs/iOsSwitchComponent';
+import { CollectionComponentList } from './collectionComponentList';
 
 const useStyle = makeStyles((theme) => ({
   heading: {
@@ -51,11 +38,21 @@ type Props = CollectionsFormProps & WizardProps<ConfigFileMarketplace, keyof Con
 const CollectionsForm: React.FC<Props> = (props) => {
   const { changeIssuerForm, validator, isValid: startValidation, editable } = props;
   const [collections, setCollections] = useState(props.collections ?? []);
+  const [showGrid, setShowGrid] = useState(true);
+  const [ownerAddress, setOwnerAddress] = useState<string | undefined>('0xebd4d9c4ebc66cfbac7aad613948c26ae3ef0772');
   const classes = useStyle();
 
   useEffect(() => {
     if (collections == null || collections?.length === 0) {
-      addCollection();
+      setCollections([{
+        name: '',
+        imageUrl: '',
+        slug: '',
+        description: '',
+        address: '',
+        assetCount: 0,
+        id: ''
+      }] as Collection[]);
     }
   }, []);
 
@@ -73,30 +70,7 @@ const CollectionsForm: React.FC<Props> = (props) => {
       }
     }, [collections, changeIssuerForm]);
 
-  const addCollection = useCallback(($e?: SyntheticEvent, index?: number) => {
-    if($e != null){
-      $e.preventDefault();
-      $e.stopPropagation();
-    }
-    if(!Boolean(editable) && collections?.length > 0){
-      return;
-    }
-    const newItem = {
-      name: '',
-      imageUrl: '',
-      slug: '',
-      description: '',
-      address: '',
-      assetCount: 0,
-      id: ''
-    };
-    if (index != null && index > 0 && index < (collections?.length ?? 0)) {
-      collections.splice(index, 0, newItem);
-      setCollections([...collections]);
-      return;
-    }
-    setCollections([...(collections ?? []), newItem]);
-  }, [collections, setCollections, editable]);
+  
 
   useEffect(() => {
     if (Boolean(editable)) {
@@ -104,134 +78,75 @@ const CollectionsForm: React.FC<Props> = (props) => {
     }
   }, [collections, changeIssuerForm, editable])
 
-  const remCollection = useCallback((index: number, $e?: SyntheticEvent) => {
-    if($e != null){
-      $e.preventDefault();
-      $e.stopPropagation();
-    }
-    if(!Boolean(editable)){
-      return;
-    }
-    if (index >= 0 && index < collections?.length) {
-      collections.splice(index, 1);
-      const _collections = [...collections];
-      setCollections(_collections);
-    }
-  }, [collections, setCollections, editable]);
-
-  const sortCollection = useCallback((index: number, action: 'UP' | 'DOWN', $e?: SyntheticEvent) => {
-    if($e != null){
-      $e.preventDefault();
-      $e.stopPropagation();
-    }
-    if(!Boolean(editable)){
-      return;
-    }
-    const direction =  action === 'UP' ? -1 : 0;
-    const removed = collections.splice(index+direction, 1);
-    if(action === 'UP'){
-      collections.splice(index, 0, ...removed);
-    } else{
-      collections.splice(index+1, 0, ...removed);
-    }
-    const _collections = [...collections];
-    setCollections(_collections);
-  }, [collections, setCollections, editable]);
-
   const uniqueCheck = useCallback((address: string): boolean => {
     const r = collections.filter(t => t.address?.toLowerCase() === address?.toLowerCase() || 
       t.slug?.toLowerCase() === address?.toLowerCase());
     return r?.length === 1;
-  }, [collections])
+  }, [collections]);
+
+  const updateCollection = useCallback((_collections: CollectionInfo[] | Collection[]) => {
+    let union: Collection[] = [];
+    if(_collections == null){
+      return;
+    }
+    const _filter = (c: CollectionInfo | Collection | undefined) => c != null && c.slug!= null && c.slug?.length > 0;
+    if(_collections.length == 0){
+      union = collections.filter(_filter);
+    } else{
+      const _aux = 'primary_asset_contracts' in _collections[0] ? collectionInfo2Collection(...(_collections as CollectionInfo[])) : 
+      _collections as Collection[];
+      union = [...collections.filter(_filter), ..._aux];
+    }
+    const set = new Set(union.map( c => c?.slug.toLowerCase()));
+    const _t = Array.from(set.values())
+    .map( x => union.find( t => t.slug.toLowerCase() === x))
+    .filter(_filter) as Collection[];
+    setCollections([..._t]);
+  }, [collections, setCollections]);
+
+  const switchOnChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setShowGrid(checked);
+  }
+
+  const onSave = (
+    $e: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined,
+    ownerAddress?: string
+  ) => {
+    if($e != null){
+      $e.preventDefault();
+    }
+    setShowGrid(false);
+    setOwnerAddress(ownerAddress);
+  }
 
   return (
     <GridContainer>
+      <Grid item xs={6} key={'multiple'}>
+        <FormControlLabel
+          control={<IOSSwitchComponent checked={showGrid} onChange={switchOnChange} name="multiple" />}
+          label="Include by Artist Address"
+        />
+      </Grid>
       {
-        collections != null ? collections?.map((collection: Collection, i: number) => (
-          <>
-            <Grid item xs={12} md={12} sm={12}>
-              <Accordion defaultExpanded={!Boolean(collection?.address)}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-label="Expand"
-                  aria-controls={`accordion-summary-${i}`}
-                  id={`accordion-summary-${i}`}
-                >
-                  <Typography className={classes.heading} variant="subtitle2" component="h2">
-                  {`${collection?.name ?? collection?.slug} ${truncateAddress(collection?.address)}`}
-                  </Typography>
-                  <AccordionActions>
-                    <CustomIconButton aria-label={`add(${i})`} onClick={($e) => addCollection($e, i)} disabled={Boolean(editable) ? !startValidation : true}>
-                      <AddCircleOutlineOutlinedIcon fontSize="small" />
-                    </CustomIconButton>
-                    {
-                      i > 0 ? (
-                        <>
-                          <CustomIconButton 
-                            key={`delete(${(new Date()).getTime()})`} 
-                            aria-label={`delete(${i})`} 
-                            disabled={!Boolean(editable)}
-                            onClick={($e) => remCollection(i,$e)}
-                          >
-                            <DeleteOutlinedIcon fontSize="small" />
-                          </CustomIconButton>
-                          <CustomIconButton 
-                            key={`up(${i})`} 
-                            aria-label={`up(${i})`} 
-                            onClick={($e) => sortCollection(i, 'UP', $e)} 
-                            disabled={!Boolean(editable)}
-                          >
-                            <ArrowUpwardOutlinedIcon  fontSize="small" />
-                          </CustomIconButton>
-                          <CustomIconButton 
-                            key={`down(${i})`} aria-label={`down(${i})`} 
-                            disabled={Boolean(editable) ? Boolean(i >= collections?.length -1) : true}
-                            onClick={($e) => sortCollection(i, 'DOWN', $e)}
-                          >
-                            <ArrowDownwardOutlinedIcon fontSize="small" />
-                          </CustomIconButton>
-                        </>
-                        
-                      ) : 
-                      (
-                        <>
-                          <CustomIconButton 
-                            key={`up(${i})`} 
-                            aria-label={`up(${i})`} 
-                            disabled={true}
-                          >
-                            <ArrowUpwardOutlinedIcon  fontSize="small" />
-                          </CustomIconButton>
-                          <CustomIconButton 
-                            key={`down(${i})`} aria-label={`down(${i})`} 
-                            disabled={Boolean(editable) ? Boolean(i >= collections?.length -1) : true}
-                            onClick={($e) => sortCollection(i, 'DOWN', $e)}
-                          >
-                            <ArrowDownwardOutlinedIcon fontSize="small" />
-                          </CustomIconButton>
-                        </>
-                      )
-                    }
-                  </AccordionActions>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <GridContainer>
-                    <CollectionComponent
-                      key={Math.round(Math.random() * 1000 + i)}
-                      index={i}
-                      data={collection}
-                      onChange={onChange}
-                      validator={validator}
-                      isValid={startValidation}
-                      editable={editable}
-                      uniqueCheck={uniqueCheck}
-                    />
-                  </GridContainer>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-          </>
-        )) : null
+        showGrid ? (
+          <ArtistCollectionsSearch 
+          artistAddress={ownerAddress}
+          collections={collection2CollectionInfo(...collections)}
+          update={updateCollection}
+          onSave={onSave}
+          validator={validator}/>
+        ) : 
+        (
+          <CollectionComponentList
+            classes={classes}
+            collections={collections}
+            editable={Boolean(editable)}
+            valid={startValidation}
+            validator={validator}
+            onChange={onChange}
+            uniqueCheck={uniqueCheck}
+          />
+        )
       }
     </GridContainer>
   );

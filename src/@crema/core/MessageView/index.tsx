@@ -59,7 +59,6 @@ const AppSnackbar: React.FC<AppSnackbarProps> = ({
   ...other
 }) => {
   const classes = useStyles1();
-
   const [open, setOpen] = React.useState(true);
   const Icon = variantIcon[variant];
 
@@ -69,10 +68,13 @@ const AppSnackbar: React.FC<AppSnackbarProps> = ({
 
   return (
     <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
+      anchorOrigin={ 
+        other != null && 'anchorOrigin' in other ? other['anchorOrigin'] : 
+        {
+          vertical: 'bottom',
+          horizontal: 'left',
+        }
+      }
       open={open}
       autoHideDuration={6000}
       onClose={onClose}>

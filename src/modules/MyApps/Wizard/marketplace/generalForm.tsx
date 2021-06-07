@@ -153,7 +153,8 @@ const GeneralForm: React.FC<Props> = (props) => {
     //   setEditable(!_editable);
     //   changeIssuerForm('editable', _editable === false);
     // }
-    const _errors: error = Object.keys(social ?? {}).reduce(
+
+    let _errors: error = Object.keys(social ?? {}).reduce(
       (pre, cur) => {
         type k = keyof typeof social;
         return {
@@ -170,10 +171,21 @@ const GeneralForm: React.FC<Props> = (props) => {
       } as error,
     );
     // setErrors(_errors);
-    const keys = Object.keys(_errors ?? {});
-    keys.forEach( (k,i) => {
-      validatorToOtherFields(k as keyof GeneralConfig, _errors ?? {});
-    })
+    const keys = ['title', 'domain', 'feePercentage', 'feeRecipient', 'icon'];
+    _errors = keys.reduce( (obj, k) => {
+      return {
+        ...obj,
+        [k as keyof error]: validatorToOtherFields(k as keyof GeneralConfig, _errors ?? {})[k]
+      } as error;
+    }, _errors);
+    const _valid = Object.values(_errors)
+    .reduce((prev, curr) => {
+      console.log('curr', curr);
+      return prev && curr == null
+    }, true)
+    console.log('_valid', _valid);
+    setValid(_valid);
+
   }, []);
 
   useEffect(() => {

@@ -1,31 +1,37 @@
+import {ZRX_API_URL} from 'shared/constants/AppConst';
+import {OrderSide} from 'types/app';
 
-import { ZRX_API_URL } from 'shared/constants/AppConst';
-import { OrderSide } from 'types/app';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-
-import { QuoteParams, SwapQuoteResponse } from './types';
+import {QuoteParams, SwapQuoteResponse} from './types';
 
 /**
  * Fetch quote right before confirm, with final validation
  * @param quoteParams
  */
-export async function fetchQuote(quoteParams: QuoteParams, network: EthereumNetwork): Promise<SwapQuoteResponse> {
+export async function fetchQuote(
+  quoteParams: QuoteParams,
+  network: EthereumNetwork,
+): Promise<SwapQuoteResponse> {
   const params = new Map<string, string>();
 
   const isSell = quoteParams.orderSide === OrderSide.Sell ? true : false;
 
-  const currency =
-    network === EthereumNetwork.ethereum ? 'ETH' : 'BNB';
+  const currency = network === EthereumNetwork.ethereum ? 'ETH' : 'BNB';
 
-  const wrapper =
-    network === EthereumNetwork.ethereum ? 'WETH' : 'WBNB';
+  const wrapper = network === EthereumNetwork.ethereum ? 'WETH' : 'WBNB';
 
   const baseName = quoteParams.baseToken.symbol.toUpperCase();
   const quoteName = quoteParams.quoteToken.symbol.toUpperCase();
 
-  const baseTokenAddress = (baseName === wrapper || baseName === currency) ? currency : quoteParams.baseToken.address;
-  const quoteTokenAddress = (quoteName === wrapper || quoteName === currency) ? currency : quoteParams.quoteToken.address;
+  const baseTokenAddress =
+    baseName === wrapper || baseName === currency
+      ? currency
+      : quoteParams.baseToken.address;
+  const quoteTokenAddress =
+    quoteName === wrapper || quoteName === currency
+      ? currency
+      : quoteParams.quoteToken.address;
 
   const sellTokenAddress = isSell ? baseTokenAddress : quoteTokenAddress;
   const buyTokenAddress = isSell ? quoteTokenAddress : baseTokenAddress;
@@ -47,7 +53,7 @@ export async function fetchQuote(quoteParams: QuoteParams, network: EthereumNetw
 
   if (quoteParams.allowedSlippage) {
     // params.set('slippagePercentage', quoteParams.allowedSlippage.div(10000).toString())
-    params.set('slippagePercentage', quoteParams.allowedSlippage.toString())
+    params.set('slippagePercentage', quoteParams.allowedSlippage.toString());
   }
 
   if (quoteParams.feeRecipient) {
@@ -59,7 +65,7 @@ export async function fetchQuote(quoteParams: QuoteParams, network: EthereumNetw
   }
 
   if (quoteParams.affiliateAddress) {
-    params.set('affiliateAddress', quoteParams.affiliateAddress)
+    params.set('affiliateAddress', quoteParams.affiliateAddress);
   }
 
   if (quoteParams.intentOnFill) {
@@ -75,16 +81,13 @@ export async function fetchQuote(quoteParams: QuoteParams, network: EthereumNetw
     url += `${key}=${value}&`;
   }
 
-  console.log(url);
-
   const quote = await fetch(url);
 
   const json = await quote.json();
 
   if (json.code) {
-    throw new Error(json.reason);
+    throw new Error(json.reason||json.message||'ERROR');
   } else {
     return json;
   }
-
 }

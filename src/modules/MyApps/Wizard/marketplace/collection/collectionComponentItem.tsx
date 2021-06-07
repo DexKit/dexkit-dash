@@ -16,7 +16,7 @@ import { error, getHelpText, fillError } from '../../shared';
 import { HELP_TEXT_COLLECTIONS } from '../helpText';
 import { InfoComponent } from '../../shared/Buttons/infoComponent';
 
-interface CollectionComponentProps {
+interface CollectionComponentItemProps {
   index: number;
   data: Collection;
   onChange: ($event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -48,7 +48,7 @@ const descriptionValidator = (description?: string) => {
   return description == null || (description != null && description?.replace(' ', '')?.length > 0 &&
     description?.replace(' ', '')?.length > 5)
 }
-export const CollectionComponent: React.FC<CollectionComponentProps> = (props) => {
+export const CollectionComponentItem: React.FC<CollectionComponentItemProps> = (props) => {
   const { index, data, onChange, validator, isValid: startValidation, editable, uniqueCheck } = props;
   const [name, setName] = useState(data.name);
   const [imageUrl, setImageUrl] = useState(data.imageUrl);
@@ -325,7 +325,7 @@ export const CollectionComponent: React.FC<CollectionComponentProps> = (props) =
         />
       </Grid>
       <Grid item xs={12} md={12}>
-        { searchfailed && <MessageView variant='warning' message={searchfailed} />}
+        { searchfailed && <MessageView variant='warning' message={searchfailed} anchorOrigin={{vertical: 'bottom', horizontal: 'right' }}/>}
       </Grid>
     </>
   )

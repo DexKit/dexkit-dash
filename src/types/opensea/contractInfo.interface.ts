@@ -1,3 +1,4 @@
+import { Stats } from './stats';
 export interface ContractInfo {
   address: string;
   asset_contract_type?: string;
@@ -21,4 +22,7 @@ export interface ContractInfo {
   buyer_fee_basis_points: number;
   seller_fee_basis_points?: number;
   payout_address?: string;
+  slug: string;
+  stats: Stats;
+  owned_asset_count: number;
 }

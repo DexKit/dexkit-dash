@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { AssetContractInfo } from 'types/opensea/assetContractInfo.interface';
+import { CollectionInfo } from 'types/opensea/collectionInfo.interface';
 import { OPENSEA_REST_API } from 'utils/constants';
 
 const openseaClient = axios.create({
@@ -21,4 +22,8 @@ async function getOpensea<T = any>(url: string): Promise<T | undefined> {
 
 export function getCollectionInfo(address: string) {
   return getOpensea<AssetContractInfo>(`/asset_contract/${address}`);
+}
+
+export function getCollectionByOwner(ownerAddress: string, offset: number = 0, limit: number = 300){
+  return getOpensea<CollectionInfo[]>(`/collections?asset_owner=${ownerAddress}&offset=${offset}&limit=${limit}`);
 }

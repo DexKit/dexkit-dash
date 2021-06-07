@@ -8,6 +8,7 @@ import { NotificationType } from "services/notification";
 import { isNativeCoin, truncateAddress } from "utils";
 import { ChainId } from "types/blockchain";
 import { useWeb3 } from "./useWeb3";
+import { Notification} from 'types/models/Notification';
 
 export enum Web3Status {
   Not_Connected,
@@ -35,15 +36,15 @@ export const useTransfer = () => {
       
       web3.eth.sendTransaction({from, to, value: amountFn.toString()})
         .once('transactionHash', (hash: string) => {
-          const notification = new Notification('Processing', { body: truncateAddress(hash) });
+          const notification: Notification = { title: 'Processing', body: truncateAddress(hash) };
           dispatch(onAddNotification([notification], NotificationType.INFO));
         })
         .then((e: any) => {
-          const notification = new Notification('Send', { body: `Sent with success ${truncateAddress(e.transactionHash)}` });
+          const notification: Notification = { title: 'Send',  body: `Sent with success ${truncateAddress(e.transactionHash)}` };
           dispatch(onAddNotification([notification], NotificationType.SUCCESS));
         })
         .catch((error: Error) => {
-          const notification = new Notification('Error', { body: error.message });
+          const notification: Notification = { title: 'Error',  body: error.message };
           dispatch(onAddNotification([notification], NotificationType.ERROR));
         });
 
@@ -53,11 +54,11 @@ export const useTransfer = () => {
       contract.methods
       .transfer(to, amountFn.toString()).send({from: from})
       .then((tx: string) => {
-        const notification = new Notification('Send', { body: 'Sent with success' });
+        const notification: Notification = { title: 'Send',  body: 'Sent with success' };
         dispatch(onAddNotification([notification]));
       })
       .catch((e: any) => {
-        const notification = new Notification('Error', { body: e.message||'' });
+        const notification: Notification = { title: 'Error',  body: e.message||'' };
         dispatch(onAddNotification([notification], NotificationType.ERROR));
       })      
     }

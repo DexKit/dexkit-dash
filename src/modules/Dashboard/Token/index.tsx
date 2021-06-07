@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
 import {Grid, Box, Link, Fade} from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -9,7 +9,6 @@ import {useStyles} from './index.style';
 import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
-
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
@@ -60,7 +59,6 @@ const TokenPage: React.FC<Props> = (props) => {
 
   const [token, setToken] = useState<Token>();
 
-  // const {loading, error, data} = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${address}`, {}, [address]);
   const {loading, error, data} = useCoingeckoTokenInfo(address, networkName);
 
   const isDark = theme.palette.type === ThemeMode.DARK;
@@ -83,12 +81,9 @@ const TokenPage: React.FC<Props> = (props) => {
     [account],
   );
 
-
-
   const myOrders =
     'My Orders' +
-    (infoMyOrders.data ? ' (' + infoMyOrders.data.total + ')' : '');
-
+    (infoMyOrders.data ? ' (' + (infoMyOrders.data.total || 0) + ')' : '');
 
   const tradeHistory = 'Trade History';
 
