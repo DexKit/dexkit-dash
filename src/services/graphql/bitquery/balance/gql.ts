@@ -19,6 +19,39 @@ export const BITQUERY_BALANCE_INFO = gql`
   }
 `
 
+export const BITQUERY_ALL_BALANCE_INFO = gql`
+  query GetAllMyBalance($address: String!) {
+    ethereum(network: ethereum) {
+      address(address: {is: $address}) {
+        balances {
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+          valueInUsd: value
+        }
+      }
+    }
+    bsc: ethereum(network: bsc) {
+      address(address: {is: $address}) {
+        balances {
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+          valueInUsd: value
+        }
+      }
+    }
+  }
+`
+
 export const BITQUERY_BALANCE_HISTORY = gql`
   query GetMyBalanceHistory($network: EthereumNetwork!, $address: String!, $block: Int!) {
     ethereum(network: $network) {

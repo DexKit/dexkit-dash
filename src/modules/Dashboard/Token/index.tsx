@@ -9,9 +9,9 @@ import {useStyles} from './index.style';
 import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
-import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
-import {COINGECKO_CONTRACT_URL, ZRX_API_URL} from 'shared/constants/AppConst';
-import {ThemeMode} from 'shared/constants/AppEnums';
+
+import {ZRX_API_URL} from 'shared/constants/AppConst';
+import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import InfoCard from 'shared/components/InfoCard';
 import ErrorView from 'modules/Common/ErrorView';
@@ -20,11 +20,12 @@ import CoingeckoMarket from './CoingeckoMarket';
 import BuySell from './BuySell';
 import {useNetwork} from 'hooks/useNetwork';
 import TotalBalance from 'shared/components/TotalBalance';
-import {useBalance} from 'hooks/balance/useBalance';
 import {Token} from 'types/app';
 import {truncateAddress} from 'utils';
 import {useChainId} from 'hooks/useChainId';
 import {Skeleton} from '@material-ui/lab';
+import { useAllBalance } from 'hooks/balance/useAllBalance';
+import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
 
 const TVChartContainer = React.lazy(
   () => import('shared/components/chart/TvChart/tv_chart'),
@@ -32,6 +33,7 @@ const TVChartContainer = React.lazy(
 
 type Params = {
   address: string;
+  networkName: EthereumNetwork;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -40,11 +42,11 @@ const TokenPage: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
-  const {address} = params;
+  const {address, networkName} = params;
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
 
-  const networkName = useNetwork();
+  const network = useNetwork();
 
   const {currentChainId} = useChainId();
 
@@ -52,13 +54,14 @@ const TokenPage: React.FC<Props> = (props) => {
 
   const {account, chainId} = useWeb3();
 
-  const {data: balances} = useBalance();
+  const {data: balances} = useAllBalance();
 
   const [chartSymbol, setChartSymbol] = useState<string>();
 
   const [token, setToken] = useState<Token>();
 
-  const {loading, error, data} = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${address}`, {}, [address]);
+  // const {loading, error, data} = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${address}`, {}, [address]);
+  const {loading, error, data} = useCoingeckoTokenInfo(address, networkName);
 
   const isDark = theme.palette.type === ThemeMode.DARK;
 

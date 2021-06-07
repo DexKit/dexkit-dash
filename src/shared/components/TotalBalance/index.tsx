@@ -3,21 +3,20 @@ import {Box, Button, Card, Fade} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
-import {OnlyOwnerError} from '@0x/utils/lib/src/revert_errors/utils/ownable_revert_errors';
+import { MyBalances } from 'types/blockchain';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 interface Props {
-  balances: GetMyBalance_ethereum_address_balances[];
+  balances: MyBalances[];
   only?: Token;
   loading?: boolean;
 }
@@ -26,28 +25,29 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
   const [senderModal, setSenderModal] = useState(false);
   const [receiverModal, setReceiverModal] = useState(false);
   const [tokens, setTokens] = useState<
-    GetMyBalance_ethereum_address_balances[]
+   MyBalances[]
   >([]);
   const [usdAvailable, setUsdAvailable] = useState<number>(0);
 
   useEffect(() => {
     if (only) {
-      const dataFn = balances?.filter(
+      const dataFn = balances?.find(
         (e) =>
           e.currency?.address?.toLowerCase() === only.address.toLowerCase(),
       );
 
-      if (dataFn.length === 0) {
+      if (!dataFn) {
         setTokens([
           {
             __typename: 'EthereumBalance',
             currency: {
               __typename: 'Currency',
               address: only.address,
-              decimals: 18,
+              decimals: only.decimals,
               name: only.name || '',
               symbol: only.symbol || '',
             },
+            network: EthereumNetwork.ethereum,
             value: 0,
             valueInUsd: 0,
           },
@@ -58,13 +58,14 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             __typename: 'EthereumBalance',
             currency: {
               __typename: 'Currency',
-              address: only.address,
-              decimals: 18,
-              name: only.name || '',
-              symbol: only.symbol || '',
+              address: dataFn.currency?.address ?? '',
+              decimals: dataFn.currency?.decimals ?? 18,
+              name: dataFn.currency?.name || '',
+              symbol:  dataFn.currency?.symbol || '',
             },
-            value: dataFn[0].value ?? 0,
-            valueInUsd: dataFn[0].valueInUsd ?? 0,
+            network: dataFn.network,
+            value: dataFn.value ?? 0,
+            valueInUsd: dataFn.valueInUsd ?? 0,
           },
         ]);
       }
@@ -238,7 +239,8 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
       <Sender
         open={senderModal}
         onClose={() => setSenderModal(false)}
-        balances={tokens}
+        // We support only for now Ethereum tokens
+        balances={tokens.filter(t => t.network === EthereumNetwork.ethereum)}
       />
 
       <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />

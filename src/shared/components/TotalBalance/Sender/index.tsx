@@ -5,6 +5,7 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
 import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import { useNetwork } from 'hooks/useNetwork';
 
 interface Props {
   open: boolean;
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const Sender: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const networkName = useNetwork();
 
   const a11yProps = (index: number) => {
     return {
@@ -70,6 +72,7 @@ const Sender: React.FC<Props> = (props) => {
                 // disabled={address != null && address.length > 0}
               />
             </Tabs>
+
 
             <SenderForm balances={props.balances} />
 

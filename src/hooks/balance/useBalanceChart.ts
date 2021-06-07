@@ -6,10 +6,11 @@ import { useNetwork } from "hooks/useNetwork";
 import { client } from "services/graphql";
 import { GetBalanceBlock, GetBalanceBlockVariables } from "services/graphql/bitquery/balance/__generated__/GetBalanceBlock";
 import { GetMyBalanceHistory, GetMyBalanceHistoryVariables } from "services/graphql/bitquery/balance/__generated__/GetMyBalanceHistory";
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import { ChartTick } from "types/app";
+import { MyBalances } from 'types/blockchain';
 
-export const useBalanceChart = (balances: GetMyBalance_ethereum_address_balances[]) => {
+
+export const useBalanceChart = (balances: MyBalances[]) => {
   const {account} = useWeb3();
   const network = useNetwork();
 

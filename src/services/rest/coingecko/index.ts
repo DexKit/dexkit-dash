@@ -44,29 +44,50 @@ export async function getToken(address: string): Promise<CoinDetailCoinGecko> {
 }
 
 export async function getCoinsData(ids: string, currency: string = 'usd'): Promise<CoinItemCoinGecko[]> {
+
 	return getCoingecko(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${ids}&sparkline=true`);
 }
 
 let coingeckoIdTokens: CoinListItemCoingecko[]; 
 
-export async function getTokens(address: string[]): Promise<{ [address: string]:  CoinItemCoinGecko}> {
+export async function getTokens(tokensMetadata: {address: string, network: string}[]): Promise<{ [address: string]:  CoinItemCoinGecko}> {
 
 	if(!coingeckoIdTokens) {
 		coingeckoIdTokens = await getAllCoinsId();
 	}
 
-	const geckoData = coingeckoIdTokens.filter(c=> c.platforms.ethereum).map(c=> { return {address: c.platforms.ethereum?.toLowerCase() as string, id: c.id }});
-
+	const geckoData = coingeckoIdTokens.filter(c => c.platforms.ethereum || c.platforms['binance-smart-chain']).map(c=> { return {address_eth: c.platforms.ethereum?.toLowerCase() as string, address_bnb: c.platforms['binance-smart-chain']?.toLowerCase() as string, id: c.id, symbol: c.symbol }});
+	const addresses =  tokensMetadata.map(t=> t.address).map(ad=>ad.toLowerCase());
 	// get only coins with active coingecko id
-	const geckoIds = geckoData.filter(a=> address.map(ad=>ad.toLowerCase()).includes(a.address.toLowerCase())).map(a=> a.id);
-	const concatId = `ethereum,${geckoIds.reduce((p,c)=> `${p},${c}`,'')}`;
+	const geckoIds = geckoData.filter( 
+		a => addresses.includes(a.address_eth?.toLowerCase())
+			|| addresses.includes(a.address_bnb?.toLowerCase())
+		).map(a=> a.id);
+
+	const geckoCoins = geckoData.filter( 
+			a => addresses.includes(a.address_eth?.toLowerCase())
+				|| addresses.includes(a.address_bnb?.toLowerCase())
+			)
+
+
+	const concatId = `ethereum,binancecoin,${geckoIds.reduce((p,c)=> `${p},${c}`,'')}`;
 	const coinsUsd = await getCoinsData(concatId);
 	//const coinsNative = await getCoinsData(concatId, 'eth');
 
-	const allCoins = geckoData.concat({address: 'eth', id: 'ethereum'});
+	const allCoins = geckoCoins
+				.concat({address_eth: 'eth', address_bnb: '', id: 'ethereum', symbol: 'ETH'})
+				.concat({address_eth: '', address_bnb: 'bnb', id: 'binancecoin', symbol: 'BNB'});
 
 	return allCoins.reduce<any>((acc, current) => {
-		acc[current.address ?? 'eth'] = coinsUsd.find(c=> c.id === current.id);
+		let address_eth = current.address_eth; 
+		let address_bnb = current.address_bnb; 
+		if(address_eth){
+			acc[address_eth] = coinsUsd.find(c=> c.id === current.id);
+		}
+		if(address_bnb){
+			acc[address_bnb] = coinsUsd.find(c=> c.id === current.id);
+		}
+	
 		// acc[current.address ?? 'eth'].currency_native = coinsNative.find(c=> c.id === current.id);
 		return acc;
 	}, {});

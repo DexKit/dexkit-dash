@@ -1,16 +1,17 @@
 import React from 'react';
 import clsx from 'clsx';
 import {useHistory} from 'react-router-dom';
-import {makeStyles, Box, TableCell, TableRow, Button, Avatar} from '@material-ui/core';
+import {makeStyles, Box, TableCell, TableRow, Button, Avatar, Chip, Tooltip} from '@material-ui/core';
 import {green, grey} from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import TokenLogo from 'shared/components/TokenLogo';
 
+import { MyBalances } from 'types/blockchain';
+
 interface TableItemProps {
-  data: GetMyBalance_ethereum_address_balances;
+  data: MyBalances;
 }
 
 const TableItem: React.FC<TableItemProps> = ({data}) => {
@@ -63,6 +64,14 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   const history = useHistory();
 
+  const getNetworkLink = (d: MyBalances) => {
+    if(d.network === EthereumNetwork.bsc){
+     return `/${EthereumNetwork.bsc}/dashboard/token/`
+    }
+    return `/${EthereumNetwork.ethereum}/dashboard/token/`
+
+  }
+
   return (
     <TableRow key={data.currency?.address} className='item-hover' hover>
       <TableCell
@@ -87,8 +96,14 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
               </Avatar>
             )}
           </Box>
-          <Box component='span' mt={3} mr={1} fontWeight={700}>
-            {data.currency?.name}
+          <Box component='span' mr={1} fontWeight={700}>
+            <Box>
+                  {data.currency?.name}   
+            </Box>
+            <Box>
+               { data.network === EthereumNetwork.bsc && <Chip size="small" label="BSC"/>}
+               { data.network === EthereumNetwork.ethereum &&  <Chip size="small" label="ETH"/>}
+            </Box>
           </Box>
         </Box>
       </TableCell>
@@ -107,7 +122,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
         <Button
           variant='outlined'
           onClick={() => {
-            history.push('/ethereum/dashboard/token/' + data.currency?.address);
+            history.push(getNetworkLink(data) + data.currency?.address);
           }}>
           Trade
         </Button>

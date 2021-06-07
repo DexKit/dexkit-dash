@@ -173,7 +173,7 @@
     "lint:fix": "tslint --fix \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.+(ts|tsx)\"",
     "precommit": "lint-staged",
-    "apollo:get-schema": "npx apollo service:download --endpoint=https://dexkit.graphql.bitquery.io graphql-schema.json",
+    "apollo:get-schema": "npx apollo service:download --endpoint=https://graphql.bitquery.io graphql-schema.json",
     "apollo:generate-types": "npx apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
   },
   "eslintConfig": {

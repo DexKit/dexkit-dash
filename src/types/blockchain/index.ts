@@ -1,5 +1,9 @@
-import { BigNumber } from '@0x/utils';
-import { TokenBalance } from 'types/app';
+import { GetAllMyBalance_ethereum_address_balances } from "services/graphql/bitquery/balance/__generated__/GetAllMyBalance";
+import { EthereumNetwork } from "shared/constants/AppEnums";
+
+
+export type MyBalances =  GetAllMyBalance_ethereum_address_balances & {network: EthereumNetwork};
+
 
 export enum ChainId {
     Mainnet = 1,

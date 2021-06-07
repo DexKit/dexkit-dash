@@ -30,6 +30,7 @@ import {useStyles} from './index.style';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
 import {Skeleton} from '@material-ui/lab';
+import { useAllBalance } from 'hooks/balance/useAllBalance';
 
 interface Props {}
 
@@ -37,7 +38,7 @@ const Wallet: React.FC<Props> = (props) => {
   const {messages} = useIntl();
   const {account} = useWeb3();
   const {defiBalance} = useDefi(account);
-  const {loading, error, data} = useBalance();
+  const {loading, error, data} = useAllBalance();
   const {
     loading: loadingChart,
     error: errorChart,

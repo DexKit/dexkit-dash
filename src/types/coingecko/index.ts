@@ -7,6 +7,7 @@ export interface CoinListItemCoingecko{
   name: string;
   platforms: {
     ethereum: string | null;
+    "binance-smart-chain": string | null;
   }
 
 }

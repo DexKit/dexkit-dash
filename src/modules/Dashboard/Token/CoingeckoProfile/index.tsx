@@ -39,7 +39,7 @@ const CoingeckoProfile: React.FC<Props> = ({data, loading}) => {
                     height: 50,
                     marginTop: 18,
                   }}>
-                  {data?.image.large ? (
+                  {data?.image?.large ? (
                     <img src={data.image.large} alt='' />
                   ) : (
                     <PeopleAltRounded />

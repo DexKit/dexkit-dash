@@ -9,6 +9,8 @@ import {BITQUERY_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
 import {useNetwork} from 'hooks/useNetwork';
 import {getTokens} from 'services/rest/coingecko';
 import {client} from 'services/graphql';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+
 
 export const useBalance = () => {
   const {account} = useWeb3();
@@ -33,12 +35,13 @@ export const useBalance = () => {
           },
         })
         .then((balances) => {
-          const addresses = balances.data.ethereum?.address[0].balances
-            ?.map((t) => t.currency?.address?.toLowerCase() || '')
-            .filter((e) => e !== '-');
+          const tokensmeta_eth = balances.data.ethereum?.address[0].balances
+          ?.map((t) => t.currency?.address?.toLowerCase() || '')
+          ?.filter((e) => e !== '-')
+          ?.map(a => {return {network: EthereumNetwork.ethereum, address: a}});
 
-          if (addresses) {
-            getTokens(addresses)
+          if (tokensmeta_eth && tokensmeta_eth.length) {
+            getTokens(tokensmeta_eth)
               .then((coingeckoList) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
                   (t) => {

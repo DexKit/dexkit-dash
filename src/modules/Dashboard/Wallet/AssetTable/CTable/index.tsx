@@ -4,14 +4,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import AppTableContainer from '../../../../../@crema/core/AppTableContainer';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import {Box, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import { MyBalances } from 'types/blockchain';
 
 interface Props {
-  balances: GetMyBalance_ethereum_address_balances[];
+  balances: MyBalances[];
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -60,7 +59,7 @@ const CTable: React.FC<Props> = ({balances}) => {
             {balances
               .filter((b) => b.value)
               .slice(page * perPage, (page + 1) * perPage)
-              .map((data: GetMyBalance_ethereum_address_balances) => (
+              .map((data: MyBalances) => (
                 <TableItem data={data} key={data.currency?.address} />
               ))}
           </TableBody>

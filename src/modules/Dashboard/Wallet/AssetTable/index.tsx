@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppCard from '../../../../@crema/core/AppCard';
 import CTable from './CTable';
-import {Fade, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Chip, Fade, makeStyles, Paper} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import LoadingTable from 'modules/Common/LoadingTable';
+import { MyBalances } from 'types/blockchain';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 interface AssetTableProps {
-  balances: GetMyBalance_ethereum_address_balances[];
+  balances: MyBalances[];
   loading?: boolean;
 }
 
@@ -23,37 +24,40 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const classes = useStyles();
+  const [filter, setFilter]  = useState('all');
+
+  const filteredBalances = () => {
+    if(filter === 'eth'){
+      return balances.filter(b => b.network === EthereumNetwork.ethereum);
+    }
+    if(filter === 'bnb'){
+      return balances.filter(b => b.network === EthereumNetwork.bsc);
+    }
+    return balances;
+  }
+
 
   return (
-    // <AppCard
-    //   contentStyle={{paddingLeft: 0, paddingRight: 0,}}
-    //   title="My Assets"
-    //   action={
-    //     <>
-    //     {/* <div>
-    //       <Chip style={{marginRight: 10}} label="All" clickable color="primary" />
-    //       <Chip style={{marginRight: 10}} label="Coins" clickable />
-    //       <Chip label="Token" clickable />
-    //     </div> */}
-
-    //     {/* <Button style={{textTransform: 'none'}} color="secondary">
-    //       View All
-    //     </Button> */}
-    //     </>
-    //   }>
-    //  </AppCard>
-    <Fade in={true} timeout={1000}>
-      <Paper className={classes.paper}>
-        <Toolbar className={classes.toolbar}>
-          <Typography variant='h5'>My Assets</Typography>
-        </Toolbar>
-        {loading ? (
-          <LoadingTable columns={3} rows={3} />
-        ) : (
-          <CTable balances={balances} />
-        )}
-      </Paper>
-    </Fade>
+     <AppCard
+       contentStyle={{paddingLeft: 0, paddingRight: 0,}}
+       title="My Assets"
+       action={
+          <div>
+           <Chip style={{marginRight: 10}} label="All" clickable color={filter === 'all' ? 'primary' : 'default'} onClick={()=> setFilter('all')}/>
+           <Chip style={{marginRight: 10}} label="ETH" clickable color={filter === 'eth' ? 'primary' : 'default'} onClick={()=> setFilter('eth')}/>
+           <Chip label="BSC" clickable color={filter === 'bnb' ? 'primary' : 'default'} onClick={()=> setFilter('bnb')}/>
+         </div>
+       }>
+          <Fade in={true} timeout={1000}>
+            <Paper className={classes.paper}>
+              {loading ? (
+                <LoadingTable columns={3} rows={3} />
+              ) : (
+                <CTable balances={filteredBalances()} />
+              )}
+            </Paper>
+          </Fade>
+    </AppCard>  
   );
 };
 
