@@ -32,6 +32,7 @@ import { WizardProps } from '../shared';
 
 import GeneralForm from './generalForm';
 import ThemeForm from '../shared/Theme/themeForm';
+import { DefaultTheme } from '../shared/Theme';
 import CollectionsForm from './collection/collectionsForm';
 import TokensForm from '../shared/Token/tokensForm';
 
@@ -77,6 +78,8 @@ function getSteps() {
   return ['General',  'Theme', 'Collections', 'Tokens and Deploy'];
 }
 
+const defaultTheme = new DefaultTheme();
+
 function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileMarketplace, keyof ConfigFileMarketplace>, chainId: ChainId) {
   const {config: form, changeIssuerForm, validator, isValid, editable } = wizardProps;
   const k = Object.values(WizardData)[step];
@@ -100,7 +103,8 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps<Co
     }
     case 1:
       const themeName = form?.theme_name ?? '';
-      const theme = form?.theme;
+      // const theme = form?.theme;
+      const theme = form?.theme ?? defaultTheme;
       return (<ThemeForm 
         themeName={themeName}
         theme={theme}
@@ -338,7 +342,9 @@ const initConfig = {
           "type": "ERC721",
           "slug": "",
       }
-  ]
+  ],
+  theme: defaultTheme,
+  theme_light: defaultTheme.componentsTheme // this is because the componentsTheme property has the default values of a ligth theme
 } as ConfigFileMarketplace;
 
 export default function VerticalLinearStepper(props: MarketplaceProps) {

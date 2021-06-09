@@ -20,6 +20,7 @@ import { ConfigFileExchange, ConfigFileMarketplace, PartialTheme, ThemePropertie
 import { ColorResult } from 'react-color';
 
 import ColorSets from 'shared/constants/ColorSets';
+import { string } from 'prop-types';
 
 type ConfigFileWithTheme = ConfigFileExchange | ConfigFileMarketplace;
 interface ThemeFormProps {
@@ -80,6 +81,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
   const [selectedOption, setSelectedOption] = useState(themesOptions[0]);
   const [componentes, setComponentes] = useState(components);
   // const themeNameForm = themeName === 'DARK_THEME' ? 'theme_dark' : 'theme_light';
+  console.log(`theme`, theme);
 
   const onChange = (event: React.ChangeEvent<
     {
@@ -95,7 +97,17 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
 
   const getValue = (k: string) => {
     const property = componentes.get(k);
-    const defaultColor = property != null ? defaultValues.get(property) ?? '#FFFFFF' : '#FFFFFF' ;
+    let defaultColor: string;
+    if(property != null && theme != null && theme.componentsTheme != null){
+      console.log(`entrou 1`, theme.componentsTheme[property])
+      defaultColor = theme.componentsTheme[property] ?? '#FFFFFF';
+    } else if(property != null){
+      defaultColor = defaultValues.get(property) ?? '#FFFFFF';
+      console.log(`entrou 2`)
+    } else {
+      defaultColor = '#FFFFFF';
+      console.log(`entrou 3`)
+    }
     let value: ColorResult = {
        hex: defaultColor, 
        hsl: {

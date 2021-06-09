@@ -32,6 +32,7 @@ import GeneralForm from './generalForm';
 import ThemeForm from '../shared/Theme/themeForm';
 import PairsForm from './pairsForm';
 import TokensForm from '../shared/Token/tokensForm';
+import { DefaultTheme } from '../shared/Theme';
 
 
 
@@ -76,6 +77,8 @@ function getSteps() {
   return ['General', 'Theme', 'Tokens', 'Pairs and Deploy'];
 }
 
+const defaultTheme = new DefaultTheme();
+
 function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileExchange, keyof ConfigFileExchange>, chainId: ChainId) {
   const { config: form, changeIssuerForm, validator, isValid, editable } = wizardProps;
   const k = Object.values(WizardData)[step];
@@ -98,7 +101,8 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps<Co
     }
     case 1:
       const themeName = form?.theme_name ?? '';
-      const theme = form?.theme;
+      // const theme = form?.theme;
+      const theme = form?.theme ?? defaultTheme;
       return (<ThemeForm
         themeName={themeName}
         theme={theme}
@@ -269,10 +273,10 @@ const initConfig = {
     "image": "https://dexkit.com/wp-content/themes/dexkit-theme/images/logo1.png "
   },
   wallets: undefined,
-  theme: undefined,
+  theme: defaultTheme,
+  theme_light: defaultTheme.componentsTheme, // this is because the componentsTheme property has the default values of a ligth theme
   theme_name: undefined,
   layout: undefined,
-  theme_light: undefined,
   theme_dark: undefined
 
 } as ConfigFileExchange;
