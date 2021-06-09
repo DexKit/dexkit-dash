@@ -41,13 +41,12 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     color: theme.palette.text.secondary,
   },
   valueSend: {
-    marginBottom: 20,
     fontWeight: 600,
     // color: 'rgb(248, 78, 78)',
   },
   valueReceive: {
     fontWeight: 600,
-    color: 'rgb(78, 228, 78)',
+    // color: 'rgb(78, 228, 78)',
   },
   progressBar: {
     width: '100%',
@@ -57,5 +56,12 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     padding: '20px 0 10px',
     gap: 5,
     marginLeft: '0 !important',
+  },
+  textRes: {
+    marginBottom: 0,
+    fontSize: 13,
+    [theme.breakpoints.up('xl')]: {
+      fontSize: 18,
+    },
   },
 }));

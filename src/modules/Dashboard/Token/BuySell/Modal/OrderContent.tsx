@@ -6,7 +6,7 @@ import {useContractWrapper} from 'hooks/useContractWrapper';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import BigNumber from 'bignumber.js';
 import {ChainId} from 'types/blockchain';
-import {OrderSide, Steps, Token} from 'types/app';
+import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
 import {
   DialogTitle,
@@ -28,6 +28,7 @@ import {
 } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
 import ErrorStep from './ErrorStep';
 import ConvertStep from './ConvertStep';
@@ -38,7 +39,8 @@ import ProgressBar from './PogressBar';
 import LoadingStep from './LoadingStep';
 import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 
 interface Props {
   isMarket: boolean;
@@ -68,6 +70,7 @@ const GasOptionsWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 `;
 
 const GasOption = styled.div<{isSelected: boolean}>`
@@ -121,58 +124,84 @@ const OrderContent: React.FC<Props> = (props) => {
   const [selectedGasPrice, setSelectedGasPrice] = useState('0');
   const [displayGasPrice, setDisplayGasPrice] = useState('0');
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);
+  const [convertGasPrice, setConvertGasPrice] = useState('0');
 
   const amountFromFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   useEffect(() => {
     if (currentStep !== Steps.DONE) {
-      console.log('START ORDER');
+      console.log('START STEP');
 
-      fetchQuote(
-        {
-          baseToken: tokenFrom,
-          quoteToken: tokenTo,
-          chainId: chainId,
-          orderSide: OrderSide.Sell,
-          makerAmount: amountFromFn,
-          // Parameters used to prevalidate quote at final
-          allowedSlippage: slippage,
-          ethAccount: props.account,
-          buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
-          intentOnFill: true,
-        },
-        networkName,
-      )
-        .then((e) => {
-          setQuote(e);
-          setSellAmount(
-            toTokenUnitAmount(e.sellAmount, tokenFrom.decimals).toNumber(),
-          );
-          setBuyAmount(
-            toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
-          );
+      if (isConvert) {
+        getGasInfo()
+          .then((e) => {
+            const newConvertGasPrice = e.gasPriceInWei.toString();
 
-          const gas = new BigNumber(e.gas);
-          const gasPrice = new BigNumber(e.gasPrice);
-          handleChangeSelectedGasPrice(gasPrice.toString());
+            setConvertGasPrice(newConvertGasPrice);
 
-          if (isMarket) {
-            const feeFn = gas.multipliedBy(gasPrice);
-            setFee(toTokenUnitAmount(feeFn, 18).toNumber());
-          } else {
-            setFee(new BigNumber(0).toNumber());
-          }
+            handleChangeSelectedGasPrice(e.gasPriceInWei.toString());
 
-          onLoading(false);
-        })
-        .catch((e) => {
-          onNext(false, e);
-          onLoading(false);
-        });
+            setSellAmount(amountFrom);
+
+            setBuyAmount(amountFrom);
+
+            onLoading(false);
+          })
+          .catch((e) => {
+            onNext(false, e);
+            onLoading(false);
+          });
+      } else {
+        fetchQuote(
+          {
+            baseToken: tokenFrom,
+            quoteToken: tokenTo,
+            chainId: chainId,
+            orderSide: OrderSide.Sell,
+            makerAmount: amountFromFn,
+            // Parameters used to prevalidate quote at final
+            allowedSlippage: slippage,
+            ethAccount: props.account,
+            buyTokenPercentage: undefined,
+            feeRecipient: undefined,
+            affiliateAddress: undefined,
+            intentOnFill: true,
+          },
+          networkName,
+        )
+          .then((e) => {
+            setQuote(e);
+            setSellAmount(
+              toTokenUnitAmount(e.sellAmount, tokenFrom.decimals).toNumber(),
+            );
+            setBuyAmount(
+              toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
+            );
+
+            const gas = new BigNumber(e.gas);
+            const gasPrice = new BigNumber(e.gasPrice);
+            handleChangeSelectedGasPrice(gasPrice.toString());
+
+            if (isMarket) {
+              const feeFn = gas.multipliedBy(gasPrice);
+              setFee(toTokenUnitAmount(feeFn, 18).toNumber());
+            } else {
+              setFee(new BigNumber(0).toNumber());
+            }
+
+            onLoading(false);
+          })
+          .catch((e) => {
+            onNext(false, e);
+            onLoading(false);
+          });
+      }
     }
   }, [currentStep, slippage]);
+
+  const getGasInfo = async (): Promise<GasInfo> => {
+    return await getGasEstimationInfoAsync();
+  };
 
   const handleChangeSelectedGasPrice = (newSelectedGasPrice: string) => {
     setSelectedGasPrice(newSelectedGasPrice);
@@ -220,13 +249,15 @@ const OrderContent: React.FC<Props> = (props) => {
     secondSymbol = tokenFrom.symbol;
   }
 
-  const lowGas = ((quote?.gasPrice || 0) * 0.8).toString();
+  const validGasPrice = isConvert ? convertGasPrice || 0 : quote?.gasPrice || 0;
+
+  const lowGas = (validGasPrice * 0.8).toString();
   const displayLowGas = (parseInt(lowGas) / Math.pow(10, 9)).toFixed(2);
 
-  const defaultGas = ((quote?.gasPrice || 0) * 1).toString();
+  const defaultGas = (validGasPrice * 1).toString();
   const displayDefaultGas = (parseInt(defaultGas) / Math.pow(10, 9)).toFixed(2);
 
-  const fastGas = ((quote?.gasPrice || 0) * 1.6).toString();
+  const fastGas = (validGasPrice * 1.6).toString();
   const displayFastGas = (parseInt(fastGas) / Math.pow(10, 9)).toFixed(2);
 
   return (
@@ -255,17 +286,18 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Typography>
                   </>
                 )}
-                {(currentStep === Steps.APPROVE) && (
+                {currentStep === Steps.APPROVE && (
                   <>
                     <Typography variant='h6' align='center'>
                       You are approving {tokenFrom.symbol} for trading on DexKit
                     </Typography>
                   </>
                 )}
-                {(currentStep === Steps.APPROVE_WRAPPER) && (
+                {currentStep === Steps.APPROVE_WRAPPER && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenWrapper.symbol} for trading on DexKit
+                      You are approving {tokenWrapper.symbol} for trading on
+                      DexKit
                     </Typography>
                   </>
                 )}
@@ -305,19 +337,56 @@ const OrderContent: React.FC<Props> = (props) => {
                 direction='row'
                 justify='center'
                 alignItems='center'>
-                <Grid item xs={12}>
+                <Grid style={{paddingRight: 8, paddingBottom: 8}} item xs={6}>
                   <Typography
                     variant='h6'
                     className={classes.textSecondary}
                     align='center'>
-                    You are sending
+                    {isConvert ? 'Convert' : 'Send'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid style={{paddingLeft: 8, paddingBottom: 8}} item xs={6}>
                   <Typography
                     className={classes.valueSend}
                     variant='h6'
                     align='center'>{`${sellAmount} ${tokenFrom.symbol}`}</Typography>
+                </Grid>
+
+                <Grid item xs={6} />
+                <Grid item xs={6}>
+                  <Box
+                    color='grey.400'
+                    textAlign='center'
+                    className={classes.textRes}>
+                    <ArrowDownwardOutlined />
+                  </Box>
+                </Grid>
+
+                <Grid
+                  style={{paddingRight: 8, paddingTop: 4, paddingBottom: 16}}
+                  item
+                  xs={6}>
+                  <Typography
+                    variant='h6'
+                    className={classes.textSecondary}
+                    align='center'>
+                    {isConvert ? 'To' : 'Receive'}
+                  </Typography>
+                </Grid>
+                <Grid
+                  style={{paddingLeft: 8, paddingTop: 4, paddingBottom: 16}}
+                  item
+                  xs={6}>
+                  <Typography
+                    className={classes.valueReceive}
+                    variant='h6'
+                    align='center'>
+                    {(isMarket || isConvert
+                      ? buyAmount.toFixed(6)
+                      : limitReceive) +
+                      ' ' +
+                      tokenTo.symbol}
+                  </Typography>
                 </Grid>
 
                 <Grid item xs={12}>
@@ -327,44 +396,41 @@ const OrderContent: React.FC<Props> = (props) => {
                     alignItems='center'
                     spacing={3}
                     className={classes.contentBox}>
-                    <Grid item xs={12} sm={3}>
-                      <Typography className={classes.textSecondary}>
-                        At Price
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={9}>
-                      <Typography className={classes.textPrimary} align='right'>
-                        {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
-                        <IconButton
-                          style={{marginLeft: 5}}
-                          size='small'
-                          onClick={invertPrice}>
-                          <SyncAltIcon fontSize='small' />
-                        </IconButton>
-                      </Typography>
-                    </Grid>
+                    {!isConvert && (
+                      <>
+                        <Grid item xs={12} sm={3}>
+                          <Typography className={classes.textSecondary}>
+                            At Price
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={9}>
+                          <Typography
+                            className={classes.textPrimary}
+                            align='right'>
+                            {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
+                            <IconButton
+                              style={{marginLeft: 5}}
+                              size='small'
+                              onClick={invertPrice}>
+                              <SyncAltIcon fontSize='small' />
+                            </IconButton>
+                          </Typography>
+                        </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                      <Typography className={classes.textSecondary}>
-                        You Receive
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={8}>
-                      <Typography className={classes.textPrimary} align='right'>
-                        {(isMarket ? buyAmount.toFixed(6) : limitReceive) + ' ' + tokenTo.symbol}
-                      </Typography>
-                    </Grid>
+                        <Grid item xs={12} sm={5}>
+                          <Typography className={classes.textSecondary}>
+                            Estimated Fee
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={7}>
+                          <Typography
+                            className={classes.textPrimary}
+                            align='right'>{`${fee.toFixed(6)} ETH`}</Typography>
+                        </Grid>
+                      </>
+                    )}
 
-                    <Grid item xs={12} sm={5}>
-                      <Typography className={classes.textSecondary}>
-                        Estimated Fee
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={7}>
-                      <Typography className={classes.textPrimary} align='right'>{`${fee.toFixed(6)} ETH`}</Typography>
-                    </Grid>
-
-                    {!isMarket && (
+                    {!isMarket && !isConvert && (
                       <>
                         <Grid item xs={12} sm={5}>
                           <Typography className={classes.textSecondary}>
@@ -372,14 +438,18 @@ const OrderContent: React.FC<Props> = (props) => {
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={7}>
-                          <Typography className={classes.textPrimary} align='right'>
-                            {expiryFn.toLocaleDateString() + ' - ' + expiryFn.toLocaleTimeString()}
+                          <Typography
+                            className={classes.textPrimary}
+                            align='right'>
+                            {expiryFn.toLocaleDateString() +
+                              ' - ' +
+                              expiryFn.toLocaleTimeString()}
                           </Typography>
                         </Grid>
                       </>
                     )}
 
-                    {isMarket && (
+                    {isMarket && !isConvert && (
                       <>
                         <Grid item xs={12} sm={5}>
                           <Typography className={classes.textSecondary}>
@@ -488,6 +558,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 chainId={chainId}
                 networkName={networkName}
                 balances={balances}
+                selectedGasPrice={selectedGasPrice}
                 onNext={onNext}
                 onLoading={onLoading}
                 onShifting={onShifting}

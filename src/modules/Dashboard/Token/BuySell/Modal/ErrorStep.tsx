@@ -8,10 +8,10 @@ import {
 } from '@material-ui/core';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
-import { onAddNotification } from 'redux/actions';
-import { NotificationType } from 'services/notification';
-import { useDispatch } from 'react-redux';
-import { Notification} from 'types/models/Notification';
+import {onAddNotification} from 'redux/actions';
+import {NotificationType} from 'services/notification';
+import {useDispatch} from 'react-redux';
+import {Notification} from 'types/models/Notification';
 interface Props {
   step: Steps | undefined;
   error: Error | string | undefined;
@@ -35,18 +35,21 @@ const ErrorStep: React.FC<Props> = (props) => {
         if (error instanceof Error) {
           setMessage(error.message);
 
-          const notification: Notification = { title: 'Error', body: error.message };
+          const notification: Notification = {
+            title: 'Error',
+            body: error.message,
+          };
           dispatch(onAddNotification([notification], NotificationType.ERROR));
         } else if (typeof error === 'string') {
           setMessage(error);
 
-          const notification: Notification = { title: 'Error', body: error };
+          const notification: Notification = {title: 'Error', body: error};
           dispatch(onAddNotification([notification], NotificationType.ERROR));
         }
       }
       onLoading(false);
     }
-  }, [step, error]);
+  }, [step]);
 
   return (
     <>

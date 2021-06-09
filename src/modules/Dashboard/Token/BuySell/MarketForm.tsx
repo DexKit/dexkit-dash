@@ -171,7 +171,9 @@ const MarketForm: React.FC<Props> = (props) => {
         network,
       )
         .then((e) => {
-          setAmountTo(toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber());
+          setAmountTo(
+            toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
+          );
           setAllowanceTarget(e.allowanceTarget);
         })
         .catch((e) => {

@@ -10,10 +10,10 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
 import styled from 'styled-components';
-import { NotificationType } from 'services/notification';
-import { useDispatch } from 'react-redux';
-import { Notification} from 'types/models/Notification';
-import { onAddNotification } from 'redux/actions';
+import {NotificationType} from 'services/notification';
+import {useDispatch} from 'react-redux';
+import {Notification} from 'types/models/Notification';
+import {onAddNotification} from 'redux/actions';
 
 interface Props {
   step: Steps;
@@ -33,7 +33,10 @@ const DoneStep: React.FC<Props> = (props) => {
       console.log('START DONE');
       onLoading(false);
 
-      const notification: Notification = { title: 'Order', body: 'Successfully created' };
+      const notification: Notification = {
+        title: 'Order',
+        body: 'Successfully created',
+      };
       dispatch(onAddNotification([notification], NotificationType.SUCCESS));
     }
   }, [step]);
@@ -46,6 +49,7 @@ const DoneStep: React.FC<Props> = (props) => {
       <Button
         style={{margin: 0}}
         fullWidth
+        variant='outlined'
         color='primary'
         size='large'
         onClick={onClose}>

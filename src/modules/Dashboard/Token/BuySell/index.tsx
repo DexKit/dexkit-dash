@@ -20,6 +20,7 @@ import {Token} from 'types/app';
 import LimitForm from './LimitForm';
 import {history} from 'redux/store';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {Web3State} from 'types/blockchain';
 
 interface Props {
   tokenAddress: string;
@@ -49,7 +50,9 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
       marginLeft: 8,
       marginRight: 8,
       fontWeight: 'bold',
+      width: '50%',
       minWidth: 10,
+      maxWidth: 100,
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
         marginLeft: 20,
@@ -60,7 +63,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
   const classes = useStyles();
 
-  const {chainId, account} = useWeb3();
+  const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
@@ -99,17 +102,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
       setSelect0(balancesFn);
 
-      if (tokenFrom == undefined) {
-        const _token = balancesFn.find(
-          (t) =>
-            t.symbol.toUpperCase() === 'ETH' ||
-            t.symbol.toUpperCase() === 'WETH',
-        );
-        setTokenFrom(_token);
-        console.log('setTokenFrom', _token);
-      }
-
-      if (tokenTo == undefined) {
+      if (tokenTo === undefined) {
         const _token = select1.find(
           (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
         );
@@ -118,6 +111,17 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
       }
     }
   }, [select1, balances]);
+
+  useEffect(() => {
+    if (tokenFrom === undefined) {
+      const _token = select0.find(
+        (t) =>
+          t.symbol.toUpperCase() === 'ETH' || t.symbol.toUpperCase() === 'WETH',
+      );
+      setTokenFrom(_token);
+      console.log('setTokenFrom', _token);
+    }
+  }, [select0]);
 
   const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
     if (token) {
@@ -139,9 +143,25 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
           tokenFrom &&
           token.address.toLowerCase() === tokenFrom.address.toLowerCase()
         ) {
-          const aux = tokenTo;
-          setTokenTo(tokenFrom);
-          setTokenFrom(aux);
+          if (web3State === Web3State.Done) {
+            const availableTokenFrom = select0.find(
+              (e) => e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
+            );
+
+            if (availableTokenFrom) {
+            } else {
+              const newTokenFrom = select0.find(
+                (e) => e.address.toLowerCase() !== token.address.toLowerCase(),
+              );
+
+              setTokenTo(tokenFrom);
+              setTokenFrom(newTokenFrom);
+            }
+          } else {
+            const aux = tokenTo;
+            setTokenTo(tokenFrom);
+            setTokenFrom(aux);
+          }
         } else {
           setTokenTo(token);
         }
@@ -188,15 +208,16 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
               className={classes.muiTabsRoot}>
               <Tab
                 className={classes.muiTab}
-                label={<IntlMessages id='Market' />}
+                label={<IntlMessages id='MARKET' />}
                 {...a11yProps(0)}
               />
               <Tab
                 className={classes.muiTab}
-                label={<IntlMessages id='Limit' />}
+                label={<IntlMessages id='LIMIT' />}
                 {...a11yProps(1)}
               />
             </Tabs>
+
             {currentTab === 0 && (
               <MarketForm
                 key='MarketForm'
@@ -212,6 +233,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
                 onTrade={handleTradeOpen}
               />
             )}
+
             {currentTab === 1 && (
               <LimitForm
                 key='LimitForm'

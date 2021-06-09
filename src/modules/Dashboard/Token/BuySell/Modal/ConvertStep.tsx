@@ -6,17 +6,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import BigNumber from 'bignumber.js';
 import {Typography} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import { fromTokenUnitAmount } from '@0x/utils';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {fromTokenUnitAmount} from '@0x/utils';
 // import {useStyles} from './index.style';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 
-
 // get tokens ta sendo chamado 3x
-
 
 interface Props {
   step: Steps;
@@ -26,6 +24,7 @@ interface Props {
   chainId: number;
   networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
+  selectedGasPrice: string;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
   onShifting: (step: Steps) => void;
@@ -40,9 +39,10 @@ const ConvertStep: React.FC<Props> = (props) => {
     chainId,
     networkName,
     balances,
+    selectedGasPrice,
     onNext,
     onLoading,
-    onShifting
+    onShifting,
   } = props;
 
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
@@ -80,7 +80,7 @@ const ConvertStep: React.FC<Props> = (props) => {
         throw new Error('Account address cannot be null or empty');
       }
 
-      const gasInfo = await getGasEstimationInfoAsync();
+      // const gasInfo = await getGasEstimationInfoAsync();
       const contractWrappers = getContractWrappers(chainId);
       const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();
@@ -95,16 +95,18 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       let txHash;
 
-      if (tokenFrom.symbol == 'ETH') {
+      if (tokenFrom.symbol === 'ETH') {
         txHash = await wethToken.deposit().sendTransactionAsync({
           value: amountFn,
           from: account,
-          gasPrice: gasInfo.gasPriceInWei
-        });  
+          // gasPrice: gasInfo.gasPriceInWei,
+          gasPrice: new BigNumber(selectedGasPrice),
+        });
       } else {
         txHash = await wethToken.withdraw(amountFn).sendTransactionAsync({
           from: account,
-          gasPrice: gasInfo.gasPriceInWei
+          // gasPrice: gasInfo.gasPriceInWei,
+          gasPrice: new BigNumber(selectedGasPrice),
         });
       }
 
@@ -115,13 +117,13 @@ const ConvertStep: React.FC<Props> = (props) => {
         .then(() => onNext(true))
         .catch((e) => onNext(false, e));
 
-        onNext(true);
+      onNext(true);
     } catch (e) {
       onNext(e);
     }
   };
 
-  const to = tokenFrom.symbol == 'ETH' ? 'WETH' : 'ETH';
+  const to = tokenFrom.symbol === 'ETH' ? 'WETH' : 'ETH';
 
   return (
     <>

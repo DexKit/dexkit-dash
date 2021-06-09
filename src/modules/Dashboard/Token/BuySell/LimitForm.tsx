@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {Fonts} from 'shared/constants/AppEnums';
 
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -26,6 +27,8 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 import {isNativeCoin, unitsInTokenAmount} from 'utils';
 import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import {isMobile} from 'web3modal';
 
 interface Props {
   chainId: number | undefined;
@@ -91,8 +94,8 @@ const LimitForm: React.FC<Props> = (props) => {
     amountTotal: {
       '&:hover': {
         cursor: 'pointer',
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     inputText: {
       fontFamily: Fonts.MEDIUM,
@@ -102,7 +105,7 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const { web3State } = useWeb3();
+  const {web3State, onConnectWeb3} = useWeb3();
 
   const network = useNetwork();
 
@@ -111,39 +114,51 @@ const LimitForm: React.FC<Props> = (props) => {
     setTokenBalance,
   ] = useState<GetMyBalance_ethereum_address_balances>();
 
-  const [amountFrom, setAmountFrom] = useState<number>(0);
+  const [
+    ethBalance,
+    setEthBalance,
+  ] = useState<GetMyBalance_ethereum_address_balances>();
+
+  const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [expiryInput, setExpiryInput] = useState<number>(1);
   const [expirySelect, setExpirySelect] = useState<number>(86400);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
+  if (web3State !== Web3State.Done && tokenFrom === undefined) {
+    const tokenETH = select1.find((e) => e.symbol === 'ETH');
+
+    onChangeToken(tokenETH, 'from');
+  }
+
   const resetAmount = () => {
     setAmountFrom(0);
     setAmountTo(0);
-  }
+  };
 
   const setMax = () => {
-    if(tokenBalance && tokenBalance.value){
-        // If is native coin we not allow user to max all of it, and leave some for gas
-          if(isNativeCoin(tokenBalance.currency?.symbol ?? '', chainId ?? 1)){
-            if(tokenBalance?.value > 0.03){
-              setAmountFrom(tokenBalance?.value - 0.03);
-              setAmountTo((tokenBalance?.value - 0.03) * price);
-        
-            }
-          }else{
-            setAmountFrom(tokenBalance?.value ?? 0)
-            setAmountTo(tokenBalance?.value  * price);
-         } 
-     }
-  }
+    if (tokenBalance && tokenBalance.value) {
+      // If is native coin we not allow user to max all of it, and leave some for gas
+      if (isNativeCoin(tokenBalance.currency?.symbol ?? '', chainId ?? 1)) {
+        if (tokenBalance?.value > 0.03) {
+          setAmountFrom(tokenBalance?.value - 0.03);
+          setAmountTo((tokenBalance?.value - 0.03) * price);
+        }
+      } else {
+        setAmountFrom(tokenBalance?.value ?? 0);
+        setAmountTo(tokenBalance?.value * price);
+      }
+    }
+  };
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
       setTokenBalance(
         balances.find((e) => e.currency?.symbol === tokenFrom?.symbol),
       );
+
+      setEthBalance(balances.find((e) => e.currency?.symbol === 'ETH'));
 
       fetchQuote(
         {
@@ -171,9 +186,8 @@ const LimitForm: React.FC<Props> = (props) => {
     }
   }, [tokenFrom, tokenTo, chainId, account]);
 
-  
   const handleTrade = () => {
-    if (tokenFrom && tokenTo && account && allowanceTarget) {
+    if (amountFrom && tokenFrom && tokenTo && account && allowanceTarget) {
       onTrade({
         isMarket: false,
         account: account,
@@ -183,25 +197,50 @@ const LimitForm: React.FC<Props> = (props) => {
         amountFrom: amountFrom,
         amountTo: amountTo,
         price: price,
-        expiry: (expiryInput * expirySelect)
+        expiry: expiryInput * expirySelect,
       });
     }
   };
 
-  const handleInputChange = (event: any) => {
-   let value = Number(event.target.value);
-   if(value < 0){
-     value = 0;
-   }
+  const handleConvert = () => {
+    const ethToken = select1.find((t) => t.symbol === 'ETH');
+    const wethToken = select1.find((t) => t.symbol === 'WETH');
+
+    if (ethToken && wethToken && amountFrom && account && allowanceTarget) {
+      onTrade({
+        isMarket: false,
+        account: account,
+        allowanceTarget: allowanceTarget,
+        tokenFrom: ethToken,
+        tokenTo: wethToken,
+        amountFrom: amountFrom,
+        amountTo: amountFrom,
+        price: amountFrom,
+        expiry: expiryInput * expirySelect,
+      });
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    let value = undefined;
+
+    if (e.target.value) {
+      value = Number(e.target.value);
+
+      if (value < 0) {
+        value = 0;
+      }
+    }
 
     setAmountFrom(value);
-    setAmountTo(value * price);
+    setAmountTo((value || 0) * price);
   };
 
   const handlePriceChange = (event: any) => {
-    
     setPrice(event.target.value);
-    setAmountTo(amountFrom * event.target.value);
+    setAmountTo((amountFrom || 0) * event.target.value);
   };
 
   const handleExpiryInputChange = (event: any) => {
@@ -216,13 +255,32 @@ const LimitForm: React.FC<Props> = (props) => {
   let disabled = false;
 
   if (web3State !== Web3State.Done) {
-    errorMessage = 'Please connect to your wallet';
-    disabled = true;
+    errorMessage = (
+      <Box display='flex' alignItems='center' justifyContent='center'>
+        <Button
+          size='large'
+          variant='contained'
+          color='primary'
+          onClick={onConnectWeb3}
+          endIcon={<AccountBalanceWalletIcon />}>
+          {web3State === Web3State.Connecting
+            ? isMobile()
+              ? 'Connecting...'
+              : 'Connecting... Check Wallet'
+            : isMobile()
+            ? 'Connect'
+            : 'Connect Wallet'}
+        </Button>
+      </Box>
+    );
+    // disabled = true;
   } else if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
     disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
+  } else if (amountFrom && tokenBalance.value < amountFrom) {
+    errorMessage = 'Insufficient balance for chosen token';
   }
 
   return (
@@ -236,13 +294,10 @@ const LimitForm: React.FC<Props> = (props) => {
                 color='grey.400'
                 textAlign='right'
                 className={classes.textRes}>
-                  <span 
-                  onClick={setMax}
-                  className={classes.amountTotal}
-                  >
-                {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
-                  tokenBalance?.value?.toFixed(4) || 0
-                } ${tokenBalance?.currency?.symbol || ''})`}
+                <span onClick={setMax} className={classes.amountTotal}>
+                  {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
+                    tokenBalance?.value?.toFixed(4) || 0
+                  } ${tokenBalance?.currency?.symbol || ''})`}
                 </span>
               </Box>
             </Grid>
@@ -277,7 +332,7 @@ const LimitForm: React.FC<Props> = (props) => {
               <SelectToken
                 id={'marketSel0'}
                 selected={tokenFrom}
-                options={select0}
+                options={web3State === Web3State.Done ? select0 : select1}
                 disabled={disabled}
                 onChange={($token) => {
                   onChangeToken($token, 'from');
@@ -330,7 +385,7 @@ const LimitForm: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid
-              style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
+              style={{paddingTop: 8, paddingRight: 8, paddingBottom: 4}}
               item
               xs={12}
               md={6}>
@@ -344,9 +399,9 @@ const LimitForm: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid
-              style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
+              style={{paddingTop: 10, paddingLeft: 8, paddingBottom: 4}}
               item
-              xs={12}
+              xs={6}
               md={3}>
               <TextField
                 variant='outlined'
@@ -358,35 +413,69 @@ const LimitForm: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid
-              style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
+              style={{paddingTop: 10, paddingLeft: 8, paddingBottom: 4}}
               item
-              xs={12}
+              xs={6}
               md={3}>
-              <Select value={expirySelect} onChange={handleExpirySelectChange}>
-                <MenuItem value={86400} selected={true}>Days</MenuItem>
-                <MenuItem value={60}>Minutes</MenuItem>
-                <MenuItem value={1}>Seconds</MenuItem>
-              </Select>
+              <Box
+                style={{height: '100%'}}
+                display='flex'
+                justifyContent='center'>
+                <Select
+                  value={expirySelect}
+                  onChange={handleExpirySelectChange}>
+                  <MenuItem value={86400} selected={true}>
+                    Days
+                  </MenuItem>
+                  <MenuItem value={60}>Minutes</MenuItem>
+                  <MenuItem value={1}>Seconds</MenuItem>
+                </Select>
+              </Box>
             </Grid>
           </GridContainer>
         </Box>
       </form>
 
-      <Button
-        className={classes.btnPrimary}
-        fullWidth
-        size='large'
-        variant='contained'
-        color='primary'
-        onClick={handleTrade}
-        disabled={
-          (tokenBalance?.value || 0)  < amountFrom || amountTo === 0
-        }>
-        <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
-        <Box fontSize='large' fontWeight='bold'>
-          Trade
-        </Box>
-      </Button>
+      <GridContainer>
+        <Grid style={{paddingRight: 8}} item xs={12} sm={6}>
+          <Button
+            className={classes.btnPrimary}
+            fullWidth
+            size='large'
+            variant='contained'
+            color='primary'
+            onClick={handleConvert}
+            disabled={
+              (ethBalance?.value || 0) < (amountFrom || 0) ||
+              amountTo === 0 ||
+              web3State !== Web3State.Done
+            }>
+            <ArrowForwardIcon fontSize='large' style={{marginRight: 10}} />
+            <Box fontSize='large' fontWeight='bold'>
+              Convert ETH
+            </Box>
+          </Button>
+        </Grid>
+        <Grid style={{paddingLeft: 8}} item xs={12} sm={6}>
+          <Button
+            className={classes.btnPrimary}
+            fullWidth
+            size='large'
+            variant='contained'
+            color='primary'
+            onClick={handleTrade}
+            disabled={
+              (tokenBalance?.value || 0) < (amountFrom || 0) ||
+              amountTo === 0 ||
+              web3State !== Web3State.Done
+            }>
+            <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
+            <Box fontSize='large' fontWeight='bold'>
+              Trade
+            </Box>
+          </Button>
+        </Grid>
+      </GridContainer>
     </Box>
   );
 };

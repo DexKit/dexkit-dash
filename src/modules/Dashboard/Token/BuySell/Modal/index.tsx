@@ -12,10 +12,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
-import { useNetwork } from 'hooks/useNetwork';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { getNativeCoinWrapped, getNativeCoinWrappedAddress } from 'utils';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {useNetwork} from 'hooks/useNetwork';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {getNativeCoinWrapped, getNativeCoinWrappedAddress} from 'utils';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
 interface OrderProps {
   open: boolean;
@@ -57,9 +57,14 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | string>();
-  
+
   const [isConvert, setIsConvert] = useState<boolean>(false);
-  const [tokenWrapper, setTokenWrapper] = useState<Token>({address:'', decimals:0, name:'',symbol:''});
+  const [tokenWrapper, setTokenWrapper] = useState<Token>({
+    address: '',
+    decimals: 0,
+    name: '',
+    symbol: '',
+  });
 
   useEffect(() => {
     if (open && tokenFrom && tokenTo && networkName && chainId) {
@@ -74,17 +79,23 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       });
 
       if (
-        (((tokenFrom.symbol == 'ETH' && tokenTo.symbol == 'WETH') || (tokenFrom.symbol == 'WETH' && tokenTo.symbol == 'ETH')) && networkName == EthereumNetwork.ethereum) ||
-        (((tokenFrom.symbol == 'BNB' && tokenTo.symbol == 'WBNB') || (tokenFrom.symbol == 'WBNB' && tokenTo.symbol == 'BNB')) && networkName == EthereumNetwork.bsc)
+        (((tokenFrom.symbol === 'ETH' && tokenTo.symbol === 'WETH') ||
+          (tokenFrom.symbol === 'WETH' && tokenTo.symbol === 'ETH')) &&
+          networkName === EthereumNetwork.ethereum) ||
+        (((tokenFrom.symbol === 'BNB' && tokenTo.symbol === 'WBNB') ||
+          (tokenFrom.symbol === 'WBNB' && tokenTo.symbol === 'BNB')) &&
+          networkName === EthereumNetwork.bsc)
       ) {
         setIsConvert(true);
         stepsFn = [Steps.APPROVE, Steps.CONVERT];
       } else if (isMarket) {
+        setIsConvert(false);
         stepsFn = [Steps.APPROVE, Steps.MARKET];
-      } else {       
+      } else {
+        setIsConvert(false);
         // if (
         //   ((tokenFrom.symbol == 'ETH' || tokenFrom.symbol == 'WETH') && networkName == EthereumNetwork.ethereum) ||
-        //   ((tokenFrom.symbol == 'BNB' || tokenFrom.symbol == 'WBNB') && networkName == EthereumNetwork.bsc)  
+        //   ((tokenFrom.symbol == 'BNB' || tokenFrom.symbol == 'WBNB') && networkName == EthereumNetwork.bsc)
         // ) {
         //   stepsFn = [Steps.APPROVE, Steps.CONVERT, Steps.LIMIT];
         // } else {
@@ -160,9 +171,9 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
                 className={classes.textPrimary}
                 variant='h5'
                 align='center'>
-                {
-                  isConvert ? 'Convert' : ('Review ' + (isMarket ? 'Market' : 'Limit') + ' Order')
-                }
+                {isConvert
+                  ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
+                  : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
               </Typography>
               <Typography align='right'>
                 <IconButton aria-label='close' onClick={onClose}>
