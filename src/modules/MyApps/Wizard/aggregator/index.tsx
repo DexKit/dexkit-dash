@@ -32,6 +32,7 @@ import ThemeForm from './theme';
 import LinksForm from './links';
 import WalletsForm from './wallets';
 import { useWeb3 } from 'hooks/useWeb3';
+import { DefaultTheme } from '../shared/Theme';
 
 
 
@@ -74,6 +75,8 @@ export enum WizardData {
 function getSteps() {
   return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
 }
+
+const defaultTheme = new DefaultTheme();
 
 const initConfig: GeneralConfigAggregator = {
   name: '',
