@@ -13,7 +13,6 @@ const binanceTokens = axios.create({
 	baseURL: 'https://raw.githubusercontent.com',
 	headers: {
 		'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': '*',
 	},
 });
 

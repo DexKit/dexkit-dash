@@ -5,11 +5,11 @@ import { GetPairExplorer, GetPairExplorerVariables, GetPairExplorer_ethereum_dex
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
-import {GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import { useEffect, useState } from 'react';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
-import { getChainId } from 'web3modal';
+
 
 interface Props {
   baseAddress: string;
@@ -24,7 +24,7 @@ export const usePairExplorer = ({
   quoteAddress,
   networkName,
 }: Props) => {
-  const chainId = getChainId(networkName);
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
   const [data, setData] = useState<GetPairExplorer_ethereum_dexTrades | any>();
   const [yesterday, setYesterday] = useState<Date>(new Date(new Date().getTime() - 24 * 3600 * 1000));
 

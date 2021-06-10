@@ -5,10 +5,10 @@ import {
   FilterOptionsState,
 } from '@material-ui/lab';
 import {Token} from 'types/app';
-import {truncateAddress} from 'utils';
-import {makeStyles, TextField} from '@material-ui/core';
+import {Chip, makeStyles, TextField, Box} from '@material-ui/core';
 import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
+import { FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
 interface Props {
   id: string;
@@ -124,6 +124,14 @@ const SelectToken: React.FC<Props> = ({
               <SelectOption>
                 <TokenLogo token0={option.address} />
                 {option.name}
+                {option?.networkName &&
+                <Box pl={1}>
+                <Chip
+                  label={FORMAT_NETWORK_NAME(option?.networkName)}
+                  color={'default'}
+                  size={'small'}
+                />
+                </Box>}
               </SelectOption>
             )}
             renderInput={(params) => (

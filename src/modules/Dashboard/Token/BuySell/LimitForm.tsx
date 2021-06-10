@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import { fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
@@ -15,8 +15,7 @@ import {
 } from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 
 import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
@@ -24,16 +23,18 @@ import SelectToken from './SelectToken';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {isNativeCoin, unitsInTokenAmount} from 'utils';
+import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
 import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
+import { GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
 
 interface Props {
   chainId: number | undefined;
   account: string | undefined;
   tokenAddress: string;
+  networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
   select1: Token[];
@@ -48,6 +49,7 @@ const LimitForm: React.FC<Props> = (props) => {
     chainId,
     account,
     tokenAddress,
+    networkName,
     balances,
     select0,
     select1,
@@ -155,10 +157,16 @@ const LimitForm: React.FC<Props> = (props) => {
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
       setTokenBalance(
-        balances.find((e) => e.currency?.symbol === tokenFrom?.symbol),
+        balances.find((e) => {
+          if(tokenFrom?.symbol && isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName) ){
+            return  e.currency?.symbol?.toLowerCase() === tokenFrom?.symbol.toLowerCase()
+          }else{
+            return  e.currency?.address?.toLowerCase() === tokenFrom?.address.toLowerCase()
+          }
+        }),
       );
 
-      setEthBalance(balances.find((e) => e.currency?.symbol === 'ETH'));
+      setEthBalance(balances.find((e) => e.currency?.symbol.toLowerCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase() ));
 
       fetchQuote(
         {
@@ -203,8 +211,8 @@ const LimitForm: React.FC<Props> = (props) => {
   };
 
   const handleConvert = () => {
-    const ethToken = select1.find((t) => t.symbol === 'ETH');
-    const wethToken = select1.find((t) => t.symbol === 'WETH');
+    const ethToken = select1.find((t) => t.symbol === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase());
+    const wethToken = select1.find((t) => t.symbol === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase());
 
     if (ethToken && wethToken && amountFrom && account && allowanceTarget) {
       onTrade({
@@ -283,12 +291,23 @@ const LimitForm: React.FC<Props> = (props) => {
     errorMessage = 'Insufficient balance for chosen token';
   }
 
+  const isNative  = isNativeCoinFromNetworkName(tokenFrom?.symbol ?? '', networkName);
+  const nativeCoinSymbol = GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase();
+  const wNativeCoinSymbol = GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase();
+
   return (
     <Box>
       <form noValidate autoComplete='off'>
         <Box className={classes.boxContainer}>
           <GridContainer>
-            <Grid item xs={12}>
+          {isNative && (
+              <Grid item xs={12}>
+                <Box mb={2} fontSize='large' textAlign='center'>
+                  To use Limit orders you need to wrap your {nativeCoinSymbol} to {wNativeCoinSymbol}, and use {wNativeCoinSymbol} to place limit orders
+                </Box>
+              </Grid>
+            )}
+          {account && <Grid item xs={12}>
               <Box
                 mb={2}
                 color='grey.400'
@@ -300,7 +319,7 @@ const LimitForm: React.FC<Props> = (props) => {
                   } ${tokenBalance?.currency?.symbol || ''})`}
                 </span>
               </Box>
-            </Grid>
+            </Grid>}
             {errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
@@ -308,6 +327,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Box>
               </Grid>
             )}
+            
 
             <Grid
               style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
@@ -323,7 +343,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 onChange={handleInputChange}
               />
             </Grid>
-
+           
             <Grid
               style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
               item
@@ -339,7 +359,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 }}
               />
             </Grid>
-
+            {!isNative &&   <>
             <Grid style={{padding: 0, marginTop: 4}} item xs={12} md={6}>
               <Grid xs={12}>
                 <Box
@@ -432,31 +452,32 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Select>
               </Box>
             </Grid>
+            </>}
           </GridContainer>
         </Box>
       </form>
 
       <GridContainer>
-        <Grid style={{paddingRight: 8}} item xs={12} sm={6}>
-          <Button
-            className={classes.btnPrimary}
-            fullWidth
-            size='large'
-            variant='contained'
-            color='primary'
-            onClick={handleConvert}
-            disabled={
-              (ethBalance?.value || 0) < (amountFrom || 0) ||
-              amountTo === 0 ||
-              web3State !== Web3State.Done
-            }>
-            <ArrowForwardIcon fontSize='large' style={{marginRight: 10}} />
-            <Box fontSize='large' fontWeight='bold'>
-              Convert ETH
-            </Box>
-          </Button>
-        </Grid>
-        <Grid style={{paddingLeft: 8}} item xs={12} sm={6}>
+      {isNative &&  
+        <Grid style={{paddingRight: 8}} item xs={12} sm={12}>
+            <Button
+              className={classes.btnPrimary}
+              fullWidth
+              size='large'
+              variant='contained'
+              color='primary'
+              onClick={handleConvert}
+              disabled={
+                (ethBalance?.value || 0) < (amountFrom || 0) ||
+                amountTo === 0 ||
+                web3State !== Web3State.Done
+              }>
+              <Box fontSize='large' fontWeight='bold'>
+                Convert {nativeCoinSymbol} -{`>`} {wNativeCoinSymbol}
+              </Box>
+            </Button>
+          </Grid>}
+          {!isNative &&   <Grid style={{paddingLeft: 8}} item xs={12} sm={12}>
           <Button
             className={classes.btnPrimary}
             fullWidth
@@ -474,7 +495,7 @@ const LimitForm: React.FC<Props> = (props) => {
               Trade
             </Box>
           </Button>
-        </Grid>
+        </Grid>}
       </GridContainer>
     </Box>
   );

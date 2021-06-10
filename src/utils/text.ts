@@ -1,11 +1,25 @@
+import { ChainId } from "types/blockchain";
 import isURL from "validator/lib/isURL";
+import { isNativeCoinWithoutChainId } from "./tokens";
 
-export const truncateAddress = (address: string|undefined) => {
+export const truncateAddress = (address: string|undefined ) => {
   if (address) {
     return `${address.slice(0, 7)}...${address.slice(address.length - 5)}`;
   }
   return '';
 };
+
+export const truncateTokenAddress = (address: string|undefined ) => {
+  if(address && isNativeCoinWithoutChainId(address) ){
+    return address.toUpperCase();
+  }
+  if (address) {
+    return `${address.slice(0, 7)}...${address.slice(address.length - 5)}`;
+  }
+  return '';
+};
+
+
 
 export function capitalize(str: string, separator: string = ' ', separatorToJoinString: string = ' ') {
   return str?.split(separator)

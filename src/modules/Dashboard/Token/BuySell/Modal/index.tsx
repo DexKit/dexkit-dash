@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
-import {useBalance} from 'hooks/balance/useBalance';
 import {
   Box,
   Dialog,
@@ -12,14 +11,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
-import {useNetwork} from 'hooks/useNetwork';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {getNativeCoinWrapped, getNativeCoinWrappedAddress} from 'utils';
+import {getNativeCoinWrapped, getNativeCoinWrappedAddressFromNetworkName, getNativeCoinWrappedFromNetworkName} from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
 interface OrderProps {
   open: boolean;
   isMarket: boolean;
+  networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
   account: string;
   allowanceTarget: string;
@@ -40,6 +39,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     allowanceTarget,
     tokenFrom,
     tokenTo,
+    networkName,
     amountFrom,
     amountTo,
     price,
@@ -48,7 +48,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const networkName = useNetwork();
   const {chainId, account} = useWeb3();
 
   const [steps, setSteps] = useState<Steps[]>([]);
@@ -72,10 +71,10 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       let stepsFn: Steps[] = [];
 
       setTokenWrapper({
-        address: getNativeCoinWrappedAddress(chainId),
+        address: getNativeCoinWrappedAddressFromNetworkName(networkName),
         decimals: 18,
         name: '',
-        symbol: getNativeCoinWrapped(chainId).toUpperCase(),
+        symbol: getNativeCoinWrappedFromNetworkName(networkName).toUpperCase(),
       });
 
       if (
@@ -185,6 +184,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
           <OrderContent
             isMarket={isMarket}
+            networkName={networkName}
             isConvert={isConvert}
             balances={balances}
             steps={steps}

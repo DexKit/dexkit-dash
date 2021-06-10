@@ -64,6 +64,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           }}
           title={{name: 'Token Explorer'}}
           subtitle={{name: truncateAddress(baseAddress), hasCopy: baseAddress}}
+          network={networkName}
         />
 
         <GridContainer>

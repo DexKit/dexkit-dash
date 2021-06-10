@@ -5,30 +5,31 @@ import Card from '@material-ui/core/Card';
 import {Box, Fade, makeStyles} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import {Fonts} from '../../../../shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
 
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
-import BigNumber from 'bignumber.js';
+
 // import {Token} from 'types/app';
 import {ModalOrderData} from 'types/models/ModalOrderData';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';
-import {history} from 'redux/store';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {Web3State} from 'types/blockchain';
+import {GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {MyBalances, Web3State} from 'types/blockchain';
+import { isNativeCoinWithoutChainId } from 'utils';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   tokenAddress: string;
-  balances: GetMyBalance_ethereum_address_balances[];
+  networkName: EthereumNetwork;
+  balances: MyBalances[];
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
-const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
+const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     muiTabsRoot: {
       position: 'relative',
@@ -61,13 +62,15 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
     },
   }));
 
+  let history = useHistory();
+
   const classes = useStyles();
 
   const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
-  const select1 = useTokenList(GET_NETWORK_NAME(chainId));
+  const select1 = useTokenList(networkName);
 
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
@@ -97,15 +100,22 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
           symbol: e.currency?.symbol || '',
           address: e.currency?.address || '',
           decimals: e.currency?.decimals || 18,
+          networkName: e.network,
         } as Token;
       });
-
       setSelect0(balancesFn);
 
       if (tokenTo === undefined) {
-        const _token = select1.find(
-          (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
-        );
+        let _token;
+        if(isNativeCoinWithoutChainId(tokenAddress)){
+          _token = select1.find(
+            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+          );
+        }else{
+          _token = select1.find(
+            (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
+          );
+        }   
         setTokenTo(_token);
         console.log('setTokenTo', _token);
       }
@@ -116,7 +126,8 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
     if (tokenFrom === undefined) {
       const _token = select0.find(
         (t) =>
-          t.symbol.toUpperCase() === 'ETH' || t.symbol.toUpperCase() === 'WETH',
+          t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
+          t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
       );
       setTokenFrom(_token);
       console.log('setTokenFrom', _token);
@@ -136,6 +147,10 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
 
           history.push(token.address);
         } else {
+          if(token.networkName && token.networkName !== networkName){
+            history.push(`/${token.networkName}/dashboard/token/${token.address}`);
+          }
+
           setTokenFrom(token);
         }
       } else {
@@ -224,6 +239,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
                 chainId={chainId}
                 account={account}
                 tokenAddress={tokenAddress}
+                networkName={networkName}
                 balances={balances}
                 select0={select0}
                 select1={select1}
@@ -240,6 +256,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
                 chainId={chainId}
                 account={account}
                 tokenAddress={tokenAddress}
+                networkName={networkName}
                 balances={balances}
                 select0={select0}
                 select1={select1}
@@ -256,6 +273,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances}) => {
       {account && (
         <OrderDialog
           open={modalOpen}
+          networkName={networkName}
           isMarket={modalData.isMarket}
           balances={balances}
           account={account}

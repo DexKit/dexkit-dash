@@ -1,15 +1,11 @@
 import React, {useEffect} from 'react';
 import {
   Button,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
   Typography,
 } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
-import styled from 'styled-components';
 import {NotificationType} from 'services/notification';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';

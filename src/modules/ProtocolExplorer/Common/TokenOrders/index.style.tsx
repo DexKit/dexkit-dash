@@ -4,6 +4,8 @@ import {CremaTheme} from 'types/AppContextPropsType';
 export const useStyles = makeStyles((theme: CremaTheme) => ({
   toolbar: {
     padding: '0 24px',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   paper: {
     width: '100%',

@@ -9,6 +9,7 @@ export const useTokenList = (networkName: EthereumNetwork) => {
 
   useEffect(() => {
     if (networkName === EthereumNetwork.bsc) {
+      console.log('on Binance List');
       getBinanceTokens()
         .then(e  => {
           e.push({
@@ -17,9 +18,21 @@ export const useTokenList = (networkName: EthereumNetwork) => {
             name: 'Binance',
             symbol: 'BNB'
           }) 
+          e.push({
+            address: '0x314593fa9a2fa16432913dbccc96104541d32d11',
+            decimals: 18,
+            name: 'DexKit',
+            symbol: 'KIT'
+          }) 
           setTokens(e)}
           )
-        .catch(e => setTokens([]));
+        .catch(e => { 
+          console.log(e);
+          console.log('error');
+          
+          setTokens([])
+        
+        });
     }
     else {
       getEthereumTokens()

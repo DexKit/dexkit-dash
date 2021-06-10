@@ -59,6 +59,7 @@ const PoolExplorer: React.FC<Props> = (props) => {
                 ],
           active: {name: 'Pool Explorer'},
         }}
+        network={networkName}
         title={{name: 'Pool Explorer'}}
         subtitle={{name: truncateAddress(address), hasCopy: address}}
       />

@@ -9,7 +9,7 @@ import {useStyles} from './index.style';
 import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
-import {ZRX_API_URL} from 'shared/constants/AppConst';
+import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import InfoCard from 'shared/components/InfoCard';
@@ -20,7 +20,7 @@ import BuySell from './BuySell';
 import {useNetwork} from 'hooks/useNetwork';
 import TotalBalance from 'shared/components/TotalBalance';
 import {Token} from 'types/app';
-import {truncateAddress} from 'utils';
+import { truncateTokenAddress} from 'utils';
 import {useChainId} from 'hooks/useChainId';
 import {Skeleton} from '@material-ui/lab';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
@@ -44,8 +44,6 @@ const TokenPage: React.FC<Props> = (props) => {
   const {address, networkName} = params;
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
-
-  const network = useNetwork();
 
   const {currentChainId} = useChainId();
 
@@ -77,7 +75,7 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [data]);
 
   const infoMyOrders = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?trader=${account}`,
+    `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders?trader=${account}`,
     [account],
   );
 
@@ -93,8 +91,9 @@ const TokenPage: React.FC<Props> = (props) => {
         {data && (
           <PageTitle
             title={{name: data.name}}
-            subtitle={{name: truncateAddress(address), hasCopy: address}}
+            subtitle={{name: truncateTokenAddress(address), hasCopy: address}}
             icon={address}
+            network={networkName}
           />
         )}
 
@@ -113,7 +112,7 @@ const TokenPage: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid item xs={12} md={12} style={{marginTop: 10}}>
-              <BuySell tokenAddress={address} balances={balances} />
+              <BuySell tokenAddress={address} balances={balances} networkName={networkName}/>
             </Grid>
 
             <GridContainer style={{marginTop: 2}}>

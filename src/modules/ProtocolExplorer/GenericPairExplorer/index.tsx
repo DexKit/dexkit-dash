@@ -55,6 +55,7 @@ const GenericPairExplorer: React.FC<Props> = (props) => {
           }}
           title={{name: 'Pair Explorer'}}
           subtitle={{name: truncateAddress(address), hasCopy: address}}
+          network={networkName}
         />
 
         <TokenFilterProvider>

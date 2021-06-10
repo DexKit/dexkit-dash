@@ -1,30 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {useWeb3} from 'hooks/useWeb3';
 import {useNetwork} from 'hooks/useNetwork';
-import {useContractWrapper} from 'hooks/useContractWrapper';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import BigNumber from 'bignumber.js';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
 import {
-  DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Grid,
   Typography,
-  Input,
   TextField,
   Box,
-  CircularProgress,
   IconButton,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
 } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
@@ -41,6 +30,7 @@ import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
+import { EthereumNetwork } from '../../../../../../__generated__/globalTypes';
 
 interface Props {
   isMarket: boolean;
@@ -57,6 +47,7 @@ interface Props {
   price: number;
   expiry: number;
   account: string;
+  networkName: EthereumNetwork;
   chainId: ChainId;
   loading: boolean;
   error: Error | string | undefined;
@@ -121,8 +112,9 @@ const OrderContent: React.FC<Props> = (props) => {
   const [sellAmount, setSellAmount] = useState(0);
   const [fee, setFee] = useState(0);
   const [slippage, setSlippage] = useState(0.03);
-  const [selectedGasPrice, setSelectedGasPrice] = useState('0');
-  const [displayGasPrice, setDisplayGasPrice] = useState('0');
+  const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
+  const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
+  const [initGasPrice, setInitGastPrice] = useState<number | undefined>();
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);
   const [convertGasPrice, setConvertGasPrice] = useState('0');
 
@@ -166,6 +158,7 @@ const OrderContent: React.FC<Props> = (props) => {
             feeRecipient: undefined,
             affiliateAddress: undefined,
             intentOnFill: true,
+            gasPrice: selectedGasPrice ? selectedGasPrice : undefined 
           },
           networkName,
         )
@@ -180,7 +173,12 @@ const OrderContent: React.FC<Props> = (props) => {
 
             const gas = new BigNumber(e.gas);
             const gasPrice = new BigNumber(e.gasPrice);
-            handleChangeSelectedGasPrice(gasPrice.toString());
+            if(!selectedGasPrice){
+              handleChangeSelectedGasPrice(gasPrice.toString());
+            }
+            if(!initGasPrice){
+              setInitGastPrice(gasPrice.toNumber());
+            }
 
             if (isMarket) {
               const feeFn = gas.multipliedBy(gasPrice);
@@ -197,7 +195,7 @@ const OrderContent: React.FC<Props> = (props) => {
           });
       }
     }
-  }, [currentStep, slippage]);
+  }, [currentStep, slippage, selectedGasPrice]);
 
   const getGasInfo = async (): Promise<GasInfo> => {
     return await getGasEstimationInfoAsync();
@@ -232,24 +230,30 @@ const OrderContent: React.FC<Props> = (props) => {
   const limitReceive = (amountFrom * price).toFixed(6);
 
   let displayPrice;
+  let displayGuaranteedPrice;
   let firstSymbol;
   let secondSymbol;
 
   const validPrice = isMarket ? quote?.price || 0 : price;
+  const validGuarenteedPrice = isMarket ? quote?.guaranteedPrice || 0 : price;
 
   if (isPriceInverted) {
     displayPrice = parseFloat(
       (validPrice === 0 ? 0 : 1 / validPrice).toString(),
     ).toFixed(6);
+    displayGuaranteedPrice = parseFloat(
+      (validGuarenteedPrice === 0 ? 0 : 1 / validGuarenteedPrice).toString(),
+    ).toFixed(6);
     firstSymbol = tokenFrom.symbol;
     secondSymbol = tokenTo.symbol;
   } else {
     displayPrice = parseFloat(validPrice.toString()).toFixed(6);
+    displayGuaranteedPrice = parseFloat(validGuarenteedPrice.toString()).toFixed(6);
     firstSymbol = tokenTo.symbol;
     secondSymbol = tokenFrom.symbol;
   }
 
-  const validGasPrice = isConvert ? convertGasPrice || 0 : quote?.gasPrice || 0;
+  const validGasPrice = isConvert ? Number(convertGasPrice) || 0 : initGasPrice || 0;
 
   const lowGas = (validGasPrice * 0.8).toString();
   const displayLowGas = (parseInt(lowGas) / Math.pow(10, 9)).toFixed(2);
@@ -416,6 +420,26 @@ const OrderContent: React.FC<Props> = (props) => {
                             </IconButton>
                           </Typography>
                         </Grid>
+                        {false && 
+                        <>
+                        <Grid item xs={12} sm={3}>
+                          <Typography className={classes.textSecondary}>
+                           Guaranteed Price
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={9}>
+                          <Typography
+                            className={classes.textPrimary}
+                            align='right'>
+                            {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
+                            <IconButton
+                              style={{marginLeft: 5}}
+                              size='small'
+                              onClick={invertPrice}>
+                              <SyncAltIcon fontSize='small' />
+                            </IconButton>
+                          </Typography>
+                        </Grid></>}
 
                         <Grid item xs={12} sm={5}>
                           <Typography className={classes.textSecondary}>

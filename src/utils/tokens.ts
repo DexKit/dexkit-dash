@@ -57,6 +57,28 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
   }
 };
 
+export const isNativeCoinFromNetworkName = (symbol: string, network: EthereumNetwork) => {
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      const isETH = symbol.toLowerCase() === 'eth';
+      return isETH;
+    case EthereumNetwork.bsc:
+      const isBNB = symbol.toLowerCase() === 'bnb';
+      return isBNB;
+    default:
+      return symbol.toLowerCase() === 'eth';
+  }
+};
+
+export const isNativeCoinWithoutChainId = (symbol: string) => {
+  const lowercaseSymbol = symbol.toLowerCase();
+  if(lowercaseSymbol === 'eth' || lowercaseSymbol === 'bnb' || lowercaseSymbol === 'matic'){
+    return true;
+  }else{
+    return false;
+  }
+};
+
 export const filterTokensInfoByString = (tokens: Token[], str: string): Token[] => {
   return tokens.filter((token) => {
     return (
@@ -93,6 +115,28 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
     case ChainId.BinanceTest:
     case ChainId.Binance:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+  }
+};
+
+export const getNativeCoinWrappedAddressFromNetworkName = (network: EthereumNetwork) => {
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    case EthereumNetwork.bsc:
+      return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    default:
+       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+  }
+};
+
+export const getNativeCoinWrappedFromNetworkName = (network: EthereumNetwork) => {
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      return 'weth';
+    case EthereumNetwork.bsc:
+      return 'wbnb';
+    default:
+      return 'weth';
   }
 };
 

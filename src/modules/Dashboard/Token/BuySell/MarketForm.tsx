@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
@@ -7,7 +7,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 
 import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
@@ -15,17 +15,20 @@ import SelectToken from './SelectToken';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {isNativeCoin, unitsInTokenAmount} from 'utils';
+import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
 import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
-import {useChainId} from 'hooks/useChainId';
+
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
+import { GET_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
+
 
 interface Props {
   chainId: number | undefined;
   account: string | undefined;
   tokenAddress: string;
+  networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
   select1: Token[];
@@ -40,6 +43,7 @@ const MarketForm: React.FC<Props> = (props) => {
     chainId,
     account,
     tokenAddress,
+    networkName,
     balances,
     select0,
     select1,
@@ -83,6 +87,9 @@ const MarketForm: React.FC<Props> = (props) => {
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
       },
+      '&:hover, &:focus': {
+        cursor: 'pointer',
+      },
     },
 
     amountTotal: {
@@ -106,8 +113,6 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const {web3State, onConnectWeb3} = useWeb3();
 
-  const network = useNetwork();
-
   const [
     tokenBalance,
     setTokenBalance,
@@ -118,8 +123,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
   if (web3State !== Web3State.Done && tokenFrom === undefined) {
-    const tokenETH = select1.find((e) => e.symbol === 'ETH');
-
+    const tokenETH = select1.find((e) => e.symbol === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName));
     onChangeToken(tokenETH, 'from');
   }
 
@@ -127,6 +131,18 @@ const MarketForm: React.FC<Props> = (props) => {
     setAmountFrom(0);
     setAmountTo(0);
   };
+
+  const switchTokens = () => {
+    if(tokenFrom){
+      onChangeToken(tokenFrom, "to");
+    }
+    if(tokenTo){
+      onChangeToken(tokenTo, "from");
+    }
+  
+  
+
+  }
 
   const setMax = () => {
     if (tokenBalance && tokenBalance.value) {
@@ -145,7 +161,13 @@ const MarketForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     setTokenBalance(
-      balances.find((e) => e.currency?.symbol === tokenFrom?.symbol),
+      balances.find((e) => {
+        if(tokenFrom?.symbol && isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName) ){
+          return  e.currency?.symbol?.toLowerCase() === tokenFrom?.symbol.toLowerCase()
+        }else{
+          return  e.currency?.address?.toLowerCase() === tokenFrom?.address.toLowerCase()
+        }
+      }),
     );
   }, [tokenFrom, balances, web3State]);
 
@@ -168,7 +190,7 @@ const MarketForm: React.FC<Props> = (props) => {
           affiliateAddress: undefined,
           intentOnFill: false,
         },
-        network,
+        networkName,
       )
         .then((e) => {
           setAmountTo(
@@ -251,7 +273,7 @@ const MarketForm: React.FC<Props> = (props) => {
       <form noValidate autoComplete='off'>
         <Box className={classes.boxContainer}>
           <GridContainer>
-            <Grid item xs={12}>
+           {account && <Grid item xs={12}>
               <Box
                 mb={2}
                 color='grey.400'
@@ -263,14 +285,14 @@ const MarketForm: React.FC<Props> = (props) => {
                   } ${tokenBalance?.currency?.symbol || ''})`}
                 </span>
               </Box>
-            </Grid>
-            {errorMessage && (
+            </Grid>}
+            {/*errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
                   {errorMessage}
                 </Box>
               </Grid>
-            )}
+            )*/}
 
             <Grid
               style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
@@ -309,6 +331,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   mb={2}
                   color='grey.400'
                   textAlign='center'
+                  onClick={() => switchTokens()}
                   className={classes.textRes}>
                   <ArrowDownwardOutlined />
                 </Box>
@@ -363,10 +386,15 @@ const MarketForm: React.FC<Props> = (props) => {
           amountTo === 0 ||
           web3State !== Web3State.Done
         }>
-        <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
-        <Box fontSize='large' fontWeight='bold'>
-          Trade
-        </Box>
+        {  (errorMessage && account) ? 
+            errorMessage :
+            <>
+            <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
+            <Box fontSize='large' fontWeight='bold'>
+              Trade
+            </Box>
+            </>
+        } 
       </Button>
     </Box>
   );

@@ -29,6 +29,8 @@ export const POLL_INTERVAL = 10000;
 
 export const ZRX_TRACKER_URL = 'https://api.0xtracker.com';
 
+export const ETH_GAS_STATION_URL = 'https://ethgasstation.info/api/ethgasAPI.json';
+
 export const ZRX_API_URL = (chainId: ChainId|undefined) => {
   switch (Number(chainId)) {
     case ChainId.Mainnet:
@@ -37,6 +39,19 @@ export const ZRX_API_URL = (chainId: ChainId|undefined) => {
       return 'https://kovan.api.0x.org';//'/swap/v1/quote'
     default:
       return '';
+  }
+};
+
+export const ZRX_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      return 'https://api.0x.org';//'/swap/v1/quote'
+    case EthereumNetwork.ethereum:
+      return 'https://kovan.api.0x.org';//'/swap/v1/quote'
+    case EthereumNetwork.bsc:
+      return 'https://bsc.api.0x.org';//'/swap/v1/quote'
+    default:
+      return 'https://api.0x.org';
   }
 };
 

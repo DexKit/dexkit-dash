@@ -46,6 +46,7 @@ import {
   GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
   GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 export enum OrderSide {
   Sell,
@@ -67,6 +68,7 @@ export interface Token {
   name: string;
   symbol: string;
   address: string;
+  networkName?: EthereumNetwork;
   decimals: number;
   displayDecimals?: 4;
   icon?: string;

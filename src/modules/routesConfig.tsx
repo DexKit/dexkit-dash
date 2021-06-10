@@ -49,11 +49,11 @@ const useRoutesConfig = (): NavItemProps[] => {
             url: `/dashboard/wallet`,
           },
           {
-            id: 'token',
-            title: 'Token',
-            messageId: 'Token',
+            id: 'trade',
+            title: 'Trade',
+            messageId: 'Trade',
             type: 'item',
-            icon: 'storage',
+            icon: 'compare_arrows',
             url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
           },
   

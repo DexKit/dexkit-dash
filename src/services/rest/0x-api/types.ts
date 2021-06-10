@@ -58,5 +58,6 @@ export interface QuoteParams {
     feeRecipient: string | undefined;
     affiliateAddress: string | undefined;
     intentOnFill: boolean;
+    gasPrice?: string;
 
 }

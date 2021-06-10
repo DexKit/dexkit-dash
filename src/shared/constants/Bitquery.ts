@@ -14,6 +14,36 @@ export const GET_NETWORK_NAME = (chainId: ChainId|undefined) => {
   }
 }
 
+export const GET_NATIVE_COIN_FROM_NETWORK_NAME = (networkName: EthereumNetwork) => {
+  switch (networkName) {
+    case EthereumNetwork.ethereum:
+      return 'eth';
+    case EthereumNetwork.bsc:
+      return 'bnb';
+    default: return 'eth';
+  }
+}
+
+export const FORMAT_NETWORK_NAME = (networkName: EthereumNetwork) => {
+  switch (networkName) {
+    case EthereumNetwork.ethereum:
+      return 'ETH';
+    case EthereumNetwork.bsc:
+      return 'BSC';
+    default: return 'ETH';
+  }
+}
+
+export const GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME = (networkName: EthereumNetwork) => {
+  switch (networkName) {
+    case EthereumNetwork.ethereum:
+      return 'weth';
+    case EthereumNetwork.bsc:
+      return 'wbnb';
+    default: return 'weth';
+  }
+}
+
 export const GET_EXCHANGE_NAME = (exchange: EXCHANGE) => {
   switch (exchange) {
     case EXCHANGE.UNISWAP: return 'Uniswap';

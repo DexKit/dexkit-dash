@@ -5,13 +5,17 @@ import {
   Breadcrumbs,
   Grid,
   Box,
+  Chip,
   Link,
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import {CremaTheme} from 'types/AppContextPropsType';
 import ButtonCopy from '../ButtonCopy';
 import TokenLogo from '../TokenLogo';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
 // import {truncateAddress} from 'utils';
 
 interface Props {
@@ -21,10 +25,11 @@ interface Props {
   };
   title: {name: string; hasCopy?: string};
   subtitle?: {name: string; hasCopy?: string};
+  network?: EthereumNetwork;
   icon?: string;
 }
 
-const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon}) => {
+const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     breadcrumbs: {
       fontSize: '16px',
@@ -88,7 +93,16 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon}) => {
         )}
 
         <Box className={classes.boxTitle}>
-          {icon && <Box mr={5}>{<TokenLogo token0={icon} />}</Box>}
+          {network && <Box mr={5}>
+          <Tooltip title="Network">
+              <Chip
+                label={FORMAT_NETWORK_NAME(network)}   
+                color={ 'default'}
+              />
+              </Tooltip>
+            </Box>}
+
+          {icon && <Box mr={2}>{<TokenLogo token0={icon} />}</Box>}
 
           <Typography className={classes.title} color='textPrimary'>
             {title.name}
