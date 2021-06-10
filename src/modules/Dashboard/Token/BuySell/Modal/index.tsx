@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  IconButton,
-  Typography,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
@@ -160,28 +153,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
           open={open}
           onClose={onClose}
           aria-labelledby='form-dialog-title'>
-          <DialogTitle id='form-dialog-title' className={classes.dialogTitle}>
-            <Box
-              display='flex'
-              alignItems='center'
-              justifyContent='space-between'>
-              <Typography style={{width: 48, height: 48}} />
-              <Typography
-                className={classes.textPrimary}
-                variant='h5'
-                align='center'>
-                {isConvert
-                  ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
-                  : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
-              </Typography>
-              <Typography align='right'>
-                <IconButton aria-label='close' onClick={onClose}>
-                  <CloseIcon />
-                </IconButton>
-              </Typography>
-            </Box>
-          </DialogTitle>
-
           <OrderContent
             isMarket={isMarket}
             networkName={networkName}

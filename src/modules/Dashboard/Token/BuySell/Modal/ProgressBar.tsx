@@ -38,7 +38,11 @@ const ProgressBar: React.FC<Props> = (props) => {
 
   let dynamicProgressBar = [];
   dynamicProgressBar.push(
-    <Circle isDone={true} backgroundColor={theme.palette.primary.main} />,
+    <Circle
+      key={0}
+      isDone={true}
+      backgroundColor={theme.palette.primary.main}
+    />,
   );
 
   for (let i = 0; i < steps.length; i++) {
@@ -56,14 +60,28 @@ const ProgressBar: React.FC<Props> = (props) => {
         : steps[i].toString();
 
     dynamicProgressBar.push(
-      <>
-        <Rect isDone={isDone} backgroundColor={backgroundColor} />
-        {step}
-        <Rect isDone={isDone} backgroundColor={backgroundColor} />
-      </>,
+      <Rect
+        key={'rect1' + i}
+        isDone={isDone}
+        backgroundColor={backgroundColor}
+      />,
     );
+
+    dynamicProgressBar.push(<span key={'step' + i}>{step}</span>);
+
     dynamicProgressBar.push(
-      <Circle isDone={isDone} backgroundColor={backgroundColor}>
+      <Rect
+        key={'react2' + i}
+        isDone={isDone}
+        backgroundColor={backgroundColor}
+      />,
+    );
+
+    dynamicProgressBar.push(
+      <Circle
+        key={'circle' + i}
+        isDone={isDone}
+        backgroundColor={backgroundColor}>
         {isDone && <DoneIcon style={{color: iconColor}} fontSize='small' />}
       </Circle>,
     );

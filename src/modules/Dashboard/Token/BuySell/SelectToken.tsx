@@ -8,7 +8,7 @@ import {Token} from 'types/app';
 import {Chip, makeStyles, TextField, Box} from '@material-ui/core';
 import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
-import { FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
 interface Props {
   id: string;
@@ -117,29 +117,32 @@ const SelectToken: React.FC<Props> = ({
             onInputChange={(event, newInputValue) => {
               setInputValue(newInputValue);
             }}
-            getOptionLabel={(e) =>
-              `${e.symbol}`
-            }
+            getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
                 <TokenLogo token0={option.address} />
                 {option.name}
-                {option?.networkName &&
-                <Box pl={1}>
-                <Chip
-                  label={FORMAT_NETWORK_NAME(option?.networkName)}
-                  color={'default'}
-                  size={'small'}
-                />
-                </Box>}
+                {option?.networkName && (
+                  <Box pl={1}>
+                    <Chip
+                      label={FORMAT_NETWORK_NAME(option?.networkName)}
+                      color={'default'}
+                      size={'small'}
+                    />
+                  </Box>
+                )}
               </SelectOption>
             )}
             renderInput={(params) => (
               <SelectBox>
-                <TokenLogo token0={selected.address} />          
+                <TokenLogo token0={selected.address} />
                 <TextField
                   {...params}
-                  placeholder={selected ? selected.symbol : 'Search by name, symbol or paste address'}
+                  placeholder={
+                    selected
+                      ? selected.symbol
+                      : 'Search by name, symbol or paste address'
+                  }
                   variant='outlined'
                   className={classes.textField}
                   // onChange={($e) => search($e.target.value)}
