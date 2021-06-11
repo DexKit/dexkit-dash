@@ -2,7 +2,7 @@ import { BigNumber } from "@0x/utils";
 import { ChainId } from "types/blockchain";
 import { EthereumNetwork } from "./AppEnums";
 
-export const initialUrl = '/dashboard/overview'; // this url will open after login
+export const initialUrl = `/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`;
 
 export const ONE_SECOND_MS = 1000;
 

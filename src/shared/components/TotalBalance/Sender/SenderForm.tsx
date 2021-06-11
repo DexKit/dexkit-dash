@@ -11,19 +11,16 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import clsx from 'clsx';
 import { useWeb3 } from 'hooks/useWeb3';
-import { fromTokenUnitAmount } from '@0x/utils';
+
 import { isAddress } from '@ethersproject/address';
-import { isNativeCoin} from 'utils/tokens';
-import { ChainId } from 'types/blockchain';
-import Web3 from 'web3';
+
 
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import { useTransfer } from 'hooks/useTransfer';
-import { Currency } from 'types/myApps';
-import { NotificationType } from 'services/notification';
+
 import { useDispatch } from 'react-redux';
-import { onAddNotification } from 'redux/actions';
+
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -53,9 +50,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
-  const {account, onActionWeb3Transaction, chainId} = useWeb3();
+
+  const {account,  chainId} = useWeb3();
   const {onTransfer} = useTransfer();
 
   const [amount, setAmount] = useState<string>('');

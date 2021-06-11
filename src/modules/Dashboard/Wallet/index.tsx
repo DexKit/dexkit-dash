@@ -55,17 +55,16 @@ const Wallet: React.FC<Props> = (props) => {
 
   return (
     <Box pt={{xl: 4}}>
-      <PageTitle
-        breadcrumbs={{
-          history: [
-            {url: '/', name: 'Dashboard'},
-            {url: '/dashboard/wallet', name: 'Wallet'},
-          ],
-          active: {name: `${truncateAddress(account)}`, hasCopy: account},
-        }}
-        title={{name: 'Wallet'}}
-      />
-
+          <PageTitle
+            breadcrumbs={{
+              history: [
+                {url: '/', name: 'Dashboard'},
+                {url: '/dashboard/wallet', name: 'Wallet'},
+              ],
+              active: {name: `${truncateAddress(account)}`, hasCopy: account},
+            }}
+            title={{name: 'Wallet'}}
+          />
       <GridContainer>
         <Grid item xs={12} md={6}>
           <Grid item xs={12} md={12}>

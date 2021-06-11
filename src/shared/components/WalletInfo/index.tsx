@@ -19,6 +19,7 @@ import {Web3State} from 'types/blockchain';
 import {isMobile} from 'web3modal';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { truncateAddress } from 'utils/text';
+import { useHistory } from 'react-router-dom';
 
 const WalletInfo = (props: any) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
@@ -28,6 +29,8 @@ const WalletInfo = (props: any) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const history = useHistory();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -42,6 +45,13 @@ const WalletInfo = (props: any) => {
   } = useWeb3();
 
   const {data: balances} = useBalance();
+
+  const onGoToWallet = () => {
+    history.push('/dashboard/wallet')
+  }
+  const onGoToManageWallet = () => {
+    history.push('/dashboard/wallet/manage-accounts')
+  }
 
   const filteredBalances = balances?.filter(
     (e) => e.currency?.symbol === 'ETH',
@@ -159,7 +169,8 @@ const WalletInfo = (props: any) => {
                   keepMounted
                   open={Boolean(anchorEl)}
                   onClose={handleClose}>
-                  <MenuItem>My Wallet</MenuItem>
+                  <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+                  <MenuItem onClick={onGoToManageWallet}>Manage Accounts</MenuItem>
                   <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
                 </Menu>
               </Box>

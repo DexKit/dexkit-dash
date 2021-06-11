@@ -1,6 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router';
-import { GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
+
 
 export const dashBoardConfigs = [
   {
@@ -8,6 +7,22 @@ export const dashBoardConfigs = [
       {
         path: '/dashboard/overview',
         component: React.lazy(() => import('./Overview'))
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/dashboard/favorite-coins',
+        component: React.lazy(() => import('./Favorites'))
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/dashboard/wallet/manage-accounts',
+        component: React.lazy(() => import('./Wallet/Accounts')),
       },
     ],
   },
@@ -20,6 +35,7 @@ export const dashBoardConfigs = [
       },
     ],
   },
+ 
   // {
   //   auth: ['wallet'],
   //   routes: [

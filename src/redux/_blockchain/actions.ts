@@ -5,7 +5,6 @@ import { createAction } from 'typesafe-actions';
 
 export const setEthAccount = createAction('blockchain/ETH_ACCOUNT_set')<string | undefined>();
 
-export const setEthAccounts = createAction('blockchain/ETH_ACCOUNTS_set')<string[]>();
 
 export const setBlockNumber = createAction('blockchain/BLOCK_NUMBER_set')<number>();
 

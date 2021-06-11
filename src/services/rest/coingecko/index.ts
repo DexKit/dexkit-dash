@@ -92,3 +92,11 @@ export async function getTokens(tokensMetadata: {address: string, network: strin
 		return acc;
 	}, {});
 }
+
+export async function getTokensById(ids: string[]): Promise<  CoinItemCoinGecko[]> {
+
+	const concatId = `ethereum,binancecoin,${ids.reduce((p,c)=> `${p},${c}`,'')}`;
+	const coinsUsd = await getCoinsData(concatId);
+	//const coinsNative = await getCoinsData(concatId, 'eth');
+	return coinsUsd;
+}

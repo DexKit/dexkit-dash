@@ -10,6 +10,7 @@ import {protocolExplorerConfigs} from './ProtocolExplorer';
 import {historyConfigs} from './History';
 import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -23,7 +24,7 @@ const routeConfigs = [
 const routes = [
   ...createRoutes(routeConfigs),
   {path: '/', exact: true, component: () => <Redirect to={initialUrl} />},
-  {component: () => <Redirect to='/dashboard/overview' />},
+  {component: () => <Redirect to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`} />},
 ];
 
 export default routes;

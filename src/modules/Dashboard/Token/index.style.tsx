@@ -37,4 +37,8 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
       fontSize: '3.8vw',
     },
   },
+  title: {
+    display: 'flex',
+    
+  },
 }));

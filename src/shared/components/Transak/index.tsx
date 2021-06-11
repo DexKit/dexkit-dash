@@ -69,6 +69,15 @@ const Transak: React.FC<Props> = (props) => {
   const transakCloseEvents = useCallback(
     (data: any) => {
       transakClient?.close();
+      const w = (window as any)
+      if(w){
+          // TODO: remove this
+          // workaround to remove annoying css bug
+          setTimeout(()=>{
+              w.document.documentElement.style = 0;   
+          }, 10)
+      }
+      
       // setTransakInstance(undefined);
     },
     [transakClient],

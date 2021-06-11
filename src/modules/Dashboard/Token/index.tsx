@@ -1,6 +1,6 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useMemo} from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
-import {Grid, Box, Link, Fade} from '@material-ui/core';
+import {Grid, Box, Link, Fade, IconButton, Tooltip} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
@@ -9,7 +9,7 @@ import {useStyles} from './index.style';
 import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
-import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import { ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import InfoCard from 'shared/components/InfoCard';
@@ -17,14 +17,19 @@ import ErrorView from 'modules/Common/ErrorView';
 import CoingeckoProfile from './CoingeckoProfile';
 import CoingeckoMarket from './CoingeckoMarket';
 import BuySell from './BuySell';
-import {useNetwork} from 'hooks/useNetwork';
+
 import TotalBalance from 'shared/components/TotalBalance';
 import {Token} from 'types/app';
 import { truncateTokenAddress} from 'utils';
-import {useChainId} from 'hooks/useChainId';
+
 import {Skeleton} from '@material-ui/lab';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
 import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
+import { toggleFavoriteCoin } from 'redux/_ui/actions';
 
 const TVChartContainer = React.lazy(
   () => import('shared/components/chart/TvChart/tv_chart'),
@@ -44,8 +49,8 @@ const TokenPage: React.FC<Props> = (props) => {
   const {address, networkName} = params;
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
-
-  const {currentChainId} = useChainId();
+  const dispatch = useDispatch();
+  const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(state => state.ui.favoriteCoins);
 
   const classes = useStyles(theme);
 
@@ -60,6 +65,23 @@ const TokenPage: React.FC<Props> = (props) => {
   const {loading, error, data} = useCoingeckoTokenInfo(address, networkName);
 
   const isDark = theme.palette.type === ThemeMode.DARK;
+
+  const onToggleFavorite = () => {
+    if(token && data){
+      dispatch(toggleFavoriteCoin({...token, ...data}));
+    }
+
+  }
+
+  const isFavorite = useMemo(()=> { 
+    if(token){
+      return favoriteCoins.find(t =>  
+        t.symbol.toLowerCase() === token.symbol.toLowerCase());
+    }else{
+      return false;
+    }
+  }, [favoriteCoins, token] )
+
 
   useEffect(() => {
     if (data && data.symbol) {
@@ -88,14 +110,26 @@ const TokenPage: React.FC<Props> = (props) => {
   return (
     <>
       <Box pt={{xl: 4}}>
-        {data && (
-          <PageTitle
-            title={{name: data.name}}
-            subtitle={{name: truncateTokenAddress(address), hasCopy: address}}
-            icon={address}
-            network={networkName}
-          />
-        )}
+         <Box className={classes.title}>
+          <Box>
+              {data && (
+                <PageTitle
+                  title={{name: data.name}}
+                  subtitle={{name: truncateTokenAddress(address), hasCopy: address}}
+                  icon={address}
+                  network={networkName}
+                />
+              )}
+            </Box>
+              <Box>
+                <Tooltip title="Add to Favorites">
+                  <IconButton aria-label="add favorite coin" color="primary" onClick={onToggleFavorite}>
+                    {isFavorite ?  <FavoriteIcon /> : <FavoriteBorderIcon/>}
+                  </IconButton>
+                </Tooltip>
+              </Box>
+         </Box>
+
 
         <GridContainer>
           <Grid item xs={12} md={5}>

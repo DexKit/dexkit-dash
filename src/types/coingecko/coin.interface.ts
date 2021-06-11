@@ -15,6 +15,10 @@ export interface CoinDetailCoinGecko {
   localization: { [key: string]: string };
   description: { [key: string]: string };
   trade_volume_24h_btc: number;
+  platforms?: {
+    ethereum?: string
+    "binance-smart-chain"?: string
+  },  
   links: {
     homepage: string[];
     blockchain_site: string[];

@@ -1,5 +1,6 @@
 {
   "app.block": "Block",
+  "app.actions": "Actions",
   "app.hash": "Hash",
   "app.protocol": "Protocol",
   "app.amount": "Amount",
@@ -483,6 +484,7 @@
   "sidebar.myapps.manage": "Manage",
   "sidebar.application": "Application",
   "sidebar.app.exchange": "Exchange",
+  "sidebar.app.favorites": "Favorites",
   "sidebar.app.staking": "Staking",
   "sidebar.app.kits": "Kit's",
   "sidebar.app.marketplace": "Marketplace",
@@ -735,6 +737,7 @@
   "sidebar.sample.page2": "Page 2",
   "customizer.layoutTypes": "Layout Types",
   "sidebar.app.dashboard.analytics": "Analytics",
+  "dashboard.favoriteCoins": "Favorite Coins",
   "dashboard.analytics.welcome": "Welcome",
   "dashboard.analytics.eddieMassy": "Eddie Massy",
   "dashboard.analytics.salesState": "Sales State",

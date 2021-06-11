@@ -33,13 +33,21 @@ const useRoutesConfig = (): NavItemProps[] => {
         type: 'group',
         children: [
           {
+            id: 'trade',
+            title: 'Trade',
+            messageId: 'Trade',
+            type: 'item',
+            icon: 'compare_arrows',
+            url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+          },
+         /* {
             id: 'overview',
             title: 'Overview',
             messageId: 'common.overview',
             type: 'item',
             icon: 'insert_chart',
             url: '/dashboard/overview',
-          },
+          },*/
           {
             id: 'wallet',
             title: 'Wallet',
@@ -49,14 +57,13 @@ const useRoutesConfig = (): NavItemProps[] => {
             url: `/dashboard/wallet`,
           },
           {
-            id: 'trade',
-            title: 'Trade',
-            messageId: 'Trade',
+            id: 'favorites',
+            title: 'Favorites',
+            messageId: 'sidebar.app.favorites',
             type: 'item',
-            icon: 'compare_arrows',
-            url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+            icon: 'favorite',
+            url: `/dashboard/favorite-coins`,
           },
-  
          /* {
             id: 'kit',
             title: 'Kit\'s',
