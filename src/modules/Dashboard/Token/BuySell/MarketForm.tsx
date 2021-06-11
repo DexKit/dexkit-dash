@@ -338,7 +338,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 label={<IntlMessages id='app.youSend' />}
                 onChange={(e) => onChangeFrom(e)}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price))}</i></>}</InputAdornment>,
+                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price) * Number(amountFrom))}</i></>}</InputAdornment>,
                 }}
               />
             </Grid>
@@ -385,7 +385,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 value={amountTo}
                 InputProps={{
                   readOnly: true,
-                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price))}</i></>}</InputAdornment>,
+                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price) * Number(amountTo))}</i></>}</InputAdornment>,
                 }}
               />
             </Grid>
@@ -404,7 +404,26 @@ const MarketForm: React.FC<Props> = (props) => {
                   onChangeToken($token, 'to');
                 }}
               />
-            </Grid>
+            </Grid> 
+            <Grid 
+              xs={12}
+              md={12}>
+             <Box display={'flex'} justifyContent={'space-evenly'}>
+             {priceQuoteTo &&  <Box>
+              <p>
+                1 {tokenTo?.symbol.toUpperCase()}  {priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price) )}</i></>} 
+                
+                </p>
+                </Box>} 
+                {priceQuoteFrom && 
+                  <Box>
+                      <p>
+                      1 {tokenFrom?.symbol.toUpperCase()} {priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price))}</i></>} 
+              
+                      </p>
+                </Box>}
+              </Box>
+              </Grid>
           </GridContainer>
         </Box>
       </form>
