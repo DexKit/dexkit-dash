@@ -10,13 +10,11 @@ import {
   Box,
   Button,
   TextField,
-  Select,
-  MenuItem,
 } from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectToken from './SelectToken';
@@ -25,13 +23,17 @@ import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
 import {Web3State} from 'types/blockchain';
-import {useNetwork} from 'hooks/useNetwork';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {
+  FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
-  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
+
 } from 'shared/constants/Bitquery';
+import { useTokenPriceUSD } from 'hooks/useTokenPriceUSD';
+import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import { useNetwork } from 'hooks/useNetwork';
+
 
 interface Props {
   chainId: number | undefined;
@@ -96,9 +98,9 @@ const MarketForm: React.FC<Props> = (props) => {
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
       },
-    },
-    '&:hover, &:focus': {
-      cursor: 'pointer',
+      '&:hover, &:focus': {
+        cursor: 'pointer',
+      },
     },
     amountTotal: {
       '&:hover': {
@@ -118,6 +120,8 @@ const MarketForm: React.FC<Props> = (props) => {
   }));
 
   const classes = useStyles();
+
+  const network = useNetwork();
 
   const {web3State, onConnectWeb3} = useWeb3();
 
@@ -151,6 +155,11 @@ const MarketForm: React.FC<Props> = (props) => {
       onChangeToken(tokenTo, 'from');
     }
   };
+
+  const {priceQuote: priceQuoteTo} = useTokenPriceUSD(tokenTo?.address, networkName, OrderSide.Buy,  amountTo, tokenTo?.decimals );
+  const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(tokenFrom?.address, networkName, OrderSide.Sell, amountFrom, tokenFrom?.decimals );
+
+
 
   const setMax = () => {
     if (tokenBalance && tokenBalance.value) {
@@ -283,7 +292,10 @@ const MarketForm: React.FC<Props> = (props) => {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
+  } else if (networkName !== network){
+    errorMessage =  `Switch to ${FORMAT_NETWORK_NAME(network)} Network in your wallet`;
   }
+  const {usdFormatter} = useUSDFormatter();
 
   return (
     <Box>
@@ -325,6 +337,9 @@ const MarketForm: React.FC<Props> = (props) => {
                 fullWidth
                 label={<IntlMessages id='app.youSend' />}
                 onChange={(e) => onChangeFrom(e)}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price))}</i></>}</InputAdornment>,
+                }}
               />
             </Grid>
 
@@ -370,6 +385,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 value={amountTo}
                 InputProps={{
                   readOnly: true,
+                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price))}</i></>}</InputAdornment>,
                 }}
               />
             </Grid>
@@ -401,11 +417,10 @@ const MarketForm: React.FC<Props> = (props) => {
         color='primary'
         onClick={handleTrade}
         disabled={
-          (tokenBalance?.value || 0) < (amountFrom || 0) ||
+          (tokenBalance?.value || 0) < (amountFrom || 0) ||  !!errorMessage ||
           amountTo === 0 ||
           web3State !== Web3State.Done
         }>
-        <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
         {errorMessage && account ? (
           errorMessage
         ) : (

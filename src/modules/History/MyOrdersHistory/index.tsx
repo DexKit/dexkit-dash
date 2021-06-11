@@ -52,9 +52,16 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const [data, setData] = useState();
   const [totalRows, setTotalRows] = useState(0);
 
-  const {loading, error, data: dataFn} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${currentPage + 1}&perPage=${rowsPerPage}&trader=${account?.toLowerCase()}`
-  , [account, currentPage, rowsPerPage]);
+  const {loading, error, data: dataFn, get} = useFetch(
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`
+  , );
+
+  useEffect(()=> {
+    if(account){
+      get(`?page=${currentPage + 1}&perPage=${rowsPerPage}&trader=${account?.toLowerCase()}`)
+    }
+  }, [account, currentPage, rowsPerPage])
+
 
   useEffect(() => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {

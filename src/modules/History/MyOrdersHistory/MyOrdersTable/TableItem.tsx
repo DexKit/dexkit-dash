@@ -59,7 +59,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {Number(row.metaData.remainingFillableTakerAmountFn).toFixed(2)}
+        {(Number(row.order.takerAmountFn) - Number(row.metaData.remainingFillableTakerAmountFn)).toFixed(2)}
         {' '}{row.order?.takerTokenFn?.symbol}{' '}
       </TableCell>
 

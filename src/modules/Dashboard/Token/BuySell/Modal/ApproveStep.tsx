@@ -141,11 +141,14 @@ const ApproveStep: React.FC<Props> = (props) => {
 
       web3Wrapper
         .awaitTransactionSuccessAsync(tx)
-        .then(() => onNext(true))
+        .then(() => {
+          const notification: Notification = { title: 'Approve', body: truncateAddress(tx) };
+          dispatch(onAddNotification([notification], NotificationType.SUCCESS));  
+          onNext(true)
+        })
         .catch((e) => onNext(false, e));
 
-      const notification: Notification = { title: 'Approve', body: truncateAddress(tx) };
-      dispatch(onAddNotification([notification], NotificationType.SUCCESS));  
+  
     } catch (e) {
       console.log('Erro ', e);
       onNext(false, e.message);

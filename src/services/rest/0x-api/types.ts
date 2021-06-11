@@ -61,3 +61,17 @@ export interface QuoteParams {
     gasPrice?: string;
 
 }
+
+/**
+ * Quote Params
+ */
+ export interface QuotePriceParams {
+    baseToken: string;
+    quoteToken: string;
+    orderSide: OrderSide;
+    baseAmount: BigNumber;
+    // Parameters used to prevalidate quote at final
+    allowedSlippage?: number;
+    gasPrice?: string;
+
+}

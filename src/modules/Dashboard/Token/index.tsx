@@ -97,9 +97,13 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [data]);
 
   const infoMyOrders = useFetch(
-    `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders?trader=${account}`,
-    [account],
-  );
+    `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders` );
+    
+    useEffect(()=> {
+      if(account) {
+        infoMyOrders.get(`?trader=${account}`)
+      }
+    }, [account])
 
   const myOrders =
     'My Orders' +
