@@ -12,7 +12,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
-
 // import {Token} from 'types/app';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {Token} from 'types/app';
@@ -103,6 +102,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
           networkName: e.network,
         } as Token;
       });
+
       setSelect0(balancesFn);
 
       if (tokenTo === undefined) {
@@ -126,8 +126,8 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
     if (tokenFrom === undefined) {
       const _token = select0.find(
         (t) =>
-          t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
-          t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+        t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
+        t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
       );
       setTokenFrom(_token);
       console.log('setTokenFrom', _token);
@@ -150,7 +150,6 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
           if(token.networkName && token.networkName !== networkName){
             history.push(`/${token.networkName}/dashboard/token/${token.address}`);
           }
-
           setTokenFrom(token);
         }
       } else {
@@ -223,12 +222,12 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
               className={classes.muiTabsRoot}>
               <Tab
                 className={classes.muiTab}
-                label={<IntlMessages id='MARKET' />}
+                label={<IntlMessages id='Market' />}
                 {...a11yProps(0)}
               />
               <Tab
                 className={classes.muiTab}
-                label={<IntlMessages id='LIMIT' />}
+                label={<IntlMessages id='Limit' />}
                 {...a11yProps(1)}
               />
             </Tabs>

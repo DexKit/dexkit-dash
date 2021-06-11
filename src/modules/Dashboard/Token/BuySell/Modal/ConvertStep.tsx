@@ -96,30 +96,48 @@ const ConvertStep: React.FC<Props> = (props) => {
       let txHash;
 
       if (tokenFrom.symbol === 'ETH') {
-        txHash = await wethToken.deposit().sendTransactionAsync({
-          value: amountFn,
-          from: account,
-          // gasPrice: gasInfo.gasPriceInWei,
-          gasPrice: new BigNumber(selectedGasPrice),
-        });
+        await wethToken
+          .deposit()
+          .sendTransactionAsync({
+            value: amountFn,
+            from: account,
+            // gasPrice: gasInfo.gasPriceInWei,
+            gasPrice: new BigNumber(selectedGasPrice),
+          })
+          .then((e) => (txHash = e))
+          .catch((e) => {
+            throw new Error(e.message);
+          });
       } else {
-        txHash = await wethToken.withdraw(amountFn).sendTransactionAsync({
-          from: account,
-          // gasPrice: gasInfo.gasPriceInWei,
-          gasPrice: new BigNumber(selectedGasPrice),
-        });
+        await wethToken
+          .withdraw(amountFn)
+          .sendTransactionAsync({
+            from: account,
+            // gasPrice: gasInfo.gasPriceInWei,
+            gasPrice: new BigNumber(selectedGasPrice),
+          })
+          .then((e) => (txHash = e))
+          .catch((e) => {
+            throw new Error(e.message);
+          });
       }
 
       console.log('convert tx', txHash);
 
-      web3Wrapper
-        .awaitTransactionSuccessAsync(txHash)
-        .then(() => onNext(true))
-        .catch((e) => onNext(false, e));
+      if (txHash) {
+        web3Wrapper
+          .awaitTransactionSuccessAsync(txHash)
+          .then(() => onNext(true))
+          .catch((e) => {
+            throw new Error(e.message);
+          });
+      } else {
+        throw new Error('txHash not found');
+      }
 
       onNext(true);
     } catch (e) {
-      onNext(e);
+      onNext(false, e.message);
     }
   };
 

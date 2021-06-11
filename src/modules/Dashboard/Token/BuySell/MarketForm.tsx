@@ -4,7 +4,15 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  Box,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
@@ -18,11 +26,12 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
 import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
-
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
-import { GET_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
-
+import {
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
 
 interface Props {
   chainId: number | undefined;
@@ -87,11 +96,10 @@ const MarketForm: React.FC<Props> = (props) => {
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
       },
-      '&:hover, &:focus': {
-        cursor: 'pointer',
-      },
     },
-
+    '&:hover, &:focus': {
+      cursor: 'pointer',
+    },
     amountTotal: {
       '&:hover': {
         cursor: 'pointer',
@@ -123,7 +131,10 @@ const MarketForm: React.FC<Props> = (props) => {
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
   if (web3State !== Web3State.Done && tokenFrom === undefined) {
-    const tokenETH = select1.find((e) => e.symbol === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName));
+    const tokenETH = select1.find(
+      (e) => e.symbol === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName),
+    );
+
     onChangeToken(tokenETH, 'from');
   }
 
@@ -133,16 +144,13 @@ const MarketForm: React.FC<Props> = (props) => {
   };
 
   const switchTokens = () => {
-    if(tokenFrom){
-      onChangeToken(tokenFrom, "to");
+    if (tokenFrom) {
+      onChangeToken(tokenFrom, 'to');
     }
-    if(tokenTo){
-      onChangeToken(tokenTo, "from");
+    if (tokenTo) {
+      onChangeToken(tokenTo, 'from');
     }
-  
-  
-
-  }
+  };
 
   const setMax = () => {
     if (tokenBalance && tokenBalance.value) {
@@ -162,10 +170,19 @@ const MarketForm: React.FC<Props> = (props) => {
   useEffect(() => {
     setTokenBalance(
       balances.find((e) => {
-        if(tokenFrom?.symbol && isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName) ){
-          return  e.currency?.symbol?.toLowerCase() === tokenFrom?.symbol.toLowerCase()
-        }else{
-          return  e.currency?.address?.toLowerCase() === tokenFrom?.address.toLowerCase()
+        if (
+          tokenFrom?.symbol &&
+          isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName)
+        ) {
+          return (
+            e.currency?.symbol?.toLowerCase() ===
+            tokenFrom?.symbol.toLowerCase()
+          );
+        } else {
+          return (
+            e.currency?.address?.toLowerCase() ===
+            tokenFrom?.address.toLowerCase()
+          );
         }
       }),
     );
@@ -273,19 +290,21 @@ const MarketForm: React.FC<Props> = (props) => {
       <form noValidate autoComplete='off'>
         <Box className={classes.boxContainer}>
           <GridContainer>
-           {account && <Grid item xs={12}>
-              <Box
-                mb={2}
-                color='grey.400'
-                textAlign='right'
-                className={classes.textRes}>
-                <span onClick={setMax} className={classes.amountTotal}>
-                  {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
-                    tokenBalance?.value?.toFixed(4) || 0
-                  } ${tokenBalance?.currency?.symbol || ''})`}
-                </span>
-              </Box>
-            </Grid>}
+            {account && (
+              <Grid item xs={12}>
+                <Box
+                  mb={2}
+                  color='grey.400'
+                  textAlign='right'
+                  className={classes.textRes}>
+                  <span onClick={setMax} className={classes.amountTotal}>
+                    {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
+                      tokenBalance?.value?.toFixed(4) || 0
+                    } ${tokenBalance?.currency?.symbol || ''})`}
+                  </span>
+                </Box>
+              </Grid>
+            )}
             {/*errorMessage && (
               <Grid item xs={12}>
                 <Box mb={2} fontSize='large' textAlign='center'>
@@ -326,19 +345,17 @@ const MarketForm: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid style={{padding: 0, marginTop: 4}} item xs={12} md={6}>
-              <Grid xs={12}>
-                <Box
-                  mb={2}
-                  color='grey.400'
-                  textAlign='center'
-                  onClick={() => switchTokens()}
-                  className={classes.textRes}>
-                  <ArrowDownwardOutlined />
-                </Box>
-              </Grid>
+              <Box
+                mb={2}
+                color='grey.400'
+                textAlign='center'
+                onClick={() => switchTokens()}
+                className={classes.textRes}>
+                <ArrowDownwardOutlined />
+              </Box>
             </Grid>
 
-            <Grid xs={12} md={6} />
+            <Grid item xs={12} md={6} />
 
             <Grid
               style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
@@ -351,7 +368,9 @@ const MarketForm: React.FC<Props> = (props) => {
                 fullWidth
                 label={<IntlMessages id='app.youReceive' />}
                 value={amountTo}
-                disabled
+                InputProps={{
+                  readOnly: true,
+                }}
               />
             </Grid>
 
@@ -386,15 +405,17 @@ const MarketForm: React.FC<Props> = (props) => {
           amountTo === 0 ||
           web3State !== Web3State.Done
         }>
-        {  (errorMessage && account) ? 
-            errorMessage :
-            <>
+        <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
+        {errorMessage && account ? (
+          errorMessage
+        ) : (
+          <>
             <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
             <Box fontSize='large' fontWeight='bold'>
               Trade
             </Box>
-            </>
-        } 
+          </>
+        )}
       </Button>
     </Box>
   );

@@ -7,14 +7,17 @@ import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
 import {
+  DialogTitle,
   DialogContent,
   DialogActions,
   Grid,
   Typography,
   TextField,
   Box,
+  CircularProgress,
   IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
@@ -24,7 +27,7 @@ import ConvertStep from './ConvertStep';
 import MarketStep from './MarketStep';
 import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
-import ProgressBar from './PogressBar';
+import ProgressBar from './ProgressBar';
 import LoadingStep from './LoadingStep';
 import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
@@ -112,97 +115,157 @@ const OrderContent: React.FC<Props> = (props) => {
   const [sellAmount, setSellAmount] = useState(0);
   const [fee, setFee] = useState(0);
   const [slippage, setSlippage] = useState(0.03);
+  const [gasAmount, setGasAmount] = useState(new BigNumber(0));
+  const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
   const [initGasPrice, setInitGastPrice] = useState<number | undefined>();
+  const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);
-  const [convertGasPrice, setConvertGasPrice] = useState('0');
 
   const amountFromFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
+  const REFRESH_RATE_SECONDS = 10;
+  const [seconds, setSeconds] = useState(0);
+
   useEffect(() => {
     if (currentStep !== Steps.DONE) {
-      console.log('START STEP');
-
-      if (isConvert) {
-        getGasInfo()
-          .then((e) => {
-            const newConvertGasPrice = e.gasPriceInWei.toString();
-
-            setConvertGasPrice(newConvertGasPrice);
-
-            handleChangeSelectedGasPrice(e.gasPriceInWei.toString());
-
-            setSellAmount(amountFrom);
-
-            setBuyAmount(amountFrom);
-
-            onLoading(false);
-          })
-          .catch((e) => {
-            onNext(false, e);
-            onLoading(false);
-          });
-      } else {
-        fetchQuote(
-          {
-            baseToken: tokenFrom,
-            quoteToken: tokenTo,
-            chainId: chainId,
-            orderSide: OrderSide.Sell,
-            makerAmount: amountFromFn,
-            // Parameters used to prevalidate quote at final
-            allowedSlippage: slippage,
-            ethAccount: props.account,
-            buyTokenPercentage: undefined,
-            feeRecipient: undefined,
-            affiliateAddress: undefined,
-            intentOnFill: true,
-            gasPrice: selectedGasPrice ? selectedGasPrice : undefined 
-          },
-          networkName,
-        )
-          .then((e) => {
-            setQuote(e);
-            setSellAmount(
-              toTokenUnitAmount(e.sellAmount, tokenFrom.decimals).toNumber(),
-            );
-            setBuyAmount(
-              toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
-            );
-
-            const gas = new BigNumber(e.gas);
-            const gasPrice = new BigNumber(e.gasPrice);
-            if(!selectedGasPrice){
-              handleChangeSelectedGasPrice(gasPrice.toString());
-            }
-            if(!initGasPrice){
-              setInitGastPrice(gasPrice.toNumber());
-            }
-
-            if (isMarket) {
-              const feeFn = gas.multipliedBy(gasPrice);
-              setFee(toTokenUnitAmount(feeFn, 18).toNumber());
-            } else {
-              setFee(new BigNumber(0).toNumber());
-            }
-
-            onLoading(false);
-          })
-          .catch((e) => {
-            onNext(false, e);
-            onLoading(false);
-          });
-      }
+      console.log('OrderContent: currentStep or slippage changed');
+      fetchInfo();
+      setSeconds(0);
     }
   }, [currentStep, slippage, selectedGasPrice]);
+
+  useEffect(() => {
+    let interval: any = null;
+
+    if (currentStep !== Steps.DONE) {
+      if (seconds < REFRESH_RATE_SECONDS) {
+        interval = setInterval(() => {
+          setSeconds((seconds) => seconds + 1);
+        }, 1000);
+      } else {
+        console.log('OrderContent: refresh');
+        fetchInfo();
+        setSeconds(0);
+      }
+
+      return () => clearInterval(interval);
+    }
+  }, [seconds]);
+
+  const fetchInfo = () => {
+    if (isConvert) {
+      getGasInfo()
+        .then((e) => {
+          setDefaultGasPrice(e.gasPriceInWei.toString());
+
+          updateSelectedGasPrice(e.gasPriceInWei);
+
+          setSellAmount(amountFrom);
+
+          setBuyAmount(amountFrom);
+
+          onLoading(false);
+        })
+        .catch((e) => {
+          onNext(false, e);
+          onLoading(false);
+        });
+    } else {
+      fetchQuote(
+        {
+          baseToken: tokenFrom,
+          quoteToken: tokenTo,
+          chainId: chainId,
+          orderSide: OrderSide.Sell,
+          makerAmount: amountFromFn,
+          // Parameters used to prevalidate quote at final
+          allowedSlippage: slippage,
+          ethAccount: props.account,
+          buyTokenPercentage: undefined,
+          feeRecipient: undefined,
+          affiliateAddress: undefined,
+          intentOnFill: true,
+        },
+        networkName,
+      )
+        .then((e) => {
+          setQuote(e);
+          setSellAmount(
+            toTokenUnitAmount(e.sellAmount, tokenFrom.decimals).toNumber(),
+          );
+          setBuyAmount(
+            toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
+          );
+
+          const gas = new BigNumber(e.gas);
+          const gasPrice = new BigNumber(e.gasPrice);
+
+          setGasAmount(gas);
+          setDefaultGasPrice(gasPrice.toNumber().toString());
+
+          updateSelectedGasPrice(gasPrice, gas);
+
+          onLoading(false);
+        })
+        .catch((e) => {
+          onNext(false, e);
+          onLoading(false);
+        });
+    }
+  };
 
   const getGasInfo = async (): Promise<GasInfo> => {
     return await getGasEstimationInfoAsync();
   };
 
-  const handleChangeSelectedGasPrice = (newSelectedGasPrice: string) => {
+  const updateSelectedGasPrice = (gasPrice: BigNumber, gas?: BigNumber) => {
+    let newGasPrice;
+
+    switch (selectedGasOption) {
+      case 'low':
+        newGasPrice = (gasPrice.toNumber() * 0.8).toString();
+        break;
+      case 'default':
+        newGasPrice = (gasPrice.toNumber() * 1).toString();
+        break;
+      case 'fast':
+        newGasPrice = (gasPrice.toNumber() * 1.6).toString();
+        break;
+    }
+
+    if (newGasPrice) {
+      handleChangeSelectedGasPrice(newGasPrice, selectedGasOption);
+
+      if (gas) {
+        updateFee(new BigNumber(newGasPrice), gas);
+      }
+    } else {
+      if (gas) {
+        updateFee(new BigNumber(selectedGasPrice), gas);
+      }
+    }
+  };
+
+  const updateFee = (gasPrice: BigNumber, gas?: BigNumber) => {
+    if (isMarket) {
+      const feeFn = (gas || gasAmount).multipliedBy(gasPrice);
+      setFee(toTokenUnitAmount(feeFn, 18).toNumber());
+    } else {
+      setFee(new BigNumber(0).toNumber());
+    }
+  };
+
+  const handleChangeSelectedGasPrice = (
+    newSelectedGasPrice: string,
+    gasOption: string,
+  ) => {
+    setSelectedGasOption(gasOption);
+
     setSelectedGasPrice(newSelectedGasPrice);
+
+    updateFee(new BigNumber(newSelectedGasPrice));
 
     const newDisplayGasPrice = (
       parseInt(newSelectedGasPrice) / Math.pow(10, 9)
@@ -212,6 +275,8 @@ const OrderContent: React.FC<Props> = (props) => {
   };
 
   const handleChangeDisplayGasPrice = (newDisplayGasPrice: string) => {
+    setSelectedGasOption('manual');
+
     setDisplayGasPrice(newDisplayGasPrice);
 
     const newSelectedGasPrice = (
@@ -219,6 +284,8 @@ const OrderContent: React.FC<Props> = (props) => {
     ).toString();
 
     setSelectedGasPrice(newSelectedGasPrice);
+
+    updateFee(new BigNumber(newSelectedGasPrice));
   };
 
   const invertPrice = () => {
@@ -253,19 +320,52 @@ const OrderContent: React.FC<Props> = (props) => {
     secondSymbol = tokenFrom.symbol;
   }
 
-  const validGasPrice = isConvert ? Number(convertGasPrice) || 0 : initGasPrice || 0;
+  const lowGasPrice = (parseInt(defaultGasPrice) * 0.8).toString();
+  const displayLowGas = (parseInt(lowGasPrice) / Math.pow(10, 9)).toFixed(2);
 
-  const lowGas = (validGasPrice * 0.8).toString();
-  const displayLowGas = (parseInt(lowGas) / Math.pow(10, 9)).toFixed(2);
+  const displayDefaultGas = (
+    parseInt(defaultGasPrice) / Math.pow(10, 9)
+  ).toFixed(2);
 
-  const defaultGas = (validGasPrice * 1).toString();
-  const displayDefaultGas = (parseInt(defaultGas) / Math.pow(10, 9)).toFixed(2);
-
-  const fastGas = (validGasPrice * 1.6).toString();
-  const displayFastGas = (parseInt(fastGas) / Math.pow(10, 9)).toFixed(2);
+  const fastGasPrice = (parseInt(defaultGasPrice) * 1.6).toString();
+  const displayFastGas = (parseInt(fastGasPrice) / Math.pow(10, 9)).toFixed(2);
 
   return (
     <>
+      <DialogTitle id='form-dialog-title' className={classes.dialogTitle}>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            style={{
+              width: 48,
+              height: 48,
+            }}>
+            {currentStep !== Steps.DONE && (
+              <CircularProgress
+                size={20}
+                variant='determinate'
+                value={(seconds / REFRESH_RATE_SECONDS) * 100}
+              />
+            )}
+          </Box>
+          <Typography
+            className={classes.textPrimary}
+            variant='h5'
+            align='center'>
+            {isConvert
+              ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
+              : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
+          </Typography>
+          <Typography align='right'>
+            <IconButton aria-label='close' onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          </Typography>
+        </Box>
+      </DialogTitle>
+
       <DialogContent className={classes.dialogContent}>
         {loading &&
         currentStep !== Steps.MARKET &&
@@ -420,6 +520,7 @@ const OrderContent: React.FC<Props> = (props) => {
                             </IconButton>
                           </Typography>
                         </Grid>
+
                         {false && 
                         <>
                         <Grid item xs={12} sm={3}>
@@ -519,8 +620,10 @@ const OrderContent: React.FC<Props> = (props) => {
                     <Grid item xs={12}>
                       <GasOptionsWrapper>
                         <GasOption
-                          isSelected={lowGas === selectedGasPrice}
-                          onClick={() => handleChangeSelectedGasPrice(lowGas)}>
+                          isSelected={selectedGasOption === 'low'}
+                          onClick={() =>
+                            handleChangeSelectedGasPrice(lowGasPrice, 'low')
+                          }>
                           <Typography style={{fontWeight: 600}}>
                             {`${displayLowGas} Gwei`}
                           </Typography>
@@ -528,9 +631,12 @@ const OrderContent: React.FC<Props> = (props) => {
                         </GasOption>
 
                         <GasOption
-                          isSelected={defaultGas === selectedGasPrice}
+                          isSelected={selectedGasOption === 'default'}
                           onClick={() =>
-                            handleChangeSelectedGasPrice(defaultGas)
+                            handleChangeSelectedGasPrice(
+                              defaultGasPrice,
+                              'default',
+                            )
                           }>
                           <Typography style={{fontWeight: 600}}>
                             {`${displayDefaultGas} Gwei`}
@@ -541,8 +647,10 @@ const OrderContent: React.FC<Props> = (props) => {
                         </GasOption>
 
                         <GasOption
-                          isSelected={fastGas === selectedGasPrice}
-                          onClick={() => handleChangeSelectedGasPrice(fastGas)}>
+                          isSelected={selectedGasOption === 'fast'}
+                          onClick={() =>
+                            handleChangeSelectedGasPrice(fastGasPrice, 'fast')
+                          }>
                           <Typography style={{fontWeight: 600}}>
                             {`${displayFastGas} Gwei`}
                           </Typography>

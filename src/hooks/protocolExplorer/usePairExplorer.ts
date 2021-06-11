@@ -10,7 +10,6 @@ import {EXCHANGE} from 'shared/constants/AppEnums';
 import { useEffect, useState } from 'react';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
 
-
 interface Props {
   baseAddress: string;
   quoteAddress: string | null;
