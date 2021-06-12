@@ -13,7 +13,8 @@ export enum ChainId {
     Goerli = 5,
     Ganache = 1337,
     Binance = 56,
-    BinanceTest = 97
+    BinanceTest = 97,
+    Matic = 137
 }
 
 export enum Web3State {

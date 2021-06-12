@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'NFT_TAG', 'dexkit_nft' );
 define( 'NFT_CRON', 'cron_dexkit_nft' );
 define( 'NFT_VERSION', '0.1.0' );
-define( 'NFT_API', 'https://staging.query.dexkit.com');
+define( 'NFT_API', 'https://query.dexkit.com');
 define( 'NFT_EXPIRE_DAYS', 7 );
 define( 'NFT_BUILD', plugin_dir_url( __FILE__ ) . 'build/' );
 define( 'NFT_MANIFEST', NFT_BUILD . 'asset-manifest.json' );

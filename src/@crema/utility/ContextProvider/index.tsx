@@ -6,6 +6,8 @@ import {ThemeMode} from '../../../shared/constants/AppEnums';
 import routes from '../../../modules';
 
 const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
+
+
   const [theme, updateTheme] = useState(defaultConfig.theme);
   const [footer, setFooter] = useState(defaultConfig.footer);
   const [footerType, setFooterType] = useState(defaultConfig.footerType);

@@ -20,6 +20,7 @@ import {GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_
 import {MyBalances, Web3State} from 'types/blockchain';
 import { isNativeCoinWithoutChainId } from 'utils';
 import { useHistory } from 'react-router-dom';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface Props {
   tokenAddress: string;
@@ -65,7 +66,9 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
   const classes = useStyles();
 
-  const {chainId, account, web3State} = useWeb3();
+  const {chainId, account: web3Account, web3State} = useWeb3();
+  const defaultAccount = useDefaultAccount();
+  const account = defaultAccount || web3Account;
 
   const [select0, setSelect0] = useState<Token[]>([]);
 

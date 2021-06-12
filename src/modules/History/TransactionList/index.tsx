@@ -1,17 +1,22 @@
-import React from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {useTransactionList} from 'hooks/history/useTransactionList';
 import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import TransactionTable from './TransactionTable';
-import {useNetwork} from 'hooks/useNetwork';
 import LoadingTable from 'modules/Common/LoadingTable';
 import PageTitle from 'shared/components/PageTitle';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { truncateAddress } from 'utils/text';
+import NetworkSwitcher from 'shared/components/NetworkSwitcher';
+
 
 type Params = {
   address: string;
+  networkName: EthereumNetwork;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -20,11 +25,20 @@ const TransactionList: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
-  const {address} = params;
+  const {address, networkName} = params;
+  const history = useHistory();
+  const account = useDefaultAccount();
+  useEffect(()=> {
+    if(account && (account !== address)){
+        history.push(`/${networkName}/history/transaction/list/${account}`)
+    }
+  }, [account])
+
+  const onSwitchNetwork = (n: EthereumNetwork) => {
+    history.push(`/${n}/history/transaction/list/${account}`)
+  }
 
   const classes = useStyles();
-
-  const networkName = useNetwork();
   const {
     loading,
     error,
@@ -34,11 +48,13 @@ const TransactionList: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTransactionList({address});
+  } = useTransactionList({address, networkName});
 
+ 
   return (
     <Box pt={{xl: 4}}>
-
+      <Box display={'flex'}>
+     
       <PageTitle
         breadcrumbs={{
           history: [
@@ -47,8 +63,10 @@ const TransactionList: React.FC<Props> = (props) => {
           ],
           active: {name: 'Transaction History'}
         }}
-        title={{name: 'Transaction History'}}
+        title={{name: `Transaction History: ${truncateAddress(address)}`}}
+        networkSwitcher={{networkName, onClick: onSwitchNetwork}}
       />
+      </Box>
 
       <GridContainer>
         <Grid item xs={12} md={12}>

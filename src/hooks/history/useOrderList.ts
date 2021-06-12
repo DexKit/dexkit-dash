@@ -2,7 +2,7 @@ import { useChainId } from "../useChainId";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import usePagination from "hooks/usePagination";
-import { EXCHANGE } from "shared/constants/AppEnums";
+import { EthereumNetwork, EXCHANGE } from "shared/constants/AppEnums";
 import { POLL_INTERVAL } from "shared/constants/AppConst";
 import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
 import { BITQUERY_ORDER_LIST } from "services/graphql/bitquery/history/gql";
@@ -12,9 +12,10 @@ import { IOrderList } from "types/app";
 interface Props {
   address: string;
   baseCurrency?: string;
+  networkName: EthereumNetwork
 }
 
-export const useOrderList = ({address, baseCurrency}: Props) =>{
+export const useOrderList = ({address, baseCurrency,  networkName}: Props) =>{
 
   const { currentChainId } = useChainId();
 
@@ -25,7 +26,7 @@ export const useOrderList = ({address, baseCurrency}: Props) =>{
 
   const { loading, error, data: dataFn } = useQuery<GetOrderList, GetOrderListVariables>(BITQUERY_ORDER_LIST, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       baseCurrency,
       // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
       address: address,

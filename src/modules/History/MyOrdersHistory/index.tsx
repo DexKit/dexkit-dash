@@ -8,7 +8,7 @@ import useFetch from 'use-http';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import { useChainId} from 'hooks/useChainId';
 import {useNetwork} from 'hooks/useNetwork';
-import {RouteComponentProps} from 'react-router';
+import {RouteComponentProps, useHistory} from 'react-router';
 import MyOrdersTable from './MyOrdersTable';
 import usePagination from 'hooks/usePagination';
 import {useStyles} from './index.style';
@@ -19,9 +19,12 @@ import PageTitle from 'shared/components/PageTitle';
 import { truncateAddress } from 'utils/text';
 import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
 import { useWeb3 } from 'hooks/useWeb3';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 type Params = {
   address: string;
+  networkName: EthereumNetwork;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -31,11 +34,13 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
     match: {params},
   } = props;
 
-  const {address} = params;
+  const {address, networkName} = params;
 
-  const networkName = useNetwork();
+  const history = useHistory();
+  const account = useDefaultAccount();
 
-  const {account} = useWeb3();
+
+
 
   const tokenList = useTokenList(networkName);
 
@@ -114,7 +119,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
           ],
           active: {name: 'My Active Orders'},
         }}
-        title={{name: 'My Active Orders'}}
+        title={{name: `My Active Orders: ${truncateAddress(account)}`, hasCopy: account}}
       />
       {token.data && (
         <PageTitle

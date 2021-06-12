@@ -1,6 +1,6 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import { Chip, Link, makeStyles} from '@material-ui/core';
+import { Avatar, Chip, Link, makeStyles, Tooltip} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 
 import TableRow from '@material-ui/core/TableRow';
@@ -12,6 +12,8 @@ import {useWeb3} from 'hooks/useWeb3';
 import {truncateAddress} from 'utils';
 import {ITransactionList} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { useIntl } from 'react-intl';
+import { ETHERSCAN_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
 
 interface TableItemProps {
   row: ITransactionList;
@@ -61,6 +63,8 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
     }
   };
 
+  const {messages} = useIntl();
+
   return (
     <TableRow key={row.transaction?.hash} className={classes.borderBottomClass}>
       <TableCell align='left' className={classes.tableCell}>
@@ -91,9 +95,38 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <Link to={`/${networkName}/history/transaction/view/${row.transaction?.hash}`} component={RouterLink}>
+        {/*<Link to={`/${networkName}/history/transaction/view/${row.transaction?.hash}`} component={RouterLink}>
           <SearchIcon />
-        </Link>
+  </Link>*/}
+  <Tooltip title={messages['app.viewTx']} placement='top'>
+            <a
+              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
+              target='_blank'>
+              {networkName == EthereumNetwork.ethereum ? (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/etherescan.png'></Avatar>
+              ) : (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/bscscan-logo-circle.png'></Avatar>
+              )}
+            </a>
+          </Tooltip>
       </TableCell>
     </TableRow>
   );

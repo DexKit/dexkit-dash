@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppSidebar.style';
 import {AppState} from '../../../../redux/store';
+import AppLogo from 'shared/components/AppLogo';
 // import WalletInfo from 'shared/components/WalletInfo';
 
 
@@ -37,6 +38,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
           style={{position: 'absolute'}}>
           <Box height='100%' className={classes.container}>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
+            <Box
+                style={{display: 'flex'}}
+                justifyContent='center'
+                alignContent='center'>
+                <AppLogo
+                  justifyContent='center'
+                  logo={require('assets/images/logo_white_kit.png')}
+                />
+              </Box>
               {/* <WalletInfo /> */}
               <PerfectScrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
@@ -49,6 +59,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
         <Box height='100%' className={clsx(classes.container, 'app-sidebar')}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
             {/* <WalletInfo /> */}
+            <AppLogo
+              justifyContent='center'
+              logo={require('assets/images/logo_white_kit.png')}
+            />
             <PerfectScrollbar className={classes.scrollAppSidebar}>
               <Navigation />
             </PerfectScrollbar>

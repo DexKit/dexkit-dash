@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 import {useOrderList} from 'hooks/history/useOrderList';
@@ -15,10 +15,13 @@ import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
 import { useFetch } from 'use-http';
 import { COINGECKO_CONTRACT_URL } from 'shared/constants/AppConst';
 import { truncateAddress } from 'utils/text';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 type Params = {
   address: string;
   token: string;
+  networkName: EthereumNetwork;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -27,11 +30,26 @@ const TradeHistory: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
-  const {address, token} = params;
+  const {address, token, networkName} = params;
   const {messages} = useIntl();
   const classes = useStyles();
+  const account = useDefaultAccount();
+  const history = useHistory();
 
-  const networkName = useNetwork();
+  useEffect(() =>{
+    if(account && (account !== address)){
+      if(token){
+        history.push(`/${networkName}/history/trade/list/${account}/token/${token}`)
+      }else{
+        history.push(`/${networkName}/history/order/list/${account}`)
+      }
+     
+    }
+  },[account])
+
+
+
+ 
   const {
     loading,
     error,
@@ -42,9 +60,13 @@ const TradeHistory: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useOrderList({address, baseCurrency: token});
+  } = useOrderList({address, baseCurrency: token, networkName});
 
   const tokenData = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${token}`, {}, [token]);
+
+  const onSwitchNetwork = (n: EthereumNetwork) => {
+    history.push(`/${n}/history/order/list/${account}`)
+  }
 
   return (
     <Box pt={{xl: 4}}>
@@ -56,7 +78,8 @@ const TradeHistory: React.FC<Props> = (props) => {
                   ],
                   active: {name: 'Trade History'},
                 }}
-                title={{name: 'Trade History'}}
+                title={{name: `Trade History: ${truncateAddress(address)}`, hasCopy: address}}
+                networkSwitcher={{networkName, onClick: onSwitchNetwork}}
                />}
     
     {token && <PageTitle
@@ -67,7 +90,7 @@ const TradeHistory: React.FC<Props> = (props) => {
                   ],
                   active: {name: 'Trade History'},
                 }}
-                title={{name: 'Trade History'}}
+                title={{name: `Trade History:  ${truncateAddress(address)}`, hasCopy: address }}
                />}
 
     {(token && tokenData.data) && (

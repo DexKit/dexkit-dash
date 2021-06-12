@@ -7,12 +7,14 @@ import { BITQUERY_TRANSACTION_LIST } from "services/graphql/bitquery/history/gql
 import { GetTransactionList, GetTransactionListVariables } from "services/graphql/bitquery/history/__generated__/GetTransactionList";
 import usePagination from "hooks/usePagination";
 import { ITransactionList } from "types/app";
+import { EthereumNetwork } from "../../../__generated__/globalTypes";
 
 interface Props {
-  address: string
+  address: string,
+  networkName: EthereumNetwork;
 }
 
-export const useTransactionList = ({address}: Props) =>{
+export const useTransactionList = ({address, networkName}: Props) =>{
 
   const { currentChainId } = useChainId();
 
@@ -22,7 +24,7 @@ export const useTransactionList = ({address}: Props) =>{
 
   const { loading, error, data: dataFn } = useQuery<GetTransactionList, GetTransactionListVariables>(BITQUERY_TRANSACTION_LIST, {
     variables: {
-      network: GET_NETWORK_NAME(currentChainId),
+      network: networkName,
       address: address,
       limit: Math.floor(rowsPerPage/2),
       offset: Math.floor(skipRows/2)

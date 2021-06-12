@@ -63,6 +63,13 @@ export const ETHERSCAN_API_URL = (chainId: ChainId|undefined) => {
     default: return 'https://etherscan.io';
   }
 }
+export const ETHERSCAN_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
+  switch(network) {
+    case EthereumNetwork.ethereum: return 'https://etherscan.io';
+    case EthereumNetwork.bsc: return 'https://bscscan.com/';
+    default: return 'https://etherscan.io';
+  }
+}
 
 export const GET_ZRX_FLASH_WALLET = (chainId: ChainId|undefined) => {
   const id = Number(chainId);

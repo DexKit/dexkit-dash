@@ -13,6 +13,7 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
 import { MyBalances } from 'types/blockchain';
+import { useNetwork } from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 interface Props {
@@ -28,6 +29,8 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
     MyBalances[]
   >([]);
   const [usdAvailable, setUsdAvailable] = useState<number>(0);
+
+  const networkName = useNetwork();
 
   useEffect(() => {
     if (only) {
@@ -47,7 +50,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
               name: only.name || '',
               symbol: only.symbol || '',
             },
-            network: EthereumNetwork.ethereum,
+            network: networkName,
             value: 0,
             valueInUsd: 0,
           },
@@ -239,7 +242,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
       <Sender
         open={senderModal}
         onClose={() => setSenderModal(false)}
-        balances={tokens.filter(t => t.network === EthereumNetwork.ethereum)}
+        balances={tokens.filter(t => t.network === networkName)}
       />
 
       <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />

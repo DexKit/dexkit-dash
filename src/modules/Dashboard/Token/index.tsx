@@ -30,6 +30,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import { toggleFavoriteCoin } from 'redux/_ui/actions';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 const TVChartContainer = React.lazy(
   () => import('shared/components/chart/TvChart/tv_chart'),
@@ -54,9 +55,11 @@ const TokenPage: React.FC<Props> = (props) => {
 
   const classes = useStyles(theme);
 
-  const {account, chainId} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
+  const defaultAccount = useDefaultAccount();
+  const account = defaultAccount || web3Account;
 
-  const {data: balances} = useAllBalance();
+  const {data: balances} = useAllBalance(account);
 
   const [chartSymbol, setChartSymbol] = useState<string>();
 

@@ -1,6 +1,6 @@
 import { Token } from "types/app";
 import { createReducer } from "@reduxjs/toolkit"
-import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin } from "./actions"
+import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin, setDefaultAccount } from "./actions"
 import { CoinDetailCoinGecko } from "types/coingecko";
 
 export type FavoriteCoin = Token & CoinDetailCoinGecko
@@ -27,6 +27,16 @@ export default createReducer(initialUIState, (builder) =>
       const ind = state.accounts.findIndex(a => a === account); 
       if(ind === -1){
         state.accounts.push(account);
+      }
+    })
+    .addCase(setDefaultAccount, (state, action) => {
+      const account = action.payload;
+      const ind = state.accounts.findIndex(a => a === account); 
+      if(ind === -1){
+        state.accounts.unshift(account);
+      }else{
+        state.accounts.splice(ind, 1);
+        state.accounts.unshift(account);
       }
     })
     .addCase(removeAccount, (state, action) => {

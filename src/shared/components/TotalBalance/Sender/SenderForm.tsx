@@ -20,6 +20,7 @@ import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquer
 import { useTransfer } from 'hooks/useTransfer';
 
 import { useDispatch } from 'react-redux';
+import { useNetwork } from 'hooks/useNetwork';
 
 
 interface Props {
@@ -53,6 +54,7 @@ const SenderForm: React.FC<Props> = (props) => {
 
 
   const {account,  chainId} = useWeb3();
+  const network = useNetwork();
   const {onTransfer} = useTransfer();
 
   const [amount, setAmount] = useState<string>('');
