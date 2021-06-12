@@ -200,6 +200,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                     name={`${selectedOption.value}.componentsTheme`}
                     themeName={themeName}
                     value={getValue(k)}
+                    logo={`/assets/images/wizard-${componentes.get(k) as string}.png`}
                     onChange={($e, value) => {
                       const property = componentes.get(k);
                       if(

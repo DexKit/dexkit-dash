@@ -13,9 +13,6 @@ import { Accordion, AccordionDetails, AccordionSummary } from '../Accordion';
 import { HelpText, getHelpText } from '..';
 import { ThemeProperties } from 'types/myApps';
 
-const dexkitLogo = require('assets/images/dexkit-logo.png');
-
-
 const useStyles = makeStyles((theme) => ({
   root: (props:{color: string}) => ({
     width: '2rem',
@@ -39,9 +36,10 @@ interface ComponentsThemeProps {
   onChange?: ($e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
   editable?: boolean;
   help: HelpText<Partial<ThemeProperties>>;
+  logo?: string;
 }
 const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
-  const { name, label, className, onChange, value, editable, help } = props;
+  const { name, label, className, onChange, value, editable, help, logo } = props;
   const [color, setColor] = useState(value.hex);
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles({ color });
@@ -75,10 +73,11 @@ const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
                 key={`${name}.${className}`}
                 disabled={!Boolean(editable)}
               />
-              <Box margin={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
+              { logo && <Box margin={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
                 <Typography>{ getHelpText(help, className, 0) }</Typography>
-                <img loading="lazy" className={classes.image} src={dexkitLogo} alt="layout property demo"/>
+                <img loading="lazy" className={classes.image} src={logo}/>
               </Box>
+              }
             </Box>
           </AccordionDetails>
         </Accordion>
