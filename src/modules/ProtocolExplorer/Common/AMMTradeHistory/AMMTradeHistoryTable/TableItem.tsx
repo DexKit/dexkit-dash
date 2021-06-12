@@ -144,12 +144,12 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
               )}
             </a>
           </Tooltip>
-          <a
+          {/*<a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.transaction?.hash}`}
             target='_blank'
             rel='noreferrer'>
             <SearchIcon />
-          </a>
+          </a> */}
         </Box>
       </TableCell>
     </TableRow>

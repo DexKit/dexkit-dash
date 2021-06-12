@@ -76,7 +76,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
           </Hidden>
-
+      
+          
          {/* <AppLogo />*/}
           <Box className={classes.grow} />
           {/* <SearchBar borderLight placeholder='Search…' />*/}

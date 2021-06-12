@@ -8,6 +8,8 @@ export const setAccounts = createAction<string[]>('ui/ACCOUNTS_set');
 
 export const addAccounts = createAction<string[]>('ui/ACCOUNTS_add');
 
+export const setDefaultAccount = createAction<string>('ui/ACCOUNTS_set_default');
+
 export const setAccount = createAction<string>('ui/ACCOUNT_set');
 
 export const removeAccount = createAction<string>('ui/ACCOUNT_remove');

@@ -20,24 +20,25 @@ import 'react-notifications-component/dist/theme.css'
 const App = () => (
   <ContextProvider>
     <Provider store={store}>
-    <ApolloProvider client={client}>
-      <CremaThemeProvider>
-        <CremaStyleProvider>
-          <LocaleProvider>
-            <ConnectedRouter history={history}>
-              <WalletRoutes>
-                <CssBaseline />
-                <Web3Manager/>
-                <ReactNotification />
-                {/*<ThemeSetting props={{}}/>*/}
-                <InfoView />
-                <AppLayout />
-              </WalletRoutes>
-            </ConnectedRouter>
-          </LocaleProvider>
-        </CremaStyleProvider>
-      </CremaThemeProvider>
-      </ApolloProvider>,
+      <ApolloProvider client={client}>
+        <CremaThemeProvider>
+          <CremaStyleProvider>
+            <LocaleProvider>
+              <ConnectedRouter history={history}>
+                <WalletRoutes>
+                  <CssBaseline />
+                  <Web3Manager/>
+                  <ReactNotification />
+                  {/*<ThemeSetting props={{}}/>*/}
+                  <InfoView />
+                  <AppLayout />
+                </WalletRoutes>
+              </ConnectedRouter>
+            </LocaleProvider>
+          </CremaStyleProvider>
+        </CremaThemeProvider>
+        </ApolloProvider>,
+
     </Provider>
   </ContextProvider>
 );

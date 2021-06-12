@@ -106,7 +106,13 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     verticalAlign: 'middle',
     display: 'inline-block',
     height: '100%',
-    width: '28.6%'
+    width: '28.6%',
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
   },
   badgeRoot: {
     display: 'flex',

@@ -16,6 +16,8 @@ import ButtonCopy from '../ButtonCopy';
 import TokenLogo from '../TokenLogo';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import NetworkSwitcher from '../NetworkSwitcher';
+
 // import {truncateAddress} from 'utils';
 
 interface Props {
@@ -26,10 +28,11 @@ interface Props {
   title: {name: string; hasCopy?: string};
   subtitle?: {name: string; hasCopy?: string};
   network?: EthereumNetwork;
+  networkSwitcher?: {networkName: EthereumNetwork, onClick: (network: EthereumNetwork) => any}
   icon?: string;
 }
 
-const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network}) => {
+const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network, networkSwitcher}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     breadcrumbs: {
       fontSize: '16px',
@@ -93,6 +96,10 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
         )}
 
         <Box className={classes.boxTitle}>
+        {networkSwitcher && <Box mr={3}>
+              <NetworkSwitcher networkName={networkSwitcher.networkName} onClick={networkSwitcher.onClick} />
+            </Box>}
+
           {network && <Box mr={5}>
           <Tooltip title="Network">
               <Chip

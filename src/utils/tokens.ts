@@ -54,6 +54,8 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
     case ChainId.Binance:
       const isBNB = symbol.toLowerCase() === 'bnb'
       return isBNB;
+    case ChainId.Matic:
+      return symbol.toLowerCase() === 'matic';
   }
 };
 
@@ -100,6 +102,8 @@ export const getNativeCoinWrapped = (chainId: ChainId) => {
     case ChainId.BinanceTest:
     case ChainId.Binance:
       return 'wbnb';
+    case ChainId.Matic:
+      return 'wmatic';
   }
 };
 

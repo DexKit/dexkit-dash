@@ -1,11 +1,13 @@
 import React from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Box, Dialog, Tabs, Tab, Card, makeStyles} from '@material-ui/core';
+import {Box, Dialog, Tabs, Tab, Card, makeStyles, Chip} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
 import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import { useNetwork } from 'hooks/useNetwork';
+import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import Tooltip from '@material-ui/core/Tooltip';
 
 interface Props {
   open: boolean;
@@ -67,7 +69,11 @@ const Sender: React.FC<Props> = (props) => {
               <Tab
                 className={classes.muiTab}
                 style={{fontWeight: 'bold'}}
-                label={<IntlMessages id='Send' />}
+                label={<Box display={'flex'}>
+                  <Tooltip title={'Current Connected Network'}>
+                  <Chip label={FORMAT_NETWORK_NAME(networkName)} style={{marginRight: '8px'}}  /> 
+                  </Tooltip> 
+                  <IntlMessages id='Send' />  </Box>}
                 {...a11yProps(0)}
                 // disabled={address != null && address.length > 0}
               />

@@ -118,7 +118,7 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const {web3State, onConnectWeb3} = useWeb3();
+  const { web3State, onConnectWeb3, account:web3Account } = useWeb3();
 
   const network = useNetwork();
 
@@ -139,13 +139,19 @@ const LimitForm: React.FC<Props> = (props) => {
   const [expirySelect, setExpirySelect] = useState<number>(86400);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
-  if (web3State !== Web3State.Done && tokenFrom === undefined) {
-    const tokenETH = select1.find(
-      (e) => e.symbol === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName),
-    );
+  useEffect(()=> {
+    if ( web3State !== Web3State.Done && tokenFrom === undefined) {
+      const tokenETH = select1.find(
+        (e) => e.symbol.toLowerCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
+      );
+    if(tokenETH){
+      tokenETH.address = GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase();
+      onChangeToken(tokenETH, 'from');
+    }
+  
+    }
 
-    onChangeToken(tokenETH, 'from');
-  }
+  }, [web3State, tokenFrom, select1])
 
   const resetAmount = () => {
     setAmountFrom(0);
@@ -334,6 +340,8 @@ const LimitForm: React.FC<Props> = (props) => {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
+  } else if (account !== web3Account) {
+      errorMessage = 'Connect Your Default Wallet';
   } else if (networkName !== network) {
     errorMessage = `Switch to ${FORMAT_NETWORK_NAME(network)} in your wallet`;
   } else if (networkName !== EthereumNetwork.ethereum) {

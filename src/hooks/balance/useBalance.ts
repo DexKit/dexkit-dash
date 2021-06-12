@@ -12,10 +12,10 @@ import {client} from 'services/graphql';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 
-export const useBalance = () => {
-  const {account} = useWeb3();
+export const useBalance = (defaultAccount?: string) => {
+  const {account: web3Account} = useWeb3();
   const network = useNetwork();
-
+  const account = defaultAccount || web3Account;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>();
   const [data, setData] = useState<GetMyBalance_ethereum_address_balances[]>(

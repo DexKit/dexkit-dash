@@ -13,8 +13,9 @@ import { MyBalances } from 'types/blockchain';
 
 
 // Get balance from BSC and ETH at once
-export const useAllBalance = () => {
-  const {account} = useWeb3();
+export const useAllBalance = (defaultAccount?: string) => {
+  const {account: web3Account} = useWeb3();
+  const account = defaultAccount || web3Account;
   const network = useNetwork();
 
   const [loading, setLoading] = useState(true);

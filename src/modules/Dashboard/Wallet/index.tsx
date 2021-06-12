@@ -31,14 +31,18 @@ import AppContextPropsType from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
 import {Skeleton} from '@material-ui/lab';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface Props {}
 
 const Wallet: React.FC<Props> = (props) => {
   const {messages} = useIntl();
-  const {account} = useWeb3();
+  const defaultAccount = useDefaultAccount();
+  const {account: web3Account} = useWeb3();
+  const account = defaultAccount || web3Account;
+  
   const {defiBalance} = useDefi(account);
-  const {loading, error, data} = useAllBalance();
+  const {loading, error, data} = useAllBalance(defaultAccount);
   const {
     loading: loadingChart,
     error: errorChart,
@@ -61,7 +65,7 @@ const Wallet: React.FC<Props> = (props) => {
                 {url: '/', name: 'Dashboard'},
                 {url: '/dashboard/wallet', name: 'Wallet'},
               ],
-              active: {name: `${truncateAddress(account)}`, hasCopy: account},
+              active: {name: `${truncateAddress(defaultAccount)}`, hasCopy: account},
             }}
             title={{name: 'Wallet'}}
           />

@@ -7,6 +7,7 @@ import {matchRoutes} from 'react-router-config';
 import AppContext from '../@crema/utility/AppContext';
 import {AppState} from '../redux/store';
 import AppContextPropsType from '../types/AppContextPropsType';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface AuthRoutesProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   const {routes} = useContext<AppContextPropsType>(AppContext);
 
   const ethAccount = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+  const defaultAccount = useDefaultAccount();
   const {initialPath} = useSelector<AppState, AppState['settings']>(({settings}) => settings);
   const currentRoute = matchRoutes(routes, pathname)[0].route;
 
@@ -42,7 +44,7 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   }, [dispatch, initialPath, pathname, ethAccount]);
 
   useEffect(() => {
-      if (!ethAccount && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('wallet')) {
+      if ((!ethAccount && !defaultAccount) && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('wallet')) {
         history.push('/connect-wallet');
       } else if (
         pathname === '/connect-wallet'  && ethAccount
@@ -58,7 +60,7 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
           history.push('/dashboards/overview');
         }
     }
-  }, [ethAccount, pathname, initialPath, currentRoute.auth, history]);
+  }, [ethAccount, pathname, initialPath, currentRoute.auth, history, defaultAccount]);
 
   return <>{children}</>;
 };

@@ -1,6 +1,6 @@
 import { ConfigResponse } from "types/myApps";
 
-const MY_APPS_ENDPOINT = 'https://staging.query.dexkit.com'
+const MY_APPS_ENDPOINT = 'https://query.dexkit.com'
 
 export const sendConfig = async (formData: any) => {
   const headers = new Headers({

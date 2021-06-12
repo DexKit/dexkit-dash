@@ -161,7 +161,7 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
           <List dense={true}>
             {/* {generate({ data: { kitsData, userKits}, icon, bgColor, history})} */}
 
-            <Kit
+           {/* <Kit
               key={'agg'}
               icon={Aggregator}
               bgColor={blue[500]}
@@ -187,7 +187,7 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
                 action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/exchange`, 'DEX'),
                 title: 'ADD +'
               }}
-            />
+            /> */}
 
             <Kit
               key={'market'}

@@ -189,7 +189,7 @@ const initConfig = {
     "icon": "https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0",
     "feeRecipient": "0x1f9eEf1A12b56452b8CAba1cFD03d697f1cc68F7",
     "feePercentage": 0.1,
-    "domain": 'http://localhost.com',
+    "domain": '',
     "social": {
       "telegram_url": "https://t.me/dexkit",
       "twitter_url": "https://twitter.com/DexKit",
