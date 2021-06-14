@@ -19,7 +19,7 @@ import {Web3State} from 'types/blockchain';
 import {isMobile} from 'web3modal';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { truncateAddress } from 'utils/text';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
@@ -37,7 +37,7 @@ const WalletInfo = (props: any) => {
   };
 
   const history = useHistory();
-
+  const location = useLocation();
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -77,7 +77,15 @@ const WalletInfo = (props: any) => {
   }
 
   const onSetDefaultAccount = (a: string) => {
-    dispatch(setDefaultAccount(a));
+    const pathname = location.pathname;
+    if(pathname && pathname.indexOf('dashboard/wallet') === 1){
+      // This is need because it was not changing the url and causing loop on update
+      history.push(`/dashboard/wallet/${a}`);
+      dispatch(setDefaultAccount(a));
+    }else{
+      dispatch(setDefaultAccount(a));
+    }
+  
   }
 
   /*const onConnectWallet = () => {

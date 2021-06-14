@@ -1,7 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {Grid, Box, Divider, Fade} from '@material-ui/core';
 
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import AppSelect from '@crema/core/AppSelect';
 import GridContainer from '@crema/core/GridContainer';
 import AppCard from '@crema/core/AppCard';
@@ -15,9 +16,7 @@ import DefiCoins, {CoinsProps} from './DefiCoins';
 import PageTitle from 'shared/components/PageTitle';
 import {Link} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
-import {useBalance} from 'hooks/balance/useBalance';
 import TotalBalance from 'shared/components/TotalBalance';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import AssetTable from './AssetTable';
 import {useNetwork} from 'hooks/useNetwork';
@@ -32,12 +31,28 @@ import {AppContext} from '@crema';
 import {Skeleton} from '@material-ui/lab';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { useDispatch } from 'react-redux';
 
-interface Props {}
+
+
+type Params = {
+  account: string;
+};
+
+type Props = RouteComponentProps<Params>;
 
 const Wallet: React.FC<Props> = (props) => {
   const {messages} = useIntl();
+  const {
+    match: {params},
+  } = props;
+  const {account: urlAccount} = params;
+  const history = useHistory();
+
   const defaultAccount = useDefaultAccount();
+  const dispatch = useDispatch()
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
   
@@ -50,6 +65,19 @@ const Wallet: React.FC<Props> = (props) => {
     handleSelectDay,
     handleSelectToken,
   } = useBalanceChart(data);
+
+  useEffect(() => {
+    if(urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount){
+      history.push(`/dashboard/wallet/${urlAccount}`)
+      dispatch(setDefaultAccount(urlAccount))
+    }
+    if(!urlAccount && defaultAccount){
+      history.push(`/dashboard/wallet/${defaultAccount}`)
+    }
+
+  }, [urlAccount, defaultAccount])
+
+
 
   const networkName = useNetwork();
 
@@ -92,11 +120,11 @@ const Wallet: React.FC<Props> = (props) => {
               <Box className='card-hover'>
                 <Link
                   className={classes.btnPrimary}
-                  to={`/${networkName}/history/order/list/${account}`}
+                  to={`/${networkName}/history/trade/list/${account}`}
                   style={{textDecoration: 'none'}}>
                   <InfoCard
                     state={{
-                      value: 'Order History',
+                      value: 'Trade History',
                       bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 1,

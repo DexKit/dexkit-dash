@@ -17,8 +17,6 @@ interface Props {
 
 export const useOrderList = ({address, baseCurrency,  networkName}: Props) =>{
 
-  const { currentChainId } = useChainId();
-
   const { currentPage, rowsPerPage, skipRows, rowsPerPageOptions, onChangePage, onChangeRowsPerPage } = usePagination();
 
   const [data, setData] = useState<IOrderList[]>();
@@ -30,8 +28,8 @@ export const useOrderList = ({address, baseCurrency,  networkName}: Props) =>{
       baseCurrency,
       // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
       address: address,
-      limit: Math.floor(rowsPerPage/2),
-      offset: Math.floor(skipRows/2)
+      limit: Math.floor(rowsPerPage),
+      offset: Math.floor(skipRows)
     },
     pollInterval: POLL_INTERVAL
   });
