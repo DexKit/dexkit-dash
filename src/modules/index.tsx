@@ -10,7 +10,8 @@ import {protocolExplorerConfigs} from './ProtocolExplorer';
 import {historyConfigs} from './History';
 import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {nftWalletConfig} from './NFTWallet';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -18,13 +19,20 @@ const routeConfigs = [
   ...protocolExplorerConfigs,
   ...myAppsConfigs,
   ...historyConfigs,
-  ...affiliateConfigs
+  ...affiliateConfigs,
+  ...nftWalletConfig,
 ];
 
 const routes = [
   ...createRoutes(routeConfigs),
   {path: '/', exact: true, component: () => <Redirect to={initialUrl} />},
-  {component: () => <Redirect to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`} />},
+  {
+    component: () => (
+      <Redirect
+        to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+      />
+    ),
+  },
 ];
 
 export default routes;
