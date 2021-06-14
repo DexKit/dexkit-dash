@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import { useNetwork } from 'hooks/useNetwork';
-import { fromTokenUnitAmount, toTokenUnitAmount } from '@0x/utils';
+import {useNetwork} from 'hooks/useNetwork';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import BigNumber from 'bignumber.js';
-import { ChainId } from 'types/blockchain';
-import { GasInfo, OrderSide, Steps, Token } from 'types/app';
-import { fetchQuote } from 'services/rest/0x-api';
+import {ChainId} from 'types/blockchain';
+import {GasInfo, OrderSide, Steps, Token} from 'types/app';
+import {fetchQuote} from 'services/rest/0x-api';
 import {
   DialogTitle,
   DialogContent,
@@ -20,7 +20,7 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import { ArrowDownwardOutlined } from '@material-ui/icons';
+import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
 import ErrorStep from './ErrorStep';
 import ConvertStep from './ConvertStep';
@@ -29,11 +29,11 @@ import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
 import ProgressBar from './ProgressBar';
 import LoadingStep from './LoadingStep';
-import { useStyles } from './index.style';
-import { getExpirationTimeFromSeconds } from 'utils/time_utils';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import { getGasEstimationInfoAsync } from 'services/gasPriceEstimation';
-import { EthereumNetwork } from '../../../../../../__generated__/globalTypes';
+import {useStyles} from './index.style';
+import {getExpirationTimeFromSeconds} from 'utils/time_utils';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
+import {EthereumNetwork} from '../../../../../../__generated__/globalTypes';
 
 interface Props {
   isMarket: boolean;
@@ -67,7 +67,7 @@ const GasOptionsWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const GasOption = styled.div<{ isSelected: boolean }>`
+const GasOption = styled.div<{isSelected: boolean}>`
   padding: 10px 15px;
   background-color: ${(props) =>
     props.isSelected ? '#ff7149' : 'transparent'};
@@ -315,7 +315,9 @@ const OrderContent: React.FC<Props> = (props) => {
     secondSymbol = tokenTo.symbol;
   } else {
     displayPrice = parseFloat(validPrice.toString()).toFixed(6);
-    displayGuaranteedPrice = parseFloat(validGuarenteedPrice.toString()).toFixed(6);
+    displayGuaranteedPrice = parseFloat(
+      validGuarenteedPrice.toString(),
+    ).toFixed(6);
     firstSymbol = tokenTo.symbol;
     secondSymbol = tokenFrom.symbol;
   }
@@ -368,8 +370,8 @@ const OrderContent: React.FC<Props> = (props) => {
 
       <DialogContent className={classes.dialogContent}>
         {loading &&
-          currentStep !== Steps.MARKET &&
-          currentStep !== Steps.LIMIT ? (
+        currentStep !== Steps.MARKET &&
+        currentStep !== Steps.LIMIT ? (
           <Box
             display='flex'
             flexDirection='column'
@@ -427,7 +429,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 justifyContent='center'>
                 <Typography align='center'>
                   <ErrorOutlineIcon
-                    style={{ marginBottom: 20, width: 100, height: 100 }}
+                    style={{marginBottom: 20, width: 100, height: 100}}
                   />
                 </Typography>
 
@@ -441,7 +443,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 direction='row'
                 justify='center'
                 alignItems='center'>
-                <Grid style={{ paddingRight: 8, paddingBottom: 8 }} item xs={6}>
+                <Grid style={{paddingRight: 8, paddingBottom: 8}} item xs={6}>
                   <Typography
                     variant='h6'
                     className={classes.textSecondary}
@@ -449,7 +451,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     {isConvert ? 'Convert' : 'Send'}
                   </Typography>
                 </Grid>
-                <Grid style={{ paddingLeft: 8, paddingBottom: 8 }} item xs={6}>
+                <Grid style={{paddingLeft: 8, paddingBottom: 8}} item xs={6}>
                   <Typography
                     className={classes.valueSend}
                     variant='h6'
@@ -467,7 +469,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 </Grid>
 
                 <Grid
-                  style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 16 }}
+                  style={{paddingRight: 8, paddingTop: 4, paddingBottom: 16}}
                   item
                   xs={6}>
                   <Typography
@@ -478,7 +480,7 @@ const OrderContent: React.FC<Props> = (props) => {
                   </Typography>
                 </Grid>
                 <Grid
-                  style={{ paddingLeft: 8, paddingTop: 4, paddingBottom: 16 }}
+                  style={{paddingLeft: 8, paddingTop: 4, paddingBottom: 16}}
                   item
                   xs={6}>
                   <Typography
@@ -513,7 +515,7 @@ const OrderContent: React.FC<Props> = (props) => {
                             align='right'>
                             {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
                             <IconButton
-                              style={{ marginLeft: 5 }}
+                              style={{marginLeft: 5}}
                               size='small'
                               onClick={invertPrice}>
                               <SyncAltIcon fontSize='small' />
@@ -521,12 +523,12 @@ const OrderContent: React.FC<Props> = (props) => {
                           </Typography>
                         </Grid>
 
-                        {false &&
+                        {isMarket && (
                           <>
                             <Grid item xs={12} sm={3}>
                               <Typography className={classes.textSecondary}>
                                 Guaranteed Price
-                          </Typography>
+                              </Typography>
                             </Grid>
                             <Grid item xs={12} sm={9}>
                               <Typography
@@ -534,13 +536,15 @@ const OrderContent: React.FC<Props> = (props) => {
                                 align='right'>
                                 {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
                                 <IconButton
-                                  style={{ marginLeft: 5 }}
+                                  style={{marginLeft: 5}}
                                   size='small'
                                   onClick={invertPrice}>
                                   <SyncAltIcon fontSize='small' />
                                 </IconButton>
                               </Typography>
-                            </Grid></>}
+                            </Grid>
+                          </>
+                        )}
 
                         <Grid item xs={12} sm={5}>
                           <Typography className={classes.textSecondary}>
@@ -587,7 +591,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               id='slippage_inp'
                               variant='outlined'
                               type='number'
-                              inputProps={{ min: 0, max: 1, step: 0.01 }}
+                              inputProps={{min: 0, max: 1, step: 0.01}}
                               value={slippage}
                               onChange={(e) => {
                                 setSlippage(Number(e.target.value));
@@ -597,12 +601,12 @@ const OrderContent: React.FC<Props> = (props) => {
                         </Grid>
                       </>
                     )}
-                    {(isMarket || isConvert) &&
+                    {(isMarket || isConvert) && (
                       <>
                         <Grid item xs={12} sm={5}>
                           <Typography className={classes.textSecondary}>
                             Gas Price (Gwei)
-                      </Typography>
+                          </Typography>
                         </Grid>
                         <Grid item xs={12} sm={7}>
                           <Box display='flex' justifyContent={'flex-end'}>
@@ -610,7 +614,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               variant='outlined'
                               type='number'
                               value={displayGasPrice}
-                              inputProps={{ min: 0, max: 1000, step: 1 }}
+                              inputProps={{min: 0, max: 1000, step: 1}}
                               onChange={(e) =>
                                 handleChangeDisplayGasPrice(e.target.value)
                               }
@@ -625,10 +629,12 @@ const OrderContent: React.FC<Props> = (props) => {
                               onClick={() =>
                                 handleChangeSelectedGasPrice(lowGasPrice, 'low')
                               }>
-                              <Typography style={{ fontWeight: 600 }}>
+                              <Typography style={{fontWeight: 600}}>
                                 {`${displayLowGas} Gwei`}
                               </Typography>
-                              <Typography style={{ fontWeight: 600 }}>Low</Typography>
+                              <Typography style={{fontWeight: 600}}>
+                                Low
+                              </Typography>
                             </GasOption>
 
                             <GasOption
@@ -639,29 +645,33 @@ const OrderContent: React.FC<Props> = (props) => {
                                   'default',
                                 )
                               }>
-                              <Typography style={{ fontWeight: 600 }}>
+                              <Typography style={{fontWeight: 600}}>
                                 {`${displayDefaultGas} Gwei`}
                               </Typography>
-                              <Typography style={{ fontWeight: 600 }}>
+                              <Typography style={{fontWeight: 600}}>
                                 Default
-                          </Typography>
+                              </Typography>
                             </GasOption>
 
                             <GasOption
                               isSelected={selectedGasOption === 'fast'}
                               onClick={() =>
-                                handleChangeSelectedGasPrice(fastGasPrice, 'fast')
+                                handleChangeSelectedGasPrice(
+                                  fastGasPrice,
+                                  'fast',
+                                )
                               }>
-                              <Typography style={{ fontWeight: 600 }}>
+                              <Typography style={{fontWeight: 600}}>
                                 {`${displayFastGas} Gwei`}
                               </Typography>
-                              <Typography style={{ fontWeight: 600 }}>
+                              <Typography style={{fontWeight: 600}}>
                                 Fast
-                          </Typography>
+                              </Typography>
                             </GasOption>
                           </GasOptionsWrapper>
                         </Grid>
-                      </>}
+                      </>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

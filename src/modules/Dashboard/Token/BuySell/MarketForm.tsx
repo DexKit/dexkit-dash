@@ -4,13 +4,7 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  makeStyles,
-  Grid,
-  Box,
-  Button,
-  TextField,
-} from '@material-ui/core';
+import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
@@ -28,12 +22,10 @@ import {isMobile} from 'web3modal';
 import {
   FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
-
 } from 'shared/constants/Bitquery';
-import { useTokenPriceUSD } from 'hooks/useTokenPriceUSD';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
-import { useNetwork } from 'hooks/useNetwork';
-
+import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {useNetwork} from 'hooks/useNetwork';
 
 interface Props {
   chainId: number | undefined;
@@ -94,6 +86,7 @@ const MarketForm: React.FC<Props> = (props) => {
     textRes: {
       marginBottom: 0,
       fontSize: 13,
+      cursor: 'pointer',
 
       [theme.breakpoints.up('xl')]: {
         fontSize: 18,
@@ -160,16 +153,25 @@ const MarketForm: React.FC<Props> = (props) => {
   const switchTokens = () => {
     if (tokenFrom) {
       onChangeToken(tokenFrom, 'to');
-    }
-    if (tokenTo) {
+    } else if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
   };
 
-  const {priceQuote: priceQuoteTo} = useTokenPriceUSD(tokenTo?.address, networkName, OrderSide.Buy,  amountTo, tokenTo?.decimals );
-  const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(tokenFrom?.address, networkName, OrderSide.Sell, amountFrom, tokenFrom?.decimals );
-
-
+  const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
+    tokenTo?.address,
+    networkName,
+    OrderSide.Buy,
+    amountTo,
+    tokenTo?.decimals,
+  );
+  const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(
+    tokenFrom?.address,
+    networkName,
+    OrderSide.Sell,
+    amountFrom,
+    tokenFrom?.decimals,
+  );
 
   const setMax = () => {
     if (tokenBalance && tokenBalance.value) {
@@ -350,7 +352,22 @@ const MarketForm: React.FC<Props> = (props) => {
                 label={<IntlMessages id='app.youSend' />}
                 onChange={(e) => onChangeFrom(e)}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price) * Number(amountFrom))}</i></>}</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position='end' style={{fontSize: '13px'}}>
+                      {priceQuoteFrom && (
+                        <>
+                          ≈
+                          <i>
+                            {' '}
+                            {usdFormatter.format(
+                              Number(priceQuoteFrom?.price) *
+                                Number(amountFrom),
+                            )}
+                          </i>
+                        </>
+                      )}
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Grid>
@@ -376,7 +393,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 mb={2}
                 color='grey.400'
                 textAlign='center'
-                onClick={() => switchTokens()}
+                onClick={switchTokens}
                 className={classes.textRes}>
                 <ArrowDownwardOutlined />
               </Box>
@@ -397,7 +414,21 @@ const MarketForm: React.FC<Props> = (props) => {
                 value={amountTo}
                 InputProps={{
                   readOnly: true,
-                  endAdornment: <InputAdornment position="end" style={{fontSize: '13px'}}>{priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price) * Number(amountTo))}</i></>}</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position='end' style={{fontSize: '13px'}}>
+                      {priceQuoteTo && (
+                        <>
+                          ≈
+                          <i>
+                            {' '}
+                            {usdFormatter.format(
+                              Number(priceQuoteTo?.price) * Number(amountTo),
+                            )}
+                          </i>
+                        </>
+                      )}
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Grid>
@@ -416,26 +447,43 @@ const MarketForm: React.FC<Props> = (props) => {
                   onChangeToken($token, 'to');
                 }}
               />
-            </Grid> 
-            <Grid 
-              xs={12}
-              md={12}>
-             <Box display={'flex'} justifyContent={'space-evenly'}>
-             {priceQuoteTo &&  <Box>
-              <p>
-                1 {tokenTo?.symbol.toUpperCase()}  {priceQuoteTo && <>≈<i> {usdFormatter.format(Number(priceQuoteTo?.price) )}</i></>} 
-                
-                </p>
-                </Box>} 
-                {priceQuoteFrom && 
+            </Grid>
+            <Grid xs={12} md={12}>
+              <Box display={'flex'} justifyContent={'space-evenly'}>
+                {priceQuoteTo && (
                   <Box>
-                      <p>
-                      1 {tokenFrom?.symbol.toUpperCase()} {priceQuoteFrom && <>≈<i> {usdFormatter.format(Number(priceQuoteFrom?.price))}</i></>} 
-              
-                      </p>
-                </Box>}
+                    <p>
+                      1 {tokenTo?.symbol.toUpperCase()}{' '}
+                      {priceQuoteTo && (
+                        <>
+                          ≈
+                          <i>
+                            {' '}
+                            {usdFormatter.format(Number(priceQuoteTo?.price))}
+                          </i>
+                        </>
+                      )}
+                    </p>
+                  </Box>
+                )}
+                {priceQuoteFrom && (
+                  <Box>
+                    <p>
+                      1 {tokenFrom?.symbol.toUpperCase()}{' '}
+                      {priceQuoteFrom && (
+                        <>
+                          ≈
+                          <i>
+                            {' '}
+                            {usdFormatter.format(Number(priceQuoteFrom?.price))}
+                          </i>
+                        </>
+                      )}
+                    </p>
+                  </Box>
+                )}
               </Box>
-              </Grid>
+            </Grid>
           </GridContainer>
         </Box>
       </form>
@@ -448,7 +496,8 @@ const MarketForm: React.FC<Props> = (props) => {
         color='primary'
         onClick={handleTrade}
         disabled={
-          (tokenBalance?.value || 0) < (amountFrom || 0) ||  !!errorMessage ||
+          (tokenBalance?.value || 0) < (amountFrom || 0) ||
+          !!errorMessage ||
           amountTo === 0 ||
           web3State !== Web3State.Done
         }>
@@ -456,7 +505,6 @@ const MarketForm: React.FC<Props> = (props) => {
           errorMessage
         ) : (
           <>
-            <SwapHorizIcon fontSize='large' style={{marginRight: 10}} />
             <Box fontSize='large' fontWeight='bold'>
               Trade
             </Box>

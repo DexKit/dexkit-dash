@@ -16,7 +16,10 @@ import OrderDialog from './Modal';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
 import {MyBalances, Web3State} from 'types/blockchain';
 import { isNativeCoinWithoutChainId } from 'utils';
 import { useHistory } from 'react-router-dom';
@@ -110,15 +113,15 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
       if (tokenTo === undefined) {
         let _token;
-        if(isNativeCoinWithoutChainId(tokenAddress)){
+        if (isNativeCoinWithoutChainId(tokenAddress)) {
           _token = select1.find(
             (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
           );
-        }else{
+        } else {
           _token = select1.find(
             (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
           );
-        }   
+        }
         setTokenTo(_token);
         console.log('setTokenTo', _token);
       }
@@ -129,8 +132,12 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
     if (tokenFrom === undefined) {
       const _token = select0.find(
         (t) =>
-        t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
-        t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+          t.symbol.toUpperCase() ===
+            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
+          t.symbol.toUpperCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+              networkName,
+            ).toUpperCase(),
       );
       setTokenFrom(_token);
       console.log('setTokenFrom', _token);
@@ -150,8 +157,10 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
           history.push(token.address);
         } else {
-          if(token.networkName && token.networkName !== networkName){
-            history.push(`/${token.networkName}/dashboard/token/${token.address}`);
+          if (token.networkName && token.networkName !== networkName) {
+            history.push(
+              `/${token.networkName}/dashboard/token/${token.address}`,
+            );
           }
           setTokenFrom(token);
         }
@@ -166,6 +175,9 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
             );
 
             if (availableTokenFrom) {
+              const aux = tokenTo;
+              setTokenTo(tokenFrom);
+              setTokenFrom(aux);
             } else {
               const newTokenFrom = select0.find(
                 (e) => e.address.toLowerCase() !== token.address.toLowerCase(),
