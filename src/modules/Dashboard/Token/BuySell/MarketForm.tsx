@@ -276,9 +276,10 @@ const MarketForm: React.FC<Props> = (props) => {
 
   let errorMessage = null;
   let disabled = false;
+  let notConnected = web3State !== Web3State.Done
 
-  if (web3State !== Web3State.Done) {
-    errorMessage = (
+ 
+  const connectButton = (
       <Box display='flex' alignItems='center' justifyContent='center'>
         <Button
           size='large'
@@ -297,7 +298,7 @@ const MarketForm: React.FC<Props> = (props) => {
       </Box>
     );
     // disabled = true;
-  } else if (select0.length === 0) {
+ if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
     disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
@@ -488,7 +489,7 @@ const MarketForm: React.FC<Props> = (props) => {
         </Box>
       </form>
 
-      <Button
+      {!notConnected && <Button
         className={classes.btnPrimary}
         fullWidth
         size='large'
@@ -510,7 +511,8 @@ const MarketForm: React.FC<Props> = (props) => {
             </Box>
           </>
         )}
-      </Button>
+      </Button>}
+      { notConnected && connectButton}
     </Box>
   );
 };

@@ -312,28 +312,28 @@ const LimitForm: React.FC<Props> = (props) => {
 
   let errorMessage = null;
   let disabled = false;
+  let notConnected = web3State !== Web3State.Done;
 
-  if (web3State !== Web3State.Done) {
-    errorMessage = (
-      <Box display='flex' alignItems='center' justifyContent='center'>
-        <Button
-          size='large'
-          variant='contained'
-          color='primary'
-          onClick={onConnectWeb3}
-          endIcon={<AccountBalanceWalletIcon />}>
-          {web3State === Web3State.Connecting
-            ? isMobile()
-              ? 'Connecting...'
-              : 'Connecting... Check Wallet'
-            : isMobile()
-            ? 'Connect'
-            : 'Connect Wallet'}
-        </Button>
-      </Box>
-    );
+  const connectButton = (
+    <Box display='flex' alignItems='center' justifyContent='center'>
+      <Button
+        size='large'
+        variant='contained'
+        color='primary'
+        onClick={onConnectWeb3}
+        endIcon={<AccountBalanceWalletIcon />}>
+        {web3State === Web3State.Connecting
+          ? isMobile()
+            ? 'Connecting...'
+            : 'Connecting... Check Wallet'
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
+      </Button>
+    </Box>
+  );
     // disabled = true;
-  } else if (select0.length === 0) {
+  if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
     disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
@@ -640,7 +640,7 @@ const LimitForm: React.FC<Props> = (props) => {
             </Box>
           </form>
 
-          <GridContainer>
+          {!notConnected &&  <GridContainer>
             {isNative && (
               <Grid style={{paddingRight: 8}} item xs={12} sm={12}>
                 <Button
@@ -693,7 +693,12 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Button>
               </Grid>
             )}
-          </GridContainer>
+          </GridContainer>}
+          {notConnected &&  <GridContainer>
+            <Grid style={{paddingLeft: 8}} item xs={12} sm={12}>
+           { connectButton}
+            </Grid>
+          </GridContainer>}
         </Box>
       )}
     </>

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
-import {makeStyles, Button, IconButton, Tooltip, Chip} from '@material-ui/core';
+import {makeStyles, Button, IconButton, Tooltip, Chip, Link} from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -27,6 +27,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import { setDefaultAccount } from 'redux/_ui/actions';
 import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import {Link as RouterLink} from 'react-router-dom';
+
 const WalletInfo = (props: any) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
 
@@ -161,6 +163,7 @@ const WalletInfo = (props: any) => {
       },
     };
   });
+  const notConnected = web3State !== Web3State.Done;
 
   const classes = useStyles(props);
 
@@ -206,6 +209,7 @@ const WalletInfo = (props: any) => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}>
                   <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+                  {notConnected && <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>}
                   {accounts.filter(a=> a !== defaultAccount).map(a => 
                     <MenuItem onClick={()=> onSetDefaultAccount(a)}>{truncateAddress(a)}
                    {a === web3Account &&  <Tooltip title={'Wallet Connected'}>
@@ -218,6 +222,7 @@ const WalletInfo = (props: any) => {
                   )}
                   <MenuItem onClick={onGoToManageWallet}>Manage Accounts</MenuItem>
                   <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+                 
                 </Menu>
               </Box>
             </Box>
@@ -230,7 +235,7 @@ const WalletInfo = (props: any) => {
           </Box>
         </Box>
       )}
-      {(web3State !== Web3State.Done && !defaultAccount) && (
+      {/*(web3State !== Web3State.Done && !defaultAccount) && (
         <Box display='flex' alignItems='center' justifyContent='center'>
           <Button
             variant='contained'
@@ -246,7 +251,17 @@ const WalletInfo = (props: any) => {
               : 'Connect Wallet'}
           </Button>
         </Box>
-      )}
+            )*/}
+     {   !defaultAccount && (
+        <Box display='flex' alignItems='center' justifyContent='center'>
+          <Button
+            variant='contained'
+            onClick={onGoToManageWallet}
+            endIcon={<AccountBalanceWalletIcon />}>
+                Add Accounts
+          </Button>
+        </Box>
+            )}
     </Box>
   );
 };

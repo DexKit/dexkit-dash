@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import { makeStyles } from '@material-ui/core/styles';
 import { CremaTheme } from 'types/AppContextPropsType';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, Grid, Tooltip, Divider, Chip } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, Grid, Tooltip, Divider, Chip, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +21,10 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { useWeb3 } from 'hooks/useWeb3';
 import { green } from '@material-ui/core/colors';
 import HomeIcon from '@material-ui/icons/Home';
+import { AboutDialog } from './aboutDialog';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import {isMobile} from 'web3modal';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -39,7 +43,7 @@ const Accounts = () => {
   const [error, setError] = useState<string>();
   const dispatch = useDispatch();
   const accounts = useSelector<AppState, AppState['ui']['accounts']>(state => state.ui.accounts);
-  const { account } = useWeb3();
+  const { web3State, onConnectWeb3, account } = useWeb3();
 
   const handlePaste = async () => {
     const cpy: any = await navigator.clipboard.readText();
@@ -72,11 +76,31 @@ const Accounts = () => {
   const onRemoveAccount = (a: string) => {
     dispatch(removeAccount(a));
   }
+  const connectButton = (
+    <Box display='flex' alignItems='center' justifyContent='center'>
+      <Button
+        variant='contained'
+        color='primary'
+        onClick={onConnectWeb3}
+        endIcon={<AccountBalanceWalletIcon />}>
+        {web3State === Web3State.Connecting
+          ? isMobile()
+            ? 'Connecting...'
+            : 'Connecting... Check Wallet'
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
+      </Button>
+    </Box>
+  );
+
+  const notConnected = web3State !== Web3State.Done;
 
 
 
   return (
     <Box pt={{ xl: 4 }}>
+      <Box display={'flex'}> 
       <PageTitle
         breadcrumbs={{
           history: [
@@ -87,6 +111,8 @@ const Accounts = () => {
         }}
         title={{ name: 'Manage Accounts' }}
       />
+        <AboutDialog />
+      </Box>
       <GridContainer>
         <Grid item xs={12} sm={12} md={4}>
           <Box className={classes.inputAddress}>
@@ -99,22 +125,31 @@ const Accounts = () => {
                 InputProps={{
                   endAdornment:
                     <InputAdornment position="end" onClick={handlePaste}>
-                      <IconButton aria-label="paste" color="primary">
-                        <CallReceivedIcon />
-                      </IconButton>
+                         <Tooltip title={'Paste valid account'}>
+                        <IconButton aria-label="paste" color="primary">
+                          <CallReceivedIcon />
+                        </IconButton>
+                      </Tooltip>
                     </InputAdornment>,
                 }}
                 onChange={onChangeAddress}
               />
             </form>
             <Box className={classes.inputAddress}>
-              <IconButton aria-label="add" color="primary" onClick={onAddAccount} disabled={!address}>
-                <AddIcon />
-              </IconButton>
+               <Tooltip title={'Add valid account'}>
+                <IconButton aria-label="add" color="primary" onClick={onAddAccount} disabled={!address}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
 
             </Box>
           </Box>
         </Grid>
+        {notConnected &&<Grid item xs={12} sm={12} md={4}>
+         <Box>
+            {connectButton}
+            </Box>
+           </Grid>}
         <Grid item xs={12} sm={12} md={9}>
           <Card>
             <List subheader={<ListSubheader>Accounts</ListSubheader>} className={classes.root}>

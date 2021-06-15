@@ -87,6 +87,8 @@ export const GET_EXCHANGE_FROM_URL = (exchangeURL: EXCHANGE_NAME_ON_URL) => {
       return EXCHANGE.ZEROX;
     case EXCHANGE_NAME_ON_URL.BALANCER:
       return EXCHANGE.BALANCER;
+    case EXCHANGE_NAME_ON_URL.PANCAKE_V2:
+      return EXCHANGE.PANCAKEV2;
     default:
       return EXCHANGE.ALL;
   }

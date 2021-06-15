@@ -112,7 +112,7 @@ const TokenPage: React.FC<Props> = (props) => {
     'My Orders' +
     (infoMyOrders.data ? ' (' + (infoMyOrders.data.total || 0) + ')' : '');
 
-  const tradeHistory = 'Trade History';
+  const tradeHistory = 'My Trade History';
 
   return (
     <>
@@ -157,7 +157,7 @@ const TokenPage: React.FC<Props> = (props) => {
             </Grid>
 
             <GridContainer style={{marginTop: 2}}>
-              <Grid item xs={12} sm={6} md={6}>
+            {account && <Grid item xs={12} sm={6} md={6}>
                 <Box className='card-hover'>
                   <Link
                     className={classes.btnPrimary}
@@ -175,8 +175,8 @@ const TokenPage: React.FC<Props> = (props) => {
                     />
                   </Link>
                 </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
+              </Grid>}
+            {account && <Grid item xs={12} sm={6} md={6}>
                 <Box className='card-hover'>
                   <Link
                     className={classes.btnSecondary}
@@ -194,7 +194,7 @@ const TokenPage: React.FC<Props> = (props) => {
                     />
                   </Link>
                 </Box>
-              </Grid>
+              </Grid>}
             </GridContainer>
           </Grid>
 

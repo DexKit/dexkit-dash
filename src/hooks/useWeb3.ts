@@ -27,11 +27,9 @@ export const useWeb3 = () => {
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(state => state.blockchain.chainId)
   const blocknumber = useSelector<AppState, AppState['blockchain']['blockNumber']>(state => state.blockchain.blockNumber)
 
-
+ 
   useEffect(() => {
     const web3 = getWeb3();
-    const provider = getProvider();
-    
     if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
       // subscribeProvider(provider);
       loadingAccount = true;
@@ -41,14 +39,15 @@ export const useWeb3 = () => {
         dispatch(addAccounts(a))
       }).finally(() => loadingAccount = false);
     }
-    if (web3State === Web3State.Done && web3 && !chainId && !loadingChainId) {
+    if (web3State === Web3State.Done && web3  && !loadingChainId) {
       loadingChainId = true;
+      console.log('calling chainId')
       web3.eth.getChainId().then((n) => {
         dispatch(setChainId(n));
       }).finally(() =>  loadingChainId = false);
     }
 
-  }, [web3State]);
+  }, [web3State,  account]);
 
 
   useEffect(() => {
