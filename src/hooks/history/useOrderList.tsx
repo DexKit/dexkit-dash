@@ -1,20 +1,21 @@
 import {useEffect, useState} from 'react';
 import useFetch from 'use-http';
-import {useChainId} from '../useChainId';
 import {useTokenList} from 'hooks/useTokenList';
 import usePagination from 'hooks/usePagination';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {toTokenUnitAmount} from '@0x/utils';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 
 interface Props {
   address: string;
+  networkName: EthereumNetwork;
 }
 
-export const useTradeHistory = ({address}: Props) => {
-  const {currentChainId} = useChainId();
-  const tokenList = useTokenList(GET_NETWORK_NAME(currentChainId));
-  
+export const useOrdersList = ({address, networkName}: Props) => {
+
+  const tokenList = useTokenList(networkName);
+  const currentChainId = GET_CHAIN_FROM_NETWORK(networkName);
 
   const {
     currentPage,

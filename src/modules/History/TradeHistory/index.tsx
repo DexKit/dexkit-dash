@@ -2,21 +2,20 @@ import React, { useEffect, useMemo } from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
-import {useOrderList} from 'hooks/history/useOrderList';
+
 import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import OrderTable from './OrderTable';
-import {useNetwork} from 'hooks/useNetwork';
 import LoadingTable from 'modules/Common/LoadingTable';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import { useIntl } from 'react-intl';
 import PageTitle from 'shared/components/PageTitle';
-import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
-import { useFetch } from 'use-http';
-import { COINGECKO_CONTRACT_URL } from 'shared/constants/AppConst';
+
 import { truncateAddress } from 'utils/text';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
+import { useTradeHistoryList } from 'hooks/history/useTradeHistoryList';
 
 type Params = {
   address: string;
@@ -41,15 +40,13 @@ const TradeHistory: React.FC<Props> = (props) => {
       if(token){
         history.push(`/${networkName}/history/trade/list/${account}/token/${token}`)
       }else{
-        history.push(`/${networkName}/history/order/list/${account}`)
+        history.push(`/${networkName}/history/trade/list/${account}`)
       }
      
     }
   },[account])
 
 
-
- 
   const {
     loading,
     error,
@@ -60,9 +57,10 @@ const TradeHistory: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useOrderList({address, baseCurrency: token, networkName});
+  } = useTradeHistoryList({address, baseCurrency: token, networkName});
 
-  const tokenData = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${token}`, {}, [token]);
+  const {data: tokenData } = useCoingeckoTokenInfo(token, networkName);
+
 
   const onSwitchNetwork = (n: EthereumNetwork) => {
     history.push(`/${n}/history/order/list/${account}`)
@@ -93,9 +91,9 @@ const TradeHistory: React.FC<Props> = (props) => {
                 title={{name: `Trade History:  ${truncateAddress(address)}`, hasCopy: address }}
                />}
 
-    {(token && tokenData.data) && (
+    {(token && tokenData) && (
               <PageTitle
-                title={{name: tokenData.data.name}}
+                title={{name: tokenData.name}}
                 subtitle={{name: truncateAddress(token), hasCopy: token}}
                 icon={token}
               />

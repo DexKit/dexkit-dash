@@ -1,53 +1,53 @@
-import { useChainId } from "../useChainId";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import usePagination from "hooks/usePagination";
-import { EthereumNetwork, EXCHANGE } from "shared/constants/AppEnums";
+import { EthereumNetwork } from "shared/constants/AppEnums";
 import { POLL_INTERVAL } from "shared/constants/AppConst";
-import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
-import { BITQUERY_ORDER_LIST } from "services/graphql/bitquery/history/gql";
-import { GetOrderList, GetOrderListVariables } from "services/graphql/bitquery/history/__generated__/GetOrderList";
 import { IOrderList } from "types/app";
-
+import { BITQUERY_TRADE_HISTORY_LIST } from "services/graphql/bitquery/history/gql";
+import { GetTradeHistoryList, GetTradeHistoryListVariables, GetTradeHistoryList_ethereum_dexTrades } from "services/graphql/bitquery/history/__generated__/GetTradeHistoryList";
 interface Props {
   address: string;
   baseCurrency?: string;
   networkName: EthereumNetwork
 }
 
-export const useOrderList = ({address, baseCurrency,  networkName}: Props) =>{
+export const useTradeHistoryList = ({address, baseCurrency,  networkName}: Props) =>{
 
   const { currentPage, rowsPerPage, skipRows, rowsPerPageOptions, onChangePage, onChangeRowsPerPage } = usePagination();
 
-  const [data, setData] = useState<IOrderList[]>();
+  const [data, setData] = useState<GetTradeHistoryList_ethereum_dexTrades[]>();
   const [totalRows, setTotalRows] = useState<number>();
+  // If there is no baseCurrency the API returns duplicated values, so we just multiply and then filter
+  let multiplier = 2;
+  if(baseCurrency){
+    multiplier = 1
+  }
 
-  const { loading, error, data: dataFn } = useQuery<GetOrderList, GetOrderListVariables>(BITQUERY_ORDER_LIST, {
+
+  const { loading, error, data: dataFn } = useQuery<GetTradeHistoryList, GetTradeHistoryListVariables>(BITQUERY_TRADE_HISTORY_LIST, {
     variables: {
       network: networkName,
       baseCurrency,
       // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
       address: address,
-      limit: Math.floor(rowsPerPage),
-      offset: Math.floor(skipRows)
+      limit: Math.floor(rowsPerPage*multiplier),
+      offset: Math.floor(skipRows*multiplier)
     },
     pollInterval: POLL_INTERVAL
   });
  
   useEffect(() => {
-    if (dataFn && dataFn?.ethereum?.maker && dataFn?.ethereum?.taker) {
-      const makerTrades: any[] = dataFn.ethereum.maker;
-      const takerTrades: any[] = dataFn.ethereum.taker;
-      const total = (dataFn.ethereum.makerCount && dataFn.ethereum.takerCount) ? ((dataFn.ethereum.makerCount[0].count || 0) + (dataFn.ethereum.takerCount[0].count || 0)) : 0;
-      const allOrders = makerTrades.concat(takerTrades);
+    if (dataFn && dataFn?.ethereum?.dexTrades ) {
 
-      setTotalRows(total);
- 
-      setData(allOrders.sort((a, b) => (b.block.height - a.block.height)).filter((thing, index, self) =>
-        index === self.findIndex((t) => (
-          t.transaction.hash === thing.transaction.hash
-        )))
-      );
+      const total = (dataFn?.ethereum?.total && dataFn?.ethereum?.total.length) ?  (dataFn?.ethereum?.total[0].count || 0) : 0
+      setTotalRows(total/multiplier);
+      if(baseCurrency){
+        setData(dataFn.ethereum.dexTrades);
+      }else{
+        setData(dataFn.ethereum.dexTrades.filter((value, index, self)=> self.map(s => s.transaction?.hash).indexOf(value.transaction?.hash) === index));
+      }
+    
      }
   }, [dataFn])
 

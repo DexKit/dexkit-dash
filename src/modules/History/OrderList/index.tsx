@@ -133,7 +133,6 @@ const TradeHistory: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  console.log(data);
 
   return (
     <Box pt={{xl: 4}}>
