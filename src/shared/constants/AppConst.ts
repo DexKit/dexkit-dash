@@ -12,7 +12,7 @@ export const SECONDS_IN_A_DAY = new BigNumber(60 * 60 * 24);
 
 export const QUOTE_ORDER_EXPIRATION_BUFFER_MS = ONE_SECOND_MS * 30; // Ignore orders that expire in 30 seconds
 
-export const POLL_INTERVAL = 60000;
+export const POLL_INTERVAL = 10000;
 
 // export const RELAYER_URL = (chainId: ChainId) => {
 //   switch (chainId) {

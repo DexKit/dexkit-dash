@@ -205,22 +205,14 @@ export const BITQUERY_TRANSACTION_LIST = gql`
   }
 `;
 
-export const BITQUERY_TRADE_HISTORY_LIST = gql`
-  query GetTradeHistoryList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $baseCurrency: String) {
+export const BITQUERY_ORDER_LIST = gql`
+  query GetOrderList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $baseCurrency: String) {
     ethereum(network: $network) {
-      dexTrades(
+      maker: dexTrades(
         options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
-        any: [
-          {    
-            taker: {is: $address}
-          },
-          {    
-            maker: {is: $address}
-          },
-        
-      ]
+        maker: {is: $address}
         baseCurrency: {is: $baseCurrency}
       ) {
         block {
@@ -245,7 +237,7 @@ export const BITQUERY_TRADE_HISTORY_LIST = gql`
         }
         side
         baseAmount
-        baseAmountInUsd: baseAmount(in: USD)
+        baseAmountInUsd: buyAmount(in: USD)
         baseCurrency {
           name
           address
@@ -254,7 +246,7 @@ export const BITQUERY_TRADE_HISTORY_LIST = gql`
         }
         quotePrice
         quoteAmount
-        quoteAmountInUsd: quoteAmount(in: USD)
+        quoteAmountInUsd: sellAmount(in: USD)
         quoteCurrency {
           name
           address
@@ -264,17 +256,69 @@ export const BITQUERY_TRADE_HISTORY_LIST = gql`
         tradeAmount(in: ETH)
         tradeAmountIsUsd: tradeAmount(in: USD)
       }
-      total: dexTrades(
+      taker: dexTrades(
+        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
-        any: [
-          {    
-            taker: {is: $address}
-          },
-          {    
-            maker: {is: $address}
-          },     
-        ]
+        taker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        date {
+          date
+        }
+        tradeIndex
+        protocol
+        transaction {
+          hash
+        }
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        side
+        baseAmount
+        baseAmountInUsd: buyAmount(in: USD)
+        baseCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        quotePrice
+        quoteAmount
+        quoteAmountInUsd: sellAmount(in: USD)
+        quoteCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+      makerCount: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        maker: {is: $address}
+        baseCurrency: {is: $baseCurrency}
+      ) {
+        count
+      }
+      takerCount: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        taker: {is: $address}
         baseCurrency: {is: $baseCurrency}
       ) {
         count
