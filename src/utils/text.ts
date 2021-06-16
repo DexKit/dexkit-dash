@@ -19,6 +19,13 @@ export const truncateTokenAddress = (address: string|undefined ) => {
   return '';
 };
 
+export const truncateText = (address: string, maxLen: number) => {
+  if (!address) {
+    return '';
+  }
+
+  return `${address.slice(0, maxLen-1)}${address?.length > maxLen ? '...' : ''}`;
+};
 
 
 export function capitalize(str: string, separator: string = ' ', separatorToJoinString: string = ' ') {

@@ -1,6 +1,7 @@
-import {Grid, Card, CardContent} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import AssetCardSkeleton from '../AssetCardSkeleton';
+
+import {List} from '@material-ui/core';
+import CollectionListItemSkeleton from '../CollectionListItemSkeleton';
 
 interface Props {
   count: number;
@@ -17,12 +18,10 @@ export default (props: Props) => {
   }, [count]);
 
   return (
-    <Grid container spacing={2}>
-      {arr.map((i, index: number) => (
-        <Grid key={index} item xs={12} sm={3}>
-          <AssetCardSkeleton />
-        </Grid>
+    <List dense>
+      {arr.map((i: any, index: number) => (
+        <CollectionListItemSkeleton key={index} />
       ))}
-    </Grid>
+    </List>
   );
 };

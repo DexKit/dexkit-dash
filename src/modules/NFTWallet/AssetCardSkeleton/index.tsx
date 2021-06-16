@@ -6,30 +6,31 @@ import {
   CardContent,
   Typography,
   makeStyles,
+  useTheme,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   cardMedia: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
   },
   mediaSkeleton: {
-    height: '56.25%',
+    height: theme.spacing(30),
   },
 }));
 
 export default () => {
+  const theme = useTheme();
   const classes = useStyles();
 
   return (
     <Card>
-      <Skeleton height={200} />
+      <Skeleton className={classes.mediaSkeleton} />
       <CardContent>
         <Typography variant='caption' color='textSecondary'>
-          <Skeleton />
+          <Skeleton width={theme.spacing(30)} />
         </Typography>
-        <Typography>
+        <Typography variant='body1'>
           <Skeleton />
         </Typography>
       </CardContent>
