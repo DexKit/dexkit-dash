@@ -46,6 +46,7 @@ export interface GetSwapQuoteResponseLiquiditySource {
  * Quote Params
  */
 export interface QuoteParams {
+    isMarket?: boolean;
     chainId: number|ChainId;
     baseToken: Token;
     quoteToken: Token;

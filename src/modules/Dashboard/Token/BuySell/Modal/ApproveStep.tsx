@@ -10,12 +10,12 @@ import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import { NotificationType } from 'services/notification';
+import {NotificationType} from 'services/notification';
 // import {useStyles} from './index.style';
-import { useDispatch } from 'react-redux';
-import { Notification} from 'types/models/Notification';
-import { onAddNotification } from 'redux/actions';
-import { truncateAddress } from 'utils';
+import {useDispatch} from 'react-redux';
+import {Notification} from 'types/models/Notification';
+import {onAddNotification} from 'redux/actions';
+import {truncateAddress} from 'utils';
 
 interface Props {
   step: Steps | undefined;
@@ -51,7 +51,7 @@ const ApproveStep: React.FC<Props> = (props) => {
   const isApprove = async () => {
     console.log('Verificando');
 
-    if (tokenFrom.symbol === 'ETH' || tokenFrom.symbol === 'WETH') {
+    if (tokenFrom.symbol === 'ETH') {
       console.log('É ETH, pular para o próximo step');
       return true;
     }
@@ -99,12 +99,10 @@ const ApproveStep: React.FC<Props> = (props) => {
       onLoading(true);
 
       if (allowanceTarget == null) {
-        return Promise.reject(
-          'Token address for approval cannot be null or empty',
-        );
+        throw new Error('Token address for approval cannot be null or empty');
       }
       if (account == null) {
-        return Promise.reject('Account address cannot be null or empty');
+        throw new Error('Account address cannot be null or empty');
       }
 
       const gasInfo = await getGasEstimationInfoAsync();
@@ -113,7 +111,7 @@ const ApproveStep: React.FC<Props> = (props) => {
       const provider = contractWrappers?.getProvider() ?? getProvider();
 
       if (provider == null || web3Wrapper == null) {
-        return Promise.reject('Provider cannot be null');
+        throw new Error('Provider cannot be null');
       }
 
       console.log('Provider', provider);
@@ -142,15 +140,19 @@ const ApproveStep: React.FC<Props> = (props) => {
       web3Wrapper
         .awaitTransactionSuccessAsync(tx)
         .then(() => {
-          const notification: Notification = { title: 'Approve', body: truncateAddress(tx) };
-          dispatch(onAddNotification([notification], NotificationType.SUCCESS));  
-          onNext(true)
-        })
-        .catch((e) => onNext(false, e));
+          const notification: Notification = {
+            title: 'Approve',
+            body: truncateAddress(tx),
+          };
 
-  
+          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
+
+          onNext(true);
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
     } catch (e) {
-      console.log('Erro ', e);
       onNext(false, e.message);
     }
   };

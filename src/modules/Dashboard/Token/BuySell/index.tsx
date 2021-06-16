@@ -21,9 +21,8 @@ import {
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {MyBalances, Web3State} from 'types/blockchain';
-import { isNativeCoinWithoutChainId } from 'utils';
-import { useHistory } from 'react-router-dom';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {isNativeCoinWithoutChainId} from 'utils';
+import {useHistory} from 'react-router-dom';
 
 interface Props {
   tokenAddress: string;
@@ -69,9 +68,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
   const classes = useStyles();
 
-  const {chainId, account: web3Account, web3State} = useWeb3();
-  const defaultAccount = useDefaultAccount();
-  const account = defaultAccount || web3Account;
+  const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
@@ -122,6 +119,12 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
             (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
           );
         }
+
+        // tokenFrom and tokenTo cannot have the same condition for initialization (ie ETH || WETH)
+        if (_token?.symbol === 'ETH' || _token?.symbol === 'WETH') {
+          _token = select1.find((t) => t.symbol === 'KIT');
+        }
+
         setTokenTo(_token);
         console.log('setTokenTo', _token);
       }
