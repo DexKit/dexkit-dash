@@ -1,123 +1,72 @@
-import {useEffect, useState} from 'react';
-import useFetch from 'use-http';
-import {useChainId} from '../useChainId';
-import {useTokenList} from 'hooks/useTokenList';
-import usePagination from 'hooks/usePagination';
-import {ZRX_API_URL} from 'shared/constants/AppConst';
-import {toTokenUnitAmount} from '@0x/utils';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
-
+  
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import usePagination from "hooks/usePagination";
+import { EthereumNetwork } from "shared/constants/AppEnums";
+import { POLL_INTERVAL } from "shared/constants/AppConst";
+import { BITQUERY_TRADE_HISTORY_LIST } from "services/graphql/bitquery/history/gql";
+import { GetTradeHistoryList, GetTradeHistoryListVariables, GetTradeHistoryList_ethereum_dexTrades } from "services/graphql/bitquery/history/__generated__/GetTradeHistoryList";
+import { getCurrency } from "utils/bitquery";
 interface Props {
   address: string;
+  baseCurrency?: string;
+  networkName: EthereumNetwork
 }
 
-export const useTradeHistory = ({address}: Props) => {
-  const {currentChainId} = useChainId();
-  const tokenList = useTokenList(GET_NETWORK_NAME(currentChainId));
-  
+export const useTradeHistory = ({address, baseCurrency,  networkName}: Props) =>{
 
-  const {
-    currentPage,
-    rowsPerPage,
-    rowsPerPageOptions,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = usePagination();
+  const { currentPage, rowsPerPage, skipRows, rowsPerPageOptions, onChangePage, onChangeRowsPerPage } = usePagination();
 
-  const [data, setData] = useState([]);
-  const [totalRows, setTotalRows] = useState<number>(0);
+  const [data, setData] = useState<GetTradeHistoryList_ethereum_dexTrades[]>();
+  const [totalRows, setTotalRows] = useState<number>();
+  // If there is no baseCurrency the API returns duplicated values, so we just multiply and then filter
+  let multiplier = 2;
+  if(baseCurrency){
+    multiplier = 1
+  }
 
-  // Sell
-  const {
-    loading: sellLoading,
-    error: sellError,
-    data: sellData,
-  } = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
-      currentPage + 1
-    }&perPage=${rowsPerPage}?makerToken=${address}`,
-    [address, currentPage, rowsPerPage],
-  );
-
-  // Buy
-  const {
-    loading: buyLoading,
-    error: buyError,
-    data: buyData,
-  } = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
-      currentPage + 1
-    }&perPage=${rowsPerPage}?takerToken=${address}`,
-    [address, currentPage, rowsPerPage],
-  );
-
-  const loading = sellLoading && buyLoading;
-  const error = sellError || buyError || null;
-
+  const { loading, error, data: dataFn } = useQuery<GetTradeHistoryList, GetTradeHistoryListVariables>(BITQUERY_TRADE_HISTORY_LIST, {
+    variables: {
+      network: networkName,
+      baseCurrency: getCurrency(networkName, baseCurrency),
+      // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
+      address: address,
+      limit: Math.floor(rowsPerPage*multiplier),
+      offset: Math.floor(skipRows*multiplier)
+    },
+    pollInterval: POLL_INTERVAL
+  });
+ 
   useEffect(() => {
-    if (sellData && sellData?.records && buyData && buyData?.records) {
-      const newSellData = sellData.records.map((e: any) => {
-        e.order['makerAmountFn'] = toTokenUnitAmount(
-          e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
-            18,
-        ).toString();
-        e.order['takerAmountFn'] = toTokenUnitAmount(
-          e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
-            18,
-        ).toString();
-        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
-          e.metaData.remainingFillableTakerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
-            18,
-        ).toString();
-        e.order['side'] = 'SELL';
-        return e;
-      });
+    if (dataFn && dataFn?.ethereum?.dexTrades ) {
 
-      const newBuyData = buyData.records.map((e: any) => {
-        console.log(e);
-        e.order['makerAmountFn'] = toTokenUnitAmount(
-          e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
-            18,
-        ).toString();
-        e.order['takerAmountFn'] = toTokenUnitAmount(
-          e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
-            18,
-        ).toString();
-        e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
-          e.metaData.remainingFillableTakerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
-            18,
-        ).toString();
-        e.order['side'] = 'BUY';
-        return e;
-      });
+      const total = (dataFn?.ethereum?.total && dataFn?.ethereum?.total.length) ?  (dataFn?.ethereum?.total[0].count || 0) : 0
+      setTotalRows(total/multiplier);
+      if(baseCurrency){
+        setData(dataFn.ethereum.dexTrades);
+      }else{
+        setData(dataFn.ethereum.dexTrades.filter((value, index, self) => 
+          self.map(s => s.transaction?.hash).indexOf(value.transaction?.hash) === index 
+          &&  self.map(s => s.transaction?.index).indexOf(value.transaction?.index) === index 
+        ));
+      }
+    
+     }
+  }, [dataFn])
 
-      const newData = newSellData.concat(newBuyData);
+  // const handleChange = (event: React.ChangeEvent<{value: unknown}>) => {
+  //   setFilterValue(event.target.value as FilterEvent);
+    
+  //   if (event.target.value === 'all') {
+  //     setTableData(data);
+  //   }
+  //   else if (event.target.value === 'send') {
+  //     setTableData(data.filter((data: TransferByAddress) => data.type === 'Send'));
+  //   }
+  //   else {
+  //     setTableData(data.filter((data: TransferByAddress) => data.type === 'Receive'));
+  //   }
+  // }; 
 
-      setData(
-        newData.sort((a: any, b: any) => a?.order.expiry - b?.order.expiry),
-      );
-      setTotalRows((sellData.total || 0) + (buyData.total || 0));
-    } else {
-      setData([]);
-      setTotalRows(0);
-    }
-  }, [sellData, buyData, tokenList]);
-
-  return {
-    loading,
-    error,
-    data,
-    totalRows,
-    currentPage,
-    rowsPerPage,
-    rowsPerPageOptions,
-    onChangePage,
-    onChangeRowsPerPage,
-  };
-};
+  return { loading, error, data, totalRows, currentPage, rowsPerPage, rowsPerPageOptions, onChangePage, onChangeRowsPerPage };
+}

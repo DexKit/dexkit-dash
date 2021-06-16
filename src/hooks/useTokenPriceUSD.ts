@@ -8,13 +8,16 @@ import { EthereumNetwork } from "shared/constants/AppEnums";
 import {OrderSide} from 'types/app';
 
 /**
- * Fetch price on real time
+ * Fetch price in real time
  * @param address 
  * @param network 
+ * @param side 
  * @param amount 
+ * @param decimals 
+ * @param refresh 
  * @returns 
  */
-export const useTokenPriceUSD = (address?: string,  network?: EthereumNetwork, side?: OrderSide, amount?: number, decimals?: number) => {
+export const useTokenPriceUSD = (address?: string,  network?: EthereumNetwork, side?: OrderSide, amount?: number, decimals?: number, refresh?: boolean) => {
     const [priceQuote, setPriceQuote] = useState<SwapQuoteResponse>();
     const [loading, setLoading] = useState<boolean>();
 
@@ -34,7 +37,7 @@ export const useTokenPriceUSD = (address?: string,  network?: EthereumNetwork, s
             .finally(()=> setLoading(false))
         }
 
-    }, [address, network, amount, side])
+    }, [address, network, amount, side, refresh, decimals])
 
     return {priceQuote, loading}
 }

@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
+
 
 import {BITQUERY_TOKEN_STATISTICS} from 'services/graphql/bitquery/protocol/gql';
 import {
@@ -8,7 +8,6 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetTokenStatistics';
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
 
 interface Props {

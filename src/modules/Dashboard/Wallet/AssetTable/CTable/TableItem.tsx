@@ -17,6 +17,7 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import TokenLogo from 'shared/components/TokenLogo';
 import {MyBalances} from 'types/blockchain';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface TableItemProps {
   data: MyBalances;
@@ -72,11 +73,20 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   const history = useHistory();
 
+  const account = useDefaultAccount();
+
   const getNetworkLink = (d: MyBalances) => {
     if (d.network === EthereumNetwork.bsc) {
       return `/${EthereumNetwork.bsc}/dashboard/token/`;
     }
     return `/${EthereumNetwork.ethereum}/dashboard/token/`;
+  };
+
+  const getTradeNetworkLink = (d: MyBalances) => {
+    if (d.network === EthereumNetwork.bsc) {
+      return `/${EthereumNetwork.bsc}/history/trade/list`;
+    }
+    return `/${EthereumNetwork.ethereum}/history/trade/list`;
   };
 
   return (
@@ -134,6 +144,14 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             history.push(getNetworkLink(data) + data.currency?.address);
           }}>
           Trade
+        </Button>
+        <Button
+          variant='outlined'
+          style={{marginLeft: '2px'}}
+          onClick={() => {
+            history.push(`${getTradeNetworkLink(data)}/${account}/token/${data.currency?.address}`);
+          }}>
+          History
         </Button>
       </TableCell>
     </TableRow>

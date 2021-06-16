@@ -9,15 +9,15 @@ import {
   TableRow,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
-import TableCell from '@material-ui/core/TableCell';
 import TableItem from './TableItem';
-import {IOrderList} from 'types/app';
+
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
+import { GetTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
 
 interface Props {
   networkName: EthereumNetwork;
-  data: IOrderList[] | undefined;
+  data: GetTradeHistoryList_ethereum_dexTrades[] | undefined;
   totalRows: number | undefined;
   currentPage: number;
   rowsPerPage: number;

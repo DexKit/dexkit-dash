@@ -163,7 +163,7 @@ const WalletInfo = (props: any) => {
       },
     };
   });
-  const notConnected = web3State !== Web3State.Done;
+  const notConnected = !web3Account;
 
   const classes = useStyles(props);
 

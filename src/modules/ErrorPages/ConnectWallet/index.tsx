@@ -11,6 +11,7 @@ import {Fonts} from '../../../shared/constants/AppEnums';
 import {useWeb3} from 'hooks/useWeb3';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { useIntl } from 'react-intl';
+import FaqList from './FaqList';
 
 
 interface ComingSoonProps {}
@@ -77,7 +78,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
               type='submit'
               className={classes.button}
               onClick={onConnectWeb3}>
-              Connect Wallet
+                Connect Wallet
             </Button>
           </Box>
           <Box
@@ -91,9 +92,28 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
               alt='Connect Wallet'
             />*/}
           </Box>
+          <Box
+            mb={5}
+            maxWidth={{xs: 300, sm: 400, xl: 672}}
+            width='100%'
+            display={'flex'}>
+            
+         
+          </Box>
+
         </Box>
         <InfoView />
       </Box>
+      <Box
+        py={{xl: 8}}
+        flex={1}
+        display='flex'
+        flexDirection='column'
+        justifyContent='center'
+        alignItems='center'
+        textAlign='center'>
+        <FaqList/>
+    </Box>
     </>
   );
 };

@@ -7,8 +7,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 
+import { GetTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
 
-import {IOrderList} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
 import { AppContext } from '@crema';
@@ -16,7 +16,7 @@ import { AppContext } from '@crema';
 import {  ETHERSCAN_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
 
 interface TableItemProps {
-  row: IOrderList;
+  row: GetTradeHistoryList_ethereum_dexTrades;
   networkName: EthereumNetwork;
 }
 

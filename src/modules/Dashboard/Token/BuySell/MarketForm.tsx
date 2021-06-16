@@ -276,7 +276,7 @@ const MarketForm: React.FC<Props> = (props) => {
 
   let errorMessage = null;
   let disabled = false;
-  let notConnected = web3State !== Web3State.Done
+  let notConnected = web3State !== Web3State.Done;
 
  
   const connectButton = (

@@ -1,22 +1,22 @@
 import React, { useEffect, useMemo } from 'react';
-import {RouteComponentProps, useHistory} from 'react-router-dom';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
-import {GridContainer} from '@crema';
-import {useOrderList} from 'hooks/history/useOrderList';
-import {useStyles} from './index.style';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Grid, Box, Paper, Toolbar, Typography } from '@material-ui/core';
+import { GridContainer } from '@crema';
+
+import { useStyles } from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import OrderTable from './OrderTable';
-import {useNetwork} from 'hooks/useNetwork';
 import LoadingTable from 'modules/Common/LoadingTable';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import { useIntl } from 'react-intl';
 import PageTitle from 'shared/components/PageTitle';
-import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
-import { useFetch } from 'use-http';
-import { COINGECKO_CONTRACT_URL } from 'shared/constants/AppConst';
+
 import { truncateAddress } from 'utils/text';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
+import { useTradeHistory } from 'hooks/history/useTradeHistory';
+import { TokenAnalytics } from 'modules/Dashboard/Token/Analytics';
 
 type Params = {
   address: string;
@@ -28,28 +28,26 @@ type Props = RouteComponentProps<Params>;
 
 const TradeHistory: React.FC<Props> = (props) => {
   const {
-    match: {params},
+    match: { params },
   } = props;
-  const {address, token, networkName} = params;
-  const {messages} = useIntl();
+  const { address, token, networkName } = params;
+  const { messages } = useIntl();
   const classes = useStyles();
   const account = useDefaultAccount();
   const history = useHistory();
 
-  useEffect(() =>{
-    if(account && (account !== address)){
-      if(token){
+  useEffect(() => {
+    if (account && (account !== address)) {
+      if (token) {
         history.push(`/${networkName}/history/trade/list/${account}/token/${token}`)
-      }else{
-        history.push(`/${networkName}/history/order/list/${account}`)
+      } else {
+        history.push(`/${networkName}/history/trade/list/${account}`)
       }
-     
+
     }
-  },[account])
+  }, [account])
 
 
-
- 
   const {
     loading,
     error,
@@ -60,49 +58,59 @@ const TradeHistory: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useOrderList({address, baseCurrency: token, networkName});
+  } = useTradeHistory({ address, baseCurrency: token, networkName });
 
-  const tokenData = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${token}`, {}, [token]);
+  const { data: tokenData } = useCoingeckoTokenInfo(token, networkName);
+
 
   const onSwitchNetwork = (n: EthereumNetwork) => {
-    history.push(`/${n}/history/order/list/${account}`)
+    history.push(`/${n}/history/trade/list/${account}`)
   }
 
   return (
-    <Box pt={{xl: 4}}>
+    <Box pt={{ xl: 4 }}>
       {!token && <PageTitle
-                breadcrumbs={{
-                  history: [
-                    {url: '/', name: 'Dashboard'},
-                    {url: `/dashboard/wallet`, name: 'Wallet'},
-                  ],
-                  active: {name: 'Trade History'},
-                }}
-                title={{name: `Trade History: ${truncateAddress(address)}`, hasCopy: address}}
-                networkSwitcher={{networkName, onClick: onSwitchNetwork}}
-               />}
-    
-    {token && <PageTitle
-                breadcrumbs={{
-                  history: [
-                    {url: '/', name: 'Dashboard'},
-                    {url: `/${networkName}/dashboard/token/${token}`, name: 'Token'},
-                  ],
-                  active: {name: 'Trade History'},
-                }}
-                title={{name: `Trade History:  ${truncateAddress(address)}`, hasCopy: address }}
-               />}
+        breadcrumbs={{
+          history: [
+            { url: '/', name: 'Dashboard' },
+            { url: `/dashboard/wallet`, name: 'Wallet' },
+          ],
+          active: { name: 'Trade History' },
+        }}
+        title={{ name: `Trade History: ${truncateAddress(address)}`, hasCopy: address }}
+        networkSwitcher={{ networkName, onClick: onSwitchNetwork }}
+      />}
 
-    {(token && tokenData.data) && (
-              <PageTitle
-                title={{name: tokenData.data.name}}
-                subtitle={{name: truncateAddress(token), hasCopy: token}}
-                icon={token}
-              />
-            )}
+      {token && <PageTitle
+        breadcrumbs={{
+          history: [
+            { url: '/', name: 'Dashboard' },
+            { url: `/${networkName}/dashboard/token/${token}`, name: 'Token' },
+          ],
+          active: { name: 'Trade History' },
+        }}
+        title={{ name: `Trade History:  ${truncateAddress(address)}`, hasCopy: address }}
+      />}
+
+      {(token && tokenData) && (
+        <PageTitle
+          title={{ name: tokenData.name }}
+          subtitle={{ name: truncateAddress(token), hasCopy: token }}
+          icon={token}
+        />
+      )}
+
+
 
 
       <GridContainer>
+        {(token && address) &&  
+        <Grid item xs={12} md={12}>
+            <Paper className={classes.paper}>
+                <TokenAnalytics account={address} token={token} networkName={networkName} />
+            </Paper>
+          </Grid>}
+
         <Grid item xs={12} md={12}>
           <Paper className={classes.paper}>
             <Toolbar className={classes.toolbar}>
@@ -110,11 +118,11 @@ const TradeHistory: React.FC<Props> = (props) => {
                 display='flex'
                 justifyContent='space-between'
                 alignItems='center'
-                style={{width: '100%'}}>
+                style={{ width: '100%' }}>
                 <Box>
-                  <Box display={'flex'} justifyContent={'flex-start'}     alignItems={'center'}>
-                      <SwapHorizontalCircleIcon color={'primary'}/>
-                      <Typography variant='h5' display={'block'}  align={'center'}>{messages['app.tradeHistory']}</Typography>
+                  <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
+                    <SwapHorizontalCircleIcon color={'primary'} />
+                    <Typography variant='h5' display={'block'} align={'center'}>{messages['app.tradeHistory']}</Typography>
                   </Box>
                 </Box>
                 {/* <Select
