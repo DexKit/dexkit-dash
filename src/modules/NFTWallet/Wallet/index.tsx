@@ -19,6 +19,7 @@ import {
   CircularProgress,
   Checkbox,
   FormControlLabel,
+  Button,
 } from '@material-ui/core';
 
 import AssetCard from '../AssetCard';
@@ -33,8 +34,10 @@ import CollectionListSkeleton from '../CollectionListSkeleton';
 import useIsMounted from 'hooks/useIsMounted';
 import CollectionsCard from '../CollectionsList';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ErrorIcon from '@material-ui/icons/Error';
 
 import _ from 'lodash';
 import CollectionsList from '../CollectionsList';
@@ -42,6 +45,7 @@ import {truncateTokenAddress} from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
 import {useIntersect} from 'hooks/useIntersect';
 import {FormatListBulletedOutlined} from '@material-ui/icons';
+import {getWindowUrl} from 'utils/browser';
 
 interface AssetsQuery {
   owner: string;
@@ -144,6 +148,9 @@ export default () => {
   const [loadingAssets, setLoadingAssets] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
+  // errors
+  const [assetsError, setAssetsError] = useState(false);
+
   // data
   const [assets, setAssets] = useState<any[]>([]);
   const [collections, setCollections] = useState<any[]>([]);
@@ -164,8 +171,8 @@ export default () => {
   const [collectionInputState, setCollectionInputState] = useState('');
 
   const fetchData = useCallback(async () => {
+    setPage(0);
     setLoadingAssets(true);
-    setHasMore(true);
 
     getAssets({
       sortBy,
@@ -185,10 +192,13 @@ export default () => {
         }
 
         if (hasOffers) {
-          assets = assets.filter((value: any) => value.sell_orders);
+          assets = assets.filter((value: any) => value.orders);
         }
 
         setAssets(assets);
+      })
+      .catch(() => {
+        setAssetsError(true);
       })
       .finally(() => setLoadingAssets(false));
   }, [address, collection, sortBy, query, hasOffers]);
@@ -237,24 +247,30 @@ export default () => {
   }, []);
 
   const handleToggleFilters = useCallback((e) => {
-    setShowFilters((value) => !value);
+    setShowFilters(false);
   }, []);
 
   const handleSelectCollection = useCallback(
     async (slug: string) => {
+      if (!isUpXs) {
+        setShowFilters(false);
+      }
+
       if (slug == collection) {
         setCollection('');
       } else {
         setCollection(slug);
       }
     },
-    [collection],
+    [collection, isUpXs],
   );
 
-  const handleToggleHasOffers = useCallback(
-    () => setHasOffers((value) => !value),
-    [],
-  );
+  const handleToggleHasOffers = useCallback(() => {
+    if (!isUpXs) {
+      setShowFilters((value) => !value);
+    }
+    setHasOffers((value) => !value);
+  }, [isUpXs]);
 
   const loader = useRef<HTMLDivElement>(null);
 
@@ -264,31 +280,52 @@ export default () => {
     if (!hasMore) {
       return;
     }
-    console.log('asdas');
 
     if (assets.length < 20) {
       return;
     }
 
-    setLoadingMoreAssets(true);
+    try {
+      setLoadingMoreAssets(true);
+      let result = await getAssets({
+        sortBy,
+        offset: page * 20,
+        limit: 20,
+        owner: address,
+        collection,
+      });
 
-    getAssets({
-      sortBy,
-      offset: page * 20,
-      limit: 20,
-      owner: address,
-      collection,
-    })
-      .then((data) => {
-        if (assets.length < 20) {
-          setHasMore(false);
-        }
+      let tempAssets = result.assets;
 
-        setAssets((value: any) => [...value, ...data.assets]);
-        setPage((value) => value + 1);
-      })
-      .finally(() => setLoadingMoreAssets(false));
-  }, [assets, collection, address, sortBy, page, hasMore, setAssets, setPage]);
+      if (query) {
+        tempAssets = tempAssets.filter(
+          (value: any) =>
+            value.name.toLowerCase().search(query.toLowerCase()) > -1,
+        );
+      }
+
+      if (hasOffers) {
+        tempAssets = tempAssets.filter((value: any) => value.orders);
+      }
+
+      setAssets((value: any) => [...value, ...tempAssets]);
+      setPage((value) => value + 1);
+
+      if (result.assets.length < 20) {
+        setHasMore(false);
+      }
+
+      setLoadingMoreAssets(false);
+    } catch (e) {
+      setAssets([]);
+      setAssetsError(true);
+    }
+  }, [query, hasOffers, assets, sortBy, address, collection, page]);
+
+  const handleTryAgainAssets = useCallback(() => {
+    setAssetsError(false);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (loader.current) {
@@ -313,9 +350,7 @@ export default () => {
   }, [address, queryCollection]);
 
   useEffect(() => {
-    (async () => {
-      fetchData();
-    })();
+    fetchData();
   }, [query, sortBy, collection, hasOffers]);
 
   return (
@@ -333,6 +368,7 @@ export default () => {
           },
         }}
         title={{
+          hasCopy: `${getWindowUrl()}/nfts/wallet/${address}`,
           name: isWalletOwner(address, userAddress)
             ? messages['nfts.walletTitle'].toString()
             : isUpXs
@@ -367,16 +403,12 @@ export default () => {
                   action={
                     !isUpXs ? (
                       <IconButton onClick={handleToggleFilters}>
-                        <ExpandMoreIcon />
+                        {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                       </IconButton>
                     ) : null
                   }
-                  title={
-                    <>
-                      <FilterListIcon />{' '}
-                      {messages['nfts.walletFilters'].toString()}
-                    </>
-                  }
+                  avatar={<FilterListIcon />}
+                  title={messages['nfts.walletFilters'].toString()}
                 />
                 <Collapse in={isUpXs || showFilters}>
                   <CardContent>
@@ -428,7 +460,8 @@ export default () => {
                       <Grid item xs>
                         {collectionLoading ? (
                           <CollectionListSkeleton count={5} />
-                        ) : (
+                        ) : null}
+                        {collections.length > 0 ? (
                           <Box className={classes.list}>
                             <CollectionsList
                               onSelect={handleSelectCollection}
@@ -436,7 +469,7 @@ export default () => {
                               collections={collections}
                             />
                           </Box>
-                        )}
+                        ) : null}
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -444,6 +477,32 @@ export default () => {
               </Card>
             </Grid>
             <Grid item xs={12} sm={9}>
+              {assetsError ? (
+                <Box py={8}>
+                  <Grid
+                    container
+                    justify='center'
+                    alignItems='center'
+                    alignContent='center'
+                    spacing={4}>
+                    <Grid item>
+                      <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                    </Grid>
+                    <Grid item>
+                      <Typography gutterBottom variant='h5'>
+                        <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                      </Typography>
+                      <Button
+                        onClick={handleTryAgainAssets}
+                        size='small'
+                        variant='contained'
+                        color='primary'>
+                        <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              ) : null}
               {loadingAssets ? (
                 <AssetsSkeleton count={8} />
               ) : (
@@ -460,71 +519,77 @@ export default () => {
                     </Box>
                   ) : (
                     <>
-                      <Box mb={2}>
-                        <Grid
-                          alignItems='center'
-                          alignContent='center'
-                          container
-                          justify='space-between'
-                          spacing={2}>
-                          <Grid item>
-                            <Box
-                              pt={{xs: 2}}
-                              textAlign={!isUpXs ? 'center' : null}>
-                              <Typography variant='h5'>
-                                {assets?.length || 0}{' '}
-                                {(assets || []).length > 1 ? (
-                                  <IntlMessages id='nfts.walletResults' />
-                                ) : (
-                                  <IntlMessages id='nfts.walletResult' />
-                                )}
-                              </Typography>
-                            </Box>
+                      {!assetsError ? (
+                        <>
+                          <Box mb={2}>
+                            <Grid
+                              alignItems='center'
+                              alignContent='center'
+                              container
+                              justify='space-between'
+                              spacing={2}>
+                              <Grid item>
+                                <Box
+                                  pt={{xs: 2}}
+                                  textAlign={!isUpXs ? 'center' : null}>
+                                  <Typography variant='h5'>
+                                    {assets?.length || 0}{' '}
+                                    {(assets || []).length > 1 ? (
+                                      <IntlMessages id='nfts.walletResults' />
+                                    ) : (
+                                      <IntlMessages id='nfts.walletResult' />
+                                    )}
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                              <Grid item>
+                                <Select
+                                  variant='outlined'
+                                  fullWidth
+                                  value={sortBy}
+                                  displayEmpty
+                                  onChange={handleChangeSortBy}>
+                                  <MenuItem selected value=''>
+                                    <IntlMessages id='nfts.walletSortBy' />
+                                  </MenuItem>
+                                  <MenuItem selected value={SORT_BY_SALE_DATE}>
+                                    <IntlMessages id='nfts.walletSortBySaleDate' />
+                                  </MenuItem>
+                                  <MenuItem selected value={SORT_BY_SALE_COUNT}>
+                                    <IntlMessages id='nfts.walletSortBySaleCount' />
+                                  </MenuItem>
+                                  <MenuItem
+                                    selected
+                                    value={SORT_BY_VISITOR_COUNT}>
+                                    <IntlMessages id='nfts.walletSortByVisitorCount' />
+                                  </MenuItem>
+                                  <MenuItem
+                                    selected
+                                    value={SORT_BY_TOTAL_PRICE}>
+                                    <IntlMessages id='nfts.walletSortByTotalPrice' />
+                                  </MenuItem>
+                                </Select>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                          <Grid container spacing={2}>
+                            {assets?.map((asset: any, index: number) => (
+                              <Grid key={index} item xs={12} sm={3}>
+                                <AssetCard
+                                  asset={asset}
+                                  onClick={handleAssetClick}
+                                />
+                              </Grid>
+                            ))}
                           </Grid>
-                          <Grid item>
-                            <Select
-                              variant='outlined'
-                              fullWidth
-                              value={sortBy}
-                              displayEmpty
-                              onChange={handleChangeSortBy}>
-                              <MenuItem selected value=''>
-                                <IntlMessages id='nfts.walletSortBy' />
-                              </MenuItem>
-                              <MenuItem selected value={SORT_BY_SALE_DATE}>
-                                <IntlMessages id='nfts.walletSortBySaleDate' />
-                              </MenuItem>
-                              <MenuItem selected value={SORT_BY_SALE_COUNT}>
-                                <IntlMessages id='nfts.walletSortBySaleCount' />
-                              </MenuItem>
-                              <MenuItem selected value={SORT_BY_VISITOR_COUNT}>
-                                <IntlMessages id='nfts.walletSortByVisitorCount' />
-                              </MenuItem>
-                              <MenuItem selected value={SORT_BY_TOTAL_PRICE}>
-                                <IntlMessages id='nfts.walletSortByTotalPrice' />
-                              </MenuItem>
-                            </Select>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                      <Grid container spacing={2}>
-                        {assets?.map((asset: any, index: number) => (
-                          <Grid key={index} item xs={12} sm={3}>
-                            <AssetCard
-                              asset={asset}
-                              onClick={handleAssetClick}
-                            />
-                          </Grid>
-                        ))}
-                      </Grid>
+                        </>
+                      ) : null}
                     </>
                   )}
                 </>
               )}
               {loadingMoreAssets ? <AssetsSkeleton count={20} /> : null}
-              <div ref={loader}>
-                <Box py={4} />
-              </div>
+              {assets.length >= 20 ? <div ref={loader} /> : null}
             </Grid>
           </Grid>
         </Box>

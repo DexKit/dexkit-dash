@@ -755,6 +755,8 @@
   "nfts.walletBreadcrumbDashboard": "Dashboard",
   "nfts.walletActiveName": "NFT Wallet",
   "nfts.walletTitle": "My NFT Wallet",
+  "nfts.walletAssetsListErrorTitle": "An error occurred while loading data",
+  "nfts.walletAssetsListErrorTryAgain": "Try Again",
   "nfts.walletSortBy": "Sort By",
   "nfts.walletSortBySaleDate": "Recently Sold",
   "nfts.walletSortByTokenId": "Token ID",

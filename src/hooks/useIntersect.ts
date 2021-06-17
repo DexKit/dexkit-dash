@@ -16,7 +16,8 @@ export function useIntersect() {
       }),
       {
         root: null,
-        threshold: 1,
+        rootMargin: '25px',
+        threshold: 0,
       },
     ),
   );
