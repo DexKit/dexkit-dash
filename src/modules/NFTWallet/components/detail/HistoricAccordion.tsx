@@ -14,17 +14,16 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useAssetEvents} from 'modules/NFTWallet/hooks/detail';
 
 interface Props {
-  contractAddress: string;
-  tokenId: string;
+  asset: any;
 }
 
 export default (props: Props) => {
-  const {contractAddress, tokenId} = props;
+  const {asset} = props;
   const {getEvents, data, loading, error} = useAssetEvents();
 
   useEffect(() => {
-    getEvents(contractAddress, parseInt(tokenId));
-  }, [getEvents, contractAddress, tokenId]);
+    getEvents(asset?.asset_contract?.address, parseInt(asset?.token_id));
+  }, [getEvents, asset]);
 
   return (
     <Accordion>

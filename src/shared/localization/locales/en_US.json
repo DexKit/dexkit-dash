@@ -780,5 +780,11 @@
   "nfts.detail.historicToLabel": "To",
   "nfts.detail.historicDateLabel": "Date",
   "nfts.detail.detailTokenIdLabel": "Token ID",
+  "nfts.detail.listingAccordionLabel": "Listings",
+  "nfts.detail.ordersPriceHeader": "Price",
+  "nfts.detail.ordersUSDPriceHeader": "Price (USD)",
+  "nfts.detail.ordersExpirationHeader": "Expiration",
+  "nfts.detail.ordersFromHeader": "From",
+  "nfts.detail.offersAccordionLabel": "Offers",
   "nfts.walletBreadcrumbAssets": "Assets"
 }

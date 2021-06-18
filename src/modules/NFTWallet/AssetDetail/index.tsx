@@ -34,10 +34,12 @@ import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
 import {getOrderHash} from '@0x/order-utils';
 import AssetOrdersTable from '../AssetOrdersTable';
-import {useAssetEvents, useAssetOrders} from '../hooks/detail';
+import {useAsset, useAssetEvents, useAssetOrders} from '../hooks/detail';
 import HistoricAccordion from '../components/detail/HistoricAccordion';
 import ListingAccordion from '../components/detail/ListingAccordion';
 import DetailAccordion from '../components/detail/DetailAccordion';
+import DescriptionCard from '../components/detail/DescriptionCard';
+import OffersAccordion from '../components/detail/OffersAccordion';
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
@@ -57,19 +59,14 @@ export const AssetDetail = () => {
   const classes = useStyles();
   const theme = useTheme();
   const {address, token}: RouteParams = useParams();
-  const {get, loading, error} = useFetch('https://api.opensea.io/api/v1/asset');
 
-  const [data, setData] = useState<any>({});
+  const {getAsset, loading, data, error} = useAsset();
 
   useEffect(() => {
     let tokenId = parseInt(token);
 
-    get(`/${address}/${tokenId}/`).then(() => {
-      if (data) {
-        setData(data);
-      }
-    });
-  }, [get, address, token]);
+    getAsset(address, tokenId);
+  }, [getAsset, address, token]);
 
   return (
     <Box pt={{xs: 8}}>
@@ -97,65 +94,54 @@ export const AssetDetail = () => {
         </Breadcrumbs>
       </Box>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <Card>
-            {loading ? (
-              <Skeleton className={classes.assetImage} height='100%' />
-            ) : null}
-            <CardMedia>
-              <img
-                style={{
-                  backgroundColor: `#${
-                    data?.background_color ? data?.background_color : 'fff'
-                  }`,
-                }}
-                src={data?.image_url}
-                className={classes.assetImage}
-              />
-            </CardMedia>
-          </Card>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Card>
+                    {loading ? (
+                      <Skeleton className={classes.assetImage} height='100%' />
+                    ) : null}
+                    <CardMedia>
+                      <img
+                        style={{
+                          backgroundColor: `#${
+                            data?.background_color
+                              ? data?.background_color
+                              : 'fff'
+                          }`,
+                        }}
+                        src={data?.image_url}
+                        className={classes.assetImage}
+                      />
+                    </CardMedia>
+                  </Card>
+                </Grid>
+                <Grid item xs={12}>
+                  <DetailAccordion asset={data} />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <DescriptionCard asset={data} loading={loading} />
+                </Grid>
+                {/* <Grid item xs={12}>
+                  <ListingAccordion asset={data} />
+                </Grid>
+                <Grid item xs={12}>
+                  <OffersAccordion asset={data} />
+                </Grid>
+              </Grid> */}
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* <Grid item xs={12} sm={12}>
+          <HistoricAccordion asset={data} />
+        */}
         </Grid>
-        <Grid item xs={12} sm={8}>
-          <Card>
-            <CardContent>
-              <Link>
-                <Typography variant='body1'>
-                  {loading ? <Skeleton /> : data?.collection?.name}
-                </Typography>
-              </Link>
-
-              <Typography
-                style={{fontWeight: 700}}
-                gutterBottom
-                variant='h4'
-                component='h1'>
-                {loading ? (
-                  <Skeleton />
-                ) : (
-                  <>
-                    {data?.name}
-                    <ButtonCopy
-                      copyText={`${getWindowUrl()}/nfts/assets/${address}/${token}`}
-                      titleText='Copied to Clipboard'
-                    />
-                  </>
-                )}
-              </Typography>
-              <Typography variant='body1' color='textSecondary'>
-                {loading ? <Skeleton /> : data?.description}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* <Grid item xs={12} sm={4}>
-          <DetailAccordion asset={data} />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <ListingAccordion contractAddress={address} tokenId={token} />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <HistoricAccordion contractAddress={address} tokenId={token} />
-        </Grid> */}
       </Grid>
     </Box>
   );
