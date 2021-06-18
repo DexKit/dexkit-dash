@@ -109,7 +109,7 @@ const SelectToken: React.FC<Props> = ({
             disabled={disabled || false}
             filterOptions={filterOptions}
             options={options.filter(
-              (option) => option.symbol || option.address || option.name,
+              (option) => option.symbol.toLowerCase() || option.address.toLowerCase() || option.name.toLowerCase(),
             )}
             value={selected}
             onChange={(event, value) => onChange(value ?? undefined)}

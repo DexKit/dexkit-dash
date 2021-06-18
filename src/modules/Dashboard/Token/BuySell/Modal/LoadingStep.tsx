@@ -14,7 +14,8 @@ const LoadingStep: React.FC<Props> = (props) => {
     <>
       {currentStepIndex !== -1 && (
         <Typography align='center' style={{paddingBottom: 10}}>
-          Please confirm on your wallet
+          Please confirm on your wallet and wait while your request is being
+          processed
         </Typography>
       )}
       <Button

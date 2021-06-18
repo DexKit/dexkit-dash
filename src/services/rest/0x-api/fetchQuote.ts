@@ -1,9 +1,9 @@
-import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
-import {OrderSide} from 'types/app';
+import { ZRX_API_URL, ZRX_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
+import { OrderSide } from 'types/app';
 
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
-import {QuoteParams, SwapQuoteResponse} from './types';
+import { QuoteParams, SwapQuoteResponse } from './types';
 
 /**
  * Fetch quote right before confirm, with final validation
@@ -25,11 +25,11 @@ export async function fetchQuote(
   const quoteName = quoteParams.quoteToken.symbol.toUpperCase();
 
   const baseTokenAddress =
-     baseName === currency
+    baseName === currency
       ? currency
       : quoteParams.baseToken.address;
   const quoteTokenAddress =
-     quoteName === currency
+    quoteName === currency
       ? currency
       : quoteParams.quoteToken.address;
 
@@ -79,6 +79,10 @@ export async function fetchQuote(
     params.set('skipValidation', 'true');
   }
 
+  if (quoteParams.isMarket !== undefined && quoteParams.isMarket === false) {
+    params.set('skipValidation', 'true');
+  }
+
   let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/quote?';
 
   for (let [key, value] of params) {
@@ -90,7 +94,7 @@ export async function fetchQuote(
   const json = await quote.json();
 
   if (json.code) {
-    throw new Error(json.reason||json.message||'ERROR');
+    throw new Error(json.reason || json.message || 'ERROR');
   } else {
     return json;
   }

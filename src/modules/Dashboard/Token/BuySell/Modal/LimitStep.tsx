@@ -3,6 +3,10 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
 import useZrx from 'hooks/useZrx';
 import {Token} from 'types/app';
+import {useDispatch} from 'react-redux';
+import {Notification} from 'types/models/Notification';
+import {onAddNotification} from 'redux/actions';
+import {NotificationType} from 'services/notification';
 // import {useStyles} from './index.style';
 
 interface Props {
@@ -16,6 +20,7 @@ interface Props {
   selectedGasPrice: string;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
+  onRequestConfirmed: (value: boolean) => void;
 }
 
 const LimitStep: React.FC<Props> = (props) => {
@@ -29,24 +34,28 @@ const LimitStep: React.FC<Props> = (props) => {
     selectedGasPrice,
     onNext,
     onLoading,
+    onRequestConfirmed,
   } = props;
 
   const {getWeb3} = useWeb3();
   const {createOrder} = useZrx();
+  const dispatch = useDispatch();
+
   // const classes = useStyles();
 
   const handleAction = () => {
     try {
       onLoading(true);
+      onRequestConfirmed(true);
 
       if (account == null) {
-        return Promise.reject('Account address cannot be null or empty');
+        throw new Error('Account address cannot be null or empty');
       }
 
       const web3 = getWeb3();
 
       if (web3 == null) {
-        return Promise.reject('Provider cannot be null');
+        throw new Error('Provider cannot be null');
       }
 
       createOrder(
@@ -57,8 +66,18 @@ const LimitStep: React.FC<Props> = (props) => {
         expiry,
         '0x000000000000000000000000000',
       )
-        .then((e) => onNext(true))
-        .catch((e) => onNext(false, e.message));
+        .then((e) => {
+          const notification: Notification = {
+            title: 'Limit Order',
+            body: 'Successfully created',
+          };
+          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
+
+          onNext(true);
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
     } catch (e) {
       onNext(false, e.message);
     }

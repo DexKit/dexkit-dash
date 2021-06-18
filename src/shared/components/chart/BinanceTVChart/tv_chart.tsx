@@ -8,21 +8,8 @@ import {
   widget,
 } from '../charting_library/charting_library.min';
 import {TRADE_API_URL} from '../../../../utils/constants';
-import {UDFCompatibleDatafeed} from '../datafeeds/udf/lib/udf-compatible-datafeed';
 import {ChainId} from 'types/blockchain';
-
-enum SeriesStyle {
-  Bars = 0,
-  Candles = 1,
-  Line = 2,
-  Area = 3,
-  HeikenAshi = 8,
-  HollowCandles = 9,
-  Renko = 4,
-  Kagi = 5,
-  PointAndFigure = 6,
-  LineBreak = 7,
-}
+import BinanceAPI from '../services/api';
 
 const ChartContainer = styled.div`
   position: relative;
@@ -96,11 +83,7 @@ export default class TVChartContainer extends React.PureComponent<
   public componentDidMount(): void {
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: this.props.symbol as string,
-      // @ts-ignore
-      datafeed: new UDFCompatibleDatafeed(
-        `${TRADE_API_URL(this.props.chainId || 1)}/candles`,
-        60 * 1000,
-      ),
+      datafeed: new BinanceAPI({ debug: false }),
       interval: this.props.interval as ChartingLibraryWidgetOptions['interval'],
       container_id: this.props
         .containerId as ChartingLibraryWidgetOptions['container_id'],
@@ -128,7 +111,6 @@ export default class TVChartContainer extends React.PureComponent<
 
     const tvWidget = new widget(widgetOptions);
     this._tvWidget = tvWidget;
-    
 
     // tslint:disable-next-line: no-empty
     tvWidget.onChartReady(() => {

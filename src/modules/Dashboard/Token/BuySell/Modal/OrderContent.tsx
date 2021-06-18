@@ -16,9 +16,11 @@ import {
   Box,
   CircularProgress,
   IconButton,
+  Popover,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
@@ -37,6 +39,7 @@ import {EthereumNetwork} from '../../../../../../__generated__/globalTypes';
 import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
 import { GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 interface Props {
   isMarket: boolean;
@@ -57,21 +60,25 @@ interface Props {
   chainId: ChainId;
   loading: boolean;
   error: Error | string | undefined;
+  isRequestConfirmed: boolean;
   onClose: () => void;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
+  onRequestConfirmed: (value: boolean) => void;
   onShifting: (step: Steps) => void;
 }
 
 const GasOptionsWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 10px;
 `;
 
 const GasOption = styled.div<{isSelected: boolean}>`
-  padding: 10px 15px;
+  padding: 5px 0px;
+  width: 90px;
   background-color: ${(props) =>
     props.isSelected ? '#ff7149' : 'transparent'};
   border: 1px solid grey;
@@ -82,7 +89,6 @@ const GasOption = styled.div<{isSelected: boolean}>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5px;
 `;
 
 const OrderContent: React.FC<Props> = (props) => {
@@ -104,9 +110,11 @@ const OrderContent: React.FC<Props> = (props) => {
     price,
     loading,
     error,
+    isRequestConfirmed,
     onClose,
     onNext,
     onLoading,
+    onRequestConfirmed,
     onShifting,
   } = props;
 
@@ -124,6 +132,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
   const [initGasPrice, setInitGastPrice] = useState<number | undefined>();
   const [selectedGasOption, setSelectedGasOption] = useState('default');
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);
 
   const amountFromFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
@@ -132,29 +141,41 @@ const OrderContent: React.FC<Props> = (props) => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    if (currentStep !== Steps.DONE) {
-      console.log('OrderContent: currentStep or slippage changed');
+    if (
+      (currentStep === Steps.CONVERT ||
+        currentStep === Steps.MARKET ||
+        currentStep === Steps.LIMIT) &&
+      !isRequestConfirmed
+    ) {
+      console.log('OrderContent: data changed');
       fetchInfo();
       setSeconds(0);
+    } else if (currentStepIndex === -1) {
+      onLoading(false);
     }
   }, [currentStep, slippage, selectedGasPrice]);
 
   useEffect(() => {
     let interval: any = null;
 
-    if (currentStep !== Steps.DONE) {
-      if (seconds < REFRESH_RATE_SECONDS) {
-        interval = setInterval(() => {
-          setSeconds((seconds) => seconds + 1);
-        }, 1000);
-      } else {
+    if (seconds < REFRESH_RATE_SECONDS) {
+      interval = setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+    } else {
+      if (
+        (currentStep === Steps.CONVERT ||
+          currentStep === Steps.MARKET ||
+          currentStep === Steps.LIMIT) &&
+        !isRequestConfirmed
+      ) {
         console.log('OrderContent: refresh');
         fetchInfo();
         setSeconds(0);
       }
-
-      return () => clearInterval(interval);
     }
+
+    return () => clearInterval(interval);
   }, [seconds]);
 
   const fetchInfo = () => {
@@ -169,15 +190,17 @@ const OrderContent: React.FC<Props> = (props) => {
 
           setBuyAmount(amountFrom);
 
-          onLoading(false);
+          if (currentStepIndex === -1) {
+            onLoading(false);
+          }
         })
         .catch((e) => {
           onNext(false, e);
-          onLoading(false);
         });
     } else {
       fetchQuote(
         {
+          isMarket: isMarket,
           baseToken: tokenFrom,
           quoteToken: tokenTo,
           chainId: chainId,
@@ -210,11 +233,12 @@ const OrderContent: React.FC<Props> = (props) => {
 
           updateSelectedGasPrice(gasPrice, gas);
 
-          onLoading(false);
+          if (currentStepIndex === -1) {
+            onLoading(false);
+          }
         })
         .catch((e) => {
           onNext(false, e);
-          onLoading(false);
         });
     }
   };
@@ -291,6 +315,17 @@ const OrderContent: React.FC<Props> = (props) => {
     updateFee(new BigNumber(newSelectedGasPrice));
   };
 
+  const handleClickGuaranteedPrice = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseGuaranteedPrice = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const popoverId = open ? 'simple-popover' : undefined;
+
   const invertPrice = () => {
     setIsPriceInverted(!isPriceInverted);
   };
@@ -350,7 +385,9 @@ const OrderContent: React.FC<Props> = (props) => {
               width: 48,
               height: 48,
             }}>
-            {currentStep !== Steps.DONE && (
+            {(currentStep === Steps.CONVERT ||
+              currentStep === Steps.MARKET ||
+              currentStep === Steps.LIMIT) && (
               <CircularProgress
                 size={20}
                 variant='determinate'
@@ -375,22 +412,26 @@ const OrderContent: React.FC<Props> = (props) => {
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
-        {loading &&
-        currentStep !== Steps.MARKET &&
-        currentStep !== Steps.LIMIT ? (
+        {loading && currentStepIndex === -1 ? (
           <Box
             display='flex'
             flexDirection='column'
             alignContent='center'
             justifyContent='center'>
-            {currentStepIndex === -1 ? (
-              <>
-                <Typography variant='h6' align='center'>
-                  Loading your order...
-                </Typography>
-              </>
-            ) : (
-              <>
+            <Typography variant='h6' align='center'>
+              Loading your order...
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            {loading &&
+            currentStep !== Steps.MARKET &&
+            currentStep !== Steps.LIMIT ? (
+              <Box
+                display='flex'
+                flexDirection='column'
+                alignContent='center'
+                justifyContent='center'>
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
@@ -415,272 +456,364 @@ const OrderContent: React.FC<Props> = (props) => {
                 )}
 
                 {/* {(currentStep === Steps.MARKET ||
-                  currentStep === Steps.LIMIT) && (
-                  <>
-                    <Typography variant='h6' align='center'>
-                      Please confirm your order on your wallet
-                    </Typography>
-                  </>
-                )} */}
-              </>
-            )}
-          </Box>
-        ) : (
-          <>
-            {currentStep === Steps.ERROR ? (
-              <Box
-                display='flex'
-                flexDirection='column'
-                alignContent='center'
-                justifyContent='center'>
-                <Typography align='center'>
-                  <ErrorOutlineIcon
-                    style={{marginBottom: 20, width: 100, height: 100}}
-                  />
-                </Typography>
-
-                <Typography variant='h6' align='center'>
-                  An error has happened
-                </Typography>
+                      currentStep === Steps.LIMIT) && (
+                      <>
+                        <Typography variant='h6' align='center'>
+                          Please confirm your order on your wallet
+                        </Typography>
+                      </>
+                    )} */}
               </Box>
             ) : (
-              <Grid
-                container
-                direction='row'
-                justify='center'
-                alignItems='center'>
-                <Grid style={{paddingRight: 8, paddingBottom: 8}} item xs={6}>
-                  <Typography
-                    variant='h6'
-                    className={classes.textSecondary}
-                    align='center'>
-                    {isConvert ? 'Convert' : 'Send'}
-                  </Typography>
-                </Grid>
-                <Grid style={{paddingLeft: 8, paddingBottom: 8}} item xs={6}>
-                  <Typography
-                    className={classes.valueSend}
-                    variant='h6'
-                    align='center'>{`${sellAmount} ${tokenFrom.symbol}`}</Typography>
-                </Grid>
-
-                <Grid item xs={6} />
-                <Grid item xs={6}>
+              <>
+                {currentStep === Steps.ERROR && (
                   <Box
-                    color='grey.400'
-                    textAlign='center'
-                    className={classes.textRes}>
-                    <ArrowDownwardOutlined />
+                    display='flex'
+                    flexDirection='column'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <Typography align='center'>
+                      <ErrorOutlineIcon
+                        style={{marginBottom: 20, width: 100, height: 100}}
+                      />
+                    </Typography>
+
+                    <Typography variant='h6' align='center'>
+                      An error has happened
+                    </Typography>
                   </Box>
-                </Grid>
+                )}
 
-                <Grid
-                  style={{paddingRight: 8, paddingTop: 4, paddingBottom: 16}}
-                  item
-                  xs={6}>
-                  <Typography
-                    variant='h6'
-                    className={classes.textSecondary}
-                    align='center'>
-                    {isConvert ? 'To' : 'Receive'}
-                  </Typography>
-                </Grid>
-                <Grid
-                  style={{paddingLeft: 8, paddingTop: 4, paddingBottom: 16}}
-                  item
-                  xs={6}>
-                  <Typography
-                    className={classes.valueReceive}
-                    variant='h6'
-                    align='center'>
-                    {(isMarket || isConvert
-                      ? buyAmount.toFixed(6)
-                      : limitReceive) +
-                      ' ' +
-                      tokenTo.symbol}
-                  </Typography>
-                </Grid>
+                {currentStep === Steps.APPROVE && (
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    alignContent='center'
+                    justifyContent='center'>
+                    {/* <Typography align='center'>
+                      <CheckCircleOutlineIcon
+                        style={{marginBottom: 20, width: 100, height: 100}}
+                      />
+                    </Typography> */}
 
-                <Grid item xs={12}>
+                    <Typography variant='h6' align='center'>
+                      To proceed with this request,
+                    </Typography>
+                    <Typography variant='h6' align='center'>
+                      we would like to request for your approval to use{' '}
+                      {tokenFrom.symbol}
+                    </Typography>
+                  </Box>
+                )}
+
+                {currentStep === Steps.DONE && (
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <Typography align='center'>
+                      <CheckCircleOutlineIcon
+                        style={{marginBottom: 20, width: 100, height: 100}}
+                      />
+                    </Typography>
+
+                    <Typography variant='h6' align='center'>
+                      {isConvert ? 'Conversion ' : 'Order '}completed!
+                    </Typography>
+                  </Box>
+                )}
+
+                {(currentStep === Steps.CONVERT ||
+                  currentStep === Steps.MARKET ||
+                  currentStep === Steps.LIMIT) && (
                   <Grid
                     container
+                    direction='row'
                     justify='center'
-                    alignItems='center'
-                    spacing={1}
-                    className={classes.contentBox}>
-                    {!isConvert && (
-                      <>
-                        <Grid item xs={12} sm={3}>
-                          <Typography className={classes.textSecondary}>
-                            At Price
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={9}>
-                          <Typography
-                            className={classes.textPrimary}
-                            align='right'>
-                            {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
-                            <IconButton
-                              style={{marginLeft: 5}}
-                              size='small'
-                              onClick={invertPrice}>
-                              <SyncAltIcon fontSize='small' />
-                            </IconButton>
-                          </Typography>
-                        </Grid>
+                    alignItems='center'>
+                    <Grid
+                      style={{paddingRight: 8, paddingBottom: 2}}
+                      item
+                      xs={6}>
+                      <Typography
+                        variant='h6'
+                        className={classes.titleSecondary}
+                        align='center'>
+                        {isConvert ? 'Convert' : 'Send'}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      style={{paddingLeft: 8, paddingBottom: 2}}
+                      item
+                      xs={6}>
+                      <Typography
+                        className={classes.valueSend}
+                        variant='h6'
+                        align='center'>{`${sellAmount} ${tokenFrom.symbol}`}</Typography>
+                    </Grid>
 
-                        {isMarket && (
+                    <Grid item xs={6} />
+                    <Grid item xs={6}>
+                      <Box
+                        color='grey.400'
+                        textAlign='center'
+                        className={classes.textRes}>
+                        <ArrowDownwardOutlined />
+                      </Box>
+                    </Grid>
+
+                    <Grid
+                      style={{
+                        paddingRight: 8,
+                        paddingTop: 0,
+                        paddingBottom: 16,
+                      }}
+                      item
+                      xs={6}>
+                      <Typography
+                        variant='h6'
+                        className={classes.titleSecondary}
+                        align='center'>
+                        {isConvert ? 'To' : 'Receive'}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      style={{paddingLeft: 8, paddingTop: 0, paddingBottom: 16}}
+                      item
+                      xs={6}>
+                      <Typography
+                        className={classes.valueReceive}
+                        variant='h6'
+                        align='center'>
+                        {(isMarket || isConvert
+                          ? buyAmount.toFixed(6)
+                          : limitReceive) +
+                          ' ' +
+                          tokenTo.symbol}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Grid
+                        container
+                        justify='center'
+                        alignItems='center'
+                        spacing={3}
+                        style={{marginBottom: 10}}
+                        className={classes.contentBox}>
+                        {!isConvert && (
                           <>
-                            <Grid item xs={12} sm={3}>
-                              <Typography className={classes.textSecondary}>
-                                Guaranteed Price
-                              </Typography>
+                            <Grid style={{paddingTop: 0}} item xs={12}>
+                              <Grid container>
+                                <Grid style={{padding: 0}} item xs={12} sm={3}>
+                                  <Typography className={classes.textSecondary}>
+                                    At Price
+                                  </Typography>
+                                </Grid>
+                                <Grid style={{padding: 0}} item xs={12} sm={9}>
+                                  <Typography
+                                    className={classes.textPrimary}
+                                    align='right'>
+                                    {`${displayPrice} ${firstSymbol} per ${secondSymbol}`}
+                                    <IconButton
+                                      style={{marginLeft: 5}}
+                                      size='small'
+                                      onClick={invertPrice}>
+                                      <SyncAltIcon fontSize='small' />
+                                    </IconButton>
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={9}>
-                              <Typography
-                                className={classes.textPrimary}
-                                align='right'>
-                                {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
-                                <IconButton
-                                  style={{marginLeft: 5}}
-                                  size='small'
-                                  onClick={invertPrice}>
-                                  <SyncAltIcon fontSize='small' />
-                                </IconButton>
-                              </Typography>
+
+                            <Grid style={{paddingTop: 0}} item xs={12}>
+                              <Grid container>
+                                <Grid style={{padding: 0}} item xs={12} sm={4}>
+                                  <Typography className={classes.textSecondary}>
+                                    Estimated Fee
+                                  </Typography>
+                                </Grid>
+                                <Grid style={{padding: 0}} item xs={12} sm={8}>
+                                  <Typography
+                                    className={classes.textPrimary}
+                                    align='right'>{estimatedFeeUSD }{` ${fee.toFixed(6)} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()}`} </Typography>
+                                </Grid>
+                              </Grid>
                             </Grid>
                           </>
                         )}
 
-                        <Grid item xs={12} sm={5}>
-                          <Typography className={classes.textSecondary}>
-                            Estimated Fee
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={7}>
-                          <Typography
-                            className={classes.textPrimary}
-                            align='right'>{estimatedFeeUSD }{` ${fee.toFixed(6)} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()}`       }     </Typography>
-                        </Grid>
-                      </>
-                    )}
+                        {!isMarket && !isConvert && (
+                          <>
+                            <Grid style={{paddingTop: 0}} item xs={12}>
+                              <Grid container>
+                                <Grid style={{padding: 0}} item xs={12} sm={4}>
+                                  <Typography className={classes.textSecondary}>
+                                    Expiry
+                                  </Typography>
+                                </Grid>
+                                <Grid style={{padding: 0}} item xs={12} sm={8}>
+                                  <Typography
+                                    className={classes.textPrimary}
+                                    align='right'>
+                                    {expiryFn.toLocaleDateString() +
+                                      ' - ' +
+                                      expiryFn.toLocaleTimeString()}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </>
+                        )}
 
-                    {!isMarket && !isConvert && (
-                      <>
-                        <Grid item xs={12} sm={5}>
-                          <Typography className={classes.textSecondary}>
-                            Expiry
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={7}>
-                          <Typography
-                            className={classes.textPrimary}
-                            align='right'>
-                            {expiryFn.toLocaleDateString() +
-                              ' - ' +
-                              expiryFn.toLocaleTimeString()}
-                          </Typography>
-                        </Grid>
-                      </>
-                    )}
+                        {isMarket && !isConvert && (
+                          <>
+                            <Grid item xs={6}>
+                              <Box display='flex'>
+                                <Box marginRight={2}>
+                                  <Typography className={classes.textSecondary}>
+                                    Slippage
+                                  </Typography>
+                                </Box>
 
-                    {isMarket && !isConvert && (
-                      <>
-                        <Grid item xs={12} sm={5}>
-                          <Typography className={classes.textSecondary}>
-                            Slippage
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={7}>
-                          <Box display='flex' justifyContent={'flex-end'}>
-                            <TextField
-                              id='slippage_inp'
-                              variant='outlined'
-                              type='number'
-                              inputProps={{min: 0, max: 1, step: 0.01}}
-                              value={slippage}
-                              onChange={(e) => {
-                                setSlippage(Number(e.target.value));
-                              }}
-                            />
-                          </Box>
-                        </Grid>
-                      </>
-                    )}
-                    {(isMarket || isConvert) && (
-                      <>
-                        <Grid item xs={12} sm={5}>
-                          <Typography className={classes.textSecondary}>
-                            Gas Price (Gwei)
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={7}>
-                          <Box display='flex' justifyContent={'flex-end'}>
-                            <TextField
-                              variant='outlined'
-                              type='number'
-                              value={displayGasPrice}
-                              inputProps={{min: 0, max: 1000, step: 1}}
-                              onChange={(e) =>
-                                handleChangeDisplayGasPrice(e.target.value)
-                              }
-                            />
-                          </Box>
-                        </Grid>
+                                <IconButton
+                                  size='small'
+                                  className={classes.textSecondary}
+                                  onClick={handleClickGuaranteedPrice}>
+                                  <HelpOutlineIcon fontSize='small' />
+                                </IconButton>
+                                <Popover
+                                  id={popoverId}
+                                  open={open}
+                                  anchorEl={anchorEl}
+                                  onClose={handleCloseGuaranteedPrice}
+                                  anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                  }}>
+                                  <Box padding={3}>
+                                    <Typography
+                                      className={classes.textSecondary}>
+                                      Guaranteed Price
+                                    </Typography>
+                                    <Typography
+                                      className={classes.textPrimary}
+                                      align='right'>
+                                      {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
+                                    </Typography>
+                                  </Box>
+                                </Popover>
+                              </Box>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Box display='flex' justifyContent={'flex-end'}>
+                                <TextField
+                                  style={{width: 90}}
+                                  id='slippage_inp'
+                                  variant='outlined'
+                                  type='number'
+                                  inputProps={{min: 0, max: 1, step: 0.01}}
+                                  value={slippage}
+                                  onChange={(e) => {
+                                    setSlippage(Number(e.target.value));
+                                  }}
+                                />
+                              </Box>
+                            </Grid>
+                          </>
+                        )}
 
-                        <Grid item xs={12}>
-                          <GasOptionsWrapper>
-                            <GasOption
-                              isSelected={selectedGasOption === 'low'}
-                              onClick={() =>
-                                handleChangeSelectedGasPrice(lowGasPrice, 'low')
-                              }>
-                              <Typography style={{fontWeight: 600}}>
-                                {`${displayLowGas} Gwei`}
+                        {(isMarket || isConvert) && (
+                          <>
+                            <Grid item xs={6}>
+                              <Typography className={classes.textSecondary}>
+                                Gas Price (Gwei)
                               </Typography>
-                              <Typography style={{fontWeight: 600}}>
-                                Low
-                              </Typography>
-                            </GasOption>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Box display='flex' justifyContent={'flex-end'}>
+                                <TextField
+                                  style={{width: 90}}
+                                  variant='outlined'
+                                  type='number'
+                                  value={displayGasPrice}
+                                  inputProps={{min: 0, max: 1000, step: 1}}
+                                  onChange={(e) =>
+                                    handleChangeDisplayGasPrice(e.target.value)
+                                  }
+                                />
+                              </Box>
+                            </Grid>
 
-                            <GasOption
-                              isSelected={selectedGasOption === 'default'}
-                              onClick={() =>
-                                handleChangeSelectedGasPrice(
-                                  defaultGasPrice,
-                                  'default',
-                                )
-                              }>
-                              <Typography style={{fontWeight: 600}}>
-                                {`${displayDefaultGas} Gwei`}
-                              </Typography>
-                              <Typography style={{fontWeight: 600}}>
-                                Default
-                              </Typography>
-                            </GasOption>
+                            <Grid
+                              style={{paddingTop: 10, paddingBottom: 0}}
+                              item
+                              xs={12}>
+                              <GasOptionsWrapper>
+                                <GasOption
+                                  isSelected={selectedGasOption === 'low'}
+                                  onClick={() =>
+                                    handleChangeSelectedGasPrice(
+                                      lowGasPrice,
+                                      'low',
+                                    )
+                                  }>
+                                  <Typography
+                                    style={{fontSize: 14, fontWeight: 600}}>
+                                    {`${displayLowGas} Gwei`}
+                                  </Typography>
+                                  <Typography style={{fontWeight: 600}}>
+                                    Low
+                                  </Typography>
+                                </GasOption>
 
-                            <GasOption
-                              isSelected={selectedGasOption === 'fast'}
-                              onClick={() =>
-                                handleChangeSelectedGasPrice(
-                                  fastGasPrice,
-                                  'fast',
-                                )
-                              }>
-                              <Typography style={{fontWeight: 600}}>
-                                {`${displayFastGas} Gwei`}
-                              </Typography>
-                              <Typography style={{fontWeight: 600}}>
-                                Fast
-                              </Typography>
-                            </GasOption>
-                          </GasOptionsWrapper>
-                        </Grid>
-                      </>
-                    )}
+                                <GasOption
+                                  isSelected={selectedGasOption === 'default'}
+                                  onClick={() =>
+                                    handleChangeSelectedGasPrice(
+                                      defaultGasPrice,
+                                      'default',
+                                    )
+                                  }>
+                                  <Typography
+                                    style={{fontSize: 14, fontWeight: 600}}>
+                                    {`${displayDefaultGas} Gwei`}
+                                  </Typography>
+                                  <Typography style={{fontWeight: 600}}>
+                                    Default
+                                  </Typography>
+                                </GasOption>
+
+                                <GasOption
+                                  isSelected={selectedGasOption === 'fast'}
+                                  onClick={() =>
+                                    handleChangeSelectedGasPrice(
+                                      fastGasPrice,
+                                      'fast',
+                                    )
+                                  }>
+                                  <Typography
+                                    style={{fontSize: 14, fontWeight: 600}}>
+                                    {`${displayFastGas} Gwei`}
+                                  </Typography>
+                                  <Typography style={{fontWeight: 600}}>
+                                    Fast
+                                  </Typography>
+                                </GasOption>
+                              </GasOptionsWrapper>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Grid>
+                )}
+              </>
             )}
           </>
         )}
@@ -692,12 +825,7 @@ const OrderContent: React.FC<Props> = (props) => {
         ) : (
           <>
             {currentStep === Steps.ERROR && (
-              <ErrorStep
-                step={currentStep}
-                error={error}
-                onClose={onClose}
-                onLoading={onLoading}
-              />
+              <ErrorStep step={currentStep} error={error} onClose={onClose} />
             )}
             {currentStep === Steps.CONVERT && (
               <ConvertStep
@@ -711,6 +839,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 selectedGasPrice={selectedGasPrice}
                 onNext={onNext}
                 onLoading={onLoading}
+                onRequestConfirmed={onRequestConfirmed}
                 onShifting={onShifting}
               />
             )}
@@ -748,6 +877,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 selectedGasPrice={selectedGasPrice}
                 onNext={onNext}
                 onLoading={onLoading}
+                onRequestConfirmed={onRequestConfirmed}
               />
             )}
             {currentStep === Steps.LIMIT && (
@@ -762,15 +892,12 @@ const OrderContent: React.FC<Props> = (props) => {
                 selectedGasPrice={selectedGasPrice}
                 onNext={onNext}
                 onLoading={onLoading}
+                onRequestConfirmed={onRequestConfirmed}
               />
             )}
 
             {currentStep === Steps.DONE && (
-              <DoneStep
-                step={currentStep}
-                onClose={onClose}
-                onLoading={onLoading}
-              />
+              <DoneStep step={currentStep} onClose={onClose} />
             )}
           </>
         )}

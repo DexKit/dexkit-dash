@@ -22,6 +22,7 @@ import {isMobile} from 'web3modal';
 import {
   FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
@@ -116,7 +117,7 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const network = useNetwork();
 
-  const { web3State, onConnectWeb3, account:web3Account } = useWeb3();
+  const {web3State, onConnectWeb3} = useWeb3();
 
   const [
     tokenBalance,
@@ -127,23 +128,18 @@ const MarketForm: React.FC<Props> = (props) => {
   const [amountTo, setAmountTo] = useState<number>(0);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
-  useEffect(()=> {
-    if ( web3State !== Web3State.Done && tokenFrom === undefined) {
-      const tokenETH = select1.find(
-        (e) => e.symbol.toLowerCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
-      );
-    if(tokenETH){
-      tokenETH.address = GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase();
-      onChangeToken(tokenETH, 'from');
-    }
-  
-    }
+  if (web3State !== Web3State.Done && tokenFrom === undefined) {
+    const tokenETH = select1.find(
+      (e) =>
+        (e.symbol.toLowerCase() ===
+          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
+          e.symbol.toLowerCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
+        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+    );
 
-  }, [web3State, tokenFrom, select1])
-
-
-/*  
-  }*/
+    onChangeToken(tokenETH, 'from');
+  }
 
   const resetAmount = () => {
     setAmountFrom(0);
@@ -182,8 +178,9 @@ const MarketForm: React.FC<Props> = (props) => {
           onFetch(tokenBalance?.value - 0.03);
         }
       } else {
-        setAmountFrom(tokenBalance?.value ?? 0);
-        onFetch(tokenBalance?.value ?? 0);
+        // Problem: balance comes with 8 decimals (rounded up) from the api
+        setAmountFrom(tokenBalance?.value - 0.000000001 ?? 0);
+        onFetch(tokenBalance?.value - 0.000000001 ?? 0);
       }
     }
   };
@@ -278,37 +275,36 @@ const MarketForm: React.FC<Props> = (props) => {
   let disabled = false;
   let notConnected = web3State !== Web3State.Done;
 
- 
   const connectButton = (
-      <Box display='flex' alignItems='center' justifyContent='center'>
-        <Button
-          size='large'
-          variant='contained'
-          color='primary'
-          onClick={onConnectWeb3}
-          endIcon={<AccountBalanceWalletIcon />}>
-          {web3State === Web3State.Connecting
-            ? isMobile()
-              ? 'Connecting...'
-              : 'Connecting... Check Wallet'
-            : isMobile()
-            ? 'Connect'
-            : 'Connect Wallet'}
-        </Button>
-      </Box>
-    );
-    // disabled = true;
- if (select0.length === 0) {
+    <Box display='flex' alignItems='center' justifyContent='center'>
+      <Button
+        size='large'
+        variant='contained'
+        color='primary'
+        onClick={onConnectWeb3}
+        endIcon={<AccountBalanceWalletIcon />}>
+        {web3State === Web3State.Connecting
+          ? isMobile()
+            ? 'Connecting...'
+            : 'Connecting... Check Wallet'
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
+      </Button>
+    </Box>
+  );
+  // disabled = true;
+  if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
     disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
-  }else if (account !== web3Account) {
-      errorMessage = 'Connect Your Default Wallet';
-  } else if (networkName !== network){
-    errorMessage =  `Switch to ${FORMAT_NETWORK_NAME(network)} Network in your wallet`;
+  } else if (networkName !== network) {
+    errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
+      network,
+    )} Network in your wallet`;
   }
   const {usdFormatter} = useUSDFormatter();
 
@@ -489,30 +485,32 @@ const MarketForm: React.FC<Props> = (props) => {
         </Box>
       </form>
 
-      {!notConnected && <Button
-        className={classes.btnPrimary}
-        fullWidth
-        size='large'
-        variant='contained'
-        color='primary'
-        onClick={handleTrade}
-        disabled={
-          (tokenBalance?.value || 0) < (amountFrom || 0) ||
-          !!errorMessage ||
-          amountTo === 0 ||
-          web3State !== Web3State.Done
-        }>
-        {errorMessage && account ? (
-          errorMessage
-        ) : (
-          <>
-            <Box fontSize='large' fontWeight='bold'>
-              Trade
-            </Box>
-          </>
-        )}
-      </Button>}
-      { notConnected && connectButton}
+      {!notConnected && (
+        <Button
+          className={classes.btnPrimary}
+          fullWidth
+          size='large'
+          variant='contained'
+          color='primary'
+          onClick={handleTrade}
+          disabled={
+            (tokenBalance?.value || 0) < (amountFrom || 0) ||
+            !!errorMessage ||
+            amountTo === 0 ||
+            web3State !== Web3State.Done
+          }>
+          {errorMessage && account ? (
+            errorMessage
+          ) : (
+            <>
+              <Box fontSize='large' fontWeight='bold'>
+                Trade
+              </Box>
+            </>
+          )}
+        </Button>
+      )}
+      {notConnected && connectButton}
     </Box>
   );
 };

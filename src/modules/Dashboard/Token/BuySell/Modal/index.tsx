@@ -1,12 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {getNativeCoinWrapped, getNativeCoinWrappedAddressFromNetworkName, getNativeCoinWrappedFromNetworkName} from 'utils';
+import {
+  getNativeCoinWrapped,
+  getNativeCoinWrappedAddressFromNetworkName,
+  getNativeCoinWrappedFromNetworkName,
+} from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {isMobile} from 'web3modal';
+import {AppContext} from '@crema';
+import AppContextPropsType from 'types/AppContextPropsType';
 
 interface OrderProps {
   open: boolean;
@@ -49,6 +56,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | string>();
+  const [isRequestConfirmed, setIsRequestConfirmed] = useState(false);
 
   const [isConvert, setIsConvert] = useState<boolean>(false);
   const [tokenWrapper, setTokenWrapper] = useState<Token>({
@@ -57,6 +65,8 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     name: '',
     symbol: '',
   });
+
+  const {theme} = useContext<AppContextPropsType>(AppContext);
 
   useEffect(() => {
     if (open && tokenFrom && tokenTo && networkName && chainId) {
@@ -99,40 +109,56 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       setSteps(stepsFn);
       setCurrentStep(stepsFn[0]);
       setCurrentStepIndex(-1);
+      setIsRequestConfirmed(false);
     }
   }, [open, tokenFrom, tokenTo, networkName, chainId]);
 
-  const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
-    if (currentStepIndex === -1) {
-      setCurrentStepIndex(0);
+  // Problem: there is a delay after Approve to get the new allowance
+  // Fix: wait X seconds before going to the next step
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+  const handleNextWithDelay = async () => {
+    if (currentStep === Steps.APPROVE) {
+      await delay(10000);
     }
 
+    const nextStepIndex = currentStepIndex + 1;
+    setCurrentStepIndex(nextStepIndex);
+
+    if (nextStepIndex < steps.length) {
+      console.log('next has next step');
+      setCurrentStep(steps[nextStepIndex]);
+    } else {
+      console.log('next done');
+      setCurrentStep(Steps.DONE);
+    }
+
+    setLoading(false);
+  };
+
+  const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
     if (hasNext) {
       console.log('next is not a error');
 
-      const nextStepIndex = currentStepIndex + 1;
-      setCurrentStepIndex(nextStepIndex);
-
-      if (nextStepIndex < steps.length) {
-        console.log('next has next step');
-        setCurrentStep(steps[nextStepIndex]);
-      } else {
-        setCurrentStep(Steps.DONE);
-        console.log('next done');
-      }
+      handleNextWithDelay();
     } else {
       console.log('next is an error');
       setError(errorMesage);
       setCurrentStep(Steps.ERROR);
+      setLoading(false);
     }
   };
 
   const handleLoading = (value: boolean) => {
-    if (currentStepIndex === -1) {
+    if (loading && currentStepIndex === -1) {
       setCurrentStepIndex(0);
     }
 
     setLoading(value);
+  };
+
+  const handleRequestConfirmed = (value: boolean) => {
+    setIsRequestConfirmed(value);
   };
 
   const handleShift = (step: Steps) => {
@@ -142,14 +168,20 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
     setSteps(tempSteps);
     setCurrentStep(tempSteps[0]);
+    setCurrentStepIndex(-1);
+    setLoading(true);
   };
+
+  const isfullScreen = window.innerWidth <= 500;
 
   return (
     <>
       {account && chainId && (
         <Dialog
+          fullScreen={isfullScreen}
           fullWidth
-          maxWidth='sm'
+          maxWidth='xs'
+          scroll='paper'
           open={open}
           onClose={onClose}
           aria-labelledby='form-dialog-title'>
@@ -171,10 +203,12 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
             account={account}
             chainId={chainId}
             loading={loading}
+            isRequestConfirmed={isRequestConfirmed}
             error={error}
             onClose={onClose}
             onNext={handleNext}
             onLoading={handleLoading}
+            onRequestConfirmed={handleRequestConfirmed}
             onShifting={handleShift}
           />
         </Dialog>

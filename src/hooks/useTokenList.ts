@@ -12,13 +12,13 @@ export const useTokenList = (networkName: EthereumNetwork) => {
       console.log('on Binance List');
       getBinanceTokens()
         .then(e  => {
-          e.push({
+          e.unshift({
             address: '',
             decimals: 18,
             name: 'Binance',
             symbol: 'BNB'
           }) 
-          e.push({
+          e.unshift({
             address: '0x314593fa9a2fa16432913dbccc96104541d32d11',
             decimals: 18,
             name: 'DexKit',
@@ -37,7 +37,7 @@ export const useTokenList = (networkName: EthereumNetwork) => {
     else {
       getEthereumTokens()
         .then(e  => {
-          e.push({
+          e.unshift({
             address: '',
             decimals: 18,
             name: 'Ethereum',

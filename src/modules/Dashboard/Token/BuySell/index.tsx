@@ -21,9 +21,8 @@ import {
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {MyBalances, Web3State} from 'types/blockchain';
-import { isNativeCoinWithoutChainId } from 'utils';
-import { useHistory } from 'react-router-dom';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {isNativeCoinWithoutChainId} from 'utils';
+import {useHistory} from 'react-router-dom';
 
 interface Props {
   tokenAddress: string;
@@ -69,9 +68,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
   const classes = useStyles();
 
-  const {chainId, account: web3Account, web3State} = useWeb3();
-  const defaultAccount = useDefaultAccount();
-  const account = defaultAccount || web3Account;
+  const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
@@ -122,6 +119,12 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
             (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
           );
         }
+
+        // tokenFrom and tokenTo cannot have the same condition for initialization (ie ETH || WETH)
+        if (_token?.symbol === 'ETH' || _token?.symbol === 'WETH') {
+          _token = select1.find((t) => t.symbol === 'KIT');
+        }
+
         setTokenTo(_token);
         console.log('setTokenTo', _token);
       }
@@ -146,20 +149,22 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
 
   const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
     if (token) {
+      const isNative = isNativeCoinWithoutChainId(token.symbol);
       if (type === 'from') {
         if (
           tokenTo &&
-          token.address.toLowerCase() === tokenTo.address.toLowerCase()
+          (token.address.toLowerCase() === tokenTo.address.toLowerCase() || 
+          (isNative && token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
         ) {
           const aux = tokenFrom;
           setTokenFrom(tokenTo);
           setTokenTo(aux);
 
-          history.push(token.address);
+          history.push(isNative ? token.symbol.toLowerCase() : token.address);
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${token.networkName}/dashboard/token/${token.address}`,
+              `/${token.networkName}/dashboard/token/${isNative ? token.symbol.toLowerCase() : token.address}`,
             );
           }
           setTokenFrom(token);
@@ -167,11 +172,12 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
       } else {
         if (
           tokenFrom &&
-          token.address.toLowerCase() === tokenFrom.address.toLowerCase()
+          (token.address.toLowerCase() === tokenFrom.address.toLowerCase()|| 
+          (isNative && token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
         ) {
           if (web3State === Web3State.Done) {
             const availableTokenFrom = select0.find(
-              (e) => e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
+              (e) => isNative ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase() : e.address.toLowerCase() === tokenTo?.address.toLowerCase()  ,
             );
 
             if (availableTokenFrom) {
@@ -180,7 +186,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
               setTokenFrom(aux);
             } else {
               const newTokenFrom = select0.find(
-                (e) => e.address.toLowerCase() !== token.address.toLowerCase(),
+                (e) => isNative ? e.symbol.toLowerCase() === token?.symbol.toLowerCase() : e.address.toLowerCase() === token?.address.toLowerCase()  
               );
 
               setTokenTo(tokenFrom);
@@ -195,7 +201,7 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
           setTokenTo(token);
         }
 
-        history.push(token.address);
+        history.push(isNative ? token.symbol.toLowerCase() : token.address);
       }
     }
   };

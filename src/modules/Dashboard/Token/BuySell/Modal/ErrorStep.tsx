@@ -15,12 +15,11 @@ import {Notification} from 'types/models/Notification';
 interface Props {
   step: Steps | undefined;
   error: Error | string | undefined;
-  onLoading: (value: boolean) => void;
   onClose: () => void;
 }
 
 const ErrorStep: React.FC<Props> = (props) => {
-  const {step, error, onLoading, onClose} = props;
+  const {step, error, onClose} = props;
   const dispatch = useDispatch();
 
   const [message, setMessage] = useState<string>('');
@@ -47,7 +46,6 @@ const ErrorStep: React.FC<Props> = (props) => {
           dispatch(onAddNotification([notification], NotificationType.ERROR));
         }
       }
-      onLoading(false);
     }
   }, [step]);
 

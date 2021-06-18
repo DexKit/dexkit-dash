@@ -13,6 +13,11 @@ import {fromTokenUnitAmount} from '@0x/utils';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
+import {useDispatch} from 'react-redux';
+import {Notification} from 'types/models/Notification';
+import {onAddNotification} from 'redux/actions';
+import {truncateAddress} from 'utils';
+import {NotificationType} from 'services/notification';
 
 // get tokens ta sendo chamado 3x
 
@@ -27,6 +32,7 @@ interface Props {
   selectedGasPrice: string;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
+  onRequestConfirmed: (value: boolean) => void;
   onShifting: (step: Steps) => void;
 }
 
@@ -42,10 +48,14 @@ const ConvertStep: React.FC<Props> = (props) => {
     selectedGasPrice,
     onNext,
     onLoading,
+    onRequestConfirmed,
     onShifting,
   } = props;
 
-  const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
+  // amountFrom is already set to BigNumber
+  // const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
+
+  const dispatch = useDispatch();
 
   const {getContractWrappers} = useContractWrapper();
 
@@ -76,6 +86,9 @@ const ConvertStep: React.FC<Props> = (props) => {
 
   const handleAction = async () => {
     try {
+      onLoading(true);
+      onRequestConfirmed(true);
+
       if (account == null) {
         throw new Error('Account address cannot be null or empty');
       }
@@ -93,13 +106,13 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       const wethToken = contractWrappers.weth9;
 
-      let txHash;
+      let txHash: string = '';
 
       if (tokenFrom.symbol === 'ETH') {
         await wethToken
           .deposit()
           .sendTransactionAsync({
-            value: amountFn,
+            value: amountFrom,
             from: account,
             // gasPrice: gasInfo.gasPriceInWei,
             gasPrice: new BigNumber(selectedGasPrice),
@@ -110,7 +123,7 @@ const ConvertStep: React.FC<Props> = (props) => {
           });
       } else {
         await wethToken
-          .withdraw(amountFn)
+          .withdraw(amountFrom)
           .sendTransactionAsync({
             from: account,
             // gasPrice: gasInfo.gasPriceInWei,
@@ -127,15 +140,24 @@ const ConvertStep: React.FC<Props> = (props) => {
       if (txHash) {
         web3Wrapper
           .awaitTransactionSuccessAsync(txHash)
-          .then(() => onNext(true))
+          .then(() => {
+            const notification: Notification = {
+              title: 'Convert',
+              body: truncateAddress(txHash),
+            };
+
+            dispatch(
+              onAddNotification([notification], NotificationType.SUCCESS),
+            );
+
+            onNext(true);
+          })
           .catch((e) => {
             throw new Error(e.message);
           });
       } else {
         throw new Error('txHash not found');
       }
-
-      onNext(true);
     } catch (e) {
       onNext(false, e.message);
     }
