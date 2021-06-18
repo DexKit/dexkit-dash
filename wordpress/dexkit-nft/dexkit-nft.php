@@ -134,7 +134,7 @@ class DexkitNFT
 		//$result = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . NFT_TAG . " WHERE id = 1", OBJECT );
 
 		$domain = get_site_url();
-    $domain = preg_replace( "#^[^:/.]*[:/]+#i", "", $domain);
+    	$domain = preg_replace( "#^[^:/.]*[:/]+#i", "", $domain);
 
 		///v4/config-wordpress?domain=dexkit.local&type=('DEX' ||  'AGGREGATOR' ||  'MARKETPLACE')
 		$request = wp_remote_get( NFT_API . '/v4/config-wordpress?domain='.$domain.'&type=MARKETPLACE' );
@@ -359,7 +359,9 @@ class DexkitNFT
 			
 			<h2>Dexkit NFT</h2>
 			<p style="text-align:justify">DEXKIT is changing the game of decentralized trading. The next-generation DeFi toolkit contains a full-suite decentralized exchange (DEX) that leverages powerful 0x (ZRX) technology allowing for multiple order types including ZERO GAS FEE placement of stop and limit orders. The exchange is powered by the underlying DEXSwap aggregator which gathers information from over 14 exchanges in search of the best price and liquidity for tokens. Collectors can launch their own customizable NFT marketplace where they can exchange crypto art, in-game assets, and any other ERC721 or 1155 token. The DEXKIT dashboard is the main control room where users can monitor statistics from all over the crypto markets, customize deployed DEXKIT tools, and perform swaps within the onboard multicurrency wallet.</p>
+			<p style="text-align:justify">In order to costumize this plugin you need to use the Dashboard Wizard, this plugin then updates based in your domain when you click on sync.</p>
 			<p><a href="https://dexkit.com">https://dexkit.com</a></p>
+			<p><a href="https://t.me/dexkit">Telegram</a></p>
 
 
 			<?php if ( $localConfig->api != NULL ) { ?>
