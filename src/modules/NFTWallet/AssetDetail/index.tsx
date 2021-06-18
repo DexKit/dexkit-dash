@@ -12,19 +12,39 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Breadcrumbs,
+  useTheme,
 } from '@material-ui/core';
 import {useParams} from 'react-router';
+import {Link as RouterLink} from 'react-router-dom';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SubjectIcon from '@material-ui/icons/Subject';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {truncateAddress} from 'utils';
 import useFetch from 'use-http';
 import {Skeleton} from '@material-ui/lab';
 import AssetEventsTable from '../AssetEventsTable';
 
+import moment from 'moment';
+import ButtonCopy from 'shared/components/ButtonCopy';
+import {NullValueNode} from 'graphql';
+import {getWindowUrl} from 'utils/browser';
+import PageTitle from 'shared/components/PageTitle';
+import {useIntl} from 'react-intl';
+import {getOrderHash} from '@0x/order-utils';
+import AssetOrdersTable from '../AssetOrdersTable';
+import {useAssetEvents, useAssetOrders} from '../hooks/detail';
+import HistoricAccordion from '../components/detail/HistoricAccordion';
+import ListingAccordion from '../components/detail/ListingAccordion';
+import DetailAccordion from '../components/detail/DetailAccordion';
+
 const useStyles = makeStyles((theme) => ({
   assetImage: {
-    padding: '66.6%',
+    height: '100%',
+    width: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
 }));
 
@@ -35,22 +55,64 @@ interface RouteParams {
 
 export const AssetDetail = () => {
   const classes = useStyles();
-
-  const {get, data, loading} = useFetch('https://api.opensea.io/api/v1/asset');
-
+  const theme = useTheme();
   const {address, token}: RouteParams = useParams();
+  const {get, loading, error} = useFetch('https://api.opensea.io/api/v1/asset');
+
+  const [data, setData] = useState<any>({});
 
   useEffect(() => {
-    get(`/${address}/${token}/`);
+    let tokenId = parseInt(token);
+
+    get(`/${address}/${tokenId}/`).then(() => {
+      if (data) {
+        setData(data);
+      }
+    });
   }, [get, address, token]);
 
   return (
-    <Box>
+    <Box pt={{xs: 8}}>
+      <Box mb={2}>
+        <Breadcrumbs>
+          <Link color='inherit' component={RouterLink} to='/'>
+            <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+          </Link>
+          <Link color='inherit'>
+            <IntlMessages id='nfts.walletBreadcrumbAssets' />
+          </Link>
+          <Link color='inherit'>
+            {loading ? (
+              <Skeleton width={theme.spacing(40)} />
+            ) : (
+              data?.collection?.name
+            )}
+          </Link>
+          <Link
+            component={RouterLink}
+            color='inherit'
+            to={`/nfts/assets/${address}/${token}`}>
+            {loading ? <Skeleton width={theme.spacing(70)} /> : data?.name}
+          </Link>
+        </Breadcrumbs>
+      </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <Card>
-            {loading ? <Skeleton height={300} /> : null}
-            <CardMedia image={data?.image_url} className={classes.assetImage} />
+            {loading ? (
+              <Skeleton className={classes.assetImage} height='100%' />
+            ) : null}
+            <CardMedia>
+              <img
+                style={{
+                  backgroundColor: `#${
+                    data?.background_color ? data?.background_color : 'fff'
+                  }`,
+                }}
+                src={data?.image_url}
+                className={classes.assetImage}
+              />
+            </CardMedia>
           </Card>
         </Grid>
         <Grid item xs={12} sm={8}>
@@ -58,11 +120,26 @@ export const AssetDetail = () => {
             <CardContent>
               <Link>
                 <Typography variant='body1'>
-                  {loading ? <Skeleton /> : data?.asset_contract.name}
+                  {loading ? <Skeleton /> : data?.collection?.name}
                 </Typography>
               </Link>
-              <Typography gutterBottom variant='h5' component='h1'>
-                {loading ? <Skeleton /> : data?.name}
+
+              <Typography
+                style={{fontWeight: 700}}
+                gutterBottom
+                variant='h4'
+                component='h1'>
+                {loading ? (
+                  <Skeleton />
+                ) : (
+                  <>
+                    {data?.name}
+                    <ButtonCopy
+                      copyText={`${getWindowUrl()}/nfts/assets/${address}/${token}`}
+                      titleText='Copied to Clipboard'
+                    />
+                  </>
+                )}
               </Typography>
               <Typography variant='body1' color='textSecondary'>
                 {loading ? <Skeleton /> : data?.description}
@@ -70,59 +147,15 @@ export const AssetDetail = () => {
             </CardContent>
           </Card>
         </Grid>
+        {/* <Grid item xs={12} sm={4}>
+          <DetailAccordion asset={data} />
+        </Grid>
         <Grid item xs={12} sm={4}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <SubjectIcon />{' '}
-              <Typography>
-                <IntlMessages id='nfts.detail.detailLabel' />
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails style={{display: 'block'}}>
-              <Box p={2}>
-                <Grid container justify='space-between'>
-                  <Grid item>
-                    <Typography variant='body1'>
-                      <IntlMessages id='nfts.detail.detailContractAddress' />
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      <Link
-                        href={`https://etherscan.io/address/${data?.asset_contract.address}`}
-                        target='_blank'>
-                        {truncateAddress(data?.asset_contract.address)}
-                      </Link>
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container justify='space-between'>
-                  <Grid item>
-                    <Typography variant='body1'>
-                      <IntlMessages id='nfts.detail.detailTokenIdLabel' />
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant='body1'>{data?.token_id}</Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+          <ListingAccordion contractAddress={address} tokenId={token} />
         </Grid>
         <Grid item xs={12} sm={8}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <SubjectIcon />{' '}
-              <Typography>
-                <IntlMessages id='nfts.detail.eventsLabel' />
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails style={{display: 'block'}}>
-              <AssetEventsTable events={[]} />
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
+          <HistoricAccordion contractAddress={address} tokenId={token} />
+        </Grid> */}
       </Grid>
     </Box>
   );

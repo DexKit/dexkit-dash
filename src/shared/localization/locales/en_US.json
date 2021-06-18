@@ -773,10 +773,12 @@
   "nfts.walletHasOffersCheck": "Has Offers",
   "nfts.detail.detailContractAddress": "Contract Address",
   "nfts.detail.detailLabel": "Details",
-  "nfts.detail.eventsLabel": "Events",
-  "nfts.detail.eventsTypeLabel": "Type",
-  "nfts.detail.eventsPriceLabel": "Price",
-  "nfts.detail.eventsFromLabel": "From",
-  "nfts.detail.eventsToLabel": "To",
-  "nfts.detail.eventsDateLabel": "Date"
+  "nfts.detail.historicLabel": "Trading History",
+  "nfts.detail.historicTypeLabel": "Type",
+  "nfts.detail.historicPriceLabel": "Price",
+  "nfts.detail.historicFromLabel": "From",
+  "nfts.detail.historicToLabel": "To",
+  "nfts.detail.historicDateLabel": "Date",
+  "nfts.detail.detailTokenIdLabel": "Token ID",
+  "nfts.walletBreadcrumbAssets": "Assets"
 }

@@ -351,7 +351,15 @@ export default () => {
 
   useEffect(() => {
     fetchData();
-  }, [query, sortBy, collection, hasOffers]);
+  }, [address, query, sortBy, collection, hasOffers]);
+
+  const isMounted = useIsMounted();
+
+  useEffect(() => {
+    if (isMounted) {
+      history.replace(`/nfts/wallet/${userAddress}`);
+    }
+  }, [userAddress]);
 
   return (
     <Box pt={{xs: 8}}>

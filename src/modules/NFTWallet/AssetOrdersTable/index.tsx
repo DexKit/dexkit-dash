@@ -13,38 +13,37 @@ import useFetch from 'use-http';
 import moment from 'moment';
 import {AssetEventType} from 'opensea-js/lib/types';
 import AssetEventTableRow from '../AssetEventTableRow';
+import AssetOrdersRow from '../AssetOrdersRow';
 
 interface Props {
-  events: any[];
+  orders: any[];
 }
 
 export default (props: Props) => {
-  const {events} = props;
+  const {orders} = props;
 
   return (
     <Table>
       <TableHead>
         <TableRow>
           <TableCell>
-            <IntlMessages id='nfts.detail.historicTypeLabel' />
+            <IntlMessages id='nfts.detail.ordersPriceHeader' />
           </TableCell>
           <TableCell>
-            <IntlMessages id='nfts.detail.historicPriceLabel' />
+            <IntlMessages id='nfts.detail.ordersUSDPriceHeader' />
+          </TableCell>
+          <TableCell></TableCell>
+          <TableCell>
+            <IntlMessages id='nfts.detail.ordersExpirationHeader' />
           </TableCell>
           <TableCell>
-            <IntlMessages id='nfts.detail.historicFromLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicToLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicDateLabel' />
+            <IntlMessages id='nfts.detail.ordersFromHeader' />
           </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {events.map((event, index) => (
-          <AssetEventTableRow event={event} />
+        {orders.map((order, index) => (
+          <AssetOrdersRow key={index} order={order} />
         ))}
       </TableBody>
     </Table>
