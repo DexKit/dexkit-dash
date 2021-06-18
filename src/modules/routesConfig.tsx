@@ -23,7 +23,6 @@ const useRoutesConfig = (): NavItemProps[] => {
 
   let items: NavItemProps[] = [];
 
-
     items = [
       {
         id: 'dashboard',
@@ -39,7 +38,7 @@ const useRoutesConfig = (): NavItemProps[] => {
             icon: 'compare_arrows',
             url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
           },
-         /* {
+          /* {
             id: 'overview',
             title: 'Overview',
             messageId: 'common.overview',
@@ -63,7 +62,15 @@ const useRoutesConfig = (): NavItemProps[] => {
             icon: 'favorite',
             url: `/dashboard/favorite-coins`,
           },
-         /* {
+          {
+            id: 'nfts',
+            title: 'NFT Wallet',
+            messageId: 'sidebar.nfts.wallet',
+            type: 'item',
+            icon: 'storefront',
+            url: '/nfts/wallet',
+          },
+          /* {
             id: 'kit',
             title: 'Kit\'s',
             messageId: 'sidebar.app.kits',
@@ -86,7 +93,7 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: 'AllInclusive',
             children: [
-             /* {
+              /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -100,7 +107,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
               },
-             /* {
+              /* {
                 id: 'pool-explorer',
                 title: 'Pool Explorer',
                 messageId: 'sidebar.protocols.pool-explorer',
@@ -124,10 +131,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'uniswap.svg',
-              type: 'svg'
+              type: 'svg',
             },
             children: [
-            /*  {
+              /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -164,10 +171,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'sushiswap.svg',
-              type: 'svg'
+              type: 'svg',
             },
             children: [
-            /*  {
+              /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -204,10 +211,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'pancake.png',
-              type: 'png'
+              type: 'png',
             },
             children: [
-            /*  {
+              /*  {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -245,10 +252,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: '0x.svg',
-              type: 'svg'
+              type: 'svg',
             },
             children: [
-             /* {
+              /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -269,7 +276,6 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${process.env.REACT_APP_DEFAULT_ETH_ZRX_PAIR}`,
               },
-              
             ],
           },
           {
@@ -279,10 +285,10 @@ const useRoutesConfig = (): NavItemProps[] => {
             type: 'collapse',
             icon: {
               src: 'balancer.svg',
-              type: 'svg'
+              type: 'svg',
             },
             children: [
-             /* {
+              /* {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
@@ -303,7 +309,6 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.BALANCER}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
               },
-              
             ],
           },
         ],
