@@ -34,6 +34,9 @@ import {getExpirationTimeFromSeconds} from 'utils/time_utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {EthereumNetwork} from '../../../../../../__generated__/globalTypes';
+import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
+import { GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 
 interface Props {
   isMarket: boolean;
@@ -109,7 +112,7 @@ const OrderContent: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const networkName = useNetwork();
-
+  const { data} = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<any>();
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
@@ -331,6 +334,9 @@ const OrderContent: React.FC<Props> = (props) => {
 
   const fastGasPrice = (parseInt(defaultGasPrice) * 1.6).toString();
   const displayFastGas = (parseInt(fastGasPrice) / Math.pow(10, 9)).toFixed(2);
+  const {usdFormatter} = useUSDFormatter();
+
+  const estimatedFeeUSD = data ? usdFormatter.format(fee*data) : null;
 
   return (
     <>
@@ -388,7 +394,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are converting ETH to WETH for trading on DexKit
+                      You are converting {GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()} to {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()} for trading on DexKit
                     </Typography>
                   </>
                 )}
@@ -500,7 +506,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     container
                     justify='center'
                     alignItems='center'
-                    spacing={3}
+                    spacing={1}
                     className={classes.contentBox}>
                     {!isConvert && (
                       <>
@@ -554,7 +560,7 @@ const OrderContent: React.FC<Props> = (props) => {
                         <Grid item xs={12} sm={7}>
                           <Typography
                             className={classes.textPrimary}
-                            align='right'>{`${fee.toFixed(6)} ETH`}</Typography>
+                            align='right'>{estimatedFeeUSD }{` ${fee.toFixed(6)} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()}`       }     </Typography>
                         </Grid>
                       </>
                     )}

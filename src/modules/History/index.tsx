@@ -30,6 +30,14 @@ export const historyConfigs = [
   {
     routes: [
       {
+        path: '/:networkName/history/transfer/list/:address',
+        component: React.lazy(() => import('./TransferList')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/:networkName/history/order/list/:address',
         component: React.lazy(() => import('./TradeHistory')),
       },

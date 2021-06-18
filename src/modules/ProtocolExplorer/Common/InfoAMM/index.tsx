@@ -1,8 +1,7 @@
 import React from 'react';
-import {useChainId} from 'hooks/useChainId';
 import {BalanceCoins} from 'types/models/Crypto';
 import {EthereumNetwork, EXCHANGE, Fonts} from 'shared/constants/AppEnums';
-import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
+import { ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import AppCard from '@crema/core/AppCard';
@@ -10,9 +9,11 @@ import {GET_DEXTOOLS_URL, GET_AMM_ANALYTICS} from 'utils/protocol';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
-import {Fade, Tooltip} from '@material-ui/core';
+import {Fade, Tooltip, Link} from '@material-ui/core';
 import LoadingInfoAMM from './LoadingInfoAMM';
-import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
+import {Link as RouterLink} from 'react-router-dom';
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
+import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
 
 export interface Props {
   data?: any;
@@ -49,7 +50,6 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 
 const InfoAMM: React.FC<Props> = (props) => {
   const {data, exchange, address, loading,  networkName} = props;
-  const currentChainId = GET_CHAIN_FROM_NETWORK(networkName);
   const classes = useStyles();
 
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
@@ -99,8 +99,8 @@ const InfoAMM: React.FC<Props> = (props) => {
                             title={'View Pair on Explorer'}
                             placement='top'>
                             <a
-                              href={`${ETHERSCAN_API_URL(
-                                currentChainId,
+                              href={`${ETHERSCAN_API_URL_FROM_NETWORK(
+                                networkName,
                               )}/address/${props.data.address}`}
                               target='_blank'
                               rel='noreferrer'>
@@ -117,6 +117,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                         </Box>
                         {analytics && (
                           <Box mr={3}>
+                             <Tooltip title={`View Analytics on ${GET_EXCHANGE_NAME(exchange)}`} placement='top'>
                             <a
                               href={analytics.url}
                               target='_blank'
@@ -130,10 +131,12 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 }}
                                 src={analytics.icon}></Avatar>
                             </a>
+                            </Tooltip>
                           </Box>
                         )}
                         {dextoolsURL && (
                           <Box mr={3}>
+                            <Tooltip title={'View On DexTools'} placement='top'>
                             <a
                               href={dextoolsURL}
                               target='_blank'
@@ -147,21 +150,26 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 }}
                                 src='/images/dextools.png'></Avatar>
                             </a>
+                            </Tooltip>
                           </Box>
                         )}
                         <Box mr={3}>
-                          <a
-                            href={`/dashboard/token/${data.baseCurrency?.address}`}>
-                            <Avatar
-                              style={{
-                                color: '#3F51B5',
-                                backgroundColor: 'white',
-                                width: 34,
-                                height: 34,
-                              }}>
-                              T
-                            </Avatar>
-                          </a>
+                            <Link
+                              to={`${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                              component={RouterLink} 
+                              >
+                              <Tooltip title={'Trade Token'} placement='top'>
+                                <Avatar
+                                  style={{
+                                    color: '#3F51B5',
+                                    backgroundColor: 'white',
+                                    width: 34,
+                                    height: 34,
+                                  }}>
+                                  <CompareArrowsIcon/>
+                                </Avatar>
+                              </Tooltip>
+                            </Link>
                         </Box>
                       </Box>
                     </Box>

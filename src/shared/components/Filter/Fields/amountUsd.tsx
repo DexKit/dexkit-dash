@@ -34,7 +34,7 @@ const AmountUsdField = (props: Props) => {
     return (
       enable ? 
        <Box display={'flex'} alignItems={'center'}>
-            <IconButton aria-label="delete" onClick={props.onClose}>
+            <IconButton aria-label="delete" onClick={props.onClose} color="secondary">
                 <DeleteIcon />
             </IconButton>
             <TextField

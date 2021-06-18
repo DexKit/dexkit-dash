@@ -205,6 +205,64 @@ export const BITQUERY_TRANSACTION_LIST = gql`
   }
 `;
 
+export const BITQUERY_TRANSFER_LIST = gql`
+  query GetTransferList($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+     transfers(
+       any: [
+          {    
+            sender: {is: $address}
+          },
+          {    
+            receiver: {is: $address}
+          }]
+        options: {desc: "block.height", limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+            unixtime
+          }
+          height
+        }
+        sender {
+          address
+          annotation
+        }
+        receiver {
+          address
+          annotation
+        }
+        currency {
+          address
+          symbol
+          name
+          decimals
+        }
+        amount
+        amountInUsd: amount(in: USD)
+        transaction {
+          hash
+        }
+        external
+      }
+      receiverCount: transfers(
+        date: {since: $from, till: $till}
+        receiver: {is: $address}
+      ) {
+        count
+      }
+      senderCount: transfers(
+        date: {since: $from, till: $till}
+        receiver: {is: $address}
+      ) {
+        count
+      }
+    }
+  }
+`;
+
 export const BITQUERY_TRADE_HISTORY_LIST = gql`
   query GetTradeHistoryList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $baseCurrency: String) {
     ethereum(network: $network) {

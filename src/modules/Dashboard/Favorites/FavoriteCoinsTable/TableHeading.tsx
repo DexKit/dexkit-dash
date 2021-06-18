@@ -40,7 +40,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
       <TableCell align='left' className={classes.tableCell}>
         <IntlMessages id='dashboard.24h' /> %
       </TableCell>
-      <TableCell align='center' className={classes.tableCell}>
+      <TableCell align='right' className={classes.tableCell}>
         <IntlMessages id='app.actions' />
       </TableCell>
     </TableRow>

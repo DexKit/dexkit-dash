@@ -97,6 +97,8 @@ export const DEXTOOLS_API_URL = 'https://www.dextools.io';
 
 export const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins';
 
+export const COINGECKO_URL_SIMPLE_PRICE = 'https://api.coingecko.com/api/v3/simple/price';
+
 export const COINGECKO_CONTRACT_URL = 'https://api.coingecko.com/api/v3/coins/ethereum/contract';
 
 

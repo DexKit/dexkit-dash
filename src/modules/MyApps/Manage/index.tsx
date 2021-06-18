@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import {Grid, Box} from '@material-ui/core';
@@ -12,16 +12,14 @@ import KitMarket from './kit-market';
 import Ripple from 'assets/images/ripple.png'
 import { useWeb3 } from 'hooks/useWeb3';
 import LockUnlock from './LockUnlock';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import Alert from '@material-ui/lab/Alert';
 import { useBalance } from 'hooks/balance/useBalance';
 import ErrorView from 'modules/Common/ErrorView';
-import LoadingView from 'modules/Common/LoadingView';
+import LoadingInfo from 'modules/ProtocolExplorer/TokenExplorer/TokenInfo/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
 const MyApps: React.FC = () => {
-  const dispatch = useDispatch();
-  const { account, chainId } = useWeb3();
+
   const { loading, error, data: balances } = useBalance();
   // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
   
@@ -52,7 +50,7 @@ const MyApps: React.FC = () => {
 
           <Grid item xs={12} md={6}>
             {
-              loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
+              loading ? <LoadingInfo /> : error ? <ErrorView message={error.message} /> : (
                 <LockUnlock balances={balances} />
               )
             }

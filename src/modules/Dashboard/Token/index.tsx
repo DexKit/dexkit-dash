@@ -99,18 +99,23 @@ const TokenPage: React.FC<Props> = (props) => {
     }
   }, [data]);
 
-  const infoMyOrders = useFetch(
+  const infoMyTakerOrders = useFetch(
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders` );
+  const infoMyMakerOrders = useFetch(
+      `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders` );
     
     useEffect(()=> {
       if(account) {
-        infoMyOrders.get(`?trader=${account}`)
+        infoMyTakerOrders.get(`?trader=${account}&takerToken=${address}`)
+        infoMyMakerOrders.get(`?trader=${account}&makerToken=${address}`)
       }
-    }, [account])
+    }, [account, address])
 
-  const myOrders =
-    'My Orders' +
-    (infoMyOrders.data ? ' (' + (infoMyOrders.data.total || 0) + ')' : '');
+  const totalMakerOrders = infoMyMakerOrders.data ? (infoMyMakerOrders.data.total || 0) : 0
+  const totalTakerOrders = infoMyTakerOrders.data ? (infoMyTakerOrders.data.total || 0) : 0
+  const totalOrders = totalMakerOrders + totalTakerOrders;
+
+  const myOrders = `My Orders (${totalOrders})`;
 
   const tradeHistory = 'My Trade History';
 

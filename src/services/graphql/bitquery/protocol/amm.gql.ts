@@ -7,7 +7,7 @@ import { gql } from "@apollo/client/core";
 
 
 export const BITQUERY_CONTRACT_ORDERS = gql`
- query GetContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+ query GetContractOrders($network: EthereumNetwork!, $exchangeName: String, $address: String!, $quoteAddress: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime,  $tradeAmount: Float) {
    ethereum(network: $network) {
      dexTrades(
        options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -15,6 +15,7 @@ export const BITQUERY_CONTRACT_ORDERS = gql`
        exchangeName: {is: $exchangeName}
        smartContractAddress: {is: $address }
        quoteCurrency: {is: $quoteAddress}
+       tradeAmountUsd: {gt: $tradeAmount}
      ) {
        timeInterval {
          second

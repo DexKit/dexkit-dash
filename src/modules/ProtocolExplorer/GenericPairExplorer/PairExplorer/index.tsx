@@ -59,7 +59,7 @@ const PairExplorer = (props: Props) => {
             {error ? (
               <ErrorView message={error.message} />
             ) : (
-              <Info data={data} loading={loading} />
+              <Info data={data} loading={loading} networkName={networkName}/>
             )}
           </Paper>
         </Grid>

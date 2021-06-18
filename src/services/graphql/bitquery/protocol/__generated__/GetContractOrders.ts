@@ -201,4 +201,5 @@ export interface GetContractOrdersVariables {
   offset: number;
   from?: any | null;
   till?: any | null;
+  tradeAmount?: number | null;
 }

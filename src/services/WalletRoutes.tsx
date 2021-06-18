@@ -45,21 +45,40 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
 
   useEffect(() => {
       if ((!ethAccount && !defaultAccount) && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('wallet')) {
-        history.push('/connect-wallet');
+        history.push('/no-wallet');
       } else if (
-        pathname === '/connect-wallet'  && ethAccount
+        pathname === '/no-wallet'  && ethAccount
       ) {
         // @ts-ignore
         if (pathname === '/') {
           history.push('/dashboards/overview');
         }
         // @ts-ignore
-        else if (initialPath !== '/connect-wallet') {
+        else if (initialPath !== '/no-wallet') {
           history.push(initialPath);
         } else {
           history.push('/dashboards/overview');
         }
     }
+
+    if (!ethAccount  && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('connect-wallet')) {
+      history.push('/connect-wallet');
+    } else if (
+      pathname === '/connect-wallet'  && ethAccount
+    ) {
+      // @ts-ignore
+      if (pathname === '/') {
+        history.push('/dashboards/overview');
+      }
+      // @ts-ignore
+      else if (initialPath !== '/no-wallet') {
+        history.push(initialPath);
+      } else {
+        history.push('/dashboards/overview');
+      }
+  }
+
+
   }, [ethAccount, pathname, initialPath, currentRoute.auth, history, defaultAccount]);
 
   return <>{children}</>;

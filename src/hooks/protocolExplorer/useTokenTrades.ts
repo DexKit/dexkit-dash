@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
 import usePagination from 'hooks/usePagination';
 import {
@@ -12,7 +12,8 @@ import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
-
+import { FilterContext } from 'providers/protocol/filterContext';
+import { getFilterValueById} from 'utils';
 
 interface Props {
   baseAddress: string | null;
@@ -27,7 +28,14 @@ export const useTokenTrades = ({
   networkName,
 }: Props) => {
   const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
+  const {
+    filters
+  } = useContext(FilterContext);
 
+  const from = getFilterValueById('from', filters);
+  const to = getFilterValueById('to', filters);
+  const tradeAmount = getFilterValueById('tradeAmount', filters);
+  console.log(tradeAmount);
   const {
     currentPage,
     rowsPerPage,
@@ -48,6 +56,9 @@ export const useTokenTrades = ({
       quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
+      from,
+      till: to,
+      tradeAmount: tradeAmount ? Number(tradeAmount) : null,
     },
     pollInterval: POLL_INTERVAL,
   });

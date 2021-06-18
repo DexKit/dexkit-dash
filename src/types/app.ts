@@ -6,12 +6,7 @@ import {
   GetTransactionList_ethereum_sender_sender,
   GetTransactionList_ethereum_sender_transaction,
 } from 'services/graphql/bitquery/history/__generated__/GetTransactionList';
-import {
-  GetTokenPairs_ethereum_dexTrades_baseCurrency,
-  GetTokenPairs_ethereum_dexTrades_exchange,
-  GetTokenPairs_ethereum_dexTrades_quoteCurrency,
-  GetTokenPairs_ethereum_dexTrades_smartContract,
-} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
+
 import {
   GetOrderList_ethereum_maker_baseCurrency,
   GetOrderList_ethereum_maker_block,
@@ -21,32 +16,14 @@ import {
   GetOrderList_ethereum_maker_transaction,
 } from 'services/graphql/bitquery/history/__generated__/GetOrderList';
 import {TradeSide} from '../../__generated__/globalTypes';
-import {
-  GetPairTrades_ethereum_dexTrades_baseCurrency,
-  GetPairTrades_ethereum_dexTrades_block,
-  GetPairTrades_ethereum_dexTrades_date,
-  GetPairTrades_ethereum_dexTrades_exchange,
-  GetPairTrades_ethereum_dexTrades_quoteCurrency,
-  GetPairTrades_ethereum_dexTrades_smartContract,
-  GetPairTrades_ethereum_dexTrades_timeInterval,
-  GetPairTrades_ethereum_dexTrades_transaction,
-} from 'services/graphql/bitquery/protocol/__generated__/GetPairTrades';
-import {
-  GetContractOrders_ethereum_dexTrades_baseCurrency,
-  GetContractOrders_ethereum_dexTrades_block,
-  GetContractOrders_ethereum_dexTrades_date,
-  GetContractOrders_ethereum_dexTrades_exchange,
-  GetContractOrders_ethereum_dexTrades_quoteCurrency,
-  GetContractOrders_ethereum_dexTrades_smartContract,
-  GetContractOrders_ethereum_dexTrades_timeInterval,
-  GetContractOrders_ethereum_dexTrades_transaction,
-} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
+
 import {ChainId} from './blockchain';
 import {
   GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
   GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { GetTransferList_ethereum_transfers } from 'services/graphql/bitquery/history/__generated__/GetTransferList';
 
 export enum OrderSide {
   Sell,
@@ -63,6 +40,8 @@ export enum Steps {
   ERROR = 'Error',
   DONE = 'Done',
 }
+
+export type Transfers = GetTransferList_ethereum_transfers & {type: 'Send' | 'Receive'};
 
 export interface Token {
   name: string;

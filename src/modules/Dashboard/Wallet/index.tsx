@@ -139,11 +139,11 @@ const Wallet: React.FC<Props> = (props) => {
               <Box className='card-hover'>
                 <Link
                   className={classes.btnSecondary}
-                  to={`/${networkName}/history/transaction/list/${account}`}
+                  to={`/${networkName}/history/transfer/list/${account}`}
                   style={{textDecoration: 'none'}}>
                   <InfoCard
                     state={{
-                      value: 'Transaction History',
+                      value: 'Transfers History',
                       bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 2,

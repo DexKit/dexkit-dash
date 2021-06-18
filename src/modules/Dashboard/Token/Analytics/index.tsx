@@ -13,6 +13,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import { useSingleBalance } from 'hooks/balance/useSingleBalance';
 import { useTokenPriceUSD } from 'hooks/useTokenPriceUSD';
 import { OrderSide } from 'types/app';
+import { green, red } from '@material-ui/core/colors';
 
 
 type Field = 'amountBuySpentUSD' | 'amountSellSpentUSD' | 'tradeProfitUSD' | 
@@ -97,6 +98,9 @@ export const TokenAnalytics = (props: Props) => {
     const profitLoss = (tokenBalance?.value || 0)*(Number(priceUSD || 0)) - ((data?.amountBuySpentUSD || 0) - (data?.amountSellSpentUSD ||0));
     const balanceUSD = (tokenBalance?.value || 0)*(Number(priceUSD || 0));
     const {usdFormatter} = useUSDFormatter();
+    const colorProfitLoss = Number(profitLoss || 0) < 0 ? red[500] : green[500];
+    
+
 
     return (
         loading ?
@@ -107,12 +111,12 @@ export const TokenAnalytics = (props: Props) => {
               data ? (
                 <List className={classes.listLayout} subheader={<ListSubheader>Trading Analytics</ListSubheader>}>
                       <List className={classes.subList}>
-                      <Tooltip title={'Your Token Balance'}><ListItem> Balance (USD)</ListItem></Tooltip>
+                      <Tooltip title={'Your Token Balance in USD'}><ListItem> Balance (USD)</ListItem></Tooltip>
                         <ListItem style={{fontWeight: 'bold'}}>{(balanceUSD && usdFormatter.format(Number(balanceUSD))) || '-'  }</ListItem>
                       </List>
                       <List className={classes.subList}> 
-                      <Tooltip title={'Difference between buys minus sells and your current balance value'}><ListItem>Profit Loss</ListItem></Tooltip>
-                        <ListItem style={{fontWeight: 'bold'}}>{(profitLoss && usdFormatter.format(Number(profitLoss))) || '-' } </ListItem>
+                      <Tooltip title={'Difference between buys minus sells and your current balance value'}><ListItem>Profit/Loss</ListItem></Tooltip>
+                        <ListItem style={{fontWeight: 'bold', color: colorProfitLoss}}>{(profitLoss && usdFormatter.format(Number(profitLoss))) || '-' } </ListItem>
                     </List>
                     {properties.map(p => (
                         <List className={classes.subList}>

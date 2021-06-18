@@ -42,8 +42,8 @@ const faqList = [
   },
   {
     id: 2,
-    ques: 'Why I need to connect my Wallet to use this page?',
-    ans: 'This page needs to interact with network and your wallet in order to work properly'
+    ques: 'I only want to check my portfolio, can I do it?',
+    ans: 'Yes, you can add accounts manually in the manage accounts page, and you can check your portfolio without need to connect a Wallet'
   }
 
 ]

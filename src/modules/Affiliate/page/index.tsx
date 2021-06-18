@@ -25,6 +25,7 @@ import { green, red } from '@material-ui/core/colors';
 import {Link } from '@material-ui/core';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -36,7 +37,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const AffiliatePage = () => {
   const classes = useStyles();
 
-  const { account } = useWeb3(); 
+  const { account: web3Account } = useWeb3(); 
+  const defaultAccount = useDefaultAccount();
+  const account = defaultAccount || web3Account;
 
   const {
     loading,

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
 import usePagination from 'hooks/usePagination';
 import {
@@ -6,12 +6,13 @@ import {
   GetContractOrdersVariables,
   GetContractOrders_ethereum_dexTrades,
 } from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
-import {extractPairFromAddress} from 'utils';
+import {extractPairFromAddress, getFilterValueById} from 'utils';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {BITQUERY_CONTRACT_ORDERS} from 'services/graphql/bitquery/protocol/amm.gql';
+import { FilterContext } from 'providers/protocol/filterContext';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -22,7 +23,15 @@ export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
   const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
 
   const {quoteAddress} = extractPairFromAddress(address, chainId);
-  console.log(quoteAddress);
+  const {
+    filters
+  } = useContext(FilterContext);
+
+  const from = getFilterValueById('from', filters);
+  const to = getFilterValueById('to', filters);
+  const tradeAmount = getFilterValueById('tradeAmount', filters);
+
+
 
   const {
     currentPage,
@@ -46,6 +55,9 @@ export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
       quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
+      from,
+      till: to,
+      tradeAmount: tradeAmount ? Number(tradeAmount) : null,
     },
     pollInterval: POLL_INTERVAL,
   });

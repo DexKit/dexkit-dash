@@ -16,7 +16,7 @@ import FaqList from './FaqList';
 
 interface ComingSoonProps {}
 
-const ConnectWallet: React.FC<ComingSoonProps> = () => {
+const NoWallet: React.FC<ComingSoonProps> = () => {
   const {onConnectWeb3} = useWeb3();
 
   const {messages} = useIntl(); 
@@ -86,7 +86,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
             display={'flex'}>
-             <Typography  variant="h4"> This page needs that you use a connected wallet, please connect your wallet or switch to a connected account</Typography>
+             <Typography  variant="h4"> Or add manually accounts at <Link to={'/dashboard/wallet/manage-accounts'} component={RouterLink}>Manage Accounts</Link></Typography>
             {/*<img
               src={require('assets/images/errorPageImages/connect-wallet.png')}
               alt='Connect Wallet'
@@ -118,4 +118,4 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
   );
 };
 
-export default ConnectWallet;
+export default NoWallet;
