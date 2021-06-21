@@ -14,6 +14,7 @@ import {
   AccordionDetails,
   Breadcrumbs,
   useTheme,
+  Hidden,
 } from '@material-ui/core';
 import {useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
@@ -33,7 +34,7 @@ import {getWindowUrl} from 'utils/browser';
 import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
 import {getOrderHash} from '@0x/order-utils';
-import AssetOrdersTable from '../AssetOrdersTable';
+import AssetOrdersTable from '../AssetListingsTable';
 import {useAsset, useAssetEvents, useAssetOrders} from '../hooks/detail';
 import HistoricAccordion from '../components/detail/HistoricAccordion';
 import ListingAccordion from '../components/detail/ListingAccordion';
@@ -54,6 +55,9 @@ interface RouteParams {
   address: string;
   token: string;
 }
+
+const ORDER_LISTING = 1;
+const ORDER_OFFER = 0;
 
 export const AssetDetail = () => {
   const classes = useStyles();
@@ -82,7 +86,7 @@ export const AssetDetail = () => {
             {loading ? (
               <Skeleton width={theme.spacing(40)} />
             ) : (
-              data?.collection?.name
+              data?.collection?.name || ''
             )}
           </Link>
           <Link
@@ -118,9 +122,11 @@ export const AssetDetail = () => {
                     </CardMedia>
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
-                  <DetailAccordion asset={data} />
-                </Grid>
+                <Hidden smDown>
+                  <Grid item xs={12}>
+                    <DetailAccordion asset={data} />
+                  </Grid>
+                </Hidden>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={8}>
@@ -128,19 +134,31 @@ export const AssetDetail = () => {
                 <Grid item xs={12}>
                   <DescriptionCard asset={data} loading={loading} />
                 </Grid>
-                {/* <Grid item xs={12}>
-                  <ListingAccordion asset={data} />
+                <Hidden smUp>
+                  <Grid item xs={12}>
+                    <DetailAccordion asset={data} />
+                  </Grid>
+                </Hidden>
+                <Grid item xs={12}>
+                  <ListingAccordion
+                    listings={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_LISTING,
+                    )}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <OffersAccordion asset={data} />
+                  <OffersAccordion
+                    offers={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_OFFER,
+                    )}
+                  />
                 </Grid>
-              </Grid> */}
               </Grid>
             </Grid>
           </Grid>
-          {/* <Grid item xs={12} sm={12}>
+        </Grid>
+        <Grid item xs={12} sm={12}>
           <HistoricAccordion asset={data} />
-        */}
         </Grid>
       </Grid>
     </Box>

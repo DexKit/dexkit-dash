@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {toTokenUnitAmount} from '@0x/utils';
 
 export function sortEventArray(arr: any[]): any[] {
   return arr
@@ -15,4 +16,19 @@ export function sortEventArray(arr: any[]): any[] {
       return 0;
     })
     .reverse();
+}
+
+export function getPriceFromOrder(order: any) {
+  return toTokenUnitAmount(
+    order.base_price,
+    order.payment_token_contract.decimals,
+  ).toNumber();
+}
+
+export function getUSDPriceFromOrder(order: any) {
+  return getPriceFromOrder(order) * order.payment_token_contract?.usd_price;
+}
+
+export function deriveUserFromAddr(address?: string) {
+  return address?.slice(2, 8).toUpperCase();
 }

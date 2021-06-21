@@ -6,7 +6,7 @@ import {
   Typography,
   Grid,
 } from '@material-ui/core';
-import AssetOrdersTable from 'modules/NFTWallet/AssetOrdersTable';
+import AssetOrdersTable from 'modules/NFTWallet/AssetListingsTable';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -14,17 +14,11 @@ import React, {useEffect} from 'react';
 import {useAssetOrders} from 'modules/NFTWallet/hooks/detail';
 
 interface Props {
-  asset: any;
+  listings: any;
 }
 
 export default (props: Props) => {
-  const {asset} = props;
-
-  const {getOrders, data, loading, error} = useAssetOrders();
-
-  useEffect(() => {
-    getOrders(asset?.asset_contract?.address, parseInt(asset?.token_id));
-  }, [getOrders, asset]);
+  const {listings} = props;
 
   return (
     <Accordion>
@@ -35,9 +29,7 @@ export default (props: Props) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <AssetOrdersTable
-          orders={data?.asset_orders ? data?.asset_orders : []}
-        />
+        <AssetOrdersTable listings={listings} />
       </AccordionDetails>
     </Accordion>
   );

@@ -5,20 +5,20 @@ import {
   AccordionSummary,
   Typography,
   Grid,
+  Button,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListIcon from '@material-ui/icons/List';
 
 import React, {useEffect} from 'react';
+import AssetOffersTable from './AssetOffersTable';
 
 interface Props {
-  asset: any;
+  offers: any;
 }
 
 export default (props: Props) => {
-  const {asset} = props;
-
-  useEffect(() => {}, [asset]);
+  const {offers} = props;
 
   return (
     <Accordion>
@@ -28,7 +28,18 @@ export default (props: Props) => {
           <IntlMessages id='nfts.detail.offersAccordionLabel' />
         </Typography>
       </AccordionSummary>
-      <AccordionDetails></AccordionDetails>
+      <AccordionDetails>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <AssetOffersTable offers={offers} />
+          </Grid>
+          {/* <Grid item>
+            <Button color='primary' variant='outlined'>
+              <IntlMessages id='nfts.detail.offersMakeOffer' />
+            </Button>
+          </Grid> */}
+        </Grid>
+      </AccordionDetails>
     </Accordion>
   );
 };

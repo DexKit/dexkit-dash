@@ -781,10 +781,24 @@
   "nfts.detail.historicDateLabel": "Date",
   "nfts.detail.detailTokenIdLabel": "Token ID",
   "nfts.detail.listingAccordionLabel": "Listings",
+  "nfts.detail.listingBuy": "Buy",
+
+  "nfts.detail.listingEventOffer": "Offer",
+  "nfts.detail.listingEventListing": "Listing",
+  "nfts.detail.listingEventCreated": "Created",
+  "nfts.detail.listingEventTransfer": "Transfer",
+  "nfts.detail.listingEventSale": "Sale",
+
   "nfts.detail.ordersPriceHeader": "Price",
   "nfts.detail.ordersUSDPriceHeader": "Price (USD)",
   "nfts.detail.ordersExpirationHeader": "Expiration",
   "nfts.detail.ordersFromHeader": "From",
+
+  "nfts.detail.offersMakeOffer": "Make Offer",
+  "nfts.detail.offersPriceHeader": "Price",
+  "nfts.detail.offersUSDPriceHeader": "Price (USD)",
+  "nfts.detail.offersExpirationHeader": "Expiration",
+  "nfts.detail.offersFromHeader": "From",
   "nfts.detail.offersAccordionLabel": "Offers",
   "nfts.walletBreadcrumbAssets": "Assets"
 }
