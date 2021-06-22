@@ -262,7 +262,7 @@ const TokenPage: React.FC<Props> = (props) => {
              
                 <Grid  container xs={12} sm={12} md={12} style={{padding:'0px'}} justify="flex-end"  direction="row">
                   <Tabs value={chartSource} onChange={onSetChartSource} aria-label="chart tabs" indicatorColor="primary">
-                            <Tab label={<><Tooltip title={'Chart from Decentralized Exchanges'}><>DEX</></Tooltip> </>} {...a11yProps(0)} /> 
+                             <Tab label={<><Tooltip title={'Chart from Decentralized Exchanges'}><>DEX</></Tooltip> </>} {...a11yProps(0)} /> 
                              <Tab label={<><Tooltip title={'Chart from Binance Exchange'}><>Binance</></Tooltip> </>} {...a11yProps(1)} />
                         </Tabs>
                 </Grid>

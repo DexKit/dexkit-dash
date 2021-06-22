@@ -3,7 +3,7 @@ import {Box, Button, Card, Fade} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
+import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
@@ -14,6 +14,7 @@ import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
 import { MyBalances } from 'types/blockchain';
 import { useNetwork } from 'hooks/useNetwork';
+import Transak from 'shared/components/Transak';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 interface Props {
@@ -191,6 +192,9 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                     alignItems='center'
                     ml={{xs: 0, xl: 'auto'}}
                     mt={{xs: 2, lg: 0}}>
+                    <Box>
+                      <Transak />
+                    </Box>
                     <Box>
                       <Button
                         variant='outlined'

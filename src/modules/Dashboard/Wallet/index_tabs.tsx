@@ -20,7 +20,7 @@ import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
 import AssetTable from './AssetTable';
 import {useNetwork} from 'hooks/useNetwork';
-
+import Transak from 'shared/components/Transak';
 import {useBalanceChart} from 'hooks/balance/useBalanceChart';
 import AssetChart from './AssetChart';
 import {useDefi} from 'hooks/useDefi';
@@ -44,7 +44,7 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
-const Wallet: React.FC<Props> = (props) => {
+const WalletTabs: React.FC<Props> = (props) => {
   const {messages} = useIntl();
   const {
     match: {params},
@@ -204,6 +204,7 @@ const Wallet: React.FC<Props> = (props) => {
                       }}
                     />
 
+                    <Transak />
                   </Box>
 
                   <Divider style={{marginTop: 5}} />
@@ -228,4 +229,4 @@ const Wallet: React.FC<Props> = (props) => {
   );
 };
 
-export default Wallet;
+export default WalletTabs;

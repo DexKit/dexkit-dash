@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +21,9 @@ import WalletInfo from 'shared/components/WalletInfo';
 import { ChainId } from 'types/blockchain';
 import { useWeb3 } from 'hooks/useWeb3';
 import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import AppContextPropsType from 'types/AppContextPropsType';
+import { AppContext } from '@crema';
+import { NavStyle } from 'shared/constants/AppEnums';
 
 
 interface AppHeaderProps {}
@@ -28,6 +31,11 @@ interface AppHeaderProps {}
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const {
+    navStyle,
+    changeNavStyle,
+
+  } = useContext<AppContextPropsType>(AppContext);
 
   const {chainId} = useWeb3();
 
@@ -43,6 +51,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setMobileMoreAnchorEl(event.currentTarget);
   }
+  const onChangeNavStyle = () => {
+    if(navStyle === NavStyle.MINI && changeNavStyle){
+      changeNavStyle(NavStyle.STANDARD);
+    }else if(changeNavStyle){
+      changeNavStyle(NavStyle.MINI);
+    }
+    else{
+      console.log('no nav style')
+    }
+  }
+
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -76,6 +95,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               color='inherit'
               aria-label='open drawer'
               onClick={() => dispatch(toggleNavCollapsed())}>
+              <MenuIcon className={classes.menuIcon} />
+            </IconButton>
+          </Hidden>
+
+          <Hidden mdDown >
+            <IconButton
+              edge='start'
+              className={classes.menuButton}
+              color='inherit'
+              aria-label='open drawer'
+              onClick={onChangeNavStyle}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
           </Hidden>
