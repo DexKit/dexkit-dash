@@ -47,8 +47,6 @@ const ThemeModeSwitcher = () => {
       [theme.breakpoints.up('md')]: {
         justifyContent: 'center',
         width: 'auto',
-        borderLeft: 'solid 1px',
-        borderLeftColor: theme.palette.grey[200],
         color: theme.palette.grey[400],
         '&:hover, &:focus': {
           color: theme.palette.text.primary,

@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -15,12 +15,12 @@ interface VerticalItemProps extends RouteComponentProps<any> {
 
 const VerticalItem: React.FC<VerticalItemProps> = ({
   item,
-  location,
   match,
   history,
   level,
 }) => {
   const classes = useStyles({level});
+  const location = useLocation();
 
   const getUrl = () => {
     if (item.url) return item.url;

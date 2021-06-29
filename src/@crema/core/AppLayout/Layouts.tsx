@@ -9,6 +9,7 @@ import {NavStyle} from '../../../shared/constants/AppEnums';
 import DefaultLayout from './DefaultLayout';
 import HeaderUserLayout from './UserHeader';
 import HeaderUserMiniLayout from './UserHeaderMini';
+import MiniSidebarToggle from './MiniSidebarToggle';
 
 interface LayoutsProps {
   [x: string]: any;
@@ -25,5 +26,6 @@ const Layouts: LayoutsProps = {
   [NavStyle.H_DEFAULT]: HorDefault,
   [NavStyle.HOR_LIGHT_NAV]: HorLightNav,
   [NavStyle.HOR_DARK_LAYOUT]: HorDarkLayout,
+  [NavStyle.MINI_SIDEBAR_TOGGLE]: MiniSidebarToggle,
 };
 export default Layouts;

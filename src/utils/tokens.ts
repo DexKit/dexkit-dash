@@ -2,7 +2,7 @@ import { BigNumber } from '@0x/utils';
 import { isWeth } from './knownTokens';
 import { ChainId } from 'types/blockchain';
 import Web3 from 'web3';
-import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE } from 'shared/constants/Blockchain';
+import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE, GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { Token } from 'types/app';
 
@@ -85,10 +85,20 @@ export const filterTokensInfoByString = (tokens: Token[], str: string): Token[] 
   return tokens.filter((token) => {
     return (
       token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
-      token.name.toLowerCase().indexOf(str.toLowerCase()) !== -1
+      token.name.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+      token.address.toLowerCase().indexOf(str.toLowerCase()) !== -1
     );
   });
 };
+
+export const findTokensInfoByAddress = (tokens: Token[], str: string): Token | undefined => {
+  return tokens.find((token) => {
+    return (
+      token.address.toLowerCase().indexOf(str.toLowerCase()) !== -1 
+    );
+  });
+};
+
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {
   switch (chainId) {
@@ -122,6 +132,8 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
   }
 };
 
+
+
 export const getNativeCoinWrappedAddressFromNetworkName = (network: EthereumNetwork) => {
   switch (network) {
     case EthereumNetwork.ethereum:
@@ -144,7 +156,61 @@ export const getNativeCoinWrappedFromNetworkName = (network: EthereumNetwork) =>
   }
 };
 
+export const GetNativeCoinFromNetworkName = (network: EthereumNetwork) => {
+  switch (network) {
+    case EthereumNetwork.ethereum:
+      return 'eth';
+    case EthereumNetwork.bsc:
+      return 'bnb';
+    default:
+      return 'eth';
+  }
+};
+
+/**
+ * API returns '-' for native coin, format it correctly
+ * @param symbol 
+ * @param address 
+ * @param network 
+ * @returns 
+ */
+export const GET_CORRECT_ADDRESS_FROM_NETWORK = (network: EthereumNetwork, token?: {symbol?: string | null, address?: string | null} | null ) => {
+  if(token?.address === '-' && token?.symbol && isNativeCoinFromNetworkName(token?.symbol, network)){
+    return token?.symbol;
+  }else{
+    if(token?.address){
+     return token?.address;
+    }
+  }
+}
+
+
+
 export const extractPairFromAddress = (address: string, chainId: ChainId) => {
+  if (!address) {
+    return {
+      baseAddress: GET_DEFAULT_BASE(chainId) as string,
+      quoteAddress: GET_DEFAULT_QUOTE(chainId) as string,
+    };
+  }
+
+  const splittedAddress = address.split('-');
+  let baseAddress =
+    splittedAddress[0] || (GET_DEFAULT_QUOTE(chainId) as string);
+  let quoteAddress = null;
+  if (splittedAddress.length > 1) {
+    baseAddress = splittedAddress[0];
+    quoteAddress = splittedAddress[1];
+    if (!Web3.utils.isAddress(quoteAddress)) {
+      quoteAddress = GET_DEFAULT_QUOTE(chainId);
+    }
+  }
+  return { baseAddress, quoteAddress };
+};
+
+export const extractPairFromAddressFromNetworkName = (address: string, networkName: EthereumNetwork) => {
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
+
   if (!address) {
     return {
       baseAddress: GET_DEFAULT_BASE(chainId) as string,

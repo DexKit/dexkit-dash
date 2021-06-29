@@ -196,6 +196,33 @@ export const BITQUERY_PAIR_EXPLORER = gql`
   }
 `;
 
+export const BITQUERY_TOKEN_SINGLE_EXPLORER = gql`
+  query GetTokenSingleExplorer(
+    $network: EthereumNetwork!
+    $exchangeName: String
+    $baseAddress: String!
+    $from: ISO8601DateTime
+  ) {
+    ethereum(network: $network) {
+      dexTrades(
+        date: {since: $from}
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {is: $baseAddress}
+      ) {
+        trades: count
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        baseCurrency {
+          name
+          symbol
+          address
+          decimals
+        }
+      }
+    }
+  }
+`;
+
 export const BITQUERY_TOKEN_INFO = gql`
   query GetTokenInfo($network: EthereumNetwork!, $address: String!) {
     ethereum(network: $network) {

@@ -8,7 +8,6 @@ import TableRow from '@material-ui/core/TableRow';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import CancelOrder from 'modules/Dashboard/Token/BuySell/Modal/CancelOrder';
 
 interface TableItemProps {

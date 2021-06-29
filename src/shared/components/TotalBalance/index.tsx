@@ -144,7 +144,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
 
   return (
     <Box className='card-hover'>
-      <Fade in={true} timeout={1000}>
+    {/*  <Fade in={true} timeout={1000}>*/}
         <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
           <Card>
             <Box
@@ -158,6 +158,12 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                 <>
                   <Skeleton variant='rect' width='40%' height={20} />
                   <Box display='flex' alignItems='end'>
+                    <Skeleton
+                        variant='rect'
+                        width={106}
+                        height={40}
+                        style={{marginRight: 10}}
+                      />
                     <Skeleton
                       variant='rect'
                       width={106}
@@ -195,7 +201,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                     <Box>
                       <Transak />
                     </Box>
-                    <Box>
+                    <Box ml={3}>
                       <Button
                         variant='outlined'
                         onClick={() => setSenderModal(true)}
@@ -224,7 +230,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             color={indigo[100]}>
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
-            {loading ? (
+            {!only && loading ? (
               <Skeleton
                 style={{marginTop: 10}}
                 variant='rect'
@@ -241,7 +247,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             )}
           </Card>
         </Box>
-      </Fade>
+  {/*    </Fade>*/}
 
       <Sender
         open={senderModal}

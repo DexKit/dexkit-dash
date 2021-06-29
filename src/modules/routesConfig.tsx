@@ -88,10 +88,10 @@ const useRoutesConfig = (): NavItemProps[] => {
         children: [
           {
             id: 'all',
-            title: 'All Protocols',
-            messageId: 'sidebar.protocols.all',
+            title: 'Explore',
+            messageId: 'sidebar.protocols.explore',
             type: 'collapse',
-            icon: 'AllInclusive',
+            icon: 'explore',
             children: [
               /* {
                 id: 'overview',
@@ -105,7 +105,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 title: 'Token Explorer',
                 messageId: 'sidebar.protocols.token-explorer',
                 type: 'item',
-                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
+                url: `/protocol-explorer/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
               },
               /* {
                 id: 'pool-explorer',
@@ -114,6 +114,52 @@ const useRoutesConfig = (): NavItemProps[] => {
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pool-explorer`,
               },*/
+              {
+                id: 'pair-explorer',
+                title: 'Pair Explorer',
+                messageId: 'sidebar.protocols.pair-explorer',
+                type: 'item',
+                url: `/protocol-explorer/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
+              },
+              {
+                id: 'pool-explorer',
+                title: 'Pool Explorer',
+                messageId: 'sidebar.protocols.pool-explorer',
+                type: 'item',
+                url: `/protocol-explorer/pool-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}?protocol=uniswap`,
+              },
+            ],
+          },
+
+
+         /* {
+            id: 'all',
+            title: 'All Protocols',
+            messageId: 'sidebar.protocols.all',
+            type: 'collapse',
+            icon: 'AllInclusive',
+            children: [
+               {
+                id: 'overview',
+                title: 'Overview',
+                messageId: 'common.overview',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/overview`,
+              },
+              {
+                id: 'tokens',
+                title: 'Token Explorer',
+                messageId: 'sidebar.protocols.token-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
+              },
+              {
+                id: 'pool-explorer',
+                title: 'Pool Explorer',
+                messageId: 'sidebar.protocols.pool-explorer',
+                type: 'item',
+                url: `/${networkName}/protocol-explorer/${EXCHANGE.ALL}/pool-explorer`,
+              },
               {
                 id: 'pair-explorer',
                 title: 'Pair Explorer',
@@ -134,13 +180,13 @@ const useRoutesConfig = (): NavItemProps[] => {
               type: 'svg',
             },
             children: [
-              /*  {
+                {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
-              },*/
+              },
               {
                 id: 'tokens',
                 title: 'Token Explorer',
@@ -174,13 +220,13 @@ const useRoutesConfig = (): NavItemProps[] => {
               type: 'svg',
             },
             children: [
-              /*  {
+                {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
-              },*/
+              },
               {
                 id: 'tokens',
                 title: 'Token Explorer',
@@ -214,13 +260,13 @@ const useRoutesConfig = (): NavItemProps[] => {
               type: 'png',
             },
             children: [
-              /*  {
+                {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.UNISWAP}/overview`,
-              },*/
+              },
               {
                 id: 'tokens',
                 title: 'Token Explorer',
@@ -255,13 +301,13 @@ const useRoutesConfig = (): NavItemProps[] => {
               type: 'svg',
             },
             children: [
-              /* {
+               {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/overview`,
-              },*/
+              },
               {
                 id: '0x-tokens',
                 title: 'Token Explorer',
@@ -288,13 +334,13 @@ const useRoutesConfig = (): NavItemProps[] => {
               type: 'svg',
             },
             children: [
-              /* {
+               {
                 id: 'overview',
                 title: 'Overview',
                 messageId: 'common.overview',
                 type: 'item',
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.ZEROX}/overview`,
-              },*/
+              },
               {
                 id: 'balancer-tokens',
                 title: 'Token Explorer',
@@ -310,7 +356,7 @@ const useRoutesConfig = (): NavItemProps[] => {
                 url: `/${networkName}/protocol-explorer/${EXCHANGE.BALANCER}/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
               },
             ],
-          },
+          },*/
         ],
       },
       {

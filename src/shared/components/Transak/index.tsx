@@ -64,11 +64,7 @@ const Transak: React.FC<Props> = (props) => {
 
   const transakAllEvents = useCallback((data: any) => {
     console.log(data);
-  }, []);
-
-  const transakCloseEvents = useCallback(
-    (data: any) => {
-      transakClient?.close();
+    if(data.eventName === 'TRANSAK_WIDGET_CLOSE'){
       const w = (window as any)
       if(w){
           // TODO: remove this
@@ -77,7 +73,16 @@ const Transak: React.FC<Props> = (props) => {
               w.document.documentElement.style = 0;   
           }, 10)
       }
-      
+    }
+
+
+  }, []);
+
+  const transakCloseEvents = useCallback(
+    (data: any) => {
+      console.log('closed')
+      transakClient?.close();
+  
       // setTransakInstance(undefined);
     },
     [transakClient],
@@ -136,7 +141,7 @@ const Transak: React.FC<Props> = (props) => {
       disabled={transakClient == null}
       {...props}
       className={classes.btnPrimary}>
-      <IconContainer style={{width: '25px', height: '25px'}}>
+      <IconContainer style={{width: '26px', height: '26px'}}>
         <Mastercard />
       </IconContainer>
       Buy

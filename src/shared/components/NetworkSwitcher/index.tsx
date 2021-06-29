@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Menu, MenuItem } from "@material-ui/core";
+import { Box, Button, Chip, Menu, MenuItem, Typography } from "@material-ui/core";
 import React from "react";
 import { EthereumNetwork } from "shared/constants/AppEnums";
 import { FORMAT_NETWORK_NAME } from "shared/constants/Bitquery";
@@ -39,8 +39,9 @@ const NetworkSwitcher = (props: Props) => {
 
   return (
     <div style={style}>
-
-      <Chip  color={'default'}  clickable label={<Box display={'flex'} alignItems={'center'}>{FORMAT_NETWORK_NAME(networkName)}<ExpandMoreIcon/> </Box>} onClick={handleClick} />
+      <Box display={'flex'} alignItems={'center'}>
+      <Typography style={{paddingRight: '2px'}}>Chain:</Typography>{' '} <Chip  color={'default'}  clickable label={<Box display={'flex'} alignItems={'center'}>{FORMAT_NETWORK_NAME(networkName)}<ExpandMoreIcon/> </Box>} onClick={handleClick} />
+     </Box>
       <Menu
         id="network-menu"
         anchorEl={anchorEl}

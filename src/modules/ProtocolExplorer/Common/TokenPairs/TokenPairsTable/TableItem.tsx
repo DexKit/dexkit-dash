@@ -1,12 +1,14 @@
 import React from 'react';
-import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
+
 import {CremaTheme} from 'types/AppContextPropsType';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
 import {TableRow, TableCell, makeStyles, Link, Box} from '@material-ui/core';
+import {Link as RouterLink} from 'react-router-dom';
 import {isMobile} from 'web3modal';
-import { GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL } from 'utils';
+import { GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL, GET_CORRECT_ADDRESS_FROM_NETWORK } from 'utils';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
+import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 
 interface TableItemProps {
   row: any; //GetTokenPairs_ethereum_dexTrades;
@@ -49,7 +51,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
   const classes = useStyles();
-
+  const {usdFormatter} = useUSDFormatter();
+  const closePriceUsd = usdFormatter.format(row?.closePriceUsd || 0);
+  const volumeUsd = usdFormatter.format(row?.volume24InUsd || 0)
   // const dataProtocolPair = {
   //   contract: row.smartContract?.address,
   //   baseToken: row.baseCurrency,
@@ -61,28 +65,28 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
           {!isMobile() && <TokenLogo token0={row.baseCurrency?.address||''} token1={row.quoteCurrency?.address||''}></TokenLogo>}
-          <Link href={GET_PROTOCOL_PAIR_URL(networkName, exchange, row.smartContract?.address.address, row.baseCurrency?.address, row.quoteCurrency?.address)}>
+          <Link to={GET_PROTOCOL_PAIR_URL(networkName, exchange, row.smartContract?.address.address, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency), GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency))} component={RouterLink}>
             {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
           </Link>
         </Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        ${row.closePriceUsd?.toFixed(2)}
+          {closePriceUsd}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {' '}{row.baseVolume24.toFixed(3)}{' '}
-        <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.baseCurrency?.address, exchange)}>
+        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency), exchange)} component={RouterLink}>
           {' '}{row.baseCurrency.symbol}{' '}
         </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {' '}{row.quoteVolume24.toFixed(3)}{' '}
-        <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)}>
+        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency), exchange)} component={RouterLink}>
           {' '}{row.quoteCurrency.symbol}{' '}
         </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        ${row.volume24InUsd.toFixed(2)}
+        {volumeUsd}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {row.trades}

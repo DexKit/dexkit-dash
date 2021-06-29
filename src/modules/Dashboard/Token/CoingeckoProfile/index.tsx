@@ -72,7 +72,7 @@ const CoingeckoProfile: React.FC<Props> = ({data, loading}) => {
                           marginLeft: 5,
                         }}>
                         {' '}
-                        {data?.symbol}
+                        {data?.symbol.toUpperCase()}
                       </span>
                     </>
                   )}

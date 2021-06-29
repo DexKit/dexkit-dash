@@ -25,7 +25,7 @@ interface Props {
     history: {url: string; name: string; hasCopy?: string}[];
     active: {name: string; hasCopy?: string};
   };
-  title: {name: string; hasCopy?: string};
+  title: {name?: string; hasCopy?: string, component?: React.ReactNode};
   subtitle?: {name: string; hasCopy?: string};
   network?: EthereumNetwork;
   networkSwitcher?: {networkName: EthereumNetwork, onClick: (network: EthereumNetwork) => any}
@@ -109,9 +109,9 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
               </Tooltip>
             </Box>}
 
-          {icon && <Box mr={2}>{<TokenLogo token0={icon} />}</Box>}
+          {icon && <Box mr={2}>{<TokenLogo token0={icon} networkName={network} />}</Box>}
 
-          <Typography className={classes.title} color='textPrimary'>
+          {(!title.component && title.name) && <Typography className={classes.title} color='textPrimary'>
             {title.name}
             {title.hasCopy !== undefined && (
               <ButtonCopy
@@ -119,7 +119,9 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
                 titleText='Copied to Clipboard!'
               />
             )}
-          </Typography>
+          </Typography>}
+
+          {title.component && title.component}
 
           {subtitle && (
             <Typography className={classes.title} color='textPrimary'>

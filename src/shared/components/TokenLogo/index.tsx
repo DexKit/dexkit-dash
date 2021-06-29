@@ -6,8 +6,9 @@ import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
 import {useChainId} from 'hooks/useChainId';
+import { CremaTheme } from 'types/AppContextPropsType';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: CremaTheme) => ({
   pair: {
     display: 'flex',
   },
@@ -17,6 +18,10 @@ const useStyles = makeStyles(() => ({
     height: '40px',
     position: 'relative',
     zIndex: 2,
+    [theme.breakpoints.down('md')]: {
+      width: '25px',
+      height: '25px',
+    },
   },
   iconRight: {
     borderRadius: '100%',
@@ -25,18 +30,26 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     zIndex: 1,
     left: '-15px',
+    [theme.breakpoints.down('md')]: {
+      width: '25px',
+      height: '25px',
+      left: '-12px',
+    },
   },
 }));
 
 interface Props {
   token0: string;
+  logoURL0?: string;
   token1?: string | undefined;
+  networkName?: EthereumNetwork;
 }
 
 const TokenLogo: React.FC<Props> = (props) => {
   const {currentChainId} = useChainId();
-  const network = useNetwork();
+  const net = useNetwork();
   const classes = useStyles();
+  const currentNetwork = props.networkName || net;
 
   const provToken0 =
     props.token0 === '-'
@@ -57,7 +70,7 @@ const TokenLogo: React.FC<Props> = (props) => {
       : '';
 
   const networkName =
-    network == EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
+  currentNetwork === EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
 
   const noFoundSrc = require('assets/images/logo-not-found.png');
   const dexkitLogo = require('assets/images/dexkit-logo.png');
@@ -67,7 +80,20 @@ const TokenLogo: React.FC<Props> = (props) => {
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
       : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
 
-  const getIconUrl = (address: string) => {
+  const getIconUrl = (address: string, logoUrl?: string) => {
+    if(logoUrl){
+      return logoUrl;
+    }
+    
+    if(address.toLowerCase() === 'bsc') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
+    }
+
+    if(address.toLowerCase() === 'eth') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
+    }
+
+
     if(address.toLowerCase() === '') {
       return currencyLogo;
     }

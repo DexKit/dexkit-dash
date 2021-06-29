@@ -7,6 +7,7 @@ import {
   TableBody,
   TableHead,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
@@ -59,6 +60,7 @@ const TokenOrdersTable: React.FC<Props> = ({
           </TableBody>
         </Table>
       </Box>
+      {!data?.length && <Typography component='h1' color={'primary'}>No Data available for this token</Typography>}
       <TablePagination
         className={classes.paginationDesktop}
         component='div'

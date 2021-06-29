@@ -29,7 +29,7 @@ const App = () => (
                   <CssBaseline />
                   <Web3Manager/>
                   <ReactNotification />
-                  {/*<ThemeSetting props={{}}/>*/}
+                {/*  <ThemeSetting props={{}}/>*/}
                   <InfoView />
                   <AppLayout />
                 </WalletRoutes>

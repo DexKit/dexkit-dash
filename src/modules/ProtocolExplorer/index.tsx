@@ -10,6 +10,33 @@ export const protocolExplorerConfigs = [
   //       },
   //     ],
   //   },
+  {
+    routes: [
+      {
+        path:
+          '/protocol-explorer/token-explorer/:address',
+        component: React.lazy(() => import('./TokenExplorer/index_tabs')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path:
+          '/protocol-explorer/pool-explorer/:address',
+        component: React.lazy(() => import('./PoolExplorer/index_tabs')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path:
+          '/protocol-explorer/pair-explorer/:address',
+        component: React.lazy(() => import('./GenericPairExplorer/PairExplorer/index_tabs')),
+      },
+    ],
+  },
 
   {
     routes: [

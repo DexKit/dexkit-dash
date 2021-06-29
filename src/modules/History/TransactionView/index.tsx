@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useNetwork } from 'hooks/useNetwork';
 import { useTransactionInfo } from 'hooks/history/useTransactionInfo';
-import { Box } from '@material-ui/core';
+import { Box, Paper} from '@material-ui/core';
 import { truncateAddress } from 'utils';
 import { useStyles } from './index.style';
 
@@ -42,7 +42,8 @@ const TransactionView: React.FC<Props> = (props) => {
 
       {
         loading ? ( <LoadingView /> ) : error ? ( <ErrorView message={error.message} /> ) : (
-          <Box>
+          <Paper>
+            <Box>
             {
               data?.ethereum?.transactions?.map(e => (
                 <Box key={e.hash}>
@@ -94,6 +95,7 @@ const TransactionView: React.FC<Props> = (props) => {
               ))
             }
           </Box>
+          </Paper>
         )
       }
     </Box>

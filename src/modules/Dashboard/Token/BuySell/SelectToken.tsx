@@ -15,6 +15,8 @@ interface Props {
   selected: Token | undefined;
   options: Token[];
   disabled?: boolean;
+  limitCoins?: boolean;
+  label?: string;
   onChange: ($token: Token | undefined) => void;
 }
 
@@ -67,16 +69,23 @@ const SelectToken: React.FC<Props> = ({
   options,
   disabled,
   onChange,
+  label,
+  limitCoins
 }) => {
   const classes = useStyles();
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const OPTIONS_LIMIT = 10;
-  const defaultFilterOptions = createFilterOptions();
+  const OPTIONS_LIMIT = 20;
+  const defaultFilterOptions = createFilterOptions({ignoreCase: true});
 
   const filterOptions = (options: any, state: FilterOptionsState<any>): any => {
-    return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT + 1);
+    if(limitCoins){
+      return defaultFilterOptions(options, state);
+    }else{
+      return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT + 1);
+    }
+  
   };
 
   return (
@@ -120,7 +129,7 @@ const SelectToken: React.FC<Props> = ({
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
-                <TokenLogo token0={option.address} />
+                <TokenLogo token0={option.address} networkName={option?.networkName}/>
                 {option.name}
                 {option?.networkName && (
                   <Box pl={1}>
@@ -135,9 +144,10 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <SelectBox>
-                <TokenLogo token0={selected.address} />
+                <TokenLogo token0={selected.address} networkName={selected?.networkName}/>
                 <TextField
                   {...params}
+                  label={label || "Search a coin"}
                   placeholder={
                     selected
                       ? selected.symbol

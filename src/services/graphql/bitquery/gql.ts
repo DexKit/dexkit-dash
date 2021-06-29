@@ -30,6 +30,26 @@ export const SEARCH_BY_ADDRESS = gql`
    }
  `;
 
+ export const SEARCH_CURRENCY_BY_ADDRESS = gql`
+   query SearchCurrencyByAddress($value: String!) {
+     search(string: $value ){
+       subject {
+        ... on Currency {
+           symbol
+           name
+           currencyAddress: address
+           tokenId
+           tokenType
+           decimals
+         }
+       }
+       network {
+        network
+      }
+     }
+   }
+ `;
+
 export const BITQUERY_SEARCH = gql`
   query BitquerySearch($network: EthereumNetwork!, $exchangeName: String!, $addresses: [String!]) {
     ethereum(network: $network) {

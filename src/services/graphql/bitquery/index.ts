@@ -9,3 +9,6 @@ export const client = new ApolloClient({
     'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string
   }
 });
+
+
+

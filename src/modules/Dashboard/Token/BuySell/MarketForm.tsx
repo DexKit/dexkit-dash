@@ -376,6 +376,8 @@ const MarketForm: React.FC<Props> = (props) => {
               md={6}>
               <SelectToken
                 id={'marketSel0'}
+                label={select0 && 'Your Coins'}
+                limitCoins={select0 ? true : false}
                 selected={tokenFrom}
                 options={web3State === Web3State.Done ? select0 : select1}
                 disabled={disabled}

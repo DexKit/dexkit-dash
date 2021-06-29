@@ -2,7 +2,7 @@ import React from 'react';
 import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {Box, Table, TableCell, TableRow} from '@material-ui/core';
+import {Box, Table, TableCell, TableRow, Typography} from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
@@ -51,7 +51,9 @@ const TokenPairsTable: React.FC<Props> = ({data, exchange, networkName}) => {
           )} */}
         </TableBody>
       </Table>
+      {!data?.length && <Typography component='h1' color={'primary'}>No Data available for this token</Typography>}
     </Box>
+    
   );
 };
 

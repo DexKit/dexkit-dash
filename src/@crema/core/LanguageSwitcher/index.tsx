@@ -63,8 +63,6 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         fontFamily: Fonts.MEDIUM,
         justifyContent: 'center',
         width: 'auto',
-        borderLeft: 'solid 1px',
-        borderLeftColor: theme.palette.grey[200],
         textTransform: 'uppercase',
         marginTop: 0,
         color: theme.palette.text.primary,

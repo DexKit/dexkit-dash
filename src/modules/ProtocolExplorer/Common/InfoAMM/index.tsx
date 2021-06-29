@@ -9,7 +9,7 @@ import {GET_DEXTOOLS_URL, GET_AMM_ANALYTICS} from 'utils/protocol';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
-import {Fade, Tooltip, Link} from '@material-ui/core';
+import {Fade, Tooltip, Link, Typography} from '@material-ui/core';
 import LoadingInfoAMM from './LoadingInfoAMM';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
@@ -72,7 +72,7 @@ const InfoAMM: React.FC<Props> = (props) => {
               {loading ? (
                 <LoadingInfoAMM />
               ) : (
-                data && (
+                data ? (
                   <Box>
                     <Box
                       display='flex'
@@ -155,7 +155,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                         )}
                         <Box mr={3}>
                             <Link
-                              to={`${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                              to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
                               component={RouterLink} 
                               >
                               <Tooltip title={'Trade Token'} placement='top'>
@@ -206,7 +206,9 @@ const InfoAMM: React.FC<Props> = (props) => {
                     </Box>
                   </Box>
                 )
-              )}
+              : (
+                <Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)} </Typography>
+            )) }
             </Box>
           </AppCard>
         </>

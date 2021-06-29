@@ -118,7 +118,7 @@ const defaultConfig: any = {
   },
   themeStyle: ThemeStyle.MODERN,
   themeMode: ThemeMode.SEMI_DARK,
-  navStyle: NavStyle.MINI,
+  navStyle: NavStyle.MINI_SIDEBAR_TOGGLE,
   layoutType: LayoutType.FULL_WIDTH,
   footerType: FooterType.FLUID,
   rtAnim: RouteTransition.NONE,

@@ -33,16 +33,18 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       fontSize: 12,
       padding: 6,
       '&:first-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingLeft: 4,
-        // },
-        paddingLeft: 20,
+        paddingLeft: 2,
+         [theme.breakpoints.up('xl')]: {
+           paddingLeft: 20,
+         },
+       
       },
       '&:last-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingRight: 4,
-        // },
-        paddingRight: 20,
+        paddingRight: 2,
+         [theme.breakpoints.up('xl')]: {
+           paddingRight: 20,
+         },
+        
       },
       // [theme.breakpoints.up('xl')]: {
       //   fontSize: 18,
@@ -59,8 +61,8 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       whiteSpace: 'nowrap',
     },
     avatar: (props: any) => ({
-      width: 40,
-      height: 40,
+      width: 30,
+      height: 30,
       padding: 0,
       backgroundColor: data?.currency?.address ? props.color : grey[500],
       [theme.breakpoints.up('xl')]: {

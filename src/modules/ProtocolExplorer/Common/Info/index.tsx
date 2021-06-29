@@ -3,7 +3,7 @@ import {useChainId} from 'hooks/useChainId';
 import {BalanceCoins} from 'types/models/Crypto';
 import {ETHERSCAN_API_URL, ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
-import {Box, Avatar, Tooltip, Fade, Link} from '@material-ui/core';
+import {Box, Avatar, Tooltip, Fade, Link, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
@@ -67,7 +67,7 @@ const Info: React.FC<Props> = (props) => {
             {loading ? (
               <LoadingInfo />
             ) : (
-              data && (
+              data ? (
                 <Box display='flex' flexDirection='column'>
                   <Box
                     display='flex'
@@ -109,7 +109,7 @@ const Info: React.FC<Props> = (props) => {
                       </Box>
                       <Box mr={3}>
                         <Link
-                          to={`${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                          to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
                           component={RouterLink} 
                           >
                            <Tooltip title={'Trade Token'} placement='top'>
@@ -159,7 +159,10 @@ const Info: React.FC<Props> = (props) => {
                     {data && <CoinsInfo coins={coinInfoFactory(data)} />}
                   </Box>
                 </Box>
-              )
+              ) : (
+                  <Typography component='h1' color={'primary'}>No Data available for this token</Typography>
+
+              ) 
             )}
           </AppCard>
         </>

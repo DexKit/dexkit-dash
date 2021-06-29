@@ -17,7 +17,6 @@ interface AssetChartProps {
 
 const AssetChart: React.FC<AssetChartProps> = ({data}) => {
 
-  console.log(data);
 
   const formatXAxis = (tickItem: any) => {
     if (tickItem) {
@@ -29,7 +28,7 @@ const AssetChart: React.FC<AssetChartProps> = ({data}) => {
     <ResponsiveContainer width='100%' height={350}>
       <LineChart data={data} margin={{top: 0, right: 0, left: -60, bottom: 0}}>
         <Tooltip />
-        <YAxis domain={['auto', 'auto']} axisLine={false} tickLine={false} type="number" />
+        <YAxis domain={['auto', 'auto']} axisLine={true} tickLine={true} type="number" />
         <XAxis padding={{left: 20, right: 20}} dataKey='date' tickFormatter={formatXAxis} />
         <CartesianGrid stroke='#eee' horizontal={true} vertical={false} />
         <Line

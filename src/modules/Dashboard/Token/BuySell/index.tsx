@@ -121,12 +121,11 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
         }
 
         // tokenFrom and tokenTo cannot have the same condition for initialization (ie ETH || WETH)
-        if (_token?.symbol === 'ETH' || _token?.symbol === 'WETH') {
-          _token = select1.find((t) => t.symbol === 'KIT');
+        if (_token?.symbol.toUpperCase() === 'ETH' || _token?.symbol.toUpperCase() === 'WETH') {
+          _token = select1.find((t) => t.symbol.toUpperCase() === 'KIT');
         }
 
         setTokenTo(_token);
-        console.log('setTokenTo', _token);
       }
     }
   }, [select1, balances]);
@@ -143,7 +142,6 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
             ).toUpperCase(),
       );
       setTokenFrom(_token);
-      console.log('setTokenFrom', _token);
     }
   }, [select0]);
 
