@@ -44,7 +44,7 @@ export default (props: Props) => {
       </TableHead>
       <TableBody>
         {events.map((event, index) => (
-          <AssetEventTableRow event={event} />
+          <AssetEventTableRow key={index} event={event} />
         ))}
       </TableBody>
     </Table>

@@ -9,18 +9,15 @@ import {
 } from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import useFetch from 'use-http';
-import moment from 'moment';
-import {AssetEventType} from 'opensea-js/lib/types';
-import AssetEventTableRow from '../AssetEventTableRow';
-import AssetOrdersRow from '../AssetOrdersRow';
+
+import AssetListingsRow from '../AssetListingsRow';
 
 interface Props {
-  orders: any[];
+  listings?: any[];
 }
 
 export default (props: Props) => {
-  const {orders} = props;
+  const {listings} = props;
 
   return (
     <Table>
@@ -42,8 +39,8 @@ export default (props: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {orders.map((order, index) => (
-          <AssetOrdersRow key={index} order={order} />
+        {listings?.map((listing: any, index: number) => (
+          <AssetListingsRow key={index} listing={listing} />
         ))}
       </TableBody>
     </Table>

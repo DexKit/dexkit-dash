@@ -46,6 +46,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import {useIntersect} from 'hooks/useIntersect';
 import {FormatListBulletedOutlined} from '@material-ui/icons';
 import {getWindowUrl} from 'utils/browser';
+import {useWeb3} from 'hooks/useWeb3';
+import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
+import axios from 'axios';
 
 interface AssetsQuery {
   owner: string;
@@ -56,39 +59,52 @@ interface AssetsQuery {
 }
 
 const useMyAssets = () => {
-  const {get, loading} = useFetch('https://api.opensea.io/api/v1/assets');
+  const {getProvider} = useWeb3();
 
   const getAssets = useCallback(
-    (query: AssetsQuery) => {
-      return get(
-        `?owner=${query.owner}&order_by=${
-          query.sortBy
-        }&order_direction=desc&offset=${query.offset}&limit=${
-          query.limit
-        }&collection=${query.collection || ''}`,
-      );
+    async (query: AssetsQuery) => {
+      const provider = getProvider();
+      const chainId = await getChainId(provider);
+
+      const url = `https://${
+        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/assets?owner=${query.owner}&order_by=${
+        query.sortBy
+      }&order_direction=desc&offset=${query.offset}&limit=${
+        query.limit
+      }&collection=${query.collection || ''}`;
+
+      return axios.get(url, {
+        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
+      });
     },
-    [get],
+    [getProvider],
   );
 
-  return {getAssets, loading};
+  return {getAssets};
 };
 
 function useCollections() {
-  const {get, loading} = useFetch(
-    'https://api.opensea.io/api/v1/collections?offset=0&limit=300',
-  );
+  const {getProvider} = useWeb3();
 
   const getCollections = useCallback(
-    (owner: string, query: string) => {
-      return get(`?offset=0&limit=300&asset_owner=${owner}`);
+    async (owner: string, query: string) => {
+      const provider = getProvider();
+      const chainId = await getChainId(provider);
+
+      const url = `https://${
+        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
+
+      return axios.get(url, {
+        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
+      });
     },
-    [get],
+    [getProvider],
   );
 
   return {
     getCollections,
-    loading,
   };
 }
 
@@ -140,7 +156,9 @@ export default () => {
   const {messages} = useIntl();
   const {address}: RouteParams = useParams();
   const {getAssets} = useMyAssets();
-  const {getCollections, loading: collectionLoading} = useCollections();
+  const {getCollections} = useCollections();
+
+  const [collectionLoading, setCollectionLoading] = useState(false);
 
   // misc
   const [showFilters, setShowFilters] = useState(false);
@@ -171,7 +189,7 @@ export default () => {
   const [collectionInputState, setCollectionInputState] = useState('');
 
   const fetchData = useCallback(async () => {
-    setPage(0);
+    setPage(1);
     setLoadingAssets(true);
 
     getAssets({
@@ -181,8 +199,8 @@ export default () => {
       owner: address,
       collection,
     })
-      .then((data) => {
-        let assets = data.assets;
+      .then((response) => {
+        let assets = response.data.assets;
 
         if (query) {
           assets = assets.filter(
@@ -193,6 +211,12 @@ export default () => {
 
         if (hasOffers) {
           assets = assets.filter((value: any) => value.orders);
+        }
+
+        if (assets?.length == 20) {
+          setHasMore(true);
+        } else {
+          setHasMore(false);
         }
 
         setAssets(assets);
@@ -272,11 +296,7 @@ export default () => {
     setHasOffers((value) => !value);
   }, [isUpXs]);
 
-  const loader = useRef<HTMLDivElement>(null);
-
-  const {observe, setCallback} = useIntersect();
-
-  const handleObserver = useCallback(async () => {
+  const handleLoadMore = useCallback(async () => {
     if (!hasMore) {
       return;
     }
@@ -293,7 +313,7 @@ export default () => {
         limit: 20,
         owner: address,
         collection,
-      });
+      }).then((response) => response.data);
 
       let tempAssets = result.assets;
 
@@ -328,25 +348,20 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    if (loader.current) {
-      observe(loader.current);
-    }
-  }, [loader.current]);
-
-  useEffect(() => {
-    setCallback(handleObserver);
-  }, [handleObserver]);
-
-  useEffect(() => {
-    getCollections(address, queryCollection).then((data) => {
-      setCollections(
-        (data || []).filter(
-          (col: any) =>
-            col.name.toLowerCase().search(queryCollection.toLocaleLowerCase()) >
-            -1,
-        ),
-      );
-    });
+    setCollectionLoading(true);
+    getCollections(address, queryCollection)
+      .then((response) => response.data)
+      .then((data) => {
+        setCollections(
+          (data || []).filter(
+            (col: any) =>
+              col.name
+                .toLowerCase()
+                .search(queryCollection.toLocaleLowerCase()) > -1,
+          ),
+        );
+      })
+      .finally(() => setCollectionLoading(false));
   }, [address, queryCollection]);
 
   useEffect(() => {
@@ -485,6 +500,51 @@ export default () => {
               </Card>
             </Grid>
             <Grid item xs={12} sm={9}>
+              <Box mb={2}>
+                <Grid
+                  alignItems='center'
+                  alignContent='center'
+                  container
+                  justify='space-between'
+                  spacing={2}>
+                  <Grid item>
+                    <Box pt={{xs: 2}} textAlign={!isUpXs ? 'center' : null}>
+                      <Typography variant='h5'>
+                        {assets?.length || 0}{' '}
+                        {(assets || []).length > 1 ? (
+                          <IntlMessages id='nfts.walletResults' />
+                        ) : (
+                          <IntlMessages id='nfts.walletResult' />
+                        )}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Select
+                      variant='outlined'
+                      fullWidth
+                      value={sortBy}
+                      displayEmpty
+                      onChange={handleChangeSortBy}>
+                      <MenuItem selected value=''>
+                        <IntlMessages id='nfts.walletSortBy' />
+                      </MenuItem>
+                      <MenuItem selected value={SORT_BY_SALE_DATE}>
+                        <IntlMessages id='nfts.walletSortBySaleDate' />
+                      </MenuItem>
+                      <MenuItem selected value={SORT_BY_SALE_COUNT}>
+                        <IntlMessages id='nfts.walletSortBySaleCount' />
+                      </MenuItem>
+                      <MenuItem selected value={SORT_BY_VISITOR_COUNT}>
+                        <IntlMessages id='nfts.walletSortByVisitorCount' />
+                      </MenuItem>
+                      <MenuItem selected value={SORT_BY_TOTAL_PRICE}>
+                        <IntlMessages id='nfts.walletSortByTotalPrice' />
+                      </MenuItem>
+                    </Select>
+                  </Grid>
+                </Grid>
+              </Box>
               {assetsError ? (
                 <Box py={8}>
                   <Grid
@@ -529,57 +589,6 @@ export default () => {
                     <>
                       {!assetsError ? (
                         <>
-                          <Box mb={2}>
-                            <Grid
-                              alignItems='center'
-                              alignContent='center'
-                              container
-                              justify='space-between'
-                              spacing={2}>
-                              <Grid item>
-                                <Box
-                                  pt={{xs: 2}}
-                                  textAlign={!isUpXs ? 'center' : null}>
-                                  <Typography variant='h5'>
-                                    {assets?.length || 0}{' '}
-                                    {(assets || []).length > 1 ? (
-                                      <IntlMessages id='nfts.walletResults' />
-                                    ) : (
-                                      <IntlMessages id='nfts.walletResult' />
-                                    )}
-                                  </Typography>
-                                </Box>
-                              </Grid>
-                              <Grid item>
-                                <Select
-                                  variant='outlined'
-                                  fullWidth
-                                  value={sortBy}
-                                  displayEmpty
-                                  onChange={handleChangeSortBy}>
-                                  <MenuItem selected value=''>
-                                    <IntlMessages id='nfts.walletSortBy' />
-                                  </MenuItem>
-                                  <MenuItem selected value={SORT_BY_SALE_DATE}>
-                                    <IntlMessages id='nfts.walletSortBySaleDate' />
-                                  </MenuItem>
-                                  <MenuItem selected value={SORT_BY_SALE_COUNT}>
-                                    <IntlMessages id='nfts.walletSortBySaleCount' />
-                                  </MenuItem>
-                                  <MenuItem
-                                    selected
-                                    value={SORT_BY_VISITOR_COUNT}>
-                                    <IntlMessages id='nfts.walletSortByVisitorCount' />
-                                  </MenuItem>
-                                  <MenuItem
-                                    selected
-                                    value={SORT_BY_TOTAL_PRICE}>
-                                    <IntlMessages id='nfts.walletSortByTotalPrice' />
-                                  </MenuItem>
-                                </Select>
-                              </Grid>
-                            </Grid>
-                          </Box>
                           <Grid container spacing={2}>
                             {assets?.map((asset: any, index: number) => (
                               <Grid key={index} item xs={12} sm={3}>
@@ -596,8 +605,27 @@ export default () => {
                   )}
                 </>
               )}
-              {loadingMoreAssets ? <AssetsSkeleton count={20} /> : null}
-              {assets.length >= 20 ? <div ref={loader} /> : null}
+              {hasMore ? (
+                <Box py={4}>
+                  <Button
+                    color='primary'
+                    size='large'
+                    onClick={handleLoadMore}
+                    disabled={loadingMoreAssets}
+                    startIcon={
+                      loadingMoreAssets ? (
+                        <CircularProgress
+                          size={theme.spacing(6)}
+                          color='inherit'
+                        />
+                      ) : null
+                    }
+                    variant='outlined'
+                    fullWidth>
+                    Load more
+                  </Button>
+                </Box>
+              ) : null}
             </Grid>
           </Grid>
         </Box>
