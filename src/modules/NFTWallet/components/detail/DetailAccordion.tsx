@@ -17,10 +17,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 interface Props {
   asset?: any;
+  loading?: boolean;
+  error?: any;
 }
 
 export default (props: Props) => {
-  const {asset} = props;
+  const {asset, loading, error} = props;
 
   return (
     <Accordion>

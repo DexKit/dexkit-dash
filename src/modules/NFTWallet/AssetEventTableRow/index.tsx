@@ -201,8 +201,10 @@ export default (props: Props) => {
         <Grid alignItems='center' alignContent='center' container spacing={2}>
           <Grid item>{getEventIcon(event)}</Grid>
           <Grid item>
-            <Typography>
-              <IntlMessages id={getEventIntlID(event)} />
+            <Typography variant='body1'>
+              {getEventIntlID(event) != '' ? (
+                <IntlMessages id={getEventIntlID(event)} />
+              ) : null}
             </Typography>
           </Grid>
         </Grid>
@@ -218,7 +220,7 @@ export default (props: Props) => {
       <TableCell>
         <AssetEventTo event={event} />
       </TableCell>
-      <TableCell>{moment(event.created_date).fromNow()}</TableCell>
+      <TableCell>{moment(event?.created_date).fromNow()}</TableCell>
     </TableRow>
   );
 };

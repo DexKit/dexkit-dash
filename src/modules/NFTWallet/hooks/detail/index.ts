@@ -1,17 +1,22 @@
 import {useCallback} from 'react';
 import useFetch from 'use-http';
 
+const ENV = process.env.NODE_ENV;
+const API_ENV = ENV == 'development' ? 'rinkeby-api' : 'api';
+
 export const OPENSEA_FETCH_OPTIONS = {
   headers: {
     'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY || '',
   },
 };
 
-export const OPENSEA_ASSET_ENDPOINT = 'https://api.opensea.io/api/v1/asset';
-export const OPENSEA_ASSET_EVENTS_ENDPOINT =
-  'https://api.opensea.io/api/v1/events';
-export const OPENSEA_ASSET_ORDERS_ENDPOINT =
-  'https://api.opensea.io/wyvern/v1/orders';
+export const OPENSEA_ASSET_ENDPOINT = `https://${API_ENV}.opensea.io/api/v1/asset`;
+
+export const OPENSEA_ASSET_EVENTS_ENDPOINT = `https://${API_ENV}.opensea.io/api/v1/events`;
+
+export const OPENSEA_ASSET_ORDERS_ENDPOINT = `https://${API_ENV}.opensea.io/wyvern/v1/orders`;
+
+export const OPENSEA_TOKENS = `https://${API_ENV}.opensea.io/api/v1/tokens`;
 
 export function useAssetOrders() {
   const {get, loading, data, error} = useFetch(
@@ -20,7 +25,7 @@ export function useAssetOrders() {
   );
 
   const getOrders = useCallback(
-    (assetAddress: string, tokenId: number) => {
+    (assetAddress: string, tokenId: string) => {
       return get(
         `?asset_contract_address=${assetAddress}&bundled=false&include_bundled=false&include_invalid=false&token_id=${tokenId}&limit=100&offset=0&order_by=created_date&order_direction=desc`,
       );
@@ -38,7 +43,7 @@ export function useAssetEvents() {
   );
 
   const getEvents = useCallback(
-    (assetAddress: string, tokenId: number) => {
+    (assetAddress: string, tokenId: string) => {
       return get(`?asset_contract_address=${assetAddress}&token_id=${tokenId}`);
     },
     [get],
@@ -54,7 +59,7 @@ export function useAsset() {
   );
 
   const getAsset = useCallback(
-    (contractAddress: string, tokenId: number) => {
+    (contractAddress: string, tokenId: string) => {
       get(`/${contractAddress}/${tokenId}/`);
     },
     [get],

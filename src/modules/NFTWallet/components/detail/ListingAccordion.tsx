@@ -15,6 +15,8 @@ import {useAssetOrders} from 'modules/NFTWallet/hooks/detail';
 
 interface Props {
   listings: any;
+  loading?: boolean;
+  error?: any;
 }
 
 export default (props: Props) => {

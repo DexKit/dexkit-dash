@@ -6,14 +6,20 @@ import {
   Tooltip,
   Typography,
   makeStyles,
+  Button,
 } from '@material-ui/core';
-import React from 'react';
-import moment from 'moment';
+import React, {useCallback} from 'react';
+
 import {
   deriveUserFromAddr,
   getPriceFromOrder,
   getUSDPriceFromOrder,
+  isAssetOwner,
+  isSameAddress,
 } from 'modules/NFTWallet/utils';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -24,11 +30,23 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   offer: any;
+  asset?: any;
+  onCancel: (offer: any) => void;
+  onAccept: (offer: any) => void;
 }
 
 export default (props: Props) => {
-  const {offer} = props;
+  const {offer, asset, onCancel, onAccept} = props;
   const classes = useStyles();
+  const userAccountAddress = useDefaultAccount();
+
+  const handleAccept = useCallback(() => {
+    onAccept(offer);
+  }, [offer]);
+
+  const handleCancel = useCallback(() => {
+    onCancel(offer);
+  }, [offer]);
 
   return (
     <TableRow>
@@ -50,12 +68,42 @@ export default (props: Props) => {
         </Grid>
       </TableCell>
       <TableCell>${getUSDPriceFromOrder(offer).toFixed(2)}</TableCell>
-      <TableCell>{moment(offer.created_date).fromNow()}</TableCell>
       <TableCell>
-        {offer.maker?.user?.username
-          ? offer.maker?.user?.username
-          : deriveUserFromAddr(offer.maker?.address)}
+        {!isAssetOwner(asset, userAccountAddress || '') &&
+        isSameAddress(offer?.maker?.address, userAccountAddress || '') ? (
+          <Button
+            onClick={handleCancel}
+            size='small'
+            color='primary'
+            variant='outlined'>
+            <IntlMessages id='nfts.detail.offersCancel' />
+          </Button>
+        ) : null}
+        {isAssetOwner(asset, userAccountAddress || '') &&
+        !isSameAddress(offer?.maker?.address, userAccountAddress || '') ? (
+          <Button
+            onClick={handleAccept}
+            size='small'
+            color='primary'
+            variant='outlined'>
+            <IntlMessages id='nfts.detail.offersAccept' />
+          </Button>
+        ) : null}
       </TableCell>
+      <TableCell>
+        {offer.expiration_time
+          ? moment.unix(offer.expiration_time).fromNow()
+          : null}
+      </TableCell>
+      {isSameAddress(offer.maker?.address, userAccountAddress || '') ? (
+        <TableCell>you</TableCell>
+      ) : (
+        <TableCell>
+          {offer.maker?.user?.username
+            ? offer.maker?.user?.username
+            : deriveUserFromAddr(offer.maker?.address)}
+        </TableCell>
+      )}
     </TableRow>
   );
 };

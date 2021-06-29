@@ -15,9 +15,12 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useAssetEvents} from 'modules/NFTWallet/hooks/detail';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
+import AssetEventsTableSkeleton from './AssetEventsTableSkeleton';
 
 interface Props {
   asset: any;
+  loading?: boolean;
+  error?: any;
 }
 
 export default (props: Props) => {
@@ -27,7 +30,11 @@ export default (props: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
-    getEvents(asset?.asset_contract?.address, parseInt(asset?.token_id));
+    if (asset) {
+      setTimeout(() => {
+        getEvents(asset?.asset_contract?.address, asset?.token_id);
+      }, 2000);
+    }
   }, [getEvents, asset]);
 
   const handleChange = useCallback(() => setExpanded((value) => !value), []);
@@ -46,9 +53,15 @@ export default (props: Props) => {
           maxHeight: theme.spacing(100),
           overflowY: 'scroll',
         }}>
-        <AssetEventsTable
-          events={data?.asset_events ? sortEventArray(data?.asset_events) : []}
-        />
+        {loading ? (
+          <AssetEventsTableSkeleton />
+        ) : (
+          <AssetEventsTable
+            events={
+              data?.asset_events ? sortEventArray(data?.asset_events) : []
+            }
+          />
+        )}
       </AccordionDetails>
     </Accordion>
   );
