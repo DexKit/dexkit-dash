@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
-import {makeStyles, Button, IconButton, Tooltip, Chip, Link} from '@material-ui/core';
+import {makeStyles, Button, IconButton, Tooltip, Chip, Link, Hidden} from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -226,12 +226,14 @@ const WalletInfo = (props: any) => {
                 </Menu>
               </Box>
             </Box>
-            <Box color={grey.A200} className={classes.designation}>
-              {ethBalanceValue
-                ? ethBalanceValue.toFixed(4)
-                : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-              ETH
-            </Box>
+            <Hidden smDown={true}>
+              <Box color={grey.A200} className={classes.designation}>
+                {ethBalanceValue
+                  ? ethBalanceValue.toFixed(4)
+                  : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
+                ETH
+              </Box>
+            </Hidden>
           </Box>
         </Box>
       )}

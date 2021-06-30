@@ -99,6 +99,33 @@ export const findTokensInfoByAddress = (tokens: Token[], str: string): Token | u
   });
 };
 
+export const findTokensInfoBySymbol = (tokens: Token[], str: string): Token | undefined => {
+  return tokens.find((token) => {
+    return (
+      token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 
+    );
+  });
+};
+
+export const GET_NATIVE_COINS = () => {
+  return [
+    {
+      address: '',
+      decimals: 18,
+      name: 'Ethereum',
+      symbol: 'ETH',
+      networkName: EthereumNetwork.ethereum
+    },
+    {
+      address: '',
+      decimals: 18,
+      name: 'Binance',
+      symbol: 'BNB',
+      networkName: EthereumNetwork.bsc
+    }
+  ]
+}
+
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {
   switch (chainId) {

@@ -4,7 +4,7 @@ import { SEARCH_CURRENCY_BY_ADDRESS } from "services/graphql/bitquery/gql";
 import { SearchCurrencyByAddress, SearchCurrencyByAddressVariables } from "services/graphql/bitquery/__generated__/SearchCurrencyByAddress";
 import { EthereumNetwork } from "shared/constants/AppEnums";
 import { Token } from "types/app";
-import { filterTokensInfoByString, findTokensInfoByAddress } from "utils";
+import { filterTokensInfoByString, findTokensInfoByAddress, findTokensInfoBySymbol, GET_NATIVE_COINS, isNativeCoinWithoutChainId } from "utils";
 import Web3 from "web3";
 import { useTokenList } from "./useTokenList";
 
@@ -26,12 +26,13 @@ export const useTokenInfo = (address: string) => {
     }
   
     useEffect(() => {
-      if (address && Web3.utils.isAddress(address) && tokenListEth.length && tokenListBsc) {
+      if (address && Web3.utils.isAddress(address) && tokenListEth.length && tokenListBsc.length) {
            setLoading(true);
            const tk = findTokensInfoByAddress(tokenListEth.concat(tokenListBsc), address);
            if(tk){
             setTokenInfo(tk);
             setLoading(false);
+            return;
            }
   
           searchByAddress(address)
@@ -60,9 +61,20 @@ export const useTokenInfo = (address: string) => {
               }
             })
             .catch((error: any) => console.error('search', error))
-            .finally(()=>  setLoading(false))
-         
-        } 
+            .finally(()=>  setLoading(false))  
+        }
+
+        if(isNativeCoinWithoutChainId(address)){
+          const tk = GET_NATIVE_COINS().find(c => c.symbol.toLowerCase() === address.toLowerCase())
+           if(tk){
+            setTokenInfo(tk);
+            return;
+           }
+
+        }
+        
+
+
     }, [address, tokenListEth, tokenListBsc]);
 
 

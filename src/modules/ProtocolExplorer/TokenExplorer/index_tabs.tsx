@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useContext, useMemo, useState } from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 
-import { AppBar, Box, Fade, Grid, Paper, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Box, Fade, Grid, Hidden, Paper, Tab, Tabs } from '@material-ui/core';
 import GridContainer from '../../../@crema/core/GridContainer';
 
 import { truncateAddress } from 'utils';
@@ -26,10 +26,13 @@ import { useTokenInfo } from 'hooks/useTokenInfo';
 import { InfoTab } from './Tabs/InfoTab';
 import { AppContext } from '@crema';
 import { Skeleton } from '@material-ui/lab';
-import TVChartContainer from 'shared/components/chart/TvChart/tv_chart';
+import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
 import AppContextPropsType from 'types/AppContextPropsType';
 import { InfoMarketTab } from './Tabs/InfoMarketTab';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import FavoritesAccordion from 'shared/components/Favorites';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 type Params = {
   address: string;
 };
@@ -43,10 +46,19 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
 
   const { address } = params;
   const history = useHistory();
-  let searchParams = useMemo(() => { return new URLSearchParams(history.location.search) }, []);
+  let searchParams = new URLSearchParams(history.location.search);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(searchParams.get('network') as EthereumNetwork ?? EthereumNetwork.ethereum)
   const { tokenInfo, loading: loadingToken } = useTokenInfo(address);
+  useEffect(
+    ()=> {
 
+    if(searchParams.get('network') !== networkName){
+      setNetworkName(searchParams.get('network') as EthereumNetwork ?? EthereumNetwork.ethereum)
+    }
+
+  }, [history.location.search])
+
+  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
 
   const [value, setValue] = React.useState(searchParams.get('tab') ?? 'overview');
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
@@ -95,6 +107,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           subtitle={{ name: truncateAddress(baseAddress), hasCopy: baseAddress }}
           icon={baseAddress}
           network={networkName}
+          shareButton={true}
         />
 
         <GridContainer>
@@ -114,21 +127,26 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                   textColor="primary"
                   aria-label="wallet tabs"
                 >
-                  <Tab value="overview" icon={<RemoveRedEyeIcon />} label="Overview" />
-                  <Tab value="top-pairs" icon={<EmojiEventsIcon />} label="Top Pairs" />
-                  <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label="Trade History" />
-                  <Tab value="info" icon={<InfoIcon />} label="Info" />
+                  <Tab value="overview" icon={<RemoveRedEyeIcon />} label={!isMobile  ? "Overview" :''} />
+                  {!isMobile && <Tab value="full-chart" icon={<TimelineIcon />} label="Full Chart" />}
+                  <Tab value="top-pairs" icon={<EmojiEventsIcon />} label={!isMobile ? "Top Pairs" : '' } />
+                  <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
+                  <Tab value="info" icon={<InfoIcon />} label={!isMobile ? "Info" : ''} />
                 </Tabs>
               </AppBar>
               <Grid item xs={12} md={12}>
                 <TabPanel value="overview">
                   <GridContainer>
                     <Grid item xs={12} md={5}>
-                      <Fade in={true} timeout={1000}>
-                        <Grid item xs={12} md={12}>
+                    <GridContainer>
+                      <Grid item xs={12} md={12}>
                           {tokenInfo && <InfoMarketTab tokenInfo={tokenInfo} networkName={networkName} />}
-                        </Grid>
-                      </Fade>
+                      </Grid>
+           
+                      <Grid item xs={12} md={12}>
+                         <FavoritesAccordion type={'token'}/>
+                      </Grid>
+                      </GridContainer>
                     </Grid>
                     <Grid item xs={12} md={7}>
                       <Fade in={true} timeout={1000}>
@@ -138,11 +156,9 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                           ) : (
                             tokenInfo && (
                               <Grid item xs={12} md={12} style={{ height: 450 }}>
-                                <TVChartContainer
-                                  symbol={`${tokenInfo.symbol}-USD`}
-                                  chainId={1}
-                                  darkMode={isDark}
-                                />
+                                <BitqueryTVChartContainer   symbol={`${networkName}:${tokenInfo.symbol.toUpperCase()}:${tokenInfo.address}`}  darkMode={isDark} />
+                                 
+                                
                               </Grid>
                             )
                           )}
@@ -150,7 +166,47 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                       </Fade>
                     </Grid>
                   </GridContainer>
+                  <Hidden mdDown={true}>
+                    <TokenOrders
+                      networkName={networkName}
+                      baseAddress={baseAddress}
+                      quoteAddress={null}
+                      exchange={EXCHANGE.ALL}
+                      type={'token'}
+                    />
+                   </Hidden>
+
+
                 </TabPanel>
+                <TabPanel value="full-chart">
+                  <Grid item xs={12} md={12}>
+                        <Fade in={true} timeout={1000}>
+                          <Grid item xs={12} md={12}>
+                            {loadingToken ? (
+                              <Skeleton variant='rect' height={370} />
+                            ) : (
+                              tokenInfo && (
+                                <Grid item xs={12} md={12} style={{ height: 450 }}>
+                                  <BitqueryTVChartContainer   symbol={`${networkName}:${tokenInfo.symbol.toUpperCase()}:${tokenInfo.address}`}  darkMode={isDark} />
+                                  
+                                  
+                                </Grid>
+                              )
+                            )}
+                          </Grid>
+                        </Fade>
+                      </Grid>
+                      <Hidden mdDown={true}>
+                        <TokenOrders
+                          networkName={networkName}
+                          baseAddress={baseAddress}
+                          quoteAddress={null}
+                          exchange={EXCHANGE.ALL}
+                          type={'token'}
+                        />
+                   </Hidden>
+                </TabPanel>
+
 
                 <TabPanel value="top-pairs">
 

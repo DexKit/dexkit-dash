@@ -49,10 +49,9 @@ const ApproveStep: React.FC<Props> = (props) => {
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   const isApprove = async () => {
-    console.log('Verificando');
 
-    if (tokenFrom.symbol === 'ETH') {
-      console.log('É ETH, pular para o próximo step');
+
+    if (tokenFrom.symbol.toUpperCase() === 'ETH') {
       return true;
     }
 
@@ -67,26 +66,17 @@ const ApproveStep: React.FC<Props> = (props) => {
       .callAsync();
     const isApproved = allowance.isGreaterThan(amountFn);
 
-    console.log('allowance:', allowance.toString());
-    console.log('amount:', amountFrom);
-    console.log('amountFn:', amountFn.toString());
-    console.log('token:', tokenFrom);
-    console.log('isApproved', isApproved);
-
     return isApproved;
   };
 
   useEffect(() => {
     if (step === Steps.APPROVE) {
-      console.log('START APPROVE');
-
+   
       isApprove()
         .then((value) => {
-          if (value) {
-            console.log('Elimina passo Approve pois já está aprovado');
+          if (value) {     
             onShifting(step);
           } else {
-            console.log('Fica para aprovar');
             onLoading(false);
           }
         })
@@ -114,28 +104,15 @@ const ApproveStep: React.FC<Props> = (props) => {
         throw new Error('Provider cannot be null');
       }
 
-      console.log('Provider', provider);
-      console.log('Token', tokenFrom);
-      console.log('Account', account);
-      console.log('AllowanceTarget', allowanceTarget);
-      console.log('Amount', amountFrom.toString());
-      console.log('AmountFn', amountFn.toString());
-      console.log(
-        'GasInfo Estimated Time Ms',
-        gasInfo.estimatedTimeMs.toString(),
-      );
-      console.log('GasInfo Price In Wei', gasInfo.gasPriceInWei.toString());
-
       const maxApproval = new BigNumber(2).pow(256).minus(1);
 
-      console.log('approve', tokenFrom);
+
 
       const erc20Token = new ERC20TokenContract(tokenFrom.address, provider);
       const tx = await erc20Token
         .approve(allowanceTarget, maxApproval)
         .sendTransactionAsync({from: account});
 
-      console.log('approve tx', tx);
 
       web3Wrapper
         .awaitTransactionSuccessAsync(tx)

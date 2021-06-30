@@ -3,6 +3,7 @@ import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {
   Box,
+  Fade,
   Table,
   TableBody,
   TableHead,
@@ -37,6 +38,7 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+  
 
   return (
     <>
@@ -48,14 +50,14 @@ const TokenOrdersTable: React.FC<Props> = ({
 
           <TableBody>
             {data &&
-              data.map((row, index) => (
-                <TableItem
-                  key={index}
-                  row={row}
-                  networkName={networkName}
-                  exchange={exchange}
-                  type={type}
-                />
+              data.map((row, index) => (            
+                  <TableItem
+                    key={index}
+                    row={row}
+                    networkName={networkName}
+                    exchange={exchange}
+                    type={type}
+                  />
               ))}
           </TableBody>
         </Table>

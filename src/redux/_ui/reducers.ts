@@ -24,7 +24,7 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(setAccount, (state, action) => {
       const account = action.payload;
-      const ind = state.accounts.findIndex(a => a === account); 
+      const ind = state.accounts.findIndex(a => a.toLowerCase() === account.toLowerCase()); 
       if(ind === -1){
         state.accounts.push(account);
       }

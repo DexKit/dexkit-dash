@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 // import {OrderData} from 'types/app';
-import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
@@ -139,7 +139,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
         <Box display='flex' alignItems='center'>
         <Tooltip title={messages['app.viewTx']} placement='top'>
           <a
-            href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.transaction?.hash}`}
+            href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
             target='_blank'>
             {networkName == EthereumNetwork.ethereum ? (
               <Avatar

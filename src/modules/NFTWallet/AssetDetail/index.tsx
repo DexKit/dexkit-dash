@@ -225,15 +225,6 @@ export const AssetDetail = () => {
                       </CardMedia>
                     </Card>
                   </Grid>
-                  <Hidden smDown>
-                    <Grid item xs={12}>
-                      <DetailAccordion
-                        asset={data}
-                        loading={loading}
-                        error={error}
-                      />
-                    </Grid>
-                  </Hidden>
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={8}>
@@ -268,7 +259,7 @@ export const AssetDetail = () => {
                       error={error}
                     />
                   </Grid>
-                  <Hidden smUp>
+               
                     <Grid item xs={12}>
                       <DetailAccordion
                         asset={data}
@@ -276,7 +267,7 @@ export const AssetDetail = () => {
                         error={error}
                       />
                     </Grid>
-                  </Hidden>
+          
                   <Grid item xs={12}>
                     <ListingAccordion
                       listings={data?.orders?.filter(

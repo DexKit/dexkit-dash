@@ -38,7 +38,7 @@ import { AssetChartTab } from './Tabs/AssetChartTab';
 import { AssetTableTab } from './Tabs/AssetTableTab';
 import { TradeHistoryTab } from './Tabs/TradeHistoryTab';
 import { TransferTab } from './Tabs/TransfersTab';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 type Params = {
   account: string;
@@ -70,6 +70,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   };
   const { loading, error, data } = useAllBalance(defaultAccount);
 
+  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount) {
@@ -94,6 +95,7 @@ const WalletTabs: React.FC<Props> = (props) => {
           active: { name: `${truncateAddress(defaultAccount)}`, hasCopy: account },
         }}
         title={{ name: 'Wallet' }}
+        shareButton={true}
       />
       <GridContainer>
         <Grid
@@ -123,10 +125,10 @@ const WalletTabs: React.FC<Props> = (props) => {
                   textColor="primary"
                   aria-label="wallet tabs"
                 >
-                  <Tab value="assets" icon={<AssessmentIcon />} label="Assets" />
-                  <Tab value="assets-chart" icon={<TimelineIcon />} label="Assets Chart" />
-                  <Tab value="transfers" icon={<SwapVertIcon />} label="Transfers" />
-                  <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label="Trade History" />
+                  <Tab value="assets" icon={<AssessmentIcon />} label={!isMobile ? "Assets" : ''} />
+                  <Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart": ''} />
+                  <Tab value="transfers" icon={<SwapVertIcon />} label={!isMobile ? "Transfers": ''} />
+                  <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
                 </Tabs>
               </AppBar>
               <TabPanel value="assets">

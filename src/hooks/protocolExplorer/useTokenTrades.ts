@@ -14,6 +14,7 @@ import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockc
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
 import { FilterContext } from 'providers/protocol/filterContext';
 import { getFilterValueById} from 'utils';
+import { useRefreshRate } from 'hooks/useRefreshRate';
 
 interface Props {
   baseAddress: string | null;
@@ -35,7 +36,7 @@ export const useTokenTrades = ({
   const from = getFilterValueById('from', filters);
   const to = getFilterValueById('to', filters);
   const tradeAmount = getFilterValueById('tradeAmount', filters);
-  console.log(tradeAmount);
+
   const {
     currentPage,
     rowsPerPage,
@@ -47,6 +48,7 @@ export const useTokenTrades = ({
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
   // const [totalRows, setTotalRows] = useState<number>();
+  const {doRefetch, nextRefresh, refreshState} = useRefreshRate(12)
 
   const {loading, error, data: dataFn} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
@@ -62,6 +64,10 @@ export const useTokenTrades = ({
     },
     pollInterval: POLL_INTERVAL,
   });
+
+
+
+
 
   useEffect(() => {
     if (dataFn && dataFn.ethereum?.dexTrades) {

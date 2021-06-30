@@ -212,7 +212,7 @@ const TokenPage: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid item xs={12} md={12} style={{marginTop: 10}}>
-            <BuySell tokenAddress={address} balances={balances} networkName={networkName}/>
+            {/*<BuySell tokenAddress={address} balances={balances} networkName={networkName}/>*/}
             </Grid>
 
             <GridContainer style={{marginTop: 2}}>

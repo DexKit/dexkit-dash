@@ -41,7 +41,6 @@ export const useWeb3 = () => {
     }
     if (web3State === Web3State.Done && web3  && !loadingChainId) {
       loadingChainId = true;
-      console.log('calling chainId')
       web3.eth.getChainId().then((n) => {
         dispatch(setChainId(n));
       }).finally(() =>  loadingChainId = false);
@@ -131,10 +130,13 @@ export const useWeb3 = () => {
     );
 
     pr.on("accountsChanged", async (accounts: string[]) => {
+      console.log("accountsChanged")
+      dispatch(setAccount(accounts[0]))
       dispatch(setEthAccount(accounts[0]));
     });
 
     pr.on("chainChanged", async (chainId: number) => {
+      console.log('chainChanged')
       dispatch(setChainId(chainId));
     });
 

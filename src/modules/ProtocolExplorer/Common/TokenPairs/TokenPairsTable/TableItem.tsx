@@ -64,7 +64,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
     <TableRow hover role='checkbox' tabIndex={-1}>
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
-          {!isMobile() && <TokenLogo token0={row.baseCurrency?.address||''} token1={row.quoteCurrency?.address||''}></TokenLogo>}
+          {!isMobile() && <TokenLogo token0={row.baseCurrency?.address||''} token1={row.quoteCurrency?.address||''} networkName={networkName}></TokenLogo>}
           <Link to={GET_PROTOCOL_PAIR_URL(networkName, exchange, row.smartContract?.address.address, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency), GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency))} component={RouterLink}>
             {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
           </Link>

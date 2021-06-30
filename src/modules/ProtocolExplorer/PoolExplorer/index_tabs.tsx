@@ -1,7 +1,7 @@
 import React, {PropsWithChildren, useContext, useMemo, useState} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 
-import {AppBar, Box,  Grid, Paper, Tab, Tabs, Typography} from '@material-ui/core';
+import {AppBar, Box,  Grid, Hidden, Paper, Tab, Tabs, Typography} from '@material-ui/core';
 import GridContainer from '../../../@crema/core/GridContainer';
 
 import {getNativeCoinWrappedAddressFromNetworkName, GET_EXCHANGE_FROM_URL, GET_URL_NAME_EXCHANGE, truncateAddress} from 'utils';
@@ -20,7 +20,6 @@ import PoolIcon from '@material-ui/icons/Pool';
 import { TokenSearch } from 'shared/components/TokenSearch';
 import { Token } from 'types/app';
 
-import { useTokenInfo } from 'hooks/useTokenInfo';
 
 import { AppContext } from '@crema';
 
@@ -71,7 +70,6 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
     if(!token){
       return;
     }
-    console.log(token.networkName);
     const net = token.networkName ?? EthereumNetwork.ethereum;
     const defaultExchange = net === EthereumNetwork.ethereum ? EXCHANGE.UNISWAP : EXCHANGE.PANCAKEV2;
     getPairContractFromExchange(token.address || token.symbol, getNativeCoinWrappedAddressFromNetworkName(net), net, defaultExchange)
@@ -82,8 +80,6 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           searchParams.set('network', net );
           searchParams.set('protocol', GET_URL_NAME_EXCHANGE(defaultExchange) );
           setExchange(defaultExchange)
-          console.log(net);
-
           setNetworkName(net);
 
 
@@ -115,6 +111,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                       <TokenLogo
                         token0={data?.baseCurrency?.address || ''}
                         token1={data?.quoteCurrency?.address || ''}
+                        networkName={networkName}
                       />
                       <Box
                         component='h3'
@@ -129,23 +126,28 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
   return (
     <>
       <Box pt={{xl: 4}}>
-        <Box display='flex' justifyContent={'space-between'}>
-        <PageTitle
-          breadcrumbs={{
-            history: [
-                    {
-                      url: `/protocol-explorer/pool-explorer/${address}`,
-                      name: 'Protocol Explorer',
-                    }
-                  ],
-            active: {name: 'Pool Explorer'},
-          }}
-          title={{name: 'Pool Explorer', component: title}}
-          subtitle={{name: truncateAddress(address), hasCopy: address}}
-          network={networkName}
-        />
-        <ProtocolSwitcher networkName={networkName as EthereumNetwork.bsc | EthereumNetwork.ethereum} protocol={exchange} onClick={onClick} /> 
-        </Box>
+         <GridContainer> 
+           <Grid item xs={12} md={6} >
+              <PageTitle
+                breadcrumbs={{
+                  history: [
+                          {
+                            url: `/protocol-explorer/pool-explorer/${address}`,
+                            name: 'Protocol Explorer',
+                          }
+                        ],
+                  active: {name: 'Pool Explorer'},
+                }}
+                title={{name: 'Pool Explorer', component: title}}
+                subtitle={{name: truncateAddress(address), hasCopy: address}}
+                network={networkName}
+                shareButton={true}
+              />
+         </Grid>
+         <Grid item xs={12} md={6} alignItems={'flex-end'} >
+          <ProtocolSwitcher networkName={networkName as EthereumNetwork.bsc | EthereumNetwork.ethereum} protocol={exchange} onClick={onClick} />
+          </Grid> 
+        </GridContainer>
         <GridContainer>
              <Grid item xs={12} md={12}>
               <Paper style={{padding: 10}}>
@@ -169,6 +171,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                   </AppBar>
                   <Grid item xs={12} md={12}>
                   <TabPanel value="overview">
+                  <GridContainer>
                   <Grid item xs={12} md={12}>
                         {error ? (
                         <ErrorView message={error.message} />
@@ -182,6 +185,26 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                         />
                         )}
                     </Grid>
+                    <Hidden mdDown={true}>
+                    <Grid item xs={12} md={12} style={{marginTop: '2px'}}>
+                      {data ? (
+                          <AMMPoolHistory
+                              networkName={networkName}
+                              address={address}
+                              exchange={exchange}
+                              baseCurrency={data.baseCurrency}
+                              quoteCurrency={data.quoteCurrency}
+                          />
+                          ) : 
+                          (<Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)}</Typography>)
+                        
+                        
+                        }
+                        </Grid>
+                     </Hidden>
+                     </GridContainer>
+
+
                   </TabPanel>
 
                 

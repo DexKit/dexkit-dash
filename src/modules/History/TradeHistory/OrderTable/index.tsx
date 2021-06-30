@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-
+import Fade from '@material-ui/core/Fade';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
 import { GetTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
@@ -49,7 +49,7 @@ const TransactionTable: React.FC<Props> = ({
           <TableBody className={classes.borderBottomClass}>
             {data &&
               data.map((row, index) => (
-                <TableItem row={row} networkName={networkName} key={index} />
+                    <TableItem row={row} networkName={networkName} key={index} /> 
               ))}
           </TableBody>
         </Table>

@@ -17,6 +17,7 @@ import TokenLogo from '../TokenLogo';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
 import NetworkSwitcher from '../NetworkSwitcher';
+import { ShareButton } from '../ShareButton';
 
 // import {truncateAddress} from 'utils';
 
@@ -30,17 +31,20 @@ interface Props {
   network?: EthereumNetwork;
   networkSwitcher?: {networkName: EthereumNetwork, onClick: (network: EthereumNetwork) => any}
   icon?: string;
+  shareButton?: boolean;
 }
 
-const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network, networkSwitcher}) => {
+const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network, networkSwitcher, shareButton}) => {
+  
   const useStyles = makeStyles((theme: CremaTheme) => ({
     breadcrumbs: {
       fontSize: '16px',
+      
       [theme.breakpoints.down('sm')]: {
-        fontSize: '15px',
+        fontSize: '14px',
       },
       [theme.breakpoints.down('xs')]: {
-        fontSize: '13px',
+        fontSize: '14px',
       },
     },
     boxTitle: {
@@ -52,20 +56,26 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
       fontSize: '24px',
       fontWeight: 600,
       [theme.breakpoints.down('sm')]: {
-        fontSize: '22px',
+        fontSize: '18px',
       },
       [theme.breakpoints.down('xs')]: {
-        fontSize: '20px',
+        fontSize: '14px',
       },
+    },
+    container: {
+      [theme.breakpoints.down('sm')]: {
+        marginTop: '5px'
+      },
+ 
     },
   }));
 
   const classes = useStyles();
 
   return (
-    <GridContainer>
+    <GridContainer className={classes.container}>
       <Grid item xs={12} md={12}>
-        {breadcrumbs && (
+        {  breadcrumbs && (
           <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
             {breadcrumbs.history.map((e) => (
               <Link
@@ -123,7 +133,7 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
 
           {title.component && title.component}
 
-          {subtitle && (
+          { subtitle && (
             <Typography className={classes.title} color='textPrimary'>
               &nbsp;-&nbsp;{subtitle.name}
               {subtitle.hasCopy !== undefined && (
@@ -133,7 +143,9 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
               )}
             </Typography>
           )}
+            {shareButton && <ShareButton/>}
         </Box>
+    
       </Grid>
     </GridContainer>
   );

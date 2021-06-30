@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import useFetch from 'use-http';
 
 const ENV = process.env.NODE_ENV;
-const API_ENV = ENV == 'development' ? 'rinkeby-api' : 'api';
+const API_ENV = ENV === 'development' ? 'api' : 'api';
 
 export const OPENSEA_FETCH_OPTIONS = {
   headers: {

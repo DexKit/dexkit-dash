@@ -14,8 +14,7 @@ import { EthereumNetwork, ThemeMode } from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 
 import ErrorView from 'modules/Common/ErrorView';
-import CoingeckoProfile from './CoingeckoProfile';
-import CoingeckoMarket from './CoingeckoMarket';
+
 import BuySell from './BuySell';
 
 import TotalBalance from 'shared/components/TotalBalance';
@@ -42,13 +41,16 @@ import InfoIcon from '@material-ui/icons/Info';
 import { TradeHistoryTab } from '../Wallet/Tabs/TradeHistoryTab';
 import { MyOrdersTab } from './Tabs/MyOrdersTab';
 import { InfoTab } from './Tabs/InfoTab';
+import { useTokenInfo } from 'hooks/useTokenInfo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-const TVChartContainer = React.lazy(
-  () => import('shared/components/chart/TvChart/tv_chart'),
-);
 
 const BinanceTVChartContainer = React.lazy(
   () => import('shared/components/chart/BinanceTVChart/tv_chart'),
+);
+
+const BitqueryTVChartContainer = React.lazy(
+  () => import('shared/components/chart/BitqueryTVChart/tv_chart'),
 );
 
 
@@ -114,6 +116,8 @@ const TokenTabsPage: React.FC<Props> = (props) => {
 
   const { data: balances } = useAllBalance(account);
 
+  const {tokenInfo} = useTokenInfo(address);
+
   const [chartSymbol, setChartSymbol] = useState<string>();
 
   const [token, setToken] = useState<Token>();
@@ -131,6 +135,8 @@ const TokenTabsPage: React.FC<Props> = (props) => {
 
   }
 
+  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
+
   const isFavorite = useMemo(() => {
     if (token) {
       return favoriteCoins.find(t =>
@@ -142,18 +148,18 @@ const TokenTabsPage: React.FC<Props> = (props) => {
 
 
   useEffect(() => {
-    if (data && data.symbol) {
+    if (tokenInfo && tokenInfo.symbol) {
       setToken({
         address: address,
-        name: data.name,
-        symbol: data.symbol.toUpperCase(),
+        name: tokenInfo.name,
+        symbol: tokenInfo.symbol.toUpperCase(),
         decimals: 0,
       });
       chartSource === ChartSource.DEX ?
-        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`)
-        : setChartSymbol(`${data.symbol?.toUpperCase()}USDT`);
+       setChartSymbol(`${networkName}:${tokenInfo.symbol?.toUpperCase()}:${tokenInfo.address}`)
+        : setChartSymbol(`${tokenInfo.symbol?.toUpperCase()}USDT`);
     }
-  }, [data]);
+  }, [tokenInfo]);
 
   const infoMyTakerOrders = useFetch(
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`);
@@ -176,14 +182,14 @@ const TokenTabsPage: React.FC<Props> = (props) => {
   const onSetChartSource = (event: React.ChangeEvent<{}>, newValue: number) => {
     if (newValue === ChartSource.Binance) {
       setChartSource(ChartSource.Binance)
-      if (data && data.symbol) {
-        setChartSymbol(`${data.symbol?.toUpperCase()}USDT`)
+      if (tokenInfo && tokenInfo.symbol) {
+        setChartSymbol(`${tokenInfo.symbol?.toUpperCase()}USDT`)
       }
     }
     if (newValue === ChartSource.DEX) {
       setChartSource(ChartSource.DEX)
-      if (data && data.symbol) {
-        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`)
+      if (tokenInfo && tokenInfo.symbol) {
+        setChartSymbol(`${networkName}:${tokenInfo.symbol?.toUpperCase()}:${tokenInfo.address}`)
       }
     }
 
@@ -195,12 +201,13 @@ const TokenTabsPage: React.FC<Props> = (props) => {
       <Box pt={{ xl: 4 }}>
         <Box className={classes.title}>
           <Box>
-            {data && (
+            {tokenInfo && (
               <PageTitle
-                title={{ name: data.name }}
+                title={{ name: tokenInfo.name }}
                 subtitle={{ name: truncateTokenAddress(address), hasCopy: address }}
                 icon={address}
                 network={networkName}
+                shareButton={true}
               />
             )}
           </Box>
@@ -241,20 +248,20 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                       textColor="primary"
                       aria-label="wallet tabs"
                     >
-                      <Tab value="trade" icon={<CompareArrowsIcon />} label="Trade" />   
-                      <Tab value="my-orders" icon={<ShoppingCartIcon/>} label={myOrders} />
-                      <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label="Trade History" />
-                      <Tab value="info" icon={<InfoIcon />} label="Info" />
+                      <Tab value="trade" icon={<CompareArrowsIcon />} label={!isMobile ? "Trade" : ''}/>   
+                      <Tab value="my-orders" icon={<ShoppingCartIcon/>} label={!isMobile ? myOrders : ''} />
+                      <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History": ''} />
+                      <Tab value="info" icon={<InfoIcon />} label={!isMobile ? "Info" : ''} />
                     </Tabs>
                   </AppBar>
                   <TabPanel value="trade">
                   <GridContainer>
                     <Grid item xs={12} md={5} style={{ marginTop: 10 }}>
-                      <BuySell tokenAddress={address} balances={balances} networkName={networkName} />
+                      <BuySell tokenAddress={address} balances={balances} networkName={networkName} tokenInfo={tokenInfo} />
                     </Grid>
                     <Grid item xs={12} md={7}>
                       <GridContainer>
-                        <Grid container xs={12} sm={12} md={6} style={{ padding: '0px' }} justify="flex-end" direction="row">
+                        <Grid item xs={12} sm={12} md={6} style={{ padding: '0px' }} justify="flex-end" direction="row">
                           <Tabs value={chartSource} onChange={onSetChartSource} aria-label="chart tabs" indicatorColor="primary">
                             <Tab label={<><Tooltip title={'Chart from Decentralized Exchanges'}><>DEX</></Tooltip> </>} {...a11yProps(0)} />
                             <Tab label={<><Tooltip title={'Chart from Binance Exchange'}><>Binance</></Tooltip> </>} {...a11yProps(1)} />
@@ -267,11 +274,13 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                             ) : (
                               <>
                                 <TabPanelChart value={chartSource} index={0}>
-                                  <TVChartContainer
+                                {/* <TVChartContainer
                                     symbol={chartSymbol}
                                     chainId={chainId}
                                     darkMode={isDark}
-                                  />
+                                 />*/}
+
+                                   <BitqueryTVChartContainer   symbol={chartSymbol}  darkMode={isDark} />
                                 </TabPanelChart>
                                 <TabPanelChart value={chartSource} index={1}>
                                   <BinanceTVChartContainer
@@ -295,7 +304,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                     <MyOrdersTab  address={address} networkName={networkName} />
                   </TabPanel>
                   <TabPanel value="trade-history">
-                      <TradeHistoryTab address={account} token={address} enableNetworkChips={false}/>
+                      <TradeHistoryTab address={account} token={address} enableNetworkChips={false} networkName={networkName}/>
                   </TabPanel>
 
                 </TabContext>

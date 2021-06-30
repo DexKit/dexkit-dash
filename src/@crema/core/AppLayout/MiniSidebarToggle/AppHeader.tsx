@@ -90,8 +90,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               onClick={onChangeNavStyle}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
-          </Hidden> */}
-            <LanguageSwitcher />
+          </Hidden> 
+            <LanguageSwitcher />*/}
             <ThemeModeSwitcher />
           {/*  <HeaderMessages />*/}
             <Notifications />

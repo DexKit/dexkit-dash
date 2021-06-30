@@ -28,10 +28,11 @@ interface Props {
   tokenAddress: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
+  tokenInfo?: Token;
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
-const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
+const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName, tokenInfo}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     muiTabsRoot: {
       position: 'relative',
@@ -121,27 +122,44 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
         }
 
         // tokenFrom and tokenTo cannot have the same condition for initialization (ie ETH || WETH)
-        if (_token?.symbol.toUpperCase() === 'ETH' || _token?.symbol.toUpperCase() === 'WETH') {
+        /*if (_token?.symbol.toUpperCase() === 'ETH' || _token?.symbol.toUpperCase() === 'WETH') {
           _token = select1.find((t) => t.symbol.toUpperCase() === 'KIT');
+        }*/
+        if(_token){
+          setTokenTo(_token);
+          return;
+        }  
+        // If token not known 
+        if(tokenInfo){
+          _token = select1.find(
+            (t) => t.address.toLowerCase() === tokenInfo.address.toLowerCase(),
+          );
+          if(!_token){
+            select1.push(tokenInfo);
+            setTokenTo(tokenInfo);
+          }
         }
 
-        setTokenTo(_token);
       }
     }
-  }, [select1, balances]);
+  }, [select1, balances, tokenInfo]);
 
   useEffect(() => {
-    if (tokenFrom === undefined) {
+    if (tokenFrom === undefined && select0.length) {
       const _token = select0.find(
-        (t) =>
-          t.symbol.toUpperCase() ===
-            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() ||
-          t.symbol.toUpperCase() ===
-            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
-              networkName,
-            ).toUpperCase(),
-      );
-      setTokenFrom(_token);
+        (t) => t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase());
+      if(_token){
+        setTokenFrom(_token);
+      }else{
+        const _token = select0.find(
+          (t) => t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+        );
+        if(_token){
+          setTokenFrom(_token);
+        }
+
+      }
+      
     }
   }, [select0]);
 
@@ -162,8 +180,9 @@ const BuySell: React.FC<Props> = ({tokenAddress, balances, networkName}) => {
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${token.networkName}/dashboard/token/${isNative ? token.symbol.toLowerCase() : token.address}`,
+              `/${token.networkName}/dashboard/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(token.networkName).toLowerCase()}`,
             );
+            setTokenTo(undefined);
           }
           setTokenFrom(token);
         }

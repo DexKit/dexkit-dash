@@ -7,9 +7,7 @@ import {
   LanguageCode,
   widget,
 } from '../charting_library/charting_library.min';
-import {TRADE_API_URL} from '../../../../utils/constants';
-import {ChainId} from 'types/blockchain';
-import BinanceAPI from '../services/api';
+import Datafeed from './api/datafeed'; 
 
 const ChartContainer = styled.div`
   position: relative;
@@ -19,12 +17,8 @@ const ChartContainer = styled.div`
 `;
 
 export interface ChartContainerProps {
-  chainId: ChainId;
   symbol: ChartingLibraryWidgetOptions['symbol'];
   interval: ChartingLibraryWidgetOptions['interval'];
-
-  // BEWARE: no trailing slash is expected in feed URL
-  datafeedUrl: string;
   libraryPath: ChartingLibraryWidgetOptions['library_path'];
   chartsStorageUrl: ChartingLibraryWidgetOptions['charts_storage_url'];
   chartsStorageApiVersion: ChartingLibraryWidgetOptions['charts_storage_api_version'];
@@ -57,11 +51,9 @@ export default class TVChartContainer extends React.PureComponent<
   ChartContainerState
 > {
   public static defaultProps: ChartContainerProps = {
-    chainId: 1,
-    symbol: 'WETH-DAI',
+    symbol: 'ethereum:KIT:0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
     interval: '60',
     containerId: 'tv_chart_container',
-    datafeedUrl: `${TRADE_API_URL(1)}/candles`,
     libraryPath: '/charting_library/',
     chartsStorageUrl: 'https://saveload.tradingview.com',
     chartsStorageApiVersion: '1.1',
@@ -83,12 +75,11 @@ export default class TVChartContainer extends React.PureComponent<
   public componentDidMount(): void {
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: this.props.symbol as string,
-      datafeed: new BinanceAPI({ debug: false }),
+      datafeed:  Datafeed ,
       interval: this.props.interval as ChartingLibraryWidgetOptions['interval'],
       container_id: this.props
         .containerId as ChartingLibraryWidgetOptions['container_id'],
       library_path: this.props.libraryPath as string,
-      timeframe: '3M',
       locale: getLanguageFromURL() || 'en',
       disabled_features: ['use_localstorage_for_settings', 'context_menus'],
       enabled_features: [],
