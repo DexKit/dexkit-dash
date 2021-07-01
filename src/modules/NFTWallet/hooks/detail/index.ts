@@ -1,68 +1,79 @@
-import {useCallback} from 'react';
+import axios from 'axios';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCallback, useState} from 'react';
 import useFetch from 'use-http';
-
-const ENV = process.env.NODE_ENV;
-const API_ENV = ENV == 'development' ? 'rinkeby-api' : 'api';
-
-export const OPENSEA_FETCH_OPTIONS = {
-  headers: {
-    'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY || '',
-  },
-};
-
-export const OPENSEA_ASSET_ENDPOINT = `https://${API_ENV}.opensea.io/api/v1/asset`;
-
-export const OPENSEA_ASSET_EVENTS_ENDPOINT = `https://${API_ENV}.opensea.io/api/v1/events`;
-
-export const OPENSEA_ASSET_ORDERS_ENDPOINT = `https://${API_ENV}.opensea.io/wyvern/v1/orders`;
-
-export const OPENSEA_TOKENS = `https://${API_ENV}.opensea.io/api/v1/tokens`;
-
-export function useAssetOrders() {
-  const {get, loading, data, error} = useFetch(
-    OPENSEA_ASSET_ORDERS_ENDPOINT,
-    OPENSEA_FETCH_OPTIONS,
-  );
-
-  const getOrders = useCallback(
-    (assetAddress: string, tokenId: string) => {
-      return get(
-        `?asset_contract_address=${assetAddress}&bundled=false&include_bundled=false&include_invalid=false&token_id=${tokenId}&limit=100&offset=0&order_by=created_date&order_direction=desc`,
-      );
-    },
-    [get],
-  );
-
-  return {getOrders, loading, data, error};
-}
+import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 
 export function useAssetEvents() {
-  const {get, data, loading, error} = useFetch(
-    OPENSEA_ASSET_EVENTS_ENDPOINT,
-    OPENSEA_FETCH_OPTIONS,
-  );
+  const {getProvider} = useWeb3();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const [data, setData] = useState<any>();
 
   const getEvents = useCallback(
-    (assetAddress: string, tokenId: string) => {
-      return get(`?asset_contract_address=${assetAddress}&token_id=${tokenId}`);
+    async (assetAddress: string, tokenId: string) => {
+      const provider = getProvider();
+      const chainId = await getChainId(provider);
+
+      const url = `https://${
+        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/events?asset_contract_address=${assetAddress}&token_id=${tokenId}`;
+
+      setLoading(true);
+
+      return axios
+        .get(url, {
+          headers: {
+            'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY,
+          },
+        })
+        .catch((reason) => setError(reason))
+        .then((response) => {
+          if (response) {
+            setData(response?.data);
+          }
+        })
+        .finally(() => setLoading(false));
     },
-    [get],
+    [getProvider],
   );
 
-  return {getEvents, data, loading, error};
+  return {getEvents, loading, data, error};
 }
 
 export function useAsset() {
-  const {get, loading, data, error} = useFetch(
-    OPENSEA_ASSET_ENDPOINT,
-    OPENSEA_FETCH_OPTIONS,
-  );
+  const {getProvider} = useWeb3();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const [data, setData] = useState<any>();
 
   const getAsset = useCallback(
-    (contractAddress: string, tokenId: string) => {
-      get(`/${contractAddress}/${tokenId}/`);
+    async (contractAddress: string, tokenId: string) => {
+      setError(undefined);
+      const provider = getProvider();
+      const chainId = await getChainId(provider);
+
+      const url = `https://${
+        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/`;
+
+      setLoading(true);
+
+      return axios
+        .get(url, {
+          headers: {
+            'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY,
+          },
+        })
+        .catch((reason) => setError(reason))
+        .then((response) => {
+          if (response) {
+            setData(response?.data);
+          }
+        })
+        .finally(() => setLoading(false));
     },
-    [get],
+    [getProvider],
   );
 
   return {getAsset, loading, data, error};

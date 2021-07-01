@@ -771,6 +771,7 @@
   "nfts.walletSearchPlaceholder": "Search...",
   "nfts.walletFilters": "Filters",
   "nfts.walletHasOffersCheck": "Has Offers",
+  "nfts.detail.errorWhileLoading": "An error occurred while loading data",
   "nfts.detail.detailContractAddress": "Contract Address",
   "nfts.detail.detailLabel": "Details",
   "nfts.detail.historicLabel": "Trading History",
@@ -826,5 +827,14 @@
   "nfts.wallet.transfer.walletAddress": "Wallet Address",
   "nfts.wallet.transfer.close": "Close",
   "nfts.wallet.transferViewTransaction": "View Transaction",
-  "nfts.wallet.makeOfferBalance": "Balance"
+  "nfts.wallet.makeOfferBalance": "Balance",
+  "nfts.detail.snackbar.offerSubmitted": "Your offer was submitted successfully",
+  "nfts.detail.snackbar.offerCanceled": "Your offer was canceled successfully",
+  "nfts.detail.snackbar.offerAccepted": "The offer was accepted successfully",
+  "nfts.detail.backdrop.pleaseSignTransaction": "Please, sign the transaction to continue",
+  "nfts.detail.backdrop.makingOffer": "Making offer",
+  "nfts.detail.backdrop.acceptingOffer": "Accepting offer",
+  "nfts.detail.backdrop.cancellingOffer": "Cancelling offer"
+  
+  
 }

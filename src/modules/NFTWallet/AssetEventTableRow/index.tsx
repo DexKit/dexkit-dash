@@ -7,6 +7,7 @@ import {
   Tooltip,
   Typography,
   makeStyles,
+  Link,
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
 import moment from 'moment';
@@ -18,6 +19,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
+
+import {Link as RouterLink} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -152,20 +155,24 @@ function AssetEventFrom(props: any) {
 
   if (getEventType(event) == EVENT_SALE) {
     return (
-      <>
+      <Link
+        component={RouterLink}
+        to={`/nfts/wallet/${event.seller?.user?.address}`}>
         {event.seller?.user
           ? event.seller?.user?.username
           : deriveUserFromAddr(event.seller?.user?.address)}
-      </>
+      </Link>
     );
   }
 
   return (
-    <>
+    <Link
+      component={RouterLink}
+      to={`/nfts/wallet/${event.from_account?.address}`}>
       {event.from_account?.user
         ? event.from_account?.user?.username
         : deriveUserFromAddr(event.from_account?.address)}
-    </>
+    </Link>
   );
 }
 
@@ -174,20 +181,24 @@ function AssetEventTo(props: any) {
 
   if (getEventType(event) == EVENT_SALE) {
     return (
-      <>
+      <Link
+        component={RouterLink}
+        to={`/nfts/wallet/${event.winner_account?.user?.address}`}>
         {event.winner_account?.user
           ? event.winner_account?.user?.username
           : deriveUserFromAddr(event.winner_account?.user?.address)}
-      </>
+      </Link>
     );
   }
 
   return (
-    <>
+    <Link
+      component={RouterLink}
+      to={`/nfts/wallet/${event.to_account?.address}`}>
       {event.to_account?.user?.username
         ? event.to_account?.user?.username
         : deriveUserFromAddr(event.to_account?.address)}
-    </>
+    </Link>
   );
 }
 
@@ -220,7 +231,11 @@ export default (props: Props) => {
       <TableCell>
         <AssetEventTo event={event} />
       </TableCell>
-      <TableCell>{moment(event?.created_date).fromNow()}</TableCell>
+      <TableCell>
+        {moment(event?.created_date)
+          .add(moment.duration({minutes: moment().utcOffset()}))
+          .fromNow()}
+      </TableCell>
     </TableRow>
   );
 };

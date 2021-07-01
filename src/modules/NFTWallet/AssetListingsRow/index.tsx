@@ -7,7 +7,6 @@ import {
   Tooltip,
   Typography,
   makeStyles,
-  Button,
 } from '@material-ui/core';
 import React from 'react';
 import moment from 'moment';
@@ -16,7 +15,9 @@ import {
   getPriceFromOrder,
   getUSDPriceFromOrder,
 } from '../utils';
-import IntlMessages from '@crema/utility/IntlMessages';
+
+import {Link as RouterLink} from 'react-router-dom';
+import {Link} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -58,11 +59,19 @@ export default (props: Props) => {
           <IntlMessages id='nfts.detail.listingBuy' />
         </Button> */}
       </TableCell>
-      <TableCell>{moment(listing?.created_date).fromNow()}</TableCell>
       <TableCell>
-        {listing.maker?.user?.username
-          ? listing.maker?.user?.username
-          : deriveUserFromAddr(listing?.maker?.address)}
+        {moment(listing?.created_date)
+          .add(moment.duration({minutes: moment().utcOffset()}))
+          .fromNow()}
+      </TableCell>
+      <TableCell>
+        <Link
+          component={RouterLink}
+          to={`/nfts/wallet/${listing?.maker?.address}`}>
+          {listing.maker?.user?.username
+            ? listing.maker?.user?.username
+            : deriveUserFromAddr(listing?.maker?.address)}
+        </Link>
       </TableCell>
     </TableRow>
   );

@@ -110,7 +110,6 @@ interface OfferParams {
   expiration: number;
   amount: number;
   tokenAddress: string;
-  quantity: number;
 }
 
 interface Props {
@@ -184,9 +183,8 @@ export default (props: Props) => {
       amount: parseFloat(amount),
       tokenAddress: selectedToken?.address || '',
       expiration,
-      quantity: parseInt(quantity),
     });
-  }, [amount, quantity, selectedToken, expiration]);
+  }, [amount, selectedToken, expiration]);
 
   const handleMaxBalance = useCallback(async () => {
     if (selectedToken && userAddress) {
@@ -274,7 +272,7 @@ export default (props: Props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               label='Quantity'
               size='medium'
@@ -287,7 +285,7 @@ export default (props: Props) => {
               ].toString()}
               fullWidth
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Grid alignItems='center' container spacing={2}>
               <Grid item xs={12} sm={4}>

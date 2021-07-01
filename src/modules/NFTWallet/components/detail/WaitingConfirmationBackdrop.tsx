@@ -38,19 +38,15 @@ export default (props: Props) => {
     <Backdrop open={open} className={classes.backdrop}>
       <Card>
         <CardContent>
-          <Grid
-            container
-            justify='center'
-            alignItems='center'
-            spacing={4}
-            direction='column'>
+          <Grid container justify='center' alignItems='center' spacing={4}>
             <Grid item>
-              <Typography variant='h5'>
-                <IntlMessages id='nfts.wallet.transfer.waitingBlockForConfirmation' />
-              </Typography>
+              <CircularProgress size={theme.spacing(10)} color='primary' />
             </Grid>
             <Grid item>
-              <CircularProgress size={theme.spacing(16)} color='primary' />
+              <Typography variant='h5'>Transferring NFT</Typography>
+              <Typography variant='body1' color='textSecondary'>
+                <IntlMessages id='nfts.wallet.transfer.waitingBlockForConfirmation' />
+              </Typography>
             </Grid>
           </Grid>
         </CardContent>

@@ -43,8 +43,6 @@ import _ from 'lodash';
 import CollectionsList from '../CollectionsList';
 import {truncateTokenAddress} from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
-import {useIntersect} from 'hooks/useIntersect';
-import {FormatListBulletedOutlined} from '@material-ui/icons';
 import {getWindowUrl} from 'utils/browser';
 import {useWeb3} from 'hooks/useWeb3';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';

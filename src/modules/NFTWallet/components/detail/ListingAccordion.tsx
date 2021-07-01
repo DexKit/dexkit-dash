@@ -11,7 +11,6 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import React, {useEffect} from 'react';
-import {useAssetOrders} from 'modules/NFTWallet/hooks/detail';
 
 interface Props {
   listings: any;

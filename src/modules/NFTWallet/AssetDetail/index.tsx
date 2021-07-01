@@ -25,7 +25,7 @@ import {truncateAddress} from 'utils';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {Skeleton, Alert} from '@material-ui/lab';
 import {getWindowUrl} from 'utils/browser';
-import {useAsset, useAssetEvents, useAssetOrders} from '../hooks/detail';
+import {useAsset} from '../hooks/detail';
 import HistoricAccordion from '../components/detail/HistoricAccordion';
 import ListingAccordion from '../components/detail/ListingAccordion';
 import DetailAccordion from '../components/detail/DetailAccordion';
@@ -42,6 +42,7 @@ import WaitingConfirmationBackdrop from '../components/detail/WaitingConfirmatio
 import BlockConfirmedBackdrop from '../components/detail/BlockConfirmedBackdrop';
 import {isAssetOwner} from '../utils';
 import {getOpenSeaPort} from 'utils/opensea';
+import {Error as ErrorIcon} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
@@ -152,6 +153,10 @@ export const AssetDetail = () => {
     setErrorMessage('');
   }, []);
 
+  const handleTryAgain = useCallback(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <>
       <TransferAssetModal
@@ -166,109 +171,125 @@ export const AssetDetail = () => {
         transaction={transaction}
         onClose={handleBlockConfirmedClose}
       />
-      <Box pt={{xs: 8}}>
-        <Box mb={2}>
-          <Breadcrumbs>
-            <Link color='inherit' component={RouterLink} to='/'>
-              <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-            </Link>
-            <Link color='inherit'>
-              <IntlMessages id='nfts.walletBreadcrumbAssets' />
-            </Link>
-            <Link color='inherit'>
-              {loading ? (
-                <Skeleton width={theme.spacing(40)} />
-              ) : (
-                data?.collection?.name || ''
-              )}
-            </Link>
-            <Link
-              component={RouterLink}
-              color='inherit'
-              to={`/nfts/assets/${address}/${token}`}>
-              {loading ? <Skeleton width={theme.spacing(70)} /> : data?.name}
-            </Link>
-          </Breadcrumbs>
+      {error ? (
+        <Box py={8}>
+          <Grid
+            container
+            justify='center'
+            alignItems='center'
+            alignContent='center'
+            spacing={4}>
+            <Grid item>
+              <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+            </Grid>
+            <Grid item>
+              <Typography gutterBottom variant='h5'>
+                <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+              </Typography>
+              <Button
+                onClick={handleTryAgain}
+                size='small'
+                variant='contained'
+                color='primary'>
+                <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
-        <Grid container spacing={2}>
-          {errorMessage ? (
+      ) : (
+        <Box pt={{xs: 8}}>
+          <Box mb={2}>
+            <Breadcrumbs>
+              <Link color='inherit' component={RouterLink} to='/'>
+                <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+              </Link>
+              <Link color='inherit'>
+                <IntlMessages id='nfts.walletBreadcrumbAssets' />
+              </Link>
+              <Link color='inherit'>
+                {loading ? (
+                  <Skeleton width={theme.spacing(40)} />
+                ) : (
+                  data?.collection?.name || ''
+                )}
+              </Link>
+              <Link
+                component={RouterLink}
+                color='inherit'
+                to={`/nfts/assets/${address}/${token}`}>
+                {loading ? <Skeleton width={theme.spacing(70)} /> : data?.name}
+              </Link>
+            </Breadcrumbs>
+          </Box>
+          <Grid container spacing={2}>
+            {errorMessage ? (
+              <Grid item xs={12}>
+                <Alert severity='error' onClose={handleAlertClose}>
+                  {errorMessage}
+                </Alert>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
-              <Alert severity='error' onClose={handleAlertClose}>
-                {errorMessage}
-              </Alert>
-            </Grid>
-          ) : null}
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Card>
-                      {loading ? (
-                        <Skeleton
-                          className={classes.assetImage}
-                          height='100%'
-                        />
-                      ) : null}
-                      <CardMedia>
-                        <img
-                          style={{
-                            backgroundColor: `#${
-                              data?.background_color
-                                ? data?.background_color
-                                : 'fff'
-                            }`,
-                          }}
-                          src={data?.image_url}
-                          className={classes.assetImage}
-                        />
-                      </CardMedia>
-                    </Card>
-                  </Grid>
-                  <Hidden smDown>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <DetailAccordion
-                        asset={data}
-                        loading={loading}
-                        error={error}
-                      />
-                    </Grid>
-                  </Hidden>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Box mb={2}>
-                      <Grid container spacing={2}>
-                        <Grid item>
-                          <CopyAddressButton
-                            copyText={`${getWindowUrl()}/nfts/assets/${
-                              data?.asset_contract?.address
-                            }/${data?.token_id}`}
+                      <Card>
+                        {loading ? (
+                          <Skeleton
+                            className={classes.assetImage}
+                            height='100%'
                           />
-                        </Grid>
-                        {isAssetOwner(data, userAccountAddress || '') ? (
-                          <Grid item>
-                            <Button
-                              onClick={handleShowTransferDialog}
-                              variant='outlined'
-                              size='small'
-                              startIcon={<SwapHorizIcon />}
-                              color='primary'>
-                              <IntlMessages id='nfts.detail.transfer' />
-                            </Button>
-                          </Grid>
                         ) : null}
-                      </Grid>
-                    </Box>
-                    <DescriptionCard
-                      asset={data}
-                      loading={loading}
-                      error={error}
-                    />
+                        <CardMedia>
+                          <img
+                            style={{
+                              backgroundColor: `#${
+                                data?.background_color
+                                  ? data?.background_color
+                                  : 'fff'
+                              }`,
+                            }}
+                            src={data?.image_url}
+                            className={classes.assetImage}
+                          />
+                        </CardMedia>
+                      </Card>
+                    </Grid>
                   </Grid>
-                  <Hidden smUp>
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Box mb={2}>
+                        <Grid container spacing={2}>
+                          <Grid item>
+                            <CopyAddressButton
+                              copyText={`${getWindowUrl()}/nfts/assets/${
+                                data?.asset_contract?.address
+                              }/${data?.token_id}`}
+                            />
+                          </Grid>
+                          {isAssetOwner(data, userAccountAddress || '') ? (
+                            <Grid item>
+                              <Button
+                                onClick={handleShowTransferDialog}
+                                variant='outlined'
+                                size='small'
+                                startIcon={<SwapHorizIcon />}
+                                color='primary'>
+                                <IntlMessages id='nfts.detail.transfer' />
+                              </Button>
+                            </Grid>
+                          ) : null}
+                        </Grid>
+                      </Box>
+                      <DescriptionCard
+                        asset={data}
+                        loading={loading}
+                        error={error}
+                      />
+                    </Grid>
                     <Grid item xs={12}>
                       <DetailAccordion
                         asset={data}
@@ -276,35 +297,35 @@ export const AssetDetail = () => {
                         error={error}
                       />
                     </Grid>
-                  </Hidden>
-                  <Grid item xs={12}>
-                    <ListingAccordion
-                      listings={data?.orders?.filter(
-                        (order: any) => order.side == ORDER_LISTING,
-                      )}
-                      loading={loading}
-                      error={error}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <OffersAccordion
-                      asset={data}
-                      offers={data?.orders?.filter(
-                        (order: any) => order.side == ORDER_OFFER,
-                      )}
-                      loading={loading}
-                      error={error}
-                    />
+                    <Grid item xs={12}>
+                      <ListingAccordion
+                        listings={data?.orders?.filter(
+                          (order: any) => order.side == ORDER_LISTING,
+                        )}
+                        loading={loading}
+                        error={error}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <OffersAccordion
+                        asset={data}
+                        offers={data?.orders?.filter(
+                          (order: any) => order.side == ORDER_OFFER,
+                        )}
+                        loading={loading}
+                        error={error}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={12} sm={12}>
+              <HistoricAccordion asset={data} loading={loading} error={error} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <HistoricAccordion asset={data} loading={loading} error={error} />
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </>
   );
 };
