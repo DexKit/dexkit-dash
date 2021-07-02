@@ -74,27 +74,20 @@ export const AboutDialog = () => {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
-          <Tooltip title={'Info about this page'}>
+        <Tooltip title={'Info about this page'}>
           <InfoIcon/>
           </Tooltip>
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          DexKit Affiliate Program
+         Favorites
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            When you have 200 KIT, the fees collected by DexKit will go routed to your address when you use the affiliate link.
+              This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token. 
+
           </Typography>
-          <Typography gutterBottom>
-             Check last fees collected by your affiliate link and total collected rewards. DexKit assumes that all trades done by this address are only related to the affiliate fees, if you trade using this address it will count as well as collected fee.
-          </Typography>
-          <Typography gutterBottom>
-             Additional fields are accepted, you can for instance append to your link the inputCurrency and outputCurrency to change the default tokens that show up.  
-          </Typography>
-          <Typography gutterBottom>
-             Example: <Link href={'https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51'}  target={'_blank'}>https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51 </Link>  
-          </Typography>
+        
         </DialogContent>
       </Dialog>
     </div>

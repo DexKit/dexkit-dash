@@ -6,7 +6,6 @@ import {grey} from '@material-ui/core/colors';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
-import {Tooltip} from '@material-ui/core';
 import { useIntl } from 'react-intl';
 
 interface Props {

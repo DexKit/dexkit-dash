@@ -6,6 +6,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts, EXCHANGE} from 'shared/constants/AppEnums';
+import { IS_AMM } from 'utils/protocol';
 
 interface TableHeadingProps {
   exchange: EXCHANGE;
@@ -85,8 +86,13 @@ const TableHeading: React.FC<TableHeadingProps> = (props) => {
           <TableCell align='left' className={classes.tableCellRoot}>
             <IntlMessages id='app.exchange' />
           </TableCell>
-      
       )}
+      
+      {IS_AMM(props.exchange)  && (      
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.pool' />
+        </TableCell>
+    )}
     </TableRow>
   );
 };

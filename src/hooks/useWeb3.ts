@@ -34,9 +34,17 @@ export const useWeb3 = () => {
       // subscribeProvider(provider);
       loadingAccount = true;
       web3.eth.getAccounts().then((a) => {
-        dispatch(setAccount(a[0]))
+        const uiAccount = {
+          address: a[0],
+          label: a[0]
+        }
+
+        dispatch(setAccount(uiAccount))
         dispatch(setEthAccount(a[0]));
-        dispatch(addAccounts(a))
+        dispatch(addAccounts(
+          a.map(ac=> {return {address: ac, label: ac}}
+          )))
+
       }).finally(() => loadingAccount = false);
     }
     if (web3State === Web3State.Done && web3  && !loadingChainId) {
@@ -75,8 +83,8 @@ export const useWeb3 = () => {
   const onSetDefaultAccount = (index: number) => {
     const web3 = getWeb3();
     if (web3 && accounts) {
-      web3.eth.defaultAccount = accounts[index];
-      dispatch(setEthAccount(accounts[index]));
+      web3.eth.defaultAccount = accounts[index].address;
+      dispatch(setEthAccount(accounts[index].address));
     }
   }
 
@@ -130,8 +138,11 @@ export const useWeb3 = () => {
     );
 
     pr.on("accountsChanged", async (accounts: string[]) => {
-      console.log("accountsChanged")
-      dispatch(setAccount(accounts[0]))
+      const uiAccount = {
+        label: accounts[0],
+        address: accounts[0]
+      }
+      dispatch(setAccount(uiAccount))
       dispatch(setEthAccount(accounts[0]));
     });
 

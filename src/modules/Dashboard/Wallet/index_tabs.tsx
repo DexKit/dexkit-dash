@@ -16,7 +16,7 @@ import { useWeb3 } from 'hooks/useWeb3';
 import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
 
-import { truncateAddress } from 'utils';
+import {  truncateIsAddress } from 'utils';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import { Web3Wrapper } from '@0x/web3-wrapper';
@@ -39,6 +39,10 @@ import { AssetTableTab } from './Tabs/AssetTableTab';
 import { TradeHistoryTab } from './Tabs/TradeHistoryTab';
 import { TransferTab } from './Tabs/TransfersTab';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import { Fonts } from 'shared/constants/AppEnums';
+import { AboutDialog } from './AboutDialog';
 
 type Params = {
   account: string;
@@ -56,6 +60,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   const { theme } = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(theme);
   const defaultAccount = useDefaultAccount();
+  const defaultLabel = useDefaultLabelAccount();
   const dispatch = useDispatch()
   const { account: web3Account } = useWeb3();
   const account = defaultAccount || web3Account;
@@ -75,7 +80,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   useEffect(() => {
     if (urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount) {
       history.push(`/dashboard/wallet/${urlAccount}`)
-      dispatch(setDefaultAccount(urlAccount))
+      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}))
     }
     if (!urlAccount && defaultAccount) {
       history.push(`/dashboard/wallet/${defaultAccount}`)
@@ -83,6 +88,19 @@ const WalletTabs: React.FC<Props> = (props) => {
 
   }, [urlAccount, defaultAccount])
 
+  const titleComponent = (
+    <Box display='flex' alignItems='center' mt={1}>
+         <AccountBalanceWalletIcon color={'primary'} fontSize={'large'}/>
+      <Box
+        component='h3'
+        color='text.primary'
+        fontWeight={Fonts.BOLD}
+        ml={2}>
+        Wallet
+      </Box>
+      <AboutDialog />
+    </Box>
+  )
 
   return (
     <Box pt={{ xl: 4 }}>
@@ -92,9 +110,9 @@ const WalletTabs: React.FC<Props> = (props) => {
             { url: '/', name: 'Dashboard' },
             { url: '/dashboard/wallet', name: 'Wallet' },
           ],
-          active: { name: `${truncateAddress(defaultAccount)}`, hasCopy: account },
+          active: { name: `${truncateIsAddress(defaultLabel)}`, hasCopy: account },
         }}
-        title={{ name: 'Wallet' }}
+        title={{ name: 'Wallet', component: titleComponent }}
         shareButton={true}
       />
       <GridContainer>
@@ -105,7 +123,7 @@ const WalletTabs: React.FC<Props> = (props) => {
           alignItems="center"
         >
           <Grid item xs={12} md={12}>
-            {error ? (
+            {(error && !data) ? (
               <ErrorView message={error.message} />
             ) : (
               <TotalBalance balances={data} loading={loading} />

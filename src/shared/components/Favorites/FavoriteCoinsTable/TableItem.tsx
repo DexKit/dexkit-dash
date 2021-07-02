@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: 40,
     height: 40,
     padding: 12,
+    backgroundColor: 'transparent',
     [theme.breakpoints.up('xl')]: {
       width: 50,
       height: 50,
@@ -107,7 +108,7 @@ const TableItem: React.FC<TableItemProps> = ({row, marketData, type}) => {
         className={clsx(classes.tableCell, classes.whitespaceNowrap)}>
         <Box display='flex'>
           <Box mr={{xs: 3, xl: 5}}>
-            {row.image.thumb ? (
+            {row?.image?.thumb ? (
               <Avatar className={classes.avatar}>
                 <img src={row.image.thumb} alt='' />
               </Avatar>

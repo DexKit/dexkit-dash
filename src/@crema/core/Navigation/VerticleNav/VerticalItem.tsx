@@ -7,6 +7,7 @@ import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
+import { Web3Wrapper } from '@0x/web3-wrapper';
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -26,13 +27,36 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
     if (item.url) return item.url;
     return '/';
   };
+  const isActive = () => {
+      if(item.url === location.pathname){
+        return true;
+      }
+      if(item.url && location.pathname){
+        // parsing the url's here
+        const parsedPath = item.url.split('/').filter(e=> e);
+        const currentPath = location.pathname.split('/').filter(e=> e);
+        let counter = 0;
+        parsedPath.forEach((p)=> {
+              if(currentPath.includes(p)){
+                counter = counter +1;
+          }});
+          // NOTE: We are assuming that if field have at least 2 match's we can consider it activate
+          if(counter > 1){
+            return true
+          }
+      }
+      return false;
+  
+  }
+
+
   return (
     <ListItem
       button
       to={getUrl()}
       component={NavLink}
       className={clsx(classes.navItem, 'nav-item', {
-        active: item.url === location.pathname,
+        active: isActive(),
       })}>
       {item.icon && (
         <Box component='span' mr={6}>

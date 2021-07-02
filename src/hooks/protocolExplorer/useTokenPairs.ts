@@ -12,6 +12,7 @@ import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
+import { getLast24HoursDate } from 'utils/time_utils';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -30,7 +31,7 @@ export const useTokenPairs = ({baseAddress, exchange, networkName}: Props) => {
   } = usePagination();
 
   const [data, setData] = useState<GetTokenPairs_ethereum_dexTrades[] | any[]>();
-  const [yesterday, setYesterday] = useState<Date>(new Date(new Date().getTime() - 24 * 3600 * 1000));
+  const [yesterday, setYesterday] = useState<Date>(getLast24HoursDate());
   
   const {loading, error, data: dataFn} = useQuery<GetTokenPairs, GetTokenPairsVariables>(BITQUERY_TOKEN_PAIRS, {
     variables: {

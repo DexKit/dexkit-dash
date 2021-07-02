@@ -86,7 +86,7 @@ const NoWallet: React.FC<ComingSoonProps> = () => {
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
             display={'flex'}>
-             <Typography  variant="h4"> Or add manually accounts at <Link to={'/dashboard/wallet/manage-accounts'} component={RouterLink}>Manage Accounts</Link></Typography>
+             <Typography  variant="h4">  <Link to={'/dashboard/wallet/manage-accounts'} component={RouterLink}>Or manually add accounts</Link></Typography>
             {/*<img
               src={require('assets/images/errorPageImages/connect-wallet.png')}
               alt='Connect Wallet'

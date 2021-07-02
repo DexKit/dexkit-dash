@@ -73,27 +73,19 @@ export const AboutDialog = () => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
-          <Tooltip title={'Info about this page'}>
-          <InfoIcon/>
-          </Tooltip>
-      </Button>
+      <Tooltip title={'Info about this page'}>
+        <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
+            <InfoIcon/>
+        </Button>
+      </Tooltip>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          DexKit Affiliate Program
+          Manage APPs page
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            When you have 200 KIT, the fees collected by DexKit will go routed to your address when you use the affiliate link.
-          </Typography>
-          <Typography gutterBottom>
-             Check last fees collected by your affiliate link and total collected rewards. DexKit assumes that all trades done by this address are only related to the affiliate fees, if you trade using this address it will count as well as collected fee.
-          </Typography>
-          <Typography gutterBottom>
-             Additional fields are accepted, you can for instance append to your link the inputCurrency and outputCurrency to change the default tokens that show up.  
-          </Typography>
-          <Typography gutterBottom>
-             Example: <Link href={'https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51'}  target={'_blank'}>https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51 </Link>  
+          The Manage section is where KITcrew members that hold at least 500 KIT can deploy their own whitelabel versions of DEXKIT apps! KIT holders can customize their own version of the DEXKIT aggregator, NFT Marketplace, and Exchange and collect fees from the platform. The wizard allows users to customize the features of the apps and host them on any wordpress enabled site!
+
           </Typography>
         </DialogContent>
       </Dialog>

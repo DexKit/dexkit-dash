@@ -1,7 +1,7 @@
 import React, {PropsWithChildren, useContext, useMemo, useState} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 
-import {AppBar, Box,  Grid, Hidden, Paper, Tab, Tabs, Typography} from '@material-ui/core';
+import {AppBar, Box,  Grid, Hidden, Paper, Tab, Tabs, Typography, useMediaQuery} from '@material-ui/core';
 import GridContainer from '../../../@crema/core/GridContainer';
 
 import {getNativeCoinWrappedAddressFromNetworkName, GET_EXCHANGE_FROM_URL, GET_URL_NAME_EXCHANGE, truncateAddress} from 'utils';
@@ -20,7 +20,7 @@ import PoolIcon from '@material-ui/icons/Pool';
 import { TokenSearch } from 'shared/components/TokenSearch';
 import { Token } from 'types/app';
 
-
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import { AppContext } from '@crema';
 
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -30,6 +30,8 @@ import ProtocolSwitcher from 'shared/components/ProtocolSwitcher';
 import { getPairContractFromExchange } from 'services/graphql/bitquery/protocol';
 import TokenLogo from 'shared/components/TokenLogo';
 import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
+import TokenPairs from '../Common/TokenPairs';
+import LoadingTable from 'modules/Common/LoadingTable';
 
 type Params = {
   address: string;
@@ -64,7 +66,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
   };
 
   const baseAddress = data && data?.baseCurrency?.address
-
+  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
 
   const onClickSearch = (token: Token) => {
     if(!token){
@@ -139,7 +141,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                   active: {name: 'Pool Explorer'},
                 }}
                 title={{name: 'Pool Explorer', component: title}}
-                subtitle={{name: truncateAddress(address), hasCopy: address}}
+                subtitle={{name: !isMobile ? truncateAddress(address) : '', hasCopy: address}}
                 network={networkName}
                 shareButton={true}
               />
@@ -166,6 +168,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                       aria-label="wallet tabs"
                     >
                       <Tab value="overview" icon={<RemoveRedEyeIcon />} label="Overview" />   
+                      <Tab value="top-pools" icon={<EmojiEventsIcon />} label="Top Pools" />
                       <Tab value="pool-history" icon={<PoolIcon />} label="Pool History" />
                     </Tabs>
                   </AppBar>
@@ -196,7 +199,9 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                               quoteCurrency={data.quoteCurrency}
                           />
                           ) : 
-                          (<Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)}</Typography>)
+                          ( loading ?   <LoadingTable columns={7} rows={10} />  :
+                                     
+                          <Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)}</Typography>)
                         
                         
                         }
@@ -205,6 +210,18 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                      </GridContainer>
 
 
+                  </TabPanel>
+
+                  <TabPanel value="top-pools">
+                  {data ? <TokenPairs
+                            baseAddress={data.baseCurrency.address}
+                            exchange={exchange}
+                            networkName={networkName}
+                      /> :
+                      (loading ?   <LoadingTable columns={7} rows={10} />  :
+                      <Typography component='h1' color={'primary'}>No data available for this token on {GET_EXCHANGE_NAME(exchange)}</Typography>)
+                    
+                    }
                   </TabPanel>
 
                 
@@ -218,7 +235,8 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
                             quoteCurrency={data.quoteCurrency}
                         />
                         ) : 
-                        (<Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)}</Typography>)
+                        (loading ?   <LoadingTable columns={7} rows={10} />  :
+                        <Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)}</Typography>)
                       
                       
                       }

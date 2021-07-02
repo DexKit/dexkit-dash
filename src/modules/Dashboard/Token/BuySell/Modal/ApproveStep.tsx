@@ -137,7 +137,7 @@ const ApproveStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to approve {tokenFrom.symbol}?
+        Would you like to approve {tokenFrom.symbol.toUpperCase()}?
       </Typography>
       <Button
         style={{margin: 0}}

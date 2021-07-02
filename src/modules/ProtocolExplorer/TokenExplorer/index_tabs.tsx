@@ -104,7 +104,7 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
             active: { name: 'Token Explorer' },
           }}
           title={{ name: tokenInfo?.name || '' }}
-          subtitle={{ name: truncateAddress(baseAddress), hasCopy: baseAddress }}
+          subtitle={{ name: !isMobile ? truncateAddress(baseAddress) : '', hasCopy: baseAddress }}
           icon={baseAddress}
           network={networkName}
           shareButton={true}

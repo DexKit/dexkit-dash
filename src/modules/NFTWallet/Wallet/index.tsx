@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Card,
@@ -15,24 +15,24 @@ import {
   Collapse,
   IconButton,
   InputAdornment,
-  useScrollTrigger,
   CircularProgress,
   Checkbox,
   FormControlLabel,
   Button,
+  Tooltip,
 } from '@material-ui/core';
 
 import AssetCard from '../AssetCard';
-import {useHistory, useParams} from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import AssetsSkeleton from '../AssetsSkeleton';
 import PageTitle from 'shared/components/PageTitle';
-import {useIntl} from 'react-intl';
+import { useIntl } from 'react-intl';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
-import useFetch from 'use-http';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import CollectionListSkeleton from '../CollectionListSkeleton';
 import useIsMounted from 'hooks/useIsMounted';
-import CollectionsCard from '../CollectionsList';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
@@ -41,15 +41,17 @@ import ErrorIcon from '@material-ui/icons/Error';
 
 import _ from 'lodash';
 import CollectionsList from '../CollectionsList';
-import {truncateTokenAddress} from 'utils';
+import { truncateIsAddress, truncateTokenAddress } from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
-import {useIntersect} from 'hooks/useIntersect';
-import {FormatListBulletedOutlined} from '@material-ui/icons';
-import {getWindowUrl} from 'utils/browser';
-import {useWeb3} from 'hooks/useWeb3';
-import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
+import { useWeb3 } from 'hooks/useWeb3';
+import { getChainId, RINKEBY_NETWORK } from 'utils/opensea';
 import axios from 'axios';
-
+import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import { Fonts } from 'shared/constants/AppEnums';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import { ShareButton } from 'shared/components/ShareButton';
+import { AboutDialog } from './AboutDialog';
 interface AssetsQuery {
   owner: string;
   offset: number;
@@ -59,45 +61,41 @@ interface AssetsQuery {
 }
 
 const useMyAssets = () => {
-  const {getProvider} = useWeb3();
+  const { getProvider } = useWeb3();
 
   const getAssets = useCallback(
     async (query: AssetsQuery) => {
       const provider = getProvider();
       const chainId = await getChainId(provider);
 
-      const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-      }.opensea.io/api/v1/assets?owner=${query.owner}&order_by=${
-        query.sortBy
-      }&order_direction=desc&offset=${query.offset}&limit=${
-        query.limit
-      }&collection=${query.collection || ''}`;
+      const url = `https://${chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+        }.opensea.io/api/v1/assets?owner=${query.owner}&order_by=${query.sortBy
+        }&order_direction=desc&offset=${query.offset}&limit=${query.limit
+        }&collection=${query.collection || ''}`;
 
       return axios.get(url, {
-        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
+        headers: { 'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY },
       });
     },
     [getProvider],
   );
 
-  return {getAssets};
+  return { getAssets };
 };
 
 function useCollections() {
-  const {getProvider} = useWeb3();
+  const { getProvider } = useWeb3();
 
   const getCollections = useCallback(
     async (owner: string, query: string) => {
       const provider = getProvider();
       const chainId = await getChainId(provider);
 
-      const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-      }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
+      const url = `https://${chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+        }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
 
       return axios.get(url, {
-        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
+        headers: { 'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY },
       });
     },
     [getProvider],
@@ -126,7 +124,7 @@ interface ListParams {
   query: string;
 }
 
-const isWalletOwner = (address: string, other?: string) => address == other;
+const isWalletOwner = (address: string, other?: string) => address?.toLowerCase() === other?.toLowerCase();
 
 const useStyles = makeStyles((theme) => ({
   collectionsTitle: {
@@ -150,13 +148,14 @@ interface AssetFilter {
 export default () => {
   const theme = useTheme();
   const userAddress = useDefaultAccount();
+  const userLabel = useDefaultLabelAccount();
   const isUpXs = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
   const history = useHistory();
-  const {messages} = useIntl();
-  const {address}: RouteParams = useParams();
-  const {getAssets} = useMyAssets();
-  const {getCollections} = useCollections();
+  const { messages } = useIntl();
+  const { address }: RouteParams = useParams();
+  const { getAssets } = useMyAssets();
+  const { getCollections } = useCollections();
 
   const [collectionLoading, setCollectionLoading] = useState(false);
 
@@ -376,8 +375,46 @@ export default () => {
     }
   }, [userAddress]);
 
+  const [copyText, setCopyText] = useState('Copy to clipboard')
+  const handleTooltipOpen = () => {
+    setCopyText('Copied')
+    setTimeout(() => {
+      setCopyText('Copy to clipboard')
+    }, 1000)
+  }
+
+
+  const titleComponent = (
+    <Box display='flex' alignItems='center' mt={1}>
+      <StorefrontIcon color={'primary'} fontSize={'large'} />
+      <Box
+        component='h3'
+        color='text.primary'
+        fontWeight={Fonts.BOLD}
+        ml={2}>
+        {isWalletOwner(address, userAddress)
+          ? `${messages['nfts.walletTitle'].toString()}: ${truncateIsAddress(userLabel)}`
+          : isUpXs
+            ? address
+            : truncateTokenAddress(address)}
+      </Box>
+      <Tooltip title={copyText}>
+        <IconButton aria-label="copy-clip" color="primary">
+          <FileCopyIcon
+            onClick={() => {
+              handleTooltipOpen();
+              navigator.clipboard.writeText(address);
+              document.execCommand('copy');
+            }} />
+        </IconButton>
+      </Tooltip>
+      <AboutDialog />
+      <ShareButton />
+    </Box>
+  )
+
   return (
-    <Box pt={{xs: 8}}>
+    <Box pt={{ xs: 8 }}>
       <PageTitle
         breadcrumbs={{
           history: [
@@ -392,11 +429,12 @@ export default () => {
         }}
         title={{
           hasCopy: address,
+          component: titleComponent,
           name: isWalletOwner(address, userAddress)
-            ? `${messages['nfts.walletTitle'].toString()}: ${truncateTokenAddress(address)}`
+            ? `${messages['nfts.walletTitle'].toString()}: ${truncateIsAddress(userLabel)}`
             : isUpXs
-            ? address
-            : truncateTokenAddress(address),
+              ? address
+              : truncateTokenAddress(address),
         }}
       />
       <>
@@ -508,7 +546,7 @@ export default () => {
                   justify='space-between'
                   spacing={2}>
                   <Grid item>
-                    <Box pt={{xs: 2}} textAlign={!isUpXs ? 'center' : null}>
+                    <Box pt={{ xs: 2 }} textAlign={!isUpXs ? 'center' : null}>
                       <Typography variant='h5'>
                         {assets?.length || 0}{' '}
                         {(assets || []).length > 1 ? (
@@ -554,7 +592,7 @@ export default () => {
                     alignContent='center'
                     spacing={4}>
                     <Grid item>
-                      <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                      <ErrorIcon style={{ fontSize: theme.spacing(8) }} />
                     </Grid>
                     <Grid item>
                       <Typography gutterBottom variant='h5'>

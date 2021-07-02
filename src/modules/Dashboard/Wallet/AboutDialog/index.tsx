@@ -73,27 +73,34 @@ export const AboutDialog = () => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
-          <Tooltip title={'Info about this page'}>
-          <InfoIcon/>
-          </Tooltip>
-      </Button>
+      <Tooltip title={'Info about this page'}>
+        <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
+            <InfoIcon/>
+        </Button>
+      </Tooltip>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          DexKit Affiliate Program
+          Wallet 
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            When you have 200 KIT, the fees collected by DexKit will go routed to your address when you use the affiliate link.
+          The wallet page is where you can look at your total balances for your connected wallets across the Ethereum and Binance Smart Chain networks. 
+
           </Typography>
           <Typography gutterBottom>
-             Check last fees collected by your affiliate link and total collected rewards. DexKit assumes that all trades done by this address are only related to the affiliate fees, if you trade using this address it will count as well as collected fee.
+          You can also see any Defi assets that you are holding as well. 
+
           </Typography>
           <Typography gutterBottom>
-             Additional fields are accepted, you can for instance append to your link the inputCurrency and outputCurrency to change the default tokens that show up.  
+          The “Asset Chart” shows you your holdings over a period of time, 
           </Typography>
           <Typography gutterBottom>
-             Example: <Link href={'https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51'}  target={'_blank'}>https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51 </Link>  
+          “Transfers” shows you all transfers of tokens in and out of your wallet. 
+
+          </Typography>
+          <Typography gutterBottom>
+            “Trade History” shows buys and sells of tokens from your wallet. All assets can be filtered by network.
+
           </Typography>
         </DialogContent>
       </Dialog>

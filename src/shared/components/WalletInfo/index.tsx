@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
-import {makeStyles, Button, IconButton, Tooltip, Chip, Link, Hidden} from '@material-ui/core';
+import {makeStyles, Button, IconButton, Tooltip, Chip,  Hidden} from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -16,9 +16,9 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useBalance} from 'hooks/balance/useBalance';
 import {tokenAmountInUnits} from 'utils/tokens';
 import {Web3State} from 'types/blockchain';
-import {isMobile} from 'web3modal';
+
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import { truncateAddress } from 'utils/text';
+import { truncateAddress, truncateIsAddress } from 'utils/text';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -27,10 +27,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import { setDefaultAccount } from 'redux/_ui/actions';
 import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
-import {Link as RouterLink} from 'react-router-dom';
+
+import { UIAccount } from 'redux/_ui/reducers';
+import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
 
 const WalletInfo = (props: any) => {
-  const {themeMode} = useContext<AppContextPropsType>(AppContext);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -53,7 +54,8 @@ const WalletInfo = (props: any) => {
     onCloseWeb3,
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const connected  = web3Account === defaultAccount;
+  const defaultAccountLabel = useDefaultLabelAccount();
+  const connected  = web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
   const accounts = useSelector<AppState, AppState['ui']['accounts']>(state => state.ui.accounts);
   const dispatch = useDispatch();
 
@@ -78,35 +80,17 @@ const WalletInfo = (props: any) => {
     ethBalanceValue = filteredBalances[0].value;
   }
 
-  const onSetDefaultAccount = (a: string) => {
+  const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
     if(pathname && pathname.indexOf('dashboard/wallet') === 1){
       // This is need because it was not changing the url and causing loop on update
-      history.push(`/dashboard/wallet/${a}`);
+      history.push(`/dashboard/wallet/${a.address}`);
       dispatch(setDefaultAccount(a));
     }else{
       dispatch(setDefaultAccount(a));
     }
   
   }
-
-  /*const onConnectWallet = () => {
-    connectWeb3().then((w: Web3)=>{
-      w.eth.getAccounts().then(console.log);
-    
-      // setIsWeb3(true);
-    })
-  }*/
-
-  // const getUserAvatar = () => {
-  //   if (user && user.displayName) {
-  //     return user.displayName.charAt(0).toUpperCase();
-  //   }
-  //   if (user && user.email) {
-  //     return user.email.charAt(0).toUpperCase();
-  //   }
-  // };
-
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {
       crUserInfo: {
@@ -185,7 +169,7 @@ const WalletInfo = (props: any) => {
               alignItems='center'
               justifyContent='space-between'>
               <Box mb={0} className={clsx(classes.userName)}>
-                {truncateAddress(defaultAccount)}
+                {truncateIsAddress(defaultAccountLabel)}
                 <Tooltip title={connected ? 'Wallet Connected' : 'Wallet Not Connected' }>
                       <IconButton aria-label="connected" style={{ color: connected ? green[500] : grey[500] , paddingLeft: '5px'}} size="small">
                       {connected ? <FiberManualRecordIcon /> : <RadioButtonUncheckedIcon/>}
@@ -210,9 +194,9 @@ const WalletInfo = (props: any) => {
                   onClose={handleClose}>
                   <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
                   {notConnected && <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>}
-                  {accounts.filter(a=> a !== defaultAccount).map(a => 
-                    <MenuItem onClick={()=> onSetDefaultAccount(a)}>{truncateAddress(a)}
-                   {a === web3Account &&  <Tooltip title={'Wallet Connected'}>
+                  {accounts.filter(a=> a.address.toLowerCase() !== defaultAccount?.toLowerCase()).map(a => 
+                    <MenuItem onClick={()=> onSetDefaultAccount(a)}>{truncateIsAddress(a.label) || truncateAddress(a.address)}
+                   {a.address.toLowerCase() === web3Account?.toLowerCase() &&  <Tooltip title={'Wallet Connected'}>
                       <IconButton aria-label="connected" style={{ color:green[500]}} size="small">
                            <FiberManualRecordIcon />
                       </IconButton>
@@ -237,23 +221,7 @@ const WalletInfo = (props: any) => {
           </Box>
         </Box>
       )}
-      {/*(web3State !== Web3State.Done && !defaultAccount) && (
-        <Box display='flex' alignItems='center' justifyContent='center'>
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={onConnectWeb3}
-            endIcon={<AccountBalanceWalletIcon />}>
-            {web3State === Web3State.Connecting
-              ? isMobile()
-                ? 'Connecting...'
-                : 'Connecting... Check Wallet'
-              : isMobile()
-              ? 'Connect'
-              : 'Connect Wallet'}
-          </Button>
-        </Box>
-            )*/}
+  
      {   !defaultAccount && (
         <Box display='flex' alignItems='center' justifyContent='center'>
           <Button

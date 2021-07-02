@@ -96,26 +96,21 @@ const Transak: React.FC<Props> = (props) => {
     [transakClient],
   );
 
-  useEffect(() => {
-    if (account == undefined) {
-      setTransakInstance(undefined);
-    }
-  }, [account]);
+
 
   useEffect(() => {
-    if (transakClient == undefined && account != null) {
-      console.log('new transak');
+    if (!transakClient) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
         defaultCryptoCurrency: 'KIT',
-        walletAddress: account, // Your customer wallet address
+        walletAddress: account ?? '', // Your customer wallet address
         themeColor: '000000', // App theme color in hex
         fiatCurrency: 'USD',
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field
-        widgetHeight: '550px',
+        widgetHeight: '600px',
         widgetWidth: '450px',
       });
 
@@ -138,7 +133,7 @@ const Transak: React.FC<Props> = (props) => {
       onClick={(e: any) => onBuy()}
       size='small'
       disableElevation
-      disabled={transakClient == null}
+      disabled={!transakClient}
       {...props}
       className={classes.btnPrimary}>
       <IconContainer style={{width: '26px', height: '26px'}}>

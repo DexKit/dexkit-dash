@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {useQuery} from '@apollo/client';
+import {NetworkStatus, useQuery} from '@apollo/client';
 import usePagination from 'hooks/usePagination';
 import {
   GetTokenTrades,
@@ -15,6 +15,8 @@ import { EthereumNetwork } from '../../../__generated__/globalTypes';
 import { FilterContext } from 'providers/protocol/filterContext';
 import { getFilterValueById} from 'utils';
 import { useRefreshRate } from 'hooks/useRefreshRate';
+import { getLast24HoursDate } from 'utils/time_utils';
+import useInterval from 'hooks/useInterval';
 
 interface Props {
   baseAddress: string | null;
@@ -29,13 +31,28 @@ export const useTokenTrades = ({
   networkName,
 }: Props) => {
   const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
+
+  const [toDate, setTo] = useState(getLast24HoursDate())
+  const [seconds, setSeconds] = useState(0);
   const {
     filters
   } = useContext(FilterContext);
 
   const from = getFilterValueById('from', filters);
-  const to = getFilterValueById('to', filters);
+  const toFilter = getFilterValueById('to', filters);
   const tradeAmount = getFilterValueById('tradeAmount', filters);
+   // TODO: investigate 
+  useInterval( () => {
+    if(!toFilter){
+      setTo(new Date())
+    }
+     
+  }, POLL_INTERVAL, false)
+
+  useInterval(()=> {
+    setSeconds(seconds +1)
+  }, 1000)
+  const to = toFilter || toDate;
 
   const {
     currentPage,
@@ -47,10 +64,10 @@ export const useTokenTrades = ({
   } = usePagination();
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
-  // const [totalRows, setTotalRows] = useState<number>();
-  const {doRefetch, nextRefresh, refreshState} = useRefreshRate(12)
 
-  const {loading, error, data: dataFn} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
+  console.log(rowsPerPage);
+  console.log(skipRows);
+  const {loading, error, data: dataFn, networkStatus} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
       network:  networkName,
       exchangeName: GET_EXCHANGE_NAME(exchange) == '' ? undefined : GET_EXCHANGE_NAME(exchange),
@@ -64,7 +81,12 @@ export const useTokenTrades = ({
     },
     pollInterval: POLL_INTERVAL,
   });
+  useEffect(()=> {
+   if(networkStatus === NetworkStatus.ready){
+     setSeconds(0)
+   }
 
+  },[networkStatus])
 
 
 
@@ -96,5 +118,7 @@ export const useTokenTrades = ({
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
+    nextRefresh: (seconds / (POLL_INTERVAL/1000)) * 100,
+    seconds,
   };
 };

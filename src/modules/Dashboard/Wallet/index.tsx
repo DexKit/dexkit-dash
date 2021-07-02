@@ -71,7 +71,7 @@ const Wallet: React.FC<Props> = (props) => {
   useEffect(() => {
     if(urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount){
       history.push(`/dashboard/wallet/${urlAccount}`)
-      dispatch(setDefaultAccount(urlAccount))
+      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}))
     }
     if(!urlAccount && defaultAccount){
       history.push(`/dashboard/wallet/${defaultAccount}`)

@@ -81,11 +81,11 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       });
 
       if (
-        (((tokenFrom.symbol === 'ETH' && tokenTo.symbol === 'WETH') ||
-          (tokenFrom.symbol === 'WETH' && tokenTo.symbol === 'ETH')) &&
+        (((tokenFrom.symbol.toUpperCase() === 'ETH' && tokenTo.symbol.toUpperCase() === 'WETH') ||
+          (tokenFrom.symbol.toUpperCase() === 'WETH' && tokenTo.symbol.toUpperCase() === 'ETH')) &&
           networkName === EthereumNetwork.ethereum) ||
-        (((tokenFrom.symbol === 'BNB' && tokenTo.symbol === 'WBNB') ||
-          (tokenFrom.symbol === 'WBNB' && tokenTo.symbol === 'BNB')) &&
+        (((tokenFrom.symbol.toUpperCase() === 'BNB' && tokenTo.symbol.toUpperCase() === 'WBNB') ||
+          (tokenFrom.symbol.toUpperCase() === 'WBNB' && tokenTo.symbol.toUpperCase() === 'BNB')) &&
           networkName === EthereumNetwork.bsc)
       ) {
         setIsConvert(true);
@@ -126,10 +126,10 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     setCurrentStepIndex(nextStepIndex);
 
     if (nextStepIndex < steps.length) {
-      console.log('next has next step');
+   
       setCurrentStep(steps[nextStepIndex]);
     } else {
-      console.log('next done');
+   
       setCurrentStep(Steps.DONE);
     }
 
@@ -138,11 +138,11 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
   const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
     if (hasNext) {
-      console.log('next is not a error');
+     
 
       handleNextWithDelay();
     } else {
-      console.log('next is an error');
+ 
       setError(errorMesage);
       setCurrentStep(Steps.ERROR);
       setLoading(false);

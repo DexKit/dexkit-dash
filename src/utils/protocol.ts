@@ -10,12 +10,22 @@ import {
   SUSHISWAP_INFO_API_URL,
 } from 'shared/constants/AppConst';
 
-type dataProtocolPair = {
-  address?: string;
-  contract?: string;
-  baseToken: Token;
-  quoteToken: Token;
-};
+
+export const IS_AMM  = (exchange: EXCHANGE) => {
+     switch (exchange) {
+       case EXCHANGE.PANCAKEV2:
+         return true;
+       case EXCHANGE.SUSHISWAP:
+         return true;
+       case EXCHANGE.UNISWAP:
+         return true;
+       default:
+        return false;
+     }
+
+
+}
+
 
 export const GET_PROTOCOL_PAIR_URL = (
   network: EthereumNetwork,
@@ -31,6 +41,7 @@ export const GET_PROTOCOL_PAIR_URL = (
       return `/protocol-explorer/pair-explorer/${baseAddress}-${quoteAddress}?network=${network}`;
   }
 };
+
 
 export const GET_PROTOCOL_TOKEN_URL = (
   network: EthereumNetwork,
@@ -108,4 +119,12 @@ export const GET_URL_NAME_EXCHANGE = (exchange: EXCHANGE) => {
     default:
       return EXCHANGE.ALL;
   }
+};
+
+export const GET_PROTOCOL_POOL_URL = (
+  network: EthereumNetwork,
+  exchange: EXCHANGE,
+  address: string | null | undefined,
+) => {
+    return `/protocol-explorer/pool-explorer/${address}?network=${network}&protocol=${GET_URL_NAME_EXCHANGE(exchange)}`;
 };

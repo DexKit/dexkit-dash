@@ -1,17 +1,13 @@
 import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import BigNumber from 'bignumber.js';
 import {Typography} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {fromTokenUnitAmount} from '@0x/utils';
+
 // import {useStyles} from './index.style';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
-import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
@@ -108,7 +104,7 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       let txHash: string = '';
 
-      if (tokenFrom.symbol === 'ETH') {
+      if (tokenFrom.symbol.toUpperCase() === 'ETH') {
         await wethToken
           .deposit()
           .sendTransactionAsync({
@@ -135,7 +131,6 @@ const ConvertStep: React.FC<Props> = (props) => {
           });
       }
 
-      console.log('convert tx', txHash);
 
       if (txHash) {
         web3Wrapper

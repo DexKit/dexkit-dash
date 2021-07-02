@@ -39,14 +39,14 @@ const EVENT_TRANSFER = 'transfer';
 const EVENT_SALE = 'sale';
 
 function getEventType(event: any) {
-  let is_transfer_event = event.event_type == 'transfer';
-  let is_created_event = event.event_type == 'created';
-  let is_offer_event = event.event_type == 'offer_entered';
-  let is_sale_event = event.event_type == 'successful';
+  let is_transfer_event = event.event_type === 'transfer';
+  let is_created_event = event.event_type === 'created';
+  let is_offer_event = event.event_type === 'offer_entered';
+  let is_sale_event = event.event_type === 'successful';
 
-  let is_from_null_address = event.from_account?.address == NULL_ADDRESS;
+  let is_from_null_address = event.from_account?.address === NULL_ADDRESS;
 
-  let is_to_owner = event.to_account?.address == event.asset.owner.address;
+  let is_to_owner = event.to_account?.address === event.asset.owner.address;
   let has_starting_price = event.starting_price != null;
 
   if (is_from_null_address && is_transfer_event) {

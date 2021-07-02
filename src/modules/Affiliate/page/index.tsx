@@ -19,13 +19,14 @@ import { useTokenBalancesAffiliate } from 'hooks/affiliate/useTokenBalances';
 import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { CremaTheme } from 'types/AppContextPropsType';
-import { AboutDialog } from '../aboutDialog';
+import { AboutDialog } from '../AboutDialog';
 import CheckIcon from '@material-ui/icons/Check';
 import { green, red } from '@material-ui/core/colors';
 import {Link } from '@material-ui/core';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { Fonts } from 'shared/constants/AppEnums';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -77,10 +78,14 @@ const AffiliatePage = () => {
     <>
       <Box pt={{xl: 4}}>
         <Box mb={2} display={'flex'} alignItems={'center'}>
-            <GroupIcon color={'primary'} fontSize="large" style={{marginRight: '4px'}}/>
-            <Typography variant='h4' color='textPrimary'>
-                Affiliate Program 
-              </Typography>
+            <GroupIcon color={'primary'} fontSize="large"/>
+            <Box
+              component='h3'
+              color='text.primary'
+              fontWeight={Fonts.BOLD}
+              ml={2}>
+              Affiliate Program
+            </Box>
               <AboutDialog/>
           </Box>
         <GridContainer>

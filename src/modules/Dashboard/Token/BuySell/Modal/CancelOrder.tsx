@@ -53,7 +53,6 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
       setLoading(false);
       setDone(false);
       setError(undefined);
-      console.log('cancel', order);
     }
   }, [open]);
 

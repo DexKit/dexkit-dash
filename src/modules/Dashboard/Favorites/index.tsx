@@ -8,7 +8,9 @@ import {useIntl} from 'react-intl';
 import { useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import FavoriteCoinsTable from './FavoriteCoinsTable';
-
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import { AboutDialog } from './AboutDialog';
+import { Fonts } from 'shared/constants/AppEnums';
 
 const Favorites = () => {
   const {messages} = useIntl();
@@ -18,6 +20,19 @@ const Favorites = () => {
   
   return (
     <Box pt={{xl: 4}}>
+    
+    <Box display='flex' alignItems='center' mt={1} mb={2}>
+         <FavoriteIcon color={'primary'} fontSize={'large'}/>
+      <Box
+        component='h3'
+        color='text.primary'
+        fontWeight={Fonts.BOLD}
+        ml={2}>
+        Favorites
+      </Box>
+      <AboutDialog />
+    </Box>
+  
       <AppCard
         height='1'
         contentStyle={{paddingLeft: 0, paddingRight: 0}}

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useChainId} from 'hooks/useChainId';
 import {BalanceCoins} from 'types/models/Crypto';
-import {ETHERSCAN_API_URL, ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import { ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {Box, Avatar, Tooltip, Fade, Link, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
@@ -11,6 +11,7 @@ import CoinsInfo from './CoinsInfo';
 import LoadingInfo from './LoadingInfo';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
+import { FavoriteButton } from 'shared/components/FavoriteButton';
 interface Props {
   data?: any;
   loading: boolean;
@@ -86,6 +87,7 @@ const Info: React.FC<Props> = (props) => {
                         mr={2}>
                         {data.baseCurrency?.symbol}/{data.quoteCurrency?.symbol}
                       </Box>
+                      {data?.baseCurrency && <FavoriteButton token={data?.baseCurrency as any}/>}
                     </Box>
                     <Box display='flex'>
                       <Box mr={3}>

@@ -12,6 +12,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 import { Token } from 'types/app';
+import { FavoriteButton } from 'shared/components/FavoriteButton';
 interface Props {
   data?: any;
   token: Token;
@@ -85,8 +86,10 @@ const InfoToken: React.FC<Props> = (props) => {
                         fontSize={20}
                         mr={2}>
                           
-                        {token?.symbol?.toUpperCase()}/USD
-                        
+                        {token?.symbol?.toUpperCase()}/USD              
+                      </Box>
+                      <Box>
+                        <FavoriteButton token={token}/>
                       </Box>
                     </Box>
                     <Box display='flex'>

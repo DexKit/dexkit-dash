@@ -1,13 +1,18 @@
 import { Token } from "types/app";
 import { createReducer } from "@reduxjs/toolkit"
-import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin, setDefaultAccount } from "./actions"
+import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin, setDefaultAccount, setAccountLabel } from "./actions"
 import { CoinDetailCoinGecko } from "types/coingecko";
 
 export type FavoriteCoin = Token & CoinDetailCoinGecko
 
+export type UIAccount = {
+  address: string;
+  label: string;
+}
+
 export interface UIState {
-    readonly account?: string;
-    readonly accounts: string[];
+    readonly account?: UIAccount;
+    readonly accounts: UIAccount[];
     readonly favoriteCoins: FavoriteCoin[];
 }
 
@@ -24,14 +29,21 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(setAccount, (state, action) => {
       const account = action.payload;
-      const ind = state.accounts.findIndex(a => a.toLowerCase() === account.toLowerCase()); 
+      const ind = state.accounts.findIndex(a => a.address.toLowerCase() === account.address.toLowerCase()); 
       if(ind === -1){
         state.accounts.push(account);
       }
     })
+    .addCase(setAccountLabel, (state, action) => {
+      const account = action.payload;
+      const ind = state.accounts.findIndex(a => a.address.toLowerCase() === account.address.toLowerCase()); 
+      if(ind !== -1){
+        state.accounts[ind] = account
+      }
+    })
     .addCase(setDefaultAccount, (state, action) => {
       const account = action.payload;
-      const ind = state.accounts.findIndex(a => a === account); 
+      const ind = state.accounts.findIndex(a => a.address.toLowerCase() === account.address.toLowerCase()); 
       if(ind === -1){
         state.accounts.unshift(account);
       }else{
@@ -41,7 +53,7 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(removeAccount, (state, action) => {
       const account = action.payload;
-      const ind = state.accounts.findIndex(a => a === account); 
+      const ind = state.accounts.findIndex(a => a.address.toLowerCase() === account.address.toLowerCase()); 
       if(ind !== -1){
         state.accounts.splice(ind, 1);
       }
@@ -49,7 +61,7 @@ export default createReducer(initialUIState, (builder) =>
     .addCase(addAccounts, (state, action) => {
       const accounts = action.payload;
       accounts.forEach(acc => {
-        const ind = state.accounts.findIndex(a => a === acc); 
+        const ind = state.accounts.findIndex(a => a.address.toLowerCase() === acc.address.toLowerCase()); 
         if(ind === -1){
           state.accounts.push(acc);
         }

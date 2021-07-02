@@ -1,7 +1,7 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
-import {Box, Fade, Hidden, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, CircularProgress, Fade, Hidden, Paper, Toolbar, Tooltip, Typography} from '@material-ui/core';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
@@ -33,41 +33,11 @@ const TokenOrders: React.FC<Props> = (props) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
+    nextRefresh,
+    seconds,
   } = useTokenTrades({baseAddress, quoteAddress, exchange, networkName});
 
   return (
-    // <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} height={1} clone>
-    //   <AppCard contentStyle={{paddingLeft: 0, paddingRight: 0,}} title={messages['app.tradeHistory']}
-
-    /* TODO Time filters
-      action={
-        (<Box>
-          <TextField
-            id="datetime-local"
-            label="From"
-            type="datetime-local" 
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            id="datetime-local"
-            label="To"
-            type="datetime-local" 
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-        />
-        </Box>
-      
-        )
-
-      }*/
-
-    // >
-    <Fade in={true} timeout={1000}>
       <Paper className={classes.paper}>
         <Toolbar className={classes.toolbar}>
           <Box
@@ -89,6 +59,13 @@ const TokenOrders: React.FC<Props> = (props) => {
               alignItems={'center'}>
               <FilterList />
               <FilterMenu />
+              <Tooltip title={`Last update ${seconds} s `}>
+                <CircularProgress
+                  size={20}
+                  variant='determinate'
+                  value={nextRefresh}
+                />
+              </Tooltip>
             </Box>
           </Hidden>
         </Toolbar>
@@ -111,7 +88,6 @@ const TokenOrders: React.FC<Props> = (props) => {
           />
         )}
       </Paper>
-    </Fade>
     // </AppCard>
     // </Box>
   );

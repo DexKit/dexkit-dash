@@ -6,7 +6,6 @@ import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -46,7 +45,6 @@ const MarketForm: React.FC<Props> = (props) => {
   const {
     chainId,
     account,
-    tokenAddress,
     networkName,
     balances,
     select0,
@@ -296,14 +294,13 @@ const MarketForm: React.FC<Props> = (props) => {
   // disabled = true;
   if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
-    disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
   } else if (networkName !== network) {
     errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
-      network,
+      networkName,
     )} Network in your wallet`;
   }
   const {usdFormatter} = useUSDFormatter();
@@ -376,7 +373,7 @@ const MarketForm: React.FC<Props> = (props) => {
               md={6}>
               <SelectToken
                 id={'marketSel0'}
-                label={select0 && 'Your Coins'}
+                label={web3State === Web3State.Done ? 'Your Coins' : ''}
                 limitCoins={select0 ? true : false}
                 selected={tokenFrom}
                 options={web3State === Web3State.Done ? select0 : select1}

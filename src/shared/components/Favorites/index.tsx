@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, Tooltip, Typography } from '@material-ui/core';
 import { useFavoriteCoinsData } from 'hooks/useFavoriteCoinsData';
 import LoadingTable from 'modules/Common/LoadingTable';
 
@@ -18,7 +18,7 @@ const key = 'dexkit.favorite.expanded';
 const FavoritesAccordion = (props: Props) => {
   const {messages} = useIntl();
 
-  const {data, loading} = useFavoriteCoinsData()
+  const {data, loading, seconds, nextRefresh} = useFavoriteCoinsData()
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(state => state.ui.favoriteCoins);
   const onChangeFavorite = (event: object, expanded: boolean) => {
     const currentState = localStorage.getItem(key) === 'false' ? false : true;
@@ -26,7 +26,6 @@ const FavoritesAccordion = (props: Props) => {
 
   }
 
-  
   return (
     <Accordion defaultExpanded={localStorage.getItem(key) === 'true' ? true : false} onChange={onChangeFavorite}>
     <AccordionSummary expandIcon={<ExpandMoreIcon />} >
@@ -38,6 +37,18 @@ const FavoritesAccordion = (props: Props) => {
     <AccordionDetails style={{display: 'block'}}>
       <Box p={2}>
         {(favoriteCoins.length > 0 && loading) &&  <LoadingTable columns={5} rows={10} /> }
+        {(!loading && favoriteCoins.length) &&
+        <Box display={'flex'} justifyContent={'flex-end'}> 
+            <Tooltip title={`Last update ${seconds} s `}>
+                    <CircularProgress
+                      size={20}
+                      variant='determinate'
+                      value={nextRefresh}
+                    />
+                  </Tooltip>
+        
+        
+         </Box>}
         {!loading && <FavoriteCoinsTable favoriteCoins={favoriteCoins} marketData={data} {...props} />} 
       </Box>
     </AccordionDetails>

@@ -336,7 +336,6 @@ const LimitForm: React.FC<Props> = (props) => {
 
  if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
-    disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
@@ -467,7 +466,7 @@ const LimitForm: React.FC<Props> = (props) => {
                   <SelectToken
                     id={'marketSel0'}
                     selected={tokenFrom}
-                    label={select0 && 'Your Coins'}
+                    label={web3State === Web3State.Done ? 'Your Coins' : ''}
                     limitCoins={select0 ? true : false}
                     options={web3State === Web3State.Done ? select0 : select1}
                     disabled={disabled}

@@ -43,7 +43,7 @@ const TokenOrdersTable: React.FC<Props> = ({
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader>
+        <Table stickyHeader >
           <TableHead>
             <TableHeading type={type} exchange={exchange} />
           </TableHead>

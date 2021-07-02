@@ -42,7 +42,7 @@ export const AssetChartTab = (props: Props) => {
         <Fade in={true} timeout={1000}>
           {loading && loadingChart ? (
             <Skeleton variant='rect' width='100%' height={350} />
-          ) : errorChart ? (
+          ) : (errorChart && !dataChart.length) ? (
             <ErrorView message={errorChart.message} />
           ) : (
             <AppCard

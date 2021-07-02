@@ -86,7 +86,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
             display={'flex'}>
-             <Typography  variant="h4"> This page needs that you use a connected wallet, please connect your wallet or switch to a connected account</Typography>
+             <Typography  variant="h4"> To use this feature you need to connect your wallet</Typography>
             {/*<img
               src={require('assets/images/errorPageImages/connect-wallet.png')}
               alt='Connect Wallet'

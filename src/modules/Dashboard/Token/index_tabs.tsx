@@ -10,7 +10,7 @@ import { AppContext } from '@crema';
 import useFetch from 'use-http';
 import { useWeb3 } from 'hooks/useWeb3';
 import { ZRX_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
-import { EthereumNetwork, ThemeMode } from 'shared/constants/AppEnums';
+import { EthereumNetwork, Fonts, ThemeMode } from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 
 import ErrorView from 'modules/Common/ErrorView';
@@ -43,6 +43,8 @@ import { MyOrdersTab } from './Tabs/MyOrdersTab';
 import { InfoTab } from './Tabs/InfoTab';
 import { useTokenInfo } from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { AboutDialog } from './AboutDialog';
+import { ShareButton } from 'shared/components/ShareButton';
 
 
 const BinanceTVChartContainer = React.lazy(
@@ -199,19 +201,31 @@ const TokenTabsPage: React.FC<Props> = (props) => {
   return (
     <>
       <Box pt={{ xl: 4 }}>
+          <Box display='flex' alignItems='center'>
+           <SwapHorizontalCircleIcon color={'primary'} fontSize={'large'} />
+          <Box
+            component='h3'
+            color='text.primary'
+            fontWeight={Fonts.BOLD}
+            ml={2}>
+            Trade
+          </Box>
+          <AboutDialog />
+          <ShareButton/>
+        </Box>
+
         <Box className={classes.title}>
           <Box>
             {tokenInfo && (
               <PageTitle
                 title={{ name: tokenInfo.name }}
-                subtitle={{ name: truncateTokenAddress(address), hasCopy: address }}
+                subtitle={{ name: !isMobile ? truncateTokenAddress(address) : '', hasCopy: address }}
                 icon={address}
                 network={networkName}
-                shareButton={true}
               />
             )}
           </Box>
-          <Box>
+          <Box display={'flex'} justifyItems={'center'} >
             <Tooltip title="Add to Favorites">
               <IconButton aria-label="add favorite coin" color="primary" onClick={onToggleFavorite}>
                 {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -224,7 +238,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
         <GridContainer pt={0}>
           <Grid item xs={12} md={12} style={{ marginTop: 10 }}>
             <Grid item xs={12} md={12}>
-              {error ? (
+              {(error && !balances) ? (
                 <ErrorView message={error.message} />
               ) : (
                 <TotalBalance

@@ -124,7 +124,7 @@ const PairExplorer = (props: Props) => {
           active: { name: 'Pair Explorer' },
         }}
         title={{ name: 'Pair Explorer', component: title }}
-        subtitle={{ name: truncateAddress(baseAddress), hasCopy: baseAddress }}
+        subtitle={{ name: !isMobile ? truncateAddress(baseAddress) : '', hasCopy: baseAddress }}
         network={networkName}
         shareButton={true}
       />
@@ -148,7 +148,7 @@ const PairExplorer = (props: Props) => {
                 aria-label="wallet tabs"
               >
                 <Tab value="overview" icon={<RemoveRedEyeIcon />} label={!isMobile ? "Overview": ''} />
-                <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ?"Trade History" : ''} />
+                <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
                 <Tab value="top-pairs" icon={<EmojiEventsIcon />} label={!isMobile ? "Top Pairs": ''} />
               </Tabs>
             </AppBar>

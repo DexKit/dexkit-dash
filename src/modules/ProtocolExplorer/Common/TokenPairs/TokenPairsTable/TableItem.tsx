@@ -3,18 +3,23 @@ import React from 'react';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
-import {TableRow, TableCell, makeStyles, Link, Box} from '@material-ui/core';
+import {TableRow, TableCell, makeStyles, Link, Box, Tooltip} from '@material-ui/core';
 import {Link as RouterLink} from 'react-router-dom';
 import {isMobile} from 'web3modal';
-import { GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL, GET_CORRECT_ADDRESS_FROM_NETWORK } from 'utils';
+import { GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL, GET_CORRECT_ADDRESS_FROM_NETWORK, IS_AMM, GET_PROTOCOL_POOL_URL } from 'utils';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import PoolIcon from '@material-ui/icons/Pool';
 
 interface TableItemProps {
   row: any; //GetTokenPairs_ethereum_dexTrades;
   exchange: EXCHANGE;
   networkName: EthereumNetwork;
 }
+
+
+
+
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableCell: {
@@ -96,6 +101,18 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
            <ExchangeLogo exchange={row.exchange?.fullName}/>
         </TableCell>
       )}
+      {IS_AMM(exchange) && (
+         <TableCell align='left' className={classes.tableCell}>
+             <Link to={GET_PROTOCOL_POOL_URL(networkName, exchange, row?.smartContract?.address.address)} component={RouterLink}>
+               <Tooltip title={'Pool'}>
+                  <PoolIcon />
+                </Tooltip>
+            </Link> 
+        </TableCell>
+      )}
+    
+
+
     </TableRow>
   );
 };

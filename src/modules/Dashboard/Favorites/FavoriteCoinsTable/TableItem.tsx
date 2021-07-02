@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: 40,
     height: 40,
     padding: 12,
+    backgroundColor: 'transparent',
     [theme.breakpoints.up('xl')]: {
       width: 50,
       height: 50,
