@@ -304,7 +304,6 @@ const MarketForm: React.FC<Props> = (props) => {
     )} Network in your wallet`;
   }
   const {usdFormatter} = useUSDFormatter();
-
   return (
     <Box>
       <form noValidate autoComplete='off'>
@@ -374,9 +373,9 @@ const MarketForm: React.FC<Props> = (props) => {
               <SelectToken
                 id={'marketSel0'}
                 label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                limitCoins={select0 ? true : false}
+                limitCoins={select0.length ? true : false}
                 selected={tokenFrom}
-                options={web3State === Web3State.Done ? select0 : select1}
+                options={(web3State === Web3State.Done && select0.length ) ? select0 : select1}
                 disabled={disabled}
                 onChange={($token) => {
                   onChangeToken($token, 'from');

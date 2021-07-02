@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-
-import { Grid, Box, Tabs, Paper, Tab } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { Grid, Box, Tabs, Paper, Tab, Link, Tooltip, Button } from '@material-ui/core';
 
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ import { useWeb3 } from 'hooks/useWeb3';
 import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
 
-import {  truncateIsAddress } from 'utils';
+import { truncateIsAddress } from 'utils';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import { Web3Wrapper } from '@0x/web3-wrapper';
@@ -43,6 +43,8 @@ import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { Fonts } from 'shared/constants/AppEnums';
 import { AboutDialog } from './AboutDialog';
+import SettingsIcon from '@material-ui/icons/Settings';
+
 
 type Params = {
   account: string;
@@ -64,23 +66,23 @@ const WalletTabs: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { account: web3Account } = useWeb3();
   const account = defaultAccount || web3Account;
-  let searchParams = new URLSearchParams(history.location.search); 
+  let searchParams = new URLSearchParams(history.location.search);
   const [value, setValue] = React.useState(searchParams.get('tab') ?? 'assets');
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
-    let searchParams = new URLSearchParams(history.location.search); 
+    let searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
-    history.push({search:searchParams.toString()});
+    history.push({ search: searchParams.toString() });
 
     setValue(newValue);
   };
   const { loading, error, data } = useAllBalance(defaultAccount);
 
-  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount) {
       history.push(`/dashboard/wallet/${urlAccount}`)
-      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}))
+      dispatch(setDefaultAccount({ address: urlAccount, label: urlAccount }))
     }
     if (!urlAccount && defaultAccount) {
       history.push(`/dashboard/wallet/${defaultAccount}`)
@@ -90,14 +92,21 @@ const WalletTabs: React.FC<Props> = (props) => {
 
   const titleComponent = (
     <Box display='flex' alignItems='center' mt={1}>
-         <AccountBalanceWalletIcon color={'primary'} fontSize={'large'}/>
+      <AccountBalanceWalletIcon color={'primary'} fontSize={'large'} />
       <Box
         component='h3'
         color='text.primary'
         fontWeight={Fonts.BOLD}
-        ml={2}>
+        ml={2}
+        mr={2}>
         Wallet
       </Box>
+      <Tooltip title={'Manage Accounts'}>
+        <Button variant="outlined" onClick={() => history.push('/dashboard/wallet/manage-accounts')}>
+          <SettingsIcon  />
+        </Button>
+
+      </Tooltip>
       <AboutDialog />
     </Box>
   )
@@ -131,40 +140,40 @@ const WalletTabs: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={12}>
-        <Box mt={2}>
-          <Paper square>
-            <TabContext value={value}>
-              <AppBar position="static" color='transparent'>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  variant="fullWidth"
-                  indicatorColor="primary"
-                  textColor="primary"
-                  aria-label="wallet tabs"
-                >
-                  <Tab value="assets" icon={<AssessmentIcon />} label={!isMobile ? "Assets" : ''} />
-                  <Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart": ''} />
-                  <Tab value="transfers" icon={<SwapVertIcon />} label={!isMobile ? "Transfers": ''} />
-                  <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
-                </Tabs>
-              </AppBar>
-              <TabPanel value="assets">
-                <AssetTableTab account={account as string} loading={loading} error={error} data={data} />
-              </TabPanel>
-              <TabPanel value="assets-chart">
-                <AssetChartTab data={data} loading={loading} />
-              </TabPanel>
-              <TabPanel value="transfers">
-                <TransferTab address={defaultAccount} />
-              </TabPanel>
-              <TabPanel value="trade-history">
-                <TradeHistoryTab address={defaultAccount} />
-              </TabPanel>
+          <Box mt={2}>
+            <Paper square>
+              <TabContext value={value}>
+                <AppBar position="static" color='transparent'>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant="fullWidth"
+                    indicatorColor="primary"
+                    textColor="primary"
+                    aria-label="wallet tabs"
+                  >
+                    <Tab value="assets" icon={<AssessmentIcon />} label={!isMobile ? "Assets" : ''} />
+                    <Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart" : ''} />
+                    <Tab value="transfers" icon={<SwapVertIcon />} label={!isMobile ? "Transfers" : ''} />
+                    <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value="assets">
+                  <AssetTableTab account={account as string} loading={loading} error={error} data={data} />
+                </TabPanel>
+                <TabPanel value="assets-chart">
+                  <AssetChartTab data={data} loading={loading} />
+                </TabPanel>
+                <TabPanel value="transfers">
+                  <TransferTab address={defaultAccount} />
+                </TabPanel>
+                <TabPanel value="trade-history">
+                  <TradeHistoryTab address={defaultAccount} />
+                </TabPanel>
 
-            </TabContext>
-          </Paper>
-        </Box>
+              </TabContext>
+            </Paper>
+          </Box>
         </Grid>
 
 

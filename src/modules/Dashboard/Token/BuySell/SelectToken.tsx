@@ -10,6 +10,10 @@ import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
+import { VariableSizeList, ListChildComponentProps } from 'react-window';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import { filterTokensInfoByString } from 'utils/tokens';
 interface Props {
   id: string;
   selected: Token | undefined;
@@ -19,6 +23,83 @@ interface Props {
   label?: string;
   onChange: ($token: Token | undefined) => void;
 }
+
+const LISTBOX_PADDING = 12; // px
+
+function useResetCache(data: any) {
+  const ref = React.useRef<VariableSizeList>(null);
+  React.useEffect(() => {
+    if (ref.current != null) {
+      ref.current.resetAfterIndex(0, true);
+    }
+  }, [data]);
+  return ref;
+}
+
+function renderRow(props: ListChildComponentProps) {
+  const { data, index, style } = props;
+  return React.cloneElement(data[index], {
+    style: {
+      ...style,
+      top: (style.top as number) + LISTBOX_PADDING,
+    },
+  });
+}
+
+
+const OuterElementContext = React.createContext({});
+
+const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
+  const outerProps = React.useContext(OuterElementContext);
+  return <div ref={ref} {...props} {...outerProps} />;
+});
+
+
+// Adapter for react-window
+const ListboxComponent = React.forwardRef<HTMLDivElement>(function ListboxComponent(props, ref) {
+  const { children, ...other } = props;
+  const itemData = React.Children.toArray(children);
+  const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'), { noSsr: true });
+  const itemCount = itemData.length;
+  const itemSize = smUp ? 40 : 58;
+
+  const getChildSize = (child: React.ReactNode) => {
+    if (React.isValidElement(child) && child.type === ListSubheader) {
+      return 58;
+    }
+
+    return itemSize;
+  };
+
+  const getHeight = () => {
+    if (itemCount > 8) {
+      return 8 * itemSize;
+    }
+    return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
+  };
+
+  const gridRef = useResetCache(itemCount);
+
+  return (
+    <div ref={ref}>
+      <OuterElementContext.Provider value={other}>
+        <VariableSizeList
+          itemData={itemData}
+          height={getHeight() + 2 * LISTBOX_PADDING}
+          width="100%"
+          ref={gridRef}
+          outerElementType={OuterElementType}
+          innerElementType="ul"
+          itemSize={(index: number) => getChildSize(itemData[index])}
+          overscanCount={5}
+          itemCount={itemCount}
+        >
+          {renderRow}
+        </VariableSizeList>
+      </OuterElementContext.Provider>
+    </div>
+  );
+});
 
 const useStyles = makeStyles({
   textField: {
@@ -76,15 +157,10 @@ const SelectToken: React.FC<Props> = ({
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const OPTIONS_LIMIT = 20;
-  const defaultFilterOptions = createFilterOptions({ignoreCase: true});
-
   const filterOptions = (options: any, state: FilterOptionsState<any>): any => {
-    if(limitCoins){
-      return defaultFilterOptions(options, state);
-    }else{
-      return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT + 1);
-    }
+    const filterValue = state.inputValue;
+    return filterTokensInfoByString(options, filterValue);
+  
   
   };
 
@@ -117,6 +193,7 @@ const SelectToken: React.FC<Props> = ({
             closeIcon={false}
             disabled={disabled || false}
             filterOptions={filterOptions}
+            ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
             options={options.filter(
               (option) => option.symbol.toLowerCase() || option.address.toLowerCase() || option.name.toLowerCase(),
             )}
@@ -129,7 +206,7 @@ const SelectToken: React.FC<Props> = ({
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
-                <TokenLogo token0={option.address} networkName={option?.networkName}/>
+                <TokenLogo token0={option.address} networkName={option?.networkName} logoURL0={option?.logoURI}/>
                 {option.name}
                 {option?.networkName && (
                   <Box pl={1}>
@@ -144,7 +221,7 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <SelectBox>
-                <TokenLogo token0={selected.address} networkName={selected?.networkName}/>
+                <TokenLogo token0={selected.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>
                 <TextField
                   {...params}
                   label={label || "Search a coin"}

@@ -3342,6 +3342,14 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.72.0.tgz"
   integrity sha512-o+TYF8vBcyySRsb2kqBDv/KMeme8a2nwWoG+lAWzbDmWfb2/MrVWYCVYDYvjXdSoI/Cujqy1i0gIDrkdxa9chA==
 
+"@magic-ext/oauth@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-0.8.0.tgz#ae5381aaab8b3a56d24512344717e86b70f7dbfc"
+  integrity sha512-iLSkkvMBfH45mcsfavsRKhpnRlWycXwzn0ortR0FCITEk4YcmOsNgpsnXgLLr1CzbuEAhsmEA/Zz8bpWlNL5bw==
+  dependencies:
+    "@magic-sdk/types" "^1.1.0"
+    crypto-js "^3.3.0"
+
 "@magic-sdk/commons@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-1.1.0.tgz"
@@ -3356,6 +3364,11 @@
     eventemitter3 "^4.0.4"
     semver "^7.3.2"
     tslib "^2.0.3"
+
+"@magic-sdk/types@^1.1.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-1.6.0.tgz#b2a45be001194358b3d8fa0c63b649b73735660e"
+  integrity sha512-CvVUPTF9tSLNFA4JhcAFjheiqWyVp9r9ooy/AheK+0rWRZCxE5QCwc81d2FduDTqzEJZeUV9+9F9R0AplhnX7w==
 
 "@magic-sdk/types@^3.1.1":
   version "3.1.1"
@@ -4512,6 +4525,13 @@
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.1.tgz"
   integrity sha512-vIo69qKKcYoJ8wKCJjwSgCTM+z3chw3g18dkrDfVX665tMH7tmbDxEAnPdey4gTlwZz5QuHGzd+hul0OVZDqqQ==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-window@^1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.8.3.tgz#14f74b144b4e3df9421eb31182dc580b7ccc7617"
+  integrity sha512-Xf+IR2Zyiyh/6z1CM8kv1aQba3S3X/hBXt4tH+T9bDSIGwFhle0GZFZGTSU8nw2cUT3UNbCHDjhxVQVZPtE8cA==
   dependencies:
     "@types/react" "*"
 
@@ -19703,9 +19723,9 @@ react-virtualized@^9.21.2:
     prop-types "^15.7.2"
     react-lifecycles-compat "^3.0.4"
 
-react-window@^1.8.5:
+react-window@^1.8.6:
   version "1.8.6"
-  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.6.tgz"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.6.tgz#d011950ac643a994118632665aad0c6382e2a112"
   integrity sha512-8VwEEYyjz6DCnGBsd+MgkD0KJ2/OXFULyDtorIiTz+QzwoP94tBoA7CnbtyXMm+cCeAUER5KJcPtWl9cpKbOBg==
   dependencies:
     "@babel/runtime" "^7.0.0"

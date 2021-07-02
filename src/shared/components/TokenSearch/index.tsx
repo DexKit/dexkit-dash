@@ -18,7 +18,10 @@ import { Token } from 'types/app';
 import { SearchCurrencyByAddress, SearchCurrencyByAddressVariables } from 'services/graphql/bitquery/__generated__/SearchCurrencyByAddress';
 import { SEARCH_CURRENCY_BY_ADDRESS } from 'services/graphql/bitquery/gql';
 import { client } from 'services/graphql';
-
+//@ts-ignore
+import { VariableSizeList, ListChildComponentProps } from 'react-window';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import TokenLogo from './TokenLogo';
 import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
 
@@ -28,6 +31,83 @@ interface TokenSearchProps {
   positionIcon?: 'start' | 'end';
   filters?: Map<string, string>;
 }
+
+const LISTBOX_PADDING = 12; // px
+
+function useResetCache(data: any) {
+  const ref = React.useRef<VariableSizeList>(null);
+  React.useEffect(() => {
+    if (ref.current != null) {
+      ref.current.resetAfterIndex(0, true);
+    }
+  }, [data]);
+  return ref;
+}
+
+function renderRow(props: ListChildComponentProps) {
+  const { data, index, style } = props;
+  return React.cloneElement(data[index], {
+    style: {
+      ...style,
+      top: (style.top as number) + LISTBOX_PADDING,
+    },
+  });
+}
+
+
+const OuterElementContext = React.createContext({});
+
+const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
+  const outerProps = React.useContext(OuterElementContext);
+  return <div ref={ref} {...props} {...outerProps} />;
+});
+
+
+// Adapter for react-window
+const ListboxComponent = React.forwardRef<HTMLDivElement>(function ListboxComponent(props, ref) {
+  const { children, ...other } = props;
+  const itemData = React.Children.toArray(children);
+  const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'), { noSsr: true });
+  const itemCount = itemData.length;
+  const itemSize = smUp ? 40 : 58;
+
+  const getChildSize = (child: React.ReactNode) => {
+    if (React.isValidElement(child) && child.type === ListSubheader) {
+      return 58;
+    }
+
+    return itemSize;
+  };
+
+  const getHeight = () => {
+    if (itemCount > 8) {
+      return 8 * itemSize;
+    }
+    return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
+  };
+
+  const gridRef = useResetCache(itemCount);
+
+  return (
+    <div ref={ref}>
+      <OuterElementContext.Provider value={other}>
+        <VariableSizeList
+          itemData={itemData}
+          height={getHeight() + 2 * LISTBOX_PADDING}
+          width="100%"
+          ref={gridRef}
+          outerElementType={OuterElementType}
+          innerElementType="ul"
+          itemSize={(index: number) => getChildSize(itemData[index])}
+          overscanCount={5}
+          itemCount={itemCount}
+        >
+          {renderRow}
+        </VariableSizeList>
+      </OuterElementContext.Provider>
+    </div>
+  );
+});
 
 export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
   const {filters, onClick, selectedTokenAddress } = props;
@@ -55,7 +135,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
       const searchTokens = filterTokensInfoByString(
         tokenListEth.concat(tokenListBsc),
         searchKey,
-      ).slice(0, 30);
+      );
       setFound(searchTokens);
     }
 
@@ -63,7 +143,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
         const searchTokens = filterTokensInfoByString(
         tokenListEth.concat(tokenListBsc),
         searchKey,
-        ).slice(0, 30);
+        );
         setFound(searchTokens);  
       
     }
@@ -83,7 +163,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
     }
   };
   const renderOption = (option: Token) => {
-    return ( <Box display={'flex'} alignItems={'center'}>
+    return ( <Box display={'flex'} alignItems={'center'} mt={1}>
                   <TokenLogo token={option.address ?? option.symbol} logoURL={option.logoURI}  network={option.networkName as EthereumNetwork} />
                   <Typography component={'h6'} style={{marginLeft: '3px'}}>{option.name} - {option.symbol.toUpperCase()}</Typography>
                 
@@ -168,6 +248,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
           options={found || []}
           getOptionLabel={getOptionLabel}
           renderOption={renderOption}
+          ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
           renderInput={(params) => (
             <TextField
               {...params}

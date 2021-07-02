@@ -467,8 +467,8 @@ const LimitForm: React.FC<Props> = (props) => {
                     id={'marketSel0'}
                     selected={tokenFrom}
                     label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                    limitCoins={select0 ? true : false}
-                    options={web3State === Web3State.Done ? select0 : select1}
+                    limitCoins={select0.length ? true : false}
+                    options={(web3State === Web3State.Done && select0.length) ? select0 : select1}
                     disabled={disabled}
                     onChange={($token) => {
                       onChangeToken($token, 'from');

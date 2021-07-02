@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   iconLeft: {
     borderRadius: '100%',
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     position: 'relative',
     zIndex: 2,
     [theme.breakpoints.down('md')]: {
@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   iconRight: {
     borderRadius: '100%',
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     position: 'relative',
     zIndex: 1,
     left: '-15px',
@@ -118,7 +118,7 @@ const TokenLogo: React.FC<Props> = (props) => {
         className={classes.iconLeft}
         onError={addDefaultSrc}
         loading='lazy'
-        src={getIconUrl(token0)}
+        src={getIconUrl(token0, props.logoURL0)}
       />
       <img
         className={classes.iconRight}
@@ -132,7 +132,7 @@ const TokenLogo: React.FC<Props> = (props) => {
       className={classes.iconLeft}
       onError={addDefaultSrc}
       loading='lazy'
-      src={getIconUrl(token0)}
+      src={getIconUrl(token0, props.logoURL0)}
     />
   );
 };
