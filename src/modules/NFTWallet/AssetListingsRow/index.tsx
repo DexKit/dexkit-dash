@@ -7,6 +7,7 @@ import {
   Tooltip,
   Typography,
   makeStyles,
+  Link,
 } from '@material-ui/core';
 import React from 'react';
 import moment from 'moment';
@@ -17,7 +18,6 @@ import {
 } from '../utils';
 
 import {Link as RouterLink} from 'react-router-dom';
-import {Link} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -60,7 +60,8 @@ export default (props: Props) => {
         </Button> */}
       </TableCell>
       <TableCell>
-        {moment(listing?.created_date)
+        {moment
+          .unix(listing?.expiration_time)
           .add(moment.duration({minutes: moment().utcOffset()}))
           .fromNow()}
       </TableCell>

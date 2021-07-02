@@ -271,16 +271,29 @@ export const AssetDetail = () => {
                             />
                           </Grid>
                           {isAssetOwner(data, userAccountAddress || '') ? (
-                            <Grid item>
-                              <Button
-                                onClick={handleShowTransferDialog}
-                                variant='outlined'
-                                size='small'
-                                startIcon={<SwapHorizIcon />}
-                                color='primary'>
-                                <IntlMessages id='nfts.detail.transfer' />
-                              </Button>
-                            </Grid>
+                            <>
+                              <Grid item>
+                                <Button
+                                  onClick={handleShowTransferDialog}
+                                  variant='outlined'
+                                  size='small'
+                                  startIcon={<SwapHorizIcon />}
+                                  color='primary'>
+                                  <IntlMessages id='nfts.detail.transfer' />
+                                </Button>
+                              </Grid>
+                              <Grid item>
+                                <Button
+                                  component={RouterLink}
+                                  variant='outlined'
+                                  size='small'
+                                  startIcon={<SwapHorizIcon />}
+                                  to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}/sell`}
+                                  color='primary'>
+                                  Sell
+                                </Button>
+                              </Grid>
+                            </>
                           ) : null}
                         </Grid>
                       </Box>

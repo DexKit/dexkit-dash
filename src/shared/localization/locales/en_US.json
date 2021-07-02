@@ -834,7 +834,6 @@
   "nfts.detail.backdrop.pleaseSignTransaction": "Please, sign the transaction to continue",
   "nfts.detail.backdrop.makingOffer": "Making offer",
   "nfts.detail.backdrop.acceptingOffer": "Accepting offer",
-  "nfts.detail.backdrop.cancellingOffer": "Cancelling offer"
-  
-  
+  "nfts.detail.backdrop.cancellingOffer": "Cancelling offer",
+  "nfts.sell.summary": "Summary"  
 }
