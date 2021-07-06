@@ -99,7 +99,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
         <Box display='flex'>
           <Box mr={{xs: 3, xl: 5}}>
             {data.currency?.address ? (
-              <TokenLogo token0={data.currency?.address} />
+              <TokenLogo token0={data.currency?.address} networkName={data.network} />
             ) : (
               // data.currency?.address == '-' ? (
               //   <Avatar className={classes.avatar} src={data.currency?.address}>

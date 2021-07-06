@@ -69,14 +69,13 @@ export const useBalanceChart = (balances: MyBalances[]) => {
     })
     .then(e => {
       if (e.data.ethereum?.blocks) {
-        console.log(`find block ${e.data.ethereum?.blocks[0]?.height} for ${fromDay}`);
         setBlock(e.data.ethereum?.blocks[0].height)
       }
     });
   }, [selectDay]);
 
   useEffect(() => {
-    if (block != null && account != null && network != null && selectToken != null && balances.length > 0) {
+    if (block && account  && network  && selectToken  && balances.length > 0) {
 
       client.query< GetMySingleBalanceHistory, GetMySingleBalanceHistoryVariables>({
         query: BITQUERY_SINGLE_BALANCE_HISTORY,

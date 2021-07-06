@@ -1,11 +1,10 @@
 import axios from 'axios'; 
-import { symbol } from 'prop-types';
+
 import * as Bitquery from './bitquery';
 import { EthereumNetwork } from "shared/constants/AppEnums"
-import { client } from 'services/graphql';
-import { StructLog } from 'ethereum-types';
 
-const lastBarsCache = new Map(); 
+
+
 const configurationData = {
     supported_resolutions: ['1','5','15','30', '60','1D', '1W', '1M']
 };
@@ -81,7 +80,6 @@ export default {
 
             // Used when coin is native one
             if(base.toLowerCase() === wrappedNative[network].toLowerCase()){
-                console.log('I am here');
                 const response2 = await axios.post(Bitquery.endpoint, {
                     query: Bitquery.GET_COIN_BARS_NATIVE_USDT,
                     variables: {
@@ -98,8 +96,6 @@ export default {
                         "X-API-KEY": process.env.REACT_APP_BITQUERY_API_KEY as string
                     }
                 })
-                console.log(response2.data.data.ethereum.dexTrades);
-
                 const bars = response2.data.data.ethereum.dexTrades.map((data: any) => {
                    
                     // We find the principal pair and multiply by quotePrice in USD
@@ -113,8 +109,7 @@ export default {
                         volume:  data.volume,
                     };
                 });
-                console.log(bars);
-        
+       
                 if (bars.length){
                     onHistoryCallback(bars, {noData: false}); 
                 }else{

@@ -279,12 +279,14 @@ export interface ThemeProperties {
       is_dark_mode?: boolean;
       support_bsc?: boolean;
       bsc_as_default?: boolean;
+      matic_as_default?: boolean;
       fee_waive_for_default_token?: boolean;
       hide_powered_by_dexkit?: boolean;
       default_token_list?: string;
       affiliateAddress: string;
       default_token_address?: string;
       default_token_address_bsc?: string;
+      default_token_address_matic?: string;
   }
   
   export interface ConfigFileAggregator extends GeneralConfigAggregator {

@@ -68,7 +68,6 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
           from: order.makerAddress,
           //gasPrice: 0, /// AQUI GAS 
         });
-      
         return web3Wrapper.awaitTransactionSuccessAsync(tx); 
       }
 

@@ -143,14 +143,13 @@ const LimitForm: React.FC<Props> = (props) => {
     const tokenETH = select1.find(
       (e) =>
         (e.symbol.toLowerCase() ===
-          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
-          e.symbol.toLowerCase() ===
             GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
         e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
     );
 
     onChangeToken(tokenETH, 'from');
   }
+
 
   const resetAmount = () => {
     setAmountFrom(0);
@@ -164,6 +163,7 @@ const LimitForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
+    setPrice((amountTo || 0) / (amountFrom || 1));
   };
 
   const setMax = () => {
@@ -351,7 +351,25 @@ const LimitForm: React.FC<Props> = (props) => {
   const isNative = isNativeCoinFromNetworkName(
     tokenFrom?.symbol ?? '',
     networkName,
+  ) || isNativeCoinFromNetworkName(
+    tokenTo?.symbol ?? '',
+    networkName,
+  )
+  const ethToken = select1 && select1.find(
+    (t) =>
+      t.symbol.toUpperCase() ===
+      GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
   );
+
+  const wethToken = select1 && select1.find(
+    (t) =>
+      t.symbol.toUpperCase() ===
+      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+        networkName,
+      ).toUpperCase()
+  );
+
+
   const nativeCoinSymbol = GET_NATIVE_COIN_FROM_NETWORK_NAME(
     networkName,
   ).toUpperCase();
@@ -402,7 +420,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 {isNative && (
                   <Grid item xs={12}>
                     <Box mb={2} fontSize='large' textAlign='center'>
-                      To use Limit orders you need to wrap your{' '}
+                      To use  {nativeCoinSymbol} on Limit orders you need to wrap your{' '}
                       {nativeCoinSymbol} to {wNativeCoinSymbol}, and use{' '}
                       {wNativeCoinSymbol} to place limit orders
                     </Box>
@@ -457,8 +475,30 @@ const LimitForm: React.FC<Props> = (props) => {
                     }}
                   />
                 </Grid>
-
+                {isNative &&   
                 <Grid
+                  style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
+                  item
+                  xs={12}
+                  md={6}>
+                  <SelectToken
+                    id={'marketSel0'}
+                    selected={ethToken}
+                    label={web3State === Web3State.Done ? 'Your Coins' : ''}
+                    limitCoins={select0.length ? true : false}
+                    options={(web3State === Web3State.Done && select0.length) ? select0 : select1}
+                    disabled={disabled}
+                    onChange={($token) => {
+                      onChangeToken($token, 'from');
+                      if(tokenTo?.symbol.toUpperCase() === ethToken?.symbol.toUpperCase()){
+                        onChangeToken(wethToken, 'to');
+                      }
+
+                    }}
+                  />
+                </Grid>}
+
+                {!isNative &&   <Grid
                   style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
                   item
                   xs={12}
@@ -472,9 +512,13 @@ const LimitForm: React.FC<Props> = (props) => {
                     disabled={disabled}
                     onChange={($token) => {
                       onChangeToken($token, 'from');
+                      if(tokenTo?.symbol.toUpperCase() === ethToken?.symbol.toUpperCase()){
+                        onChangeToken(wethToken, 'to');
+                      }
+
                     }}
                   />
-                </Grid>
+                </Grid>}
 
                 {!isNative && (
                   <>
@@ -556,6 +600,20 @@ const LimitForm: React.FC<Props> = (props) => {
                         label={<IntlMessages id='app.price' />}
                         value={price}
                         onChange={handlePriceChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position='end'
+                              style={{fontSize: '13px'}}>
+                              {(tokenFrom && tokenTo) && (
+                                <>
+                                  {tokenTo.symbol.toUpperCase()} per {tokenFrom.symbol.toUpperCase()}
+                                </>
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        
                       />
                     </Grid>
 

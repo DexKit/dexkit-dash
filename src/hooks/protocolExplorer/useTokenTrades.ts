@@ -65,8 +65,6 @@ export const useTokenTrades = ({
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
 
-  console.log(rowsPerPage);
-  console.log(skipRows);
   const {loading, error, data: dataFn, networkStatus} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
       network:  networkName,

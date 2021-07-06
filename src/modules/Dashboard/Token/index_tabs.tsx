@@ -155,7 +155,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
         address: address,
         name: tokenInfo.name,
         symbol: tokenInfo.symbol.toUpperCase(),
-        decimals: 0,
+        decimals: tokenInfo.decimals,
       });
       chartSource === ChartSource.DEX ?
        setChartSymbol(`${networkName}:${tokenInfo.symbol?.toUpperCase()}:${tokenInfo.address}`)

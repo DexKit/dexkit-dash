@@ -73,7 +73,8 @@ export enum WizardData {
 // }
 
 function getSteps() {
-  return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
+  // return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
+  return ['General', 'Theme'];
 }
 
 const defaultTheme = new DefaultTheme();
@@ -96,6 +97,7 @@ const initConfig: GeneralConfigAggregator = {
   affiliateAddress: '',
   default_token_address: '',
   default_token_address_bsc: '',
+  default_token_address_matic: '',
 };
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileAggregator, WizardData>, chainId: ChainId) {

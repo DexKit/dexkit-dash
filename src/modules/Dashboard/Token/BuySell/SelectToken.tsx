@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Autocomplete,
   createFilterOptions,
@@ -155,7 +155,7 @@ const SelectToken: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState(selected?.symbol);
 
   const filterOptions = (options: any, state: FilterOptionsState<any>): any => {
     const filterValue = state.inputValue;
@@ -163,6 +163,13 @@ const SelectToken: React.FC<Props> = ({
   
   
   };
+  //NOTE: This is due to bug on autocomplete
+  useEffect(()=> {
+    if(selected){
+      setInputValue(selected?.symbol);
+    }
+   
+  },[selected])
 
   return (
     <>
@@ -186,8 +193,8 @@ const SelectToken: React.FC<Props> = ({
           )}
         />
       ) : (
-        id &&
-        selected && (
+        (id &&
+        selected) && (
           <Autocomplete
             id={id}
             closeIcon={false}
@@ -221,9 +228,10 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <SelectBox>
-                <TokenLogo token0={selected.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>
-                <TextField
+                 <TokenLogo token0={selected.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>
+                  <TextField
                   {...params}
+                  value={selected.symbol}
                   label={label || "Search a coin"}
                   placeholder={
                     selected

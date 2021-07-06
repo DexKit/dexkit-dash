@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
 import {ERC20TokenContract} from '@0x/contract-wrappers';
-import {getProvider, getWeb3, getWeb3Wrapper} from 'services/web3modal';
+import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import BigNumber from 'bignumber.js';
 import {ethers} from 'ethers';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
@@ -16,6 +16,8 @@ import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
+import { getERC20Contract } from 'utils/ethers';
+import { classNames } from 'react-select/src/utils';
 
 interface Props {
   step: Steps | undefined;
@@ -50,21 +52,20 @@ const ApproveStep: React.FC<Props> = (props) => {
 
   const isApprove = async () => {
 
-
-    if (tokenFrom.symbol.toUpperCase() === 'ETH') {
+    if (tokenFrom.symbol.toUpperCase() === 'ETH'  || (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance)   ) {
       return true;
     }
 
     const contractWrappers = await getContractWrappers(chainId);
-    const erc20Token = new ERC20TokenContract(
-      tokenFrom.address,
-      contractWrappers?.getProvider() ?? getProvider(),
-    );
 
-    const allowance = await erc20Token
-      .allowance(account, allowanceTarget)
-      .callAsync();
-    const isApproved = allowance.isGreaterThan(amountFn);
+    const ethersProviders = new ethers.providers.Web3Provider(contractWrappers?.getProvider() ?? getProvider(), chainId )
+
+    const etherERC20Contract = getERC20Contract(tokenFrom.address, ethersProviders, account )
+    const allowance = await etherERC20Contract.allowance(account, allowanceTarget)
+    
+ 
+    const isApproved = new BigNumber(allowance.toString()).isGreaterThan(amountFn);
+
 
     return isApproved;
   };
@@ -88,10 +89,10 @@ const ApproveStep: React.FC<Props> = (props) => {
     try {
       onLoading(true);
 
-      if (allowanceTarget == null) {
+      if (!allowanceTarget) {
         throw new Error('Token address for approval cannot be null or empty');
       }
-      if (account == null) {
+      if (!account) {
         throw new Error('Account address cannot be null or empty');
       }
 
@@ -100,26 +101,22 @@ const ApproveStep: React.FC<Props> = (props) => {
       const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();
 
-      if (provider == null || web3Wrapper == null) {
+      if (!provider || !web3Wrapper) {
         throw new Error('Provider cannot be null');
       }
 
       const maxApproval = new BigNumber(2).pow(256).minus(1);
+      const ethersProviders = new ethers.providers.Web3Provider(contractWrappers?.getProvider() ?? getProvider(), chainId )
 
-
-
-      const erc20Token = new ERC20TokenContract(tokenFrom.address, provider);
-      const tx = await erc20Token
-        .approve(allowanceTarget, maxApproval)
-        .sendTransactionAsync({from: account});
-
-
+      const etherERC20Contract = getERC20Contract(tokenFrom.address, ethersProviders, account )
+      const tx = await etherERC20Contract.approve(allowanceTarget, maxApproval.toString());
+    
       web3Wrapper
-        .awaitTransactionSuccessAsync(tx)
+        .awaitTransactionSuccessAsync(tx.hash)
         .then(() => {
           const notification: Notification = {
             title: 'Approve',
-            body: truncateAddress(tx),
+            body: truncateAddress(tx.hash),
           };
 
           dispatch(onAddNotification([notification], NotificationType.SUCCESS));
