@@ -15,10 +15,12 @@ import AssetListingsRow from '../AssetListingsRow';
 
 interface Props {
   listings?: any[];
+  onCancel: (listing: any) => void;
+  onBuy: (listing: any) => void;
 }
 
 export default (props: Props) => {
-  const {listings} = props;
+  const {listings, onCancel, onBuy} = props;
 
   return (
     <TableContainer>
@@ -42,7 +44,12 @@ export default (props: Props) => {
         </TableHead>
         <TableBody>
           {listings?.map((listing: any, index: number) => (
-            <AssetListingsRow key={index} listing={listing} />
+            <AssetListingsRow
+              onCancel={onCancel}
+              onBuy={onBuy}
+              key={index}
+              listing={listing}
+            />
           ))}
         </TableBody>
       </Table>

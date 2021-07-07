@@ -8,8 +8,8 @@ import {
   makeStyles,
   Typography,
   CircularProgress,
+  BackdropProps,
 } from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -21,16 +21,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  open: boolean;
-}
+interface Props extends BackdropProps {}
 
 export default (props: Props) => {
-  const {open} = props;
+  const {open, onClick} = props;
   const classes = useStyles();
 
   return (
-    <Backdrop className={classes.backdrop} open={open}>
+    <Backdrop className={classes.backdrop} open={open} onClick={onClick}>
       <Paper>
         <Box p={4}>
           <Grid
@@ -52,7 +50,7 @@ export default (props: Props) => {
                 spacing={4}>
                 <Grid item>
                   <Typography gutterBottom variant='h5'>
-                    <IntlMessages id='nfts.detail.backdrop.acceptingOffer' />
+                    <IntlMessages id='nfts.sell.buyingListing' />
                   </Typography>
                   <Typography variant='body1'>
                     <IntlMessages id='nfts.detail.backdrop.pleaseSignTransaction' />

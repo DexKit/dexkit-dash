@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
 import moment from 'moment';
-import {deriveUserFromAddr} from '../utils';
+import {deriveUserFromAddr} from '../../../utils';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';

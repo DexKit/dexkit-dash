@@ -1,4 +1,3 @@
-import {toTokenUnitAmount} from '@0x/utils';
 import {
   TableRow,
   TableCell,
@@ -8,16 +7,21 @@ import {
   Typography,
   makeStyles,
   Link,
+  Button,
 } from '@material-ui/core';
-import React from 'react';
+import React, {useCallback} from 'react';
 import moment from 'moment';
 import {
   deriveUserFromAddr,
   getPriceFromOrder,
   getUSDPriceFromOrder,
-} from '../utils';
+  isAssetOwner,
+  isSameAddress,
+} from '../../../utils';
 
 import {Link as RouterLink} from 'react-router-dom';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -28,11 +32,22 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   listing: any;
+  onCancel: (listing: any) => void;
+  onBuy: (listing: any) => void;
 }
 
 export default (props: Props) => {
-  const {listing} = props;
+  const {listing, onCancel, onBuy} = props;
   const classes = useStyles();
+  const userAccountAddress = useDefaultAccount();
+
+  const handleBuy = useCallback(() => {
+    onBuy(listing);
+  }, [onBuy, listing]);
+
+  const handleCancel = useCallback(() => {
+    onCancel(listing);
+  }, [onCancel, listing]);
 
   return (
     <TableRow>
@@ -55,15 +70,31 @@ export default (props: Props) => {
       </TableCell>
       <TableCell>${getUSDPriceFromOrder(listing).toFixed(2)}</TableCell>
       <TableCell>
-        {/* <Button variant='outlined' size='small' color='primary'>
-          <IntlMessages id='nfts.detail.listingBuy' />
-        </Button> */}
+        {isSameAddress(listing?.maker?.address, userAccountAddress || '') ? (
+          <Button
+            onClick={handleCancel}
+            variant='outlined'
+            size='small'
+            color='primary'>
+            <IntlMessages id='nfts.detail.listingCancel' />
+          </Button>
+        ) : (
+          <Button
+            onClick={handleBuy}
+            variant='outlined'
+            size='small'
+            color='primary'>
+            <IntlMessages id='nfts.detail.listingBuy' />
+          </Button>
+        )}
       </TableCell>
       <TableCell>
-        {moment
-          .unix(listing?.expiration_time)
-          .add(moment.duration({minutes: moment().utcOffset()}))
-          .fromNow()}
+        {listing?.expiration_time > 0
+          ? moment
+              .unix(listing?.expiration_time)
+              .add(moment.duration({minutes: moment().utcOffset()}))
+              .fromNow()
+          : 'never'}
       </TableCell>
       <TableCell>
         <Link

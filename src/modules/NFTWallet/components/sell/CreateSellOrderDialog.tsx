@@ -14,6 +14,7 @@ import React from 'react';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import {Link as RouterLink} from 'react-router-dom';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -47,13 +48,13 @@ export default (props: Props) => {
                   <CheckCircleIcon className={classes.icon} />
                 </Box>
                 <Typography gutterBottom align='center' variant='h5'>
-                  Item successfully listed
+                  <IntlMessages id='nfts.sell.itemSuccessFullyListed' />
                 </Typography>
                 <Typography
                   color='textSecondary'
                   align='center'
                   variant='body1'>
-                  Access the item to see your listing
+                  <IntlMessages id='nfts.sell.accessItemListing' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -64,7 +65,7 @@ export default (props: Props) => {
                   variant='contained'
                   color='primary'
                   size='large'>
-                  View listing
+                  <IntlMessages id='nfts.sell.viewListing' />
                 </Button>
               </Grid>
             </Grid>
@@ -72,14 +73,13 @@ export default (props: Props) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h5'>
-                  Listing your item...
+                  <IntlMessages id='nfts.sell.listingYourItem' />
                 </Typography>
                 <Typography
                   align='center'
                   color='textSecondary'
                   variant='body1'>
-                  Just accept the signature request and wait for listing to be
-                  processed.
+                  <IntlMessages id='nfts.sell.acceptSignatureRequest' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>

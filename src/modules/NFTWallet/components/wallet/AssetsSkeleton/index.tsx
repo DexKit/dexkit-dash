@@ -1,6 +1,6 @@
 import {Grid, Card, CardContent} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import AssetCardSkeleton from '../AssetCardSkeleton';
+import AssetCardSkeleton from '../../detail/AssetCardSkeleton';
 
 interface Props {
   count: number;

@@ -23,15 +23,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   open: boolean;
-  onClick: () => void;
 }
 
 export default (props: Props) => {
-  const {open, onClick} = props;
+  const {open} = props;
   const classes = useStyles();
 
   return (
-    <Backdrop className={classes.backdrop} open={open} onClick={onClick}>
+    <Backdrop className={classes.backdrop} open={open}>
       <Paper>
         <Box p={4}>
           <Grid

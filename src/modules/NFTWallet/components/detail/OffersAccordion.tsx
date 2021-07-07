@@ -126,27 +126,34 @@ export default (props: Props) => {
 
         const openSeaPort = await getOpenSeaPort(provider);
 
-        let order = await openSeaPort.api.getOrder({
-          hash: offer.order_hash,
+        const {orders} = await openSeaPort.api.getOrders({
+          asset_contract_address: asset?.asset_contract?.address,
+          token_id: asset?.token_id,
         });
 
-        setShowAccept(true);
+        let orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
 
-        openSeaPort
-          .fulfillOrder({
-            order,
-            accountAddress: userAccountAddress,
-            referrerAddress: process.env.REACT_APP_OPENSEA_AFFILIATE,
-          })
-          .then(() => {
-            setShowAcceptSuccess(true);
-          })
-          .catch((reason) => {
-            setErrorMessage(reason.message);
-          })
-          .finally(() => {
-            setShowAccept(false);
-          });
+        if (orderIndex > -1) {
+          let order = orders[orderIndex];
+
+          setShowAccept(true);
+
+          openSeaPort
+            .fulfillOrder({
+              order,
+              accountAddress: userAccountAddress,
+              referrerAddress: process.env.REACT_APP_OPENSEA_AFFILIATE,
+            })
+            .then(() => {
+              setShowAcceptSuccess(true);
+            })
+            .catch((reason) => {
+              setErrorMessage(reason.message);
+            })
+            .finally(() => {
+              setShowAccept(false);
+            });
+        }
       }
     },
     [userAccountAddress, getProvider],
@@ -174,30 +181,36 @@ export default (props: Props) => {
 
         const openSeaPort = await getOpenSeaPort(provider);
 
-        let order = await openSeaPort.api.getOrder({
-          hash: offer.order_hash,
-          target: offer.target,
+        let {orders} = await openSeaPort.api.getOrders({
+          asset_contract_address: asset?.asset_contract?.address,
+          token_id: asset?.token_id,
         });
 
-        setShowCancel(true);
+        let orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
 
-        openSeaPort
-          .cancelOrder({
-            order,
-            accountAddress: userAccountAddress,
-          })
-          .then(() => {
-            setShowCancelSuccess(true);
-          })
-          .catch((reason) => {
-            setErrorMessage(reason.message);
-          })
-          .finally(() => {
-            setShowCancel(false);
-          });
+        if (orderIndex > -1) {
+          setShowCancel(true);
+
+          let order = orders[orderIndex];
+
+          openSeaPort
+            .cancelOrder({
+              order,
+              accountAddress: userAccountAddress,
+            })
+            .then(() => {
+              setShowCancelSuccess(true);
+            })
+            .catch((reason) => {
+              setErrorMessage(reason.message);
+            })
+            .finally(() => {
+              setShowCancel(false);
+            });
+        }
       }
     },
-    [userAccountAddress, getProvider],
+    [asset, userAccountAddress, getProvider],
   );
 
   const handleCloseSuccess = useCallback(() => setShowSuccess(false), []);
@@ -268,9 +281,9 @@ export default (props: Props) => {
           </Box>
         </Paper>
       </Backdrop>
-      <CancelOfferBackdrop open={showCancel} onClick={handleCloseCancel} />
-      <AcceptOfferBackdrop open={showAccept} onClick={handleCloseAccept} />
-      <MakeOfferBackdrop open={showMakeOffer} onClick={handleCloseMakeOffer} />
+      <CancelOfferBackdrop open={showCancel} />
+      <AcceptOfferBackdrop open={showAccept} />
+      <MakeOfferBackdrop open={showMakeOffer} />
       <Snackbar
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         open={showSuccess}

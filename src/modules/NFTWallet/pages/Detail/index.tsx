@@ -3,46 +3,42 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Box,
   Card,
-  CardContent,
   CardMedia,
   Grid,
   makeStyles,
   Link,
   Breadcrumbs,
   useTheme,
-  Hidden,
-  IconButton,
   Button,
-  Backdrop,
-  CircularProgress,
   Typography,
 } from '@material-ui/core';
 import {useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {truncateAddress} from 'utils';
 
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {Skeleton, Alert} from '@material-ui/lab';
 import {getWindowUrl} from 'utils/browser';
-import {useAsset} from '../hooks/detail';
-import HistoricAccordion from '../components/detail/HistoricAccordion';
-import ListingAccordion from '../components/detail/ListingAccordion';
-import DetailAccordion from '../components/detail/DetailAccordion';
-import DescriptionCard from '../components/detail/DescriptionCard';
-import OffersAccordion from '../components/detail/OffersAccordion';
-import TransferAssetModal from '../components/detail/TransferAssetModal';
-import CopyAddressButton from '../components/detail/CopyAddressButton';
+import {useAsset} from '../../hooks/detail';
+import HistoricAccordion from '../../components/detail/HistoricAccordion';
+import ListingAccordion from '../../components/detail/ListingAccordion';
+import DetailAccordion from '../../components/detail/DetailAccordion';
+import DescriptionCard from '../../components/detail/DescriptionCard';
+import OffersAccordion from '../../components/detail/OffersAccordion';
+import TransferAssetModal from '../../components/detail/TransferAssetModal';
+import CopyAddressButton from '../../components/detail/CopyAddressButton';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Network, OpenSeaPort} from 'opensea-js';
 import {useWeb3} from 'hooks/useWeb3';
 import {getWeb3Wrapper} from 'services/web3modal';
-import DoneIcon from '@material-ui/icons/Done';
-import WaitingConfirmationBackdrop from '../components/detail/WaitingConfirmationBackdrop';
-import BlockConfirmedBackdrop from '../components/detail/BlockConfirmedBackdrop';
-import {isAssetOwner} from '../utils';
+import WaitingConfirmationBackdrop from '../../components/detail/WaitingConfirmationBackdrop';
+import BlockConfirmedBackdrop from '../../components/detail/BlockConfirmedBackdrop';
+import {isAssetOwner} from '../../utils';
 import {getOpenSeaPort} from 'utils/opensea';
-import {Error as ErrorIcon} from '@material-ui/icons';
+import {AttachMoney, Error as ErrorIcon} from '@material-ui/icons';
+import CancellingListingBackdrop from 'modules/NFTWallet/components/detail/CancellingListingBackdrop';
+import BuyCheckoutDialog from 'modules/NFTWallet/components/detail/BuyCheckoutDialog';
+import BuyingListingBackdrop from 'modules/NFTWallet/components/detail/BuyingListingBackdrop';
+import BuySuccessBackdrop from 'modules/NFTWallet/components/detail/BuySuccessBackdrop';
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
@@ -83,6 +79,14 @@ export const AssetDetail = () => {
   const [blockConfirmed, setBlockConfirmed] = useState(false);
   const [transaction, setTransaction] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isCancellingListing, setIsCancellingListing] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [buyOrder, setBuyOrder] = useState<any>();
+  const [buyTransaction, setBuyTransaction] = useState('');
+
+  const [showCancellingSuccess, setShowCancellingSuccess] = useState(false);
+  const [showBuyingSuccess, setShowBuyingSuccess] = useState(false);
+  const [showBuying, setShowBuying] = useState(false);
 
   const fetchData = useCallback(() => {
     getAsset(address, token);
@@ -157,8 +161,120 @@ export const AssetDetail = () => {
     fetchData();
   }, [fetchData]);
 
+  const handleCancelListing = useCallback(
+    async (listing: any) => {
+      if (userAccountAddress) {
+        const provider = getProvider();
+
+        const openSeaPort = await getOpenSeaPort(provider);
+
+        const {orders} = await openSeaPort.api.getOrders({
+          token_id: data?.token_id,
+          asset_contract_address: data?.asset_contract?.address,
+        });
+
+        let orderIndex = orders.findIndex(
+          (order) => order.hash == listing.order_hash,
+        );
+
+        if (orderIndex > -1) {
+          let order = orders[orderIndex];
+
+          setIsCancellingListing(true);
+
+          openSeaPort
+            .cancelOrder({order, accountAddress: userAccountAddress})
+            .then(() => {
+              setShowCancellingSuccess(true);
+            })
+            .catch((reason: any) => {
+              setErrorMessage(reason.message);
+            })
+            .finally(() => {
+              setIsCancellingListing(false);
+            });
+        }
+      }
+    },
+    [data, getProvider, userAccountAddress],
+  );
+
+  const handleBuyListing = useCallback((listing: any) => {
+    setBuyOrder(listing);
+    console.log(listing);
+    setShowCheckout(true);
+  }, []);
+
+  const handleCloseCheckout = useCallback(() => {
+    setShowCheckout(false);
+    setBuyOrder(null);
+  }, []);
+
+  const handleConfirmBuy = useCallback(async () => {
+    if (userAccountAddress) {
+      const provider = getProvider();
+      const openSeaPort = await getOpenSeaPort(provider);
+
+      const {orders} = await openSeaPort.api.getOrders({
+        token_id: data?.token_id,
+        asset_contract_address: data?.asset_contract?.address,
+      });
+
+      let orderIndex = orders.findIndex(
+        (order) => order.hash == buyOrder.order_hash,
+      );
+
+      if (orderIndex > -1) {
+        let order = orders[orderIndex];
+
+        setShowBuying(true);
+
+        openSeaPort
+          .fulfillOrder({
+            order,
+            accountAddress: userAccountAddress,
+            referrerAddress: process.env.REACT_APP_OPENSEA_AFFILIATE,
+          })
+          .then((hash: string) => {
+            setShowBuyingSuccess(true);
+            setShowCheckout(false);
+            setBuyOrder(null);
+            setBuyTransaction(hash);
+          })
+          .catch((reason) => {
+            setErrorMessage(reason.message);
+            setShowCheckout(false);
+            setBuyOrder(null);
+          })
+          .finally(() => {
+            setShowBuying(false);
+          });
+      } else {
+      }
+    }
+  }, [data, getProvider, buyOrder, userAccountAddress]);
+
+  const handleCloseBuySuccess = useCallback(() => {
+    setShowBuyingSuccess(false);
+    setBuyTransaction('');
+  }, []);
+
   return (
     <>
+      <CancellingListingBackdrop open={isCancellingListing} />
+      <BuyingListingBackdrop open={showBuying} />
+      <BuyCheckoutDialog
+        onConfirm={handleConfirmBuy}
+        open={showCheckout}
+        onClose={handleCloseCheckout}
+        asset={data}
+        order={buyOrder}
+      />
+      <BuySuccessBackdrop
+        transaction={buyTransaction}
+        open={showBuyingSuccess}
+        onClose={handleCloseBuySuccess}
+      />
       <TransferAssetModal
         asset={data}
         open={showTransferDialog}
@@ -287,7 +403,7 @@ export const AssetDetail = () => {
                                   component={RouterLink}
                                   variant='outlined'
                                   size='small'
-                                  startIcon={<SwapHorizIcon />}
+                                  startIcon={<AttachMoney />}
                                   to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}/sell`}
                                   color='primary'>
                                   Sell
@@ -301,6 +417,7 @@ export const AssetDetail = () => {
                         asset={data}
                         loading={loading}
                         error={error}
+                        onBuy={handleBuyListing}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -317,6 +434,8 @@ export const AssetDetail = () => {
                         )}
                         loading={loading}
                         error={error}
+                        onCancel={handleCancelListing}
+                        onBuy={handleBuyListing}
                       />
                     </Grid>
                     <Grid item xs={12}>

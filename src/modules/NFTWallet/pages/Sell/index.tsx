@@ -11,57 +11,30 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Select,
   TextField,
   Typography,
   makeStyles,
-  useMediaQuery,
   useTheme,
-  Collapse,
   Button,
   Switch,
-  FormControl,
-  InputLabel,
   Avatar,
-  Snackbar,
-  Slider,
 } from '@material-ui/core';
 
-import AssetCard from '../AssetCard';
 import {useHistory, useParams} from 'react-router';
-import AssetsSkeleton from '../AssetsSkeleton';
-import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
-import IntlMessages from '../../../@crema/utility/IntlMessages';
-import useFetch from 'use-http';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import CollectionListSkeleton from '../CollectionListSkeleton';
-import useIsMounted from 'hooks/useIsMounted';
-import CollectionsCard from '../CollectionsList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ViewComfyIcon from '@material-ui/icons/ViewComfy';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ErrorIcon from '@material-ui/icons/Error';
-
 import _ from 'lodash';
-import CollectionsList from '../CollectionsList';
-import {truncateTokenAddress} from 'utils';
-import SearchIcon from '@material-ui/icons/Search';
-import {useIntersect} from 'hooks/useIntersect';
-import {FormatListBulletedOutlined} from '@material-ui/icons';
-import {getWindowUrl} from 'utils/browser';
-import SaleTypeButton from '../components/sell/SaleTypeButton';
-import TokenInput, {PaymentToken} from '../components/sell/TokenInput';
-import {useAsset} from '../hooks/detail';
+import SaleTypeButton from '../../components/sell/SaleTypeButton';
+import TokenInput, {PaymentToken} from '../../components/sell/TokenInput';
+import {useAsset} from '../../hooks/detail';
 import {useWeb3} from 'hooks/useWeb3';
 import {getOpenSeaPort} from 'utils/opensea';
 import moment from 'moment';
-import TimedeltaSelect from '../components/detail/TimedeltaSelect';
 import {isAddress} from 'ethers/lib/utils';
-import CreateSellOrderDialog from '../components/sell/CreateSellOrderDialog';
+import CreateSellOrderDialog from '../../components/sell/CreateSellOrderDialog';
 import {Alert, Skeleton} from '@material-ui/lab';
-import DaysSelect from '../components/sell/DaysSelect';
+import DaysSelect from '../../components/sell/DaysSelect';
 
 interface RouteParams {
   address: string;
@@ -107,11 +80,7 @@ const SALE_BY_PRICE = 'p';
 const SALE_HIGHEST_BID = 'h';
 
 export default () => {
-  const theme = useTheme();
-  const userAddress = useDefaultAccount();
-  const isUpXs = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
-  const history = useHistory();
   const {messages} = useIntl();
   const {getProvider} = useWeb3();
   const {address, token}: RouteParams = useParams();
@@ -340,7 +309,7 @@ export default () => {
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <Typography variant='body1' color='textSecondary'>
-                        You are listing:
+                        <IntlMessages id='nfts.sell.youAreListing' />:
                       </Typography>
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -377,16 +346,20 @@ export default () => {
                         <Grid item xs={6} sm={4}>
                           <SaleTypeButton
                             active={saleType == SALE_BY_PRICE}
-                            header='Set Price'
-                            subheader='Sell at a fixed or declining price'
+                            header={messages['nfts.sell.setPrice'].toString()}
+                            subheader={messages[
+                              'nfts.sell.sellFixedPrice'
+                            ].toString()}
                             onClick={handleSelectByPrice}
                           />
                         </Grid>
                         <Grid item xs={6} sm={4}>
                           <SaleTypeButton
                             active={saleType == SALE_HIGHEST_BID}
-                            header='Highest Bid'
-                            subheader='Auction to the highest bidder'
+                            header={messages['nfts.sell.highestBid'].toString()}
+                            subheader={messages[
+                              'nfts.sell.actionToHighestBidder'
+                            ].toString()}
                             onClick={handleSelectHighestBid}
                           />
                         </Grid>
@@ -412,11 +385,10 @@ export default () => {
                             <Typography
                               variant='body1'
                               className={classes.boldText}>
-                              Price
+                              <IntlMessages id='nfts.sell.priceRow' />
                             </Typography>
                             <Typography variant='body2' color='textSecondary'>
-                              Will be on sale until you transfer this item or
-                              cancel it.
+                              <IntlMessages id='nfts.sell.priceRowDescription' />
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={4}>
@@ -442,11 +414,10 @@ export default () => {
                               <Typography
                                 variant='body1'
                                 className={classes.boldText}>
-                                Reserve Price
+                                <IntlMessages id='nfts.sell.reservePrice' />
                               </Typography>
                               <Typography variant='body2' color='textSecondary'>
-                                Create a hidden limit by setting a reserve
-                                price.
+                                <IntlMessages id='nfts.sell.reservePriceDescription' />
                               </Typography>
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -474,12 +445,10 @@ export default () => {
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
-                            Include ending price
+                            <IntlMessages id='nfts.sell.includeEndingPrice' />
                           </Typography>
                           <Typography variant='body2' color='textSecondary'>
-                            Adding an ending price will allow this listing to
-                            expire, or for the price to be reduced until a buyer
-                            is found.
+                            <IntlMessages id='nfts.sell.includeEndingPriceDescription' />
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -503,11 +472,10 @@ export default () => {
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
-                            Starting Price
+                            <IntlMessages id='nfts.sell.startingPrice' />
                           </Typography>
                           <Typography variant='body2' color='textSecondary'>
-                            Will be on sale until you transfer this item or
-                            cancel it.
+                            <IntlMessages id='nfts.sell.startingPriceDescription' />
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -533,10 +501,10 @@ export default () => {
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
-                            Ending Price
+                            <IntlMessages id='nfts.sell.endingPrice' />
                           </Typography>
                           <Typography variant='body2' color='textSecondary'>
-                            Must be less than or equal to the starting price.
+                            <IntlMessages id='nfts.sell.endingPriceDescription' />
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -548,7 +516,9 @@ export default () => {
                             onChangeToken={handleChangeToken}
                             error={
                               endingPrice < 0 || endingPrice > startingPrice
-                                ? 'greater than the starting price'
+                                ? messages[
+                                    'nfts.sell.greaterThanStartingPrice'
+                                  ].toString()
                                 : undefined
                             }
                           />
@@ -566,17 +536,18 @@ export default () => {
                         spacing={2}>
                         <Grid item>
                           <Typography variant='body1'>
-                            Expiration date
+                            <IntlMessages id='nfts.sell.expirationDate' />
                           </Typography>
                           <Typography variant='body2'>
-                            Your listing will automatically end at this time. No
-                            need to cancel it!
+                            <IntlMessages id='nfts.sell.expirationDateDescription' />
                           </Typography>
                         </Grid>
                         <Grid item>
                           <DaysSelect
                             displayEmpty
-                            emptyLabel='Expiration'
+                            emptyLabel={messages[
+                              'nfts.sell.expiration'
+                            ].toString()}
                             variant='outlined'
                             value={expiration}
                             onChange={handleChangeExpiration}
@@ -596,11 +567,10 @@ export default () => {
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
-                            Schedule for a future time
+                            <IntlMessages id='nfts.sell.scheduleForFutureTime' />
                           </Typography>
                           <Typography variant='body2' color='textSecondary'>
-                            You can schedule this listing to only be buyable at
-                            a future date
+                            <IntlMessages id='nfts.sell.scheduleForFutureTimeDescription' />
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -612,7 +582,9 @@ export default () => {
                             {hasScheduleTime ? (
                               <Grid item>
                                 <DaysSelect
-                                  emptyLabel='Expiration'
+                                  emptyLabel={messages[
+                                    'nfts.sell.expiration'
+                                  ].toString()}
                                   variant='outlined'
                                   value={listingTime}
                                   onChange={handleListingTimeChange}
@@ -642,11 +614,10 @@ export default () => {
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
-                            Privacy
+                            <IntlMessages id='nfts.sell.privacy' />
                           </Typography>
                           <Typography variant='body2' color='textSecondary'>
-                            You can keep your listing public, or your can
-                            specify one address that's allowed to buy it.
+                            <IntlMessages id='nfts.sell.privacyDescription' />
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -664,12 +635,14 @@ export default () => {
                       <TextField
                         fullWidth
                         variant='outlined'
-                        placeholder='Buyer address'
+                        placeholder={messages[
+                          'nfts.sell.buyerAddress'
+                        ].toString()}
                         value={buyerAddress}
                         error={!isAddress(buyerAddress) && buyerAddress != ''}
                         helperText={
                           !isAddress(buyerAddress) && buyerAddress != ''
-                            ? 'Invalid Address'
+                            ? messages['nfts.sell.invalidAddress'].toString()
                             : undefined
                         }
                         onChange={handleBuyerAddressChange}
@@ -692,7 +665,9 @@ export default () => {
                           display='flex'
                           justifyContent='space-between'
                           alignItems='center'>
-                          <Typography>Price</Typography>
+                          <Typography>
+                            <IntlMessages id='nfts.sell.price' />
+                          </Typography>
                           <Typography>
                             <Grid
                               container
@@ -720,7 +695,9 @@ export default () => {
                           display='flex'
                           justifyContent='space-between'
                           alignItems='center'>
-                          <Typography>Starting price</Typography>
+                          <Typography>
+                            <IntlMessages id='nfts.sell.startingPrice' />
+                          </Typography>
                           <Typography>
                             <Grid
                               container
@@ -748,7 +725,9 @@ export default () => {
                           display='flex'
                           justifyContent='space-between'
                           alignItems='center'>
-                          <Typography>Ending price</Typography>
+                          <Typography>
+                            <IntlMessages id='nfts.sell.endingPrice' />
+                          </Typography>
                           <Typography>
                             <Grid
                               container
@@ -776,7 +755,9 @@ export default () => {
                           display='flex'
                           justifyContent='space-between'
                           alignItems='center'>
-                          <Typography>Expires in</Typography>
+                          <Typography>
+                            <IntlMessages id='nfts.sell.expiresIn' />
+                          </Typography>
                           <Typography>
                             {moment
                               .unix(expiration)
@@ -793,7 +774,7 @@ export default () => {
                         color='primary'
                         fullWidth
                         size='large'>
-                        Post your listing
+                        <IntlMessages id='nfts.sell.postYourListing' />
                       </Button>
                     </Grid>
                   </Grid>
@@ -813,11 +794,10 @@ export default () => {
                       gutterBottom
                       style={{fontWeight: 800}}
                       variant='body1'>
-                      Fees
+                      <IntlMessages id='nfts.sell.fees' />
                     </Typography>
                     <Typography variant='body2' color='textSecondary'>
-                      Listing is free! At the time of the sale, the following
-                      2.5% fees will be deducted.
+                      <IntlMessages id='nfts.sell.listingFeeDescription' />
                     </Typography>
                   </Grid>
                 </Grid>

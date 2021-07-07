@@ -8,3 +8,11 @@ export interface OpenSeaToken {
   eth_price: string;
   usd_price: string;
 }
+
+export interface AssetsQuery {
+  owner: string;
+  offset: number;
+  limit: number;
+  sortBy: string;
+  collection?: string;
+}

@@ -9,7 +9,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SubjectIcon from '@material-ui/icons/Subject';
-import AssetEventsTable from 'modules/NFTWallet/AssetEventsTable';
+import AssetEventsTable from './AssetEventsTable';
 import {sortEventArray} from 'modules/NFTWallet/utils';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useAssetEvents} from 'modules/NFTWallet/hooks/detail';

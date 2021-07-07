@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Box,
   Card,
@@ -15,24 +15,22 @@ import {
   Collapse,
   IconButton,
   InputAdornment,
-  useScrollTrigger,
   CircularProgress,
   Checkbox,
   FormControlLabel,
   Button,
 } from '@material-ui/core';
 
-import AssetCard from '../AssetCard';
+import AssetCard from '../../components/detail/AssetCard';
 import {useHistory, useParams} from 'react-router';
-import AssetsSkeleton from '../AssetsSkeleton';
+import AssetsSkeleton from '../../components/wallet/AssetsSkeleton';
 import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
-import IntlMessages from '../../../@crema/utility/IntlMessages';
-import useFetch from 'use-http';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import CollectionListSkeleton from '../CollectionListSkeleton';
+import CollectionListSkeleton from '../../components/wallet/CollectionListSkeleton';
 import useIsMounted from 'hooks/useIsMounted';
-import CollectionsCard from '../CollectionsList';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
@@ -40,47 +38,14 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ErrorIcon from '@material-ui/icons/Error';
 
 import _ from 'lodash';
-import CollectionsList from '../CollectionsList';
+import CollectionsList from '../../components/wallet/CollectionsList';
 import {truncateTokenAddress} from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
 import {getWindowUrl} from 'utils/browser';
 import {useWeb3} from 'hooks/useWeb3';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import axios from 'axios';
-
-interface AssetsQuery {
-  owner: string;
-  offset: number;
-  limit: number;
-  sortBy: string;
-  collection?: string;
-}
-
-const useMyAssets = () => {
-  const {getProvider} = useWeb3();
-
-  const getAssets = useCallback(
-    async (query: AssetsQuery) => {
-      const provider = getProvider();
-      const chainId = await getChainId(provider);
-
-      const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-      }.opensea.io/api/v1/assets?owner=${query.owner}&order_by=${
-        query.sortBy
-      }&order_direction=desc&offset=${query.offset}&limit=${
-        query.limit
-      }&collection=${query.collection || ''}`;
-
-      return axios.get(url, {
-        headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},
-      });
-    },
-    [getProvider],
-  );
-
-  return {getAssets};
-};
+import {useMyAssets} from 'modules/NFTWallet/hooks/wallet';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -115,15 +80,6 @@ interface RouteParams {
   address: string;
 }
 
-interface ListParams {
-  owner: string;
-  collection?: string;
-  sortBy: string;
-  limit: number;
-  offset: number;
-  query: string;
-}
-
 const isWalletOwner = (address: string, other?: string) => address == other;
 
 const useStyles = makeStyles((theme) => ({
@@ -138,12 +94,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: theme.spacing(60),
   },
 }));
-
-interface AssetFilter {
-  query: string;
-  collection: string;
-  sortBy: string;
-}
 
 export default () => {
   const theme = useTheme();
@@ -197,7 +147,7 @@ export default () => {
       owner: address,
       collection,
     })
-      .then((response) => {
+      .then((response: any) => {
         let assets = response.data.assets;
 
         if (query) {
@@ -311,7 +261,7 @@ export default () => {
         limit: 20,
         owner: address,
         collection,
-      }).then((response) => response.data);
+      }).then((response: any) => response.data);
 
       let tempAssets = result.assets;
 
