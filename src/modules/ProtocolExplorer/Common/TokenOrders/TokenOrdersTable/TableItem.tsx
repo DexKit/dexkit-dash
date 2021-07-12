@@ -88,6 +88,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
 
   const createdFn = new Date((row.block?.timestamp?.time)||0);
   const priceUsd = usdFormatter.format((row.baseAmountInUsd || 1) / (row.baseAmount || 1) );
+  const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0) ;
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
@@ -128,7 +129,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
         </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        ${row.tradeAmountIsUsd?.toFixed(2)}
+        {tradeAmountUsd}
       </TableCell>
       {exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCell}>

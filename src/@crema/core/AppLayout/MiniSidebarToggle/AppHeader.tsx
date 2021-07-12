@@ -3,12 +3,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
 import {toggleNavCollapsed} from '../../../../redux/actions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
@@ -20,9 +21,9 @@ import { useWeb3 } from 'hooks/useWeb3';
 import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
 import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
 
-
-
 import clsx from 'clsx';
+import { AppState } from 'redux/store';
+import { isMobile } from 'web3modal';
 
 interface AppHeaderProps {}
 
@@ -43,6 +44,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setMobileMoreAnchorEl(event.currentTarget);
   }
+  const {navCollapsed} = useSelector<AppState, AppState['settings']>(
+    ({settings}) => settings,
+  );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -68,14 +72,25 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     <>
       <AppBar color='inherit' className={clsx(classes.appBar, 'app-bar')}>
         <Toolbar className={classes.appToolbar}>
-          <IconButton
+        {!isMobile() && 
+        <IconButton
             edge='start'
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
             onClick={() => dispatch(toggleNavCollapsed())}>
-            <MenuIcon className={classes.menuIcon} />
-          </IconButton>
+            {navCollapsed  ? <MenuOpenIcon className={classes.menuIconCollapsed} /> :  <MenuOpenIcon className={classes.menuIcon} />}
+          </IconButton>}
+          {isMobile() && 
+        <IconButton
+            edge='start'
+            className={classes.menuButton}
+            color='inherit'
+            aria-label='open drawer'
+            onClick={() => dispatch(toggleNavCollapsed())}>
+           <MenuIcon className={classes.menuIcon} />
+          </IconButton>}
+
 
          {/* <AppLogo />*/}
          <Box className={classes.grow} />

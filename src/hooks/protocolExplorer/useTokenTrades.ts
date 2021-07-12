@@ -14,8 +14,7 @@ import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockc
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
 import { FilterContext } from 'providers/protocol/filterContext';
 import { getFilterValueById} from 'utils';
-import { useRefreshRate } from 'hooks/useRefreshRate';
-import { getLast24HoursDate } from 'utils/time_utils';
+import { getAfer24HoursDate } from 'utils/time_utils';
 import useInterval from 'hooks/useInterval';
 
 interface Props {
@@ -32,7 +31,7 @@ export const useTokenTrades = ({
 }: Props) => {
   const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
 
-  const [toDate, setTo] = useState(getLast24HoursDate())
+  const [toDate, setTo] = useState(getAfer24HoursDate())
   const [seconds, setSeconds] = useState(0);
   const {
     filters
@@ -44,7 +43,7 @@ export const useTokenTrades = ({
    // TODO: investigate 
   useInterval( () => {
     if(!toFilter){
-      setTo(new Date())
+      setTo(new Date(getAfer24HoursDate()))
     }
      
   }, POLL_INTERVAL, false)

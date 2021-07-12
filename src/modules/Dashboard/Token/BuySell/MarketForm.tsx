@@ -26,6 +26,7 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 interface Props {
   chainId: number | undefined;
@@ -219,8 +220,8 @@ const MarketForm: React.FC<Props> = (props) => {
           allowedSlippage: 0.03,
           ethAccount: props.account,
           buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
+          feeRecipient: FEE_RECIPIENT,
+          affiliateAddress: FEE_RECIPIENT,
           intentOnFill: false,
         },
         networkName,

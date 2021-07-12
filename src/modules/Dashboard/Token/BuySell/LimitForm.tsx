@@ -36,6 +36,7 @@ import {
 } from 'shared/constants/Bitquery';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 interface Props {
   chainId: number | undefined;
@@ -221,8 +222,8 @@ const LimitForm: React.FC<Props> = (props) => {
           allowedSlippage: 0.03,
           ethAccount: account,
           buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
+          feeRecipient: FEE_RECIPIENT,
+          affiliateAddress: FEE_RECIPIENT,
           intentOnFill: false,
         },
         network,

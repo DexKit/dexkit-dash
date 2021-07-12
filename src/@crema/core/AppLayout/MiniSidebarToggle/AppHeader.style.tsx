@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: 35,
     height: 35,
   },
+  menuIconCollapsed: {
+    width: 35,
+    height: 35,
+    transform: 'rotate(180deg)',
+  },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {

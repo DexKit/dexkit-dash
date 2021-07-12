@@ -6,6 +6,7 @@ import {ReactComponent as Mastercard} from '../../../assets/images/mastercard.sv
 import styled from 'styled-components';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
+import { useWindowSize } from 'hooks/useWindowSize';
 
 interface Props extends ButtonProps {}
 
@@ -31,7 +32,7 @@ const IconContainer = styled.div<DefaultProps>`
 `;
 
 const Transak: React.FC<Props> = (props) => {
-
+  const windowSize = useWindowSize();
   const useStyles = makeStyles((theme: CremaTheme) => ({
     btnPrimary: {
       color: 'white',
@@ -63,7 +64,6 @@ const Transak: React.FC<Props> = (props) => {
   const [transakClient, setTransakInstance] = useState<any>();
 
   const transakAllEvents = useCallback((data: any) => {
-    console.log(data);
     if(data.eventName === 'TRANSAK_WIDGET_CLOSE'){
       const w = (window as any)
       if(w){
@@ -80,7 +80,6 @@ const Transak: React.FC<Props> = (props) => {
 
   const transakCloseEvents = useCallback(
     (data: any) => {
-      console.log('closed')
       transakClient?.close();
   
       // setTransakInstance(undefined);
@@ -99,7 +98,7 @@ const Transak: React.FC<Props> = (props) => {
 
 
   useEffect(() => {
-    if (!transakClient) {
+    if (!transakClient && windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
@@ -110,8 +109,8 @@ const Transak: React.FC<Props> = (props) => {
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field
-        widgetHeight: '600px',
-        widgetWidth: '450px',
+        widgetHeight: windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
+        widgetWidth: windowSize?.width < 510 ? `${windowSize.width - 10}px`  : '500px'
       });
 
       transak.on(transak.ALL_EVENTS, transakAllEvents);
@@ -119,7 +118,7 @@ const Transak: React.FC<Props> = (props) => {
       transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
       setTransakInstance(transak);
     }
-  }, [account, transakClient]);
+  }, [account, transakClient,  windowSize]);
 
   const onBuy = () => {
     if (transakClient) {

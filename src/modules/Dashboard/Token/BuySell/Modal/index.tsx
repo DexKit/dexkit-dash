@@ -180,7 +180,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
         <Dialog
           fullScreen={isfullScreen}
           fullWidth
-          maxWidth='xs'
+          maxWidth='sm'
           scroll='paper'
           open={open}
           onClose={onClose}

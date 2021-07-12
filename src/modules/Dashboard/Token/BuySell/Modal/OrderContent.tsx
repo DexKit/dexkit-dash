@@ -40,6 +40,7 @@ import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
 import { GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 interface Props {
   isMarket: boolean;
@@ -210,8 +211,8 @@ const OrderContent: React.FC<Props> = (props) => {
           allowedSlippage: slippage,
           ethAccount: props.account,
           buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
+          feeRecipient: FEE_RECIPIENT,
+          affiliateAddress: FEE_RECIPIENT,
           intentOnFill: true,
         },
         networkName,
