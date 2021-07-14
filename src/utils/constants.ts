@@ -32,7 +32,7 @@ export const TRADE_API_URL = (chainId: ChainId) => {
         case ChainId.Kovan:
             return 'https://kovan.api.dexkit.com/v3';
         default:
-            return '';
+            return 'https://query.dexkit.com/v4';
     }
 };
 

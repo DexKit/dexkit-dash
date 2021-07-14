@@ -27,11 +27,19 @@ export const dashBoardConfigs = [
     ],
   },
   {
+    routes: [
+      {
+        path: '/dashboard/wallet/:account',
+        component: React.lazy(() => import('./Wallet/index_tabs')),
+      },
+    ],
+  },
+  {
     auth: ['wallet'],
     routes: [
       {
         path: '/dashboard/wallet',
-        component: React.lazy(() => import('./Wallet')),
+        component: React.lazy(() => import('./Wallet/index_tabs')),
       },
     ],
   },
@@ -59,7 +67,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/:networkName/dashboard/token/:address',
-        component: React.lazy(() => import('./Token')),
+        component: React.lazy(() => import('./Token/index_tabs')),
       },
     ],
   }

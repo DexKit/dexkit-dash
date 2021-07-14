@@ -1,0 +1,53 @@
+
+import Box from "@material-ui/core/Box";
+import NoWallet from "modules/ErrorPages/NoWallet";
+import TransferListContainer from "modules/History/TransferList/container"
+import React, { useMemo, useState } from "react"
+import { useHistory } from "react-router-dom";
+import NetworkChips from "shared/components/NetworkChips";
+
+import { EthereumNetwork } from "shared/constants/AppEnums";
+
+
+type  Props  = {
+        address?: string;
+        enableNetworkChips?: boolean;
+      };
+      
+
+
+
+export const TransferTab = (props:Props) => {
+        const history = useHistory();
+        let searchParams = useMemo(() => {return new URLSearchParams(history.location.search)},[]); 
+        const [networkName, setNetworkName] = useState<EthereumNetwork>(searchParams.get('network') as EthereumNetwork ?? EthereumNetwork.ethereum);
+        const {address, enableNetworkChips = true } = props
+       
+
+        const onChangeNetwork = (net: EthereumNetwork | 'all')=> {
+                let searchParams = new URLSearchParams(history.location.search); 
+                searchParams.set('network', net);
+                history.push({search:searchParams.toString()});
+                setNetworkName(net as EthereumNetwork);
+        }
+
+
+
+        return (
+        
+                  <>
+                  {address &&  
+                <>
+                      {enableNetworkChips &&  
+                      <Box display={'flex'} >
+                         <NetworkChips networkName={networkName} onClick={onChangeNetwork} enableAll={false}/>
+                      </Box>
+                      
+                      }
+
+                        <TransferListContainer address={address} networkName={networkName}/>
+                    </>}
+                    {!address && <NoWallet/>}
+                  </>
+        )
+}

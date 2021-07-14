@@ -10,12 +10,22 @@ import {
   SUSHISWAP_INFO_API_URL,
 } from 'shared/constants/AppConst';
 
-type dataProtocolPair = {
-  address?: string;
-  contract?: string;
-  baseToken: Token;
-  quoteToken: Token;
-};
+
+export const IS_AMM  = (exchange: EXCHANGE) => {
+     switch (exchange) {
+       case EXCHANGE.PANCAKEV2:
+         return true;
+       case EXCHANGE.SUSHISWAP:
+         return true;
+       case EXCHANGE.UNISWAP:
+         return true;
+       default:
+        return false;
+     }
+
+
+}
+
 
 export const GET_PROTOCOL_PAIR_URL = (
   network: EthereumNetwork,
@@ -25,14 +35,13 @@ export const GET_PROTOCOL_PAIR_URL = (
   quoteAddress: string | null | undefined,
 ) => {
   switch (exchange) {
-    case EXCHANGE.UNISWAP:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${address}`;
     case EXCHANGE.ZEROX:
-      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/pair-explorer/${baseAddress}-${quoteAddress}`;
+      return `/protocol-explorer/pair-explorer/${baseAddress}-${quoteAddress}?network=${network}`;
     default:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/pair-explorer/${address}`;
+      return `/protocol-explorer/pair-explorer/${baseAddress}-${quoteAddress}?network=${network}`;
   }
 };
+
 
 export const GET_PROTOCOL_TOKEN_URL = (
   network: EthereumNetwork,
@@ -41,11 +50,11 @@ export const GET_PROTOCOL_TOKEN_URL = (
 ) => {
   switch (exchange) {
     case EXCHANGE.UNISWAP:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${address}`;
+      return `/protocol-explorer/token-explorer/${address}?network=${network}`;
     case EXCHANGE.ZEROX:
-      return `/${network}/protocol-explorer/${EXCHANGE.ZEROX}/token-explorer/${address}`;
+      return `/protocol-explorer/token-explorer/${address}?network=${network}`;
     default:
-      return `/${network}/protocol-explorer/${EXCHANGE.UNISWAP}/token-explorer/${address}`;
+      return `/protocol-explorer/token-explorer/${address}?network=${network}`;
   }
 };
 
@@ -87,7 +96,35 @@ export const GET_EXCHANGE_FROM_URL = (exchangeURL: EXCHANGE_NAME_ON_URL) => {
       return EXCHANGE.ZEROX;
     case EXCHANGE_NAME_ON_URL.BALANCER:
       return EXCHANGE.BALANCER;
+    case EXCHANGE_NAME_ON_URL.PANCAKEV2:
+      return EXCHANGE.PANCAKEV2;
     default:
       return EXCHANGE.ALL;
   }
+};
+
+
+export const GET_URL_NAME_EXCHANGE = (exchange: EXCHANGE) => {
+  switch (exchange) {
+    case EXCHANGE.UNISWAP:
+      return EXCHANGE_NAME_ON_URL.UNISWAP;
+    case EXCHANGE.SUSHISWAP:
+      return EXCHANGE_NAME_ON_URL.SUSHISWAP;
+    case EXCHANGE.ZEROX:
+      return EXCHANGE.ZEROX;
+    case EXCHANGE.BALANCER:
+      return EXCHANGE_NAME_ON_URL.BALANCER;
+    case EXCHANGE.PANCAKEV2:
+      return EXCHANGE_NAME_ON_URL.PANCAKEV2;
+    default:
+      return EXCHANGE.ALL;
+  }
+};
+
+export const GET_PROTOCOL_POOL_URL = (
+  network: EthereumNetwork,
+  exchange: EXCHANGE,
+  address: string | null | undefined,
+) => {
+    return `/protocol-explorer/pool-explorer/${address}?network=${network}&protocol=${GET_URL_NAME_EXCHANGE(exchange)}`;
 };

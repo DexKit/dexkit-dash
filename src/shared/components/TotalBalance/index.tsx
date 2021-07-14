@@ -3,7 +3,7 @@ import {Box, Button, Card, Fade} from '@material-ui/core';
 import {indigo} from '@material-ui/core/colors';
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
+import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
@@ -14,6 +14,7 @@ import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
 import { MyBalances } from 'types/blockchain';
 import { useNetwork } from 'hooks/useNetwork';
+import Transak from 'shared/components/Transak';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 interface Props {
@@ -142,8 +143,8 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
   }
 
   return (
-    <Box className='card-hover'>
-      <Fade in={true} timeout={1000}>
+    <Box>
+    {/*  <Fade in={true} timeout={1000}>*/}
         <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
           <Card>
             <Box
@@ -157,6 +158,12 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                 <>
                   <Skeleton variant='rect' width='40%' height={20} />
                   <Box display='flex' alignItems='end'>
+                    <Skeleton
+                        variant='rect'
+                        width={106}
+                        height={40}
+                        style={{marginRight: 10}}
+                      />
                     <Skeleton
                       variant='rect'
                       width={106}
@@ -192,6 +199,9 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
                     ml={{xs: 0, xl: 'auto'}}
                     mt={{xs: 2, lg: 0}}>
                     <Box>
+                      <Transak />
+                    </Box>
+                    <Box ml={3}>
                       <Button
                         variant='outlined'
                         onClick={() => setSenderModal(true)}
@@ -220,7 +230,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             color={indigo[100]}>
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
-            {loading ? (
+            {!only && loading ? (
               <Skeleton
                 style={{marginTop: 10}}
                 variant='rect'
@@ -237,7 +247,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
             )}
           </Card>
         </Box>
-      </Fade>
+  {/*    </Fade>*/}
 
       <Sender
         open={senderModal}

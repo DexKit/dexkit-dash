@@ -6,7 +6,6 @@ import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
 import VerticalNavGroup from './VerticalNavGroup';
 import VerticalExternal from './VerticaIExternal';
-import AppLogo from 'shared/components/AppLogo';
 import useRoutesConfig from '../../../../modules/routesConfig';
 
 interface NavigationProps {}

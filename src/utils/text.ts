@@ -1,4 +1,4 @@
-import { ChainId } from "types/blockchain";
+import { Web3Wrapper } from "@0x/web3-wrapper";
 import isURL from "validator/lib/isURL";
 import { isNativeCoinWithoutChainId } from "./tokens";
 
@@ -8,6 +8,7 @@ export const truncateAddress = (address: string|undefined ) => {
   }
   return '';
 };
+
 
 export const truncateTokenAddress = (address: string|undefined ) => {
   if(address && isNativeCoinWithoutChainId(address) ){
@@ -39,3 +40,24 @@ export const urlValidator = (url: string) => {
     protocols: ['http','https']
   });
 }
+
+
+/**
+ * Truncate if address, pass maxLen if you wanna to truncate the text as well
+ * @param address Text
+ * @param maxLen 
+ * @returns 
+ */
+ export const truncateIsAddress = (address: string|undefined, maxLen?: number ) => {
+  if (address) {
+    if(Web3Wrapper.isAddress(address)){
+      return `${address.slice(0, 7)}...${address.slice(address.length - 5)}`;
+    }else{
+      if(maxLen){
+        return truncateText(address, maxLen)
+      }
+      return address;
+    }
+  }
+  return '';
+};

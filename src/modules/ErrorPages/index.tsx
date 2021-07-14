@@ -40,6 +40,14 @@ export const errorPagesConfigs = [
   {
     routes: [
       {
+        path: '/no-wallet',
+        component: React.lazy(() => import('./NoWallet')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/connect-wallet',
         component: React.lazy(() => import('./ConnectWallet')),
       },

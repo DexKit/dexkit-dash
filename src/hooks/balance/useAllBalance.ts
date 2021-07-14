@@ -53,7 +53,7 @@ export const useAllBalance = (defaultAccount?: string) => {
               .then((coingeckoList) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
                   (t) => {
-                    const addr = (t.currency?.address == '-') ? 'eth' : t?.currency?.address?.toLowerCase();
+                    const addr = (t.currency?.address === '-') ? 'eth' : t?.currency?.address?.toLowerCase();
                 
                     return <MyBalances>{
                       currency: {
@@ -89,7 +89,7 @@ export const useAllBalance = (defaultAccount?: string) => {
                 );
               
                 const allData = (dataFn ?? []).concat(dataFnBNB ?? []);
-                setData(allData);
+                setData(allData.filter(b=> b?.value && b?.value > 0));
               })
               .catch((e) => setError(e))
               .finally(() => setLoading(false));

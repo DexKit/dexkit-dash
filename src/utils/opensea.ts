@@ -17,13 +17,18 @@ export async function getChainId(provider: any) {
 }
 
 export async function getOpenSeaPort(provider: any) {
-  let config = {};
+  let config = {
+    apiBaseUrl: 'https://api.opensea.io',
+    networkName: Network.Main,
+    apiKey: process.env.REACT_APP_OPENSEA_API_KEY,
+  };
 
   let chainId = await getChainId(provider);
 
   if (chainId == RINKEBY_NETWORK) {
     config = RINKEBY_API_CONFIG;
   }
+
 
   let port = new OpenSeaPort(provider, config);
 

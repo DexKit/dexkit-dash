@@ -27,6 +27,10 @@ export async function getDexkit(): Promise<CoinDetailCoinGecko> {
 	return getCoingecko('dexkit?sparkline=true');
 }
 
+export async function getTokenById(id: string): Promise<CoinDetailCoinGecko> {
+	return getCoingecko(`${id}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`);
+}
+
 export async function getBitcoin(): Promise<CoinDetailCoinGecko> {
 	return getCoingecko('bitcoin?sparkline=true');
 }
@@ -50,7 +54,10 @@ export async function getCoinsData(ids: string, currency: string = 'usd'): Promi
 
 let coingeckoIdTokens: CoinListItemCoingecko[]; 
 
-export async function getTokens(tokensMetadata: {address: string, network: string}[]): Promise<{ [address: string]:  CoinItemCoinGecko}> {
+
+
+
+export async function getTokens(tokensMetadata: {address: string}[]): Promise<{ [address: string]:  CoinItemCoinGecko}> {
 
 	if(!coingeckoIdTokens) {
 		coingeckoIdTokens = await getAllCoinsId();
@@ -92,6 +99,23 @@ export async function getTokens(tokensMetadata: {address: string, network: strin
 		return acc;
 	}, {});
 }
+
+export async function getTokenCoingeckoItemList(address: string): Promise<CoinListItemCoingecko | null> {
+
+	if(!coingeckoIdTokens) {
+		coingeckoIdTokens = await getAllCoinsId();
+	}
+
+	const geckoData = coingeckoIdTokens.filter(c => c.platforms.ethereum || c.platforms['binance-smart-chain'])
+	const findToken = geckoData.find(c => c?.platforms?.ethereum?.toLowerCase() === address.toLowerCase() 
+	|| c.platforms['binance-smart-chain']?.toLowerCase() === address.toLowerCase() )
+	if(findToken){
+		return findToken;
+	}else{
+		return null;
+	}
+}
+
 
 export async function getTokensById(ids: string[]): Promise<  CoinItemCoinGecko[]> {
 

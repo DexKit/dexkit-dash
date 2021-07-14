@@ -2,14 +2,17 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 import InfoView from '../../../@crema/core/InfoView';
-
+import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import {Link as RouterLink} from 'react-router-dom';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, Link} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {useWeb3} from 'hooks/useWeb3';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { useIntl } from 'react-intl';
+import FaqList from './FaqList';
+
 
 interface ComingSoonProps {}
 
@@ -75,7 +78,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
               type='submit'
               className={classes.button}
               onClick={onConnectWeb3}>
-              Connect Wallet
+                Connect Wallet
             </Button>
           </Box>
           <Box
@@ -83,14 +86,34 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
             display={'flex'}>
+             <Typography  variant="h4"> To use this feature you need to connect your wallet</Typography>
             {/*<img
               src={require('assets/images/errorPageImages/connect-wallet.png')}
               alt='Connect Wallet'
             />*/}
           </Box>
+          <Box
+            mb={5}
+            maxWidth={{xs: 300, sm: 400, xl: 672}}
+            width='100%'
+            display={'flex'}>
+            
+         
+          </Box>
+
         </Box>
         <InfoView />
       </Box>
+      <Box
+        py={{xl: 8}}
+        flex={1}
+        display='flex'
+        flexDirection='column'
+        justifyContent='center'
+        alignItems='center'
+        textAlign='center'>
+        <FaqList/>
+    </Box>
     </>
   );
 };

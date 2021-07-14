@@ -17,6 +17,7 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import TokenLogo from 'shared/components/TokenLogo';
 import {MyBalances} from 'types/blockchain';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface TableItemProps {
   data: MyBalances;
@@ -32,16 +33,18 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       fontSize: 12,
       padding: 6,
       '&:first-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingLeft: 4,
-        // },
-        paddingLeft: 20,
+        paddingLeft: 2,
+         [theme.breakpoints.up('xl')]: {
+           paddingLeft: 20,
+         },
+       
       },
       '&:last-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingRight: 4,
-        // },
-        paddingRight: 20,
+        paddingRight: 2,
+         [theme.breakpoints.up('xl')]: {
+           paddingRight: 20,
+         },
+        
       },
       // [theme.breakpoints.up('xl')]: {
       //   fontSize: 18,
@@ -58,8 +61,8 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       whiteSpace: 'nowrap',
     },
     avatar: (props: any) => ({
-      width: 40,
-      height: 40,
+      width: 30,
+      height: 30,
       padding: 0,
       backgroundColor: data?.currency?.address ? props.color : grey[500],
       [theme.breakpoints.up('xl')]: {
@@ -72,11 +75,20 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   const history = useHistory();
 
+  const account = useDefaultAccount();
+
   const getNetworkLink = (d: MyBalances) => {
     if (d.network === EthereumNetwork.bsc) {
       return `/${EthereumNetwork.bsc}/dashboard/token/`;
     }
     return `/${EthereumNetwork.ethereum}/dashboard/token/`;
+  };
+
+  const getTradeNetworkLink = (d: MyBalances) => {
+    if (d.network === EthereumNetwork.bsc) {
+      return `/${EthereumNetwork.bsc}/history/trade/list`;
+    }
+    return `/${EthereumNetwork.ethereum}/history/trade/list`;
   };
 
   return (
@@ -87,7 +99,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
         <Box display='flex'>
           <Box mr={{xs: 3, xl: 5}}>
             {data.currency?.address ? (
-              <TokenLogo token0={data.currency?.address} />
+              <TokenLogo token0={data.currency?.address} networkName={data.network} />
             ) : (
               // data.currency?.address == '-' ? (
               //   <Avatar className={classes.avatar} src={data.currency?.address}>
@@ -134,6 +146,14 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             history.push(getNetworkLink(data) + data.currency?.address);
           }}>
           Trade
+        </Button>
+        <Button
+          variant='outlined'
+          style={{marginLeft: '2px'}}
+          onClick={() => {
+            history.push(`${getTradeNetworkLink(data)}/${account}/token/${data.currency?.address}`);
+          }}>
+          History
         </Button>
       </TableCell>
     </TableRow>

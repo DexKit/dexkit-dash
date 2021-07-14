@@ -6,7 +6,6 @@ import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -22,10 +21,12 @@ import {isMobile} from 'web3modal';
 import {
   FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 interface Props {
   chainId: number | undefined;
@@ -45,7 +46,6 @@ const MarketForm: React.FC<Props> = (props) => {
   const {
     chainId,
     account,
-    tokenAddress,
     networkName,
     balances,
     select0,
@@ -116,7 +116,7 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const network = useNetwork();
 
-  const { web3State, onConnectWeb3, account:web3Account } = useWeb3();
+  const {web3State, onConnectWeb3} = useWeb3();
 
   const [
     tokenBalance,
@@ -127,23 +127,18 @@ const MarketForm: React.FC<Props> = (props) => {
   const [amountTo, setAmountTo] = useState<number>(0);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
-  useEffect(()=> {
-    if ( web3State !== Web3State.Done && tokenFrom === undefined) {
-      const tokenETH = select1.find(
-        (e) => e.symbol.toLowerCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
-      );
-    if(tokenETH){
-      tokenETH.address = GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase();
-      onChangeToken(tokenETH, 'from');
-    }
-  
-    }
+  if (web3State !== Web3State.Done && tokenFrom === undefined) {
+    const tokenETH = select1.find(
+      (e) =>
+        (e.symbol.toLowerCase() ===
+          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
+          e.symbol.toLowerCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
+        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+    );
 
-  }, [web3State, tokenFrom, select1])
-
-
-/*  
-  }*/
+    onChangeToken(tokenETH, 'from');
+  }
 
   const resetAmount = () => {
     setAmountFrom(0);
@@ -182,8 +177,9 @@ const MarketForm: React.FC<Props> = (props) => {
           onFetch(tokenBalance?.value - 0.03);
         }
       } else {
-        setAmountFrom(tokenBalance?.value ?? 0);
-        onFetch(tokenBalance?.value ?? 0);
+        // Problem: balance comes with 8 decimals (rounded up) from the api
+        setAmountFrom(tokenBalance?.value - 0.000000001 ?? 0);
+        onFetch(tokenBalance?.value - 0.000000001 ?? 0);
       }
     }
   };
@@ -224,8 +220,8 @@ const MarketForm: React.FC<Props> = (props) => {
           allowedSlippage: 0.03,
           ethAccount: props.account,
           buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
+          feeRecipient: FEE_RECIPIENT,
+          affiliateAddress: FEE_RECIPIENT,
           intentOnFill: false,
         },
         networkName,
@@ -276,41 +272,39 @@ const MarketForm: React.FC<Props> = (props) => {
 
   let errorMessage = null;
   let disabled = false;
+  let notConnected = web3State !== Web3State.Done;
 
-  if (web3State !== Web3State.Done) {
-    errorMessage = (
-      <Box display='flex' alignItems='center' justifyContent='center'>
-        <Button
-          size='large'
-          variant='contained'
-          color='primary'
-          onClick={onConnectWeb3}
-          endIcon={<AccountBalanceWalletIcon />}>
-          {web3State === Web3State.Connecting
-            ? isMobile()
-              ? 'Connecting...'
-              : 'Connecting... Check Wallet'
-            : isMobile()
-            ? 'Connect'
-            : 'Connect Wallet'}
-        </Button>
-      </Box>
-    );
-    // disabled = true;
-  } else if (select0.length === 0) {
+  const connectButton = (
+    <Box display='flex' alignItems='center' justifyContent='center'>
+      <Button
+        size='large'
+        variant='contained'
+        color='primary'
+        onClick={onConnectWeb3}
+        endIcon={<AccountBalanceWalletIcon />}>
+        {web3State === Web3State.Connecting
+          ? isMobile()
+            ? 'Connecting...'
+            : 'Connecting... Check Wallet'
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
+      </Button>
+    </Box>
+  );
+  // disabled = true;
+  if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
-    disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
-  }else if (account !== web3Account) {
-      errorMessage = 'Connect Your Default Wallet';
-  } else if (networkName !== network){
-    errorMessage =  `Switch to ${FORMAT_NETWORK_NAME(network)} Network in your wallet`;
+  } else if (networkName !== network) {
+    errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
+      networkName,
+    )} Network in your wallet`;
   }
   const {usdFormatter} = useUSDFormatter();
-
   return (
     <Box>
       <form noValidate autoComplete='off'>
@@ -379,8 +373,10 @@ const MarketForm: React.FC<Props> = (props) => {
               md={6}>
               <SelectToken
                 id={'marketSel0'}
+                label={web3State === Web3State.Done ? 'Your Coins' : ''}
+                limitCoins={select0.length ? true : false}
                 selected={tokenFrom}
-                options={web3State === Web3State.Done ? select0 : select1}
+                options={(web3State === Web3State.Done && select0.length ) ? select0 : select1}
                 disabled={disabled}
                 onChange={($token) => {
                   onChangeToken($token, 'from');
@@ -488,29 +484,32 @@ const MarketForm: React.FC<Props> = (props) => {
         </Box>
       </form>
 
-      <Button
-        className={classes.btnPrimary}
-        fullWidth
-        size='large'
-        variant='contained'
-        color='primary'
-        onClick={handleTrade}
-        disabled={
-          (tokenBalance?.value || 0) < (amountFrom || 0) ||
-          !!errorMessage ||
-          amountTo === 0 ||
-          web3State !== Web3State.Done
-        }>
-        {errorMessage && account ? (
-          errorMessage
-        ) : (
-          <>
-            <Box fontSize='large' fontWeight='bold'>
-              Trade
-            </Box>
-          </>
-        )}
-      </Button>
+      {!notConnected && (
+        <Button
+          className={classes.btnPrimary}
+          fullWidth
+          size='large'
+          variant='contained'
+          color='primary'
+          onClick={handleTrade}
+          disabled={
+            (tokenBalance?.value || 0) < (amountFrom || 0) ||
+            !!errorMessage ||
+            amountTo === 0 ||
+            web3State !== Web3State.Done
+          }>
+          {errorMessage && account ? (
+            errorMessage
+          ) : (
+            <>
+              <Box fontSize='large' fontWeight='bold'>
+                Trade
+              </Box>
+            </>
+          )}
+        </Button>
+      )}
+      {notConnected && connectButton}
     </Box>
   );
 };

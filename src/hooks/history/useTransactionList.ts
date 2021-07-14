@@ -16,7 +16,6 @@ interface Props {
 
 export const useTransactionList = ({address, networkName}: Props) =>{
 
-  const { currentChainId } = useChainId();
 
   const { currentPage, rowsPerPage, skipRows, rowsPerPageOptions, onChangePage, onChangeRowsPerPage } = usePagination();
 

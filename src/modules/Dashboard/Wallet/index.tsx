@@ -1,7 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {Grid, Box, Divider, Fade} from '@material-ui/core';
 
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import AppSelect from '@crema/core/AppSelect';
 import GridContainer from '@crema/core/GridContainer';
 import AppCard from '@crema/core/AppCard';
@@ -10,34 +11,49 @@ import {useIntl} from 'react-intl';
 
 import InfoCard from './InfoCard';
 
-import DefiCoins, {CoinsProps} from './DefiCoins';
+import DefiCoins from './DefiCoins';
 
 import PageTitle from 'shared/components/PageTitle';
 import {Link} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
-import {useBalance} from 'hooks/balance/useBalance';
 import TotalBalance from 'shared/components/TotalBalance';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import AssetTable from './AssetTable';
 import {useNetwork} from 'hooks/useNetwork';
-import Transak from 'shared/components/Transak';
+
 import {useBalanceChart} from 'hooks/balance/useBalanceChart';
 import AssetChart from './AssetChart';
 import {useDefi} from 'hooks/useDefi';
-import {truncateAddress} from 'utils';
+import {isNativeCoinFromNetworkName, truncateAddress} from 'utils';
 import {useStyles} from './index.style';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
 import {Skeleton} from '@material-ui/lab';
 import { useAllBalance } from 'hooks/balance/useAllBalance';
 import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { useDispatch } from 'react-redux';
+import SelectCoin from 'shared/components/SelectCoin';
 
-interface Props {}
+
+
+type Params = {
+  account: string;
+};
+
+type Props = RouteComponentProps<Params>;
 
 const Wallet: React.FC<Props> = (props) => {
   const {messages} = useIntl();
+  const {
+    match: {params},
+  } = props;
+  const {account: urlAccount} = params;
+  const history = useHistory();
+
   const defaultAccount = useDefaultAccount();
+  const dispatch = useDispatch()
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
   
@@ -47,9 +63,23 @@ const Wallet: React.FC<Props> = (props) => {
     loading: loadingChart,
     error: errorChart,
     data: dataChart,
+    selectToken,
     handleSelectDay,
     handleSelectToken,
   } = useBalanceChart(data);
+
+  useEffect(() => {
+    if(urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount){
+      history.push(`/dashboard/wallet/${urlAccount}`)
+      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}))
+    }
+    if(!urlAccount && defaultAccount){
+      history.push(`/dashboard/wallet/${defaultAccount}`)
+    }
+
+  }, [urlAccount, defaultAccount])
+
+
 
   const networkName = useNetwork();
 
@@ -92,11 +122,11 @@ const Wallet: React.FC<Props> = (props) => {
               <Box className='card-hover'>
                 <Link
                   className={classes.btnPrimary}
-                  to={`/${networkName}/history/order/list/${account}`}
+                  to={`/${networkName}/history/trade/list/${account}`}
                   style={{textDecoration: 'none'}}>
                   <InfoCard
                     state={{
-                      value: 'Order History',
+                      value: 'Trade History',
                       bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 1,
@@ -111,11 +141,11 @@ const Wallet: React.FC<Props> = (props) => {
               <Box className='card-hover'>
                 <Link
                   className={classes.btnSecondary}
-                  to={`/${networkName}/history/transaction/list/${account}`}
+                  to={`/${networkName}/history/transfer/list/${account}`}
                   style={{textDecoration: 'none'}}>
                   <InfoCard
                     state={{
-                      value: 'Transaction History',
+                      value: 'Transfers History',
                       bgColor: theme.palette.sidebar.bgColor,
                       icon: '/assets/images/dashboard/1_monthly_sales.png',
                       id: 2,
@@ -143,10 +173,20 @@ const Wallet: React.FC<Props> = (props) => {
                     paddingRight='5px'
                     display='flex'
                     justifyContent={'space-between'}>
-                    <AppSelect
-                      menus={data.map((e) => e.currency?.symbol)}
-                      defaultValue={'ETH'}
-                      onChange={(e) => handleSelectToken(e)}
+                    <SelectCoin
+                      menus={data.map((e) => {return {symbol: e.currency?.symbol ?? '', address: e.currency?.address ?? ''}})}
+                      defaultValue={selectToken}
+                      onChange={(e) => { 
+                        // NOTE: Search
+                        const findToken = data.find(t => (t.currency?.address?.toLowerCase() ?? t.currency?.symbol.toLowerCase()) === e.toLowerCase());
+                        if(findToken){
+                          const tokenAddress = isNativeCoinFromNetworkName(findToken.currency?.symbol ?? '', findToken.network) ? 
+                                findToken.currency?.symbol.toUpperCase() : findToken.currency?.address;
+                          if(tokenAddress){
+                            handleSelectToken(tokenAddress, findToken.network);
+                          }          
+                        }       
+                      }}
                     />
 
                     <AppSelect
@@ -164,7 +204,6 @@ const Wallet: React.FC<Props> = (props) => {
                       }}
                     />
 
-                    <Transak />
                   </Box>
 
                   <Divider style={{marginTop: 5}} />

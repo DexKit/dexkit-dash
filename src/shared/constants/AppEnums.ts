@@ -23,6 +23,7 @@ export enum NavStyle {
   DEFAULT = 'default',
   MINI = 'mini',
   STANDARD = 'standard',
+  MINI_SIDEBAR_TOGGLE = 'mini-sidebar-toggle',
   HEADER_USER = 'user-header',
   HEADER_USER_MINI = 'user-mini-header',
   DRAWER = 'drawer',
@@ -110,6 +111,7 @@ export enum EXCHANGE_NAME_ON_URL {
   KYBER_NETWORK = 'kyber-network',
   //bsc
   PANCAKE = 'pancake',
+  PANCAKEV2 = 'pancake-v2',
   ALL = 'all'
 }
 

@@ -12,6 +12,8 @@ import {
   Avatar,
   makeStyles,
 } from '@material-ui/core';
+
+import {Link as RouterLink} from 'react-router-dom';
 import { MintBurn } from 'types/app';
 
 interface Props {
@@ -83,13 +85,13 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
     }
   };
 
-  const timeFn = row.time.split(' ');
+  const timeFn  = new Date((row?.time)||0);
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
-        <Box>{timeFn[0]}</Box>
-        <Box>{timeFn[1]}</Box>
+        <Box>{timeFn.toLocaleDateString()}</Box>
+        <Box>{timeFn.toLocaleTimeString()}</Box>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
@@ -101,14 +103,14 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         {row.amount0.toFixed(2)}{' '}
-        <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.baseCurrency?.address, exchange)}>
+        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, row.baseCurrency?.address, exchange)} component={RouterLink}>
           {row.baseCurrency?.symbol}
         </Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
         {row.amount1.toFixed(2)}{' '}
-        <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)}>
+        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)} component={RouterLink}>
           {row.quoteCurrency?.symbol}
         </Link>
       </TableCell>
@@ -125,11 +127,13 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
         <Box className={classes.badgeRoot}>
           {row.reserve0.toFixed(2)}{' '}
           <Link
-            href={GET_PROTOCOL_TOKEN_URL(
+            to={GET_PROTOCOL_TOKEN_URL(
               networkName,
               row.baseCurrency?.address,
               exchange,
-            )}>
+            )}
+            component={RouterLink}
+            >
             {row.baseCurrency?.symbol}
           </Link>
         </Box>
@@ -138,7 +142,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
       <TableCell align='left' className={classes.tableCell}>
         <Box className={classes.badgeRoot}>
           {row.reserve1.toFixed(2)}{' '}
-          <Link href={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)}>
+          <Link to={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)} component={RouterLink}>
             {row.quoteCurrency?.symbol}
           </Link>
         </Box>

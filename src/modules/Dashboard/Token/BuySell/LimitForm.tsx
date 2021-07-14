@@ -36,6 +36,7 @@ import {
 } from 'shared/constants/Bitquery';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 interface Props {
   chainId: number | undefined;
@@ -118,7 +119,7 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const { web3State, onConnectWeb3, account:web3Account } = useWeb3();
+  const {web3State, onConnectWeb3} = useWeb3();
 
   const network = useNetwork();
 
@@ -139,19 +140,17 @@ const LimitForm: React.FC<Props> = (props) => {
   const [expirySelect, setExpirySelect] = useState<number>(86400);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
 
-  useEffect(()=> {
-    if ( web3State !== Web3State.Done && tokenFrom === undefined) {
-      const tokenETH = select1.find(
-        (e) => e.symbol.toLowerCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
-      );
-    if(tokenETH){
-      tokenETH.address = GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase();
-      onChangeToken(tokenETH, 'from');
-    }
-  
-    }
+  if (web3State !== Web3State.Done && tokenFrom === undefined) {
+    const tokenETH = select1.find(
+      (e) =>
+        (e.symbol.toLowerCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
+        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+    );
 
-  }, [web3State, tokenFrom, select1])
+    onChangeToken(tokenETH, 'from');
+  }
+
 
   const resetAmount = () => {
     setAmountFrom(0);
@@ -165,6 +164,7 @@ const LimitForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
+    setPrice((amountTo || 0) / (amountFrom || 1));
   };
 
   const setMax = () => {
@@ -176,8 +176,9 @@ const LimitForm: React.FC<Props> = (props) => {
           setAmountTo((tokenBalance?.value - 0.03) * price);
         }
       } else {
-        setAmountFrom(tokenBalance?.value ?? 0);
-        setAmountTo(tokenBalance?.value * price);
+        // Problem: balance comes with 8 decimals (rounded up) from the api
+        setAmountFrom(tokenBalance?.value - 0.000000001 ?? 0);
+        setAmountTo((tokenBalance?.value - 0.000000001) * price);
       }
     }
   };
@@ -221,8 +222,8 @@ const LimitForm: React.FC<Props> = (props) => {
           allowedSlippage: 0.03,
           ethAccount: account,
           buyTokenPercentage: undefined,
-          feeRecipient: undefined,
-          affiliateAddress: undefined,
+          feeRecipient: FEE_RECIPIENT,
+          affiliateAddress: FEE_RECIPIENT,
           intentOnFill: false,
         },
         network,
@@ -313,35 +314,33 @@ const LimitForm: React.FC<Props> = (props) => {
   let errorMessage = null;
   let disabled = false;
 
-  if (web3State !== Web3State.Done) {
-    errorMessage = (
-      <Box display='flex' alignItems='center' justifyContent='center'>
-        <Button
-          size='large'
-          variant='contained'
-          color='primary'
-          onClick={onConnectWeb3}
-          endIcon={<AccountBalanceWalletIcon />}>
-          {web3State === Web3State.Connecting
-            ? isMobile()
-              ? 'Connecting...'
-              : 'Connecting... Check Wallet'
-            : isMobile()
-            ? 'Connect'
-            : 'Connect Wallet'}
-        </Button>
-      </Box>
-    );
-    // disabled = true;
-  } else if (select0.length === 0) {
+  let notConnected = web3State !== Web3State.Done;
+
+  const connectButton = (
+    <Box display='flex' alignItems='center' justifyContent='center'>
+      <Button
+        size='large'
+        variant='contained'
+        color='primary'
+        onClick={onConnectWeb3}
+        endIcon={<AccountBalanceWalletIcon />}>
+        {web3State === Web3State.Connecting
+          ? isMobile()
+            ? 'Connecting...'
+            : 'Connecting... Check Wallet'
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
+      </Button>
+    </Box>
+  );
+
+ if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
-    disabled = true;
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
-  } else if (account !== web3Account) {
-      errorMessage = 'Connect Your Default Wallet';
   } else if (networkName !== network) {
     errorMessage = `Switch to ${FORMAT_NETWORK_NAME(network)} in your wallet`;
   } else if (networkName !== EthereumNetwork.ethereum) {
@@ -353,7 +352,25 @@ const LimitForm: React.FC<Props> = (props) => {
   const isNative = isNativeCoinFromNetworkName(
     tokenFrom?.symbol ?? '',
     networkName,
+  ) || isNativeCoinFromNetworkName(
+    tokenTo?.symbol ?? '',
+    networkName,
+  )
+  const ethToken = select1 && select1.find(
+    (t) =>
+      t.symbol.toUpperCase() ===
+      GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
   );
+
+  const wethToken = select1 && select1.find(
+    (t) =>
+      t.symbol.toUpperCase() ===
+      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+        networkName,
+      ).toUpperCase()
+  );
+
+
   const nativeCoinSymbol = GET_NATIVE_COIN_FROM_NETWORK_NAME(
     networkName,
   ).toUpperCase();
@@ -404,7 +421,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 {isNative && (
                   <Grid item xs={12}>
                     <Box mb={2} fontSize='large' textAlign='center'>
-                      To use Limit orders you need to wrap your{' '}
+                      To use  {nativeCoinSymbol} on Limit orders you need to wrap your{' '}
                       {nativeCoinSymbol} to {wNativeCoinSymbol}, and use{' '}
                       {wNativeCoinSymbol} to place limit orders
                     </Box>
@@ -416,7 +433,6 @@ const LimitForm: React.FC<Props> = (props) => {
                       mb={2}
                       color='grey.400'
                       textAlign='right'
-                      onClick={switchTokens}
                       className={classes.textRes}>
                       <span onClick={setMax} className={classes.amountTotal}>
                         {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
@@ -460,7 +476,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     }}
                   />
                 </Grid>
-
+                {isNative &&   
                 <Grid
                   style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
                   item
@@ -468,14 +484,42 @@ const LimitForm: React.FC<Props> = (props) => {
                   md={6}>
                   <SelectToken
                     id={'marketSel0'}
-                    selected={tokenFrom}
-                    options={web3State === Web3State.Done ? select0 : select1}
+                    selected={ethToken}
+                    label={web3State === Web3State.Done ? 'Your Coins' : ''}
+                    limitCoins={select0.length ? true : false}
+                    options={(web3State === Web3State.Done && select0.length) ? select0 : select1}
                     disabled={disabled}
                     onChange={($token) => {
                       onChangeToken($token, 'from');
+                      if(tokenTo?.symbol.toUpperCase() === ethToken?.symbol.toUpperCase()){
+                        onChangeToken(wethToken, 'to');
+                      }
+
                     }}
                   />
-                </Grid>
+                </Grid>}
+
+                {!isNative &&   <Grid
+                  style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
+                  item
+                  xs={12}
+                  md={6}>
+                  <SelectToken
+                    id={'marketSel0'}
+                    selected={tokenFrom}
+                    label={web3State === Web3State.Done ? 'Your Coins' : ''}
+                    limitCoins={select0.length ? true : false}
+                    options={(web3State === Web3State.Done && select0.length) ? select0 : select1}
+                    disabled={disabled}
+                    onChange={($token) => {
+                      onChangeToken($token, 'from');
+                      if(tokenTo?.symbol.toUpperCase() === ethToken?.symbol.toUpperCase()){
+                        onChangeToken(wethToken, 'to');
+                      }
+
+                    }}
+                  />
+                </Grid>}
 
                 {!isNative && (
                   <>
@@ -557,6 +601,20 @@ const LimitForm: React.FC<Props> = (props) => {
                         label={<IntlMessages id='app.price' />}
                         value={price}
                         onChange={handlePriceChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position='end'
+                              style={{fontSize: '13px'}}>
+                              {(tokenFrom && tokenTo) && (
+                                <>
+                                  {tokenTo.symbol.toUpperCase()} per {tokenFrom.symbol.toUpperCase()}
+                                </>
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        
                       />
                     </Grid>
 
@@ -640,7 +698,7 @@ const LimitForm: React.FC<Props> = (props) => {
             </Box>
           </form>
 
-          <GridContainer>
+          {!notConnected &&  <GridContainer>
             {isNative && (
               <Grid style={{paddingRight: 8}} item xs={12} sm={12}>
                 <Button
@@ -693,7 +751,12 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Button>
               </Grid>
             )}
-          </GridContainer>
+          </GridContainer>}
+          {notConnected &&  <GridContainer>
+            <Grid style={{paddingLeft: 8}} item xs={12} sm={12}>
+           { connectButton}
+            </Grid>
+          </GridContainer>}
         </Box>
       )}
     </>

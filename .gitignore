@@ -28,6 +28,7 @@ react-sortable-hoc# See https://help.github.com/articles/ignoring-files/ for mor
 .env.test.local
 .env.production.local
 .yarn
+.tslintignore
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {useQuery} from '@apollo/client';
+import {useContext, useEffect, useState} from 'react';
+import {NetworkStatus, useQuery} from '@apollo/client';
 import usePagination from 'hooks/usePagination';
 import {
   GetTokenTrades,
@@ -12,7 +12,10 @@ import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
 import { EthereumNetwork } from '../../../__generated__/globalTypes';
-
+import { FilterContext } from 'providers/protocol/filterContext';
+import { getFilterValueById} from 'utils';
+import { getAfer24HoursDate } from 'utils/time_utils';
+import useInterval from 'hooks/useInterval';
 
 interface Props {
   baseAddress: string | null;
@@ -28,6 +31,28 @@ export const useTokenTrades = ({
 }: Props) => {
   const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
 
+  const [toDate, setTo] = useState(getAfer24HoursDate())
+  const [seconds, setSeconds] = useState(0);
+  const {
+    filters
+  } = useContext(FilterContext);
+
+  const from = getFilterValueById('from', filters);
+  const toFilter = getFilterValueById('to', filters);
+  const tradeAmount = getFilterValueById('tradeAmount', filters);
+   // TODO: investigate 
+  useInterval( () => {
+    if(!toFilter){
+      setTo(new Date(getAfer24HoursDate()))
+    }
+     
+  }, POLL_INTERVAL, false)
+
+  useInterval(()=> {
+    setSeconds(seconds +1)
+  }, 1000)
+  const to = toFilter || toDate;
+
   const {
     currentPage,
     rowsPerPage,
@@ -38,9 +63,8 @@ export const useTokenTrades = ({
   } = usePagination();
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
-  // const [totalRows, setTotalRows] = useState<number>();
 
-  const {loading, error, data: dataFn} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
+  const {loading, error, data: dataFn, networkStatus} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
       network:  networkName,
       exchangeName: GET_EXCHANGE_NAME(exchange) == '' ? undefined : GET_EXCHANGE_NAME(exchange),
@@ -48,9 +72,21 @@ export const useTokenTrades = ({
       quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
+      from,
+      till: to,
+      tradeAmount: tradeAmount ? Number(tradeAmount) : null,
     },
     pollInterval: POLL_INTERVAL,
   });
+  useEffect(()=> {
+   if(networkStatus === NetworkStatus.ready){
+     setSeconds(0)
+   }
+
+  },[networkStatus])
+
+
+
 
   useEffect(() => {
     if (dataFn && dataFn.ethereum?.dexTrades) {
@@ -79,5 +115,7 @@ export const useTokenTrades = ({
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
+    nextRefresh: (seconds / (POLL_INTERVAL/1000)) * 100,
+    seconds,
   };
 };

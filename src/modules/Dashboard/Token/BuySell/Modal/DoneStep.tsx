@@ -1,9 +1,5 @@
 import React, {useEffect} from 'react';
-import {
-  Button,
-  Typography,
-} from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import {Button, Typography} from '@material-ui/core';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
 import {NotificationType} from 'services/notification';
@@ -13,35 +9,33 @@ import {onAddNotification} from 'redux/actions';
 
 interface Props {
   step: Steps;
-  onLoading: (value: boolean) => void;
   onClose: () => void;
 }
 
 const DoneStep: React.FC<Props> = (props) => {
-  const {step, onLoading, onClose} = props;
+  const {step, onClose} = props;
 
   const classes = useStyles();
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (step === Steps.DONE) {
-      console.log('START DONE');
-      onLoading(false);
+  // useEffect(() => {
+  //   if (step === Steps.DONE) {
+  //     console.log('START DONE');
 
-      const notification: Notification = {
-        title: 'Order',
-        body: 'Successfully created',
-      };
-      dispatch(onAddNotification([notification], NotificationType.SUCCESS));
-    }
-  }, [step]);
+  //     const notification: Notification = {
+  //       title: 'Order',
+  //       body: 'Successfully created',
+  //     };
+  //     dispatch(onAddNotification([notification], NotificationType.SUCCESS));
+  //   }
+  // }, [step]);
 
   return (
     <>
-      <Typography align='center' style={{paddingBottom: 10}}>
+      {/* <Typography align='center' style={{paddingBottom: 10}}>
         Order completed!
-      </Typography>
+      </Typography> */}
       <Button
         style={{margin: 0}}
         fullWidth
@@ -49,10 +43,7 @@ const DoneStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={onClose}>
-        <CheckCircleOutlineIcon
-          style={{width: 40, height: 40, paddingRight: 10}}
-        />
-        Close
+        Done
       </Button>
     </>
   );

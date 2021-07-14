@@ -19,6 +19,24 @@ export const BITQUERY_BALANCE_INFO = gql`
   }
 `
 
+export const BITQUERY_SINGLE_BALANCE_INFO = gql`
+  query GetSingleBalance($network: EthereumNetwork!, $address: String!, $currency: String!) {
+    ethereum(network: $network) {
+      address(address: {is: $address}) {
+        balances(currency:{is: $currency}) {
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+        }
+      }
+    }
+  }
+`
+
 export const BITQUERY_ALL_BALANCE_INFO = gql`
   query GetAllMyBalance($address: String!) {
     ethereum(network: ethereum) {
@@ -57,6 +75,29 @@ export const BITQUERY_BALANCE_HISTORY = gql`
     ethereum(network: $network) {
       address(address: {is: $address}) {
         balances(height: {gteq: $block}) {
+          history {
+            timestamp
+            transferAmount
+            value
+            block
+          }
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+        }
+      }
+    }
+  }
+`
+
+export const BITQUERY_SINGLE_BALANCE_HISTORY = gql`
+  query GetMySingleBalanceHistory($network: EthereumNetwork!, $address: String!, $block: Int!, $currency: String!) {
+    ethereum(network: $network) {
+      address(address: {is: $address}) {
+        balances(height: {gteq: $block}, currency: {is: $currency}) {
           history {
             timestamp
             transferAmount

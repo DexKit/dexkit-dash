@@ -2,7 +2,7 @@ import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {useNetwork} from 'hooks/useNetwork';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {
@@ -117,7 +117,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
         <Box display='flex' alignItems='center'>
           <Tooltip title={messages['app.viewTx']} placement='top'>
             <a
-              href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.transaction?.hash}`}
+              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
               target='_blank'>
               {netName == EthereumNetwork.ethereum ? (
                 <Avatar

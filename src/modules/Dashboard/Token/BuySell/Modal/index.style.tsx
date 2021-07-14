@@ -9,10 +9,11 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     // color: 'white',
   },
   dialogContent: {
-    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     // height: '98vh',
     // maxHeight: '330px',
-    minHeight: '400px',
+    minHeight: '350px',
     display: 'flex',
     justifyContent: 'center',
     alighItem: 'center',
@@ -36,8 +37,13 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     fontWeight: 600,
     color: theme.palette.text.primary,
   },
+  titleSecondary: {
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+  },
   textSecondary: {
     fontWeight: 500,
+    fontSize: 15,
     color: theme.palette.text.secondary,
   },
   valueSend: {

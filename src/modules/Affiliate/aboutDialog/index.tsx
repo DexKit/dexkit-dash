@@ -10,8 +10,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import { CremaTheme } from 'types/AppContextPropsType';
-import {Link } from '@material-ui/core';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import {Link, Tooltip } from '@material-ui/core';
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -52,12 +52,7 @@ const DialogContent = withStyles((theme: Theme) => ({
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles((theme: Theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
+
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
     openButton: {
@@ -79,7 +74,9 @@ export const AboutDialog = () => {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
+          <Tooltip title={'Info about this page'}>
           <InfoIcon/>
+          </Tooltip>
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>

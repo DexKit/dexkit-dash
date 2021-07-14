@@ -1,18 +1,21 @@
 import { createAction } from '@reduxjs/toolkit';
 import { Token } from 'types/app';
 import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
+import { UIAccount } from './reducers';
 
 
 
-export const setAccounts = createAction<string[]>('ui/ACCOUNTS_set');
+export const setAccounts = createAction<UIAccount[]>('ui/ACCOUNTS_set');
 
-export const addAccounts = createAction<string[]>('ui/ACCOUNTS_add');
+export const addAccounts = createAction<UIAccount[]>('ui/ACCOUNTS_add');
 
-export const setDefaultAccount = createAction<string>('ui/ACCOUNTS_set_default');
+export const setAccountLabel = createAction<UIAccount>('ui/ACCOUNT_LABEL_set');
 
-export const setAccount = createAction<string>('ui/ACCOUNT_set');
+export const setDefaultAccount = createAction<UIAccount>('ui/ACCOUNTS_set_default');
 
-export const removeAccount = createAction<string>('ui/ACCOUNT_remove');
+export const setAccount = createAction<UIAccount>('ui/ACCOUNT_set');
+
+export const removeAccount = createAction<UIAccount>('ui/ACCOUNT_remove');
 
 type FavoriteCoin = Token & CoinDetailCoinGecko
 

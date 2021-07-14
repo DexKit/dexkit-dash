@@ -1,23 +1,33 @@
 import { useEffect, useState } from "react";
 import { useWeb3 } from "hooks/useWeb3";
 
-import { BITQUERY_BALANCE_BLOCK, BITQUERY_BALANCE_HISTORY } from "services/graphql/bitquery/balance/gql";
+import { BITQUERY_BALANCE_BLOCK, BITQUERY_SINGLE_BALANCE_HISTORY } from "services/graphql/bitquery/balance/gql";
 import { useNetwork } from "hooks/useNetwork";
 import { client } from "services/graphql";
 import { GetBalanceBlock, GetBalanceBlockVariables } from "services/graphql/bitquery/balance/__generated__/GetBalanceBlock";
-import { GetMyBalanceHistory, GetMyBalanceHistoryVariables } from "services/graphql/bitquery/balance/__generated__/GetMyBalanceHistory";
+import { GetMySingleBalanceHistory, GetMySingleBalanceHistoryVariables } from "services/graphql/bitquery/balance/__generated__/GetMySingleBalanceHistory";
 import { ChartTick } from "types/app";
 import { MyBalances } from 'types/blockchain';
+import { isNativeCoinFromNetworkName } from "utils";
+import { EthereumNetwork } from "shared/constants/AppEnums";
+import { useDefaultAccount } from "hooks/useDefaultAccount";
 
 
 export const useBalanceChart = (balances: MyBalances[]) => {
-  const {account} = useWeb3();
-  const network = useNetwork();
-
+  const account = useDefaultAccount();
+  const [network, setNetwork] = useState<EthereumNetwork>(EthereumNetwork.ethereum);
   const [block, setBlock] = useState<number>();
 
   const [selectDay, setSelectDay] = useState(7);
-  const [selectToken, setSelectToken] = useState<string>('ETH');
+  const [selectToken, setSelectToken] = useState<string | undefined>();
+  useEffect(()=> {
+    if(!selectToken && balances.length > 0){
+      setNetwork(balances[0].network);
+      setSelectToken(balances[0].currency?.address ?? balances[0].currency?.symbol);
+    }
+
+
+  }, [balances])
 
   const [allData, setAllData] = useState<{ [idx: string]: ChartTick[] }>({});
 
@@ -30,9 +40,9 @@ export const useBalanceChart = (balances: MyBalances[]) => {
     setSelectDay(day);
   }
 
-  const handleSelectToken = (token: string) => {
-    if (allData && allData[token]) {
-      const dataFn: ChartTick[] = allData[selectToken].map((e: any) => {
+  const handleSelectToken = (token: string, net: EthereumNetwork) => {
+    if (allData && allData[token] && allData[token].length) {
+      const dataFn: ChartTick[] = allData[token].map((e: any) => {
         return {
           date: e.date.toLocaleDateString(),
           value: e.value
@@ -41,12 +51,13 @@ export const useBalanceChart = (balances: MyBalances[]) => {
 
       setData(dataFn.reverse());
     }
-
+    setNetwork(net);
     setSelectToken(token);
+    
+ 
   }
 
   useEffect(() => {
-    console.log(`get ${selectDay} days ago`)
     const fromDay = new Date();
     fromDay.setDate(fromDay.getDate() - selectDay);
     
@@ -58,36 +69,34 @@ export const useBalanceChart = (balances: MyBalances[]) => {
     })
     .then(e => {
       if (e.data.ethereum?.blocks) {
-        console.log(`find block ${e.data.ethereum?.blocks[0]?.height} for ${fromDay}`);
         setBlock(e.data.ethereum?.blocks[0].height)
       }
     });
   }, [selectDay]);
 
   useEffect(() => {
-    if (block != null && account != null && network != null && selectToken != null && balances.length > 0) {
+    if (block && account  && network  && selectToken  && balances.length > 0) {
 
-      client.query<GetMyBalanceHistory, GetMyBalanceHistoryVariables>({
-        query: BITQUERY_BALANCE_HISTORY,
+      client.query< GetMySingleBalanceHistory, GetMySingleBalanceHistoryVariables>({
+        query: BITQUERY_SINGLE_BALANCE_HISTORY,
         variables: {
           network: network,
           address: account,
           block: block,
+          currency: selectToken
         }
       })
       .then(b => {
         const data = b.data.ethereum?.address[0].balances?.reduce<{ [idx: string]: ChartTick[] }>((acc, current): any => {
-          const idx = current.currency?.symbol.toUpperCase();
+          const idx = isNativeCoinFromNetworkName(current.currency?.symbol.toUpperCase() ?? '', network) ?  current.currency?.symbol.toUpperCase() : current.currency?.address ;
           const v: ChartTick[] = [];
-          
+   
           if (idx) {
             const today = new Date();
-            const value = balances.find(e => idx == e.currency?.symbol.toUpperCase())?.value || 0;
+            const value = balances.find(e => idx === (isNativeCoinFromNetworkName(e.currency?.symbol.toUpperCase() ?? '', network) ?  e.currency?.symbol.toUpperCase() : e.currency?.address)   )?.value || 0;
 
             v.push({date: today, value: value});
             
-            console.log('history'+idx, current.history);
-
             if (current.history) {
               for (let i=0; i < current.history.length; i++) {
                 const vData = v[v.length-1];
@@ -122,20 +131,21 @@ export const useBalanceChart = (balances: MyBalances[]) => {
           }
         }, {});
 
-        console.log(data);
 
         const all = data ?? {};
 
-        setAllData(all);
 
-        const dataFn: ChartTick[] = all[selectToken].map((e: any) => {
-          return {
-            date: e.date.toLocaleDateString(),
-            value: e.value
-          }
-        }) || [];
+        if(all[selectToken] && all[selectToken].length){
+          const dataFn: ChartTick[] = all[selectToken].map((e: any) => {
+            return {
+              date: e.date.toLocaleDateString(),
+              value: e.value
+            }
+          }) || [];
 
-        setData(dataFn.reverse());
+          setData(dataFn.reverse());
+        }
+        
       })
       .catch(e => {
         setError(e);
@@ -148,6 +158,6 @@ export const useBalanceChart = (balances: MyBalances[]) => {
     }
   }, [block, account, network, selectToken, balances]);
   
-  return { loading, error, data, handleSelectDay, handleSelectToken };
+  return { loading, error, data, handleSelectDay, handleSelectToken, selectToken };
 }
  

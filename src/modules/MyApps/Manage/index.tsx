@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import {  useSelector } from 'react-redux';
 import { AppState } from 'redux/store';
 import {Grid, Box} from '@material-ui/core';
 import { teal } from '@material-ui/core/colors';
@@ -10,18 +10,19 @@ import AppsTable from './apps-table';
 import TotalRewards from './TotalRewards';
 import KitMarket from './kit-market';
 import Ripple from 'assets/images/ripple.png'
-import { useWeb3 } from 'hooks/useWeb3';
+
 import LockUnlock from './LockUnlock';
-import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import Alert from '@material-ui/lab/Alert';
 import { useBalance } from 'hooks/balance/useBalance';
 import ErrorView from 'modules/Common/ErrorView';
-import LoadingView from 'modules/Common/LoadingView';
+import LoadingInfo from 'modules/ProtocolExplorer/TokenExplorer/TokenInfo/LoadingInfo';
+import AppsIcon from '@material-ui/icons/Apps';
+import { AboutDialog } from './AboutDialog';
+import { Fonts } from 'shared/constants/AppEnums';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
 const MyApps: React.FC = () => {
-  const dispatch = useDispatch();
-  const { account, chainId } = useWeb3();
+
   const { loading, error, data: balances } = useBalance();
   // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
   
@@ -33,11 +34,25 @@ const MyApps: React.FC = () => {
   //     dispatch(setInsufficientAmountAlert(true));
   //   }
   // }, [balances, dispatch]);
+
+ 
   
   return (
     <>
       <Box pt={{ xl: 4 }}>
-         <Box pb={2}>
+          <Box display='flex' alignItems='center' mt={1}>
+            <AppsIcon color={'primary'} fontSize={'large'}/>
+          <Box
+            component='h3'
+            color='text.primary'
+            fontWeight={Fonts.BOLD}
+            ml={2}>
+            Manage APPs
+          </Box>
+          <AboutDialog />
+      </Box>
+
+         <Box pb={2} mt={2}>
             <Alert severity="warning">
               This feature is still under high development, You will need KIT to use this. Check our live updates to see when this feature will be enable for everyone!
             </Alert>
@@ -52,7 +67,7 @@ const MyApps: React.FC = () => {
 
           <Grid item xs={12} md={6}>
             {
-              loading ? <LoadingView /> : error ? <ErrorView message={error.message} /> : (
+              loading ? <LoadingInfo /> : error ? <ErrorView message={error.message} /> : (
                 <LockUnlock balances={balances} />
               )
             }

@@ -6,6 +6,7 @@ import {ReactComponent as Mastercard} from '../../../assets/images/mastercard.sv
 import styled from 'styled-components';
 import { CremaTheme } from 'types/AppContextPropsType';
 import { Fonts } from 'shared/constants/AppEnums';
+import { useWindowSize } from 'hooks/useWindowSize';
 
 interface Props extends ButtonProps {}
 
@@ -31,7 +32,7 @@ const IconContainer = styled.div<DefaultProps>`
 `;
 
 const Transak: React.FC<Props> = (props) => {
-
+  const windowSize = useWindowSize();
   const useStyles = makeStyles((theme: CremaTheme) => ({
     btnPrimary: {
       color: 'white',
@@ -63,12 +64,7 @@ const Transak: React.FC<Props> = (props) => {
   const [transakClient, setTransakInstance] = useState<any>();
 
   const transakAllEvents = useCallback((data: any) => {
-    console.log(data);
-  }, []);
-
-  const transakCloseEvents = useCallback(
-    (data: any) => {
-      transakClient?.close();
+    if(data.eventName === 'TRANSAK_WIDGET_CLOSE'){
       const w = (window as any)
       if(w){
           // TODO: remove this
@@ -77,7 +73,15 @@ const Transak: React.FC<Props> = (props) => {
               w.document.documentElement.style = 0;   
           }, 10)
       }
-      
+    }
+
+
+  }, []);
+
+  const transakCloseEvents = useCallback(
+    (data: any) => {
+      transakClient?.close();
+  
       // setTransakInstance(undefined);
     },
     [transakClient],
@@ -91,27 +95,22 @@ const Transak: React.FC<Props> = (props) => {
     [transakClient],
   );
 
-  useEffect(() => {
-    if (account == undefined) {
-      setTransakInstance(undefined);
-    }
-  }, [account]);
+
 
   useEffect(() => {
-    if (transakClient == undefined && account != null) {
-      console.log('new transak');
+    if (!transakClient && windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
         defaultCryptoCurrency: 'KIT',
-        walletAddress: account, // Your customer wallet address
+        walletAddress: account ?? '', // Your customer wallet address
         themeColor: '000000', // App theme color in hex
         fiatCurrency: 'USD',
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field
-        widgetHeight: '550px',
-        widgetWidth: '450px',
+        widgetHeight: windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
+        widgetWidth: windowSize?.width < 510 ? `${windowSize.width - 10}px`  : '500px'
       });
 
       transak.on(transak.ALL_EVENTS, transakAllEvents);
@@ -119,7 +118,7 @@ const Transak: React.FC<Props> = (props) => {
       transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
       setTransakInstance(transak);
     }
-  }, [account, transakClient]);
+  }, [account, transakClient,  windowSize]);
 
   const onBuy = () => {
     if (transakClient) {
@@ -133,10 +132,10 @@ const Transak: React.FC<Props> = (props) => {
       onClick={(e: any) => onBuy()}
       size='small'
       disableElevation
-      disabled={transakClient == null}
+      disabled={!transakClient}
       {...props}
       className={classes.btnPrimary}>
-      <IconContainer style={{width: '25px', height: '25px'}}>
+      <IconContainer style={{width: '26px', height: '26px'}}>
         <Mastercard />
       </IconContainer>
       Buy

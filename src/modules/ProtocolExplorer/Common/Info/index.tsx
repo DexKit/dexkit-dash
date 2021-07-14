@@ -1,18 +1,21 @@
 import React from 'react';
 import {useChainId} from 'hooks/useChainId';
 import {BalanceCoins} from 'types/models/Crypto';
-import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
-import {Fonts} from 'shared/constants/AppEnums';
-import {Box, Avatar, Tooltip, Fade} from '@material-ui/core';
+import { ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
+import {Box, Avatar, Tooltip, Fade, Link, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
 import LoadingInfo from './LoadingInfo';
-
+import {Link as RouterLink} from 'react-router-dom';
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
+import { FavoriteButton } from 'shared/components/FavoriteButton';
 interface Props {
   data?: any;
   loading: boolean;
+  networkName: EthereumNetwork;
 }
 
 const coinInfoFactory = (propsData: any): BalanceCoins[] => {
@@ -43,7 +46,7 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 };
 
 const Info: React.FC<Props> = (props) => {
-  const {data, loading} = props;
+  const {data, loading, networkName} = props;
   const {currentChainId} = useChainId();
   const classes = useStyles();
 
@@ -65,7 +68,7 @@ const Info: React.FC<Props> = (props) => {
             {loading ? (
               <LoadingInfo />
             ) : (
-              data && (
+              data ? (
                 <Box display='flex' flexDirection='column'>
                   <Box
                     display='flex'
@@ -84,13 +87,14 @@ const Info: React.FC<Props> = (props) => {
                         mr={2}>
                         {data.baseCurrency?.symbol}/{data.quoteCurrency?.symbol}
                       </Box>
+                      {data?.baseCurrency && <FavoriteButton token={data?.baseCurrency as any}/>}
                     </Box>
                     <Box display='flex'>
                       <Box mr={3}>
                         <Tooltip title={'View on Explorer'} placement='top'>
                           <a
-                            href={`${ETHERSCAN_API_URL(
-                              currentChainId,
+                            href={`${ETHERSCAN_API_URL_FROM_NETWORK(
+                              networkName,
                             )}/address/${data.address}`}
                             target='_blank'
                             rel='noreferrer'>
@@ -106,18 +110,22 @@ const Info: React.FC<Props> = (props) => {
                         </Tooltip>
                       </Box>
                       <Box mr={3}>
-                        <a
-                          href={`/dashboard/token/${data.baseCurrency?.address}`}>
-                          <Avatar
-                            style={{
-                              color: '#3F51B5',
-                              backgroundColor: 'white',
-                              width: 34,
-                              height: 34,
-                            }}>
-                            T
-                          </Avatar>
-                        </a>
+                        <Link
+                          to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                          component={RouterLink} 
+                          >
+                           <Tooltip title={'Trade Token'} placement='top'>
+                            <Avatar
+                              style={{
+                                color: '#3F51B5',
+                                backgroundColor: 'white',
+                                width: 34,
+                                height: 34,
+                              }}>
+                              <CompareArrowsIcon/>
+                            </Avatar>
+                          </Tooltip>
+                        </Link>
                       </Box>
                     </Box>
                   </Box>
@@ -153,7 +161,10 @@ const Info: React.FC<Props> = (props) => {
                     {data && <CoinsInfo coins={coinInfoFactory(data)} />}
                   </Box>
                 </Box>
-              )
+              ) : (
+                  <Typography component='h1' color={'primary'}>No Data available for this token</Typography>
+
+              ) 
             )}
           </AppCard>
         </>
