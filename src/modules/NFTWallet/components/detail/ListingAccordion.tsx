@@ -3,6 +3,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
+  Grid,
   Typography,
 } from '@material-ui/core';
 import AssetOrdersTable from './AssetListingsTable';
@@ -10,10 +12,7 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import React, {useCallback, useEffect, useState} from 'react';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {useWeb3} from 'hooks/useWeb3';
-import {getOpenSeaPort} from 'utils/opensea';
-import CancellingListingBackdrop from './CancellingListingBackdrop';
+import NotesIcon from '@material-ui/icons/Notes';
 
 interface Props {
   listings: any;
@@ -36,11 +35,34 @@ export default (props: Props) => {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <AssetOrdersTable
-            onCancel={onCancel}
-            onBuy={onBuy}
-            listings={listings}
-          />
+          {listings?.length > 0 ? (
+            <AssetOrdersTable
+              onCancel={onCancel}
+              onBuy={onBuy}
+              listings={listings}
+            />
+          ) : (
+            <Box display='block' width='100%' py={4}>
+              <Grid
+                direction='column'
+                container
+                spacing={2}
+                justify='center'
+                alignItems='center'>
+                <Grid item>
+                  <NotesIcon color='disabled' />
+                </Grid>
+                <Grid item>
+                  <Typography
+                    color='textSecondary'
+                    align='center'
+                    variant='body1'>
+                    <IntlMessages id='nfts.detail.noListingsYet' />
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
+          )}
         </AccordionDetails>
       </Accordion>
     </>

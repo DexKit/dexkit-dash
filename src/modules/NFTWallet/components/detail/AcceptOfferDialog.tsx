@@ -148,7 +148,7 @@ export default (props: Props) => {
                   <Grid item>
                     {offer ? (
                       <Typography>
-                        {(getPriceFromOrder(offer) * 0.975).toFixed(2)}
+                        {getPriceFromOrder(offer) * 0.975}
                       </Typography>
                     ) : null}
                   </Grid>

@@ -11,6 +11,7 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  Paper,
   TextField,
   Typography,
   makeStyles,
@@ -18,7 +19,13 @@ import {
   Button,
   Switch,
   Avatar,
+  Link,
+  InputAdornment,
+  IconButton,
+  Tooltip,
 } from '@material-ui/core';
+
+import {Link as RouterLink} from 'react-router-dom';
 
 import {useHistory, useParams} from 'react-router';
 import {useIntl} from 'react-intl';
@@ -30,11 +37,19 @@ import TokenInput, {PaymentToken} from '../../components/sell/TokenInput';
 import {useAsset} from '../../hooks/detail';
 import {useWeb3} from 'hooks/useWeb3';
 import {getOpenSeaPort} from 'utils/opensea';
-import moment from 'moment';
+import moment, {Moment} from 'moment';
 import {isAddress} from 'ethers/lib/utils';
 import CreateSellOrderDialog from '../../components/sell/CreateSellOrderDialog';
 import {Alert, Skeleton} from '@material-ui/lab';
-import DaysSelect from '../../components/sell/DaysSelect';
+import DaysSelect, {
+  DAYS_SELECT_OPTIONS,
+  Option,
+} from '../../components/sell/DaysSelect';
+import PasteIconButton from 'shared/components/PasteIconButton';
+import {DateTimePicker} from '@material-ui/pickers';
+import CloseIcon from '@material-ui/icons/Close';
+import HelpIcon from '@material-ui/icons/Help';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 interface RouteParams {
   address: string;
@@ -81,8 +96,11 @@ const SALE_HIGHEST_BID = 'h';
 
 export default () => {
   const classes = useStyles();
+  const theme = useTheme();
   const {messages} = useIntl();
   const {getProvider} = useWeb3();
+  const history = useHistory();
+
   const {address, token}: RouteParams = useParams();
 
   const userAccountAddress = useDefaultAccount();
@@ -101,8 +119,16 @@ export default () => {
   const [listingTime, setListingTime] = useState(0);
   const [buyerAddress, setBuyerAddress] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
+  const [customExpiration, setCustomExpiration] = useState<Moment>();
+  const [customScheduleTime, setCustomScheduleTime] = useState<Moment>();
+
+  const [customScheduleTimeDate, setCustomScheduleTimeDate] = useState(false);
+
+  const [customExpirationDate, setCustomExpirationDate] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState('');
 
+  // FIX: replace this
   const [paymentToken, setPaymentToken] = useState<PaymentToken>({
     symbol: 'ETH',
     address: '0x0000000000000000000000000000000000000000',
@@ -113,6 +139,12 @@ export default () => {
   });
 
   const {getAsset, loading, data, error} = useAsset();
+
+  useEffect(() => {
+    if (!userAccountAddress) {
+      history.replace('/connect-wallet');
+    }
+  }, []);
 
   useEffect(() => {
     getAsset(address, token);
@@ -136,7 +168,6 @@ export default () => {
     (index: number) => {
       if (data) {
         let tokens = getPaymentTokens(data);
-        console.log(tokens[index], index);
         setPaymentToken(tokens[index]);
         setTokenIndex(index);
       }
@@ -158,10 +189,13 @@ export default () => {
 
   const handleSelectByPrice = useCallback(() => {
     setSaleType(SALE_BY_PRICE);
+    setReservePrice(0);
   }, []);
 
   const handleSelectHighestBid = useCallback(() => {
     setSaleType(SALE_HIGHEST_BID);
+    setHasEndingPrice(false);
+    setEndingPrice(0);
   }, []);
 
   const handleChangeHasEnding = useCallback((e: ChangeEvent<any>) => {
@@ -170,18 +204,12 @@ export default () => {
     }
 
     setHasEndingPrice(e.target.checked);
+    setCustomExpiration(moment());
+    setCustomExpirationDate(false);
   }, []);
 
   const handleIsPrivateChange = useCallback((e: ChangeEvent<any>) => {
     setIsPrivate(e.target.checked);
-  }, []);
-
-  const handleExpirationSelect = useCallback((e) => {
-    setExpiration(e);
-  }, []);
-
-  const handleListingTimeSelect = useCallback((e) => {
-    setListingTime(e);
   }, []);
 
   const handleBuyerAddressChange = useCallback((e) => {
@@ -201,19 +229,29 @@ export default () => {
       return false;
     }
 
+    if (hasEndingPrice && expiration == 0) {
+      return false;
+    }
+
     if (isPrivate && buyerAddress == '') {
       return false;
     }
 
     return true;
-  }, [startingPrice, buyerAddress, endingPrice, hasEndingPrice, isPrivate]);
+  }, [
+    startingPrice,
+    buyerAddress,
+    endingPrice,
+    hasEndingPrice,
+    isPrivate,
+    expiration,
+  ]);
 
   const handlePostOrder = useCallback(async () => {
     if (userAccountAddress) {
       const provider = getProvider();
 
       const openseaPort = await getOpenSeaPort(provider);
-      console.log(paymentToken.address);
 
       let params: any = {
         paymentTokenAddress: paymentToken.address,
@@ -230,7 +268,7 @@ export default () => {
         params.endAmount = endingPrice;
       }
 
-      if (listingTime) {
+      if (listingTime > 0) {
         params.listingTime = listingTime;
       }
 
@@ -273,10 +311,31 @@ export default () => {
     isPrivate,
     buyerAddress,
     expiration,
+    listingTime,
   ]);
 
   const handleChangeExpiration = useCallback((e: ChangeEvent<any>) => {
-    setExpiration(e.target.value);
+    const option: Option = DAYS_SELECT_OPTIONS[e.target.value];
+
+    if (option.custom) {
+      setCustomExpirationDate(true);
+      setExpiration(moment().unix());
+    } else {
+      setCustomExpirationDate(false);
+      setExpiration(option.days);
+    }
+  }, []);
+
+  const handleCustomExpiration = useCallback((e: any) => {
+    const value: Moment = e;
+    setCustomExpiration(e);
+    setExpiration(value.unix());
+  }, []);
+
+  const handleCustomScheduleTime = useCallback((e: any) => {
+    const value: Moment = e;
+    setCustomScheduleTime(e);
+    setListingTime(value.unix());
   }, []);
 
   const [hasScheduleTime, setHasScheduleTime] = useState(false);
@@ -287,11 +346,68 @@ export default () => {
     }
 
     setHasScheduleTime(e.target.checked);
+    setCustomScheduleTime(moment());
+    setCustomScheduleTimeDate(false);
   }, []);
 
   const handleListingTimeChange = useCallback((e: ChangeEvent<any>) => {
-    setListingTime(parseInt(e.target.value));
+    const option: Option = DAYS_SELECT_OPTIONS[e.target.value];
+
+    if (option.custom) {
+      setCustomScheduleTimeDate(true);
+      setListingTime(moment().unix());
+    } else {
+      setCustomScheduleTimeDate(false);
+      setListingTime(option.days);
+    }
   }, []);
+
+  const handlePaste = useCallback((text: string) => {
+    setBuyerAddress(text);
+  }, []);
+
+  const getEndingPriceError = useCallback(
+    (start: number, end: number): undefined | string => {
+      let error = undefined;
+
+      if (end == 0) {
+        error = messages['nfts.sell.expire.greaterThanZero'].toString();
+      }
+
+      if (end > start) {
+        error = messages[
+          'nfts.sell.expire.greaterThanStartingPrice'
+        ].toString();
+      }
+
+      return error;
+    },
+    [messages],
+  );
+
+  const handleCustomExpirationClose = useCallback(() => {
+    setExpiration(0);
+    setCustomExpirationDate(false);
+  }, []);
+
+  const handleCustomScheduleTimeClose = useCallback(() => {
+    setListingTime(0);
+    setCustomScheduleTimeDate(false);
+  }, []);
+
+  const handleGoCreateBundle = useCallback(() => {
+    history.push({
+      pathname: `/nfts/wallet/${userAccountAddress}`,
+      state: {
+        action: 'create-bundle',
+        asset: {
+          contractAddress: data?.asset_contract?.address,
+          tokenId: data?.token_id,
+          imageUrl: data?.image_url,
+        },
+      },
+    });
+  }, [data, userAccountAddress]);
 
   return (
     <>
@@ -302,42 +418,77 @@ export default () => {
       />
       <Box pt={{xs: 8}}>
         <Grid container spacing={2}>
+          {loading ? null : (
+            <Grid item xs={12}>
+              <Paper>
+                <Box p={4}>
+                  <Grid
+                    container
+                    spacing={2}
+                    alignItems='center'
+                    alignContent='center'>
+                    <Grid item>
+                      <IconButton
+                        component={RouterLink}
+                        to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
+                        <KeyboardBackspaceIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='body1'>
+                        <IntlMessages id='nfts.sell.goBackTo' />{' '}
+                        <span style={{color: theme.palette.primary.main}}>
+                          {data?.name}
+                        </span>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Paper>
+            </Grid>
+          )}
           <Grid item xs={12} sm={8}>
             <Card>
               <CardContent>
                 <Box mb={4}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <Typography variant='body1' color='textSecondary'>
-                        <IntlMessages id='nfts.sell.youAreListing' />:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      {loading ? (
-                        <Skeleton className={classes.assetImageSkeleton} />
-                      ) : (
-                        <img
-                          src={data?.image_url}
-                          className={classes.assetImage}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={12} sm={9}>
-                      <Typography gutterBottom variant='caption'>
-                        {loading ? <Skeleton /> : data?.collection?.name}
-                      </Typography>
-                      <Typography gutterBottom variant='h5'>
-                        {loading ? <Skeleton /> : data?.name}
-                      </Typography>
-                      <Typography gutterBottom variant='body1'>
-                        {loading ? (
-                          <Skeleton variant='text' />
-                        ) : (
-                          data?.description
-                        )}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                  <Paper variant='outlined'>
+                    <Box p={4}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Typography variant='body1' color='textSecondary'>
+                            <IntlMessages id='nfts.sell.youAreListing' />:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          {loading ? (
+                            <Skeleton
+                              style={{display: 'block'}}
+                              component='div'
+                              className={classes.assetImageSkeleton}
+                            />
+                          ) : (
+                            <img
+                              src={data?.image_url}
+                              className={classes.assetImage}
+                            />
+                          )}
+                        </Grid>
+                        <Grid item xs={12} sm={9}>
+                          <Typography gutterBottom variant='caption'>
+                            {loading ? <Skeleton /> : data?.collection?.name}
+                          </Typography>
+                          <Typography gutterBottom variant='h5'>
+                            {loading ? <Skeleton /> : data?.name}
+                          </Typography>
+                          <Link
+                            component={RouterLink}
+                            to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
+                            <IntlMessages id='nfts.sell.viewItem' />
+                          </Link>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Paper>
                 </Box>
                 <Grid container spacing={8}>
                   <Grid item xs={12}>
@@ -361,6 +512,15 @@ export default () => {
                               'nfts.sell.actionToHighestBidder'
                             ].toString()}
                             onClick={handleSelectHighestBid}
+                          />
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <SaleTypeButton
+                            header={messages['nfts.sell.bundle'].toString()}
+                            subheader={messages[
+                              'nfts.sell.bundleDescription'
+                            ].toString()}
+                            onClick={handleGoCreateBundle}
                           />
                         </Grid>
                       </Grid>
@@ -417,7 +577,16 @@ export default () => {
                                 <IntlMessages id='nfts.sell.reservePrice' />
                               </Typography>
                               <Typography variant='body2' color='textSecondary'>
-                                <IntlMessages id='nfts.sell.reservePriceDescription' />
+                                <IntlMessages id='nfts.sell.reservePriceDescription' />{' '}
+                                <Tooltip
+                                  title={
+                                    <IntlMessages id='nfts.sell.reservePriceTooltip' />
+                                  }>
+                                  <Link>
+                                    <IntlMessages id='nfts.sell.learnMore' />{' '}
+                                    <HelpIcon fontSize='inherit' />
+                                  </Link>
+                                </Tooltip>
                               </Typography>
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -514,13 +683,10 @@ export default () => {
                             tokenIndex={tokenIndex}
                             onChangeAmount={handleChangeEndingPrice}
                             onChangeToken={handleChangeToken}
-                            error={
-                              endingPrice < 0 || endingPrice > startingPrice
-                                ? messages[
-                                    'nfts.sell.greaterThanStartingPrice'
-                                  ].toString()
-                                : undefined
-                            }
+                            error={getEndingPriceError(
+                              startingPrice,
+                              endingPrice,
+                            )}
                           />
                         </Grid>
                       </Grid>
@@ -543,15 +709,56 @@ export default () => {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <DaysSelect
-                            displayEmpty
-                            emptyLabel={messages[
-                              'nfts.sell.expiration'
-                            ].toString()}
-                            variant='outlined'
-                            value={expiration}
-                            onChange={handleChangeExpiration}
-                          />
+                          <Grid
+                            container
+                            alignItems='center'
+                            alignContent='center'
+                            spacing={2}>
+                            {!customExpirationDate ? (
+                              <Grid item>
+                                <DaysSelect
+                                  displayEmpty
+                                  emptyLabel={messages[
+                                    'nfts.sell.expiration'
+                                  ].toString()}
+                                  variant='outlined'
+                                  value={DAYS_SELECT_OPTIONS.findIndex(
+                                    (o: Option) => o.days == expiration,
+                                  )}
+                                  onChange={handleChangeExpiration}
+                                  error={hasEndingPrice && expiration == 0}
+                                  helperText={
+                                    expiration == 0
+                                      ? messages[
+                                          'nfts.sell.selectExpirationDate'
+                                        ].toString()
+                                      : ''
+                                  }
+                                />
+                              </Grid>
+                            ) : null}
+                            {customExpirationDate ? (
+                              <Grid item>
+                                <DateTimePicker
+                                  format='DD/MM/YYYY HH:mm'
+                                  minDate={moment()}
+                                  label='Expiration'
+                                  inputVariant='outlined'
+                                  value={customExpiration}
+                                  onChange={handleCustomExpiration}
+                                  ampm={false}
+                                />
+                              </Grid>
+                            ) : null}
+                            {customExpirationDate ? (
+                              <Grid item>
+                                <IconButton
+                                  onClick={handleCustomExpirationClose}>
+                                  <CloseIcon />
+                                </IconButton>
+                              </Grid>
+                            ) : null}
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -579,16 +786,39 @@ export default () => {
                             alignItems='center'
                             alignContent='center'
                             spacing={2}>
-                            {hasScheduleTime ? (
+                            {hasScheduleTime && !customScheduleTimeDate ? (
                               <Grid item>
                                 <DaysSelect
                                   emptyLabel={messages[
                                     'nfts.sell.expiration'
                                   ].toString()}
                                   variant='outlined'
-                                  value={listingTime}
+                                  value={DAYS_SELECT_OPTIONS.findIndex(
+                                    (o: Option) => o.days == listingTime,
+                                  )}
                                   onChange={handleListingTimeChange}
                                 />
+                              </Grid>
+                            ) : null}
+                            {hasScheduleTime && customScheduleTimeDate ? (
+                              <Grid item>
+                                <DateTimePicker
+                                  format='DD/MM/YYYY HH:mm'
+                                  minDate={moment()}
+                                  label='Expiration'
+                                  inputVariant='outlined'
+                                  value={customScheduleTime}
+                                  onChange={handleCustomScheduleTime}
+                                  ampm={false}
+                                />
+                              </Grid>
+                            ) : null}
+                            {hasScheduleTime && customScheduleTimeDate ? (
+                              <Grid item>
+                                <IconButton
+                                  onClick={handleCustomScheduleTimeClose}>
+                                  <CloseIcon />
+                                </IconButton>
                               </Grid>
                             ) : null}
                             <Grid item>
@@ -646,6 +876,13 @@ export default () => {
                             : undefined
                         }
                         onChange={handleBuyerAddressChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end' variant='standard'>
+                              <PasteIconButton onPaste={handlePaste} />
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     </Grid>
                   ) : null}
@@ -764,6 +1001,13 @@ export default () => {
                               .format('DD/MM/YYYY HH:mm:ss')}
                           </Typography>
                         </Box>
+                      </Grid>
+                    ) : null}
+                    {hasEndingPrice && endingPrice == 0 ? (
+                      <Grid item xs={12}>
+                        <Alert severity='warning'>
+                          <IntlMessages id='nfts.sell.endingPriceIsZero' />
+                        </Alert>
                       </Grid>
                     ) : null}
                     <Grid item xs={12}>

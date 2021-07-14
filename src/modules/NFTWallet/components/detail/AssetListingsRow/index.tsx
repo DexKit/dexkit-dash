@@ -79,13 +79,16 @@ export default (props: Props) => {
             <IntlMessages id='nfts.detail.listingCancel' />
           </Button>
         ) : (
-          <Button
-            onClick={handleBuy}
-            variant='outlined'
-            size='small'
-            color='primary'>
-            <IntlMessages id='nfts.detail.listingBuy' />
-          </Button>
+          <Tooltip title={'Huahuhdasuhdau'}>
+            <Button
+              disabled={listing?.listing_time > moment().unix()}
+              onClick={handleBuy}
+              variant='outlined'
+              size='small'
+              color='primary'>
+              <IntlMessages id='nfts.detail.listingBuy' />
+            </Button>
+          </Tooltip>
         )}
       </TableCell>
       <TableCell>

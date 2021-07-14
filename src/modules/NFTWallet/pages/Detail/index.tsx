@@ -12,7 +12,7 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import {useParams} from 'react-router';
+import {useHistory, useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -39,6 +39,8 @@ import CancellingListingBackdrop from 'modules/NFTWallet/components/detail/Cance
 import BuyCheckoutDialog from 'modules/NFTWallet/components/detail/BuyCheckoutDialog';
 import BuyingListingBackdrop from 'modules/NFTWallet/components/detail/BuyingListingBackdrop';
 import BuySuccessBackdrop from 'modules/NFTWallet/components/detail/BuySuccessBackdrop';
+import {AxiosResponse} from 'axios';
+import NotFound from 'modules/NFTWallet/components/detail/NotFound';
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
@@ -58,10 +60,9 @@ interface RouteParams {
   token: string;
 }
 
+// TODO: refactor this to OpenSea api enum
 const ORDER_LISTING = 1;
 const ORDER_OFFER = 0;
-
-function isOwner(asset: any, address: string) {}
 
 export const AssetDetail = () => {
   const classes = useStyles();
@@ -86,11 +87,19 @@ export const AssetDetail = () => {
 
   const [showCancellingSuccess, setShowCancellingSuccess] = useState(false);
   const [showBuyingSuccess, setShowBuyingSuccess] = useState(false);
-  const [showBuying, setShowBuying] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
 
   const fetchData = useCallback(() => {
     getAsset(address, token);
   }, [getAsset, address, token]);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!userAccountAddress) {
+      history.replace('/connect-wallet');
+    }
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -138,11 +147,12 @@ export const AssetDetail = () => {
             .catch((reason: any) => {
               setErrorMessage(reason.message);
             })
-            .finally(() => setWaitingConfirmation(false));
+            .finally(() => {
+              setWaitingConfirmation(false);
+              fetchData();
+            });
           setBlockConfirmed(true);
         }
-
-        fetchData();
       }
     },
     [data, userAccountAddress, getProvider, fetchData],
@@ -192,16 +202,16 @@ export const AssetDetail = () => {
             })
             .finally(() => {
               setIsCancellingListing(false);
+              fetchData();
             });
         }
       }
     },
-    [data, getProvider, userAccountAddress],
+    [data, getProvider, fetchData, userAccountAddress],
   );
 
   const handleBuyListing = useCallback((listing: any) => {
     setBuyOrder(listing);
-    console.log(listing);
     setShowCheckout(true);
   }, []);
 
@@ -227,7 +237,7 @@ export const AssetDetail = () => {
       if (orderIndex > -1) {
         let order = orders[orderIndex];
 
-        setShowBuying(true);
+        setIsBuying(true);
 
         openSeaPort
           .fulfillOrder({
@@ -247,28 +257,39 @@ export const AssetDetail = () => {
             setBuyOrder(null);
           })
           .finally(() => {
-            setShowBuying(false);
+            setIsBuying(false);
+            fetchData();
           });
-      } else {
       }
     }
-  }, [data, getProvider, buyOrder, userAccountAddress]);
+  }, [data, getProvider, fetchData, buyOrder, userAccountAddress]);
 
   const handleCloseBuySuccess = useCallback(() => {
     setShowBuyingSuccess(false);
     setBuyTransaction('');
   }, []);
 
+  const isHttpStatus = useCallback(
+    (response: AxiosResponse, status: number) => {
+      return response.status == status;
+    },
+    [],
+  );
+
+  const handleRefresh = useCallback(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <>
       <CancellingListingBackdrop open={isCancellingListing} />
-      <BuyingListingBackdrop open={showBuying} />
       <BuyCheckoutDialog
         onConfirm={handleConfirmBuy}
         open={showCheckout}
         onClose={handleCloseCheckout}
         asset={data}
         order={buyOrder}
+        loading={isBuying}
       />
       <BuySuccessBackdrop
         transaction={buyTransaction}
@@ -288,30 +309,34 @@ export const AssetDetail = () => {
         onClose={handleBlockConfirmedClose}
       />
       {error ? (
-        <Box py={8}>
-          <Grid
-            container
-            justify='center'
-            alignItems='center'
-            alignContent='center'
-            spacing={4}>
-            <Grid item>
-              <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+        isHttpStatus((error as any).response, 404) ? (
+          <NotFound />
+        ) : (
+          <Box py={8}>
+            <Grid
+              container
+              justify='center'
+              alignItems='center'
+              alignContent='center'
+              spacing={4}>
+              <Grid item>
+                <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+              </Grid>
+              <Grid item>
+                <Typography gutterBottom variant='h5'>
+                  <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                </Typography>
+                <Button
+                  onClick={handleTryAgain}
+                  size='small'
+                  variant='contained'
+                  color='primary'>
+                  <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography gutterBottom variant='h5'>
-                <IntlMessages id='nfts.walletAssetsListErrorTitle' />
-              </Typography>
-              <Button
-                onClick={handleTryAgain}
-                size='small'
-                variant='contained'
-                color='primary'>
-                <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        )
       ) : (
         <Box pt={{xs: 8}}>
           <Box mb={2}>
@@ -379,13 +404,15 @@ export const AssetDetail = () => {
                     <Grid item xs={12}>
                       <Box mb={2}>
                         <Grid container spacing={2}>
-                          <Grid item>
-                            <CopyAddressButton
-                              copyText={`${getWindowUrl()}/nfts/assets/${
-                                data?.asset_contract?.address
-                              }/${data?.token_id}`}
-                            />
-                          </Grid>
+                          {loading ? null : (
+                            <Grid item>
+                              <CopyAddressButton
+                                copyText={`${getWindowUrl()}/nfts/assets/${
+                                  data?.asset_contract?.address
+                                }/${data?.token_id}`}
+                              />
+                            </Grid>
+                          )}
                           {isAssetOwner(data, userAccountAddress || '') ? (
                             <>
                               <Grid item>
@@ -446,6 +473,7 @@ export const AssetDetail = () => {
                         )}
                         loading={loading}
                         error={error}
+                        onRefresh={handleRefresh}
                       />
                     </Grid>
                   </Grid>

@@ -19,10 +19,12 @@ import {
   Checkbox,
   FormControlLabel,
   Button,
+  Paper,
+  Container,
 } from '@material-ui/core';
 
 import AssetCard from '../../components/detail/AssetCard';
-import {useHistory, useParams} from 'react-router';
+import {useHistory, useLocation, useParams} from 'react-router';
 import AssetsSkeleton from '../../components/wallet/AssetsSkeleton';
 import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
@@ -39,6 +41,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 
 import _ from 'lodash';
 import CollectionsList from '../../components/wallet/CollectionsList';
+import FloatActionBar from '../../components/wallet/FloatActionBar';
 import {truncateTokenAddress} from 'utils';
 import SearchIcon from '@material-ui/icons/Search';
 import {getWindowUrl} from 'utils/browser';
@@ -46,6 +49,12 @@ import {useWeb3} from 'hooks/useWeb3';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import axios from 'axios';
 import {useMyAssets} from 'modules/NFTWallet/hooks/wallet';
+import ActionSelect, {
+  Actions,
+} from 'modules/NFTWallet/components/wallet/ActionSelect';
+
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -132,6 +141,19 @@ export default () => {
   //Collection filters
   const [queryCollection, setQueryCollection] = useState('');
 
+  // actions
+  const [selectActive, setSelectActive] = useState(false);
+  const [action, setAction] = useState('');
+  const [showSelectedAssets, setShowSelectedAssets] = useState(false);
+  const [showBundleDialog, setShowBundleDialog] = useState(true);
+  const [selectedAssets, setSelectedAssets] = useState<
+    Array<{
+      tokenId: string;
+      contractAddress: string;
+      imageUrl: string;
+    }>
+  >([]);
+
   // Input states
   const [queryInputState, setQueryInputState] = useState('');
   const [collectionInputState, setCollectionInputState] = useState('');
@@ -205,14 +227,69 @@ export default () => {
     [setLazyQueryCollection],
   );
 
-  const handleAssetClick = useCallback(
+  const getAssetIndex = useCallback(
     (asset: any) => {
-      history.push(
-        `/nfts/assets/${asset.asset_contract.address}/${asset?.token_id}`,
+      return selectedAssets.findIndex(
+        (value) =>
+          value.tokenId?.toLowerCase() === asset?.token_id?.toLowerCase() &&
+          value.contractAddress?.toLowerCase() ===
+            asset?.asset_contract?.address?.toLowerCase(),
       );
     },
-    [history],
+    [selectedAssets],
   );
+
+  const isAssetSelected = useCallback(
+    (asset: any) => {
+      return getAssetIndex(asset) > -1;
+    },
+    [getAssetIndex, selectedAssets],
+  );
+
+  const handleAssetClick = useCallback(
+    (asset: any) => {
+      if (selectActive) {
+        let assetIndex = getAssetIndex(asset);
+
+        if (assetIndex > -1) {
+          setSelectedAssets((value) => {
+            let newArr = [...value];
+
+            newArr.splice(assetIndex, 1);
+
+            return newArr;
+          });
+        } else {
+          setSelectedAssets((value) => [
+            ...value,
+            {
+              tokenId: asset?.token_id,
+              contractAddress: asset?.asset_contract?.address,
+              imageUrl: asset?.image_url,
+            },
+          ]);
+        }
+      } else {
+        history.push(
+          `/nfts/assets/${asset.asset_contract.address}/${asset?.token_id}`,
+        );
+      }
+    },
+    [isAssetSelected, selectActive, history],
+  );
+
+  const handleChangeAction = useCallback((e) => {
+    let value = e.target.value;
+
+    setAction(value);
+
+    if (value == '') {
+      setSelectActive(false);
+      setSelectedAssets([]);
+    } else if (value == Actions.CREATE_BUNDLE) {
+      setSelectActive(true);
+    }
+  }, []);
 
   const handleChangeSortBy = useCallback((e) => {
     setSortBy(e.target.value);
@@ -243,6 +320,19 @@ export default () => {
     }
     setHasOffers((value) => !value);
   }, [isUpXs]);
+
+  const handleToggleSelectedAssets = useCallback(() => {
+    setShowSelectedAssets((value) => !value);
+  }, []);
+
+  const handleGoCreateBundle = useCallback(() => {
+    history.push({
+      pathname: '/nfts/create-bundle',
+      state: {
+        assets: selectedAssets,
+      },
+    });
+  }, [selectedAssets]);
 
   const handleLoadMore = useCallback(async () => {
     if (!hasMore) {
@@ -324,260 +414,345 @@ export default () => {
     }
   }, [userAddress]);
 
+  const {state} = useLocation<{action: string; asset: any}>();
+
+  useEffect(() => {
+    if (state) {
+      if (state.action == 'create-bundle') {
+        setAction(Actions.CREATE_BUNDLE);
+        setSelectActive(true);
+        setSelectedAssets([state.asset]);
+        history.replace({state: {}});
+      }
+    }
+  }, [state]);
+
   return (
-    <Box pt={{xs: 8}}>
-      <PageTitle
-        breadcrumbs={{
-          history: [
-            {
-              url: '/',
-              name: messages['nfts.walletBreadcrumbDashboard'].toString(),
+    <>
+      <Box pt={{xs: 8}}>
+        <PageTitle
+          breadcrumbs={{
+            history: [
+              {
+                url: '/',
+                name: messages['nfts.walletBreadcrumbDashboard'].toString(),
+              },
+            ],
+            active: {
+              name: messages['nfts.walletActiveName'].toString(),
             },
-          ],
-          active: {
-            name: messages['nfts.walletActiveName'].toString(),
-          },
-        }}
-        title={{
-          hasCopy: `${getWindowUrl()}/nfts/wallet/${address}`,
-          name: isWalletOwner(address, userAddress)
-            ? messages['nfts.walletTitle'].toString()
-            : isUpXs
-            ? address
-            : truncateTokenAddress(address),
-        }}
-      />
-      <>
-        <Box>
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={3}>
-              <Card>
-                <CardContent>
-                  <TextField
-                    value={queryInputState}
-                    onChange={handleQueryInputChange}
-                    fullWidth
-                    variant='outlined'
-                    placeholder={messages[
-                      'nfts.walletSearchPlaceholder'
-                    ].toString()}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </CardContent>
-                <CardHeader
-                  action={
-                    !isUpXs ? (
-                      <IconButton onClick={handleToggleFilters}>
-                        {showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                      </IconButton>
-                    ) : null
-                  }
-                  avatar={<FilterListIcon />}
-                  title={messages['nfts.walletFilters'].toString()}
-                />
-                <Collapse in={isUpXs || showFilters}>
+          }}
+          title={{
+            hasCopy: `${getWindowUrl()}/nfts/wallet/${address}`,
+            name: isWalletOwner(address, userAddress)
+              ? messages['nfts.walletTitle'].toString()
+              : isUpXs
+              ? address
+              : truncateTokenAddress(address),
+          }}
+        />
+        <>
+          <Box>
+            <Grid container spacing={4}>
+              <Grid item xs={12} sm={3}>
+                <Card>
                   <CardContent>
-                    <Grid container direction='column' spacing={2}>
-                      <Grid item xs>
-                        <FormControlLabel
-                          color='primary'
-                          control={<Checkbox />}
-                          checked={hasOffers}
-                          onChange={handleToggleHasOffers}
-                          label={messages[
-                            'nfts.walletHasOffersCheck'
-                          ].toString()}
-                        />
-                      </Grid>
-                      <Grid item xs>
-                        <Box py={2}>
-                          <Grid container spacing={2}>
-                            <Grid item>
-                              <ViewComfyIcon />
-                            </Grid>
-                            <Grid item xs>
-                              <Typography
-                                className={classes.collectionsTitle}
-                                variant='body1'>
-                                <IntlMessages id='nfts.walletCollections' />
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Box>
-                        <TextField
-                          placeholder={messages[
-                            'nfts.walletCollectionFilter'
-                          ].toString()}
-                          variant='outlined'
-                          type='search'
-                          onChange={handleCollectionQueryChange}
-                          value={collectionInputState}
-                          fullWidth
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position='start'>
-                                <SearchIcon />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs>
-                        {collectionLoading ? (
-                          <CollectionListSkeleton count={5} />
-                        ) : null}
-                        {collections.length > 0 ? (
-                          <Box className={classes.list}>
-                            <CollectionsList
-                              onSelect={handleSelectCollection}
-                              collection={collection}
-                              collections={collections}
-                            />
-                          </Box>
-                        ) : null}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <Box mb={2}>
-                <Grid
-                  alignItems='center'
-                  alignContent='center'
-                  container
-                  justify='space-between'
-                  spacing={2}>
-                  <Grid item>
-                    <Box pt={{xs: 2}} textAlign={!isUpXs ? 'center' : null}>
-                      <Typography variant='h5'>
-                        {assets?.length || 0}{' '}
-                        {(assets || []).length > 1 ? (
-                          <IntlMessages id='nfts.walletResults' />
-                        ) : (
-                          <IntlMessages id='nfts.walletResult' />
-                        )}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Select
-                      variant='outlined'
+                    <TextField
+                      value={queryInputState}
+                      onChange={handleQueryInputChange}
                       fullWidth
-                      value={sortBy}
-                      displayEmpty
-                      onChange={handleChangeSortBy}>
-                      <MenuItem selected value=''>
-                        <IntlMessages id='nfts.walletSortBy' />
-                      </MenuItem>
-                      <MenuItem selected value={SORT_BY_SALE_DATE}>
-                        <IntlMessages id='nfts.walletSortBySaleDate' />
-                      </MenuItem>
-                      <MenuItem selected value={SORT_BY_SALE_COUNT}>
-                        <IntlMessages id='nfts.walletSortBySaleCount' />
-                      </MenuItem>
-                      <MenuItem selected value={SORT_BY_VISITOR_COUNT}>
-                        <IntlMessages id='nfts.walletSortByVisitorCount' />
-                      </MenuItem>
-                      <MenuItem selected value={SORT_BY_TOTAL_PRICE}>
-                        <IntlMessages id='nfts.walletSortByTotalPrice' />
-                      </MenuItem>
-                    </Select>
-                  </Grid>
-                </Grid>
-              </Box>
-              {assetsError ? (
-                <Box py={8}>
+                      variant='outlined'
+                      placeholder={messages[
+                        'nfts.walletSearchPlaceholder'
+                      ].toString()}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </CardContent>
+                  <CardHeader
+                    action={
+                      !isUpXs ? (
+                        <IconButton onClick={handleToggleFilters}>
+                          {showFilters ? (
+                            <ExpandLessIcon />
+                          ) : (
+                            <ExpandMoreIcon />
+                          )}
+                        </IconButton>
+                      ) : null
+                    }
+                    avatar={<FilterListIcon />}
+                    title={messages['nfts.walletFilters'].toString()}
+                  />
+                  <Collapse in={isUpXs || showFilters}>
+                    <CardContent>
+                      <Grid container direction='column' spacing={2}>
+                        <Grid item xs>
+                          <FormControlLabel
+                            color='primary'
+                            control={<Checkbox />}
+                            checked={hasOffers}
+                            onChange={handleToggleHasOffers}
+                            label={messages[
+                              'nfts.walletHasOffersCheck'
+                            ].toString()}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <Box py={2}>
+                            <Grid container spacing={2}>
+                              <Grid item>
+                                <ViewComfyIcon />
+                              </Grid>
+                              <Grid item xs>
+                                <Typography
+                                  className={classes.collectionsTitle}
+                                  variant='body1'>
+                                  <IntlMessages id='nfts.walletCollections' />
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                          <TextField
+                            placeholder={messages[
+                              'nfts.walletCollectionFilter'
+                            ].toString()}
+                            variant='outlined'
+                            type='search'
+                            onChange={handleCollectionQueryChange}
+                            value={collectionInputState}
+                            fullWidth
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position='start'>
+                                  <SearchIcon />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          {collectionLoading ? (
+                            <CollectionListSkeleton count={5} />
+                          ) : null}
+                          {collections.length > 0 ? (
+                            <Box className={classes.list}>
+                              <CollectionsList
+                                onSelect={handleSelectCollection}
+                                collection={collection}
+                                collections={collections}
+                              />
+                            </Box>
+                          ) : null}
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Collapse>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={9}>
+                <Box mb={2}>
                   <Grid
-                    container
-                    justify='center'
                     alignItems='center'
                     alignContent='center'
-                    spacing={4}>
+                    container
+                    justify='space-between'
+                    spacing={2}>
                     <Grid item>
-                      <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                      {assets?.length > 0 ? (
+                        <Box pt={{xs: 2}} textAlign={!isUpXs ? 'center' : null}>
+                          <Typography variant='h5'>
+                            {assets?.length || 0}{' '}
+                            {(assets || []).length > 1 ? (
+                              <IntlMessages id='nfts.walletResults' />
+                            ) : (
+                              <IntlMessages id='nfts.walletResult' />
+                            )}
+                          </Typography>
+                        </Box>
+                      ) : null}
                     </Grid>
                     <Grid item>
-                      <Typography gutterBottom variant='h5'>
-                        <IntlMessages id='nfts.walletAssetsListErrorTitle' />
-                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <ActionSelect
+                            value={action}
+                            onChange={handleChangeAction}
+                            fullWidth
+                            variant='outlined'
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Select
+                            variant='outlined'
+                            fullWidth
+                            value={sortBy}
+                            displayEmpty
+                            onChange={handleChangeSortBy}>
+                            <MenuItem selected value=''>
+                              <IntlMessages id='nfts.walletSortBy' />
+                            </MenuItem>
+                            <MenuItem selected value={SORT_BY_SALE_DATE}>
+                              <IntlMessages id='nfts.walletSortBySaleDate' />
+                            </MenuItem>
+                            <MenuItem selected value={SORT_BY_SALE_COUNT}>
+                              <IntlMessages id='nfts.walletSortBySaleCount' />
+                            </MenuItem>
+                            <MenuItem selected value={SORT_BY_VISITOR_COUNT}>
+                              <IntlMessages id='nfts.walletSortByVisitorCount' />
+                            </MenuItem>
+                            <MenuItem selected value={SORT_BY_TOTAL_PRICE}>
+                              <IntlMessages id='nfts.walletSortByTotalPrice' />
+                            </MenuItem>
+                          </Select>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Box>
+                {assetsError ? (
+                  <Box py={8}>
+                    <Grid
+                      container
+                      justify='center'
+                      alignItems='center'
+                      alignContent='center'
+                      spacing={4}>
+                      <Grid item>
+                        <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                      </Grid>
+                      <Grid item>
+                        <Typography gutterBottom variant='h5'>
+                          <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                        </Typography>
+                        <Button
+                          onClick={handleTryAgainAssets}
+                          size='small'
+                          variant='contained'
+                          color='primary'>
+                          <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                ) : null}
+                {loadingAssets ? (
+                  <AssetsSkeleton count={8} />
+                ) : (
+                  <>
+                    {assets?.length == 0 ? (
+                      <Box py={8}>
+                        <Grid container alignContent='center' justify='center'>
+                          <Grid item>
+                            <Typography variant='h5' component='h3'>
+                              No items found
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    ) : (
+                      <>
+                        {!assetsError ? (
+                          <>
+                            <Grid container spacing={2}>
+                              {assets?.map((asset: any, index: number) => (
+                                <Grid key={index} item xs={12} sm={3}>
+                                  <AssetCard
+                                    forSelect={selectActive}
+                                    asset={asset}
+                                    onClick={handleAssetClick}
+                                    selected={isAssetSelected(asset)}
+                                  />
+                                </Grid>
+                              ))}
+                            </Grid>
+                          </>
+                        ) : null}
+                      </>
+                    )}
+                  </>
+                )}
+                {hasMore ? (
+                  <Box py={4}>
+                    <Button
+                      color='primary'
+                      size='large'
+                      onClick={handleLoadMore}
+                      disabled={loadingMoreAssets}
+                      startIcon={
+                        loadingMoreAssets ? (
+                          <CircularProgress
+                            size={theme.spacing(6)}
+                            color='inherit'
+                          />
+                        ) : null
+                      }
+                      variant='outlined'
+                      fullWidth>
+                      Load more
+                    </Button>
+                  </Box>
+                ) : null}
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      </Box>
+      {action == Actions.CREATE_BUNDLE ? (
+        <FloatActionBar>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Collapse in={showSelectedAssets}>1</Collapse>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                alignItems='center'
+                alignContent='center'
+                container
+                justify='space-between'
+                spacing={2}>
+                <Grid item>
+                  <IconButton onClick={handleToggleSelectedAssets}>
+                    {showSelectedAssets ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <Grid
+                    container
+                    alignItems='center'
+                    alignContent='center'
+                    spacing={2}>
+                    <Grid item>
                       <Button
-                        onClick={handleTryAgainAssets}
-                        size='small'
-                        variant='contained'
-                        color='primary'>
-                        <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                        onClick={handleGoCreateBundle}
+                        disabled={selectedAssets.length == 0}
+                        size='large'
+                        color='primary'
+                        variant='contained'>
+                        <IntlMessages id='nfts.wallet.sell' />
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button size='large' variant='outlined'>
+                        <IntlMessages id='nfts.wallet.cancel' />
                       </Button>
                     </Grid>
                   </Grid>
-                </Box>
-              ) : null}
-              {loadingAssets ? (
-                <AssetsSkeleton count={8} />
-              ) : (
-                <>
-                  {assets?.length == 0 ? (
-                    <Box py={8}>
-                      <Grid container alignContent='center' justify='center'>
-                        <Grid item>
-                          <Typography variant='h5' component='h3'>
-                            No items found
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  ) : (
-                    <>
-                      {!assetsError ? (
-                        <>
-                          <Grid container spacing={2}>
-                            {assets?.map((asset: any, index: number) => (
-                              <Grid key={index} item xs={12} sm={3}>
-                                <AssetCard
-                                  asset={asset}
-                                  onClick={handleAssetClick}
-                                />
-                              </Grid>
-                            ))}
-                          </Grid>
-                        </>
-                      ) : null}
-                    </>
-                  )}
-                </>
-              )}
-              {hasMore ? (
-                <Box py={4}>
-                  <Button
-                    color='primary'
-                    size='large'
-                    onClick={handleLoadMore}
-                    disabled={loadingMoreAssets}
-                    startIcon={
-                      loadingMoreAssets ? (
-                        <CircularProgress
-                          size={theme.spacing(6)}
-                          color='inherit'
-                        />
-                      ) : null
-                    }
-                    variant='outlined'
-                    fullWidth>
-                    Load more
-                  </Button>
-                </Box>
-              ) : null}
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Box>
-      </>
-    </Box>
+        </FloatActionBar>
+      ) : null}
+    </>
   );
 };

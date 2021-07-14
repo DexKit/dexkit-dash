@@ -19,6 +19,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
 import {OpenSeaPort} from 'opensea-js';
 import {Network, Order, WyvernSchemaName} from 'opensea-js/lib/types';
+import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 
 import React, {useCallback, useEffect, useState} from 'react';
 import MakeOfferDialog from './MakeOfferDialog';
@@ -48,10 +49,11 @@ interface Props {
   offers: any;
   loading?: boolean;
   error?: any;
+  onRefresh: () => void;
 }
 
 export default (props: Props) => {
-  const {offers, asset, loading} = props;
+  const {offers, onRefresh, asset, loading} = props;
   const [showDialog, setShowDialog] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -107,6 +109,7 @@ export default (props: Props) => {
           .then((order: Order) => {
             setShowSuccess(true);
             setShowDialog(false);
+            onRefresh();
           })
           .catch((reason) => {
             setErrorMessage(reason.message);
@@ -116,7 +119,7 @@ export default (props: Props) => {
           });
       }
     },
-    [asset, userAccountAddress, getProvider],
+    [asset, userAccountAddress, getProvider, onRefresh],
   );
 
   const acceptOffer = useCallback(
@@ -131,7 +134,8 @@ export default (props: Props) => {
           token_id: asset?.token_id,
         });
 
-        let orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
+        // lowercase
+        let orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
 
         if (orderIndex > -1) {
           let order = orders[orderIndex];
@@ -146,6 +150,9 @@ export default (props: Props) => {
             })
             .then(() => {
               setShowAcceptSuccess(true);
+              setOffer(null);
+              setShowAcceptDialog(false);
+              onRefresh();
             })
             .catch((reason) => {
               setErrorMessage(reason.message);
@@ -156,14 +163,13 @@ export default (props: Props) => {
         }
       }
     },
-    [userAccountAddress, getProvider],
+    [userAccountAddress, getProvider, onRefresh],
   );
 
   const [offer, setOffer] = useState<any>();
 
   const handleAcceptOffer = useCallback(
     (offer: any) => {
-      console.log(offer);
       setOffer(offer);
       setShowAcceptDialog(true);
     },
@@ -200,6 +206,7 @@ export default (props: Props) => {
             })
             .then(() => {
               setShowCancelSuccess(true);
+              onRefresh();
             })
             .catch((reason) => {
               setErrorMessage(reason.message);
@@ -210,7 +217,7 @@ export default (props: Props) => {
         }
       }
     },
-    [asset, userAccountAddress, getProvider],
+    [asset, userAccountAddress, getProvider, onRefresh],
   );
 
   const handleCloseSuccess = useCallback(() => setShowSuccess(false), []);
@@ -335,12 +342,48 @@ export default (props: Props) => {
               </Grid>
             ) : null}
             <Grid item xs={12}>
-              <AssetOffersTable
-                offers={offers}
-                asset={asset}
-                onCancel={handleCancelOffer}
-                onAccept={handleAcceptOffer}
-              />
+              {loading ? (
+                <Box
+                  py={8}
+                  display='flex'
+                  alignContent='center'
+                  justifyContent='center'
+                  alignItems='center'>
+                  <CircularProgress color='primary' />
+                </Box>
+              ) : (
+                <>
+                  {offers?.length > 0 ? (
+                    <AssetOffersTable
+                      offers={offers}
+                      asset={asset}
+                      onCancel={handleCancelOffer}
+                      onAccept={handleAcceptOffer}
+                    />
+                  ) : (
+                    <Box display='block' width='100%' py={4}>
+                      <Grid
+                        direction='column'
+                        container
+                        spacing={2}
+                        justify='center'
+                        alignItems='center'>
+                        <Grid item>
+                          <MoneyOffIcon color='disabled' />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            color='textSecondary'
+                            align='center'
+                            variant='body1'>
+                            <IntlMessages id='nfts.detail.noOffersYet' />
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+                </>
+              )}
             </Grid>
             {!isAssetOwner(asset, userAccountAddress || '') ? (
               <Grid item>

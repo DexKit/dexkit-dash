@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   Card,
   CardContent,
@@ -25,6 +25,11 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {toTokenUnitAmount} from '@0x/utils';
 import {Link as RouterLink} from 'react-router-dom';
 import {OrderSide} from 'opensea-js/lib/types';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import {KeyboardDateTimePicker} from '@material-ui/pickers';
+import moment from 'moment';
+import {useWeb3} from 'hooks/useWeb3';
+import {getOpenSeaPort, getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 
 const useStyles = makeStyles((theme) => ({
   tokenImage: {
@@ -43,6 +48,8 @@ interface Props {
 export default (props: Props) => {
   const {asset, loading, error, onBuy} = props;
   const classes = useStyles();
+  const [isTestnet, setIsTestnet] = useState(false);
+  const {getProvider} = useWeb3();
   const userAccountAddress = useDefaultAccount();
 
   const hasListing = useCallback((asset: any) => {
@@ -71,6 +78,18 @@ export default (props: Props) => {
   const handleBuy = useCallback(() => {
     onBuy(getFirstOrder(asset));
   }, [asset, onBuy]);
+
+  useEffect(() => {
+    (async () => {
+      let chainId = await getChainId(getProvider());
+
+      if (chainId == RINKEBY_NETWORK) {
+        setIsTestnet(true);
+      } else {
+        setIsTestnet(false);
+      }
+    })();
+  }, [userAccountAddress, getProvider]);
 
   return (
     <Card>
@@ -114,14 +133,18 @@ export default (props: Props) => {
                 <Grid item>
                   <Link
                     target='_blank'
-                    href={`https://testnets.opensea.io/assets/${asset?.asset_contract?.address}/${asset?.token_id}`}>
+                    href={`https://${
+                      isTestnet ? 'testnets' : 'www'
+                    }.opensea.io/assets/${asset?.asset_contract?.address}/${
+                      asset?.token_id
+                    }`}>
                     <Grid
                       container
                       spacing={1}
                       alignItems='center'
                       alignContent='center'>
                       <Grid item>
-                        <LinkIcon />
+                        <OpenInNewIcon fontSize='inherit' />
                       </Grid>{' '}
                       <Grid item>
                         <IntlMessages id='nfts.detail.openSea' />
@@ -155,6 +178,9 @@ export default (props: Props) => {
                     </Typography>
                   </Box>
                   <Button
+                    disabled={
+                      getFirstOrder(asset).listing_time > moment().unix()
+                    }
                     onClick={handleBuy}
                     variant='contained'
                     size='large'

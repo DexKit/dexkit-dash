@@ -8,23 +8,47 @@ import {
   CardMedia,
   makeStyles,
   Typography,
+  Box,
   Tooltip,
+  useTheme,
 } from '@material-ui/core';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {truncateText} from 'utils';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import clsx from 'clsx';
 
 interface Props {
   asset: any;
+  selected?: boolean;
+  forSelect?: boolean;
   onClick: (asset: any) => void;
 }
 
 const useStyles = makeStyles((theme) => ({
+  card: {
+    position: 'relative',
+  },
+  selected: {
+    borderWidth: 1,
+    borderColor: theme.palette.primary.main,
+    borderStyle: 'solid',
+  },
   cardMedia: {
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
   cardContent: {
     height: theme.spacing(30),
+  },
+  checkIcon: {
+    position: 'absolute',
+    height: theme.spacing(9),
+    width: theme.spacing(9),
+    zIndex: 30,
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+    backgroundColor: theme.palette.common.white,
+    borderRadius: '50%',
   },
   tokenImageSmall: {
     width: theme.spacing(3),
@@ -33,15 +57,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default (props: Props) => {
-  const {asset, onClick} = props;
+  const {asset, forSelect: elevate, selected, onClick} = props;
   const classes = useStyles();
+  const theme = useTheme();
 
   const handleClick = useCallback(() => {
     onClick(asset);
   }, [asset, onClick]);
 
   return (
-    <Card>
+    <Card
+      elevation={selected ? 24 : 1}
+      variant={elevate && !selected ? 'outlined' : 'elevation'}
+      className={clsx(classes.card, selected ? classes.selected : '')}>
+      {selected ? (
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
+          alignContent='center'
+          boxShadow={1}
+          className={classes.checkIcon}>
+          <CheckCircleIcon color='primary' fontSize='large' />
+        </Box>
+      ) : null}
       <CardActionArea onClick={handleClick}>
         <CardMedia
           className={classes.cardMedia}

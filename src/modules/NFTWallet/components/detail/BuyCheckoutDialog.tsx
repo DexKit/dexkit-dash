@@ -10,6 +10,8 @@ import {
   Typography,
   makeStyles,
   Paper,
+  CircularProgress,
+  useTheme,
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {toTokenUnitAmount} from '@0x/utils';
@@ -32,11 +34,13 @@ interface Props extends DialogProps {
   onClose: () => void;
   asset?: any;
   order?: any;
+  loading?: boolean;
 }
 
 export default (props: Props) => {
-  const {asset, order, onClose, onConfirm} = props;
+  const {asset, order, onClose, onConfirm, loading} = props;
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <Dialog {...props} disableBackdropClick>
@@ -97,15 +101,24 @@ export default (props: Props) => {
           <Grid container spacing={2} justify='center' alignItems='center'>
             <Grid item>
               <Button
+                disabled={loading}
                 onClick={onConfirm}
                 variant='contained'
                 color='primary'
                 size='large'>
-                <IntlMessages id='nfts.detail.checkout' />
+                {loading ? (
+                  <CircularProgress size={theme.spacing(6)} color='inherit' />
+                ) : (
+                  <IntlMessages id='nfts.detail.checkout' />
+                )}
               </Button>
             </Grid>
             <Grid item>
-              <Button onClick={onClose} variant='outlined' size='large'>
+              <Button
+                disabled={loading}
+                onClick={onClose}
+                variant='outlined'
+                size='large'>
                 <IntlMessages id='nfts.detail.checkoutCancel' />
               </Button>
             </Grid>

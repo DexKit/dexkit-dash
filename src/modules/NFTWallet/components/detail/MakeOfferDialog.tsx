@@ -26,7 +26,7 @@ import {OpenSeaPort} from 'opensea-js';
 import {useWeb3} from 'hooks/useWeb3';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {getUnixDays} from 'modules/NFTWallet/utils';
+import {getFirstOrder, getUnixDays} from 'modules/NFTWallet/utils';
 import {getOpenSeaPort} from 'utils/opensea';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     maxWidth: '100%',
     maxHeigth: '100%',
+  },
+  tokenImage: {
+    height: theme.spacing(6),
+    width: theme.spacing(6),
   },
 }));
 
@@ -269,6 +273,28 @@ export default (props: Props) => {
                   {asset?.collection?.name}
                 </Typography>
                 <Typography variant='h5'>{asset?.name}</Typography>
+                {getFirstOrder(asset) ? (
+                  <Typography gutterBottom variant='h5'>
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      alignContent='center'>
+                      <img
+                        src={
+                          getFirstOrder(asset).payment_token_contract?.image_url
+                        }
+                        className={classes.tokenImage}
+                      />
+                      <span>
+                        {toTokenUnitAmount(
+                          getFirstOrder(asset)?.current_price,
+                          getFirstOrder(asset)?.payment_token_contract
+                            ?.decimals,
+                        ).toNumber()}
+                      </span>
+                    </Box>
+                  </Typography>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>

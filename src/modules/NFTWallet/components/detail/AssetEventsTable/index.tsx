@@ -6,6 +6,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  TableContainer,
+  useTheme,
 } from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -20,33 +22,40 @@ interface Props {
 
 export default (props: Props) => {
   const {events} = props;
+  const theme = useTheme();
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicTypeLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicPriceLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicFromLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicToLabel' />
-          </TableCell>
-          <TableCell>
-            <IntlMessages id='nfts.detail.historicDateLabel' />
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {events.map((event, index) => (
-          <AssetEventTableRow key={index} event={event} />
-        ))}
-      </TableBody>
-    </Table>
+    <TableContainer
+      style={{
+        maxHeight: theme.spacing(100),
+        overflowY: 'scroll',
+      }}>
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <IntlMessages id='nfts.detail.historicTypeLabel' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='nfts.detail.historicPriceLabel' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='nfts.detail.historicFromLabel' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='nfts.detail.historicToLabel' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='nfts.detail.historicDateLabel' />
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {events.map((event, index) => (
+            <AssetEventTableRow key={index} event={event} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
