@@ -14,6 +14,7 @@ import ButtonCopy from 'shared/components/ButtonCopy';
 import {truncateAddress} from 'utils';
 import SubjectIcon from '@material-ui/icons/Subject';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {Skeleton} from '@material-ui/lab';
 
 interface Props {
   asset?: any;
@@ -34,6 +35,11 @@ export default (props: Props) => {
       </AccordionSummary>
       <AccordionDetails style={{display: 'block'}}>
         <Box p={2}>
+          <Box mb={2}>
+            <Typography variant='body1' color='textSecondary'>
+              {loading ? <Skeleton /> : asset?.description}
+            </Typography>
+          </Box>
           <Grid container justify='space-between'>
             <Grid item>
               <Typography variant='body1'>

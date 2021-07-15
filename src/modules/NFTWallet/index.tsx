@@ -3,21 +3,29 @@ import React from 'react';
 export const nftWalletConfig = [
   {
     routes: [
-      // {
-      //   path: '/nfts/assets/:address/:token/sell',
-      //   component: React.lazy(() => import('./Sell')),
-      // },
+      {
+        path: '/nfts/assets/:address/:token/sell',
+        component: React.lazy(() => import('./pages/Sell')),
+      },
       {
         path: '/nfts/assets/:address/:token',
-        component: React.lazy(() => import('./AssetDetail')),
+        component: React.lazy(() => import('./pages/Detail')),
       },
       {
         path: '/nfts/wallet/:address',
-        component: React.lazy(() => import('./Wallet')),
+        component: React.lazy(() => import('./pages/Wallet')),
       },
+      // {
+      //   path: '/nfts/create-bundle',
+      //   component: React.lazy(() => import('./pages/CreateBundle')),
+      // },
+      // {
+      //   path: '/nfts/bundle/:slug',
+      //   component: React.lazy(() => import('./pages/BundleDetail')),
+      // },
       {
         path: '/nfts/wallet',
-        component: React.lazy(() => import('./WalletRedirect')),
+        component: React.lazy(() => import('./pages/WalletRedirect')),
       },
     ],
   },

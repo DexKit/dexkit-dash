@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Backdrop,
@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
@@ -33,16 +35,29 @@ interface Props {
   onClose: () => void;
 }
 
-let ETHERSCAN_URL = 'https://etherscan.io/tx';
+function useEtherscanUrl() {
+  const [url, setUrl] = useState('https://etherscan.io/tx');
+  const {getProvider} = useWeb3();
 
-if (process.env.NODE_ENV == 'development') {
-  ETHERSCAN_URL = 'https://rinkeby.etherscan.io/tx';
+  useEffect(() => {
+    (async () => {
+      const provider = getProvider();
+
+      if ((await getChainId(provider)) == RINKEBY_NETWORK) {
+        setUrl('https://rinkeby.etherscan.io/tx');
+      }
+    })();
+  }, [getProvider]);
+
+  return {url};
 }
 
 export default (props: Props) => {
   const {open, transaction, onClose} = props;
   const classes = useStyles();
   const theme = useTheme();
+
+  const {url} = useEtherscanUrl();
 
   return (
     <Backdrop open={open} className={classes.backdrop}>
@@ -70,9 +85,7 @@ export default (props: Props) => {
             {transaction ? (
               <Grid item>
                 <Typography variant='body1'>
-                  <Link
-                    href={`${ETHERSCAN_URL}/${transaction}`}
-                    target='_blank'>
+                  <Link href={`${url}/${transaction}`} target='_blank'>
                     <IntlMessages id='nfts.wallet.transferViewTransaction' />
                   </Link>
                 </Typography>

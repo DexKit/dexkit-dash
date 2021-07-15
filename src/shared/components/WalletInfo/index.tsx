@@ -2,7 +2,14 @@ import React, {useContext} from 'react';
 
 import AppContext from '../../../@crema/utility/AppContext';
 import clsx from 'clsx';
-import {makeStyles, Button, IconButton, Tooltip, Chip,  Hidden} from '@material-ui/core';
+import {
+  makeStyles,
+  Button,
+  IconButton,
+  Tooltip,
+  Chip,
+  Hidden,
+} from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -18,21 +25,20 @@ import {tokenAmountInUnits} from 'utils/tokens';
 import {Web3State} from 'types/blockchain';
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import { truncateAddress, truncateIsAddress } from 'utils/text';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {truncateAddress, truncateIsAddress} from 'utils/text';
+import {useHistory, useLocation} from 'react-router-dom';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from 'redux/store';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 
-import { UIAccount } from 'redux/_ui/reducers';
-import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
+import {UIAccount} from 'redux/_ui/reducers';
+import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 const WalletInfo = (props: any) => {
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,20 +61,23 @@ const WalletInfo = (props: any) => {
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const defaultAccountLabel = useDefaultLabelAccount();
-  const connected  = web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
-  const accounts = useSelector<AppState, AppState['ui']['accounts']>(state => state.ui.accounts);
+  const connected =
+    web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
+  const accounts = useSelector<AppState, AppState['ui']['accounts']>(
+    (state) => state.ui.accounts,
+  );
   const dispatch = useDispatch();
 
   const {data: balances} = useBalance(defaultAccount);
 
   const onGoToWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet')
-  }
+    history.push('/dashboard/wallet');
+  };
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet/manage-accounts')
-  }
+    history.push('/dashboard/wallet/manage-accounts');
+  };
 
   const filteredBalances = balances?.filter(
     (e) => e.currency?.symbol === 'ETH',
@@ -82,15 +91,14 @@ const WalletInfo = (props: any) => {
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
-    if(pathname && pathname.indexOf('dashboard/wallet') === 1){
+    if (pathname && pathname.indexOf('dashboard/wallet') === 1) {
       // This is need because it was not changing the url and causing loop on update
       history.push(`/dashboard/wallet/${a.address}`);
       dispatch(setDefaultAccount(a));
-    }else{
+    } else {
       dispatch(setDefaultAccount(a));
     }
-  
-  }
+  };
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {
       crUserInfo: {
@@ -170,17 +178,34 @@ const WalletInfo = (props: any) => {
               justifyContent='space-between'>
               <Box mb={0} className={clsx(classes.userName)}>
                 {truncateIsAddress(defaultAccountLabel)}
-                <Tooltip title={connected ? 'Wallet Connected' : 'Wallet Not Connected' }>
-                      <IconButton aria-label="connected" style={{ color: connected ? green[500] : grey[500] , paddingLeft: '5px'}} size="small">
-                      {connected ? <FiberManualRecordIcon /> : <RadioButtonUncheckedIcon/>}
-                      </IconButton>
-                    </Tooltip>
-                   { chainId && 
-                    <Tooltip title={'Connected Network' }>  
-                     <Chip  color={'default'}  label={GET_CHAIN_ID_NAME(chainId)} size={'small'} style={{marginLeft: '5px'}}/>
-                   </Tooltip>
-                   }
-
+                <Tooltip
+                  title={
+                    connected ? 'Wallet Connected' : 'Wallet Not Connected'
+                  }>
+                  <IconButton
+                    aria-label='connected'
+                    style={{
+                      color: connected ? green[500] : grey[500],
+                      paddingLeft: '5px',
+                    }}
+                    size='small'>
+                    {connected ? (
+                      <FiberManualRecordIcon />
+                    ) : (
+                      <RadioButtonUncheckedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+                {chainId && (
+                  <Tooltip title={'Connected Network'}>
+                    <Chip
+                      color={'default'}
+                      label={GET_CHAIN_ID_NAME(chainId)}
+                      size={'small'}
+                      style={{marginLeft: '5px'}}
+                    />
+                  </Tooltip>
+                )}
               </Box>
               <Box ml={3} className={classes.pointer} color={'text.primary'}>
                 <Box component='span' onClick={handleClick}>
@@ -193,20 +218,36 @@ const WalletInfo = (props: any) => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}>
                   <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
-                  {notConnected && <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>}
-                  {accounts.filter(a=> a.address.toLowerCase() !== defaultAccount?.toLowerCase()).map(a => 
-                    <MenuItem onClick={()=> onSetDefaultAccount(a)}>{truncateIsAddress(a.label) || truncateAddress(a.address)}
-                   {a.address.toLowerCase() === web3Account?.toLowerCase() &&  <Tooltip title={'Wallet Connected'}>
-                      <IconButton aria-label="connected" style={{ color:green[500]}} size="small">
-                           <FiberManualRecordIcon />
-                      </IconButton>
-                    </Tooltip>}
-                    
-                    </MenuItem>
+                  {notConnected && (
+                    <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>
                   )}
-                  <MenuItem onClick={onGoToManageWallet}>Manage Accounts</MenuItem>
+                  {accounts
+                    .filter(
+                      (a) =>
+                        a?.address?.toLowerCase() !==
+                        defaultAccount?.toLowerCase(),
+                    )
+                    .map((a) => (
+                      <MenuItem onClick={() => onSetDefaultAccount(a)}>
+                        {truncateIsAddress(a.label) ||
+                          truncateAddress(a.address)}
+                        {a?.address?.toLowerCase() ===
+                          web3Account?.toLowerCase() && (
+                          <Tooltip title={'Wallet Connected'}>
+                            <IconButton
+                              aria-label='connected'
+                              style={{color: green[500]}}
+                              size='small'>
+                              <FiberManualRecordIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </MenuItem>
+                    ))}
+                  <MenuItem onClick={onGoToManageWallet}>
+                    Manage Accounts
+                  </MenuItem>
                   <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
-                 
                 </Menu>
               </Box>
             </Box>
@@ -221,17 +262,17 @@ const WalletInfo = (props: any) => {
           </Box>
         </Box>
       )}
-  
-     {   !defaultAccount && (
+
+      {!defaultAccount && (
         <Box display='flex' alignItems='center' justifyContent='center'>
           <Button
             variant='contained'
             onClick={onGoToManageWallet}
             endIcon={<AccountBalanceWalletIcon />}>
-                Add Accounts
+            Add Accounts
           </Button>
         </Box>
-            )}
+      )}
     </Box>
   );
 };

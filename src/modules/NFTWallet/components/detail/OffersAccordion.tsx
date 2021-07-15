@@ -11,6 +11,7 @@ import {
   makeStyles,
   Paper,
   Box,
+  Snackbar,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListIcon from '@material-ui/icons/List';
@@ -18,14 +19,19 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
 import {OpenSeaPort} from 'opensea-js';
 import {Network, Order, WyvernSchemaName} from 'opensea-js/lib/types';
+import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 
 import React, {useCallback, useEffect, useState} from 'react';
 import MakeOfferDialog from './MakeOfferDialog';
 import AssetOffersTable from './AssetOffersTable';
 import {isAssetOwner} from 'modules/NFTWallet/utils';
-import {CheckCircle} from '@material-ui/icons';
+
 import {Alert} from '@material-ui/lab';
 import {getOpenSeaPort} from 'utils/opensea';
+import CancelOfferBackdrop from './CancelOfferBackdrop';
+import MakeOfferBackdrop from './MakeOfferBackdrop';
+import AcceptOfferBackdrop from './AcceptOfferBackdrop';
+import AcceptOfferDialog from './AcceptOfferDialog';
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -43,10 +49,11 @@ interface Props {
   offers: any;
   loading?: boolean;
   error?: any;
+  onRefresh: () => void;
 }
 
 export default (props: Props) => {
-  const {offers, asset, loading} = props;
+  const {offers, onRefresh, asset, loading} = props;
   const [showDialog, setShowDialog] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -56,6 +63,12 @@ export default (props: Props) => {
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [showCancelSuccess, setShowCancelSuccess] = useState(false);
   const [showAcceptSuccess, setShowAcceptSuccess] = useState(false);
+
+  const [showMakeOffer, setShowMakeOffer] = useState(false);
+  const [showCancel, setShowCancel] = useState(false);
+  const [showAccept, setShowAccept] = useState(false);
+
+  const [showAcceptDialog, setShowAcceptDialog] = useState(false);
 
   const classes = useStyles();
 
@@ -76,7 +89,7 @@ export default (props: Props) => {
       const openSeaPort = await getOpenSeaPort(provider);
 
       if (userAccountAddress) {
-        setShowBackdrop(true);
+        setShowMakeOffer(true);
 
         let orderParams: any = {
           asset: {
@@ -88,6 +101,7 @@ export default (props: Props) => {
           accountAddress: userAccountAddress,
           startAmount: params.amount,
           expirationTime: params.expiration,
+          referrerAddress: process.env.REACT_APP_OPENSEA_AFFILIATE,
         };
 
         openSeaPort
@@ -95,50 +109,76 @@ export default (props: Props) => {
           .then((order: Order) => {
             setShowSuccess(true);
             setShowDialog(false);
+            onRefresh();
           })
           .catch((reason) => {
             setErrorMessage(reason.message);
           })
           .finally(() => {
-            setShowBackdrop(false);
+            setShowMakeOffer(false);
           });
       }
     },
-    [asset, userAccountAddress, getProvider],
+    [asset, userAccountAddress, getProvider, onRefresh],
   );
 
-  const handleAcceptOffer = useCallback(
+  const acceptOffer = useCallback(
     async (offer: any) => {
       if (userAccountAddress) {
         let provider = getProvider();
 
         const openSeaPort = await getOpenSeaPort(provider);
 
-        let order = await openSeaPort.api.getOrder({
-          hash: offer.order_hash,
-          target: offer.target,
+        const {orders} = await openSeaPort.api.getOrders({
+          asset_contract_address: asset?.asset_contract?.address,
+          token_id: asset?.token_id,
         });
 
-        setShowBackdrop(true);
+        // lowercase
+        let orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
 
-        openSeaPort
-          .fulfillOrder({
-            order,
-            accountAddress: userAccountAddress,
-          })
-          .then(() => {
-            setShowAcceptSuccess(true);
-          })
-          .catch((reason) => {
-            setErrorMessage(reason.message);
-          })
-          .finally(() => {
-            setShowBackdrop(false);
-          });
+        if (orderIndex > -1) {
+          let order = orders[orderIndex];
+
+          setShowAccept(true);
+
+          openSeaPort
+            .fulfillOrder({
+              order,
+              accountAddress: userAccountAddress,
+              referrerAddress: process.env.REACT_APP_OPENSEA_AFFILIATE,
+            })
+            .then(() => {
+              setShowAcceptSuccess(true);
+              setOffer(null);
+              setShowAcceptDialog(false);
+              onRefresh();
+            })
+            .catch((reason) => {
+              setErrorMessage(reason.message);
+            })
+            .finally(() => {
+              setShowAccept(false);
+            });
+        }
       }
     },
-    [userAccountAddress, getProvider],
+    [userAccountAddress, getProvider, onRefresh],
   );
+
+  const [offer, setOffer] = useState<any>();
+
+  const handleAcceptOffer = useCallback(
+    (offer: any) => {
+      setOffer(offer);
+      setShowAcceptDialog(true);
+    },
+    [setOffer],
+  );
+
+  const handleConfirmAcceptOffer = useCallback(() => {
+    acceptOffer(offer);
+  }, [offer]);
 
   const handleCancelOffer = useCallback(
     async (offer: any) => {
@@ -147,30 +187,37 @@ export default (props: Props) => {
 
         const openSeaPort = await getOpenSeaPort(provider);
 
-        let order = await openSeaPort.api.getOrder({
-          hash: offer.order_hash,
-          target: offer.target,
+        let {orders} = await openSeaPort.api.getOrders({
+          asset_contract_address: asset?.asset_contract?.address,
+          token_id: asset?.token_id,
         });
 
-        setShowBackdrop(true);
+        let orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
 
-        openSeaPort
-          .cancelOrder({
-            order,
-            accountAddress: userAccountAddress,
-          })
-          .then(() => {
-            setShowCancelSuccess(true);
-          })
-          .catch((reason) => {
-            setErrorMessage(reason.message);
-          })
-          .finally(() => {
-            setShowBackdrop(false);
-          });
+        if (orderIndex > -1) {
+          setShowCancel(true);
+
+          let order = orders[orderIndex];
+
+          openSeaPort
+            .cancelOrder({
+              order,
+              accountAddress: userAccountAddress,
+            })
+            .then(() => {
+              setShowCancelSuccess(true);
+              onRefresh();
+            })
+            .catch((reason) => {
+              setErrorMessage(reason.message);
+            })
+            .finally(() => {
+              setShowCancel(false);
+            });
+        }
       }
     },
-    [userAccountAddress, getProvider],
+    [asset, userAccountAddress, getProvider, onRefresh],
   );
 
   const handleCloseSuccess = useCallback(() => setShowSuccess(false), []);
@@ -185,6 +232,22 @@ export default (props: Props) => {
 
   const handleErrorClose = useCallback(() => {
     setErrorMessage('');
+  }, []);
+
+  const handleCloseCancel = useCallback(() => {
+    setShowCancel(false);
+  }, []);
+
+  const handleCloseAccept = useCallback(() => {
+    setShowAccept(false);
+  }, []);
+
+  const handleCloseMakeOffer = useCallback(() => {
+    setShowMakeOffer(false);
+  }, []);
+
+  const handleCloseAcceptDialog = useCallback(() => {
+    setShowAcceptDialog(false);
   }, []);
 
   return (
@@ -225,81 +288,43 @@ export default (props: Props) => {
           </Box>
         </Paper>
       </Backdrop>
-      <Backdrop
-        className={classes.backdrop}
+      <CancelOfferBackdrop open={showCancel} />
+      <AcceptOfferBackdrop open={showAccept} />
+      <MakeOfferBackdrop open={showMakeOffer} />
+      <Snackbar
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         open={showSuccess}
-        onClick={handleCloseSuccess}>
-        <Paper>
-          <Box p={4}>
-            <Grid
-              justify='center'
-              alignItems='center'
-              alignContent='center'
-              direction='column'
-              container
-              spacing={4}>
-              <Grid item>
-                <CheckCircle className={classes.icon} />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5'>
-                  <IntlMessages id='nfts.detail.offerCreated' />
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Backdrop>
-      <Backdrop
-        className={classes.backdrop}
+        autoHideDuration={6000}
+        onClose={handleCloseSuccess}>
+        <Alert onClose={handleCloseSuccess} severity='success'>
+          <IntlMessages id='nfts.detail.snackbar.offerSubmitted' />
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         open={showCancelSuccess}
-        onClick={handleCloseCancelSuccess}>
-        <Paper>
-          <Box p={4}>
-            <Grid
-              justify='center'
-              alignItems='center'
-              alignContent='center'
-              direction='column'
-              container
-              spacing={4}>
-              <Grid item>
-                <CheckCircle className={classes.icon} />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5'>
-                  <IntlMessages id='nfts.detail.offerCanceled' />
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Backdrop>
-      <Backdrop
-        className={classes.backdrop}
+        autoHideDuration={6000}
+        onClose={handleCloseCancelSuccess}>
+        <Alert onClose={handleCloseCancelSuccess} severity='success'>
+          <IntlMessages id='nfts.detail.snackbar.offerCanceled' />
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         open={showAcceptSuccess}
-        onClick={handleCloseAcceptSuccess}>
-        <Paper>
-          <Box p={4}>
-            <Grid
-              justify='center'
-              alignItems='center'
-              alignContent='center'
-              direction='column'
-              container
-              spacing={4}>
-              <Grid item>
-                <CheckCircle className={classes.icon} />
-              </Grid>
-              <Grid item>
-                <Typography variant='h5'>
-                  <IntlMessages id='nfts.detail.offerAccepted' />
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Backdrop>
+        autoHideDuration={6000}
+        onClose={handleCloseAcceptSuccess}>
+        <Alert onClose={handleCloseAcceptSuccess} severity='success'>
+          <IntlMessages id='nfts.detail.snackbar.offerAccepted' />
+        </Alert>
+      </Snackbar>
+      <AcceptOfferDialog
+        open={showAcceptDialog}
+        onClose={handleCloseAcceptDialog}
+        onAccept={handleConfirmAcceptOffer}
+        asset={asset}
+        offer={offer}
+      />
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <ListIcon />{' '}
@@ -317,12 +342,48 @@ export default (props: Props) => {
               </Grid>
             ) : null}
             <Grid item xs={12}>
-              <AssetOffersTable
-                offers={offers}
-                asset={asset}
-                onCancel={handleCancelOffer}
-                onAccept={handleAcceptOffer}
-              />
+              {loading ? (
+                <Box
+                  py={8}
+                  display='flex'
+                  alignContent='center'
+                  justifyContent='center'
+                  alignItems='center'>
+                  <CircularProgress color='primary' />
+                </Box>
+              ) : (
+                <>
+                  {offers?.length > 0 ? (
+                    <AssetOffersTable
+                      offers={offers}
+                      asset={asset}
+                      onCancel={handleCancelOffer}
+                      onAccept={handleAcceptOffer}
+                    />
+                  ) : (
+                    <Box display='block' width='100%' py={4}>
+                      <Grid
+                        direction='column'
+                        container
+                        spacing={2}
+                        justify='center'
+                        alignItems='center'>
+                        <Grid item>
+                          <MoneyOffIcon color='disabled' />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            color='textSecondary'
+                            align='center'
+                            variant='body1'>
+                            <IntlMessages id='nfts.detail.noOffersYet' />
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+                </>
+              )}
             </Grid>
             {!isAssetOwner(asset, userAccountAddress || '') ? (
               <Grid item>

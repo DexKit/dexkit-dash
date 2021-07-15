@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {toTokenUnitAmount} from '@0x/utils';
+import {OrderSide} from 'opensea-js/lib/types';
 
 export function sortEventArray(arr: any[]): any[] {
   return arr
@@ -79,3 +80,20 @@ export function getAssetOwnerName(asset: any) {
 export function getUnixDays(days: number): number {
   return Math.round(Date.now() / 1000 + 60 * 60 * 24 * days);
 }
+
+export const getFirstOrder = (asset: any) => {
+  return asset?.orders.filter((o: any) => o.side == OrderSide.Sell)[0];
+};
+
+export const getFirstOrderTokenImage = (asset: any) => {
+  return getFirstOrder(asset).payment_token_contract?.image_url;
+};
+
+export const getFirstOrderPrice = (asset: any) => {
+  const order = getFirstOrder(asset);
+
+  return toTokenUnitAmount(
+    order.current_price,
+    order.payment_token_contract?.decimals,
+  ).toNumber();
+};

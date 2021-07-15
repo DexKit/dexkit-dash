@@ -4,12 +4,16 @@ import {
   AccordionSummary,
   Typography,
   useTheme,
+  Box,
+  Button,
+  Grid,
+  CircularProgress,
 } from '@material-ui/core';
 import React, {useCallback, useEffect, useState} from 'react';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SubjectIcon from '@material-ui/icons/Subject';
-import AssetEventsTable from 'modules/NFTWallet/AssetEventsTable';
+import AssetEventsTable from './AssetEventsTable';
 import {sortEventArray} from 'modules/NFTWallet/utils';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useAssetEvents} from 'modules/NFTWallet/hooks/detail';
@@ -26,16 +30,57 @@ interface Props {
 export default (props: Props) => {
   const {asset} = props;
   const theme = useTheme();
-  const {getEvents, data, loading, error} = useAssetEvents();
+  const {getEvents} = useAssetEvents();
   const [expanded, setExpanded] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<any[]>([]);
+  const [error, setError] = useState();
+
+  const fetchData = useCallback(() => {
+    if (!hasMore) {
+      return;
+    }
+
+    setLoading(true);
+
+    getEvents(asset?.asset_contract?.address, asset?.token_id, page)
+      .then((response) => {
+        console.log(response);
+
+        let result = response.data?.asset_events;
+
+        if (result?.length < 20) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+
+        let newData = [...data, ...result];
+
+        setData(newData);
+      })
+      .catch((reason) => {
+        setError(reason.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [data, asset, page, hasMore]);
+
+  const handleLoadMore = useCallback(() => {
+    setPage((value) => value + 1);
+    fetchData();
+  }, [fetchData, data, getEvents, asset]);
 
   useEffect(() => {
     if (asset) {
       setTimeout(() => {
-        getEvents(asset?.asset_contract?.address, asset?.token_id);
+        fetchData();
       }, 2000);
     }
-  }, [getEvents, asset]);
+  }, [asset]);
 
   const handleChange = useCallback(() => setExpanded((value) => !value), []);
 
@@ -47,20 +92,41 @@ export default (props: Props) => {
           <IntlMessages id='nfts.detail.historicLabel' />
         </Typography>
       </AccordionSummary>
-      <AccordionDetails
-        style={{
-          display: 'block',
-          maxHeight: theme.spacing(100),
-          overflowY: 'scroll',
-        }}>
-        {loading ? (
-          <AssetEventsTableSkeleton />
+      <AccordionDetails style={{display: 'block'}}>
+        {loading && data?.length < 20 ? (
+          <Box py={8}>
+            <Grid container justify='center' alignItems='center'>
+              <Grid item>
+                <CircularProgress />
+              </Grid>
+            </Grid>
+          </Box>
         ) : (
-          <AssetEventsTable
-            events={
-              data?.asset_events ? sortEventArray(data?.asset_events) : []
-            }
-          />
+          <>
+            {data?.length > 0 ? (
+              <AssetEventsTable events={data ? sortEventArray(data) : []} />
+            ) : null}
+            {data?.length > 0 && hasMore ? (
+              <Box mt={4}>
+                <Button
+                  disabled={loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress
+                        size={theme.spacing(4)}
+                        color='inherit'
+                      />
+                    ) : null
+                  }
+                  color='primary'
+                  onClick={handleLoadMore}
+                  variant='outlined'
+                  fullWidth>
+                  Load More
+                </Button>
+              </Box>
+            ) : null}
+          </>
         )}
       </AccordionDetails>
     </Accordion>
