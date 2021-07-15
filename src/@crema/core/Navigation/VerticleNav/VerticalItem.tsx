@@ -7,7 +7,7 @@ import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
-import { Web3Wrapper } from '@0x/web3-wrapper';
+
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;

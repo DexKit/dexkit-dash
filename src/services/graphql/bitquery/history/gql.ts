@@ -247,18 +247,6 @@ export const BITQUERY_TRANSFER_LIST = gql`
         }
         external
       }
-      receiverCount: transfers(
-        date: {since: $from, till: $till}
-        receiver: {is: $address}
-      ) {
-        count
-      }
-      senderCount: transfers(
-        date: {since: $from, till: $till}
-        receiver: {is: $address}
-      ) {
-        count
-      }
     }
   }
 `;

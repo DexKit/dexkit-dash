@@ -287,6 +287,7 @@ export interface ThemeProperties {
       default_token_address?: string;
       default_token_address_bsc?: string;
       default_token_address_matic?: string;
+      default_slippage?: number;
   }
   
   export interface ConfigFileAggregator extends GeneralConfigAggregator {

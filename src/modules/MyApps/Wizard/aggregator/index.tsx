@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GridContainer } from '@crema';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -26,11 +26,9 @@ import { WizardProps } from '../shared';
 import { SubmitComponent } from '../shared/Buttons/submit';
 import { NavigationButton } from '../shared/Buttons/navigationButton';
 
-import TokensForm from '../shared/Token/tokensForm';
 import GeneralForm from './general';
 import ThemeForm from './theme';
 import LinksForm from './links';
-import WalletsForm from './wallets';
 import { useWeb3 } from 'hooks/useWeb3';
 import { DefaultTheme } from '../shared/Theme';
 
@@ -74,7 +72,7 @@ export enum WizardData {
 
 function getSteps() {
   // return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
-  return ['General', 'Theme'];
+  return ['General', 'Theme', 'Links'];
 }
 
 const defaultTheme = new DefaultTheme();
@@ -84,20 +82,22 @@ const initConfig: GeneralConfigAggregator = {
   logo: '',
   logo_dark: '',
   domain: '',
-  feeRecipient: '',
-  buyTokenPercentage: '0',
-  brand_color: '#FFFF',
-  brand_color_dark: '#313541',
-  support_bsc: false,
+  feeRecipient: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
+  buyTokenPercentage: '0.003',
+  brand_color: "#ff7149",
+  brand_color_dark: "#2172E5",
+  support_bsc: true,
   bsc_as_default: false,
+  matic_as_default: false,
   fee_waive_for_default_token: false,
   is_dark_mode: false,
   hide_powered_by_dexkit: false,
-  default_token_list: '',
-  affiliateAddress: '',
-  default_token_address: '',
-  default_token_address_bsc: '',
-  default_token_address_matic: '',
+  default_token_list: 'https://tokens.coingecko.com/uniswap/all.json',
+  affiliateAddress: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
+  default_token_address: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
+  default_token_address_bsc: '0x314593fa9a2fa16432913dbccc96104541d32d11',
+  default_token_address_matic: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
+  default_slippage: 1,
 };
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileAggregator, WizardData>, chainId: ChainId) {
@@ -111,6 +111,7 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps<Co
       <GeneralForm 
         title={label}
         data={data}
+        editable={editable}
         changeIssuerForm={changeIssuerForm}
         validator={validator}
         isValid={_isValid ?? isValid} 
@@ -128,21 +129,6 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps<Co
         editable={editable}
       />);
     case 2:{
-      return (
-        <TokensForm 
-          title={label} 
-          // data={ config.token_fee_program ?? []} 
-          // data={[]} 
-          changeIssuerForm={changeIssuerForm}
-          config={config}
-          validator={validator}
-          isValid={isValid}
-          editable={editable}
-          chainId={chainId}
-        />
-      );
-    }
-    case 3:{
       const data = config?.links ?? 
       {
         about: undefined,
@@ -154,23 +140,6 @@ function getStepContent(step: number, label: string, wizardProps: WizardProps<Co
       } as AggregatorLinks;
       return (
         <LinksForm 
-          changeIssuerForm={changeIssuerForm}
-          data={data}
-          config={config}
-          validator={validator}
-          isValid={isValid}
-          editable={editable}
-        />
-      );
-    }
-    case 4:{
-      const data = config?.wallets ?? 
-      {
-        fortmatic: undefined,
-        portis: undefined
-      } as AggregatorWallet;
-      return (
-        <WalletsForm 
           changeIssuerForm={changeIssuerForm}
           data={data}
           config={config}
@@ -219,11 +188,18 @@ export default function VerticalLinearStepper() {
     setValid(_isValid);
   }, [setValid]);
 
+  useEffect(()=>{
+    console.log(data);
+  },[data])
+
+
   const updateData = 
     (
       key: WizardData | "editable",
       value: GeneralConfigAggregator | TokenFeeProgramConfig[] | AggregatorLinks | AggregatorWallet
     ) => {
+      console.log(value);
+      console.log(key);
       const dataType = Object.values(WizardData).find( e => e === key);
       switch(dataType){
         case WizardData.GENERAL: {
@@ -271,6 +247,57 @@ export default function VerticalLinearStepper() {
         }
       };
     }
+   const [textButtonCopy, setTextButtonCopy] = useState('Copy Shortcode')
+
+  const handleCopyShortcode = () => {
+      setTextButtonCopy('Copied')
+      let text = ''
+      if(data.logo){
+        text = `logo="${data.logo}"`
+      }
+      if(data.logo_dark){
+        text = `${text} logo_dark="${data.logo_dark}"`
+      }
+      if(data.bsc_as_default){
+          text = `${text} bsc_as_default="true"`
+      }
+      if(data.matic_as_default){
+          text = `${text} matic_as_default="true"`
+      }
+      if(data.is_dark_mode){
+          text = `${text} is_dark_mode="true"`
+      }
+      if(data.default_token_address){
+          text = `${text} default_token_address_eth="${data.default_token_address}"`
+      }
+      if(data.default_token_address_bsc){
+          text = `${text} default_token_address_bsc="${data.default_token_address_bsc}"`
+      }
+      if(data.default_token_address_matic){
+          text = `${text} default_token_address_matic="${data.default_token_address_matic}"`
+      }
+      if(data.brand_color){
+          text = `${text} brand_color="${data.brand_color}"`
+      }
+      if(data.brand_color_dark){
+          text = `${text} brand_color_dark="${data.brand_color_dark}"`
+      }
+      if(data.default_slippage){
+        text = `${text} default_slippage="${data.default_slippage}"`
+    }
+  
+  
+  
+      const shortCodeToCopy = `[dexkit_aggregator ${text} ]`;
+      navigator.clipboard.writeText(shortCodeToCopy);
+      document.execCommand('copy');
+      setTimeout(()=> {
+        setTextButtonCopy('Copy Shortcode');
+      }, 500)
+  
+    }
+
+
 
   return (
     <div className={classes.root}>
@@ -313,7 +340,7 @@ export default function VerticalLinearStepper() {
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
           <Button onClick={handleReset} className={classes.button}>
-            Review
+             Reset
           </Button>
           <SubmitComponent 
             data={(data ?? {}) as ConfigFileAggregator} 
@@ -323,6 +350,11 @@ export default function VerticalLinearStepper() {
           />
         </Paper>
       )}
+         <Paper square elevation={0} className={classes.resetContainer}>
+          <Button onClick={handleCopyShortcode} className={classes.button} color="primary">
+             {textButtonCopy}
+          </Button>
+        </Paper>
     </div>
   );
 }

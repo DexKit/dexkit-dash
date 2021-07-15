@@ -27,7 +27,6 @@ interface ThemeFormProps {
   editable?: boolean;
 }
 const components: Map<string, keyof AggregatorTheme> = new Map<string, keyof AggregatorTheme>([
-  ['Is Dark Mode', 'is_dark_mode'],
   ['Brand Color', 'brand_color'],
   ['Brand Color Dark', 'brand_color_dark']
 ]);
@@ -155,7 +154,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                 color="primary"
               />
             }
-            label={'Is Dark Mode'}
+            label={'Dark Mode as Default'}
             labelPlacement="end"
           />
           <Button color="primary" onClick={resetAll}> Reset All</Button>

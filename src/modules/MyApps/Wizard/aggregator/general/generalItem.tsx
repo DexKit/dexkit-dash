@@ -13,6 +13,7 @@ import { capitalize, urlValidator } from 'utils/text';
 import { isAddress } from 'ethers/lib/utils';
 import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import { InfoComponent } from '../../shared/Buttons/infoComponent';
+import {  getFieldProperties } from '../fieldProperties';
 
 interface error {
   [key: string]: string | undefined;
@@ -24,7 +25,7 @@ interface ItemComponentProps {
   fieldName: k;
   label: string | React.ReactElement;
   placeholder?: string;
-  value?: string | boolean;
+  value?: string | boolean | number;
   validator: (isValid: boolean) => void;
   changeField: (
     $event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -34,7 +35,7 @@ interface ItemComponentProps {
   isValid: boolean;
   helpText: string;
 }
-type TypeElement = 'checkbox' | 'url' | 'percentage' | 'color' | 'address' | 'text';
+type TypeElement = 'checkbox' | 'url' | 'percentage' | 'color' | 'address' | 'text' | 'hidden';
 
 export const ItemComponent: React.FC<ItemComponentProps> = (
   { 
@@ -64,21 +65,26 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
   }, [valid, validator]);
 
   useEffect(() => {
-    if (typeof value === 'boolean') {
+    if (['feeRecipient', 'support_bsc', 'default_token_list', 'fee_waive_for_default_token'].includes(fieldName)) {
+      setTypeElement('hidden')
+    }else if (typeof value === 'boolean') {
       setTypeElement('checkbox');
     }
     else if (['logo', 'logo_dark', 'domain'].includes(fieldName)) {
       setTypeElement('url');
-    } else if (['feeRecipient', 'buyTokenPercentage'].includes(fieldName)) {
+    } else if (['buyTokenPercentage'].includes(fieldName)) {
       setTypeElement('percentage');
     } else if (['brand_color', 'brand_color_dark'].includes(fieldName)) {
       setTypeElement('color')
-    } else if (['affiliateAddress', 'default_token_address', 'default_token_address_bsc'].includes(fieldName)) {
+    } else if (['affiliateAddress', 'default_token_address', 'default_token_address_bsc', 'default_token_address_matic'].includes(fieldName)) {
       setTypeElement('address');
     } else {
       setTypeElement('text');
     }
   }, []);
+
+  const isRequired = getFieldProperties(fieldName)?.isRequired !== undefined ? getFieldProperties(fieldName)?.isRequired : true;
+
 
   switch (typeElement) {
     case 'checkbox':
@@ -111,14 +117,15 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             type="url"
             value={value}
+            required={isRequired}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
             error={(error != null && error[fieldName] != null) as boolean}
             onBlur={() => {
               const url = value != null ? value as string :  '';
-              const _error = url.length > 0 ? ( !urlValidator(url) ? `${capitalize(fieldName, '_', ' ')} is invalid!` : undefined ) : 
-                `${capitalize(fieldName, '_', ' ')} is invalid!`;
+              const _error = url.length > 0 ? ( !urlValidator(url) ? `${capitalize(fieldName, '_', ' ')} is invalid. Not valid URL!` : undefined ) : 
+                `${capitalize(fieldName, '_', ' ')} is invalid. Not valid URL!`;
               if (error != null) {
                 setError({[fieldName]: _error})
               } else {
@@ -152,11 +159,12 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             type="number"
             value={value}
+            required={isRequired}
             inputProps={
               {
-                min: 0.0,
-                max: 100,
-                step: 0.1
+                min: getFieldProperties(fieldName)?.min || 0.0,
+                max: getFieldProperties(fieldName)?.max || 100,
+                step: getFieldProperties(fieldName)?.step || 0.1,
               }
             }
             InputProps={{
@@ -194,7 +202,6 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           />
         </Grid>
       )
-
     }
     case 'color':
       return (
@@ -202,6 +209,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             value={value ?? '#FFFF'}
             type="color"
+            required={isRequired}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
@@ -233,6 +241,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             type="text"
             value={value}
+            required={isRequired}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error!= null ? error[fieldName] : undefined}
@@ -269,6 +278,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
           <TextField
             type="text"
             value={value}
+            required={isRequired}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
@@ -300,6 +310,20 @@ export const ItemComponent: React.FC<ItemComponentProps> = (
             InputProps={{ endAdornment: (<InfoComponent text={helpText}/>)}}
           />
         </Grid>
+      );
+    }
+    case 'hidden':{
+      return (
+      
+          <TextField
+            type="hidden"
+            value={value}
+            required={isRequired}
+            key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
+            id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
+            helperText={!valid && error != null ? error[fieldName] : undefined}
+          />
+
       );
     }
 

@@ -100,7 +100,7 @@ const InfoToken: React.FC<Props> = (props) => {
                               networkName,
                             )}/address/${token.address}`}
                             target='_blank'
-                            rel='noreferrer'>
+                            rel="noopener noreferrer">
                             <Avatar
                               style={{
                                 color: '#3F51B5',

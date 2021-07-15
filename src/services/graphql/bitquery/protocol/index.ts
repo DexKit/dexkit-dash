@@ -18,8 +18,6 @@ export const getPairContractFromExchange = async (baseAddress: string, quoteAddr
           offset: 0
         }
       });
-      console.log(exchange);
-      console.log(networkName);
      if(data && data.ethereum?.dexTrades && data.ethereum?.dexTrades.length){
          return data.ethereum?.dexTrades[0].smartContract?.address?.address as string
      }else{ 

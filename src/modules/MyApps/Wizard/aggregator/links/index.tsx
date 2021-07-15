@@ -16,7 +16,7 @@ placeholders.set('about', 'https://aboutproject.com');
 placeholders.set('code', 'https://github.com');
 placeholders.set('docs', 'https://doc.project.com');
 placeholders.set('discord', 'https://discord.com/invite/gCRAFhc');
-placeholders.set('telegram', 'https://t.me/peoject');
+placeholders.set('telegram', 'https://t.me/project');
 placeholders.set('analytics', 'https://analytics.google.com');
 
 

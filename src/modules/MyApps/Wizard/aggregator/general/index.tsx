@@ -9,6 +9,7 @@ import { CustomLabel } from 'shared/components/Wizard/Label';
 import { error } from '../../shared';
 import { HELP_TEXT } from '../helpText';
 import { getHelpText } from '../../shared';
+import { getFieldProperties } from '../fieldProperties';
 
 interface GeneralFormProps extends Omit<WizardProps<ConfigFileAggregator, WizardData>, 'config'>{
   title: string
@@ -59,7 +60,10 @@ const GeneralForm: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log(fields);
+    console.log(editable);
     if(Boolean(editable)){
+      console.log('called');
       changeIssuerForm(WizardData.GENERAL, fields);
     }
   }, [fields, changeIssuerForm, editable]);
@@ -76,7 +80,7 @@ const GeneralForm: React.FC<Props> = (props) => {
           const helpText = getHelpText(HELP_TEXT, key, 0);
           return (
           <ItemComponent
-            label={<CustomLabel required={true}>{capitalize(key,'_')}</CustomLabel>} 
+            label={<CustomLabel required={getFieldProperties(key)?.isRequired !== undefined ? getFieldProperties(key)?.isRequired : true}>{capitalize(key,'_')}</CustomLabel>} 
             fieldName={key} 
             changeField={changeFields} 
             validator={(_valid: boolean) => {

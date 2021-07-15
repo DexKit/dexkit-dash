@@ -101,6 +101,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
   <Tooltip title={messages['app.viewTx']} placement='top'>
             <a
               href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
+              rel="noopener noreferrer"
               target='_blank'>
               {networkName == EthereumNetwork.ethereum ? (
                 <Avatar

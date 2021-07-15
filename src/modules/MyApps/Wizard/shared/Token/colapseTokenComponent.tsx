@@ -6,7 +6,6 @@ import {
   AccordionDetails,
   AccordionActions,
   Typography,
-  FormControlLabel,
   makeStyles
 } from '@material-ui/core';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';

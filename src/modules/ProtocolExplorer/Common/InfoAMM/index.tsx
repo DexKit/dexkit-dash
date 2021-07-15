@@ -103,7 +103,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 networkName,
                               )}/address/${props.data.address}`}
                               target='_blank'
-                              rel='noreferrer'>
+                              rel="noopener noreferrer">
                               <Avatar
                                 style={{
                                   color: '#3F51B5',
@@ -121,7 +121,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                             <a
                               href={analytics.url}
                               target='_blank'
-                              rel='noreferrer'>
+                              rel="noopener noreferrer">
                               <Avatar
                                 style={{
                                   color: '#3F51B5',

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Web3 from 'web3';
 import {useTokenList} from 'hooks/useTokenList';
-// import {searchByAddress} from 'services/graphql/bitquery';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {filterTokensInfoByString, findTokensInfoByAddress} from 'utils/tokens';
@@ -114,9 +113,9 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
   const [found, setFound] = useState<Token[]>();
   const [val, setVal] = useState<Token | null>();
-  const [inputVal, setInputVal] = useState<Token | null>();
+  const [, setInputVal] = useState<Token | null>();
   const [searchKey, setSearchKey] = useState<string>('');
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
 
   const tokenListEth = useTokenList(EthereumNetwork.ethereum);
   const tokenListBsc = useTokenList(EthereumNetwork.bsc);

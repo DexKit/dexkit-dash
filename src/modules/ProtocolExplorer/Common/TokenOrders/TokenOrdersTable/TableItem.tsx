@@ -87,7 +87,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
   };
 
   const createdFn = new Date((row.block?.timestamp?.time)||0);
-  const priceUsd = usdFormatter.format((row.baseAmountInUsd || 1) / (row.baseAmount || 1) );
+  const priceUsd = usdFormatter.format((row.tradeAmountIsUsd || 1) / (row.baseAmount || 1) );
   const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0) ;
 
   return (
