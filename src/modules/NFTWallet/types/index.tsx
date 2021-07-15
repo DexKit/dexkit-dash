@@ -1,5 +1,5 @@
 export interface OpenSeaToken {
-  id: number;
+  id?: number;
   symbol: string;
   address: string;
   image_url: string;

@@ -514,7 +514,7 @@ export default () => {
                             onClick={handleSelectHighestBid}
                           />
                         </Grid>
-                        <Grid item xs={6} sm={4}>
+                        {/* <Grid item xs={6} sm={4}>
                           <SaleTypeButton
                             header={messages['nfts.sell.bundle'].toString()}
                             subheader={messages[
@@ -522,7 +522,7 @@ export default () => {
                             ].toString()}
                             onClick={handleGoCreateBundle}
                           />
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </Box>
                   </Grid>

@@ -827,6 +827,8 @@
   "nfts.wallet.makeOfferYouAreBuying": "You are buying",
   "nfts.wallet.transferTransfering": "You are transferring",
   "nfts.wallet.transferTransfer": "Transfer",
+  "nfts.wallet.noItemsFound": "No items found",
+  "nfts.wallet.loadMore": "Load more",
   "nfts.wallet.transferCancel": "Cancel",
   "nfts.wallet.transfer.waitingBlockForConfirmation": "Waiting for blockchain confirmation.",
   "nfts.wallet.transfer.willBeTransfered": "will be transferred to",
@@ -906,5 +908,9 @@
   "nfts.bundle.creatingBundle": "Create bundle",
   "nfts.bundle.bundleNameLabel": "Bundle name",
   "nfts.bundle.bundleDescriptionLabel": "Bundle description",
-  "nfts.bundle.backtToWallet": "Go back to your wallet"
+  "nfts.bundle.backtToWallet": "Go back to your wallet",
+  "nfts.bundle.summary": "Summary",
+  "nfts.bundle.bundleNameRequired": "Bundle name is required",
+  "nfts.bundle.listingBundle": "Listing bundle",
+  "nfts.bundle.items": "Items"
 }

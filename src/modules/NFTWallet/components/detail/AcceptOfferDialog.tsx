@@ -50,15 +50,6 @@ export default (props: Props) => {
       </DialogTitle>
       <DialogContent>
         <Box py={2}>
-          <Box mb={2}>
-            <Grid container>
-              <Grid item>
-                <Paper>
-                  <img src={asset?.image_url} className={classes.image} />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Box>
           <Box mb={4}>
             <Grid
               container

@@ -55,6 +55,7 @@ import ActionSelect, {
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -145,12 +146,13 @@ export default () => {
   const [selectActive, setSelectActive] = useState(false);
   const [action, setAction] = useState('');
   const [showSelectedAssets, setShowSelectedAssets] = useState(false);
-  const [showBundleDialog, setShowBundleDialog] = useState(true);
   const [selectedAssets, setSelectedAssets] = useState<
     Array<{
+      name: string;
       tokenId: string;
-      contractAddress: string;
+      tokenAddress: string;
       imageUrl: string;
+      schemaName: string;
     }>
   >([]);
 
@@ -232,7 +234,7 @@ export default () => {
       return selectedAssets.findIndex(
         (value) =>
           value.tokenId?.toLowerCase() === asset?.token_id?.toLowerCase() &&
-          value.contractAddress?.toLowerCase() ===
+          value.tokenAddress?.toLowerCase() ===
             asset?.asset_contract?.address?.toLowerCase(),
       );
     },
@@ -264,8 +266,11 @@ export default () => {
             ...value,
             {
               tokenId: asset?.token_id,
-              contractAddress: asset?.asset_contract?.address,
+              tokenAddress: asset?.asset_contract?.address,
               imageUrl: asset?.image_url,
+              schemaName: asset?.asset_contract?.schema_name,
+              name: asset?.name,
+              collectionName: asset?.collection?.name,
             },
           ]);
         }
@@ -333,6 +338,12 @@ export default () => {
       },
     });
   }, [selectedAssets]);
+
+  const handleCancelCreateBundle = useCallback(() => {
+    setAction('');
+    setSelectedAssets([]);
+    setSelectActive(false);
+  }, []);
 
   const handleLoadMore = useCallback(async () => {
     if (!hasMore) {
@@ -579,14 +590,14 @@ export default () => {
                     </Grid>
                     <Grid item>
                       <Grid container spacing={2}>
-                        <Grid item>
+                        {/* <Grid item>
                           <ActionSelect
                             value={action}
                             onChange={handleChangeAction}
                             fullWidth
                             variant='outlined'
                           />
-                        </Grid>
+                        </Grid> */}
                         <Grid item>
                           <Select
                             variant='outlined'
@@ -647,10 +658,24 @@ export default () => {
                   <>
                     {assets?.length == 0 ? (
                       <Box py={8}>
-                        <Grid container alignContent='center' justify='center'>
-                          <Grid item>
+                        <Grid
+                          container
+                          direction='column'
+                          alignContent='center'
+                          justify='center'
+                          spacing={4}>
+                          <Grid item xs={12}>
+                            <Box
+                              display='flex'
+                              alignItems='center'
+                              alignContent='center'
+                              justifyContent='center'>
+                              <SentimentVeryDissatisfiedIcon fontSize='large' />
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12}>
                             <Typography variant='h5' component='h3'>
-                              No items found
+                              <IntlMessages id='nfts.wallet.noItemsFound' />
                             </Typography>
                           </Grid>
                         </Grid>
@@ -694,7 +719,7 @@ export default () => {
                       }
                       variant='outlined'
                       fullWidth>
-                      Load more
+                      <IntlMessages id='nfts.wallet.loadMore' />
                     </Button>
                   </Box>
                 ) : null}
@@ -742,7 +767,10 @@ export default () => {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button size='large' variant='outlined'>
+                      <Button
+                        onClick={handleCancelCreateBundle}
+                        size='large'
+                        variant='outlined'>
                         <IntlMessages id='nfts.wallet.cancel' />
                       </Button>
                     </Grid>
