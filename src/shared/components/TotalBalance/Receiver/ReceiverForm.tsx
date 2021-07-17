@@ -60,7 +60,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
           <TextField
             fullWidth
             variant='outlined'
-            label={'My Adress'}
+            label={'My Address'}
             value={inputAddress}
             InputProps={{
               className: classes.inputText,

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, List, makeStyles } from '@material-ui/co
 import { Kit } from './kit';
 import clsx from 'clsx';
 import { CremaTheme } from 'types/AppContextPropsType';
-import { Fonts } from 'shared/constants/AppEnums';
+import { EthereumNetwork, Fonts } from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import { WhitelabelTypes } from 'types/myApps';
 import { useSufficientBalance } from 'hooks/balance/useSufficientBalance';
@@ -12,6 +12,7 @@ import Aggregator from 'assets/images/aggregator.png';
 import Marketplace from 'assets/images/marketplace.png';
 import Exchange from 'assets/images/exchange.png';
 import {blue, indigo, teal} from '@material-ui/core/colors';
+import { useSingleBalance } from 'hooks/balance/useSingleBalance';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -87,6 +88,10 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
   // const { account } = useWeb3();
   const history = useHistory();
   const [amount, setAmount] = useState(0);
+
+  const {data, loading} = useSingleBalance(process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '', EthereumNetwork.ethereum)
+
+  
   const { data: balance } = useSufficientBalance(amount, {
     symbol: 'KIT',
     address: process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
@@ -97,11 +102,6 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [urlRedirect, setUrlRedirect] = useState('#');
 
-  useEffect(() => {
-    if(balance != null && !balance.isSufficientAmount){
-      setShowDialog(true);
-    }
-  }, [urlRedirect]);
   // const dispatch = useDispatch();
 
   // const { kitsData, userKits } = useSelector<AppState, AppState['myApps']>(({myApps}) => myApps);
@@ -133,7 +133,11 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
       }
     }
     setUrlRedirect(url);
-    setShowDialog(true);
+    if(data && data?.value  && data?.value < amount ){
+      setShowDialog(true);
+    }else{
+      history.push(url);
+    }
   }
 
   const confimDialog = useCallback(() => {
@@ -175,7 +179,7 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
               }}
             />
 
-       {/*     <Kit
+       {  /*  <Kit
               key={'exg'}
               icon={Exchange}
               color={bgColor}
@@ -187,7 +191,7 @@ const KitMarket: React.FC<KitMarketProps> = ({ icon, bgColor, heading }) => {
                 action: ($e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => buttonAction(`/my-apps/wizard/exchange`, 'DEX'),
                 title: 'ADD +'
               }}
-            /> */}
+            />*/ }
 
             <Kit
               key={'market'}

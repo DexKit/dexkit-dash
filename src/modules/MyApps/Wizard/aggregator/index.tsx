@@ -31,6 +31,7 @@ import ThemeForm from './theme';
 import LinksForm from './links';
 import { useWeb3 } from 'hooks/useWeb3';
 import { DefaultTheme } from '../shared/Theme';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -169,6 +170,7 @@ export default function VerticalLinearStepper() {
   const [preview, setPreview] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const history = useHistory();
 
   const { chainId } = useWeb3();
 
@@ -198,8 +200,6 @@ export default function VerticalLinearStepper() {
       key: WizardData | "editable",
       value: GeneralConfigAggregator | TokenFeeProgramConfig[] | AggregatorLinks | AggregatorWallet
     ) => {
-      console.log(value);
-      console.log(key);
       const dataType = Object.values(WizardData).find( e => e === key);
       switch(dataType){
         case WizardData.GENERAL: {
@@ -305,7 +305,7 @@ export default function VerticalLinearStepper() {
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/my-apps/exchange">My Apps</Link>
+          <Link color="inherit" onClick={() => history.push('/my-apps/manage')}>My Apps</Link>
             <Typography color="textPrimary">Wizard</Typography>
           </Breadcrumbs>
           <Typography variant="h4" color="textPrimary">AGGREGATOR</Typography>

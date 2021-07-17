@@ -16,7 +16,14 @@ export const sendConfig = async (formData: any) => {
   console.log('POST DATA', init);
 
   const url = `${MY_APPS_ENDPOINT}/v4/config`;
-  return await fetch(url, init)
+  const response =  await fetch(url, init)
+  if(response.ok && response.status === 200){
+    const data = await response.json() as ConfigResponse;
+    return data;
+  }else{
+    const data = await response.text();
+    throw Error(data)
+  }
 }
 
 export const getConfig = async (owner: string) => {

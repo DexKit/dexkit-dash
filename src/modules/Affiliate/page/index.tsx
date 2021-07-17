@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
 import AffiliateHistory from 'modules/Affiliate/history';
-import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 
 import {Skeleton} from '@material-ui/lab';
 import {useAffiliateTrades} from 'hooks/affiliate/useAffiliateTrades';
@@ -25,7 +24,7 @@ import {useTokenBalancesAffiliate} from 'hooks/affiliate/useTokenBalances';
 import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {AboutDialog} from '../aboutDialog';
+import {AboutDialog} from '../AboutDialog';
 import CheckIcon from '@material-ui/icons/Check';
 import {green, red} from '@material-ui/core/colors';
 import {Link} from '@material-ui/core';
@@ -41,8 +40,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const AffiliatePage = () => {
-  const classes = useStyles();
-
+  
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;

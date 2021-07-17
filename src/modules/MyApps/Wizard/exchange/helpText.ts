@@ -9,7 +9,6 @@ export const HELP_TEXT: HelpText<GeneralConfig> = {
 }
 
 export const HELP_TEXT_PAIR: HelpText<CurrencyPairMetaData> = {
-  'address': ['Enter the pair address'],
   'base': ['Bae pair name'],
   'quote': ['Quote pair name'],
 }

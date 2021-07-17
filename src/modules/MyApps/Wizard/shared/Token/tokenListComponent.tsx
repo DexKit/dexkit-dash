@@ -22,7 +22,7 @@ import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
 import { error } from '..';
 import { CustomLabel } from 'shared/components/Wizard/Label';
 import { useTokenList } from 'hooks/useTokenList';
-import { useBlokchain } from 'hooks/useBlokchain';
+import { useBlockchain } from 'hooks/useBlockchain';
 import { Token } from 'types/app';
 import { TokenMetaData } from 'types/myApps';
 import { ChainId } from 'types/blockchain';
@@ -55,7 +55,7 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const networkName = useNetwork();
   const listToken = useTokenList(networkName);
-  const { onGetToken } = useBlokchain();
+  const { onGetToken } = useBlockchain();
   const helpText = 'Enter the addresses of the tokens by secing them through ";"';
 
   const findToken = useCallback(async (): Promise<(Token | undefined)[]> => {

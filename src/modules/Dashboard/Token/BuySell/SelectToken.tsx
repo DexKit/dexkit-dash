@@ -171,6 +171,13 @@ const SelectToken: React.FC<Props> = ({
    
   },[selected])
 
+  const getSymbol = (sel:any)=>{
+    console.log(sel)
+    return sel.symbol;
+
+
+  }
+
   return (
     <>
       {options.length === 0 ? (
@@ -193,8 +200,7 @@ const SelectToken: React.FC<Props> = ({
           )}
         />
       ) : (
-        (id &&
-        selected) && (
+        (id && selected) && (
           <Autocomplete
             id={id}
             closeIcon={false}
@@ -204,12 +210,8 @@ const SelectToken: React.FC<Props> = ({
             options={options.filter(
               (option) => option.symbol.toLowerCase() || option.address.toLowerCase() || option.name.toLowerCase(),
             )}
-            value={selected}
+            defaultValue={selected}
             onChange={(event, value) => onChange(value ?? undefined)}
-            inputValue={inputValue}
-            onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-            }}
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
@@ -228,10 +230,10 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <SelectBox>
-                 <TokenLogo token0={selected.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>
-                  <TextField
+                { selected && <TokenLogo token0={selected?.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>}
+                 <TextField
                   {...params}
-                  value={selected.symbol}
+                  defaultValue={selected?.symbol}
                   label={label || "Search a coin"}
                   placeholder={
                     selected
@@ -240,8 +242,8 @@ const SelectToken: React.FC<Props> = ({
                   }
                   variant='outlined'
                   className={classes.textField}
-                  // onChange={($e) => search($e.target.value)}
                 />
+        
               </SelectBox>
             )}
           />

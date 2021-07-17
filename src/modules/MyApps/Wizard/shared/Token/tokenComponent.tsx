@@ -9,7 +9,7 @@ import { Token } from 'types/app';
 import { ChainId } from 'types/blockchain';
 import { CustomLabel } from 'shared/components/Wizard/Label';
 import { error } from '..';
-import { useBlokchain } from 'hooks/useBlokchain';
+import { useBlockchain } from 'hooks/useBlockchain';
 import { HELP_TEXT_TOKEN } from './helpText';
 import { getHelpText } from '../';
 import { InfoComponent } from '../Buttons/infoComponent';
@@ -52,7 +52,7 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
   const [valid, setValid] = useState<boolean>(isValid);
   const [loading, setLoading] = useState(false);
   const [searchfailed, setSearchFailed] = useState<string>();
-  const { onGetToken } = useBlokchain();
+  const { onGetToken } = useBlockchain();
 
   const findToken = useCallback((): Promise<Token | undefined> => {
     if(address == null || !isAddress(address)){
@@ -66,10 +66,12 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
   }, [tokens, address, onGetToken]);
 
   useEffect(() => {
-    const _valid = nameValidator(name) && addressValidator(address) && decimalsValidator(decimals)
-    && uniqueCheck(address);
-    setValid(_valid);
-    validator(_valid);
+    if(address){
+      const _valid = nameValidator(name) && addressValidator(address) && decimalsValidator(decimals)
+      && uniqueCheck(address);
+      setValid(_valid);
+      validator(_valid);
+    }
   }, []);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
       setLoading(false)
       findToken()
       .then( token => {
-        if (token != null) {
+        if (token != null && address) {
           const unique = uniqueCheck(address);
           const _name = token.name ?? name;
           const _symbol = token.symbol ?? symbol;
@@ -148,18 +150,20 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
           value={address}
           onBlur={
             () => {
-              const unique = uniqueCheck(address);
-              if (!Boolean(editable)) {
-                return;
-              }
-              if(!unique){
-                setErrors({ ...errors, address: 'There is already a collection with the address informed!'})
-              }
-              else if (addressValidator(address)){
-                setErrors({ ...errors, address: undefined })
-              }
-              else{
-                setErrors({ ...errors, address: 'Collection address is invalid!' })
+                if(address){
+                const unique = uniqueCheck(address);
+                if (!Boolean(editable)) {
+                  return;
+                }
+                if(!unique){
+                  setErrors({ ...errors, address: 'There is already a collection with the address informed!'})
+                }
+                else if (addressValidator(address)){
+                  setErrors({ ...errors, address: undefined })
+                }
+                else{
+                  setErrors({ ...errors, address: 'Collection address is invalid!' })
+                }
               }
             }
           }

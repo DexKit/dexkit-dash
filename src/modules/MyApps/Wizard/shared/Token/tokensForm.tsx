@@ -126,11 +126,15 @@ function TokensForm<T,K>(props: Props<T,K>){
     if(_tokens == null){
       return;
     }
-    const _filter = (t: TokenMetaData | undefined) => t != null && t.address?.length > 0 && t.addresses[Number(chainId)]?.length > 0;
+    const _filter = (t: TokenMetaData | undefined) => t != null && t?.address 
+    && t?.address?.length > 0 
+    && t?.addresses 
+    && t?.addresses[Number(chainId)];
+
     const union = [...tokens.filter(_filter), ..._tokens.filter(_filter)];
-    const set = new Set(union.map( t => t.address.toLowerCase()));
+    const set = new Set(union.map( t => t?.address?.toLowerCase()));
     const _t = Array.from(set.values())
-    .map( x => union.find( t => t.address.toLowerCase() === x))
+    .map( x => union.find( t => t?.address?.toLowerCase() === x))
     .filter(_filter) as TokenMetaData[];
     setTokens([..._t]);
   }, [tokens, setTokens, chainId]);

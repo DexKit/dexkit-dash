@@ -45,11 +45,11 @@ export interface ConfigResponse {
   
   
   export interface TokenMetaData {
-    addresses: { [key: number]: string };
+    addresses: { [key: string]: string | undefined };
     symbol: string;
     decimals: number;
     name: string;
-    address: string;  
+    address?: string;  
     primaryColor?: string;
     id?: string;
     c_id?: string;
@@ -75,7 +75,6 @@ export interface ConfigResponse {
   }
   
   export interface CurrencyPairMetaData {
-    address: string; //endereco do pair?
     base: string;
     quote: string;
     config?: ConfigPairMetaData;

@@ -39,18 +39,47 @@ const Changelog = () => {
                 >
                 Changelog
            </Box>
-            <Accordion>
+            <Accordion defaultExpanded={true}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panelv0.0.4"
                     id="panelv0.0.4-header"
                 >
-                    <Typography className={classes.heading}>v0.0.4 - 16-07-2021 </Typography>
+                    <Typography className={classes.heading}>v0.0.4 - 19-07-2021 </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography>
-
+                <Box display={'flex'} flexDirection={'column'}>
+                    <Typography className={classes.item}>
+                        NFT WALLET:
+                        <br/>
+                            1. List wallet assets. 
+                            <br/>
+                            2. View details from assets  
+                            <br/>
+                                * Asset info like: Name, image, description, collection name 
+                            <br/>
+                                * Listings, Offers and Trading history 
+                            <br/>  
+                            3. Transfer assets to another addresses 
+                            <br/>
+                            4. Make and accept offers to assets.
+                            <br/>
+                            5. Accept offers from users 
+                            <br/>
+                            6. Create listings from assets 
+                            <br/>
+                               * Schedule listing 
+                            <br/>
+                            * Set an ending price 
+                            <br/>
+                              * Wait for highest bid (English Auction)
                     </Typography>
+                    <Typography className={classes.item}>
+                        MANAGE
+                        <br/>
+                        * Added Aggregator Whitelabel
+                    </Typography>
+                    </Box>
                 </AccordionDetails>
             </Accordion>
             <Accordion>

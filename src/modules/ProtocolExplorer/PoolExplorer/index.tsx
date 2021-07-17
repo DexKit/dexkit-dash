@@ -9,7 +9,6 @@ import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import PageTitle from 'shared/components/PageTitle';
 import {TokenSearchByList} from 'shared/components/TokenSearchByList';
-import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import InfoAMM from '../Common/InfoAMM';
 import AMMPoolHistory from '../Common/AMMPoolHistory';

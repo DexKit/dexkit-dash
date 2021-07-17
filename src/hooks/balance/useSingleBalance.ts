@@ -13,7 +13,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { getCurrency } from 'utils/bitquery';
 
-export const useSingleBalance = (address: string, network:EthereumNetwork, defaultAccount?: string) => {
+export const useSingleBalance = (address: string, network: EthereumNetwork, defaultAccount?: string) => {
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
 

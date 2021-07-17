@@ -9,7 +9,6 @@ import {
   Button,
   Avatar,
   Chip,
-  Tooltip,
 } from '@material-ui/core';
 import {green, grey} from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';

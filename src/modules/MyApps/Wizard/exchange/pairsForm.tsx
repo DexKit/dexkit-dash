@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useState, SyntheticEvent, memo } from 'react';
+import React, {  useCallback, useEffect, useState, SyntheticEvent, memo } from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Grid,
@@ -25,12 +25,9 @@ import { ChainId } from 'types/blockchain';
 import { useTokenList } from 'hooks/useTokenList';
 import { CustomLabel } from 'shared/components/Wizard/Label';
 import { WizardProps } from '../shared';
-import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
-import { isAddress } from 'ethers/lib/utils';
 import { InfoComponent } from '../shared/Buttons/infoComponent';
 import { HELP_TEXT_PAIR } from './helpText';
 import { getHelpText } from '../shared';
-import { useBlokchain } from 'hooks/useBlokchain';
 import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
 import { PairItemComponent } from './pairItem';
 
@@ -47,7 +44,6 @@ const useStyle = makeStyles((theme) => ({
 interface AccordionLabel {
   base: string;
   quote: string;
-  address: string;
 }
 
 type ConfigError = {
@@ -55,7 +51,6 @@ type ConfigError = {
 }
 
 interface error {
-  address?: string;
   base?: string;
   quote?: string;
   config: ConfigError;
@@ -128,12 +123,10 @@ const placeholders = {
 
 const PairComponent: React.FC<PairComponentProps> = (props) => {
   const { index, data, onChange, validator, isValid, editable } = props;
-  const [address, setAddress] = useState(data?.address);
   const [base, setBase] = useState(data?.base);
   const [quote, setQuote] = useState(data?.quote);
   const [config, setConfig] = useState(data?.config);
   const [errors, setErrors] = useState<error>({
-    address: undefined,
     base: undefined,
     quote: undefined,
     config: {
@@ -147,7 +140,6 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   const [pair, setPair] = useState(data);
   const [valid, setValid] = useState<boolean>(isValid);
   const [searchfailed, setSearchFailed] = useState<string>();
-  const { onGetPair } = useBlokchain();
   const [loading, setLoading] = useState(false);
 
   const maxAmountError = useCallback((): string | undefined => {
@@ -164,18 +156,12 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
     return 'min amount is invalid!'
   }, [config]);
 
-  const findPair = useCallback((): Promise<{ token0: Token | undefined, token1: Token | undefined } | undefined> => {
-    if (address != null && isAddress(address)) {
-      return onGetPair(address);
-    }
-    return Promise.resolve(undefined);
-  }, [onGetPair, address])
-
-  useEffect(() => {
+  
+  /*useEffect(() => {
     if (!Boolean(editable) || !loading) {
       return;
     }
-    if (errors == null || (errors != null && errors['address'] == null)) {
+    if (errors == null || (errors != null )) {
       setLoading(true);
       setSearchFailed(undefined);
       findPair()
@@ -235,7 +221,7 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
         .finally(() => setLoading(false));
 
     }
-  }, [config]);
+  }, [config]);*/
 
   const _onBlur = ($e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
      key: string | keyof ConfigPairMetaData, errors: error, hasProperty: boolean,
@@ -301,12 +287,11 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
 
   useEffect(() => {
     setPair({
-      address,
       base,
       quote,
       config
     });
-  }, [address, base, quote, config]);
+  }, [base, quote, config]);
 
   useEffect(() => {
     console.log('errors', errors);
@@ -322,7 +307,7 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   }, [valid, validator]);
 
   useEffect(() => {
-    setErrors({ ...errors, address: searchfailed });
+    setErrors({ ...errors });
   }, [searchfailed]);
 
   const exclude = ['pricePrecision'];
@@ -330,41 +315,6 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   .filter( f => exclude.every( x => x !== f));
   return (
     <>
-      <Grid item xs={12} md={6} sm={6}>
-        <TextField
-          type="text"
-          value={address}
-          key={`pair(${index}).address`}
-          id={`pair(${index}).address`}
-          helperText={!valid ? errors?.address : undefined}
-          error={errors?.address != null}
-          placeholder={ZERO_ADDRESS.toString()}
-          onBlur={
-            () => {
-              if (address == null || isAddress(address.toString().trim())) {
-                errors.address = undefined;
-                setErrors({ ...errors })
-              }
-              else
-                setErrors({ ...errors, address: 'Pair address is invalid!' })
-            }
-          }
-          onChange={
-            ($e) => {
-              setAddress($e.target.value);
-              onChange($e, { ...pair, address }, index);
-            }
-          }
-          InputLabelProps={{
-            shrink: true,
-          }}
-          fullWidth
-          label={<CustomLabel text="Pair address" required={true} />}
-          variant="outlined"
-          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT_PAIR, 'address', 0)} />) }}
-          disabled={loading}
-        />
-      </Grid>
       <Grid item xs={12} md={6} sm={6}>
       <PairItemComponent
         key={`pricePrecision`}
@@ -566,9 +516,8 @@ const PairsForm: React.FC<Props> = (props) => {
   }, [pairs, setPairs, editable]);
 
   const AccordionLabelComponente = memo((props: AccordionLabel) => {
-    const {base, quote, address } = props;
-    const text =  base && quote ? `${base}/${quote} ${truncateAddress(address)}` :
-    `${truncateAddress(address)}`;
+    const {base, quote } = props;
+    const text =  base && quote && `${base.toUpperCase()}/${quote.toUpperCase()}`;
     return (
       <Typography className={classes.heading} variant="subtitle2" component="h2">
         {text}
@@ -581,7 +530,7 @@ const PairsForm: React.FC<Props> = (props) => {
       {
         pairs != null ? pairs.map((pair: CurrencyPairMetaData, i: number) => (
           <Grid item xs={12} md={12} sm={12}>
-            <Accordion defaultExpanded={!Boolean(pair?.address)}>
+            <Accordion >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-label="Expand"
@@ -589,7 +538,6 @@ const PairsForm: React.FC<Props> = (props) => {
                 id={`accordion-summary-${i}`}
               >
                 <AccordionLabelComponente
-                  address={pair.address}
                   base={pair.base}
                   quote={pair.quote}
                   key={'accordioLabel'} 

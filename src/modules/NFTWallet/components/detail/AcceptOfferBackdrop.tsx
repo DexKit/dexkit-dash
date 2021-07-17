@@ -9,7 +9,7 @@ import {
   Typography,
   CircularProgress,
 } from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
+
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {

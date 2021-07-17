@@ -33,7 +33,7 @@ import ThemeForm from '../shared/Theme/themeForm';
 import PairsForm from './pairsForm';
 import TokensForm from '../shared/Token/tokensForm';
 import { DefaultTheme } from '../shared/Theme';
-
+//import initConfig from './config.json'
 
 
 
@@ -74,10 +74,110 @@ export enum WizardData {
 // }
 
 function getSteps() {
-  return ['General', 'Theme', 'Tokens', 'Pairs and Deploy'];
+  // return ['General', 'Theme', 'Tokens', 'Pairs and Deploy'];
+  return ['General', 'Theme'];
 }
 
 const defaultTheme = new DefaultTheme();
+
+const initConfig = {
+  general: {
+    "title": "KitDex",
+    "icon": "https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0",
+    "feeRecipient": "0x1f9eEf1A12b56452b8CAba1cFD03d697f1cc68F7",
+    "feePercentage": 0.1,
+    "domain": '',
+    "social": {
+      "telegram_url": "https://t.me/dexkit",
+      "twitter_url": "https://twitter.com/DexKit",
+      "github_url": "https://github.com/DexKit"
+    }
+  },
+  tokens: [
+    {
+      "decimals": 18,
+      "symbol": "dai",
+      "name": "Dai",
+      "icon": "assets/icons/dai.svg",
+      "unified_cryptoasset_id": 2308,
+      "primaryColor": "#DEA349",
+      "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "addresses": {
+        "1": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "3": "0xfc8862446cd3e4a2e7167e7d97df738407fead07",
+        "4": "0x6f2d6ff85efca691aad23d549771160a12f0a0fc",
+        "42": "0xc4375b7de8af5a38a93548eb8453a498222c4ff2",
+        "50": ""
+      },
+      "website": "https://makerdao.com/en/dai/",
+      "description": "Dai is an asset-backed, hard currency for the 21st century.",
+      "c_id": "dai",
+      "displayDecimals": 2,
+      "isStableCoin": true,
+      "mainnetAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+    },
+    {
+      "symbol": "weth",
+      "name": "Wrapped Ether",
+      "primaryColor": "#3333ff",
+      "icon": "assets/icons/weth.svg",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "addresses": {
+        "1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "3": "0xc778417e063141139fce010982780140aa0cd5ab",
+        "4": "0xc778417e063141139fce010982780140aa0cd5ab",
+        "42": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "50": "0x0b1ba0af832d7c05fd64161e0db78e85978e8082"
+      },
+      "decimals": 18,
+      "displayDecimals": 3,
+      "id": "ethereum",
+      "c_id": "ethereum",
+      "unified_cryptoasset_id": 2396,
+      "website": "https://weth.io",
+      "description": "wETH is 'wrapped ETH'",
+      "isStableCoin": false,
+      "mainnetAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    }
+  ],
+  pairs: [
+    {
+      "base": "weth",
+      "quote": "dai",
+      "config": {
+        "basePrecision": 3,
+        "pricePrecision": 5,
+        "minAmount": 0.00001,
+        "maxAmount": 20
+      }
+    }
+  ],
+  marketFilters: [
+    {
+      "text": "ETH",
+      "value": "weth"
+    },
+    {
+      "text": "DAI",
+      "value": "dai"
+    }
+  ],
+  author: {
+    "address": ["0xD00995A10dB2E58A1A90270485056629134B151B"],
+    "name": "DexKit",
+    "description": "DexKit Marketplace, this marketplace showcase, how this whitelabel works. You can deploy and costumize your own coin",
+    "image": "https://dexkit.com/wp-content/themes/dexkit-theme/images/logo1.png "
+  },
+  wallets: undefined,
+  theme: defaultTheme,
+  theme_light: defaultTheme.componentsTheme, // this is because the componentsTheme property has the default values of a ligth theme
+  theme_name: undefined,
+  layout: undefined,
+  theme_dark: undefined
+
+} as ConfigFileExchange;
+
+
 
 function getStepContent(step: number, label: string, wizardProps: WizardProps<ConfigFileExchange, keyof ConfigFileExchange>, chainId: ChainId) {
   const { config: form, changeIssuerForm, validator, isValid, editable } = wizardProps;
@@ -183,103 +283,7 @@ const initSocial = {
 
 // } as ConfigFileExchange;
 
-const initConfig = {
-  general: {
-    "title": "KitDex",
-    "icon": "https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0",
-    "feeRecipient": "0x1f9eEf1A12b56452b8CAba1cFD03d697f1cc68F7",
-    "feePercentage": 0.1,
-    "domain": '',
-    "social": {
-      "telegram_url": "https://t.me/dexkit",
-      "twitter_url": "https://twitter.com/DexKit",
-      "github_url": "https://github.com/DexKit"
-    }
-  },
-  tokens: [
-    {
-      "decimals": 18,
-      "symbol": "dai",
-      "name": "Dai",
-      "icon": "assets/icons/dai.svg",
-      "unified_cryptoasset_id": 2308,
-      "primaryColor": "#DEA349",
-      "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
-      "addresses": {
-        "1": "0x6b175474e89094c44da98b954eedeac495271d0f",
-        "3": "0xfc8862446cd3e4a2e7167e7d97df738407fead07",
-        "4": "0x6f2d6ff85efca691aad23d549771160a12f0a0fc",
-        "42": "0xc4375b7de8af5a38a93548eb8453a498222c4ff2",
-        "50": ""
-      },
-      "website": "https://makerdao.com/en/dai/",
-      "description": "Dai is an asset-backed, hard currency for the 21st century.",
-      "c_id": "dai",
-      "displayDecimals": 2,
-      "isStableCoin": true,
-      "mainnetAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
-    },
-    {
-      "symbol": "weth",
-      "name": "Wrapped Ether",
-      "primaryColor": "#3333ff",
-      "icon": "assets/icons/weth.svg",
-      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      "addresses": {
-        "1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "3": "0xc778417e063141139fce010982780140aa0cd5ab",
-        "4": "0xc778417e063141139fce010982780140aa0cd5ab",
-        "42": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-        "50": "0x0b1ba0af832d7c05fd64161e0db78e85978e8082"
-      },
-      "decimals": 18,
-      "displayDecimals": 3,
-      "id": "ethereum",
-      "c_id": "ethereum",
-      "unified_cryptoasset_id": 2396,
-      "website": "https://weth.io",
-      "description": "wETH is 'wrapped ETH'",
-      "isStableCoin": false,
-      "mainnetAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-    }
-  ],
-  pairs: [
-    {
-      "address": "",
-      "base": "weth",
-      "quote": "dai",
-      "config": {
-        "basePrecision": 3,
-        "pricePrecision": 5,
-        "minAmount": 0.00001,
-        "maxAmount": 20
-      }
-    }
-  ],
-  marketFilters: [
-    {
-      "text": "ETH",
-      "value": "weth"
-    },
-    {
-      "text": "DAI",
-      "value": "dai"
-    }
-  ],
-  author: {
-    "address": ["0xD00995A10dB2E58A1A90270485056629134B151B"],
-    "name": "DexKit",
-    "description": "DexKit Marketplace, this marketplace showcase, how this whitelabel works. You can deploy and costumize your own coin",
-    "image": "https://dexkit.com/wp-content/themes/dexkit-theme/images/logo1.png "
-  },
-  wallets: undefined,
-  theme: defaultTheme,
-  theme_light: defaultTheme.componentsTheme, // this is because the componentsTheme property has the default values of a ligth theme
-  theme_name: undefined,
-  layout: undefined,
-  theme_dark: undefined
 
-} as ConfigFileExchange;
 
 export default function VerticalLinearStepper(props: MarketplaceProps) {
   const { match: { params }, history } = props;
