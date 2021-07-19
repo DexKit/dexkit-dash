@@ -184,7 +184,8 @@ export const AssetDetail = () => {
         });
 
         let orderIndex = orders.findIndex(
-          (order) => order.hash == listing.order_hash,
+          (order) =>
+            order.hash.toLowerCase() === listing.order_hash.toLowerCase(),
         );
 
         if (orderIndex > -1) {
@@ -480,9 +481,15 @@ export const AssetDetail = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={12}>
-              <HistoricAccordion asset={data} loading={loading} error={error} />
-            </Grid>
+            {data ? (
+              <Grid item xs={12} sm={12}>
+                <HistoricAccordion
+                  asset={data}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </Box>
       )}

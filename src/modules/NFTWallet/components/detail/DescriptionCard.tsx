@@ -20,6 +20,7 @@ import {
   isAssetOwner,
   isAssetSingleOwner,
   getAssetOwnerAddress,
+  sortByMinPrice,
 } from 'modules/NFTWallet/utils';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {toTokenUnitAmount} from '@0x/utils';
@@ -30,6 +31,11 @@ import {KeyboardDateTimePicker} from '@material-ui/pickers';
 import moment from 'moment';
 import {useWeb3} from 'hooks/useWeb3';
 import {getOpenSeaPort, getChainId, RINKEBY_NETWORK} from 'utils/opensea';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import TokenIconSpan from './TokenIconSpan';
+import CountdownTimer from './CountdownTimer';
+import CountdownPrice from './CountdownPrice';
+import CountdownPriceUSD from './CountdownPriceUSD';
 
 const useStyles = makeStyles((theme) => ({
   tokenImage: {
@@ -49,7 +55,7 @@ export default (props: Props) => {
   const {asset, loading, error, onBuy} = props;
   const classes = useStyles();
   const [isTestnet, setIsTestnet] = useState(false);
-  const {getProvider} = useWeb3();
+  const {getProvider, chainId} = useWeb3();
   const userAccountAddress = useDefaultAccount();
 
   const hasListing = useCallback((asset: any) => {
@@ -59,7 +65,9 @@ export default (props: Props) => {
   }, []);
 
   const getFirstOrder = useCallback((asset: any) => {
-    return asset?.orders.filter((o: any) => o.side == OrderSide.Sell)[0];
+    return asset?.orders
+      .filter((o: any) => o.side == OrderSide.Sell)
+      .sort(sortByMinPrice)[0];
   }, []);
 
   const getFirstOrderTokenImage = useCallback((asset: any) => {
@@ -75,21 +83,40 @@ export default (props: Props) => {
     ).toNumber();
   }, []);
 
+  const getEndingPrice = useCallback(
+    (asset: any) => {
+      let order = getFirstOrder(asset);
+
+      let basePrice = toTokenUnitAmount(
+        order.base_price,
+        order.payment_token_contract?.decimals,
+      );
+
+      let extra = toTokenUnitAmount(
+        order.extra,
+        order.payment_token_contract?.decimals,
+      );
+
+      return basePrice.minus(extra).toNumber();
+    },
+    [getFirstOrder],
+  );
+
   const handleBuy = useCallback(() => {
     onBuy(getFirstOrder(asset));
   }, [asset, onBuy]);
 
   useEffect(() => {
     (async () => {
-      let chainId = await getChainId(getProvider());
+      let cid = await getChainId(getProvider());
 
-      if (chainId == RINKEBY_NETWORK) {
+      if (cid == RINKEBY_NETWORK) {
         setIsTestnet(true);
       } else {
         setIsTestnet(false);
       }
     })();
-  }, [userAccountAddress, getProvider]);
+  }, [userAccountAddress, getProvider, chainId]);
 
   return (
     <Card>
@@ -134,10 +161,10 @@ export default (props: Props) => {
                   <Link
                     target='_blank'
                     href={`https://${
-                      isTestnet ? 'testnets' : 'www'
-                    }.opensea.io/assets/${asset?.asset_contract?.address}/${
+                      isTestnet ? 'testnets.' : ''
+                    }opensea.io/assets/${asset?.asset_contract?.address}/${
                       asset?.token_id
-                    }`}>
+                    }?ref=0x2d2193f337a4e446c14caa5c90e7b5849203acd0`}>
                     <Grid
                       container
                       spacing={1}
@@ -157,39 +184,105 @@ export default (props: Props) => {
           </Grid>
           {hasListing(asset) &&
           !isAssetOwner(asset, userAccountAddress || '') ? (
-            <Grid item xs={12}>
-              <Paper variant='outlined'>
-                <Box p={4}>
-                  <Box mb={2}>
-                    <Typography gutterBottom variant='body1'>
-                      <IntlMessages id='nfts.detail.currentPrice' />
-                    </Typography>
-                    <Typography gutterBottom variant='h5'>
-                      <Box
-                        display='flex'
-                        alignItems='center'
-                        alignContent='center'>
-                        <img
-                          src={getFirstOrderTokenImage(asset)}
-                          className={classes.tokenImage}
-                        />
-                        <span>{getFirstOrderPrice(asset)}</span>
-                      </Box>
-                    </Typography>
+            <>
+              <Grid item xs={12}>
+                <Paper variant='outlined'>
+                  <Box p={4}>
+                    <Grid
+                      container
+                      alignItems='center'
+                      alignContent='center'
+                      spacing={2}>
+                      <Grid item>
+                        <AccessTimeIcon />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='body1'>
+                          <IntlMessages id='nfts.detail.saleEndsIn' />{' '}
+                          <strong>
+                            <CountdownTimer
+                              dateTime={moment(
+                                getFirstOrder(asset).closing_date,
+                              ).utc(true)}
+                            />
+                          </strong>{' '}
+                          <IntlMessages id='nfts.detail.at' />{' '}
+                          <TokenIconSpan
+                            imageUrl={
+                              getFirstOrder(asset).payment_token_contract
+                                ?.image_url
+                            }
+                            symbol={
+                              getFirstOrder(asset).payment_token_contract
+                                ?.symbol
+                            }
+                          />{' '}
+                          {getEndingPrice(asset)}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Box>
-                  <Button
-                    disabled={
-                      getFirstOrder(asset).listing_time > moment().unix()
-                    }
-                    onClick={handleBuy}
-                    variant='contained'
-                    size='large'
-                    color='primary'>
-                    <IntlMessages id='nfts.detail.buyNow' />
-                  </Button>
-                </Box>
-              </Paper>
-            </Grid>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper variant='outlined'>
+                  <Box p={4}>
+                    <Box mb={2}>
+                      <Typography gutterBottom variant='body1'>
+                        <IntlMessages id='nfts.detail.currentPrice' />
+                      </Typography>
+                      <Grid
+                        container
+                        alignItems='center'
+                        alignContent='center'
+                        spacing={2}>
+                        <Grid item>
+                          <Typography gutterBottom variant='h5'>
+                            <Box
+                              display='flex'
+                              alignItems='center'
+                              alignContent='center'>
+                              <img
+                                src={getFirstOrderTokenImage(asset)}
+                                className={classes.tokenImage}
+                              />
+                              <CountdownPrice
+                                price={toTokenUnitAmount(
+                                  getFirstOrder(asset).base_price,
+                                  getFirstOrder(asset).payment_token_contract
+                                    ?.decimals,
+                                ).toNumber()}
+                                endingDate={moment.utc(
+                                  getFirstOrder(asset).closing_date,
+                                )}
+                                createdDate={moment.utc(
+                                  getFirstOrder(asset).created_date,
+                                )}
+                                endingPrice={getEndingPrice(asset)}
+                                active={
+                                  !getFirstOrder(asset).closing_extendable &&
+                                  getFirstOrder(asset).closing_date
+                                }
+                              />
+                            </Box>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Button
+                      disabled={
+                        getFirstOrder(asset).listing_time > moment().unix()
+                      }
+                      onClick={handleBuy}
+                      variant='contained'
+                      size='large'
+                      color='primary'>
+                      <IntlMessages id='nfts.detail.buyNow' />
+                    </Button>
+                  </Box>
+                </Paper>
+              </Grid>
+            </>
           ) : null}
         </Grid>
       </CardContent>

@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import React, {useCallback, useEffect, useState} from 'react';
 import NotesIcon from '@material-ui/icons/Notes';
+import {sortByMinPrice} from 'modules/NFTWallet/utils';
 
 interface Props {
   listings: any;
@@ -39,7 +40,7 @@ export default (props: Props) => {
             <AssetOrdersTable
               onCancel={onCancel}
               onBuy={onBuy}
-              listings={listings}
+              listings={listings.sort(sortByMinPrice)}
             />
           ) : (
             <Box display='block' width='100%' py={4}>

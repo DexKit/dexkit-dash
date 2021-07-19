@@ -264,11 +264,11 @@ export default () => {
         startAmount: startingPrice,
       };
 
-      if (endingPrice) {
+      if (endingPrice && endingPrice > 0) {
         params.endAmount = endingPrice;
       }
 
-      if (listingTime > 0) {
+      if (hasScheduleTime && listingTime > 0) {
         params.listingTime = listingTime;
       }
 
@@ -610,7 +610,7 @@ export default () => {
                         justify='space-between'
                         alignItems='center'
                         spacing={2}>
-                        <Grid item>
+                        <Grid item xs>
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
@@ -637,7 +637,7 @@ export default () => {
                         justify='space-between'
                         alignItems='center'
                         spacing={2}>
-                        <Grid item>
+                        <Grid item xs>
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
@@ -770,7 +770,7 @@ export default () => {
                         justify='space-between'
                         alignItems='center'
                         spacing={2}>
-                        <Grid item>
+                        <Grid item xs>
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
@@ -840,7 +840,7 @@ export default () => {
                         justify='space-between'
                         alignItems='center'
                         spacing={2}>
-                        <Grid item>
+                        <Grid item xs>
                           <Typography
                             variant='body1'
                             className={classes.boldText}>
@@ -919,7 +919,7 @@ export default () => {
                                   />
                                 </Avatar>
                               </Grid>
-                              <Grid item>{startingPrice.toFixed(2)}</Grid>
+                              <Grid item>{startingPrice}</Grid>
                               <Grid item>{paymentToken.symbol}</Grid>
                             </Grid>
                           </Typography>
@@ -949,7 +949,7 @@ export default () => {
                                   />
                                 </Avatar>
                               </Grid>
-                              <Grid item>{startingPrice.toFixed(2)}</Grid>
+                              <Grid item>{startingPrice}</Grid>
                               <Grid item>{paymentToken.symbol}</Grid>
                             </Grid>
                           </Typography>
@@ -979,7 +979,7 @@ export default () => {
                                   />
                                 </Avatar>
                               </Grid>
-                              <Grid item>{endingPrice.toFixed(2)}</Grid>
+                              <Grid item>{endingPrice}</Grid>
                               <Grid item>{paymentToken.symbol}</Grid>
                             </Grid>
                           </Typography>

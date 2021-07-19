@@ -158,7 +158,11 @@ export default (props: Props) => {
   }, []);
 
   const handleAmountChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    if (parseInt(e.target.value) < 0) {
+      setAmount('0');
+    } else {
+      setAmount(e.target.value);
+    }
   }, []);
 
   const handleQuantityChange = useCallback(
