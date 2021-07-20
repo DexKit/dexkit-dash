@@ -100,12 +100,12 @@ export default () => {
       const openSeaPort = await getOpenSeaPort(provider);
 
       const {orders} = await openSeaPort.api.getOrders({
-        token_id: data?.token_id,
         asset_contract_address: data?.asset_contract?.address,
+        token_ids: data?.token_id,
       });
 
       let orderIndex = orders.findIndex(
-        (order) => order.hash == listingOrder.order_hash,
+        (order) => order.hash.toLowerCase() === listingOrder.order_hash,
       );
 
       if (orderIndex > -1) {
