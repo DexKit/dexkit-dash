@@ -24,7 +24,7 @@ import {useTokenBalancesAffiliate} from 'hooks/affiliate/useTokenBalances';
 import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/Settings';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {AboutDialog} from '../AboutDialog';
+import {AboutDialog} from '../aboutDialog';
 import CheckIcon from '@material-ui/icons/Check';
 import {green, red} from '@material-ui/core/colors';
 import {Link} from '@material-ui/core';
