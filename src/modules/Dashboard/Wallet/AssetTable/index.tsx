@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import AppCard from '../../../../@crema/core/AppCard';
 import CTable from './CTable';
 import {Chip, Fade, makeStyles, Paper} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import LoadingTable from 'modules/Common/LoadingTable';
-import { MyBalances } from 'types/blockchain';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
+import {MyBalances} from 'types/blockchain';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 interface AssetTableProps {
   balances: MyBalances[];
@@ -30,9 +30,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const filteredBalances = () => {
     if (filter === 'eth') {
       return balances.filter((b) => b.network === EthereumNetwork.ethereum);
-    }
-    if (filter === 'bnb') {
+    } else if (filter === 'bnb') {
       return balances.filter((b) => b.network === EthereumNetwork.bsc);
+    } else if (filter === 'btc') {
+      return balances.filter((b) => b.network === EthereumNetwork.btc);
     }
     return balances;
   };
@@ -58,10 +59,17 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             onClick={() => setFilter('eth')}
           />
           <Chip
+            style={{marginRight: 10}}
             label='BSC'
             clickable
             color={filter === 'bnb' ? 'primary' : 'default'}
             onClick={() => setFilter('bnb')}
+          />
+          <Chip
+            label='BTC'
+            clickable
+            color={filter === 'btc' ? 'primary' : 'default'}
+            onClick={() => setFilter('btc')}
           />
         </div>
       }>

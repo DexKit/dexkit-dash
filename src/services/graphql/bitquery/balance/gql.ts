@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import {gql} from '@apollo/client';
 
 export const BITQUERY_BALANCE_INFO = gql`
   query GetMyBalance($network: EthereumNetwork!, $address: String!) {
@@ -17,13 +17,17 @@ export const BITQUERY_BALANCE_INFO = gql`
       }
     }
   }
-`
+`;
 
 export const BITQUERY_SINGLE_BALANCE_INFO = gql`
-  query GetSingleBalance($network: EthereumNetwork!, $address: String!, $currency: String!) {
+  query GetSingleBalance(
+    $network: EthereumNetwork!
+    $address: String!
+    $currency: String!
+  ) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
-        balances(currency:{is: $currency}) {
+        balances(currency: {is: $currency}) {
           currency {
             name
             symbol
@@ -35,7 +39,7 @@ export const BITQUERY_SINGLE_BALANCE_INFO = gql`
       }
     }
   }
-`
+`;
 
 export const BITQUERY_ALL_BALANCE_INFO = gql`
   query GetAllMyBalance($address: String!) {
@@ -67,11 +71,29 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
         }
       }
     }
+    # btc: ethereum(network: btc) {
+    #   address(address: {is: $address}) {
+    #     balances {
+    #       currency {
+    #         name
+    #         symbol
+    #         decimals
+    #         address
+    #       }
+    #       value
+    #       valueInUsd: value
+    #     }
+    #   }
+    # }
   }
-`
+`;
 
 export const BITQUERY_BALANCE_HISTORY = gql`
-  query GetMyBalanceHistory($network: EthereumNetwork!, $address: String!, $block: Int!) {
+  query GetMyBalanceHistory(
+    $network: EthereumNetwork!
+    $address: String!
+    $block: Int!
+  ) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
         balances(height: {gteq: $block}) {
@@ -91,10 +113,15 @@ export const BITQUERY_BALANCE_HISTORY = gql`
       }
     }
   }
-`
+`;
 
 export const BITQUERY_SINGLE_BALANCE_HISTORY = gql`
-  query GetMySingleBalanceHistory($network: EthereumNetwork!, $address: String!, $block: Int!, $currency: String!) {
+  query GetMySingleBalanceHistory(
+    $network: EthereumNetwork!
+    $address: String!
+    $block: Int!
+    $currency: String!
+  ) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
         balances(height: {gteq: $block}, currency: {is: $currency}) {
@@ -114,7 +141,7 @@ export const BITQUERY_SINGLE_BALANCE_HISTORY = gql`
       }
     }
   }
-`
+`;
 
 export const BITQUERY_BALANCE_BLOCK = gql`
   query GetBalanceBlock($date: ISO8601DateTime!) {
@@ -124,4 +151,4 @@ export const BITQUERY_BALANCE_BLOCK = gql`
       }
     }
   }
-`
+`;

@@ -56,12 +56,16 @@ const CTable: React.FC<Props> = ({balances}) => {
             <TableHeading />
           </TableHead>
           <TableBody>
-            {balances
-              .filter((b) => b.value)
-              .slice(page * perPage, (page + 1) * perPage)
-              .map((data: MyBalances) => (
-                <TableItem data={data} key={data.currency?.address} />
-              ))}
+            {balances.length ? (
+              balances
+                .filter((b) => b.value)
+                .slice(page * perPage, (page + 1) * perPage)
+                .map((data: MyBalances) => (
+                  <TableItem data={data} key={data.currency?.address} />
+                ))
+            ) : (
+              <button>Create BTC Wallet!</button>
+            )}
           </TableBody>
         </Table>
       </Box>

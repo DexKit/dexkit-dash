@@ -64,19 +64,20 @@ export enum CoinIcons {
   BITCOIN_WHITE = 'assets/images/bitcoin.png',
   ETHERIUM = 'assets/images/etherium.png',
   LITECOIN = 'assets/images/litcoin.png',
-  RIPPLE = 'assets/images/ripple.png'
+  RIPPLE = 'assets/images/ripple.png',
 }
 
 export enum EthereumNetwork {
-  bsc = "bsc",
-  bsc_testnet = "bsc_testnet",
-  celo_alfajores = "celo_alfajores",
-  celo_baklava = "celo_baklava",
-  celo_rc1 = "celo_rc1",
-  ethclassic = "ethclassic",
-  ethclassic_reorg = "ethclassic_reorg",
-  ethereum = "ethereum",
-  goerli = "goerli",
+  bsc = 'bsc',
+  btc = 'btc',
+  bsc_testnet = 'bsc_testnet',
+  celo_alfajores = 'celo_alfajores',
+  celo_baklava = 'celo_baklava',
+  celo_rc1 = 'celo_rc1',
+  ethclassic = 'ethclassic',
+  ethclassic_reorg = 'ethclassic_reorg',
+  ethereum = 'ethereum',
+  goerli = 'goerli',
 }
 
 export enum EXCHANGE {
@@ -97,7 +98,7 @@ export enum EXCHANGE {
   //bsc
   PANCAKE = 'Pancake',
   PANCAKEV2 = 'Pancake v2',
-  ALL = 'all'
+  ALL = 'all',
 }
 
 export enum EXCHANGE_NAME_ON_URL {
@@ -112,7 +113,7 @@ export enum EXCHANGE_NAME_ON_URL {
   //bsc
   PANCAKE = 'pancake',
   PANCAKEV2 = 'pancake-v2',
-  ALL = 'all'
+  ALL = 'all',
 }
 
 export enum PROTOCOL {
@@ -124,10 +125,10 @@ export enum PROTOCOL {
   ZEROX = 'Zerox Exchange',
   BANCOR_V2 = 'Bancor Network v2',
   CURVE = 'Curve',
-  BALANCER =  'Balancer Pool Token',
+  BALANCER = 'Balancer Pool Token',
   MOONISWAP = 'Mooniswap',
-  DODO =  'Dodo',
+  DODO = 'Dodo',
   //bsc
   PANCAKE = 'Pancake',
-  ALL = ''
+  ALL = '',
 }
