@@ -1,9 +1,9 @@
 import NoWallet from "modules/ErrorPages/NoWallet";
+import TradeAllHistoryContainer from "modules/History/TradeAllHistory/container";
 import TradeHistoryContainer from "modules/History/TradeHistory/container"
 import React, { useMemo, useState } from "react"
 import { useHistory } from "react-router-dom";
 import NetworkChips from "shared/components/NetworkChips";
-import NetworkSwitcher from "shared/components/NetworkSwitcher";
 import { EthereumNetwork } from "shared/constants/AppEnums";
 
 type Props = {
@@ -32,7 +32,8 @@ export const TradeHistoryTab = (props: Props) => {
         return <>
        {address && <>
         {enableNetworkChips && <NetworkChips networkName={networkName} onClick={onChangeNetwork} enableAll={false}/>}
-          <TradeHistoryContainer address={address} token={token} networkName={networkName}/>
+        {token &&<TradeHistoryContainer address={address} token={token} networkName={networkName}/>}
+        {!token && <TradeAllHistoryContainer address={address}  networkName={networkName}/> }
           </>}
 
           {!address && <NoWallet/>}

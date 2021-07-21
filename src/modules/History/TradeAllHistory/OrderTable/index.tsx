@@ -11,11 +11,11 @@ import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
-import { GetTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
+import { GetAllTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetAllTradeHistoryList';
 
 interface Props {
   networkName: EthereumNetwork;
-  data: GetTradeHistoryList_ethereum_dexTrades[] | undefined;
+  data: GetAllTradeHistoryList_ethereum_dexTrades[] | undefined;
   totalRows: number | undefined;
   currentPage: number;
   rowsPerPage: number;

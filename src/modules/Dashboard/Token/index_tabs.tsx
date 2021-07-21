@@ -232,7 +232,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
               </IconButton>
             </Tooltip>
           </Box>
-        </Box>
+            </Box>
 
 
         <GridContainer pt={0}>

@@ -374,7 +374,6 @@ const MarketForm: React.FC<Props> = (props) => {
               <SelectToken
                 id={'marketSel0'}
                 label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                limitCoins={select0.length ? true : false}
                 selected={tokenFrom}
                 options={(web3State === Web3State.Done && select0.length ) ? select0 : select1}
                 disabled={disabled}
@@ -434,7 +433,8 @@ const MarketForm: React.FC<Props> = (props) => {
               item
               xs={12}
               md={6}>
-              <SelectToken
+      
+      {select1.length > 0 && <SelectToken
                 id={'marketSel1'}
                 selected={tokenTo}
                 options={select1}
@@ -442,7 +442,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 onChange={($token) => {
                   onChangeToken($token, 'to');
                 }}
-              />
+              />}
             </Grid>
             <Grid xs={12} md={12}>
               <Box display={'flex'} justifyContent={'space-evenly'}>

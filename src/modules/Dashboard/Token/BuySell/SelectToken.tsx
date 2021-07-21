@@ -151,7 +151,6 @@ const SelectToken: React.FC<Props> = ({
   disabled,
   onChange,
   label,
-  limitCoins
 }) => {
   const classes = useStyles();
 
@@ -170,13 +169,6 @@ const SelectToken: React.FC<Props> = ({
     }
    
   },[selected])
-
-  const getSymbol = (sel:any)=>{
-    console.log(sel)
-    return sel.symbol;
-
-
-  }
 
   return (
     <>

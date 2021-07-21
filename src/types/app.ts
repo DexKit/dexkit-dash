@@ -15,7 +15,7 @@ import {
   GetOrderList_ethereum_maker_smartContract,
   GetOrderList_ethereum_maker_transaction,
 } from 'services/graphql/bitquery/history/__generated__/GetOrderList';
-import {TradeSide} from '../../__generated__/globalTypes';
+import {Network, TradeSide} from '../../__generated__/globalTypes';
 
 import {ChainId} from './blockchain';
 import {
@@ -56,6 +56,24 @@ export interface Token {
   coingecko_id?: string;
   chainId?: ChainId;
   logoURI?: string;
+}
+
+export interface Coin{
+  name: string;
+  symbol: string;
+  address: string;
+  networkName?: Network;
+  decimals: number;
+  displayDecimals?: 4;
+  icon?: string;
+  price_usd?: BigNumber;
+  price_usd_24h_change?: BigNumber;
+  coingecko_id?: string;
+  chainId?: ChainId;
+  logoURI?: string;
+  isCoin: boolean;
+  changelly_support: boolean;
+  changelly_id: string;
 }
 
 export interface TokenBalance {

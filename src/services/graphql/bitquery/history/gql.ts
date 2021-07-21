@@ -332,3 +332,65 @@ export const BITQUERY_TRADE_HISTORY_LIST = gql`
     }
   }
 `;
+
+
+export const BITQUERY_ALL_TRADE_HISTORY_LIST = gql`
+  query GetAllTradeHistoryList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: ["block.height"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        makerOrTaker: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        protocol
+        transaction {
+          hash
+          index
+          nonce
+          txFrom {
+            address
+          }
+        }
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        sellAmount
+        sellCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        buyAmount
+        buyCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+      }
+      total: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        makerOrTaker: {is: $address}
+      ) {
+        count
+      }
+    }
+  }
+`;

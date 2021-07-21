@@ -23,6 +23,7 @@ import {
 import { MyBalances, Web3State } from 'types/blockchain';
 import { isNativeCoinWithoutChainId } from 'utils';
 import { useHistory } from 'react-router-dom';
+import { useCoinList } from 'hooks/useCoinList';
 
 interface Props {
   tokenAddress: string;
@@ -74,6 +75,7 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
   const [select0, setSelect0] = useState<Token[]>([]);
 
   const select1 = useTokenList(networkName);
+
 
   const [tokenFrom, setTokenFrom] = useState<Token>();
 

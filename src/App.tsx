@@ -15,6 +15,8 @@ import WalletRoutes from 'services/WalletRoutes';
 import { Web3Manager } from 'shared/components/Web3Manager';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
+import { Changelly } from 'services/rest/changelly';
+
 
 
 const App = () => (

@@ -122,6 +122,7 @@ const LimitForm: React.FC<Props> = (props) => {
   const {web3State, onConnectWeb3} = useWeb3();
 
   const network = useNetwork();
+  const [isInverted, setIsInverted] = useState(false);
 
   const [
     tokenBalance,
@@ -257,12 +258,12 @@ const LimitForm: React.FC<Props> = (props) => {
   const handleConvert = () => {
     const ethToken = select1.find(
       (t) =>
-        t.symbol ===
+        t.symbol.toUpperCase() ===
         GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
     const wethToken = select1.find(
       (t) =>
-        t.symbol ===
+        t.symbol.toUpperCase() ===
         GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
 
@@ -299,8 +300,9 @@ const LimitForm: React.FC<Props> = (props) => {
   };
 
   const handlePriceChange = (event: any) => {
-    setPrice(event.target.value);
-    setAmountTo((amountFrom || 0) * event.target.value);
+    const newPrice = isInverted ? 1/event.target.value : event.target.value;
+    setPrice(newPrice);
+    setAmountTo((amountFrom || 0) * newPrice);
   };
 
   const handleExpiryInputChange = (event: any) => {
@@ -486,7 +488,6 @@ const LimitForm: React.FC<Props> = (props) => {
                     id={'marketSel0'}
                     selected={ethToken}
                     label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                    limitCoins={select0.length ? true : false}
                     options={(web3State === Web3State.Done && select0.length) ? select0 : select1}
                     disabled={disabled}
                     onChange={($token) => {
@@ -599,16 +600,21 @@ const LimitForm: React.FC<Props> = (props) => {
                         variant='outlined'
                         fullWidth
                         label={<IntlMessages id='app.price' />}
-                        value={price}
+                        value={isInverted ? 1/price : price}
                         onChange={handlePriceChange}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment
                               position='end'
-                              style={{fontSize: '13px'}}>
+                              style={{fontSize: '13px'}}
+                              onClick={()=> setIsInverted(!isInverted)}
+                              >
                               {(tokenFrom && tokenTo) && (
                                 <>
-                                  {tokenTo.symbol.toUpperCase()} per {tokenFrom.symbol.toUpperCase()}
+                                {isInverted ?
+                                 `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}` :
+                                  `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`
+                                }
                                 </>
                               )}
                             </InputAdornment>
