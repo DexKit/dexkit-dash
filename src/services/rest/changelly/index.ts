@@ -45,7 +45,7 @@ const request = (method: string, params: any) => {
         body: JSON.stringify(body)
         
     }
-    return fetch(CHANGELY_ENDPOINT, requestInit);
+    return fetch(CHANGELY_ENDPOINT, requestInit).then(r=> r.json());
 }  
 
 /*
@@ -73,7 +73,7 @@ export const Changelly = {
         return request('getMinAmount', params);
     },
     getExchangeAmount(params: {from: string, to: string, amount: string}){
-        return request('getMinAmount', params);
+        return request('getExchangeAmount', params);
     },
     validateAddress(params: {currency: string, address: string}){
         return request('validateAddress', params);

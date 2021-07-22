@@ -27,7 +27,6 @@ export const useAllBalance = (defaultAccount?: string) => {
   useEffect(() => {
     if (account) {
       setLoading(true);
-
       client
         .query<GetAllMyBalance, GetAllMyBalanceVariables>({
           query: BITQUERY_ALL_BALANCE_INFO,
@@ -48,7 +47,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           const tokensmeta = (tokensmeta_bnb ?? []).concat(tokensmeta_eth ?? []);
     
 
-          if (tokensmeta.length) {
+          if (tokensmeta.length || (balances.data.ethereum?.address[0].balances?.length || balances.data.bsc?.address[0].balances?.length)) {
             getTokens(tokensmeta)
               .then((coingeckoList) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
@@ -101,9 +100,9 @@ export const useAllBalance = (defaultAccount?: string) => {
           console.info(e);
           setError(e);
           setLoading(false);
-        });
+        }).finally(() => setLoading(false)) ;
     } else {
-      setLoading(true);
+      setLoading(false);
       setError(undefined);
       setData([]);
     }

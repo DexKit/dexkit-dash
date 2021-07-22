@@ -13,6 +13,14 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
+        path: '/dashboard/swap/coins',
+        component: React.lazy(() => import('./Swap')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/dashboard/favorite-coins',
         component: React.lazy(() => import('./Favorites'))
       },
@@ -70,5 +78,5 @@ export const dashBoardConfigs = [
         component: React.lazy(() => import('./Token/index_tabs')),
       },
     ],
-  }
+  },
 ];

@@ -13,6 +13,7 @@ interface Props {
   open: boolean;
   balances: GetMyBalance_ethereum_address_balances[];
   onClose: () => void;
+  amount?: number;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -79,7 +80,7 @@ const Sender: React.FC<Props> = (props) => {
               />
             </Tabs>
 
-            <SenderForm balances={props.balances} />
+            <SenderForm balances={props.balances} amount={props.amount} />
 
           </Card>
         </Box>

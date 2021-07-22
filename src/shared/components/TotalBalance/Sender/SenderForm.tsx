@@ -25,6 +25,7 @@ import { useNetwork } from 'hooks/useNetwork';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
+  amount?: number;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -57,7 +58,7 @@ const SenderForm: React.FC<Props> = (props) => {
   const network = useNetwork();
   const {onTransfer} = useTransfer();
 
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>(String(props.amount || '') );
   const [address, setAddress] = useState<string>('');
   const [selected, setSelected] = useState<GetMyBalance_ethereum_address_balances>(props.balances[0]||undefined);
 
