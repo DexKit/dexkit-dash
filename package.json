@@ -2,6 +2,9 @@
   "name": "dexkit-dash",
   "version": "0.2.0",
   "private": true,
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "@0x/assert": "^3.0.9",
     "@0x/asset-swapper": "^6.4.0",
@@ -149,6 +152,7 @@
     "rss-parser": "3.11.0",
     "seamless-immutable": "7.1.3",
     "slick-carousel": "^1.8.1",
+    "solc": "^0.8.6",
     "styled-components": "^4.1.3",
     "tslint": "^6.1.2",
     "tslint-react": "^5.0.0",
@@ -162,12 +166,13 @@
     "web3-eth-contract": "^1.3.5",
     "web3-utils": "^1.3.5",
     "web3modal": "^1.9.1",
-    "webpack": "^5.17.0",
+    "webpack": "4",
     "workbox-core": "^6.1.0",
     "workbox-expiration": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
     "workbox-strategies": "^6.1.0",
+    "worker-loader": "^3.0.8",
     "yup": "^0.29.1"
   },
   "scripts": {

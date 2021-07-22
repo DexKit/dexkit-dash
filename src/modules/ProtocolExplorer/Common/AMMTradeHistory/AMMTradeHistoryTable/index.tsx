@@ -58,7 +58,11 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
           </TableBody>
         </Table>
       </Box>
-      {!data?.length && <Typography component='h1' color={'primary'}>No data available for this protocol</Typography>}
+      {!data?.length && (
+        <Typography component='h1' color={'primary'}>
+          No data available for this protocol
+        </Typography>
+      )}
       <TablePagination
         className={classes.paginationDesktop}
         component='div'
@@ -66,7 +70,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -80,7 +84,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={25}
         rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

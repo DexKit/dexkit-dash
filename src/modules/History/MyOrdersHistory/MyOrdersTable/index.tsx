@@ -63,14 +63,17 @@ const MyOrdersTable: React.FC<Props> = ({
                 <TableItem row={row} networkName={networkName} key={index} />
               ))} */}
             {paginatedRows}
-
-            
           </TableBody>
         </Table>
-          {(data && data.length === 0) &&
-          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
-                        You don't have active orders for this token
-          </Typography>}
+        {data && data.length === 0 && (
+          <Typography
+            variant='h5'
+            display={'block'}
+            align={'center'}
+            color={'primary'}>
+            You don't have active orders for this token
+          </Typography>
+        )}
       </Box>
 
       <TablePagination
@@ -80,7 +83,7 @@ const MyOrdersTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>

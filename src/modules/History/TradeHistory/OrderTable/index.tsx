@@ -13,7 +13,7 @@ import TableItem from './TableItem';
 import Fade from '@material-ui/core/Fade';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
-import { GetTradeHistoryList_ethereum_dexTrades } from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
+import {GetTradeHistoryList_ethereum_dexTrades} from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -49,14 +49,19 @@ const TransactionTable: React.FC<Props> = ({
           <TableBody className={classes.borderBottomClass}>
             {data &&
               data.map((row, index) => (
-                    <TableItem row={row} networkName={networkName} key={index} /> 
+                <TableItem row={row} networkName={networkName} key={index} />
               ))}
           </TableBody>
         </Table>
-        {(data && data.length === 0) &&
-          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
-                        You don't have trades yet
-          </Typography>}
+        {data && data.length === 0 && (
+          <Typography
+            variant='h5'
+            display={'block'}
+            align={'center'}
+            color={'primary'}>
+            You don't have trades yet
+          </Typography>
+        )}
       </Box>
 
       <TablePagination
@@ -66,7 +71,7 @@ const TransactionTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -80,7 +85,7 @@ const TransactionTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={25}
         rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

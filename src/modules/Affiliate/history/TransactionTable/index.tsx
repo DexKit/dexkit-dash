@@ -9,7 +9,7 @@ import TableItem from './TableItem';
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { GetAffiliateTrades } from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 
 interface Props {
   transactionData: GetAffiliateTrades | undefined;
@@ -59,7 +59,9 @@ const TransactionTable: React.FC<Props> = ({
       },
     },
   }));
-  const data = transactionData?.ethereum?.transfers ? transactionData?.ethereum?.transfers : [];
+  const data = transactionData?.ethereum?.transfers
+    ? transactionData?.ethereum?.transfers
+    : [];
   const classes = useStyles();
 
   return (
@@ -71,24 +73,19 @@ const TransactionTable: React.FC<Props> = ({
           </TableHead>
           <TableBody>
             {data.length > 1 &&
-              data.map((item, i) => (
-                <TableItem
-                  key={i}
-                  data={item}
-                />
-              ))}
+              data.map((item, i) => <TableItem key={i} data={item} />)}
           </TableBody>
         </Table>
         {isLoading && <Loader />}
       </Box>
       <TablePagination
+        component='div'
         className={classes.paginationDesktop}
         rowsPerPageOptions={[10, 25, 50]}
-        component='div'
         count={total}
         rowsPerPage={perPage}
         page={page}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -102,7 +99,7 @@ const TransactionTable: React.FC<Props> = ({
         count={total}
         rowsPerPage={25}
         page={page}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

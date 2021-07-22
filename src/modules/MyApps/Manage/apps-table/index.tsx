@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -27,11 +27,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 
 import {stableSort, getComparator} from 'utils/table';
-import { useMyAppsConfig } from 'hooks/myApps/useMyAppsConfig';
-import { useWeb3 } from 'hooks/useWeb3';
-import { onAddNotification, setInsufficientAmountAlert } from 'redux/actions';
-import { WhitelabelTypes } from 'types/myApps';
-import { useBalance } from 'hooks/balance/useBalance';
+import {useMyAppsConfig} from 'hooks/myApps/useMyAppsConfig';
+import {useWeb3} from 'hooks/useWeb3';
+import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
+import {WhitelabelTypes} from 'types/myApps';
+import {useBalance} from 'hooks/balance/useBalance';
 // import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
@@ -47,7 +47,7 @@ const headCells: HeadCell[] = [
   {id: 'slug', label: 'Id', isSort: false},
   {id: 'domain', align: 'left', label: 'Domain', isSort: true},
   {id: 'type', align: 'left', label: 'Type', isSort: false},
-//  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
+  //  {id: 'collectedFees', align: 'left', label: 'Collected Fees', isSort: true},
   {id: 'expireds', align: 'left', label: 'Status', isSort: false},
   {id: 'actions', align: 'left', label: 'Actions', isSort: false},
 ];
@@ -67,34 +67,35 @@ const AppsTable = () => {
   const [orderDirection, setOrderDirection] = useState<Order>('desc');
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [showDialog, setShowDialog] = useState(false);
-  const { account } = useWeb3();
+  const {account} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
-  const { error, data: balances } = useBalance();
+  const {error, data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const apps = configs?.filter( config => config?.active) ?? [];
+    const apps = configs?.filter((config) => config?.active) ?? [];
     const kitsCost = apps.reduce((cost, app) => {
-      if(app.type === 'DEX'){
+      if (app.type === 'DEX') {
         return cost + Number(process.env.REACT_APP_APP_COST_KIT_EXCHANGE);
       }
-      if(app.type === 'AGGREGATOR'){
+      if (app.type === 'AGGREGATOR') {
         return cost + Number(process.env.REACT_APP_APP_COST_KIT_AGGREGATOR);
       }
-      if(app.type === 'MARKETPLACE'){
-        return cost + Number(process.env.REACT_APP_APP_COST_KIT_MARKETPLACE); 
+      if (app.type === 'MARKETPLACE') {
+        return cost + Number(process.env.REACT_APP_APP_COST_KIT_MARKETPLACE);
       }
       return cost;
-      
     }, 0);
-    const kitBalance = balances?.filter( b => b?.currency?.symbol?.toUpperCase() === 'KIT') ?? [];
+    const kitBalance =
+      balances?.filter((b) => b?.currency?.symbol?.toUpperCase() === 'KIT') ??
+      [];
     const kitAmount = kitBalance.reduce((amount, k) => {
       const value = Number(k.value);
       return isFinite(value) && !isNaN(value) ? amount + value : amount;
     }, 0);
     dispatch(setInsufficientAmountAlert(kitAmount < kitsCost));
-  }, [configs, balances, dispatch])
+  }, [configs, balances, dispatch]);
 
   const handleSelectionType = (data: any) => {
     console.log('data: ', data);
@@ -120,42 +121,47 @@ const AppsTable = () => {
   const classes = useStyles();
   const onEditConfig = (slug: string) => {
     history.push(`/my-apps/wizard/marketplace/${slug}`);
-  }
+  };
 
   const onOpenApp = (slug: string, type: WhitelabelTypes) => {
     switch (type) {
       case 'DEX':
-        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
         break;
       case 'MARKETPLACE':
-        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
         break;
       case 'AGGREGATOR':
-        window.open(`https://swap.dexkit.com/#/swap?id=${slug}`) 
+        window.open(`https://swap.dexkit.com/#/swap?id=${slug}`);
         break;
       default:
-        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`) 
+        window.open(`https://exchange.dexkit.com/#/trade?id=${slug}`);
         break;
     }
-  }
+  };
 
   const onDeleteApp = (slug: string, type: WhitelabelTypes) => {
-    const index = configs?.findIndex( c => c?.slug?.toLowerCase() === slug.toLowerCase() && 
-      c?.type?.toLowerCase() === type.toLowerCase()) ?? -1;
-    if(index >= 0){
+    const index =
+      configs?.findIndex(
+        (c) =>
+          c?.slug?.toLowerCase() === slug.toLowerCase() &&
+          c?.type?.toLowerCase() === type.toLowerCase(),
+      ) ?? -1;
+    if (index >= 0) {
       //TODO: chamar o end-point da API
       // const notification: Notification = {
-        //   title: `${slug} app deleted`,
-        //   body: `deleted ${slug} app successfully`,
-        //   timestamp: (new Date()).getTime(),
-        // };
-        const config = configs?.splice(index, 1)[0];
-        console.log('removed', config);
-      const notification = new Notification(`${slug} app deleted`, { body: `deleted ${slug} app successfully` });
+      //   title: `${slug} app deleted`,
+      //   body: `deleted ${slug} app successfully`,
+      //   timestamp: (new Date()).getTime(),
+      // };
+      const config = configs?.splice(index, 1)[0];
+      console.log('removed', config);
+      const notification = new Notification(`${slug} app deleted`, {
+        body: `deleted ${slug} app successfully`,
+      });
       dispatch(onAddNotification([notification]));
     }
-
-  }
+  };
 
   return (
     <>
@@ -248,29 +254,33 @@ const AppsTable = () => {
                       </TableCell>
                       <TableCell align='left' className={classes.tableCell}>
                         <Box className={classes.badgeRoot}>
-                            <IconButton aria-label="edit" onClick={() => onEditConfig(config.slug)}>
-                              <EditIcon/>
-                           </IconButton>
-                           <IconButton aria-label="launch" onClick={() => onOpenApp(config.slug, config.type)}>
-                              <LaunchIcon/>
-                           </IconButton>
-                           <IconButton 
-                           aria-label="remove" 
-                           onClick={($e) => {
-                             $e.stopPropagation();
-                             setShowDialog(true) 
-                            //  onDeleteApp(config.slug, config.type)
-                          }}>
-                              <DeleteIcon/>
-                           </IconButton>
+                          <IconButton
+                            aria-label='edit'
+                            onClick={() => onEditConfig(config.slug)}>
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-label='launch'
+                            onClick={() => onOpenApp(config.slug, config.type)}>
+                            <LaunchIcon />
+                          </IconButton>
+                          <IconButton
+                            aria-label='remove'
+                            onClick={($e) => {
+                              $e.stopPropagation();
+                              setShowDialog(true);
+                              //  onDeleteApp(config.slug, config.type)
+                            }}>
+                            <DeleteIcon />
+                          </IconButton>
                         </Box>
                       </TableCell>
-                      <ConfirmationDialog 
+                      <ConfirmationDialog
                         title={`Want to confirm the exclusion of the "${config.slug}" app?`}
                         dialogTitle={'Confirm app exclusion'}
                         open={showDialog}
-                        onConfirm={() => { 
-                          onDeleteApp(config.slug, config.type)
+                        onConfirm={() => {
+                          onDeleteApp(config.slug, config.type);
                           setShowDialog(!showDialog);
                         }}
                         onDeny={(x) => setShowDialog(x)}
@@ -287,40 +297,38 @@ const AppsTable = () => {
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onChangePage={handleChangePage}
+            onPageChange={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
-           <TablePagination
+          <TablePagination
             className={classes.paginationMobile}
             rowsPerPageOptions={[]}
             component='div'
             count={data.length}
             rowsPerPage={25}
             page={page}
-            onChangePage={handleChangePage}
+            onPageChange={handleChangePage}
           />
-
         </Paper>
-
-      ) :
-      <Paper className={classes.paper}>
+      ) : (
+        <Paper className={classes.paper}>
           <Toolbar className={classes.toolbar}>
             <Typography variant='h5'>My Apps</Typography>
           </Toolbar>
-            <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '60px 0px',
-                  }}>
-                  <Typography>You don't have Apps yet </Typography>
-              </Grid>
-          </Paper>
-      }
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '60px 0px',
+            }}>
+            <Typography>You don't have Apps yet </Typography>
+          </Grid>
+        </Paper>
+      )}
 
       {loading ? <Loader /> : null}
 

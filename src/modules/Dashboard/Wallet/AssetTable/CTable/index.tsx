@@ -72,7 +72,7 @@ const CTable: React.FC<Props> = ({balances}) => {
         count={balances.length}
         rowsPerPage={perPage}
         page={page}
-        onChangePage={(_event: unknown, newPage: number) => setPage(newPage)}
+        onPageChange={(_event: unknown, newPage: number) => setPage(newPage)}
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
           setPerPage(parseInt(event.target.value, 10))
         }
@@ -84,7 +84,7 @@ const CTable: React.FC<Props> = ({balances}) => {
         count={balances.length}
         rowsPerPage={15}
         page={page}
-        onChangePage={(_event: unknown, newPage: number) => setPage(newPage)}
+        onPageChange={(_event: unknown, newPage: number) => setPage(newPage)}
       />
     </>
   );

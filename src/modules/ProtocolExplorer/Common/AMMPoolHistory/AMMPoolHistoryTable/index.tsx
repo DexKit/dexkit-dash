@@ -11,7 +11,7 @@ import Loader from '@crema/core/Loader';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
-import { MintBurn } from 'types/app';
+import {MintBurn} from 'types/app';
 
 interface Props {
   exchange: EXCHANGE;
@@ -65,7 +65,7 @@ const AMMPoolHistoryTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -79,7 +79,7 @@ const AMMPoolHistoryTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={25}
         rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

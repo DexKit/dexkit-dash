@@ -38,31 +38,34 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
-  
 
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader >
+        <Table stickyHeader>
           <TableHead>
             <TableHeading type={type} exchange={exchange} />
           </TableHead>
 
           <TableBody>
             {data &&
-              data.map((row, index) => (            
-                  <TableItem
-                    key={index}
-                    row={row}
-                    networkName={networkName}
-                    exchange={exchange}
-                    type={type}
-                  />
+              data.map((row, index) => (
+                <TableItem
+                  key={index}
+                  row={row}
+                  networkName={networkName}
+                  exchange={exchange}
+                  type={type}
+                />
               ))}
           </TableBody>
         </Table>
       </Box>
-      {!data?.length && <Typography component='h1' color={'primary'}>No Data available for this token</Typography>}
+      {!data?.length && (
+        <Typography component='h1' color={'primary'}>
+          No Data available for this token
+        </Typography>
+      )}
       <TablePagination
         className={classes.paginationDesktop}
         component='div'
@@ -70,7 +73,7 @@ const TokenOrdersTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
