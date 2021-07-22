@@ -21,7 +21,7 @@ export default (props: Props) => {
   }, []);
 
   return (
-    <IconButton onClick={handlePaste}>
+    <IconButton size='small' onClick={handlePaste}>
       <CallReceivedIcon />
     </IconButton>
   );
