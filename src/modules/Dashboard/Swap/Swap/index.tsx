@@ -50,6 +50,7 @@ export const SwapComponent = () => {
   const [transaction, setTransaction] = useState<ChangellyTransaction | null>(
     null,
   );
+  const [creatingTransaction, setCreatingTransaction] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -224,15 +225,21 @@ export const SwapComponent = () => {
   }, [fromAmount, minFromAmount]);
 
   const handleCreateTransaction = useCallback(() => {
+    setCreatingTransaction(true);
+
     if (fromCoin && toCoin) {
       Changelly.createTransaction({
         from: fromCoin.ticker,
         to: toCoin.ticker,
         amount: fromAmount.toString(),
         address: addressToSend,
-      }).then((r) => {
-        setTransaction(r.result as ChangellyTransaction);
-      });
+      })
+        .then((r) => {
+          setTransaction(r.result as ChangellyTransaction);
+        })
+        .finally(() => {
+          setCreatingTransaction(false);
+        });
     }
   }, [fromCoin, toCoin, addressToSend, fromAmount]);
 
@@ -273,6 +280,10 @@ export const SwapComponent = () => {
     setSelectTo('');
   }, []);
 
+  const handleReset = useCallback(() => {
+    setTransaction(null);
+  }, []);
+
   return (
     <>
       <SelectCoinsDialog
@@ -306,6 +317,7 @@ export const SwapComponent = () => {
               fromCoin={fromCoin}
               toCoin={toCoin}
               transaction={transaction}
+              onReset={handleReset}
             />
           </CardContent>
         ) : (
@@ -506,10 +518,15 @@ export const SwapComponent = () => {
                     fromLoading ||
                     toLoading ||
                     !acceptAML ||
-                    addressToSend == ''
+                    addressToSend == '' ||
+                    creatingTransaction
                   }
                   onClick={handleCreateTransaction}>
-                  Swap
+                  {creatingTransaction ? (
+                    <CircularProgress color='inherit' size={theme.spacing(6)} />
+                  ) : (
+                    'Swap'
+                  )}
                 </Button>
               </CardActions>
             ) : null}

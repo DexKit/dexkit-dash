@@ -39,7 +39,6 @@ export const LoadingSkeleton = () => {
         </Grid>
       </Grid>
       <Grid container xs={12} spacing={2} alignItems='center'></Grid>
-
       <Grid container xs={12} spacing={2} alignItems='center'>
         <Grid item xs={12}>
           <Skeleton>
