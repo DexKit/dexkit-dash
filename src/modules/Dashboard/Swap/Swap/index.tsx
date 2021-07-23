@@ -31,6 +31,9 @@ import {Steps} from './Provider';
 import {ReviewOrder} from './Components/ReviewOrder';
 import {SelectCoinsDialog} from './Modal/SelectCoins';
 
+import _ from 'lodash';
+import {CoinSelectButton} from './Components/CoinSelectButton';
+
 export const SwapComponent = () => {
   const theme = useTheme();
 
@@ -106,25 +109,6 @@ export const SwapComponent = () => {
     })();
   }, []);
 
-  const onChangeFromAmount = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!fromCoin || !toCoin) {
-      return;
-    }
-    const amount = Number(ev.target.value);
-    setFromAmount(amount);
-    setToLoading(true);
-    Changelly.getExchangeAmount({
-      from: fromCoin?.ticker,
-      to: toCoin?.ticker,
-      amount: amount.toString(),
-    })
-      .then((res) => {
-        const am = Number(res.result);
-        setToAmount(am);
-      })
-      .finally(() => setToLoading(false));
-  };
-
   const fetchCoinsAmounts = useCallback(async () => {
     if (!fromCoin || !toCoin) {
       return;
@@ -139,22 +123,28 @@ export const SwapComponent = () => {
         from: toCoin.ticker,
         to: fromCoin.ticker,
       });
+
       setFromLoading(false);
 
       if (r.result) {
         const newAmount = Number(r.result);
+
         setMinFromAmount(newAmount);
         setFromAmount(newAmount);
+
         setToLoading(true);
+
         const res = await Changelly.getExchangeAmount({
           from: toCoin.ticker,
           to: fromCoin.ticker,
           amount: newAmount.toString(),
         });
+
         if (res.result) {
           const am = Number(res.result);
           setToAmount(am);
         }
+
         setToLoading(false);
       } else {
         return;
@@ -176,26 +166,79 @@ export const SwapComponent = () => {
     fetchCoinsAmounts();
   }, [fetchCoinsAmounts, toCoin, fromCoin]);
 
-  const onChangeToAmount = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!fromCoin || !toCoin) {
-      return;
-    }
-    const amount = Number(ev.target.value);
+  const calculateRatio = useCallback(
+    (from: string, to: string, amount: string) => {
+      return Changelly.getExchangeAmount({
+        from,
+        to,
+        amount,
+      });
+    },
+    [],
+  );
 
-    setToAmount(amount);
-    setFromLoading(true);
+  const calculateToRatio = useCallback(
+    (value: string) => {
+      if (!toCoin || !fromCoin) {
+        return;
+      }
 
-    Changelly.getExchangeAmount({
-      from: toCoin?.ticker,
-      to: fromCoin?.ticker,
-      amount: amount.toString(),
-    })
-      .then((res) => {
-        const am = Number(res.result);
-        setFromAmount(am);
-      })
-      .finally(() => setFromLoading(false));
-  };
+      if (calculateRatio) {
+        setFromLoading(true);
+        calculateRatio(toCoin.ticker, fromCoin.ticker, value)
+          ?.then((result) => {
+            if (result) {
+              setFromAmount(Number(result.result));
+            }
+          })
+          .finally(() => {
+            setFromLoading(false);
+          });
+      }
+    },
+    [toCoin, fromCoin, toAmount, calculateRatio],
+  );
+
+  const calculateFromRatio = useCallback(
+    (value: string) => {
+      if (!toCoin || !fromCoin) {
+        return;
+      }
+
+      if (calculateRatio) {
+        setToLoading(true);
+        calculateRatio(fromCoin.ticker, toCoin.ticker, value)
+          ?.then((result) => {
+            if (result) {
+              setToAmount(Number(result.result));
+            }
+          })
+          .finally(() => {
+            setToLoading(false);
+          });
+      }
+    },
+    [toCoin, fromCoin, fromAmount, calculateRatio],
+  );
+
+  const onChangeFromAmount = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const amount = Number(e.target.value);
+      setFromAmount(amount);
+      calculateFromRatio(e.target.value);
+    },
+    [setFromAmount, calculateFromRatio],
+  );
+
+  const onChangeToAmount = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const amount = Number(e.target.value);
+      setToAmount(amount);
+      console.log('entra aqui5');
+      calculateToRatio(e.target.value);
+    },
+    [setToAmount, calculateToRatio],
+  );
 
   const handleChangeAccept = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -263,8 +306,16 @@ export const SwapComponent = () => {
   const handleSelectCoin = useCallback(
     (coin: ChangellyCoin) => {
       if (selectTo == 'to') {
+        if (coin == fromCoin) {
+          setFromCoin(toCoin);
+        }
+
         setToCoin(coin);
       } else {
+        if (coin == toCoin) {
+          setToCoin(fromCoin);
+        }
+
         setFromCoin(coin);
       }
 
@@ -272,7 +323,7 @@ export const SwapComponent = () => {
       setShowSelectCoin(false);
       fetchCoinsAmounts();
     },
-    [fetchCoinsAmounts, selectTo],
+    [fetchCoinsAmounts, selectTo, fromCoin, toCoin],
   );
 
   const handleCancelSelectCoin = useCallback(() => {
@@ -282,7 +333,10 @@ export const SwapComponent = () => {
 
   const handleReset = useCallback(() => {
     setTransaction(null);
-  }, []);
+    setAddressToSend('');
+
+    fetchCoinsAmounts();
+  }, [fetchCoinsAmounts]);
 
   return (
     <>
@@ -293,19 +347,7 @@ export const SwapComponent = () => {
         onClose={handleCancelSelectCoin}
       />
       <Card>
-        {!loading ? (
-          <CardHeader
-            title='Multichain Swap'
-            action={
-              transaction ? (
-                <IconButton aria-label='back' onClick={handleCancelTransaction}>
-                  <ArrowBackIcon />
-                  <Typography component={'p'}>Back</Typography>
-                </IconButton>
-              ) : null
-            }
-          />
-        ) : null}
+        {/* {!loading ? <CardHeader title='Multichain Swap' /> : null} */}
         {fromCoin &&
         toCoin &&
         addressToSend &&
@@ -360,7 +402,7 @@ export const SwapComponent = () => {
                               disabled={fromLoading}
                               id='from-amount'
                               type='number'
-                              variant='filled'
+                              variant='outlined'
                               placeholder='0.00'
                               value={fromAmount}
                               onChange={onChangeFromAmount}
@@ -388,14 +430,11 @@ export const SwapComponent = () => {
                             />
                           </Grid>
                           <Grid item>
-                            <Button
-                              size='large'
-                              fullWidth
-                              variant='contained'
+                            <CoinSelectButton
+                              symbol={fromCoin?.name || ''}
+                              iconImage={fromCoin?.image || ''}
                               onClick={handleFromSelectToken}
-                              endIcon={<ExpandMoreIcon />}>
-                              {fromCoin?.name.toUpperCase()}
-                            </Button>
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
@@ -427,7 +466,7 @@ export const SwapComponent = () => {
                               disabled={toLoading}
                               id='to-amount'
                               type={'number'}
-                              variant='filled'
+                              variant='outlined'
                               placeholder='0.00'
                               value={toAmount}
                               onChange={onChangeToAmount}
@@ -449,14 +488,11 @@ export const SwapComponent = () => {
                             />
                           </Grid>
                           <Grid item>
-                            <Button
-                              fullWidth
-                              size='large'
-                              variant='contained'
+                            <CoinSelectButton
+                              symbol={toCoin?.name || ''}
+                              iconImage={toCoin?.image || ''}
                               onClick={handleToSelectToken}
-                              endIcon={<ExpandMoreIcon />}>
-                              {toCoin?.name.toUpperCase()}
-                            </Button>
+                            />
                           </Grid>
                         </Grid>
                       </Grid>

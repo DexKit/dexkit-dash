@@ -21,7 +21,7 @@ const defaultConfig: any = {
       background: {
         paper: '#FFFFFF',
         default: '#f4f5f7',
-      //  default: '#fafbfc',
+        //  default: '#fafbfc',
       },
       primary: {
         main: '#ff7149',
@@ -83,6 +83,11 @@ const defaultConfig: any = {
         },
         body2: {
           fontSize: 14,
+        },
+      },
+      MuiOutlinedInput: {
+        root: {
+          backgroundColor: 'rgba(255, 255, 255, 0.09)',
         },
       },
       MuiToggleButton: {

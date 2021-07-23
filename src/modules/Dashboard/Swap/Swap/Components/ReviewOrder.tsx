@@ -6,6 +6,7 @@ import {
   InputAdornment,
   TextField,
   LinearProgress,
+  Button,
 } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
 import React, {useEffect, useState, useCallback} from 'react';
@@ -41,9 +42,11 @@ export const ReviewOrder = (props: Props) => {
   const getStatusMessage = useCallback((status: string) => {
     switch (status) {
       case 'waiting':
-        return 'Waiting deposit';
+        return 'Waiting for deposit';
       case 'confirming':
-        return 'Waiting deposit';
+        return 'Confirming transaction';
+      case 'hold':
+        return 'Transaction need verification';
       default:
         return '';
     }
@@ -52,10 +55,11 @@ export const ReviewOrder = (props: Props) => {
   return status == 'finished' ? (
     <OrderFinished onReset={onReset} />
   ) : (
-    <Grid container xs={12} alignItems='center' spacing={1} direction={'row'}>
+    <Grid container alignItems='center' spacing={1} direction={'row'}>
       <Grid item xs={12}>
-        <Box mb={2}>
-          <Box mb={2}>
+        <Box mb={4}>
+          <Typography variant='h5'>{getStatusMessage(status)}</Typography>
+          <Box pt={2}>
             <Grid container spacing={2}>
               <Grid item xs={3}>
                 <LinearProgress value={100} variant='determinate' />
@@ -77,11 +81,10 @@ export const ReviewOrder = (props: Props) => {
               </Grid>
             </Grid>
           </Box>
-          <Typography variant='caption'>{getStatusMessage(status)}</Typography>
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='body1'>You send</Typography>
+        <Typography variant='caption'>You send</Typography>
         <Typography variant='h4'>
           {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}{' '}
           <ButtonCopy
@@ -91,60 +94,47 @@ export const ReviewOrder = (props: Props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='body1'>You Receive</Typography>
+        <Typography variant='caption'>You Receive</Typography>
         <Typography variant='h4'>
           {transaction?.amountExpectedTo} {toCoin.name.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Box py={6}>
-          <Typography align='center' variant='subtitle1'>
-            Send{' '}
-            <strong>
-              {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}
-            </strong>{' '}
-            to this address
-          </Typography>
-          <TextField
-            fullWidth
-            value={transaction.payinAddress}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <ButtonCopy
-                    copyText={transaction.payinAddress}
-                    titleText='Address copied!'
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
+        <Typography variant='caption'>Transaction ID</Typography>
+        <Typography variant='h5'>
+          {transaction?.id}{' '}
+          <ButtonCopy copyText={transaction?.id} titleText={transaction?.id} />
+        </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>KYC Required</Typography>
-          <Typography variant='body1'>
-            {transaction.kycRequired ? 'yes' : 'no'}
-          </Typography>
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Status</Typography>
-          <Typography variant='body1'>{status}</Typography>
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Transaction ID</Typography>
-          <Typography variant='body1'>
-            {transaction?.id}{' '}
-            <ButtonCopy
-              copyText={transaction?.id}
-              titleText={transaction?.id}
+        <Box py={8}>
+          <Box p={4}>
+            <Typography
+              color='textSecondary'
+              gutterBottom
+              align='center'
+              variant='body1'>
+              Please, send{' '}
+              <strong>
+                {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}
+              </strong>{' '}
+              to the address below and wait for transaction confirmation
+            </Typography>
+            <TextField
+              fullWidth
+              value={transaction.payinAddress}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <ButtonCopy
+                      copyText={transaction.payinAddress}
+                      titleText='Address copied!'
+                    />
+                  </InputAdornment>
+                ),
+              }}
             />
-          </Typography>
+          </Box>
         </Box>
       </Grid>
       {status === 'hold' ? (
@@ -170,6 +160,11 @@ export const ReviewOrder = (props: Props) => {
           </Paper>
         </Grid>
       ) : null}
+      <Grid item xs={12}>
+        <Button onClick={onReset} size='large' fullWidth variant='outlined'>
+          Cancel
+        </Button>
+      </Grid>
     </Grid>
   );
 };

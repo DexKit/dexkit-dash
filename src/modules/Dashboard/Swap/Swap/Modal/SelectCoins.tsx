@@ -14,7 +14,10 @@ import {
   List,
   Box,
   makeStyles,
+  IconButton,
 } from '@material-ui/core';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 import {ChangellyCoin} from 'types/changelly';
 import SelectCoinListItem from '../Components/SelectCoinListItem';
@@ -74,16 +77,24 @@ export const SelectCoinsDialog = (props: Props) => {
 
   return (
     <Dialog
+      maxWidth='xl'
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-      <DialogTitle id='form-dialog-title'>Select a coin</DialogTitle>
+      <DialogTitle id='form-dialog-title'>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Typography variant='body1'>Select a coin</Typography>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <Box mb={4}>
           <TextField
             autoFocus
             id='name'
-            label='Search coins'
+            placeholder='Search coins'
             fullWidth
             value={filterText}
             variant='outlined'
@@ -104,11 +115,6 @@ export const SelectCoinsDialog = (props: Props) => {
           </List>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} variant='contained'>
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

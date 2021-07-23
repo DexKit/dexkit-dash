@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   coinAvatar: {
     height: theme.spacing(6),
     width: theme.spacing(6),
+    filter: 'grayscale(100%)',
   },
 }));
 
@@ -34,7 +35,10 @@ export const SelectCoinListItem = (props: Props) => {
       <ListItemIcon>
         <Avatar src={coin.image} className={classes.coinAvatar} />
       </ListItemIcon>
-      <ListItemText primary={coin.ticker?.toUpperCase()} />
+      <ListItemText
+        primary={coin.ticker?.toUpperCase()}
+        secondary={coin.fullName}
+      />
     </ListItem>
   );
 };

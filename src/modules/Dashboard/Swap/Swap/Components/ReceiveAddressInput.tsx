@@ -54,7 +54,7 @@ export const ReceiveAddressInput = (props: Props) => {
       id='Address'
       required
       error={!isAddressValid || address === ''}
-      variant='filled'
+      variant='outlined'
       value={address}
       onChange={onChangeAddress}
       fullWidth
