@@ -15,6 +15,9 @@ import CheckCircle from '@material-ui/icons/CheckCircleOutline';
 
 import {makeStyles} from '@material-ui/core/styles';
 
+import Failed from './modals/Failed';
+import Success from './modals/Success';
+
 const useStyles = makeStyles((theme) => ({
   aligned: {textAlign: 'center', width: '100%', padding: 20},
   buttons: {
@@ -40,6 +43,8 @@ const Transaction: React.FC = () => {
 
   const [form, setForm] = useState({address: '', amount: 0});
   const [hasPasted, setHasPasted] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [error, setError] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.persist();
@@ -53,11 +58,18 @@ const Transaction: React.FC = () => {
     });
   }
 
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    // Make the request
+    setOpenModal(true);
+    setError(true);
+  }
+
   return (
     <div className={classes.container}>
       <Container maxWidth='sm' className={classes.aligned}>
         <Card component={Paper}>
-          <form noValidate autoComplete='off'>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
             <Typography style={{padding: 25}} variant='h5'>
               Insert the informations about the transfer
             </Typography>
@@ -97,22 +109,28 @@ const Transaction: React.FC = () => {
                 }}
               />
             </Box>
+            <div className={classes.buttons}>
+              <Button
+                color='secondary'
+                variant='text'
+                onClick={() => setForm({address: '', amount: 0})}>
+                RESET
+              </Button>
+              <Button
+                type='submit'
+                color='primary'
+                variant='contained'
+                disabled={Number(form.amount) <= 0 || !form.address}>
+                TRANSFER
+              </Button>
+            </div>
           </form>
-          <div className={classes.buttons}>
-            <Button
-              color='secondary'
-              variant='text'
-              onClick={() => setForm({address: '', amount: 0})}>
-              RESET
-            </Button>
-            <Button
-              color='primary'
-              variant='contained'
-              disabled={Number(form.amount) <= 0 || !form.address}>
-              TRANSFER
-            </Button>
-          </div>
         </Card>
+        {error ? (
+          <Failed open={openModal} setOpen={setOpenModal} />
+        ) : (
+          <Success open={openModal} setOpen={setOpenModal} />
+        )}
       </Container>
     </div>
   );
