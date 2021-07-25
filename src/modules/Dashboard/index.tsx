@@ -78,4 +78,12 @@ export const dashBoardConfigs = [
       },
     ],
   },
+  {
+    routes: [
+      {
+        path: '/transaction',
+        component: React.lazy(() => import('./Wallet/Transaction')),
+      },
+    ],
+  },
 ];

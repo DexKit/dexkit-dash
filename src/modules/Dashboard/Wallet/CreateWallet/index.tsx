@@ -63,7 +63,7 @@ const CreateBTCWallet: React.FC = () => {
       component: <InfoPage setHasSeed={setHasSeed} />,
     },
     {
-      description: 'Mnemonic generation',
+      description: 'Mnemonic info',
       component: hasSeed ? (
         <MnemonicInsert
           setAllowStep={setAllowStep}
