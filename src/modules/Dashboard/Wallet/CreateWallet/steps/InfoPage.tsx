@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +12,7 @@ const useStyles = makeStyles(() => ({
   aligned: {textAlign: 'center', width: '100%'},
 }));
 
-const ProcedureInfo: React.FC = () => {
+const ProcedureInfo: React.FC<any> = ({setHasSeed}) => {
   const classes = useStyles();
 
   return (
@@ -38,6 +39,20 @@ const ProcedureInfo: React.FC = () => {
           If you lose it, we will not be able to restore your wallet.
         </Typography>
       </Box>
+
+      <Divider style={{margin: 10}} />
+
+      <Container maxWidth='sm' style={{marginTop: '10%'}}>
+        <Box className={classes.aligned}>ALREADY HAD A SEED?</Box>
+        <Box className={classes.aligned} style={{marginTop: 10}}>
+          <Button
+            color='secondary'
+            variant='contained'
+            onClick={() => setHasSeed(true)}>
+            Insert mnemonics
+          </Button>
+        </Box>
+      </Container>
     </Container>
   );
 };

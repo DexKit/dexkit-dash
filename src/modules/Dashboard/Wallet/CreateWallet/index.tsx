@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import * as bip39 from 'bip39';
 
@@ -15,27 +15,24 @@ import {makeStyles} from '@material-ui/core';
 
 import InfoPage from './steps/InfoPage';
 import Passphrase from './steps/Passphrase';
+import MnemonicInsert from './steps/MnemonicInsert';
 import GeneratedWallet from './steps/GeneratedWallet';
 import MnemonicConfirm from './steps/MnemonicConfirm';
 import MnemonicGeneration from './steps/MnemonicGeneration';
 
-const mnemonics = bip39.generateMnemonic().split(' ');
+const mnemonicsGen = bip39.generateMnemonic().split(' ');
 interface IStep {
   description: string;
   component: React.ReactElement;
 }
 
 const useStyles = makeStyles((theme) => ({
+  buttons: {width: '100%', paddingBottom: 0, marginTop: theme.spacing(1)},
   container: {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttons: {
-    width: '100%',
-    paddingBottom: 0,
-    marginTop: theme.spacing(1),
   },
 }));
 
@@ -45,15 +42,38 @@ const CreateBTCWallet: React.FC = () => {
   const [allowStep, setAllowStep] = useState(true);
   const [passphrase, setPass] = useState<string>();
 
+  const [hasSeed, setHasSeed] = useState(false);
+  const [mnemonics, setMnemonics] = useState(mnemonicsGen);
+
+  useEffect(() => {
+    if (activeStep === 0) {
+      setAllowStep(true);
+      setHasSeed(false);
+    }
+  }, [activeStep]);
+
+  useEffect(() => {
+    if (hasSeed) handleNext();
+    // eslint-disable-next-line
+  }, [hasSeed]);
+
   const steps: IStep[] = [
     {
       description: 'Procedure information',
-      component: <InfoPage />,
+      component: <InfoPage setHasSeed={setHasSeed} />,
     },
     {
       description: 'Mnemonic generation',
-      component: (
-        <MnemonicGeneration setAllowStep={setAllowStep} mnemonics={mnemonics} />
+      component: hasSeed ? (
+        <MnemonicInsert
+          setAllowStep={setAllowStep}
+          setMnemonics={setMnemonics}
+        />
+      ) : (
+        <MnemonicGeneration
+          setAllowStep={setAllowStep}
+          mnemonics={mnemonicsGen}
+        />
       ),
     },
     {

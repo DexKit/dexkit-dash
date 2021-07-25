@@ -24,7 +24,6 @@ const MnemonicConfirm: React.FC<any> = ({mnemonics, setAllowStep}) => {
     ),
   );
 
-  console.log(mnemonics);
   const getListStyle = () => ({
     background: '#1D2125',
     display: 'flex',

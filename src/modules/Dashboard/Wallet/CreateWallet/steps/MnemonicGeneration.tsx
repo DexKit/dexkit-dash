@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
 const MnemonicGeneration: React.FC<any> = ({mnemonics, setAllowStep}) => {
   const classes = useStyles();
 
-  setAllowStep(true);
+  useEffect(() => {
+    setAllowStep(true);
+  }, [setAllowStep]);
 
   return (
     <Container maxWidth='sm' className={classes.root}>
