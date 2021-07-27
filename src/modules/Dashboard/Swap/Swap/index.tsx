@@ -33,6 +33,7 @@ import {SelectCoinsDialog} from './Modal/SelectCoins';
 
 import _ from 'lodash';
 import {CoinSelectButton} from './Components/CoinSelectButton';
+import {ReceiveAddressStep} from './Components/ReceiveAddressStep';
 
 export const SwapComponent = () => {
   const theme = useTheme();
@@ -54,6 +55,7 @@ export const SwapComponent = () => {
     null,
   );
   const [creatingTransaction, setCreatingTransaction] = useState(false);
+  const [goToReceiveAddress, setGoToReceiveAddress] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -279,6 +281,7 @@ export const SwapComponent = () => {
       })
         .then((r) => {
           setTransaction(r.result as ChangellyTransaction);
+          setGoToReceiveAddress(false);
         })
         .finally(() => {
           setCreatingTransaction(false);
@@ -334,9 +337,29 @@ export const SwapComponent = () => {
   const handleReset = useCallback(() => {
     setTransaction(null);
     setAddressToSend('');
+    setGoToReceiveAddress(false);
+    setAcceptAML(false);
 
     fetchCoinsAmounts();
   }, [fetchCoinsAmounts]);
+
+  const handleAddressToSendChange = useCallback(
+    (value: string) => {
+      setAddressToSend(value);
+    },
+    [setAddressToSend],
+  );
+
+  const handleGoToReceiveAddress = useCallback(() => {
+    setGoToReceiveAddress(true);
+    setAcceptAML(false);
+  }, []);
+
+  const handleGoBack = useCallback(() => {
+    setGoToReceiveAddress(false);
+    setAddressToSend('');
+    setAcceptAML(false);
+  }, []);
 
   return (
     <>
@@ -345,15 +368,37 @@ export const SwapComponent = () => {
         open={showSelectCoin}
         onSelectCoin={handleSelectCoin}
         onClose={handleCancelSelectCoin}
+        selectTo={selectTo}
       />
       <Card>
-        {/* {!loading ? <CardHeader title='Multichain Swap' /> : null} */}
-        {fromCoin &&
-        toCoin &&
-        addressToSend &&
-        fromAmount &&
-        toAmount &&
-        transaction ? (
+        {loading ? (
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Skeleton height={theme.spacing(4)} width='30%' />
+              </Grid>
+              <Grid item xs={9}>
+                <Skeleton height={theme.spacing(16)} />
+              </Grid>
+              <Grid item xs={3}>
+                <Skeleton height={theme.spacing(16)} />
+              </Grid>
+              <Grid item xs={12}>
+                <Skeleton height={theme.spacing(4)} width='30%' />
+              </Grid>
+              <Grid item xs={9}>
+                <Skeleton height={theme.spacing(16)} />
+              </Grid>
+              <Grid item xs={3}>
+                <Skeleton height={theme.spacing(16)} />
+              </Grid>
+              <Grid item xs={12}>
+                <Skeleton height={theme.spacing(16)} />
+              </Grid>
+            </Grid>
+          </CardContent>
+        ) : null}
+        {fromCoin && toCoin && transaction && acceptAML ? (
           <CardContent>
             <ReviewOrder
               fromCoin={fromCoin}
@@ -362,212 +407,152 @@ export const SwapComponent = () => {
               onReset={handleReset}
             />
           </CardContent>
-        ) : (
-          <>
-            <CardContent>
-              {loading ? (
-                <Box
-                  py={16}
-                  display='flex'
-                  justifyContent='center'
-                  alignItems='center'>
-                  <Box
-                    display='flex'
-                    flexDirection='column'
-                    justifyContent='center'
-                    alignItems='center'
-                    alignContent='center'>
-                    <Box mb={4}>
-                      <Typography gutterBottom variant='h5'>
-                        Loading coins...
-                      </Typography>
-                    </Box>
-                    <CircularProgress
-                      color='primary'
-                      size={theme.spacing(16)}
-                    />
-                  </Box>
-                </Box>
-              ) : (
-                <Grid container spacing={2}>
+        ) : null}
+        {goToReceiveAddress ? (
+          <CardContent>
+            <ReceiveAddressStep
+              acceptAML={acceptAML}
+              onAcceptChange={handleChangeAccept}
+              toCoin={toCoin}
+              onPaste={handlePaste}
+              addressToSend={addressToSend}
+              onChange={handleAddressToSendChange}
+              onSwap={handleCreateTransaction}
+              loading={creatingTransaction}
+              onGoBack={handleGoBack}
+            />
+          </CardContent>
+        ) : null}
+        {!loading && !goToReceiveAddress && !transaction ? (
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Grid container alignItems='center' spacing={2}>
                   <Grid item xs={12}>
-                    <Grid container alignItems='center' spacing={1}>
-                      <Grid item xs={12}>
-                        <Typography variant='body1'>You Send</Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Grid container spacing={2}>
-                          <Grid item xs>
-                            <TextField
-                              disabled={fromLoading}
-                              id='from-amount'
-                              type='number'
-                              variant='outlined'
-                              placeholder='0.00'
-                              value={fromAmount}
-                              onChange={onChangeFromAmount}
-                              fullWidth
-                              inputProps={{
-                                step: 0.0000001,
-                                min: 0,
-                              }}
-                              InputProps={{
-                                endAdornment: fromLoading ? (
-                                  <InputAdornment position='end'>
-                                    <CircularProgress
-                                      color='inherit'
-                                      size='1rem'
-                                    />
-                                  </InputAdornment>
-                                ) : null,
-                              }}
-                              error={!isFromAmountValid()}
-                              helperText={
-                                !isFromAmountValid()
-                                  ? `Minimum Amount ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
-                                  : ''
-                              }
-                            />
-                          </Grid>
-                          <Grid item>
-                            <CoinSelectButton
-                              symbol={fromCoin?.name || ''}
-                              iconImage={fromCoin?.image || ''}
-                              onClick={handleFromSelectToken}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box
-                      pt={2}
-                      display='flex'
-                      alignItems='center'
-                      justifyContent='center'>
-                      <IconButton
-                        color='primary'
-                        size='small'
-                        onClick={onSwitchCoin}>
-                        <ArrowDownwardIcon fontSize='inherit' />
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2} alignItems='center'>
-                      <Grid item xs={12}>
-                        <Typography variant='body1'>You Receive</Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Grid container spacing={2}>
-                          <Grid item xs>
-                            <TextField
-                              disabled={toLoading}
-                              id='to-amount'
-                              type={'number'}
-                              variant='outlined'
-                              placeholder='0.00'
-                              value={toAmount}
-                              onChange={onChangeToAmount}
-                              fullWidth
-                              inputProps={{
-                                step: 0.0000001,
-                                min: 0,
-                              }}
-                              InputProps={{
-                                endAdornment: toLoading ? (
-                                  <InputAdornment position='end'>
-                                    <CircularProgress
-                                      color='inherit'
-                                      size='1rem'
-                                    />
-                                  </InputAdornment>
-                                ) : null,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item>
-                            <CoinSelectButton
-                              symbol={toCoin?.name || ''}
-                              iconImage={toCoin?.image || ''}
-                              onClick={handleToSelectToken}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  {toAmount > 0 && fromAmount > 0 ? (
-                    <Grid item xs={12}>
-                      <Typography color='textSecondary' variant='body2'>
-                        {toLoading || fromLoading ? (
-                          <Skeleton width='40%' />
-                        ) : (
-                          getPriceRatioText()
-                        )}
-                      </Typography>
-                    </Grid>
-                  ) : null}
-                  <Grid item xs={12}>
-                    <Typography variant='body1'>Receive Address</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <ReceiveAddressInput
-                      coin={toCoin}
-                      address={addressToSend}
-                      onChange={(add) => setAddressToSend(add)}
-                      onPaste={handlePaste}
-                    />
+                    <Typography variant='body1'>You Send</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Grid container spacing={2}>
-                      <Grid item>
-                        <Checkbox
-                          checked={acceptAML}
-                          onChange={handleChangeAccept}
-                          inputProps={{'aria-label': 'servicesCheckbox'}}
+                      <Grid item xs>
+                        <TextField
+                          disabled={fromLoading}
+                          id='from-amount'
+                          type='number'
+                          variant='outlined'
+                          placeholder='0.00'
+                          value={fromAmount}
+                          onChange={onChangeFromAmount}
+                          fullWidth
+                          inputProps={{
+                            step: 0.0000001,
+                            min: 0,
+                          }}
+                          InputProps={{
+                            endAdornment: fromLoading ? (
+                              <InputAdornment position='end'>
+                                <CircularProgress color='inherit' size='1rem' />
+                              </InputAdornment>
+                            ) : null,
+                          }}
+                          error={!isFromAmountValid()}
+                          helperText={
+                            !isFromAmountValid()
+                              ? `Minimum Amount ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
+                              : ''
+                          }
                         />
                       </Grid>
-                      <Grid item xs>
-                        <Typography color='textSecondary' variant='body2'>
-                          “Exchange services provided by Changelly. By clicking
-                          “Accept”, I acknowledge and understand that my
-                          transaction may trigger AML/KYC verification according
-                          to Changelly AML/KYC”
-                        </Typography>
+                      <Grid item>
+                        <CoinSelectButton
+                          symbol={fromCoin?.name || ''}
+                          iconImage={fromCoin?.image || ''}
+                          onClick={handleFromSelectToken}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              )}
-            </CardContent>
-            {!loading ? (
-              <CardActions>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  pt={2}
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='center'>
+                  <IconButton
+                    color='primary'
+                    size='small'
+                    onClick={onSwitchCoin}>
+                    <ArrowDownwardIcon fontSize='inherit' />
+                  </IconButton>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={2} alignItems='center'>
+                  <Grid item xs={12}>
+                    <Typography variant='body1'>You Receive</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs>
+                        <TextField
+                          disabled={toLoading}
+                          id='to-amount'
+                          type={'number'}
+                          variant='outlined'
+                          placeholder='0.00'
+                          value={toAmount}
+                          onChange={onChangeToAmount}
+                          fullWidth
+                          inputProps={{
+                            step: 0.0000001,
+                            min: 0,
+                          }}
+                          InputProps={{
+                            endAdornment: toLoading ? (
+                              <InputAdornment position='end'>
+                                <CircularProgress color='inherit' size='1rem' />
+                              </InputAdornment>
+                            ) : null,
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <CoinSelectButton
+                          symbol={toCoin?.name || ''}
+                          iconImage={toCoin?.image || ''}
+                          onClick={handleToSelectToken}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              {toAmount > 0 && fromAmount > 0 ? (
+                <Grid item xs={12}>
+                  <Typography color='textSecondary' variant='body2'>
+                    {toLoading || fromLoading ? (
+                      <Skeleton width='40%' />
+                    ) : (
+                      getPriceRatioText()
+                    )}
+                  </Typography>
+                </Grid>
+              ) : null}
+              <Grid item xs={12}>
                 <Button
                   variant='contained'
                   color='primary'
                   size='large'
                   fullWidth
-                  disabled={
-                    disabledButton ||
-                    fromLoading ||
-                    toLoading ||
-                    !acceptAML ||
-                    addressToSend == '' ||
-                    creatingTransaction
-                  }
-                  onClick={handleCreateTransaction}>
-                  {creatingTransaction ? (
-                    <CircularProgress color='inherit' size={theme.spacing(6)} />
-                  ) : (
-                    'Swap'
-                  )}
+                  disabled={disabledButton || fromLoading || toLoading}
+                  onClick={handleGoToReceiveAddress}>
+                  Next
                 </Button>
-              </CardActions>
-            ) : null}
-          </>
-        )}
+              </Grid>
+            </Grid>
+          </CardContent>
+        ) : null}
       </Card>
     </>
   );

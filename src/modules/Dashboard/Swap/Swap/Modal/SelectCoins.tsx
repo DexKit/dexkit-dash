@@ -32,10 +32,11 @@ const useStyles = makeStyles((theme) => ({
 interface Props extends DialogProps {
   coins: ChangellyCoin[];
   onSelectCoin: (coin: ChangellyCoin) => void;
+  selectTo: string;
 }
 
 export const SelectCoinsDialog = (props: Props) => {
-  const {onSelectCoin, coins, onClose} = props;
+  const {onSelectCoin, coins, onClose, selectTo} = props;
   const theme = useTheme();
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,7 +45,11 @@ export const SelectCoinsDialog = (props: Props) => {
   const [filteredCoins, setFilteredCoins] = useState<ChangellyCoin[]>([]);
 
   useEffect(() => {
-    setFilteredCoins(coins);
+    if (selectTo == 'to') {
+      setFilteredCoins(coins.filter((coin) => coin.enabledTo));
+    } else if (selectTo == 'from') {
+      setFilteredCoins(coins.filter((coin) => coin.enabledFrom));
+    }
   }, [coins]);
 
   const handleFilterChange = useCallback(

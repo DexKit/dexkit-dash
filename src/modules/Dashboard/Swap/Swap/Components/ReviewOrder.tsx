@@ -7,6 +7,7 @@ import {
   TextField,
   LinearProgress,
   Button,
+  Link,
 } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
 import React, {useEffect, useState, useCallback} from 'react';
@@ -14,6 +15,15 @@ import {Changelly} from 'services/rest/changelly';
 import ButtonCopy from 'shared/components/ButtonCopy';
 import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
 import {truncateAddress} from 'utils';
+import {
+  getChangellyStatusMessage,
+  STATUS_CONFIRMING,
+  STATUS_FAILED,
+  STATUS_FINISHED,
+  STATUS_HOLD,
+  STATUS_WAITING,
+} from '../../util';
+import OrderFailed from './OrderFailed';
 import OrderFinished from './OrderFinished';
 
 interface Props {
@@ -39,53 +49,78 @@ export const ReviewOrder = (props: Props) => {
     }
   }, 30000);
 
-  const getStatusMessage = useCallback((status: string) => {
-    switch (status) {
-      case 'waiting':
-        return 'Waiting for deposit';
-      case 'confirming':
-        return 'Confirming transaction';
-      case 'hold':
-        return 'Transaction need verification';
-      default:
-        return '';
-    }
-  }, []);
+  if (status == STATUS_FAILED) {
+    return <OrderFailed onReset={onReset} />;
+  }
 
-  return status == 'finished' ? (
+  return status == STATUS_FINISHED ? (
     <OrderFinished onReset={onReset} />
   ) : (
-    <Grid container alignItems='center' spacing={1} direction={'row'}>
-      <Grid item xs={12}>
-        <Box mb={4}>
-          <Typography variant='h5'>{getStatusMessage(status)}</Typography>
-          <Box pt={2}>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <LinearProgress value={100} variant='determinate' />
+    <Grid container alignItems='center' spacing={2}>
+      {status === STATUS_HOLD ? (
+        <Grid item xs={12}>
+          <Paper variant='outlined'>
+            <Box p={4}>
+              <Typography align='center' gutterBottom variant='subtitle2'>
+                Changelly Verification Required
+              </Typography>
+              <Typography gutterBottom variant='body2'>
+                Changelly is a third party application. The transaction you
+                requested will be held for you until you are verified.
+              </Typography>
+              <Typography align='center' gutterBottom variant='subtitle1'>
+                To Get Verified
+              </Typography>
+              <Typography variant='body2'>
+                1. send an email to{' '}
+                <Link href='mailto:security@changelly.com'>
+                  security@changelly.com
+                </Link>
+              </Typography>
+              <Typography variant='body2'>
+                2. In the subject line, enter the following information:{' '}
+                <strong>Transaction ID: {transaction?.id}</strong>
+              </Typography>
+            </Box>
+          </Paper>
+        </Grid>
+      ) : (
+        <Grid item xs={12}>
+          <Box mb={4}>
+            <Typography variant='h5'>
+              {getChangellyStatusMessage(status)}
+            </Typography>
+            <Box pt={2}>
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <LinearProgress value={100} variant='determinate' />
+                </Grid>
+                <Grid item xs={3}>
+                  <LinearProgress
+                    variant={
+                      status == STATUS_WAITING ? 'indeterminate' : 'determinate'
+                    }
+                    value={status == STATUS_CONFIRMING ? 100 : 0}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <LinearProgress
+                    variant={
+                      status == STATUS_CONFIRMING
+                        ? 'indeterminate'
+                        : 'determinate'
+                    }
+                    value={status != STATUS_CONFIRMING ? 0 : 100}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={3}>
-                <LinearProgress
-                  variant={
-                    status == 'waiting' ? 'indeterminate' : 'determinate'
-                  }
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <LinearProgress
-                  variant={
-                    status == 'confirming' ? 'indeterminate' : 'determinate'
-                  }
-                  value={status != 'confirming' ? 0 : 100}
-                />
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
-      </Grid>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Typography variant='caption'>You send</Typography>
-        <Typography variant='h4'>
+        <Typography variant='h5'>
           {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}{' '}
           <ButtonCopy
             copyText={transaction?.amountExpectedFrom}
@@ -95,9 +130,13 @@ export const ReviewOrder = (props: Props) => {
       </Grid>
       <Grid item xs={12}>
         <Typography variant='caption'>You Receive</Typography>
-        <Typography variant='h4'>
+        <Typography variant='h5'>
           {transaction?.amountExpectedTo} {toCoin.name.toUpperCase()}
         </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant='caption'>Receive Address</Typography>
+        <Typography variant='body1'>{transaction?.payoutAddress}</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant='caption'>Transaction ID</Typography>
@@ -106,6 +145,12 @@ export const ReviewOrder = (props: Props) => {
           <ButtonCopy copyText={transaction?.id} titleText={transaction?.id} />
         </Typography>
       </Grid>
+      {transaction?.kycRequired ? (
+        <Grid item xs={12}>
+          <Typography variant='caption'>KYC Verification</Typography>
+          <Typography variant='body1'></Typography>
+        </Grid>
+      ) : null}
       <Grid item xs={12}>
         <Box py={8}>
           <Box p={4}>
@@ -137,31 +182,13 @@ export const ReviewOrder = (props: Props) => {
           </Box>
         </Box>
       </Grid>
-      {status === 'hold' ? (
-        <Grid item xs={12}>
-          <Paper variant='outlined'>
-            <Box p={4}>
-              <Typography variant='body1'>
-                Changelly Verification Required
-              </Typography>
-              <Typography variant='body1'>
-                Changelly is a third party application. The transaction you
-                requested will be held for you until you are verified.
-              </Typography>
-              <Typography variant='body1'>To get Verified</Typography>
-              <Typography variant='body1'>
-                1. send an email to security@changelly.com
-              </Typography>
-              <Typography variant='body1'>
-                2. In the subject line, enter the following information:
-                Transaction ID: {transaction?.id}
-              </Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      ) : null}
       <Grid item xs={12}>
-        <Button onClick={onReset} size='large' fullWidth variant='outlined'>
+        <Button
+          disabled={status == STATUS_CONFIRMING}
+          onClick={onReset}
+          size='large'
+          fullWidth
+          variant='outlined'>
           Cancel
         </Button>
       </Grid>
