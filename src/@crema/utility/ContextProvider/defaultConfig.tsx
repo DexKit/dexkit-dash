@@ -7,11 +7,13 @@ import {
   RouteTransition,
   ThemeMode,
   ThemeStyle,
-  ThemeStyleRadius,
 } from '../../../shared/constants/AppEnums';
 
 const breakpoints = createBreakpoints({});
-const cardRadius = ThemeStyleRadius.STANDARD;
+const cardRadius = 12;
+const inputBorderRadius = 8;
+const buttonBorderRadius = 8;
+ 
 const defaultConfig: any = {
   theme: {
     spacing: 4,
@@ -24,14 +26,14 @@ const defaultConfig: any = {
       //  default: '#fafbfc',
       },
       primary: {
-        main: '#ff7149',
+        main: '#F36F39',
         contrastText: '#fff',
       },
       secondary: {
-        main: '#c52b00',
+        main: '#FCEFE4',
       },
       sidebar: {
-        bgColor: '#181a1f',
+        bgColor: '#2E3243',
         textColor: '#fff',
       },
       common: {
@@ -55,28 +57,28 @@ const defaultConfig: any = {
     overrides: {
       MuiTypography: {
         h1: {
-          fontSize: 36,
+          fontSize: 28,
         },
         h2: {
-          fontSize: 30,
-        },
-        h3: {
           fontSize: 24,
         },
+        h3: {
+          fontSize: 18,
+        },
         h4: {
-          fontSize: 22,
+          fontSize: 18,
         },
         h5: {
-          fontSize: 18,
+          fontSize: 16,
         },
         h6: {
           fontSize: 16,
         },
         subtitle1: {
-          fontSize: 18,
+          fontSize: 16,
         },
         subtitle2: {
-          fontSize: 20,
+          fontSize: 18,
         },
         body1: {
           fontSize: 16,
@@ -92,10 +94,7 @@ const defaultConfig: any = {
       },
       MuiCardLg: {
         root: {
-          borderRadius:
-            cardRadius === ThemeStyleRadius.STANDARD
-              ? ThemeStyleRadius.STANDARD
-              : ThemeStyleRadius.MODERN + 20,
+          borderRadius: cardRadius,
         },
       },
       MuiCard: {
@@ -104,9 +103,26 @@ const defaultConfig: any = {
           // boxShadow: '0px 5px 6px rgba(0, 0, 0, 0.04)',
         },
       },
-      MuiButton: {
+      MuiPaper: {
         root: {
           borderRadius: cardRadius,
+        }
+      },
+      MuiAppBar: {
+        root: {
+          borderRadius: 0,
+        }
+      },
+      MuiOutlinedInput: {
+        root: {
+          
+          borderRadius: inputBorderRadius,
+          backgroundColor: 'rgba(82, 92, 117, 0.5)',
+        },
+      },
+      MuiButton: {
+        root: {
+          borderRadius: buttonBorderRadius,
           // boxShadow: '0px 5px 6px rgba(0, 0, 0, 0.04)',
           [breakpoints.down('md')]: {
             paddingTop: '8px !important',

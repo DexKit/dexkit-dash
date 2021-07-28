@@ -4,6 +4,7 @@ import AppContext from '../AppContext';
 import PropTypes from 'prop-types';
 import {ThemeMode} from '../../../shared/constants/AppEnums';
 import routes from '../../../modules';
+import { Theme } from '@material-ui/core';
 
 const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
 
@@ -30,12 +31,14 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
   );
 
   const updateThemeMode = (themeMode: ThemeMode) => {
-    let currentTheme = {...theme};
+    let currentTheme = {...theme} as Theme;
     if (themeMode === ThemeMode.DARK) {
+      
       currentTheme.palette.type = ThemeMode.DARK;
+
       currentTheme.palette.background = {
-        paper: '#181a1f',
-        default: '#1d2125',
+        paper: '#252836',
+        default: '#1F1D2B',
       };
       currentTheme.palette.text = {
         primary: 'rgba(255, 255, 255, 0.87)',
@@ -43,6 +46,10 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
         disabled: 'rgba(255, 255, 255, 0.38)',
         hint: 'rgba(255, 255, 255, 0.38)',
       };
+
+
+
+
     } else {
       currentTheme.palette.type = ThemeMode.LIGHT;
       currentTheme.palette.background = {
