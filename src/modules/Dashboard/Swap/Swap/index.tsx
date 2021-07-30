@@ -549,7 +549,7 @@ export const SwapComponent = (props: any) => {
         {transaction ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
               action={
                 <Button onClick={handleReset} startIcon={<ArrowBackIcon />}>
                   Back
