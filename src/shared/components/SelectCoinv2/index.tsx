@@ -28,8 +28,6 @@ export const SelectCoinv2 = (props: SelectCoinv2Props) => {
   const {onClick, token} = props;
   const classes = useStyles();
 
-  console.log(token);
-
   return (
     <StyledButton
       fullWidth

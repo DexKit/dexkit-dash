@@ -10,6 +10,7 @@ import {
   Link,
 } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
+import useIsWindowVisible from 'hooks/useIsWindowVisible';
 import {useTokenList} from 'hooks/useTokenList';
 import React, {useEffect, useState, useCallback} from 'react';
 import {Changelly} from 'services/rest/changelly';
@@ -39,6 +40,8 @@ export const ReviewOrder = (props: Props) => {
   const [status, setStatus] = useState('');
   const {updateStatus} = useSwapTransactions();
 
+  const isWindowVisible = useIsWindowVisible();
+
   const handleTransfer = useCallback(() => {
     onTransfer(
       parseFloat(transaction?.amountExpectedFrom),
@@ -48,19 +51,23 @@ export const ReviewOrder = (props: Props) => {
 
   useEffect(() => {
     if (transaction) {
-      Changelly.getStatus(transaction.id).then((r) => {
-        setStatus(r.result);
-        updateStatus(transaction, r.result);
-      });
+      if (isWindowVisible) {
+        Changelly.getStatus(transaction.id).then((r) => {
+          setStatus(r.result);
+          updateStatus(transaction, r.result);
+        });
+      }
     }
-  }, [transaction]);
+  }, [transaction, isWindowVisible]);
 
   useInterval(() => {
     if (transaction) {
-      Changelly.getStatus(transaction.id).then((r) => {
-        setStatus(r.result);
-        updateStatus(transaction, r.result);
-      });
+      if (isWindowVisible) {
+        Changelly.getStatus(transaction.id).then((r) => {
+          setStatus(r.result);
+          updateStatus(transaction, r.result);
+        });
+      }
     }
   }, 30000);
 
