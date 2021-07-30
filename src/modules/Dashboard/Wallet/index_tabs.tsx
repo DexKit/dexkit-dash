@@ -153,7 +153,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     aria-label="wallet tabs"
                   >
                     <Tab value="assets" icon={<AssessmentIcon />} label={!isMobile ? "Assets" : ''} />
-                    <Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart" : ''} />
+                    {/*<Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart" : ''} />*/}
                     <Tab value="transfers" icon={<SwapVertIcon />} label={!isMobile ? "Transfers" : ''} />
                     <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
                   </Tabs>
@@ -161,9 +161,9 @@ const WalletTabs: React.FC<Props> = (props) => {
                 <TabPanel value="assets">
                   <AssetTableTab account={account as string} loading={loading} error={error} data={data} />
                 </TabPanel>
-                <TabPanel value="assets-chart">
-                  <AssetChartTab data={data} loading={loading} />
-                </TabPanel>
+                {/* <TabPanel value="assets-chart">
+                    <AssetChartTab data={data} loading={loading} />
+                 </TabPanel>*/}
                 <TabPanel value="transfers">
                   <TransferTab address={defaultAccount} />
                 </TabPanel>

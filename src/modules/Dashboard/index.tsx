@@ -13,7 +13,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/swap/coins',
+        path: '/swap/coins',
         component: React.lazy(() => import('./Swap')),
       },
     ],

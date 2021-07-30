@@ -39,6 +39,28 @@ const Changelog = () => {
                 >
                 Changelog
            </Box>
+           <Accordion defaultExpanded={true}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panelv0.0.5"
+                    id="panelv0.0.5-header"
+                >
+                    <Typography className={classes.heading}>v0.0.5 - 30-07-2021 </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                <Box display={'flex'} flexDirection={'column'}>
+                    <Typography className={classes.item}>
+                        SWAP:
+                            <br/>
+                            1. Added Multichain Swaps 
+                            <br/>                       
+                    </Typography>
+                    <Typography className={classes.item}>
+                        Added Support
+                    </Typography>
+                    </Box>
+                </AccordionDetails>
+            </Accordion>
             <Accordion defaultExpanded={true}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}

@@ -122,17 +122,17 @@ export const ReviewOrder = (props: Props) => {
                     variant={
                       status == STATUS_WAITING ? 'indeterminate' : 'determinate'
                     }
-                    value={status == STATUS_CONFIRMING ? 100 : 0}
+                    value={status === STATUS_CONFIRMING ? 100 : 0}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <LinearProgress
                     variant={
-                      status == STATUS_CONFIRMING
+                      status === STATUS_CONFIRMING
                         ? 'indeterminate'
                         : 'determinate'
                     }
-                    value={status != STATUS_CONFIRMING ? 0 : 100}
+                    value={status !== STATUS_CONFIRMING ? 0 : 100}
                   />
                 </Grid>
               </Grid>
@@ -204,7 +204,7 @@ export const ReviewOrder = (props: Props) => {
           />
         </Box>
       </Grid>
-      {transaction?.currencyFrom.toLowerCase() == 'eth' ? (
+      {(transaction?.currencyFrom.toLowerCase() === 'eth' && status == STATUS_WAITING) ? (
         <Grid item xs={12}>
           <Button
             onClick={handleTransfer}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
-import { Grid, Box, Fade, IconButton, Tooltip,  AppBar, Paper } from '@material-ui/core';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Grid, Box,  IconButton, Tooltip,  AppBar, Paper } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 import { RouteComponentProps } from 'react-router-dom';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -36,7 +36,6 @@ import Tab from '@material-ui/core/Tab';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import InfoIcon from '@material-ui/icons/Info';
 import { TradeHistoryTab } from '../Wallet/Tabs/TradeHistoryTab';
 import { MyOrdersTab } from './Tabs/MyOrdersTab';
@@ -102,7 +101,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(state => state.ui.favoriteCoins);
 
   let searchParams = useMemo(() => { return new URLSearchParams(history.location.search) }, []);
-  const [value, setValue] = React.useState(searchParams.get('tab') ?? 'trade');
+  const [value, setValue] = React.useState(searchParams.get('tab') ?? 'my-orders');
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     let searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
@@ -249,27 +248,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
               )}
             </Grid>
           </Grid>
-          <Grid item xs={12} md={12}>
-            <Box mt={2}>
-              <Paper square>
-                <TabContext value={value}>
-                  <AppBar position="static" color='transparent'>
-                    <Tabs
-                      value={value}
-                      onChange={handleChange}
-                      variant="fullWidth"
-                      indicatorColor="primary"
-                      textColor="primary"
-                      aria-label="wallet tabs"
-                    >
-                      <Tab value="trade" icon={<CompareArrowsIcon />} label={!isMobile ? "Trade" : ''}/>   
-                      <Tab value="my-orders" icon={<ShoppingCartIcon/>} label={!isMobile ? myOrders : ''} />
-                      <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History": ''} />
-                      <Tab value="info" icon={<InfoIcon />} label={!isMobile ? "Info" : ''} />
-                    </Tabs>
-                  </AppBar>
-                  <TabPanel value="trade">
-                  <GridContainer>
+          <GridContainer>
                     <Grid item xs={12} md={5} style={{ marginTop: 10 }}>
                       <BuySell tokenAddress={address} balances={balances} networkName={networkName} tokenInfo={tokenInfo} />
                     </Grid>
@@ -281,12 +260,13 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                             <Tab label={<><Tooltip title={'Chart from Binance Exchange'}><>Binance</></Tooltip> </>} {...a11yProps(1)} />
                           </Tabs>
                         </Grid>
-                        <Fade in={true} timeout={1000}>
+           
                           <Grid style={{ height: '450px' }} item xs={12} sm={12} md={12}>
+                          
                             {!chartSymbol ? (
                               <Skeleton variant='rect' height={370} />
                             ) : (
-                              <>
+                                <>
                                 <TabPanelChart value={chartSource} index={0}>
                                 {/* <TVChartContainer
                                     symbol={chartSymbol}
@@ -303,14 +283,31 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                                     darkMode={isDark} />
 
                                 </TabPanelChart>
-                              </>
-                            )}
+                                </>
+                            )}            
                           </Grid>
-                        </Fade>
                       </GridContainer>
                     </Grid>
                     </GridContainer>
-                  </TabPanel>
+          <Grid item xs={12} md={12}>
+            <Box mt={2}>
+              <Paper square>
+                <TabContext value={value}>
+                  <AppBar position="static" color='transparent'>
+                    <Tabs
+                      value={value}
+                      onChange={handleChange}
+                      variant="fullWidth"
+                      indicatorColor="primary"
+                      textColor="primary"
+                      aria-label="wallet tabs"
+                    >
+                      <Tab value="my-orders" icon={<ShoppingCartIcon/>} label={!isMobile ? myOrders : ''} />
+                      <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History": ''} />
+                      <Tab value="info" icon={<InfoIcon />} label={!isMobile ? "Info" : ''} />
+                    </Tabs>
+                  </AppBar>
+
                   <TabPanel value="info">
                       <InfoTab error={error} loading={loading} data={data}/>
                   </TabPanel>

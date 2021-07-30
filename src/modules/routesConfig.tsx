@@ -36,6 +36,14 @@ const useRoutesConfig = (): NavItemProps[] => {
             url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
           },
           {
+            id: 'swap',
+            title: 'Swap',
+            messageId: 'Swap',
+            type: 'item',
+            icon: 'swap_horizontal_circle',
+            url: `/swap/coins`,
+          },
+          {
             id: 'wallet',
             title: 'Wallet',
             messageId: 'sidebar.app.wallet',

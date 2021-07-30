@@ -21,7 +21,7 @@ export const Version = () => {
           className={clsx(classes.navItem, 'nav-item')}>
           
           <ListItemText
-            primary={'v0.0.4'}
+            primary={'v0.0.5'}
             classes={{primary: 'nav-item-text'}}
           />
     
