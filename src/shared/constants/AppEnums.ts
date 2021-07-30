@@ -53,11 +53,11 @@ export enum RouteTransition {
 }
 
 export enum Fonts {
-  LIGHT = 'Gilroy-Light',
-  REGULAR = 'Gilroy-Regular',
-  MEDIUM = 'Gilroy-Medium',
-  BOLD = 'Gilroy-Bold',
-  EXTRA_BOLD = 'Gilroy-ExtraBold',
+  LIGHT = 'Noto Sans',
+  REGULAR = 'Noto Sans',
+  MEDIUM = 'Noto Sans',
+  BOLD = 'Noto Sans',
+  EXTRA_BOLD = 'Noto Sans',
 }
 
 export enum CoinIcons {
