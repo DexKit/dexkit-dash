@@ -4,6 +4,8 @@ import React from 'react';
 import {SwapComponent} from './Swap';
 
 const SwapLayout = () => {
+  console.log('sadasdsa');
+
   return (
     <Box pt={4}>
       <Grid container justify='center' spacing={2}>

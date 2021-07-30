@@ -13,7 +13,7 @@ export const OrderFailed = (props: Props) => {
   const theme = useTheme();
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4}>
       <Grid item xs={12}>
         <Box display='flex' alignItems='center' justifyContent='center'>
           <ErrorIcon
@@ -25,7 +25,7 @@ export const OrderFailed = (props: Props) => {
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <Typography align='center' variant='subtitle1'>
+        <Typography align='center' variant='h5'>
           {getChangellyStatusMessage(STATUS_FAILED)}
         </Typography>
         <Typography align='center' variant='body2' color='textSecondary'>

@@ -20,7 +20,9 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 
 import {ChangellyCoin} from 'types/changelly';
-import SelectCoinListItem from '../Components/SelectCoinListItem';
+import SelectTokenListItem from './SelectTokenListItem';
+
+import {Token} from '../../../types/app';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -30,27 +32,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props extends DialogProps {
-  coins: ChangellyCoin[];
-  onSelectCoin: (coin: ChangellyCoin) => void;
-  selectTo: string;
+  tokens: Token[];
+  onSelectToken: (coin: Token) => void;
 }
 
-export const SelectCoinsDialog = (props: Props) => {
-  const {onSelectCoin, coins, onClose, selectTo} = props;
+export const SelectTokenDialog = (props: Props) => {
+  const {onSelectToken, tokens, onClose} = props;
   const theme = useTheme();
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
-  const [filteredCoins, setFilteredCoins] = useState<ChangellyCoin[]>([]);
+  const [filteredTokens, setFilteredTokens] = useState<Token[]>([]);
 
   useEffect(() => {
-    if (selectTo == 'to') {
-      setFilteredCoins(coins.filter((coin) => coin.enabledTo));
-    } else if (selectTo == 'from') {
-      setFilteredCoins(coins.filter((coin) => coin.enabledFrom));
-    }
-  }, [selectTo, coins]);
+    setFilteredTokens(tokens);
+  }, [tokens]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,20 +55,20 @@ export const SelectCoinsDialog = (props: Props) => {
 
       setFilterText(value);
 
-      let filtered = coins.filter((coin: ChangellyCoin) =>
-        coin.name.startsWith(value),
+      let filtered = tokens.filter((token: Token) =>
+        token.name.startsWith(value),
       );
 
-      setFilteredCoins(filtered);
+      setFilteredTokens(filtered);
     },
-    [coins],
+    [tokens],
   );
 
-  const handleSelectCoin = useCallback(
-    (coin: ChangellyCoin) => {
-      onSelectCoin(coin);
+  const handleSelectToken = useCallback(
+    (token: Token) => {
+      onSelectToken(token);
     },
-    [onSelectCoin],
+    [onSelectToken],
   );
 
   const handleClose = useCallback(() => {
@@ -81,14 +78,10 @@ export const SelectCoinsDialog = (props: Props) => {
   }, [onClose]);
 
   return (
-    <Dialog
-      maxWidth='xl'
-      {...props}
-      aria-labelledby='form-dialog-title'
-      fullScreen={fullScreen}>
-      <DialogTitle id='form-dialog-title'>
+    <Dialog maxWidth='xl' {...props} fullScreen={fullScreen}>
+      <DialogTitle>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Select a coin</Typography>
+          <Typography variant='body1'>Select a token</Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -99,21 +92,21 @@ export const SelectCoinsDialog = (props: Props) => {
           <TextField
             autoFocus
             id='name'
-            placeholder='Search coins'
+            placeholder='Search tokens'
             fullWidth
             value={filterText}
             variant='outlined'
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
-          <Typography variant='body1'>No coins found</Typography>
+        {filteredTokens.length == 0 ? (
+          <Typography variant='body1'>No tokens found</Typography>
         ) : (
           <List>
-            {filteredCoins.map((coin, index: number) => (
-              <SelectCoinListItem
-                onClick={handleSelectCoin}
-                coin={coin}
+            {filteredTokens.map((token, index: number) => (
+              <SelectTokenListItem
+                onClick={handleSelectToken}
+                token={token}
                 key={index}
               />
             ))}
@@ -123,3 +116,5 @@ export const SelectCoinsDialog = (props: Props) => {
     </Dialog>
   );
 };
+
+export default SelectTokenDialog;

@@ -4,6 +4,7 @@ import Notification from '../_notification/reducers';
 import Blockchain from '../_blockchain/reducers';
 import MyApps from '../_myapps/reducers';
 import UI from '../_ui/reducers';
+import Swap from '../_swap/reducers';
 
 const reducers = {
   common: Common,
@@ -12,6 +13,7 @@ const reducers = {
   blockchain: Blockchain,
   myApps: MyApps,
   ui: UI,
+  swap: Swap,
 };
 
 export default reducers;

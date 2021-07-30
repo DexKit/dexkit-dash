@@ -29,14 +29,12 @@ import {useStyles} from './index.style';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {AppContext} from '@crema';
 import {Skeleton} from '@material-ui/lab';
-import { useAllBalance } from 'hooks/balance/useAllBalance';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
+import {useAllBalance} from 'hooks/balance/useAllBalance';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {Web3Wrapper} from '@0x/web3-wrapper';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
 import SelectCoin from 'shared/components/SelectCoin';
-
-
 
 type Params = {
   account: string;
@@ -53,10 +51,10 @@ const Wallet: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const defaultAccount = useDefaultAccount();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
-  
+
   const {defiBalance} = useDefi(account);
   const {loading, error, data} = useAllBalance(defaultAccount);
   const {
@@ -69,17 +67,18 @@ const Wallet: React.FC<Props> = (props) => {
   } = useBalanceChart(data);
 
   useEffect(() => {
-    if(urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount){
-      history.push(`/dashboard/wallet/${urlAccount}`)
-      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}))
+    if (
+      urlAccount &&
+      Web3Wrapper.isAddress(urlAccount) &&
+      defaultAccount !== urlAccount
+    ) {
+      history.push(`/dashboard/wallet/${urlAccount}`);
+      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}));
     }
-    if(!urlAccount && defaultAccount){
-      history.push(`/dashboard/wallet/${defaultAccount}`)
+    if (!urlAccount && defaultAccount) {
+      history.push(`/dashboard/wallet/${defaultAccount}`);
     }
-
-  }, [urlAccount, defaultAccount])
-
-
+  }, [urlAccount, defaultAccount]);
 
   const networkName = useNetwork();
 
@@ -89,16 +88,19 @@ const Wallet: React.FC<Props> = (props) => {
 
   return (
     <Box pt={{xl: 4}}>
-          <PageTitle
-            breadcrumbs={{
-              history: [
-                {url: '/', name: 'Dashboard'},
-                {url: '/dashboard/wallet', name: 'Wallet'},
-              ],
-              active: {name: `${truncateAddress(defaultAccount)}`, hasCopy: account},
-            }}
-            title={{name: 'Wallet'}}
-          />
+      <PageTitle
+        breadcrumbs={{
+          history: [
+            {url: '/', name: 'Dashboard'},
+            {url: '/dashboard/wallet', name: 'Wallet'},
+          ],
+          active: {
+            name: `${truncateAddress(defaultAccount)}`,
+            hasCopy: account,
+          },
+        }}
+        title={{name: 'Wallet'}}
+      />
       <GridContainer>
         <Grid item xs={12} md={6}>
           <Grid item xs={12} md={12}>
@@ -174,18 +176,32 @@ const Wallet: React.FC<Props> = (props) => {
                     display='flex'
                     justifyContent={'space-between'}>
                     <SelectCoin
-                      menus={data.map((e) => {return {symbol: e.currency?.symbol ?? '', address: e.currency?.address ?? ''}})}
+                      menus={data.map((e) => {
+                        return {
+                          symbol: e.currency?.symbol ?? '',
+                          address: e.currency?.address ?? '',
+                        };
+                      })}
                       defaultValue={selectToken}
-                      onChange={(e) => { 
+                      onChange={(e) => {
                         // NOTE: Search
-                        const findToken = data.find(t => (t.currency?.address?.toLowerCase() ?? t.currency?.symbol.toLowerCase()) === e.toLowerCase());
-                        if(findToken){
-                          const tokenAddress = isNativeCoinFromNetworkName(findToken.currency?.symbol ?? '', findToken.network) ? 
-                                findToken.currency?.symbol.toUpperCase() : findToken.currency?.address;
-                          if(tokenAddress){
+                        const findToken = data.find(
+                          (t) =>
+                            (t.currency?.address?.toLowerCase() ??
+                              t.currency?.symbol.toLowerCase()) ===
+                            e.toLowerCase(),
+                        );
+                        if (findToken) {
+                          const tokenAddress = isNativeCoinFromNetworkName(
+                            findToken.currency?.symbol ?? '',
+                            findToken.network,
+                          )
+                            ? findToken.currency?.symbol.toUpperCase()
+                            : findToken.currency?.address;
+                          if (tokenAddress) {
                             handleSelectToken(tokenAddress, findToken.network);
-                          }          
-                        }       
+                          }
+                        }
                       }}
                     />
 
@@ -203,7 +219,6 @@ const Wallet: React.FC<Props> = (props) => {
                         handleSelectDay(Number(e.split(' ')[0]));
                       }}
                     />
-
                   </Box>
 
                   <Divider style={{marginTop: 5}} />

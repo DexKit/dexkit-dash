@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   Box,
   Grid,
@@ -14,19 +14,18 @@ import {
   CardHeader,
   CircularProgress,
   useTheme,
+  Badge,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 
 import {Changelly} from 'services/rest/changelly';
 import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
 
-import ImportExportIcon from '@material-ui/icons/ImportExport';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import HistoryIcon from '@material-ui/icons/History';
 
-import {ReceiveAddressInput} from './Components/ReceiveAddressInput';
 import {Steps} from './Provider';
 import {ReviewOrder} from './Components/ReviewOrder';
 import {SelectCoinsDialog} from './Modal/SelectCoins';
@@ -34,9 +33,23 @@ import {SelectCoinsDialog} from './Modal/SelectCoins';
 import _ from 'lodash';
 import {CoinSelectButton} from './Components/CoinSelectButton';
 import {ReceiveAddressStep} from './Components/ReceiveAddressStep';
+import {SwapHistoricDialog} from './Components/SwapHistoricDialog';
+import {useSwapTransactions} from '../hooks';
+import {STATUS_CONFIRMING, STATUS_WAITING} from '../util';
+import SendCoinDialog from 'shared/components/Dialogs/SendCoinDialog';
 
-export const SwapComponent = () => {
+import SelectTokensDialog from 'shared/components/Dialogs/SelectTokenDialog';
+
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useTokenList} from 'hooks/useTokenList';
+import {useWeb3} from 'hooks/useWeb3';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+
+export const SwapComponent = (props: any) => {
   const theme = useTheme();
+
+  const userAccountAddress = useDefaultAccount();
 
   const [loading, setLoading] = useState(false);
   const [toLoading, setToLoading] = useState(false);
@@ -56,6 +69,9 @@ export const SwapComponent = () => {
   );
   const [creatingTransaction, setCreatingTransaction] = useState(false);
   const [goToReceiveAddress, setGoToReceiveAddress] = useState(false);
+
+  const {transactions, saveTransaction} = useSwapTransactions();
+  const [showTransactions, setShowTransactions] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -122,8 +138,8 @@ export const SwapComponent = () => {
       setFromLoading(true);
 
       const r = await Changelly.getMinAmount({
-        from: toCoin.ticker,
-        to: fromCoin.ticker,
+        from: fromCoin.ticker,
+        to: toCoin.ticker,
       });
 
       setFromLoading(false);
@@ -137,8 +153,8 @@ export const SwapComponent = () => {
         setToLoading(true);
 
         const res = await Changelly.getExchangeAmount({
-          from: toCoin.ticker,
-          to: fromCoin.ticker,
+          from: fromCoin.ticker,
+          to: toCoin.ticker,
           amount: newAmount.toString(),
         });
 
@@ -236,7 +252,6 @@ export const SwapComponent = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
       setToAmount(amount);
-      console.log('entra aqui5');
       calculateToRatio(e.target.value);
     },
     [setToAmount, calculateToRatio],
@@ -281,6 +296,7 @@ export const SwapComponent = () => {
       })
         .then((r) => {
           setTransaction(r.result as ChangellyTransaction);
+          saveTransaction(r.result as ChangellyTransaction);
           setGoToReceiveAddress(false);
         })
         .finally(() => {
@@ -336,11 +352,11 @@ export const SwapComponent = () => {
 
   const handleReset = useCallback(() => {
     setTransaction(null);
-    setAddressToSend('');
-    setGoToReceiveAddress(false);
-    setAcceptAML(false);
-
-    fetchCoinsAmounts();
+    fetchCoinsAmounts().finally(() => {
+      setAddressToSend('');
+      setAcceptAML(false);
+      setGoToReceiveAddress(false);
+    });
   }, [fetchCoinsAmounts]);
 
   const handleAddressToSendChange = useCallback(
@@ -361,6 +377,85 @@ export const SwapComponent = () => {
     setAcceptAML(false);
   }, []);
 
+  const handleOpenTransactions = useCallback(() => {
+    setShowTransactions(true);
+  }, []);
+
+  const handleCloseTransactions = useCallback(() => {
+    setShowTransactions(false);
+  }, []);
+
+  const handleSelectTransaction = useCallback((tx: ChangellyTransaction) => {
+    setTransaction(tx);
+    setShowTransactions(false);
+  }, []);
+
+  const [transferAddress, setTransferAddress] = useState('');
+  const [transferAmount, setTransferAmount] = useState(0);
+
+  const [showTransfer, setShowTransfer] = useState(false);
+
+  const handleTransfer = useCallback((amount: number, address: string) => {
+    setShowTransfer(true);
+    setTransferAmount(amount);
+    setTransferAddress(address);
+  }, []);
+
+  const handleCloseTransfer = useCallback(() => {
+    setShowTransfer(false);
+    setTransferAmount(0);
+    setTransferAddress('');
+    setSendCoinsError(false);
+    setSendCoinsSuccess(false);
+    setSendCoinsLoading(false);
+  }, []);
+
+  const {getWeb3} = useWeb3();
+  const [showSelectTokens, setShowSelectTokens] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const tokens = useTokenList(EthereumNetwork.ethereum);
+
+  useEffect(() => {
+    let web3 = getWeb3();
+
+    if (userAccountAddress) {
+      web3?.eth.getBalance(userAccountAddress).then((result: string) => {
+        setBalance(toTokenUnitAmount(result, 18).toNumber());
+      });
+    }
+  }, [getWeb3, userAccountAddress]);
+
+  const handleSelectToken = useCallback(() => {}, []);
+
+  const [sendCoinsSuccess, setSendCoinsSuccess] = useState(false);
+  const [sendCoinsError, setSendCoinsError] = useState(false);
+  const [sendCoinsLoading, setSendCoinsLoading] = useState(false);
+
+  const handleSendCoin = useCallback(
+    (amount: number, address: string) => {
+      let web3 = getWeb3();
+
+      if (userAccountAddress) {
+        setSendCoinsLoading(true);
+        web3?.eth
+          .sendTransaction({
+            from: userAccountAddress,
+            value: fromTokenUnitAmount(amount, 18).toString(),
+            to: address,
+          })
+          .on('confirmation', (confNumber: number) => {
+            setSendCoinsSuccess(true);
+            setSendCoinsLoading(false);
+          })
+          .on('error', () => {
+            setSendCoinsError(true);
+            setSendCoinsLoading(false);
+          });
+      }
+    },
+    [userAccountAddress],
+  );
+
   return (
     <>
       <SelectCoinsDialog
@@ -369,6 +464,31 @@ export const SwapComponent = () => {
         onSelectCoin={handleSelectCoin}
         onClose={handleCancelSelectCoin}
         selectTo={selectTo}
+      />
+      <SelectTokensDialog
+        tokens={tokens}
+        onSelectToken={handleSelectToken}
+        open={showSelectTokens}
+      />
+      <SwapHistoricDialog
+        open={showTransactions}
+        transactions={transactions}
+        onClose={handleCloseTransactions}
+        onSelectTransaction={handleSelectTransaction}
+      />
+      <SendCoinDialog
+        toAmount={transferAmount}
+        toAddress={transferAddress}
+        balance={balance}
+        toToken={
+          tokens.filter((token) => token.symbol.toUpperCase() === 'ETH')[0]
+        }
+        open={showTransfer}
+        onSend={handleSendCoin}
+        onClose={handleCloseTransfer}
+        error={sendCoinsError}
+        success={sendCoinsSuccess}
+        loading={sendCoinsLoading}
       />
       <Card>
         {loading ? (
@@ -398,160 +518,205 @@ export const SwapComponent = () => {
             </Grid>
           </CardContent>
         ) : null}
-        {fromCoin && toCoin && transaction && acceptAML ? (
-          <CardContent>
-            <ReviewOrder
-              fromCoin={fromCoin}
-              toCoin={toCoin}
-              transaction={transaction}
-              onReset={handleReset}
+        {transaction ? (
+          <>
+            <CardHeader
+              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              action={
+                <Button onClick={handleReset} startIcon={<ArrowBackIcon />}>
+                  Back
+                </Button>
+              }
             />
-          </CardContent>
+            <CardContent>
+              <ReviewOrder
+                transaction={transaction}
+                onReset={handleReset}
+                onTransfer={handleTransfer}
+              />
+            </CardContent>
+          </>
         ) : null}
         {goToReceiveAddress ? (
-          <CardContent>
-            <ReceiveAddressStep
-              acceptAML={acceptAML}
-              onAcceptChange={handleChangeAccept}
-              toCoin={toCoin}
-              onPaste={handlePaste}
-              addressToSend={addressToSend}
-              onChange={handleAddressToSendChange}
-              onSwap={handleCreateTransaction}
-              loading={creatingTransaction}
-              onGoBack={handleGoBack}
+          <>
+            <CardHeader
+              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              action={
+                <Button onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
+                  Back
+                </Button>
+              }
             />
-          </CardContent>
+            <CardContent>
+              <ReceiveAddressStep
+                acceptAML={acceptAML}
+                onAcceptChange={handleChangeAccept}
+                toCoin={toCoin}
+                onPaste={handlePaste}
+                addressToSend={addressToSend}
+                onChange={handleAddressToSendChange}
+                onSwap={handleCreateTransaction}
+                loading={creatingTransaction}
+                onGoBack={handleGoBack}
+              />
+            </CardContent>
+          </>
         ) : null}
         {!loading && !goToReceiveAddress && !transaction ? (
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Grid container alignItems='center' spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant='body1'>You Send</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs>
-                        <TextField
-                          disabled={fromLoading}
-                          id='from-amount'
-                          type='number'
-                          variant='outlined'
-                          placeholder='0.00'
-                          value={fromAmount}
-                          onChange={onChangeFromAmount}
-                          fullWidth
-                          inputProps={{
-                            step: 0.0000001,
-                            min: 0,
-                          }}
-                          InputProps={{
-                            endAdornment: fromLoading ? (
-                              <InputAdornment position='end'>
-                                <CircularProgress color='inherit' size='1rem' />
-                              </InputAdornment>
-                            ) : null,
-                          }}
-                          error={!isFromAmountValid()}
-                          helperText={
-                            !isFromAmountValid()
-                              ? `Minimum Amount ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
-                              : ''
-                          }
-                        />
-                      </Grid>
-                      <Grid item>
-                        <CoinSelectButton
-                          symbol={fromCoin?.name || ''}
-                          iconImage={fromCoin?.image || ''}
-                          onClick={handleFromSelectToken}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Box
-                  pt={2}
-                  display='flex'
-                  alignItems='center'
-                  justifyContent='center'>
-                  <IconButton
+          <>
+            <CardHeader
+              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              action={
+                <IconButton onClick={handleOpenTransactions}>
+                  <Badge
                     color='primary'
-                    size='small'
-                    onClick={onSwitchCoin}>
-                    <ArrowDownwardIcon fontSize='inherit' />
-                  </IconButton>
-                </Box>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={2} alignItems='center'>
-                  <Grid item xs={12}>
-                    <Typography variant='body1'>You Receive</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs>
-                        <TextField
-                          disabled={toLoading}
-                          id='to-amount'
-                          type={'number'}
-                          variant='outlined'
-                          placeholder='0.00'
-                          value={toAmount}
-                          onChange={onChangeToAmount}
-                          fullWidth
-                          inputProps={{
-                            step: 0.0000001,
-                            min: 0,
-                          }}
-                          InputProps={{
-                            endAdornment: toLoading ? (
-                              <InputAdornment position='end'>
-                                <CircularProgress color='inherit' size='1rem' />
-                              </InputAdornment>
-                            ) : null,
-                          }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <CoinSelectButton
-                          symbol={toCoin?.name || ''}
-                          iconImage={toCoin?.image || ''}
-                          onClick={handleToSelectToken}
-                        />
+                    badgeContent={
+                      transactions?.filter(
+                        (tx: ChangellyTransaction) =>
+                          tx.status == STATUS_WAITING ||
+                          tx.status == STATUS_CONFIRMING,
+                      ).length
+                    }>
+                    <HistoryIcon />
+                  </Badge>
+                </IconButton>
+              }
+            />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Grid container alignItems='center' spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography variant='body1'>You Send</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <CoinSelectButton
+                            symbol={fromCoin?.name || ''}
+                            iconImage={fromCoin?.image || ''}
+                            onClick={handleFromSelectToken}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            disabled={fromLoading}
+                            id='from-amount'
+                            type='number'
+                            variant='outlined'
+                            placeholder='0.00'
+                            value={fromAmount}
+                            onChange={onChangeFromAmount}
+                            fullWidth
+                            inputProps={{
+                              step: 0.0000001,
+                              min: 0,
+                            }}
+                            InputProps={{
+                              endAdornment: fromLoading ? (
+                                <InputAdornment position='end'>
+                                  <CircularProgress
+                                    color='inherit'
+                                    size='1rem'
+                                  />
+                                </InputAdornment>
+                              ) : null,
+                            }}
+                            error={!isFromAmountValid()}
+                            helperText={
+                              !isFromAmountValid()
+                                ? `Minimum Amount ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
+                                : ''
+                            }
+                          />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              {toAmount > 0 && fromAmount > 0 ? (
                 <Grid item xs={12}>
-                  <Typography color='textSecondary' variant='body2'>
-                    {toLoading || fromLoading ? (
-                      <Skeleton width='40%' />
-                    ) : (
-                      getPriceRatioText()
-                    )}
-                  </Typography>
+                  <Box
+                    pt={2}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='center'>
+                    <IconButton
+                      color='primary'
+                      size='small'
+                      onClick={onSwitchCoin}>
+                      <ArrowDownwardIcon fontSize='inherit' />
+                    </IconButton>
+                  </Box>
                 </Grid>
-              ) : null}
-              <Grid item xs={12}>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  size='large'
-                  fullWidth
-                  disabled={disabledButton || fromLoading || toLoading}
-                  onClick={handleGoToReceiveAddress}>
-                  Next
-                </Button>
+                <Grid item xs={12}>
+                  <Grid container spacing={2} alignItems='center'>
+                    <Grid item xs={12}>
+                      <Typography variant='body1'>You Receive</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <CoinSelectButton
+                            symbol={toCoin?.name || ''}
+                            iconImage={toCoin?.image || ''}
+                            onClick={handleToSelectToken}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <TextField
+                            disabled={toLoading}
+                            id='to-amount'
+                            type={'number'}
+                            variant='outlined'
+                            placeholder='0.00'
+                            value={toAmount}
+                            onChange={onChangeToAmount}
+                            fullWidth
+                            inputProps={{
+                              step: 0.0000001,
+                              min: 0,
+                            }}
+                            InputProps={{
+                              endAdornment: toLoading ? (
+                                <InputAdornment position='end'>
+                                  <CircularProgress
+                                    color='inherit'
+                                    size='1rem'
+                                  />
+                                </InputAdornment>
+                              ) : null,
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {toAmount > 0 && fromAmount > 0 ? (
+                  <Grid item xs={12}>
+                    <Typography color='textSecondary' variant='body2'>
+                      {toLoading || fromLoading ? (
+                        <Skeleton width='40%' />
+                      ) : (
+                        getPriceRatioText()
+                      )}
+                    </Typography>
+                  </Grid>
+                ) : null}
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    size='large'
+                    fullWidth
+                    disabled={disabledButton || fromLoading || toLoading}
+                    onClick={handleGoToReceiveAddress}>
+                    Next
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </CardContent>
+            </CardContent>
+          </>
         ) : null}
       </Card>
     </>

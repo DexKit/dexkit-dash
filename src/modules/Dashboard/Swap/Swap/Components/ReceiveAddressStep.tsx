@@ -85,16 +85,6 @@ export const ReceiveAddressStep = (props: Props) => {
           )}
         </Button>
       </Grid>
-      <Grid item xs={12}>
-        <Button
-          disabled={loading}
-          fullWidth
-          startIcon={<ArrowBackIcon />}
-          onClick={onGoBack}
-          variant='outlined'>
-          Back
-        </Button>
-      </Grid>
     </Grid>
   );
 };

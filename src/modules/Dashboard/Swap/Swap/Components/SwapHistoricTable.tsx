@@ -1,12 +1,46 @@
-import {Dialog, DialogContent, DialogProps} from '@material-ui/core';
-import React from 'react';
+import {
+  TableHead,
+  TableContainer,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Paper,
+} from '@material-ui/core';
+import React, {useCallback} from 'react';
+import {ChangellyTransaction} from 'types/changelly';
+import {SwapHistoricTableRow} from './SwapHistoricTableRow';
 
-interface Props extends DialogProps {}
+interface Props {
+  transactions: ChangellyTransaction[];
+  onSelect: (transaction: ChangellyTransaction) => void;
+}
 
 export const SwapHistoricTable = (props: Props) => {
+  const {transactions, onSelect} = props;
+
   return (
-    <Dialog {...props}>
-      <DialogContent></DialogContent>
-    </Dialog>
+    <TableContainer component={Paper} variant='outlined'>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Send</TableCell>
+            <TableCell>Receive</TableCell>
+            <TableCell>Created</TableCell>
+            <TableCell>Status</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {transactions.map((tx: ChangellyTransaction, index: number) => (
+            <SwapHistoricTableRow
+              onClick={onSelect}
+              transaction={tx}
+              key={index}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };

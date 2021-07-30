@@ -10,11 +10,13 @@ import {
   Link,
 } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
+import {useTokenList} from 'hooks/useTokenList';
 import React, {useEffect, useState, useCallback} from 'react';
 import {Changelly} from 'services/rest/changelly';
 import ButtonCopy from 'shared/components/ButtonCopy';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
-import {truncateAddress} from 'utils';
+import {useSwapTransactions} from '../../hooks';
 import {
   getChangellyStatusMessage,
   STATUS_CONFIRMING,
@@ -27,25 +29,38 @@ import OrderFailed from './OrderFailed';
 import OrderFinished from './OrderFinished';
 
 interface Props {
-  fromCoin: ChangellyCoin;
-  toCoin: ChangellyCoin;
   transaction: ChangellyTransaction;
   onReset: () => void;
+  onTransfer: (amount: number, address: string) => void;
 }
 
 export const ReviewOrder = (props: Props) => {
-  const {fromCoin, toCoin, transaction, onReset} = props;
-  const [status, setStatus] = useState('');
+  const {transaction, onReset, onTransfer} = props;
+  const [status, setStatus] = useState('failed');
+  const {updateStatus} = useSwapTransactions();
+
+  const handleTransfer = useCallback(() => {
+    onTransfer(
+      parseFloat(transaction?.amountExpectedFrom),
+      transaction?.payinAddress,
+    );
+  }, [onTransfer, transaction]);
 
   useEffect(() => {
     if (transaction) {
-      Changelly.getStatus(transaction.id).then((r) => setStatus(r.result));
+      // Changelly.getStatus(transaction.id).then((r) => {
+      //   setStatus(r.result);
+      //   updateStatus(transaction, r.result);
+      // });
     }
   }, [transaction]);
 
   useInterval(() => {
     if (transaction) {
-      Changelly.getStatus(transaction.id).then((r) => setStatus(r.result));
+      // Changelly.getStatus(transaction.id).then((r) => {
+      //   setStatus(r.result);
+      //   updateStatus(transaction, r.result);
+      // });
     }
   }, 30000);
 
@@ -121,7 +136,8 @@ export const ReviewOrder = (props: Props) => {
       <Grid item xs={12}>
         <Typography variant='caption'>You send</Typography>
         <Typography variant='h5'>
-          {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}{' '}
+          {transaction?.amountExpectedFrom}{' '}
+          {transaction?.currencyFrom.toUpperCase()}{' '}
           <ButtonCopy
             copyText={transaction?.amountExpectedFrom}
             titleText={transaction?.amountExpectedFrom}
@@ -131,7 +147,7 @@ export const ReviewOrder = (props: Props) => {
       <Grid item xs={12}>
         <Typography variant='caption'>You Receive</Typography>
         <Typography variant='h5'>
-          {transaction?.amountExpectedTo} {toCoin.name.toUpperCase()}
+          {transaction?.amountExpectedTo} {transaction.currencyTo.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -152,46 +168,47 @@ export const ReviewOrder = (props: Props) => {
         </Grid>
       ) : null}
       <Grid item xs={12}>
-        <Box py={8}>
-          <Box p={4}>
-            <Typography
-              color='textSecondary'
-              gutterBottom
-              align='center'
-              variant='body1'>
-              Please, send{' '}
-              <strong>
-                {transaction?.amountExpectedFrom} {fromCoin.name.toUpperCase()}
-              </strong>{' '}
-              to the address below and wait for transaction confirmation
-            </Typography>
-            <TextField
-              fullWidth
-              value={transaction.payinAddress}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <ButtonCopy
-                      copyText={transaction.payinAddress}
-                      titleText='Address copied!'
-                    />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
+        <Box p={4}>
+          <Typography
+            color='textSecondary'
+            gutterBottom
+            align='center'
+            variant='body1'>
+            Please, send{' '}
+            <strong>
+              {transaction?.amountExpectedFrom}{' '}
+              {transaction?.currencyFrom.toUpperCase()}
+            </strong>{' '}
+            to the address below and wait for transaction confirmation
+          </Typography>
+          <TextField
+            fullWidth
+            value={transaction.payinAddress}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <ButtonCopy
+                    copyText={transaction.payinAddress}
+                    titleText='Address copied!'
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
         </Box>
       </Grid>
-      <Grid item xs={12}>
-        <Button
-          disabled={status == STATUS_CONFIRMING}
-          onClick={onReset}
-          size='large'
-          fullWidth
-          variant='outlined'>
-          Cancel
-        </Button>
-      </Grid>
+      {transaction?.currencyFrom.toLowerCase() == 'eth' ? (
+        <Grid item xs={12}>
+          <Button
+            onClick={handleTransfer}
+            size='large'
+            fullWidth
+            variant='contained'
+            color='primary'>
+            Transfer now
+          </Button>
+        </Grid>
+      ) : null}
     </Grid>
   );
 };
