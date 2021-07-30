@@ -170,7 +170,7 @@ export const ReviewOrder = (props: Props) => {
       </Grid>
       {transaction?.kycRequired ? (
         <Grid item xs={12}>
-          <Typography variant='caption'>KYC Verification</Typography>
+          <Typography variant='caption' color={'error'}>KYC Verification Needed</Typography>
           <Typography variant='body1'></Typography>
         </Grid>
       ) : null}
