@@ -568,7 +568,7 @@ export const SwapComponent = (props: any) => {
         {goToReceiveAddress ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
               action={
                 <Button onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
                   Back
@@ -593,7 +593,7 @@ export const SwapComponent = (props: any) => {
         {!loading && !goToReceiveAddress && !transaction ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multidex Swap</Typography>}
+              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
               action={
                 <IconButton onClick={handleOpenTransactions}>
                   <Badge
