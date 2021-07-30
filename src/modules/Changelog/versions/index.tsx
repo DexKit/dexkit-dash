@@ -61,7 +61,7 @@ const Changelog = () => {
                     </Box>
                 </AccordionDetails>
             </Accordion>
-            <Accordion defaultExpanded={true}>
+            <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panelv0.0.4"
