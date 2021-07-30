@@ -59,9 +59,14 @@ export const SwapComponent = (props: any) => {
   const [coins, setCoins] = useState<ChangellyCoin[]>([]);
   const [fromCoin, setFromCoin] = useState<ChangellyCoin>();
   const [toCoin, setToCoin] = useState<ChangellyCoin>();
+
   const [fromAmount, setFromAmount] = useState<number>(0);
-  const [minFromAmount, setMinFromAmount] = useState<number>(0);
   const [toAmount, setToAmount] = useState<number>(0);
+
+  const [fromAmountValue, setFromAmountValue] = useState('');
+  const [toAmountValue, setToAmountValue] = useState('');
+
+  const [minFromAmount, setMinFromAmount] = useState<number>(0);
   const [addressToSend, setAddressToSend] = useState<string>('');
   const [validAddress, setValidAddress] = useState<boolean>(false);
   const [transaction, setTransaction] = useState<ChangellyTransaction | null>(
@@ -108,6 +113,8 @@ export const SwapComponent = (props: any) => {
         const newAmount = Number(r.result);
         setMinFromAmount(newAmount);
         setFromAmount(newAmount);
+        setFromAmountValue(r.result);
+
         setToLoading(true);
 
         const res = await Changelly.getExchangeAmount({
@@ -118,6 +125,7 @@ export const SwapComponent = (props: any) => {
 
         if (res.result) {
           const am = Number(res.result);
+          setToAmountValue(res.result);
           setToAmount(am);
         }
         setToLoading(false);
@@ -149,6 +157,7 @@ export const SwapComponent = (props: any) => {
 
         setMinFromAmount(newAmount);
         setFromAmount(newAmount);
+        setFromAmountValue(r.result);
 
         setToLoading(true);
 
@@ -160,6 +169,7 @@ export const SwapComponent = (props: any) => {
 
         if (res.result) {
           const am = Number(res.result);
+          setToAmountValue(res.result);
           setToAmount(am);
         }
 
@@ -206,6 +216,7 @@ export const SwapComponent = (props: any) => {
         calculateRatio(toCoin.ticker, fromCoin.ticker, value)
           ?.then((result) => {
             if (result) {
+              setFromAmountValue(result.result);
               setFromAmount(Number(result.result));
             }
           })
@@ -228,6 +239,7 @@ export const SwapComponent = (props: any) => {
         calculateRatio(fromCoin.ticker, toCoin.ticker, value)
           ?.then((result) => {
             if (result) {
+              setToAmountValue(result.result);
               setToAmount(Number(result.result));
             }
           })
@@ -242,7 +254,15 @@ export const SwapComponent = (props: any) => {
   const onChangeFromAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
-      setFromAmount(amount);
+
+      setFromAmountValue(e.target.value);
+
+      if (e.target.value == '') {
+        setFromAmount(0);
+      } else {
+        setFromAmount(amount);
+      }
+
       calculateFromRatio(e.target.value);
     },
     [setFromAmount, calculateFromRatio],
@@ -251,7 +271,15 @@ export const SwapComponent = (props: any) => {
   const onChangeToAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
-      setToAmount(amount);
+
+      setToAmountValue(e.target.value);
+
+      if (e.target.value == '') {
+        setToAmount(0);
+      } else {
+        setToAmount(amount);
+      }
+
       calculateToRatio(e.target.value);
     },
     [setToAmount, calculateToRatio],
@@ -605,7 +633,7 @@ export const SwapComponent = (props: any) => {
                             type='number'
                             variant='outlined'
                             placeholder='0.00'
-                            value={fromAmount}
+                            value={fromAmountValue}
                             onChange={onChangeFromAmount}
                             fullWidth
                             inputProps={{
@@ -669,7 +697,7 @@ export const SwapComponent = (props: any) => {
                             type={'number'}
                             variant='outlined'
                             placeholder='0.00'
-                            value={toAmount}
+                            value={toAmountValue}
                             onChange={onChangeToAmount}
                             fullWidth
                             inputProps={{

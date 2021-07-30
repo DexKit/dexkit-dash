@@ -36,7 +36,7 @@ interface Props {
 
 export const ReviewOrder = (props: Props) => {
   const {transaction, onReset, onTransfer} = props;
-  const [status, setStatus] = useState('failed');
+  const [status, setStatus] = useState('');
   const {updateStatus} = useSwapTransactions();
 
   const handleTransfer = useCallback(() => {
@@ -48,19 +48,19 @@ export const ReviewOrder = (props: Props) => {
 
   useEffect(() => {
     if (transaction) {
-      // Changelly.getStatus(transaction.id).then((r) => {
-      //   setStatus(r.result);
-      //   updateStatus(transaction, r.result);
-      // });
+      Changelly.getStatus(transaction.id).then((r) => {
+        setStatus(r.result);
+        updateStatus(transaction, r.result);
+      });
     }
   }, [transaction]);
 
   useInterval(() => {
     if (transaction) {
-      // Changelly.getStatus(transaction.id).then((r) => {
-      //   setStatus(r.result);
-      //   updateStatus(transaction, r.result);
-      // });
+      Changelly.getStatus(transaction.id).then((r) => {
+        setStatus(r.result);
+        updateStatus(transaction, r.result);
+      });
     }
   }, 30000);
 
