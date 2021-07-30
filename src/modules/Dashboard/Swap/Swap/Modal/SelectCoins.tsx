@@ -24,6 +24,7 @@ import SelectCoinListItem from '../Components/SelectCoinListItem';
 
 const useStyles = makeStyles((theme) => ({
   list: {
+    minHeight: theme.spacing(20),
     maxHeight: theme.spacing(150),
     overflowY: 'scroll',
   },
@@ -59,7 +60,7 @@ export const SelectCoinsDialog = (props: Props) => {
       setFilterText(value);
 
       let filtered = coins.filter((coin: ChangellyCoin) =>
-        coin.name.startsWith(value),
+        coin.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 || coin.ticker.toLowerCase().indexOf(value.toLowerCase()) !== -1
       );
 
       setFilteredCoins(filtered);
