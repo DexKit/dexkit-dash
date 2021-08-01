@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
+import {useDispatch} from 'react-redux';
+
 import Box from '@material-ui/core/Box';
 import Fade from '@material-ui/core/Fade';
 import Divider from '@material-ui/core/Divider';
@@ -12,8 +14,10 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FileCopy from '@material-ui/icons/FileCopyOutlined';
 import CheckCircle from '@material-ui/icons/CheckCircleOutlineOutlined';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 
+import {AppDispatch} from 'redux/store';
+import {setBTCAccount} from 'redux/actions';
 import generateWallet from 'utils/generateWallet';
 
 const useStyles = makeStyles(() => ({
@@ -22,13 +26,14 @@ const useStyles = makeStyles(() => ({
 
 const GeneratedWallet: React.FC<any> = ({mnemonics, passphrase}) => {
   const classes = useStyles();
+  const dispatch = useDispatch<AppDispatch>();
   const wallet = generateWallet(mnemonics, passphrase);
 
   const [toClipboard, setToClipboard] = useState(false);
 
   useEffect(() => {
-    // Stores the wallet hash into the local storage
-    localStorage.setItem('btc-wallet', wallet);
+    // Stores the encrypted seed into the Redux
+    dispatch(setBTCAccount(wallet));
   });
 
   return (
