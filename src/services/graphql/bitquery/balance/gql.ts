@@ -71,20 +71,6 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
         }
       }
     }
-    # btc: ethereum(network: btc) {
-    #   address(address: {is: $address}) {
-    #     balances {
-    #       currency {
-    #         name
-    #         symbol
-    #         decimals
-    #         address
-    #       }
-    #       value
-    #       valueInUsd: value
-    #     }
-    #   }
-    # }
   }
 `;
 

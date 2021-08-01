@@ -2,6 +2,9 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
@@ -28,6 +31,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
         },
       },
     },
+  },
+  alignedButton: {
+    margin: '0 auto',
   },
   paginationDesktop: {
     [theme.breakpoints.down('xs')]: {
@@ -64,7 +70,18 @@ const CTable: React.FC<Props> = ({balances}) => {
                   <TableItem data={data} key={data.currency?.address} />
                 ))
             ) : (
-              <button>Create BTC Wallet!</button>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Button
+                    fullWidth
+                    size='large'
+                    color='primary'
+                    href='/create-wallet'
+                    className={classes.alignedButton}>
+                    Create BTC Wallet!
+                  </Button>
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

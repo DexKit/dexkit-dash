@@ -52,14 +52,6 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/create-wallet`,
         },
         {
-          id: 'transaction',
-          title: 'Transaction',
-          messageId: 'Transaction',
-          type: 'item',
-          icon: 'swap_horiz',
-          url: `/transaction`,
-        },
-        {
           id: 'favorites',
           title: 'Favorites',
           messageId: 'sidebar.app.favorites',

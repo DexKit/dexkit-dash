@@ -5,7 +5,7 @@ import {Chip, Fade, makeStyles, Paper} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import LoadingTable from 'modules/Common/LoadingTable';
 import {MyBalances} from 'types/blockchain';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {EthereumNetwork, MainnetNetworks} from 'shared/constants/AppEnums';
 
 interface AssetTableProps {
   balances: MyBalances[];
@@ -32,8 +32,11 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
       return balances.filter((b) => b.network === EthereumNetwork.ethereum);
     } else if (filter === 'bnb') {
       return balances.filter((b) => b.network === EthereumNetwork.bsc);
-    } else if (filter === 'btc') {
-      return balances.filter((b) => b.network === EthereumNetwork.btc);
+    } else if (filter === 'mainnet') {
+      return balances.filter((b) =>
+        // @ts-ignore
+        Object.values(MainnetNetworks).includes(b.network as MainnetNetworks),
+      );
     }
     return balances;
   };
@@ -66,10 +69,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             onClick={() => setFilter('bnb')}
           />
           <Chip
-            label='BTC'
+            label='Mainnet'
             clickable
-            color={filter === 'btc' ? 'primary' : 'default'}
-            onClick={() => setFilter('btc')}
+            color={filter === 'mainnet' ? 'primary' : 'default'}
+            onClick={() => setFilter('mainnet')}
           />
         </div>
       }>

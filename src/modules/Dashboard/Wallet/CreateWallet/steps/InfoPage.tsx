@@ -19,7 +19,7 @@ const ProcedureInfo: React.FC<any> = ({setHasSeed}) => {
     <Container maxWidth='sm'>
       <Box className={classes.aligned}>
         <Typography>
-          <b>To activate 2fa you must save secret phrase (12 words).</b>
+          <b>Lorem ipsum dolor sit amet consectetur adipisicing elit</b>
         </Typography>
       </Box>
 
@@ -31,12 +31,10 @@ const ProcedureInfo: React.FC<any> = ({setHasSeed}) => {
 
       <Box className={classes.aligned}>
         <Typography>
-          Now we will show you 12 words of your secret phrase.
-        </Typography>
-      </Box>
-      <Box className={classes.aligned}>
-        <Typography>
-          If you lose it, we will not be able to restore your wallet.
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est ducimus
+          vero itaque architecto illo officia labore natus reiciendis ratione
+          perferendis placeat, laborum repellat, sapiente modi amet quasi
+          voluptatibus aliquam eos.
         </Typography>
       </Box>
 

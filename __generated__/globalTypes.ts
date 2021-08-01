@@ -9,7 +9,6 @@
 
 export enum EthereumNetwork {
   bsc = 'bsc',
-  btc = 'btc',
   bsc_testnet = 'bsc_testnet',
   celo_alfajores = 'celo_alfajores',
   celo_baklava = 'celo_baklava',

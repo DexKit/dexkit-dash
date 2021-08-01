@@ -11,7 +11,7 @@ import {client} from 'services/graphql';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {MyBalances} from 'types/blockchain';
 
-// Get balance from BSC, ETH and BTC at once
+// Get balance from BSC and ETH at once
 export const useAllBalance = (defaultAccount?: string) => {
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
@@ -43,14 +43,9 @@ export const useAllBalance = (defaultAccount?: string) => {
             ?.filter((e) => e !== '-')
             ?.map((a) => ({network: EthereumNetwork.bsc, address: a}));
 
-          const tokensmeta_btc = balances.data.btc?.address[0].balances
-            ?.map((t) => t.currency?.address?.toLowerCase() || '')
-            ?.filter((e) => e !== '-')
-            ?.map((a) => ({network: EthereumNetwork.btc, address: a}));
-
-          const tokensmeta = (tokensmeta_bnb ?? [])
-            .concat(tokensmeta_eth ?? [])
-            .concat(tokensmeta_btc ?? []);
+          const tokensmeta = (tokensmeta_bnb ?? []).concat(
+            tokensmeta_eth ?? [],
+          );
 
           if (tokensmeta.length) {
             getTokens(tokensmeta)
@@ -93,28 +88,7 @@ export const useAllBalance = (defaultAccount?: string) => {
                   },
                 );
 
-                const dataFnBTC = balances.data.btc?.address[0].balances?.map(
-                  (t) => {
-                    const addr =
-                      t.currency?.address === '-'
-                        ? 'btc'
-                        : t?.currency?.address?.toLowerCase();
-
-                    return {
-                      currency: {...t.currency, address: addr},
-                      network: EthereumNetwork.btc,
-                      value: t.value,
-                      // enquanto não vem a solução pela bitquery
-                      valueInUsd:
-                        (t.value || 0) *
-                        (coingeckoList[addr || '']?.current_price || 0),
-                    } as MyBalances;
-                  },
-                );
-
-                const allData = (dataFn ?? [])
-                  .concat(dataFnBNB ?? [])
-                  .concat(dataFnBTC ?? []);
+                const allData = (dataFn ?? []).concat(dataFnBNB ?? []);
                 setData(allData.filter((b) => b?.value && b?.value > 0));
               })
               .catch((e) => setError(e))

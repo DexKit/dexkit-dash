@@ -3,8 +3,6 @@ import {EthereumNetwork, EXCHANGE} from './AppEnums';
 
 export const GET_NETWORK_NAME = (chainId: ChainId | undefined) => {
   switch (Number(chainId)) {
-    case ChainId.BTC:
-      return EthereumNetwork.btc;
     case ChainId.Mainnet:
     case ChainId.Ropsten:
     case ChainId.Rinkeby:
@@ -28,8 +26,6 @@ export const GET_NATIVE_COIN_FROM_NETWORK_NAME = (
       return 'eth';
     case EthereumNetwork.bsc:
       return 'bnb';
-    case EthereumNetwork.btc:
-      return 'btc';
     default:
       return 'eth';
   }
@@ -41,8 +37,6 @@ export const FORMAT_NETWORK_NAME = (networkName: EthereumNetwork) => {
       return 'ETH';
     case EthereumNetwork.bsc:
       return 'BSC';
-    case EthereumNetwork.btc:
-      return 'BTC';
     default:
       return 'ETH';
   }

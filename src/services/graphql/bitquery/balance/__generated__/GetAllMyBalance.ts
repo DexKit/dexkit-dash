@@ -103,16 +103,6 @@ export interface GetAllMyBalance_bsc_address_balances {
   valueInUsd: number | null;
 }
 
-export interface GetAllMyBalance_btc_address_balances {
-  __typename: 'BTCBalance';
-  /**
-   * Currency of transfer
-   */
-  currency: GetAllMyBalance_btc_address_balances_currency | null;
-  value: number | null;
-  valueInUsd: number | null;
-}
-
 export interface GetAllMyBalance_bsc_address {
   __typename: 'EthereumAddressInfoWithBalance';
   /**
@@ -121,28 +111,12 @@ export interface GetAllMyBalance_bsc_address {
   balances: GetAllMyBalance_bsc_address_balances[] | null;
 }
 
-export interface GetAllMyBalance_btc_address {
-  __typename: 'BTCAddressInfoWithBalance';
-  /**
-   * DEPRECATED Balances by currencies for the address
-   */
-  balances: GetAllMyBalance_btc_address_balances[] | null;
-}
-
 export interface GetAllMyBalance_bsc {
   __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */
   address: GetAllMyBalance_bsc_address[];
-}
-
-export interface GetAllMyBalance_btc {
-  __typename: 'BTC';
-  /**
-   * Basic information about address ( or smart contract )
-   */
-  address: GetAllMyBalance_btc_address[];
 }
 
 export interface GetAllMyBalance {
@@ -154,10 +128,6 @@ export interface GetAllMyBalance {
    * Ethereum Mainnet / Classic Chain Datasets
    */
   bsc: GetAllMyBalance_bsc | null;
-  /**
-   * Ethereum Mainnet / Classic Chain Datasets
-   */
-  btc: GetAllMyBalance_btc | null;
 }
 
 export interface GetAllMyBalanceVariables {

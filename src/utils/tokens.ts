@@ -144,8 +144,6 @@ export const GET_NATIVE_COINS = () => {
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {
   switch (chainId) {
-    case ChainId.BTC:
-      return 'BTC';
     case ChainId.Mainnet:
     case ChainId.Ropsten:
     case ChainId.Kovan:

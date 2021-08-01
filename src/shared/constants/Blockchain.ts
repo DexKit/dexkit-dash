@@ -102,8 +102,6 @@ export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
       return ChainId.Mainnet;
     case EthereumNetwork.bsc:
       return ChainId.Binance;
-    case EthereumNetwork.btc:
-      return ChainId.BTC;
     default:
       return ChainId.Mainnet;
   }
