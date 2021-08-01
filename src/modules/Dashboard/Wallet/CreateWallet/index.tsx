@@ -7,13 +7,11 @@ import Card from '@material-ui/core/Card';
 import Step from '@material-ui/core/Step';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
 import Container from '@material-ui/core/Container';
 
 import {makeStyles} from '@material-ui/core';
-import ArrowBack from '@material-ui/icons/ArrowBack';
 
 import InfoPage from './steps/InfoPage';
 import Passphrase from './steps/Passphrase';
@@ -30,14 +28,6 @@ interface IStep {
 
 const useStyles = makeStyles((theme) => ({
   buttons: {width: '100%', paddingBottom: 0, marginTop: theme.spacing(1)},
-  backButton: {
-    position: 'relative',
-    top: '-47%',
-    left: '0%',
-    height: 60,
-    width: 50,
-    borderRadius: 200,
-  },
   container: {
     width: '100%',
     display: 'flex',
@@ -112,14 +102,6 @@ const CreateBTCWallet: React.FC = () => {
 
   return (
     <div className={classes.container}>
-      <Button
-        color='secondary'
-        variant='contained'
-        size='medium'
-        className={classes.backButton}
-        onClick={() => window.history.back()}>
-        <ArrowBack />
-      </Button>
       <Container maxWidth='lg'>
         <Card component={Paper}>
           <Stepper activeStep={activeStep} style={{height: '100%'}}>
@@ -156,7 +138,11 @@ const CreateBTCWallet: React.FC = () => {
                   onClick={handleBack}>
                   BACK
                 </Button>
-                <Box style={{flex: '1 1 auto'}} />
+                <Box style={{flex: '1 1 auto', textAlign: 'center'}}>
+                  <Button color='primary' onClick={() => window.history.back()}>
+                    EXIT
+                  </Button>
+                </Box>
                 <Button onClick={handleNext} disabled={!allowStep}>
                   {activeStep === steps.length - 1 ? 'FINISH' : 'NEXT'}
                 </Button>

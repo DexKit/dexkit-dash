@@ -1,7 +1,7 @@
 import {ChainId} from 'types/blockchain';
-import {EthereumNetwork, EXCHANGE} from './AppEnums';
+import {EthereumNetwork, MainnetNetwork, EXCHANGE} from './AppEnums';
 
-export const GET_NETWORK_NAME = (chainId: ChainId | undefined) => {
+export const GET_NETWORK_NAME = (chainId?: ChainId) => {
   switch (Number(chainId)) {
     case ChainId.Mainnet:
     case ChainId.Ropsten:
@@ -31,12 +31,18 @@ export const GET_NATIVE_COIN_FROM_NETWORK_NAME = (
   }
 };
 
-export const FORMAT_NETWORK_NAME = (networkName: EthereumNetwork) => {
+export const FORMAT_NETWORK_NAME = (
+  networkName: EthereumNetwork | MainnetNetwork,
+) => {
   switch (networkName) {
     case EthereumNetwork.ethereum:
       return 'ETH';
     case EthereumNetwork.bsc:
       return 'BSC';
+    case MainnetNetwork.btc:
+      return 'BTC';
+    case MainnetNetwork.dogecoin:
+      return 'DOGE';
     default:
       return 'ETH';
   }

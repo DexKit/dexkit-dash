@@ -84,6 +84,11 @@ export enum EthereumNetwork {
   goerli = 'goerli',
 }
 
+export enum MainnetNetwork {
+  btc = 'btc',
+  dogecoin = 'dogecoin',
+}
+
 export enum EXCHANGE {
   // ethereum
   UNISWAP = 'Uniswap',
