@@ -353,13 +353,13 @@ export const SwapComponent = (props: any) => {
   const handleSelectCoin = useCallback(
     (coin: ChangellyCoin) => {
       if (selectTo == 'to') {
-        if (coin == fromCoin) {
+        if (coin === fromCoin) {
           setFromCoin(toCoin);
         }
 
         setToCoin(coin);
       } else {
-        if (coin == toCoin) {
+        if (coin === toCoin) {
           setToCoin(fromCoin);
         }
 
