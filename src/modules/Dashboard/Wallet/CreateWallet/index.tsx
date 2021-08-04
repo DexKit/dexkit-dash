@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import * as bip39 from 'bip39';
 
@@ -19,6 +19,7 @@ import MnemonicInsert from './steps/MnemonicInsert';
 import GeneratedWallet from './steps/GeneratedWallet';
 import MnemonicConfirm from './steps/MnemonicConfirm';
 import MnemonicGeneration from './steps/MnemonicGeneration';
+import { useHistory } from 'react-router-dom';
 
 const mnemonicsGen = bip39.generateMnemonic().split(' ');
 interface IStep {
@@ -41,9 +42,13 @@ const CreateBTCWallet: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [allowStep, setAllowStep] = useState(true);
   const [passphrase, setPass] = useState<string>();
-
+  const history = useHistory();
   const [hasSeed, setHasSeed] = useState(false);
   const [mnemonics, setMnemonics] = useState(mnemonicsGen);
+
+  const goToWallet = useCallback(()=>{
+    history.push('/dashboard/wallet')
+  },[history])
 
   useEffect(() => {
     if (activeStep === 0) {
@@ -123,7 +128,7 @@ const CreateBTCWallet: React.FC = () => {
                   paddingTop: '17vh',
                 }}>
                 <Box style={{flex: '1 1 auto'}} />
-                <Button href='/dashboard/wallet'>FINISH</Button>
+                <Button onClick={goToWallet}>FINISH</Button>
               </Box>
             ) : (
               <Box
@@ -139,7 +144,7 @@ const CreateBTCWallet: React.FC = () => {
                   BACK
                 </Button>
                 <Box style={{flex: '1 1 auto', textAlign: 'center'}}>
-                  <Button color='primary' onClick={() => window.history.back()}>
+                  <Button color='primary' onClick={() => history.goBack()}>
                     EXIT
                   </Button>
                 </Box>

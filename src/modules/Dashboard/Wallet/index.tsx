@@ -35,6 +35,7 @@ import {Web3Wrapper} from '@0x/web3-wrapper';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import SelectCoin from 'shared/components/SelectCoin';
+import { AccountType, Network } from 'types/blockchain';
 
 type Params = {
   account: string;
@@ -73,7 +74,7 @@ const Wallet: React.FC<Props> = (props) => {
       defaultAccount !== urlAccount
     ) {
       history.push(`/dashboard/wallet/${urlAccount}`);
-      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}));
+      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount, type: AccountType.EVM, network: Network.ethereum}));
     }
     if (!urlAccount && defaultAccount) {
       history.push(`/dashboard/wallet/${defaultAccount}`);

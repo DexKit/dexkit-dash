@@ -24,3 +24,6 @@ export const addFavoriteCoin = createAction<FavoriteCoin>('ui/FAVORITE_COIN_ADD'
 export const removeFavoriteCoin = createAction<FavoriteCoin>('ui/FAVORITE_COIN_remove')
 
 export const toggleFavoriteCoin = createAction<FavoriteCoin>('ui/FAVORITE_COIN_toggle')
+
+
+export const setUserEncryptedSeed = createAction<string| undefined>('ui/USER_ENCRYPTED_Seed_set')

@@ -1,19 +1,27 @@
 import { Token } from "types/app";
 import { createReducer } from "@reduxjs/toolkit"
-import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin, setDefaultAccount, setAccountLabel } from "./actions"
+import { setAccounts, setAccount, removeAccount, addFavoriteCoin, removeFavoriteCoin, addAccounts, toggleFavoriteCoin, setDefaultAccount, setAccountLabel, setUserEncryptedSeed } from "./actions"
 import { CoinDetailCoinGecko } from "types/coingecko";
+import { AccountType } from "types/blockchain";
+import { Network } from "../../../__generated__/globalTypes";
 
 export type FavoriteCoin = Token & CoinDetailCoinGecko
+
+
+
 
 export type UIAccount = {
   address: string;
   label: string;
+  type: AccountType;
+  network: Network;
 }
 
 export interface UIState {
     readonly account?: UIAccount;
     readonly accounts: UIAccount[];
     readonly favoriteCoins: FavoriteCoin[];
+    readonly encryptedSeed?: string;
 }
 
 const initialUIState: UIState = {
@@ -91,6 +99,9 @@ export default createReducer(initialUIState, (builder) =>
       }else{
         state.favoriteCoins.splice(ind, 1);
       }
+    })
+    .addCase(setUserEncryptedSeed, (state, action) => {
+      state.encryptedSeed = action.payload;
     })
     
 )

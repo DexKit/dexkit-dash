@@ -14,7 +14,7 @@ export interface BlockchainState {
   readonly tokenBalances: TokenBalance[];
   readonly ethBalance: BigNumber;
   readonly wethTokenBalance: TokenBalance | undefined;
-  readonly btcAccount: string | undefined;
+  readonly walletSeed: string | undefined;
 }
 
 const initialBlockchainState: BlockchainState = {
@@ -29,7 +29,7 @@ const initialBlockchainState: BlockchainState = {
       gasPriceInWei: DEFAULT_GAS_PRICE,
       estimatedTimeMs: DEFAULT_ESTIMATED_TRANSACTION_TIME_MS,
   },*/
-  btcAccount: undefined,
+  walletSeed: undefined,
 };
 
 export default (
@@ -59,8 +59,6 @@ export default (
       return {...state, web3State: Web3State.NotConnected};
     case getType(actions.setEthBalance):
       return {...state, ethBalance: action.payload};
-    case getType(actions.setBTCAccount):
-      return {...state, btcAccount: action.payload};
     default:
       return state;
   }

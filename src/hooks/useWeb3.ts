@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "redux/store";
 import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber } from "redux/actions";
-import { Web3State } from "types/blockchain";
+import { AccountType, Web3State, Network } from "types/blockchain";
 import { BigNumber } from "@0x/utils";
 import { addAccounts, setAccount } from 'redux/_ui/actions';
 
@@ -36,13 +36,15 @@ export const useWeb3 = () => {
       web3.eth.getAccounts().then((a) => {
         const uiAccount = {
           address: a[0],
-          label: a[0]
+          label: a[0],
+          type: AccountType.EVM,
+          network: Network.ethereum
         }
 
         dispatch(setAccount(uiAccount))
         dispatch(setEthAccount(a[0]));
         dispatch(addAccounts(
-          a.map(ac=> {return {address: ac, label: ac}}
+          a.map(ac=> {return {address: ac, label: ac,  type: AccountType.EVM, network: Network.ethereum}}
           )))
 
       }).finally(() => loadingAccount = false);
@@ -140,20 +142,20 @@ export const useWeb3 = () => {
     pr.on("accountsChanged", async (accounts: string[]) => {
       const uiAccount = {
         label: accounts[0],
-        address: accounts[0]
+        address: accounts[0],
+        type: AccountType.EVM,
+        network: Network.ethereum
       }
       dispatch(setAccount(uiAccount))
       dispatch(setEthAccount(accounts[0]));
     });
 
     pr.on("chainChanged", async (chainId: number) => {
-      console.log('chainChanged')
       dispatch(setChainId(chainId));
     });
 
 
     pr.on("block", (blocknumber: number) => {
-      console.log('blocknumber', blocknumber);
       dispatch(setBlockNumber(blocknumber));
     });
 

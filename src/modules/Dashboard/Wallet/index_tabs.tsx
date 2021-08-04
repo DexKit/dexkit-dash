@@ -44,6 +44,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { Fonts } from 'shared/constants/AppEnums';
 import { AboutDialog } from './AboutDialog';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { AccountType, Network } from 'types/blockchain';
 
 
 type Params = {
@@ -82,7 +83,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   useEffect(() => {
     if (urlAccount && Web3Wrapper.isAddress(urlAccount) && defaultAccount !== urlAccount) {
       history.push(`/dashboard/wallet/${urlAccount}`)
-      dispatch(setDefaultAccount({ address: urlAccount, label: urlAccount }))
+      dispatch(setDefaultAccount({ address: urlAccount, label: urlAccount, type: AccountType.EVM, network: Network.ethereum }))
     }
     if (!urlAccount && defaultAccount) {
       history.push(`/dashboard/wallet/${defaultAccount}`)

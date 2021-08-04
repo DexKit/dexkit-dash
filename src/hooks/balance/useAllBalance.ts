@@ -98,7 +98,6 @@ export const useAllBalance = (defaultAccount?: string) => {
           }
         })
         .catch((e) => {
-          console.info(e);
           setError(e);
           setLoading(false);
         });

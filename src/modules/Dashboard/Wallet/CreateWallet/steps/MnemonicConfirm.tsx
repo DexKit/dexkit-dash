@@ -52,8 +52,6 @@ const MnemonicConfirm: React.FC<any> = ({mnemonics, setAllowStep}) => {
   const width = useWidth();
   const classes = useStyles();
 
-  console.log({width});
-
   const [valid, setValid] = useState(false);
   const [items, setItems] = useState(
     shuffle<ICardContent>(

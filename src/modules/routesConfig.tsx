@@ -44,14 +44,6 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/dashboard/wallet`,
         },
         {
-          id: 'create-wallet',
-          title: 'Create Wallet',
-          messageId: 'Create Wallet',
-          type: 'item',
-          icon: 'account_balance_wallet',
-          url: `/create-wallet`,
-        },
-        {
           id: 'favorites',
           title: 'Favorites',
           messageId: 'sidebar.app.favorites',

@@ -33,6 +33,3 @@ export const setTokenBalance = createAction(
 
 export const resetWallet = createAction('blockchain/RESET_WALLET_set')();
 
-export const setBTCAccount = createAction('blockchain/BTC_ACCOUNT_set')<
-  string | undefined
->();

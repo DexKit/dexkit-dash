@@ -11,6 +11,7 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import {Box, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalances} from 'types/blockchain';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   balances: MyBalances[];
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const CTable: React.FC<Props> = ({balances}) => {
   const [perPage, setPerPage] = React.useState(8);
   const [page, setPage] = React.useState(0);
-
+  const history = useHistory();
   const classes = useStyles();
 
   return (
@@ -76,7 +77,7 @@ const CTable: React.FC<Props> = ({balances}) => {
                     fullWidth
                     size='large'
                     color='primary'
-                    href='/create-wallet'
+                    onClick={() => history.push('/create-wallet')}
                     className={classes.alignedButton}>
                     Create BTC Wallet!
                   </Button>

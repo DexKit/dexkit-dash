@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Box from "@material-ui/core/Box"
 import PageTitle from "shared/components/PageTitle"
 import GridContainer from '@crema/core/GridContainer';
@@ -24,7 +24,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import { AboutDialog } from './aboutDialog';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
-import {Web3State} from 'types/blockchain';
+import {AccountType, Network, Web3State} from 'types/blockchain';
 import { UIAccount } from 'redux/_ui/reducers';
 import EditIcon from '@material-ui/icons/Edit';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -72,37 +72,41 @@ const Accounts = () => {
 
     }
   }
-  const handleAddLabel = (acc: string) => {
-  
+  const handleAddLabel = useCallback((acc: string, type: AccountType, network: Network) => {  
     dispatch(setAccountLabel({
       address: acc,
-      label: label || acc
+      label: label || acc,
+      type,
+      network
     }));
     setEditLabel(undefined);
-  }
+  }, [setAccountLabel, setEditLabel, dispatch])
 
-  const onRemoveLabel = (acc: string) => {
+  const onRemoveLabel = useCallback(
+    (acc: string, type: AccountType, network: Network) => {
     dispatch(setAccountLabel({
       address: acc,
-      label: acc
+      label: acc,
+      type,
+      network
     }));
-
-  }
+  }, [setAccountLabel, dispatch])
 
 
   const onChangeLabel = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const value = ev.currentTarget.value;
     setLabel(value);
   }
-  const onAddAccount = () => {
+  const onAddAccount = useCallback(() => {
     if (address && Web3Wrapper.isAddress(address)) {
-
       dispatch(addAccounts([{
         address: address,
-        label: address
+        label: address,
+        type: AccountType.EVM,
+        network: Network.ethereum
       }]));
     }
-  }
+  },[address])
 
   const onMakeDefaultAccount = (a: UIAccount) => { 
       dispatch(setDefaultAccount(a));
@@ -224,7 +228,7 @@ const Accounts = () => {
                       style={{minWidth: '350px'}}
                       InputProps={{
                         endAdornment:
-                          <InputAdornment position="end" onClick={() => handleAddLabel(a.address)}>
+                          <InputAdornment position="end" onClick={() => handleAddLabel(a.address, a.type, a.network)}>
                               <Tooltip title={'Add Label'}>
                               <IconButton aria-label="paste" color="primary">
                                  <AddIcon />
@@ -242,7 +246,7 @@ const Accounts = () => {
                         <Chip label="Label" size={'small'} style={{marginLeft: '5px'}}/>
                    </Tooltip>
                    <Tooltip title={'Remove Label'}>
-                        <IconButton aria-label="delete" color="secondary" onClick={() => onRemoveLabel(a.address)}>
+                        <IconButton aria-label="delete" color="secondary" onClick={() => onRemoveLabel(a.address, a.type, a.network)}>
                           <ClearIcon />
                         </IconButton>
                       </Tooltip>
