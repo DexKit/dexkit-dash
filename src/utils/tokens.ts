@@ -107,6 +107,8 @@ export const findTokensInfoBySymbol = (tokens: Token[], str: string): Token | un
   });
 };
 
+
+
 export const GET_NATIVE_COINS = () => {
   return [
     {
@@ -114,14 +116,16 @@ export const GET_NATIVE_COINS = () => {
       decimals: 18,
       name: 'Ethereum',
       symbol: 'ETH',
-      networkName: EthereumNetwork.ethereum
+      networkName: EthereumNetwork.ethereum,
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     },
     {
       address: '',
       decimals: 18,
       name: 'Binance',
       symbol: 'BNB',
-      networkName: EthereumNetwork.bsc
+      networkName: EthereumNetwork.bsc,
+      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
     }
   ]
 }
