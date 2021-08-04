@@ -13,7 +13,7 @@ const breakpoints = createBreakpoints({});
 const cardRadius = 12;
 const inputBorderRadius = 8;
 const buttonBorderRadius = 8;
- 
+
 const defaultConfig: any = {
   theme: {
     spacing: 4,
@@ -22,11 +22,10 @@ const defaultConfig: any = {
       type: ThemeMode.LIGHT,
       background: {
         paper: '#FFFFFF',
-        default: '#f4f5f7',
-        //  default: '#fafbfc',
+        default: '#f3f4f6',
       },
       primary: {
-        main: '#F36F39',
+        main: '#FFA552',
         contrastText: '#fff',
       },
       secondary: {
@@ -42,7 +41,7 @@ const defaultConfig: any = {
       },
       text: {
         primary: 'rgba(0, 0, 0, 0.87)',
-        secondary: 'rgba(0, 0, 0, 0.54)',
+        secondary: 'rgba(0, 0, 0, 0.67)',
         disabled: 'rgba(0, 0, 0, 0.38)',
         hint: 'rgba(0, 0, 0, 0.38)',
       },
@@ -87,11 +86,6 @@ const defaultConfig: any = {
           fontSize: 14,
         },
       },
-      MuiOutlinedInput: {
-        root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.09)',
-        },
-      },
       MuiToggleButton: {
         root: {
           borderRadius: cardRadius,
@@ -111,24 +105,17 @@ const defaultConfig: any = {
       MuiPaper: {
         root: {
           borderRadius: cardRadius,
-        }
+        },
       },
       MuiAppBar: {
         root: {
           borderRadius: 0,
-        }
-      },
-      MuiOutlinedInput: {
-        root: {
-          
-          borderRadius: inputBorderRadius,
-          backgroundColor: 'rgba(82, 92, 117, 0.5)',
         },
       },
       MuiButton: {
         root: {
           borderRadius: buttonBorderRadius,
-          // boxShadow: '0px 5px 6px rgba(0, 0, 0, 0.04)',
+          boxShadow: '0px 14px 22px rgba(255, 165, 82, 0.34)',
           [breakpoints.down('md')]: {
             paddingTop: '8px !important',
             paddingBottom: '8px !important',

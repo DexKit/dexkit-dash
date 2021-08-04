@@ -4,9 +4,10 @@ import transakSDK from '@transak/transak-sdk';
 import {useWeb3} from 'hooks/useWeb3';
 import {ReactComponent as Mastercard} from '../../../assets/images/mastercard.svg';
 import styled from 'styled-components';
-import { CremaTheme } from 'types/AppContextPropsType';
-import { Fonts } from 'shared/constants/AppEnums';
-import { useWindowSize } from 'hooks/useWindowSize';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {Fonts} from 'shared/constants/AppEnums';
+import {useWindowSize} from 'hooks/useWindowSize';
+import {ReactComponent as CoinIcon} from 'assets/images/icons/coin.svg';
 
 interface Props extends ButtonProps {}
 
@@ -55,33 +56,30 @@ const Transak: React.FC<Props> = (props) => {
       },
     },
   }));
-  
-  const classes = useStyles();
 
+  const classes = useStyles();
 
   const {account} = useWeb3();
 
   const [transakClient, setTransakInstance] = useState<any>();
 
   const transakAllEvents = useCallback((data: any) => {
-    if(data.eventName === 'TRANSAK_WIDGET_CLOSE'){
-      const w = (window as any)
-      if(w){
-          // TODO: remove this
-          // workaround to remove annoying css bug
-          setTimeout(()=>{
-              w.document.documentElement.style = 0;   
-          }, 10)
+    if (data.eventName === 'TRANSAK_WIDGET_CLOSE') {
+      const w = window as any;
+      if (w) {
+        // TODO: remove this
+        // workaround to remove annoying css bug
+        setTimeout(() => {
+          w.document.documentElement.style = 0;
+        }, 10);
       }
     }
-
-
   }, []);
 
   const transakCloseEvents = useCallback(
     (data: any) => {
       transakClient?.close();
-  
+
       // setTransakInstance(undefined);
     },
     [transakClient],
@@ -95,8 +93,6 @@ const Transak: React.FC<Props> = (props) => {
     [transakClient],
   );
 
-
-
   useEffect(() => {
     if (!transakClient && windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
@@ -109,8 +105,10 @@ const Transak: React.FC<Props> = (props) => {
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field
-        widgetHeight: windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
-        widgetWidth: windowSize?.width < 510 ? `${windowSize.width - 10}px`  : '500px'
+        widgetHeight:
+          windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
+        widgetWidth:
+          windowSize?.width < 510 ? `${windowSize.width - 10}px` : '500px',
       });
 
       transak.on(transak.ALL_EVENTS, transakAllEvents);
@@ -118,7 +116,7 @@ const Transak: React.FC<Props> = (props) => {
       transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
       setTransakInstance(transak);
     }
-  }, [account, transakClient,  windowSize]);
+  }, [account, transakClient, windowSize]);
 
   const onBuy = () => {
     if (transakClient) {
@@ -128,16 +126,12 @@ const Transak: React.FC<Props> = (props) => {
 
   return (
     <Button
-      variant='outlined'
-      onClick={(e: any) => onBuy()}
-      size='small'
-      disableElevation
-      disabled={!transakClient}
       {...props}
-      className={classes.btnPrimary}>
-      <IconContainer style={{width: '26px', height: '26px'}}>
-        <Mastercard />
-      </IconContainer>
+      variant='contained'
+      color='primary'
+      onClick={(e: any) => onBuy()}
+      disabled={!transakClient}
+      startIcon={<CoinIcon />}>
       Buy
     </Button>
   );

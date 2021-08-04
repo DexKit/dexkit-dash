@@ -1,29 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Card from '@material-ui/core/Card';
-import { Box, Fade, makeStyles } from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+
+import {
+  Card,
+  CardContent,
+  Tab,
+  Tabs,
+  Box,
+  Fade,
+  makeStyles,
+} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import { EthereumNetwork, Fonts } from '../../../../shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
 
-import { CremaTheme } from '../../../../types/AppContextPropsType';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useTokenList } from 'hooks/useTokenList';
+import {CremaTheme} from '../../../../types/AppContextPropsType';
+import {useWeb3} from 'hooks/useWeb3';
+import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
 // import {Token} from 'types/app';
-import { ModalOrderData } from 'types/models/ModalOrderData';
-import { Token } from 'types/app';
+import {ModalOrderData} from 'types/models/ModalOrderData';
+import {Token} from 'types/app';
 import LimitForm from './LimitForm';
 import {
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
-import { MyBalances, Web3State } from 'types/blockchain';
-import { isNativeCoinWithoutChainId } from 'utils';
-import { useHistory } from 'react-router-dom';
-import { useCoinList } from 'hooks/useCoinList';
+import {MyBalances, Web3State} from 'types/blockchain';
+import {isNativeCoinWithoutChainId} from 'utils';
+import {useHistory} from 'react-router-dom';
+import {useCoinList} from 'hooks/useCoinList';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+import SelectTokenDialog from './Modal/SelectTokenDialog';
 
 interface Props {
   tokenAddress: string;
@@ -33,49 +41,53 @@ interface Props {
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
-const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenInfo }) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    muiTabsRoot: {
-      position: 'relative',
-      marginTop: -8,
-      marginLeft: -8,
-      marginBottom: 16,
-      [theme.breakpoints.up('xl')]: {
-        marginLeft: -20,
-        marginBottom: 32,
-      },
-      '& .Mui-selected': {
-        fontFamily: Fonts.LIGHT,
-      },
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  muiTabsRoot: {
+    position: 'relative',
+    marginTop: -8,
+    marginLeft: -8,
+    marginBottom: 16,
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: -20,
+      marginBottom: 32,
     },
-    muiTab: {
-      fontSize: 16,
-      textTransform: 'capitalize',
-      padding: 0,
-      marginLeft: 8,
-      marginRight: 8,
-      fontWeight: 'bold',
-      width: '50%',
-      minWidth: 10,
-      maxWidth: 100,
-      [theme.breakpoints.up('xl')]: {
-        fontSize: 18,
-        marginLeft: 20,
-        marginRight: 20,
-      },
+    '& .Mui-selected': {
+      fontFamily: Fonts.LIGHT,
     },
-  }));
+  },
+  muiTab: {
+    fontSize: 16,
+    textTransform: 'capitalize',
+    padding: 0,
+    marginLeft: 8,
+    marginRight: 8,
+    fontWeight: 'bold',
+    width: '50%',
+    minWidth: 10,
+    maxWidth: 100,
+    [theme.breakpoints.up('xl')]: {
+      fontSize: 18,
+      marginLeft: 20,
+      marginRight: 20,
+    },
+  },
+}));
 
+const BuySell: React.FC<Props> = ({
+  tokenAddress,
+  balances,
+  networkName,
+  tokenInfo,
+}) => {
   let history = useHistory();
 
   const classes = useStyles();
 
-  const { chainId, account, web3State } = useWeb3();
+  const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
 
   const select1 = useTokenList(networkName);
-
 
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
@@ -89,8 +101,8 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
     isMarket: true,
     account: '',
     allowanceTarget: '',
-    tokenFrom: { address: '', name: '', symbol: '', decimals: 18 },
-    tokenTo: { address: '', name: '', symbol: '', decimals: 18 },
+    tokenFrom: {address: '', name: '', symbol: '', decimals: 18},
+    tokenTo: {address: '', name: '', symbol: '', decimals: 18},
     amountFrom: 0,
     amountTo: 0,
     price: 0,
@@ -128,7 +140,7 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
         setTokenTo(_token);
         return;
       }
-      // If token not known 
+      // If token not known
       if (tokenInfo) {
         _token = select1.find(
           (t) => t.address.toLowerCase() === tokenInfo.address.toLowerCase(),
@@ -138,29 +150,30 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
           setTokenTo(tokenInfo);
         }
       }
-
     }
-
-  }, [select1, tokenInfo, tokenTo])
-
-
+  }, [select1, tokenInfo, tokenTo]);
 
   useEffect(() => {
     if (tokenFrom === undefined && select0.length) {
       const _token = select0.find(
-        (t) => t.symbol.toUpperCase() === GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase());
+        (t) =>
+          t.symbol.toUpperCase() ===
+          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+      );
       if (_token) {
         setTokenFrom(_token);
       } else {
         const _token = select0.find(
-          (t) => t.symbol.toUpperCase() === GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+          (t) =>
+            t.symbol.toUpperCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+              networkName,
+            ).toUpperCase(),
         );
         if (_token) {
           setTokenFrom(_token);
         }
-
       }
-
     }
   }, [select0]);
 
@@ -171,7 +184,8 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
         if (
           tokenTo &&
           (token.address.toLowerCase() === tokenTo.address.toLowerCase() ||
-            (isNative && token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
+            (isNative &&
+              token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
         ) {
           const aux = tokenFrom;
           setTokenFrom(tokenTo);
@@ -181,7 +195,11 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${token.networkName}/dashboard/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(token.networkName).toLowerCase()}`,
+              `/${
+                token.networkName
+              }/dashboard/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                token.networkName,
+              ).toLowerCase()}`,
             );
             setTokenTo(undefined);
           }
@@ -191,11 +209,14 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
         if (
           tokenFrom &&
           (token.address.toLowerCase() === tokenFrom.address.toLowerCase() ||
-            (isNative && token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
+            (isNative &&
+              token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
         ) {
           if (web3State === Web3State.Done) {
-            const availableTokenFrom = select0.find(
-              (e) => isNative ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase() : e.address.toLowerCase() === tokenTo?.address.toLowerCase()  ,
+            const availableTokenFrom = select0.find((e) =>
+              isNative
+                ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase()
+                : e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
             );
 
             if (availableTokenFrom) {
@@ -203,8 +224,10 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
               setTokenTo(tokenFrom);
               setTokenFrom(aux);
             } else {
-              const newTokenFrom = select0.find(
-                (e) => isNative ? e.symbol.toLowerCase() === token?.symbol.toLowerCase() : e.address.toLowerCase() === token?.address.toLowerCase()
+              const newTokenFrom = select0.find((e) =>
+                isNative
+                  ? e.symbol.toLowerCase() === token?.symbol.toLowerCase()
+                  : e.address.toLowerCase() === token?.address.toLowerCase(),
               );
 
               setTokenTo(tokenFrom);
@@ -245,87 +268,69 @@ const BuySell: React.FC<Props> = ({ tokenAddress, balances, networkName, tokenIn
   };
 
   return (
-    <>
-      <Fade in={true} timeout={1000}>
-        <Box
-          py={{ xs: 5, sm: 5, xl: 5 }}
-          px={{ xs: 6, sm: 6, xl: 6 }}
-          height='1'
-          clone>
-          <Card>
-            <Tabs
-              value={currentTab}
-              onChange={handleChangeTab}
-              indicatorColor='primary'
-              textColor='primary'
-              className={classes.muiTabsRoot}>
-              <Tab
-                className={classes.muiTab}
-                label={<IntlMessages id='Market' />}
-                {...a11yProps(0)}
-              />
-              <Tab
-                className={classes.muiTab}
-                label={<IntlMessages id='Limit' />}
-                {...a11yProps(1)}
-              />
-            </Tabs>
-
-            {currentTab === 0 && (
-              <MarketForm
-                key='MarketForm'
-                chainId={chainId}
-                account={account}
-                tokenAddress={tokenAddress}
-                networkName={networkName}
-                balances={balances}
-                select0={select0}
-                select1={select1}
-                tokenFrom={tokenFrom}
-                tokenTo={tokenTo}
-                onChangeToken={handleChangeToken}
-                onTrade={handleTradeOpen}
-              />
-            )}
-
-            {currentTab === 1 && (
-              <LimitForm
-                key='LimitForm'
-                chainId={chainId}
-                account={account}
-                tokenAddress={tokenAddress}
-                networkName={networkName}
-                balances={balances}
-                select0={select0}
-                select1={select1}
-                tokenFrom={tokenFrom}
-                tokenTo={tokenTo}
-                onChangeToken={handleChangeToken}
-                onTrade={handleTradeOpen}
-              />
-            )}
-          </Card>
-        </Box>
-      </Fade>
-
-      {account && (
-        <OrderDialog
-          open={modalOpen}
-          networkName={networkName}
-          isMarket={modalData.isMarket}
-          balances={balances}
-          account={account}
-          allowanceTarget={modalData.allowanceTarget}
-          tokenFrom={modalData.tokenFrom}
-          tokenTo={modalData.tokenTo}
-          amountFrom={modalData.amountFrom}
-          amountTo={modalData.amountTo}
-          price={modalData.price}
-          expiry={modalData.expiry}
-          onClose={handleTradeClose}
-        />
-      )}
-    </>
+    <Box>
+      <Box display='flex' justifyContent='center'>
+        <CustomTabs
+          TabIndicatorProps={{style: {display: 'none'}}}
+          value={currentTab}
+          onChange={handleChangeTab}
+          variant='standard'>
+          <CustomTab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+          <CustomTab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+        </CustomTabs>
+      </Box>
+      <Box py={2}>
+        {currentTab === 0 && (
+          <MarketForm
+            key='MarketForm'
+            chainId={chainId}
+            account={account}
+            tokenAddress={tokenAddress}
+            networkName={networkName}
+            balances={balances}
+            select0={select0}
+            select1={select1}
+            tokenFrom={tokenFrom}
+            tokenTo={tokenTo}
+            onChangeToken={handleChangeToken}
+            onTrade={handleTradeOpen}
+          />
+        )}
+        {currentTab === 1 && (
+          <LimitForm
+            key='LimitForm'
+            chainId={chainId}
+            account={account}
+            tokenAddress={tokenAddress}
+            networkName={networkName}
+            balances={balances}
+            select0={select0}
+            select1={select1}
+            tokenFrom={tokenFrom}
+            tokenTo={tokenTo}
+            onChangeToken={handleChangeToken}
+            onTrade={handleTradeOpen}
+          />
+        )}
+        {account && (
+          <OrderDialog
+            open={modalOpen}
+            networkName={networkName}
+            isMarket={modalData.isMarket}
+            balances={balances}
+            account={account}
+            allowanceTarget={modalData.allowanceTarget}
+            tokenFrom={modalData.tokenFrom}
+            tokenTo={modalData.tokenTo}
+            amountFrom={modalData.amountFrom}
+            amountTo={modalData.amountTo}
+            price={modalData.price}
+            expiry={modalData.expiry}
+            onClose={handleTradeClose}
+          />
+        )}
+      </Box>
+    </Box>
   );
 };
 

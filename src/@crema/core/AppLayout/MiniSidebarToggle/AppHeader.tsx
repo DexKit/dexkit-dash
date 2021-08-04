@@ -16,14 +16,14 @@ import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
 import WalletInfo from 'shared/components/WalletInfo';
-import { ChainId } from 'types/blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import {ChainId} from 'types/blockchain';
+import {useWeb3} from 'hooks/useWeb3';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
 
 import clsx from 'clsx';
-import { AppState } from 'redux/store';
-import { isMobile } from 'web3modal';
+import {AppState} from 'redux/store';
+import {isMobile} from 'web3modal';
 
 interface AppHeaderProps {}
 
@@ -72,31 +72,36 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     <>
       <AppBar color='inherit' className={clsx(classes.appBar, 'app-bar')}>
         <Toolbar className={classes.appToolbar}>
-        {!isMobile() && 
-        <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-            onClick={() => dispatch(toggleNavCollapsed())}>
-            {navCollapsed  ? <MenuOpenIcon className={classes.menuIconCollapsed} /> :  <MenuOpenIcon className={classes.menuIcon} />}
-          </IconButton>}
-          {isMobile() && 
-        <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-            onClick={() => dispatch(toggleNavCollapsed())}>
-           <MenuIcon className={classes.menuIcon} />
-          </IconButton>}
+          {!isMobile() && (
+            <IconButton
+              edge='start'
+              className={classes.menuButton}
+              color='inherit'
+              aria-label='open drawer'
+              onClick={() => dispatch(toggleNavCollapsed())}>
+              {navCollapsed ? (
+                <MenuOpenIcon className={classes.menuIconCollapsed} />
+              ) : (
+                <MenuOpenIcon className={classes.menuIcon} />
+              )}
+            </IconButton>
+          )}
+          {isMobile() && (
+            <IconButton
+              edge='start'
+              className={classes.menuButton}
+              color='inherit'
+              aria-label='open drawer'
+              onClick={() => dispatch(toggleNavCollapsed())}>
+              <MenuIcon className={classes.menuIcon} />
+            </IconButton>
+          )}
 
-
-         {/* <AppLogo />*/}
-         <Box className={classes.grow} />
+          {/* <AppLogo />*/}
+          <Box className={classes.grow} />
           {/* <SearchBar borderLight placeholder='Search…' />*/}
           <Box className={classes.sectionDesktop}>
-          {/*<Hidden mdDown >
+            {/*<Hidden mdDown >
             <IconButton
               edge='start'
               className={classes.menuButton}
@@ -107,21 +112,19 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
             </IconButton>
           </Hidden> 
             <LanguageSwitcher />*/}
-            <ThemeModeSwitcher />
-          {/*  <HeaderMessages />*/}
+            {/* <ThemeModeSwitcher /> */}
+            {/*  <HeaderMessages />*/}
             <Notifications />
-            {
-              (chainId !== ChainId.Mainnet && chainId !== undefined) ? (
-                <Box
-                  className={classes.badgeRoot}
-                  style={{
-                    color: 'rgba(226, 167, 46)',
-                    backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                  }}>
-                  {GET_CHAIN_ID_NAME(chainId)}
-                </Box>
-              ) : null
-            }
+            {chainId !== ChainId.Mainnet && chainId !== undefined ? (
+              <Box
+                className={classes.badgeRoot}
+                style={{
+                  color: 'rgba(226, 167, 46)',
+                  backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                }}>
+                {GET_CHAIN_ID_NAME(chainId)}
+              </Box>
+            ) : null}
           </Box>
           <Box className={classes.sectionMobile}>
             <IconButton
@@ -143,4 +146,3 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   );
 };
 export default AppHeader;
-

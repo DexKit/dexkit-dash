@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {AppState} from 'redux/store';
 import {
   swapClearTransactions,
+  swapRemoveTransaction,
   swapSaveTransaction,
   swapUpdateTransaction,
 } from 'redux/_swap/actions';
@@ -33,10 +34,15 @@ export function useSwapTransactions() {
     dispatch(swapClearTransactions());
   }, []);
 
+  const remove = useCallback((id: string) => {
+    dispatch(swapRemoveTransaction(id));
+  }, []);
+
   return {
     transactions: transactions || [],
     saveTransaction,
     updateStatus,
     clear,
+    remove,
   };
 }

@@ -1,11 +1,11 @@
 import React from 'react';
-import {ListItem} from '@material-ui/core';
+import {ListItem, ListSubheader, Divider} from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalNavGroup.style';
-import { NavItemProps } from '../../../../modules/routesConfig';
+import {NavItemProps} from '../../../../modules/routesConfig';
 import VerticalExternal from './VerticaIExternal';
 
 interface VerticalNavGroupProps {
@@ -18,12 +18,10 @@ const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
 
   return (
     <>
-      <ListItem
-        component='li'
-        className={clsx(classes.navItem, 'nav-item nav-item-header')}>
+      <ListSubheader disableSticky component='li' className={classes.subheader}>
         {<IntlMessages id={item.messageId} />}
-      </ListItem>
-
+      </ListSubheader>
+      <Divider className={classes.divider} />
       {item.children && Array.isArray(item.children) && (
         <>
           {item.children.map((item: any) => (
@@ -39,7 +37,9 @@ const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
               {item.type === 'item' && (
                 <VerticalItem item={item} level={level} />
               )}
-                {item.type === 'external' && <VerticalExternal item={item} level={level} />}
+              {item.type === 'external' && (
+                <VerticalExternal item={item} level={level} />
+              )}
             </React.Fragment>
           ))}
         </>

@@ -7,7 +7,7 @@ import {
   LanguageCode,
   widget,
 } from '../charting_library/charting_library.min';
-import Datafeed from './api/datafeed'; 
+import Datafeed from './api/datafeed';
 
 const ChartContainer = styled.div`
   position: relative;
@@ -75,7 +75,7 @@ export default class TVChartContainer extends React.PureComponent<
   public componentDidMount(): void {
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: this.props.symbol as string,
-      datafeed:  Datafeed ,
+      datafeed: Datafeed,
       interval: this.props.interval as ChartingLibraryWidgetOptions['interval'],
       container_id: this.props
         .containerId as ChartingLibraryWidgetOptions['container_id'],
@@ -150,6 +150,11 @@ export default class TVChartContainer extends React.PureComponent<
   }
 
   public render(): JSX.Element {
-    return <ChartContainer id={this.props.containerId} />;
+    return (
+      <ChartContainer
+        style={{minHeight: '450px'}}
+        id={this.props.containerId}
+      />
+    );
   }
 }
