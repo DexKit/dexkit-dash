@@ -42,6 +42,8 @@ import BuySuccessBackdrop from 'modules/NFTWallet/components/detail/BuySuccessBa
 import {AxiosResponse} from 'axios';
 import NotFound from 'modules/NFTWallet/components/detail/NotFound';
 
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
+
 const useStyles = makeStyles((theme) => ({
   assetImage: {
     height: '100%',
@@ -321,26 +323,36 @@ export const AssetDetail = () => {
               alignContent='center'
               spacing={4}>
               <Grid item>
-                <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                <ConnectivityImage />
               </Grid>
               <Grid item>
-                <Typography gutterBottom variant='h5'>
-                  <IntlMessages id='nfts.walletAssetsListErrorTitle' />
-                </Typography>
-                <Button
-                  onClick={handleTryAgain}
-                  size='small'
-                  variant='contained'
-                  color='primary'>
-                  <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
-                </Button>
+                <Grid
+                  direction='column'
+                  container
+                  alignItems='center'
+                  alignContent='center'
+                  spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography gutterBottom variant='h5'>
+                      <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      onClick={handleTryAgain}
+                      size='small'
+                      color='primary'>
+                      <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
         )
       ) : (
         <Box pt={{xs: 8}}>
-          <Box mb={2}>
+          <Box mb={4}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to='/'>
                 <IntlMessages id='nfts.walletBreadcrumbDashboard' />
@@ -363,7 +375,7 @@ export const AssetDetail = () => {
               </Link>
             </Breadcrumbs>
           </Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             {errorMessage ? (
               <Grid item xs={12}>
                 <Alert severity='error' onClose={handleAlertClose}>
@@ -372,9 +384,9 @@ export const AssetDetail = () => {
               </Grid>
             ) : null}
             <Grid item xs={12}>
-              <Grid container spacing={2}>
+              <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <Card>
                         {loading ? (
@@ -401,10 +413,10 @@ export const AssetDetail = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <Box mb={2}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={4}>
                           {loading ? null : (
                             <Grid item>
                               <CopyAddressButton

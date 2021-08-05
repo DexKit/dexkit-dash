@@ -16,6 +16,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {ReactComponent as SuccessIcon} from 'assets/images/icons/success-icon.svg';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -46,7 +47,7 @@ export default (props: Props) => {
                   alignContent='center'
                   justifyContent='center'
                   mb={2}>
-                  <CheckCircleIcon className={classes.icon} />
+                  <SuccessIcon />
                 </Box>
                 <Typography gutterBottom align='center' variant='h5'>
                   <IntlMessages id='nfts.sell.itemSuccessFullyListed' />

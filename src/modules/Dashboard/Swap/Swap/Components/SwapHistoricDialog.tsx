@@ -51,7 +51,7 @@ export const SwapHistoricDialog = (props: Props) => {
         </Box>
       </DialogTitle>
       <Divider />
-      <DialogContent>
+      <DialogContent dividers>
         {transactions.length > 0 ? (
           <Box mb={4}>
             <Box display='flex' justifyContent='flex-end' py={4}>

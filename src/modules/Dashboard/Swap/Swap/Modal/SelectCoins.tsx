@@ -95,7 +95,7 @@ export const SelectCoinsDialog = (props: Props) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Box mb={4}>
           <TextField
             autoFocus

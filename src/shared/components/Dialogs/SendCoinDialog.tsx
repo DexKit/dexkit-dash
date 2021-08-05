@@ -126,8 +126,7 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
             </IconButton>
           </Box>
         </DialogTitle>
-        <Divider />
-        <DialogContent>
+        <DialogContent dividers>
           {loading ? (
             <Box py={8}>
               <Grid

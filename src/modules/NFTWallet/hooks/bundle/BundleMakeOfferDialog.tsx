@@ -256,7 +256,7 @@ export default (props: Props) => {
           ) : null}
         </Grid>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography variant='body1' color='textSecondary'>

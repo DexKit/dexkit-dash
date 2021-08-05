@@ -50,9 +50,14 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
   };
 
   return (
-    <ListItem selected={isActive()} button to={getUrl()} component={NavLink}>
+    <ListItem
+      className={classes.item}
+      selected={isActive()}
+      button
+      to={getUrl()}
+      component={NavLink}>
       {item.icon && (
-        <ListItemIcon>
+        <ListItemIcon className={classes.itemIcon}>
           {item.customIcon ? (
             <CustomIcon
               icon={item.icon as string}

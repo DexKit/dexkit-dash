@@ -19,15 +19,15 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       [theme.breakpoints.up('lg')]: {
         position: 'fixed',
         '&.mini-sidebar-collapsed': {
-          width: '4rem',
+          width: theme.spacing(18),
 
           '& + .main-content': {
-            marginLeft: '4rem',
-            width: 'calc(100vw - 4rem)',
+            marginLeft: theme.spacing(18),
+            width: `calc(100vw - ${theme.spacing(18)}px)`,
             flex: 'auto',
 
             '& .app-bar': {
-              width: 'calc(100vw - 4rem)',
+              width: `calc(100vw - ${theme.spacing(18)}px)`,
             },
           },
 

@@ -1,66 +1,55 @@
-import React from 'react';
-import {Icon, Link, ListItemText } from '@material-ui/core';
+import React, {useCallback} from 'react';
+import {
+  Icon,
+  Link,
+  ListItemText,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
 import clsx from 'clsx';
 import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
-import { NavItemProps } from '../../../../modules/routesConfig';
+import {NavItemProps} from '../../../../modules/routesConfig';
 
-
-interface VerticalExternalProps{
+interface VerticalExternalProps {
   item: NavItemProps;
   level: number;
 }
 
-const VerticalExternal: React.FC<VerticalExternalProps> = ({
-  item,
-  level,
-}) => {
+const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
   const classes = useStyles({level});
 
   const getUrl = () => {
     if (item.url) return item.url;
     return '/';
   };
-  
+
+  const handleOpenLink = useCallback(() => {
+    window.open(getUrl(), '_blank');
+  }, [getUrl]);
+
   return (
-    <Link
-      href={getUrl()}
-      target={'_blank'}
-      style={{'display':'flex'}}
-      className={clsx(classes.navItem, 'nav-item')}>
+    <ListItem button onClick={handleOpenLink} className={classes.item}>
       {item.icon && (
-        <Box component='span' mr={6}>
+        <ListItemIcon className={classes.itemIcon}>
           <Icon
             className={clsx(classes.listIcon, 'nav-item-icon')}
             color='action'>
             {item.icon}
           </Icon>
-        </Box>
-      )} 
+        </ListItemIcon>
+      )}
       <ListItemText
         primary={<IntlMessages id={item.messageId} />}
         classes={{primary: 'nav-item-text'}}
       />
-      <Box component='span' mr={6} className={'nav-item-text'}>
-          <Icon
-            className={clsx(classes.listIcon, 'nav-item-icon')}
-            color='action'>
-           open_in_new
-          </Icon>
-        </Box>
-     {/*  <IntlMessages classes={{primary: 'nav-item-text'}} id={item.messageId} />*/}
-     {/* <ListItemText
-        primary={ }
-        classes={{primary: 'nav-item-text'}}
-     />*/}
-      {item.count && (
-        <Box mr={4} clone >
-          <Badge count={item.count} color={item.color} />
-        </Box>
-      )}
-    </Link>
+      <ListItemSecondaryAction className={classes.hiddenOverflow}>
+        <Icon color='action'>open_in_new</Icon>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 };
 

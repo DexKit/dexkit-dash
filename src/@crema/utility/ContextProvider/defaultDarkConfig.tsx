@@ -60,33 +60,44 @@ const defaultConfig: any = {
       MuiTypography: {
         h1: {
           fontSize: 28,
+          fontWeight: 500,
         },
         h2: {
           fontSize: 24,
+          fontWeight: 500,
         },
         h3: {
           fontSize: 18,
+          fontWeight: 500,
         },
         h4: {
           fontSize: 18,
+          fontWeight: 400,
         },
         h5: {
           fontSize: 16,
+          textTransform: 'uppercase',
+          fontWeight: 'normal',
         },
         h6: {
           fontSize: 16,
         },
         subtitle1: {
           fontSize: 16,
+          color: '#7D7E81',
         },
         subtitle2: {
           fontSize: 18,
+          color: '#7D7E81',
         },
         body1: {
           fontSize: 16,
+          fontWeight: 500,
+          lineHeight: '100%',
         },
         body2: {
           fontSize: 14,
+          fontWeight: 500,
         },
       },
       MuiToggleButton: {
@@ -154,11 +165,18 @@ const defaultConfig: any = {
       },
       MuiAccordion: {
         root: {
-          padding: 16,
+          padding: 8,
           borderRadius: cardRadius,
         },
         rounded: {
           borderRadius: cardRadius,
+        },
+      },
+      MuiAccordionSummary: {
+        root: {
+          textTransform: 'uppercase',
+          fontSize: 18,
+          fontWeight: 500,
         },
       },
     },

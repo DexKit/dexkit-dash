@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       textTransform: 'uppercase',
       color: theme.palette.common.white,
       fontWeight: 500,
+      overflow: 'hidden',
+      textOverflow: '',
+      whiteSpace: 'nowrap',
     },
     divider: {
       height: 2,
@@ -21,6 +24,9 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       marginRight: theme.spacing(4),
       marginLeft: theme.spacing(4),
       marginBottom: theme.spacing(4),
+      overflow: 'hidden',
+      textOverflow: '',
+      whiteSpace: 'nowrap',
     },
     navItem: {
       height: 40,

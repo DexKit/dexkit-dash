@@ -9,6 +9,16 @@ import AppContextPropsType, {
 const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
+    item: {
+      paddingLeft: 0,
+    },
+    itemIcon: {
+      paddingRight: 16,
+      paddingLeft: 16,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     svgActive: {
       '& > path': {
         fill: '#FFA552',
@@ -98,6 +108,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       fontSize: 18,
       fontWeight: 500,
       lineHeight: 18,
+    },
+    hiddenOverflow: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
   };
 });

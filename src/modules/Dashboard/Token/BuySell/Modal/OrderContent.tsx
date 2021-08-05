@@ -36,11 +36,14 @@ import {getExpirationTimeFromSeconds} from 'utils/time_utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {EthereumNetwork} from '../../../../../../__generated__/globalTypes';
-import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
-import { GET_NATIVE_COIN_FROM_NETWORK_NAME, GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
+import {
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 
 interface Props {
   isMarket: boolean;
@@ -121,7 +124,7 @@ const OrderContent: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const networkName = useNetwork();
-  const { data} = useNativeCoinPriceUSD(networkName);
+  const {data} = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<any>();
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
@@ -372,7 +375,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const displayFastGas = (parseInt(fastGasPrice) / Math.pow(10, 9)).toFixed(2);
   const {usdFormatter} = useUSDFormatter();
 
-  const estimatedFeeUSD = data ? usdFormatter.format(fee*data) : null;
+  const estimatedFeeUSD = data ? usdFormatter.format(fee * data) : null;
 
   return (
     <>
@@ -412,7 +415,7 @@ const OrderContent: React.FC<Props> = (props) => {
         </Box>
       </DialogTitle>
 
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent className={classes.dialogContent} dividers>
         {loading && currentStepIndex === -1 ? (
           <Box
             display='flex'
@@ -436,7 +439,15 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are converting {GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()} to {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()} for trading on DexKit
+                      You are converting{' '}
+                      {GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                        networkName,
+                      ).toUpperCase()}{' '}
+                      to{' '}
+                      {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+                        networkName,
+                      ).toUpperCase()}{' '}
+                      for trading on DexKit
                     </Typography>
                   </>
                 )}
@@ -638,7 +649,14 @@ const OrderContent: React.FC<Props> = (props) => {
                                 <Grid style={{padding: 0}} item xs={12} sm={8}>
                                   <Typography
                                     className={classes.textPrimary}
-                                    align='right'>{estimatedFeeUSD }{` ${fee.toFixed(6)} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()}`} </Typography>
+                                    align='right'>
+                                    {estimatedFeeUSD}
+                                    {` ${fee.toFixed(
+                                      6,
+                                    )} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                                      networkName,
+                                    ).toUpperCase()}`}{' '}
+                                  </Typography>
                                 </Grid>
                               </Grid>
                             </Grid>
