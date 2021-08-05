@@ -32,6 +32,7 @@ import {useHistory} from 'react-router-dom';
 import {useCoinList} from 'hooks/useCoinList';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import SelectTokenDialog from './Modal/SelectTokenDialog';
+import { ETH_SYMBOL_URL, BINANCE_SYMBOL_URL } from 'shared/constants/Coins';
 
 interface Props {
   tokenAddress: string;
@@ -73,6 +74,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
+
+//TODO: This select1 and select0 logic is bugged and it is not working well, investigate way to change all this logic
 const BuySell: React.FC<Props> = ({
   tokenAddress,
   balances,
@@ -86,9 +89,10 @@ const BuySell: React.FC<Props> = ({
   const {chainId, account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
+  const [select1, setSelect1] = useState<Token[]>([]);
 
-  const select1 = useTokenList(networkName);
-
+  const tokensETH = useTokenList(EthereumNetwork.ethereum);
+  const tokensBSC = useTokenList(EthereumNetwork.bsc);
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
   const [tokenTo, setTokenTo] = useState<Token>();
@@ -109,23 +113,56 @@ const BuySell: React.FC<Props> = ({
     expiry: 0,
   });
 
+  useEffect(()=> {
+    if(networkName === EthereumNetwork.bsc){
+      setSelect1(tokensBSC);
+    }else{
+      setSelect1(tokensETH);
+    }
+  },[networkName, tokensETH, tokensBSC])
+
+  // Here, we map the balances with logos from the token lists
   useEffect(() => {
     if (balances) {
       const balancesFn = balances.map((e) => {
+        // Add images from token list
+        let tokenLogoUri;
+        if(e.network === EthereumNetwork.ethereum && tokensETH.length > 0){
+          if(e?.currency?.symbol.toLowerCase() === 'eth'){
+            tokenLogoUri = ETH_SYMBOL_URL;
+          }else{
+  
+            const token = tokensETH.find(t=> t.address.toLowerCase() === e.currency?.address?.toLowerCase()); 
+            if(token){
+              tokenLogoUri = token.logoURI;
+          }
+        }
+        }
+        if(e.network=== EthereumNetwork.bsc && tokensBSC.length > 0){
+          if(e?.currency?.symbol.toLowerCase() === 'bnb'){
+            tokenLogoUri = BINANCE_SYMBOL_URL;
+          }else{
+            const token = tokensBSC.find(t=> t.address.toLowerCase() === e.currency?.address?.toLowerCase()); 
+            if(token){
+              tokenLogoUri = token.logoURI;
+            }
+         }
+        }
         return {
           name: e.currency?.name || '',
           symbol: e.currency?.symbol || '',
           address: e.currency?.address || '',
           decimals: e.currency?.decimals || 18,
           networkName: e.network,
+          logoURI: tokenLogoUri
         } as Token;
       });
       setSelect0(balancesFn);
     }
-  }, [balances]);
-
+  }, [balances, tokensETH, tokensBSC]);
+  // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
-    if (tokenTo === undefined) {
+    if (tokenTo === undefined && select1.length > 0) {
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
@@ -145,22 +182,24 @@ const BuySell: React.FC<Props> = ({
         _token = select1.find(
           (t) => t.address.toLowerCase() === tokenInfo.address.toLowerCase(),
         );
+        // If token is not available on normal list, add it
         if (!_token) {
-          select1.push(tokenInfo);
+          setSelect1(select1.concat(tokenInfo))
           setTokenTo(tokenInfo);
         }
       }
     }
   }, [select1, tokenInfo, tokenTo]);
-
+  // We here auto fill the from select with a default value if not set. We start with native coin, 
+  // then wrapped and then the first one on the list
   useEffect(() => {
-    if (tokenFrom === undefined && select0.length) {
+    if (tokenFrom === undefined && select0.length > 0) {
       const _token = select0.find(
         (t) =>
           t.symbol.toUpperCase() ===
           GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
       );
-      if (_token) {
+      if (_token && _token.symbol.toLowerCase() !== tokenInfo?.symbol.toLowerCase()) {
         setTokenFrom(_token);
       } else {
         const _token = select0.find(
@@ -170,8 +209,15 @@ const BuySell: React.FC<Props> = ({
               networkName,
             ).toUpperCase(),
         );
-        if (_token) {
+        if (_token && _token.symbol.toLowerCase() !== tokenInfo?.symbol.toLowerCase()) {
           setTokenFrom(_token);
+        }else{
+          // If not founded wrapped and native just use the first one of the list that matches current network
+          const _token = select0.find((t)=> t.networkName === networkName && t.symbol.toLowerCase() !== tokenInfo?.symbol.toLowerCase());
+          if(_token){
+            setTokenFrom( _token);
+          }
+         
         }
       }
     }

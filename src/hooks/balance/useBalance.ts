@@ -25,7 +25,6 @@ export const useBalance = (defaultAccount?: string) => {
   useEffect(() => {
     if (account) {
       setLoading(true);
-
       client
         .query<GetMyBalance, GetMyBalanceVariables>({
           query: BITQUERY_BALANCE_INFO,
@@ -46,9 +45,7 @@ export const useBalance = (defaultAccount?: string) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
                   (t) => {
                     //   const addr = (t.currency?.address == '-') ? 'eth' : t?.currency?.address?.toLowerCase();
-
                     const addr = t.currency?.address;
-
                     return <GetMyBalance_ethereum_address_balances>{
                       currency: {
                         ...t.currency,
@@ -71,7 +68,6 @@ export const useBalance = (defaultAccount?: string) => {
           }
         })
         .catch((e) => {
-          console.info(e);
           setError(e);
           setLoading(false);
         });

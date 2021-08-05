@@ -4,7 +4,7 @@ import { SEARCH_CURRENCY_BY_ADDRESS } from "services/graphql/bitquery/gql";
 import { SearchCurrencyByAddress, SearchCurrencyByAddressVariables } from "services/graphql/bitquery/__generated__/SearchCurrencyByAddress";
 import { EthereumNetwork } from "shared/constants/AppEnums";
 import { Token } from "types/app";
-import { filterTokensInfoByString, findTokensInfoByAddress, findTokensInfoBySymbol, GET_NATIVE_COINS, isNativeCoinWithoutChainId } from "utils";
+import { findTokensInfoByAddress,  GET_NATIVE_COINS, isNativeCoinWithoutChainId } from "utils";
 import Web3 from "web3";
 import { useTokenList } from "./useTokenList";
 

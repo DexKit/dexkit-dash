@@ -1,7 +1,10 @@
 import { Coin } from "types/app";
-import { Network } from "../../../__generated__/globalTypes";
+import { Network } from "./Bitquery";
 
 
+
+export const ETH_SYMBOL_URL = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
+export const BINANCE_SYMBOL_URL = 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
 
 export const COINS: Coin[] = [
     {
@@ -27,4 +30,5 @@ export const COINS: Coin[] = [
         coingecko_id: 'dogecoin'
     }
 ]
+
 
