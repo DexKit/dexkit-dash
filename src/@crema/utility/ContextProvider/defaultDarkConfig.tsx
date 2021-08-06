@@ -179,6 +179,18 @@ const defaultConfig: any = {
           fontWeight: 500,
         },
       },
+      MuiTablePagination: {
+        select: {
+          backgroundColor: '#3C4255',
+          borderRadius: inputBorderRadius,
+          border: '1px solid #525C75',
+          padding: 16,
+          fontWeight: 500,
+          fontStyle: 'normal',
+          fontSize: 18,
+          color: '#fff',
+        },
+      },
     },
   },
   themeStyle: ThemeStyle.MODERN,

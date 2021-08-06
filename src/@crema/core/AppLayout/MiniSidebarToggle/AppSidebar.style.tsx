@@ -45,6 +45,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             visibility: 'hidden',
           },
 
+          '& .visible-hover': {
+            opecity: 0,
+            visibility: 'hidden',
+          },
+
           '& .nav-item-header, & .user-info, & .collapse-children': {
             display: 'none',
           },
@@ -89,6 +94,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         [theme.breakpoints.up('lg')]: {
           '&.mini-sidebar-collapsed': {
             width: '21.6rem',
+
+            '& .visible-hover': {
+              opacity: 1,
+              visibility: 'visible',
+            },
 
             '& .nav-item-text, & .nav-item-icon-arrow': {
               opecity: 1,

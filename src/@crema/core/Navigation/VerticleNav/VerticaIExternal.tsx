@@ -34,7 +34,7 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
   return (
     <ListItem button onClick={handleOpenLink} className={classes.item}>
       {item.icon && (
-        <ListItemIcon className={classes.itemIcon}>
+        <ListItemIcon className={clsx(classes.itemIcon, 'visible-hover')}>
           <Icon
             className={clsx(classes.listIcon, 'nav-item-icon')}
             color='action'>
@@ -46,7 +46,8 @@ const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
         primary={<IntlMessages id={item.messageId} />}
         classes={{primary: 'nav-item-text'}}
       />
-      <ListItemSecondaryAction className={classes.hiddenOverflow}>
+      <ListItemSecondaryAction
+        className={clsx(classes.hiddenOverflow, 'nav-item-icon-arrow')}>
         <Icon color='action'>open_in_new</Icon>
       </ListItemSecondaryAction>
     </ListItem>
