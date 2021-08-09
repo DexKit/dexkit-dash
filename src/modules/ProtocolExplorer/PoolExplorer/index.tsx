@@ -32,7 +32,11 @@ const PoolExplorer: React.FC<Props> = (props) => {
   } = props;
   const {networkName, exchange, address} = params;
 
-  const {loading, error, data} = useAMMPairExplorer({exchange, address, networkName});
+  const {loading, error, data} = useAMMPairExplorer({
+    exchange,
+    address,
+    networkName,
+  });
 
   return (
     <Box pt={{xl: 4}}>
@@ -81,7 +85,11 @@ const PoolExplorer: React.FC<Props> = (props) => {
 
           <Grid item xs={12} md={5}>
             <Paper style={{padding: 10}}>
-              <TokenSearchByList exchangeName={exchange} type={'pool'} networkName={networkName} />
+              <TokenSearchByList
+                exchangeName={exchange}
+                type={'pool'}
+                networkName={networkName}
+              />
             </Paper>
           </Grid>
 

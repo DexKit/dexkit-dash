@@ -7,12 +7,12 @@ import {Fonts} from '../../../../shared/constants/AppEnums';
 import AppCard from '../../../../@crema/core/AppCard';
 import clsx from 'clsx';
 import {CoinData} from '../../../../types/models/Crypto';
-import {CremaTheme} from '../../../../types/AppContextPropsType'; 
+import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   statsCard: {
     borderRadius: theme.overrides.MuiCardLg.root.borderRadius,
-    padding: 10
+    padding: 10,
   },
   root: {
     height: 30,
@@ -52,32 +52,28 @@ const CoinStats: React.FC<CoinStatsProps> = ({
       <Box display='flex' alignItems='center'>
         <Box p={2} fontSize={{xs: 18, md: 18}} clone>
           <Avatar className={classes.root}>
-          {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/' + ethers.utils.getAddress(icon.toLowerCase()) + '/logo.png'} alt='' /> */}
-          <img alt='' src={icon} />
+            {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/' + ethers.utils.getAddress(icon.toLowerCase()) + '/logo.png'} alt='' /> */}
+            <img alt='' src={icon} />
           </Avatar>
         </Box>
-        <Box style={{marginLeft:5}} >
-          <Box component='p'  fontSize={12} >
+        <Box style={{marginLeft: 5}}>
+          <Box component='p' fontSize={12}>
             {heading}
           </Box>
-          <Box
-            component='p'
-            display='inline-block'
-            fontSize={12}>
-              <p style={{fontWeight: 'bold'}}>${data.price}</p>
+          <Box component='p' display='inline-block' fontSize={12}>
+            <p style={{fontWeight: 'bold'}}>${data.price}</p>
           </Box>
           <Box
             component='p'
             ml={3}
             style={{marginLeft: 0}}
-            textAlign="left"
+            textAlign='left'
             fontSize={12}
             fontWeight={Fonts.MEDIUM}
             color={data.increment > 0.0 ? green[500] : red[500]}>
             {data.increment.toFixed(2)}%
           </Box>
         </Box>
-        
       </Box>
     </AppCard>
   );

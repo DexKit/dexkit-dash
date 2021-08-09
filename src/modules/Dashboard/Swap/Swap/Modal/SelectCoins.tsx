@@ -55,12 +55,14 @@ export const SelectCoinsDialog = (props: Props) => {
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value;
+      const value = e.target.value;
 
       setFilterText(value);
 
-      let filtered = coins.filter((coin: ChangellyCoin) =>
-        coin.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 || coin.ticker.toLowerCase().indexOf(value.toLowerCase()) !== -1
+      const filtered = coins.filter(
+        (coin: ChangellyCoin) =>
+          coin.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+          coin.ticker.toLowerCase().indexOf(value.toLowerCase()) !== -1,
       );
 
       setFilteredCoins(filtered);

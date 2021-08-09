@@ -58,7 +58,11 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
           </TableBody>
         </Table>
       </Box>
-      {!data?.length && <Typography component='h1' color={'primary'}>No data available for this protocol</Typography>}
+      {!data?.length && (
+        <Typography component='h1' color={'primary'}>
+          No data available for this protocol
+        </Typography>
+      )}
       <TablePagination
         className={classes.paginationDesktop}
         component='div'

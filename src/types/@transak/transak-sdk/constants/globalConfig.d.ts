@@ -11,7 +11,7 @@ export interface ENVIRONMENT {
   PRODUCTION: ENVIRONMENT_TYPE;
 }
 
-export interface STATUS{
+export interface STATUS {
   INIT: string;
   TRANSAK_INITIALISED: string;
 }

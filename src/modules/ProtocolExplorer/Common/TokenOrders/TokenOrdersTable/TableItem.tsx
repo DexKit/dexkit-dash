@@ -19,11 +19,11 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
-import { GET_CORRECT_ADDRESS_FROM_NETWORK } from 'utils';
+import {GET_CORRECT_ADDRESS_FROM_NETWORK} from 'utils';
 import {isMobile} from 'web3modal';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
-import { useIntl } from 'react-intl';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import {useIntl} from 'react-intl';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 
 interface TableItemProps {
   row: GetTokenTrades_ethereum_dexTrades;
@@ -65,7 +65,12 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName}) => {
+const TableItem: React.FC<TableItemProps> = ({
+  row,
+  exchange,
+  type,
+  networkName,
+}) => {
   const {chainId} = useWeb3();
   const classes = useStyles();
   const {usdFormatter} = useUSDFormatter();
@@ -86,9 +91,11 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
     }
   };
 
-  const createdFn = new Date((row.block?.timestamp?.time)||0);
-  const priceUsd = usdFormatter.format((row.tradeAmountIsUsd || 1) / (row.baseAmount || 1) );
-  const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0) ;
+  const createdFn = new Date(row.block?.timestamp?.time || 0);
+  const priceUsd = usdFormatter.format(
+    (row.tradeAmountIsUsd || 1) / (row.baseAmount || 1),
+  );
+  const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0);
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
@@ -105,8 +112,23 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
       {type === 'token' && (
         <TableCell align='left' className={classes.tableCell}>
           <Box display='flex' alignItems='center'>
-            {!isMobile() && <TokenLogo token0={row.baseCurrency?.address||''} token1={row.quoteCurrency?.address||''}></TokenLogo>}
-            <Link to={GET_PROTOCOL_PAIR_URL(networkName, exchange, row.smartContract?.address.address, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency), GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency))} component={RouterLink}>
+            {!isMobile() && (
+              <TokenLogo
+                token0={row.baseCurrency?.address || ''}
+                token1={row.quoteCurrency?.address || ''}></TokenLogo>
+            )}
+            <Link
+              to={GET_PROTOCOL_PAIR_URL(
+                networkName,
+                exchange,
+                row.smartContract?.address.address,
+                GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency),
+                GET_CORRECT_ADDRESS_FROM_NETWORK(
+                  networkName,
+                  row.quoteCurrency,
+                ),
+              )}
+              component={RouterLink}>
               {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
             </Link>
           </Box>
@@ -117,13 +139,26 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {row.baseAmount?.toFixed(2)}
-        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency), exchange)} component={RouterLink}>
-          {' '}{row.baseCurrency?.symbol}{' '}
+        <Link
+          to={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency),
+            exchange,
+          )}
+          component={RouterLink}>
+          {' '}
+          {row.baseCurrency?.symbol}{' '}
         </Link>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {row.quoteAmount?.toFixed(4)}
-        <Link to={GET_PROTOCOL_TOKEN_URL(networkName, GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency), exchange)} component={RouterLink}>
+        <Link
+          to={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency),
+            exchange,
+          )}
+          component={RouterLink}>
           {' '}
           {row.quoteCurrency?.symbol}
         </Link>
@@ -133,39 +168,42 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, type, networkName})
       </TableCell>
       {exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCell}>
-          <ExchangeLogo exchange={row.exchange?.fullName||''}/>
+          <ExchangeLogo exchange={row.exchange?.fullName || ''} />
         </TableCell>
       )}
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
-        <Tooltip title={messages['app.viewTx']} placement='top'>
-          <a
-            href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
-            target='_blank'>
-            {networkName == EthereumNetwork.ethereum ? (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/etherescan.png'></Avatar>
-            ) : (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/bscscan-logo-circle.png'></Avatar>
-            )}
-          </a>
+          <Tooltip title={messages['app.viewTx']} placement='top'>
+            <a
+              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
+                row.transaction?.hash
+              }`}
+              target='_blank'
+              rel='noreferrer'>
+              {networkName == EthereumNetwork.ethereum ? (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/etherescan.png'></Avatar>
+              ) : (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/bscscan-logo-circle.png'></Avatar>
+              )}
+            </a>
           </Tooltip>
           {/*<a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.hash}`}

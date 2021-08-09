@@ -1,21 +1,21 @@
-import { Token } from "types/app";
+import {Token} from 'types/app';
 
 export const isZrx = (token: string): boolean => {
-    return token === 'zrx';
+  return token === 'zrx';
 };
 
 export const isWeth = (token: string): boolean => {
-    return token === 'weth';
+  return token === 'weth';
 };
 
 export const isWhackd = (token: string): boolean => {
-    return token === 'whackd';
+  return token === 'whackd';
 };
 
 export const isWethToken = (token: Token): boolean => {
-    if (token.symbol.toLowerCase() === 'weth') {
-        return true;
-    } else {
-        return false;
-    }
+  if (token.symbol.toLowerCase() === 'weth') {
+    return true;
+  } else {
+    return false;
+  }
 };

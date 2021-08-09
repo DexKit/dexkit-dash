@@ -34,7 +34,7 @@ const AppSidebar: React.FC<AppSidebarProps> = (props) => {
   };
   const classes = useStyles(props);
 
-  let sidebarClasses = classes.sidebarStandard;
+  const sidebarClasses = classes.sidebarStandard;
 
   const sideBarComponent = () => {
     return (

@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const AffiliatePage = () => {
-  
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;

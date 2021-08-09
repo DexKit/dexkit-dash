@@ -1,8 +1,7 @@
-import BigNumber from "bignumber.js";
-import {Token} from "types/app";
+import BigNumber from 'bignumber.js';
+import {Token} from 'types/app';
 
 export interface ModalOrderData {
-
   isMarket: boolean;
 
   account: string;
@@ -19,6 +18,5 @@ export interface ModalOrderData {
 
   price: number;
 
-  expiry: number
-
+  expiry: number;
 }

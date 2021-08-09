@@ -6,8 +6,6 @@ import {ThemeMode} from '../../../shared/constants/AppEnums';
 import routes from '../../../modules';
 
 const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
-
-
   const [theme, updateTheme] = useState(defaultConfig.theme);
   const [footer, setFooter] = useState(defaultConfig.footer);
   const [footerType, setFooterType] = useState(defaultConfig.footerType);
@@ -30,7 +28,7 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
   );
 
   const updateThemeMode = (themeMode: ThemeMode) => {
-    let currentTheme = {...theme};
+    const currentTheme = {...theme};
     if (themeMode === ThemeMode.DARK) {
       currentTheme.palette.type = ThemeMode.DARK;
       currentTheme.palette.background = {

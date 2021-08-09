@@ -232,7 +232,7 @@ export default (props: Props) => {
 
       const openseaPort = await getOpenSeaPort(provider);
 
-      let params: any = {
+      const params: any = {
         paymentTokenAddress: paymentToken.address,
         accountAddress: userAccountAddress,
         startAmount: startingPrice,

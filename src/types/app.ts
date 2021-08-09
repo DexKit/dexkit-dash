@@ -22,8 +22,8 @@ import {
   GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
   GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GetTransferList_ethereum_transfers } from 'services/graphql/bitquery/history/__generated__/GetTransferList';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GetTransferList_ethereum_transfers} from 'services/graphql/bitquery/history/__generated__/GetTransferList';
 
 export enum OrderSide {
   Sell,
@@ -41,7 +41,9 @@ export enum Steps {
   DONE = 'Done',
 }
 
-export type Transfers = GetTransferList_ethereum_transfers & {type: 'Send' | 'Receive'};
+export type Transfers = GetTransferList_ethereum_transfers & {
+  type: 'Send' | 'Receive';
+};
 
 export interface Token {
   name: string;
@@ -58,7 +60,7 @@ export interface Token {
   logoURI?: string;
 }
 
-export interface Coin{
+export interface Coin {
   name: string;
   symbol: string;
   address: string;

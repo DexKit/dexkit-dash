@@ -1,12 +1,20 @@
 import React from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Box, Dialog, Tabs, Tab, Card, makeStyles, Chip} from '@material-ui/core';
+import {
+  Box,
+  Dialog,
+  Tabs,
+  Tab,
+  Card,
+  makeStyles,
+  Chip,
+} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import { useNetwork } from 'hooks/useNetwork';
-import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {useNetwork} from 'hooks/useNetwork';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import Tooltip from '@material-ui/core/Tooltip';
 
 interface Props {
@@ -58,10 +66,14 @@ const Sender: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <Dialog fullWidth maxWidth="xs" open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">
-
+      <Dialog
+        fullWidth
+        maxWidth='xs'
+        open={props.open}
+        onClose={props.onClose}
+        aria-labelledby='form-dialog-title'>
         <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card >
+          <Card>
             <Tabs
               indicatorColor='primary'
               textColor='primary'
@@ -70,21 +82,25 @@ const Sender: React.FC<Props> = (props) => {
               <Tab
                 className={classes.muiTab}
                 style={{fontWeight: 'bold'}}
-                label={<Box display={'flex'}>
-                  <Tooltip title={'Current Connected Network'}>
-                  <Chip label={FORMAT_NETWORK_NAME(networkName)} style={{marginRight: '8px'}}  /> 
-                  </Tooltip> 
-                  <IntlMessages id='Send' />  </Box>}
+                label={
+                  <Box display={'flex'}>
+                    <Tooltip title={'Current Connected Network'}>
+                      <Chip
+                        label={FORMAT_NETWORK_NAME(networkName)}
+                        style={{marginRight: '8px'}}
+                      />
+                    </Tooltip>
+                    <IntlMessages id='Send' />{' '}
+                  </Box>
+                }
                 {...a11yProps(0)}
                 // disabled={address != null && address.length > 0}
               />
             </Tabs>
 
             <SenderForm balances={props.balances} amount={props.amount} />
-
           </Card>
         </Box>
-
       </Dialog>
     </div>
   );

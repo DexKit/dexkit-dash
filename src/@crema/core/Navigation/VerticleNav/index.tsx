@@ -12,7 +12,7 @@ import useRoutesConfig from '../../../../modules/routesConfig';
 interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = () => {
-  const  items = useRoutesConfig();
+  const items = useRoutesConfig();
 
   return (
     <List>
@@ -27,10 +27,12 @@ const Navigation: React.FC<NavigationProps> = () => {
 
           {item.type === 'item' && <VerticalItem item={item} level={0} />}
 
-          {item.type === 'external' && <VerticalExternal item={item} level={0} />}
+          {item.type === 'external' && (
+            <VerticalExternal item={item} level={0} />
+          )}
         </React.Fragment>
       ))}
-      <Version/>
+      <Version />
     </List>
   );
 };

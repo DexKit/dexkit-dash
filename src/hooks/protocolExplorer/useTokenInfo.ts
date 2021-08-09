@@ -8,7 +8,7 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetTokenInfo';
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import { EthereumNetwork } from '../../../__generated__/globalTypes';
+import {EthereumNetwork} from '../../../__generated__/globalTypes';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -16,7 +16,6 @@ interface Props {
 }
 
 export const useTokenInfo = ({address, networkName}: Props) => {
-
   const {loading, error, data} = useQuery<GetTokenInfo, GetTokenInfoVariables>(
     BITQUERY_TOKEN_INFO,
     {

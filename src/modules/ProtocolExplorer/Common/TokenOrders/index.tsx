@@ -1,7 +1,16 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
-import {Box, CircularProgress, Fade, Hidden, Paper, Toolbar, Tooltip, Typography} from '@material-ui/core';
+import {
+  Box,
+  CircularProgress,
+  Fade,
+  Hidden,
+  Paper,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
@@ -38,56 +47,56 @@ const TokenOrders: React.FC<Props> = (props) => {
   } = useTokenTrades({baseAddress, quoteAddress, exchange, networkName});
 
   return (
-      <Paper className={classes.paper}>
-        <Toolbar className={classes.toolbar}>
+    <Paper className={classes.paper}>
+      <Toolbar className={classes.toolbar}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-start'}
+          alignItems={'center'}>
+          <SwapHorizontalCircleIcon
+            color={'primary'}
+            className={classes.toolbarIcon}
+          />
+          <Typography variant='h5' display={'block'} align={'center'}>
+            {messages['app.tradeHistory']}
+          </Typography>
+        </Box>
+        <Hidden mdDown>
           <Box
             display={'flex'}
-            justifyContent={'flex-start'}
+            justifyContent={'flex-end'}
             alignItems={'center'}>
-            <SwapHorizontalCircleIcon
-              color={'primary'}
-              className={classes.toolbarIcon}
-            />
-            <Typography variant='h5' display={'block'} align={'center'}>
-              {messages['app.tradeHistory']}
-            </Typography>
+            <FilterList />
+            <FilterMenu />
+            <Tooltip title={`Last update ${seconds} s `}>
+              <CircularProgress
+                size={20}
+                variant='determinate'
+                value={nextRefresh}
+              />
+            </Tooltip>
           </Box>
-          <Hidden mdDown>
-            <Box
-              display={'flex'}
-              justifyContent={'flex-end'}
-              alignItems={'center'}>
-              <FilterList />
-              <FilterMenu />
-              <Tooltip title={`Last update ${seconds} s `}>
-                <CircularProgress
-                  size={20}
-                  variant='determinate'
-                  value={nextRefresh}
-                />
-              </Tooltip>
-            </Box>
-          </Hidden>
-        </Toolbar>
+        </Hidden>
+      </Toolbar>
 
-        {loading ? (
-          <LoadingTable columns={8} rows={10} />
-        ) : error ? (
-          <ErrorView message={error.message} />
-        ) : (
-          <TokenOrdersTable
-            networkName={networkName}
-            data={data}
-            exchange={exchange}
-            type={type}
-            currentPage={currentPage}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={rowsPerPageOptions}
-            onChangePage={(newPage) => onChangePage(newPage)}
-            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-          />
-        )}
-      </Paper>
+      {loading ? (
+        <LoadingTable columns={8} rows={10} />
+      ) : error ? (
+        <ErrorView message={error.message} />
+      ) : (
+        <TokenOrdersTable
+          networkName={networkName}
+          data={data}
+          exchange={exchange}
+          type={type}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
+          onChangePage={(newPage) => onChangePage(newPage)}
+          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+        />
+      )}
+    </Paper>
     // </AppCard>
     // </Box>
   );

@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 
-
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.modal + 1,

@@ -5,11 +5,9 @@ import {Fonts} from 'shared/constants/AppEnums';
 export const useStyles = makeStyles((theme: CremaTheme) => ({
   btnPrimary: {
     fontFamily: Fonts.BOLD,
-
   },
   btnSecondary: {
     fontFamily: Fonts.BOLD,
-
   },
   contractAddress: {
     fontSize: 20,
@@ -19,6 +17,5 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   title: {
     display: 'flex',
-    
   },
 }));

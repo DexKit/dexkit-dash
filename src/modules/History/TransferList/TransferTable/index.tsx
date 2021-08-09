@@ -49,10 +49,15 @@ const TransferTable: React.FC<Props> = ({
               ))}
           </TableBody>
         </Table>
-        {(data && data.length === 0) &&
-          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
-                        You don't have made transfers with this wallet yet
-          </Typography>}
+        {data && data.length === 0 && (
+          <Typography
+            variant='h5'
+            display={'block'}
+            align={'center'}
+            color={'primary'}>
+            You don't have made transfers with this wallet yet
+          </Typography>
+        )}
       </Box>
 
       <TablePagination

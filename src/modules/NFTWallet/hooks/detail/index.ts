@@ -8,7 +8,7 @@ export function useAssetEvents() {
   const {getProvider} = useWeb3();
 
   const getEvents = useCallback(
-    async (assetAddress: string, tokenId: string, page: number = 0) => {
+    async (assetAddress: string, tokenId: string, page = 0) => {
       const provider = getProvider();
       const chainId = await getChainId(provider);
 

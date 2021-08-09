@@ -6,7 +6,7 @@ import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
 import {useChainId} from 'hooks/useChainId';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   pair: {
@@ -70,7 +70,7 @@ const TokenLogo: React.FC<Props> = (props) => {
       : '';
 
   const networkName =
-  currentNetwork === EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
+    currentNetwork === EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
 
   const noFoundSrc = require('assets/images/logo-not-found.png');
   const dexkitLogo = require('assets/images/dexkit-logo.png');
@@ -81,20 +81,19 @@ const TokenLogo: React.FC<Props> = (props) => {
       : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
 
   const getIconUrl = (address: string, logoUrl?: string) => {
-    if(logoUrl){
+    if (logoUrl) {
       return logoUrl;
     }
-    
-    if(address.toLowerCase() === 'bsc') {
+
+    if (address.toLowerCase() === 'bsc') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
     }
 
-    if(address.toLowerCase() === 'eth') {
+    if (address.toLowerCase() === 'eth') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
     }
 
-
-    if(address.toLowerCase() === '') {
+    if (address.toLowerCase() === '') {
       return currencyLogo;
     }
     if (

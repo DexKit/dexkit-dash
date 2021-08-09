@@ -16,8 +16,8 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { GetContractOrders_ethereum_dexTrades } from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
-import { useIntl } from 'react-intl';
+import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
+import {useIntl} from 'react-intl';
 
 interface Props {
   row: GetContractOrders_ethereum_dexTrades;
@@ -78,7 +78,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
     }
   };
 
-  const createdFn = new Date((row.date?.date)||0);
+  const createdFn = new Date(row.date?.date || 0);
 
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
@@ -101,12 +101,25 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
       <TableCell align='left' className={classes.tableCell}>
         {row.baseAmount?.toFixed(4)}{' '}
         <Link
-          href={GET_PROTOCOL_TOKEN_URL(networkName, row.baseCurrency?.address, exchange)}>{row.baseCurrency?.symbol}</Link>
+          href={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            row.baseCurrency?.address,
+            exchange,
+          )}>
+          {row.baseCurrency?.symbol}
+        </Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
         {row.quoteAmount?.toFixed(4)}{' '}
-        <Link  href={GET_PROTOCOL_TOKEN_URL(networkName, row.quoteCurrency?.address, exchange)}>{row.quoteCurrency?.symbol}</Link>
+        <Link
+          href={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            row.quoteCurrency?.address,
+            exchange,
+          )}>
+          {row.quoteCurrency?.symbol}
+        </Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
@@ -117,8 +130,11 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
         <Box display='flex' alignItems='center'>
           <Tooltip title={messages['app.viewTx']} placement='top'>
             <a
-              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${row.transaction?.hash}`}
-              target='_blank'>
+              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
+                row.transaction?.hash
+              }`}
+              target='_blank'
+              rel='noreferrer'>
               {netName == EthereumNetwork.ethereum ? (
                 <Avatar
                   style={{

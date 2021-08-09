@@ -13,7 +13,7 @@ import Info from 'modules/ProtocolExplorer/Common/Info';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 import {Skeleton} from '@material-ui/lab';
-import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
+import {GET_CHAIN_FROM_NETWORK} from 'shared/constants/Blockchain';
 
 const TVChartContainer = React.lazy(
   () => import('../../../../shared/components/chart/TvChart/tv_chart'),
@@ -27,12 +27,9 @@ type Props = {
 
 const PairExplorer = (props: Props) => {
   const {networkName, exchange, address} = props;
-  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
 
-  const {baseAddress, quoteAddress} = extractPairFromAddress(
-    address,
-    chainId,
-  );
+  const {baseAddress, quoteAddress} = extractPairFromAddress(address, chainId);
 
   const {loading, error, data} = usePairExplorer({
     baseAddress,
@@ -51,7 +48,11 @@ const PairExplorer = (props: Props) => {
           <Grid item xs={12} md={12}>
             <Paper style={{padding: 10}}>
               {exchange && (
-                <TokenSearchByList exchangeName={exchange} type={'pair'} networkName={networkName} />
+                <TokenSearchByList
+                  exchangeName={exchange}
+                  type={'pair'}
+                  networkName={networkName}
+                />
               )}
             </Paper>
           </Grid>
@@ -59,7 +60,7 @@ const PairExplorer = (props: Props) => {
             {error ? (
               <ErrorView message={error.message} />
             ) : (
-              <Info data={data} loading={loading} networkName={networkName}/>
+              <Info data={data} loading={loading} networkName={networkName} />
             )}
           </Paper>
         </Grid>

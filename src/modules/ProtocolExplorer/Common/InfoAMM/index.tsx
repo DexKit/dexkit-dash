@@ -1,7 +1,7 @@
 import React from 'react';
 import {BalanceCoins} from 'types/models/Crypto';
 import {EthereumNetwork, EXCHANGE, Fonts} from 'shared/constants/AppEnums';
-import { ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import AppCard from '@crema/core/AppCard';
@@ -13,7 +13,7 @@ import {Fade, Tooltip, Link, Typography} from '@material-ui/core';
 import LoadingInfoAMM from './LoadingInfoAMM';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
-import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 
 export interface Props {
   data?: any;
@@ -49,7 +49,7 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 };
 
 const InfoAMM: React.FC<Props> = (props) => {
-  const {data, exchange, address, loading,  networkName} = props;
+  const {data, exchange, address, loading, networkName} = props;
   const classes = useStyles();
 
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
@@ -71,57 +71,59 @@ const InfoAMM: React.FC<Props> = (props) => {
             <Box display='flex' flexDirection='column'>
               {loading ? (
                 <LoadingInfoAMM />
-              ) : (
-                data ? (
-                  <Box>
-                    <Box
-                      display='flex'
-                      flexDirection='row'
-                      justifyContent='space-between'>
-                      <Box display='flex' alignItems='center'>
-                        <TokenLogo
-                          token0={data.baseCurrency?.address || ''}
-                          token1={data.quoteCurrency?.address || ''}
-                        />
-                        <Box
-                          component='h3'
-                          color='text.primary'
-                          fontWeight={Fonts.BOLD}
-                          fontSize={20}
-                          mr={2}>
-                          {data.baseCurrency?.symbol}/
-                          {data.quoteCurrency?.symbol}
-                        </Box>
+              ) : data ? (
+                <Box>
+                  <Box
+                    display='flex'
+                    flexDirection='row'
+                    justifyContent='space-between'>
+                    <Box display='flex' alignItems='center'>
+                      <TokenLogo
+                        token0={data.baseCurrency?.address || ''}
+                        token1={data.quoteCurrency?.address || ''}
+                      />
+                      <Box
+                        component='h3'
+                        color='text.primary'
+                        fontWeight={Fonts.BOLD}
+                        fontSize={20}
+                        mr={2}>
+                        {data.baseCurrency?.symbol}/{data.quoteCurrency?.symbol}
                       </Box>
-                      <Box display='flex'>
+                    </Box>
+                    <Box display='flex'>
+                      <Box mr={3}>
+                        <Tooltip
+                          title={'View Pair on Explorer'}
+                          placement='top'>
+                          <a
+                            href={`${ETHERSCAN_API_URL_FROM_NETWORK(
+                              networkName,
+                            )}/address/${props.data.address}`}
+                            target='_blank'
+                            rel='noopener noreferrer'>
+                            <Avatar
+                              style={{
+                                color: '#3F51B5',
+                                backgroundColor: 'white',
+                                width: 34,
+                                height: 34,
+                              }}
+                              src='/images/etherescan.png'></Avatar>
+                          </a>
+                        </Tooltip>
+                      </Box>
+                      {analytics && (
                         <Box mr={3}>
                           <Tooltip
-                            title={'View Pair on Explorer'}
+                            title={`View Analytics on ${GET_EXCHANGE_NAME(
+                              exchange,
+                            )}`}
                             placement='top'>
-                            <a
-                              href={`${ETHERSCAN_API_URL_FROM_NETWORK(
-                                networkName,
-                              )}/address/${props.data.address}`}
-                              target='_blank'
-                              rel="noopener noreferrer">
-                              <Avatar
-                                style={{
-                                  color: '#3F51B5',
-                                  backgroundColor: 'white',
-                                  width: 34,
-                                  height: 34,
-                                }}
-                                src='/images/etherescan.png'></Avatar>
-                            </a>
-                          </Tooltip>
-                        </Box>
-                        {analytics && (
-                          <Box mr={3}>
-                             <Tooltip title={`View Analytics on ${GET_EXCHANGE_NAME(exchange)}`} placement='top'>
                             <a
                               href={analytics.url}
                               target='_blank'
-                              rel="noopener noreferrer">
+                              rel='noopener noreferrer'>
                               <Avatar
                                 style={{
                                   color: '#3F51B5',
@@ -131,12 +133,12 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 }}
                                 src={analytics.icon}></Avatar>
                             </a>
-                            </Tooltip>
-                          </Box>
-                        )}
-                        {dextoolsURL && (
-                          <Box mr={3}>
-                            <Tooltip title={'View On DexTools'} placement='top'>
+                          </Tooltip>
+                        </Box>
+                      )}
+                      {dextoolsURL && (
+                        <Box mr={3}>
+                          <Tooltip title={'View On DexTools'} placement='top'>
                             <a
                               href={dextoolsURL}
                               target='_blank'
@@ -150,65 +152,66 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 }}
                                 src='/images/dextools.png'></Avatar>
                             </a>
-                            </Tooltip>
-                          </Box>
-                        )}
-                        <Box mr={3}>
-                            <Link
-                              to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
-                              component={RouterLink} 
-                              >
-                              <Tooltip title={'Trade Token'} placement='top'>
-                                <Avatar
-                                  style={{
-                                    color: '#3F51B5',
-                                    backgroundColor: 'white',
-                                    width: 34,
-                                    height: 34,
-                                  }}>
-                                  <CompareArrowsIcon/>
-                                </Avatar>
-                              </Tooltip>
-                            </Link>
+                          </Tooltip>
                         </Box>
+                      )}
+                      <Box mr={3}>
+                        <Link
+                          to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                          component={RouterLink}>
+                          <Tooltip title={'Trade Token'} placement='top'>
+                            <Avatar
+                              style={{
+                                color: '#3F51B5',
+                                backgroundColor: 'white',
+                                width: 34,
+                                height: 34,
+                              }}>
+                              <CompareArrowsIcon />
+                            </Avatar>
+                          </Tooltip>
+                        </Link>
                       </Box>
-                    </Box>
-
-                    <Box display='flex' alignItems='center'>
-                      <Box
-                        component='h2'
-                        fontWeight={Fonts.BOLD}
-                        style={{color: color, marginTop: 13}}
-                        fontSize={24}>
-                        ${props.data.priceUsd.toFixed(4)}
-                      </Box>
-                    </Box>
-                    <Box display='flex'>
-                      <Box
-                        component='h3'
-                        fontWeight={Fonts.LIGHT}
-                        style={{color: color}}
-                        fontSize={13}>
-                        (24h {props.data.priceChange.toFixed(2)}%)
-                      </Box>
-                      <Box
-                        component='h3'
-                        fontWeight={Fonts.LIGHT}
-                        style={{color: 'text.primary', marginLeft: 10}}
-                        fontSize={13}>
-                        {props.data.price.toFixed(8)}{' '}
-                        {props.data.quoteCurrency?.symbol}
-                      </Box>
-                    </Box>
-
-                    <Box pt={{md: 2, lg: 3, xl: 6}}>
-                      {data && <CoinsInfo coins={coinInfoFactory(data)} />}
                     </Box>
                   </Box>
-                )
-              : (
-                <Typography component='h1' color={'primary'}>No data available for this pair on {GET_EXCHANGE_NAME(exchange)} </Typography>
-            )) }
+
+                  <Box display='flex' alignItems='center'>
+                    <Box
+                      component='h2'
+                      fontWeight={Fonts.BOLD}
+                      style={{color: color, marginTop: 13}}
+                      fontSize={24}>
+                      ${props.data.priceUsd.toFixed(4)}
+                    </Box>
+                  </Box>
+                  <Box display='flex'>
+                    <Box
+                      component='h3'
+                      fontWeight={Fonts.LIGHT}
+                      style={{color: color}}
+                      fontSize={13}>
+                      (24h {props.data.priceChange.toFixed(2)}%)
+                    </Box>
+                    <Box
+                      component='h3'
+                      fontWeight={Fonts.LIGHT}
+                      style={{color: 'text.primary', marginLeft: 10}}
+                      fontSize={13}>
+                      {props.data.price.toFixed(8)}{' '}
+                      {props.data.quoteCurrency?.symbol}
+                    </Box>
+                  </Box>
+
+                  <Box pt={{md: 2, lg: 3, xl: 6}}>
+                    {data && <CoinsInfo coins={coinInfoFactory(data)} />}
+                  </Box>
+                </Box>
+              ) : (
+                <Typography component='h1' color={'primary'}>
+                  No data available for this pair on{' '}
+                  {GET_EXCHANGE_NAME(exchange)}{' '}
+                </Typography>
+              )}
             </Box>
           </AppCard>
         </>

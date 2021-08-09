@@ -23,7 +23,6 @@ const routeConfigs = [
   ...affiliateConfigs,
   ...nftWalletConfig,
   ...changelogConfigs,
-
 ];
 
 const routes = [

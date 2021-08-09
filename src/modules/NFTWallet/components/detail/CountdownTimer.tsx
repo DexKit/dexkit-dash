@@ -14,8 +14,8 @@ export default (props: Props) => {
   const timerRef = useRef<any>();
 
   const countDown = useCallback(() => {
-    let year = new Date().getFullYear();
-    let difference = dateTime.diff(moment());
+    const year = new Date().getFullYear();
+    const difference = dateTime.diff(moment());
     let timeLeft: any = {};
 
     if (difference > 0) {

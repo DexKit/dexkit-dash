@@ -251,11 +251,11 @@ export default () => {
   const handleAssetClick = useCallback(
     (asset: any) => {
       if (selectActive) {
-        let assetIndex = getAssetIndex(asset);
+        const assetIndex = getAssetIndex(asset);
 
         if (assetIndex > -1) {
           setSelectedAssets((value) => {
-            let newArr = [...value];
+            const newArr = [...value];
 
             newArr.splice(assetIndex, 1);
 
@@ -284,7 +284,7 @@ export default () => {
   );
 
   const handleChangeAction = useCallback((e) => {
-    let value = e.target.value;
+    const value = e.target.value;
 
     setAction(value);
 
@@ -356,7 +356,7 @@ export default () => {
 
     try {
       setLoadingMoreAssets(true);
-      let result = await getAssets({
+      const result = await getAssets({
         sortBy,
         offset: page * 20,
         limit: 20,

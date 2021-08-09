@@ -128,7 +128,7 @@ const ThemeSetting: React.FC<ThemeSettingProps> = (props) => {
     updatePrimaryColor!(colorSet.PrimaryColor);
     updateSecondaryColor!(colorSet.SecondaryColor);
   };
-  
+
   const classes = useStyles(props);
 
   return (

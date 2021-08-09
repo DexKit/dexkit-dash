@@ -119,7 +119,7 @@ export const AssetDetail = () => {
 
       if (userAccountAddress) {
         const provider = getProvider();
-        let seaport = await getOpenSeaPort(provider);
+        const seaport = await getOpenSeaPort(provider);
 
         setWaitingConfirmation(true);
 
@@ -183,13 +183,13 @@ export const AssetDetail = () => {
           asset_contract_address: data?.asset_contract?.address,
         });
 
-        let orderIndex = orders.findIndex(
+        const orderIndex = orders.findIndex(
           (order) =>
             order.hash.toLowerCase() === listing.order_hash.toLowerCase(),
         );
 
         if (orderIndex > -1) {
-          let order = orders[orderIndex];
+          const order = orders[orderIndex];
 
           setIsCancellingListing(true);
 
@@ -231,12 +231,12 @@ export const AssetDetail = () => {
         asset_contract_address: data?.asset_contract?.address,
       });
 
-      let orderIndex = orders.findIndex(
+      const orderIndex = orders.findIndex(
         (order) => order.hash == buyOrder.order_hash,
       );
 
       if (orderIndex > -1) {
-        let order = orders[orderIndex];
+        const order = orders[orderIndex];
 
         setIsBuying(true);
 

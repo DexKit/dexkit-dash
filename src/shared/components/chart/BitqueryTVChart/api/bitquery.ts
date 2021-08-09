@@ -1,6 +1,6 @@
-export const endpoint = 'https://graphql.bitquery.io';    
+export const endpoint = 'https://graphql.bitquery.io';
 
-export const GET_COIN_INFO =`
+export const GET_COIN_INFO = `
 query GET_COIN_INFO($tokenAddress: String, $network: EthereumNetwork) {
   ethereum(network: $network) {
     dexTrades(
@@ -25,7 +25,7 @@ query GET_COIN_INFO($tokenAddress: String, $network: EthereumNetwork) {
     }
   }
 }
-`; 
+`;
 
 export const GET_COIN_BARS = `
 query ($from: ISO8601DateTime!, $to: ISO8601DateTime!, $interval: Int!, $tokenAddress: String) {
@@ -50,10 +50,7 @@ query ($from: ISO8601DateTime!, $to: ISO8601DateTime!, $interval: Int!, $tokenAd
     }
   }
 }
-`; 
-
-
-  
+`;
 
 export const GET_COIN_BARS_USDT = `
 query GetCoinBars($network: EthereumNetwork!, $from: ISO8601DateTime!, $to: ISO8601DateTime!, $interval: Int!, $base: String,   $wrappedNative: String,  $usdReference: String ) {
@@ -94,7 +91,7 @@ query GetCoinBars($network: EthereumNetwork!, $from: ISO8601DateTime!, $to: ISO8
     }
   }
 }
-`; 
+`;
 
 export const GET_COIN_BARS_NATIVE_USDT = `
 query GetCoinBars($network: EthereumNetwork!, $from: ISO8601DateTime!, $to: ISO8601DateTime!, $interval: Int!,  $wrappedNative: String,  $usdReference: String ) {
@@ -128,4 +125,4 @@ query GetCoinBars($network: EthereumNetwork!, $from: ISO8601DateTime!, $to: ISO8
     }
   }
 }
-`; 
+`;

@@ -276,66 +276,70 @@ export const BITQUERY_TOKEN_STATISTICS = gql`
 `;
 
 export const BITQUERY_TOKEN_TRADES = gql`
-query GetTokenTrades(
-  $network: EthereumNetwork!,
-  $exchangeName: String,
-  $from: ISO8601DateTime,
-  $till: ISO8601DateTime,
-  $baseAddress: String,
-  $quoteAddress: String,
-  $limit: Int!,
-  $offset: Int!,
-  $tradeAmount: Float
-) {
-   ethereum(network: $network) {
-     dexTrades(
-       options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
-       exchangeName: {is: $exchangeName}
-       baseCurrency: {is: $baseAddress}
-       quoteCurrency: {is: $quoteAddress}
-       tradeAmountUsd: {gt: $tradeAmount}
-       date: {since: $from, till: $till}
-     ) {
-       tradeIndex
-       block {
-         timestamp {
-           time(format: "%Y-%m-%d %H:%M:%S")
-         }
-         height
-       }
-       protocol
-       exchange {
-         fullName
-       }
-       smartContract {
-         address {
-           address
-           annotation
-         }
-       }
-       transaction {
-         hash
-       }
-       baseAmount
-       baseAmountInUsd: baseAmount(in: USD)
-       baseCurrency {
-         address
-         decimals
-         name
-         symbol
-       }
-       side
-       quoteAmount
-       quoteAmountInUsd: quoteAmount(in: USD)
-       quoteCurrency {
-         address
-         decimals
-         name
-         symbol
-       }
-       tradeAmount(in: ETH)
-       tradeAmountIsUsd: tradeAmount(in: USD)
-     }
-   }
- }
+  query GetTokenTrades(
+    $network: EthereumNetwork!
+    $exchangeName: String
+    $from: ISO8601DateTime
+    $till: ISO8601DateTime
+    $baseAddress: String
+    $quoteAddress: String
+    $limit: Int!
+    $offset: Int!
+    $tradeAmount: Float
+  ) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {
+          desc: ["block.height", "tradeIndex"]
+          limit: $limit
+          offset: $offset
+        }
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {is: $baseAddress}
+        quoteCurrency: {is: $quoteAddress}
+        tradeAmountUsd: {gt: $tradeAmount}
+        date: {since: $from, till: $till}
+      ) {
+        tradeIndex
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        protocol
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        transaction {
+          hash
+        }
+        baseAmount
+        baseAmountInUsd: baseAmount(in: USD)
+        baseCurrency {
+          address
+          decimals
+          name
+          symbol
+        }
+        side
+        quoteAmount
+        quoteAmountInUsd: quoteAmount(in: USD)
+        quoteCurrency {
+          address
+          decimals
+          name
+          symbol
+        }
+        tradeAmount(in: ETH)
+        tradeAmountIsUsd: tradeAmount(in: USD)
+      }
+    }
+  }
 `;

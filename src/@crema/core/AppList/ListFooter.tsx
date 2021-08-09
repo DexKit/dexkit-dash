@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, CircularProgress, makeStyles} from '@material-ui/core';
 import clsx from 'clsx';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   listFooterRoot: {
     padding: 10,
     color: theme.palette.text.secondary,

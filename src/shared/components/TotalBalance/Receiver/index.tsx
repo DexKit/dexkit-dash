@@ -9,8 +9,8 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 interface Props {
-  open: boolean,
-  onClose: () => void,
+  open: boolean;
+  onClose: () => void;
 }
 
 const Receiver: React.FC<Props> = (props) => {
@@ -54,10 +54,14 @@ const Receiver: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <Dialog fullWidth maxWidth="xs"  open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">
-
+      <Dialog
+        fullWidth
+        maxWidth='xs'
+        open={props.open}
+        onClose={props.onClose}
+        aria-labelledby='form-dialog-title'>
         <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card >
+          <Card>
             <Tabs
               indicatorColor='primary'
               textColor='primary'
@@ -71,11 +75,9 @@ const Receiver: React.FC<Props> = (props) => {
               />
             </Tabs>
 
-            <ReceiverForm  />
-          
+            <ReceiverForm />
           </Card>
         </Box>
-
       </Dialog>
     </div>
   );

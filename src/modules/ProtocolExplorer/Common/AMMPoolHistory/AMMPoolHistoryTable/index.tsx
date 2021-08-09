@@ -11,7 +11,7 @@ import Loader from '@crema/core/Loader';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
-import { MintBurn } from 'types/app';
+import {MintBurn} from 'types/app';
 
 interface Props {
   exchange: EXCHANGE;

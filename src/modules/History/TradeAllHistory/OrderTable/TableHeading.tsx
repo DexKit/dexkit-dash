@@ -20,7 +20,7 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
       fontSize: 16,
       padding: 8,
       fontFamily: Fonts.LIGHT,
-     
+
       '&:last-child': {
         // [theme.breakpoints.up('xl')]: {
         //   paddingRight: 4,

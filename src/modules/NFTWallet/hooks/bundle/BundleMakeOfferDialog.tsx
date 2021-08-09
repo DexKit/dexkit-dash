@@ -54,7 +54,7 @@ const TokenBalanceSpan = (props: TokenBalanceSpanProps) => {
   useEffect(() => {
     (async () => {
       if (token) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const seaport = await getOpenSeaPort(provider);
 
@@ -146,12 +146,12 @@ export default (props: Props) => {
 
   useEffect(() => {
     (async () => {
-      let tokens = (await getTokens()).tokens;
+      const tokens = (await getTokens()).tokens;
 
       setPaymentTokens(tokens);
 
       if (tokens) {
-        let firstToken = tokens[0];
+        const firstToken = tokens[0];
         setSelectedToken({
           address: firstToken.address,
           decimals: firstToken.decimals,

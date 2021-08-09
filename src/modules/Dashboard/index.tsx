@@ -1,12 +1,11 @@
 import React from 'react';
 
-
 export const dashBoardConfigs = [
   {
     routes: [
       {
         path: '/dashboard/overview',
-        component: React.lazy(() => import('./Overview'))
+        component: React.lazy(() => import('./Overview')),
       },
     ],
   },
@@ -22,7 +21,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/dashboard/favorite-coins',
-        component: React.lazy(() => import('./Favorites'))
+        component: React.lazy(() => import('./Favorites')),
       },
     ],
   },
@@ -51,7 +50,7 @@ export const dashBoardConfigs = [
       },
     ],
   },
- 
+
   // {
   //   auth: ['wallet'],
   //   routes: [

@@ -1,11 +1,8 @@
-import {
-  createStyles,
-  Theme
-} from '@material-ui/core/styles';
-import { Styles } from "jss";
+import {createStyles, Theme} from '@material-ui/core/styles';
+import {Styles} from 'jss';
 import {ThemeProperties} from 'types/myApps';
 import {HelpText} from '../';
-export { DefaultTheme } from './defaultTheme';
+export {DefaultTheme} from './defaultTheme';
 
 export const HELP_TEXT_THEME: HelpText<Partial<ThemeProperties>> = {
   background: ['Enter with the background color of the site'],
@@ -22,27 +19,27 @@ export const HELP_TEXT_THEME: HelpText<Partial<ThemeProperties>> = {
 
 export const modalThemeStyle: Styles = {
   content: {
-      backgroundColor: '#EFEFEF',
-      borderColor: '#CACACA',
-      bottom: 'auto',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 0,
-      left: 'auto',
-      maxHeight: '90%',
-      minWidth: '350px',
-      overflow: 'hidden',
-      padding: '16px',
-      position: 'relative',
-      right: 'auto',
-      top: 'auto',
+    backgroundColor: '#EFEFEF',
+    borderColor: '#CACACA',
+    bottom: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 0,
+    left: 'auto',
+    maxHeight: '90%',
+    minWidth: '350px',
+    overflow: 'hidden',
+    padding: '16px',
+    position: 'relative',
+    right: 'auto',
+    top: 'auto',
   },
   overlay: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      display: 'flex',
-      justifyContent: 'center',
-      zIndex: 12345,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    display: 'flex',
+    justifyContent: 'center',
+    zIndex: 12345,
   },
 };
 
@@ -138,8 +135,5 @@ export const lightThemeColors: ThemeProperties = {
   topbarSeparatorColor: '#dedede',
   // ...fontSizes,
   tdFontSize: '',
-  thFontSize: ''
+  thFontSize: '',
 };
-
-
-

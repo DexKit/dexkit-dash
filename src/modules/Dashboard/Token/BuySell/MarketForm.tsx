@@ -26,7 +26,7 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 
 interface Props {
   chainId: number | undefined;
@@ -271,8 +271,8 @@ const MarketForm: React.FC<Props> = (props) => {
   };
 
   let errorMessage = null;
-  let disabled = false;
-  let notConnected = web3State !== Web3State.Done;
+  const disabled = false;
+  const notConnected = web3State !== Web3State.Done;
 
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
@@ -375,7 +375,11 @@ const MarketForm: React.FC<Props> = (props) => {
                 id={'marketSel0'}
                 label={web3State === Web3State.Done ? 'Your Coins' : ''}
                 selected={tokenFrom}
-                options={(web3State === Web3State.Done && select0.length ) ? select0 : select1}
+                options={
+                  web3State === Web3State.Done && select0.length
+                    ? select0
+                    : select1
+                }
                 disabled={disabled}
                 onChange={($token) => {
                   onChangeToken($token, 'from');
@@ -433,16 +437,17 @@ const MarketForm: React.FC<Props> = (props) => {
               item
               xs={12}
               md={6}>
-      
-      {select1.length > 0 && <SelectToken
-                id={'marketSel1'}
-                selected={tokenTo}
-                options={select1}
-                disabled={disabled}
-                onChange={($token) => {
-                  onChangeToken($token, 'to');
-                }}
-              />}
+              {select1.length > 0 && (
+                <SelectToken
+                  id={'marketSel1'}
+                  selected={tokenTo}
+                  options={select1}
+                  disabled={disabled}
+                  onChange={($token) => {
+                    onChangeToken($token, 'to');
+                  }}
+                />
+              )}
             </Grid>
             <Grid xs={12} md={12}>
               <Box display={'flex'} justifyContent={'space-evenly'}>

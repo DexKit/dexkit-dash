@@ -3,14 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork, TradeSide } from "./../../../../../../__generated__/globalTypes";
+import {
+  EthereumNetwork,
+  TradeSide,
+} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetOrderInfo
 // ====================================================
 
 export interface GetOrderInfo_ethereum_dexTrades_baseCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -34,7 +37,7 @@ export interface GetOrderInfo_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -46,7 +49,7 @@ export interface GetOrderInfo_ethereum_dexTrades_block_timestamp {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_block {
-  __typename: "BlockExtended";
+  __typename: 'BlockExtended';
   /**
    * Hash hex representation
    */
@@ -62,7 +65,7 @@ export interface GetOrderInfo_ethereum_dexTrades_block {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_date {
-  __typename: "Date";
+  __typename: 'Date';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -70,7 +73,7 @@ export interface GetOrderInfo_ethereum_dexTrades_date {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_exchange {
-  __typename: "EthereumDex";
+  __typename: 'EthereumDex';
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -82,7 +85,7 @@ export interface GetOrderInfo_ethereum_dexTrades_exchange {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_maker {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -90,7 +93,7 @@ export interface GetOrderInfo_ethereum_dexTrades_maker {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_quoteCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -114,7 +117,7 @@ export interface GetOrderInfo_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_taker {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -122,7 +125,7 @@ export interface GetOrderInfo_ethereum_dexTrades_taker {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_transaction_to {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -130,7 +133,7 @@ export interface GetOrderInfo_ethereum_dexTrades_transaction_to {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_transaction_txFrom {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -138,7 +141,7 @@ export interface GetOrderInfo_ethereum_dexTrades_transaction_txFrom {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades_transaction {
-  __typename: "EthereumTransactionInfoExtended";
+  __typename: 'EthereumTransactionInfoExtended';
   /**
    * Gas consumed
    */
@@ -174,7 +177,7 @@ export interface GetOrderInfo_ethereum_dexTrades_transaction {
 }
 
 export interface GetOrderInfo_ethereum_dexTrades {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   baseAmount: number | null;
   baseAmountInUSD: number | null;
   /**
@@ -229,7 +232,7 @@ export interface GetOrderInfo_ethereum_dexTrades {
 }
 
 export interface GetOrderInfo_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

@@ -23,7 +23,7 @@ export function useSwapTransactions() {
 
   const updateStatus = useCallback(
     (tx: ChangellyTransaction, status: string) => {
-      let newTx = {...tx, status};
+      const newTx = {...tx, status};
       dispatch(swapUpdateTransaction(newTx));
     },
     [transactions],

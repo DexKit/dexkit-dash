@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useWeb3 } from 'hooks/useWeb3';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useWeb3} from 'hooks/useWeb3';
 import {Box, Button, TextField} from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Fonts } from 'shared/constants/AppEnums';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {Fonts} from 'shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
 import QRCode from 'qrcode.react';
 import copy from 'copy-to-clipboard';
 
-interface Props {
-}
+interface Props {}
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -34,8 +33,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const ReceiverForm: React.FC<Props> = (props) => {
   const classes = useStyles();
-  
-  const { account } = useWeb3();
+
+  const {account} = useWeb3();
 
   const [inputAddress] = useState(account);
   const [qrCodeText, setQRCodeText] = useState(inputAddress ?? '');
@@ -49,12 +48,11 @@ const ReceiverForm: React.FC<Props> = (props) => {
     generateQRCode(inputAddress ?? '');
   }, [inputAddress]);
 
-
   return (
     <Box>
       <form noValidate autoComplete='off'>
-        <Box textAlign="center" mb={5}>
-          <QRCode id="walletAddressQrCode" size={180} value={qrCodeText} />
+        <Box textAlign='center' mb={5}>
+          <QRCode id='walletAddressQrCode' size={180} value={qrCodeText} />
         </Box>
         <Box mb={5}>
           <TextField
@@ -67,21 +65,17 @@ const ReceiverForm: React.FC<Props> = (props) => {
             }}
           />
         </Box>
-        <Box textAlign="center" mb={5}>
+        <Box textAlign='center' mb={5}>
           <Button
             fullWidth
-            style={{ maxWidth: '60%' }}
-            variant="contained"
+            style={{maxWidth: '60%'}}
+            variant='contained'
             onClick={() => copy(inputAddress ?? '')}
-            color="primary"
-          >
+            color='primary'>
             Copy To Clipboard
           </Button>
         </Box>
-
       </form>
-
-
     </Box>
   );
 };

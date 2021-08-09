@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 interface HorizontalNavProps {}
 
 const HorizontalNav: React.FC<HorizontalNavProps> = () => {
-  const  items  = useRoutesConfig();
+  const items = useRoutesConfig();
   return (
     <List className='navbarNav'>
       {items.map((item) => (

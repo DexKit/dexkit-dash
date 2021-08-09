@@ -59,11 +59,9 @@
 //   return null;
 // };
 
-
-
 export const useAuthUser = (p?: boolean) => {
   if (p) {
-    return {displayName: '', email: '', photoURL: ''}
+    return {displayName: '', email: '', photoURL: ''};
   }
   return null;
-}
+};

@@ -58,7 +58,7 @@ export async function fetchPrice(
 
   let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/price?';
 
-  for (let [key, value] of params) {
+  for (const [key, value] of params) {
     url += `${key}=${value}&`;
   }
 
@@ -67,7 +67,7 @@ export async function fetchPrice(
   const json = await quote.json();
 
   if (json.code) {
-    throw new Error(json.reason||json.message||'ERROR');
+    throw new Error(json.reason || json.message || 'ERROR');
   } else {
     return json;
   }

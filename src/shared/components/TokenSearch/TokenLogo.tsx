@@ -6,7 +6,7 @@ import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
 import {useChainId} from 'hooks/useChainId';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   pair: {
@@ -29,7 +29,6 @@ interface Props {
   token: string;
   network: EthereumNetwork;
   logoURL?: string;
- 
 }
 
 const TokenLogo: React.FC<Props> = (props) => {
@@ -58,24 +57,25 @@ const TokenLogo: React.FC<Props> = (props) => {
       return dexkitLogo;
     }
 
-    if(url){
+    if (url) {
       return url;
     }
-    
-    if(address.toLowerCase() === 'bsc') {
+
+    if (address.toLowerCase() === 'bsc') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
     }
 
-    if(address.toLowerCase() === 'eth') {
+    if (address.toLowerCase() === 'eth') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
     }
 
-
-    if(address.toLowerCase() === '') {
+    if (address.toLowerCase() === '') {
       return currencyLogo;
     }
-    
-    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${utils.getAddress(address)}/logo.png`;
+
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${utils.getAddress(
+      address,
+    )}/logo.png`;
   };
 
   const addDefaultSrc = (ev: any) => {

@@ -16,8 +16,8 @@ import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
-import { getERC20Contract } from 'utils/ethers';
-import { classNames } from 'react-select/src/utils';
+import {getERC20Contract} from 'utils/ethers';
+import {classNames} from 'react-select/src/utils';
 
 interface Props {
   step: Steps | undefined;
@@ -51,31 +51,42 @@ const ApproveStep: React.FC<Props> = (props) => {
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   const isApprove = async () => {
-
-    if (tokenFrom.symbol.toUpperCase() === 'ETH'  || (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance)   ) {
+    if (
+      tokenFrom.symbol.toUpperCase() === 'ETH' ||
+      (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance)
+    ) {
       return true;
     }
 
     const contractWrappers = await getContractWrappers(chainId);
 
-    const ethersProviders = new ethers.providers.Web3Provider(contractWrappers?.getProvider() ?? getProvider(), chainId )
+    const ethersProviders = new ethers.providers.Web3Provider(
+      contractWrappers?.getProvider() ?? getProvider(),
+      chainId,
+    );
 
-    const etherERC20Contract = getERC20Contract(tokenFrom.address, ethersProviders, account )
-    const allowance = await etherERC20Contract.allowance(account, allowanceTarget)
-    
- 
-    const isApproved = new BigNumber(allowance.toString()).isGreaterThan(amountFn);
+    const etherERC20Contract = getERC20Contract(
+      tokenFrom.address,
+      ethersProviders,
+      account,
+    );
+    const allowance = await etherERC20Contract.allowance(
+      account,
+      allowanceTarget,
+    );
 
+    const isApproved = new BigNumber(allowance.toString()).isGreaterThan(
+      amountFn,
+    );
 
     return isApproved;
   };
 
   useEffect(() => {
     if (step === Steps.APPROVE) {
-   
       isApprove()
         .then((value) => {
-          if (value) {     
+          if (value) {
             onShifting(step);
           } else {
             onLoading(false);
@@ -106,11 +117,21 @@ const ApproveStep: React.FC<Props> = (props) => {
       }
 
       const maxApproval = new BigNumber(2).pow(256).minus(1);
-      const ethersProviders = new ethers.providers.Web3Provider(contractWrappers?.getProvider() ?? getProvider(), chainId )
+      const ethersProviders = new ethers.providers.Web3Provider(
+        contractWrappers?.getProvider() ?? getProvider(),
+        chainId,
+      );
 
-      const etherERC20Contract = getERC20Contract(tokenFrom.address, ethersProviders, account )
-      const tx = await etherERC20Contract.approve(allowanceTarget, maxApproval.toString());
-    
+      const etherERC20Contract = getERC20Contract(
+        tokenFrom.address,
+        ethersProviders,
+        account,
+      );
+      const tx = await etherERC20Contract.approve(
+        allowanceTarget,
+        maxApproval.toString(),
+      );
+
       web3Wrapper
         .awaitTransactionSuccessAsync(tx.hash)
         .then(() => {

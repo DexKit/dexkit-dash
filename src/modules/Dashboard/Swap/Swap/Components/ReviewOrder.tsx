@@ -170,7 +170,9 @@ export const ReviewOrder = (props: Props) => {
       </Grid>
       {transaction?.kycRequired ? (
         <Grid item xs={12}>
-          <Typography variant='caption' color={'error'}>KYC Verification Needed</Typography>
+          <Typography variant='caption' color={'error'}>
+            KYC Verification Needed
+          </Typography>
           <Typography variant='body1'></Typography>
         </Grid>
       ) : null}
@@ -204,7 +206,8 @@ export const ReviewOrder = (props: Props) => {
           />
         </Box>
       </Grid>
-      {(transaction?.currencyFrom.toLowerCase() === 'eth' && status == STATUS_WAITING) ? (
+      {transaction?.currencyFrom.toLowerCase() === 'eth' &&
+      status == STATUS_WAITING ? (
         <Grid item xs={12}>
           <Button
             onClick={handleTransfer}

@@ -34,7 +34,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   };
 
   const classes = useStyles({themeMode});
-  let sidebarClasses = classes.sidebarStandard;
+  const sidebarClasses = classes.sidebarStandard;
 
   return (
     <>
@@ -42,7 +42,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         <Drawer
           anchor={position}
           open={navCollapsed}
-          onClose={ev => handleToggleDrawer()}
+          onClose={(ev) => handleToggleDrawer()}
           classes={{
             root: clsx(variant),
             paper: clsx(variant),
@@ -66,7 +66,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             !navCollapsed ? '' : 'mini-sidebar-collapsed',
           )}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-           {/* <AppLogo
+            {/* <AppLogo
               justifyContent='center'
               logo={require('assets/images/logo_white_kit.png')}
            />*/}

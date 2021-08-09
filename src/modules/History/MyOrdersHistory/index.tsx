@@ -6,7 +6,7 @@ import {GridContainer} from '@crema';
 import ErrorView from 'modules/Common/ErrorView';
 import useFetch from 'use-http';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
-import { useChainId} from 'hooks/useChainId';
+import {useChainId} from 'hooks/useChainId';
 import {useNetwork} from 'hooks/useNetwork';
 import {RouteComponentProps, useHistory} from 'react-router';
 import MyOrdersTable from './MyOrdersTable';
@@ -16,11 +16,11 @@ import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
 import PageTitle from 'shared/components/PageTitle';
-import { truncateAddress } from 'utils/text';
-import { CoinDetailCoinGecko } from 'types/coingecko/coin.interface';
-import { useWeb3 } from 'hooks/useWeb3';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {truncateAddress} from 'utils/text';
+import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
+import {useWeb3} from 'hooks/useWeb3';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 type Params = {
   address: string;
@@ -39,9 +39,6 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const history = useHistory();
   const account = useDefaultAccount();
 
-
-
-
   const tokenList = useTokenList(networkName);
 
   const {currentChainId} = useChainId();
@@ -58,15 +55,18 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const [totalRows, setTotalRows] = useState(0);
 
   const {loading, error, data: dataFn, get} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`
-  , );
+    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`,
+  );
 
-  useEffect(()=> {
-    if(account){
-      get(`?page=${currentPage + 1}&perPage=${rowsPerPage}&trader=${account?.toLowerCase()}`)
+  useEffect(() => {
+    if (account) {
+      get(
+        `?page=${
+          currentPage + 1
+        }&perPage=${rowsPerPage}&trader=${account?.toLowerCase()}`,
+      );
     }
-  }, [account, currentPage, rowsPerPage])
-
+  }, [account, currentPage, rowsPerPage]);
 
   useEffect(() => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
@@ -107,7 +107,11 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   }, [dataFn, tokenList]);
 
   const classes = useStyles();
-  const token = useFetch<CoinDetailCoinGecko>(`${COINGECKO_CONTRACT_URL}/${address}`, {}, [address]);
+  const token = useFetch<CoinDetailCoinGecko>(
+    `${COINGECKO_CONTRACT_URL}/${address}`,
+    {},
+    [address],
+  );
 
   return (
     <Box pt={{xl: 4}}>
@@ -119,7 +123,10 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
           ],
           active: {name: 'My Active Orders'},
         }}
-        title={{name: `My Active Orders: ${truncateAddress(account)}`, hasCopy: account}}
+        title={{
+          name: `My Active Orders: ${truncateAddress(account)}`,
+          hasCopy: account,
+        }}
       />
       {token.data && (
         <PageTitle

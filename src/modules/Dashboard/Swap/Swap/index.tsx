@@ -297,10 +297,10 @@ export const SwapComponent = (props: any) => {
   }, []);
 
   const getPriceRatioText = useCallback(() => {
-    let to = toCoin?.name?.toUpperCase();
-    let from = fromCoin?.name.toUpperCase();
+    const to = toCoin?.name?.toUpperCase();
+    const from = fromCoin?.name.toUpperCase();
 
-    let ratio = Number(fromAmount) / Number(toAmount);
+    const ratio = Number(fromAmount) / Number(toAmount);
 
     return `1 ${to} ≈ ${ratio.toFixed(8)} ${from}`;
   }, [toAmount, fromAmount, toCoin, fromCoin]);
@@ -444,7 +444,7 @@ export const SwapComponent = (props: any) => {
   const tokens = useTokenList(EthereumNetwork.ethereum);
 
   useEffect(() => {
-    let web3 = getWeb3();
+    const web3 = getWeb3();
 
     if (userAccountAddress) {
       web3?.eth.getBalance(userAccountAddress).then((result: string) => {
@@ -461,7 +461,7 @@ export const SwapComponent = (props: any) => {
 
   const handleSendCoin = useCallback(
     (amount: number, address: string) => {
-      let web3 = getWeb3();
+      const web3 = getWeb3();
 
       if (userAccountAddress) {
         setSendCoinsLoading(true);
@@ -549,7 +549,9 @@ export const SwapComponent = (props: any) => {
         {transaction ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
+              title={
+                <Typography variant='subtitle1'>Multichain Swap</Typography>
+              }
               action={
                 <Button onClick={handleReset} startIcon={<ArrowBackIcon />}>
                   Back
@@ -568,7 +570,9 @@ export const SwapComponent = (props: any) => {
         {goToReceiveAddress ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
+              title={
+                <Typography variant='subtitle1'>Multichain Swap</Typography>
+              }
               action={
                 <Button onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
                   Back
@@ -593,7 +597,9 @@ export const SwapComponent = (props: any) => {
         {!loading && !goToReceiveAddress && !transaction ? (
           <>
             <CardHeader
-              title={<Typography variant='subtitle1'>Multichain Swap</Typography>}
+              title={
+                <Typography variant='subtitle1'>Multichain Swap</Typography>
+              }
               action={
                 <IconButton onClick={handleOpenTransactions}>
                   <Badge

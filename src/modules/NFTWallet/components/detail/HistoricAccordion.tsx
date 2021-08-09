@@ -49,7 +49,7 @@ export default (props: Props) => {
       .then((response) => {
         console.log(response);
 
-        let result = response.data?.asset_events;
+        const result = response.data?.asset_events;
 
         if (result?.length < 20) {
           setHasMore(false);
@@ -57,7 +57,7 @@ export default (props: Props) => {
           setHasMore(true);
         }
 
-        let newData = [...data, ...result];
+        const newData = [...data, ...result];
 
         setData(newData);
       })

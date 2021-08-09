@@ -1,9 +1,9 @@
-import { ZRX_API_URL, ZRX_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
-import { OrderSide } from 'types/app';
+import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {OrderSide} from 'types/app';
 
-import { EthereumNetwork } from 'shared/constants/AppEnums';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import { QuoteParams, SwapQuoteResponse } from './types';
+import {QuoteParams, SwapQuoteResponse} from './types';
 
 /**
  * Fetch quote right before confirm, with final validation
@@ -25,13 +25,9 @@ export async function fetchQuote(
   const quoteName = quoteParams.quoteToken.symbol.toUpperCase();
 
   const baseTokenAddress =
-    baseName === currency
-      ? currency
-      : quoteParams.baseToken.address;
+    baseName === currency ? currency : quoteParams.baseToken.address;
   const quoteTokenAddress =
-    quoteName === currency
-      ? currency
-      : quoteParams.quoteToken.address;
+    quoteName === currency ? currency : quoteParams.quoteToken.address;
 
   const sellTokenAddress = isSell ? baseTokenAddress : quoteTokenAddress;
   const buyTokenAddress = isSell ? quoteTokenAddress : baseTokenAddress;
@@ -85,7 +81,7 @@ export async function fetchQuote(
 
   let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/quote?';
 
-  for (let [key, value] of params) {
+  for (const [key, value] of params) {
     url += `${key}=${value}&`;
   }
 

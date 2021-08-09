@@ -90,7 +90,7 @@ const UserInfo: React.FC<UserInfoProps> = (props) => {
               }
             }}>
             Logout
-          </MenuItem> */} 
+          </MenuItem> */}
         </Menu>
       </Box>
     </Box>

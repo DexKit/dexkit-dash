@@ -128,7 +128,6 @@ export default class TVChartContainer extends React.PureComponent<
 
     const tvWidget = new widget(widgetOptions);
     this._tvWidget = tvWidget;
-    
 
     // tslint:disable-next-line: no-empty
     tvWidget.onChartReady(() => {

@@ -39,6 +39,5 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   },
   title: {
     display: 'flex',
-    
   },
 }));

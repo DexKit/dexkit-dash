@@ -57,7 +57,7 @@ const TokenBalanceSpan = (props: TokenBalanceSpanProps) => {
   useEffect(() => {
     (async () => {
       if (token) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const seaport = await getOpenSeaPort(provider);
 

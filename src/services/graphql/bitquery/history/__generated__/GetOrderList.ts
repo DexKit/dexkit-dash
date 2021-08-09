@@ -3,14 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork, TradeSide } from "./../../../../../../__generated__/globalTypes";
+import {
+  EthereumNetwork,
+  TradeSide,
+} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetOrderList
 // ====================================================
 
 export interface GetOrderList_ethereum_maker_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -18,7 +21,7 @@ export interface GetOrderList_ethereum_maker_block_timestamp {
 }
 
 export interface GetOrderList_ethereum_maker_block {
-  __typename: "BlockExtended";
+  __typename: 'BlockExtended';
   /**
    * Block timestamp
    */
@@ -30,7 +33,7 @@ export interface GetOrderList_ethereum_maker_block {
 }
 
 export interface GetOrderList_ethereum_maker_transaction {
-  __typename: "EthereumTransactionInfoExtended";
+  __typename: 'EthereumTransactionInfoExtended';
   /**
    * Hash hex representation
    */
@@ -38,7 +41,7 @@ export interface GetOrderList_ethereum_maker_transaction {
 }
 
 export interface GetOrderList_ethereum_maker_exchange {
-  __typename: "EthereumDex";
+  __typename: 'EthereumDex';
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -46,7 +49,7 @@ export interface GetOrderList_ethereum_maker_exchange {
 }
 
 export interface GetOrderList_ethereum_maker_smartContract_address {
-  __typename: "Address";
+  __typename: 'Address';
   /**
    * String address representation
    */
@@ -58,7 +61,7 @@ export interface GetOrderList_ethereum_maker_smartContract_address {
 }
 
 export interface GetOrderList_ethereum_maker_smartContract {
-  __typename: "EthereumSmartContract";
+  __typename: 'EthereumSmartContract';
   /**
    * Smart Contract Address
    */
@@ -66,7 +69,7 @@ export interface GetOrderList_ethereum_maker_smartContract {
 }
 
 export interface GetOrderList_ethereum_maker_baseCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -86,7 +89,7 @@ export interface GetOrderList_ethereum_maker_baseCurrency {
 }
 
 export interface GetOrderList_ethereum_maker_quoteCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -106,7 +109,7 @@ export interface GetOrderList_ethereum_maker_quoteCurrency {
 }
 
 export interface GetOrderList_ethereum_maker {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   /**
    * Block in the blockchain
    */
@@ -153,7 +156,7 @@ export interface GetOrderList_ethereum_maker {
 }
 
 export interface GetOrderList_ethereum_taker_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -161,7 +164,7 @@ export interface GetOrderList_ethereum_taker_block_timestamp {
 }
 
 export interface GetOrderList_ethereum_taker_block {
-  __typename: "BlockExtended";
+  __typename: 'BlockExtended';
   /**
    * Block timestamp
    */
@@ -173,7 +176,7 @@ export interface GetOrderList_ethereum_taker_block {
 }
 
 export interface GetOrderList_ethereum_taker_date {
-  __typename: "Date";
+  __typename: 'Date';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -181,7 +184,7 @@ export interface GetOrderList_ethereum_taker_date {
 }
 
 export interface GetOrderList_ethereum_taker_transaction {
-  __typename: "EthereumTransactionInfoExtended";
+  __typename: 'EthereumTransactionInfoExtended';
   /**
    * Hash hex representation
    */
@@ -189,7 +192,7 @@ export interface GetOrderList_ethereum_taker_transaction {
 }
 
 export interface GetOrderList_ethereum_taker_exchange {
-  __typename: "EthereumDex";
+  __typename: 'EthereumDex';
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -197,7 +200,7 @@ export interface GetOrderList_ethereum_taker_exchange {
 }
 
 export interface GetOrderList_ethereum_taker_smartContract_address {
-  __typename: "Address";
+  __typename: 'Address';
   /**
    * String address representation
    */
@@ -209,7 +212,7 @@ export interface GetOrderList_ethereum_taker_smartContract_address {
 }
 
 export interface GetOrderList_ethereum_taker_smartContract {
-  __typename: "EthereumSmartContract";
+  __typename: 'EthereumSmartContract';
   /**
    * Smart Contract Address
    */
@@ -217,7 +220,7 @@ export interface GetOrderList_ethereum_taker_smartContract {
 }
 
 export interface GetOrderList_ethereum_taker_baseCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -237,7 +240,7 @@ export interface GetOrderList_ethereum_taker_baseCurrency {
 }
 
 export interface GetOrderList_ethereum_taker_quoteCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -257,7 +260,7 @@ export interface GetOrderList_ethereum_taker_quoteCurrency {
 }
 
 export interface GetOrderList_ethereum_taker {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   /**
    * Block in the blockchain
    */
@@ -308,17 +311,17 @@ export interface GetOrderList_ethereum_taker {
 }
 
 export interface GetOrderList_ethereum_makerCount {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   count: number | null;
 }
 
 export interface GetOrderList_ethereum_takerCount {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   count: number | null;
 }
 
 export interface GetOrderList_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

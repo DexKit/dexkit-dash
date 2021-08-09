@@ -12,8 +12,8 @@ import CallMadeIcon from '@material-ui/icons/CallMade';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {Token} from 'types/app';
 import {Skeleton} from '@material-ui/lab';
-import { MyBalances } from 'types/blockchain';
-import { useNetwork } from 'hooks/useNetwork';
+import {MyBalances} from 'types/blockchain';
+import {useNetwork} from 'hooks/useNetwork';
 import Transak from 'shared/components/Transak';
 // import {tokenSymbolToDisplayString} from 'utils';
 
@@ -26,9 +26,7 @@ interface Props {
 const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
   const [senderModal, setSenderModal] = useState(false);
   const [receiverModal, setReceiverModal] = useState(false);
-  const [tokens, setTokens] = useState<
-    MyBalances[]
-  >([]);
+  const [tokens, setTokens] = useState<MyBalances[]>([]);
   const [usdAvailable, setUsdAvailable] = useState<number>(0);
 
   const networkName = useNetwork();
@@ -65,7 +63,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
               address: dataFn.currency?.address ?? '',
               decimals: dataFn.currency?.decimals ?? 18,
               name: dataFn.currency?.name || '',
-              symbol:  dataFn.currency?.symbol || '',
+              symbol: dataFn.currency?.symbol || '',
             },
             network: dataFn.network,
             value: dataFn.value ?? 0,
@@ -144,115 +142,115 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
 
   return (
     <Box>
-    {/*  <Fade in={true} timeout={1000}>*/}
-        <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card>
-            <Box
-              display='flex'
-              // flexDirection={{xs: 'column', xl: 'row'}}
-              alignItems={{xl: 'center'}}
-              flexDirection={'row'}
-              flexWrap={'wrap'}
-              justifyContent={'space-between'}>
-              {loading ? (
-                <>
-                  <Skeleton variant='rect' width='40%' height={20} />
-                  <Box display='flex' alignItems='end'>
-                    <Skeleton
-                        variant='rect'
-                        width={106}
-                        height={40}
-                        style={{marginRight: 10}}
-                      />
-                    <Skeleton
-                      variant='rect'
-                      width={106}
-                      height={40}
-                      style={{marginRight: 10}}
-                    />
-                    <Skeleton variant='rect' width={106} height={40} />
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Box display='flex' alignItems='baseline' mr={2}>
-                    <Box
-                      component='h3'
-                      color='text.primary'
-                      fontFamily={Fonts.BOLD}
-                      fontSize={{xs: 20, sm: 22, xl: 24}}>
-                      ${onlyTokenValueInUsd || usdAvailable.toFixed(2)}
-                    </Box>
-                    <Box
-                      component='span'
-                      ml={3}
-                      color={indigo[100]}
-                      fontSize={{xs: 16, xl: 18}}
-                      whiteSpace='nowrap'>
-                      {onlyTokenValue || 'Avl. Balance'}
-                    </Box>
-                  </Box>
-
+      {/*  <Fade in={true} timeout={1000}>*/}
+      <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
+        <Card>
+          <Box
+            display='flex'
+            // flexDirection={{xs: 'column', xl: 'row'}}
+            alignItems={{xl: 'center'}}
+            flexDirection={'row'}
+            flexWrap={'wrap'}
+            justifyContent={'space-between'}>
+            {loading ? (
+              <>
+                <Skeleton variant='rect' width='40%' height={20} />
+                <Box display='flex' alignItems='end'>
+                  <Skeleton
+                    variant='rect'
+                    width={106}
+                    height={40}
+                    style={{marginRight: 10}}
+                  />
+                  <Skeleton
+                    variant='rect'
+                    width={106}
+                    height={40}
+                    style={{marginRight: 10}}
+                  />
+                  <Skeleton variant='rect' width={106} height={40} />
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box display='flex' alignItems='baseline' mr={2}>
                   <Box
-                    display='flex'
-                    alignItems='center'
-                    ml={{xs: 0, xl: 'auto'}}
-                    mt={{xs: 2, lg: 0}}>
-                    <Box>
-                      <Transak />
-                    </Box>
-                    <Box ml={3}>
-                      <Button
-                        variant='outlined'
-                        onClick={() => setSenderModal(true)}
-                        className={classes.btnPrimary}>
-                        <IntlMessages id='common.send' />
-                        <CallMadeIcon style={{marginLeft: 5}} />
-                      </Button>
-                    </Box>
-                    <Box ml={3}>
-                      <Button
-                        variant='outlined'
-                        onClick={() => setReceiverModal(true)}
-                        className={classes.btnSecondary}>
-                        <IntlMessages id='common.receive' />
-                        <CallReceivedIcon style={{marginLeft: 5}} />
-                      </Button>
-                    </Box>
+                    component='h3'
+                    color='text.primary'
+                    fontFamily={Fonts.BOLD}
+                    fontSize={{xs: 20, sm: 22, xl: 24}}>
+                    ${onlyTokenValueInUsd || usdAvailable.toFixed(2)}
                   </Box>
-                </>
-              )}
-            </Box>
-            {/* <Box
+                  <Box
+                    component='span'
+                    ml={3}
+                    color={indigo[100]}
+                    fontSize={{xs: 16, xl: 18}}
+                    whiteSpace='nowrap'>
+                    {onlyTokenValue || 'Avl. Balance'}
+                  </Box>
+                </Box>
+
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  ml={{xs: 0, xl: 'auto'}}
+                  mt={{xs: 2, lg: 0}}>
+                  <Box>
+                    <Transak />
+                  </Box>
+                  <Box ml={3}>
+                    <Button
+                      variant='outlined'
+                      onClick={() => setSenderModal(true)}
+                      className={classes.btnPrimary}>
+                      <IntlMessages id='common.send' />
+                      <CallMadeIcon style={{marginLeft: 5}} />
+                    </Button>
+                  </Box>
+                  <Box ml={3}>
+                    <Button
+                      variant='outlined'
+                      onClick={() => setReceiverModal(true)}
+                      className={classes.btnSecondary}>
+                      <IntlMessages id='common.receive' />
+                      <CallReceivedIcon style={{marginLeft: 5}} />
+                    </Button>
+                  </Box>
+                </Box>
+              </>
+            )}
+          </Box>
+          {/* <Box
             component='p'
             mb={{xs: 3.5, md: 4, xl: 6}}
             fontSize={{xs: 16, xl: 18}}
             color={indigo[100]}>
             <IntlMessages id='dashboard.buyCurrency' />
           </Box> */}
-            {!only && loading ? (
-              <Skeleton
-                style={{marginTop: 10}}
-                variant='rect'
-                width='100%'
-                height={40}
-              />
-            ) : (
-              !only &&
-              tokens.length > 0 && (
-                <Box pt={{lg: 5}}>
-                  <CoinsInfo coins={tokens} />
-                </Box>
-              )
-            )}
-          </Card>
-        </Box>
-  {/*    </Fade>*/}
+          {!only && loading ? (
+            <Skeleton
+              style={{marginTop: 10}}
+              variant='rect'
+              width='100%'
+              height={40}
+            />
+          ) : (
+            !only &&
+            tokens.length > 0 && (
+              <Box pt={{lg: 5}}>
+                <CoinsInfo coins={tokens} />
+              </Box>
+            )
+          )}
+        </Card>
+      </Box>
+      {/*    </Fade>*/}
 
       <Sender
         open={senderModal}
         onClose={() => setSenderModal(false)}
-        balances={tokens.filter(t => t.network === networkName)}
+        balances={tokens.filter((t) => t.network === networkName)}
       />
 
       <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />

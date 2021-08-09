@@ -5,7 +5,7 @@ import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalNavGroup.style';
-import { NavItemProps } from '../../../../modules/routesConfig';
+import {NavItemProps} from '../../../../modules/routesConfig';
 import VerticalExternal from './VerticaIExternal';
 
 interface VerticalNavGroupProps {
@@ -39,7 +39,9 @@ const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
               {item.type === 'item' && (
                 <VerticalItem item={item} level={level} />
               )}
-                {item.type === 'external' && <VerticalExternal item={item} level={level} />}
+              {item.type === 'external' && (
+                <VerticalExternal item={item} level={level} />
+              )}
             </React.Fragment>
           ))}
         </>

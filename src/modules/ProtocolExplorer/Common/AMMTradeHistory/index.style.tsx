@@ -5,13 +5,13 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   toolbar: {
     padding: '0 24px',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
   },
   toolbarIcon: {
-    marginRight: '3px'
-  }
+    marginRight: '3px',
+  },
 }));

@@ -1,8 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Collapse,
   Icon,
@@ -67,9 +63,9 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   history,
   level,
 }) => {
-  const classes = useStyles({ level });
-  const { theme } = useContext<AppContextPropsType>(AppContext);
-  const { pathname } = location;
+  const classes = useStyles({level});
+  const {theme} = useContext<AppContextPropsType>(AppContext);
+  const {pathname} = location;
   const [open, setOpen] = useState(() => needsToBeOpened(pathname, item));
 
   useEffect(() => {
@@ -84,19 +80,18 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   const getIcon = (icon: string | undefined) => {
     switch (icon) {
       case 'uniswap':
-        return   <UniswapLogo />
+        return <UniswapLogo />;
       case 'zrxprotocol':
-        return  <ZRXprotocolLogo/>
+        return <ZRXprotocolLogo />;
       case 'sushiswap':
-          return  <SushiLogo/>
+        return <SushiLogo />;
       case 'balancer':
-          return  <BalancerLogo/>
-    
-      default:
-       return icon;
-    }
-  }
+        return <BalancerLogo />;
 
+      default:
+        return icon;
+    }
+  };
 
   return (
     <>
@@ -109,7 +104,7 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
           <IconComponent icon={item.icon} classes={classes} />
         </Box>
         <ListItemText
-          classes={{ primary: clsx('nav-item-text', classes.listItemText) }}
+          classes={{primary: clsx('nav-item-text', classes.listItemText)}}
           primary={<IntlMessages id={item.messageId} />}
         />
         <Box p={0} clone>
@@ -118,8 +113,8 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
               {open
                 ? 'expand_more'
                 : theme.direction === 'ltr'
-                  ? 'chevron_right'
-                  : 'chevron_left'}
+                ? 'chevron_right'
+                : 'chevron_left'}
             </Icon>
           </IconButton>
         </Box>

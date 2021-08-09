@@ -1,19 +1,17 @@
-const allSettled = function(promises: Promise<any>[]) {
-
+const allSettled = function (promises: Promise<any>[]) {
   return Promise.all(
     promises.map((promise, i) =>
       promise
-        .then(value => ({
+        .then((value) => ({
           loaded: true,
           value,
         }))
-        .catch(value => ({
+        .catch((value) => ({
           loaded: false,
           value,
-        }))
-    )
+        })),
+    ),
   );
-  
 };
 
 export default allSettled;

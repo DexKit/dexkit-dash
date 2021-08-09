@@ -73,18 +73,18 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {Number(row.order.makerAmountFn).toFixed(2)}
-        {' '}{row.order?.makerTokenFn?.symbol}{' '}
+        {Number(row.order.makerAmountFn).toFixed(2)}{' '}
+        {row.order?.makerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {Number(row.order.takerAmountFn).toFixed(2)}
-        {' '}{row.order?.takerTokenFn?.symbol}{' '}
+        {Number(row.order.takerAmountFn).toFixed(2)}{' '}
+        {row.order?.takerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {Number(row.metaData.remainingFillableTakerAmountFn).toFixed(2)}
-        {' '}{row.order?.takerTokenFn?.symbol}{' '}
+        {Number(row.metaData.remainingFillableTakerAmountFn).toFixed(2)}{' '}
+        {row.order?.takerTokenFn?.symbol}{' '}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>

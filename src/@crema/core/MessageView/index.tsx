@@ -68,12 +68,13 @@ const AppSnackbar: React.FC<AppSnackbarProps> = ({
 
   return (
     <Snackbar
-      anchorOrigin={ 
-        other != null && 'anchorOrigin' in other ? other['anchorOrigin'] : 
-        {
-          vertical: 'bottom',
-          horizontal: 'left',
-        }
+      anchorOrigin={
+        other != null && 'anchorOrigin' in other
+          ? other['anchorOrigin']
+          : {
+              vertical: 'bottom',
+              horizontal: 'left',
+            }
       }
       open={open}
       autoHideDuration={6000}

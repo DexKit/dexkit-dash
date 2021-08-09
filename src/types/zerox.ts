@@ -1,37 +1,37 @@
-import { SignedOrder } from '@0x/order-utils';
-import { BigNumber } from '@0x/utils';
-import { OrderSide, Token } from 'types/app';
+import {SignedOrder} from '@0x/order-utils';
+import {BigNumber} from '@0x/utils';
+import {OrderSide, Token} from 'types/app';
 
-
-export interface SwapQuoteResponse extends SwapQuoteResponsePartialTransaction, SwapQuoteResponsePrice {
-    gasPrice: string;
-    protocolFee: string;
-    minimumProtocolFee: string;
-    orders: SignedOrder[];
-    buyAmount: string;
-    sellAmount: string;
-    buyTokenAddress: string;
-    sellTokenAddress: string;
-    sources: GetSwapQuoteResponseLiquiditySource[];
-    from?: string;
-    gas: string;
-    estimatedGas: string;
-    estimatedGasTokenRefund: string;
-    allowanceTarget?: string;
-   // quoteReport?: QuoteReport;
+export interface SwapQuoteResponse
+  extends SwapQuoteResponsePartialTransaction,
+    SwapQuoteResponsePrice {
+  gasPrice: string;
+  protocolFee: string;
+  minimumProtocolFee: string;
+  orders: SignedOrder[];
+  buyAmount: string;
+  sellAmount: string;
+  buyTokenAddress: string;
+  sellTokenAddress: string;
+  sources: GetSwapQuoteResponseLiquiditySource[];
+  from?: string;
+  gas: string;
+  estimatedGas: string;
+  estimatedGasTokenRefund: string;
+  allowanceTarget?: string;
+  // quoteReport?: QuoteReport;
 }
 
 export interface SwapQuoteResponsePartialTransaction {
-    to: string;
-    data: string;
-    value: string;
-    decodedUniqueId: string;
+  to: string;
+  data: string;
+  value: string;
+  decodedUniqueId: string;
 }
 
 export interface SwapQuoteResponsePrice {
-    price: string;
-    guaranteedPrice: string;
-
+  price: string;
+  guaranteedPrice: string;
 }
 
 export interface GetSwapQuoteResponseLiquiditySource {

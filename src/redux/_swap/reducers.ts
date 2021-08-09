@@ -26,9 +26,9 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
         transactions: [],
       };
     case UPDATE_TRANSACTION:
-      let newTransactions = state.transactions;
+      const newTransactions = state.transactions;
 
-      let removeIndex = newTransactions.findIndex(
+      const removeIndex = newTransactions.findIndex(
         (tx: ChangellyTransaction) => tx.id == action.transaction.id,
       );
 

@@ -20,11 +20,11 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {useStyles} from './index.style';
 import {useContractWrapper} from 'hooks/useContractWrapper';
-import { useChainId } from 'hooks/useChainId';
-import { ERC20TokenContract } from '@0x/contract-wrappers';
-import { SignedOrder } from '@0x/order-utils';
-import { useWeb3 } from 'hooks/useWeb3';
-import { getWeb3Wrapper } from 'services/web3modal';
+import {useChainId} from 'hooks/useChainId';
+import {ERC20TokenContract} from '@0x/contract-wrappers';
+import {SignedOrder} from '@0x/order-utils';
+import {useWeb3} from 'hooks/useWeb3';
+import {getWeb3Wrapper} from 'services/web3modal';
 import {LimitOrder} from '@0x/protocol-utils';
 
 interface OrderProps {
@@ -64,11 +64,13 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
       const web3Wrapper = await getWeb3Wrapper();
 
       if (contractWrappers && web3Wrapper) {
-        const tx = await contractWrappers.exchange.cancelOrder(order).sendTransactionAsync({
-          from: order.makerAddress,
-          //gasPrice: 0, /// AQUI GAS 
-        });
-        return web3Wrapper.awaitTransactionSuccessAsync(tx); 
+        const tx = await contractWrappers.exchange
+          .cancelOrder(order)
+          .sendTransactionAsync({
+            from: order.makerAddress,
+            //gasPrice: 0, /// AQUI GAS
+          });
+        return web3Wrapper.awaitTransactionSuccessAsync(tx);
       }
 
       setDone(true);

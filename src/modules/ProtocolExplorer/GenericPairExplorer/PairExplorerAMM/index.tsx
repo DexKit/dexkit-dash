@@ -29,7 +29,11 @@ type Props = {
 const PairExplorerAMM = (props: Props) => {
   const {networkName, exchange, address} = props;
 
-  const {loading, error, data} = useAMMPairExplorer({exchange, address, networkName});
+  const {loading, error, data} = useAMMPairExplorer({
+    exchange,
+    address,
+    networkName,
+  });
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
@@ -41,7 +45,11 @@ const PairExplorerAMM = (props: Props) => {
           <Grid item xs={12} md={12}>
             <Paper style={{padding: 10}}>
               {exchange && (
-                <TokenSearchByList exchangeName={exchange} type={'pair'} networkName={networkName}/>
+                <TokenSearchByList
+                  exchangeName={exchange}
+                  type={'pair'}
+                  networkName={networkName}
+                />
               )}
             </Paper>
           </Grid>

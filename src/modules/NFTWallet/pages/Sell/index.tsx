@@ -167,7 +167,7 @@ export default () => {
   const handleChangeToken = useCallback(
     (index: number) => {
       if (data) {
-        let tokens = getPaymentTokens(data);
+        const tokens = getPaymentTokens(data);
         setPaymentToken(tokens[index]);
         setTokenIndex(index);
       }
@@ -253,7 +253,7 @@ export default () => {
 
       const openseaPort = await getOpenSeaPort(provider);
 
-      let params: any = {
+      const params: any = {
         paymentTokenAddress: paymentToken.address,
         accountAddress: userAccountAddress,
         asset: {

@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {CremaTheme} from '../../../types/AppContextPropsType';
 
 interface SelectCoinProps {
-  menus: {address: string, symbol: string}[] | any[];
+  menus: {address: string; symbol: string}[] | any[];
   onChange: (value: any) => void;
   defaultValue: any;
 }

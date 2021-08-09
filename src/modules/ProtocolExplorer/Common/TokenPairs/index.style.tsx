@@ -10,6 +10,6 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     marginBottom: theme.spacing(2),
   },
   toolbarIcon: {
-    marginRight: '3px'
-  }
+    marginRight: '3px',
+  },
 }));

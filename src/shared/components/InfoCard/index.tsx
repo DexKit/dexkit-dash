@@ -28,7 +28,7 @@ const InfoCard: React.FC<Props> = ({state}) => {
         style={{backgroundColor: bgColor, cursor: 'pointer'}}>
         <Box display='flex' alignItems='center'>
           <Box mr={3} clone alignSelf='flex-start'>
-          <img width='12%' src={id === 1 ? History : Trade } alt='icon' />
+            <img width='12%' src={id === 1 ? History : Trade} alt='icon' />
           </Box>
           <Box flex={1} color='#F15A2B'>
             <Typography component='h5' variant='inherit' color='inherit'>

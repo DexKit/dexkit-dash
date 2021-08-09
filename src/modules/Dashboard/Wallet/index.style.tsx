@@ -17,5 +17,4 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     flexGrow: 1,
   },
- 
 }));

@@ -23,14 +23,13 @@ export async function getOpenSeaPort(provider: any) {
     apiKey: process.env.REACT_APP_OPENSEA_API_KEY,
   };
 
-  let chainId = await getChainId(provider);
+  const chainId = await getChainId(provider);
 
   if (chainId == RINKEBY_NETWORK) {
     config = RINKEBY_API_CONFIG;
   }
 
-
-  let port = new OpenSeaPort(provider, config);
+  const port = new OpenSeaPort(provider, config);
 
   return port;
 }

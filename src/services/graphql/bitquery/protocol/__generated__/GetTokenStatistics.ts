@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetTokenStatistics
 // ====================================================
 
 export interface GetTokenStatistics_ethereum_transfers_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -22,7 +22,7 @@ export interface GetTokenStatistics_ethereum_transfers_currency {
 }
 
 export interface GetTokenStatistics_ethereum_transfers {
-  __typename: "EthereumTransfers";
+  __typename: 'EthereumTransfers';
   /**
    * Currency of transfer
    */
@@ -39,7 +39,7 @@ export interface GetTokenStatistics_ethereum_transfers {
 }
 
 export interface GetTokenStatistics_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Currency Transfers
    */
