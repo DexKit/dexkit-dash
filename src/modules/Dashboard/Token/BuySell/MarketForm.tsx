@@ -337,7 +337,7 @@ const MarketForm: React.FC<Props> = (props) => {
       if (target === 'to') {
         return select1;
       } else if (target === 'from') {
-        return (web3State === Web3State.Done && select0.length > 0)
+        return web3State === Web3State.Done && select0.length > 0
           ? select0
           : select1;
       }

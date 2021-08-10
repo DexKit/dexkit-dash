@@ -123,8 +123,6 @@ export const findTokensInfoBySymbol = (
   });
 };
 
-
-
 export const GET_NATIVE_COINS = () => {
   return [
     {
@@ -133,7 +131,8 @@ export const GET_NATIVE_COINS = () => {
       name: 'Ethereum',
       symbol: 'ETH',
       networkName: EthereumNetwork.ethereum,
-      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     },
     {
       address: '',
@@ -141,11 +140,11 @@ export const GET_NATIVE_COINS = () => {
       name: 'Binance',
       symbol: 'BNB',
       networkName: EthereumNetwork.bsc,
-      logoURI: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
-    }
-  ]
-}
-
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
+    },
+  ];
+};
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {
   switch (chainId) {

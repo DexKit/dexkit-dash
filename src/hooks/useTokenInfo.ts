@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
-import { client } from "services/graphql";
-import { SEARCH_CURRENCY_BY_ADDRESS } from "services/graphql/bitquery/gql";
-import { SearchCurrencyByAddress, SearchCurrencyByAddressVariables } from "services/graphql/bitquery/__generated__/SearchCurrencyByAddress";
-import { EthereumNetwork } from "shared/constants/AppEnums";
-import { Token } from "types/app";
-import { findTokensInfoByAddress,  GET_NATIVE_COINS, isNativeCoinWithoutChainId } from "utils";
-import Web3 from "web3";
-import { useTokenList } from "./useTokenList";
+import {useEffect, useState} from 'react';
+import {client} from 'services/graphql';
+import {SEARCH_CURRENCY_BY_ADDRESS} from 'services/graphql/bitquery/gql';
+import {
+  SearchCurrencyByAddress,
+  SearchCurrencyByAddressVariables,
+} from 'services/graphql/bitquery/__generated__/SearchCurrencyByAddress';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {Token} from 'types/app';
+import {
+  findTokensInfoByAddress,
+  GET_NATIVE_COINS,
+  isNativeCoinWithoutChainId,
+} from 'utils';
+import Web3 from 'web3';
+import {useTokenList} from './useTokenList';
 
 export const useTokenInfo = (address: string) => {
   const [loading, setLoading] = useState<boolean>(false);
