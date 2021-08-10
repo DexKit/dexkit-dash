@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import defaultConfig from './defaultConfig';
+import defaultDarkConfig from './defaultDarkConfig';
 import AppContext from '../AppContext';
 import PropTypes from 'prop-types';
 import {ThemeMode} from '../../../shared/constants/AppEnums';
 import routes from '../../../modules';
+import {Theme} from '@material-ui/core';
 
 const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
-  const [theme, updateTheme] = useState(defaultConfig.theme);
+  const [theme, updateTheme] = useState(defaultDarkConfig.theme); // FIXME: change in the future
   const [footer, setFooter] = useState(defaultConfig.footer);
   const [footerType, setFooterType] = useState(defaultConfig.footerType);
   const [themeMode, updateMode] = useState(defaultConfig.themeMode);
@@ -28,33 +30,13 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
   );
 
   const updateThemeMode = (themeMode: ThemeMode) => {
-    const currentTheme = {...theme};
-    if (themeMode === ThemeMode.DARK) {
-      currentTheme.palette.type = ThemeMode.DARK;
-      currentTheme.palette.background = {
-        paper: '#181a1f',
-        default: '#1d2125',
-      };
-      currentTheme.palette.text = {
-        primary: 'rgba(255, 255, 255, 0.87)',
-        secondary: 'rgba(255, 255, 255, 0.67)',
-        disabled: 'rgba(255, 255, 255, 0.38)',
-        hint: 'rgba(255, 255, 255, 0.38)',
-      };
-    } else {
-      currentTheme.palette.type = ThemeMode.LIGHT;
-      currentTheme.palette.background = {
-        paper: '#FFFFFF',
-        default: '#f3f4f6',
-      };
-      currentTheme.palette.text = {
-        primary: 'rgba(0, 0, 0, 0.87)',
-        secondary: 'rgba(0, 0, 0, 0.67)',
-        disabled: 'rgba(0, 0, 0, 0.38)',
-        hint: 'rgba(0, 0, 0, 0.38)',
-      };
-    }
-    updateTheme(currentTheme);
+    // let currentTheme: Theme = defaultConfig.theme;
+
+    // if (themeMode === ThemeMode.DARK) {
+    //   currentTheme = defaultDarkConfig.theme;
+    // }
+
+    updateTheme(defaultDarkConfig.theme);
   };
 
   const setRTL = (rtl: boolean) => {

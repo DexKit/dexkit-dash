@@ -38,9 +38,9 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
 
   return (
     <GridContainer>
-      {token && address && (
+      {token && address ? (
         <Grid item xs={12} md={12}>
-          <Paper className={classes.paper}>
+          <Paper>
             <TokenAnalytics
               account={address}
               token={token}
@@ -48,7 +48,7 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
             />
           </Paper>
         </Grid>
-      )}
+      ) : null}
 
       <Grid item xs={12} md={12}>
         <Paper className={classes.paper}>

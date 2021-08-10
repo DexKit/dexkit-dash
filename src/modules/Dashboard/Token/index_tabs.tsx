@@ -1,7 +1,25 @@
-import React, {useEffect, useState, useContext, useMemo} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useMemo,
+  useCallback,
+} from 'react';
 import GridContainer from '../../../@crema/core/GridContainer';
-import {Grid, Box, IconButton, Tooltip, AppBar, Paper} from '@material-ui/core';
-import {useHistory} from 'react-router-dom';
+import {
+  Grid,
+  Box,
+  Fade,
+  IconButton,
+  Tooltip,
+  AppBar,
+  Paper,
+  Card,
+  CardContent,
+  Breadcrumbs,
+  Typography,
+} from '@material-ui/core';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -36,7 +54,7 @@ import Tab from '@material-ui/core/Tab';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import InfoIcon from '@material-ui/icons/Info';
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {TradeHistoryTab} from '../Wallet/Tabs/TradeHistoryTab';
 import {MyOrdersTab} from './Tabs/MyOrdersTab';
 import {InfoTab} from './Tabs/InfoTab';
@@ -44,6 +62,8 @@ import {useTokenInfo} from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {AboutDialog} from './AboutDialog';
 import {ShareButton} from 'shared/components/ShareButton';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+import InfoIcon from '@material-ui/icons/Info';
 
 const BinanceTVChartContainer = React.lazy(
   () => import('shared/components/chart/BinanceTVChart/tv_chart'),
@@ -208,51 +228,79 @@ const TokenTabsPage: React.FC<Props> = (props) => {
     }
   };
 
+  const [currentTab, setCurrentTab] = useState('trade');
+
+  const handleChangeTab = useCallback(
+    (event: React.ChangeEvent<{}>, value: string) => {
+      setCurrentTab(value);
+    },
+    [],
+  );
+
+  const [showAboutDialog, setShowAboutDialog] = useState(false);
+
+  const handleCloseAboutDialog = useCallback(() => {
+    setShowAboutDialog(false);
+  }, []);
+
+  const handleOpenAboutDialog = useCallback(() => {
+    setShowAboutDialog(true);
+  }, []);
+
   return (
     <>
-      <Box pt={{xl: 4}}>
-        <Box display='flex' alignItems='center'>
-          <SwapHorizontalCircleIcon color={'primary'} fontSize={'large'} />
-          <Box
-            component='h3'
-            color='text.primary'
-            fontWeight={Fonts.BOLD}
-            ml={2}>
-            Trade
-          </Box>
-          <AboutDialog />
-          <ShareButton />
+      <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
+      <Box py={4}>
+        <Box>
+          <Grid container justify='space-between' alignItems='center'>
+            <Grid item>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Breadcrumbs aria-label='breadcrumb'>
+                    <Typography variant='body2' color='textSecondary'>
+                      Home
+                    </Typography>
+                    <Typography variant='body2' color='textSecondary'>
+                      Trade
+                    </Typography>
+                  </Breadcrumbs>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={2} alignItems='center'>
+                    <Grid item>
+                      <Typography variant='h5'>Trade</Typography>
+                    </Grid>
+                    <Grid item>
+                      <IconButton onClick={handleOpenAboutDialog} size='small'>
+                        <InfoIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container spacing={1}>
+                <Grid item>
+                  <ShareButton />
+                </Grid>
+                <Grid item>
+                  <Tooltip title='Add to Favorites'>
+                    <IconButton
+                      aria-label='add favorite coin'
+                      color='primary'
+                      onClick={onToggleFavorite}>
+                      {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Box>
-
-        <Box className={classes.title}>
-          <Box>
-            {tokenInfo && (
-              <PageTitle
-                title={{name: tokenInfo.name}}
-                subtitle={{
-                  name: !isMobile ? truncateTokenAddress(address) : '',
-                  hasCopy: address,
-                }}
-                icon={address}
-                network={networkName}
-              />
-            )}
-          </Box>
-          <Box display={'flex'} justifyItems={'center'}>
-            <Tooltip title='Add to Favorites'>
-              <IconButton
-                aria-label='add favorite coin'
-                color='primary'
-                onClick={onToggleFavorite}>
-                {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-
-        <GridContainer pt={0}>
-          <Grid item xs={12} md={12} style={{marginTop: 10}}>
-            <Grid item xs={12} md={12}>
+        <Box mt={4}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
               {error && !balances ? (
                 <ErrorView message={error.message} />
               ) : (
@@ -260,136 +308,107 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                   balances={balances}
                   only={token}
                   loading={loading}
+                  tokenName={tokenInfo?.name}
+                  address={address}
                 />
               )}
             </Grid>
-          </Grid>
-          <GridContainer>
-            <Grid item xs={12} md={5} style={{marginTop: 10}}>
-              <BuySell
-                tokenAddress={address}
-                balances={balances}
-                networkName={networkName}
-                tokenInfo={tokenInfo}
-              />
+            <Grid item xs={12} md={5}>
+              <Card>
+                <Tabs
+                  value={currentTab}
+                  onChange={handleChangeTab}
+                  indicatorColor='primary'
+                  textColor='inherit'
+                  variant='fullWidth'>
+                  <Tab label='Trade' value='trade' {...a11yProps(0)} />
+                  <Tab label='Orders' value='orders' {...a11yProps(1)} />
+                </Tabs>
+                <CardContent>
+                  <BuySell
+                    tokenAddress={address}
+                    balances={balances}
+                    networkName={networkName}
+                    tokenInfo={tokenInfo}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
             <Grid item xs={12} md={7}>
-              <GridContainer>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={6}
-                  style={{padding: '0px'}}
-                  justify='flex-end'
-                  direction='row'>
-                  <Tabs
-                    value={chartSource}
-                    onChange={onSetChartSource}
-                    aria-label='chart tabs'
-                    indicatorColor='primary'>
-                    <Tab
-                      label={
-                        <>
-                          <Tooltip title={'Chart from Decentralized Exchanges'}>
-                            <>DEX</>
-                          </Tooltip>{' '}
-                        </>
-                      }
-                      {...a11yProps(0)}
-                    />
-                    <Tab
-                      label={
-                        <>
-                          <Tooltip title={'Chart from Binance Exchange'}>
-                            <>Binance</>
-                          </Tooltip>{' '}
-                        </>
-                      }
-                      {...a11yProps(1)}
-                    />
-                  </Tabs>
-                </Grid>
-
-                <Grid style={{height: '450px'}} item xs={12} sm={12} md={12}>
-                  {!chartSymbol ? (
-                    <Skeleton variant='rect' height={370} />
-                  ) : (
-                    <>
-                      <TabPanelChart value={chartSource} index={0}>
-                        {/* <TVChartContainer
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={12}>
+                  <Card>
+                    <Tabs
+                      value={chartSource}
+                      onChange={onSetChartSource}
+                      aria-label='chart tabs'
+                      indicatorColor='primary'>
+                      <Tab
+                        label={
+                          <Tooltip title='Chart from Decentralized Exchanges'>
+                            <span>DEX</span>
+                          </Tooltip>
+                        }
+                        {...a11yProps(0)}
+                      />
+                      <Tab
+                        label={
+                          <Tooltip title='Chart from Binance Exchange'>
+                            <span>Binance</span>
+                          </Tooltip>
+                        }
+                        {...a11yProps(1)}
+                      />
+                    </Tabs>
+                    <CardContent className={classes.iframeContainer}>
+                      <Fade in={true} timeout={1000}>
+                        {!chartSymbol ? (
+                          <Skeleton variant='rect' height={370} />
+                        ) : (
+                          <>
+                            <TabPanelChart value={chartSource} index={0}>
+                              {/* <TVChartContainer
                                     symbol={chartSymbol}
                                     chainId={chainId}
                                     darkMode={isDark}
                                  />*/}
 
-                        <BitqueryTVChartContainer
-                          symbol={chartSymbol}
-                          darkMode={isDark}
-                        />
-                      </TabPanelChart>
-                      <TabPanelChart value={chartSource} index={1}>
-                        <BinanceTVChartContainer
-                          symbol={chartSymbol}
-                          chainId={chainId}
-                          darkMode={isDark}
-                        />
-                      </TabPanelChart>
-                    </>
-                  )}
+                              <BitqueryTVChartContainer
+                                symbol={chartSymbol}
+                                darkMode={isDark}
+                              />
+                            </TabPanelChart>
+                            <TabPanelChart value={chartSource} index={1}>
+                              <BinanceTVChartContainer
+                                symbol={chartSymbol}
+                                chainId={chainId}
+                                darkMode={isDark}
+                              />
+                            </TabPanelChart>
+                          </>
+                        )}
+                      </Fade>
+                    </CardContent>
+                  </Card>
                 </Grid>
-              </GridContainer>
+              </Grid>
             </Grid>
-          </GridContainer>
-          <Grid item xs={12} md={12}>
-            <Box mt={2}>
-              <Paper square>
-                <TabContext value={value}>
-                  <AppBar position='static' color='transparent'>
-                    <Tabs
-                      value={value}
-                      onChange={handleChange}
-                      variant='fullWidth'
-                      indicatorColor='primary'
-                      textColor='primary'
-                      aria-label='wallet tabs'>
-                      <Tab
-                        value='my-orders'
-                        icon={<ShoppingCartIcon />}
-                        label={!isMobile ? myOrders : ''}
-                      />
-                      <Tab
-                        value='trade-history'
-                        icon={<SwapHorizontalCircleIcon />}
-                        label={!isMobile ? 'Trade History' : ''}
-                      />
-                      <Tab
-                        value='info'
-                        icon={<InfoIcon />}
-                        label={!isMobile ? 'Info' : ''}
-                      />
-                    </Tabs>
-                  </AppBar>
-
-                  <TabPanel value='info'>
-                    <InfoTab error={error} loading={loading} data={data} />
-                  </TabPanel>
-                  <TabPanel value='my-orders'>
-                    <MyOrdersTab address={address} networkName={networkName} />
-                  </TabPanel>
-                  <TabPanel value='trade-history'>
-                    <TradeHistoryTab
-                      address={account}
-                      token={address}
-                      enableNetworkChips={false}
-                      networkName={networkName}
-                    />
-                  </TabPanel>
-                </TabContext>
-              </Paper>
-            </Box>
+            <Grid item xs={12}>
+              <InfoTab error={error} loading={loading} data={data} />
+            </Grid>
+            <Grid item xs={12}>
+              <MyOrdersTab address={address} networkName={networkName} />
+            </Grid>
+            <Grid item xs={12}>
+              <TradeHistoryTab
+                address={account}
+                token={address}
+                enableNetworkChips={false}
+                networkName={networkName}
+              />
+            </Grid>
           </Grid>
-        </GridContainer>
+        </Box>
       </Box>
     </>
   );

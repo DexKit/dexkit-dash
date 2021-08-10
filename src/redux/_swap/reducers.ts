@@ -1,5 +1,6 @@
 import {
   CLEAR_TRANSACTIONS,
+  REMOVE_TRANSACTION,
   SAVE_TRANSACTION,
   UPDATE_TRANSACTION,
 } from './actions';
@@ -28,15 +29,28 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
     case UPDATE_TRANSACTION:
       const newTransactions = state.transactions;
 
-      const removeIndex = newTransactions.findIndex(
+      let index = newTransactions.findIndex(
         (tx: ChangellyTransaction) => tx.id == action.transaction.id,
       );
 
-      newTransactions[removeIndex] = action.transaction;
+      newTransactions[index] = action.transaction;
 
       return {
         ...state,
         transactions: [...newTransactions],
+      };
+    case REMOVE_TRANSACTION:
+      let transactions = state.transactions;
+
+      let removeIndex = transactions.findIndex(
+        (tx: ChangellyTransaction) => tx.id == action.id,
+      );
+
+      transactions.splice(removeIndex, 1);
+
+      return {
+        ...state,
+        transactions: [...transactions],
       };
     default:
       return state;

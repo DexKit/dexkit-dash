@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 import {useWindowSize} from 'hooks/useWindowSize';
+import {ReactComponent as CoinIcon} from 'assets/images/icons/coin.svg';
 
 type Props = ButtonProps;
 
@@ -125,16 +126,12 @@ const Transak: React.FC<Props> = (props) => {
 
   return (
     <Button
-      variant='outlined'
-      onClick={(e: any) => onBuy()}
-      size='small'
-      disableElevation
-      disabled={!transakClient}
       {...props}
-      className={classes.btnPrimary}>
-      <IconContainer style={{width: '26px', height: '26px'}}>
-        <Mastercard />
-      </IconContainer>
+      variant='contained'
+      color='primary'
+      onClick={(e: any) => onBuy()}
+      disabled={!transakClient}
+      startIcon={<CoinIcon />}>
       Buy
     </Button>
   );

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
-import {Box, Button, TextField} from '@material-ui/core';
+import {Box, Button, TextField, Grid} from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -49,12 +49,14 @@ const ReceiverForm: React.FC<Props> = (props) => {
   }, [inputAddress]);
 
   return (
-    <Box>
-      <form noValidate autoComplete='off'>
-        <Box textAlign='center' mb={5}>
-          <QRCode id='walletAddressQrCode' size={180} value={qrCodeText} />
-        </Box>
-        <Box mb={5}>
+    <Box pb={4}>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Box pt={4} pb={6} display='flex' justifyContent='center'>
+            <QRCode id='walletAddressQrCode' size={180} value={qrCodeText} />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             fullWidth
             variant='outlined'
@@ -64,18 +66,18 @@ const ReceiverForm: React.FC<Props> = (props) => {
               className: classes.inputText,
             }}
           />
-        </Box>
-        <Box textAlign='center' mb={5}>
+        </Grid>
+        <Grid item xs={12}>
           <Button
             fullWidth
-            style={{maxWidth: '60%'}}
             variant='contained'
             onClick={() => copy(inputAddress ?? '')}
-            color='primary'>
+            color='primary'
+            size='large'>
             Copy To Clipboard
           </Button>
-        </Box>
-      </form>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

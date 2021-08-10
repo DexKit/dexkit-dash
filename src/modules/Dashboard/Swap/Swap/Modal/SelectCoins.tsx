@@ -46,9 +46,9 @@ export const SelectCoinsDialog = (props: Props) => {
   const [filteredCoins, setFilteredCoins] = useState<ChangellyCoin[]>([]);
 
   useEffect(() => {
-    if (selectTo == 'to') {
+    if (selectTo === 'to') {
       setFilteredCoins(coins.filter((coin) => coin.enabledTo));
-    } else if (selectTo == 'from') {
+    } else if (selectTo === 'from') {
       setFilteredCoins(coins.filter((coin) => coin.enabledFrom));
     }
   }, [selectTo, coins]);
@@ -85,7 +85,8 @@ export const SelectCoinsDialog = (props: Props) => {
 
   return (
     <Dialog
-      maxWidth='xl'
+      maxWidth='sm'
+      fullWidth
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
@@ -97,7 +98,7 @@ export const SelectCoinsDialog = (props: Props) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Box mb={4}>
           <TextField
             autoFocus

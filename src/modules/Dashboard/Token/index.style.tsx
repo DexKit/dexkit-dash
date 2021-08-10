@@ -3,6 +3,13 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
 export const useStyles = makeStyles((theme: CremaTheme) => ({
+  iframeContainer: {
+    display: 'flex',
+    minHeight: 450,
+    '& iframe': {
+      minHeight: 450,
+    },
+  },
   btnPrimary: {
     fontFamily: Fonts.BOLD,
 

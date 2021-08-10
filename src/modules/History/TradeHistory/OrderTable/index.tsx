@@ -68,6 +68,7 @@ const TransactionTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
+        SelectProps={{variant: 'outlined'}}
         onChangePage={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }

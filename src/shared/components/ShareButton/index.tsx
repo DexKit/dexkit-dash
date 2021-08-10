@@ -16,15 +16,16 @@ import {
 } from 'react-share';
 import ShareIcon from '@material-ui/icons/Share';
 import {Box, Tooltip} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-type Props = {
+import IconButton, {IconButtonProps} from '@material-ui/core/IconButton';
+
+interface Props extends IconButtonProps {
   shareText?: string;
-};
+}
 
 export const ShareButton = (props: Props) => {
   const {shareText} = props;
 
-  const tradeShareText =
+  let tradeShareText =
     shareText || `Trade and Analyze Your Favourite Tokens at DexKit`;
   const shareUrl = window.location.href;
 
@@ -40,7 +41,8 @@ export const ShareButton = (props: Props) => {
           <IconButton
             aria-label='share-url'
             color='primary'
-            onClick={() => toggleShareModal()}>
+            onClick={() => toggleShareModal()}
+            {...props}>
             <ShareIcon />
           </IconButton>
         </Tooltip>

@@ -26,14 +26,18 @@ interface Props {
 
 export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
-  const {updateStatus, clear} = useSwapTransactions();
+  const {clear, remove} = useSwapTransactions();
 
   const handleClear = useCallback(() => {
     clear();
   }, []);
 
+  const handleRemove = useCallback((transaction: ChangellyTransaction) => {
+    remove(transaction.id);
+  }, []);
+
   return (
-    <Dialog fullWidth open={open} maxWidth='sm' onClose={onClose}>
+    <Dialog fullWidth open={open} maxWidth='lg' onClose={onClose}>
       <DialogTitle>
         <Box
           display='flex'
@@ -47,7 +51,7 @@ export const SwapHistoricDialog = (props: Props) => {
         </Box>
       </DialogTitle>
       <Divider />
-      <DialogContent>
+      <DialogContent dividers>
         {transactions.length > 0 ? (
           <Box mb={4}>
             <Box display='flex' justifyContent='flex-end' py={4}>
@@ -58,6 +62,7 @@ export const SwapHistoricDialog = (props: Props) => {
             <SwapHistoricTable
               transactions={transactions}
               onSelect={onSelectTransaction}
+              onRemove={handleRemove}
             />
           </Box>
         ) : (

@@ -9,6 +9,21 @@ import AppContextPropsType, {
 const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
+    item: {
+      paddingLeft: 0,
+    },
+    itemIcon: {
+      paddingRight: 16,
+      paddingLeft: 16,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    svgActive: {
+      '& > path': {
+        fill: '#FFA552',
+      },
+    },
     navItem: {
       height: 64,
       fontWeight: 700,
@@ -26,7 +41,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         textTransform: 'uppercase',
       },
       '&.active': {
-        backgroundColor: 'rgba(0,0,0,1)',
+        backgroundColor: 'rgba(82, 92, 117, 0.3)',
         pointerEvents: 'none',
         transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
         '& .nav-item-text': {
@@ -90,7 +105,14 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      fontFamily: Fonts.REGULAR,
+      fontSize: 18,
+      fontWeight: 500,
+      lineHeight: 18,
+    },
+    hiddenOverflow: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
   };
 });

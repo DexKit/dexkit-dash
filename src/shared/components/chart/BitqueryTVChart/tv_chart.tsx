@@ -150,6 +150,11 @@ export default class TVChartContainer extends React.PureComponent<
   }
 
   public render(): JSX.Element {
-    return <ChartContainer id={this.props.containerId} />;
+    return (
+      <ChartContainer
+        style={{minHeight: '450px'}}
+        id={this.props.containerId}
+      />
+    );
   }
 }

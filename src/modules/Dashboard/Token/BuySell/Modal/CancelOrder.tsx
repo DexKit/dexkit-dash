@@ -195,7 +195,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
           </Box>
         </DialogTitle>
 
-        <DialogContent className={classes.dialogContent}>
+        <DialogContent className={classes.dialogContent} dividers>
           <Box
             display='flex'
             flexDirection='column'

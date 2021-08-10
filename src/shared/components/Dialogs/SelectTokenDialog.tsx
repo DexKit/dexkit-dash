@@ -87,7 +87,7 @@ export const SelectTokenDialog = (props: Props) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Box mb={4}>
           <TextField
             autoFocus

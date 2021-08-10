@@ -84,8 +84,8 @@ const TokenLogo: React.FC<Props> = (props) => {
     if (logoUrl) {
       return logoUrl;
     }
-
-    if (address.toLowerCase() === 'bsc') {
+    
+    if(address.toLowerCase() === 'bsc' || address.toLowerCase() === 'bnb') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
     }
 

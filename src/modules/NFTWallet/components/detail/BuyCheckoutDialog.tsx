@@ -47,7 +47,7 @@ export default (props: Props) => {
       <DialogTitle>
         <IntlMessages id='nfts.sell.checkoutTitle' />
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Box py={4}>
           <Grid container spacing={2}>
             <Grid item xs={12}>

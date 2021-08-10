@@ -415,7 +415,7 @@ const OrderContent: React.FC<Props> = (props) => {
         </Box>
       </DialogTitle>
 
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent className={classes.dialogContent} dividers>
         {loading && currentStepIndex === -1 ? (
           <Box
             display='flex'

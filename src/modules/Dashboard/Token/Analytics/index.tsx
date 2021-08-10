@@ -7,12 +7,24 @@ import React from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ErrorView from 'modules/Common/ErrorView';
-import {makeStyles, Tooltip} from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  makeStyles,
+  Tooltip,
+  AccordionSummary,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {OrderSide} from 'types/app';
 import {green, red} from '@material-ui/core/colors';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 
 type Field =
   | 'amountBuySpentUSD'
@@ -115,47 +127,76 @@ export const TokenAnalytics = (props: Props) => {
   const {usdFormatter} = useUSDFormatter();
   const colorProfitLoss = Number(profitLoss || 0) < 0 ? red[500] : green[500];
 
-  return loading ? (
-    <Skeleton variant='rect' height={100} />
-  ) : error ? (
-    <ErrorView message={'Error fetching analytics'} />
-  ) : data ? (
-    <List
-      className={classes.listLayout}
-      subheader={<ListSubheader>Trading Analytics</ListSubheader>}>
-      <List className={classes.subList}>
-        <Tooltip title={'Your Token Balance in USD'}>
-          <ListItem> Balance (USD)</ListItem>
-        </Tooltip>
-        <ListItem style={{fontWeight: 'bold'}}>
-          {(balanceUSD && usdFormatter.format(Number(balanceUSD))) || '-'}
-        </ListItem>
-      </List>
-      <List className={classes.subList}>
-        <Tooltip
-          title={
-            'Difference between buys minus sells and your current balance value'
-          }>
-          <ListItem>Profit/Loss</ListItem>
-        </Tooltip>
-        <ListItem style={{fontWeight: 'bold', color: colorProfitLoss}}>
-          {(profitLoss && usdFormatter.format(Number(profitLoss))) || '-'}{' '}
-        </ListItem>
-      </List>
-      {properties.map((p) => (
-        <List className={classes.subList}>
-          <ListItem>{p.label}</ListItem>
-          <ListItem style={{fontWeight: 'bold'}}>
-            {p.isUSD ? usdFormatter.format(data[p.field]) : data[p.field]}
-          </ListItem>
-        </List>
-      ))}
-    </List>
-  ) : (
-    <List subheader={<ListSubheader>Trading Analytics</ListSubheader>}>
-      <ListItem style={{fontWeight: 'bold'}}>
-        No trade analytics available for this account, start trading
-      </ListItem>
-    </List>
+  // loading
+  // error
+
+  return (
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        Trading Analytics
+      </AccordionSummary>
+      <AccordionDetails style={{display: 'block'}}>
+        {error ? <ErrorView message={'Error fetching analytics'} /> : null}
+        {loading ? <Skeleton variant='rect' height={100} /> : null}
+        {data ? (
+          <List
+            className={classes.listLayout}
+            subheader={<ListSubheader>Trading Analytics</ListSubheader>}>
+            <List className={classes.subList}>
+              <Tooltip title={'Your Token Balance in USD'}>
+                <ListItem> Balance (USD)</ListItem>
+              </Tooltip>
+              <ListItem style={{fontWeight: 'bold'}}>
+                {(balanceUSD && usdFormatter.format(Number(balanceUSD))) || '-'}
+              </ListItem>
+            </List>
+            <List className={classes.subList}>
+              <Tooltip
+                title={
+                  'Difference between buys minus sells and your current balance value'
+                }>
+                <ListItem>Profit/Loss</ListItem>
+              </Tooltip>
+              <ListItem style={{fontWeight: 'bold', color: colorProfitLoss}}>
+                {(profitLoss && usdFormatter.format(Number(profitLoss))) || '-'}{' '}
+              </ListItem>
+            </List>
+            {properties.map((p) => (
+              <List className={classes.subList}>
+                <ListItem>{p.label}</ListItem>
+                <ListItem style={{fontWeight: 'bold'}}>
+                  {p.isUSD ? usdFormatter.format(data[p.field]) : data[p.field]}
+                </ListItem>
+              </List>
+            ))}
+          </List>
+        ) : null}
+        {!data ? (
+          <Grid
+            container
+            alignItems='center'
+            alignContent='center'
+            justify='center'
+            direction='column'
+            spacing={2}>
+            <Grid item xs={12}>
+              <ConnectivityImage />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                style={{textTransform: 'uppercase'}}
+                gutterBottom
+                align='center'
+                variant='h5'>
+                Ops, no data
+              </Typography>
+              <Typography align='center'>
+                No trade analytics available for this account, start trading.
+              </Typography>
+            </Grid>
+          </Grid>
+        ) : null}
+      </AccordionDetails>
+    </Accordion>
   );
 };

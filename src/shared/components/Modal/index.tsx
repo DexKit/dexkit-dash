@@ -22,7 +22,7 @@ const FormDialog: React.FC<TotalBalanceProps> = (props) => {
     <div>
       <Dialog open={open} onClose={onClose} aria-labelledby='form-dialog-title'>
         <DialogTitle id='form-dialog-title'>Transfer</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
           <TextField
             autoFocus
             margin='dense'

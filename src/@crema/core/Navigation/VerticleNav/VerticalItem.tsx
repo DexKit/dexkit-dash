@@ -1,12 +1,13 @@
 import React from 'react';
-import {Icon, ListItem, ListItemText} from '@material-ui/core';
-import clsx from 'clsx';
+import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+
 import {Badge, NavLink} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
+import CustomIcon from 'shared/components/CustomIcon';
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -50,24 +51,26 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
 
   return (
     <ListItem
+      className={classes.item}
+      selected={isActive()}
       button
       to={getUrl()}
-      component={NavLink}
-      className={clsx(classes.navItem, 'nav-item', {
-        active: isActive(),
-      })}>
+      component={NavLink}>
       {item.icon && (
-        <Box component='span' mr={6}>
-          <Icon
-            className={clsx(classes.listIcon, 'nav-item-icon')}
-            color='action'>
-            {item.icon}
-          </Icon>
-        </Box>
+        <ListItemIcon className={classes.itemIcon}>
+          {item.customIcon ? (
+            <CustomIcon
+              icon={item.icon as string}
+              className={isActive() ? classes.svgActive : undefined}
+            />
+          ) : (
+            <Icon>{item.icon}</Icon>
+          )}
+        </ListItemIcon>
       )}
       <ListItemText
+        className={classes.listItemText}
         primary={<IntlMessages id={item.messageId} />}
-        classes={{primary: 'nav-item-text'}}
       />
       {item.count && (
         <Box mr={4} clone>

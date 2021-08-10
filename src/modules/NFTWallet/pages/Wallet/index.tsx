@@ -57,6 +57,9 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
+import {ReactComponent as EmptyWalletImage} from 'assets/images/state/wallet-01.svg';
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
+
 function useCollections() {
   const {getProvider} = useWeb3();
 
@@ -635,19 +638,29 @@ export default () => {
                       alignContent='center'
                       spacing={4}>
                       <Grid item>
-                        <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                        <ConnectivityImage />
                       </Grid>
                       <Grid item>
-                        <Typography gutterBottom variant='h5'>
-                          <IntlMessages id='nfts.walletAssetsListErrorTitle' />
-                        </Typography>
-                        <Button
-                          onClick={handleTryAgainAssets}
-                          size='small'
-                          variant='contained'
-                          color='primary'>
-                          <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
-                        </Button>
+                        <Grid
+                          direction='column'
+                          container
+                          alignItems='center'
+                          alignContent='center'
+                          spacing={2}>
+                          <Grid item xs={12}>
+                            <Typography gutterBottom variant='h5'>
+                              <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button
+                              onClick={handleTryAgainAssets}
+                              size='small'
+                              color='primary'>
+                              <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Box>
@@ -656,25 +669,20 @@ export default () => {
                   <AssetsSkeleton count={8} />
                 ) : (
                   <>
-                    {assets?.length == 0 ? (
+                    {assets?.length == 0 && !assetsError ? (
                       <Box py={8}>
                         <Grid
                           container
                           direction='column'
                           alignContent='center'
                           justify='center'
+                          alignItems='center'
                           spacing={4}>
                           <Grid item xs={12}>
-                            <Box
-                              display='flex'
-                              alignItems='center'
-                              alignContent='center'
-                              justifyContent='center'>
-                              <SentimentVeryDissatisfiedIcon fontSize='large' />
-                            </Box>
+                            <EmptyWalletImage />
                           </Grid>
                           <Grid item xs={12}>
-                            <Typography variant='h5' component='h3'>
+                            <Typography align='center' variant='h5'>
                               <IntlMessages id='nfts.wallet.noItemsFound' />
                             </Typography>
                           </Grid>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListItem} from '@material-ui/core';
+import {ListItem, ListSubheader, Divider} from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
@@ -7,6 +7,8 @@ import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalNavGroup.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import VerticalExternal from './VerticaIExternal';
+import {AppState} from 'redux/store';
+import {useSelector} from 'react-redux';
 
 interface VerticalNavGroupProps {
   item: NavItemProps;
@@ -16,14 +18,23 @@ interface VerticalNavGroupProps {
 const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
   const classes = useStyles({level});
 
+  const {navCollapsed} = useSelector<AppState, AppState['settings']>(
+    ({settings}) => settings,
+  );
+
   return (
     <>
-      <ListItem
-        component='li'
-        className={clsx(classes.navItem, 'nav-item nav-item-header')}>
-        {<IntlMessages id={item.messageId} />}
-      </ListItem>
-
+      {!navCollapsed ? (
+        <>
+          <ListSubheader
+            disableSticky
+            component='li'
+            className={classes.subheader}>
+            {<IntlMessages id={item.messageId} />}
+          </ListSubheader>
+          <Divider className={classes.divider} />
+        </>
+      ) : null}
       {item.children && Array.isArray(item.children) && (
         <>
           {item.children.map((item: any) => (

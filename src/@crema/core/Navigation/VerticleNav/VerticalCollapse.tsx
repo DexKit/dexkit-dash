@@ -5,6 +5,7 @@ import {
   IconButton,
   ListItem,
   ListItemText,
+  ListItemIcon,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalItem from './VerticalItem';
@@ -20,6 +21,7 @@ import {ReactComponent as ZRXprotocolLogo} from 'assets/images/0x.svg';
 import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
 import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
 import IconComponent from '../Icon';
+import CustomIcon from 'shared/components/CustomIcon';
 
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
@@ -95,14 +97,17 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
 
   return (
     <>
-      <ListItem
-        button
-        component='li'
-        className={clsx(classes.navItem, open && 'open')}
-        onClick={handleClick}>
-        <Box component='span' mr={6}>
-          <IconComponent icon={item.icon} classes={classes} />
-        </Box>
+      <ListItem button component='li' selected={open} onClick={handleClick}>
+        <ListItemIcon>
+          {item.customIcon ? (
+            <CustomIcon
+              icon={item.icon as string}
+              className={open ? classes.svgActive : undefined}
+            />
+          ) : (
+            <IconComponent icon={item.icon} classes={classes} />
+          )}
+        </ListItemIcon>
         <ListItemText
           classes={{primary: clsx('nav-item-text', classes.listItemText)}}
           primary={<IntlMessages id={item.messageId} />}

@@ -14,10 +14,11 @@ import {SwapHistoricTableRow} from './SwapHistoricTableRow';
 interface Props {
   transactions: ChangellyTransaction[];
   onSelect: (transaction: ChangellyTransaction) => void;
+  onRemove: (transaction: ChangellyTransaction) => void;
 }
 
 export const SwapHistoricTable = (props: Props) => {
-  const {transactions, onSelect} = props;
+  const {transactions, onSelect, onRemove} = props;
 
   return (
     <TableContainer component={Paper} variant='outlined'>
@@ -29,6 +30,7 @@ export const SwapHistoricTable = (props: Props) => {
             <TableCell>Receive</TableCell>
             <TableCell>Created</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -37,6 +39,7 @@ export const SwapHistoricTable = (props: Props) => {
               onClick={onSelect}
               transaction={tx}
               key={index}
+              onRemove={onRemove}
             />
           ))}
         </TableBody>

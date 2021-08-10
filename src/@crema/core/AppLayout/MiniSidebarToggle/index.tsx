@@ -44,7 +44,6 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
             <AppFixedFooter />
           </Box>
         </Hidden>
-
         <Hidden lgUp>
           <Box className={classes.mainContainerFull}>
             <AppHeader />

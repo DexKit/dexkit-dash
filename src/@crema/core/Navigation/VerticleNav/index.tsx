@@ -15,7 +15,7 @@ const Navigation: React.FC<NavigationProps> = () => {
   const items = useRoutesConfig();
 
   return (
-    <List>
+    <List disablePadding>
       {/*<AppLogo justifyContent="center" logo={require('assets/images/logo_white.png')}/>*/}
       {items.map((item) => (
         <React.Fragment key={item.id}>
