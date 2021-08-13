@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useMemo} from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import {Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
 import {useIntl} from 'react-intl';
@@ -20,36 +20,38 @@ interface TableItemProps {
   networkName: EthereumNetwork;
 }
 
-const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    borderBottomClass: {
-      borderBottom: '0 none',
-    },
-    tableCell: {
-      fontSize: 16,
-      padding: '12px 8px',
-      '&:first-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingLeft: 4,
-        // },
-        paddingLeft: 20,
-      },
-      '&:last-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingRight: 4,
-        // },
-        paddingRight: 20,
-      },
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  borderBottomClass: {
+    borderBottom: '0 none',
+  },
+  tableCell: {
+    fontSize: 16,
+    borderBottom: 0,
+    padding: '12px 8px',
+    '&:first-child': {
       // [theme.breakpoints.up('xl')]: {
-      //   fontSize: 18,
-      //   padding: 16,
+      //   paddingLeft: 4,
       // },
+      paddingLeft: 20,
     },
-  }));
+    '&:last-child': {
+      // [theme.breakpoints.up('xl')]: {
+      //   paddingRight: 4,
+      // },
+      paddingRight: 20,
+    },
+    // [theme.breakpoints.up('xl')]: {
+    //   fontSize: 18,
+    //   padding: 16,
+    // },
+  },
+}));
+
+const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
 
   const classes = useStyles();
 
-  const getPaymentTypeColor = () => {
+  const paymentTypeColor = useMemo(() => {
     switch (row.side) {
       case 'SELL': {
         return '#F84E4E';
@@ -61,7 +63,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
         return '#E2A72E';
       }
     }
-  };
+  }, [row.side]);
 
   const {locale} = useContext<AppContextPropsType>(AppContext);
   const timestamp = row.block?.timestamp?.time
@@ -85,7 +87,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Chip
-          style={{backgroundColor: getPaymentTypeColor(), color: 'white'}}
+          style={{backgroundColor: paymentTypeColor, color: 'white'}}
           label={row.side}
         />
       </TableCell>

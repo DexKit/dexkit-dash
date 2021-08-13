@@ -30,7 +30,6 @@ import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
 import {useCoinList} from 'hooks/useCoinList';
-import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL} from 'shared/constants/Coins';
 
@@ -72,6 +71,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       marginRight: 20,
     },
   },
+  tabsContainer: {
+    width: '100%'
+  }
 }));
 
 //TODO: This select1 and select0 logic is bugged and it is not working well, investigate way to change all this logic
@@ -329,16 +331,17 @@ const BuySell: React.FC<Props> = ({
   return (
     <Box>
       <Box display='flex' justifyContent='center'>
-        <CustomTabs
-          TabIndicatorProps={{style: {display: 'none'}}}
+        <Tabs
+          className={classes.tabsContainer}
           value={currentTab}
+          indicatorColor='primary'
           onChange={handleChangeTab}
           variant='standard'>
-          <CustomTab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-          <CustomTab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
-        </CustomTabs>
+          <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+          <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+        </Tabs>
       </Box>
-      <Box py={2}>
+      <Box py={2} padding={4}>
         {currentTab === 0 && (
           <MarketForm
             key='MarketForm'

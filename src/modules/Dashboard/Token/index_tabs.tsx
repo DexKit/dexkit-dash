@@ -55,7 +55,7 @@ import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
-import {TradeHistoryTab} from '../Wallet/Tabs/TradeHistoryTab';
+import TradeHistoryContainer from 'modules/History/TradeHistory/container';
 import {MyOrdersTab} from './Tabs/MyOrdersTab';
 import {InfoTab} from './Tabs/InfoTab';
 import {useTokenInfo} from 'hooks/useTokenInfo';
@@ -133,11 +133,15 @@ const TokenTabsPage: React.FC<Props> = (props) => {
 
   const {account: web3Account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const account = defaultAccount || web3Account;
+  const account: (string | undefined) = defaultAccount || web3Account || "";
 
   const {data: balances} = useAllBalance(account);
 
   const {tokenInfo} = useTokenInfo(address);
+
+  const [tableActive, setTableActive] = useState<number>(0)
+
+  const onChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => setTableActive(newValue)
 
   const [chartSymbol, setChartSymbol] = useState<string>();
 
@@ -228,15 +232,6 @@ const TokenTabsPage: React.FC<Props> = (props) => {
     }
   };
 
-  const [currentTab, setCurrentTab] = useState('trade');
-
-  const handleChangeTab = useCallback(
-    (event: React.ChangeEvent<{}>, value: string) => {
-      setCurrentTab(value);
-    },
-    [],
-  );
-
   const [showAboutDialog, setShowAboutDialog] = useState(false);
 
   const handleCloseAboutDialog = useCallback(() => {
@@ -300,41 +295,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
         </Box>
         <Box mt={4}>
           <Grid container spacing={4}>
-            <Grid item xs={12}>
-              {error && !balances ? (
-                <ErrorView message={error.message} />
-              ) : (
-                <TotalBalance
-                  balances={balances}
-                  only={token}
-                  loading={loading}
-                  tokenName={tokenInfo?.name}
-                  address={address}
-                />
-              )}
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <Card>
-                <Tabs
-                  value={currentTab}
-                  onChange={handleChangeTab}
-                  indicatorColor='primary'
-                  textColor='inherit'
-                  variant='fullWidth'>
-                  <Tab label='Trade' value='trade' {...a11yProps(0)} />
-                  <Tab label='Orders' value='orders' {...a11yProps(1)} />
-                </Tabs>
-                <CardContent>
-                  <BuySell
-                    tokenAddress={address}
-                    balances={balances}
-                    networkName={networkName}
-                    tokenInfo={tokenInfo}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={8}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={12}>
                   <Card>
@@ -393,20 +354,37 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={12} md={4}>
+              <Card>
+                <BuySell
+                  tokenAddress={address}
+                  balances={balances}
+                  networkName={networkName}
+                  tokenInfo={tokenInfo}
+                />
+              </Card>
+            </Grid>
             <Grid item xs={12}>
+              <CustomTabs
+                TabIndicatorProps={{style: {display: 'none'}}}
+                value={tableActive}
+                onChange={onChangeTab}
+                variant='standard'>
+                <CustomTab label={"Open Orders"} />
+                <CustomTab label={"Trade"} />
+              </CustomTabs>
+              {tableActive == 0 && <MyOrdersTab address={address} networkName={networkName} />}
+              {tableActive == 1 && (
+                <TradeHistoryContainer
+                  address={account}
+                  token={address}
+                  networkName={networkName}
+                />
+              )}
+            </Grid>
+            {/*   <Grid item xs={12}>
               <InfoTab error={error} loading={loading} data={data} />
-            </Grid>
-            <Grid item xs={12}>
-              <MyOrdersTab address={address} networkName={networkName} />
-            </Grid>
-            <Grid item xs={12}>
-              <TradeHistoryTab
-                address={account}
-                token={address}
-                enableNetworkChips={false}
-                networkName={networkName}
-              />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
       </Box>

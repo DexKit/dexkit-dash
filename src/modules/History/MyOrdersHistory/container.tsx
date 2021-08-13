@@ -106,39 +106,37 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
     <Box pt={{xl: 4}}>
       <GridContainer>
         <Grid item xs={12} md={12}>
-          <Paper className={classes.paper}>
-            <Toolbar className={classes.toolbar}>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-                style={{width: '100%'}}>
-                <Box>
-                  <Typography variant='h5'>My Orders</Typography>
-                </Box>
+          <Toolbar className={classes.toolbar}>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              alignItems='center'
+              style={{width: '100%'}}>
+              <Box>
+                <Typography variant='h5'>My Orders</Typography>
               </Box>
-            </Toolbar>
-            {loading ? (
-              <LoadingTable columns={6} rows={10} />
-            ) : error ? (
-              <ErrorView message={error.message} />
-            ) : (
-              data && (
-                <MyOrdersTable
-                  networkName={networkName}
-                  data={data}
-                  totalRows={totalRows}
-                  currentPage={currentPage}
-                  rowsPerPage={rowsPerPage}
-                  rowsPerPageOptions={rowsPerPageOptions}
-                  onChangePage={(newPage) => onChangePage(newPage)}
-                  onChangeRowsPerPage={(perPage) =>
-                    onChangeRowsPerPage(perPage)
-                  }
-                />
-              )
-            )}
-          </Paper>
+            </Box>
+          </Toolbar>
+          {loading ? (
+            <LoadingTable columns={6} rows={10} />
+          ) : error ? (
+            <ErrorView message={error.message} />
+          ) : (
+            data && (
+              <MyOrdersTable
+                networkName={networkName}
+                data={data}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangePage={(newPage) => onChangePage(newPage)}
+                onChangeRowsPerPage={(perPage) =>
+                  onChangeRowsPerPage(perPage)
+                }
+              />
+            )
+          )}
         </Grid>
       </GridContainer>
     </Box>

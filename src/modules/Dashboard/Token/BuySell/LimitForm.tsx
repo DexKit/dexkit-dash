@@ -10,12 +10,13 @@ import {
   Box,
   Button,
   TextField,
+  Typography,
   Select,
   MenuItem,
   InputAdornment,
 } from '@material-ui/core';
-import {ArrowDownwardOutlined} from '@material-ui/icons';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import SwapVertIcon from '@material-ui/icons/SwapVert';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -37,6 +38,87 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  root: {
+    color: theme.palette.secondary.main,
+    fontSize: 18,
+    marginTop: 6,
+    [theme.breakpoints.up('xl')]: {
+      fontSize: 20,
+      marginTop: 16,
+    },
+  },
+  boxContainer: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(5),
+    },
+  },
+  btnPrimary: {
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.dark,
+      color: 'white',
+    },
+  },
+  textRes: {
+    marginBottom: 0,
+    fontSize: 13,
+    cursor: 'pointer',
+    [theme.breakpoints.up('xl')]: {
+      fontSize: 18,
+    },
+    '&:hover, &:focus': {
+      cursor: 'pointer',
+    },
+  },
+  amountTotal: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+  inputText: {
+    fontFamily: Fonts.MEDIUM,
+    width: '100%',
+  },
+  inputLabel: {
+    paddingBottom: '4px !important',
+    fontWeight: 'bold'
+  },
+  balance: {
+    paddingBottom: '4px !important',
+    fontWeight: 'bold',
+    display: 'flex',
+    flexDirection: 'row-reverse'
+  },
+  swap: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+  },
+  limitContainer: {
+    padding: '8px',
+    '& .MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& .MuiGrid-container > .MuiGrid-item': {
+      padding: '6px 8px',
+    }
+  },
+  expiryContainer: {
+    display: 'flex',
+    marginBottom: '16px',
+    '.MuiInputBase-root': {
+      margin: '0 8px'
+    }
+  },
+  select: {
+    width: '100%',
+    marginRight: '16px',
+  }
+}));
 
 interface Props {
   chainId: number | undefined;
@@ -67,56 +149,6 @@ const LimitForm: React.FC<Props> = (props) => {
     onTrade,
   } = props;
 
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    root: {
-      color: theme.palette.secondary.main,
-      fontSize: 18,
-      marginTop: 6,
-      [theme.breakpoints.up('xl')]: {
-        fontSize: 20,
-        marginTop: 16,
-      },
-    },
-    boxContainer: {
-      marginTop: theme.spacing(7),
-      marginBottom: theme.spacing(9),
-
-      [theme.breakpoints.down('sm')]: {
-        marginTop: theme.spacing(5),
-        marginBottom: theme.spacing(5),
-      },
-    },
-    btnPrimary: {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-        color: 'white',
-      },
-    },
-    textRes: {
-      marginBottom: 0,
-      fontSize: 13,
-      cursor: 'pointer',
-      [theme.breakpoints.up('xl')]: {
-        fontSize: 18,
-      },
-      '&:hover, &:focus': {
-        cursor: 'pointer',
-      },
-    },
-    amountTotal: {
-      '&:hover': {
-        cursor: 'pointer',
-        textDecoration: 'underline',
-      },
-    },
-    inputText: {
-      fontFamily: Fonts.MEDIUM,
-      width: '100%',
-    },
-  }));
-
   const classes = useStyles();
 
   const {web3State, onConnectWeb3} = useWeb3();
@@ -144,28 +176,25 @@ const LimitForm: React.FC<Props> = (props) => {
   if (web3State !== Web3State.Done && tokenFrom === undefined) {
     const tokenETH = select1.find(
       (e) =>
-        e.symbol.toLowerCase() ===
-          GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
-        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+      e.symbol.toLowerCase() ===
+      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
+      e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
     );
 
     onChangeToken(tokenETH, 'from');
   }
 
-  const resetAmount = () => {
-    setAmountFrom(0);
-    setAmountTo(0);
-  };
-
-  const switchTokens = () => {
+  const switchTokens = React.useCallback(() => {
     if (tokenFrom) {
       onChangeToken(tokenFrom, 'to');
     }
+
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
+
     setPrice((amountTo || 0) / (amountFrom || 1));
-  };
+  }, [tokenTo, tokenFrom]);
 
   const setMax = () => {
     if (tokenBalance && tokenBalance.value) {
@@ -207,8 +236,8 @@ const LimitForm: React.FC<Props> = (props) => {
       setEthBalance(
         balances.find(
           (e) =>
-            e.currency?.symbol.toLowerCase() ===
-            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
+          e.currency?.symbol.toLowerCase() ===
+          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toLowerCase(),
         ),
       );
 
@@ -257,13 +286,13 @@ const LimitForm: React.FC<Props> = (props) => {
   const handleConvert = () => {
     const ethToken = select1.find(
       (t) =>
-        t.symbol.toUpperCase() ===
-        GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+      t.symbol.toUpperCase() ===
+      GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
     const wethToken = select1.find(
       (t) =>
-        t.symbol.toUpperCase() ===
-        GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+      t.symbol.toUpperCase() ===
+      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
 
     if (ethToken && wethToken && amountFrom && account && allowanceTarget) {
@@ -318,7 +347,7 @@ const LimitForm: React.FC<Props> = (props) => {
   const notConnected = web3State !== Web3State.Done;
 
   const connectButton = (
-    <Box display='flex' alignItems='center' justifyContent='center'>
+    <Box mr={8} display='flex' alignItems='center' justifyContent='center'>
       <Button
         size='large'
         variant='contained'
@@ -329,9 +358,9 @@ const LimitForm: React.FC<Props> = (props) => {
           ? isMobile()
             ? 'Connecting...'
             : 'Connecting... Check Wallet'
-          : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+            : isMobile()
+              ? 'Connect'
+              : 'Connect Wallet'}
       </Button>
     </Box>
   );
@@ -357,16 +386,16 @@ const LimitForm: React.FC<Props> = (props) => {
     select1 &&
     select1.find(
       (t) =>
-        t.symbol.toUpperCase() ===
-        GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+      t.symbol.toUpperCase() ===
+      GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
 
   const wethToken =
     select1 &&
     select1.find(
       (t) =>
-        t.symbol.toUpperCase() ===
-        GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+      t.symbol.toUpperCase() ===
+      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
     );
 
   const nativeCoinSymbol = GET_NATIVE_COIN_FROM_NETWORK_NAME(
@@ -394,7 +423,7 @@ const LimitForm: React.FC<Props> = (props) => {
   const {usdFormatter} = useUSDFormatter();
 
   return (
-    <>
+    <Box className={classes.limitContainer}>
       {networkName !== EthereumNetwork.ethereum && (
         <Box>
           <Box className={classes.boxContainer}>
@@ -412,45 +441,94 @@ const LimitForm: React.FC<Props> = (props) => {
       )}
 
       {networkName == EthereumNetwork.ethereum && (
-        <Box>
+        <Box py={4}>
           <form noValidate autoComplete='off'>
             <Box className={classes.boxContainer}>
               <GridContainer>
                 {isNative && (
                   <Grid item xs={12}>
-                    <Box mb={2} fontSize='large' textAlign='center'>
+                    <Box fontSize='large' textAlign='center'>
                       To use {nativeCoinSymbol} on Limit orders you need to wrap
                       your {nativeCoinSymbol} to {wNativeCoinSymbol}, and use{' '}
                       {wNativeCoinSymbol} to place limit orders
                     </Box>
                   </Grid>
                 )}
-                {account && (
-                  <Grid item xs={12}>
-                    <Box
-                      mb={2}
-                      color='grey.400'
-                      textAlign='right'
-                      className={classes.textRes}>
-                      <span onClick={setMax} className={classes.amountTotal}>
-                        {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
-                          tokenBalance?.value?.toFixed(4) || 0
-                        } ${tokenBalance?.currency?.symbol || ''})`}
-                      </span>
-                    </Box>
+                {isNative && (
+                  <Grid
+                    item
+                    xs={12}
+                    md={5}>
+                    <Typography variant="body2" className={classes.inputLabel}>
+                      <IntlMessages id='app.youSend' />
+                    </Typography>
+                    <SelectToken
+                      id={'marketSel0'}
+                      selected={ethToken}
+                      label={' '}
+                      options={
+                        web3State === Web3State.Done && select0.length
+                          ? select0
+                          : select1
+                      }
+                      disabled={disabled}
+                      onChange={($token) => {
+                        onChangeToken($token, 'from');
+                        if (
+                          tokenTo?.symbol.toUpperCase() ===
+                          ethToken?.symbol.toUpperCase()
+                        ) {
+                          onChangeToken(wethToken, 'to');
+                        }
+                      }}
+                    />
+                  </Grid>
+                )}
+
+                {!isNative && (
+                  <Grid
+                    item
+                    xs={12}
+                    md={5}>
+                      <>
+                        <Typography variant="body2" className={classes.inputLabel}>
+                          <IntlMessages id='app.youSend' />
+                        </Typography>
+                        <SelectToken
+                          id={'marketSel0'}
+                          selected={tokenFrom}
+                          label={' '}
+                          limitCoins={select0.length ? true : false}
+                          options={
+                            web3State === Web3State.Done && select0.length
+                              ? select0
+                              : select1
+                          }
+                          disabled={disabled}
+                          onChange={($token) => {
+                            onChangeToken($token, 'from');
+                            if (
+                              tokenTo?.symbol.toUpperCase() ===
+                              ethToken?.symbol.toUpperCase()
+                            ) {
+                              onChangeToken(wethToken, 'to');
+                            }
+                          }} />
+                      </>
                   </Grid>
                 )}
                 <Grid
-                  style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
                   item
                   xs={12}
-                  md={6}>
+                  md={7}>
+                  <Typography variant="body2" className={classes.balance}>
+                    0
+                  </Typography>
                   <TextField
                     variant='outlined'
                     type='number'
                     fullWidth
                     value={amountFrom}
-                    label={<IntlMessages id='app.youSend' />}
                     onChange={handleInputChange}
                     InputProps={{
                       endAdornment: (
@@ -464,7 +542,7 @@ const LimitForm: React.FC<Props> = (props) => {
                                 {' '}
                                 {usdFormatter.format(
                                   Number(priceQuoteFrom?.price) *
-                                    Number(amountFrom),
+                                  Number(amountFrom),
                                 )}
                               </i>
                             </>
@@ -474,93 +552,49 @@ const LimitForm: React.FC<Props> = (props) => {
                     }}
                   />
                 </Grid>
-                {isNative && (
-                  <Grid
-                    style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
-                    item
-                    xs={12}
-                    md={6}>
-                    <SelectToken
-                      id={'marketSel0'}
-                      selected={ethToken}
-                      label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                      options={
-                        web3State === Web3State.Done && select0.length
-                          ? select0
-                          : select1
-                      }
-                      disabled={disabled}
-                      onChange={($token) => {
-                        onChangeToken($token, 'from');
-                        if (
-                          tokenTo?.symbol.toUpperCase() ===
-                          ethToken?.symbol.toUpperCase()
-                        ) {
-                          onChangeToken(wethToken, 'to');
-                        }
-                      }}
-                    />
-                  </Grid>
-                )}
-
-                {!isNative && (
-                  <Grid
-                    style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
-                    item
-                    xs={12}
-                    md={6}>
-                    <SelectToken
-                      id={'marketSel0'}
-                      selected={tokenFrom}
-                      label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                      limitCoins={select0.length ? true : false}
-                      options={
-                        web3State === Web3State.Done && select0.length
-                          ? select0
-                          : select1
-                      }
-                      disabled={disabled}
-                      onChange={($token) => {
-                        onChangeToken($token, 'from');
-                        if (
-                          tokenTo?.symbol.toUpperCase() ===
-                          ethToken?.symbol.toUpperCase()
-                        ) {
-                          onChangeToken(wethToken, 'to');
-                        }
-                      }}
-                    />
-                  </Grid>
-                )}
-
                 {!isNative && (
                   <>
                     <Grid
-                      style={{padding: 0, marginTop: 4}}
+                      style={{ padding: '1em', marginTop: 4}}
                       item
                       xs={12}
-                      md={6}>
+                      md={7}>
                       <Box
                         mb={2}
                         color='grey.400'
                         textAlign='center'
                         onClick={() => switchTokens()}
-                        className={classes.textRes}>
-                        <ArrowDownwardOutlined />
+                        className={`${classes.textRes} ${classes.swap}`}>
+                        <SwapVertIcon fontSize="large"/>
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12} md={6} />
+                    <Grid item xs={12} md={5} />
 
                     <Grid
-                      style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
                       item
                       xs={12}
-                      md={6}>
+                      md={5}>
+                      <SelectToken
+                        id={'marketSel1'}
+                        selected={tokenTo}
+                        options={select1}
+                        disabled={disabled}
+                        onChange={($token) => {
+                          onChangeToken($token, 'to');
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      md={7}>
+                      <Typography variant="body2" className={classes.balance}>
+                        0
+                      </Typography>
                       <TextField
                         variant='outlined'
                         fullWidth
-                        label={<IntlMessages id='app.youReceive' />}
                         value={amountTo}
                         InputProps={{
                           readOnly: true,
@@ -575,7 +609,7 @@ const LimitForm: React.FC<Props> = (props) => {
                                     {' '}
                                     {usdFormatter.format(
                                       Number(priceQuoteTo?.price) *
-                                        Number(amountTo),
+                                      Number(amountTo),
                                     )}
                                   </i>
                                 </>
@@ -586,85 +620,72 @@ const LimitForm: React.FC<Props> = (props) => {
                       />
                     </Grid>
 
-                    <Grid
-                      style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
-                      item
-                      xs={12}
-                      md={6}>
-                      <SelectToken
-                        id={'marketSel1'}
-                        selected={tokenTo}
-                        options={select1}
-                        disabled={disabled}
-                        onChange={($token) => {
-                          onChangeToken($token, 'to');
-                        }}
-                      />
+                    <Grid item xs={12}>
+                      <Grid
+                        item
+                        xs={12}>
+                        <Typography variant="body2" className={classes.inputLabel}>
+                          <IntlMessages id='app.price' />
+                        </Typography>
+                        <TextField
+                          variant='outlined'
+                          fullWidth
+                          value={isInverted ? 1 / price : price}
+                          onChange={handlePriceChange}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment
+                                position='end'
+                                style={{fontSize: '13px'}}
+                                onClick={() => setIsInverted(!isInverted)}>
+                                {tokenFrom && tokenTo && (
+                                  <>
+                                    {isInverted
+                                      ? `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}`
+                                      : `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`}
+                                  </>
+                                )}
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
                     </Grid>
 
-                    <Grid
-                      style={{paddingTop: 8, paddingRight: 8, paddingBottom: 4}}
-                      item
-                      xs={12}
-                      md={6}>
-                      <TextField
-                        variant='outlined'
-                        fullWidth
-                        label={<IntlMessages id='app.price' />}
-                        value={isInverted ? 1 / price : price}
-                        onChange={handlePriceChange}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment
-                              position='end'
-                              style={{fontSize: '13px'}}
-                              onClick={() => setIsInverted(!isInverted)}>
-                              {tokenFrom && tokenTo && (
-                                <>
-                                  {isInverted
-                                    ? `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}`
-                                    : `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`}
-                                </>
-                              )}
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
+                    <Grid item xs={12} className={classes.expiryContainer}>
+                      <Grid
+                        item
+                        xs={5}>
+                        <Typography variant="body2" className={classes.inputLabel}>
+                          <IntlMessages id='app.expiry' />
+                        </Typography>
+                        <Box
+                          display='flex'
+                          justifyContent='center'>
+                          <Select
+                            className={classes.select}
+                            variant="outlined"
+                            value={expirySelect}
+                            onChange={handleExpirySelectChange}>
+                            <MenuItem value={86400} selected={true}>Days</MenuItem>
+                            <MenuItem value={60}>Minutes</MenuItem>
+                            <MenuItem value={1}>Seconds</MenuItem>
+                          </Select>
+                        </Box>
+                      </Grid>
+                      <Grid
+                        style={{ marginTop: '24px' }}
+                        item
+                        xs={7}>
+                        <TextField
+                          variant='outlined'
+                          type="number"
+                          fullWidth
+                          value={expiryInput}
+                          onChange={handleExpiryInputChange}
+                        />
+                      </Grid>
 
-                    <Grid
-                      style={{paddingTop: 10, paddingLeft: 8, paddingBottom: 4}}
-                      item
-                      xs={6}
-                      md={3}>
-                      <TextField
-                        variant='outlined'
-                        fullWidth
-                        label={<IntlMessages id='app.expiry' />}
-                        value={expiryInput}
-                        onChange={handleExpiryInputChange}
-                      />
-                    </Grid>
-
-                    <Grid
-                      style={{paddingTop: 10, paddingLeft: 8, paddingBottom: 4}}
-                      item
-                      xs={6}
-                      md={3}>
-                      <Box
-                        style={{height: '100%'}}
-                        display='flex'
-                        justifyContent='center'>
-                        <Select
-                          value={expirySelect}
-                          onChange={handleExpirySelectChange}>
-                          <MenuItem value={86400} selected={true}>
-                            Days
-                          </MenuItem>
-                          <MenuItem value={60}>Minutes</MenuItem>
-                          <MenuItem value={1}>Seconds</MenuItem>
-                        </Select>
-                      </Box>
                     </Grid>
                   </>
                 )}
@@ -715,7 +736,7 @@ const LimitForm: React.FC<Props> = (props) => {
           {!notConnected && (
             <GridContainer>
               {isNative && (
-                <Grid style={{paddingRight: 8}} item xs={12} sm={12}>
+                <Grid item xs={12} sm={12}>
                   <Button
                     className={classes.btnPrimary}
                     fullWidth
@@ -736,7 +757,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Grid>
               )}
               {!isNative && (
-                <Grid style={{paddingLeft: 8}} item xs={12} sm={12}>
+                <Grid item xs={12} sm={12}>
                   <Button
                     className={classes.btnPrimary}
                     fullWidth
@@ -769,15 +790,13 @@ const LimitForm: React.FC<Props> = (props) => {
             </GridContainer>
           )}
           {notConnected && (
-            <GridContainer>
-              <Grid style={{paddingLeft: 8}} item xs={12} sm={12}>
-                {connectButton}
-              </Grid>
-            </GridContainer>
+            <Grid style={{ padding: '8px' }} item xs={12} sm={12}>
+              {connectButton}
+            </Grid>
           )}
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 
