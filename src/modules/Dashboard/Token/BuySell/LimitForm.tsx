@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   select: {
     width: '100%',
     marginRight: '16px',
+  },
+  submit: {
+    marginTop: '20px',
   }
 }));
 
@@ -555,7 +558,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 {!isNative && (
                   <>
                     <Grid
-                      style={{ padding: '1em', marginTop: 4}}
+                      style={{ marginTop: 4}}
                       item
                       xs={12}
                       md={7}>
@@ -738,7 +741,7 @@ const LimitForm: React.FC<Props> = (props) => {
               {isNative && (
                 <Grid item xs={12} sm={12}>
                   <Button
-                    className={classes.btnPrimary}
+                    className={`${classes.btnPrimary} ${classes.submit}`}
                     fullWidth
                     size='large'
                     variant='contained'

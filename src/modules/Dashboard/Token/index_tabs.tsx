@@ -366,6 +366,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <CustomTabs
+                className={classes.tabsContainer}
                 TabIndicatorProps={{style: {display: 'none'}}}
                 value={tableActive}
                 onChange={onChangeTab}

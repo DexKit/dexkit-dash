@@ -47,4 +47,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   title: {
     display: 'flex',
   },
+  tabsContainer: {
+    width: '350px'
+  }
 }));

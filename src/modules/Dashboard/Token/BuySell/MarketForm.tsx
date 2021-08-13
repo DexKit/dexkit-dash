@@ -444,7 +444,7 @@ const MarketForm: React.FC<Props> = (props) => {
               </Grid>
 
               <Grid
-                style={{ padding: '1em', marginTop: 4}}
+                style={{ padding: 0, marginTop: 4}}
                 item
                 xs={12}
                 md={7}>
