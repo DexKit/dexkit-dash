@@ -143,6 +143,7 @@ const SelectBox = styled.div`
 
 const SelectOption = styled.div`
   display: flex;
+  width: 100px;
   align-items: center;
 
   & img {
@@ -214,6 +215,7 @@ const SelectToken: React.FC<Props> = ({
                 option.name.toLowerCase(),
             )}
             defaultValue={selected}
+            value={selected}
             onChange={(event, value) => onChange(value ?? undefined)}
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (

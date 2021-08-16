@@ -13,7 +13,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import SwapVertIcon from '@material-ui/icons/SwapVert';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
@@ -41,7 +40,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {ReactComponent as BitcoinConvert} from '../../../../assets/images/icons/bitcoin-convert.svg';
+import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
+import VerticalSwap from './VerticalSwap'
+
+import {marketFormStyles as useStyles} from './index.styles'
 
 interface Props {
   chainId: number | undefined;
@@ -57,69 +59,6 @@ interface Props {
   onTrade: (data: ModalOrderData) => void;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  marketContainer: {
-    '& .MuiOutlinedInput-input': {
-      padding: '14px'
-    }
-  },
-  root: {
-    color: theme.palette.secondary.main,
-    fontSize: 18,
-    marginTop: 6,
-    [theme.breakpoints.up('xl')]: {
-      fontSize: 20,
-      marginTop: 16,
-    },
-  },
-  boxContainer: {
-    marginTop: theme.spacing(7),
-    marginBottom: theme.spacing(9),
-
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(5),
-    },
-  },
-  textRes: {
-    marginBottom: 0,
-    fontSize: 13,
-    cursor: 'pointer',
-
-    [theme.breakpoints.up('xl')]: {
-      fontSize: 18,
-    },
-    '&:hover, &:focus': {
-      cursor: 'pointer',
-    },
-  },
-  amountTotal: {
-    '&:hover': {
-      cursor: 'pointer',
-      textDecoration: 'underline',
-    },
-  },
-  inputText: {
-    fontFamily: Fonts.MEDIUM,
-    width: '100%',
-  },
-  toText: {
-    '&:disabled': {
-      color: 'text.primary',
-    },
-  },
-  inputLabel: {
-    paddingBottom: '0px !important',
-    fontWeight: 'bold'
-  },
-  swap: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-  },
-  submit: {
-    marginTop: '20px'
-  }
-}));
 
 const MarketForm: React.FC<Props> = (props) => {
   const {
@@ -333,7 +272,7 @@ const MarketForm: React.FC<Props> = (props) => {
   }
   const {usdFormatter} = useUSDFormatter();
 
-  const [selectTo, setSelectTo] = useState('');
+  const [selectTo, setSelectTo] = useState<'from' | 'to'>('from');
   const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
 
   const handleSelectTokenTo = useCallback(() => {
@@ -349,32 +288,23 @@ const MarketForm: React.FC<Props> = (props) => {
   const handleSelectToken = useCallback(
     (token: Token) => {
       setShowSelectTokenDialog(false);
-      if (selectTo == 'to') {
-        onChangeToken(token, 'to');
-      } else if (selectTo === 'from') {
-        onChangeToken(token, 'from');
-      }
+      onChangeToken(token, selectTo);
     },
     [selectTo, onChangeToken],
   );
 
   const getTokens = useCallback(
     (target: string) => {
-      if (target === 'to') {
-        return select1;
-      } else if (target === 'from') {
-        return web3State === Web3State.Done && select0.length > 0
-          ? select0
-          : select1;
-      }
+      return target === 'from' && web3State === Web3State.Done && select0.length > 0
+        ? select0
+        : select1;
 
-      return [];
+      return select1;
     },
     [web3State, select0, select1],
   );
 
   const handleSelectTokenDialogClose = useCallback(() => {
-    setSelectTo('');
     setShowSelectTokenDialog(false);
   }, []);
 
@@ -443,20 +373,8 @@ const MarketForm: React.FC<Props> = (props) => {
                 />
               </Grid>
 
-              <Grid
-                style={{ padding: 0, marginTop: 4}}
-                item
-                xs={12}
-                md={7}>
-                <Box
-                  mb={2}
-                  color='grey.400'
-                  textAlign='center'
-                  onClick={() => switchTokens()}
-                  className={`${classes.textRes} ${classes.swap}`}>
-                  <SwapVertIcon fontSize="large"/>
-                </Box>
-              </Grid>
+              <VerticalSwap switchTokens={switchTokens}/>
+
               <Grid item xs={12} className={classes.inputLabel}>
                 <IntlMessages id='app.youReceive' />
               </Grid>
@@ -569,7 +487,7 @@ const MarketForm: React.FC<Props> = (props) => {
                       errorMessage
                     ) : (
                       <>
-                        <BitcoinConvert />
+                        <TradeIcon />
                         <Box ml={1} fontSize='large' fontWeight='bold'>
                           Trade
                         </Box>

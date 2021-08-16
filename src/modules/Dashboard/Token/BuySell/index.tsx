@@ -18,7 +18,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
-// import {Token} from 'types/app';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';

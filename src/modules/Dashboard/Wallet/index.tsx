@@ -1,40 +1,56 @@
-import React, {useContext, useEffect, useState} from 'react';
-
-import {Grid, Box, Divider, Fade} from '@material-ui/core';
+import React, {useContext, useEffect} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import {
+  Grid,
+  Box,
+  Tabs,
+  Paper,
+  Tab,
+  Link,
+  Tooltip,
+  Button,
+} from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
-import AppSelect from '@crema/core/AppSelect';
+
 import GridContainer from '@crema/core/GridContainer';
-import AppCard from '@crema/core/AppCard';
 
 import {useIntl} from 'react-intl';
 
-import InfoCard from './InfoCard';
-
-import DefiCoins from './DefiCoins';
-
 import PageTitle from 'shared/components/PageTitle';
-import {Link} from 'react-router-dom';
+
 import {useWeb3} from 'hooks/useWeb3';
 import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
-import AssetTable from './AssetTable';
-import {useNetwork} from 'hooks/useNetwork';
 
-import {useBalanceChart} from 'hooks/balance/useBalanceChart';
-import AssetChart from './AssetChart';
-import {useDefi} from 'hooks/useDefi';
-import {isNativeCoinFromNetworkName, truncateAddress} from 'utils';
-import {useStyles} from './index.style';
-import AppContextPropsType from 'types/AppContextPropsType';
-import {AppContext} from '@crema';
-import {Skeleton} from '@material-ui/lab';
+import {truncateIsAddress} from 'utils';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
-import SelectCoin from 'shared/components/SelectCoin';
+import AppContextPropsType from 'types/AppContextPropsType';
+import AppContext from '@crema/utility/AppContext';
+import {useStyles} from './index.style';
+import AppBar from '@material-ui/core/AppBar';
+import TabContext from '@material-ui/lab/TabContext';
+import TabPanel from '@material-ui/lab/TabPanel';
+import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
+import TimelineIcon from '@material-ui/icons/Timeline';
+
+import AssessmentIcon from '@material-ui/icons/Assessment';
+
+import SwapVertIcon from '@material-ui/icons/SwapVert';
+import {AssetChartTab} from './Tabs/AssetChartTab';
+import {AssetTableTab} from './Tabs/AssetTableTab';
+import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
+import {TransferTab} from './Tabs/TransfersTab';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import {Fonts} from 'shared/constants/AppEnums';
+import {AboutDialog} from './AboutDialog';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 type Params = {
   account: string;
@@ -42,29 +58,32 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
-const Wallet: React.FC<Props> = (props) => {
+const WalletTabs: React.FC<Props> = (props) => {
   const {messages} = useIntl();
   const {
     match: {params},
   } = props;
   const {account: urlAccount} = params;
   const history = useHistory();
-
+  const {theme} = useContext<AppContextPropsType>(AppContext);
+  const classes = useStyles(theme);
   const defaultAccount = useDefaultAccount();
+  const defaultLabel = useDefaultLabelAccount();
   const dispatch = useDispatch();
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
+  const searchParams = new URLSearchParams(history.location.search);
+  const [value, setValue] = React.useState(searchParams.get('tab') ?? 'assets');
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+    const searchParams = new URLSearchParams(history.location.search);
+    searchParams.set('tab', newValue);
+    history.push({search: searchParams.toString()});
 
-  const {defiBalance} = useDefi(account);
+    setValue(newValue);
+  };
   const {loading, error, data} = useAllBalance(defaultAccount);
-  const {
-    loading: loadingChart,
-    error: errorChart,
-    data: dataChart,
-    selectToken,
-    handleSelectDay,
-    handleSelectToken,
-  } = useBalanceChart(data);
+
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (
@@ -80,11 +99,27 @@ const Wallet: React.FC<Props> = (props) => {
     }
   }, [urlAccount, defaultAccount]);
 
-  const networkName = useNetwork();
-
-  const classes = useStyles();
-
-  const {theme} = useContext<AppContextPropsType>(AppContext);
+  const titleComponent = (
+    <Box display='flex' alignItems='center' mt={1}>
+      <AccountBalanceWalletIcon color={'primary'} fontSize={'large'} />
+      <Box
+        component='h3'
+        color='text.primary'
+        fontWeight={Fonts.BOLD}
+        ml={2}
+        mr={2}>
+        Wallet
+      </Box>
+      <Tooltip title={'Manage Accounts'}>
+        <Button
+          variant='outlined'
+          onClick={() => history.push('/dashboard/wallet/manage-accounts')}>
+          <SettingsIcon />
+        </Button>
+      </Tooltip>
+      <AboutDialog />
+    </Box>
+  );
 
   return (
     <Box pt={{xl: 4}}>
@@ -95,152 +130,77 @@ const Wallet: React.FC<Props> = (props) => {
             {url: '/dashboard/wallet', name: 'Wallet'},
           ],
           active: {
-            name: `${truncateAddress(defaultAccount)}`,
+            name: `${truncateIsAddress(defaultLabel)}`,
             hasCopy: account,
           },
         }}
-        title={{name: 'Wallet'}}
+        title={{name: 'Wallet', component: titleComponent}}
+        shareButton={true}
       />
       <GridContainer>
-        <Grid item xs={12} md={6}>
+        <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item xs={12} md={12}>
-            {error ? (
+            {error && !data ? (
               <ErrorView message={error.message} />
             ) : (
               <TotalBalance balances={data} loading={loading} />
             )}
           </Grid>
-
-          <Grid item xs={12} md={12} style={{marginTop: 15}}>
-            {error ? (
-              <ErrorView message={error.message} />
-            ) : (
-              <AssetTable balances={data} loading={loading} />
-            )}
-          </Grid>
-
-          <GridContainer style={{marginTop: 2}}>
-            <Grid item xs={12} sm={6} md={6}>
-              <Box className='card-hover'>
-                <Link
-                  className={classes.btnPrimary}
-                  to={`/${networkName}/history/trade/list/${account}`}
-                  style={{textDecoration: 'none'}}>
-                  <InfoCard
-                    state={{
-                      value: 'Trade History',
-                      bgColor: theme.palette.sidebar.bgColor,
-                      icon: '/assets/images/dashboard/1_monthly_sales.png',
-                      id: 1,
-                      type: 'Click to Open',
-                    }}
-                  />
-                </Link>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={6}>
-              <Box className='card-hover'>
-                <Link
-                  className={classes.btnSecondary}
-                  to={`/${networkName}/history/transfer/list/${account}`}
-                  style={{textDecoration: 'none'}}>
-                  <InfoCard
-                    state={{
-                      value: 'Transfers History',
-                      bgColor: theme.palette.sidebar.bgColor,
-                      icon: '/assets/images/dashboard/1_monthly_sales.png',
-                      id: 2,
-                      type: 'Click to Open',
-                    }}
-                  />
-                </Link>
-              </Box>
-            </Grid>
-          </GridContainer>
         </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Grid item xs={12} md={12} style={{paddingLeft: 0, paddingRight: 0}}>
-            <Fade in={true} timeout={1000}>
-              {loading && loadingChart ? (
-                <Skeleton variant='rect' width='100%' height={350} />
-              ) : errorChart ? (
-                <ErrorView message={errorChart.message} />
-              ) : (
-                <AppCard
-                  style={{paddingLeft: 0, paddingRight: 0, paddingTop: 5}}>
-                  <Box
-                    paddingLeft='5px'
-                    paddingRight='5px'
-                    display='flex'
-                    justifyContent={'space-between'}>
-                    <SelectCoin
-                      menus={data.map((e) => {
-                        return {
-                          symbol: e.currency?.symbol ?? '',
-                          address: e.currency?.address ?? '',
-                        };
-                      })}
-                      defaultValue={selectToken}
-                      onChange={(e) => {
-                        // NOTE: Search
-                        const findToken = data.find(
-                          (t) =>
-                            (t.currency?.address?.toLowerCase() ??
-                              t.currency?.symbol.toLowerCase()) ===
-                            e.toLowerCase(),
-                        );
-                        if (findToken) {
-                          const tokenAddress = isNativeCoinFromNetworkName(
-                            findToken.currency?.symbol ?? '',
-                            findToken.network,
-                          )
-                            ? findToken.currency?.symbol.toUpperCase()
-                            : findToken.currency?.address;
-                          if (tokenAddress) {
-                            handleSelectToken(tokenAddress, findToken.network);
-                          }
-                        }
-                      }}
+        <Grid item xs={12} md={12}>
+          <Box mt={2}>
+            <Paper square>
+              <TabContext value={value}>
+                <AppBar position='static' color='transparent'>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant='fullWidth'
+                    indicatorColor='primary'
+                    textColor='primary'
+                    aria-label='wallet tabs'>
+                    <Tab
+                      value='assets'
+                      icon={<AssessmentIcon />}
+                      label={!isMobile ? 'Assets' : ''}
                     />
-
-                    <AppSelect
-                      menus={[
-                        '7 days',
-                        '15 days',
-                        '30 days',
-                        '60 days',
-                        '90 days',
-                        '180 days',
-                      ]}
-                      defaultValue={'7 days'}
-                      onChange={(e) => {
-                        handleSelectDay(Number(e.split(' ')[0]));
-                      }}
+                    {/*<Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart" : ''} />*/}
+                    <Tab
+                      value='transfers'
+                      icon={<SwapVertIcon />}
+                      label={!isMobile ? 'Transfers' : ''}
                     />
-                  </Box>
-
-                  <Divider style={{marginTop: 5}} />
-
-                  <Box>
-                    <Grid item xs={12} md={12} xl={12} style={{padding: 10}}>
-                      <AssetChart data={dataChart} />
-                    </Grid>
-                  </Box>
-                </AppCard>
-              )}
-            </Fade>
-          </Grid>
-          {
-            <Grid item xs={12} md={12} style={{marginTop: 15}}>
-              <DefiCoins {...defiBalance} />
-            </Grid>
-          }
+                    <Tab
+                      value='trade-history'
+                      icon={<SwapHorizontalCircleIcon />}
+                      label={!isMobile ? 'Trade History' : ''}
+                    />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value='assets'>
+                  <AssetTableTab
+                    account={account as string}
+                    loading={loading}
+                    error={error}
+                    data={data}
+                  />
+                </TabPanel>
+                {/* <TabPanel value="assets-chart">
+                    <AssetChartTab data={data} loading={loading} />
+                 </TabPanel>*/}
+                <TabPanel value='transfers'>
+                  <TransferTab address={defaultAccount} />
+                </TabPanel>
+                <TabPanel value='trade-history'>
+                  <TradeHistoryTab address={defaultAccount} />
+                </TabPanel>
+              </TabContext>
+            </Paper>
+          </Box>
         </Grid>
       </GridContainer>
     </Box>
   );
 };
 
-export default Wallet;
+export default WalletTabs;
