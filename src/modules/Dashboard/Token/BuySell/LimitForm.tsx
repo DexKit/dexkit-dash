@@ -5,7 +5,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
-  makeStyles,
   Grid,
   Box,
   Button,
@@ -15,18 +14,16 @@ import {
   MenuItem,
   InputAdornment,
 } from '@material-ui/core';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import { Alert, Skeleton } from '@material-ui/lab'
+import {Alert, Skeleton} from '@material-ui/lab';
 import VerticalSwap from './VerticalSwap';
-import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectTokenV2 from './SelectTokenV2';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
+import {isNativeCoinFromNetworkName} from 'utils';
 import {Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
@@ -41,7 +38,7 @@ import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
 import SelectTokenDialog from './Modal/SelectTokenDialog';
-import {limitFormStyles as useStyles} from './index.styles'
+import {limitFormStyles as useStyles} from './index.styles';
 
 interface Props {
   chainId: number | undefined;
@@ -103,8 +100,8 @@ const LimitForm: React.FC<Props> = (props) => {
     const tokenETH = select1.find(
       (e) =>
       e.symbol.toLowerCase() ===
-      GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
-      e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+        GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
+        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
     );
 
     onChangeToken(tokenETH, 'from');
@@ -124,13 +121,14 @@ const LimitForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
-      const getTokenBalance = (token: (Token | undefined)) => balances.find((e) => {
-        const symbol = token && isNativeCoinFromNetworkName(token?.symbol, networkName)
-          ? token?.address.toLowerCase()
-          : token?.symbol.toLowerCase()
+      const getTokenBalance = (token: (Token | undefined)) =>
+        balances.find((e) => {
+          const symbol = token && isNativeCoinFromNetworkName(token?.symbol, networkName)
+            ? token?.address.toLowerCase()
+            : token?.symbol.toLowerCase();
 
-        return e.currency?.symbol?.toLowerCase() === symbol;
-      });
+          return e.currency?.symbol?.toLowerCase() === symbol;
+        });
 
       setTokenFromBalance(getTokenBalance(tokenFrom));
 
@@ -345,10 +343,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     </Alert>
                   </Grid>
                 )}
-                <Grid
-                  item
-                  xs={12}
-                  md={5}>
+                <Grid item xs={5}>
                   <Typography variant="body2" className={classes.inputLabel}>
                     <IntlMessages id='app.youSend' />
                   </Typography>
@@ -362,10 +357,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     />
                   </Box>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={7}>
+                <Grid item sm={7}>
                   <Typography variant="body2" className={classes.balance}>
                     {account ? (
                       `Balance ${tokenFromBalance?.value?.toFixed(4) || 0} ${tokenFromBalance?.currency?.symbol || ''}`
@@ -598,7 +590,7 @@ const LimitForm: React.FC<Props> = (props) => {
                       errorMessage
                     ) : (
                       <>
-                        <Box mx={2}>
+                        <Box mx={2} display={'flex'}>
                           <TradeIcon />
                         </Box>
                         <Box fontSize='large' fontWeight='bold'>

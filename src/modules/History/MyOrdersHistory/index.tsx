@@ -96,7 +96,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         return e;
       });
 
-      console.log(newData);
+      console.log('netData', newData);
 
       setData(newData);
       setTotalRows(dataFn.total);

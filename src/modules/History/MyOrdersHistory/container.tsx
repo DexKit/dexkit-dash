@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid, Box, Toolbar, Typography} from '@material-ui/core';
 import {COINGECKO_CONTRACT_URL} from 'shared/constants/AppConst';
 import {GridContainer} from '@crema';
 import ErrorView from 'modules/Common/ErrorView';
@@ -14,8 +14,6 @@ import {useStyles} from './index.style';
 import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
-import PageTitle from 'shared/components/PageTitle';
-import {truncateAddress} from 'utils/text';
 import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';

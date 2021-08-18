@@ -80,10 +80,8 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
   },
   btnPrimary: {
     backgroundColor: theme.palette.primary.main,
-    color: 'white',
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.dark,
-      color: 'white',
     },
   },
   textRes: {

@@ -2,8 +2,10 @@ import React, {useContext, useMemo} from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import {Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
 import {useIntl} from 'react-intl';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import TableRow from '@material-ui/core/TableRow';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 
@@ -47,10 +49,50 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
+type ViewTxProps = {
+  hash: string;
+  networkName: EthereumNetwork;
+};
+
+const ViewTx: React.FC<ViewTxProps> = ({hash, networkName}) => {
+  const {messages} = useIntl();
+  return (
+    <Tooltip title={messages['app.viewTx']} placement='top'>
+      <a
+        href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${hash}`}
+        target='_blank'
+        rel='noopener noreferrer'>
+        {networkName === EthereumNetwork.ethereum ? (
+          <Avatar
+            style={{
+              color: '#3F51B5',
+              backgroundColor: 'white',
+              width: '20px',
+              height: '20px',
+              marginRight: '5px',
+              marginBottom: '5px',
+            }}
+            src='/images/etherescan.png'></Avatar>
+        ) : (
+          <Avatar
+            style={{
+              color: '#3F51B5',
+              backgroundColor: 'white',
+              width: '20px',
+              height: '20px',
+              marginRight: '5px',
+              marginBottom: '5px',
+            }}
+            src='/images/bscscan-logo-circle.png'></Avatar>
+        )}
+      </a>
+    </Tooltip>
+  );
+};
+
 const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
-
   const classes = useStyles();
-
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const paymentTypeColor = useMemo(() => {
     switch (row.side) {
       case 'SELL': {
@@ -77,7 +119,76 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
   const priceUSD = row?.baseAmount
     ? formatter.format((row?.tradeAmountIsUsd || 0) / row?.baseAmount)
     : '-';
-  const {messages} = useIntl();
+  const ViewTxComponent = React.useMemo(
+    () => () => <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,
+    [networkName, row.transaction?.hash],
+  );
+
+  if (isMobile) {
+    const summaryTitle = <IntlMessages id='app.pair' />;
+    const summaryValue = `${row.baseCurrency?.symbol}/${row.quoteCurrency?.symbol}`;
+    const data = [
+      {
+        id: 'exchange',
+        title: <IntlMessages id='app.exchange' />,
+        value: row.exchange ? (
+          <ExchangeLogo exchange={row.exchange.fullName} />
+        ) : (
+          ''
+        ),
+      },
+      {
+        id: 'side',
+        title: <IntlMessages id='app.side' />,
+        value: (
+          <Chip
+            style={{backgroundColor: paymentTypeColor, color: 'white'}}
+            label={row.side}
+          />
+        ),
+      },
+      {
+        id: 'baseAmount',
+        title: <IntlMessages id='app.baseAmount' />,
+        value: `${row.baseAmount?.toFixed(4)} ${row.baseCurrency?.symbol}`,
+      },
+      {
+        id: 'quoteAmount',
+        title: <IntlMessages id='app.quoteAmount' />,
+        value: `${row.quoteAmount?.toFixed(4)} ${row.quoteCurrency?.symbol}`,
+      },
+      {
+        id: 'price',
+        title: <IntlMessages id='app.price' />,
+        value: priceUSD,
+      },
+      {
+        id: 'tradeAmount',
+        title: <IntlMessages id='app.tradeAmount' />,
+        value: formatter.format(row.tradeAmountIsUsd || 0),
+      },
+      {
+        id: 'created',
+        title: <IntlMessages id='app.created' />,
+        value: timestamp,
+      },
+      {
+        id: 'viewTx',
+        title: '',
+        value: <ViewTxComponent />,
+      },
+    ];
+
+    return (
+      <TableRow key={row.transaction?.hash} className={classes.borderBottomClass}>
+        <CollapsibleTableRow
+          summaryValue={summaryValue}
+          summaryTitle={summaryTitle}
+          data={data}
+        />
+      </TableRow>
+    );
+  }
 
   return (
     <TableRow key={row.transaction?.hash} className={classes.borderBottomClass}>
@@ -117,43 +228,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {/* <Link
-          to={`/${networkName}/history/order/view/${row.transaction?.hash}`}
-          component={RouterLink}>
-          <SearchIcon />
-       </Link>*/}
-        <Tooltip title={messages['app.viewTx']} placement='top'>
-          <a
-            href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
-              row.transaction?.hash
-            }`}
-            target='_blank'
-            rel='noopener noreferrer'>
-            {networkName === EthereumNetwork.ethereum ? (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/etherescan.png'></Avatar>
-            ) : (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/bscscan-logo-circle.png'></Avatar>
-            )}
-          </a>
-        </Tooltip>
+        <ViewTxComponent />
       </TableCell>
     </TableRow>
   );

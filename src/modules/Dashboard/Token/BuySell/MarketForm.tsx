@@ -3,19 +3,11 @@ import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 import {AppContext} from '@crema';
 
-import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  makeStyles,
-  Grid,
-  Box,
-  Button,
-  TextField,
-  Typography,
-} from '@material-ui/core';
-import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
+import {Grid, Box, Button, TextField, Typography} from '@material-ui/core';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
+import AppContextPropsType from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
 import SelectTokenV2 from './SelectTokenV2';
 import {ModalOrderData} from 'types/models/ModalOrderData';
@@ -41,9 +33,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
-import VerticalSwap from './VerticalSwap'
-
-import {marketFormStyles as useStyles} from './index.styles'
+import VerticalSwap from './VerticalSwap';
+import {marketFormStyles as useStyles} from './index.styles';
 
 interface Props {
   chainId: number | undefined;
@@ -58,7 +49,6 @@ interface Props {
   onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
   onTrade: (data: ModalOrderData) => void;
 }
-
 
 const MarketForm: React.FC<Props> = (props) => {
   const {
@@ -103,11 +93,6 @@ const MarketForm: React.FC<Props> = (props) => {
 
     onChangeToken(tokenETH, 'from');
   }
-
-  const resetAmount = () => {
-    setAmountFrom(0);
-    setAmountTo(0);
-  };
 
   const switchTokens = () => {
     if (tokenFrom) {
@@ -169,7 +154,7 @@ const MarketForm: React.FC<Props> = (props) => {
         }
       }),
     );
-  }, [tokenFrom, balances, web3State]);
+  }, [tokenFrom, balances, web3State, networkName]);
 
   const onFetch = (newValue: number | undefined) => {
     setAmountFrom(newValue);
@@ -278,12 +263,12 @@ const MarketForm: React.FC<Props> = (props) => {
   const handleSelectTokenTo = useCallback(() => {
     setSelectTo('to');
     setShowSelectTokenDialog(true);
-  }, [onChangeToken]);
+  }, [setSelectTo, setShowSelectTokenDialog]);
 
   const handleSelectTokenFrom = useCallback(() => {
     setSelectTo('from');
     setShowSelectTokenDialog(true);
-  }, [onChangeToken]);
+  }, [setSelectTo, setShowSelectTokenDialog]);
 
   const handleSelectToken = useCallback(
     (token: Token) => {
@@ -295,7 +280,9 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const getTokens = useCallback(
     (target: string) => {
-      return target === 'from' && web3State === Web3State.Done && select0.length > 0
+      return target === 'from' &&
+        web3State === Web3State.Done &&
+        select0.length > 0
         ? select0
         : select1;
 
@@ -330,7 +317,9 @@ const MarketForm: React.FC<Props> = (props) => {
                   color='textSecondary'
                   align='right'>
                   {account ? (
-                    `${tokenBalance?.value?.toFixed(4) || 0} ${tokenBalance?.currency?.symbol || ''}`
+                    `${tokenBalance?.value?.toFixed(4) || 0} ${
+                      tokenBalance?.currency?.symbol || ''
+                    }`
                   ) : (
                     <Skeleton width={'100%'} />
                   )}
@@ -373,7 +362,7 @@ const MarketForm: React.FC<Props> = (props) => {
                 />
               </Grid>
 
-              <VerticalSwap switchTokens={switchTokens}/>
+              <VerticalSwap switchTokens={switchTokens} />
 
               <Grid item xs={12} className={classes.inputLabel}>
                 <IntlMessages id='app.youReceive' />
@@ -416,57 +405,62 @@ const MarketForm: React.FC<Props> = (props) => {
               </Grid>
               <Grid xs={12} md={12}>
                 <Box padding={'8px'}>
-                  {
-                    (priceQuoteTo || priceQuoteFrom) && (
-                      <Accordion style={{ backgroundColor: theme.palette.sidebar.bgColor }}>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header"
-                        >
-                          <Typography style={{ textDecoration: 'none' }}>Aditional information</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Box display={'flex'} width="100%" justifyContent={'space-evenly'}>
-                            {priceQuoteTo && (
-                              <Box>
-                                <p>
-                                  1 {tokenTo?.symbol.toUpperCase()}{' '}
-                                  {priceQuoteTo && (
-                                    <>
-                                      ≈
-                                      <i>
-                                        {' '}
-                                        {usdFormatter.format(Number(priceQuoteTo?.price))}
-                                      </i>
-                                    </>
-                                  )}
-                                </p>
-                              </Box>
-                            )}
-                            {priceQuoteFrom && (
-                              <Box>
-                                <p>
-                                  1 {tokenFrom?.symbol.toUpperCase()}{' '}
-                                  {priceQuoteFrom && (
-                                    <>
-                                      ≈
-                                      <i>
-                                        {' '}
-                                        {usdFormatter.format(
-                                          Number(priceQuoteFrom?.price),
-                                        )}
-                                      </i>
-                                    </>
-                                  )}
-                                </p>
-                              </Box>
-                            )}
-                          </Box>
-                        </AccordionDetails>
-                      </Accordion>
-                    )
-                  }
+                  {(priceQuoteTo || priceQuoteFrom) && (
+                    <Accordion
+                      style={{backgroundColor: theme.palette.sidebar.bgColor}}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='panel1a-content'
+                        id='panel1a-header'>
+                        <Typography style={{textDecoration: 'none'}}>
+                          Additional information
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box
+                          display={'flex'}
+                          width='100%'
+                          justifyContent={'space-evenly'}>
+                          {priceQuoteTo && (
+                            <Box>
+                              <p>
+                                1 {tokenTo?.symbol.toUpperCase()}{' '}
+                                {priceQuoteTo && (
+                                  <>
+                                    ≈
+                                    <i>
+                                      {' '}
+                                      {usdFormatter.format(
+                                        Number(priceQuoteTo?.price),
+                                      )}
+                                    </i>
+                                  </>
+                                )}
+                              </p>
+                            </Box>
+                          )}
+                          {priceQuoteFrom && (
+                            <Box>
+                              <p>
+                                1 {tokenFrom?.symbol.toUpperCase()}{' '}
+                                {priceQuoteFrom && (
+                                  <>
+                                    ≈
+                                    <i>
+                                      {' '}
+                                      {usdFormatter.format(
+                                        Number(priceQuoteFrom?.price),
+                                      )}
+                                    </i>
+                                  </>
+                                )}
+                              </p>
+                            </Box>
+                          )}
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                  )}
                 </Box>
               </Grid>
               <Grid item xs={12} className={classes.submit}>

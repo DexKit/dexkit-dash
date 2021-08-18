@@ -23,6 +23,7 @@ const defaultConfig: any = {
       background: {
         paper: '#252836',
         default: '#1F1D2B',
+        darker: '#252331',
       },
       primary: {
         main: '#FFA552',

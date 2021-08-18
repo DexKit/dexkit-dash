@@ -1,33 +1,22 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useMemo,
-  useCallback,
-} from 'react';
-import GridContainer from '../../../@crema/core/GridContainer';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import {
   Grid,
   Box,
   IconButton,
   Tooltip,
-  AppBar,
-  Paper,
   Card,
-  CardContent,
   Breadcrumbs,
   Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@material-ui/core';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
-import AppContextPropsType from 'types/AppContextPropsType';
-import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
 import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
-import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
-import PageTitle from 'shared/components/PageTitle';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import BuySell from './BuySell';
 
 import {Token} from 'types/app';
@@ -47,11 +36,14 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {AboutDialog} from './AboutDialog';
 import {ShareButton} from 'shared/components/ShareButton';
 import InfoIcon from '@material-ui/icons/Info';
+import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
+import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
+import {useStyles} from './index.style'
 
 type Params = {
   address: string;
   networkName: EthereumNetwork;
-}
+};
 
 type Props = RouteComponentProps<Params>;
 
@@ -60,18 +52,18 @@ const TokenTabsPage: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, networkName} = params;
-  const {theme} = useContext<AppContextPropsType>(AppContext);
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
   );
   const {account: web3Account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const account: (string | undefined) = defaultAccount || web3Account || "";
+  const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
   const [token, setToken] = useState<Token>();
-  const {loading, error, data} = useCoingeckoTokenInfo(address, networkName);
+  const {data} = useCoingeckoTokenInfo(address, networkName);
+  const classes = useStyles();
 
   const onToggleFavorite = () => {
     if (token && data) {
@@ -100,7 +92,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
         decimals: tokenInfo.decimals,
       });
     }
-  }, [tokenInfo]);
+  }, [tokenInfo, address]);
 
   const infoMyTakerOrders = useFetch(
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
@@ -129,7 +121,7 @@ const TokenTabsPage: React.FC<Props> = (props) => {
   return (
     <>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
-      <Box py={4}>
+      <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
         <Box>
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>
@@ -178,34 +170,75 @@ const TokenTabsPage: React.FC<Props> = (props) => {
           </Grid>
         </Box>
         <Box mt={4}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={8}>
-              <Charts
-                chainId={chainId}
-                tokenInfo={tokenInfo}
-                networkName={networkName}
-                />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <BuySell
-                  tokenAddress={address}
-                  balances={balances}
-                  networkName={networkName}
-                  tokenInfo={tokenInfo}
-                />
-              </Card>
-            </Grid>
-            <Grid item xs={12}>
-              <HistoryTables
-                account={account}
-                networkName={networkName}
-                address={address}
-              />
-            </Grid>
-            {/*   <Grid item xs={12}>
-              <InfoTab error={error} loading={loading} data={data} />
-            </Grid> */}
+          <Grid container spacing={3}>
+            {isMobile ? (
+              <>
+                <Card>
+                  <BuySell
+                    tokenAddress={address}
+                    balances={balances}
+                    networkName={networkName}
+                    tokenInfo={tokenInfo}
+                  />
+                </Card>
+                <Grid item xs={12} className={classes.mobileChartsContainer}>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ArrowDownIcon />}
+                      aria-controls='panel1a-content'
+                      id='panel1a-header'>
+                      <Typography>
+                        <GraphicsIcon /> Graficos
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Charts
+                        chainId={chainId}
+                        tokenInfo={tokenInfo}
+                        networkName={networkName}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                </Grid>
+                <Grid item xs={12}>
+                  <HistoryTables
+                    account={account}
+                    networkName={networkName}
+                    address={address}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} md={8}>
+                  <Charts
+                    chainId={chainId}
+                    tokenInfo={tokenInfo}
+                    networkName={networkName}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Card>
+                    <BuySell
+                      tokenAddress={address}
+                      balances={balances}
+                      networkName={networkName}
+                      tokenInfo={tokenInfo}
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12}>
+                  <HistoryTables
+                    account={account}
+                    networkName={networkName}
+                    address={address}
+                  />
+                </Grid>
+                {/*   <Grid item xs={12}>
+                  <InfoTab error={error} loading={loading} data={data} />
+                </Grid> */}
+              </>
+            )}
           </Grid>
         </Box>
       </Box>
