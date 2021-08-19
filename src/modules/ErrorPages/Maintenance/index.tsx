@@ -17,7 +17,6 @@ const Maintenance: React.FC<MaintenanceProps> = () => {
 
   const onGoBackToHome = () => {
     history.push(initialUrl);
-    
   };
 
   const useStyles = makeStyles((theme: CremaTheme) => {

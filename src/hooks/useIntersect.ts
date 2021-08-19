@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { useCallback, useRef } from "react";
+import _ from 'lodash';
+import {useCallback, useRef} from 'react';
 
 export function useIntersect() {
   const callback = useRef<() => void>();
@@ -22,16 +22,22 @@ export function useIntersect() {
     ),
   );
 
-  const setCallback = useCallback((cb :() => void) => {
-    callback.current = cb;
-  }, [callback]);
+  const setCallback = useCallback(
+    (cb: () => void) => {
+      callback.current = cb;
+    },
+    [callback],
+  );
 
-  const observe = useCallback((el: Element) => {
-    if (observer.current.root) {
-      observer.current.unobserve(observer.current.root);
-    }
-    observer.current.observe(el);
-  }, [observer.current]);
+  const observe = useCallback(
+    (el: Element) => {
+      if (observer.current.root) {
+        observer.current.unobserve(observer.current.root);
+      }
+      observer.current.observe(el);
+    },
+    [observer.current],
+  );
 
-  return { observe, setCallback };
+  return {observe, setCallback};
 }

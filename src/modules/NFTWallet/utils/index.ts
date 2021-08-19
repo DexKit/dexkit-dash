@@ -5,8 +5,8 @@ import {OrderSide} from 'opensea-js/lib/types';
 export function sortEventArray(arr: any[]): any[] {
   return arr
     .sort((a, b) => {
-      let dateA = moment(a.created_date);
-      let dateB = moment(b.created_date);
+      const dateA = moment(a.created_date);
+      const dateB = moment(b.created_date);
 
       if (dateA.isBefore(dateB)) {
         return -1;
@@ -43,7 +43,7 @@ export function isSameAddress(address: string, other: string) {
 
 export function isAssetOwner(asset: any, address: string) {
   if (asset) {
-    for (let el of asset.top_ownerships) {
+    for (const el of asset.top_ownerships) {
       if (isSameAddress(el.owner.address, address)) {
         return true;
       }
@@ -99,12 +99,12 @@ export const getFirstOrderPrice = (asset: any) => {
 };
 
 export function sortByMinPrice(a: any, b: any) {
-  let priceA = toTokenUnitAmount(
+  const priceA = toTokenUnitAmount(
     a.current_price,
     a.payment_token_contract?.decimals,
   ).toNumber();
 
-  let priceB = toTokenUnitAmount(
+  const priceB = toTokenUnitAmount(
     b.current_price,
     b.payment_token_contract?.decimals,
   ).toNumber();

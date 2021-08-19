@@ -20,8 +20,8 @@ export default (props: Props) => {
 
   const countDown = useCallback(() => {
     if (active) {
-      let diff = endingDate.diff(moment());
-      let step = endingPrice / diff;
+      const diff = endingDate.diff(moment());
+      const step = endingPrice / diff;
 
       setPriceText((price - step) * priceUSD);
     }

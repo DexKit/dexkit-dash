@@ -1,4 +1,4 @@
-import { BigNumber } from '@0x/utils';
+import {BigNumber} from '@0x/utils';
 
 export interface TokenList {
   name: string;
@@ -9,7 +9,7 @@ export interface TokenList {
     patch: number;
   };
   keywords: string[];
-  tokens: TokenInfo[]
+  tokens: TokenInfo[];
 }
 
 export interface TokenInfo {

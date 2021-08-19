@@ -35,7 +35,7 @@ const AppMenu: React.FC<AppMenuProps> = () => {
         keepMounted
         open={open}
         onClose={handleClose}>
-        {options.map(option => (
+        {options.map((option) => (
           <MenuItem
             key={option}
             selected={option === 'Pyxis'}

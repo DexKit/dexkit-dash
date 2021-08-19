@@ -9,8 +9,7 @@ import {BITQUERY_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
 import {useNetwork} from 'hooks/useNetwork';
 import {getTokens} from 'services/rest/coingecko';
 import {client} from 'services/graphql';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 export const useBalance = (defaultAccount?: string) => {
   const {account: web3Account} = useWeb3();
@@ -25,7 +24,6 @@ export const useBalance = (defaultAccount?: string) => {
   useEffect(() => {
     if (account) {
       setLoading(true);
-
       client
         .query<GetMyBalance, GetMyBalanceVariables>({
           query: BITQUERY_BALANCE_INFO,
@@ -36,9 +34,11 @@ export const useBalance = (defaultAccount?: string) => {
         })
         .then((balances) => {
           const tokensmeta_eth = balances.data.ethereum?.address[0].balances
-          ?.map((t) => t.currency?.address?.toLowerCase() || '')
-          ?.filter((e) => e !== '-')
-          ?.map(a => {return {network: EthereumNetwork.ethereum, address: a}});
+            ?.map((t) => t.currency?.address?.toLowerCase() || '')
+            ?.filter((e) => e !== '-')
+            ?.map((a) => {
+              return {network: EthereumNetwork.ethereum, address: a};
+            });
 
           if (tokensmeta_eth && tokensmeta_eth.length) {
             getTokens(tokensmeta_eth)
@@ -46,9 +46,7 @@ export const useBalance = (defaultAccount?: string) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
                   (t) => {
                     //   const addr = (t.currency?.address == '-') ? 'eth' : t?.currency?.address?.toLowerCase();
-
                     const addr = t.currency?.address;
-
                     return <GetMyBalance_ethereum_address_balances>{
                       currency: {
                         ...t.currency,
@@ -71,7 +69,6 @@ export const useBalance = (defaultAccount?: string) => {
           }
         })
         .catch((e) => {
-          console.info(e);
           setError(e);
           setLoading(false);
         });

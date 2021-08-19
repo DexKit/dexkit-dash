@@ -1,30 +1,47 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { usePairExplorer } from 'hooks/protocolExplorer/usePairExplorer';
-import { extractPairFromAddressFromNetworkName, getNativeCoinWrappedAddressFromNetworkName } from 'utils/tokens';
+import React, {useContext, useEffect, useState} from 'react';
+import {usePairExplorer} from 'hooks/protocolExplorer/usePairExplorer';
+import {
+  extractPairFromAddressFromNetworkName,
+  getNativeCoinWrappedAddressFromNetworkName,
+} from 'utils/tokens';
 import GridContainer from '../../../../@crema/core/GridContainer';
-import { AppBar, Fade, Grid, Paper, Tab, Tabs, Box, Hidden } from '@material-ui/core';
-import { AppContext } from '@crema';
+import {
+  AppBar,
+  Fade,
+  Grid,
+  Paper,
+  Tab,
+  Tabs,
+  Box,
+  Hidden,
+} from '@material-ui/core';
+import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
-import { EXCHANGE, EthereumNetwork, ThemeMode, Fonts } from 'shared/constants/AppEnums';
+import {
+  EXCHANGE,
+  EthereumNetwork,
+  ThemeMode,
+  Fonts,
+} from 'shared/constants/AppEnums';
 import TabContext from '@material-ui/lab/TabContext';
 import TabPanel from '@material-ui/lab/TabPanel';
-import { RouteComponentProps } from 'react-router-dom';
-import { TokenFilterProvider } from 'providers/protocol/tokenFilterProvider';
+import {RouteComponentProps} from 'react-router-dom';
+import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 
 import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
 import Info from 'modules/ProtocolExplorer/Common/Info';
 import PageTitle from 'shared/components/PageTitle';
 import ErrorView from 'modules/Common/ErrorView';
-import { Skeleton } from '@material-ui/lab';
+import {Skeleton} from '@material-ui/lab';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
-import { TokenSearch } from 'shared/components/TokenSearch';
-import { useHistory } from 'react-router-dom';
-import { Token } from 'types/app';
+import {TokenSearch} from 'shared/components/TokenSearch';
+import {useHistory} from 'react-router-dom';
+import {Token} from 'types/app';
 
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import TokenPairs from 'modules/ProtocolExplorer/Common/TokenPairs';
-import { truncateAddress } from 'utils/text';
+import {truncateAddress} from 'utils/text';
 import TokenLogo from 'shared/components/TokenLogo';
 import FavoritesAccordion from 'shared/components/Favorites';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -34,36 +51,38 @@ const BitqueryTVChartContainer = React.lazy(
 
 type Params = {
   address: string;
-
 };
 
 type Props = RouteComponentProps<Params>;
 
 const PairExplorer = (props: Props) => {
   const {
-    match: { params },
+    match: {params},
   } = props;
 
-  const { address } = params;
+  const {address} = params;
   const history = useHistory();
-  let searchParams = new URLSearchParams(history.location.search);
-  const [networkName, setNetworkName] = useState<EthereumNetwork>(searchParams.get('network') as EthereumNetwork ?? EthereumNetwork.ethereum)
+  const searchParams = new URLSearchParams(history.location.search);
+  const [networkName, setNetworkName] = useState<EthereumNetwork>(
+    (searchParams.get('network') as EthereumNetwork) ??
+      EthereumNetwork.ethereum,
+  );
 
-  const { baseAddress, quoteAddress } = extractPairFromAddressFromNetworkName(
+  const {baseAddress, quoteAddress} = extractPairFromAddressFromNetworkName(
     address,
     networkName,
   );
-  useEffect(
-    ()=> {
-
-    if(searchParams.get('network') !== networkName){
-      setNetworkName(searchParams.get('network') as EthereumNetwork ?? EthereumNetwork.ethereum)
+  useEffect(() => {
+    if (searchParams.get('network') !== networkName) {
+      setNetworkName(
+        (searchParams.get('network') as EthereumNetwork) ??
+          EthereumNetwork.ethereum,
+      );
     }
+  }, [history.location.search]);
 
-  }, [history.location.search])
-
-  const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
-  const { loading, error, data } = usePairExplorer({
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+  const {loading, error, data} = usePairExplorer({
     baseAddress,
     quoteAddress,
     exchange: EXCHANGE.ALL,
@@ -74,26 +93,33 @@ const PairExplorer = (props: Props) => {
     if (!token) {
       return;
     }
-    let searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(history.location.search);
     const net = token.networkName ?? EthereumNetwork.ethereum;
     searchParams.set('network', net);
     setNetworkName(net);
-    history.push({ pathname: `/protocol-explorer/pair-explorer/${token.address || token.symbol}-${getNativeCoinWrappedAddressFromNetworkName(net)}`, search: searchParams.toString() });
-  }
+    history.push({
+      pathname: `/protocol-explorer/pair-explorer/${
+        token.address || token.symbol
+      }-${getNativeCoinWrappedAddressFromNetworkName(net)}`,
+      search: searchParams.toString(),
+    });
+  };
 
-  const [value, setValue] = React.useState(searchParams.get('tab') ?? 'overview');
+  const [value, setValue] = React.useState(
+    searchParams.get('tab') ?? 'overview',
+  );
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
-    let searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
-    history.push({ search: searchParams.toString() });
+    history.push({search: searchParams.toString()});
 
     setValue(newValue);
   };
 
-  const { theme } = useContext<AppContextPropsType>(AppContext);
+  const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
-  const title =
-    data ? <Box display='flex' alignItems='center'>
+  const title = data ? (
+    <Box display='flex' alignItems='center'>
       <TokenLogo
         token0={data?.baseCurrency?.address || ''}
         token1={data?.quoteCurrency?.address || ''}
@@ -107,12 +133,11 @@ const PairExplorer = (props: Props) => {
         mr={2}>
         {data?.baseCurrency?.symbol}/{data?.quoteCurrency?.symbol}
       </Box>
-    </Box> : null;
-
+    </Box>
+  ) : null;
 
   return (
-
-    <Box pt={{ xl: 4 }}>
+    <Box pt={{xl: 4}}>
       <PageTitle
         breadcrumbs={{
           history: [
@@ -121,48 +146,69 @@ const PairExplorer = (props: Props) => {
               name: 'Pair Explorer',
             },
           ],
-          active: { name: 'Pair Explorer' },
+          active: {name: 'Pair Explorer'},
         }}
-        title={{ name: 'Pair Explorer', component: title }}
-        subtitle={{ name: !isMobile ? truncateAddress(baseAddress) : '', hasCopy: baseAddress }}
+        title={{name: 'Pair Explorer', component: title}}
+        subtitle={{
+          name: !isMobile ? truncateAddress(baseAddress) : '',
+          hasCopy: baseAddress,
+        }}
         network={networkName}
         shareButton={true}
       />
       <GridContainer>
         <Grid item xs={12} md={12}>
           <Grid item xs={12} md={12}>
-            <Paper style={{ padding: 10 }}>
-              <TokenSearch onClick={onClickSearch} selectedTokenAddress={baseAddress} />
+            <Paper style={{padding: 10}}>
+              <TokenSearch
+                onClick={onClickSearch}
+                selectedTokenAddress={baseAddress}
+              />
             </Paper>
           </Grid>
         </Grid>
         <TokenFilterProvider>
           <TabContext value={value}>
-            <AppBar position="static" color='transparent'>
+            <AppBar position='static' color='transparent'>
               <Tabs
                 value={value}
                 onChange={handleChange}
-                variant="fullWidth"
-                indicatorColor="primary"
-                textColor="primary"
-                aria-label="wallet tabs"
-              >
-                <Tab value="overview" icon={<RemoveRedEyeIcon />} label={!isMobile ? "Overview": ''} />
-                <Tab value="trade-history" icon={<SwapHorizontalCircleIcon />} label={!isMobile ? "Trade History" : ''} />
-                <Tab value="top-pairs" icon={<EmojiEventsIcon />} label={!isMobile ? "Top Pairs": ''} />
+                variant='fullWidth'
+                indicatorColor='primary'
+                textColor='primary'
+                aria-label='wallet tabs'>
+                <Tab
+                  value='overview'
+                  icon={<RemoveRedEyeIcon />}
+                  label={!isMobile ? 'Overview' : ''}
+                />
+                <Tab
+                  value='trade-history'
+                  icon={<SwapHorizontalCircleIcon />}
+                  label={!isMobile ? 'Trade History' : ''}
+                />
+                <Tab
+                  value='top-pairs'
+                  icon={<EmojiEventsIcon />}
+                  label={!isMobile ? 'Top Pairs' : ''}
+                />
               </Tabs>
             </AppBar>
             <Grid item xs={12} md={12}>
-              <TabPanel value="overview">
+              <TabPanel value='overview'>
                 <GridContainer>
                   <Grid item xs={12} md={5}>
                     <GridContainer>
                       <Grid item xs={12} md={12}>
-                        <Paper style={{ marginTop: 20 }}>
+                        <Paper style={{marginTop: 20}}>
                           {error ? (
                             <ErrorView message={error.message} />
                           ) : (
-                            <Info data={data} loading={loading} networkName={networkName} />
+                            <Info
+                              data={data}
+                              loading={loading}
+                              networkName={networkName}
+                            />
                           )}
                         </Paper>
                       </Grid>
@@ -170,7 +216,6 @@ const PairExplorer = (props: Props) => {
                         <FavoritesAccordion type={'pair'} />
                       </Grid>
                     </GridContainer>
-
                   </Grid>
                   <Grid item xs={12} md={7}>
                     <Fade in={true} timeout={1000}>
@@ -181,8 +226,13 @@ const PairExplorer = (props: Props) => {
                           <ErrorView message={error.message} />
                         ) : (
                           data && (
-                            <Grid item xs={12} md={12} style={{ height: 450 }}>
-                              <BitqueryTVChartContainer symbol={`${networkName}:${data?.baseCurrency?.symbol.toUpperCase()}:${data?.baseCurrency?.address}`} darkMode={isDark} />
+                            <Grid item xs={12} md={12} style={{height: 450}}>
+                              <BitqueryTVChartContainer
+                                symbol={`${networkName}:${data?.baseCurrency?.symbol.toUpperCase()}:${
+                                  data?.baseCurrency?.address
+                                }`}
+                                darkMode={isDark}
+                              />
                             </Grid>
                           )
                         )}
@@ -203,18 +253,15 @@ const PairExplorer = (props: Props) => {
                 </GridContainer>
               </TabPanel>
 
-              <TabPanel value="top-pairs">
-
+              <TabPanel value='top-pairs'>
                 <TokenPairs
                   baseAddress={baseAddress}
                   exchange={EXCHANGE.ALL}
                   networkName={networkName}
                 />
-
               </TabPanel>
 
-
-              <TabPanel value="trade-history">
+              <TabPanel value='trade-history'>
                 <TokenOrders
                   networkName={networkName}
                   baseAddress={baseAddress}
@@ -224,12 +271,8 @@ const PairExplorer = (props: Props) => {
                 />
               </TabPanel>
             </Grid>
-
           </TabContext>
         </TokenFilterProvider>
-
-
-
       </GridContainer>
     </Box>
   );

@@ -1,5 +1,11 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -9,8 +15,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
-import { CremaTheme } from 'types/AppContextPropsType';
-import {Link, Tooltip } from '@material-ui/core';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {Link, Tooltip} from '@material-ui/core';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,7 +29,7 @@ const styles = (theme: Theme) =>
       right: theme.spacing(1),
       top: theme.spacing(1),
       color: theme.palette.grey[500],
-    }
+    },
   });
 
 export interface DialogTitleProps extends WithStyles<typeof styles> {
@@ -33,12 +39,15 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
 }
 
 const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
-  const { children, classes, onClose, ...other } = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
+      <Typography variant='h6'>{children}</Typography>
       {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+        <IconButton
+          aria-label='close'
+          className={classes.closeButton}
+          onClick={onClose}>
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -52,17 +61,15 @@ const DialogContent = withStyles((theme: Theme) => ({
   },
 }))(MuiDialogContent);
 
-
-
 const useStyles = makeStyles((theme: CremaTheme) => ({
-    openButton: {
-        marginLeft: '10px'
-    }
-  }));
+  openButton: {
+    marginLeft: '10px',
+  },
+}));
 
 export const AboutDialog = () => {
   const [open, setOpen] = React.useState(false);
-  const classes = useStyles ();
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,21 +81,31 @@ export const AboutDialog = () => {
   return (
     <div>
       <Tooltip title={'Info about this page'}>
-        <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
-            <InfoIcon/>
+        <Button
+          variant='outlined'
+          onClick={handleClickOpen}
+          className={classes.openButton}>
+          <InfoIcon />
         </Button>
       </Tooltip>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby='customized-dialog-title'
+        open={open}>
+        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           Manage APPs page
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-          The Manage section is where KITcrew members that hold at least 500 KIT can deploy their own whitelabel versions of DEXKIT apps! KIT holders can customize their own version of the DEXKIT aggregator, NFT Marketplace, and Exchange and collect fees from the platform. The wizard allows users to customize the features of the apps and host them on any wordpress enabled site!
-
+            The Manage section is where KITcrew members that hold at least 500
+            KIT can deploy their own whitelabel versions of DEXKIT apps! KIT
+            holders can customize their own version of the DEXKIT aggregator,
+            NFT Marketplace, and Exchange and collect fees from the platform.
+            The wizard allows users to customize the features of the apps and
+            host them on any wordpress enabled site!
           </Typography>
         </DialogContent>
       </Dialog>
     </div>
   );
-}
+};

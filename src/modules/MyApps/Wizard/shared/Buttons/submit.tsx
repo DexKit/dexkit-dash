@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router';
-import { useDispatch } from 'react-redux';
+import React, {useState} from 'react';
+import {useHistory} from 'react-router';
+import {useDispatch} from 'react-redux';
 
-import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
+import {Button, createStyles, makeStyles, Theme} from '@material-ui/core';
 
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 
-import { eip712Utils } from '@0x/order-utils';
-import { MetamaskSubprovider } from '@0x/subproviders';
-import { EIP712TypedData } from '@0x/types';
-import { Web3Wrapper } from '@0x/web3-wrapper';
+import {eip712Utils} from '@0x/order-utils';
+import {MetamaskSubprovider} from '@0x/subproviders';
+import {EIP712TypedData} from '@0x/types';
+import {Web3Wrapper} from '@0x/web3-wrapper';
 
-import { sendConfig } from 'services/my-apps';
-import { NotificationType } from 'services/notification';
-import { Notification as CustomNotification} from 'types/models/Notification';
-import { ConfigFile, WhitelabelTypes } from 'types/myApps';
-import { onAddNotification } from 'redux/actions';
+import {sendConfig} from 'services/my-apps';
+import {NotificationType} from 'services/notification';
+import {Notification as CustomNotification} from 'types/models/Notification';
+import {ConfigFile, WhitelabelTypes} from 'types/myApps';
+import {onAddNotification} from 'redux/actions';
 
 interface SubmitProps {
   text: string;
@@ -29,22 +29,24 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginTop: theme.spacing(1),
       marginRight: theme.spacing(1),
-    }
-  }));
+    },
+  }),
+);
 
 export const SubmitComponent: React.FC<SubmitProps> = (props) => {
   const classes = useStyles();
-  const { data: config, type, valid, text } = props;
-  const { chainId, account, getProvider } = useWeb3();
+  const {data: config, type, valid, text} = props;
+  const {chainId, account, getProvider} = useWeb3();
   const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
-  const submit = ($event: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => {
+  const submit = (
+    $event: React.MouseEvent<HTMLElement, MouseEvent> | undefined,
+  ) => {
     //send data
     if (!isLoading) {
       setLoading(true);
       setTimeout(function () {
-
         // let object: any = {};
         // (data as FormData).forEach((value, key) => {
         //   // Reflect.has in favor of: object.hasOwnProperty(key)
@@ -68,14 +70,14 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
             const msgParams: EIP712TypedData = {
               types: {
                 EIP712Domain: [
-                  { name: 'name', type: 'string' },
-                  { name: 'version', type: 'string' },
-                  { name: 'chainId', type: 'uint256' },
-                  { name: 'verifyingContract', type: 'address' },
+                  {name: 'name', type: 'string'},
+                  {name: 'version', type: 'string'},
+                  {name: 'chainId', type: 'uint256'},
+                  {name: 'verifyingContract', type: 'address'},
                 ],
                 Message: [
-                  { name: 'message', type: 'string' },
-                  { name: 'terms', type: 'string' },
+                  {name: 'message', type: 'string'},
+                  {name: 'terms', type: 'string'},
                 ],
               },
               primaryType: 'Message',
@@ -101,33 +103,37 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
               msgParams.domain,
             );
 
-            web3Metamask.signTypedDataAsync(ethAccount.toLowerCase(), typedData).then(signature => {
-              const dataToSend = {
-                signature,
-                type: type,
-                config: JSON.stringify(config),
-                message: JSON.stringify(typedData),
-                owner: ethAccount
-              }
+            web3Metamask
+              .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
+              .then((signature) => {
+                const dataToSend = {
+                  signature,
+                  type: type,
+                  config: JSON.stringify(config),
+                  message: JSON.stringify(typedData),
+                  owner: ethAccount,
+                };
 
-              //console.log(JSON.stringify(json))
-              sendConfig(dataToSend)
-                .then((c: any) => {
-                  const notification: CustomNotification = {
-                    title: 'Config Accepted', 
-                     body: 'Config created' 
-                  };
-                  dispatch(onAddNotification([notification]));
-                  history.push(`/my-apps/manage`);
-                })
-                .catch(() => {
-                  const notification: CustomNotification = {
-                    title: 'Error', 
-                    body: 'Config error! Do you have KIT?' 
-                  };
-                  dispatch(onAddNotification([notification], NotificationType.ERROR));
-                })
-            })
+                //console.log(JSON.stringify(json))
+                sendConfig(dataToSend)
+                  .then((c: any) => {
+                    const notification: CustomNotification = {
+                      title: 'Config Accepted',
+                      body: 'Config created',
+                    };
+                    dispatch(onAddNotification([notification]));
+                    history.push(`/my-apps/manage`);
+                  })
+                  .catch(() => {
+                    const notification: CustomNotification = {
+                      title: 'Error',
+                      body: 'Config error! Do you have KIT?',
+                    };
+                    dispatch(
+                      onAddNotification([notification], NotificationType.ERROR),
+                    );
+                  });
+              });
           }
         } catch (error) {
           throw new Error(error.message);
@@ -136,17 +142,16 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
         setLoading(false);
       }, 2000);
     }
-  }
+  };
 
   return (
     <Button
       disabled={isLoading || !valid}
-      variant="contained"
-      color="primary"
+      variant='contained'
+      color='primary'
       onClick={submit}
-      className={classes.button}
-    >
-      { text }
+      className={classes.button}>
+      {text}
     </Button>
-  )
-}
+  );
+};

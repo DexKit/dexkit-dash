@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Accordion,
@@ -8,31 +8,36 @@ import {
   makeStyles,
   FormControlLabel,
   Typography,
-  Button
+  Button,
 } from '@material-ui/core';
 import ComponentTheme from '../../shared/Theme/componentTheme';
-import { AccordionDetails } from '../../shared/Accordion';
+import {AccordionDetails} from '../../shared/Accordion';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { CremaTheme } from 'types/AppContextPropsType';
-import { AggregatorTheme } from 'types/myApps';
-import { ColorResult } from 'react-color';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {AggregatorTheme} from 'types/myApps';
+import {ColorResult} from 'react-color';
 
 import ColorSets from 'shared/constants/ColorSets';
-import { HELP_TEXT_THEME } from '../../shared/Theme';
-import { WizardData } from '..';
+import {HELP_TEXT_THEME} from '../../shared/Theme';
+import {WizardData} from '..';
 
 interface ThemeFormProps {
   theme: AggregatorTheme;
   changeIssuerForm?: (key: WizardData, value: any) => void;
   editable?: boolean;
 }
-const components: Map<string, keyof AggregatorTheme> = new Map<string, keyof AggregatorTheme>([
-  ['Is Dark Mode', 'is_dark_mode'],
+const components: Map<string, keyof AggregatorTheme> = new Map<
+  string,
+  keyof AggregatorTheme
+>([
   ['Brand Color', 'brand_color'],
-  ['Brand Color Dark', 'brand_color_dark']
+  ['Brand Color Dark', 'brand_color_dark'],
 ]);
 
-const defaultValues: Map<keyof AggregatorTheme, string> = new Map<keyof AggregatorTheme, string>([
+const defaultValues: Map<keyof AggregatorTheme, string> = new Map<
+  keyof AggregatorTheme,
+  string
+>([
   ['brand_color', ColorSets[1].PrimaryColor],
   ['brand_color_dark', ColorSets[2].PrimaryColor],
 ]);
@@ -46,16 +51,16 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
   select: {
-    marginInline: '10px'
+    marginInline: '10px',
   },
   section: {
-    marginBlock: '20px'
-  }
+    marginBlock: '20px',
+  },
 }));
 
 const ThemeForm: React.FC<ThemeFormProps> = (props) => {
   const classes = useStyles();
-  const { theme: startTheme, changeIssuerForm, editable } = props;
+  const {theme: startTheme, changeIssuerForm, editable} = props;
   const [theme, setTheme] = useState(startTheme);
   const [isDarkTheme, setDarkTheme] = useState(true);
   const [componentes, setComponentes] = useState(components);
@@ -63,8 +68,9 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
 
   const getValue = (k: string) => {
     const property = componentes.get(k);
-    const defaultColor = property != null ? defaultValues.get(property) ?? '#FFFFFF' : '#FFFFFF';
-    let value: ColorResult = {
+    const defaultColor =
+      property != null ? defaultValues.get(property) ?? '#FFFFFF' : '#FFFFFF';
+    const value: ColorResult = {
       hex: defaultColor,
       hsl: {
         h: 0,
@@ -75,22 +81,23 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
         b: 255,
         g: 255,
         r: 255,
-      }
+      },
     };
-    if (theme != null && property != null
-      && property !== 'is_dark_mode'
-    ) {
-      value.hex = theme[property] as string ?? defaultColor;
+    if (theme != null && property != null && property !== 'is_dark_mode') {
+      value.hex = (theme[property] as string) ?? defaultColor;
     }
     return value;
-  }
+  };
 
-  const checkOnChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  const checkOnChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean,
+  ) => {
     if (!Boolean(editable)) {
       return;
     }
     setDarkTheme(Boolean(checked));
-  }
+  };
 
   const resetAll = () => {
     if (theme != null) {
@@ -101,24 +108,25 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
         }
         theme.is_dark_mode = true;
       });
-      setTheme({ ...theme });
-      setComponentes(new Map<string, keyof AggregatorTheme>(componentes.entries()))
+      setTheme({...theme});
+      setComponentes(
+        new Map<string, keyof AggregatorTheme>(componentes.entries()),
+      );
     }
     if (changeIssuerForm != null) {
       changeIssuerForm(WizardData.THEME, theme);
     }
-  }
+  };
   useEffect(() => {
     if (theme == null || Object.keys(theme).length === 0) {
-      const _theme = Array.from(componentes.values())
-        .reduce((obj, key, i) => {
-          return {
-            ...obj,
-            [key]: defaultValues.get(key),
-          }
-        }, {} as AggregatorTheme);
+      const _theme = Array.from(componentes.values()).reduce((obj, key, i) => {
+        return {
+          ...obj,
+          [key]: defaultValues.get(key),
+        };
+      }, {} as AggregatorTheme);
       setTheme({
-        ..._theme
+        ..._theme,
       });
     }
   }, []);
@@ -126,7 +134,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
   useEffect(() => {
     theme.is_dark_mode = Boolean(isDarkTheme);
     if (changeIssuerForm != null) {
-      changeIssuerForm(WizardData.THEME, { ...theme });
+      changeIssuerForm(WizardData.THEME, {...theme});
     }
   }, [isDarkTheme]);
 
@@ -134,17 +142,19 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
     <Accordion defaultExpanded>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <Typography className={classes.heading} variant="subtitle2" component="h2">
+        aria-controls='panel1a-content'
+        id='panel1a-header'>
+        <Typography
+          className={classes.heading}
+          variant='subtitle2'
+          component='h2'>
           Costumize Aggregator Theme colors:
-				</Typography>
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Box component="section" width="100%" className={classes.section}>
+        <Box component='section' width='100%' className={classes.section}>
           <FormControlLabel
-            value={(isDarkTheme) as boolean}
+            value={isDarkTheme as boolean}
             control={
               <Checkbox
                 value={isDarkTheme}
@@ -152,24 +162,28 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                 disabled={!Boolean(editable)}
                 onChange={checkOnChange}
                 name={'is_dark_mode'}
-                color="primary"
+                color='primary'
               />
             }
-            label={'Is Dark Mode'}
-            labelPlacement="end"
+            label={'Dark Mode as Default'}
+            labelPlacement='end'
           />
-          <Button color="primary" onClick={resetAll}> Reset All</Button>
+          <Button color='primary' onClick={resetAll}>
+            {' '}
+            Reset All
+          </Button>
         </Box>
-        <Box component="section" className={classes.section}>
+        <Box component='section' className={classes.section}>
           <GridContainer>
-            {
-              theme != null ? Array.from(componentes.keys())
-                .map(k =>
+            {theme != null
+              ? Array.from(componentes.keys()).map((k) => (
                   <ComponentTheme
                     label={k}
                     key={componentes.get(k) as string}
                     className={componentes.get(k) as string}
-                    name={isDarkTheme ? 'Aggregator dark theme' : 'Aggregator theme'}
+                    name={
+                      isDarkTheme ? 'Aggregator dark theme' : 'Aggregator theme'
+                    }
                     themeName={''}
                     value={getValue(k)}
                     onChange={($e, value) => {
@@ -178,19 +192,19 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                         theme[property] = value;
                       }
                       if (changeIssuerForm != null) {
-                        changeIssuerForm(WizardData.THEME, { ...theme });
+                        changeIssuerForm(WizardData.THEME, {...theme});
                       }
                     }}
                     editable={Boolean(editable)}
                     help={HELP_TEXT_THEME}
                   />
-                ) : null
-            }
+                ))
+              : null}
           </GridContainer>
         </Box>
       </AccordionDetails>
     </Accordion>
-  )
+  );
 };
 
 export default ThemeForm;

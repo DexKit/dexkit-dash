@@ -1,9 +1,8 @@
 export interface Notification {
-
   /**
    * The id of a notification
    */
-  id?: string | number | Symbol
+  id?: string | number | symbol;
   /**
    * The title of a notification.
    */

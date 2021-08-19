@@ -17,14 +17,14 @@ import Notifications from '../../Notifications';
 
 import {Hidden} from '@material-ui/core';
 import WalletInfo from 'shared/components/WalletInfo';
-import { ChainId } from 'types/blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import {ChainId} from 'types/blockchain';
+import {useWeb3} from 'hooks/useWeb3';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
 
 import AppContextPropsType from 'types/AppContextPropsType';
-import { AppContext } from '@crema';
-import { NavStyle } from 'shared/constants/AppEnums';
+import {AppContext} from '@crema';
+import {NavStyle} from 'shared/constants/AppEnums';
 
 interface AppHeaderProps {}
 
@@ -32,13 +32,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const {chainId} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
-  
-  const {
-    navStyle,
-    changeNavStyle,
 
-  } = useContext<AppContextPropsType>(AppContext);
-
+  const {navStyle, changeNavStyle} = useContext<AppContextPropsType>(
+    AppContext,
+  );
 
   const [
     mobileMoreAnchorEl,
@@ -54,15 +51,14 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }
 
   const onChangeNavStyle = () => {
-    if(navStyle === NavStyle.MINI && changeNavStyle){
+    if (navStyle === NavStyle.MINI && changeNavStyle) {
       changeNavStyle(NavStyle.STANDARD);
-    }else if(changeNavStyle){
+    } else if (changeNavStyle) {
       changeNavStyle(NavStyle.MINI);
+    } else {
+      console.log('no nav style');
     }
-    else{
-      console.log('no nav style')
-    }
-  }
+  };
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -100,15 +96,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
             </IconButton>
           </Hidden>
 
-          
-         
-      
-          
-         {/* <AppLogo />*/}
+          {/* <AppLogo />*/}
           <Box className={classes.grow} />
           {/* <SearchBar borderLight placeholder='Search…' />*/}
           <Box className={classes.sectionDesktop}>
-          {/*<Hidden mdDown >
+            {/*<Hidden mdDown >
             <IconButton
               edge='start'
               className={classes.menuButton}
@@ -120,20 +112,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           </Hidden> */}
             <LanguageSwitcher />
             <ThemeModeSwitcher />
-          {/*  <HeaderMessages />*/}
+            {/*  <HeaderMessages />*/}
             <Notifications />
-            {
-              (chainId !== ChainId.Mainnet && chainId !== undefined) ? (
-                <Box
-                  className={classes.badgeRoot}
-                  style={{
-                    color: 'rgba(226, 167, 46)',
-                    backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                  }}>
-                  {GET_CHAIN_ID_NAME(chainId)}
-                </Box>
-              ) : null
-            }
+            {chainId !== ChainId.Mainnet && chainId !== undefined ? (
+              <Box
+                className={classes.badgeRoot}
+                style={{
+                  color: 'rgba(226, 167, 46)',
+                  backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                }}>
+                {GET_CHAIN_ID_NAME(chainId)}
+              </Box>
+            ) : null}
           </Box>
           <Box className={classes.sectionMobile}>
             <IconButton
@@ -148,7 +138,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           <Box className={classes.wallet}>
             <WalletInfo />
           </Box>
-
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

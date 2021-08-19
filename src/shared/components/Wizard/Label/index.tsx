@@ -1,19 +1,18 @@
-import React, { PropsWithChildren } from 'react';
+import React, {PropsWithChildren} from 'react';
 
 interface CustomLabelProps {
   text?: string;
-  required?: boolean
+  required?: boolean;
 }
 
 type Props = PropsWithChildren<CustomLabelProps>;
-export function CustomLabel({ text, required, children }: Props) {
+export function CustomLabel({text, required, children}: Props) {
   return required != null && required ? (
     <label>
-      { text ?? children }<span style={{ color: 'red'}}>*</span>
+      {text ?? children}
+      <span style={{color: 'red'}}>*</span>
     </label>
   ) : (
-    <label>
-      { text ?? children}
-    </label>
-  )
+    <label>{text ?? children}</label>
+  );
 }

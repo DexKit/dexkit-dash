@@ -1,12 +1,19 @@
 import React from 'react';
 
-
 export const dashBoardConfigs = [
   {
     routes: [
       {
         path: '/dashboard/overview',
-        component: React.lazy(() => import('./Overview'))
+        component: React.lazy(() => import('./Overview')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/swap/coins',
+        component: React.lazy(() => import('./Swap')),
       },
     ],
   },
@@ -14,7 +21,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/dashboard/favorite-coins',
-        component: React.lazy(() => import('./Favorites'))
+        component: React.lazy(() => import('./Favorites')),
       },
     ],
   },
@@ -43,7 +50,7 @@ export const dashBoardConfigs = [
       },
     ],
   },
- 
+
   // {
   //   auth: ['wallet'],
   //   routes: [
@@ -70,5 +77,5 @@ export const dashBoardConfigs = [
         component: React.lazy(() => import('./Token/index_tabs')),
       },
     ],
-  }
+  },
 ];

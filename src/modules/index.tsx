@@ -5,6 +5,7 @@ import {createRoutes} from '../@crema/utility/Utils';
 import {errorPagesConfigs} from './ErrorPages';
 
 import {dashBoardConfigs} from './Dashboard';
+import {changelogConfigs} from './Changelog';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';
 import {historyConfigs} from './History';
@@ -23,6 +24,7 @@ const routeConfigs = [
   ...affiliateConfigs,
   ...nftWalletConfig,
   ...wizardConfig,
+  ...changelogConfigs,
 ];
 
 const routes = [

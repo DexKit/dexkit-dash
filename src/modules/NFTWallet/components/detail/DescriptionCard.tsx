@@ -85,14 +85,14 @@ export default (props: Props) => {
 
   const getEndingPrice = useCallback(
     (asset: any) => {
-      let order = getFirstOrder(asset);
+      const order = getFirstOrder(asset);
 
-      let basePrice = toTokenUnitAmount(
+      const basePrice = toTokenUnitAmount(
         order.base_price,
         order.payment_token_contract?.decimals,
       );
 
-      let extra = toTokenUnitAmount(
+      const extra = toTokenUnitAmount(
         order.extra,
         order.payment_token_contract?.decimals,
       );
@@ -108,7 +108,7 @@ export default (props: Props) => {
 
   useEffect(() => {
     (async () => {
-      let cid = await getChainId(getProvider());
+      const cid = await getChainId(getProvider());
 
       if (cid == RINKEBY_NETWORK) {
         setIsTestnet(true);

@@ -9,7 +9,6 @@ import {
   Button,
   Avatar,
   Chip,
-  Tooltip,
 } from '@material-ui/core';
 import {green, grey} from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';
@@ -17,7 +16,7 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import TokenLogo from 'shared/components/TokenLogo';
 import {MyBalances} from 'types/blockchain';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 interface TableItemProps {
   data: MyBalances;
@@ -34,17 +33,15 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       padding: 6,
       '&:first-child': {
         paddingLeft: 2,
-         [theme.breakpoints.up('xl')]: {
-           paddingLeft: 20,
-         },
-       
+        [theme.breakpoints.up('xl')]: {
+          paddingLeft: 20,
+        },
       },
       '&:last-child': {
         paddingRight: 2,
-         [theme.breakpoints.up('xl')]: {
-           paddingRight: 20,
-         },
-        
+        [theme.breakpoints.up('xl')]: {
+          paddingRight: 20,
+        },
       },
       // [theme.breakpoints.up('xl')]: {
       //   fontSize: 18,
@@ -99,7 +96,10 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
         <Box display='flex'>
           <Box mr={{xs: 3, xl: 5}}>
             {data.currency?.address ? (
-              <TokenLogo token0={data.currency?.address} networkName={data.network} />
+              <TokenLogo
+                token0={data.currency?.address}
+                networkName={data.network}
+              />
             ) : (
               // data.currency?.address == '-' ? (
               //   <Avatar className={classes.avatar} src={data.currency?.address}>
@@ -151,7 +151,11 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           variant='outlined'
           style={{marginLeft: '2px'}}
           onClick={() => {
-            history.push(`${getTradeNetworkLink(data)}/${account}/token/${data.currency?.address}`);
+            history.push(
+              `${getTradeNetworkLink(data)}/${account}/token/${
+                data.currency?.address
+              }`,
+            );
           }}>
           History
         </Button>

@@ -2,17 +2,17 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {makeStyles, Chip, Link, Avatar,  Tooltip} from '@material-ui/core';
+import {makeStyles, Chip, Link, Avatar, Tooltip} from '@material-ui/core';
 
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import {useWeb3} from 'hooks/useWeb3';
 import SearchIcon from '@material-ui/icons/Search';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import { useNetwork } from 'hooks/useNetwork';
-import { useIntl } from 'react-intl';
-import { GetAffiliateTrades_ethereum_transfers } from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
-import { GET_TRADE_TOKEN_URL } from 'utils/tokens';
+import {useNetwork} from 'hooks/useNetwork';
+import {useIntl} from 'react-intl';
+import {GetAffiliateTrades_ethereum_transfers} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import {GET_TRADE_TOKEN_URL} from 'utils/tokens';
 
 interface Props {
   data: Required<GetAffiliateTrades_ethereum_transfers>;
@@ -55,7 +55,9 @@ const TableItem: React.FC<Props> = ({data}) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
 
-  const createdFn = data.block?.timestamp?.time ? new Date(data.block?.timestamp?.time) : new Date();
+  const createdFn = data.block?.timestamp?.time
+    ? new Date(data.block?.timestamp?.time)
+    : new Date();
   const netName = useNetwork();
   const {messages} = useIntl();
 
@@ -80,36 +82,39 @@ const TableItem: React.FC<Props> = ({data}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
-        <Tooltip title={messages['app.viewTx']} placement='top'>
-          <a
-            href={`${ETHERSCAN_API_URL(chainId)}/tx/${data.transaction?.hash}`}
-            target='_blank'>
-            {netName == EthereumNetwork.ethereum ? (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/etherescan.png'></Avatar>
-            ) : (
-              <Avatar
-                style={{
-                  color: '#3F51B5',
-                  backgroundColor: 'white',
-                  width: '20px',
-                  height: '20px',
-                  marginRight: '5px',
-                  marginBottom: '5px',
-                }}
-                src='/images/bscscan-logo-circle.png'></Avatar>
-            )}
-          </a>
+          <Tooltip title={messages['app.viewTx']} placement='top'>
+            <a
+              href={`${ETHERSCAN_API_URL(chainId)}/tx/${
+                data.transaction?.hash
+              }`}
+              target='_blank'
+              rel='noreferrer'>
+              {netName == EthereumNetwork.ethereum ? (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/etherescan.png'></Avatar>
+              ) : (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/bscscan-logo-circle.png'></Avatar>
+              )}
+            </a>
           </Tooltip>
-         {/* <a
+          {/* <a
             href={`${ETHERSCAN_API_URL(chainId)}/tx/${data.hash}`}
             target='_blank'>
             <SearchIcon />

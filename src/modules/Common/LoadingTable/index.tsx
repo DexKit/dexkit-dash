@@ -9,7 +9,7 @@ interface Props {
 
 const LoadingTable: React.FC<Props> = (props) => {
   const {columns, rows} = props;
-  let tableBodyRow = [];
+  const tableBodyRow = [];
 
   for (let i = 0; i < columns; i++) {
     tableBodyRow.push(
@@ -19,7 +19,7 @@ const LoadingTable: React.FC<Props> = (props) => {
     );
   }
 
-  let tableBodyRows = [];
+  const tableBodyRows = [];
 
   for (let i = 0; i < rows; i++) {
     tableBodyRows.push(<TableRow>{tableBodyRow}</TableRow>);

@@ -3,10 +3,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
-import { Fonts } from 'shared/constants/AppEnums';
-import { CremaTheme } from 'types/AppContextPropsType';
-
-
+import {Fonts} from 'shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   borderBottomClass: {
@@ -36,7 +34,7 @@ const TableHeading: React.FC<TableHeadingPorps> = () => {
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         <IntlMessages id='app.price' />
-      </TableCell>  
+      </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         <IntlMessages id='dashboard.24h' /> %
       </TableCell>

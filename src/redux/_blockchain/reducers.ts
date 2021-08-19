@@ -4,7 +4,7 @@ import {RootAction} from '../store';
 import * as actions from '../actions';
 import {Web3State} from 'types/blockchain';
 import {TokenBalance} from 'types/app';
-import { ZERO } from 'shared/constants/Blockchain';
+import {ZERO} from 'shared/constants/Blockchain';
 
 export interface BlockchainState {
   readonly ethAccount: string | undefined;

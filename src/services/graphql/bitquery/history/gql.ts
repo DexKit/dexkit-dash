@@ -1,11 +1,9 @@
-import { gql } from "@apollo/client/core";
+import {gql} from '@apollo/client/core';
 
 export const BITQUERY_TRANSACTION_INFO = gql`
   query GetTransactionInfo($network: EthereumNetwork!, $hash: String!) {
     ethereum(network: $network) {
-      transactions(
-        txHash: {is: $hash}
-      ) {
+      transactions(txHash: {is: $hash}) {
         amount
         block {
           height
@@ -118,11 +116,18 @@ export const BITQUERY_ORDER_INFO = gql`
         }
       }
     }
-  }  
+  }
 `;
 
 export const BITQUERY_TRANSACTION_LIST = gql`
-  query GetTransactionList($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetTransactionList(
+    $network: EthereumNetwork!
+    $address: String
+    $limit: Int!
+    $offset: Int!
+    $from: ISO8601DateTime
+    $till: ISO8601DateTime
+  ) {
     ethereum(network: $network) {
       sender: transfers(
         options: {desc: "block.height", limit: $limit, offset: $offset}
@@ -206,16 +211,17 @@ export const BITQUERY_TRANSACTION_LIST = gql`
 `;
 
 export const BITQUERY_TRANSFER_LIST = gql`
-  query GetTransferList($network: EthereumNetwork!, $address: String, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime) {
+  query GetTransferList(
+    $network: EthereumNetwork!
+    $address: String
+    $limit: Int!
+    $offset: Int!
+    $from: ISO8601DateTime
+    $till: ISO8601DateTime
+  ) {
     ethereum(network: $network) {
-     transfers(
-       any: [
-          {    
-            sender: {is: $address}
-          },
-          {    
-            receiver: {is: $address}
-          }]
+      transfers(
+        any: [{sender: {is: $address}}, {receiver: {is: $address}}]
         options: {desc: "block.height", limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
       ) {
@@ -247,38 +253,27 @@ export const BITQUERY_TRANSFER_LIST = gql`
         }
         external
       }
-      receiverCount: transfers(
-        date: {since: $from, till: $till}
-        receiver: {is: $address}
-      ) {
-        count
-      }
-      senderCount: transfers(
-        date: {since: $from, till: $till}
-        receiver: {is: $address}
-      ) {
-        count
-      }
     }
   }
 `;
 
 export const BITQUERY_TRADE_HISTORY_LIST = gql`
-  query GetTradeHistoryList($network: EthereumNetwork!, $exchangeName: String, $address: String!, $limit: Int!, $offset: Int!, $from: ISO8601DateTime, $till: ISO8601DateTime, $baseCurrency: String) {
+  query GetTradeHistoryList(
+    $network: EthereumNetwork!
+    $exchangeName: String
+    $address: String!
+    $limit: Int!
+    $offset: Int!
+    $from: ISO8601DateTime
+    $till: ISO8601DateTime
+    $baseCurrency: String
+  ) {
     ethereum(network: $network) {
       dexTrades(
         options: {desc: ["block.height"], limit: $limit, offset: $offset}
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
-        any: [
-          {    
-            taker: {is: $address}
-          },
-          {    
-            maker: {is: $address}
-          },
-        
-      ]
+        any: [{taker: {is: $address}}, {maker: {is: $address}}]
         baseCurrency: {is: $baseCurrency}
       ) {
         block {
@@ -329,15 +324,77 @@ export const BITQUERY_TRADE_HISTORY_LIST = gql`
       total: dexTrades(
         date: {since: $from, till: $till}
         exchangeName: {is: $exchangeName}
-        any: [
-          {    
-            taker: {is: $address}
-          },
-          {    
-            maker: {is: $address}
-          },     
-        ]
+        any: [{taker: {is: $address}}, {maker: {is: $address}}]
         baseCurrency: {is: $baseCurrency}
+      ) {
+        count
+      }
+    }
+  }
+`;
+
+export const BITQUERY_ALL_TRADE_HISTORY_LIST = gql`
+  query GetAllTradeHistoryList(
+    $network: EthereumNetwork!
+    $exchangeName: String
+    $address: String!
+    $limit: Int!
+    $offset: Int!
+    $from: ISO8601DateTime
+    $till: ISO8601DateTime
+  ) {
+    ethereum(network: $network) {
+      dexTrades(
+        options: {desc: ["block.height"], limit: $limit, offset: $offset}
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        makerOrTaker: {is: $address}
+      ) {
+        block {
+          timestamp {
+            time(format: "%Y-%m-%d %H:%M:%S")
+          }
+          height
+        }
+        protocol
+        transaction {
+          hash
+          index
+          nonce
+          txFrom {
+            address
+          }
+        }
+        exchange {
+          fullName
+        }
+        smartContract {
+          address {
+            address
+            annotation
+          }
+        }
+        sellAmount
+        sellCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        buyAmount
+        buyCurrency {
+          name
+          address
+          symbol
+          decimals
+        }
+        tradeAmount(in: ETH)
+        tradeAmountInUsd: tradeAmount(in: USD)
+      }
+      total: dexTrades(
+        date: {since: $from, till: $till}
+        exchangeName: {is: $exchangeName}
+        makerOrTaker: {is: $address}
       ) {
         count
       }

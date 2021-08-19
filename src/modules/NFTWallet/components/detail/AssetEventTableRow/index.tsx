@@ -45,16 +45,16 @@ const EVENT_SALE = 'sale';
 const EVENT_CANCELLED = 'cancelled';
 
 function getEventType(event: any) {
-  let is_transfer_event = event.event_type === 'transfer';
-  let is_created_event = event.event_type === 'created';
-  let is_offer_event = event.event_type === 'offer_entered';
-  let is_sale_event = event.event_type === 'successful';
-  let is_event_cancelled = event.event_type === 'cancelled';
+  const is_transfer_event = event.event_type === 'transfer';
+  const is_created_event = event.event_type === 'created';
+  const is_offer_event = event.event_type === 'offer_entered';
+  const is_sale_event = event.event_type === 'successful';
+  const is_event_cancelled = event.event_type === 'cancelled';
 
-  let is_from_null_address = event.from_account?.address === NULL_ADDRESS;
+  const is_from_null_address = event.from_account?.address === NULL_ADDRESS;
 
-  let is_to_owner = event.to_account?.address === event.asset.owner.address;
-  let has_starting_price = event.starting_price != null;
+  const is_to_owner = event.to_account?.address === event.asset.owner.address;
+  const has_starting_price = event.starting_price != null;
 
   if (is_from_null_address && is_transfer_event) {
     return EVENT_CREATED;

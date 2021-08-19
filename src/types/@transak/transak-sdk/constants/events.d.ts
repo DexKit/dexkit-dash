@@ -1,4 +1,4 @@
-export default interface Events{
+export default interface Events {
   TRANSAK_WIDGET_INITIALISED: string;
   TRANSAK_WIDGET_OPEN: string;
   TRANSAK_WIDGET_CLOSE_REQUEST: string;

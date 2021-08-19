@@ -6,15 +6,15 @@ import PageviewIcon from '@material-ui/icons/Pageview';
 import TableRow from '@material-ui/core/TableRow';
 import clsx from 'clsx';
 import {green, red} from '@material-ui/core/colors';
-import { FavoriteCoin } from 'redux/_ui/reducers';
+import {FavoriteCoin} from 'redux/_ui/reducers';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { CremaTheme } from 'types/AppContextPropsType';
-import { removeFavoriteCoin } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
-import { CoinItemCoinGecko } from 'types/coingecko';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {removeFavoriteCoin} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {CoinItemCoinGecko} from 'types/coingecko';
 import Tooltip from '@material-ui/core/Tooltip';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { useHistory } from 'react-router-dom';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   borderBottomClass: {
@@ -32,11 +32,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     },
   },
   tableCellColor: {
-    color:  (props: {value: number}) => 
-       props.value > 0 ? green[600] : red[600],
+    color: (props: {value: number}) =>
+      props.value > 0 ? green[600] : red[600],
   },
-  fontLIGHT: {
-  },
+  fontLIGHT: {},
   whitespaceNowrap: {
     whiteSpace: 'nowrap',
   },
@@ -54,26 +53,27 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 interface TableItemProps {
   row: FavoriteCoin;
-  marketData?: CoinItemCoinGecko 
+  marketData?: CoinItemCoinGecko;
 }
 
 const TableItem: React.FC<TableItemProps> = ({row, marketData}) => {
-  const classes = useStyles({value: marketData?.price_change_percentage_24h ?? 0});
+  const classes = useStyles({
+    value: marketData?.price_change_percentage_24h ?? 0,
+  });
   const dispatch = useDispatch();
   const history = useHistory();
   const deleteCoin = () => {
     dispatch(removeFavoriteCoin(row));
-  }
+  };
   const isBSC = row.platforms?.['binance-smart-chain'];
   const isETH = row.platforms?.ethereum;
 
   const goToTradeETH = () => {
-    history.push(`/${EthereumNetwork.ethereum}/dashboard/token/${isETH}`)
-  }
+    history.push(`/${EthereumNetwork.ethereum}/dashboard/token/${isETH}`);
+  };
   const goToTradeBSC = () => {
-    history.push(`/${EthereumNetwork.bsc}/dashboard/token/${isBSC}`)
-  }
-
+    history.push(`/${EthereumNetwork.bsc}/dashboard/token/${isBSC}`);
+  };
 
   return (
     <TableRow className={clsx(classes.borderBottomClass, 'item-hover')}>
@@ -100,11 +100,10 @@ const TableItem: React.FC<TableItemProps> = ({row, marketData}) => {
           </Box>
         </Box>
       </TableCell>
-      <TableCell
-        className={clsx(classes.tableCell, classes.fontLIGHT)}>
+      <TableCell className={clsx(classes.tableCell, classes.fontLIGHT)}>
         ${marketData?.current_price ?? '-'}
       </TableCell>
-  
+
       <TableCell
         className={clsx(
           classes.tableCell,
@@ -115,17 +114,31 @@ const TableItem: React.FC<TableItemProps> = ({row, marketData}) => {
         {(marketData && marketData?.price_change_percentage_24h) ?? '-'} %
       </TableCell>
       <TableCell align='right' className={classes.tableCell}>
-        <IconButton aria-label="delete" onClick={deleteCoin} color="secondary">
-            <DeleteIcon />
+        <IconButton aria-label='delete' onClick={deleteCoin} color='secondary'>
+          <DeleteIcon />
         </IconButton>
 
-        {isBSC && <Tooltip title="Trade on BSC"><Chip label={'BSC'} color='default' clickable style={{marginLeft:'5px'}} onClick={goToTradeBSC}/></Tooltip>}
+        {isBSC && (
+          <Tooltip title='Trade on BSC'>
+            <Chip
+              label={'BSC'}
+              color='default'
+              clickable
+              style={{marginLeft: '5px'}}
+              onClick={goToTradeBSC}
+            />
+          </Tooltip>
+        )}
 
-
-        {isETH &&  <Chip label={'ETH'} color='default' clickable style={{marginLeft:'5px'}} onClick={goToTradeETH}/>}
-
-
-
+        {isETH && (
+          <Chip
+            label={'ETH'}
+            color='default'
+            clickable
+            style={{marginLeft: '5px'}}
+            onClick={goToTradeETH}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

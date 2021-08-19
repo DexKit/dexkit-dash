@@ -15,7 +15,7 @@ import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
 import {truncateAddress} from 'utils';
-import { isAddress } from 'web3-utils';
+import {isAddress} from 'web3-utils';
 
 type Params = {
   address: string;
@@ -148,7 +148,6 @@ const TradeHistory: React.FC<Props> = (props) => {
         title={{name: 'Order List'}}
         subtitle={{name: truncateAddress(address), hasCopy: address}}
       />
-
 
       <GridContainer>
         <Grid item xs={12} md={12}>

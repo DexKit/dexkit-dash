@@ -1,24 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {  } from '@material-ui/core';
+import React, {useEffect, useRef, useState} from 'react';
+import {} from '@material-ui/core';
 // import PropTypes from 'prop-types';
-import { 
-  Box, 
-  ListItemAvatar, 
+import {
+  Box,
+  ListItemAvatar,
   Avatar,
-  IconButton, 
-  ListItem, 
-  ListItemSecondaryAction, 
-  ListItemText, 
+  IconButton,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
   makeStyles,
-  Badge
+  Badge,
 } from '@material-ui/core';
-import { Fonts } from 'shared/constants/AppEnums';
-import { CremaTheme } from 'types/AppContextPropsType';
-import { Notification } from 'types/models/Notification';
-import { FilterTiltShiftSharp, MoreVertOutlined } from '@material-ui/icons';
-import { NotificationItemOptions, NotificationItemOptionsData } from './NotificationItemOptions';
-import { useDispatch } from 'react-redux';
-import { onRemoveNotification, onUncheckedNotification } from 'redux/actions';
+import {Fonts} from 'shared/constants/AppEnums';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {Notification} from 'types/models/Notification';
+import {FilterTiltShiftSharp, MoreVertOutlined} from '@material-ui/icons';
+import {
+  NotificationItemOptions,
+  NotificationItemOptionsData,
+} from './NotificationItemOptions';
+import {useDispatch} from 'react-redux';
+import {onRemoveNotification, onUncheckedNotification} from 'redux/actions';
 
 interface NotificationItemProps {
   item: Notification;
@@ -31,7 +34,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   item,
   onClick,
   listStyle,
-  id
+  id,
 }) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     textBase: {
@@ -62,26 +65,29 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const ref = useRef<Element>();
 
   const options = (item: Notification): NotificationItemOptionsData[] => {
-    if(item?.check){
+    if (item?.check) {
       return [
         {
           option: 'Delete',
-          action: () => dispatch(onRemoveNotification(item?.id ?? id))
+          action: () => dispatch(onRemoveNotification(item?.id ?? id)),
         },
         {
           option: 'View later',
-          action: () => dispatch(onUncheckedNotification(item?.id ?? id))
+          action: () => dispatch(onUncheckedNotification(item?.id ?? id)),
         },
       ];
     }
-    return [{
-      option: 'Delete',
-      action: () => dispatch(onRemoveNotification(item?.id ?? id))
-    }];
-    
-  }
+    return [
+      {
+        option: 'Delete',
+        action: () => dispatch(onRemoveNotification(item?.id ?? id)),
+      },
+    ];
+  };
 
-  useEffect(() => console.log('show notification options', showOptions), [showOptions]);
+  useEffect(() => console.log('show notification options', showOptions), [
+    showOptions,
+  ]);
 
   return (
     <>
@@ -111,41 +117,35 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       </Box> */}
         <ListItemText
           className={classes.textBase}
-          style={
-            {
-              fontFamily: Fonts.LIGHT,
-              color: 'text.primary',
-              marginInline: '2rem'
-            }
-          }
+          style={{
+            fontFamily: Fonts.LIGHT,
+            color: 'text.primary',
+            marginInline: '2rem',
+          }}
           primary={item.title}
           secondary={item.body ?? ''}
         />
         <ListItemSecondaryAction>
           <IconButton
-            edge="end"
-            aria-label="options"
+            edge='end'
+            aria-label='options'
             onClick={($e) => {
               ref.current = $e.currentTarget;
               $e.preventDefault();
               $e.stopPropagation();
               setShowOptions(true);
-            }}
-          >
-            {
-              item?.check ? (<MoreVertOutlined />) : 
-              (<Badge
-                className={classes.badge}
-                variant="dot" 
-                color='secondary'>
+            }}>
+            {item?.check ? (
+              <MoreVertOutlined />
+            ) : (
+              <Badge className={classes.badge} variant='dot' color='secondary'>
                 <MoreVertOutlined />
-              </Badge>)
-            }
+              </Badge>
+            )}
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
-      { showOptions && (
-
+      {showOptions && (
         <NotificationItemOptions
           options={options(item)}
           anchorEl={ref.current}
@@ -154,10 +154,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
             setShowOptions(false);
             ref.current = undefined;
           }}
-
         />
-      )
-      }
+      )}
     </>
   );
 };

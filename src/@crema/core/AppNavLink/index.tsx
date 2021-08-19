@@ -9,11 +9,13 @@ interface AppNavLinkProps {
   [x: string]: any;
 }
 
-const AppNavLink: React.FC<AppNavLinkProps> = React.forwardRef(({to, children, ...rest}, ref) => (
-  //@ts-ignore
-  <Link to={to} {...rest} ref={ref}>
-    <>{children}</>
-  </Link>
-));
+const AppNavLink: React.FC<AppNavLinkProps> = React.forwardRef(
+  ({to, children, ...rest}, ref) => (
+    //@ts-ignore
+    <Link to={to} {...rest} ref={ref}>
+      <>{children}</>
+    </Link>
+  ),
+);
 
 export default AppNavLink;

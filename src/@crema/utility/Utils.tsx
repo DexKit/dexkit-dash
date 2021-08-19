@@ -17,7 +17,7 @@ export const setRoutes = (config: any) => {
   let routes = [...config.routes];
   if (config.auth) {
     routes = routes.map((route) => {
-      let auth = route.auth
+      const auth = route.auth
         ? [...config.auth, ...route.auth]
         : [...config.auth];
       return {...route, auth};

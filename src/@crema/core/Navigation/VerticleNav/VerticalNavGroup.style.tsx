@@ -8,6 +8,26 @@ import AppContextPropsType, {
 const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
+    subheader: {
+      fontSize: 18,
+      textTransform: 'uppercase',
+      color: theme.palette.common.white,
+      fontWeight: 500,
+      overflow: 'hidden',
+      textOverflow: '',
+      whiteSpace: 'nowrap',
+    },
+    divider: {
+      height: 2,
+      width: theme.spacing(18),
+      backgroundColor: '#F36F39',
+      marginRight: theme.spacing(4),
+      marginLeft: theme.spacing(4),
+      marginBottom: theme.spacing(4),
+      overflow: 'hidden',
+      textOverflow: '',
+      whiteSpace: 'nowrap',
+    },
     navItem: {
       height: 40,
       paddingLeft:

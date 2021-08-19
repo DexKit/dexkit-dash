@@ -102,7 +102,7 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       const wethToken = contractWrappers.weth9;
 
-      let txHash: string = '';
+      let txHash = '';
 
       if (tokenFrom.symbol.toUpperCase() === 'ETH') {
         await wethToken
@@ -130,7 +130,6 @@ const ConvertStep: React.FC<Props> = (props) => {
             throw new Error(e.message);
           });
       }
-
 
       if (txHash) {
         web3Wrapper

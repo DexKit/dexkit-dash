@@ -1,3 +1,3 @@
-import { client } from './bitquery';
+import {client} from './bitquery';
 
-export { client };
+export {client};

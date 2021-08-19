@@ -25,7 +25,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
   };
 
   const classes = useStyles();
-  let sidebarClasses = classes.sidebarStandard;
+  const sidebarClasses = classes.sidebarStandard;
 
   return (
     <>

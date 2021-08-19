@@ -44,7 +44,7 @@ interface AppFixedFooterProps {
   props?: any;
 }
 
-const AppFixedFooter: React.FC<AppFixedFooterProps> = props => {
+const AppFixedFooter: React.FC<AppFixedFooterProps> = (props) => {
   const {footer, footerType} = useContext<AppContextPropsType>(AppContext);
 
   const classes = useStyles({props});

@@ -3,7 +3,7 @@ import {Box, makeStyles, List, ListItem, ListItemText} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import Scrollbar from '@crema/core/Scrollbar';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { FeedItem } from 'types/rss/feedItem.interface';
+import {FeedItem} from 'types/rss/feedItem.interface';
 
 interface LatestNewsProps {
   data: FeedItem[] | undefined;
@@ -42,43 +42,41 @@ const NewsList: React.FC<LatestNewsProps> = ({data}) => {
   return (
     <Scrollbar>
       <List>
-        {data && data.map((news) => {
-          return (
-            <ListItem key={news.guid} className={classes.listItem}>
-              <ListItemText
-                className={classes.newsContent}
-                primary={
-                  <Box
-                    mb={1}
-                    component='span'
-                    display='flex'
-                    alignItems='center'
-                    fontSize={{xs: 16, xl: 18}}>
-                    <Box color='grey.500'>{news.pubDate}</Box>
-                    <Box ml={2} color='primary.main'>
-                      {news.creator}
+        {data &&
+          data.map((news) => {
+            return (
+              <ListItem key={news.guid} className={classes.listItem}>
+                <ListItemText
+                  className={classes.newsContent}
+                  primary={
+                    <Box
+                      mb={1}
+                      component='span'
+                      display='flex'
+                      alignItems='center'
+                      fontSize={{xs: 16, xl: 18}}>
+                      <Box color='grey.500'>{news.pubDate}</Box>
+                      <Box ml={2} color='primary.main'>
+                        {news.creator}
+                      </Box>
                     </Box>
-                  </Box>
-                }
-                secondary={
-                  <Box
-                    component='span'
-                    color='grey.700'
-                    fontFamily={Fonts.MEDIUM}
-                    fontSize={{xs: 14, sm: 16, xl: 18}}>
-                    {news.contentSnippet || news.content}
-                  </Box>
-                }
-              />
-              <Box ml={{sm: 3, xl: 5}}>
-                <img
-                  className={classes.newsImg}
-                  src={news.enclosure?.url}
+                  }
+                  secondary={
+                    <Box
+                      component='span'
+                      color='grey.700'
+                      fontFamily={Fonts.MEDIUM}
+                      fontSize={{xs: 14, sm: 16, xl: 18}}>
+                      {news.contentSnippet || news.content}
+                    </Box>
+                  }
                 />
-              </Box>
-            </ListItem>
-          );
-        })}
+                <Box ml={{sm: 3, xl: 5}}>
+                  <img className={classes.newsImg} src={news.enclosure?.url} />
+                </Box>
+              </ListItem>
+            );
+          })}
       </List>
     </Scrollbar>
   );

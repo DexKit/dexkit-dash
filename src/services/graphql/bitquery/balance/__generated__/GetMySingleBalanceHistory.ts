@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetMySingleBalanceHistory
 // ====================================================
 
 export interface GetMySingleBalanceHistory_ethereum_address_balances_history {
-  __typename: "EthereumBalanceChange";
+  __typename: 'EthereumBalanceChange';
   /**
    * Block timestamp
    */
@@ -27,7 +27,7 @@ export interface GetMySingleBalanceHistory_ethereum_address_balances_history {
 }
 
 export interface GetMySingleBalanceHistory_ethereum_address_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -47,7 +47,7 @@ export interface GetMySingleBalanceHistory_ethereum_address_balances_currency {
 }
 
 export interface GetMySingleBalanceHistory_ethereum_address_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * History of balance changes by currencies for the address
    */
@@ -59,7 +59,7 @@ export interface GetMySingleBalanceHistory_ethereum_address_balances {
 }
 
 export interface GetMySingleBalanceHistory_ethereum_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Balances by currencies for the address
    */
@@ -67,7 +67,7 @@ export interface GetMySingleBalanceHistory_ethereum_address {
 }
 
 export interface GetMySingleBalanceHistory_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */

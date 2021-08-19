@@ -15,15 +15,15 @@ import {
   GetOrderList_ethereum_maker_smartContract,
   GetOrderList_ethereum_maker_transaction,
 } from 'services/graphql/bitquery/history/__generated__/GetOrderList';
-import {TradeSide} from '../../__generated__/globalTypes';
+import {Network, TradeSide} from '../../__generated__/globalTypes';
 
 import {ChainId} from './blockchain';
 import {
   GetAMMPairExplorer_ethereum_dexTrades_baseCurrency,
   GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GetTransferList_ethereum_transfers } from 'services/graphql/bitquery/history/__generated__/GetTransferList';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GetTransferList_ethereum_transfers} from 'services/graphql/bitquery/history/__generated__/GetTransferList';
 
 export enum OrderSide {
   Sell,
@@ -41,7 +41,9 @@ export enum Steps {
   DONE = 'Done',
 }
 
-export type Transfers = GetTransferList_ethereum_transfers & {type: 'Send' | 'Receive'};
+export type Transfers = GetTransferList_ethereum_transfers & {
+  type: 'Send' | 'Receive';
+};
 
 export interface Token {
   name: string;
@@ -56,6 +58,24 @@ export interface Token {
   coingecko_id?: string;
   chainId?: ChainId;
   logoURI?: string;
+}
+
+export interface Coin {
+  name: string;
+  symbol: string;
+  address: string;
+  networkName?: Network;
+  decimals: number;
+  displayDecimals?: 4;
+  icon?: string;
+  price_usd?: BigNumber;
+  price_usd_24h_change?: BigNumber;
+  coingecko_id?: string;
+  chainId?: ChainId;
+  logoURI?: string;
+  isCoin: boolean;
+  changelly_support: boolean;
+  changelly_id: string;
 }
 
 export interface TokenBalance {

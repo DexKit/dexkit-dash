@@ -23,9 +23,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       borderTop: `1px solid ${theme.palette.divider}`,
       '& > table': {
         marginBottom: 0,
-        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
-          whiteSpace: 'nowrap',
-        },
+        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td':
+          {
+            whiteSpace: 'nowrap',
+          },
       },
     },
   },

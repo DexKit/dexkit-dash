@@ -5,6 +5,7 @@ import Blockchain from '../_blockchain/reducers';
 import MyApps from '../_myapps/reducers';
 import UI from '../_ui/reducers';
 import Wizard from '../_wizard/reducers';
+import Swap from '../_swap/reducers';
 
 const reducers = {
   common: Common,
@@ -14,6 +15,7 @@ const reducers = {
   myApps: MyApps,
   wizard: Wizard,
   ui: UI,
+  swap: Swap,
 };
 
 export default reducers;
