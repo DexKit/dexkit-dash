@@ -39,6 +39,10 @@ export default () => {
     [history],
   );
 
+  const handleCreateToken = useCallback(() => {
+    history.push('/wizard/deploy/token');
+  }, [history]);
+
   return (
     <Box py={{xs: 8}}>
       <Box mb={4}>
@@ -72,7 +76,14 @@ export default () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Card>
-            <CardHeader title='My Tokens' />
+            <CardHeader
+              title='My Tokens'
+              action={
+                <IconButton color='primary' onClick={handleCreateToken}>
+                  <Add />
+                </IconButton>
+              }
+            />
             <TokensList />
           </Card>
         </Grid>

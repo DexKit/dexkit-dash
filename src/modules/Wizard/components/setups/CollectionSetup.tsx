@@ -140,7 +140,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   );
 
   const handleBack = useCallback(() => {
-    history.push('/wizard/deploy');
+    history.push('/wizard');
   }, [history]);
 
   const handleDialogCancel = useCallback(() => {
@@ -295,6 +295,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
       if (web3 && userDefaultAcount) {
         let contract = new web3.eth.Contract(ERC721Abi, contractAddress);
+        debugger;
 
         let paramItems = hashes.map((hash: string) => {
           return {
@@ -339,11 +340,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
         collectionImagehash,
       );
 
-      let itemsHashes: string[] = [];
-
-      if (items.length > 0) {
-        itemsHashes = await sendItemsMetadata(itemImagesHashes);
-      }
+      let itemsHashes = await sendItemsMetadata(itemImagesHashes);
 
       setContractStatus(ContractStatus.CreateCollection);
 
@@ -364,9 +361,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
         setContractStatus(ContractStatus.Minting);
 
-        if (items.length > 0) {
-          await mintItems(address, itemsHashes);
-        }
+        await mintItems(address, itemsHashes);
 
         setContractStatus(ContractStatus.Finalized);
       }

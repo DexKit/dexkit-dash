@@ -10,4 +10,5 @@ export const SOURCES: any = {
   'utils/Strings.sol': require('contracts/token/utils/Strings').FILE,
   'utils/Counters.sol': require('contracts/token/utils/Counters').FILE,
   'access/Ownable.sol': require('contracts/token/access/Ownable').FILE,
+  'access/ERC20.sol': require('contracts/token/ERC20').FILE,
 };

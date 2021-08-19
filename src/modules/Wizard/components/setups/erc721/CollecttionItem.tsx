@@ -99,7 +99,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
       variant={variant ? variant : 'elevation'}
       className={isInvalid() ? classes.invalid : undefined}>
       <CardContent>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} alignItems='center'>
           <Grid item xs={12}>
             <Box display='flex' justifyContent='space-between'>
               <Typography variant='h6'></Typography>
@@ -109,7 +109,12 @@ export const CollectionItem = (props: CollectionItemProps) => {
             </Box>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <ImageUploadButton onChange={handleImageChange} file={item.image} />
+            <Box display='flex' justifyContent='center'>
+              <ImageUploadButton
+                onChange={handleImageChange}
+                file={item.image}
+              />
+            </Box>
           </Grid>
           <Grid item xs={12} sm={9}>
             <Grid container spacing={4}>

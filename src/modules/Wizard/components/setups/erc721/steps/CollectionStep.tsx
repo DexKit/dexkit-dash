@@ -38,15 +38,12 @@ export const CollectionStep = (props: CollectionStepProps) => {
     let hasDescription = values.description !== '';
     let hasSymbol = values.symbol !== '';
     let hasImage = collectionImage !== null;
-    let isInvalidURL = values.url !== '' && isValidURL(values.url);
 
-    if (
-      !hasName ||
-      !hasDescription ||
-      !hasSymbol ||
-      !hasImage ||
-      isInvalidURL
-    ) {
+    if (!hasName || !hasDescription || !hasSymbol || !hasImage) {
+      return false;
+    }
+
+    if (values.url !== '' && !isValidURL(values.url)) {
       return false;
     }
 

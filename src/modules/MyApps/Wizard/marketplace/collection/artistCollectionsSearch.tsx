@@ -232,15 +232,15 @@ export function ArtistCollectionsSearch(props: Props) {
               }
             }}
             onSelectionModelChange={($e) => {
-              setSelecteds(
-                $e?.selectionModel?.map((id) => {
-                  const _id = Number(id.valueOf());
-                  return collections[_id - 1];
-                }),
-              );
+              // setSelecteds(
+              //   $e?.selectionModel?.map((id) => {
+              //     const _id = Number(id.valueOf());
+              //     return collections[_id - 1];
+              //   }),
+              // );
             }}
             autoPageSize={false}
-            onPageChange={(param) => setPage(param.page)}
+            onPageChange={(param) => setPage(param)}
             checkboxSelection
           />
         </Box>

@@ -63,15 +63,17 @@ export const DeployStep = (props: DeployStepProps) => {
                   <Typography variant='body1'>{values.symbol}</Typography>
                 </Box>
               </Grid>
-              <Grid item xs={12}>
-                <Box
-                  display='flex'
-                  alignItems='center'
-                  justifyContent='space-between'>
-                  <Typography variant='body1'>External URL</Typography>
-                  <Typography variant='body1'>{values.url}</Typography>
-                </Box>
-              </Grid>
+              {values.url !== '' ? (
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-between'>
+                    <Typography variant='body1'>External URL</Typography>
+                    <Typography variant='body1'>{values.url}</Typography>
+                  </Box>
+                </Grid>
+              ) : null}
               <Grid item xs={12}>
                 <Box
                   display='flex'
@@ -86,11 +88,11 @@ export const DeployStep = (props: DeployStepProps) => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           {items.map((item, index: number) => (
             <Grid key={index} item xs={12}>
-              <Card>
-                <CardContent>
+              <Paper>
+                <Box p={4}>
                   <Grid
                     container
                     alignContent='center'
@@ -116,8 +118,8 @@ export const DeployStep = (props: DeployStepProps) => {
                       ) : null}
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
+                </Box>
+              </Paper>
             </Grid>
           ))}
         </Grid>

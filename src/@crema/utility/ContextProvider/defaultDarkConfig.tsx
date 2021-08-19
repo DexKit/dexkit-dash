@@ -190,7 +190,13 @@ const defaultConfig: any = {
           fontSize: 18,
           color: '#fff',
         },
+        
       },
+      MuiStepper: {
+        root: {
+          borderRadius: cardRadius,
+        },  
+      }
     },
   },
   themeStyle: ThemeStyle.MODERN,
