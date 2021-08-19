@@ -4,8 +4,16 @@ export const wizardConfig = [
   {
     routes: [
       {
-        path: '/wizard/deploy/:slug',
-        component: React.lazy(() => import('./pages/deploy/Setup')),
+        path: '/wizard/collection/:contract',
+        component: React.lazy(() => import('./pages/collection/index')),
+      },
+      {
+        path: '/wizard/deploy/collection',
+        component: React.lazy(() => import('./pages/deploy/Collection')),
+      },
+      {
+        path: '/wizard/deploy/token',
+        component: React.lazy(() => import('./pages/deploy/Token')),
       },
       {
         path: '/wizard/deploy',

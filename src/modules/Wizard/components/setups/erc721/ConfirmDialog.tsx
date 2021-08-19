@@ -5,132 +5,57 @@ import {
   Typography,
   Paper,
   Dialog,
+  DialogTitle,
+  DialogActions,
   DialogProps,
   Button,
+  useTheme,
   DialogContent,
   Box,
 } from '@material-ui/core';
+
 import InfoIcon from '@material-ui/icons/Info';
 
-import {useWeb3} from 'hooks/useWeb3';
-import {Erc721Data} from 'modules/Wizard/types';
-
 export interface ConfirmDialogProps extends DialogProps {
-  data: Erc721Data;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
 export default (props: ConfirmDialogProps) => {
-  const {data, onConfirm, onCancel} = props;
+  const {onConfirm, onCancel} = props;
 
-  const {chainId} = useWeb3();
+  const theme = useTheme();
 
   return (
     <Dialog {...props}>
-      <DialogContent>
-        <Grid
-          container
-          alignItems='center'
-          alignContent='center'
-          direction='column'
-          spacing={4}>
-          <Grid item>
-            <InfoIcon fontSize='large' />
-          </Grid>
-          <Grid item>
-            <Typography align='center' gutterBottom variant='h5'>
-              Check information
-            </Typography>
-            <Typography align='center' variant='body1'>
-              Check your information before you deploy your smart contract
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Paper variant='outlined'>
-              <Box p={4}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      justify='space-between'
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid>
-                        <Typography variant='body1'>Network</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography variant='body1'>{chainId}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      justify='space-between'
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid>
-                        <Typography variant='body1'>Name</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography variant='body1'>{data.name}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      justify='space-between'
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid>
-                        <Typography variant='body1'>Symbol</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography variant='body1'>{data.symbol}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid
-                      container
-                      justify='space-between'
-                      alignItems='center'
-                      alignContent='center'>
-                      <Grid>
-                        <Typography variant='body1'>Base URI</Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography variant='body1'>{data.baseUri}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item>
-            <Box py={4}>
-              <Grid container spacing={2}>
-                <Grid item>
-                  <Button
-                    onClick={onConfirm}
-                    variant='contained'
-                    color='primary'>
-                    Confirm
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button onClick={onCancel} variant='contained'>
-                    Cancel
-                  </Button>
-                </Grid>
-              </Grid>
+      <DialogTitle>
+        <Typography variant='body1'>Creating collection</Typography>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Grid container spacing={4}>
+          <Grid xs={12} item>
+            <Box display='flex' justifyContent='center'>
+              <InfoIcon style={{fontSize: theme.spacing(16)}} />
             </Box>
+          </Grid>
+          <Grid xs={12} item>
+            <Typography variant='h5' align='center'>
+              Creating collection
+            </Typography>
+            <Typography color='textSecondary' variant='body1' align='center'>
+              Do you really want to create a collection?
+            </Typography>
           </Grid>
         </Grid>
       </DialogContent>
+      <DialogActions>
+        <Button variant='contained' color='primary' onClick={onConfirm}>
+          Confirm
+        </Button>
+        <Button variant='contained' onClick={onCancel}>
+          Cancel
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

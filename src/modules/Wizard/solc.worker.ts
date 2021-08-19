@@ -11,6 +11,8 @@ ctx.addEventListener('message', (event) => {
     if (event.data.contract == 'erc721') {
       let solc = wrapper((self as any).Module);
 
+      console.log(SOURCES);
+
       var input = {
         language: 'Solidity',
         sources: {
@@ -34,6 +36,8 @@ ctx.addEventListener('message', (event) => {
       var output = JSON.parse(
         solc.compile(JSON.stringify(input), {import: findImports}),
       );
+
+      console.log(output);
 
       let contract = output.contracts['ERC721.sol']['ERC721'];
 

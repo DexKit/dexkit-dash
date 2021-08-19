@@ -8,4 +8,6 @@ export const SOURCES: any = {
   'utils/Address.sol': require('contracts/token/utils/Address').FILE,
   'utils/Context.sol': require('contracts/token/utils/Context').FILE,
   'utils/Strings.sol': require('contracts/token/utils/Strings').FILE,
+  'utils/Counters.sol': require('contracts/token/utils/Counters').FILE,
+  'access/Ownable.sol': require('contracts/token/access/Ownable').FILE,
 };

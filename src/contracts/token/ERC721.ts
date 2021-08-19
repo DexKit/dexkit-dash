@@ -9,17 +9,25 @@ import "./IERC721Metadata.sol";
 import "./utils/Address.sol";
 import "./utils/Context.sol";
 import "./utils/Strings.sol";
+import "./utils/Counters.sol";
+import "./access/Ownable.sol";
 import "./ERC165.sol";
 
-contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
+contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable  {
     using Address for address;
     using Strings for uint256;
+    using Counters for Counters.Counter;
+
+    Counters.Counter private _tokenIdCounter;
 
     // Token name
     string private _name;
 
     // Token symbol
     string private _symbol;
+
+    // Contract URI
+    string private _contractURI;
 
     // Mapping from token ID to owner address
     mapping(uint256 => address) private _owners;
@@ -33,9 +41,28 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    constructor(string memory name_, string memory symbol_) {
+    // mappings for token URIS
+    mapping(uint256 => string) private _tokenURIs;
+
+    constructor(string memory name_, string memory symbol_, string memory contractURI_) {
         _name = name_;
         _symbol = symbol_;
+        _contractURI = contractURI_;
+    }
+
+    function contractURI() public view returns (string memory) {
+        return string(abi.encodePacked("ipfs://", _contractURI));
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require(_exists(tokenId), "ERC721URIStorage: URI query for nonexistent token");
+
+        return string(abi.encodePacked("ipfs://", _tokenURIs[tokenId]));
+    }
+
+    function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+        require(_exists(tokenId), "ERC721URIStorage: URI set of nonexistent token");
+        _tokenURIs[tokenId] = _tokenURI;
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
@@ -62,17 +89,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
-    }
-
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-
-        string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
-    }
-
-    function _baseURI() internal view virtual returns (string memory) {
-        return "";
     }
 
     function approve(address to, uint256 tokenId) public virtual override {
@@ -195,7 +211,11 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
         _balances[owner] -= 1;
         delete _owners[tokenId];
-
+        
+        if (bytes(_tokenURIs[tokenId]).length != 0) {
+            delete _tokenURIs[tokenId];
+        }
+        
         emit Transfer(owner, address(0), tokenId);
     }
 
@@ -245,6 +265,31 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         } else {
             return true;
         }
+    }
+
+    function safeMint(address to, string memory tokenURI_) public onlyOwner {
+        _safeMint(to, _tokenIdCounter.current());
+        _setTokenURI(_tokenIdCounter.current(), tokenURI_);
+        _tokenIdCounter.increment();
+    }
+
+    struct ItemParam {
+        address to;
+        string tokenURI;
+    }
+
+    function multiSafeMint(ItemParam[] memory items) public onlyOwner {
+
+        for (uint i = 0; i < items.length; i++) {
+            _safeMint(items[i].to, _tokenIdCounter.current());
+            _setTokenURI(_tokenIdCounter.current(), items[i].tokenURI);
+            _tokenIdCounter.increment();
+        }
+        
+    }
+
+    function setTokenURI(uint256 tokenId_, string memory tokenURI_) public onlyOwner {
+        _setTokenURI(tokenId_, tokenURI_);
     }
 
     function _beforeTokenTransfer(
