@@ -6,12 +6,11 @@ import OrderContent from './OrderContent';
 import {useStyles} from './index.style';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {
-  getNativeCoinWrapped,
   getNativeCoinWrappedAddressFromNetworkName,
   getNativeCoinWrappedFromNetworkName,
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {isMobile} from 'web3modal';
+
 import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
 
@@ -47,7 +46,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     onClose,
   } = props;
 
-  const classes = useStyles();
   const {chainId, account} = useWeb3();
 
   const [steps, setSteps] = useState<Steps[]>([]);

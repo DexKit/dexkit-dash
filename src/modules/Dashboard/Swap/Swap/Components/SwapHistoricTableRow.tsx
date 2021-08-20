@@ -15,7 +15,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 
 interface Props {
-  transaction: ChangellyTransaction;
+  transaction: ChangellyTransaction | null;
   onClick: (transaction: ChangellyTransaction) => void;
   onRemove: (transaction: ChangellyTransaction) => void;
 }
@@ -25,11 +25,15 @@ export const SwapHistoricTableRow = (props: Props) => {
   const [removing, setRemoving] = useState(false);
 
   const handleClick = useCallback(() => {
-    onClick(transaction);
+    if (transaction) {
+      onClick(transaction);
+    }
   }, [onClick, transaction]);
 
   const handleConfirm = useCallback(() => {
-    onRemove(transaction);
+    if (transaction) {
+      onRemove(transaction);
+    }
   }, [transaction]);
 
   const handleCancel = useCallback(() => {
@@ -44,22 +48,22 @@ export const SwapHistoricTableRow = (props: Props) => {
     <TableRow hover>
       <TableCell>
         <Link style={{cursor: 'pointer'}} onClick={handleClick}>
-          {transaction.id}
+          {transaction?.id}
         </Link>
       </TableCell>
       <TableCell>
-        {transaction.amountExpectedFrom}{' '}
-        {transaction.currencyFrom.toUpperCase()}
+        {transaction?.amountExpectedFrom}{' '}
+        {transaction?.currencyFrom.toUpperCase()}
       </TableCell>
       <TableCell>
-        {transaction.amountExpectedTo} {transaction.currencyTo.toUpperCase()}
+        {transaction?.amountExpectedTo} {transaction?.currencyTo?.toUpperCase()}
       </TableCell>
       <TableCell>
-        {transaction.createdAt
-          ? moment(transaction.createdAt).format('DD/MM/YYYY HH:mm:ss')
+        {transaction?.createdAt
+          ? moment(transaction?.createdAt).format('DD/MM/YYYY HH:mm:ss')
           : ''}
       </TableCell>
-      <TableCell>{transaction.status}</TableCell>
+      <TableCell>{transaction?.status}</TableCell>
       <TableCell>
         {removing ? (
           <Grid container spacing={2}>

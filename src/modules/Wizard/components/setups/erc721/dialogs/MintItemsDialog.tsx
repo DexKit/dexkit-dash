@@ -20,6 +20,7 @@ import {useWizardApi} from 'modules/Wizard/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {ethers} from 'ethers';
 
 interface MintItemsDialogProps extends DialogProps {
   contractAddress: string;
@@ -35,7 +36,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
   const wizardApi = useWizardApi();
 
-  const {getWeb3, chainId} = useWeb3();
+  const {getWeb3, getProvider, chainId} = useWeb3();
 
   const [mintTransactionHash, setMintTransactionHash] = useState('');
   const [items, setItems] = useState<CollectionItemData[]>([]);
@@ -113,12 +114,17 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     [items],
   );
 
+  // TODO: remove duplace
   const mintItems = useCallback(
     async (contractAddress: string, hashes: string[]) => {
-      let web3 = getWeb3();
+      if (userDefaultAcount) {
+        let provider = new ethers.providers.Web3Provider(getProvider());
 
-      if (web3 && userDefaultAcount) {
-        let contract = new web3.eth.Contract(ERC721Abi, contractAddress);
+        var contract = new ethers.Contract(
+          contractAddress,
+          ERC721Abi,
+          provider.getSigner(),
+        );
 
         let paramItems = hashes.map((hash: string) => {
           return {
@@ -127,23 +133,14 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
           };
         });
 
-        await contract.methods
-          .multiSafeMint(paramItems)
-          .send({
-            from: userDefaultAcount,
-          })
-          .on('error', (err: any) => {})
-          .on('transactionHash', (transactionHash: string) => {
-            setMintTransactionHash(transactionHash);
-          })
-          .on('receipt', (receipt: any) => {})
-          .on('confirmation', (confirmationNumber: number, receipt: any) => {})
-          .then(function (result: any) {
-            console.log(result);
-          });
+        let result = await contract.multiSafeMint(paramItems);
+
+        setMintTransactionHash(result.hash);
+
+        await result.wait();
       }
     },
-    [userDefaultAcount, getWeb3, items],
+    [userDefaultAcount, getProvider, items],
   );
 
   const handleConfirm = useCallback(async () => {
@@ -155,6 +152,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
     await mintItems(contractAddress, itemsHashes);
 
+    onFinish();
     setShowSuccess(true);
     setLoading(false);
   }, [contractAddress, getWeb3, items, onFinish]);
@@ -185,14 +183,14 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
   }, [items]);
 
   return (
-    <Dialog {...props}>
-      <DialogTitle>Mint items</DialogTitle>
+    <Dialog {...props} disableBackdropClick>
+      {!loading && !showSuccess ? <DialogTitle>Mint items</DialogTitle> : null}
       {showSuccess ? (
         <DialogContent>
           <Box py={4}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Box py={4} display='flex' justifyContent='center'>
+                <Box display='flex' justifyContent='center'>
                   <CheckCircleIcon style={{fontSize: theme.spacing(18)}} />
                 </Box>
               </Grid>
@@ -233,11 +231,11 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
           <Box py={4}>
             <Grid container spacing={4}>
               <Grid xs={12}>
-                <Box py={4} display='flex' justifyContent='center'>
+                <Box display='flex' justifyContent='center'>
                   <CircularProgress size={theme.spacing(18)} />
                 </Box>
               </Grid>
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <Typography variant='h5' align='center'>
                   Minting items
                 </Typography>

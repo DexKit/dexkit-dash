@@ -11,6 +11,7 @@ import {
   useTheme,
   Button,
   Typography,
+  Paper,
 } from '@material-ui/core';
 import {useHistory, useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
@@ -46,10 +47,9 @@ import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectiv
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
-    height: '100%',
+    height: 'auto',
     width: '100%',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    borderRadius: theme.shape.borderRadius,
   },
   backdrop: {
     zIndex: theme.zIndex.modal + 1,
@@ -388,27 +388,29 @@ export const AssetDetail = () => {
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Card>
-                        {loading ? (
-                          <Skeleton
-                            className={classes.assetImage}
-                            height='100%'
-                          />
-                        ) : null}
-                        <CardMedia>
-                          <img
-                            style={{
-                              backgroundColor: `#${
-                                data?.background_color
-                                  ? data?.background_color
-                                  : 'fff'
-                              }`,
-                            }}
-                            src={data?.image_url}
-                            className={classes.assetImage}
-                          />
-                        </CardMedia>
-                      </Card>
+                      {loading ? (
+                        <Skeleton className={classes.assetImage} />
+                      ) : (
+                        <Paper>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            alignItems='center'
+                            alignContent='center'>
+                            <img
+                              src={data?.image_url}
+                              className={classes.assetImage}
+                              style={{
+                                backgroundColor: `#${
+                                  data?.background_color
+                                    ? data?.background_color
+                                    : 'fff'
+                                }`,
+                              }}
+                            />
+                          </Box>
+                        </Paper>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>

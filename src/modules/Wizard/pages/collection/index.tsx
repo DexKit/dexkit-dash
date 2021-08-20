@@ -25,6 +25,16 @@ import {Skeleton} from '@material-ui/lab';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import {MintItemsDialog} from 'modules/Wizard/components/setups/erc721/dialogs/MintItemsDialog';
 
+function useForceUpdate() {
+  const [update, set] = useState(false);
+
+  const forceUpdate = useCallback(() => {
+    set((value) => !value);
+  }, []);
+
+  return {update, forceUpdate};
+}
+
 const useStyles = makeStyles((theme) => ({
   collectionImage: {
     width: theme.spacing(30),
@@ -60,9 +70,12 @@ const CollectionPage = () => {
     setShowMintDialog(false);
   }, []);
 
+  const {update, forceUpdate} = useForceUpdate();
+
   const handleFinish = useCallback(() => {
     get(contract);
-  }, [contract]);
+    forceUpdate();
+  }, [contract, forceUpdate]);
 
   return (
     <>
@@ -152,7 +165,7 @@ const CollectionPage = () => {
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <CollectionItems contractAddress={contract} />
+                <CollectionItems update={update} contractAddress={contract} />
               </Grid>
             </Grid>
           </Grid>

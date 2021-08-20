@@ -64,6 +64,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                     alignItems='center'
                     py={4}>
                     <ImageUploadButton
+                      error={collectionImage === null}
                       onChange={onImageChange}
                       file={collectionImage}
                     />

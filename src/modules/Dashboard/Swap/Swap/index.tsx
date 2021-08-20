@@ -255,9 +255,18 @@ export const SwapComponent = (props: any) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
 
-      setFromAmountValue(e.target.value);
+      let isPostive =
+        e.target.value !== '' && parseFloat(e.target.value) >= 0.0;
 
-      if (e.target.value == '') {
+      if (!isPostive) {
+        setFromAmountValue('');
+      } else {
+        setFromAmountValue(e.target.value);
+      }
+
+      if (e.target.value === '') {
+        setFromAmount(0);
+      } else if (!isPostive) {
         setFromAmount(0);
       } else {
         setFromAmount(amount);
@@ -272,9 +281,18 @@ export const SwapComponent = (props: any) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
 
-      setToAmountValue(e.target.value);
+      let isPostive =
+        e.target.value !== '' && parseFloat(e.target.value) >= 0.0;
+
+      if (!isPostive) {
+        setToAmountValue('');
+      } else {
+        setToAmountValue(e.target.value);
+      }
 
       if (e.target.value == '') {
+        setToAmount(0);
+      } else if (parseInt(e.target.value) < 0) {
         setToAmount(0);
       } else {
         setToAmount(amount);
@@ -312,8 +330,11 @@ export const SwapComponent = (props: any) => {
     return fromAmount >= minFromAmount;
   }, [fromAmount, minFromAmount]);
 
+  const [transactionError, setTransactioError] = useState('');
+
   const handleCreateTransaction = useCallback(() => {
     setCreatingTransaction(true);
+    setTransactioError('');
 
     if (fromCoin && toCoin) {
       Changelly.createTransaction({
@@ -323,9 +344,13 @@ export const SwapComponent = (props: any) => {
         address: addressToSend,
       })
         .then((r) => {
-          setTransaction(r.result as ChangellyTransaction);
-          saveTransaction(r.result as ChangellyTransaction);
-          setGoToReceiveAddress(false);
+          if (r.result) {
+            setTransaction(r.result as ChangellyTransaction);
+            saveTransaction(r.result as ChangellyTransaction);
+            setGoToReceiveAddress(false);
+          } else {
+            setTransactioError('Transaction failed, try again later.');
+          }
         })
         .finally(() => {
           setCreatingTransaction(false);
@@ -590,6 +615,7 @@ export const SwapComponent = (props: any) => {
                 onSwap={handleCreateTransaction}
                 loading={creatingTransaction}
                 onGoBack={handleGoBack}
+                transactionError={transactionError}
               />
             </CardContent>
           </>
@@ -743,7 +769,12 @@ export const SwapComponent = (props: any) => {
                     color='primary'
                     size='large'
                     fullWidth
-                    disabled={disabledButton || fromLoading || toLoading}
+                    disabled={
+                      disabledButton ||
+                      fromLoading ||
+                      toLoading ||
+                      !isFromAmountValid()
+                    }
                     onClick={handleGoToReceiveAddress}>
                     Next
                   </Button>

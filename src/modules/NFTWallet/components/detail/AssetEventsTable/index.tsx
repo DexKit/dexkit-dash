@@ -15,6 +15,7 @@ import useFetch from 'use-http';
 import moment from 'moment';
 import {AssetEventType} from 'opensea-js/lib/types';
 import AssetEventTableRow from '../AssetEventTableRow';
+import {Scrollbar} from '@crema';
 
 interface Props {
   events: any[];
@@ -25,11 +26,7 @@ export default (props: Props) => {
   const theme = useTheme();
 
   return (
-    <TableContainer
-      style={{
-        maxHeight: theme.spacing(100),
-        overflowY: 'scroll',
-      }}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -50,7 +47,12 @@ export default (props: Props) => {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+
+        <TableBody
+          component={Scrollbar}
+          style={{
+            maxHeight: theme.spacing(100),
+          }}>
           {events.map((event, index) => (
             <AssetEventTableRow key={index} event={event} />
           ))}

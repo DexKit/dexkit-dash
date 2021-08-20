@@ -185,45 +185,48 @@ export default (props: Props) => {
           {hasListing(asset) &&
           !isAssetOwner(asset, userAccountAddress || '') ? (
             <>
-              <Grid item xs={12}>
-                <Paper variant='outlined'>
-                  <Box p={4}>
-                    <Grid
-                      container
-                      alignItems='center'
-                      alignContent='center'
-                      spacing={2}>
-                      <Grid item>
-                        <AccessTimeIcon />
+              {getFirstOrder(asset).closing_date ? (
+                <Grid item xs={12}>
+                  <Paper variant='outlined'>
+                    <Box p={4}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        alignContent='center'
+                        spacing={2}>
+                        <Grid item>
+                          <AccessTimeIcon />
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='body1'>
+                            <IntlMessages id='nfts.detail.saleEndsIn' />{' '}
+                            <strong>
+                              <CountdownTimer
+                                dateTime={moment(
+                                  getFirstOrder(asset).closing_date,
+                                ).utc(true)}
+                              />
+                            </strong>{' '}
+                            <IntlMessages id='nfts.detail.at' />{' '}
+                            <TokenIconSpan
+                              imageUrl={
+                                getFirstOrder(asset).payment_token_contract
+                                  ?.image_url
+                              }
+                              symbol={
+                                getFirstOrder(asset).payment_token_contract
+                                  ?.symbol
+                              }
+                            />{' '}
+                            {getEndingPrice(asset)}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography variant='body1'>
-                          <IntlMessages id='nfts.detail.saleEndsIn' />{' '}
-                          <strong>
-                            <CountdownTimer
-                              dateTime={moment(
-                                getFirstOrder(asset).closing_date,
-                              ).utc(true)}
-                            />
-                          </strong>{' '}
-                          <IntlMessages id='nfts.detail.at' />{' '}
-                          <TokenIconSpan
-                            imageUrl={
-                              getFirstOrder(asset).payment_token_contract
-                                ?.image_url
-                            }
-                            symbol={
-                              getFirstOrder(asset).payment_token_contract
-                                ?.symbol
-                            }
-                          />{' '}
-                          {getEndingPrice(asset)}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </Grid>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+
               <Grid item xs={12}>
                 <Paper variant='outlined'>
                   <Box p={4}>

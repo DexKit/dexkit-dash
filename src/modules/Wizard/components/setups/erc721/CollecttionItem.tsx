@@ -111,6 +111,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
           <Grid item xs={12} sm={3}>
             <Box display='flex' justifyContent='center'>
               <ImageUploadButton
+                error={item.image === null}
                 onChange={handleImageChange}
                 file={item.image}
               />
@@ -125,6 +126,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   name='name'
                   onChange={handleChange}
                   label='Name'
+                  error={item.name !== ''}
                   variant='outlined'
                   fullWidth
                 />
@@ -137,6 +139,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   label='Description'
                   rows={3}
                   multiline
+                  error={item.description !== ''}
                   variant='outlined'
                   onChange={handleChange}
                   fullWidth

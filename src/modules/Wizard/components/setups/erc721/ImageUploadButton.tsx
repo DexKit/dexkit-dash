@@ -32,15 +32,21 @@ const useStyle = makeStyles((theme) => ({
     width: theme.spacing(30),
     borderRadius: '50%',
   },
+  error: {
+    borderColor: theme.palette.error.main,
+    borderWidth: 1,
+    borderStyle: 'solid',
+  },
 }));
 
 export interface ImageUploadButtonProps {
   onChange: (file: File | null) => void;
   file: File | null;
+  error?: boolean;
 }
 
 export function ImageUploadButton(props: ImageUploadButtonProps) {
-  const {onChange, file} = props;
+  const {onChange, file, error} = props;
 
   const classes = useStyle();
 
@@ -86,7 +92,9 @@ export function ImageUploadButton(props: ImageUploadButtonProps) {
         style={{display: 'none'}}
         accept='image/png, image/gif, image/jpeg, image/svg'
       />
-      <CustomButton onClick={handleClick}>
+      <CustomButton
+        className={error ? classes.error : undefined}
+        onClick={handleClick}>
         {file ? <img className={classes.img} ref={imgRef} /> : <ImageIcon />}
       </CustomButton>
     </>

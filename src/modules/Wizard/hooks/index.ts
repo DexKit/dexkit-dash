@@ -6,6 +6,8 @@ import Web3 from 'web3';
 import {Collection} from 'redux/_wizard/reducers';
 import {useWeb3} from 'hooks/useWeb3';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
+import {BigNumber, ethers} from 'ethers';
+import {findTokensInfoByAddress} from 'utils';
 
 function isIpfsUrl(url: string) {
   return url.startsWith('ipfs://');
@@ -107,17 +109,21 @@ export function useCollectionMetadata() {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<any | null>(null);
-  let {getWeb3} = useWeb3();
+  let {getProvider} = useWeb3();
 
-  const get = useCallback(async (address: string) => {
-    setLoading(true);
+  const get = useCallback(
+    async (address: string) => {
+      setLoading(true);
 
-    let web3 = getWeb3();
+      let ethersProvider = new ethers.providers.Web3Provider(getProvider());
 
-    if (web3) {
-      let contract = new web3.eth.Contract(ERC721Abi, address);
+      var contract = new ethers.Contract(
+        address,
+        ERC721Abi,
+        ethersProvider.getSigner(),
+      );
 
-      let contractURI: string = await contract.methods.contractURI().call();
+      let contractURI: string = await contract.contractURI();
 
       if (isIpfsUrl(contractURI)) {
         let cleanImageHash = new URL(contractURI).pathname.replace('//', '');
@@ -141,8 +147,9 @@ export function useCollectionMetadata() {
       });
 
       setLoading(false);
-    }
-  }, []);
+    },
+    [getProvider],
+  );
 
   return {data, loading, error, get};
 }
@@ -151,68 +158,71 @@ export function useCollectionItems() {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<any | null>(null);
-  let {getWeb3} = useWeb3();
+  let {getProvider} = useWeb3();
 
   const get = useCallback(
     async (address: string) => {
       setLoading(true);
 
-      let web3 = getWeb3();
+      let ethersProvider = new ethers.providers.Web3Provider(getProvider());
 
-      if (web3) {
-        let contract = new web3.eth.Contract(ERC721Abi, address);
+      var contract = new ethers.Contract(
+        address,
+        ERC721Abi,
+        ethersProvider.getSigner(),
+      );
 
-        let events = await contract.getPastEvents('Transfer', {
-          fromBlock: 0,
-          toBlock: 'latest',
-        });
+      let eventFilter = await contract.filters.Transfer();
 
-        let tokenIds = new Set<string>();
+      let events = await contract.queryFilter(eventFilter);
 
-        for (let event of events) {
-          tokenIds.add(event.returnValues[2]);
+      let tokenIds = new Set<string>();
+
+      for (let event of events) {
+        if (event.args) {
+          tokenIds.add((event.args[2] as BigNumber).toNumber().toString());
         }
-
-        let tokens: {
-          tokenId: string;
-          name: string;
-          description: string;
-          imageUrl: string;
-        }[] = [];
-
-        for (let tokenId of tokenIds) {
-          let tokenURI: any = await contract.methods.tokenURI(tokenId).call();
-
-          let url = tokenURI;
-
-          if (isIpfsUrl(tokenURI)) {
-            let cleanHash = new URL(tokenURI).pathname.replace('//', '');
-            url = `https://ipfs.io/ipfs/${cleanHash}`;
-          }
-
-          let metadata: {name: string; description: string; image: string} =
-            await axios.get(url).then((response) => response.data);
-
-          let imageUrl = metadata.image;
-
-          if (isIpfsUrl(imageUrl)) {
-            let cleanImageHash = new URL(imageUrl).pathname.replace('//', '');
-            imageUrl = `https://ipfs.io/ipfs/${cleanImageHash}`;
-          }
-
-          tokens.push({
-            tokenId,
-            imageUrl,
-            name: metadata.name,
-            description: metadata.description,
-          });
-        }
-
-        setData(tokens);
-        setLoading(false);
       }
+
+      let tokens: {
+        tokenId: string;
+        name: string;
+        description: string;
+        imageUrl: string;
+      }[] = [];
+
+      for (let tokenId of tokenIds) {
+        let tokenURI: string = await contract.tokenURI(tokenId);
+
+        let url = tokenURI;
+
+        if (isIpfsUrl(tokenURI)) {
+          let cleanHash = new URL(tokenURI).pathname.replace('//', '');
+          url = `https://ipfs.io/ipfs/${cleanHash}`;
+        }
+
+        let metadata: {name: string; description: string; image: string} =
+          await axios.get(url).then((response) => response.data);
+
+        let imageUrl = metadata.image;
+
+        if (isIpfsUrl(imageUrl)) {
+          let cleanImageHash = new URL(imageUrl).pathname.replace('//', '');
+          imageUrl = `https://ipfs.io/ipfs/${cleanImageHash}`;
+        }
+
+        tokens.push({
+          tokenId,
+          imageUrl,
+          name: metadata.name,
+          description: metadata.description,
+        });
+      }
+
+      setData(tokens);
+      setLoading(false);
     },
-    [getWeb3],
+    [getProvider],
   );
 
   return {data, error, loading, get};

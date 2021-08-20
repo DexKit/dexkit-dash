@@ -55,6 +55,7 @@ import {String} from 'lodash';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {useDispatch} from 'react-redux';
 import {addCollection} from 'redux/_wizard/actions';
+import {ethers} from 'ethers';
 
 export interface CollectionSetupProps {}
 
@@ -64,7 +65,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const dispatch = useDispatch();
 
   const userDefaultAcount = useDefaultAccount();
-  const {getWeb3} = useWeb3();
+  const {getWeb3, getProvider} = useWeb3();
 
   const [step, setStep] = useState<CollectionSetupSteps>(
     CollectionSetupSteps.Collection,
@@ -289,13 +290,17 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     [items],
   );
 
+  // TODO: remove duplace
   const mintItems = useCallback(
     async (contractAddress: string, hashes: string[]) => {
-      let web3 = getWeb3();
+      if (userDefaultAcount) {
+        let provider = new ethers.providers.Web3Provider(getProvider());
 
-      if (web3 && userDefaultAcount) {
-        let contract = new web3.eth.Contract(ERC721Abi, contractAddress);
-        debugger;
+        var contract = new ethers.Contract(
+          contractAddress,
+          ERC721Abi,
+          provider.getSigner(),
+        );
 
         let paramItems = hashes.map((hash: string) => {
           return {
@@ -304,25 +309,12 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           };
         });
 
-        await contract.methods
-          .multiSafeMint(paramItems)
-          .send({
-            from: userDefaultAcount,
-          })
-          .on('error', (err: any) => {})
-          .on('transactionHash', (transactionHash: string) => {
-            setMintTransactionHash(transactionHash);
-          })
-          .on('receipt', (receipt: any) => {
-            console.log(receipt);
-          })
-          .on('confirmation', (confirmationNumber: number, receipt: any) => {})
-          .then(function (newContractInstance: any) {
-            console.log(newContractInstance);
-          });
+        let result = await contract.multiSafeMint(paramItems);
+
+        await result.wait();
       }
     },
-    [userDefaultAcount, getWeb3, items],
+    [userDefaultAcount, items, getProvider],
   );
 
   const handleConfirmFinalize = useCallback(async () => {

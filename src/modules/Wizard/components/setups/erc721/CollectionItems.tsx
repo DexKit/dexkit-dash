@@ -21,17 +21,18 @@ const useStyles = makeStyles((theme) => ({
 
 interface CollectionItemsProps {
   contractAddress: string;
+  update: boolean;
 }
 
 export const CollectionItems = (props: CollectionItemsProps) => {
-  const {contractAddress} = props;
+  const {contractAddress, update} = props;
   const {data, error, loading, get} = useCollectionItems();
 
   const classes = useStyles();
 
   useEffect(() => {
     get(contractAddress);
-  }, [get, contractAddress]);
+  }, [get, contractAddress, update]);
 
   if (loading) {
     return <CollectionItemsSkeleton />;
