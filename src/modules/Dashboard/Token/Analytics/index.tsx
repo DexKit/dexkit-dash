@@ -161,8 +161,8 @@ export const TokenAnalytics = (props: Props) => {
                 {(profitLoss && usdFormatter.format(Number(profitLoss))) || '-'}{' '}
               </ListItem>
             </List>
-            {properties.map((p) => (
-              <List className={classes.subList}>
+            {properties.map((p, index) => (
+              <List className={classes.subList} key={index}>
                 <ListItem>{p.label}</ListItem>
                 <ListItem style={{fontWeight: 'bold'}}>
                   {p.isUSD ? usdFormatter.format(data[p.field]) : data[p.field]}

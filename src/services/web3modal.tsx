@@ -9,6 +9,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import {Magic} from 'magic-sdk';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {OAuthExtension} from '@magic-ext/oauth';
+import {ethers, providers} from 'ethers';
 
 const providerOptions = {
   walletconnect: {
@@ -88,6 +89,17 @@ const getWeb3 = () => {
   return web3;
 };
 
+let ethersjs: null | ethers.providers.Web3Provider;
+const getEthers = () => {
+  if (!provider) {
+    return;
+  }
+  if (!ethersjs) {
+    ethersjs = new providers.Web3Provider(getProvider());
+  }
+  return ethersjs;
+};
+
 const web3Transaction = (
   transactionConfig: TransactionConfig,
 ): Promise<TransactionReceipt> | undefined => {
@@ -120,4 +132,5 @@ export {
   getWeb3Wrapper,
   web3Modal,
   web3Transaction,
+  getEthers,
 };

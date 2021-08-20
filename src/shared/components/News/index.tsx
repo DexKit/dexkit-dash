@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Card from '@material-ui/core/Card';
 import NewsList from './NewsList';
-import Link from '@material-ui/core/Link';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Box, Fade, makeStyles} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
@@ -10,18 +9,10 @@ import useNews from 'hooks/useNews';
 import ErrorView from 'modules/Common/ErrorView';
 import LoadingView from 'modules/Common/LoadingView';
 
-interface Props {}
 
-const News: React.FC<Props> = (props) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    textRes: {
-      fontSize: 16,
-      [theme.breakpoints.up('xl')]: {
-        fontSize: 18,
-      },
-    },
-  }));
 
+const News = () => {
+  
   const {loading, error, data} = useNews({limit: 3});
 
   const [shouldRender, setShouldRender] = useState(false);
@@ -33,7 +24,6 @@ const News: React.FC<Props> = (props) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const classes = useStyles();
 
   return (
     <>

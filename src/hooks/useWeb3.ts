@@ -23,6 +23,7 @@ import {
 import {Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
 import {addAccounts, setAccount} from 'redux/_ui/actions';
+import {getMulticall} from 'services/multicall';
 
 // @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
 // the app to break as wallet was being called multiple times. useState inside the hook was not working as solution

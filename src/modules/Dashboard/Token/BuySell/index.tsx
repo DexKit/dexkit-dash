@@ -81,7 +81,7 @@ const BuySell: React.FC<Props> = ({
   networkName,
   tokenInfo,
 }) => {
-  let history = useHistory();
+  const history = useHistory();
 
   const classes = useStyles();
 

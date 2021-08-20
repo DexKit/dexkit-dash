@@ -50,11 +50,11 @@ export const SelectTokenDialog = (props: Props) => {
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value;
+      const value = e.target.value;
 
       setFilterText(value);
 
-      let filtered = tokens.filter(
+      const filtered = tokens.filter(
         (coin: Token) =>
           coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
           coin.symbol.toLowerCase().startsWith(value.toLowerCase()),

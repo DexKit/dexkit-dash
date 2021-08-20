@@ -89,6 +89,7 @@ const TokenPage: React.FC<Props> = (props) => {
   const {address, networkName} = params;
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
+
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
@@ -97,6 +98,7 @@ const TokenPage: React.FC<Props> = (props) => {
   const classes = useStyles(theme);
 
   const {account: web3Account, chainId} = useWeb3();
+
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;
 

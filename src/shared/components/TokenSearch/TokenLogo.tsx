@@ -1,11 +1,8 @@
 import React from 'react';
-import {Box} from '@material-ui/core';
+
 import {makeStyles} from '@material-ui/core/styles';
-import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
-import {useChainId} from 'hooks/useChainId';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({

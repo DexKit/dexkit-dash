@@ -64,7 +64,7 @@ import {AboutDialog} from './AboutDialog';
 import {ShareButton} from 'shared/components/ShareButton';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import InfoIcon from '@material-ui/icons/Info';
-
+import { useMulticallTokenBalances } from 'hooks/multicall/useMulticallTokenBalances';
 const BinanceTVChartContainer = React.lazy(
   () => import('shared/components/chart/BinanceTVChart/tv_chart'),
 );
