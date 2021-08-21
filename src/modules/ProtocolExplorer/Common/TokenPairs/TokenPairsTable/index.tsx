@@ -30,14 +30,15 @@ const TokenPairsTable: React.FC<Props> = ({data, exchange, networkName}) => {
           <TableHeading exchange={exchange} />
         </TableHead>
         <TableBody>
-          {data && data.map((row, index) => (
-            <TableItem
-              row={row}
-              key={index}
-              exchange={exchange}
-              networkName={networkName}
-            />
-          ))}
+          {data &&
+            data.map((row, index) => (
+              <TableItem
+                row={row}
+                key={index}
+                exchange={exchange}
+                networkName={networkName}
+              />
+            ))}
           {/* (
             <TableRow className={classes.borderBottomClass}>
               <TableCell
@@ -51,9 +52,12 @@ const TokenPairsTable: React.FC<Props> = ({data, exchange, networkName}) => {
           )} */}
         </TableBody>
       </Table>
-      {!data?.length && <Typography component='h1' color={'primary'}>No Data available for this token</Typography>}
+      {!data?.length && (
+        <Typography component='h1' color={'primary'}>
+          No Data available for this token
+        </Typography>
+      )}
     </Box>
-    
   );
 };
 

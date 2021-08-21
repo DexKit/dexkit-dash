@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
 import AffiliateHistory from 'modules/Affiliate/history';
-import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 
 import {Skeleton} from '@material-ui/lab';
 import {useAffiliateTrades} from 'hooks/affiliate/useAffiliateTrades';
@@ -41,8 +40,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const AffiliatePage = () => {
-  const classes = useStyles();
-
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;

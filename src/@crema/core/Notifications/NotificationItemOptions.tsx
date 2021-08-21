@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Popover from '@material-ui/core/Popover';
-import { List, ListItem } from '@material-ui/core';
+import {List, ListItem} from '@material-ui/core';
 
 export interface NotificationItemOptionsData {
   option: string;
-  action: (item: string | number | Symbol) => void;
+  action: (item: string | number | symbol) => void;
 }
 
 interface NotificationItemOptionsProps {
-  options: NotificationItemOptionsData[]
-  onClose?: ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void) | undefined
+  options: NotificationItemOptionsData[];
+  onClose?:
+    | ((event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void)
+    | undefined;
   anchorEl?: Element | ((element: Element) => Element);
   open?: boolean;
 }
 
-export const NotificationItemOptions: React.FC<NotificationItemOptionsProps> = (props) => {
-  const { options, anchorEl, open, onClose } = props;
+export const NotificationItemOptions: React.FC<NotificationItemOptionsProps> = (
+  props,
+) => {
+  const {options, anchorEl, open, onClose} = props;
   const [show, setShow] = useState(Boolean(open));
   return (
     <Popover
@@ -34,27 +38,21 @@ export const NotificationItemOptions: React.FC<NotificationItemOptionsProps> = (
           onClose($e, 'backdropClick');
         }
         setShow(false);
-      }}
-    >
+      }}>
       <List>
-        {
-          options?.map(({ option, action }, i) => (
-            <ListItem 
-            key={`notificationOption[${i}]`} 
+        {options?.map(({option, action}, i) => (
+          <ListItem
+            key={`notificationOption[${i}]`}
             button
-            onClick={
-              ($e) => {
-                $e.preventDefault();
-                action($e.currentTarget.id);
-                setShow(false);
-              }
-            }
-            >
-              {option}
-            </ListItem>
-          ))
-        }
+            onClick={($e) => {
+              $e.preventDefault();
+              action($e.currentTarget.id);
+              setShow(false);
+            }}>
+            {option}
+          </ListItem>
+        ))}
       </List>
     </Popover>
   );
-}
+};

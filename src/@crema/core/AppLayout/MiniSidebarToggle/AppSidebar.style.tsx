@@ -19,15 +19,15 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       [theme.breakpoints.up('lg')]: {
         position: 'fixed',
         '&.mini-sidebar-collapsed': {
-          width: '4rem',
+          width: theme.spacing(18),
 
           '& + .main-content': {
-            marginLeft: '4rem',
-            width: 'calc(100vw - 4rem)',
+            marginLeft: theme.spacing(18),
+            width: `calc(100vw - ${theme.spacing(18)}px)`,
             flex: 'auto',
 
             '& .app-bar': {
-              width: 'calc(100vw - 4rem)',
+              width: `calc(100vw - ${theme.spacing(18)}px)`,
             },
           },
 
@@ -41,6 +41,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           },
 
           '& .nav-item-text, & .nav-item-icon-arrow': {
+            opecity: 0,
+            visibility: 'hidden',
+          },
+
+          '& .visible-hover': {
             opecity: 0,
             visibility: 'hidden',
           },
@@ -89,6 +94,11 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         [theme.breakpoints.up('lg')]: {
           '&.mini-sidebar-collapsed': {
             width: '21.6rem',
+
+            '& .visible-hover': {
+              opacity: 1,
+              visibility: 'visible',
+            },
 
             '& .nav-item-text, & .nav-item-icon-arrow': {
               opecity: 1,

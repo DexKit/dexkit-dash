@@ -9,5 +9,5 @@ export * from './text';
 export * from './tokens';
 
 export function prop<T, K extends keyof T>(obj: T, key: K) {
-    return obj[key];
+  return obj[key];
 }

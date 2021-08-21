@@ -2,16 +2,12 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import {Box, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalances} from 'types/blockchain';
-import { useHistory } from 'react-router-dom';
 
 interface Props {
   balances: MyBalances[];
@@ -33,9 +29,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       },
     },
   },
-  alignedButton: {
-    margin: '0 auto',
-  },
   paginationDesktop: {
     [theme.breakpoints.down('xs')]: {
       display: 'none',
@@ -52,7 +45,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const CTable: React.FC<Props> = ({balances}) => {
   const [perPage, setPerPage] = React.useState(8);
   const [page, setPage] = React.useState(0);
-  const history = useHistory();
+
   const classes = useStyles();
 
   return (
@@ -63,27 +56,12 @@ const CTable: React.FC<Props> = ({balances}) => {
             <TableHeading />
           </TableHead>
           <TableBody>
-            {balances.length ? (
-              balances
-                .filter((b) => b.value)
-                .slice(page * perPage, (page + 1) * perPage)
-                .map((data: MyBalances) => (
-                  <TableItem data={data} key={data.currency?.address} />
-                ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Button
-                    fullWidth
-                    size='large'
-                    color='primary'
-                    onClick={() => history.push('/create-wallet')}
-                    className={classes.alignedButton}>
-                    Create BTC Wallet!
-                  </Button>
-                </TableCell>
-              </TableRow>
-            )}
+            {balances
+              .filter((b) => b.value)
+              .slice(page * perPage, (page + 1) * perPage)
+              .map((data: MyBalances) => (
+                <TableItem data={data} key={data.currency?.address} />
+              ))}
           </TableBody>
         </Table>
       </Box>

@@ -1,11 +1,12 @@
 import moment from 'moment';
 import {toTokenUnitAmount} from '@0x/utils';
+import {OrderSide} from 'opensea-js/lib/types';
 
 export function sortEventArray(arr: any[]): any[] {
   return arr
     .sort((a, b) => {
-      let dateA = moment(a.created_date);
-      let dateB = moment(b.created_date);
+      const dateA = moment(a.created_date);
+      const dateB = moment(b.created_date);
 
       if (dateA.isBefore(dateB)) {
         return -1;
@@ -20,7 +21,7 @@ export function sortEventArray(arr: any[]): any[] {
 
 export function getPriceFromOrder(order: any) {
   return toTokenUnitAmount(
-    order.base_price,
+    order.current_price,
     order.payment_token_contract.decimals,
   ).toNumber();
 }
@@ -42,7 +43,7 @@ export function isSameAddress(address: string, other: string) {
 
 export function isAssetOwner(asset: any, address: string) {
   if (asset) {
-    for (let el of asset.top_ownerships) {
+    for (const el of asset.top_ownerships) {
       if (isSameAddress(el.owner.address, address)) {
         return true;
       }
@@ -78,4 +79,43 @@ export function getAssetOwnerName(asset: any) {
 
 export function getUnixDays(days: number): number {
   return Math.round(Date.now() / 1000 + 60 * 60 * 24 * days);
+}
+
+export const getFirstOrder = (asset: any) => {
+  return asset?.orders.filter((o: any) => o.side == OrderSide.Sell)[0];
+};
+
+export const getFirstOrderTokenImage = (asset: any) => {
+  return getFirstOrder(asset).payment_token_contract?.image_url;
+};
+
+export const getFirstOrderPrice = (asset: any) => {
+  const order = getFirstOrder(asset);
+
+  return toTokenUnitAmount(
+    order.current_price,
+    order.payment_token_contract?.decimals,
+  ).toNumber();
+};
+
+export function sortByMinPrice(a: any, b: any) {
+  const priceA = toTokenUnitAmount(
+    a.current_price,
+    a.payment_token_contract?.decimals,
+  ).toNumber();
+
+  const priceB = toTokenUnitAmount(
+    b.current_price,
+    b.payment_token_contract?.decimals,
+  ).toNumber();
+
+  if (priceA < priceB) {
+    return -1;
+  }
+
+  if (priceA > priceB) {
+    return 1;
+  }
+
+  return 0;
 }

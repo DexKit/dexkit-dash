@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-
 import FileCopy from '@material-ui/icons/FileCopyOutlined';
 import CheckCircle from '@material-ui/icons/CheckCircleOutlineOutlined';
 
@@ -19,8 +18,8 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import {AppDispatch} from 'redux/store';
 import generateWallet from 'utils/generateWallet';
-import { addAccounts, setUserEncryptedSeed } from 'redux/_ui/actions';
-import { AccountType, Network } from 'types/blockchain';
+import {addAccounts, setUserEncryptedSeed} from 'redux/_ui/actions';
+import {SupportedNetworkType, Network} from 'types/blockchain';
 
 const useStyles = makeStyles(() => ({
   aligned: {width: '100%', textAlign: 'center'},
@@ -32,17 +31,19 @@ const GeneratedWallet: React.FC<any> = ({mnemonics, passphrase}) => {
   const [address, setAddress] = useState<string | undefined>();
 
   const [toClipboard, setToClipboard] = useState(false);
-  useEffect(()=> {
-    generateWallet(mnemonics, passphrase).then(w=> {
+  useEffect(() => {
+    generateWallet(mnemonics, passphrase).then((w) => {
       setAddress(w.address);
-      addAccounts([{address: w.address, label: w.address, type: AccountType.UTXO, network: Network.bitcoin}]);
+      addAccounts({accounts: [
+        {
+          address: w.address,
+          label: w.address,
+          networkType: SupportedNetworkType.evm
+        },
+      ], type: SupportedNetworkType.evm} );
       dispatch(setUserEncryptedSeed(w.encryptedSeed));
-
-    })
-
-  }, [])
-
-
+    });
+  }, []);
 
   return (
     <Container maxWidth='sm'>
@@ -61,8 +62,10 @@ const GeneratedWallet: React.FC<any> = ({mnemonics, passphrase}) => {
           endAdornment={
             <InputAdornment position='end'>
               <Fade in>
-              <IconButton
-                  onClick={() => address ?  navigator.clipboard.writeText(address): null}>
+                <IconButton
+                  onClick={() =>
+                    address ? navigator.clipboard.writeText(address) : null
+                  }>
                   {toClipboard ? <CheckCircle /> : <FileCopy />}
                 </IconButton>
               </Fade>
@@ -70,7 +73,7 @@ const GeneratedWallet: React.FC<any> = ({mnemonics, passphrase}) => {
           }
         />
       </Box>
-   {/*   <Box>
+      {/*   <Box>
         <FormControlLabel
           control={
             <Switch

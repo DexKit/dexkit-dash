@@ -152,8 +152,6 @@ import Box from '@material-ui/core/Box';
 // };
 
 const UserInfo = (props: any) => {
-  return (
-    <Box></Box>
-  );
-}
+  return <Box></Box>;
+};
 export default UserInfo;

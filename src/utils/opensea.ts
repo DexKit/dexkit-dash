@@ -10,7 +10,10 @@ const RINKEBY_API_CONFIG = {
 };
 
 export async function getChainId(provider: any) {
-  return provider.request({method: 'eth_chainId'});
+  if (provider) {
+    return provider.request({method: 'eth_chainId'});
+  }
+  return null;
 }
 
 export async function getOpenSeaPort(provider: any) {
@@ -20,14 +23,13 @@ export async function getOpenSeaPort(provider: any) {
     apiKey: process.env.REACT_APP_OPENSEA_API_KEY,
   };
 
-  let chainId = await getChainId(provider);
+  const chainId = await getChainId(provider);
 
   if (chainId == RINKEBY_NETWORK) {
     config = RINKEBY_API_CONFIG;
   }
 
-
-  let port = new OpenSeaPort(provider, config);
+  const port = new OpenSeaPort(provider, config);
 
   return port;
 }

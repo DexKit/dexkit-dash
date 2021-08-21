@@ -1,14 +1,11 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Collapse,
   Icon,
   IconButton,
   ListItem,
   ListItemText,
+  ListItemIcon,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalItem from './VerticalItem';
@@ -24,6 +21,7 @@ import {ReactComponent as ZRXprotocolLogo} from 'assets/images/0x.svg';
 import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
 import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
 import IconComponent from '../Icon';
+import CustomIcon from 'shared/components/CustomIcon';
 
 const needsToBeOpened = (pathname: string, item: NavItemProps): boolean => {
   if (pathname) {
@@ -67,9 +65,9 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   history,
   level,
 }) => {
-  const classes = useStyles({ level });
-  const { theme } = useContext<AppContextPropsType>(AppContext);
-  const { pathname } = location;
+  const classes = useStyles({level});
+  const {theme} = useContext<AppContextPropsType>(AppContext);
+  const {pathname} = location;
   const [open, setOpen] = useState(() => needsToBeOpened(pathname, item));
 
   useEffect(() => {
@@ -84,32 +82,34 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   const getIcon = (icon: string | undefined) => {
     switch (icon) {
       case 'uniswap':
-        return   <UniswapLogo />
+        return <UniswapLogo />;
       case 'zrxprotocol':
-        return  <ZRXprotocolLogo/>
+        return <ZRXprotocolLogo />;
       case 'sushiswap':
-          return  <SushiLogo/>
+        return <SushiLogo />;
       case 'balancer':
-          return  <BalancerLogo/>
-    
-      default:
-       return icon;
-    }
-  }
+        return <BalancerLogo />;
 
+      default:
+        return icon;
+    }
+  };
 
   return (
     <>
-      <ListItem
-        button
-        component='li'
-        className={clsx(classes.navItem, open && 'open')}
-        onClick={handleClick}>
-        <Box component='span' mr={6}>
-          <IconComponent icon={item.icon} classes={classes} />
-        </Box>
+      <ListItem button component='li' selected={open} onClick={handleClick}>
+        <ListItemIcon>
+          {item.customIcon ? (
+            <CustomIcon
+              icon={item.icon as string}
+              className={open ? classes.svgActive : undefined}
+            />
+          ) : (
+            <IconComponent icon={item.icon} classes={classes} />
+          )}
+        </ListItemIcon>
         <ListItemText
-          classes={{ primary: clsx('nav-item-text', classes.listItemText) }}
+          classes={{primary: clsx('nav-item-text', classes.listItemText)}}
           primary={<IntlMessages id={item.messageId} />}
         />
         <Box p={0} clone>
@@ -118,8 +118,8 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
               {open
                 ? 'expand_more'
                 : theme.direction === 'ltr'
-                  ? 'chevron_right'
-                  : 'chevron_left'}
+                ? 'chevron_right'
+                : 'chevron_left'}
             </Icon>
           </IconButton>
         </Box>

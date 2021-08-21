@@ -1,16 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {makeStyles, Grid, Box, Button, TextField} from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  Box,
+  Button,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import {ArrowDownwardOutlined} from '@material-ui/icons';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {OrderSide, Token} from 'types/app';
-import SelectToken from './SelectToken';
+import SelectTokenV2 from './SelectTokenV2';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
@@ -26,7 +33,9 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import SelectTokenDialog from './Modal/SelectTokenDialog';
+import {Skeleton} from '@material-ui/lab';
 
 interface Props {
   chainId: number | undefined;
@@ -73,14 +82,6 @@ const MarketForm: React.FC<Props> = (props) => {
       [theme.breakpoints.down('sm')]: {
         marginTop: theme.spacing(5),
         marginBottom: theme.spacing(5),
-      },
-    },
-    btnPrimary: {
-      backgroundColor: theme.palette.primary.main,
-      color: 'text.primary',
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-        color: 'text.primary',
       },
     },
     textRes: {
@@ -271,8 +272,8 @@ const MarketForm: React.FC<Props> = (props) => {
   };
 
   let errorMessage = null;
-  let disabled = false;
-  let notConnected = web3State !== Web3State.Done;
+  const disabled = false;
+  const notConnected = web3State !== Web3State.Done;
 
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
@@ -305,212 +306,236 @@ const MarketForm: React.FC<Props> = (props) => {
     )} Network in your wallet`;
   }
   const {usdFormatter} = useUSDFormatter();
+
+  const [selectTo, setSelectTo] = useState('');
+  const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
+
+  const handleSelectTokenTo = useCallback(() => {
+    setSelectTo('to');
+    setShowSelectTokenDialog(true);
+  }, [onChangeToken]);
+
+  const handleSelectTokenFrom = useCallback(() => {
+    setSelectTo('from');
+    setShowSelectTokenDialog(true);
+  }, [onChangeToken]);
+
+  const handleSelectToken = useCallback(
+    (token: Token) => {
+      setShowSelectTokenDialog(false);
+      if (selectTo == 'to') {
+        onChangeToken(token, 'to');
+      } else if (selectTo === 'from') {
+        onChangeToken(token, 'from');
+      }
+    },
+    [selectTo, onChangeToken],
+  );
+
+  const getTokens = useCallback(
+    (target: string) => {
+      if (target === 'to') {
+        return select1;
+      } else if (target === 'from') {
+        return web3State === Web3State.Done && select0.length > 0
+          ? select0
+          : select1;
+      }
+
+      return [];
+    },
+    [web3State, select0, select1],
+  );
+
+  const handleSelectTokenDialogClose = useCallback(() => {
+    setSelectTo('');
+    setShowSelectTokenDialog(false);
+  }, []);
+
   return (
-    <Box>
-      <form noValidate autoComplete='off'>
-        <Box className={classes.boxContainer}>
-          <GridContainer>
-            {account && (
+    <>
+      <SelectTokenDialog
+        open={showSelectTokenDialog}
+        tokens={getTokens(selectTo)}
+        onSelectToken={handleSelectToken}
+        onClose={handleSelectTokenDialogClose}
+      />
+      <Box>
+        <form noValidate autoComplete='off'>
+          <Box>
+            <Grid container spacing={4}>
               <Grid item xs={12}>
+                <Typography
+                  onClick={setMax}
+                  variant='body2'
+                  color='textSecondary'
+                  align='right'>
+                  {account ? (
+                    <>
+                      ${tokenBalance?.valueInUsd?.toFixed(2) || 0} (
+                      {tokenBalance?.value?.toFixed(4) || 0}
+                      {tokenBalance?.currency?.symbol || ''})
+                    </>
+                  ) : (
+                    <Skeleton width={'20%'} />
+                  )}
+                </Typography>
+              </Grid>
+              <Grid item xs={3} sm={3}>
+                <SelectTokenV2
+                  id={'marketSel0'}
+                  label={'Your Coins'}
+                  selected={tokenFrom}
+                  disabled={disabled}
+                  onClick={handleSelectTokenFrom}
+                />
+              </Grid>
+              <Grid item xs={9} sm={9}>
+                <TextField
+                  variant='outlined'
+                  type='number'
+                  value={amountFrom}
+                  fullWidth
+                  label={<IntlMessages id='app.youSend' />}
+                  onChange={(e) => onChangeFrom(e)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end' style={{fontSize: '13px'}}>
+                        {priceQuoteFrom && (
+                          <>
+                            ≈
+                            <i>
+                              {' '}
+                              {usdFormatter.format(
+                                Number(priceQuoteFrom?.price) *
+                                  Number(amountFrom),
+                              )}
+                            </i>
+                          </>
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+
+              <Grid xs={12}>
                 <Box
                   mb={2}
                   color='grey.400'
-                  textAlign='right'
+                  textAlign='center'
+                  onClick={switchTokens}
                   className={classes.textRes}>
-                  <span onClick={setMax} className={classes.amountTotal}>
-                    {`$${tokenBalance?.valueInUsd?.toFixed(2) || 0} (${
-                      tokenBalance?.value?.toFixed(4) || 0
-                    } ${tokenBalance?.currency?.symbol || ''})`}
-                  </span>
+                  <ArrowDownwardOutlined />
                 </Box>
               </Grid>
-            )}
-            {/*errorMessage && (
+              <Grid item xs={3} md={3}>
+                {select1.length > 0 && (
+                  <SelectTokenV2
+                    id={'marketSel1'}
+                    selected={tokenTo}
+                    disabled={disabled}
+                    onClick={handleSelectTokenTo}
+                  />
+                )}
+              </Grid>
+              <Grid item xs={9} md={9}>
+                <TextField
+                  variant='outlined'
+                  className={classes.toText}
+                  fullWidth
+                  label={<IntlMessages id='app.youReceive' />}
+                  value={amountTo}
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                      <InputAdornment position='end' style={{fontSize: '13px'}}>
+                        {priceQuoteTo && (
+                          <>
+                            ≈
+                            <i>
+                              {' '}
+                              {usdFormatter.format(
+                                Number(priceQuoteTo?.price) * Number(amountTo),
+                              )}
+                            </i>
+                          </>
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid xs={12} md={12}>
+                <Box display={'flex'} justifyContent={'space-evenly'}>
+                  {priceQuoteTo && (
+                    <Box>
+                      <p>
+                        1 {tokenTo?.symbol.toUpperCase()}{' '}
+                        {priceQuoteTo && (
+                          <>
+                            ≈
+                            <i>
+                              {' '}
+                              {usdFormatter.format(Number(priceQuoteTo?.price))}
+                            </i>
+                          </>
+                        )}
+                      </p>
+                    </Box>
+                  )}
+                  {priceQuoteFrom && (
+                    <Box>
+                      <p>
+                        1 {tokenFrom?.symbol.toUpperCase()}{' '}
+                        {priceQuoteFrom && (
+                          <>
+                            ≈
+                            <i>
+                              {' '}
+                              {usdFormatter.format(
+                                Number(priceQuoteFrom?.price),
+                              )}
+                            </i>
+                          </>
+                        )}
+                      </p>
+                    </Box>
+                  )}
+                </Box>
+              </Grid>
               <Grid item xs={12}>
-                <Box mb={2} fontSize='large' textAlign='center'>
-                  {errorMessage}
-                </Box>
+                {!notConnected && (
+                  <Button
+                    fullWidth
+                    size='large'
+                    variant='contained'
+                    color='primary'
+                    onClick={handleTrade}
+                    disabled={
+                      (tokenBalance?.value || 0) < (amountFrom || 0) ||
+                      !!errorMessage ||
+                      amountTo === 0 ||
+                      web3State !== Web3State.Done
+                    }>
+                    {errorMessage && account ? (
+                      errorMessage
+                    ) : (
+                      <>
+                        <Box fontSize='large' fontWeight='bold'>
+                          Trade
+                        </Box>
+                      </>
+                    )}
+                  </Button>
+                )}
+                {notConnected && connectButton}
               </Grid>
-            )*/}
-
-            <Grid
-              style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
-              item
-              xs={12}
-              md={6}>
-              <TextField
-                variant='outlined'
-                type='number'
-                value={amountFrom}
-                fullWidth
-                label={<IntlMessages id='app.youSend' />}
-                onChange={(e) => onChangeFrom(e)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end' style={{fontSize: '13px'}}>
-                      {priceQuoteFrom && (
-                        <>
-                          ≈
-                          <i>
-                            {' '}
-                            {usdFormatter.format(
-                              Number(priceQuoteFrom?.price) *
-                                Number(amountFrom),
-                            )}
-                          </i>
-                        </>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              />
             </Grid>
-
-            <Grid
-              style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
-              item
-              xs={12}
-              md={6}>
-              <SelectToken
-                id={'marketSel0'}
-                label={web3State === Web3State.Done ? 'Your Coins' : ''}
-                limitCoins={select0.length ? true : false}
-                selected={tokenFrom}
-                options={(web3State === Web3State.Done && select0.length ) ? select0 : select1}
-                disabled={disabled}
-                onChange={($token) => {
-                  onChangeToken($token, 'from');
-                }}
-              />
-            </Grid>
-
-            <Grid style={{padding: 0, marginTop: 4}} item xs={12} md={6}>
-              <Box
-                mb={2}
-                color='grey.400'
-                textAlign='center'
-                onClick={switchTokens}
-                className={classes.textRes}>
-                <ArrowDownwardOutlined />
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6} />
-
-            <Grid
-              style={{paddingTop: 4, paddingRight: 8, paddingBottom: 4}}
-              item
-              xs={12}
-              md={6}>
-              <TextField
-                variant='outlined'
-                className={classes.toText}
-                fullWidth
-                label={<IntlMessages id='app.youReceive' />}
-                value={amountTo}
-                InputProps={{
-                  readOnly: true,
-                  endAdornment: (
-                    <InputAdornment position='end' style={{fontSize: '13px'}}>
-                      {priceQuoteTo && (
-                        <>
-                          ≈
-                          <i>
-                            {' '}
-                            {usdFormatter.format(
-                              Number(priceQuoteTo?.price) * Number(amountTo),
-                            )}
-                          </i>
-                        </>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid
-              style={{paddingTop: 4, paddingLeft: 8, paddingBottom: 4}}
-              item
-              xs={12}
-              md={6}>
-              <SelectToken
-                id={'marketSel1'}
-                selected={tokenTo}
-                options={select1}
-                disabled={disabled}
-                onChange={($token) => {
-                  onChangeToken($token, 'to');
-                }}
-              />
-            </Grid>
-            <Grid xs={12} md={12}>
-              <Box display={'flex'} justifyContent={'space-evenly'}>
-                {priceQuoteTo && (
-                  <Box>
-                    <p>
-                      1 {tokenTo?.symbol.toUpperCase()}{' '}
-                      {priceQuoteTo && (
-                        <>
-                          ≈
-                          <i>
-                            {' '}
-                            {usdFormatter.format(Number(priceQuoteTo?.price))}
-                          </i>
-                        </>
-                      )}
-                    </p>
-                  </Box>
-                )}
-                {priceQuoteFrom && (
-                  <Box>
-                    <p>
-                      1 {tokenFrom?.symbol.toUpperCase()}{' '}
-                      {priceQuoteFrom && (
-                        <>
-                          ≈
-                          <i>
-                            {' '}
-                            {usdFormatter.format(Number(priceQuoteFrom?.price))}
-                          </i>
-                        </>
-                      )}
-                    </p>
-                  </Box>
-                )}
-              </Box>
-            </Grid>
-          </GridContainer>
-        </Box>
-      </form>
-
-      {!notConnected && (
-        <Button
-          className={classes.btnPrimary}
-          fullWidth
-          size='large'
-          variant='contained'
-          color='primary'
-          onClick={handleTrade}
-          disabled={
-            (tokenBalance?.value || 0) < (amountFrom || 0) ||
-            !!errorMessage ||
-            amountTo === 0 ||
-            web3State !== Web3State.Done
-          }>
-          {errorMessage && account ? (
-            errorMessage
-          ) : (
-            <>
-              <Box fontSize='large' fontWeight='bold'>
-                Trade
-              </Box>
-            </>
-          )}
-        </Button>
-      )}
-      {notConnected && connectButton}
-    </Box>
+          </Box>
+        </form>
+      </Box>
+    </>
   );
 };
 

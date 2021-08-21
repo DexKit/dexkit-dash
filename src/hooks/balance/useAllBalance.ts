@@ -24,7 +24,6 @@ export const useAllBalance = (defaultAccount?: string) => {
   useEffect(() => {
     if (account) {
       setLoading(true);
-
       client
         .query<GetAllMyBalance, GetAllMyBalanceVariables>({
           query: BITQUERY_ALL_BALANCE_INFO,
@@ -36,18 +35,25 @@ export const useAllBalance = (defaultAccount?: string) => {
           const tokensmeta_eth = balances.data.ethereum?.address[0].balances
             ?.map((t) => t.currency?.address?.toLowerCase() || '')
             ?.filter((e) => e !== '-')
-            ?.map((a) => ({network: EthereumNetwork.ethereum, address: a}));
+            ?.map((a) => {
+              return {network: EthereumNetwork.ethereum, address: a};
+            });
 
           const tokensmeta_bnb = balances.data.bsc?.address[0].balances
             ?.map((t) => t.currency?.address?.toLowerCase() || '')
             ?.filter((e) => e !== '-')
-            ?.map((a) => ({network: EthereumNetwork.bsc, address: a}));
-
+            ?.map((a) => {
+              return {network: EthereumNetwork.bsc, address: a};
+            });
           const tokensmeta = (tokensmeta_bnb ?? []).concat(
             tokensmeta_eth ?? [],
           );
 
-          if (tokensmeta.length) {
+          if (
+            tokensmeta.length ||
+            balances.data.ethereum?.address[0].balances?.length ||
+            balances.data.bsc?.address[0].balances?.length
+          ) {
             getTokens(tokensmeta)
               .then((coingeckoList) => {
                 const dataFn = balances.data.ethereum?.address[0].balances?.map(
@@ -57,8 +63,11 @@ export const useAllBalance = (defaultAccount?: string) => {
                         ? 'eth'
                         : t?.currency?.address?.toLowerCase();
 
-                    return {
-                      currency: {...t.currency, address: addr},
+                    return <MyBalances>{
+                      currency: {
+                        ...t.currency,
+                        address: addr,
+                      },
                       network: EthereumNetwork.ethereum,
                       value: t.value,
                       // enquanto não vem a solução pela bitquery
@@ -72,12 +81,15 @@ export const useAllBalance = (defaultAccount?: string) => {
                 const dataFnBNB = balances.data.bsc?.address[0].balances?.map(
                   (t) => {
                     const addr =
-                      t.currency?.address === '-'
+                      t.currency?.address == '-'
                         ? 'bnb'
                         : t?.currency?.address?.toLowerCase();
 
-                    return {
-                      currency: {...t.currency, address: addr},
+                    return <MyBalances>{
+                      currency: {
+                        ...t.currency,
+                        address: addr,
+                      },
                       network: EthereumNetwork.bsc,
                       value: t.value,
                       // enquanto não vem a solução pela bitquery
@@ -100,9 +112,10 @@ export const useAllBalance = (defaultAccount?: string) => {
         .catch((e) => {
           setError(e);
           setLoading(false);
-        });
+        })
+        .finally(() => setLoading(false));
     } else {
-      setLoading(true);
+      setLoading(false);
       setError(undefined);
       setData([]);
     }

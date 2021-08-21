@@ -1,10 +1,7 @@
-
-
-
 export function getWindowUrl() {
-  let protocol = window.location.protocol
-  let hostname = window.location.hostname
-  let port = window.location.port
-  
-  return `${protocol}://${hostname}${port ? ':'+port : ''}`;
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+
+  return `${protocol}://${hostname}${port ? ':' + port : ''}`;
 }

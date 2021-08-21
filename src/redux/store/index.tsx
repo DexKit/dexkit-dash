@@ -2,8 +2,8 @@ import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import reducers from '../reducers';
-import { save, load } from "redux-localstorage-simple"
-import { ActionType } from 'typesafe-actions';
+import {save, load} from 'redux-localstorage-simple';
+import {ActionType} from 'typesafe-actions';
 
 import * as actions from '../actions';
 
@@ -21,7 +21,11 @@ export type AppDispatch = typeof store.dispatch;
 export type AppState = ReturnType<typeof rootReducer>;
 
 function configureStore() {
-  const middleware = [thunk, routerMiddleware(history), save({ ignoreStates: ['blockchain'] })];
+  const middleware = [
+    thunk,
+    routerMiddleware(history),
+    save({ignoreStates: ['blockchain']}),
+  ];
 
   const enhancers = [];
   const windowIfDefined =
@@ -29,16 +33,15 @@ function configureStore() {
   if (windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__) {
     enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__());
   }
-  const createStoreWithMiddleware =  compose(applyMiddleware(...middleware), ...enhancers)(createStore)
+  const createStoreWithMiddleware = compose(
+    applyMiddleware(...middleware),
+    ...enhancers,
+  )(createStore);
 
-
-  return createStoreWithMiddleware(
-    rootReducer,
-    load(),
-  );
+  return createStoreWithMiddleware(rootReducer, load());
 }
 
-const store = configureStore()
+const store = configureStore();
 
 export default store;
 

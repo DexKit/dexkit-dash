@@ -12,7 +12,6 @@ import {AppState} from '../../../../redux/store';
 import AppLogo from 'shared/components/AppLogo';
 // import WalletInfo from 'shared/components/WalletInfo';
 
-
 interface AppSidebarProps {
   position?: 'left' | 'bottom' | 'right' | 'top' | undefined;
 }
@@ -27,7 +26,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
     dispatch(toggleNavCollapsed());
   };
   const classes = useStyles();
-  let sidebarClasses = classes.sidebarStandard;
+  const sidebarClasses = classes.sidebarStandard;
   return (
     <>
       <Hidden lgUp>
@@ -38,7 +37,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({position = 'left'}) => {
           style={{position: 'absolute'}}>
           <Box height='100%' className={classes.container}>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-            <Box
+              <Box
                 style={{display: 'flex'}}
                 justifyContent='center'
                 alignContent='center'>

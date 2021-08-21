@@ -5,12 +5,12 @@ import TableBody from '@material-ui/core/TableBody';
 import {makeStyles, Typography, Link} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import { FavoriteCoin } from 'redux/_ui/reducers';
+import {FavoriteCoin} from 'redux/_ui/reducers';
 import AppTableContainer from '@crema/core/AppTableContainer';
 
 import {Link as RouterLink} from 'react-router-dom';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { CoinItemCoinGecko } from 'types/coingecko';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {CoinItemCoinGecko} from 'types/coingecko';
 
 const useStyles = makeStyles(() => ({
   borderBottomClass: {
@@ -21,21 +21,19 @@ const useStyles = makeStyles(() => ({
 interface FavoriteCoinsTableProps {
   favoriteCoins: FavoriteCoin[];
   marketData?: CoinItemCoinGecko[];
-  type: 'pair' | 'token'
+  type: 'pair' | 'token';
 }
 
 const FavoriteCoinsTable: React.FC<FavoriteCoinsTableProps> = ({
   favoriteCoins,
   marketData,
- type,
+  type,
 }) => {
   const classes = useStyles();
-  const coinsWithMarketData = favoriteCoins.map(f => { 
-
-    const market = marketData && marketData.find(m=> m.id === f.id);
-    return {f, market: market }
+  const coinsWithMarketData = favoriteCoins.map((f) => {
+    const market = marketData && marketData.find((m) => m.id === f.id);
+    return {f, market: market};
   });
-
 
   return (
     <AppTableContainer>
@@ -44,19 +42,27 @@ const FavoriteCoinsTable: React.FC<FavoriteCoinsTableProps> = ({
           <TableHeading />
         </TableHead>
         <TableBody>
-          {coinsWithMarketData.
-              map(row => (
-                <TableItem key={row.f.name} row={row.f} marketData={row.market} type={type}/>
-              ))}
+          {coinsWithMarketData.map((row) => (
+            <TableItem
+              key={row.f.name}
+              row={row.f}
+              marketData={row.market}
+              type={type}
+            />
+          ))}
         </TableBody>
       </Table>
-      {(favoriteCoins && favoriteCoins.length === 0) &&
-      <>
-          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
-                        You don't have favorite coins yet        
+      {favoriteCoins && favoriteCoins.length === 0 && (
+        <>
+          <Typography
+            variant='h5'
+            display={'block'}
+            align={'center'}
+            color={'primary'}>
+            You don't have favorite coins yet
           </Typography>
-       
-          </>}
+        </>
+      )}
     </AppTableContainer>
   );
 };

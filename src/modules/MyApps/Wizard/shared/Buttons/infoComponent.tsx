@@ -1,16 +1,19 @@
-import { InputAdornment } from '@material-ui/core'
-import React, { FC } from 'react'
-import { InfoButtonComponent, PopOverProps } from 'shared/components/ActionsButtons/infoButtonComponent'
+import {InputAdornment} from '@material-ui/core';
+import React, {FC} from 'react';
+import {
+  InfoButtonComponent,
+  PopOverProps,
+} from 'shared/components/ActionsButtons/infoButtonComponent';
 
 interface Props {
   text?: string;
 }
 export const InfoComponent: FC<Props> = (props) => (
-  <InputAdornment position="end">
+  <InputAdornment position='end'>
     <InfoButtonComponent
       popoverProps={
         {
-          anchorReference: "anchorEl",
+          anchorReference: 'anchorEl',
           anchorOrigin: {
             vertical: 'top',
             horizontal: 'left',
@@ -18,9 +21,10 @@ export const InfoComponent: FC<Props> = (props) => (
           transformOrigin: {
             vertical: 'bottom',
             horizontal: 'left',
-          }
+          },
         } as PopOverProps
       }
-      text={props.text} />
+      text={props.text}
+    />
   </InputAdornment>
-)
+);

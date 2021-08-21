@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { setupCache } from 'axios-cache-adapter'
+import {setupCache} from 'axios-cache-adapter';
 
 // Create `axios-cache-adapter` instance
 const cache = setupCache({
-  maxAge: 15 * 60 * 1000
-})
+  maxAge: 15 * 60 * 1000,
+});
 
 export default axios.create({
-
   adapter: cache.adapter,
 
   headers: {
@@ -18,8 +17,7 @@ export default axios.create({
   cache: {
     exclude: {
       // Only exclude PUT, PATCH and DELETE methods from cache
-      methods: ['post', 'put', 'patch', 'delete']
-    }
+      methods: ['post', 'put', 'patch', 'delete'],
+    },
   },
-
 });

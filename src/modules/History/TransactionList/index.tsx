@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
@@ -8,11 +8,10 @@ import ErrorView from 'modules/Common/ErrorView';
 import TransactionTable from './TransactionTable';
 import LoadingTable from 'modules/Common/LoadingTable';
 import PageTitle from 'shared/components/PageTitle';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { truncateAddress } from 'utils/text';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {truncateAddress} from 'utils/text';
 import NetworkSwitcher from 'shared/components/NetworkSwitcher';
-
 
 type Params = {
   address: string;
@@ -28,15 +27,15 @@ const TransactionList: React.FC<Props> = (props) => {
   const {address, networkName} = params;
   const history = useHistory();
   const account = useDefaultAccount();
-  useEffect(()=> {
-    if(account && (account !== address)){
-        history.push(`/${networkName}/history/transaction/list/${account}`)
+  useEffect(() => {
+    if (account && account !== address) {
+      history.push(`/${networkName}/history/transaction/list/${account}`);
     }
-  }, [account])
+  }, [account]);
 
   const onSwitchNetwork = (n: EthereumNetwork) => {
-    history.push(`/${n}/history/transaction/list/${account}`)
-  }
+    history.push(`/${n}/history/transaction/list/${account}`);
+  };
 
   const classes = useStyles();
   const {
@@ -50,22 +49,20 @@ const TransactionList: React.FC<Props> = (props) => {
     onChangeRowsPerPage,
   } = useTransactionList({address, networkName});
 
- 
   return (
     <Box pt={{xl: 4}}>
       <Box display={'flex'}>
-     
-      <PageTitle
-        breadcrumbs={{
-          history: [
-            {url:'/', name: 'Dashboard'},
-            {url: '/dashboard/wallet', name: 'Wallet'}
-          ],
-          active: {name: 'Transaction History'}
-        }}
-        title={{name: `Transaction History: ${truncateAddress(address)}`}}
-        networkSwitcher={{networkName, onClick: onSwitchNetwork}}
-      />
+        <PageTitle
+          breadcrumbs={{
+            history: [
+              {url: '/', name: 'Dashboard'},
+              {url: '/dashboard/wallet', name: 'Wallet'},
+            ],
+            active: {name: 'Transaction History'},
+          }}
+          title={{name: `Transaction History: ${truncateAddress(address)}`}}
+          networkSwitcher={{networkName, onClick: onSwitchNetwork}}
+        />
       </Box>
 
       <GridContainer>

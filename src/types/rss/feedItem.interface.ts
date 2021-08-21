@@ -1,12 +1,12 @@
-import { FeedEnclosure } from "./feedEnclosure.interface";
+import {FeedEnclosure} from './feedEnclosure.interface';
 
-export interface FeedItem{
+export interface FeedItem {
   creator?: string;
-  title?: string,
+  title?: string;
   link?: string;
   pubDate?: Date;
   enclosure?: FeedEnclosure;
-  "dc:creator"?: string;
+  'dc:creator'?: string;
   content?: string;
   contentSnippet?: string;
   guid?: string;

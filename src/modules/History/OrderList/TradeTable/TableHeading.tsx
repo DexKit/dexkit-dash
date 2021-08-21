@@ -53,7 +53,7 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.buyAmount' />
       </TableCell>
-      
+
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.sellAmount' />
       </TableCell>

@@ -85,8 +85,8 @@ export interface TransactionDataNew {
   totalValue: string;
   amount: string;
   total: string;
-  pair: string,
-  poolVariation: number
+  pair: string;
+  poolVariation: number;
 }
 
 export interface InfoWidgets {

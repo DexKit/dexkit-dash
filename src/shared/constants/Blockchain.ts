@@ -81,6 +81,8 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
   switch (id) {
     case ChainId.Mainnet:
       return 'ETH';
+    case ChainId.Rinkeby:
+      return 'Rinkeby';
     case ChainId.Matic:
       return 'MATIC';
     case ChainId.Kovan:

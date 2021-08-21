@@ -43,8 +43,8 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
     if (assets) {
       const defis: CoinProps[] = [];
 
-      for (let asset of assets) {
-        for (let coin of asset?.coinsData || []) {
+      for (const asset of assets) {
+        for (const coin of asset?.coinsData || []) {
           defis.push(coin);
         }
       }

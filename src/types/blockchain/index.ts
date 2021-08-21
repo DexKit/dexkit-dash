@@ -28,9 +28,17 @@ export enum Web3State {
 /**
  * To distinguish between BTC, DOGE and ETH like networks: Matic, BSC, Avalanche
  */
-export enum AccountType {
-  EVM = 'EVM',
-  UTXO = 'UTXO',
+export enum WalletType {
+  evm = 'evm',
+}
+
+export enum SupportedNetworkType{
+  bitcoin = 'bitcoin',
+  evm = 'evm',
+  dogecoin = 'dogecoin',
+  cardano = 'cardano',
+  dash = 'dash',
+  eos = 'eos',
 }
 
 export enum Network {

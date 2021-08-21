@@ -26,7 +26,7 @@ import {OpenSeaPort} from 'opensea-js';
 import {useWeb3} from 'hooks/useWeb3';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {getUnixDays} from 'modules/NFTWallet/utils';
+import {getFirstOrder, getUnixDays} from 'modules/NFTWallet/utils';
 import {getOpenSeaPort} from 'utils/opensea';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     maxWidth: '100%',
     maxHeigth: '100%',
+  },
+  tokenImage: {
+    height: theme.spacing(6),
+    width: theme.spacing(6),
   },
 }));
 
@@ -53,7 +57,7 @@ const TokenBalanceSpan = (props: TokenBalanceSpanProps) => {
   useEffect(() => {
     (async () => {
       if (token) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const seaport = await getOpenSeaPort(provider);
 
@@ -110,7 +114,6 @@ interface OfferParams {
   expiration: number;
   amount: number;
   tokenAddress: string;
-  quantity: number;
 }
 
 interface Props {
@@ -155,7 +158,11 @@ export default (props: Props) => {
   }, []);
 
   const handleAmountChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    if (parseInt(e.target.value) < 0) {
+      setAmount('0');
+    } else {
+      setAmount(e.target.value);
+    }
   }, []);
 
   const handleQuantityChange = useCallback(
@@ -184,9 +191,8 @@ export default (props: Props) => {
       amount: parseFloat(amount),
       tokenAddress: selectedToken?.address || '',
       expiration,
-      quantity: parseInt(quantity),
     });
-  }, [amount, quantity, selectedToken, expiration]);
+  }, [amount, selectedToken, expiration]);
 
   const handleMaxBalance = useCallback(async () => {
     if (selectedToken && userAddress) {
@@ -242,7 +248,7 @@ export default (props: Props) => {
           ) : null}
         </Grid>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography variant='body1' color='textSecondary'>
@@ -271,10 +277,32 @@ export default (props: Props) => {
                   {asset?.collection?.name}
                 </Typography>
                 <Typography variant='h5'>{asset?.name}</Typography>
+                {getFirstOrder(asset) ? (
+                  <Typography gutterBottom variant='h5'>
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      alignContent='center'>
+                      <img
+                        src={
+                          getFirstOrder(asset).payment_token_contract?.image_url
+                        }
+                        className={classes.tokenImage}
+                      />
+                      <span>
+                        {toTokenUnitAmount(
+                          getFirstOrder(asset)?.current_price,
+                          getFirstOrder(asset)?.payment_token_contract
+                            ?.decimals,
+                        ).toNumber()}
+                      </span>
+                    </Box>
+                  </Typography>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               label='Quantity'
               size='medium'
@@ -287,7 +315,7 @@ export default (props: Props) => {
               ].toString()}
               fullWidth
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Grid alignItems='center' container spacing={2}>
               <Grid item xs={12} sm={4}>

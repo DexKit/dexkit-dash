@@ -1,15 +1,15 @@
-import { 
-  Avatar, 
+import {
+  Avatar,
   Button,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-} from "@material-ui/core";
-import React from "react";
+} from '@material-ui/core';
+import React from 'react';
 import {makeStyles} from '@material-ui/core';
-import { BigNumber } from "@0x/utils";
-import { CremaTheme } from "types/AppContextPropsType";
+import {BigNumber} from '@0x/utils';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -24,9 +24,14 @@ interface KitProps {
   icon: string;
   name: string;
   button: {
-    color: "inherit" | "primary" | "secondary" | "default" | undefined;
+    color: 'inherit' | 'primary' | 'secondary' | 'default' | undefined;
     title: string;
-    action: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, globalThis.MouseEvent>) => void | undefined;
+    action: (
+      event: React.MouseEvent<
+        HTMLAnchorElement | HTMLButtonElement,
+        globalThis.MouseEvent
+      >,
+    ) => void | undefined;
   };
   value: number | string | BigNumber;
   color?: string;
@@ -34,25 +39,26 @@ interface KitProps {
 }
 
 export const Kit: React.FC<KitProps> = (props) => {
-  const { name, value, button, bgColor, icon } = props;
+  const {name, value, button, bgColor, icon} = props;
   const classes = useStyles({bgColor});
   return (
     <ListItem>
-      
       <ListItemAvatar>
-      <Avatar className={classes.root}>
+        <Avatar className={classes.root}>
           <img alt='' src={icon} width='35px' height='35px' />
         </Avatar>
       </ListItemAvatar>
 
       <ListItemText primary={name} secondary={`${value} KIT`} />
-      
+
       <ListItemSecondaryAction>
-        <Button variant="outlined" color={button.color} onClick={($e) => button.action($e)}>
+        <Button
+          variant='outlined'
+          color={button.color}
+          onClick={($e) => button.action($e)}>
           {button.title}
         </Button>
       </ListItemSecondaryAction>
-
     </ListItem>
   );
-}
+};

@@ -7,8 +7,10 @@ import {
   Typography,
   makeStyles,
   Button,
+  Link,
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
 
 import {
   deriveUserFromAddr,
@@ -92,16 +94,29 @@ export default (props: Props) => {
       </TableCell>
       <TableCell>
         {offer.expiration_time
-          ? moment.unix(offer.expiration_time).fromNow()
+          ? moment
+              .unix(offer.expiration_time)
+              .add(moment.duration({minutes: moment().utcOffset()}))
+              .fromNow()
           : null}
       </TableCell>
       {isSameAddress(offer.maker?.address, userAccountAddress || '') ? (
-        <TableCell>you</TableCell>
+        <TableCell>
+          <Link
+            component={RouterLink}
+            to={`/nfts/wallet/${offer?.maker?.address}`}>
+            you
+          </Link>
+        </TableCell>
       ) : (
         <TableCell>
-          {offer.maker?.user?.username
-            ? offer.maker?.user?.username
-            : deriveUserFromAddr(offer.maker?.address)}
+          <Link
+            component={RouterLink}
+            to={`/nfts/wallet/${offer?.maker?.address}`}>
+            {offer.maker?.user?.username
+              ? offer.maker?.user?.username
+              : deriveUserFromAddr(offer.maker?.address)}
+          </Link>
         </TableCell>
       )}
     </TableRow>

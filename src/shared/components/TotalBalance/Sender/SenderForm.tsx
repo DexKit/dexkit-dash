@@ -8,23 +8,28 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@material-ui/core';
 import clsx from 'clsx';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 
-import { isAddress } from '@ethersproject/address';
-
+import {isAddress} from '@ethersproject/address';
 
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import { useTransfer } from 'hooks/useTransfer';
+import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import {useTransfer} from 'hooks/useTransfer';
 
-import { useDispatch } from 'react-redux';
-import { useNetwork } from 'hooks/useNetwork';
-
+import {useDispatch} from 'react-redux';
+import {useNetwork} from 'hooks/useNetwork';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
+  amount?: number;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -46,47 +51,50 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   inputText: {
     fontFamily: Fonts.MEDIUM,
     width: '100%',
-  }
+  },
 }));
 
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-
-  const {account,  chainId} = useWeb3();
+  const {account, chainId} = useWeb3();
   const network = useNetwork();
   const {onTransfer} = useTransfer();
 
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>(String(props.amount || ''));
   const [address, setAddress] = useState<string>('');
-  const [selected, setSelected] = useState<GetMyBalance_ethereum_address_balances>(props.balances[0]||undefined);
+  const [
+    selected,
+    setSelected,
+  ] = useState<GetMyBalance_ethereum_address_balances>(
+    props.balances[0] || undefined,
+  );
 
   const handleCopy = async () => {
     const cpy: any = await navigator.clipboard.readText();
     setAddress(cpy);
-  }
-  
+  };
+
   const handleMax = async () => {
     if (selected && selected.value) {
       setAmount(selected.value.toString());
     }
-  }
+  };
 
   const handleToken = (idx: any) => {
     setSelected(props.balances[idx]);
-  }
+  };
 
   const handleSend = () => {
     if (account && selected && selected.currency) {
       try {
-
         if (selected.currency.address && selected.currency.name && chainId) {
           onTransfer(account, address, amount, {
             address: selected.currency.address,
             decimals: selected.currency.decimals,
             name: selected.currency.name,
             symbol: selected.currency.symbol,
-            chainId: chainId
+            chainId: chainId,
           });
         }
 
@@ -116,7 +124,7 @@ const SenderForm: React.FC<Props> = (props) => {
         console.log(e);
       }
     }
-  }
+  };
 
   return (
     <Box>
@@ -127,14 +135,18 @@ const SenderForm: React.FC<Props> = (props) => {
             native
             variant='outlined'
             onChange={(e) => handleToken(e.target.value)}
-            inputProps={ { name: 'Token', id:'token' } }
-          >
-          {
-            props?.balances?.map((balance, i) => {
-              return (<option defaultValue={balance?.currency?.name || ''} value={i} key={i}>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>)
-            })
-          }
-        </Select>
+            inputProps={{name: 'Token', id: 'token'}}>
+            {props?.balances?.map((balance, i) => {
+              return (
+                <option
+                  defaultValue={balance?.currency?.name || ''}
+                  value={i}
+                  key={
+                    i
+                  }>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>
+              );
+            })}
+          </Select>
         </Box>
 
         <Box mb={5}>
@@ -143,9 +155,12 @@ const SenderForm: React.FC<Props> = (props) => {
               mb={2}
               color='grey.400'
               textAlign='right'
-              className={classes.textRes}
-            >
-              { selected?.value ? `${selected.value.toFixed(6)} ${selected.currency?.symbol} ($${selected.valueInUsd?.toFixed(2)})` : `0` }
+              className={classes.textRes}>
+              {selected?.value
+                ? `${selected.value.toFixed(6)} ${
+                    selected.currency?.symbol
+                  } ($${selected.valueInUsd?.toFixed(2)})`
+                : `0`}
             </Box>
           }
           {/* <TextField
@@ -158,18 +173,20 @@ const SenderForm: React.FC<Props> = (props) => {
               className: classes.inputText,
             }}
           /> */}
-          <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-amount"><IntlMessages id='Amount' /></InputLabel>
+          <FormControl className={clsx(classes.inputText)} variant='outlined'>
+            <InputLabel htmlFor='outlined-adornment-amount'>
+              <IntlMessages id='Amount' />
+            </InputLabel>
             <OutlinedInput
-              id="outlined-adornment-amount"
+              id='outlined-adornment-amount'
               fullWidth
               type={'text'}
               label={<IntlMessages id='Amount' />}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={handleMax} edge="end">
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleMax} edge='end'>
                     <CallReceivedIcon />
                   </IconButton>
                 </InputAdornment>
@@ -179,18 +196,20 @@ const SenderForm: React.FC<Props> = (props) => {
         </Box>
 
         <Box mb={5}>
-          <FormControl className={clsx(classes.inputText)} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-to"><IntlMessages id='To' /></InputLabel>
+          <FormControl className={clsx(classes.inputText)} variant='outlined'>
+            <InputLabel htmlFor='outlined-adornment-to'>
+              <IntlMessages id='To' />
+            </InputLabel>
             <OutlinedInput
-              id="outlined-adornment-to"
+              id='outlined-adornment-to'
               fullWidth
               type={'text'}
               label={<IntlMessages id='To' />}
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={handleCopy} edge="end">
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleCopy} edge='end'>
                     <FileCopyIcon />
                   </IconButton>
                 </InputAdornment>
@@ -199,25 +218,29 @@ const SenderForm: React.FC<Props> = (props) => {
           </FormControl>
         </Box>
 
-        <Box textAlign="center" mb={5}>
-          <Button 
-            fullWidth 
-            style={{maxWidth: '60%'}} 
-            variant="contained" 
-            color="primary"
+        <Box textAlign='center' mb={5}>
+          <Button
+            fullWidth
+            style={{maxWidth: '60%'}}
+            variant='contained'
+            color='primary'
             onClick={handleSend}
-            disabled={!isAddress(address) || ((selected?.value||0) < parseFloat(amount)) || parseFloat(amount) == 0 || amount == ''}
-          >
-            {
-              address == '' || amount == '0' ? 'Send' : (
-                !isAddress(address) ? 'Invalid Address' : ((selected?.value||0) < parseFloat(amount) ? 'Insufficient funds' : 'Send')
-              )
-            }
+            disabled={
+              !isAddress(address) ||
+              (selected?.value || 0) < parseFloat(amount) ||
+              parseFloat(amount) == 0 ||
+              amount == ''
+            }>
+            {address == '' || amount == '0'
+              ? 'Send'
+              : !isAddress(address)
+              ? 'Invalid Address'
+              : (selected?.value || 0) < parseFloat(amount)
+              ? 'Insufficient funds'
+              : 'Send'}
           </Button>
         </Box>
-       
       </form>
-     
     </Box>
   );
 };

@@ -9,7 +9,7 @@ import TableItem from './TableItem';
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
-import { GetAffiliateTrades } from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 
 interface Props {
   transactionData: GetAffiliateTrades | undefined;
@@ -59,7 +59,9 @@ const TransactionTable: React.FC<Props> = ({
       },
     },
   }));
-  const data = transactionData?.ethereum?.transfers ? transactionData?.ethereum?.transfers : [];
+  const data = transactionData?.ethereum?.transfers
+    ? transactionData?.ethereum?.transfers
+    : [];
   const classes = useStyles();
 
   return (
@@ -71,12 +73,7 @@ const TransactionTable: React.FC<Props> = ({
           </TableHead>
           <TableBody>
             {data.length > 1 &&
-              data.map((item, i) => (
-                <TableItem
-                  key={i}
-                  data={item}
-                />
-              ))}
+              data.map((item, i) => <TableItem key={i} data={item} />)}
           </TableBody>
         </Table>
         {isLoading && <Loader />}

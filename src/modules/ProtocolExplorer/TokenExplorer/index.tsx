@@ -71,16 +71,23 @@ const TokenExplorer: React.FC<TokenProps> = (props) => {
           <TokenFilterProvider>
             <Grid item xs={12} md={12}>
               <Paper style={{padding: 10}}>
-                <TokenSearchByList type={'token'} exchangeName={exchange} networkName={networkName}/>
+                <TokenSearchByList
+                  type={'token'}
+                  exchangeName={exchange}
+                  networkName={networkName}
+                />
               </Paper>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TokenInfo address={baseAddress}  networkName={networkName}/>
+              <TokenInfo address={baseAddress} networkName={networkName} />
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TokenStatistics address={baseAddress} networkName={networkName}/>
+              <TokenStatistics
+                address={baseAddress}
+                networkName={networkName}
+              />
             </Grid>
 
             <Grid item xs={12} sm={12} md={12}>

@@ -4,8 +4,8 @@ import {useTokenList} from 'hooks/useTokenList';
 import usePagination from 'hooks/usePagination';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {toTokenUnitAmount} from '@0x/utils';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GET_CHAIN_FROM_NETWORK} from 'shared/constants/Blockchain';
 
 interface Props {
   address: string;
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const useOrderList = ({address, networkName}: Props) => {
-
   const tokenList = useTokenList(networkName);
   const currentChainId = GET_CHAIN_FROM_NETWORK(networkName);
 

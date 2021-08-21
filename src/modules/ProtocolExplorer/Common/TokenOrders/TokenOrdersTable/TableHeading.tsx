@@ -49,53 +49,40 @@ const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
 
   return (
     <TableRow className={classes.tableRowRoot}>
-    
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.timestamp' />
-        </TableCell>
-   
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.timestamp' />
+      </TableCell>
 
-    
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.type' />
-        </TableCell>
-    
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.type' />
+      </TableCell>
+
       {type === 'token' && (
-       
-          <TableCell align='left' className={classes.tableCellRoot}>
-            <IntlMessages id='app.pair' />
-          </TableCell>
-
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.pair' />
+        </TableCell>
       )}
 
-    
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.price' />
-        </TableCell>
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.price' />
+      </TableCell>
 
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.baseAmount' />
+      </TableCell>
 
-     
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.baseAmount' />
-        </TableCell>
- 
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.quoteAmount' />
+      </TableCell>
 
-     
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.quoteAmount' />
-        </TableCell>
-   
-    
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.total' />
-        </TableCell>
-
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.total' />
+      </TableCell>
 
       {exchange === EXCHANGE.ALL && (
-  
-          <TableCell align='left' className={classes.tableCellRoot}>
-            <IntlMessages id='app.exchange' />
-          </TableCell>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.exchange' />
+        </TableCell>
       )}
       <TableCell align='left' className={classes.tableCellRoot}></TableCell>
     </TableRow>

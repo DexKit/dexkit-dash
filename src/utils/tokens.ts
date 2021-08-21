@@ -20,7 +20,7 @@ export const tokenAmountInUnitsToBigNumber = (
 
 export const tokenAmountInUnits = (
   amount: BigNumber,
-  decimals: number = 18,
+  decimals = 18,
   toFixedDecimals = 2,
 ): string => {
   return tokenAmountInUnitsToBigNumber(amount, decimals).toFixed(
@@ -131,6 +131,8 @@ export const GET_NATIVE_COINS = () => {
       name: 'Ethereum',
       symbol: 'ETH',
       networkName: EthereumNetwork.ethereum,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     },
     {
       address: '',
@@ -138,6 +140,8 @@ export const GET_NATIVE_COINS = () => {
       name: 'Binance',
       symbol: 'BNB',
       networkName: EthereumNetwork.bsc,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
     },
   ];
 };

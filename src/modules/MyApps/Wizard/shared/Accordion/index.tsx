@@ -3,7 +3,7 @@ import React from 'react';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 export const Accordion = withStyles({
   root: {
@@ -39,7 +39,7 @@ export const AccordionSummary = withStyles({
     display: 'flex',
     alignContent: 'stretch',
     justifyContent: 'space-between',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   expanded: {},
 })(MuiAccordionSummary);
@@ -49,6 +49,6 @@ export const AccordionDetails = withStyles((theme) => ({
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 }))(MuiAccordionDetails);

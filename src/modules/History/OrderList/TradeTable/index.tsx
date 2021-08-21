@@ -34,7 +34,7 @@ const TradeTable: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  let paginatedRows: any = [];
+  const paginatedRows: any = [];
   const currentRow = currentPage * rowsPerPage;
 
   for (let i = currentRow; i < currentRow + rowsPerPage; i++) {

@@ -1,13 +1,11 @@
-import { Dispatch } from 'redux';
-import { AppActions } from 'types';
+import {Dispatch} from 'redux';
+import {AppActions} from 'types';
 
 import Api from '@crema/services/ApiConfig';
-import { BigNumber } from '@0x/utils';
-import { fetchStart, fetchSuccess, fetchError } from 'redux/actions';
-import { setAllKits, setAllTokens, setUserKits } from './actions';
-import { Kit } from 'types/models/Kit';
-
-
+import {BigNumber} from '@0x/utils';
+import {fetchStart, fetchSuccess, fetchError} from 'redux/actions';
+import {setAllKits, setAllTokens, setUserKits} from './actions';
+import {Kit} from 'types/models/Kit';
 
 export const onGetAllKits = () => {
   return (dispatch: Dispatch<AppActions>) => {
@@ -43,7 +41,7 @@ export const onGetAllTokens = () => {
         dispatch(fetchError(error.message));
       });
   };
-}
+};
 
 export const onGetUserKits = (kit_address: string | BigNumber) => {
   return (dispatch: Dispatch<AppActions>) => {
@@ -61,4 +59,4 @@ export const onGetUserKits = (kit_address: string | BigNumber) => {
         dispatch(fetchError(error.message));
       });
   };
-}
+};

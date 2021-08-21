@@ -1,6 +1,6 @@
 import React from 'react';
 import {BalanceCoins} from 'types/models/Crypto';
-import { ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {Box, Avatar, Tooltip, Fade, Link} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
@@ -10,9 +10,9 @@ import CoinsInfo from './CoinsInfo';
 import LoadingInfo from './LoadingInfo';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
-import { Token } from 'types/app';
-import { FavoriteButton } from 'shared/components/FavoriteButton';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {Token} from 'types/app';
+import {FavoriteButton} from 'shared/components/FavoriteButton';
 interface Props {
   data?: any;
   token: Token;
@@ -20,11 +20,12 @@ interface Props {
   networkName: EthereumNetwork;
 }
 
-
-
-const coinInfoFactory = (propsData: any, usdFormatter: any, token: Token): BalanceCoins[] => {
-
-  const dailyUSD = usdFormatter.format(propsData?.volume24Usd || 0)
+const coinInfoFactory = (
+  propsData: any,
+  usdFormatter: any,
+  token: Token,
+): BalanceCoins[] => {
+  const dailyUSD = usdFormatter.format(propsData?.volume24Usd || 0);
 
   return [
     {
@@ -49,7 +50,7 @@ const coinInfoFactory = (propsData: any, usdFormatter: any, token: Token): Balan
 
 const InfoToken: React.FC<Props> = (props) => {
   const {data, loading, networkName, token} = props;
-  const {usdFormatter}  = useUSDFormatter()
+  const {usdFormatter} = useUSDFormatter();
   const classes = useStyles();
   // const color = 'rgb(78, 228, 78)';
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
@@ -76,20 +77,17 @@ const InfoToken: React.FC<Props> = (props) => {
                     flexDirection='row'
                     justifyContent='space-between'>
                     <Box display='flex' alignItems='center'>
-                      <TokenLogo
-                        token0={token?.address || ''}
-                      />
+                      <TokenLogo token0={token?.address || ''} />
                       <Box
                         component='h3'
                         color='text.primary'
                         fontWeight={Fonts.BOLD}
                         fontSize={20}
                         mr={2}>
-                          
-                        {token?.symbol?.toUpperCase()}/USD              
+                        {token?.symbol?.toUpperCase()}/USD
                       </Box>
                       <Box>
-                        <FavoriteButton token={token}/>
+                        <FavoriteButton token={token} />
                       </Box>
                     </Box>
                     <Box display='flex'>
@@ -100,7 +98,7 @@ const InfoToken: React.FC<Props> = (props) => {
                               networkName,
                             )}/address/${token.address}`}
                             target='_blank'
-                            rel='noreferrer'>
+                            rel='noopener noreferrer'>
                             <Avatar
                               style={{
                                 color: '#3F51B5',
@@ -115,9 +113,8 @@ const InfoToken: React.FC<Props> = (props) => {
                       <Box mr={3}>
                         <Link
                           to={`/${networkName}/dashboard/token/${token?.address}`}
-                          component={RouterLink} 
-                          >
-                           <Tooltip title={'Trade Token'} placement='top'>
+                          component={RouterLink}>
+                          <Tooltip title={'Trade Token'} placement='top'>
                             <Avatar
                               style={{
                                 color: '#3F51B5',
@@ -125,7 +122,7 @@ const InfoToken: React.FC<Props> = (props) => {
                                 width: 34,
                                 height: 34,
                               }}>
-                              <CompareArrowsIcon/>
+                              <CompareArrowsIcon />
                             </Avatar>
                           </Tooltip>
                         </Link>
@@ -134,30 +131,36 @@ const InfoToken: React.FC<Props> = (props) => {
                   </Box>
 
                   <Box display='flex' alignItems='center'>
-                    <Tooltip title={'Real Time Price from all DEX\'s'} placement='top'>
-                        <Box
-                          component='h3'
-                          fontWeight={Fonts.BOLD}
-                          style={{ marginTop: 13}}
-                          fontSize={20}>
-                        
-                            {usdFormatter.format(data.priceUsd || 0)}
-                    
-                        </Box>
-                      </Tooltip>
-                   </Box>
-                   {data.priceChange &&  <Box display='flex'>
-                    <Box
-                      component='h3'
-                      fontWeight={Fonts.LIGHT}
-                      style={{color: color}}
-                      fontSize={13}>
-                      (24h {data.priceChange?.toFixed(2)}%)
+                    <Tooltip
+                      title={"Real Time Price from all DEX's"}
+                      placement='top'>
+                      <Box
+                        component='h3'
+                        fontWeight={Fonts.BOLD}
+                        style={{marginTop: 13}}
+                        fontSize={20}>
+                        {usdFormatter.format(data.priceUsd || 0)}
+                      </Box>
+                    </Tooltip>
+                  </Box>
+                  {data.priceChange && (
+                    <Box display='flex'>
+                      <Box
+                        component='h3'
+                        fontWeight={Fonts.LIGHT}
+                        style={{color: color}}
+                        fontSize={13}>
+                        (24h {data.priceChange?.toFixed(2)}%)
+                      </Box>
                     </Box>
-                  </Box>}
+                  )}
 
                   <Box pt={{md: 2, lg: 3, xl: 6}}>
-                    {data && <CoinsInfo coins={coinInfoFactory(data, usdFormatter, token)} />}
+                    {data && (
+                      <CoinsInfo
+                        coins={coinInfoFactory(data, usdFormatter, token)}
+                      />
+                    )}
                   </Box>
                 </Box>
               )

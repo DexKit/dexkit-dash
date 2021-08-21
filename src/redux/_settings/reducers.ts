@@ -1,7 +1,7 @@
 import {getType} from 'typesafe-actions';
 import {RootAction} from '../store';
 import * as actions from '../actions';
-import { NavStyle } from 'shared/constants/AppEnums';
+import {NavStyle} from 'shared/constants/AppEnums';
 
 export interface SettingState {
   readonly navCollapsed: boolean;
@@ -14,14 +14,14 @@ const initialSettings: SettingState = {
   navCollapsed: false,
   initialPath: '/',
   darkMode: true,
-  navStyle: NavStyle.STANDARD
+  navStyle: NavStyle.STANDARD,
 };
 
 export default (
   state: SettingState = initialSettings,
-  action: RootAction
+  action: RootAction,
 ): SettingState => {
-  switch(action.type) {
+  switch (action.type) {
     case getType(actions.toggleNavCollapsed):
       return {...state, navCollapsed: !state.navCollapsed};
     case getType(actions.setInitialPath):
@@ -29,9 +29,8 @@ export default (
     case getType(actions.setDarkMode):
       return {...state, darkMode: action.payload};
     case getType(actions.setNavStyle):
-        return {...state, navStyle: action.payload};
+      return {...state, navStyle: action.payload};
     default:
       return state;
   }
-}
- 
+};

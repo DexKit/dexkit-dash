@@ -1,5 +1,11 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -9,8 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
-import { CremaTheme } from 'types/AppContextPropsType';
-
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -23,7 +28,7 @@ const styles = (theme: Theme) =>
       right: theme.spacing(1),
       top: theme.spacing(1),
       color: theme.palette.grey[500],
-    }
+    },
   });
 
 export interface DialogTitleProps extends WithStyles<typeof styles> {
@@ -33,12 +38,15 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
 }
 
 const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
-  const { children, classes, onClose, ...other } = props;
+  const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
+      <Typography variant='h6'>{children}</Typography>
       {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+        <IconButton
+          aria-label='close'
+          className={classes.closeButton}
+          onClick={onClose}>
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -60,14 +68,14 @@ const DialogActions = withStyles((theme: Theme) => ({
 }))(MuiDialogActions);
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
-    openButton: {
-        marginLeft: '10px'
-    }
-  }));
+  openButton: {
+    marginLeft: '10px',
+  },
+}));
 
 export const AboutDialog = () => {
   const [open, setOpen] = React.useState(false);
-  const classes = useStyles ();
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -78,28 +86,37 @@ export const AboutDialog = () => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen} className={classes.openButton}>
-          <InfoIcon/>
+      <Button
+        variant='outlined'
+        onClick={handleClickOpen}
+        className={classes.openButton}>
+        <InfoIcon />
       </Button>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby='customized-dialog-title'
+        open={open}>
+        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           Manage Accounts
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Here you can add multiple accounts without the need to connect your Wallet.
+            Here you can add multiple accounts without the need to connect your
+            Wallet.
           </Typography>
           <Typography gutterBottom>
-           You are able to switch accounts on the top menu right and the application it will auto update with selected account.
+            You are able to switch accounts on the top menu right and the
+            application it will auto update with selected account.
           </Typography>
           <Typography gutterBottom>
-              The first account is the default. You can change clicking at the home button in other accounts.
+            The first account is the default. You can change clicking at the
+            home button in other accounts.
           </Typography>
           <Typography gutterBottom>
-              Connect Wallet in case you need to interact with the network.
+            Connect Wallet in case you need to interact with the network.
           </Typography>
         </DialogContent>
       </Dialog>
     </div>
   );
-}
+};

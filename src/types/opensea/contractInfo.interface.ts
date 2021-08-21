@@ -1,4 +1,4 @@
-import { Stats } from './stats';
+import {Stats} from './stats';
 export interface ContractInfo {
   address: string;
   asset_contract_type?: string;
@@ -17,7 +17,7 @@ export interface ContractInfo {
   dev_buyer_fee_basis_points: number;
   dev_seller_fee_basis_points: number;
   only_proxied_transfers: boolean;
-  opensea_buyer_fee_basis_points:number;
+  opensea_buyer_fee_basis_points: number;
   opensea_seller_fee_basis_points: number;
   buyer_fee_basis_points: number;
   seller_fee_basis_points?: number;

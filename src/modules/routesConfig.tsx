@@ -13,6 +13,7 @@ export interface NavItemProps {
   count?: number;
   color?: string;
   children?: NavItemProps[] | NavItemProps;
+  customIcon?: boolean;
 }
 
 const useRoutesConfig = (): NavItemProps[] => {
@@ -32,7 +33,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Trade',
           messageId: 'Trade',
           type: 'item',
-          icon: 'compare_arrows',
+          icon: 'bitcoin.convert',
+          customIcon: true,
           url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
         },
         {
@@ -40,7 +42,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Wallet',
           messageId: 'sidebar.app.wallet',
           type: 'item',
-          icon: 'account_balance_wallet',
+          customIcon: true,
+          icon: 'money.wallet',
           url: `/dashboard/wallet`,
         },
         {
@@ -48,7 +51,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Favorites',
           messageId: 'sidebar.app.favorites',
           type: 'item',
-          icon: 'favorite',
+          customIcon: true,
+          icon: 'lovely',
           url: `/dashboard/favorite-coins`,
         },
         {
@@ -56,7 +60,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'NFT Wallet',
           messageId: 'sidebar.nfts.wallet',
           type: 'item',
-          icon: 'storefront',
+          customIcon: true,
+          icon: 'slider.horizontal',
           url: '/nfts/wallet',
         },
       ],
@@ -72,7 +77,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Explore',
           messageId: 'sidebar.protocols.explore',
           type: 'collapse',
-          icon: 'explore',
+          customIcon: true,
+          icon: 'buy.crypto',
           children: [
             {
               id: 'tokens',
@@ -111,7 +117,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Manage',
           messageId: 'sidebar.myapps.manage',
           type: 'item',
-          icon: 'apps',
+          customIcon: true,
+          icon: 'element.plus',
           url: '/my-apps/manage',
         },
       ],
@@ -127,7 +134,8 @@ const useRoutesConfig = (): NavItemProps[] => {
           title: 'Become Affiliate',
           messageId: 'sidebar.affiliate.become-affiliate',
           type: 'item',
-          icon: 'groupWork',
+          customIcon: true,
+          icon: 'user.octagon',
           url: '/affiliate/overview',
         },
       ],
