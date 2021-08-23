@@ -10,6 +10,8 @@ import {
   Link,
   Tooltip,
   Button,
+  Card,
+  CardContent,
   Backdrop,
 } from '@material-ui/core';
 
@@ -56,6 +58,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import {TradeToolsSection} from './components/TradeToolsSection';
 import {SwapComponent} from '../Swap/Swap';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
+import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
 
 type Params = {
   account: string;
@@ -145,7 +148,30 @@ const WalletTabs: React.FC<Props> = (props) => {
                 />
               )}
             </Grid>
-            <Grid item xs={12}></Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <CardContent>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <TokensGroupActionButton
+                            title='Explorer'
+                            subtitle='lorem ipsum indolor'
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TokensGroupActionButton
+                            title='Explorer'
+                            subtitle='lorem ipsum indolor'
+                          />
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
             <Grid item>
               <CustomTabs
                 value={value}
