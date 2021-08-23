@@ -63,12 +63,10 @@ const SenderForm: React.FC<Props> = (props) => {
 
   const [amount, setAmount] = useState<string>(String(props.amount || ''));
   const [address, setAddress] = useState<string>('');
-  const [
-    selected,
-    setSelected,
-  ] = useState<GetMyBalance_ethereum_address_balances>(
-    props.balances[0] || undefined,
-  );
+  const [selected, setSelected] =
+    useState<GetMyBalance_ethereum_address_balances>(
+      props.balances[0] || undefined,
+    );
 
   const handleCopy = async () => {
     const cpy: any = await navigator.clipboard.readText();
@@ -221,7 +219,7 @@ const SenderForm: React.FC<Props> = (props) => {
         <Box textAlign='center' mb={5}>
           <Button
             fullWidth
-            style={{maxWidth: '60%'}}
+            size='large'
             variant='contained'
             color='primary'
             onClick={handleSend}

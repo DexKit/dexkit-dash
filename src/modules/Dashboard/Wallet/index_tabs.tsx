@@ -6,9 +6,11 @@ import {
   Tabs,
   Paper,
   Tab,
+  Typography,
   Link,
   Tooltip,
   Button,
+  Backdrop,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
@@ -51,6 +53,9 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {Fonts} from 'shared/constants/AppEnums';
 import {AboutDialog} from './AboutDialog';
 import SettingsIcon from '@material-ui/icons/Settings';
+import {TradeToolsSection} from './components/TradeToolsSection';
+import {SwapComponent} from '../Swap/Swap';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 
 type Params = {
   account: string;
@@ -122,84 +127,58 @@ const WalletTabs: React.FC<Props> = (props) => {
   );
 
   return (
-    <Box pt={{xl: 4}}>
-      <PageTitle
-        breadcrumbs={{
-          history: [
-            {url: '/', name: 'Dashboard'},
-            {url: '/dashboard/wallet', name: 'Wallet'},
-          ],
-          active: {
-            name: `${truncateIsAddress(defaultLabel)}`,
-            hasCopy: account,
-          },
-        }}
-        title={{name: 'Wallet', component: titleComponent}}
-        shareButton={true}
-      />
-      <GridContainer>
-        <Grid container direction='row' justify='center' alignItems='center'>
-          <Grid item xs={12} md={12}>
-            {error && !data ? (
-              <ErrorView message={error.message} />
-            ) : (
-              <TotalBalance balances={data} loading={loading} />
-            )}
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Box mt={2}>
-            <Paper square>
-              <TabContext value={value}>
-                <AppBar position='static' color='transparent'>
-                  <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    variant='fullWidth'
-                    indicatorColor='primary'
-                    textColor='primary'
-                    aria-label='wallet tabs'>
-                    <Tab
-                      value='assets'
-                      icon={<AssessmentIcon />}
-                      label={!isMobile ? 'Assets' : ''}
-                    />
-                    {/*<Tab value="assets-chart" icon={<TimelineIcon />} label={!isMobile ? "Assets Chart" : ''} />*/}
-                    <Tab
-                      value='transfers'
-                      icon={<SwapVertIcon />}
-                      label={!isMobile ? 'Transfers' : ''}
-                    />
-                    <Tab
-                      value='trade-history'
-                      icon={<SwapHorizontalCircleIcon />}
-                      label={!isMobile ? 'Trade History' : ''}
-                    />
-                  </Tabs>
-                </AppBar>
-                <TabPanel value='assets'>
-                  <AssetTableTab
-                    account={account as string}
-                    loading={loading}
-                    error={error}
-                    data={data}
-                  />
-                </TabPanel>
-                {/* <TabPanel value="assets-chart">
-                    <AssetChartTab data={data} loading={loading} />
-                 </TabPanel>*/}
-                <TabPanel value='transfers'>
-                  <TransferTab address={defaultAccount} />
-                </TabPanel>
-                <TabPanel value='trade-history'>
-                  <TradeHistoryTab address={defaultAccount} />
-                </TabPanel>
-              </TabContext>
-            </Paper>
+    <>
+      <TabContext value={value}>
+        <Box pt={{xl: 4}}>
+          <Box mb={4}>
+            <Typography variant='h5'>Wallet</Typography>
           </Box>
-        </Grid>
-      </GridContainer>
-    </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={12}>
+              {error && !data ? (
+                <ErrorView message={error.message} />
+              ) : (
+                <TotalBalance
+                  address={account}
+                  balances={data}
+                  loading={loading}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}></Grid>
+            <Grid item>
+              <CustomTabs
+                value={value}
+                onChange={handleChange}
+                variant='standard'
+                TabIndicatorProps={{
+                  style: {display: 'none'},
+                }}
+                aria-label='wallet tabs'>
+                <CustomTab value='assets' label={'Assets'} />
+                <CustomTab value='trade-history' label={'History'} />
+              </CustomTabs>
+            </Grid>
+            <Grid item xs={12}>
+              <TabPanel value='assets'>
+                <AssetTableTab
+                  account={account as string}
+                  loading={loading}
+                  error={error}
+                  data={data}
+                />
+              </TabPanel>
+              <TabPanel value='transfers'>
+                <TransferTab address={defaultAccount} />
+              </TabPanel>
+              <TabPanel value='trade-history'>
+                <TradeHistoryTab address={defaultAccount} />
+              </TabPanel>
+            </Grid>
+          </Grid>
+        </Box>
+      </TabContext>
+    </>
   );
 };
 

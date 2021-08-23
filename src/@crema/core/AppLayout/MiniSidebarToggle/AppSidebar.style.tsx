@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           '& .visible-hover': {
             opecity: 0,
             visibility: 'hidden',
+            display: 'none',
           },
 
           '& .nav-item-header, & .user-info, & .collapse-children': {
@@ -98,6 +99,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             '& .visible-hover': {
               opacity: 1,
               visibility: 'visible',
+              display: 'block',
             },
 
             '& .nav-item-text, & .nav-item-icon-arrow': {
@@ -121,9 +123,10 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             '& .collapse-children .collapse-children .nav-item': {
               paddingLeft: 117,
             },
-            '& .collapse-children .collapse-children .collapse-children .nav-item': {
-              paddingLeft: 167,
-            },
+            '& .collapse-children .collapse-children .collapse-children .nav-item':
+              {
+                paddingLeft: 167,
+              },
           },
         },
 
@@ -139,9 +142,10 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             '& .collapse-children .collapse-children .nav-item': {
               paddingLeft: 124,
             },
-            '& .collapse-children .collapse-children .collapse-children .nav-item': {
-              paddingLeft: 174,
-            },
+            '& .collapse-children .collapse-children .collapse-children .nav-item':
+              {
+                paddingLeft: 174,
+              },
           },
         },
       },

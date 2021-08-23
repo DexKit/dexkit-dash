@@ -64,6 +64,7 @@ import {AboutDialog} from './AboutDialog';
 import {ShareButton} from 'shared/components/ShareButton';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import InfoIcon from '@material-ui/icons/Info';
+import {ShareDialog} from 'shared/components/ShareDialog';
 
 const BinanceTVChartContainer = React.lazy(
   () => import('shared/components/chart/BinanceTVChart/tv_chart'),
@@ -247,8 +248,24 @@ const TokenTabsPage: React.FC<Props> = (props) => {
     setShowAboutDialog(true);
   }, []);
 
+  const [showShareDialog, setShowShareDialog] = useState(false);
+
+  const handleShowShareDialog = useCallback(() => {
+    setShowShareDialog(true);
+  }, []);
+
+  const handleCloseShareDialog = useCallback(() => {
+    setShowShareDialog(false);
+  }, []);
+
   return (
     <>
+      <ShareDialog
+        open={showShareDialog}
+        shareText={``}
+        shareUrl={window.location.toString()}
+        onClose={handleCloseShareDialog}
+      />
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <Box py={4}>
         <Box>
@@ -279,23 +296,6 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              <Grid container spacing={1}>
-                <Grid item>
-                  <ShareButton />
-                </Grid>
-                <Grid item>
-                  <Tooltip title='Add to Favorites'>
-                    <IconButton
-                      aria-label='add favorite coin'
-                      color='primary'
-                      onClick={onToggleFavorite}>
-                      {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </Grid>
           </Grid>
         </Box>
         <Box mt={4}>
@@ -310,6 +310,9 @@ const TokenTabsPage: React.FC<Props> = (props) => {
                   loading={loading}
                   tokenName={tokenInfo?.name}
                   address={address}
+                  onMakeFavorite={onToggleFavorite}
+                  onShare={handleShowShareDialog}
+                  isFavorite={isFavorite ? true : false}
                 />
               )}
             </Grid>

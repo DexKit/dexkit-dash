@@ -33,6 +33,7 @@ export const SwapHistoricTableRow = (props: Props) => {
   const handleConfirm = useCallback(() => {
     if (transaction) {
       onRemove(transaction);
+      setRemoving(false);
     }
   }, [transaction]);
 

@@ -26,52 +26,55 @@ export default (props: Props) => {
   const {asset, loading, error} = props;
 
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <SubjectIcon />{' '}
-        <Typography>
-          <IntlMessages id='nfts.detail.detailLabel' />
+    <Box py={4}>
+      <Box mb={4}>
+        <Typography
+          style={{lineHeight: '140%'}}
+          variant='body1'
+          color='textSecondary'>
+          {loading ? <Skeleton /> : asset?.description}
         </Typography>
-      </AccordionSummary>
-      <AccordionDetails style={{display: 'block'}}>
-        <Box p={2}>
-          <Box mb={2}>
-            <Typography variant='body1' color='textSecondary'>
-              {loading ? <Skeleton /> : asset?.description}
-            </Typography>
-          </Box>
-          <Grid container justify='space-between'>
-            <Grid item>
-              <Typography variant='body1'>
-                <IntlMessages id='nfts.detail.detailContractAddress' />
-              </Typography>
+      </Box>
+      {asset ? (
+        <Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Grid container justify='space-between'>
+                <Grid item>
+                  <Typography variant='body1'>
+                    <IntlMessages id='nfts.detail.detailContractAddress' />
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    <Link
+                      href={`https://etherscan.io/address/${asset?.asset_contract?.address}`}
+                      target='_blank'>
+                      {truncateAddress(asset?.asset_contract?.address)}
+                    </Link>
+                    <ButtonCopy
+                      copyText={asset?.asset_contract?.address}
+                      titleText='Copied to Clipboard'
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography>
-                <Link
-                  href={`https://etherscan.io/address/${asset?.asset_contract?.address}`}
-                  target='_blank'>
-                  {truncateAddress(asset?.asset_contract?.address)}
-                </Link>
-                <ButtonCopy
-                  copyText={asset?.asset_contract?.address}
-                  titleText='Copied to Clipboard'
-                />
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container justify='space-between'>
-            <Grid item>
-              <Typography variant='body1'>
-                <IntlMessages id='nfts.detail.detailTokenIdLabel' />
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='body1'>{asset?.token_id}</Typography>
+            <Grid item xs={12}>
+              <Grid container justify='space-between'>
+                <Grid item>
+                  <Typography variant='body1'>
+                    <IntlMessages id='nfts.detail.detailTokenIdLabel' />
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant='body1'>{asset?.token_id}</Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Box>
-      </AccordionDetails>
-    </Accordion>
+      ) : null}
+    </Box>
   );
 };

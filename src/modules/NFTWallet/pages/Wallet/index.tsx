@@ -55,7 +55,6 @@ import ActionSelect, {
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/state/wallet-01.svg';
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
@@ -118,6 +117,8 @@ export default () => {
   const {address}: RouteParams = useParams();
   const {getAssets} = useMyAssets();
   const {getCollections} = useCollections();
+
+  const {chainId} = useWeb3();
 
   const [collectionLoading, setCollectionLoading] = useState(false);
 
@@ -418,7 +419,7 @@ export default () => {
 
   useEffect(() => {
     fetchData();
-  }, [address, query, sortBy, collection, hasOffers]);
+  }, [address, query, sortBy, collection, hasOffers, chainId]);
 
   const isMounted = useIsMounted();
 

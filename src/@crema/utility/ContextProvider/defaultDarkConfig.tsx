@@ -167,9 +167,15 @@ const defaultConfig: any = {
         root: {
           padding: 8,
           borderRadius: cardRadius,
+          '&:before': {
+            display: 'none',
+          },
         },
         rounded: {
           borderRadius: cardRadius,
+        },
+        expanded: {
+          margin: 0,
         },
       },
       MuiAccordionSummary: {
@@ -190,13 +196,12 @@ const defaultConfig: any = {
           fontSize: 18,
           color: '#fff',
         },
-        
       },
       MuiStepper: {
         root: {
           borderRadius: cardRadius,
-        },  
-      }
+        },
+      },
     },
   },
   themeStyle: ThemeStyle.MODERN,

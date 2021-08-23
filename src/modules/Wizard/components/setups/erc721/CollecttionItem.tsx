@@ -126,7 +126,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   name='name'
                   onChange={handleChange}
                   label='Name'
-                  error={item.name !== ''}
+                  error={item.name === ''}
                   variant='outlined'
                   fullWidth
                 />
@@ -139,7 +139,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   label='Description'
                   rows={3}
                   multiline
-                  error={item.description !== ''}
+                  error={item.description === ''}
                   variant='outlined'
                   onChange={handleChange}
                   fullWidth

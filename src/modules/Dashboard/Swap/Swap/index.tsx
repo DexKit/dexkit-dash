@@ -45,8 +45,15 @@ import {useTokenList} from 'hooks/useTokenList';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import Close from '@material-ui/icons/Close';
+import {ArrowForward} from '@material-ui/icons';
 
-export const SwapComponent = (props: any) => {
+interface SwapComponentProps {
+  onClose?: () => void;
+}
+
+export const SwapComponent = (props: SwapComponentProps) => {
+  const {onClose} = props;
   const theme = useTheme();
 
   const userAccountAddress = useDefaultAccount();
@@ -509,6 +516,12 @@ export const SwapComponent = (props: any) => {
     [userAccountAddress],
   );
 
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose();
+    }
+  }, [onClose]);
+
   return (
     <>
       <SelectCoinsDialog
@@ -769,6 +782,7 @@ export const SwapComponent = (props: any) => {
                     color='primary'
                     size='large'
                     fullWidth
+                    startIcon={<ArrowForward />}
                     disabled={
                       disabledButton ||
                       fromLoading ||
@@ -779,6 +793,17 @@ export const SwapComponent = (props: any) => {
                     Next
                   </Button>
                 </Grid>
+                {onClose ? (
+                  <Grid item xs={12}>
+                    <Button
+                      variant='outlined'
+                      startIcon={<Close />}
+                      fullWidth
+                      onClick={onClose}>
+                      Close
+                    </Button>
+                  </Grid>
+                ) : null}
               </Grid>
             </CardContent>
           </>

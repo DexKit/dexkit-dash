@@ -5,7 +5,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
-import {Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, TableContainer} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalances} from 'types/blockchain';
 
@@ -50,22 +50,20 @@ const CTable: React.FC<Props> = ({balances}) => {
   const classes = useStyles();
 
   return (
-    <>
-      <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {balances
-              .filter((b) => b.value)
-              .slice(page * perPage, (page + 1) * perPage)
-              .map((data: MyBalances) => (
-                <TableItem data={data} key={data.currency?.address} />
-              ))}
-          </TableBody>
-        </Table>
-      </Box>
+    <TableContainer>
+      <Table stickyHeader>
+        <TableHead>
+          <TableHeading />
+        </TableHead>
+        <TableBody>
+          {balances
+            .filter((b) => b.value)
+            .slice(page * perPage, (page + 1) * perPage)
+            .map((data: MyBalances) => (
+              <TableItem data={data} key={data.currency?.address} />
+            ))}
+        </TableBody>
+      </Table>
       <TablePagination
         className={classes.paginationDesktop}
         rowsPerPageOptions={[8, 15, 20]}
@@ -87,7 +85,7 @@ const CTable: React.FC<Props> = ({balances}) => {
         page={page}
         onPageChange={(_event: unknown, newPage: number) => setPage(newPage)}
       />
-    </>
+    </TableContainer>
   );
 };
 

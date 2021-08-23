@@ -35,6 +35,7 @@ import {Web3Wrapper} from '@0x/web3-wrapper';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import SelectCoin from 'shared/components/SelectCoin';
+import {TradeToolsSection} from './components/TradeToolsSection';
 
 type Params = {
   account: string;
@@ -88,37 +89,27 @@ const Wallet: React.FC<Props> = (props) => {
 
   return (
     <Box pt={{xl: 4}}>
-      <PageTitle
-        breadcrumbs={{
-          history: [
-            {url: '/', name: 'Dashboard'},
-            {url: '/dashboard/wallet', name: 'Wallet'},
-          ],
-          active: {
-            name: `${truncateAddress(defaultAccount)}`,
-            hasCopy: account,
-          },
-        }}
-        title={{name: 'Wallet'}}
-      />
-      <GridContainer>
+      <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
           <Grid item xs={12} md={12}>
             {error ? (
               <ErrorView message={error.message} />
             ) : (
-              <TotalBalance balances={data} loading={loading} />
+              <TotalBalance
+                address={account}
+                balances={data}
+                loading={loading}
+              />
             )}
           </Grid>
 
-          <Grid item xs={12} md={12} style={{marginTop: 15}}>
+          <Grid item xs={12} md={12}>
             {error ? (
               <ErrorView message={error.message} />
             ) : (
               <AssetTable balances={data} loading={loading} />
             )}
           </Grid>
-
           <GridContainer style={{marginTop: 2}}>
             <Grid item xs={12} sm={6} md={6}>
               <Box className='card-hover'>
@@ -232,13 +223,11 @@ const Wallet: React.FC<Props> = (props) => {
               )}
             </Fade>
           </Grid>
-          {
-            <Grid item xs={12} md={12} style={{marginTop: 15}}>
-              <DefiCoins {...defiBalance} />
-            </Grid>
-          }
+          <Grid item xs={12} md={12} style={{marginTop: 15}}>
+            <DefiCoins {...defiBalance} />
+          </Grid>
         </Grid>
-      </GridContainer>
+      </Grid>
     </Box>
   );
 };
