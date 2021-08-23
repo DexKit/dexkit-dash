@@ -59,6 +59,7 @@ import {TradeToolsSection} from './components/TradeToolsSection';
 import {SwapComponent} from '../Swap/Swap';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
+import {ArrowForward} from '@material-ui/icons';
 
 type Params = {
   account: string;
