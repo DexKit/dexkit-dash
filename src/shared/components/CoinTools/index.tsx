@@ -1,34 +1,23 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {
   Box,
-  Paper,
-  Typography,
   Grid,
   useTheme,
-  useMediaQuery,
   Backdrop,
-  IconButton,
 } from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
-
 import {makeStyles} from '@material-ui/core/styles';
-import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import Receiver from './Receiver';
-import Sender from './Sender';
 import {Token} from 'types/app';
 import {MyBalances} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {truncateAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
-
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
+import Sender from '../TotalBalance/Sender';
+import Receiver from '../TotalBalance/Receiver';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -102,20 +91,16 @@ interface Props {
   isFavorite?: boolean;
 }
 
-const TotalBalance = (props: Props) => {
+const CoinTools = (props: Props) => {
   const {
     balances,
     only,
-    loading,
-    address,
-    tokenName,
     onMakeFavorite,
     onShare,
     isFavorite,
   } = props;
+
   const [tokens, setTokens] = useState<MyBalances[]>([]);
-  const [usdAvailable, setUsdAvailable] = useState<number>(0);
-  const [amountsVisible, setAmountsVisible] = useState(true);
 
   const networkName = useNetwork();
 
@@ -166,29 +151,8 @@ const TotalBalance = (props: Props) => {
     }
   }, [only, balances]);
 
-  useEffect(() => {
-    setUsdAvailable(
-      tokens?.reduce((acc, current) => {
-        return (acc += current.valueInUsd || 0);
-      }, 0) || 0,
-    );
-  }, [tokens]);
 
   const classes = useStyles();
-
-  let onlyTokenValue = null;
-  let onlyTokenValueInUsd = null;
-
-  if (only) {
-    if (tokens.length > 0) {
-      onlyTokenValue =
-        tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
-      onlyTokenValueInUsd = tokens[0].valueInUsd?.toFixed(2);
-    }
-  }
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [showSender, setShowSender] = useState(false);
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
@@ -218,10 +182,6 @@ const TotalBalance = (props: Props) => {
 
   const handleTrade = useCallback(() => {}, [init]);
 
-  const handleToggleVisibility = useCallback(() => {
-    setAmountsVisible((value) => !value);
-  }, []);
-
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
   }, []);
@@ -234,8 +194,10 @@ const TotalBalance = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <Backdrop className={classes.backdrop} open={showSwap}>
-        {/* TODO: transform this in a dialog */}
+      <Backdrop
+        className={classes.backdrop}
+        open={showSwap}
+        onClick={handleSwapClose}>
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
             <SwapComponent onClose={handleSwapClose} />
@@ -243,53 +205,6 @@ const TotalBalance = (props: Props) => {
         </Grid>
       </Backdrop>
       <Box>
-        <Grid container spacing={2} alignItems='center' justify='space-between'>
-          <Grid item xs={isMobile ? 12 : undefined} sm={3}>
-            <Paper>
-              <Box p={4}>
-                <Grid
-                  container
-                  alignItems='center'
-                  justify='space-between'
-                  spacing={4}>
-                  <Grid item>
-                    <Grid container spacing={2} alignItems='center'>
-                      <Grid item>
-                        <Box className={classes.greenSquare}></Box>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant='body2'>
-                          {truncateAddress(address)}
-                        </Typography>
-                        <Typography className={classes.usdAmount}>
-                          {loading || usdAvailable === 0 ? (
-                            <Skeleton />
-                          ) : (
-                            <>
-                              <span className={classes.usdAmountSign}>$</span>
-                              {amountsVisible
-                                ? onlyTokenValueInUsd || usdAvailable.toFixed(2)
-                                : '****,**'}
-                            </>
-                          )}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {amountsVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={isMobile ? 12 : undefined}>
             <TradeToolsSection
               onSend={handleShowSender}
               onReceive={handleShowReceiver}
@@ -300,11 +215,9 @@ const TotalBalance = (props: Props) => {
               onMakeFavorite={onMakeFavorite}
               isFavorite={isFavorite}
             />
-          </Grid>
-        </Grid>
       </Box>
     </>
   );
 };
 
-export default TotalBalance;
+export default CoinTools;

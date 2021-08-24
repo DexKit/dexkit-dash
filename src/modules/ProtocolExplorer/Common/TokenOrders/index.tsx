@@ -46,17 +46,12 @@ const TokenOrders: React.FC<Props> = (props) => {
     seconds,
   } = useTokenTrades({baseAddress, quoteAddress, exchange, networkName});
 
-  return (
-    <Paper className={classes.paper}>
+  return ( <>
       <Toolbar className={classes.toolbar}>
         <Box
           display={'flex'}
           justifyContent={'flex-start'}
           alignItems={'center'}>
-          <SwapHorizontalCircleIcon
-            color={'primary'}
-            className={classes.toolbarIcon}
-          />
           <Typography variant='h5' display={'block'} align={'center'}>
             {messages['app.tradeHistory']}
           </Typography>
@@ -96,7 +91,7 @@ const TokenOrders: React.FC<Props> = (props) => {
           onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
         />
       )}
-    </Paper>
+   </>
     // </AppCard>
     // </Box>
   );
