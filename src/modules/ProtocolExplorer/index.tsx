@@ -13,8 +13,8 @@ export const protocolExplorerConfigs = [
   {
     routes: [
       {
-        path: '/protocol-explorer/token-explorer/:address',
-        component: React.lazy(() => import('./TokenExplorer/index_tabs')),
+        path: '/explorer/:address',
+        component: React.lazy(() => import('./pages')),
       },
     ],
   },

@@ -29,15 +29,6 @@ const useRoutesConfig = (): NavItemProps[] => {
       type: 'group',
       children: [
         {
-          id: 'trade',
-          title: 'Trade',
-          messageId: 'Trade',
-          type: 'item',
-          icon: 'bitcoin.convert',
-          customIcon: true,
-          url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
-        },
-        {
           id: 'wallet',
           title: 'Wallet',
           messageId: 'sidebar.app.wallet',
@@ -46,6 +37,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'money.wallet',
           url: `/dashboard/wallet`,
         },
+        {
+          id: 'trade',
+          title: 'Trade',
+          messageId: 'Trade',
+          type: 'item',
+          icon: 'bitcoin.convert',
+          customIcon: true,
+          url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+        },     
         {
           id: 'favorites',
           title: 'Favorites',
@@ -87,30 +87,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'collapse',
           customIcon: true,
           icon: 'buy.crypto',
-          children: [
-            {
-              id: 'tokens',
-              title: 'Token Explorer',
-              messageId: 'sidebar.protocols.token-explorer',
-              type: 'item',
-              url: `/protocol-explorer/token-explorer/${process.env.REACT_APP_ETH_DEFAULT_TOKEN}`,
-            },
-
-            {
-              id: 'pair-explorer',
-              title: 'Pair Explorer',
-              messageId: 'sidebar.protocols.pair-explorer',
-              type: 'item',
-              url: `/protocol-explorer/pair-explorer/${process.env.REACT_APP_ETH_KIT_PAIR}`,
-            },
-            {
-              id: 'pool-explorer',
-              title: 'Pool Explorer',
-              messageId: 'sidebar.protocols.pool-explorer',
-              type: 'item',
-              url: `/protocol-explorer/pool-explorer/${process.env.REACT_APP_ETH_DEFAULT_PAIR}?protocol=uniswap`,
-            },
-          ],
+          url: '/explorer',
         },
       ],
     },

@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useNetwork} from 'hooks/useNetwork';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import BigNumber from 'bignumber.js';
+import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';

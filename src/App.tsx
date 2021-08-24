@@ -15,29 +15,33 @@ import WalletRoutes from 'services/WalletRoutes';
 import {Web3Manager} from 'shared/components/Web3Manager';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import {QueryClient, QueryClientProvider} from 'react-query';
+
+const queryClient = new QueryClient();
 
 const App = () => (
   <ContextProvider>
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <CremaThemeProvider>
-          <CremaStyleProvider>
-            <LocaleProvider>
-              <ConnectedRouter history={history}>
-                <WalletRoutes>
-                  <CssBaseline />
-                  <Web3Manager />
-                  <ReactNotification />
-                  {/*  <ThemeSetting props={{}}/>*/}
-                  <InfoView />
-                  <AppLayout />
-                </WalletRoutes>
-              </ConnectedRouter>
-            </LocaleProvider>
-          </CremaStyleProvider>
-        </CremaThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <CremaThemeProvider>
+            <CremaStyleProvider>
+              <LocaleProvider>
+                <ConnectedRouter history={history}>
+                  <WalletRoutes>
+                    <CssBaseline />
+                    <Web3Manager />
+                    <ReactNotification />
+                    {/*  <ThemeSetting props={{}}/>*/}
+                    <InfoView />
+                    <AppLayout />
+                  </WalletRoutes>
+                </ConnectedRouter>
+              </LocaleProvider>
+            </CremaStyleProvider>
+          </CremaThemeProvider>
+        </QueryClientProvider>
       </ApolloProvider>
-      ,
     </Provider>
   </ContextProvider>
 );
