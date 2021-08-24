@@ -41,7 +41,7 @@ const defaultConfig: any = {
       },
       text: {
         primary: 'rgba(0, 0, 0, 0.87)',
-        secondary: 'rgba(0, 0, 0, 0.67)',
+        secondary: '#8F96A7',
         disabled: 'rgba(0, 0, 0, 0.38)',
         hint: 'rgba(0, 0, 0, 0.38)',
       },

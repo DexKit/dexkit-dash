@@ -33,7 +33,7 @@ const routes = [
   {
     component: () => (
       <Redirect
-        to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+        to={`/wallet`}
       />
     ),
   },

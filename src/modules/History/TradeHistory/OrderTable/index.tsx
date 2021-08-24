@@ -11,6 +11,7 @@ import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {GetTradeHistoryList_ethereum_dexTrades} from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
 
 interface Props {
@@ -35,12 +36,13 @@ const TransactionTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead className={classes.borderBottomClass}>
-            <TableHeading />
+            {!isMobile && <TableHeading />}
           </TableHead>
 
           <TableBody className={classes.borderBottomClass}>

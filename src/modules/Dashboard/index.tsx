@@ -74,7 +74,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/:networkName/dashboard/token/:address',
-        component: React.lazy(() => import('./Token/index_tabs')),
+        component: React.lazy(() => import('./Token')),
       },
     ],
   },
