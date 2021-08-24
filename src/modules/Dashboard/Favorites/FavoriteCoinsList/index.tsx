@@ -1,16 +1,13 @@
-import React from 'react';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import {makeStyles, Typography, Link} from '@material-ui/core';
-import TableHeading from './TableHeading';
-import TableItem from './TableItem';
-import {FavoriteCoin} from 'redux/_ui/reducers';
-import AppTableContainer from '@crema/core/AppTableContainer';
+import React, {useCallback} from 'react';
+import {makeStyles, Typography, Link, Box, Grid} from '@material-ui/core';
 
-import {Link as RouterLink} from 'react-router-dom';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import FavoriteItem from './FavoriteItem';
+import {FavoriteCoin} from 'redux/_ui/reducers';
+
 import {CoinItemCoinGecko} from 'types/coingecko';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   borderBottomClass: {
@@ -18,35 +15,47 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface FavoriteCoinsTableProps {
+interface FavoriteCoinsListProps {
   favoriteCoins: FavoriteCoin[];
   marketData?: CoinItemCoinGecko[];
+  onRemoveCoin?: (coin: FavoriteCoin) => void;
 }
 
-const FavoriteCoinsTable: React.FC<FavoriteCoinsTableProps> = ({
+const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   favoriteCoins,
   marketData,
+  onRemoveCoin,
 }) => {
-  const classes = useStyles();
   const coinsWithMarketData = favoriteCoins.map((f) => {
     const market = marketData && marketData.find((m) => m.id === f.id);
     return {f, market: market};
   });
 
+  const history = useHistory();
+
+  const handleClick = useCallback((network: string, address: string) => {
+    console.log(network, address);
+
+    history.push(`/${network}/dashboard/token/${address}`);
+  }, []);
+
   return (
-    <AppTableContainer>
-      <Table>
-        <TableHead className={classes.borderBottomClass}>
-          <TableHeading />
-        </TableHead>
-        <TableBody>
+    <Box>
+      <Grid>
+        <Grid item xs={12}>
           {coinsWithMarketData.map((row) => (
-            <TableItem key={row.f.name} row={row.f} marketData={row.market} />
+            <FavoriteItem
+              key={row.f.name}
+              row={row.f}
+              marketData={row.market}
+              onRemoveCoin={onRemoveCoin}
+              onClick={handleClick}
+            />
           ))}
-        </TableBody>
-      </Table>
+        </Grid>
+      </Grid>
       {favoriteCoins && favoriteCoins.length === 0 && (
-        <>
+        <Grid item xs={12}>
           <Typography
             variant='h5'
             display={'block'}
@@ -65,10 +74,10 @@ const FavoriteCoinsTable: React.FC<FavoriteCoinsTableProps> = ({
               Trade page.
             </Link>
           </Typography>
-        </>
+        </Grid>
       )}
-    </AppTableContainer>
+    </Box>
   );
 };
 
-export default FavoriteCoinsTable;
+export default FavoriteCoinsList;

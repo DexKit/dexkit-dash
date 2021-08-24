@@ -37,7 +37,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/dashboard/wallet/:account',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },
@@ -46,7 +46,7 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/dashboard/wallet',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },

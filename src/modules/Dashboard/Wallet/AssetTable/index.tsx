@@ -27,6 +27,7 @@ import {Search} from '@material-ui/icons';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
+import AssetList from '../components/AssetList';
 
 interface AssetTableProps {
   balances: MyBalances[];
@@ -50,24 +51,35 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
   const [filter, setFilter] = useState('all');
 
-  const filteredBalances = () => {
-    if (filter === 'eth') {
-      return balances.filter((b) => b.network === EthereumNetwork.ethereum);
-    }
-    if (filter === 'bnb') {
-      return balances.filter((b) => b.network === EthereumNetwork.bsc);
-    }
-    return balances;
-  };
-
-  const handleToggleFilters = useCallback(() => {
-    setShowFilters((value) => !value);
-  }, []);
-
   const [search, setSearch] = useState('');
 
   const handleChange = useCallback((e) => {
     setSearch(e.target.value);
+  }, []);
+
+  const filteredBalances = useCallback(() => {
+    let results = balances;
+
+    if (filter === 'eth') {
+      results = results.filter((b) => b.network === EthereumNetwork.ethereum);
+    }
+    if (filter === 'bnb') {
+      results = results.filter((b) => b.network === EthereumNetwork.bsc);
+    }
+
+    if (search !== '') {
+      results = results.filter(
+        (b) =>
+          b.currency?.name?.toLowerCase().startsWith(search.toLowerCase()) ||
+          b.currency?.symbol?.toLowerCase().startsWith(search.toLowerCase()),
+      );
+    }
+
+    return results;
+  }, [filter, search, balances]);
+
+  const handleToggleFilters = useCallback(() => {
+    setShowFilters((value) => !value);
   }, []);
 
   const theme = useTheme();
@@ -180,11 +192,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {loading ? (
-            <LoadingTable columns={3} rows={3} />
-          ) : (
-            <CTable balances={filteredBalances()} />
-          )}
+          <AssetList balances={filteredBalances()} />
         </Grid>
       </Grid>
     </>

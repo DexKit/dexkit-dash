@@ -3,6 +3,7 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 export type MyBalances = GetAllMyBalance_ethereum_address_balances & {
   network: EthereumNetwork;
+  price24hPercentage?: number;
 };
 
 export enum ChainId {

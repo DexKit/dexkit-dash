@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import GridContainer from '@crema/core/GridContainer';
 
@@ -108,28 +109,6 @@ const WalletTabs: React.FC<Props> = (props) => {
     }
   }, [urlAccount, defaultAccount]);
 
-  const titleComponent = (
-    <Box display='flex' alignItems='center' mt={1}>
-      <AccountBalanceWalletIcon color={'primary'} fontSize={'large'} />
-      <Box
-        component='h3'
-        color='text.primary'
-        fontWeight={Fonts.BOLD}
-        ml={2}
-        mr={2}>
-        Wallet
-      </Box>
-      <Tooltip title={'Manage Accounts'}>
-        <Button
-          variant='outlined'
-          onClick={() => history.push('/dashboard/wallet/manage-accounts')}>
-          <SettingsIcon />
-        </Button>
-      </Tooltip>
-      <AboutDialog />
-    </Box>
-  );
-
   return (
     <>
       <TabContext value={value}>
@@ -156,6 +135,21 @@ const WalletTabs: React.FC<Props> = (props) => {
                     <CardContent>
                       <Grid container spacing={4}>
                         <Grid item xs={12}>
+                          <Grid
+                            container
+                            alignItems='center'
+                            justify='space-between'>
+                            <Grid item>
+                              <Typography variant='body1'>Groups</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Button endIcon={<KeyboardArrowRightIcon />}>
+                                View more
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
                           <TokensGroupActionButton
                             title='Explorer'
                             subtitle='lorem ipsum indolor'
@@ -167,6 +161,32 @@ const WalletTabs: React.FC<Props> = (props) => {
                             subtitle='lorem ipsum indolor'
                           />
                         </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                  <Card>
+                    <CardContent>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Grid
+                            container
+                            alignItems='center'
+                            justify='space-between'>
+                            <Grid item>
+                              <Typography variant='body1'>Favorites</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Button
+                                size='small'
+                                endIcon={<KeyboardArrowRightIcon />}>
+                                View more
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}></Grid>
                       </Grid>
                     </CardContent>
                   </Card>
