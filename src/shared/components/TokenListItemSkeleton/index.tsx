@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 6,
     display: 'block',
     textAlign: 'left',
-    cursor: 'pointer',
   },
 }));
 

@@ -17,12 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
   secondToken: {
     zIndex: TOKEN_ZINDEX,
-    left: theme.spacing(4),
+    left: -theme.spacing(4),
+    position: 'relative',
+  },
+  exchange: {
+    fontWeight: 500,
+    fontSize: 14,
+    color: '#7A8398',
   },
   tokenIcon: {
     borderRadius: '50%',
     height: theme.spacing(8),
     width: theme.spacing(8),
+  },
+  pair: {
+    fontWeight: 500,
+    fontSize: 16,
   },
 }));
 
@@ -46,31 +56,44 @@ interface TokenPairCardProps {
   firstIcon: React.ReactNode;
   secondIcon: React.ReactNode;
   selected?: boolean;
+  exchange: string;
+  onSelect?: () => void;
 }
 
 export const TokenPairCard = (props: TokenPairCardProps) => {
-  const {firstToken, secondToken, selected, firstIcon, secondIcon} = props;
+  const {
+    firstToken,
+    secondToken,
+    selected,
+    firstIcon,
+    secondIcon,
+    exchange,
+    onSelect,
+  } = props;
 
   const classes = useStyles();
 
   return (
     <Paper className={classes.paper}>
-      <Grid container spacing={2} alignItems='center'>
-        <Grid item>
-          <Box>
-            <Box className={classes.firstToken}>{firstIcon}</Box>
-            <Box className={classes.secondToken}>{secondIcon}</Box>
-          </Box>
+      <Box p={4}>
+        <Grid container spacing={2} alignItems='center'>
+          <Grid item>
+            <Box display='flex'>
+              <Box className={classes.firstToken}>{firstIcon}</Box>
+              <Box className={classes.secondToken}>{secondIcon}</Box>
+            </Box>
+          </Grid>
+          <Grid item xs>
+            <Typography gutterBottom className={classes.pair}>
+              {firstToken}/{secondToken}
+            </Typography>
+            <Typography className={classes.exchange}>{exchange}</Typography>
+          </Grid>
+          <Grid item>
+            <Radio checked={selected} color='primary' onClick={onSelect} />
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography>
-            {firstToken}/{secondToken}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Radio checked={selected} color='primary' />
-        </Grid>
-      </Grid>
+      </Box>
     </Paper>
   );
 };

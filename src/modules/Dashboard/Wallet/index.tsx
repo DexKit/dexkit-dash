@@ -60,6 +60,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import TokenCard from 'shared/components/TokenCard';
 import TokenLogo from 'shared/components/TokenLogo';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 
 type Params = {
   account: string;
@@ -143,6 +144,15 @@ const WalletTabs: React.FC<Props> = (props) => {
                     price24Change={3}
                     pair={'ETH'}
                     onClick={() => console.log('hello')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TokenPairCard
+                    firstIcon={<TokenPairIcon src={''} />}
+                    secondIcon={<TokenPairIcon src={''} />}
+                    firstToken={'ETH'}
+                    secondToken={'USDT'}
+                    exchange={'Uniswap'}
                   />
                 </Grid>
               </Grid>

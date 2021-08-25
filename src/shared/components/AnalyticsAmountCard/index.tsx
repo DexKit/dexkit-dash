@@ -1,13 +1,6 @@
 import React from 'react';
 
-import {
-  Paper,
-  Grid,
-  makeStyles,
-  Box,
-  Typography,
-  ButtonBase,
-} from '@material-ui/core';
+import {Paper, Grid, makeStyles, Box, Typography} from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(() => ({
@@ -37,7 +30,7 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
 
   return isLoading ? (
     <Skeleton>
-      <Paper component={ButtonBase} className={classes.paper} onClick={onClick}>
+      <Paper className={classes.paper} onClick={onClick}>
         <Box p={4}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -54,7 +47,7 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
       </Paper>
     </Skeleton>
   ) : (
-    <Paper component={ButtonBase} className={classes.paper} onClick={onClick}>
+    <Paper className={classes.paper} onClick={onClick}>
       <Box p={4}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
