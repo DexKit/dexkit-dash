@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   paper: {
+    backgroundColor: '#252836',
     borderRadius: 6,
     display: 'block',
     textAlign: 'left',
@@ -31,7 +32,7 @@ interface TokenListItemProps {
   symbol: string;
   name: string;
   amount: number;
-  dayChange: number;
+  dayChange?: number;
   address?: string;
   network?: any;
   onClick?: (network: string, address: string) => void;
@@ -55,6 +56,8 @@ export const TokenListItem = (props: TokenListItemProps) => {
       onClick(network, address);
     }
   }, [network, address, onClick]);
+
+  console.log('network', name, network);
 
   return (
     <Paper onClick={handleClick} className={classes.paper}>
@@ -86,17 +89,19 @@ export const TokenListItem = (props: TokenListItemProps) => {
                 <Typography align='right' variant='body1'>
                   ${amount}
                 </Typography>
-                <Typography
-                  align='right'
-                  style={{
-                    color:
-                      dayChange >= 0
-                        ? theme.palette.success.main
-                        : theme.palette.error.main,
-                  }}
-                  variant='body2'>
-                  {dayChange}%
-                </Typography>
+                {dayChange !== undefined ? (
+                  <Typography
+                    align='right'
+                    style={{
+                      color:
+                        dayChange >= 0
+                          ? theme.palette.success.main
+                          : theme.palette.error.main,
+                    }}
+                    variant='body2'>
+                    {dayChange}%
+                  </Typography>
+                ) : null}
               </Grid>
               {onRemove ? (
                 <Grid item>

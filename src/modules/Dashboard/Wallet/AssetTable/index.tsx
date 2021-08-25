@@ -44,8 +44,16 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
+enum TokenOrderBy {
+  Name,
+  UsdAmount,
+  TokenAmount,
+}
+
 const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const classes = useStyles();
+
+  const [orderBy, setOrderBy] = useState(TokenOrderBy.Name);
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -75,8 +83,35 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
       );
     }
 
+    // TODO: simplify this code
+    if (orderBy === TokenOrderBy.Name) {
+      results = results.sort((a: MyBalances, b: MyBalances): number => {
+        return a.currency?.name?.localeCompare(b.currency?.name || '') || 0;
+      });
+    } else if (orderBy === TokenOrderBy.TokenAmount) {
+      results = results.sort((a: MyBalances, b: MyBalances): number => {
+        let firstValue = a.value || 0;
+        let lastValue = b.value || 0;
+
+        if (firstValue < lastValue) return -1;
+        else if (firstValue > lastValue) return 1;
+
+        return 0;
+      });
+    } else if (orderBy === TokenOrderBy.UsdAmount) {
+      results = results.sort((a: MyBalances, b: MyBalances): number => {
+        let firstValue = a.valueInUsd || 0;
+        let lastValue = b.valueInUsd || 0;
+
+        if (firstValue < lastValue) return -1;
+        else if (firstValue > lastValue) return 1;
+
+        return 0;
+      });
+    }
+
     return results;
-  }, [filter, search, balances]);
+  }, [orderBy, filter, search, balances]);
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);

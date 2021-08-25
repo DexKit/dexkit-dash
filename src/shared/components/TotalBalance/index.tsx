@@ -244,7 +244,7 @@ const TotalBalance = (props: Props) => {
       </Backdrop>
       <Box>
         <Grid container spacing={2} alignItems='center' justify='space-between'>
-          <Grid item xs={isMobile ? 12 : undefined} sm={3}>
+          <Grid item xs={isMobile ? 12 : undefined} sm={4}>
             <Paper>
               <Box p={4}>
                 <Grid

@@ -49,7 +49,6 @@ export const AssetList = (props: AssetListProps) => {
               symbol={balance.currency?.symbol || ''}
               name={balance.currency?.name || ''}
               amount={balance?.valueInUsd || 0}
-              dayChange={0}
               onClick={handleClick}
             />
           </Grid>

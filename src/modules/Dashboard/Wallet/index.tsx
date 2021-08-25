@@ -52,15 +52,14 @@ import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
 import {TransferTab} from './Tabs/TransfersTab';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import {Fonts} from 'shared/constants/AppEnums';
-import {AboutDialog} from './AboutDialog';
-import SettingsIcon from '@material-ui/icons/Settings';
-import {TradeToolsSection} from './components/TradeToolsSection';
-import {SwapComponent} from '../Swap/Swap';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
-import {ArrowForward} from '@material-ui/icons';
+import TokenListItem from 'shared/components/TokenListItem';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
+import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import TokenCard from 'shared/components/TokenCard';
+import TokenLogo from 'shared/components/TokenLogo';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 type Params = {
   account: string;
@@ -109,6 +108,8 @@ const WalletTabs: React.FC<Props> = (props) => {
     }
   }, [urlAccount, defaultAccount]);
 
+  const favoritesWithMarket = useFavoritesWithMarket();
+
   return (
     <>
       <TabContext value={value}>
@@ -129,8 +130,26 @@ const WalletTabs: React.FC<Props> = (props) => {
               )}
             </Grid>
             <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TokenCard
+                    amount={3}
+                    icon={
+                      <TokenLogo
+                        token0={'0x00'}
+                        networkName={EthereumNetwork.bsc}
+                      />
+                    }
+                    price24Change={3}
+                    pair={'ETH'}
+                    onClick={() => console.log('hello')}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={5}>
                   <Card>
                     <CardContent>
                       <Grid container spacing={4}>
@@ -165,7 +184,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={7}>
                   <Card>
                     <CardContent>
                       <Grid container spacing={4}>
@@ -179,6 +198,8 @@ const WalletTabs: React.FC<Props> = (props) => {
                             </Grid>
                             <Grid item>
                               <Button
+                                to='/dashboard/favorite-coins'
+                                component={RouterLink}
                                 size='small'
                                 endIcon={<KeyboardArrowRightIcon />}>
                                 View more
@@ -186,7 +207,38 @@ const WalletTabs: React.FC<Props> = (props) => {
                             </Grid>
                           </Grid>
                         </Grid>
-                        <Grid item xs={12}></Grid>
+                        <Grid item xs={12}>
+                          {favoritesWithMarket.loading ? (
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                            </Grid>
+                          ) : (
+                            favoritesWithMarket.data.map((favorite) => (
+                              <TokenListItem
+                                address={favorite.coin.address}
+                                dayChange={
+                                  favorite.market.price_change_percentage_24h ||
+                                  0
+                                }
+                                amount={favorite.market.current_price}
+                                symbol={favorite.coin.symbol}
+                                name={favorite.coin.name}
+                                network={favorite.coin?.networkName || ''}
+                              />
+                            ))
+                          )}
+                        </Grid>
                       </Grid>
                     </CardContent>
                   </Card>
