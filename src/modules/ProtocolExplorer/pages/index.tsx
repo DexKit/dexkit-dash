@@ -1,7 +1,16 @@
 import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 
-import {Accordion, AccordionDetails, AccordionSummary, Box, Breadcrumbs, Grid, Paper, Typography} from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Breadcrumbs,
+  Grid,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
@@ -25,6 +34,8 @@ import {Pairs} from '../components/pairs';
 
 import {useStyles} from './index.style';
 import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
+import TokenCard from 'shared/components/TokenCard';
+import TokenLogo from 'shared/components/TokenLogo';
 
 type Params = {
   address: string;
@@ -145,10 +156,24 @@ const Explorer: React.FC<TokenProps> = (props) => {
       </Grid>
 
       <Grid container justify='space-between' spacing={2}>
-        <Grid item xs={6}>
-          <Typography variant='h6'>Coin Price and Tools</Typography>
+        <Grid item xs={12} md={6}>
+          {loadingToken || !tokenInfo || !tokenMarket ? (
+            <Skeleton variant={'rect'} height={100} />
+          ) : (
+            <TokenCard
+              icon={
+                <TokenLogo
+                  token0={tokenInfo?.address || ''}
+                  networkName={networkName}
+                />
+              }
+              pair={tokenInfo?.symbol as string}
+              amount={tokenMarket?.priceUsd as number}
+              price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
+            />
+          )}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           {balances.data && <CoinTools balances={balances.data} />}
         </Grid>
 

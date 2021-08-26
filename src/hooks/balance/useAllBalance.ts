@@ -71,6 +71,9 @@ export const useAllBalance = (defaultAccount?: string) => {
                       network: EthereumNetwork.ethereum,
                       value: t.value,
                       // enquanto não vem a solução pela bitquery
+                      price24hPercentage:
+                        coingeckoList[addr || ''].price_change_percentage_24h ||
+                        0,
                       valueInUsd:
                         (t.value || 0) *
                         (coingeckoList[addr || '']?.current_price || 0),

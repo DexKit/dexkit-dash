@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import GridContainer from '@crema/core/GridContainer';
 
@@ -51,15 +52,15 @@ import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
 import {TransferTab} from './Tabs/TransfersTab';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import {Fonts} from 'shared/constants/AppEnums';
-import {AboutDialog} from './AboutDialog';
-import SettingsIcon from '@material-ui/icons/Settings';
-import {TradeToolsSection} from './components/TradeToolsSection';
-import {SwapComponent} from '../Swap/Swap';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
-import {ArrowForward} from '@material-ui/icons';
+import TokenListItem from 'shared/components/TokenListItem';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
+import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import TokenCard from 'shared/components/TokenCard';
+import TokenLogo from 'shared/components/TokenLogo';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 
 type Params = {
   account: string;
@@ -108,27 +109,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     }
   }, [urlAccount, defaultAccount]);
 
-  const titleComponent = (
-    <Box display='flex' alignItems='center' mt={1}>
-      <AccountBalanceWalletIcon color={'primary'} fontSize={'large'} />
-      <Box
-        component='h3'
-        color='text.primary'
-        fontWeight={Fonts.BOLD}
-        ml={2}
-        mr={2}>
-        Wallet
-      </Box>
-      <Tooltip title={'Manage Accounts'}>
-        <Button
-          variant='outlined'
-          onClick={() => history.push('/dashboard/wallet/manage-accounts')}>
-          <SettingsIcon />
-        </Button>
-      </Tooltip>
-      <AboutDialog />
-    </Box>
-  );
+  const favoritesWithMarket = useFavoritesWithMarket();
 
   return (
     <>
@@ -150,11 +131,53 @@ const WalletTabs: React.FC<Props> = (props) => {
               )}
             </Grid>
             <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <TokenCard
+                    amount={3}
+                    icon={
+                      <TokenLogo
+                        token0={'0x00'}
+                        networkName={EthereumNetwork.bsc}
+                      />
+                    }
+                    price24Change={3}
+                    pair={'ETH'}
+                    onClick={() => console.log('hello')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TokenPairCard
+                    firstIcon={<TokenPairIcon src={''} />}
+                    secondIcon={<TokenPairIcon src={''} />}
+                    firstToken={'ETH'}
+                    secondToken={'USDT'}
+                    exchange={EXCHANGE.UNISWAP}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={5}>
                   <Card>
                     <CardContent>
                       <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Grid
+                            container
+                            alignItems='center'
+                            justify='space-between'>
+                            <Grid item>
+                              <Typography variant='body1'>Groups</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Button endIcon={<KeyboardArrowRightIcon />}>
+                                View more
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
                         <Grid item xs={12}>
                           <TokensGroupActionButton
                             title='Explorer'
@@ -166,6 +189,65 @@ const WalletTabs: React.FC<Props> = (props) => {
                             title='Explorer'
                             subtitle='lorem ipsum indolor'
                           />
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={7}>
+                  <Card>
+                    <CardContent>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Grid
+                            container
+                            alignItems='center'
+                            justify='space-between'>
+                            <Grid item>
+                              <Typography variant='body1'>Favorites</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Button
+                                to='/dashboard/favorite-coins'
+                                component={RouterLink}
+                                size='small'
+                                endIcon={<KeyboardArrowRightIcon />}>
+                                View more
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                          {favoritesWithMarket.loading ? (
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                            </Grid>
+                          ) : (
+                            favoritesWithMarket.data.map((favorite) => (
+                              <TokenListItem
+                                address={favorite.coin.address}
+                                dayChange={
+                                  favorite.market.price_change_percentage_24h ||
+                                  0
+                                }
+                                amount={favorite.market.current_price}
+                                symbol={favorite.coin.symbol}
+                                name={favorite.coin.name}
+                                network={favorite.coin?.networkName || ''}
+                              />
+                            ))
+                          )}
                         </Grid>
                       </Grid>
                     </CardContent>

@@ -9,6 +9,8 @@ import {
   Backdrop,
   IconButton,
 } from '@material-ui/core';
+import {Skeleton} from '@material-ui/lab';
+
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
@@ -232,10 +234,8 @@ const TotalBalance = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <Backdrop
-        className={classes.backdrop}
-        open={showSwap}
-        onClick={handleSwapClose}>
+      <Backdrop className={classes.backdrop} open={showSwap}>
+        {/* TODO: transform this in a dialog */}
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
             <SwapComponent onClose={handleSwapClose} />
@@ -244,7 +244,7 @@ const TotalBalance = (props: Props) => {
       </Backdrop>
       <Box>
         <Grid container spacing={2} alignItems='center' justify='space-between'>
-          <Grid item xs={isMobile ? 12 : undefined}>
+          <Grid item xs={isMobile ? 12 : undefined} sm={4}>
             <Paper>
               <Box p={4}>
                 <Grid
@@ -262,10 +262,16 @@ const TotalBalance = (props: Props) => {
                           {truncateAddress(address)}
                         </Typography>
                         <Typography className={classes.usdAmount}>
-                          <span className={classes.usdAmountSign}>$</span>
-                          {amountsVisible
-                            ? onlyTokenValueInUsd || usdAvailable.toFixed(2)
-                            : '****,**'}
+                          {loading || usdAvailable === 0 ? (
+                            <Skeleton />
+                          ) : (
+                            <>
+                              <span className={classes.usdAmountSign}>$</span>
+                              {amountsVisible
+                                ? onlyTokenValueInUsd || usdAvailable.toFixed(2)
+                                : '****,**'}
+                            </>
+                          )}
                         </Typography>
                       </Grid>
                     </Grid>

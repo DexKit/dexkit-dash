@@ -38,7 +38,7 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
 
   return (
     <Box mt={2}>
-      {IS_AMM(pair?.exchange?.fullName as EXCHANGE) ? (
+      {IS_AMM(pair?.exchange?.fullName as EXCHANGE, pair?.protocol) ? (
         <Grid container alignItems='center' spacing={2}>
           <Grid item xs={12}>
             <Grid container alignItems='center' spacing={2}>

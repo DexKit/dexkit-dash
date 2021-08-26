@@ -5,7 +5,6 @@ import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {Box, Avatar, Tooltip, Fade, Link, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
-import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
 import LoadingInfo from './LoadingInfo';
@@ -47,7 +46,6 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 
 const Info: React.FC<Props> = (props) => {
   const {data, loading, networkName} = props;
-  const {currentChainId} = useChainId();
   const classes = useStyles();
 
   // const color = 'rgb(78, 228, 78)';
@@ -74,10 +72,6 @@ const Info: React.FC<Props> = (props) => {
                   flexDirection='row'
                   justifyContent='space-between'>
                   <Box display='flex' alignItems='center'>
-                    <TokenLogo
-                      token0={data.baseCurrency?.address || ''}
-                      token1={data.quoteCurrency?.address || ''}
-                    />
                     <Box
                       component='h3'
                       color='text.primary'

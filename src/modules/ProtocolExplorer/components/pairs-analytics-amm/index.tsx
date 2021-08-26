@@ -6,6 +6,8 @@ import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protoc
 import {ReactComponent as PresentationChartIcon} from 'assets/images/icons/presentation-chart.svg';
 import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
+import {ReactComponent as StatusUpIcon} from 'assets/images/icons/status-up.svg';
+import {ReactComponent as HashtagIcon} from 'assets/images/icons/hashtag.svg';
 import { useAMMPairExplorer } from 'hooks/protocolExplorer/useAMMPairExplorer';
 import { EthereumNetwork, EXCHANGE } from 'shared/constants/AppEnums';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
@@ -54,11 +56,12 @@ export const PairAnalyticsAMM = (props: Props) => {
           <Grid  item>
             <AnalyticsAmountCard
               isLoading={loading}
-              icon={<GraphIcon />}
-              amount={data?.trades || '-'}
-              caption={'Total Trades (24h)'}
+              icon={<HashtagIcon />}
+              amount={liquidity}
+              caption={'Total Liquidity'}
             />
           </Grid>
+
           <Grid  item>
             <AnalyticsAmountCard
               isLoading={loading}
@@ -78,7 +81,7 @@ export const PairAnalyticsAMM = (props: Props) => {
           <Grid  item>
             <AnalyticsAmountCard
               isLoading={loading}
-              icon={<PresentationChartIcon />}
+              icon={<StatusUpIcon />}
               amount={data?.basePooled.toFixed(4) || '-'}
               caption={`Pooled ${pair.baseCurrency?.symbol} (24h)`}
             />
@@ -86,7 +89,7 @@ export const PairAnalyticsAMM = (props: Props) => {
           <Grid  item>
             <AnalyticsAmountCard
               isLoading={loading}
-              icon={<PresentationChartIcon />}
+              icon={<StatusUpIcon />}
               amount={data?.quotePooled.toFixed(4) || '-'}
               caption={`Pooled ${pair.quoteCurrency?.symbol} (24h)`}
             />
@@ -94,11 +97,12 @@ export const PairAnalyticsAMM = (props: Props) => {
           <Grid  item>
             <AnalyticsAmountCard
               isLoading={loading}
-              icon={<PresentationChartIcon />}
-              amount={liquidity}
-              caption={'Total Liquidity'}
+              icon={<GraphIcon />}
+              amount={data?.trades || '-'}
+              caption={'Total Trades (24h)'}
             />
           </Grid>
+    
         </Grid>
       </Grid>
     </Grid>

@@ -220,7 +220,9 @@ const TableItem: React.FC<TableItemProps> = ({
             {!isMobile && (
               <TokenLogo
                 token0={row.baseCurrency?.address || ''}
-                token1={row.quoteCurrency?.address || ''}></TokenLogo>
+                token1={row.quoteCurrency?.address || ''}
+                networkName={networkName}
+                ></TokenLogo>
             )}
             <Link
               to={GET_PROTOCOL_PAIR_URL(

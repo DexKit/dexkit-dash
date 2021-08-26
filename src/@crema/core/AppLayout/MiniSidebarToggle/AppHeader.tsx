@@ -47,10 +47,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [
-    mobileMoreAnchorEl,
-    setMobileMoreAnchorEl,
-  ] = useState<null | HTMLElement>(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
+    useState<null | HTMLElement>(null);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -134,6 +132,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               alignItems='center'
               alignContent='center'
               spacing={2}>
+              <Grid item>
+                <Box mr={4}>
+                  <DexkitLogoImage />
+                </Box>
+              </Grid>
               <Grid item xs>
                 <AppBarSearchInput
                   placeholder='Search for tokens, pools and vaults'

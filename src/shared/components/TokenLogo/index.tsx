@@ -4,7 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
+import {GET_DEFAULT_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 import {useChainId} from 'hooks/useChainId';
 import {CremaTheme} from 'types/AppContextPropsType';
 
@@ -40,24 +40,23 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 interface Props {
   token0: string;
+  networkName: EthereumNetwork;
   logoURL0?: string;
   token1?: string | undefined;
-  networkName?: EthereumNetwork;
 }
 
 const TokenLogo: React.FC<Props> = (props) => {
-  const {currentChainId} = useChainId();
   const net = useNetwork();
   const classes = useStyles();
   const currentNetwork = props.networkName || net;
 
   const provToken0 =
     props.token0 === '-'
-      ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId)
+      ? GET_DEFAULT_TOKEN_BY_NETWORK(currentNetwork)
       : props.token0;
   const provToken1 =
     props.token1 === '-'
-      ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId)
+      ? GET_DEFAULT_TOKEN_BY_NETWORK(currentNetwork)
       : props.token1;
 
   const token0 =

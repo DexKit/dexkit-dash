@@ -13,6 +13,7 @@ import HistoryTables from '../history';
 import Box from '@material-ui/core/Box';
 import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
+import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 type Props = {
   baseAddress: string;
   exchange: EXCHANGE;
@@ -74,13 +75,17 @@ export const Pairs = (props: Props) => {
           <Grid item xs={12}>
             <Grid container spacing={4}>
               {data &&
-                data?.map((i, k) => (
+                data?.map((pair, k) => (
                   <Grid key={k} item>
                     {
-                      <PairItem
-                        loading={loading}
-                        item={i}
-                        onClick={() => setSelectedPair(i)}
+                      <TokenPairCard
+                        firstToken={pair.baseCurrency?.symbol as string}
+                        secondToken={pair.quoteCurrency?.symbol as string}
+                        firstIcon={''}
+                        secondIcon={''}
+                        selected={pair === selectedPair}
+                        exchange={pair.exchange?.fullName as EXCHANGE}
+                        onSelect={() => setSelectedPair(pair)}
                       />
                     }
                   </Grid>
@@ -89,7 +94,7 @@ export const Pairs = (props: Props) => {
           </Grid>
           <Grid item xs={12}>
             {selectedPair &&
-            IS_AMM(selectedPair?.exchange?.fullName as EXCHANGE) ? (
+            IS_AMM(selectedPair?.exchange?.fullName as EXCHANGE, selectedPair?.protocol) ? (
               <PairAnalyticsAMM
                 exchange={selectedPair?.exchange?.fullName as EXCHANGE}
                 address={selectedPair?.smartContract?.address.address as string}
@@ -97,7 +102,13 @@ export const Pairs = (props: Props) => {
                 pair={selectedPair}
               />
             ) : (
-              <PairAnalytics />
+              selectedPair && (
+                <PairAnalytics
+                  exchange={selectedPair?.exchange?.fullName as EXCHANGE}
+                  networkName={networkName}
+                  pair={selectedPair}
+                />
+              )
             )}
           </Grid>
           <Grid item xs={12}></Grid>
