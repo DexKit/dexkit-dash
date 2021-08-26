@@ -37,26 +37,17 @@ const TransactionTable: React.FC<Props> = ({
   const classes = useStyles();
   return (
     <>
-      <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader>
-          <TableHead className={classes.borderBottomClass}>
-            <TableHeading />
-          </TableHead>
-
-          <TableBody className={classes.borderBottomClass}>
-            {data &&
-              data.map((row, index) => (
-                <TableItem row={row} networkName={networkName} key={index} />
-              ))}
-          </TableBody>
-        </Table>
-        {data && data.length === 0 && (
-          <Typography variant='h5' align={'center'} color={'primary'}>
-            You don't have trades yet
-          </Typography>
-        )}
-      </Box>
-
+      <Table stickyHeader>
+        <TableHead>
+          <TableHeading />
+        </TableHead>
+        <TableBody>
+          {data &&
+            data.map((row, index) => (
+              <TableItem row={row} networkName={networkName} key={index} />
+            ))}
+        </TableBody>
+      </Table>
       <TablePagination
         className={classes.paginationDesktop}
         component='div'

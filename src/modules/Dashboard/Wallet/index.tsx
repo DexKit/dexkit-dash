@@ -279,9 +279,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                   data={data}
                 />
               </TabPanel>
-              <TabPanel value='transfers'>
-                <TransferTab address={defaultAccount} />
-              </TabPanel>
               <TabPanel value='trade-history'>
                 <TradeHistoryTab address={defaultAccount} />
               </TabPanel>

@@ -1,6 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import Box from '@material-ui/core/Box';
+import SwipeableViews from 'react-swipeable-views';
+
 import {
+  Box,
   CardHeader,
   ListItemIcon,
   Typography,
@@ -10,6 +12,8 @@ import {
   MenuItem,
   Snackbar,
   CardContent,
+  Breadcrumbs,
+  Link,
 } from '@material-ui/core';
 import PageTitle from 'shared/components/PageTitle';
 import GridContainer from '@crema/core/GridContainer';
@@ -54,14 +58,20 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
-import EditIcon from '@material-ui/icons/Edit';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ClearIcon from '@material-ui/icons/Clear';
 import {Fonts} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils';
 import AccountListItem from './components/AccountListItem';
 import {Alert} from '@material-ui/lab';
+import {Link as RouterLink} from 'react-router-dom';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
+
+import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
+import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
+import ContainedInput from 'shared/components/ContainedInput';
+
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     width: '100%',
@@ -86,14 +96,18 @@ const Accounts = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
 
+  const [selectActive, setSelectActive] = useState(false);
+
   const [selectedAccount, setSelectedAccount] = useState<UIAccount | null>(
     null,
   );
 
   const dispatch = useDispatch();
+
   const accounts = useSelector<AppState, AppState['ui']['accounts']>(
     (state) => state.ui.accounts,
   );
+
   const {web3State, onConnectWeb3, account} = useWeb3();
 
   const handlePaste = async () => {
@@ -105,16 +119,14 @@ const Accounts = () => {
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const value = ev.currentTarget.value;
-    if (Web3Wrapper.isAddress(value)) {
-      setError('');
-      setAddress(value);
+
+    if (!Web3Wrapper.isAddress(value)) {
+      setError('Address not valid');
     } else {
-      if (value) {
-        setError('Address not valid');
-      } else {
-        setError('');
-      }
+      setError(undefined);
     }
+
+    setAddress(value);
   };
 
   const handleAddAccount = useCallback(() => {
@@ -166,11 +178,9 @@ const Accounts = () => {
 
   const titleComponent = (
     <Box display='flex' alignItems='center' mt={1}>
-      <AccountBoxIcon color={'primary'} fontSize={'large'} />
-      <Box component='h3' color='text.primary' fontWeight={Fonts.BOLD} mr={2}>
+      <Typography variant='h5' color='textSecondary'>
         Manage Accounts
-      </Box>
-      <AboutDialog />
+      </Typography>
     </Box>
   );
 
@@ -188,14 +198,12 @@ const Accounts = () => {
     [],
   );
 
-  const handleMakeDefault = useCallback(() => {
-    if (selectedAccount) {
-      dispatch(setDefaultAccount(selectedAccount));
-    }
-
-    setAnchorEl(undefined);
-    setSelectedAccount(null);
-  }, [dispatch, setDefaultAccount, selectedAccount]);
+  const handleMakeDefault = useCallback(
+    (account: UIAccount) => {
+      dispatch(setDefaultAccount(account));
+    },
+    [dispatch, setDefaultAccount],
+  );
 
   const handleRemove = useCallback(() => {
     if (selectedAccount) {
@@ -221,47 +229,6 @@ const Accounts = () => {
   const handleEditLabel = useCallback(() => {
     setIsEditing(true);
   }, []);
-
-  const renderMenu = useCallback(() => {
-    return (
-      <Menu
-        anchorEl={anchorEl}
-        open={anchorEl !== undefined}
-        onClose={handleMenuClose}>
-        <MenuItem onClick={handleMakeDefault}>
-          <ListItemIcon>
-            <HomeIcon fontSize='small' />
-          </ListItemIcon>
-          <Typography variant='inherit'>Make default</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleEditLabel}>
-          <ListItemIcon>
-            <EditIcon fontSize='small' />
-          </ListItemIcon>
-          <Typography variant='inherit'>Edit label</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleCopyAddress}>
-          <ListItemIcon>
-            <FileCopyIcon fontSize='small' />
-          </ListItemIcon>
-          <Typography variant='inherit'>Copy Address</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleRemove}>
-          <ListItemIcon>
-            <DeleteIcon fontSize='small' />
-          </ListItemIcon>
-          <Typography variant='inherit'>Remove</Typography>
-        </MenuItem>
-      </Menu>
-    );
-  }, [
-    anchorEl,
-    handleMenuClose,
-    handleEditLabel,
-    handleCopyAddress,
-    handleMakeDefault,
-    handleRemove,
-  ]);
 
   const handleCloseSnackbar = useCallback(() => {
     setShowSnackbar(false);
@@ -299,104 +266,191 @@ const Accounts = () => {
     setAddNew(true);
   }, []);
 
+  const handleToggleSelect = useCallback(() => {
+    setSelectActive((active) => {
+      if (active) {
+        setSelectedAccounts([]);
+      }
+      return !active;
+    });
+  }, []);
+
+  const [selectedAccounts, setSelectedAccounts] = useState<UIAccount[]>([]);
+
+  const isAccountSelected = useCallback(
+    (selectedAccount: UIAccount) => {
+      return (
+        selectedAccounts.findIndex(
+          (a) => a.address === selectedAccount.address,
+        ) > -1
+      );
+    },
+    [selectedAccounts],
+  );
+
+  const handleSelect = useCallback(
+    (selectedAccount: UIAccount) => {
+      let newAccounts = [...selectedAccounts];
+
+      let index = newAccounts.findIndex(
+        (acc) => acc.address === selectedAccount.address,
+      );
+
+      if (index > -1) {
+        newAccounts.splice(index, 1);
+      } else {
+        newAccounts.push(selectedAccount);
+      }
+
+      setSelectedAccounts(newAccounts);
+    },
+    [selectedAccounts],
+  );
+
+  // TODO: put a confirm modal before this
+  const handleRemoveMultiple = useCallback(() => {
+    for (let account of selectedAccounts) {
+      dispatch(removeAccount(account));
+
+      let newAccounts = [...selectedAccounts];
+
+      let index = selectedAccounts.findIndex(
+        (another) => another.address === another.address,
+      );
+
+      if (index > -1) {
+        newAccounts.splice(index, 1);
+        setSelectedAccounts(newAccounts);
+      }
+    }
+  }, [selectedAccounts]);
+
   return (
     <Box pt={{xl: 4}}>
-      {renderMenu()}
       {renderSnackbar()}
-      <Box display={'flex'} mb={2}>
-        <PageTitle
-          breadcrumbs={{
-            history: [
-              {url: '/', name: 'Dashboard'},
-              {url: '/dashboard/wallet', name: 'Wallet'},
-            ],
-            active: {name: `Manage`},
-          }}
-          title={{name: 'Manage Accounts', component: titleComponent}}
-        />
-      </Box>
-      <Grid container>
+      <Grid container spacing={4}>
         {notConnected && (
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12}>
             <Box>{connectButton}</Box>
           </Grid>
         )}
         <Grid item xs={12}>
-          <Card>
-            <CardHeader
-              title='Accounts'
-              action={
-                <IconButton color='primary' onClick={handleAddNew}>
-                  <AddIcon />
-                </IconButton>
-              }
-            />
-            {addNew ? (
-              <CardContent>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Grid
-                      alignItems='center'
-                      alignContent='center'
-                      container
-                      spacing={2}>
-                      <Grid item xs>
-                        <TextField
-                          label='New address'
-                          fullWidth
-                          helperText={error}
-                          error={!!error}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment
-                                position='end'
-                                onClick={handlePaste}>
-                                <Tooltip title={'Paste valid account'}>
-                                  <IconButton
-                                    aria-label='paste'
-                                    color='primary'>
-                                    <CallReceivedIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </InputAdornment>
-                            ),
-                          }}
-                          onChange={onChangeAddress}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Tooltip title={'Add valid account'}>
-                          <Button
-                            aria-label='add'
-                            color='primary'
-                            onClick={handleAddAccount}
-                            disabled={!address}
-                            startIcon={<DoneIcon />}>
-                            Save
-                          </Button>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Typography variant='body1'>Add new account</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                alignItems='center'
+                alignContent='center'
+                container
+                spacing={2}>
+                <Grid item xs>
+                  <ContainedInput
+                    placeholder='Address'
+                    fullWidth
+                    endAdornment={
+                      <InputAdornment position='end' onClick={handlePaste}>
+                        <Tooltip title={'Paste valid account'}>
+                          <IconButton aria-label='paste' color='primary'>
+                            <CallReceivedIcon />
+                          </IconButton>
                         </Tooltip>
-                      </Grid>
-                    </Grid>
+                      </InputAdornment>
+                    }
+                    onChange={onChangeAddress}
+                  />
+                </Grid>
+                <Grid item>
+                  <Tooltip title={'Add valid account'}>
+                    <SquaredIconButton
+                      onClick={handleAddAccount}
+                      disabled={address === '' || error !== undefined}>
+                      <DoneIcon />
+                    </SquaredIconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                {error ? (
+                  <Typography
+                    variant='caption'
+                    style={{color: theme.palette.error.main}}>
+                    {error}
+                  </Typography>
+                ) : null}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <SwipeableViews>
+            <Box display='flex'>
+              <Box mr={2}>
+                <Chip size='small' label='BTC' />
+              </Box>
+              <Box mr={2}>
+                <Chip clickable size='small' label='ETH' variant='outlined' />
+              </Box>
+              <Box>
+                <Chip clickable size='small' label='BSC' variant='outlined' />
+              </Box>
+            </Box>
+          </SwipeableViews>
+        </Grid>
+        <Grid item xs={12}>
+          <Box
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'>
+            <Typography variant='body1'>{accounts.length} Accounts</Typography>
+
+            {selectActive ? (
+              <Box>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <SquaredIconButton onClick={handleToggleSelect}>
+                      <CloseCircleIcon />
+                    </SquaredIconButton>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title='Remove items'>
+                      <SquaredIconButton
+                        onClick={handleRemoveMultiple}
+                        disabled={selectedAccounts.length === 0}>
+                        <DeleteIcon />
+                      </SquaredIconButton>
+                    </Tooltip>
                   </Grid>
                 </Grid>
-              </CardContent>
-            ) : null}
-            <List>
-              {accounts.map((a, index: number) => (
-                <React.Fragment key={index}>
-                  <AccountListItem
-                    account={a}
-                    editing={a.address == selectedAccount?.address && isEditing}
-                    isConnected={a.address == account}
-                    onLabelChange={handleLabelChange}
-                    onOpenMenu={handleOpenMenu}
-                    isDefault={index == 0}
-                  />
-                  <Divider light />
-                </React.Fragment>
-              ))}
-            </List>
-          </Card>
+              </Box>
+            ) : (
+              <SquaredIconButton onClick={handleToggleSelect}>
+                <EditIcon />
+              </SquaredIconButton>
+            )}
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            {accounts.map((a, index: number) => (
+              <Grid item xs={12} key={index}>
+                <AccountListItem
+                  account={a}
+                  isConnected={
+                    a.address.toLowerCase() === account?.toLowerCase()
+                  }
+                  onLabelChange={handleLabelChange}
+                  onOpenMenu={handleOpenMenu}
+                  isDefault={index == 0}
+                  selectActive={selectActive}
+                  onSelect={handleSelect}
+                  selected={isAccountSelected(a)}
+                  onMakeDefault={handleMakeDefault}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </Grid>
     </Box>

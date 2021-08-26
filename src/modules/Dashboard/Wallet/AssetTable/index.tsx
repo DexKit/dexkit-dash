@@ -15,6 +15,12 @@ import {
   InputAdornment,
   useTheme,
   useMediaQuery,
+  Accordion,
+  AccordionSummary,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -93,8 +99,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
         let firstValue = a.value || 0;
         let lastValue = b.value || 0;
 
-        if (firstValue < lastValue) return -1;
-        else if (firstValue > lastValue) return 1;
+        if (firstValue > lastValue) return -1;
+        else if (firstValue < lastValue) return 1;
 
         return 0;
       });
@@ -103,8 +109,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
         let firstValue = a.valueInUsd || 0;
         let lastValue = b.valueInUsd || 0;
 
-        if (firstValue < lastValue) return -1;
-        else if (firstValue > lastValue) return 1;
+        if (firstValue > lastValue) return -1;
+        else if (firstValue < lastValue) return 1;
 
         return 0;
       });
@@ -115,6 +121,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
+  }, []);
+
+  const handleOrderByChange = useCallback((e) => {
+    setOrderBy(e.target.value);
   }, []);
 
   const theme = useTheme();
@@ -163,9 +173,28 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               />
             </Grid>
             <Grid item xs={12}>
+              <FormControl variant='outlined' fullWidth>
+                <InputLabel>Order by</InputLabel>
+                <Select
+                  style={{backgroundColor: 'transparent'}}
+                  label='Order by'
+                  value={orderBy}
+                  variant='outlined'
+                  onChange={handleOrderByChange}
+                  fullWidth>
+                  <MenuItem value={TokenOrderBy.Name}>Name</MenuItem>
+                  <MenuItem value={TokenOrderBy.TokenAmount}>
+                    Token amount
+                  </MenuItem>
+                  <MenuItem value={TokenOrderBy.UsdAmount}>USD Amount</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
                 Network
               </Typography>
+
               <Chip
                 style={{marginRight: 10}}
                 label='All'

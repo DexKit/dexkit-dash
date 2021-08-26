@@ -10,6 +10,9 @@ export const ContainedInput = withStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     fontWeight: 500,
     fontStyle: 'normal',
+    '&:hover': {
+      borderColor: theme.palette.primary.main,
+    },
   },
 }))(InputBase);
 

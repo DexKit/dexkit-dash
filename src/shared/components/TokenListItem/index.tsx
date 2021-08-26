@@ -32,6 +32,7 @@ interface TokenListItemProps {
   symbol: string;
   name: string;
   amount: number;
+  amountUsd?: number;
   dayChange?: number;
   address?: string;
   network?: any;
@@ -40,8 +41,17 @@ interface TokenListItemProps {
 }
 
 export const TokenListItem = (props: TokenListItemProps) => {
-  const {symbol, name, amount, dayChange, address, network, onClick, onRemove} =
-    props;
+  const {
+    symbol,
+    name,
+    amount,
+    dayChange,
+    amountUsd,
+    address,
+    network,
+    onClick,
+    onRemove,
+  } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -70,16 +80,12 @@ export const TokenListItem = (props: TokenListItemProps) => {
               </Grid>
               <Grid item>
                 <Typography color='textSecondary' variant='caption'>
-                  {name}{' '}
+                  {name}
                 </Typography>
-                <Typography variant='body2'>{symbol.toUpperCase()}</Typography>
-              </Grid>
-              <Grid>
-                <Chip
-                  size='small'
-                  variant='outlined'
-                  label={network.toUpperCase()}
-                />
+                <Typography variant='body2'>
+                  {symbol.toUpperCase()}{' '}
+                  {<Chip size='small' label={network.toUpperCase()} />}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -87,8 +93,18 @@ export const TokenListItem = (props: TokenListItemProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography align='right' variant='body1'>
-                  ${amount}
+                  {amount}
                 </Typography>
+                {amountUsd ? (
+                  <Typography
+                    align='right'
+                    variant='body2'
+                    color='textSecondary'>
+                    ${amountUsd.toFixed(2)}
+                  </Typography>
+                ) : null}
+              </Grid>
+              <Grid item>
                 {dayChange !== undefined ? (
                   <Typography
                     align='right'
