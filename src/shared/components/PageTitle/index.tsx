@@ -134,7 +134,7 @@ const PageTitle: React.FC<Props> = ({
 
           {icon && (
             <Box mr={2}>
-              {<TokenLogo token0={icon} networkName={network as any} />}
+              {<TokenLogo token0={icon} networkName={network} />}
             </Box>
           )}
 

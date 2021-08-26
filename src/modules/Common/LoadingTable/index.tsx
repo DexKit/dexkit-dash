@@ -13,7 +13,7 @@ const LoadingTable: React.FC<Props> = (props) => {
 
   for (let i = 0; i < columns; i++) {
     tableBodyRow.push(
-      <TableCell style={{paddingTop: 12, paddingBottom: 12}} key={`loading-cell-key-${i}`}>
+      <TableCell style={{paddingTop: 12, paddingBottom: 12}}>
         <Skeleton variant='text' />
       </TableCell>,
     );
@@ -22,7 +22,7 @@ const LoadingTable: React.FC<Props> = (props) => {
   const tableBodyRows = [];
 
   for (let i = 0; i < rows; i++) {
-    tableBodyRows.push(<TableRow key={`loading-row-key-${i}`}>{tableBodyRow}</TableRow>);
+    tableBodyRows.push(<TableRow>{tableBodyRow}</TableRow>);
   }
 
   return (

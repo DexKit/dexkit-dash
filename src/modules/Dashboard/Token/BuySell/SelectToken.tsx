@@ -222,7 +222,7 @@ const SelectToken: React.FC<Props> = ({
               <SelectOption>
                 <TokenLogo
                   token0={option.address}
-                  networkName={option?.networkName as any}
+                  networkName={option?.networkName}
                   logoURL0={option?.logoURI}
                 />
                 {option.name}
@@ -246,7 +246,7 @@ const SelectToken: React.FC<Props> = ({
                   {selected && (
                     <TokenLogo
                       token0={selected?.address}
-                      networkName={selected?.networkName as any}
+                      networkName={selected?.networkName}
                       logoURL0={selected?.logoURI}
                     />
                   )}

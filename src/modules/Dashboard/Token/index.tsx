@@ -47,7 +47,7 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
-const TokenPage: React.FC<Props> = (props) => {
+const TokenTabsPage: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
@@ -246,4 +246,4 @@ const TokenPage: React.FC<Props> = (props) => {
   );
 };
 
-export default TokenPage;
+export default TokenTabsPage;

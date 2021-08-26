@@ -10,12 +10,7 @@ import {
   SUSHISWAP_INFO_API_URL,
 } from 'shared/constants/AppConst';
 
-export const IS_AMM = (exchange: EXCHANGE, protocol?: string | null) => {
-  //TODO: Remove this when is give support for this on Uniswap V3
-  if(protocol && protocol === 'Uniswap v3'){
-    return false;
-  }
-
+export const IS_AMM = (exchange: EXCHANGE) => {
   switch (exchange) {
     case EXCHANGE.PANCAKEV2:
       return true;

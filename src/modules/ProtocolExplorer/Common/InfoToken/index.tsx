@@ -77,6 +77,7 @@ const InfoToken: React.FC<Props> = (props) => {
                     flexDirection='row'
                     justifyContent='space-between'>
                     <Box display='flex' alignItems='center'>
+                      <TokenLogo token0={token?.address || ''} />
                       <Box
                         component='h3'
                         color='text.primary'

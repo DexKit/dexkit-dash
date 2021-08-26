@@ -1,5 +1,7 @@
-import {Box, Chip, Menu, MenuItem} from '@material-ui/core';
+import {Box, Button, Chip, Menu, MenuItem} from '@material-ui/core';
 import React from 'react';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Token} from 'types/app';
@@ -39,12 +41,7 @@ const TokenFilter = (props: Props) => {
         clickable
         label={
           <Box display={'flex'} alignItems={'center'}>
-            {
-              <TokenLogo
-                token0={selectedToken.address}
-                networkName={selectedToken.networkName as any}
-              />
-            }{' '}
+            {<TokenLogo token0={selectedToken.address} />}{' '}
             {selectedToken.symbol.toUpperCase()} <ExpandMoreIcon />{' '}
           </Box>
         }
@@ -67,12 +64,7 @@ const TokenFilter = (props: Props) => {
                 color={'default'}
                 label={
                   <Box display={'flex'} alignItems={'center'}>
-                    {
-                      <TokenLogo
-                        token0={t.address ?? t.symbol}
-                        networkName={t.networkName as any}
-                      />
-                    }{' '}
+                    {<TokenLogo token0={t.address ?? t.symbol} />}{' '}
                     {t.symbol.toUpperCase()}
                   </Box>
                 }

@@ -45,41 +45,61 @@ const AMMPoolHistory: React.FC<Props> = (props: Props) => {
   });
 
   return (
-    <>
-      <Toolbar className={classes.toolbar}>
-        <Box
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
-          style={{width: '100%'}}>
+    <Fade in={true} timeout={1000}>
+      <Paper className={classes.paper}>
+        <Toolbar className={classes.toolbar}>
           <Box
-            display={'flex'}
-            justifyContent={'flex-start'}
-            alignItems={'center'}>
-            <Typography variant='h6' display={'block'} align={'center'}>
-              {messages['app.pool']}
-            </Typography>
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
+            style={{width: '100%'}}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-start'}
+              alignItems={'center'}>
+              <PoolIcon color={'primary'} className={classes.toolbarIcon} />
+              <Typography variant='h5' display={'block'} align={'center'}>
+                {messages['app.pool']}
+              </Typography>
+            </Box>
+            {/* <Box>
+            <Select
+              className={classes.selectBox}
+              value={filterValue}
+              onChange={handleChange}
+              disableUnderline={true}>
+              <option value='all' className={classes.selectOption}>
+                {messages['app.all']}
+              </option>
+              <option value='add' className={classes.selectOption}>
+                {messages['app.add']}
+              </option>
+              <option value='remove' className={classes.selectOption}>
+                {messages['app.remove']}
+              </option>
+            </Select>
+          </Box> */}
           </Box>
-        </Box>
-      </Toolbar>
-      {loading ? (
-        <LoadingTable columns={7} rows={10} />
-      ) : error ? (
-        <ErrorView message={error.message} />
-      ) : (
-        <AMMPoolHistoryTable
-          networkName={networkName}
-          data={data}
-          exchange={exchange}
-          totalRows={100}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onChangePage={(newPage) => onChangePage(newPage)}
-          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-        />
-      )}
-    </>
+        </Toolbar>
+        {loading ? (
+          <LoadingTable columns={7} rows={10} />
+        ) : error ? (
+          <ErrorView message={error.message} />
+        ) : (
+          <AMMPoolHistoryTable
+            networkName={networkName}
+            data={data}
+            exchange={exchange}
+            totalRows={100}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangePage={(newPage) => onChangePage(newPage)}
+            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+          />
+        )}
+      </Paper>
+    </Fade>
   );
 };
 

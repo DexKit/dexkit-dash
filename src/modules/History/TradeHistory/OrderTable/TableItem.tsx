@@ -1,19 +1,21 @@
 import React, {useContext, useMemo} from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import { Chip, makeStyles} from '@material-ui/core';
-
+import {Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
+import {useIntl} from 'react-intl';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import TableRow from '@material-ui/core/TableRow';
 import IntlMessages from '@crema/utility/IntlMessages';
+
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
+
 import {GetTradeHistoryList_ethereum_dexTrades} from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
+
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
 import {AppContext} from '@crema';
 
-
-import {ViewTx} from 'shared/components/ViewTx';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 
 interface TableItemProps {
   row: GetTradeHistoryList_ethereum_dexTrades;
@@ -29,13 +31,64 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderBottom: 0,
     padding: '12px 8px',
     '&:first-child': {
+      // [theme.breakpoints.up('xl')]: {
+      //   paddingLeft: 4,
+      // },
       paddingLeft: 20,
     },
     '&:last-child': {
+      // [theme.breakpoints.up('xl')]: {
+      //   paddingRight: 4,
+      // },
       paddingRight: 20,
     },
+    // [theme.breakpoints.up('xl')]: {
+    //   fontSize: 18,
+    //   padding: 16,
+    // },
   },
 }));
+
+type ViewTxProps = {
+  hash: string;
+  networkName: EthereumNetwork;
+};
+
+const ViewTx: React.FC<ViewTxProps> = ({hash, networkName}) => {
+  const {messages} = useIntl();
+  return (
+    <Tooltip title={messages['app.viewTx']} placement='top'>
+      <a
+        href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${hash}`}
+        target='_blank'
+        rel='noopener noreferrer'>
+        {networkName === EthereumNetwork.ethereum ? (
+          <Avatar
+            style={{
+              color: '#3F51B5',
+              backgroundColor: 'white',
+              width: '20px',
+              height: '20px',
+              marginRight: '5px',
+              marginBottom: '5px',
+            }}
+            src='/images/etherescan.png'></Avatar>
+        ) : (
+          <Avatar
+            style={{
+              color: '#3F51B5',
+              backgroundColor: 'white',
+              width: '20px',
+              height: '20px',
+              marginRight: '5px',
+              marginBottom: '5px',
+            }}
+            src='/images/bscscan-logo-circle.png'></Avatar>
+        )}
+      </a>
+    </Tooltip>
+  );
+};
 
 const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
   const classes = useStyles();
@@ -67,27 +120,14 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
     ? formatter.format((row?.tradeAmountIsUsd || 0) / row?.baseAmount)
     : '-';
   const ViewTxComponent = React.useMemo(
-    () => () =>
-      <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,
+    () => () => <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,
     [networkName, row.transaction?.hash],
   );
 
   if (isMobile) {
-    const summaryTitle = (
-      <Chip
-        style={{backgroundColor: paymentTypeColor, color: 'white'}}
-        label={row.side}
-      />
-    );
-    const summaryValue = `${row.baseAmount?.toFixed(4)} ${
-      row.baseCurrency?.symbol
-    } for ${row.quoteAmount?.toFixed(4)} ${row.quoteCurrency?.symbol}`;
+    const summaryTitle = <IntlMessages id='app.pair' />;
+    const summaryValue = `${row.baseCurrency?.symbol}/${row.quoteCurrency?.symbol}`;
     const data = [
-      {
-        id: 'pair',
-        title: <IntlMessages id='app.pair' />,
-        value: `{row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}`
-      },
       {
         id: 'exchange',
         title: <IntlMessages id='app.exchange' />,
@@ -140,9 +180,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
     ];
 
     return (
-      <TableRow
-        key={row.transaction?.hash}
-        className={classes.borderBottomClass}>
+      <TableRow key={row.transaction?.hash} className={classes.borderBottomClass}>
         <CollapsibleTableRow
           summaryValue={summaryValue}
           summaryTitle={summaryTitle}

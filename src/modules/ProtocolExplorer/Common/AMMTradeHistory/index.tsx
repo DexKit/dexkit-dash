@@ -34,13 +34,19 @@ const AMMTradeHistory: React.FC<Props> = (props: Props) => {
   } = useAMMPairTrades({networkName, exchange, address});
 
   return (
-      <>
+    // <AppCard height={1} title={messages['app.tradeHistory']}>
+    <Fade in={true} timeout={1000}>
+      <Paper className={classes.paper}>
         <Toolbar className={classes.toolbar}>
           <Box
             display={'flex'}
             justifyContent={'flex-start'}
             alignItems={'center'}>
-            <Typography variant='h6' display={'block'} align={'center'}>
+            <SwapHorizontalCircleIcon
+              color={'primary'}
+              className={classes.toolbarIcon}
+            />
+            <Typography variant='h5' display={'block'} align={'center'}>
               {messages['app.tradeHistory']}
             </Typography>
           </Box>
@@ -72,7 +78,9 @@ const AMMTradeHistory: React.FC<Props> = (props: Props) => {
             onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
           />
         )}
-    </>
+      </Paper>
+    </Fade>
+    // </AppCard>
   );
 };
 

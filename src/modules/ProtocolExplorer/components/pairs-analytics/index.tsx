@@ -1,37 +1,13 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React, { useMemo } from 'react';
+import React from 'react';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
 
 import {ReactComponent as PresentationChartIcon} from 'assets/images/icons/presentation-chart.svg';
 import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
-import { usePairExplorer } from 'hooks/protocolExplorer/usePairExplorer';
-import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
-import { EthereumNetwork, EXCHANGE } from 'shared/constants/AppEnums';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 
-type Props = {
-  exchange: EXCHANGE;
-  networkName: EthereumNetwork;
-  pair: GetTokenPairs_ethereum_dexTrades;
-};
-export const PairAnalytics = (props: Props) => {
-  const {exchange, networkName, pair} = props;
-
-  const {loading, error, data} = usePairExplorer({
-    baseAddress: pair.baseCurrency?.address as string,
-    quoteAddress: pair.quoteCurrency?.address as string,
-    exchange,
-    networkName,
-  });
-
-  const {usdFormatter} = useUSDFormatter();
-  const tradeAmountInUSD = useMemo(() => {
-    return loading ? '-' : usdFormatter.format(data?.tradeAmountInUsd|| 0);
-  }, [data?.tradeAmountInUsd, loading]);
-
-
+export const PairAnalytics = () => {
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
@@ -42,34 +18,58 @@ export const PairAnalytics = (props: Props) => {
         <Grid container justifyContent='center' spacing={4}>
           <Grid key={1} item>
             <AnalyticsAmountCard
+              key={1}
               icon={<ChartSuccessIcon />}
-              isLoading={loading}
-              amount={tradeAmountInUSD}
+              amount={0}
               caption={'Daily Volume'}
             />
           </Grid>
           <Grid key={2} item>
             <AnalyticsAmountCard
+              key={2}
               icon={<GraphIcon />}
-              isLoading={loading}
-              amount={data?.trades || '-'}
+              amount={0}
               caption={'Total Trades (24h)'}
             />
           </Grid>
           <Grid key={3} item>
             <AnalyticsAmountCard
+              key={3}
               icon={<PresentationChartIcon />}
-              isLoading={loading}
-              amount={data?.baseAmount.toFixed(4) || '-'}
-              caption={`Amount ${pair.baseCurrency?.symbol} (24h)`}
+              amount={0}
+              caption={'Amount ZRX (24h)'}
             />
           </Grid>
-          <Grid key={4} item>
+          <Grid key={3} item>
             <AnalyticsAmountCard
-              isLoading={loading}
+              key={3}
               icon={<PresentationChartIcon />}
-              amount={data?.quoteAmount.toFixed(4) || '-'}
-              caption={`Amount ${pair.quoteCurrency?.symbol} (24h)`}
+              amount={0}
+              caption={'Amount KIT (24h)'}
+            />
+          </Grid>
+          <Grid key={3} item>
+            <AnalyticsAmountCard
+              key={3}
+              icon={<PresentationChartIcon />}
+              amount={0}
+              caption={'Pooled KIT (24h)'}
+            />
+          </Grid>
+          <Grid key={3} item>
+            <AnalyticsAmountCard
+              key={3}
+              icon={<PresentationChartIcon />}
+              amount={0}
+              caption={'Pooled WETH (24h)'}
+            />
+          </Grid>
+          <Grid key={3} item>
+            <AnalyticsAmountCard
+              key={3}
+              icon={<PresentationChartIcon />}
+              amount={0}
+              caption={'Total Liquidity'}
             />
           </Grid>
         </Grid>

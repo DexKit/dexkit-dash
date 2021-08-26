@@ -37,6 +37,43 @@ export const protocolExplorerConfigs = [
     ],
   },
 
+  {
+    routes: [
+      {
+        path:
+          '/:networkName/protocol-explorer/:exchange/token-explorer/:address',
+        component: React.lazy(() => import('./TokenExplorer')),
+      },
+    ],
+  },
+
+  {
+    routes: [
+      {
+        path: '/:networkName/protocol-explorer/:exchange/token-explorer',
+        component: React.lazy(() => import('./TokenExplorer')),
+      },
+    ],
+  },
+
+  {
+    routes: [
+      {
+        path:
+          '/:networkName/protocol-explorer/:exchange/pool-explorer/:address',
+        component: React.lazy(() => import('./PoolExplorer')),
+      },
+    ],
+  },
+
+  {
+    routes: [
+      {
+        path: '/:networkName/protocol-explorer/:exchange/pool-explorer',
+        component: React.lazy(() => import('./PoolExplorer')),
+      },
+    ],
+  },
 
   {
     routes: [

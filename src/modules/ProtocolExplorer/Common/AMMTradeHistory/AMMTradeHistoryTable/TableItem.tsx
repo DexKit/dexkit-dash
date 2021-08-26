@@ -1,6 +1,9 @@
-import React, { useMemo } from 'react';
-
+import React from 'react';
+import {useWeb3} from 'hooks/useWeb3';
+import {useNetwork} from 'hooks/useNetwork';
 import {CremaTheme} from 'types/AppContextPropsType';
+import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {
   Box,
@@ -8,15 +11,13 @@ import {
   TableRow,
   Chip,
   Link,
+  Avatar,
   makeStyles,
-  useMediaQuery,
+  Tooltip,
 } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import IntlMessages from '@crema/utility/IntlMessages';
-import { EXCHANGE, EthereumNetwork } from 'shared/constants/AppEnums';
-import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
-import { ViewTx } from 'shared/components/ViewTx';
+import {useIntl} from 'react-intl';
 
 interface Props {
   row: GetContractOrders_ethereum_dexTrades;
@@ -25,18 +26,25 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
-  borderBottomClass: {
-    borderBottom: '0 none',
-  },
   tableCell: {
     fontSize: 16,
     padding: '12px 8px',
     '&:first-child': {
+      // [theme.breakpoints.up('xl')]: {
+      //   paddingLeft: 4,
+      // },
       paddingLeft: 20,
     },
     '&:last-child': {
+      // [theme.breakpoints.up('xl')]: {
+      //   paddingRight: 4,
+      // },
       paddingRight: 20,
     },
+    // [theme.breakpoints.up('xl')]: {
+    //   fontSize: 18,
+    //   padding: 16,
+    // },
   },
   anchar: {
     color: theme.palette.primary.main,
@@ -52,51 +60,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const classes = useStyles();
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-  const {usdFormatter} = useUSDFormatter();
-  const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0);
-  const priceUsd = usdFormatter.format(
-    (row.baseAmountInUsd || 1) / (row.baseAmount || 1) || 0,
-  );
-  const ViewTxComponent = React.useMemo(
-    () => () =>
-      <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,
-    [networkName, row.transaction?.hash],
-  );
-  const timestamp = row.block?.timestamp?.time
-  ? new Date(row.block?.timestamp?.time).toLocaleString()
-  : row.block?.timestamp?.time;
+  const {chainId} = useWeb3();
+  const {messages} = useIntl();
+  const netName = useNetwork();
 
-
-  const quoteAmountRow = (
-    <>
-      {row.quoteAmount?.toFixed(4)}{' '}
-      <Link
-        href={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.quoteCurrency?.address,
-          exchange,
-        )}>
-        {row.quoteCurrency?.symbol}
-      </Link>
-    </>
-  );
-
-  const baseAmountRow = (
-    <>
-      {row.baseAmount?.toFixed(4)}{' '}
-      <Link
-        href={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.baseCurrency?.address,
-          exchange,
-        )}>
-        {row.baseCurrency?.symbol}
-      </Link>
-    </>
-  );
-
-  const paymentTypeColor = useMemo(() => {
+  const getPaymentTypeColor = () => {
     switch (row.side) {
       case 'BUY': {
         return '#F84E4E';
@@ -108,74 +76,10 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
         return '#E2A72E';
       }
     }
-  }, [row.side]);
+  };
 
   const createdFn = new Date(row.date?.date || 0);
-  if (isMobile) {
-    const summaryTitle = (
-      <Chip
-        style={{backgroundColor: paymentTypeColor, color: 'white'}}
-        label={row.side === 'SELL' ? 'BUY' : 'SELL'}
-      />
-    );
-    const summaryValue = `${row.baseAmount?.toFixed(2)} ${
-      row.baseCurrency?.symbol
-    } for ${row.quoteAmount?.toFixed(2)} ${row.quoteCurrency?.symbol}`;
-    const data = [
-      {
-        id: 'side',
-        title: <IntlMessages id='app.side' />,
-        value: (
-          <Chip
-            style={{backgroundColor: paymentTypeColor, color: 'white'}}
-            label={row.side === 'SELL' ? 'BUY' : 'SELL'}
-          />
-        ),
-      },
-      {
-        id: 'baseAmount',
-        title: <IntlMessages id='app.baseAmount' />,
-        value: baseAmountRow,
-      },
-      {
-        id: 'quoteAmount',
-        title: <IntlMessages id='app.quoteAmount' />,
-        value: quoteAmountRow,
-      },
-      {
-        id: 'price',
-        title: <IntlMessages id='app.price' />,
-        value: priceUsd,
-      },
-      {
-        id: 'tradeAmount',
-        title: <IntlMessages id='app.tradeAmount' />,
-        value: usdFormatter.format(row.tradeAmountIsUsd || 0),
-      },
-      {
-        id: 'created',
-        title: <IntlMessages id='app.created' />,
-        value: timestamp,
-      },
-      {
-        id: 'viewTx',
-        title: '',
-        value: <ViewTxComponent />,
-      },
-    ];
 
-    return (
-      <TableRow
-        key={row.transaction?.hash}
-        className={classes.borderBottomClass}>
-        <CollapsibleTableRow
-          summaryValue={summaryValue}
-          summaryTitle={summaryTitle}
-          data={data}
-        />
-      </TableRow>
-    );
-  }
   return (
     <TableRow hover role='checkbox' tabIndex={-1}>
       <TableCell component='th' scope='row' className={classes.tableCell}>
@@ -185,29 +89,84 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Chip
-          style={{backgroundColor: paymentTypeColor, color: 'white'}}
+          style={{backgroundColor: getPaymentTypeColor(), color: 'white'}}
           label={row.side === 'SELL' ? 'BUY' : 'SELL'}
         />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {priceUsd}
+        ${((row.baseAmountInUsd || 1) / (row.baseAmount || 1)).toFixed(2)}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {baseAmountRow}
+        {row.baseAmount?.toFixed(4)}{' '}
+        <Link
+          href={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            row.baseCurrency?.address,
+            exchange,
+          )}>
+          {row.baseCurrency?.symbol}
+        </Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {quoteAmountRow}
+        {row.quoteAmount?.toFixed(4)}{' '}
+        <Link
+          href={GET_PROTOCOL_TOKEN_URL(
+            networkName,
+            row.quoteCurrency?.address,
+            exchange,
+          )}>
+          {row.quoteCurrency?.symbol}
+        </Link>
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        {tradeAmountUsd}
+        ${row.tradeAmountIsUsd?.toFixed(2)}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCell}>
-        <ViewTxComponent />
+        <Box display='flex' alignItems='center'>
+          <Tooltip title={messages['app.viewTx']} placement='top'>
+            <a
+              href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
+                row.transaction?.hash
+              }`}
+              target='_blank'
+              rel='noreferrer'>
+              {netName == EthereumNetwork.ethereum ? (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/etherescan.png'></Avatar>
+              ) : (
+                <Avatar
+                  style={{
+                    color: '#3F51B5',
+                    backgroundColor: 'white',
+                    width: '20px',
+                    height: '20px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                  }}
+                  src='/images/bscscan-logo-circle.png'></Avatar>
+              )}
+            </a>
+          </Tooltip>
+          {/*<a
+            href={`${ETHERSCAN_API_URL(chainId)}/tx/${row.transaction?.hash}`}
+            target='_blank'
+            rel='noreferrer'>
+            <SearchIcon />
+          </a> */}
+        </Box>
       </TableCell>
     </TableRow>
   );

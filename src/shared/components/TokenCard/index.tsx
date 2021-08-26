@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import {
   Paper,
@@ -10,13 +10,12 @@ import {
   alpha,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 
 interface TokenCardProps {
   icon: React.ReactNode | React.ReactNode[];
   pair: string;
-  amount: number | string;
-  price24Change?: number;
+  amount: number;
+  price24Change: number;
   onClick?: () => void;
 }
 
@@ -47,11 +46,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const TokenCard = (props: TokenCardProps) => {
   const {icon, price24Change, pair, amount, onClick} = props;
-  const {usdFormatter} = useUSDFormatter();
-  const amountUSD = useMemo(()=> {
-    return usdFormatter.format(Number(amount));
-
-  }, [amount])
 
   const classes = useStyles();
 
@@ -72,14 +66,14 @@ export const TokenCard = (props: TokenCardProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography className={classes.amount} variant='h5'>
-                {amountUSD}
+                  ${amount.toFixed(2)}{' '}
                 </Typography>
               </Grid>
-              {price24Change && <Grid item>
+              <Grid item>
                 <Typography className={classes.price24Change}>
                   {price24Change}%
                 </Typography>
-              </Grid>}
+              </Grid>
             </Grid>
             <Typography className={classes.pair} variant='body1'>
               {pair.toUpperCase()}

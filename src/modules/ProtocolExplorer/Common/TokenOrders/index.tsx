@@ -4,11 +4,14 @@ import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
 import {
   Box,
   CircularProgress,
+  Fade,
   Hidden,
+  Paper,
   Toolbar,
   Tooltip,
   Typography,
 } from '@material-ui/core';
+import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
 import FilterList from 'shared/components/Filter/list';
@@ -43,8 +46,7 @@ const TokenOrders: React.FC<Props> = (props) => {
     seconds,
   } = useTokenTrades({baseAddress, quoteAddress, exchange, networkName});
 
-  return (
-    <Box>
+  return ( <>
       <Toolbar className={classes.toolbar}>
         <Box
           display={'flex'}
@@ -89,9 +91,9 @@ const TokenOrders: React.FC<Props> = (props) => {
           onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
         />
       )}
-    </Box>
+   </>
     // </AppCard>
-    //
+    // </Box>
   );
 };
 

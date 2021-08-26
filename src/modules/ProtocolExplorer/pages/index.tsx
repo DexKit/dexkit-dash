@@ -1,18 +1,27 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  AppBar,
   Box,
   Breadcrumbs,
+  Fade,
   Grid,
+  Hidden,
   Paper,
+  Tab,
+  Tabs,
   Typography,
 } from '@material-ui/core';
+import GridContainer from '../../../@crema/core/GridContainer';
 
-import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
+import {truncateAddress} from 'utils';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 
 import {Token} from 'types/app';
@@ -28,15 +37,8 @@ import CoinTools from 'shared/components/CoinTools';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {Analytics} from '../components/analytics';
 import {useTokenMarket} from 'hooks/protocolExplorer/useTokenMarket';
-import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
-import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
-import {Pairs} from '../components/pairs';
-
-import {useStyles} from './index.style';
-import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
-import TokenCard from 'shared/components/TokenCard';
-import TokenLogo from 'shared/components/TokenLogo';
-
+import HistoryTables from '../components/history';
+import { Pairs } from '../components/pairs';
 type Params = {
   address: string;
 };
@@ -48,8 +50,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
     match: {params},
   } = props;
 
-  const classes = useStyles();
-
   const {address} = params;
   const history = useHistory();
   const searchParams = new URLSearchParams(history.location.search);
@@ -59,11 +59,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
       EthereumNetwork.ethereum,
   );
   const {tokenInfo, loading: loadingToken} = useTokenInfo(address);
-  const {loading: loadingTokenMarket, data: tokenMarket} = useTokenMarket(
-    networkName,
-    EXCHANGE.ALL,
-    tokenInfo,
-  );
+  const {loading, data} = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
 
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
@@ -79,7 +75,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const [value, setValue] = React.useState(
     searchParams.get('tab') ?? 'overview',
   );
-
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
@@ -112,27 +107,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
 
-  const Chart = (
-    <Paper className={classes.paperChart}>
-      {loadingToken || !tokenInfo ? (
-        <Grid item xs={12} md={12} style={{height: 450}}>
-          <Skeleton variant='rect' height={450} />
-        </Grid>
-      ) : (
-        tokenInfo && (
-          <Grid item xs={12} md={12} style={{height: 450}}>
-            <BitqueryTVChartContainer
-              symbol={`${networkName}:${tokenInfo.symbol.toUpperCase()}:${
-                tokenInfo.address
-              }`}
-              darkMode={isDark}
-            />
-          </Grid>
-        )
-      )}
-    </Paper>
-  );
-
   return (
     <Box>
       <Grid container justify='space-between' alignItems='center'>
@@ -155,64 +129,25 @@ const Explorer: React.FC<TokenProps> = (props) => {
         </Grid>
       </Grid>
 
-      <Grid container justify='space-between' spacing={2}>
-        <Grid item xs={12} md={6}>
-          {loadingToken || !tokenInfo || !tokenMarket ? (
-            <Skeleton variant={'rect'} height={100} />
-          ) : (
-            <TokenCard
-              icon={
-                <TokenLogo
-                  token0={tokenInfo?.address || ''}
-                  networkName={networkName}
-                />
-              }
-              pair={tokenInfo?.symbol as string}
-              amount={tokenMarket?.priceUsd as number}
-              price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
-            />
-          )}
+      <Grid container justify='space-between' alignItems='center'>
+        <Grid item xs={6}>
+          <Typography variant='h6'>Coin Price and Tools</Typography>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={6}>
           {balances.data && <CoinTools balances={balances.data} />}
         </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper className={classes.paper}>
-            <Analytics
-              token={tokenInfo}
-              tokenMarket={tokenMarket}
-              loading={loadingToken || loadingTokenMarket}
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          {isMobile ? (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ArrowDownIcon />}
-                aria-controls='panel1a-content'
-                id='panel1a-header'>
-                <Typography>
-                  <GraphicsIcon /> Chart
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails> {Chart}</AccordionDetails>
-            </Accordion>
-          ) : (
-            Chart
-          )}
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <TokenFilterProvider>
-            <Pairs
-              baseAddress={address}
-              networkName={networkName}
-              exchange={EXCHANGE.ALL}
-            />
-          </TokenFilterProvider>
-        </Grid>
       </Grid>
+
+      <Analytics />
+      <Pairs baseAddress={address} networkName={networkName} exchange={EXCHANGE.ALL}/>
+
+      <Box mt={4}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <HistoryTables address={address} networkName={networkName} />
+          </Grid>
+        </Grid>
+      </Box>
     </Box>
   );
 };

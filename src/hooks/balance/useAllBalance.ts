@@ -72,7 +72,7 @@ export const useAllBalance = (defaultAccount?: string) => {
                       value: t.value,
                       // enquanto não vem a solução pela bitquery
                       price24hPercentage:
-                        coingeckoList[addr || '']?.price_change_percentage_24h ||
+                        coingeckoList[addr || ''].price_change_percentage_24h ||
                         0,
                       valueInUsd:
                         (t.value || 0) *
@@ -94,9 +94,6 @@ export const useAllBalance = (defaultAccount?: string) => {
                       },
                       network: EthereumNetwork.bsc,
                       value: t.value,
-                      price24hPercentage:
-                      coingeckoList[addr || '']?.price_change_percentage_24h ||
-                      0,
                       // enquanto não vem a solução pela bitquery
                       valueInUsd:
                         (t.value || 0) *

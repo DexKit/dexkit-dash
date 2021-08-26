@@ -8,8 +8,6 @@ import {
   Radio,
   Box,
 } from '@material-ui/core';
-import { GET_EXCHANGE_NAME } from 'shared/constants/Bitquery';
-import { EXCHANGE } from 'shared/constants/AppEnums';
 
 const useStyles = makeStyles((theme) => ({
   paper: {},
@@ -58,7 +56,7 @@ interface TokenPairCardProps {
   firstIcon: React.ReactNode;
   secondIcon: React.ReactNode;
   selected?: boolean;
-  exchange: EXCHANGE;
+  exchange: string;
   onSelect?: () => void;
 }
 
@@ -89,7 +87,7 @@ export const TokenPairCard = (props: TokenPairCardProps) => {
             <Typography gutterBottom className={classes.pair}>
               {firstToken}/{secondToken}
             </Typography>
-            <Typography className={classes.exchange}>{GET_EXCHANGE_NAME(exchange)}</Typography>
+            <Typography className={classes.exchange}>{exchange}</Typography>
           </Grid>
           <Grid item>
             <Radio checked={selected} color='primary' onClick={onSelect} />

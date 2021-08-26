@@ -16,7 +16,7 @@ export const AssetList = (props: AssetListProps) => {
   const history = useHistory();
 
   const handleClick = useCallback((network: string, address: string) => {
-    history.push(`/dashboard/wallet/overview/${network}/${address}`);
+    history.push(`/${network}/dashboard/token/${address}`);
   }, []);
 
   return (

@@ -59,7 +59,7 @@ import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import TokenCard from 'shared/components/TokenCard';
 import TokenLogo from 'shared/components/TokenLogo';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 
 type Params = {
@@ -152,7 +152,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     secondIcon={<TokenPairIcon src={''} />}
                     firstToken={'ETH'}
                     secondToken={'USDT'}
-                    exchange={EXCHANGE.UNISWAP}
+                    exchange={'Uniswap'}
                   />
                 </Grid>
               </Grid>
@@ -234,19 +234,21 @@ const WalletTabs: React.FC<Props> = (props) => {
                               </Grid>
                             </Grid>
                           ) : (
-                            favoritesWithMarket.data.map((favorite) => (
-                              <TokenListItem
-                                address={favorite.coin.address}
-                                dayChange={
-                                  favorite.market.price_change_percentage_24h ||
-                                  0
-                                }
-                                amount={favorite.market.current_price}
-                                symbol={favorite.coin.symbol}
-                                name={favorite.coin.name}
-                                network={favorite.coin?.networkName || ''}
-                              />
-                            ))
+                            favoritesWithMarket.data
+                              .slice(0, 5)
+                              .map((favorite) => (
+                                <TokenListItem
+                                  address={favorite.coin.address}
+                                  dayChange={
+                                    favorite.market
+                                      .price_change_percentage_24h || 0
+                                  }
+                                  amount={favorite.market.current_price}
+                                  symbol={favorite.coin.symbol}
+                                  name={favorite.coin.name}
+                                  network={favorite.coin?.networkName || ''}
+                                />
+                              ))
                           )}
                         </Grid>
                       </Grid>

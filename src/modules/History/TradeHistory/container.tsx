@@ -66,6 +66,21 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
                 </Typography>
               </Box>
             </Box>
+            {/* <Select
+                  className={classes.selectBox}
+                  value={filterValue}
+                  onChange={handleChange}
+                  disableUnderline={true}>
+                  <option value='all' className={classes.selectOption}>
+                    {messages['app.all']}
+                  </option>
+                  <option value='send' className={classes.selectOption}>
+                    {messages['app.send']}
+                  </option>
+                  <option value='receive' className={classes.selectOption}>
+                    {messages['app.receive']}
+                  </option>
+                </Select> */}
           </Box>
         </Toolbar>
         {loading ? (
