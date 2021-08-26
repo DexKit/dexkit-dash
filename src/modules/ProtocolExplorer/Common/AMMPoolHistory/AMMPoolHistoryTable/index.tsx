@@ -1,13 +1,10 @@
 import React from 'react';
-import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import {Box, makeStyles, TablePagination} from '@material-ui/core';
-import {grey} from '@material-ui/core/colors';
-import Loader from '@crema/core/Loader';
+import {Box, TablePagination, useMediaQuery} from '@material-ui/core';
+
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
@@ -37,13 +34,13 @@ const AMMPoolHistoryTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
-
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead>
-            <TableHeading />
+          {!isMobile  && <TableHeading />}
           </TableHead>
           <TableBody>
             {data &&

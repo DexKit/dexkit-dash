@@ -18,7 +18,6 @@ export const PairAnalytics = () => {
         <Grid container justifyContent='center' spacing={4}>
           <Grid key={1} item>
             <AnalyticsAmountCard
-              key={1}
               icon={<ChartSuccessIcon />}
               amount={0}
               caption={'Daily Volume'}
@@ -26,7 +25,6 @@ export const PairAnalytics = () => {
           </Grid>
           <Grid key={2} item>
             <AnalyticsAmountCard
-              key={2}
               icon={<GraphIcon />}
               amount={0}
               caption={'Total Trades (24h)'}
@@ -34,42 +32,16 @@ export const PairAnalytics = () => {
           </Grid>
           <Grid key={3} item>
             <AnalyticsAmountCard
-              key={3}
               icon={<PresentationChartIcon />}
               amount={0}
               caption={'Amount ZRX (24h)'}
             />
           </Grid>
-          <Grid key={3} item>
+          <Grid key={4} item>
             <AnalyticsAmountCard
-              key={3}
               icon={<PresentationChartIcon />}
               amount={0}
               caption={'Amount KIT (24h)'}
-            />
-          </Grid>
-          <Grid key={3} item>
-            <AnalyticsAmountCard
-              key={3}
-              icon={<PresentationChartIcon />}
-              amount={0}
-              caption={'Pooled KIT (24h)'}
-            />
-          </Grid>
-          <Grid key={3} item>
-            <AnalyticsAmountCard
-              key={3}
-              icon={<PresentationChartIcon />}
-              amount={0}
-              caption={'Pooled WETH (24h)'}
-            />
-          </Grid>
-          <Grid key={3} item>
-            <AnalyticsAmountCard
-              key={3}
-              icon={<PresentationChartIcon />}
-              amount={0}
-              caption={'Total Liquidity'}
             />
           </Grid>
         </Grid>

@@ -11,35 +11,27 @@ import {useIntl} from 'react-intl';
 
 interface Props {}
 
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  tableRowRoot: {
+    color: grey[500],
+  },
+  tableCellRoot: {
+    color: '#8F96A7',
+    borderBottom: '0 none',
+    fontSize: 16,
+    padding: 8,
+    fontFamily: Fonts.LIGHT,
+    '&:first-child': {
+      paddingLeft: 20,
+    },
+    '&:last-child': {
+      paddingRight: 20,
+    },
+  },
+}));
+
+
 const TableHeading: React.FC<Props> = (props) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    tableRowRoot: {
-      color: grey[500],
-    },
-    tableCellRoot: {
-      backgroundColor: theme.palette.background.paper,
-      borderBottom: '0 none',
-      fontSize: 16,
-      padding: 8,
-      fontFamily: Fonts.LIGHT,
-      '&:first-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingLeft: 4,
-        // },
-        paddingLeft: 20,
-      },
-      '&:last-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingRight: 4,
-        // },
-        paddingRight: 20,
-      },
-      // [theme.breakpoints.up('xl')]: {
-      //   fontSize: 18,
-      //   padding: 16,
-      // },
-    },
-  }));
 
   const classes = useStyles(props);
   const {messages} = useIntl();

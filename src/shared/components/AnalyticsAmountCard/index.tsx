@@ -6,7 +6,6 @@ import {
   makeStyles,
   Box,
   Typography,
-  ButtonBase,
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -24,7 +23,7 @@ const useStyles = makeStyles(() => ({
 
 interface AnalyticsAmountCardProps {
   icon: React.ReactNode | React.ReactNode[];
-  amount: number;
+  amount: number | string;
   caption: string;
   isLoading?: boolean;
   onClick?: () => void;
@@ -36,25 +35,25 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
   const classes = useStyles();
 
   return isLoading ? (
-    <Skeleton>
-      <Paper component={ButtonBase} className={classes.paper} onClick={onClick}>
-        <Box p={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={12}>
-              {icon}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography color='textSecondary' variant='caption'>
-                {caption}
-              </Typography>
-              <Typography variant='h5'>0.00</Typography>
-            </Grid>
+    <Paper  className={classes.paper} onClick={onClick}>
+      <Box p={4}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            {icon}
           </Grid>
-        </Box>
-      </Paper>
-    </Skeleton>
+          <Grid item xs={12}>
+            <Typography color='textSecondary' variant='caption'>
+              {caption}
+            </Typography>
+            <Skeleton>
+              <Typography variant='h5'>0.00</Typography>
+            </Skeleton>
+          </Grid>
+        </Grid>
+      </Box>
+    </Paper>
   ) : (
-    <Paper component={ButtonBase} className={classes.paper} onClick={onClick}>
+    <Paper className={classes.paper} onClick={onClick}>
       <Box p={4}>
         <Grid container spacing={6}>
           <Grid item xs={12}>

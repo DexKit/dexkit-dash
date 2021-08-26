@@ -37,10 +37,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
         flexBasis: '50%',
       },
     },
-    '& .MuiAccordionSummary-expandIcon': {
-      position: 'absolute',
-      right: '10px',
-    },
     '&.Mui-expanded': {
       minHeight: '50px',
     },

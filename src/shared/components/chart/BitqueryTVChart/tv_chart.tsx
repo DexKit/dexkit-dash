@@ -96,7 +96,7 @@ export default class TVChartContainer extends React.PureComponent<
 
     if (this.props.darkMode) {
       widgetOptions.overrides = {
-        'paneProperties.background': '#181a1f',
+        'paneProperties.background': '#2E3243',
       };
     }
 
@@ -138,7 +138,7 @@ export default class TVChartContainer extends React.PureComponent<
 
         if (this.props.darkMode) {
           this._tvWidget.applyOverrides({
-            'paneProperties.background': '#181a1f',
+            'paneProperties.background': '#2E3243',
           });
         } else {
           this._tvWidget.applyOverrides({

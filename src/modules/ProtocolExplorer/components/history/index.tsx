@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
-import {makeStyles, Paper} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TokenOrders from 'modules/ProtocolExplorer/Common/TokenOrders';
+import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
+import PairHistory from './PairHistory';
 
 type HistoryTablesProps = {
   address: string;
   networkName: EthereumNetwork;
+  pair?: GetTokenPairs_ethereum_dexTrades;
   account?: string;
 };
 
@@ -30,6 +33,7 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
   address,
   networkName,
   account,
+  pair,
 }) => {
   const [tableActive, setTableActive] = useState<number>(0);
   const onChangeTab = (event: React.ChangeEvent<{}>, newValue: number) =>
@@ -48,13 +52,17 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         <CustomTab label={'History'} />
         <CustomTab label={'Pairs'} />
       </CustomTabs>
-
-
       {tableActive == 0 && (
-        <TokenOrders baseAddress={address} quoteAddress={null} networkName={networkName} type={'token'} exchange={EXCHANGE.ALL}/>
+        <TokenOrders
+          baseAddress={address}
+          quoteAddress={null}
+          networkName={networkName}
+          type={'token'}
+          exchange={EXCHANGE.ALL}
+        />
       )}
-      {tableActive == 1 && (
-        <> </>
+      {tableActive == 1 && pair && (
+        <PairHistory networkName={networkName} pair={pair} />
       )}
     </>
   );

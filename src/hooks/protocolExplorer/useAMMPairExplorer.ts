@@ -77,6 +77,9 @@ export const useAMMPairExplorer = ({exchange, address, networkName}: Props) => {
       d24Current['volume24InUsd'] = d24Current.tradeAmountInUsd;
       d24Current['basePooled'] = basePooled;
       d24Current['quotePooled'] = quotePooled;
+      d24Current['baseAmount'] = d24Current.baseAmount;
+      d24Current['quoteAmount'] = d24Current.quoteAmount;
+      d24Current['trades'] = d24Current.trades;
 
       // const newData = dexTrades
       setData(d24Current);
