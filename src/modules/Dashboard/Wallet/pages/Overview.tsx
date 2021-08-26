@@ -12,12 +12,11 @@ import {
   AccordionSummary,
 } from '@material-ui/core';
 
-import {RouteComponentProps} from 'react-router-dom';
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
 import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import BuySell from './BuySell';
 
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
@@ -28,17 +27,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-
-import HistoryTables from './HistoryTables';
-import Charts from './Charts';
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {AboutDialog} from './AboutDialog';
 import {ShareButton} from 'shared/components/ShareButton';
-import InfoIcon from '@material-ui/icons/Info';
-import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
-import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
-import {useStyles} from './index.style'
+
+import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
+import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
+import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
+import {useStyles} from './Overview.style';
+import BuySell from 'modules/Dashboard/Token/BuySell';
+import Charts from 'modules/Dashboard/Token/Charts';
+import HistoryTables from 'modules/Dashboard/Token/HistoryTables';
+import TokenCard from 'shared/components/TokenCard';
+import CoinTools from 'shared/components/CoinTools';
+import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
+import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 
 type Params = {
   address: string;
@@ -47,7 +50,7 @@ type Params = {
 
 type Props = RouteComponentProps<Params>;
 
-const TokenPage: React.FC<Props> = (props) => {
+const WalletOverviewPage: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
@@ -62,9 +65,16 @@ const TokenPage: React.FC<Props> = (props) => {
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
   const [token, setToken] = useState<Token>();
+  const priceUSD = useTokenPriceUSD(
+    address,
+    networkName,
+    undefined,
+    1,
+    token?.decimals,
+  );
   const {data} = useCoingeckoTokenInfo(address, networkName);
   const classes = useStyles();
-
+  const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {
       dispatch(toggleFavoriteCoin({...token, ...data}));
@@ -108,64 +118,63 @@ const TokenPage: React.FC<Props> = (props) => {
     }
   }, [account, address]);
 
-  const [showAboutDialog, setShowAboutDialog] = useState(false);
-
-  const handleCloseAboutDialog = useCallback(() => {
-    setShowAboutDialog(false);
-  }, []);
-
-  const handleOpenAboutDialog = useCallback(() => {
-    setShowAboutDialog(true);
-  }, []);
+  const handleBack = useCallback(() => history.push(`/dashboard/wallet/`), []);
 
   return (
     <>
-      <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
         <Box>
-          <Grid container justify='space-between' alignItems='center'>
-            <Grid item>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Breadcrumbs aria-label='breadcrumb'>
-                    <Typography variant='body2' color='textSecondary'>
-                      Home
-                    </Typography>
-                    <Typography variant='body2' color='textSecondary'>
-                      Trade
-                    </Typography>
-                  </Breadcrumbs>
+          <Grid
+            container
+            justify='space-between'
+            alignItems='center'
+            spacing={2}>
+            <Grid item xs={12}>
+              <Breadcrumbs aria-label='breadcrumb'>
+                <Typography variant='body2' color='textSecondary'>
+                  Wallet
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  Overview
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  {tokenInfo?.symbol}
+                </Typography>
+              </Breadcrumbs>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Grid container spacing={2} alignItems='center'>
+                <Grid item>
+                  <IconButton onClick={handleBack} size='small'>
+                    <ArrowLeftIcon />
+                  </IconButton>
                 </Grid>
-                <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems='center'>
-                    <Grid item>
-                      <Typography variant='h5'>Trade</Typography>
-                    </Grid>
-                    <Grid item>
-                      <IconButton onClick={handleOpenAboutDialog} size='small'>
-                        <InfoIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
+                <Grid item>
+                  <Typography variant='h5'>Overview</Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              <Grid container spacing={1}>
-                <Grid item>
-                  <ShareButton />
-                </Grid>
-                <Grid item>
-                  <Tooltip title='Add to Favorites'>
-                    <IconButton
-                      aria-label='add favorite coin'
-                      color='primary'
-                      onClick={onToggleFavorite}>
-                      {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </Grid>
+            <Grid item xs={12} md={6}>
+              {tokenInfo && (
+                <TokenCard
+                  icon={''}
+                  pair={tokenInfo?.symbol}
+                  amount={priceUSD?.priceQuote?.price || 0}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <CoinTools balances={balances} />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              {token && (
+                <TokenAnalytics
+                  account={account}
+                  token={token.address}
+                  networkName={networkName}
+                />
+              )}
             </Grid>
           </Grid>
         </Box>
@@ -192,11 +201,11 @@ const TokenPage: React.FC<Props> = (props) => {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Charts
+                    {tokenInfo &&   <Charts
                         chainId={chainId}
                         tokenInfo={tokenInfo}
                         networkName={networkName}
-                      />
+                      />}
                     </AccordionDetails>
                   </Accordion>
                 </Grid>
@@ -211,11 +220,11 @@ const TokenPage: React.FC<Props> = (props) => {
             ) : (
               <>
                 <Grid item xs={12} md={8}>
-                  <Charts
+                {tokenInfo && <Charts
                     chainId={chainId}
                     tokenInfo={tokenInfo}
                     networkName={networkName}
-                  />
+                  />}
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Card>
@@ -246,4 +255,4 @@ const TokenPage: React.FC<Props> = (props) => {
   );
 };
 
-export default TokenPage;
+export default WalletOverviewPage;
