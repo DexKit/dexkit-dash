@@ -77,7 +77,6 @@ const InfoToken: React.FC<Props> = (props) => {
                     flexDirection='row'
                     justifyContent='space-between'>
                     <Box display='flex' alignItems='center'>
-                      <TokenLogo token0={token?.address || ''} />
                       <Box
                         component='h3'
                         color='text.primary'
@@ -112,7 +111,7 @@ const InfoToken: React.FC<Props> = (props) => {
                       </Box>
                       <Box mr={3}>
                         <Link
-                          to={`/${networkName}/dashboard/token/${token?.address}`}
+                          to={`/${networkName}/token/${token?.address}`}
                           component={RouterLink}>
                           <Tooltip title={'Trade Token'} placement='top'>
                             <Avatar

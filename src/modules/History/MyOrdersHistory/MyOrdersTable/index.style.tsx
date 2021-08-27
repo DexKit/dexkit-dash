@@ -32,4 +32,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
       display: 'block',
     },
   },
+  tableClass: {
+    marginBottom: '16px',
+  },
 }));

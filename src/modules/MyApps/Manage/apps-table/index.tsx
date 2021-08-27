@@ -297,7 +297,7 @@ const AppsTable = () => {
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onChangePage={handleChangePage}
+            onPageChange={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
           <TablePagination
@@ -307,7 +307,7 @@ const AppsTable = () => {
             count={data.length}
             rowsPerPage={25}
             page={page}
-            onChangePage={handleChangePage}
+            onPageChange={handleChangePage}
           />
         </Paper>
       ) : (

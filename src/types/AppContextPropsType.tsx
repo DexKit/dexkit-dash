@@ -7,8 +7,8 @@ import {
   ThemeStyle,
 } from '../shared/constants/AppEnums';
 import {LanguageProps} from '../@crema/core/LanguageSwitcher/data';
-import {PaletteType, Theme, Transitions} from '@material-ui/core';
-import {Direction} from '@material-ui/core/styles/createMuiTheme';
+import {PaletteType, Theme, Transitions, Direction} from '@material-ui/core';
+
 import {ZIndex} from '@material-ui/core/styles/zIndex';
 import {Spacing} from '@material-ui/core/styles/createSpacing';
 import {Mixins} from '@material-ui/core/styles/createMixins';

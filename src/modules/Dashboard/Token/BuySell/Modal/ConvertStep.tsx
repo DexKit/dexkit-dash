@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
-import BigNumber from 'bignumber.js';
 import {Typography} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -14,6 +13,7 @@ import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
 import {NotificationType} from 'services/notification';
+import { BigNumber } from '@0x/utils';
 
 // get tokens ta sendo chamado 3x
 

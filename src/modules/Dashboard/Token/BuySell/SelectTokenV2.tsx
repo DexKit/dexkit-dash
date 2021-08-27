@@ -1,27 +1,12 @@
-import React, {useEffect} from 'react';
-import {
-  Autocomplete,
-  createFilterOptions,
-  FilterOptionsState,
-} from '@material-ui/lab';
+import React from 'react';
+
 import {Token} from 'types/app';
 import {
-  Chip,
   makeStyles,
-  TextField,
-  Box,
-  Grid,
   Button,
   withStyles,
 } from '@material-ui/core';
-import TokenLogo from 'shared/components/TokenLogo';
-import styled from 'styled-components';
-import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
-import {VariableSizeList, ListChildComponentProps} from 'react-window';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import {filterTokensInfoByString} from 'utils/tokens';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 interface Props {

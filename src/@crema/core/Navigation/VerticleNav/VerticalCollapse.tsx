@@ -109,7 +109,9 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
           )}
         </ListItemIcon>
         <ListItemText
-          classes={{primary: clsx('nav-item-text', classes.listItemText)}}
+          classes={{
+            primary: clsx('nav-item-text', classes.listItemText),
+          }}
           primary={<IntlMessages id={item.messageId} />}
         />
         <Box p={0} clone>

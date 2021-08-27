@@ -30,7 +30,7 @@ import OrderFailed from './OrderFailed';
 import OrderFinished from './OrderFinished';
 
 interface Props {
-  transaction: ChangellyTransaction;
+  transaction?: ChangellyTransaction;
   onReset: () => void;
   onTransfer: (amount: number, address: string) => void;
 }
@@ -43,10 +43,12 @@ export const ReviewOrder = (props: Props) => {
   const isWindowVisible = useIsWindowVisible();
 
   const handleTransfer = useCallback(() => {
-    onTransfer(
-      parseFloat(transaction?.amountExpectedFrom),
-      transaction?.payinAddress,
-    );
+    if (transaction) {
+      onTransfer(
+        parseFloat(transaction.amountExpectedFrom),
+        transaction.payinAddress,
+      );
+    }
   }, [onTransfer, transaction]);
 
   useEffect(() => {
@@ -71,40 +73,42 @@ export const ReviewOrder = (props: Props) => {
     }
   }, 30000);
 
-  if (status == STATUS_FAILED) {
+  if (status === STATUS_FAILED) {
     return <OrderFailed onReset={onReset} />;
   }
 
-  return status == STATUS_FINISHED ? (
+  return status === STATUS_FINISHED ? (
     <OrderFinished onReset={onReset} />
   ) : (
     <Grid container alignItems='center' spacing={2}>
-      {status === STATUS_HOLD ? (
+      {status === STATUS_HOLD || transaction?.kycRequired ? (
         <Grid item xs={12}>
-          <Paper variant='outlined'>
-            <Box p={4}>
-              <Typography align='center' gutterBottom variant='subtitle2'>
-                Changelly Verification Required
-              </Typography>
-              <Typography gutterBottom variant='body2'>
-                Changelly is a third party application. The transaction you
-                requested will be held for you until you are verified.
-              </Typography>
-              <Typography align='center' gutterBottom variant='subtitle1'>
-                To Get Verified
-              </Typography>
-              <Typography variant='body2'>
-                1. send an email to{' '}
-                <Link href='mailto:security@changelly.com'>
-                  security@changelly.com
-                </Link>
-              </Typography>
-              <Typography variant='body2'>
-                2. In the subject line, enter the following information:{' '}
-                <strong>Transaction ID: {transaction?.id}</strong>
-              </Typography>
-            </Box>
-          </Paper>
+          <Box mb={4}>
+            <Paper variant='outlined'>
+              <Box p={4}>
+                <Typography align='center' gutterBottom variant='subtitle2'>
+                  Changelly Verification Required
+                </Typography>
+                <Typography gutterBottom variant='body2'>
+                  Changelly is a third party application. The transaction you
+                  requested will be held for you until you are verified.
+                </Typography>
+                <Typography align='center' gutterBottom variant='subtitle1'>
+                  To Get Verified
+                </Typography>
+                <Typography variant='body2'>
+                  1. send an email to{' '}
+                  <Link href='mailto:security@changelly.com'>
+                    security@changelly.com
+                  </Link>
+                </Typography>
+                <Typography variant='body2'>
+                  2. In the subject line, enter the following information:{' '}
+                  <strong>Transaction ID: {transaction?.id}</strong>
+                </Typography>
+              </Box>
+            </Paper>
+          </Box>
         </Grid>
       ) : (
         <Grid item xs={12}>
@@ -144,17 +148,18 @@ export const ReviewOrder = (props: Props) => {
         <Typography variant='caption'>You send</Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedFrom}{' '}
-          {transaction?.currencyFrom.toUpperCase()}{' '}
+          {transaction?.currencyFrom?.toUpperCase()}{' '}
           <ButtonCopy
-            copyText={transaction?.amountExpectedFrom}
-            titleText={transaction?.amountExpectedFrom}
+            copyText={transaction?.amountExpectedFrom || ''}
+            titleText={transaction?.amountExpectedFrom || ''}
           />
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant='caption'>You Receive</Typography>
         <Typography variant='h5'>
-          {transaction?.amountExpectedTo} {transaction.currencyTo.toUpperCase()}
+          {transaction?.amountExpectedTo}{' '}
+          {transaction?.currencyTo?.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -165,17 +170,12 @@ export const ReviewOrder = (props: Props) => {
         <Typography variant='caption'>Transaction ID</Typography>
         <Typography variant='h5'>
           {transaction?.id}{' '}
-          <ButtonCopy copyText={transaction?.id} titleText={transaction?.id} />
+          <ButtonCopy
+            copyText={transaction?.id || ''}
+            titleText={transaction?.id || ''}
+          />
         </Typography>
       </Grid>
-      {transaction?.kycRequired ? (
-        <Grid item xs={12}>
-          <Typography variant='caption' color={'error'}>
-            KYC Verification Needed
-          </Typography>
-          <Typography variant='body1'></Typography>
-        </Grid>
-      ) : null}
       <Grid item xs={12}>
         <Box p={4}>
           <Typography
@@ -192,12 +192,12 @@ export const ReviewOrder = (props: Props) => {
           </Typography>
           <TextField
             fullWidth
-            value={transaction.payinAddress}
+            value={transaction?.payinAddress}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
                   <ButtonCopy
-                    copyText={transaction.payinAddress}
+                    copyText={transaction?.payinAddress || ''}
                     titleText='Address copied!'
                   />
                 </InputAdornment>

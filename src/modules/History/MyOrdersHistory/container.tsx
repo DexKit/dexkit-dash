@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid, Box, Toolbar, Typography} from '@material-ui/core';
 import {COINGECKO_CONTRACT_URL} from 'shared/constants/AppConst';
 import {GridContainer} from '@crema';
 import ErrorView from 'modules/Common/ErrorView';
@@ -14,8 +14,6 @@ import {useStyles} from './index.style';
 import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
-import PageTitle from 'shared/components/PageTitle';
-import {truncateAddress} from 'utils/text';
 import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -96,49 +94,42 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
   }, [dataFn, tokenList]);
 
   const classes = useStyles();
-  const token = useFetch<CoinDetailCoinGecko>(
-    `${COINGECKO_CONTRACT_URL}/${address}`,
-    {},
-    [address],
-  );
 
   return (
     <Box pt={{xl: 4}}>
       <GridContainer>
         <Grid item xs={12} md={12}>
-          <Paper className={classes.paper}>
-            <Toolbar className={classes.toolbar}>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-                style={{width: '100%'}}>
-                <Box>
-                  <Typography variant='h5'>My Orders</Typography>
-                </Box>
+          <Toolbar className={classes.toolbar}>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              alignItems='center'
+              style={{width: '100%'}}>
+              <Box>
+                <Typography variant='h5'>My Orders</Typography>
               </Box>
-            </Toolbar>
-            {loading ? (
-              <LoadingTable columns={6} rows={10} />
-            ) : error ? (
-              <ErrorView message={error.message} />
-            ) : (
-              data && (
-                <MyOrdersTable
-                  networkName={networkName}
-                  data={data}
-                  totalRows={totalRows}
-                  currentPage={currentPage}
-                  rowsPerPage={rowsPerPage}
-                  rowsPerPageOptions={rowsPerPageOptions}
-                  onChangePage={(newPage) => onChangePage(newPage)}
-                  onChangeRowsPerPage={(perPage) =>
-                    onChangeRowsPerPage(perPage)
-                  }
-                />
-              )
-            )}
-          </Paper>
+            </Box>
+          </Toolbar>
+          {loading ? (
+            <LoadingTable columns={6} rows={10} />
+          ) : error ? (
+            <ErrorView message={error.message} />
+          ) : (
+            data && (
+              <MyOrdersTable
+                networkName={networkName}
+                data={data}
+                totalRows={totalRows}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangePage={(newPage) => onChangePage(newPage)}
+                onChangeRowsPerPage={(perPage) =>
+                  onChangeRowsPerPage(perPage)
+                }
+              />
+            )
+          )}
         </Grid>
       </GridContainer>
     </Box>

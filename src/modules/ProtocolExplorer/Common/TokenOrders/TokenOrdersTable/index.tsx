@@ -9,6 +9,7 @@ import {
   TableHead,
   TablePagination,
   Typography,
+  useMediaQuery,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
@@ -38,13 +39,13 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
-
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead>
-            <TableHeading type={type} exchange={exchange} />
+           {!isMobile && <TableHeading type={type} exchange={exchange} />}
           </TableHead>
 
           <TableBody>
@@ -73,7 +74,7 @@ const TokenOrdersTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>

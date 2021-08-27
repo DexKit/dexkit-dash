@@ -96,7 +96,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         return e;
       });
 
-      console.log(newData);
+      console.log('netData', newData);
 
       setData(newData);
       setTotalRows(dataFn.total);
@@ -119,7 +119,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url: '/', name: 'Dashboard'},
-            {url: `/${networkName}/dashboard/token/${address}`, name: 'Token'},
+            {url: `/${networkName}/token/${address}`, name: 'Token'},
           ],
           active: {name: 'My Active Orders'},
         }}

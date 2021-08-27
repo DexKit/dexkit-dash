@@ -37,7 +37,7 @@ export const SwapHistoricDialog = (props: Props) => {
   }, []);
 
   return (
-    <Dialog fullWidth open={open} maxWidth='lg' onClose={onClose}>
+    <Dialog fullWidth open={open} maxWidth='md' onClose={onClose}>
       <DialogTitle>
         <Box
           display='flex'

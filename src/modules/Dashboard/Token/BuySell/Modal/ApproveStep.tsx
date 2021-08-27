@@ -2,14 +2,12 @@ import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
-import {ERC20TokenContract} from '@0x/contract-wrappers';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
-import BigNumber from 'bignumber.js';
 import {ethers} from 'ethers';
 import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
 import {NotificationType} from 'services/notification';
 // import {useStyles} from './index.style';
 import {useDispatch} from 'react-redux';
@@ -17,7 +15,7 @@ import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
 import {getERC20Contract} from 'utils/ethers';
-import {classNames} from 'react-select/src/utils';
+
 
 interface Props {
   step: Steps | undefined;

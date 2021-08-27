@@ -67,7 +67,7 @@ const TransferTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -81,7 +81,7 @@ const TransferTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={25}
         rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

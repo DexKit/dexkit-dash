@@ -76,9 +76,9 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   const getNetworkLink = (d: MyBalances) => {
     if (d.network === EthereumNetwork.bsc) {
-      return `/${EthereumNetwork.bsc}/dashboard/token/`;
+      return `/${EthereumNetwork.bsc}/token/`;
     }
-    return `/${EthereumNetwork.ethereum}/dashboard/token/`;
+    return `/${EthereumNetwork.ethereum}/token/`;
   };
 
   const getTradeNetworkLink = (d: MyBalances) => {
@@ -93,7 +93,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       <TableCell
         align='left'
         className={clsx(classes.tableCell, classes.whitespaceNowrap)}>
-        <Box display='flex'>
+        <Box display='flex' alignItems='center' alignContent='center'>
           <Box mr={{xs: 3, xl: 5}}>
             {data.currency?.address ? (
               <TokenLogo
@@ -101,15 +101,6 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
                 networkName={data.network}
               />
             ) : (
-              // data.currency?.address == '-' ? (
-              //   <Avatar className={classes.avatar} src={data.currency?.address}>
-              //     {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'} alt='' /> */}
-              //   </Avatar>
-              // ) : (
-              //   <Avatar className={classes.avatar} src={data.currency?.address}>
-              //     {/* <img src={'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/' + ethers.utils.getAddress(data.currency.address.toLowerCase()) + '/logo.png'} alt='' /> */}
-              //   </Avatar>
-              // )
               <Avatar className={classes.avatar}>
                 <PageviewIcon />
               </Avatar>

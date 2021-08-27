@@ -327,10 +327,20 @@ export default (props: Props) => {
       />
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <ListIcon />{' '}
-          <Typography variant='body1'>
-            <IntlMessages id='nfts.detail.offersAccordionLabel' />
-          </Typography>
+          <Box>
+            <Grid container spacing={2} alignItems='center'>
+              <Grid item>
+                <Typography variant='body1'>
+                  <ListIcon fontSize='inherit' />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant='body1'>
+                  <IntlMessages id='nfts.detail.offersAccordionLabel' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>

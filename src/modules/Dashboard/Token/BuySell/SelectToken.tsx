@@ -5,7 +5,7 @@ import {
   FilterOptionsState,
 } from '@material-ui/lab';
 import {Token} from 'types/app';
-import {Chip, makeStyles, TextField, Box} from '@material-ui/core';
+import {Chip, makeStyles, TextField, Box, Typography} from '@material-ui/core';
 import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
@@ -105,12 +105,18 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
 const useStyles = makeStyles({
   textField: {
     '& .MuiOutlinedInput-root': {
-      paddingLeft: '55px',
+      padding: '5px 50px'
     },
     // '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
     //   border: 'none',
     // },
   },
+  bold: {
+    fontWeight: 'bold',
+  },
+  selectLabel: {
+    marginBottom: '4px'
+  }
 });
 
 const SelectBox = styled.div`
@@ -131,13 +137,13 @@ const SelectBox = styled.div`
   border-radius: 5px;
   pointer-events: none;
   border-color: rgba(255, 255, 255, 0.23);
-  display: flex;
   align-items: center;
   justify-content: center; */
 `;
 
 const SelectOption = styled.div`
   display: flex;
+  width: 100px;
   align-items: center;
 
   & img {
@@ -209,13 +215,14 @@ const SelectToken: React.FC<Props> = ({
                 option.name.toLowerCase(),
             )}
             defaultValue={selected}
+            value={selected}
             onChange={(event, value) => onChange(value ?? undefined)}
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
                 <TokenLogo
                   token0={option.address}
-                  networkName={option?.networkName}
+                  networkName={option?.networkName as any}
                   logoURL0={option?.logoURI}
                 />
                 {option.name}
@@ -231,27 +238,31 @@ const SelectToken: React.FC<Props> = ({
               </SelectOption>
             )}
             renderInput={(params) => (
-              <SelectBox>
-                {selected && (
-                  <TokenLogo
-                    token0={selected?.address}
-                    networkName={selected?.networkName}
-                    logoURL0={selected?.logoURI}
+              <>
+                <Typography variant="body2" className={`${classes.bold} ${!label ? classes.selectLabel : ''}`}>
+                  {label || 'Search a coin'}
+                </Typography>
+                <SelectBox>
+                  {selected && (
+                    <TokenLogo
+                      token0={selected?.address}
+                      networkName={selected?.networkName as any}
+                      logoURL0={selected?.logoURI}
+                    />
+                  )}
+                  <TextField
+                    {...params}
+                    defaultValue={selected?.symbol}
+                    placeholder={
+                      selected
+                        ? selected.symbol
+                        : 'Search by name, symbol or paste address'
+                    }
+                    variant='outlined'
+                    className={classes.textField}
                   />
-                )}
-                <TextField
-                  {...params}
-                  defaultValue={selected?.symbol}
-                  label={label || 'Search a coin'}
-                  placeholder={
-                    selected
-                      ? selected.symbol
-                      : 'Search by name, symbol or paste address'
-                  }
-                  variant='outlined'
-                  className={classes.textField}
-                />
-              </SelectBox>
+                </SelectBox>
+              </>
             )}
           />
         )
@@ -260,4 +271,4 @@ const SelectToken: React.FC<Props> = ({
   );
 };
 
-export default SelectToken;
+export default  SelectToken;

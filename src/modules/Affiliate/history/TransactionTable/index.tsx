@@ -79,13 +79,13 @@ const TransactionTable: React.FC<Props> = ({
         {isLoading && <Loader />}
       </Box>
       <TablePagination
+        component='div'
         className={classes.paginationDesktop}
         rowsPerPageOptions={[10, 25, 50]}
-        component='div'
         count={total}
         rowsPerPage={perPage}
         page={page}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -99,7 +99,7 @@ const TransactionTable: React.FC<Props> = ({
         count={total}
         rowsPerPage={25}
         page={page}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

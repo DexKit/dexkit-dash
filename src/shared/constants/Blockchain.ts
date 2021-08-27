@@ -58,7 +58,7 @@ export const GET_DEFAULT_BASE = (chainId: ChainId | undefined) => {
   }
 };
 
-export const GET_DEFAULT_TOKEN_NETTOWRK = (chainId: ChainId | undefined) => {
+export const GET_DEFAULT_TOKEN_NETWORK = (chainId: ChainId | undefined) => {
   const id = Number(chainId);
 
   switch (id) {
@@ -70,6 +70,19 @@ export const GET_DEFAULT_TOKEN_NETTOWRK = (chainId: ChainId | undefined) => {
     case ChainId.Kovan:
     case ChainId.Goerli:
     case ChainId.Ropsten:
+    default:
+      return null;
+  }
+};
+
+export const GET_DEFAULT_TOKEN_BY_NETWORK = (network: EthereumNetwork | undefined) => {
+
+
+  switch (network) {
+    case EthereumNetwork.bsc:
+      return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case EthereumNetwork.ethereum:
+      return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
     default:
       return null;
   }

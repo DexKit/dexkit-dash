@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
+
 
 import {BITQUERY_AMM_PAIR_EXPLORER} from 'services/graphql/bitquery/protocol/amm.gql';
 import {
@@ -8,7 +8,7 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_DEFAULT_QUOTE,
@@ -33,7 +33,7 @@ export const useAMMPairExplorer = ({exchange, address, networkName}: Props) => {
     variables: {
       network: networkName,
       exchangeName:
-        exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
+        exchange === EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       pairAddress: address,
       quoteAddress: GET_DEFAULT_QUOTE(chainId) as string,
     },
@@ -77,7 +77,6 @@ export const useAMMPairExplorer = ({exchange, address, networkName}: Props) => {
       d24Current['volume24InUsd'] = d24Current.tradeAmountInUsd;
       d24Current['basePooled'] = basePooled;
       d24Current['quotePooled'] = quotePooled;
-
       // const newData = dexTrades
       setData(d24Current);
     } else {
