@@ -16,8 +16,8 @@ export const AssetList = (props: AssetListProps) => {
   const history = useHistory();
 
   const handleClick = useCallback((network: string, address: string) => {
-    history.push(`/dashboard/wallet/overview/${network}/${address}`);
-  }, []);
+    history.push(`/wallet/overview/${network}/${address}`);
+  }, [history]);
 
   return (
     <Grid container spacing={2}>

@@ -97,33 +97,13 @@ const TableItem: React.FC<TableItemProps> = ({
   const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0);
   const quoteAmountRow = (
     <>
-      {row.quoteAmount?.toFixed(4)}
-      <Link
-        to={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.quoteCurrency),
-          exchange,
-        )}
-        component={RouterLink}>
-        {' '}
-        {row.quoteCurrency?.symbol}
-      </Link>
+      {row.quoteAmount?.toFixed(4)} {row.quoteCurrency?.symbol}
     </>
   );
 
   const baseAmountRow = (
     <>
-       {row.baseAmount?.toFixed(4)}
-        <Link
-          to={GET_PROTOCOL_TOKEN_URL(
-            networkName,
-            GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency),
-            exchange,
-          )}
-          component={RouterLink}>
-          {' '}
-          {row.baseCurrency?.symbol}{' '}
-        </Link>
+      {row.baseAmount?.toFixed(4)} {row.baseCurrency?.symbol}{' '}
     </>
   );
 
@@ -221,23 +201,9 @@ const TableItem: React.FC<TableItemProps> = ({
               <TokenLogo
                 token0={row.baseCurrency?.address || ''}
                 token1={row.quoteCurrency?.address || ''}
-                networkName={networkName}
-                ></TokenLogo>
+                networkName={networkName}></TokenLogo>
             )}
-            <Link
-              to={GET_PROTOCOL_PAIR_URL(
-                networkName,
-                exchange,
-                row.smartContract?.address.address,
-                GET_CORRECT_ADDRESS_FROM_NETWORK(networkName, row.baseCurrency),
-                GET_CORRECT_ADDRESS_FROM_NETWORK(
-                  networkName,
-                  row.quoteCurrency,
-                ),
-              )}
-              component={RouterLink}>
-              {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
-            </Link>
+            {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
           </Box>
         </TableCell>
       )}
@@ -245,10 +211,10 @@ const TableItem: React.FC<TableItemProps> = ({
         {priceUsd}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-       {baseAmountRow}
+        {baseAmountRow}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-       {quoteAmountRow}
+        {quoteAmountRow}
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
         {tradeAmountUsd}

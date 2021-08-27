@@ -39,7 +39,6 @@ import {marketFormStyles as useStyles} from './index.styles';
 interface Props {
   chainId: number | undefined;
   account: string | undefined;
-  tokenAddress: string;
   networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
@@ -72,29 +71,27 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const {web3State, onConnectWeb3} = useWeb3();
 
-  const [
-    tokenBalance,
-    setTokenBalance,
-  ] = useState<GetMyBalance_ethereum_address_balances>();
+  const [tokenBalance, setTokenBalance] =
+    useState<GetMyBalance_ethereum_address_balances>();
 
   const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
+  useEffect(() => {
+    if (web3State !== Web3State.Done && tokenFrom === undefined) {
+      const tokenETH = select1.find(
+        (e) =>
+          (e.symbol.toLowerCase() ===
+            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
+            e.symbol.toLowerCase() ===
+              GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
+          e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+      );
+      onChangeToken(tokenETH, 'from');
+    }
+  }, [tokenFrom, web3State, networkName, select1, onChangeToken, tokenTo]);
 
-  if (web3State !== Web3State.Done && tokenFrom === undefined) {
-    const tokenETH = select1.find(
-      (e) =>
-        (e.symbol.toLowerCase() ===
-          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
-          e.symbol.toLowerCase() ===
-            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
-        e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
-    );
-
-    onChangeToken(tokenETH, 'from');
-  }
-
-  const switchTokens = () => {
+  const switchTokens = useCallback(() => {
     if (tokenFrom) {
       onChangeToken(tokenFrom, 'to');
     }
@@ -102,38 +99,93 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
-  };
+  }, [tokenFrom, tokenTo]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
-    tokenTo?.address,
+    tokenTo?.address || tokenTo?.symbol,
     networkName,
     OrderSide.Buy,
     amountTo,
     tokenTo?.decimals,
   );
+
+  const {priceQuote: priceQuoteToUnit} = useTokenPriceUSD(
+    tokenTo?.address || tokenTo?.symbol,
+    networkName,
+    OrderSide.Buy,
+    1,
+    tokenTo?.decimals,
+  );
+
   const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(
-    tokenFrom?.address,
+    tokenFrom?.address || tokenFrom?.symbol,
     networkName,
     OrderSide.Sell,
     amountFrom,
     tokenFrom?.decimals,
   );
+  const onFetch = useCallback(
+    (newValue: number | undefined, side: 'to' | 'from') => {
+      if (side === 'from') {
+        setAmountFrom(newValue);
+      } else {
+        if (newValue) {
+          setAmountTo(newValue);
+        }
+      }
+      if (tokenFrom && tokenTo && chainId && newValue) {
+        fetchQuote(
+          {
+            chainId: chainId,
+            baseToken: side === 'from' ? tokenFrom : tokenTo,
+            quoteToken: side === 'from' ? tokenTo : tokenFrom,
+            orderSide: OrderSide.Sell,
+            makerAmount: fromTokenUnitAmount(newValue, tokenFrom.decimals),
+            // Parameters used to prevalidate quote at final
+            allowedSlippage: 0.03,
+            ethAccount: account,
+            buyTokenPercentage: undefined,
+            feeRecipient: FEE_RECIPIENT,
+            affiliateAddress: FEE_RECIPIENT,
+            intentOnFill: false,
+          },
+          networkName,
+        )
+          .then((e) => {
+            if (side === 'from') {
+              setAmountTo(
+                toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
+              );
+            } else {
+              setAmountFrom(
+                toTokenUnitAmount(e.buyAmount, tokenFrom.decimals).toNumber(),
+              );
+            }
+            setAllowanceTarget(e.allowanceTarget);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    },
+    [networkName, tokenFrom, tokenTo, chainId, account],
+  );
 
-  const setMax = () => {
+  const setMax = useCallback(() => {
     if (tokenBalance && tokenBalance.value) {
       // If is native coin we not allow user to max all of it, and leave some for gas
       if (isNativeCoin(tokenBalance.currency?.symbol ?? '', chainId ?? 1)) {
         if (tokenBalance?.value > 0.03) {
           setAmountFrom(tokenBalance?.value - 0.03);
-          onFetch(tokenBalance?.value - 0.03);
+          onFetch(tokenBalance?.value - 0.03, 'from');
         }
       } else {
         // Problem: balance comes with 8 decimals (rounded up) from the api
         setAmountFrom(tokenBalance?.value - 0.000000001 ?? 0);
-        onFetch(tokenBalance?.value - 0.000000001 ?? 0);
+        onFetch(tokenBalance?.value - 0.000000001 ?? 0, 'from');
       }
     }
-  };
+  }, [tokenBalance, chainId, onFetch]);
 
   useEffect(() => {
     setTokenBalance(
@@ -156,56 +208,39 @@ const MarketForm: React.FC<Props> = (props) => {
     );
   }, [tokenFrom, balances, web3State, networkName]);
 
-  const onFetch = (newValue: number | undefined) => {
-    setAmountFrom(newValue);
+  const onChangeFrom = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      let value = undefined;
 
-    if (tokenFrom && tokenTo && chainId && newValue) {
-      fetchQuote(
-        {
-          chainId: chainId,
-          baseToken: tokenFrom,
-          quoteToken: tokenTo,
-          orderSide: OrderSide.Sell,
-          makerAmount: fromTokenUnitAmount(newValue, tokenFrom.decimals),
-          // Parameters used to prevalidate quote at final
-          allowedSlippage: 0.03,
-          ethAccount: props.account,
-          buyTokenPercentage: undefined,
-          feeRecipient: FEE_RECIPIENT,
-          affiliateAddress: FEE_RECIPIENT,
-          intentOnFill: false,
-        },
-        networkName,
-      )
-        .then((e) => {
-          setAmountTo(
-            toTokenUnitAmount(e.buyAmount, tokenTo.decimals).toNumber(),
-          );
-          setAllowanceTarget(e.allowanceTarget);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  };
+      if (e.target.value) {
+        value = Number(e.target.value);
 
-  const onChangeFrom = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
-    let value = undefined;
-
-    if (e.target.value) {
-      value = Number(e.target.value);
-
-      if (value < 0) {
-        value = 0;
+        if (value < 0) {
+          value = 0;
+        }
       }
-    }
+      onFetch(value, 'from');
+    },
+    [onFetch],
+  );
 
-    onFetch(value);
-  };
+  const onChangeTo = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      let value = undefined;
 
-  const handleTrade = () => {
+      if (e.target.value) {
+        value = Number(e.target.value);
+
+        if (value < 0) {
+          value = 0;
+        }
+      }
+      onFetch(value, 'to');
+    },
+    [onFetch],
+  );
+
+  const handleTrade = useCallback(() => {
     if (amountFrom && tokenFrom && tokenTo && account && allowanceTarget) {
       onTrade({
         isMarket: true,
@@ -219,7 +254,7 @@ const MarketForm: React.FC<Props> = (props) => {
         expiry: 0,
       });
     }
-  };
+  }, [amountFrom, tokenFrom, tokenTo, account, allowanceTarget, amountTo]);
 
   let errorMessage = null;
   const disabled = false;
@@ -285,8 +320,6 @@ const MarketForm: React.FC<Props> = (props) => {
         select0.length > 0
         ? select0
         : select1;
-
-      return select1;
     },
     [web3State, select0, select1],
   );
@@ -298,6 +331,7 @@ const MarketForm: React.FC<Props> = (props) => {
   return (
     <Box className={classes.marketContainer}>
       <SelectTokenDialog
+        title={selectTo === 'from' ? 'You send' : 'You receive'}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}
@@ -312,6 +346,7 @@ const MarketForm: React.FC<Props> = (props) => {
               </Grid>
               <Grid item xs={6} className={classes.inputLabel}>
                 <Typography
+                  className={classes.amountTotal}
                   onClick={setMax}
                   variant='body2'
                   color='textSecondary'
@@ -382,9 +417,9 @@ const MarketForm: React.FC<Props> = (props) => {
                   variant='outlined'
                   className={classes.toText}
                   fullWidth
+                  onChange={(e) => onChangeTo(e)}
                   value={amountTo}
                   InputProps={{
-                    readOnly: true,
                     endAdornment: (
                       <InputAdornment position='end' style={{fontSize: '13px'}}>
                         {priceQuoteTo && (
@@ -403,7 +438,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   }}
                 />
               </Grid>
-              <Grid xs={12} md={12}>
+              <Grid item xs={12} md={12}>
                 <Box padding={'8px'}>
                   {(priceQuoteTo || priceQuoteFrom) && (
                     <Accordion
@@ -422,7 +457,7 @@ const MarketForm: React.FC<Props> = (props) => {
                           width='100%'
                           justifyContent={'space-evenly'}>
                           {priceQuoteTo && (
-                            <Box>
+                            <Box pr={2}>
                               <p>
                                 1 {tokenTo?.symbol.toUpperCase()}{' '}
                                 {priceQuoteTo && (
@@ -440,7 +475,7 @@ const MarketForm: React.FC<Props> = (props) => {
                             </Box>
                           )}
                           {priceQuoteFrom && (
-                            <Box>
+                            <Box pr={2}>
                               <p>
                                 1 {tokenFrom?.symbol.toUpperCase()}{' '}
                                 {priceQuoteFrom && (
@@ -454,6 +489,20 @@ const MarketForm: React.FC<Props> = (props) => {
                                     </i>
                                   </>
                                 )}
+                              </p>
+                            </Box>
+                          )}
+                          {priceQuoteTo?.price && priceQuoteToUnit?.price && (
+                            <Box>
+                              <p>
+                                Price Impact:{' '}
+                                {(
+                                  ((Number(priceQuoteTo.price) -
+                                    Number(priceQuoteToUnit.price)) /
+                                    Number(priceQuoteTo.price)) *
+                                  100
+                                ).toFixed(2)}
+                                %
                               </p>
                             </Box>
                           )}

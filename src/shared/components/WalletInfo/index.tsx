@@ -134,11 +134,11 @@ const WalletInfo = (props: any) => {
 
   const onGoToWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet');
+    history.push('/wallet');
   };
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet/manage-accounts');
+    history.push('/wallet/manage-accounts');
   };
 
   const filteredBalances = balances?.filter(
@@ -153,9 +153,9 @@ const WalletInfo = (props: any) => {
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
-    if (pathname && pathname.indexOf('dashboard/wallet') === 1) {
+    if (pathname && pathname.indexOf('/wallet') === 1) {
       // This is need because it was not changing the url and causing loop on update
-      history.push(`/dashboard/wallet/${a.address}`);
+      history.push(`/wallet/${a.address}`);
       dispatch(setDefaultAccount(a));
     } else {
       dispatch(setDefaultAccount(a));

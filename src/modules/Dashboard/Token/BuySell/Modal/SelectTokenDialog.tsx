@@ -7,13 +7,10 @@ import {
   Typography,
   DialogContent,
   DialogTitle,
-  DialogActions,
-  Button,
   TextField,
   useMediaQuery,
   List,
   Box,
-  makeStyles,
   IconButton,
 } from '@material-ui/core';
 
@@ -22,23 +19,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import SelectTokenListItem from '../../components/SelectTokenListItem';
 import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
-
-const useStyles = makeStyles((theme) => ({
-  list: {
-    maxHeight: theme.spacing(150),
-    overflowY: 'scroll',
-  },
-}));
+import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 
 interface Props extends DialogProps {
+  title?: string;
   tokens: Token[];
   onSelectToken: (token: Token) => void;
 }
 
 export const SelectTokenDialog = (props: Props) => {
-  const {onSelectToken, tokens, onClose} = props;
+  const {onSelectToken, tokens, onClose, title} = props;
   const theme = useTheme();
-  const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
@@ -89,14 +80,19 @@ export const SelectTokenDialog = (props: Props) => {
       fullScreen={fullScreen}>
       <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Select a token</Typography>
+          <Box display='flex' alignItems='center'>
+            <Box display='flex' pr={2}>
+              <MoneySendIcon />
+            </Box>
+            <Typography variant='body1'>{title || 'Select a token'}</Typography>
+          </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <Box mb={4}>
+        <Box mb={4} p={2}>
           <TextField
             autoComplete='off'
             autoFocus
@@ -114,7 +110,7 @@ export const SelectTokenDialog = (props: Props) => {
           <List>
             <VariableSizeList
               itemData={filteredTokens}
-              itemSize={(index: number) => 56}
+              itemSize={() => 56}
               itemCount={filteredTokens.length}
               width='100%'
               height={250}>

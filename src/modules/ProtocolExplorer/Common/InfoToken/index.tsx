@@ -111,7 +111,7 @@ const InfoToken: React.FC<Props> = (props) => {
                       </Box>
                       <Box mr={3}>
                         <Link
-                          to={`/${networkName}/dashboard/token/${token?.address}`}
+                          to={`/${networkName}/token/${token?.address}`}
                           component={RouterLink}>
                           <Tooltip title={'Trade Token'} placement='top'>
                             <Avatar

@@ -43,7 +43,7 @@ export const Favorites = () => {
     <Box pt={{xl: 4}}>
       <Box mb={2}>
         <Breadcrumbs>
-          <Link color='inherit' component={RouterLink} to={'/dashboard/wallet'}>
+          <Link color='inherit' component={RouterLink} to={'/wallet'}>
             Wallet
           </Link>
           <Link color='textSecondary'>Favorites</Link>

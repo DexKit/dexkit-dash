@@ -36,7 +36,7 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   const handleClick = useCallback((network: string, address: string) => {
     console.log(network, address);
 
-    history.push(`/${network}/dashboard/token/${address}`);
+    history.push(`/${network}/token/${address}`);
   }, []);
 
   return (
@@ -69,7 +69,7 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
             align={'center'}
             color={'primary'}>
             <Link
-              to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+              to={`/${EthereumNetwork.ethereum}/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
               component={RouterLink}>
               Trade page.
             </Link>

@@ -1,15 +1,19 @@
-import React from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import WarningIcon from '@material-ui/icons/Warning';
-interface Props {
-  message: string;
-}
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
+import React from 'react';
 
-const ErrorView: React.FC<Props> = ({message}) => {
+type Props = {
+  title: string;
+  message: string;
+};
+
+export const Empty = (props: Props) => {
+  const {title, message} = props;
+
   return (
-    <Box py={4} display={'flex'} justifyContent={'center'}>
+    <Box py={4}>
       <Grid
         container
         alignItems='center'
@@ -18,7 +22,7 @@ const ErrorView: React.FC<Props> = ({message}) => {
         direction='column'
         spacing={2}>
         <Grid item xs={12}>
-          <WarningIcon color='secondary' fontSize='large' />
+          <ConnectivityImage />
         </Grid>
         <Grid item xs={12}>
           <Typography
@@ -26,15 +30,11 @@ const ErrorView: React.FC<Props> = ({message}) => {
             gutterBottom
             align='center'
             variant='h5'>
-           Ops, error fetching data 
+            {title}
           </Typography>
-          <Typography align='center'>
-            Try again please!
-          </Typography>
+          <Typography align='center'>{message}</Typography>
         </Grid>
       </Grid>
     </Box>
   );
 };
-
-export default ErrorView;

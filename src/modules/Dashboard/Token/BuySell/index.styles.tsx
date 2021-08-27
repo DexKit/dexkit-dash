@@ -8,6 +8,11 @@ export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
       padding: '14px'
     }
   },
+  maxBalance:{
+    '&:hover, &:focus': {
+      cursor: 'pointer',
+    },
+  },
   root: {
     color: theme.palette.secondary.main,
     fontSize: 18,
@@ -111,7 +116,6 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
   },
   balance: {
     paddingBottom: '4px !important',
-    fontWeight: 'bold',
     display: 'flex',
     flexDirection: 'row-reverse'
   },

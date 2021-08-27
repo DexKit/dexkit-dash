@@ -1,14 +1,11 @@
 import React, {useState, useCallback} from 'react';
-import CTable from './CTable';
+
 import {
   Chip,
-  Fade,
   makeStyles,
-  Paper,
   Box,
   Grid,
   Typography,
-  TextField,
   Drawer,
   IconButton,
   Divider,
@@ -16,9 +13,9 @@ import {
   useTheme,
   useMediaQuery,
 } from '@material-ui/core';
-import FilterListIcon from '@material-ui/icons/FilterList';
+
 import {CremaTheme} from 'types/AppContextPropsType';
-import LoadingTable from 'modules/Common/LoadingTable';
+
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import Close from '@material-ui/icons/Close';

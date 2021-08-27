@@ -22,13 +22,10 @@ import GridContainer from '@crema/core/GridContainer';
 
 import {useIntl} from 'react-intl';
 
-import PageTitle from 'shared/components/PageTitle';
-
 import {useWeb3} from 'hooks/useWeb3';
 import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
 
-import {truncateIsAddress} from 'utils';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Web3Wrapper} from '@0x/web3-wrapper';
@@ -37,16 +34,10 @@ import {useDispatch} from 'react-redux';
 import AppContextPropsType from 'types/AppContextPropsType';
 import AppContext from '@crema/utility/AppContext';
 import {useStyles} from './index.style';
-import AppBar from '@material-ui/core/AppBar';
+
 import TabContext from '@material-ui/lab/TabContext';
 import TabPanel from '@material-ui/lab/TabPanel';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
-import TimelineIcon from '@material-ui/icons/Timeline';
 
-import AssessmentIcon from '@material-ui/icons/Assessment';
-
-import SwapVertIcon from '@material-ui/icons/SwapVert';
-import {AssetChartTab} from './Tabs/AssetChartTab';
 import {AssetTableTab} from './Tabs/AssetTableTab';
 import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
 import {TransferTab} from './Tabs/TransfersTab';
@@ -93,19 +84,17 @@ const WalletTabs: React.FC<Props> = (props) => {
   };
   const {loading, error, data} = useAllBalance(defaultAccount);
 
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
   useEffect(() => {
     if (
       urlAccount &&
       Web3Wrapper.isAddress(urlAccount) &&
       defaultAccount !== urlAccount
     ) {
-      history.push(`/dashboard/wallet/${urlAccount}`);
+      history.push(`/wallet/${urlAccount}`);
       dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}));
     }
     if (!urlAccount && defaultAccount) {
-      history.push(`/dashboard/wallet/${defaultAccount}`);
+      history.push(`/wallet/${defaultAccount}`);
     }
   }, [urlAccount, defaultAccount]);
 
@@ -129,33 +118,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                   loading={loading}
                 />
               )}
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <TokenCard
-                    amount={3}
-                    icon={
-                      <TokenLogo
-                        token0={'0x00'}
-                        networkName={EthereumNetwork.bsc}
-                      />
-                    }
-                    price24Change={3}
-                    pair={'ETH'}
-                    onClick={() => console.log('hello')}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TokenPairCard
-                    firstIcon={<TokenPairIcon src={''} />}
-                    secondIcon={<TokenPairIcon src={''} />}
-                    firstToken={'ETH'}
-                    secondToken={'USDT'}
-                    exchange={EXCHANGE.UNISWAP}
-                  />
-                </Grid>
-              </Grid>
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
@@ -208,7 +170,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                             </Grid>
                             <Grid item>
                               <Button
-                                to='/dashboard/favorite-coins'
+                                to='/favorite-coins'
                                 component={RouterLink}
                                 size='small'
                                 endIcon={<KeyboardArrowRightIcon />}>

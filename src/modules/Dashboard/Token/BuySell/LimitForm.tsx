@@ -43,7 +43,6 @@ import {limitFormStyles as useStyles} from './index.styles';
 interface Props {
   chainId: number | undefined;
   account: string | undefined;
-  tokenAddress: string;
   networkName: EthereumNetwork;
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
@@ -58,7 +57,6 @@ const LimitForm: React.FC<Props> = (props) => {
   const {
     chainId,
     account,
-    tokenAddress,
     networkName,
     balances,
     select0,
@@ -76,15 +74,11 @@ const LimitForm: React.FC<Props> = (props) => {
   const network = useNetwork();
   const [isInverted, setIsInverted] = useState(false);
 
-  const [
-    tokenFromBalance,
-    setTokenFromBalance,
-  ] = useState<GetMyBalance_ethereum_address_balances>();
+  const [tokenFromBalance, setTokenFromBalance] =
+    useState<GetMyBalance_ethereum_address_balances>();
 
-  const [
-    tokenToBalance,
-    setTokenToBalance,
-  ] = useState<GetMyBalance_ethereum_address_balances>();
+  const [tokenToBalance, setTokenToBalance] =
+    useState<GetMyBalance_ethereum_address_balances>();
 
   const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
@@ -92,15 +86,16 @@ const LimitForm: React.FC<Props> = (props) => {
   const [expiryInput, setExpiryInput] = useState<number>(1);
   const [expirySelect, setExpirySelect] = useState<number>(86400);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
-  const [showSelectTokenDialog, setShowSelectTokenDialog] = useState<boolean>(false);
+  const [showSelectTokenDialog, setShowSelectTokenDialog] =
+    useState<boolean>(false);
   const [selectTo, setSelectTo] = useState<'from' | 'to'>('from');
   const notConnected = useMemo(() => web3State !== Web3State.Done, [web3State]);
 
   if (notConnected && tokenFrom === undefined) {
     const tokenETH = select1.find(
       (e) =>
-      e.symbol.toLowerCase() ===
-        GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
+        e.symbol.toLowerCase() ===
+          GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
         e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
     );
 
@@ -117,15 +112,16 @@ const LimitForm: React.FC<Props> = (props) => {
     }
 
     setPrice((amountTo || 0) / (amountFrom || 1));
-  }
+  };
 
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
-      const getTokenBalance = (token: (Token | undefined)) =>
+      const getTokenBalance = (token: Token | undefined) =>
         balances.find((e) => {
-          const symbol = token && isNativeCoinFromNetworkName(token?.symbol, networkName)
-            ? token?.address.toLowerCase()
-            : token?.symbol.toLowerCase();
+          const symbol =
+            token && isNativeCoinFromNetworkName(token?.symbol, networkName)
+              ? token?.address.toLowerCase()
+              : token?.symbol.toLowerCase();
 
           return e.currency?.symbol?.toLowerCase() === symbol;
         });
@@ -207,9 +203,8 @@ const LimitForm: React.FC<Props> = (props) => {
     setExpirySelect(event.target.value);
   };
 
-  let errorMessage: (string | undefined);
+  let errorMessage: string | undefined;
   const disabled = false;
-
 
   const connectButton = (
     <Box m={6} display='flex' alignItems='center' justifyContent='center'>
@@ -223,16 +218,20 @@ const LimitForm: React.FC<Props> = (props) => {
           ? isMobile()
             ? 'Connecting...'
             : 'Connecting... Check Wallet'
-            : isMobile()
-              ? 'Connect'
-              : 'Connect Wallet'}
+          : isMobile()
+          ? 'Connect'
+          : 'Connect Wallet'}
       </Button>
     </Box>
   );
 
   if (select0.length === 0) {
     errorMessage = 'No balances found in your wallet';
-  } else if (!tokenFromBalance || !tokenFromBalance.value || tokenFromBalance.value === 0) {
+  } else if (
+    !tokenFromBalance ||
+    !tokenFromBalance.value ||
+    tokenFromBalance.value === 0
+  ) {
     errorMessage = 'No available balance for chosen token';
   } else if (amountFrom && tokenFromBalance.value < amountFrom) {
     errorMessage = 'Insufficient balance for chosen token';
@@ -248,22 +247,20 @@ const LimitForm: React.FC<Props> = (props) => {
     isNativeCoinFromNetworkName(tokenFrom?.symbol ?? '', networkName) ||
     isNativeCoinFromNetworkName(tokenTo?.symbol ?? '', networkName);
 
-  const nativeCoinSymbol = GET_NATIVE_COIN_FROM_NETWORK_NAME(
-    networkName,
-  ).toUpperCase();
-  const wNativeCoinSymbol = GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
-    networkName,
-  ).toUpperCase();
+  const nativeCoinSymbol =
+    GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase();
+  const wNativeCoinSymbol =
+    GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase();
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
-    tokenTo?.address,
+    tokenTo?.address || tokenTo?.symbol,
     networkName,
     OrderSide.Buy,
     amountTo,
     tokenTo?.decimals,
   );
   const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(
-    tokenFrom?.address,
+    tokenFrom?.address || tokenFrom?.symbol,
     networkName,
     OrderSide.Sell,
     amountFrom,
@@ -292,11 +289,11 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const getTokens = useCallback(
     (target: string) => {
-      return target === 'from' && web3State === Web3State.Done && select0.length > 0
+      return target === 'from' &&
+        web3State === Web3State.Done &&
+        select0.length > 0
         ? select0
         : select1;
-
-      return select1;
     },
     [web3State, select0, select1],
   );
@@ -318,7 +315,7 @@ const LimitForm: React.FC<Props> = (props) => {
           <Box className={classes.boxContainer}>
             <GridContainer>
               <Grid item xs={12}>
-                <Alert severity="info">
+                <Alert severity='info'>
                   Limit orders are only supported on{' '}
                   {FORMAT_NETWORK_NAME(EthereumNetwork.ethereum)} Network for
                   now
@@ -336,7 +333,7 @@ const LimitForm: React.FC<Props> = (props) => {
               <GridContainer>
                 {isNative && (
                   <Grid item xs={12}>
-                    <Alert severity="info">
+                    <Alert severity='info'>
                       To use {nativeCoinSymbol} on Limit orders you need to wrap
                       your {nativeCoinSymbol} to {wNativeCoinSymbol}, and use{' '}
                       {wNativeCoinSymbol} to place limit orders
@@ -344,7 +341,7 @@ const LimitForm: React.FC<Props> = (props) => {
                   </Grid>
                 )}
                 <Grid item xs={5}>
-                  <Typography variant="body2" className={classes.inputLabel}>
+                  <Typography variant='body2' className={classes.inputLabel}>
                     <IntlMessages id='app.youSend' />
                   </Typography>
                   <Box height={48}>
@@ -358,12 +355,17 @@ const LimitForm: React.FC<Props> = (props) => {
                   </Box>
                 </Grid>
                 <Grid item sm={7}>
-                  <Typography variant="body2" className={classes.balance}>
+                  <Typography
+                    variant='body2'
+                    color='textSecondary'
+                    className={classes.balance}>
                     {account ? (
-                      `Balance ${tokenFromBalance?.value?.toFixed(4) || 0} ${tokenFromBalance?.currency?.symbol || ''}`
+                      `Balance ${tokenFromBalance?.value?.toFixed(4) || 0} ${
+                        tokenFromBalance?.currency?.symbol || ''
+                      }`
                     ) : (
-                    <Skeleton width={'100%'} />
-                  )}
+                      <Skeleton width={'100%'} />
+                    )}
                   </Typography>
                   <TextField
                     variant='outlined'
@@ -383,7 +385,7 @@ const LimitForm: React.FC<Props> = (props) => {
                                 {' '}
                                 {usdFormatter.format(
                                   Number(priceQuoteFrom?.price) *
-                                  Number(amountFrom),
+                                    Number(amountFrom),
                                 )}
                               </i>
                             </>
@@ -396,11 +398,10 @@ const LimitForm: React.FC<Props> = (props) => {
                 {!isNative && (
                   <>
                     <VerticalSwap switchTokens={switchTokens} />
-                    <Grid
-                      item
-                      xs={12}
-                      md={5}>
-                      <Typography variant="body2" className={classes.inputLabel}>
+                    <Grid item xs={12} md={5}>
+                      <Typography
+                        variant='body2'
+                        className={classes.inputLabel}>
                         <IntlMessages id='app.youReceive' />
                       </Typography>
                       <Box height={48}>
@@ -413,13 +414,15 @@ const LimitForm: React.FC<Props> = (props) => {
                         />
                       </Box>
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      md={7}>
-                      <Typography variant="body2" className={classes.balance}>
+                    <Grid item xs={12} md={7}>
+                      <Typography
+                        variant='body2'
+                        color='textSecondary'
+                        className={classes.balance}>
                         {account ? (
-                          `Balance ${tokenToBalance?.value?.toFixed(4) || 0} ${tokenToBalance?.currency?.symbol || ''}`
+                          `Balance ${tokenToBalance?.value?.toFixed(4) || 0} ${
+                            tokenToBalance?.currency?.symbol || ''
+                          }`
                         ) : (
                           <Skeleton width={'100%'} />
                         )}
@@ -441,7 +444,7 @@ const LimitForm: React.FC<Props> = (props) => {
                                     {' '}
                                     {usdFormatter.format(
                                       Number(priceQuoteTo?.price) *
-                                      Number(amountTo),
+                                        Number(amountTo),
                                     )}
                                   </i>
                                 </>
@@ -453,10 +456,10 @@ const LimitForm: React.FC<Props> = (props) => {
                     </Grid>
 
                     <Grid item xs={12}>
-                      <Grid
-                        item
-                        xs={12}>
-                        <Typography variant="body2" className={classes.inputLabel}>
+                      <Grid item xs={12}>
+                        <Typography
+                          variant='body2'
+                          className={classes.inputLabel}>
                           <IntlMessages id='app.price' />
                         </Typography>
                         <TextField
@@ -485,39 +488,35 @@ const LimitForm: React.FC<Props> = (props) => {
                     </Grid>
 
                     <Grid item xs={12} className={classes.expiryContainer}>
-                      <Grid
-                        item
-                        xs={5}>
-                        <Typography variant="body2" className={classes.inputLabel}>
+                      <Grid item xs={5}>
+                        <Typography
+                          variant='body2'
+                          className={classes.inputLabel}>
                           <IntlMessages id='app.expiry' />
                         </Typography>
-                        <Box
-                          display='flex'
-                          justifyContent='center'>
+                        <Box display='flex' justifyContent='center'>
                           <Select
                             className={classes.select}
-                            variant="outlined"
+                            variant='outlined'
                             value={expirySelect}
                             onChange={handleExpirySelectChange}>
-                            <MenuItem value={86400} selected={true}>Days</MenuItem>
+                            <MenuItem value={86400} selected={true}>
+                              Days
+                            </MenuItem>
                             <MenuItem value={60}>Minutes</MenuItem>
                             <MenuItem value={1}>Seconds</MenuItem>
                           </Select>
                         </Box>
                       </Grid>
-                      <Grid
-                        style={{ marginTop: '24px' }}
-                        item
-                        xs={7}>
+                      <Grid style={{marginTop: '24px'}} item xs={7}>
                         <TextField
                           variant='outlined'
-                          type="number"
+                          type='number'
                           fullWidth
                           value={expiryInput}
                           onChange={handleExpiryInputChange}
                         />
                       </Grid>
-
                     </Grid>
                   </>
                 )}
@@ -581,29 +580,29 @@ const LimitForm: React.FC<Props> = (props) => {
                     amountTo === 0 ||
                     web3State !== Web3State.Done
                   }>
-                    {isNative && (
-                      <Box fontSize='large' fontWeight='bold'>
-                        Convert {nativeCoinSymbol} -{`>`} {wNativeCoinSymbol}
+                  {isNative && (
+                    <Box fontSize='large' fontWeight='bold'>
+                      Convert {nativeCoinSymbol} -{`>`} {wNativeCoinSymbol}
+                    </Box>
+                  )}
+                  {!isNative && errorMessage && account ? (
+                    errorMessage
+                  ) : (
+                    <>
+                      <Box mx={2} display={'flex'}>
+                        <TradeIcon />
                       </Box>
-                    )}
-                    {!isNative && errorMessage && account ? (
-                      errorMessage
-                    ) : (
-                      <>
-                        <Box mx={2} display={'flex'}>
-                          <TradeIcon />
-                        </Box>
-                        <Box fontSize='large' fontWeight='bold'>
-                          Trade
-                        </Box>
-                      </>
-                    )}
+                      <Box fontSize='large' fontWeight='bold'>
+                        Trade
+                      </Box>
+                    </>
+                  )}
                 </Button>
               </Grid>
             </GridContainer>
           )}
           {notConnected && (
-            <Grid style={{ padding: '8px' }} item xs={12} sm={12}>
+            <Grid style={{padding: '8px'}} item xs={12} sm={12}>
               {connectButton}
             </Grid>
           )}
