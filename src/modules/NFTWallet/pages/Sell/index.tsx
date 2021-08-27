@@ -195,6 +195,7 @@ export default () => {
   const handleSelectHighestBid = useCallback(() => {
     setSaleType(SALE_HIGHEST_BID);
     setHasEndingPrice(false);
+    setIsPrivate(false);
     setEndingPrice(0);
   }, []);
 
@@ -375,9 +376,8 @@ export default () => {
       }
 
       if (end > start) {
-        error = messages[
-          'nfts.sell.expire.greaterThanStartingPrice'
-        ].toString();
+        error =
+          messages['nfts.sell.expire.greaterThanStartingPrice'].toString();
       }
 
       return error;

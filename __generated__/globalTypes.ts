@@ -17,6 +17,7 @@ export enum EthereumNetwork {
   ethclassic_reorg = "ethclassic_reorg",
   ethereum = "ethereum",
   goerli = "goerli",
+  matic = 'matic',
 }
 
 export enum Network {

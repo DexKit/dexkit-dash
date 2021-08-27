@@ -1,37 +1,25 @@
-import React, {useEffect, useState, useContext, useMemo} from 'react';
-import GridContainer from '../../../@crema/core/GridContainer';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import {
   Grid,
   Box,
-  Link,
-  Fade,
   IconButton,
   Tooltip,
-  ButtonGroup,
-  Button,
+  Card,
+  Breadcrumbs,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@material-ui/core';
-import {Link as RouterLink} from 'react-router-dom';
 
 import {RouteComponentProps} from 'react-router-dom';
-import AppContextPropsType from 'types/AppContextPropsType';
-import {useStyles} from './index.style';
-import {AppContext} from '@crema';
 import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
 import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
-import {EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
-import PageTitle from 'shared/components/PageTitle';
-import InfoCard from 'shared/components/InfoCard';
-import ErrorView from 'modules/Common/ErrorView';
-import CoingeckoProfile from './CoingeckoProfile';
-import CoingeckoMarket from './CoingeckoMarket';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import BuySell from './BuySell';
 
-import TotalBalance from 'shared/components/TotalBalance';
 import {Token} from 'types/app';
-import {truncateTokenAddress} from 'utils';
-
-import {Skeleton} from '@material-ui/lab';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -40,85 +28,51 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
-const TVChartContainer = React.lazy(
-  () => import('shared/components/chart/TvChart/tv_chart'),
-);
-
-const BinanceTVChartContainer = React.lazy(
-  () => import('shared/components/chart/BinanceTVChart/tv_chart'),
-);
+import HistoryTables from './HistoryTables';
+import Charts from './Charts';
+import {useTokenInfo} from 'hooks/useTokenInfo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {AboutDialog} from './AboutDialog';
+import {ShareButton} from 'shared/components/ShareButton';
+import InfoIcon from '@material-ui/icons/Info';
+import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
+import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
+import {useStyles} from './index.style'
 
 type Params = {
   address: string;
   networkName: EthereumNetwork;
 };
 
-function a11yProps(index: any) {
-  return {
-    id: `chart-tab-${index}`,
-    'aria-controls': `chart-tabpanel-${index}`,
-  };
-}
-interface TabPanelProps {
-  children: React.ReactNode;
-  dir?: string;
-  index: any;
-  value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const {children, value, index, ...other} = props;
-
-  return <>{value === index ? children || null : null}</>;
-}
-
 type Props = RouteComponentProps<Params>;
-
-enum ChartSource {
-  DEX,
-  Binance,
-}
 
 const TokenPage: React.FC<Props> = (props) => {
   const {
     match: {params},
   } = props;
   const {address, networkName} = params;
-
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
   );
-
-  const classes = useStyles(theme);
-
   const {account: web3Account, chainId} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
-  const account = defaultAccount || web3Account;
-
+  const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
-
-  const [chartSymbol, setChartSymbol] = useState<string>();
-
+  const {tokenInfo} = useTokenInfo(address);
   const [token, setToken] = useState<Token>();
-
-  const [chartSource, setChartSource] = useState<ChartSource>(ChartSource.DEX);
-
-  const {loading, error, data} = useCoingeckoTokenInfo(address, networkName);
-
-  const isDark = theme.palette.type === ThemeMode.DARK;
+  const {data} = useCoingeckoTokenInfo(address, networkName);
+  const classes = useStyles();
 
   const onToggleFavorite = () => {
     if (token && data) {
       dispatch(toggleFavoriteCoin({...token, ...data}));
     }
   };
+
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   const isFavorite = useMemo(() => {
     if (token) {
@@ -131,18 +85,15 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [favoriteCoins, token]);
 
   useEffect(() => {
-    if (data && data.symbol) {
+    if (tokenInfo && tokenInfo.symbol) {
       setToken({
         address: address,
-        name: data.name,
-        symbol: data.symbol.toUpperCase(),
-        decimals: 0,
+        name: tokenInfo.name,
+        symbol: tokenInfo.symbol.toUpperCase(),
+        decimals: tokenInfo.decimals,
       });
-      chartSource === ChartSource.DEX
-        ? setChartSymbol(`${data.symbol?.toUpperCase()}-USD`)
-        : setChartSymbol(`${data.symbol?.toUpperCase()}USDT`);
     }
-  }, [data]);
+  }, [tokenInfo, address]);
 
   const infoMyTakerOrders = useFetch(
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
@@ -158,206 +109,139 @@ const TokenPage: React.FC<Props> = (props) => {
     }
   }, [account, address]);
 
-  const totalMakerOrders = infoMyMakerOrders.data
-    ? infoMyMakerOrders.data.total || 0
-    : 0;
-  const totalTakerOrders = infoMyTakerOrders.data
-    ? infoMyTakerOrders.data.total || 0
-    : 0;
-  const totalOrders = totalMakerOrders + totalTakerOrders;
+  const [showAboutDialog, setShowAboutDialog] = useState(false);
 
-  const myOrders = `My Orders (${totalOrders})`;
+  const handleCloseAboutDialog = useCallback(() => {
+    setShowAboutDialog(false);
+  }, []);
 
-  const tradeHistory = 'My Trade History';
-  const onSetChartSource = (event: React.ChangeEvent<{}>, newValue: number) => {
-    if (newValue === ChartSource.Binance) {
-      setChartSource(ChartSource.Binance);
-      if (data && data.symbol) {
-        setChartSymbol(`${data.symbol?.toUpperCase()}USDT`);
-      }
-    }
-    if (newValue === ChartSource.DEX) {
-      setChartSource(ChartSource.DEX);
-      if (data && data.symbol) {
-        setChartSymbol(`${data.symbol?.toUpperCase()}-USD`);
-      }
-    }
-  };
+  const handleOpenAboutDialog = useCallback(() => {
+    setShowAboutDialog(true);
+  }, []);
 
   return (
     <>
-      <Box pt={{xl: 4}}>
-        <Box className={classes.title}>
-          <Box>
-            {data && (
-              <PageTitle
-                title={{name: data.name}}
-                subtitle={{
-                  name: truncateTokenAddress(address),
-                  hasCopy: address,
-                }}
-                icon={address}
-                network={networkName}
-              />
-            )}
-          </Box>
-          <Box>
-            <Tooltip title='Add to Favorites'>
-              <IconButton
-                aria-label='add favorite coin'
-                color='primary'
-                onClick={onToggleFavorite}>
-                {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              </IconButton>
-            </Tooltip>
-          </Box>
+      <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
+      <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
+        <Box>
+          <Grid container justify='space-between' alignItems='center'>
+            <Grid item>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Breadcrumbs aria-label='breadcrumb'>
+                    <Typography variant='body2' color='textSecondary'>
+                      Home
+                    </Typography>
+                    <Typography variant='body2' color='textSecondary'>
+                      Trade
+                    </Typography>
+                  </Breadcrumbs>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={2} alignItems='center'>
+                    <Grid item>
+                      <Typography variant='h5'>Trade</Typography>
+                    </Grid>
+                    <Grid item>
+                      <IconButton onClick={handleOpenAboutDialog} size='small'>
+                        <InfoIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container spacing={1}>
+                <Grid item>
+                  <ShareButton />
+                </Grid>
+                <Grid item>
+                  <Tooltip title='Add to Favorites'>
+                    <IconButton
+                      aria-label='add favorite coin'
+                      color='primary'
+                      onClick={onToggleFavorite}>
+                      {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Box>
-
-        <GridContainer>
-          <Grid item xs={12} md={5}>
-            <Grid item xs={12} md={12}>
-              {error ? (
-                <ErrorView message={error.message} />
-              ) : (
-                <TotalBalance
-                  balances={balances}
-                  only={token}
-                  loading={loading}
-                />
-              )}
-            </Grid>
-
-            <Grid item xs={12} md={12} style={{marginTop: 10}}>
-              {/*<BuySell tokenAddress={address} balances={balances} networkName={networkName}/>*/}
-            </Grid>
-
-            <GridContainer style={{marginTop: 2}}>
-              {account && (
-                <Grid item xs={12} sm={6} md={6}>
-                  <Box className='card-hover'>
-                    <Link
-                      className={classes.btnPrimary}
-                      component={RouterLink}
-                      to={`/${networkName}/history/myorders/list/${address}`}
-                      style={{textDecoration: 'none'}}>
-                      <InfoCard
-                        state={{
-                          value: myOrders,
-                          bgColor: theme.palette.sidebar.bgColor,
-                          icon: '/assets/images/dashboard/1_monthly_sales.png',
-                          id: 1,
-                          type: 'Click to Open',
-                        }}
-                      />
-                    </Link>
-                  </Box>
-                </Grid>
-              )}
-              {account && (
-                <Grid item xs={12} sm={6} md={6}>
-                  <Box className='card-hover'>
-                    <Link
-                      className={classes.btnSecondary}
-                      component={RouterLink}
-                      to={`/${networkName}/history/trade/list/${account}/token/${address}`}
-                      style={{textDecoration: 'none'}}>
-                      <InfoCard
-                        state={{
-                          value: tradeHistory,
-                          bgColor: theme.palette.sidebar.bgColor,
-                          icon: '/assets/images/dashboard/1_monthly_sales.png',
-                          id: 2,
-                          type: 'Click to Open',
-                        }}
-                      />
-                    </Link>
-                  </Box>
-                </Grid>
-              )}
-            </GridContainer>
-          </Grid>
-
-          <Grid item xs={12} md={7}>
-            <GridContainer>
-              <Grid
-                container
-                xs={12}
-                sm={12}
-                md={12}
-                style={{padding: '0px'}}
-                justify='flex-end'
-                direction='row'>
-                <Tabs
-                  value={chartSource}
-                  onChange={onSetChartSource}
-                  aria-label='chart tabs'
-                  indicatorColor='primary'>
-                  <Tab
-                    label={
-                      <>
-                        <Tooltip title={'Chart from Decentralized Exchanges'}>
-                          <>DEX</>
-                        </Tooltip>{' '}
-                      </>
-                    }
-                    {...a11yProps(0)}
+        <Box mt={4}>
+          <Grid container spacing={3}>
+            {isMobile ? (
+              <>
+                <Card>
+                  <BuySell
+                    tokenAddress={address}
+                    balances={balances}
+                    networkName={networkName}
+                    tokenInfo={tokenInfo}
                   />
-                  <Tab
-                    label={
-                      <>
-                        <Tooltip title={'Chart from Binance Exchange'}>
-                          <>Binance</>
-                        </Tooltip>{' '}
-                      </>
-                    }
-                    {...a11yProps(1)}
-                  />
-                </Tabs>
-              </Grid>
-              <Fade in={true} timeout={1000}>
-                <Grid style={{height: '450px'}} item xs={12} sm={12} md={12}>
-                  {!chartSymbol ? (
-                    <Skeleton variant='rect' height={370} />
-                  ) : (
-                    <>
-                      <TabPanel value={chartSource} index={0}>
-                        <TVChartContainer
-                          symbol={chartSymbol}
-                          chainId={chainId}
-                          darkMode={isDark}
-                        />
-                      </TabPanel>
-                      <TabPanel value={chartSource} index={1}>
-                        <BinanceTVChartContainer
-                          symbol={chartSymbol}
-                          chainId={chainId}
-                          darkMode={isDark}
-                        />
-                      </TabPanel>
-                    </>
-                  )}
+                </Card>
+                <Grid item xs={12} className={classes.mobileChartsContainer}>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ArrowDownIcon />}
+                      aria-controls='panel1a-content'
+                      id='panel1a-header'>
+                      <Typography>
+                        <GraphicsIcon /> Charts
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Charts
+                        chainId={chainId}
+                        tokenInfo={tokenInfo}
+                        networkName={networkName}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
                 </Grid>
-              </Fade>
-            </GridContainer>
-
-            <GridContainer style={{marginTop: 15}}>
-              <Grid item xs={12} sm={6} md={6}>
-                {error ? (
-                  <ErrorView message={error.message} />
-                ) : (
-                  <CoingeckoProfile data={data} loading={loading} />
-                )}
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                {error ? (
-                  <ErrorView message={error.message} />
-                ) : (
-                  <CoingeckoMarket data={data} loading={loading} />
-                )}
-              </Grid>
-            </GridContainer>
+                <Grid item xs={12}>
+                  <HistoryTables
+                    account={account}
+                    networkName={networkName}
+                    address={address}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} md={8}>
+                  <Charts
+                    chainId={chainId}
+                    tokenInfo={tokenInfo}
+                    networkName={networkName}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Card>
+                    <BuySell
+                      tokenAddress={address}
+                      balances={balances}
+                      networkName={networkName}
+                      tokenInfo={tokenInfo}
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12}>
+                  <HistoryTables
+                    account={account}
+                    networkName={networkName}
+                    address={address}
+                  />
+                </Grid>
+                {/*   <Grid item xs={12}>
+                  <InfoTab error={error} loading={loading} data={data} />
+                </Grid> */}
+              </>
+            )}
           </Grid>
-        </GridContainer>
+        </Box>
       </Box>
     </>
   );

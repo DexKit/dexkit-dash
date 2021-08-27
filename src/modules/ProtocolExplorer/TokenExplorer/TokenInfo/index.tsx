@@ -46,7 +46,7 @@ const TokenInfo: React.FC<Props> = (props) => {
                     <Grid key={index} container>
                       <Grid item xs={12}>
                         <Box display='flex' alignItems={'center'} mb={2}>
-                          <TokenLogo token0={e.address}></TokenLogo>
+                      
                           <Box
                             component='h3'
                             pl={2}

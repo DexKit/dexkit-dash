@@ -216,31 +216,31 @@ export function ArtistCollectionsSearch(props: Props) {
             onCellClick={($e) => {
               if (
                 $e?.field === 'imageUrl' &&
-                $e?.getValue($e?.field)?.toString()
+                $e?.getValue($e?.id, $e?.field)?.toString()
               ) {
-                window.open($e?.getValue($e?.field)?.toString());
+                window.open($e?.getValue($e?.id, $e?.field)?.toString());
               } else if (
                 $e?.field !== '__check__' &&
                 $e?.field !== 'id' &&
-                $e?.getValue('slug')?.toString()
+                $e?.getValue($e?.id, 'slug')?.toString()
               ) {
                 window.open(
                   `https://opensea.io/collection/${$e
-                    ?.getValue('slug')
+                    ?.getValue($e?.id, 'slug')
                     ?.toString()}`,
                 );
               }
             }}
             onSelectionModelChange={($e) => {
-              setSelecteds(
-                $e?.selectionModel?.map((id) => {
-                  const _id = Number(id.valueOf());
-                  return collections[_id - 1];
-                }),
-              );
+              // setSelecteds(
+              //   $e?.selectionModel?.map((id) => {
+              //     const _id = Number(id.valueOf());
+              //     return collections[_id - 1];
+              //   }),
+              // );
             }}
             autoPageSize={false}
-            onPageChange={(param) => setPage(param.page)}
+            onPageChange={(param) => setPage(param)}
             checkboxSelection
           />
         </Box>

@@ -30,7 +30,7 @@ export const useTokenPairs = ({baseAddress, exchange, networkName}: Props) => {
   } = usePagination();
 
   const [data, setData] = useState<
-    GetTokenPairs_ethereum_dexTrades[] | any[]
+    GetTokenPairs_ethereum_dexTrades[]
   >();
   const [yesterday, setYesterday] = useState<Date>(getLast24HoursDate());
 

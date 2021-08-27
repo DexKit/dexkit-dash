@@ -63,7 +63,8 @@ const ContentView: React.FC<ContentViewProps> = () => {
         display='flex'
         flex={1}
         flexDirection='column'
-        className='main-content-view'>
+        className='main-content-view'
+        pb={14}>
         <Suspense>
           <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
         </Suspense>

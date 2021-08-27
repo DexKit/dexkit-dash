@@ -13,9 +13,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       textTransform: 'uppercase',
       color: theme.palette.common.white,
       fontWeight: 500,
-      overflow: 'hidden',
-      textOverflow: '',
-      whiteSpace: 'nowrap',
     },
     divider: {
       height: 2,

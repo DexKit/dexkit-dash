@@ -72,10 +72,10 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
       const newData = dataFn.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['makerTokenFn'] = makerToken;
@@ -96,7 +96,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         return e;
       });
 
-      console.log(newData);
+      console.log('netData', newData);
 
       setData(newData);
       setTotalRows(dataFn.total);
@@ -119,7 +119,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url: '/', name: 'Dashboard'},
-            {url: `/${networkName}/dashboard/token/${address}`, name: 'Token'},
+            {url: `/${networkName}/token/${address}`, name: 'Token'},
           ],
           active: {name: 'My Active Orders'},
         }}

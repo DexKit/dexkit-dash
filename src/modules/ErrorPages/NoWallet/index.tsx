@@ -88,7 +88,7 @@ const NoWallet: React.FC<ComingSoonProps> = () => {
             <Typography variant='h4'>
               {' '}
               <Link
-                to={'/dashboard/wallet/manage-accounts'}
+                to={'/wallet/manage-accounts'}
                 component={RouterLink}>
                 Or manually add accounts
               </Link>

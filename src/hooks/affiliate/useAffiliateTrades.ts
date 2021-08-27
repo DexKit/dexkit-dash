@@ -29,6 +29,7 @@ export const useAffiliateTrades = (affiliateAccount: string) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
 
   const variables: GetAffiliateTradesVariables = {
+    //@ts-ignore
     network: GET_NETWORK_NAME(currentChainId),
     limit: rowsPerPage,
     offset: page * rowsPerPage,

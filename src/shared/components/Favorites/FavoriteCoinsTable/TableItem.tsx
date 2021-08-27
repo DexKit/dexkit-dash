@@ -89,7 +89,7 @@ const TableItem: React.FC<TableItemProps> = ({row, marketData, type}) => {
         });
         break;
       default:
-        history.push(`/${EthereumNetwork.ethereum}/dashboard/token/${isETH}`);
+        history.push(`/${EthereumNetwork.ethereum}/token/${isETH}`);
         break;
     }
   };
@@ -112,7 +112,7 @@ const TableItem: React.FC<TableItemProps> = ({row, marketData, type}) => {
         });
         break;
       default:
-        history.push(`/${EthereumNetwork.bsc}/dashboard/token/${isBSC}`);
+        history.push(`/${EthereumNetwork.bsc}/token/${isBSC}`);
         break;
     }
   };

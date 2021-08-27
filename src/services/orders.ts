@@ -1,7 +1,6 @@
 import {LimitOrder, SignatureType} from '@0x/protocol-utils';
-import {fromTokenUnitAmount} from '@0x/utils';
+import {BigNumber, fromTokenUnitAmount} from '@0x/utils';
 import {Web3Wrapper} from '@0x/web3-wrapper';
-import BigNumber from 'bignumber.js';
 import {
   TAKER_FEE_PERCENTAGE,
   ZERO_ADDRESS,

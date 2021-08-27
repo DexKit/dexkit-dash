@@ -23,6 +23,7 @@ const defaultConfig: any = {
       background: {
         paper: '#252836',
         default: '#1F1D2B',
+        darker: '#252331',
       },
       primary: {
         main: '#FFA552',
@@ -167,9 +168,15 @@ const defaultConfig: any = {
         root: {
           padding: 8,
           borderRadius: cardRadius,
+          '&:before': {
+            display: 'none',
+          },
         },
         rounded: {
           borderRadius: cardRadius,
+        },
+        expanded: {
+          margin: 0,
         },
       },
       MuiAccordionSummary: {
@@ -189,6 +196,11 @@ const defaultConfig: any = {
           fontStyle: 'normal',
           fontSize: 18,
           color: '#fff',
+        },
+      },
+      MuiStepper: {
+        root: {
+          borderRadius: cardRadius,
         },
       },
     },

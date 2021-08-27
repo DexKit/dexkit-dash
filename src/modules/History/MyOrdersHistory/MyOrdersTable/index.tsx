@@ -10,10 +10,11 @@ import {
   TableContainer,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
-import TableItem from './TableItem';
+import TableItemContainer from './TableItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -27,7 +28,6 @@ interface Props {
 }
 
 const MyOrdersTable: React.FC<Props> = ({
-  networkName,
   data,
   totalRows,
   currentPage,
@@ -40,13 +40,12 @@ const MyOrdersTable: React.FC<Props> = ({
 
   const paginatedRows: any = [];
   const currentRow = currentPage * rowsPerPage;
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   for (let i = currentRow; i < currentRow + rowsPerPage; i++) {
     if (data) {
       if (data.length > i) {
-        paginatedRows.push(
-          <TableItem row={data[i]} networkName={networkName} key={i} />,
-        );
+        paginatedRows.push(<TableItemContainer row={data[i]} key={i} />);
       }
     }
   }
@@ -56,9 +55,9 @@ const MyOrdersTable: React.FC<Props> = ({
       {data && data?.length > 0 ? (
         <>
           <TableContainer>
-            <Table stickyHeader>
+            <Table stickyHeader className={classes.tableClass}>
               <TableHead className={classes.borderBottomClass}>
-                <TableHeading />
+                {!isMobile && <TableHeading />}
               </TableHead>
               <TableBody className={classes.borderBottomClass}>
                 {paginatedRows}
@@ -72,7 +71,7 @@ const MyOrdersTable: React.FC<Props> = ({
             page={currentPage}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={rowsPerPageOptions}
-            onChangePage={(event: unknown, newPage: number) =>
+            onPageChange={(event: unknown, newPage: number) =>
               onChangePage(newPage)
             }
             onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>

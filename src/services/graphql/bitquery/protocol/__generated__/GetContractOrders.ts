@@ -3,22 +3,19 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {
-  EthereumNetwork,
-  TradeSide,
-} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork, TradeSide } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetContractOrders
 // ====================================================
 
 export interface GetContractOrders_ethereum_dexTrades_timeInterval {
-  __typename: 'TimeInterval';
+  __typename: "TimeInterval";
   second: string;
 }
 
 export interface GetContractOrders_ethereum_dexTrades_date {
-  __typename: 'Date';
+  __typename: "Date";
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -26,7 +23,7 @@ export interface GetContractOrders_ethereum_dexTrades_date {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_block_timestamp {
-  __typename: 'DateTime';
+  __typename: "DateTime";
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -34,7 +31,7 @@ export interface GetContractOrders_ethereum_dexTrades_block_timestamp {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_block {
-  __typename: 'BlockExtended';
+  __typename: "BlockExtended";
   /**
    * Block timestamp
    */
@@ -46,7 +43,7 @@ export interface GetContractOrders_ethereum_dexTrades_block {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_exchange {
-  __typename: 'EthereumDex';
+  __typename: "EthereumDex";
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -58,7 +55,7 @@ export interface GetContractOrders_ethereum_dexTrades_exchange {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_smartContract_address {
-  __typename: 'Address';
+  __typename: "Address";
   /**
    * String address representation
    */
@@ -70,7 +67,7 @@ export interface GetContractOrders_ethereum_dexTrades_smartContract_address {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_smartContract {
-  __typename: 'EthereumSmartContract';
+  __typename: "EthereumSmartContract";
   /**
    * Smart Contract Address
    */
@@ -78,7 +75,7 @@ export interface GetContractOrders_ethereum_dexTrades_smartContract {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_transaction {
-  __typename: 'EthereumTransactionInfoExtended';
+  __typename: "EthereumTransactionInfoExtended";
   /**
    * Hash hex representation
    */
@@ -86,7 +83,7 @@ export interface GetContractOrders_ethereum_dexTrades_transaction {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_baseCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -106,7 +103,7 @@ export interface GetContractOrders_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetContractOrders_ethereum_dexTrades_quoteCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -126,7 +123,7 @@ export interface GetContractOrders_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetContractOrders_ethereum_dexTrades {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   /**
    * Time interval
    */
@@ -181,7 +178,7 @@ export interface GetContractOrders_ethereum_dexTrades {
 }
 
 export interface GetContractOrders_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

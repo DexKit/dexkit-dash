@@ -32,3 +32,4 @@ export const setTokenBalance = createAction(
 )<TokenBalance>();
 
 export const resetWallet = createAction('blockchain/RESET_WALLET_set')();
+

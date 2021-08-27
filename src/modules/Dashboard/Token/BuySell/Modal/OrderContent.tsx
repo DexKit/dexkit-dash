@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useNetwork} from 'hooks/useNetwork';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import BigNumber from 'bignumber.js';
+import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
@@ -134,7 +133,6 @@ const OrderContent: React.FC<Props> = (props) => {
   const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
-  const [initGasPrice, setInitGastPrice] = useState<number | undefined>();
   const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);

@@ -13,13 +13,12 @@ import {
   isNativeCoinWithoutChainId,
 } from 'utils';
 import Web3 from 'web3';
-import {useTokenList} from './useTokenList';
+import { useTokenLists } from './useTokenLists';
 
 export const useTokenInfo = (address: string) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [tokenInfo, setTokenInfo] = useState<Token>();
-  const tokenListEth = useTokenList(EthereumNetwork.ethereum);
-  const tokenListBsc = useTokenList(EthereumNetwork.bsc);
+  const {ethTokens, binanceTokens} = useTokenLists();
 
   const searchByAddress = (value: string) => {
     return client.query<
@@ -37,12 +36,11 @@ export const useTokenInfo = (address: string) => {
     if (
       address &&
       Web3.utils.isAddress(address) &&
-      tokenListEth.length &&
-      tokenListBsc.length
+      ethTokens && binanceTokens && ethTokens.length && binanceTokens.length
     ) {
       setLoading(true);
       const tk = findTokensInfoByAddress(
-        tokenListEth.concat(tokenListBsc),
+        ethTokens.concat(binanceTokens),
         address,
       );
       if (tk) {
@@ -70,7 +68,7 @@ export const useTokenInfo = (address: string) => {
             }
           } else if (
             !result.loading &&
-            result?.errors != null &&
+            result?.errors !== null &&
             result?.errors.length > 0
           ) {
             console.error('search errors', result.errors);
@@ -89,7 +87,7 @@ export const useTokenInfo = (address: string) => {
         return;
       }
     }
-  }, [address, tokenListEth, tokenListBsc]);
+  }, [address, ethTokens, binanceTokens]);
 
   return {tokenInfo, loading};
 };

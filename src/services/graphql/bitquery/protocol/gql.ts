@@ -184,7 +184,6 @@ export const BITQUERY_PAIR_EXPLORER = gql`
           decimals
         }
         tradeAmount(in: ETH)
-        tradeAmountInUsd: tradeAmount(in: USD)
         maximum_price: quotePrice(calculate: maximum)
         minimum_price: quotePrice(calculate: minimum)
         open_price: minimum(of: block, get: quote_price)

@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {EthereumNetwork} from './../../../../../__generated__/globalTypes';
+import { EthereumNetwork } from "./../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: BitquerySearch
 // ====================================================
 
 export interface BitquerySearch_ethereum_dexTrades_baseCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -30,7 +30,7 @@ export interface BitquerySearch_ethereum_dexTrades_baseCurrency {
 }
 
 export interface BitquerySearch_ethereum_dexTrades_quoteCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -50,7 +50,7 @@ export interface BitquerySearch_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface BitquerySearch_ethereum_dexTrades_smartContract_address {
-  __typename: 'Address';
+  __typename: "Address";
   /**
    * String address representation
    */
@@ -58,7 +58,7 @@ export interface BitquerySearch_ethereum_dexTrades_smartContract_address {
 }
 
 export interface BitquerySearch_ethereum_dexTrades_smartContract {
-  __typename: 'EthereumSmartContract';
+  __typename: "EthereumSmartContract";
   /**
    * Smart Contract Address
    */
@@ -66,7 +66,7 @@ export interface BitquerySearch_ethereum_dexTrades_smartContract {
 }
 
 export interface BitquerySearch_ethereum_dexTrades {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   /**
    * Base currency
    */
@@ -82,7 +82,7 @@ export interface BitquerySearch_ethereum_dexTrades {
 }
 
 export interface BitquerySearch_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

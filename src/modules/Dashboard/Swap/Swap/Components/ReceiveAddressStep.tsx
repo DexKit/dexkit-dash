@@ -6,11 +6,11 @@ import {
   CircularProgress,
   useTheme,
 } from '@material-ui/core';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {ReceiveAddressInput} from './ReceiveAddressInput';
 
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SwapVertIcon from '@material-ui/icons/SwapVert';
+import {Alert} from '@material-ui/lab';
 
 interface Props {
   toCoin: any;
@@ -22,6 +22,7 @@ interface Props {
   onSwap: () => void;
   loading: boolean;
   onGoBack: () => void;
+  transactionError?: string;
 }
 
 export const ReceiveAddressStep = (props: Props) => {
@@ -34,7 +35,7 @@ export const ReceiveAddressStep = (props: Props) => {
     acceptAML,
     onSwap,
     loading,
-    onGoBack,
+    transactionError,
   } = props;
   const theme = useTheme();
 
@@ -69,9 +70,14 @@ export const ReceiveAddressStep = (props: Props) => {
           </Grid>
         </Grid>
       </Grid>
+      {transactionError ? (
+        <Grid item xs={12}>
+          <Alert severity='error'>{transactionError}</Alert>
+        </Grid>
+      ) : null}
       <Grid item xs={12}>
         <Button
-          disabled={loading || !acceptAML || addressToSend == ''}
+          disabled={loading || !acceptAML || addressToSend === ''}
           onClick={onSwap}
           fullWidth
           size='large'

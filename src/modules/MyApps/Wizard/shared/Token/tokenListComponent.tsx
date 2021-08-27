@@ -72,7 +72,7 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
     const r = await Promise.all(
       addresses.map(async (address) => {
         let token = listToken.find(
-          (t) => t.address.toLowerCase() === address.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === address.toLowerCase(),
         );
 
         if (token == null) {

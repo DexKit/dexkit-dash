@@ -11,6 +11,7 @@ import {
   useTheme,
   Button,
   Typography,
+  Paper,
 } from '@material-ui/core';
 import {useHistory, useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
@@ -46,10 +47,9 @@ import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectiv
 
 const useStyles = makeStyles((theme) => ({
   assetImage: {
-    height: '100%',
+    height: 'auto',
     width: '100%',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    borderRadius: theme.shape.borderRadius,
   },
   backdrop: {
     zIndex: theme.zIndex.modal + 1,
@@ -388,76 +388,41 @@ export const AssetDetail = () => {
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Card>
-                        {loading ? (
-                          <Skeleton
-                            className={classes.assetImage}
-                            height='100%'
-                          />
-                        ) : null}
-                        <CardMedia>
-                          <img
-                            style={{
-                              backgroundColor: `#${
-                                data?.background_color
-                                  ? data?.background_color
-                                  : 'fff'
-                              }`,
-                            }}
-                            src={data?.image_url}
-                            className={classes.assetImage}
-                          />
-                        </CardMedia>
-                      </Card>
+                      {loading ? (
+                        <Skeleton className={classes.assetImage} />
+                      ) : (
+                        <Paper>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            alignItems='center'
+                            alignContent='center'>
+                            <img
+                              src={data?.image_url}
+                              className={classes.assetImage}
+                              style={{
+                                backgroundColor: `#${
+                                  data?.background_color
+                                    ? data?.background_color
+                                    : 'fff'
+                                }`,
+                              }}
+                            />
+                          </Box>
+                        </Paper>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Box mb={2}>
-                        <Grid container spacing={4}>
-                          {loading ? null : (
-                            <Grid item>
-                              <CopyAddressButton
-                                copyText={`${getWindowUrl()}/nfts/assets/${
-                                  data?.asset_contract?.address
-                                }/${data?.token_id}`}
-                              />
-                            </Grid>
-                          )}
-                          {isAssetOwner(data, userAccountAddress || '') ? (
-                            <>
-                              <Grid item>
-                                <Button
-                                  onClick={handleShowTransferDialog}
-                                  variant='outlined'
-                                  size='small'
-                                  startIcon={<SwapHorizIcon />}
-                                  color='primary'>
-                                  <IntlMessages id='nfts.detail.transfer' />
-                                </Button>
-                              </Grid>
-                              <Grid item>
-                                <Button
-                                  component={RouterLink}
-                                  variant='outlined'
-                                  size='small'
-                                  startIcon={<AttachMoney />}
-                                  to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}/sell`}
-                                  color='primary'>
-                                  Sell
-                                </Button>
-                              </Grid>
-                            </>
-                          ) : null}
-                        </Grid>
-                      </Box>
                       <DescriptionCard
                         asset={data}
                         loading={loading}
                         error={error}
                         onBuy={handleBuyListing}
+                        onTransfer={handleShowTransferDialog}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -467,29 +432,29 @@ export const AssetDetail = () => {
                         error={error}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <ListingAccordion
-                        listings={data?.orders?.filter(
-                          (order: any) => order.side == ORDER_LISTING,
-                        )}
-                        loading={loading}
-                        error={error}
-                        onCancel={handleCancelListing}
-                        onBuy={handleBuyListing}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <OffersAccordion
-                        asset={data}
-                        offers={data?.orders?.filter(
-                          (order: any) => order.side == ORDER_OFFER,
-                        )}
-                        loading={loading}
-                        error={error}
-                        onRefresh={handleRefresh}
-                      />
-                    </Grid>
                   </Grid>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <ListingAccordion
+                    listings={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_LISTING,
+                    )}
+                    loading={loading}
+                    error={error}
+                    onCancel={handleCancelListing}
+                    onBuy={handleBuyListing}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <OffersAccordion
+                    asset={data}
+                    offers={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_OFFER,
+                    )}
+                    loading={loading}
+                    error={error}
+                    onRefresh={handleRefresh}
+                  />
                 </Grid>
               </Grid>
             </Grid>

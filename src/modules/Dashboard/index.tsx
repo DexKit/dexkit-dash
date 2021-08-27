@@ -4,7 +4,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/overview',
+        path: '/overview',
         component: React.lazy(() => import('./Overview')),
       },
     ],
@@ -20,7 +20,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/favorite-coins',
+        path: '/favorite-coins',
         component: React.lazy(() => import('./Favorites')),
       },
     ],
@@ -28,7 +28,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/manage-accounts',
+        path: '/wallet/manage-accounts',
         component: React.lazy(() => import('./Wallet/Accounts')),
       },
     ],
@@ -36,8 +36,16 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/:account',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        path: '/wallet/overview/:networkName/:address',
+        component: React.lazy(() => import('./Wallet/pages/Overview')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/wallet/:account',
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },
@@ -45,11 +53,12 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboard/wallet',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        path: '/wallet',
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },
+
 
   // {
   //   auth: ['wallet'],
@@ -73,8 +82,16 @@ export const dashBoardConfigs = [
     auth: ['token'],
     routes: [
       {
-        path: '/:networkName/dashboard/token/:address',
-        component: React.lazy(() => import('./Token/index_tabs')),
+        path: '/:networkName/token/:address',
+        component: React.lazy(() => import('./Token')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/create-wallet',
+        component: React.lazy(() => import('./Wallet/CreateWallet')),
       },
     ],
   },

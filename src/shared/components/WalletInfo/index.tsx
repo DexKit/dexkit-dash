@@ -5,7 +5,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-
   Grid,
   Hidden,
   Typography,
@@ -16,14 +15,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import {green, grey, orange} from '@material-ui/core/colors';
 import {Fonts} from '../../constants/AppEnums';
-import  {
-  CremaTheme,
-} from '../../../types/AppContextPropsType';
+import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 import {useBalance} from 'hooks/balance/useBalance';
 import {tokenAmountInUnits} from 'utils/tokens';
-import {Web3State} from 'types/blockchain';
-
+import {SupportedNetworkType, Web3State} from 'types/blockchain';
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
 import {useHistory, useLocation} from 'react-router-dom';
@@ -34,12 +30,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDefaultAccount} from 'redux/_ui/actions';
 
-
 import {UIAccount} from 'redux/_ui/reducers';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
-
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -101,6 +95,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   };
 });
 
+
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -119,27 +114,27 @@ const WalletInfo = (props: any) => {
     account: web3Account,
     ethBalance,
     web3State,
-    chainId,
     onCloseWeb3,
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const defaultAccountLabel = useDefaultLabelAccount();
   const connected =
     web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
-  const accounts = useSelector<AppState, AppState['ui']['accounts']>(
-    (state) => state.ui.accounts,
+  const wallet = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
   );
+  const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
   const {data: balances} = useBalance(defaultAccount);
 
   const onGoToWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet');
+    history.push('/wallet');
   };
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/dashboard/wallet/manage-accounts');
+    history.push('/wallet/manage-accounts');
   };
 
   const filteredBalances = balances?.filter(
@@ -154,15 +149,14 @@ const WalletInfo = (props: any) => {
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
-    if (pathname && pathname.indexOf('dashboard/wallet') === 1) {
+    if (pathname && pathname.indexOf('/wallet') === 1) {
       // This is need because it was not changing the url and causing loop on update
-      history.push(`/dashboard/wallet/${a.address}`);
-      dispatch(setDefaultAccount(a));
+      history.push(`/wallet/${a.address}`);
+      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     } else {
-      dispatch(setDefaultAccount(a));
+      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     }
   };
- 
 
   const notConnected = !web3Account;
 
@@ -226,8 +220,8 @@ const WalletInfo = (props: any) => {
                   (a) =>
                     a?.address?.toLowerCase() !== defaultAccount?.toLowerCase(),
                 )
-                .map((a) => (
-                  <MenuItem onClick={() => onSetDefaultAccount(a)}>
+                .map((a, i) => (
+                  <MenuItem key={i} onClick={() => onSetDefaultAccount(a)}>
                     {truncateIsAddress(a.label) || truncateAddress(a.address)}
                     {a?.address?.toLowerCase() ===
                       web3Account?.toLowerCase() && (

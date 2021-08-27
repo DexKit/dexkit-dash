@@ -1,15 +1,13 @@
 import Typography from '@material-ui/core/Typography';
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Box,
   Grid,
   Button,
   IconButton,
-  Checkbox,
   InputAdornment,
   TextField,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -30,7 +28,6 @@ import {Steps} from './Provider';
 import {ReviewOrder} from './Components/ReviewOrder';
 import {SelectCoinsDialog} from './Modal/SelectCoins';
 
-import _ from 'lodash';
 import {CoinSelectButton} from './Components/CoinSelectButton';
 import {ReceiveAddressStep} from './Components/ReceiveAddressStep';
 import {SwapHistoricDialog} from './Components/SwapHistoricDialog';
@@ -45,15 +42,22 @@ import {useTokenList} from 'hooks/useTokenList';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import Close from '@material-ui/icons/Close';
+import {ArrowForward} from '@material-ui/icons';
 
-export const SwapComponent = (props: any) => {
+interface SwapComponentProps {
+  onClose?: () => void;
+}
+
+export const SwapComponent = (props: SwapComponentProps) => {
+  const {onClose} = props;
   const theme = useTheme();
 
   const userAccountAddress = useDefaultAccount();
 
   const [loading, setLoading] = useState(false);
   const [toLoading, setToLoading] = useState(false);
-  const [step, setStep] = useState(Steps.Exchange);
+  const [step, ] = useState(Steps.Exchange);
   const [acceptAML, setAcceptAML] = useState(false);
   const [fromLoading, setFromLoading] = useState(false);
   const [coins, setCoins] = useState<ChangellyCoin[]>([]);
@@ -255,9 +259,18 @@ export const SwapComponent = (props: any) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
 
-      setFromAmountValue(e.target.value);
+      let isPostive =
+        e.target.value !== '' && parseFloat(e.target.value) >= 0.0;
 
-      if (e.target.value == '') {
+      if (!isPostive) {
+        setFromAmountValue('');
+      } else {
+        setFromAmountValue(e.target.value);
+      }
+
+      if (e.target.value === '') {
+        setFromAmount(0);
+      } else if (!isPostive) {
         setFromAmount(0);
       } else {
         setFromAmount(amount);
@@ -272,9 +285,18 @@ export const SwapComponent = (props: any) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const amount = Number(e.target.value);
 
-      setToAmountValue(e.target.value);
+      let isPostive =
+        e.target.value !== '' && parseFloat(e.target.value) >= 0.0;
+
+      if (!isPostive) {
+        setToAmountValue('');
+      } else {
+        setToAmountValue(e.target.value);
+      }
 
       if (e.target.value == '') {
+        setToAmount(0);
+      } else if (parseInt(e.target.value) < 0) {
         setToAmount(0);
       } else {
         setToAmount(amount);
@@ -312,8 +334,11 @@ export const SwapComponent = (props: any) => {
     return fromAmount >= minFromAmount;
   }, [fromAmount, minFromAmount]);
 
+  const [transactionError, setTransactioError] = useState('');
+
   const handleCreateTransaction = useCallback(() => {
     setCreatingTransaction(true);
+    setTransactioError('');
 
     if (fromCoin && toCoin) {
       Changelly.createTransaction({
@@ -323,9 +348,13 @@ export const SwapComponent = (props: any) => {
         address: addressToSend,
       })
         .then((r) => {
-          setTransaction(r.result as ChangellyTransaction);
-          saveTransaction(r.result as ChangellyTransaction);
-          setGoToReceiveAddress(false);
+          if (r.result) {
+            setTransaction(r.result as ChangellyTransaction);
+            saveTransaction(r.result as ChangellyTransaction);
+            setGoToReceiveAddress(false);
+          } else {
+            setTransactioError('Transaction failed, try again later.');
+          }
         })
         .finally(() => {
           setCreatingTransaction(false);
@@ -484,6 +513,12 @@ export const SwapComponent = (props: any) => {
     [userAccountAddress],
   );
 
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose();
+    }
+  }, [onClose]);
+
   return (
     <>
       <SelectCoinsDialog
@@ -509,7 +544,7 @@ export const SwapComponent = (props: any) => {
         toAddress={transferAddress}
         balance={balance}
         toToken={
-          tokens.filter((token) => token.symbol.toUpperCase() === 'ETH')[0]
+          tokens.filter((token:any) => token.symbol.toUpperCase() === 'ETH')[0]
         }
         open={showTransfer}
         onSend={handleSendCoin}
@@ -590,6 +625,7 @@ export const SwapComponent = (props: any) => {
                 onSwap={handleCreateTransaction}
                 loading={creatingTransaction}
                 onGoBack={handleGoBack}
+                transactionError={transactionError}
               />
             </CardContent>
           </>
@@ -743,11 +779,28 @@ export const SwapComponent = (props: any) => {
                     color='primary'
                     size='large'
                     fullWidth
-                    disabled={disabledButton || fromLoading || toLoading}
+                    startIcon={<ArrowForward />}
+                    disabled={
+                      disabledButton ||
+                      fromLoading ||
+                      toLoading ||
+                      !isFromAmountValid()
+                    }
                     onClick={handleGoToReceiveAddress}>
                     Next
                   </Button>
                 </Grid>
+                {onClose ? (
+                  <Grid item xs={12}>
+                    <Button
+                      variant='outlined'
+                      startIcon={<Close />}
+                      fullWidth
+                      onClick={onClose}>
+                      Close
+                    </Button>
+                  </Grid>
+                ) : null}
               </Grid>
             </CardContent>
           </>

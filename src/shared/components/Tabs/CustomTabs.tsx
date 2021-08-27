@@ -13,9 +13,10 @@ export const CustomTab = withStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
     borderRadius: theme.shape.borderRadius,
+    flexGrow: 1,
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: 'rgba(82, 92, 117, 0.2)',
+      backgroundColor: '#525C75',
     },
     marginRight: theme.spacing(2),
     '&:last-child': {

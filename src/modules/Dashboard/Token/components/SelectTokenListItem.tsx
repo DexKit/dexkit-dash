@@ -59,6 +59,7 @@ export const SelectTokenListItem = (props: Props) => {
             <img src={token.logoURI} className={classes.token} />
           </Box>
         </Grid>
+     
         <Grid item xs>
           <Typography variant='body1'>{token.symbol?.toUpperCase()}</Typography>
           <Typography variant='body2' color='textSecondary'>
@@ -73,6 +74,7 @@ export const SelectTokenListItem = (props: Props) => {
             />
           ) : null}
         </Grid>
+       
       </Grid>
     </Box>
   );

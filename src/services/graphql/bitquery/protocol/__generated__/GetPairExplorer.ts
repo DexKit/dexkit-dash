@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetPairExplorer
 // ====================================================
 
 export interface GetPairExplorer_ethereum_dexTrades_baseCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Currency name
    */
@@ -30,7 +30,7 @@ export interface GetPairExplorer_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetPairExplorer_ethereum_dexTrades_quoteCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Currency name
    */
@@ -50,7 +50,7 @@ export interface GetPairExplorer_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetPairExplorer_ethereum_dexTrades {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   trades: number | null;
   baseAmount: number | null;
   baseAmountInUsd: number | null;
@@ -66,15 +66,15 @@ export interface GetPairExplorer_ethereum_dexTrades {
    */
   quoteCurrency: GetPairExplorer_ethereum_dexTrades_quoteCurrency | null;
   tradeAmount: number | null;
-  tradeAmountInUsd: number | null;
   maximum_price: number | null;
   minimum_price: number | null;
   open_price: string | null;
   close_price: string | null;
+  tradeAmountInUsd: number | null;
 }
 
 export interface GetPairExplorer_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

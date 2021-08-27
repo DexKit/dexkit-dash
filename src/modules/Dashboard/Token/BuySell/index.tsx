@@ -1,14 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-  Card,
-  CardContent,
-  Tab,
-  Tabs,
-  Box,
-  Fade,
-  makeStyles,
-} from '@material-ui/core';
+import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
@@ -18,7 +10,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 import MarketForm from './MarketForm';
 import OrderDialog from './Modal';
-// import {Token} from 'types/app';
 import {ModalOrderData} from 'types/models/ModalOrderData';
 import {Token} from 'types/app';
 import LimitForm from './LimitForm';
@@ -29,13 +20,10 @@ import {
 import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
-import {useCoinList} from 'hooks/useCoinList';
-import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import SelectTokenDialog from './Modal/SelectTokenDialog';
-import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL} from 'shared/constants/Coins';
+import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL, MATIC_SYMBOL_URL} from 'shared/constants/Coins';
 
 interface Props {
-  tokenAddress: string;
+  tokenAddress?: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
   tokenInfo?: Token;
@@ -72,6 +60,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       marginRight: 20,
     },
   },
+  tabsContainer: {
+    width: '100%',
+  },
 }));
 
 //TODO: This select1 and select0 logic is bugged and it is not working well, investigate way to change all this logic
@@ -92,6 +83,7 @@ const BuySell: React.FC<Props> = ({
 
   const tokensETH = useTokenList(EthereumNetwork.ethereum);
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
+  const tokensMATIC = useTokenList(EthereumNetwork.matic);
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
   const [tokenTo, setTokenTo] = useState<Token>();
@@ -115,10 +107,12 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (networkName === EthereumNetwork.bsc) {
       setSelect1(tokensBSC);
-    } else {
+    } else if(networkName === EthereumNetwork.matic) {
+      setSelect1(tokensMATIC);
+    }else{
       setSelect1(tokensETH);
     }
-  }, [networkName, tokensETH, tokensBSC]);
+  }, [networkName, tokensETH, tokensBSC, tokensMATIC]);
 
   // Here, we map the balances with logos from the token lists
   useEffect(() => {
@@ -131,7 +125,7 @@ const BuySell: React.FC<Props> = ({
             tokenLogoUri = ETH_SYMBOL_URL;
           } else {
             const token = tokensETH.find(
-              (t) =>
+              (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
             if (token) {
@@ -144,7 +138,21 @@ const BuySell: React.FC<Props> = ({
             tokenLogoUri = BINANCE_SYMBOL_URL;
           } else {
             const token = tokensBSC.find(
-              (t) =>
+              (t: any) =>
+                t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
+            );
+            if (token) {
+              tokenLogoUri = token.logoURI;
+            }
+          }
+        }
+
+        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0) {
+          if (e?.currency?.symbol.toLowerCase() === 'matic') {
+            tokenLogoUri = MATIC_SYMBOL_URL;
+          } else {
+            const token = tokensMATIC.find(
+              (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
             if (token) {
@@ -166,7 +174,7 @@ const BuySell: React.FC<Props> = ({
   }, [balances, tokensETH, tokensBSC]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
-    if (tokenTo === undefined && select1.length > 0) {
+    if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
@@ -193,7 +201,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, tokenInfo, tokenTo]);
+  }, [select1, tokenInfo, tokenTo, tokenInfo]);
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list
   useEffect(() => {
@@ -256,7 +264,7 @@ const BuySell: React.FC<Props> = ({
             history.push(
               `/${
                 token.networkName
-              }/dashboard/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+              }/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
                 token.networkName,
               ).toLowerCase()}`,
             );
@@ -329,22 +337,22 @@ const BuySell: React.FC<Props> = ({
   return (
     <Box>
       <Box display='flex' justifyContent='center'>
-        <CustomTabs
-          TabIndicatorProps={{style: {display: 'none'}}}
+        <Tabs
+          className={classes.tabsContainer}
           value={currentTab}
+          indicatorColor='primary'
           onChange={handleChangeTab}
           variant='standard'>
-          <CustomTab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-          <CustomTab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
-        </CustomTabs>
+          <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+          <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+        </Tabs>
       </Box>
-      <Box py={2}>
+      <Box py={2} padding={4}>
         {currentTab === 0 && (
           <MarketForm
             key='MarketForm'
             chainId={chainId}
             account={account}
-            tokenAddress={tokenAddress}
             networkName={networkName}
             balances={balances}
             select0={select0}
@@ -360,7 +368,6 @@ const BuySell: React.FC<Props> = ({
             key='LimitForm'
             chainId={chainId}
             account={account}
-            tokenAddress={tokenAddress}
             networkName={networkName}
             balances={balances}
             select0={select0}

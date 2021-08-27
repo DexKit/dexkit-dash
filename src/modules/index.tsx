@@ -13,6 +13,7 @@ import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
+import {wizardConfig} from './Wizard';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -22,6 +23,7 @@ const routeConfigs = [
   ...historyConfigs,
   ...affiliateConfigs,
   ...nftWalletConfig,
+  ...wizardConfig,
   ...changelogConfigs,
 ];
 
@@ -31,7 +33,7 @@ const routes = [
   {
     component: () => (
       <Redirect
-        to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+        to={`/wallet`}
       />
     ),
   },

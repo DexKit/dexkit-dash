@@ -1,40 +1,96 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Box,
-  Button,
-  Card,
+  Paper,
   Typography,
-  TextField,
-  InputAdornment,
   Grid,
-  IconButton,
   useTheme,
   useMediaQuery,
+  Backdrop,
+  IconButton,
 } from '@material-ui/core';
-import {indigo} from '@material-ui/core/colors';
+import {Skeleton} from '@material-ui/lab';
+
 import {makeStyles} from '@material-ui/core/styles';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
-import CallMadeIcon from '@material-ui/icons/CallMade';
-import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {Token} from 'types/app';
-import {Skeleton} from '@material-ui/lab';
 import {MyBalances} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
-import Transak from 'shared/components/Transak';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {ReactComponent as CopyIcon} from '../../../assets/images/icons/note.svg';
-import {ReactComponent as ExportIcon} from '../../../assets/images/icons/export.svg';
-import {ReactComponent as ImportIcon} from '../../../assets/images/icons/import.svg';
-
-import CopyButton from '../CopyButton';
-import TokenLogo from '../TokenLogo';
 import {truncateAddress} from 'utils';
+import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
+import {useTransak} from 'hooks/useTransak';
+
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
+import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
+
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  greenSquare: {
+    backgroundColor: theme.palette.success.main,
+    height: theme.spacing(8),
+    width: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+  },
+  usdAmount: {
+    fontSize: 32,
+    fontWeight: 600,
+  },
+  usdAmountSign: {
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  btnPrimary: {
+    color: 'white',
+    borderColor: 'white',
+    fontFamily: Fonts.BOLD,
+    textTransform: 'capitalize',
+    width: 106,
+    fontSize: 16,
+    '&:hover, &:focus': {
+      // backgroundColor: theme.palette.primary.dark,
+      color: '#F15A2B',
+      borderColor: '#F15A2B',
+    },
+    lineHeight: '16px',
+    [theme.breakpoints.up('sm')]: {
+      lineHeight: '20px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      lineHeight: '26px',
+    },
+  },
+  backdrop: {
+    zIndex: theme.zIndex.modal,
+    color: '#fff',
+  },
+  btnSecondary: {
+    color: '#F15A2B',
+    borderColor: '#F15A2B',
+    fontFamily: Fonts.BOLD,
+    textTransform: 'capitalize',
+    width: 106,
+    fontSize: 16,
+    '&:hover, &:focus': {
+      // backgroundColor: theme.palette.secondary.dark,
+      color: 'white',
+      borderColor: 'white',
+    },
+    lineHeight: '16px',
+    [theme.breakpoints.up('sm')]: {
+      lineHeight: '20px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      lineHeight: '26px',
+    },
+  },
+}));
 
 interface Props {
   balances: MyBalances[];
@@ -42,14 +98,25 @@ interface Props {
   loading?: boolean;
   address?: string;
   tokenName?: string;
+  onShare?: () => void;
+  onMakeFavorite?: () => void;
+  isFavorite?: boolean;
 }
 
 const TotalBalance = (props: Props) => {
-  const {balances, only, loading, address, tokenName} = props;
-  const [senderModal, setSenderModal] = useState(false);
-  const [receiverModal, setReceiverModal] = useState(false);
+  const {
+    balances,
+    only,
+    loading,
+    address,
+    tokenName,
+    onMakeFavorite,
+    onShare,
+    isFavorite,
+  } = props;
   const [tokens, setTokens] = useState<MyBalances[]>([]);
   const [usdAvailable, setUsdAvailable] = useState<number>(0);
+  const [amountsVisible, setAmountsVisible] = useState(true);
 
   const networkName = useNetwork();
 
@@ -108,49 +175,6 @@ const TotalBalance = (props: Props) => {
     );
   }, [tokens]);
 
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    btnPrimary: {
-      color: 'white',
-      borderColor: 'white',
-      fontFamily: Fonts.BOLD,
-      textTransform: 'capitalize',
-      width: 106,
-      fontSize: 16,
-      '&:hover, &:focus': {
-        // backgroundColor: theme.palette.primary.dark,
-        color: '#F15A2B',
-        borderColor: '#F15A2B',
-      },
-      lineHeight: '16px',
-      [theme.breakpoints.up('sm')]: {
-        lineHeight: '20px',
-      },
-      [theme.breakpoints.up('xl')]: {
-        lineHeight: '26px',
-      },
-    },
-    btnSecondary: {
-      color: '#F15A2B',
-      borderColor: '#F15A2B',
-      fontFamily: Fonts.BOLD,
-      textTransform: 'capitalize',
-      width: 106,
-      fontSize: 16,
-      '&:hover, &:focus': {
-        // backgroundColor: theme.palette.secondary.dark,
-        color: 'white',
-        borderColor: 'white',
-      },
-      lineHeight: '16px',
-      [theme.breakpoints.up('sm')]: {
-        lineHeight: '20px',
-      },
-      [theme.breakpoints.up('xl')]: {
-        lineHeight: '26px',
-      },
-    },
-  }));
-
   const classes = useStyles();
 
   let onlyTokenValue = null;
@@ -166,138 +190,128 @@ const TotalBalance = (props: Props) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const [showSender, setShowSender] = useState(false);
+  const [showReceiver, setShowReceiver] = useState(false);
+  const [showSwap, setShowSwap] = useState(false);
+  const [showTrade, setShowTrade] = useState(false);
+
+  const handleShowSender = useCallback(() => {
+    setShowSender(true);
+  }, []);
+  const handleShowReceiver = useCallback(() => {
+    setShowReceiver(true);
+  }, []);
+  const handleCloseSender = useCallback(() => {
+    setShowSender(false);
+  }, []);
+  const handleCloseReceiver = useCallback(() => {
+    setShowReceiver(false);
+  }, []);
+
+  const {init} = useTransak();
+
+  const handleBuyCrypto = useCallback(() => {
+    init();
+  }, [init]);
+
+  const handleSwap = useCallback(() => {
+    setShowSwap(true);
+  }, [init]);
+
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
+
+  const handleToggleVisibility = useCallback(() => {
+    setAmountsVisible((value) => !value);
+  }, []);
+
+  const handleSwapClose = useCallback(() => {
+    setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false)
+  }, []);
+
   return (
-    <Box>
+    <>
+      <Sender
+        open={showSender}
+        onClose={handleCloseSender}
+        balances={tokens.filter((t) => t.network === networkName)}
+      />
+      <Receiver open={showReceiver} onClose={handleCloseReceiver} />
+      <BuySellModal  networkName={networkName} balances={tokens} open={showTrade} onClose={handleTradeClose} />
+
+      <Backdrop className={classes.backdrop} open={showSwap}>
+        {/* TODO: transform this in a dialog */}
+        <Grid container alignItems='center' justify='center'>
+          <Grid item xs={12} sm={4}>
+            <SwapComponent onClose={handleSwapClose} />
+          </Grid>
+        </Grid>
+      </Backdrop>
       <Box>
-        <Card>
-          <Box p={4}>
-            {loading ? (
-              <Skeleton height={theme.spacing(4)} />
-            ) : (
-              <Grid
-                container
-                spacing={2}
-                alignItems='center'
-                justify='space-between'>
-                <Grid item xs={isMobile ? 12 : undefined}>
-                  <Grid container alignItems='center' spacing={2}>
-                    <Grid item xs={isMobile ? 12 : undefined}>
-                      {loading ? (
-                        <Skeleton />
-                      ) : (
-                        <TextField
-                          disabled
-                          size='small'
-                          fullWidth
-                          variant='outlined'
-                          value={truncateAddress(address)}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position='start'>
-                                {address ? (
-                                  <TokenLogo token0={address} />
-                                ) : null}{' '}
-                                <Typography
-                                  style={{fontWeight: 800}}
-                                  variant='overline'>
-                                  {tokenName}
-                                </Typography>
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment
-                                style={{paddingRight: theme.spacing(2)}}
-                                position='end'>
-                                <CopyButton
-                                  copyText={address || ''}
-                                  tooltip='Address copied!'
-                                  size='small'>
-                                  <CopyIcon />
-                                </CopyButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={isMobile ? 6 : undefined}>
-                      <Grid container spacing={2} alignItems='baseline'>
-                        <Grid item>
-                          <Typography variant='h5'>
-                            {loading ? (
-                              <Skeleton width='25%' />
-                            ) : (
-                              <>
-                                $
-                                {onlyTokenValueInUsd || usdAvailable.toFixed(2)}{' '}
-                              </>
-                            )}
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography variant='body2'>
-                            {loading ? (
-                              <Skeleton width='20%' />
-                            ) : (
-                              <>
-                                {tokens?.length > 0
-                                  ? tokens[0].value?.toFixed(4)
-                                  : 0}{' '}
-                                <span
-                                  style={{color: theme.palette.primary.main}}>
-                                  {tokens?.length > 0
-                                    ? tokens[0].currency?.symbol
-                                    : '' || 'Avl. Balance'}
-                                </span>
-                              </>
-                            )}
-                          </Typography>
-                        </Grid>
+        <Grid container spacing={2} alignItems='center' justify='space-between'>
+          <Grid item xs={isMobile ? 12 : undefined} sm={4}>
+            <Paper>
+              <Box p={4}>
+                <Grid
+                  container
+                  alignItems='center'
+                  justify='space-between'
+                  spacing={4}>
+                  <Grid item>
+                    <Grid container spacing={2} alignItems='center'>
+                      <Grid item>
+                        <Box className={classes.greenSquare}></Box>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='body2'>
+                          {truncateAddress(address)}
+                        </Typography>
+                        <Typography className={classes.usdAmount}>
+                          {loading || usdAvailable === 0 ? (
+                            <Skeleton />
+                          ) : (
+                            <>
+                              <span className={classes.usdAmountSign}>$</span>
+                              {amountsVisible
+                                ? onlyTokenValueInUsd || usdAvailable.toFixed(2)
+                                : '****,**'}
+                            </>
+                          )}
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={isMobile ? 12 : undefined}>
-                  <Grid
-                    container
-                    spacing={2}
-                    alignItems='center'
-                    alignContent='center'>
-                    <Grid item xs={isMobile ? 12 : undefined}>
-                      <Transak fullWidth={isMobile} />
-                    </Grid>
-                    <Grid item xs={isMobile ? 6 : undefined}>
-                      <Button
-                        fullWidth={isMobile}
-                        variant='contained'
-                        onClick={() => setSenderModal(true)}
-                        endIcon={<ImportIcon />}>
-                        <IntlMessages id='common.send' />
-                      </Button>
-                    </Grid>
-                    <Grid item xs={isMobile ? 6 : undefined}>
-                      <Button
-                        fullWidth={isMobile}
-                        variant='contained'
-                        onClick={() => setReceiverModal(true)}
-                        endIcon={<ExportIcon />}>
-                        <IntlMessages id='common.receive' />
-                      </Button>
-                    </Grid>
+                  <Grid item>
+                    <IconButton onClick={handleToggleVisibility}>
+                      {amountsVisible ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
                   </Grid>
                 </Grid>
-              </Grid>
-            )}
-          </Box>
-        </Card>
+              </Box>
+            </Paper>
+          </Grid>
+          <Grid item xs={isMobile ? 12 : undefined}>
+            <TradeToolsSection
+              onSend={handleShowSender}
+              onReceive={handleShowReceiver}
+              onBuyCrypto={handleBuyCrypto}
+              onSwap={handleSwap}
+              onTrade={handleTrade}
+              onShare={onShare}
+              onMakeFavorite={onMakeFavorite}
+              isFavorite={isFavorite}
+            />
+          </Grid>
+        </Grid>
       </Box>
-      <Sender
-        open={senderModal}
-        onClose={() => setSenderModal(false)}
-        balances={tokens.filter((t) => t.network === networkName)}
-      />
-      <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
-    </Box>
+    </>
   );
 };
 

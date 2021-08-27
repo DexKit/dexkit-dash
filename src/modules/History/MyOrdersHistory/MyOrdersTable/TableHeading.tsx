@@ -15,7 +15,7 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
       color: grey[500],
     },
     tableCellRoot: {
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: 'transparent',
       borderBottom: '0 none',
       fontSize: 16,
       padding: 8,
