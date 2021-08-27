@@ -45,6 +45,7 @@ interface Props {
   select1: Token[];
   tokenFrom: Token | undefined;
   tokenTo: Token | undefined;
+  disableReceive?: boolean;
   onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
   onTrade: (data: ModalOrderData) => void;
 }
@@ -59,6 +60,7 @@ const MarketForm: React.FC<Props> = (props) => {
     select1,
     tokenFrom,
     tokenTo,
+    disableReceive,
     onChangeToken,
     onTrade,
   } = props;
@@ -407,7 +409,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <SelectTokenV2
                     id={'marketSel1'}
                     selected={tokenTo}
-                    disabled={disabled}
+                    disabled={disabled || disableReceive}
                     onClick={handleSelectTokenTo}
                   />
                 )}

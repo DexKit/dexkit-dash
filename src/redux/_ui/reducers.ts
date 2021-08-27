@@ -10,6 +10,7 @@ import {
   toggleFavoriteCoin,
   setDefaultAccount,
   setAccountLabel,
+  setShowAccounts,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 
@@ -24,11 +25,13 @@ export interface UIState {
   readonly account?: UIAccount;
   readonly accounts: UIAccount[];
   readonly favoriteCoins: FavoriteCoin[];
+  readonly showAccounts: boolean;
 }
 
 const initialUIState: UIState = {
   accounts: [],
   favoriteCoins: [],
+  showAccounts: false,
 };
 
 export default createReducer(initialUIState, (builder) =>
@@ -85,6 +88,11 @@ export default createReducer(initialUIState, (builder) =>
           state.accounts.push(acc);
         }
       });
+    })
+    .addCase(setShowAccounts, (state, action) => {
+      let value = action.payload;
+
+      state.showAccounts = value;
     })
     .addCase(removeFavoriteCoin, (state, action) => {
       const token = action.payload;

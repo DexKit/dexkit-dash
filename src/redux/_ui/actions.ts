@@ -13,6 +13,10 @@ export const setDefaultAccount = createAction<UIAccount>(
   'ui/ACCOUNTS_set_default',
 );
 
+export const setShowAccounts = createAction<boolean>(
+  'ui/ACCOUNTS_set_show_accounts',
+);
+
 export const setAccount = createAction<UIAccount>('ui/ACCOUNT_set');
 
 export const removeAccount = createAction<UIAccount>('ui/ACCOUNT_remove');

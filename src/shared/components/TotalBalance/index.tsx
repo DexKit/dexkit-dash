@@ -29,7 +29,9 @@ import {useTransak} from 'hooks/useTransak';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
-import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
+
+import {GreenSquare} from '../GreenSquare';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -229,7 +231,7 @@ const TotalBalance = (props: Props) => {
   }, []);
 
   const handleTradeClose = useCallback(() => {
-    setShowTrade(false)
+    setShowTrade(false);
   }, []);
 
   return (
@@ -240,7 +242,12 @@ const TotalBalance = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <BuySellModal  networkName={networkName} balances={tokens} open={showTrade} onClose={handleTradeClose} />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
+      />
 
       <Backdrop className={classes.backdrop} open={showSwap}>
         {/* TODO: transform this in a dialog */}
@@ -263,7 +270,7 @@ const TotalBalance = (props: Props) => {
                   <Grid item>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item>
-                        <Box className={classes.greenSquare}></Box>
+                        <GreenSquare />
                       </Grid>
                       <Grid item>
                         <Typography variant='body2'>

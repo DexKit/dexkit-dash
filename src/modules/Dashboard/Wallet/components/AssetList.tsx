@@ -48,8 +48,10 @@ export const AssetList = (props: AssetListProps) => {
               network={balance.network}
               symbol={balance.currency?.symbol || ''}
               name={balance.currency?.name || ''}
-              amount={balance?.valueInUsd || 0}
+              amount={balance?.value || 0}
+              amountUsd={balance?.valueInUsd || 0}
               onClick={handleClick}
+              dayChange={balance.price24hPercentage}
             />
           </Grid>
         ))
