@@ -46,6 +46,7 @@ interface Props {
   select1: Token[];
   tokenFrom: Token | undefined;
   tokenTo: Token | undefined;
+  disableReceive?: boolean;
   onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
   onTrade: (data: ModalOrderData) => void;
 }
@@ -60,6 +61,7 @@ const MarketForm: React.FC<Props> = (props) => {
     select1,
     tokenFrom,
     tokenTo,
+    disableReceive,
     onChangeToken,
     onTrade,
   } = props;
@@ -72,10 +74,8 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const {web3State, onConnectWeb3} = useWeb3();
 
-  const [
-    tokenBalance,
-    setTokenBalance,
-  ] = useState<GetMyBalance_ethereum_address_balances>();
+  const [tokenBalance, setTokenBalance] =
+    useState<GetMyBalance_ethereum_address_balances>();
 
   const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
@@ -372,7 +372,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <SelectTokenV2
                     id={'marketSel1'}
                     selected={tokenTo}
-                    disabled={disabled}
+                    disabled={disabled || disableReceive}
                     onClick={handleSelectTokenTo}
                   />
                 )}

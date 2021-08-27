@@ -42,6 +42,7 @@ import TokenCard from 'shared/components/TokenCard';
 import CoinTools from 'shared/components/CoinTools';
 import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
+import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
 
 type Params = {
   address: string;
@@ -72,7 +73,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     1,
     token?.decimals,
   );
-  const {data} = useCoingeckoTokenInfo(address, networkName);
+  const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
   const classes = useStyles();
   const history = useHistory();
   const onToggleFavorite = () => {
@@ -155,19 +156,23 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              {tokenInfo && (
-                <TokenCard
-                  icon={''}
-                  pair={tokenInfo?.symbol}
-                  amount={priceUSD?.priceQuote?.price || 0}
-                />
-              )}
+            <Grid item xs={12}>
+              <Grid container justify='space-between' alignItems='center'>
+                <Grid item xs={12} sm={4}>
+                  {tokenInfo && (
+                    <TokenCard
+                      icon={''}
+                      pair={tokenInfo?.symbol}
+                      amount={priceUSD?.priceQuote?.price || 0}
+                    />
+                  )}
+                </Grid>
+                <Grid item>
+                  <CoinTools balances={balances} />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <CoinTools balances={balances} />
-            </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12}>
               {token && (
                 <TokenAnalytics
                   account={account}
@@ -201,11 +206,13 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                    {tokenInfo &&   <Charts
-                        chainId={chainId}
-                        tokenInfo={tokenInfo}
-                        networkName={networkName}
-                      />}
+                      {tokenInfo && (
+                        <Charts
+                          chainId={chainId}
+                          tokenInfo={tokenInfo}
+                          networkName={networkName}
+                        />
+                      )}
                     </AccordionDetails>
                   </Accordion>
                 </Grid>
@@ -220,11 +227,13 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
             ) : (
               <>
                 <Grid item xs={12} md={8}>
-                {tokenInfo && <Charts
-                    chainId={chainId}
-                    tokenInfo={tokenInfo}
-                    networkName={networkName}
-                  />}
+                  {tokenInfo && (
+                    <Charts
+                      chainId={chainId}
+                      tokenInfo={tokenInfo}
+                      networkName={networkName}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Card>
@@ -233,8 +242,15 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       balances={balances}
                       networkName={networkName}
                       tokenInfo={tokenInfo}
+                      // Flag to disable receive
+                      disableReceive={true}
                     />
                   </Card>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid item xs={12}>
+                    <InfoTab error={error} loading={loading} data={data} />
+                  </Grid>
                 </Grid>
                 <Grid item xs={12}>
                   <HistoryTables
@@ -243,9 +259,6 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                     address={address}
                   />
                 </Grid>
-                {/*   <Grid item xs={12}>
-                  <InfoTab error={error} loading={loading} data={data} />
-                </Grid> */}
               </>
             )}
           </Grid>

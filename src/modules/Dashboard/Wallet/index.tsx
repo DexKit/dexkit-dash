@@ -131,158 +131,95 @@ const WalletTabs: React.FC<Props> = (props) => {
               )}
             </Grid>
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <TokenCard
-                    amount={3}
-                    icon={
-                      <TokenLogo
-                        token0={'0x00'}
-                        networkName={EthereumNetwork.bsc}
-                      />
-                    }
-                    price24Change={3}
-                    pair={'ETH'}
-                    onClick={() => console.log('hello')}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TokenPairCard
-                    firstIcon={<TokenPairIcon src={''} />}
-                    secondIcon={<TokenPairIcon src={''} />}
-                    firstToken={'ETH'}
-                    secondToken={'USDT'}
-                    exchange={EXCHANGE.UNISWAP}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={5}>
-                  <Card>
-                    <CardContent>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            alignItems='center'
-                            justify='space-between'>
-                            <Grid item>
-                              <Typography variant='body1'>Groups</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Button endIcon={<KeyboardArrowRightIcon />}>
-                                View more
-                              </Button>
-                            </Grid>
-                          </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        justify='space-between'>
+                        <Grid item>
+                          <Typography variant='body1'>Favorites</Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                          <TokensGroupActionButton
-                            title='Explorer'
-                            subtitle='lorem ipsum indolor'
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TokensGroupActionButton
-                            title='Explorer'
-                            subtitle='lorem ipsum indolor'
-                          />
+                        <Grid item>
+                          <Button
+                            to='/dashboard/favorite-coins'
+                            component={RouterLink}
+                            size='small'
+                            endIcon={<KeyboardArrowRightIcon />}>
+                            View more
+                          </Button>
                         </Grid>
                       </Grid>
-                    </CardContent>
-                  </Card>
+                    </Grid>
+                    <Grid item xs={12}>
+                      {favoritesWithMarket.loading ? (
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        favoritesWithMarket.data.map((favorite) => (
+                          <TokenListItem
+                            address={favorite.coin.address}
+                            dayChange={
+                              favorite.market.price_change_percentage_24h || 0
+                            }
+                            amount={favorite.market.current_price}
+                            symbol={favorite.coin.symbol}
+                            name={favorite.coin.name}
+                            network={favorite.coin?.networkName || ''}
+                          />
+                        ))
+                      )}
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={7}>
-                  <Card>
-                    <CardContent>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            alignItems='center'
-                            justify='space-between'>
-                            <Grid item>
-                              <Typography variant='body1'>Favorites</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Button
-                                to='/dashboard/favorite-coins'
-                                component={RouterLink}
-                                size='small'
-                                endIcon={<KeyboardArrowRightIcon />}>
-                                View more
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                          {favoritesWithMarket.loading ? (
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                            </Grid>
-                          ) : (
-                            favoritesWithMarket.data.map((favorite) => (
-                              <TokenListItem
-                                address={favorite.coin.address}
-                                dayChange={
-                                  favorite.market.price_change_percentage_24h ||
-                                  0
-                                }
-                                amount={favorite.market.current_price}
-                                symbol={favorite.coin.symbol}
-                                name={favorite.coin.name}
-                                network={favorite.coin?.networkName || ''}
-                              />
-                            ))
-                          )}
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                <Grid item xs={8}>
+                  <Grid container spacing={4}>
+                    <Grid item>
+                      <CustomTabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='standard'
+                        TabIndicatorProps={{
+                          style: {display: 'none'},
+                        }}
+                        aria-label='wallet tabs'>
+                        <CustomTab value='assets' label={'Assets'} />
+                        <CustomTab value='trade-history' label={'History'} />
+                      </CustomTabs>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TabPanel value='assets'>
+                        <AssetTableTab
+                          account={account as string}
+                          loading={loading}
+                          error={error}
+                          data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel value='transfers'>
+                        <TransferTab address={defaultAccount} />
+                      </TabPanel>
+                      <TabPanel value='trade-history'>
+                        <TradeHistoryTab address={defaultAccount} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item>
-              <CustomTabs
-                value={value}
-                onChange={handleChange}
-                variant='standard'
-                TabIndicatorProps={{
-                  style: {display: 'none'},
-                }}
-                aria-label='wallet tabs'>
-                <CustomTab value='assets' label={'Assets'} />
-                <CustomTab value='trade-history' label={'History'} />
-              </CustomTabs>
-            </Grid>
-            <Grid item xs={12}>
-              <TabPanel value='assets'>
-                <AssetTableTab
-                  account={account as string}
-                  loading={loading}
-                  error={error}
-                  data={data}
-                />
-              </TabPanel>
-              <TabPanel value='transfers'>
-                <TransferTab address={defaultAccount} />
-              </TabPanel>
-              <TabPanel value='trade-history'>
-                <TradeHistoryTab address={defaultAccount} />
-              </TabPanel>
             </Grid>
           </Grid>
         </Box>

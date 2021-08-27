@@ -33,6 +33,7 @@ import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL} from 'shared/constants/Coins';
 
 interface Props {
+  disableReceive?: boolean;
   tokenAddress: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
@@ -71,8 +72,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     },
   },
   tabsContainer: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 }));
 
 //TODO: This select1 and select0 logic is bugged and it is not working well, investigate way to change all this logic
@@ -81,6 +82,7 @@ const BuySell: React.FC<Props> = ({
   balances,
   networkName,
   tokenInfo,
+  disableReceive,
 }) => {
   let history = useHistory();
 
@@ -351,6 +353,7 @@ const BuySell: React.FC<Props> = ({
             balances={balances}
             select0={select0}
             select1={select1}
+            disableReceive={disableReceive}
             tokenFrom={tokenFrom}
             tokenTo={tokenTo}
             onChangeToken={handleChangeToken}

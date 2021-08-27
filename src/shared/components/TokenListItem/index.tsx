@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import TokenLogo from '../TokenLogo';
 import DeleteIcon from '@material-ui/icons/Delete';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -32,6 +33,7 @@ interface TokenListItemProps {
   symbol: string;
   name: string;
   amount: number;
+  amountUsd?: number;
   dayChange?: number;
   address?: string;
   network?: any;
@@ -40,8 +42,17 @@ interface TokenListItemProps {
 }
 
 export const TokenListItem = (props: TokenListItemProps) => {
-  const {symbol, name, amount, dayChange, address, network, onClick, onRemove} =
-    props;
+  const {
+    symbol,
+    name,
+    amount,
+    dayChange,
+    amountUsd,
+    address,
+    network,
+    onClick,
+    onRemove,
+  } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -52,12 +63,11 @@ export const TokenListItem = (props: TokenListItemProps) => {
       address !== undefined &&
       network !== undefined
     ) {
-      console.log('aqui 222', network, address);
       onClick(network, address);
     }
   }, [network, address, onClick]);
 
-  console.log('network', name, network);
+  const {usdFormatter} = useUSDFormatter();
 
   return (
     <Paper onClick={handleClick} className={classes.paper}>
@@ -68,18 +78,19 @@ export const TokenListItem = (props: TokenListItemProps) => {
               <Grid item>
                 <TokenLogo token0={address || ''} networkName={network} />
               </Grid>
+
               <Grid item>
-                <Typography color='textSecondary' variant='caption'>
-                  {name}{' '}
-                </Typography>
-                <Typography variant='body2'>{symbol.toUpperCase()}</Typography>
-              </Grid>
-              <Grid>
                 <Chip
                   size='small'
                   variant='outlined'
                   label={network.toUpperCase()}
                 />
+              </Grid>
+              <Grid item>
+                <Typography color='textSecondary' variant='caption'>
+                  {name}{' '}
+                </Typography>
+                <Typography variant='body2'>{symbol.toUpperCase()}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -87,9 +98,16 @@ export const TokenListItem = (props: TokenListItemProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography align='right' variant='body1'>
-                  ${amount}
+                  {amount}
                 </Typography>
-                {dayChange !== undefined ? (
+                {amountUsd ? (
+                  <Typography align='right' variant='body2'>
+                    {usdFormatter.format(amountUsd)}
+                  </Typography>
+                ) : null}
+              </Grid>
+              {dayChange !== undefined ? (
+                <Grid item>
                   <Typography
                     align='right'
                     style={{
@@ -101,8 +119,8 @@ export const TokenListItem = (props: TokenListItemProps) => {
                     variant='body2'>
                     {dayChange}%
                   </Typography>
-                ) : null}
-              </Grid>
+                </Grid>
+              ) : null}
               {onRemove ? (
                 <Grid item>
                   <IconButton onClick={onRemove}>

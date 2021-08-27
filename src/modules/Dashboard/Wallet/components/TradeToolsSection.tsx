@@ -1,5 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react';
 
+import SwipeableViews from 'react-swipeable-views';
 import {
   Box,
   Grid,
@@ -22,6 +23,9 @@ import {ReactComponent as AddCircleIcon} from 'assets/images/icons/add-circle.sv
 import {ReactComponent as ArrowRedoOutlinedIcon} from 'assets/images/icons/arrow-redo-outline.svg';
 import {ReactComponent as HeartPurpleIcon} from 'assets/images/icons/heart-purple.svg';
 import {ReactComponent as HeartEmptyIcon} from 'assets/images/icons/heart-empty.svg';
+import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
+
+import {useAccountsModal} from 'hooks/useAccountsModal';
 
 interface TradeToolsSectionProps {
   onSend: () => void;
@@ -39,6 +43,17 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(6),
     width: theme.spacing(6),
   },
+  container: {
+    display: 'flex',
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  item: {
+    marginRight: theme.spacing(4),
+  },
+  itemText: {
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export const TradeToolsSection = (props: TradeToolsSectionProps) => {
@@ -53,6 +68,12 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     isFavorite,
   } = props;
 
+  const accountsModal = useAccountsModal();
+
+  const handleShowAccounts = useCallback(() => {
+    accountsModal.setShow(true);
+  }, [accountsModal]);
+
   const classes = useStyles();
 
   const theme = useTheme();
@@ -60,83 +81,102 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box p={4}>
-      <Grid container spacing={4}>
-        {isMobile ? (
-          <Grid item xs={12}>
-            <Typography variant='h6'>Trade tools</Typography>
-          </Grid>
-        ) : null}
-
-        {onMakeFavorite ? (
-          <Grid item>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton
-                style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
-                onClick={onMakeFavorite}>
-                {isFavorite ? (
-                  <HeartPurpleIcon className={classes.icon} />
-                ) : (
-                  <HeartEmptyIcon className={classes.icon} />
-                )}
-              </RoundedIconButton>
-              <Typography variant='caption'>Favorite</Typography>
+    <Box>
+      {isMobile ? (
+        <Box mb={4}>
+          <Typography variant='h6'>Trade tools</Typography>
+        </Box>
+      ) : null}
+      <SwipeableViews>
+        <Box className={classes.container}>
+          {onMakeFavorite ? (
+            <Box>
+              <Box display='flex' flexDirection='column' alignItems='center'>
+                <RoundedIconButton
+                  style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
+                  onClick={onMakeFavorite}>
+                  {isFavorite ? (
+                    <HeartPurpleIcon className={classes.icon} />
+                  ) : (
+                    <HeartEmptyIcon className={classes.icon} />
+                  )}
+                </RoundedIconButton>
+                <Typography variant='caption'>Favorite</Typography>
+              </Box>
             </Box>
-          </Grid>
-        ) : null}
+          ) : null}
 
-        {onShare ? (
-          <Grid item>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onShare}>
-                <ArrowRedoOutlinedIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption'>Share</Typography>
+          {onShare ? (
+            <Box className={classes.item}>
+              <Box display='flex' flexDirection='column' alignItems='center'>
+                <RoundedIconButton onClick={onShare}>
+                  <ArrowRedoOutlinedIcon className={classes.icon} />
+                </RoundedIconButton>
+                <Typography variant='caption'>Share</Typography>
+              </Box>
             </Box>
-          </Grid>
-        ) : null}
-        <Grid item>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onTrade}>
-              <BitcoinConvertWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>Trade</Typography>
+          ) : null}
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onTrade}>
+                <BitcoinConvertWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption'>Trade</Typography>
+            </Box>
           </Box>
-        </Grid>
-        <Grid item>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onSwap}>
-              <MoneySendIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>Swap</Typography>
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onSwap}>
+                <MoneySendIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption' className={classes.itemText}>
+                Swap
+              </Typography>
+            </Box>
           </Box>
-        </Grid>
-        <Grid item>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onSend}>
-              <ExportWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>Send</Typography>
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={handleShowAccounts}>
+                <WalletSearchIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption' className={classes.itemText}>
+                Accounts
+              </Typography>
+            </Box>
           </Box>
-        </Grid>
-        <Grid item>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onReceive}>
-              <ImportWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onSend}>
+                <ExportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption' className={classes.itemText}>
+                Send
+              </Typography>
+            </Box>
+          </Box>
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onReceive}>
+                <ImportWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
 
-            <Typography variant='caption'>Receive</Typography>
+              <Typography variant='caption' className={classes.itemText}>
+                Receive
+              </Typography>
+            </Box>
           </Box>
-        </Grid>
-        <Grid item>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onBuyCrypto}>
-              <AddCircleIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>Buy Crypto</Typography>
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onBuyCrypto}>
+                <AddCircleIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption' className={classes.itemText}>
+                Buy Crypto
+              </Typography>
+            </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </SwipeableViews>
     </Box>
   );
 };
