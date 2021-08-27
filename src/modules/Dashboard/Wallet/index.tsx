@@ -186,7 +186,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={12} sm={8}>
                   <Grid container spacing={4}>
                     <Grid item>
                       <CustomTabs

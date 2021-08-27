@@ -117,7 +117,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
                           : theme.palette.error.main,
                     }}
                     variant='body2'>
-                    {dayChange}%
+                    {dayChange.toFixed(2)}%
                   </Typography>
                 </Grid>
               ) : null}

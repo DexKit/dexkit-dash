@@ -111,6 +111,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     display: 'flex',
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    touchAction: 'auto',
+    overflowX: 'scroll',
+    '&::-webkit-scrollbar': {
+      width: '0px !important',
+    },
   },
   analyticsItem: {
     marginRight: theme.spacing(4),
@@ -148,7 +153,7 @@ export const TokenAnalytics = (props: Props) => {
       {error ? <ErrorView message={'Error fetching analytics'} /> : null}
       {loading ? <Skeleton variant='rect' height={100} /> : null}
       {data ? (
-        <SwipeableViews className={classes.analyticsContainer}>
+        <Box className={classes.analyticsContainer}>
           <Box className={classes.analyticsItem}>
             <AnalyticsAmountCard
               amount={balanceUSD}
@@ -172,7 +177,7 @@ export const TokenAnalytics = (props: Props) => {
               />
             </Box>
           ))}
-        </SwipeableViews>
+        </Box>
       ) : null}
       {!data ? (
         <Grid

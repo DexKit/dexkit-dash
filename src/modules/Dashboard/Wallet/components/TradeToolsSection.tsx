@@ -45,11 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: 'flex',
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    overflowY: 'hidden',
+    overflowX: 'scroll',
   },
   item: {
     marginRight: theme.spacing(4),
+    objectFit: 'contain',
+    width: '100%',
   },
   itemText: {
     whiteSpace: 'nowrap',
@@ -81,102 +85,100 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box>
+    <Box py={4}>
       {isMobile ? (
-        <Box mb={4}>
+        <Box mb={2}>
           <Typography variant='h6'>Trade tools</Typography>
         </Box>
       ) : null}
-      <SwipeableViews>
-        <Box className={classes.container}>
-          {onMakeFavorite ? (
-            <Box>
-              <Box display='flex' flexDirection='column' alignItems='center'>
-                <RoundedIconButton
-                  style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
-                  onClick={onMakeFavorite}>
-                  {isFavorite ? (
-                    <HeartPurpleIcon className={classes.icon} />
-                  ) : (
-                    <HeartEmptyIcon className={classes.icon} />
-                  )}
-                </RoundedIconButton>
-                <Typography variant='caption'>Favorite</Typography>
-              </Box>
+      <Box className={classes.container}>
+        {onMakeFavorite ? (
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton
+                style={isFavorite ? {borderColor: '#F76F8E'} : undefined}
+                onClick={onMakeFavorite}>
+                {isFavorite ? (
+                  <HeartPurpleIcon className={classes.icon} />
+                ) : (
+                  <HeartEmptyIcon className={classes.icon} />
+                )}
+              </RoundedIconButton>
+              <Typography variant='caption'>Favorite</Typography>
             </Box>
-          ) : null}
+          </Box>
+        ) : null}
 
-          {onShare ? (
-            <Box className={classes.item}>
-              <Box display='flex' flexDirection='column' alignItems='center'>
-                <RoundedIconButton onClick={onShare}>
-                  <ArrowRedoOutlinedIcon className={classes.icon} />
-                </RoundedIconButton>
-                <Typography variant='caption'>Share</Typography>
-              </Box>
-            </Box>
-          ) : null}
+        {onShare ? (
           <Box className={classes.item}>
             <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onTrade}>
-                <BitcoinConvertWhiteIcon className={classes.icon} />
+              <RoundedIconButton onClick={onShare}>
+                <ArrowRedoOutlinedIcon className={classes.icon} />
               </RoundedIconButton>
-              <Typography variant='caption'>Trade</Typography>
+              <Typography variant='caption'>Share</Typography>
             </Box>
           </Box>
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onSwap}>
-                <MoneySendIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption' className={classes.itemText}>
-                Swap
-              </Typography>
-            </Box>
-          </Box>
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={handleShowAccounts}>
-                <WalletSearchIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption' className={classes.itemText}>
-                Accounts
-              </Typography>
-            </Box>
-          </Box>
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onSend}>
-                <ExportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption' className={classes.itemText}>
-                Send
-              </Typography>
-            </Box>
-          </Box>
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onReceive}>
-                <ImportWhiteIcon className={classes.icon} />
-              </RoundedIconButton>
-
-              <Typography variant='caption' className={classes.itemText}>
-                Receive
-              </Typography>
-            </Box>
-          </Box>
-          <Box className={classes.item}>
-            <Box display='flex' flexDirection='column' alignItems='center'>
-              <RoundedIconButton onClick={onBuyCrypto}>
-                <AddCircleIcon className={classes.icon} />
-              </RoundedIconButton>
-              <Typography variant='caption' className={classes.itemText}>
-                Buy Crypto
-              </Typography>
-            </Box>
+        ) : null}
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={onTrade}>
+              <BitcoinConvertWhiteIcon className={classes.icon} />
+            </RoundedIconButton>
+            <Typography variant='caption'>Trade</Typography>
           </Box>
         </Box>
-      </SwipeableViews>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={onSwap}>
+              <MoneySendIcon className={classes.icon} />
+            </RoundedIconButton>
+            <Typography variant='caption' className={classes.itemText}>
+              Swap
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={handleShowAccounts}>
+              <WalletSearchIcon className={classes.icon} />
+            </RoundedIconButton>
+            <Typography variant='caption' className={classes.itemText}>
+              Accounts
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={onSend}>
+              <ExportWhiteIcon className={classes.icon} />
+            </RoundedIconButton>
+            <Typography variant='caption' className={classes.itemText}>
+              Send
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={onReceive}>
+              <ImportWhiteIcon className={classes.icon} />
+            </RoundedIconButton>
+
+            <Typography variant='caption' className={classes.itemText}>
+              Receive
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.item}>
+          <Box display='flex' flexDirection='column' alignItems='center'>
+            <RoundedIconButton onClick={onBuyCrypto}>
+              <AddCircleIcon className={classes.icon} />
+            </RoundedIconButton>
+            <Typography variant='caption' className={classes.itemText}>
+              Buy Crypto
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };

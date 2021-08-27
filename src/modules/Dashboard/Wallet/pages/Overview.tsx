@@ -193,6 +193,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                     balances={balances}
                     networkName={networkName}
                     tokenInfo={tokenInfo}
+                    disableReceive
                   />
                 </Card>
                 <Grid item xs={12} className={classes.mobileChartsContainer}>
