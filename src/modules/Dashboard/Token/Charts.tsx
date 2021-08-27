@@ -5,7 +5,6 @@ import {
   CardContent, Fade
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
-import {ChainId} from 'types/blockchain';
 import {EthereumNetwork, ThemeMode} from '../../../shared/constants/AppEnums';
 import {Token} from 'types/app';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -89,14 +88,16 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
   };
 
   useEffect(() => {
-    chartSource === ChartSource.DEX
+    if(tokenInfo){
+      chartSource === ChartSource.DEX
       ? setChartSymbol(
           `${networkName}:${tokenInfo?.symbol?.toUpperCase()}:${
             tokenInfo?.address
           }`,
         )
       : setChartSymbol(`${tokenInfo?.symbol?.toUpperCase()}USDT`);
-  }, [tokenInfo])
+    }
+  }, [tokenInfo, networkName])
 
   return (
     <Grid container spacing={4}>

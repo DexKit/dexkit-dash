@@ -76,9 +76,9 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
 
   const getNetworkLink = (d: MyBalances) => {
     if (d.network === EthereumNetwork.bsc) {
-      return `/${EthereumNetwork.bsc}/dashboard/token/`;
+      return `/${EthereumNetwork.bsc}/token/`;
     }
-    return `/${EthereumNetwork.ethereum}/dashboard/token/`;
+    return `/${EthereumNetwork.ethereum}/token/`;
   };
 
   const getTradeNetworkLink = (d: MyBalances) => {

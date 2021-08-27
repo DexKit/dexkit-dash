@@ -40,7 +40,7 @@ const TransferListPage: React.FC<Props> = (props) => {
           breadcrumbs={{
             history: [
               {url: '/', name: 'Dashboard'},
-              {url: '/dashboard/wallet', name: 'Wallet'},
+              {url: '/wallet', name: 'Wallet'},
             ],
             active: {name: 'Transfers History'},
           }}

@@ -1,14 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-  Card,
-  CardContent,
-  Tab,
-  Tabs,
-  Box,
-  Fade,
-  makeStyles,
-} from '@material-ui/core';
+import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
@@ -28,13 +20,11 @@ import {
 import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
-import {useCoinList} from 'hooks/useCoinList';
-import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL} from 'shared/constants/Coins';
 
 interface Props {
   disableReceive?: boolean;
-  tokenAddress: string;
+  tokenAddress?: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
   tokenInfo?: Token;
@@ -169,7 +159,7 @@ const BuySell: React.FC<Props> = ({
   }, [balances, tokensETH, tokensBSC]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
-    if (tokenTo === undefined && select1.length > 0) {
+    if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
@@ -196,7 +186,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, tokenInfo, tokenTo]);
+  }, [select1, tokenInfo, tokenTo, tokenInfo]);
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list
   useEffect(() => {
@@ -257,9 +247,7 @@ const BuySell: React.FC<Props> = ({
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${
-                token.networkName
-              }/dashboard/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+              `/${token.networkName}/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
                 token.networkName,
               ).toLowerCase()}`,
             );
@@ -348,7 +336,6 @@ const BuySell: React.FC<Props> = ({
             key='MarketForm'
             chainId={chainId}
             account={account}
-            tokenAddress={tokenAddress}
             networkName={networkName}
             balances={balances}
             select0={select0}
@@ -365,7 +352,6 @@ const BuySell: React.FC<Props> = ({
             key='LimitForm'
             chainId={chainId}
             account={account}
-            tokenAddress={tokenAddress}
             networkName={networkName}
             balances={balances}
             select0={select0}

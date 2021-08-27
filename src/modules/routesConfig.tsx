@@ -35,7 +35,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'money.wallet',
-          url: `/dashboard/wallet`,
+          url: `/wallet`,
         },
         {
           id: 'trade',
@@ -44,7 +44,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           icon: 'bitcoin.convert',
           customIcon: true,
-          url: `/${networkName}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+          url: `/${networkName}/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
         },     
         {
           id: 'favorites',
@@ -53,7 +53,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'lovely',
-          url: `/dashboard/favorite-coins`,
+          url: `/favorite-coins`,
         },
         {
           id: 'nfts',

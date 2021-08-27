@@ -106,7 +106,7 @@ const Info: React.FC<Props> = (props) => {
                     </Box>
                     <Box mr={3}>
                       <Link
-                        to={`/${networkName}/dashboard/token/${data.baseCurrency?.address}`}
+                        to={`/${networkName}/token/${data.baseCurrency?.address}`}
                         component={RouterLink}>
                         <Tooltip title={'Trade Token'} placement='top'>
                           <Avatar

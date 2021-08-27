@@ -5,7 +5,6 @@ import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_DEFAULT_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
-import {useChainId} from 'hooks/useChainId';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({

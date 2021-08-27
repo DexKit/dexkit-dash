@@ -29,7 +29,9 @@ import {useTransak} from 'hooks/useTransak';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
+
 import {GreenSquare} from '../GreenSquare';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -193,6 +195,7 @@ const TotalBalance = (props: Props) => {
   const [showSender, setShowSender] = useState(false);
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
+  const [showTrade, setShowTrade] = useState(false);
 
   const handleShowSender = useCallback(() => {
     setShowSender(true);
@@ -217,7 +220,7 @@ const TotalBalance = (props: Props) => {
     setShowSwap(true);
   }, [init]);
 
-  const handleTrade = useCallback(() => {}, [init]);
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleToggleVisibility = useCallback(() => {
     setAmountsVisible((value) => !value);
@@ -225,6 +228,10 @@ const TotalBalance = (props: Props) => {
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false);
   }, []);
 
   return (
@@ -235,6 +242,13 @@ const TotalBalance = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
+      />
+
       <Backdrop className={classes.backdrop} open={showSwap}>
         {/* TODO: transform this in a dialog */}
         <Grid container alignItems='center' justify='center'>

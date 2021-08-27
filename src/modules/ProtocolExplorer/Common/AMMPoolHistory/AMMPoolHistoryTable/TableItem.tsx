@@ -83,31 +83,13 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
 
   const baseAmountRow = (
     <>
-      {row.amount0.toFixed(2)}{' '}
-      <Link
-        to={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.baseCurrency?.address,
-          exchange,
-        )}
-        component={RouterLink}>
-        {row.baseCurrency?.symbol}
-      </Link>
+      {row.amount0.toFixed(2)} {row.baseCurrency?.symbol}
     </>
   );
 
   const quoteAmountRow = (
     <>
-      {row.amount1.toFixed(2)}{' '}
-      <Link
-        to={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.quoteCurrency?.address,
-          exchange,
-        )}
-        component={RouterLink}>
-        {row.quoteCurrency?.symbol}
-      </Link>{' '}
+      {row.amount1.toFixed(2)} {row.quoteCurrency?.symbol}
     </>
   );
 
@@ -127,16 +109,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const baseRemainingRow = (
     <>
       <Box className={classes.badgeRoot}>
-        {row.reserve0.toFixed(2)}{' '}
-        <Link
-          to={GET_PROTOCOL_TOKEN_URL(
-            networkName,
-            row.baseCurrency?.address,
-            exchange,
-          )}
-          component={RouterLink}>
-          {row.baseCurrency?.symbol}
-        </Link>
+        {row.reserve0.toFixed(2)} {row.baseCurrency?.symbol}
       </Box>
     </>
   );
@@ -144,16 +117,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const quoteRemainingRow = (
     <>
       <Box className={classes.badgeRoot}>
-        {row.reserve1.toFixed(2)}{' '}
-        <Link
-          to={GET_PROTOCOL_TOKEN_URL(
-            networkName,
-            row.quoteCurrency?.address,
-            exchange,
-          )}
-          component={RouterLink}>
-          {row.quoteCurrency?.symbol}
-        </Link>
+        {row.reserve1.toFixed(2)} {row.quoteCurrency?.symbol}
       </Box>
     </>
   );

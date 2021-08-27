@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
@@ -14,9 +14,9 @@ import {
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import IntlMessages from '@crema/utility/IntlMessages';
-import { EXCHANGE, EthereumNetwork } from 'shared/constants/AppEnums';
+import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
-import { ViewTx } from 'shared/components/ViewTx';
+import {ViewTx} from 'shared/components/ViewTx';
 
 interface Props {
   row: GetContractOrders_ethereum_dexTrades;
@@ -64,35 +64,18 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
     [networkName, row.transaction?.hash],
   );
   const timestamp = row.block?.timestamp?.time
-  ? new Date(row.block?.timestamp?.time).toLocaleString()
-  : row.block?.timestamp?.time;
-
+    ? new Date(row.block?.timestamp?.time).toLocaleString()
+    : row.block?.timestamp?.time;
 
   const quoteAmountRow = (
     <>
-      {row.quoteAmount?.toFixed(4)}{' '}
-      <Link
-        href={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.quoteCurrency?.address,
-          exchange,
-        )}>
-        {row.quoteCurrency?.symbol}
-      </Link>
+      {row.quoteAmount?.toFixed(4)} {row.quoteCurrency?.symbol}
     </>
   );
 
   const baseAmountRow = (
     <>
-      {row.baseAmount?.toFixed(4)}{' '}
-      <Link
-        href={GET_PROTOCOL_TOKEN_URL(
-          networkName,
-          row.baseCurrency?.address,
-          exchange,
-        )}>
-        {row.baseCurrency?.symbol}
-      </Link>
+      {row.baseAmount?.toFixed(4)} {row.baseCurrency?.symbol}
     </>
   );
 

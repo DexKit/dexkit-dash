@@ -4,7 +4,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/overview',
+        path: '/overview',
         component: React.lazy(() => import('./Overview')),
       },
     ],
@@ -20,7 +20,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/favorite-coins',
+        path: '/favorite-coins',
         component: React.lazy(() => import('./Favorites')),
       },
     ],
@@ -28,7 +28,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/manage-accounts',
+        path: '/wallet/manage-accounts',
         component: React.lazy(() => import('./Wallet/Accounts')),
       },
     ],
@@ -36,7 +36,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/overview/:networkName/:address',
+        path: '/wallet/overview/:networkName/:address',
         component: React.lazy(() => import('./Wallet/pages/Overview')),
       },
     ],
@@ -44,7 +44,7 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/:account',
+        path: '/wallet/:account',
         component: React.lazy(() => import('./Wallet')),
       },
     ],
@@ -53,7 +53,7 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboard/wallet',
+        path: '/wallet',
         component: React.lazy(() => import('./Wallet')),
       },
     ],
@@ -82,7 +82,7 @@ export const dashBoardConfigs = [
     auth: ['token'],
     routes: [
       {
-        path: '/:networkName/dashboard/token/:address',
+        path: '/:networkName/token/:address',
         component: React.lazy(() => import('./Token')),
       },
     ],

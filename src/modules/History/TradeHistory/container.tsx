@@ -37,17 +37,6 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
 
   return (
     <GridContainer>
-      {/* token && address ? (   // TODO: remove this after implementing overview screen
-        <Grid item xs={12} md={12}>
-          <Paper>
-            <TokenAnalytics
-              account={address}
-              token={token}
-              networkName={networkName}
-            />
-          </Paper>
-        </Grid>
-      ) : null */}
 
       <Grid item xs={12} md={12}>
         <Toolbar className={classes.toolbar}>

@@ -94,11 +94,6 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
   }, [dataFn, tokenList]);
 
   const classes = useStyles();
-  const token = useFetch<CoinDetailCoinGecko>(
-    `${COINGECKO_CONTRACT_URL}/${address}`,
-    {},
-    [address],
-  );
 
   return (
     <Box pt={{xl: 4}}>

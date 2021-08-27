@@ -1,15 +1,13 @@
 import Typography from '@material-ui/core/Typography';
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Box,
   Grid,
   Button,
   IconButton,
-  Checkbox,
   InputAdornment,
   TextField,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,

@@ -62,7 +62,7 @@ const TradeHistoryPage: React.FC<Props> = (props) => {
           breadcrumbs={{
             history: [
               {url: '/', name: 'Dashboard'},
-              {url: `/dashboard/wallet`, name: 'Wallet'},
+              {url: `/wallet`, name: 'Wallet'},
             ],
             active: {name: 'Trade History'},
           }}
@@ -79,7 +79,7 @@ const TradeHistoryPage: React.FC<Props> = (props) => {
           breadcrumbs={{
             history: [
               {url: '/', name: 'Dashboard'},
-              {url: `/${networkName}/dashboard/token/${token}`, name: 'Token'},
+              {url: `/${networkName}/token/${token}`, name: 'Token'},
             ],
             active: {name: 'Trade History'},
           }}

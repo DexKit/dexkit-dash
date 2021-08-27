@@ -119,7 +119,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     }
   }, [account, address]);
 
-  const handleBack = useCallback(() => history.push(`/dashboard/wallet/`), []);
+  const handleBack = useCallback(() => history.push(`/wallet/`), []);
 
   return (
     <>
