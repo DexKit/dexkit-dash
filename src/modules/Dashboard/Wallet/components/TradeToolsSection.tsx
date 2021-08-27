@@ -49,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
     overflowY: 'hidden',
     overflowX: 'scroll',
+    flexWrap: 'nowrap',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
   item: {
     marginRight: theme.spacing(4),

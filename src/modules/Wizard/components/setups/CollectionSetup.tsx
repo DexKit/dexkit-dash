@@ -40,7 +40,7 @@ import DeployingDialog from './erc721/DeployingDialog';
 import DeployErrorDialog from './erc721/DeployErrorDialog';
 import DeploySuccessDialog from './erc721/DeploySuccessDialog';
 
-import SolcWorker from 'worker-loader!../../solc.worker'; // eslint-disable-line
+import SolcWorker from 'worker-loader!../../solc.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 import Web3 from 'web3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Contract} from 'web3-eth-contract';
@@ -56,6 +56,7 @@ import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {useDispatch} from 'react-redux';
 import {addCollection} from 'redux/_wizard/actions';
 import {ethers} from 'ethers';
+import {ERC721Bytecode} from 'contracts/bytecodes/ERC721';
 
 export interface CollectionSetupProps {}
 
@@ -94,47 +95,33 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     async (contractURI: string) => {
       let web3 = getWeb3();
 
-      let promise = new Promise<string>((resolve, reject) => {
+      let promise = new Promise<string>(async (resolve, reject) => {
         if (userDefaultAcount) {
-          let worker: Worker = new SolcWorker();
+          if (web3) {
+            let contract = new web3.eth.Contract(ERC721Abi);
 
-          worker.postMessage({
-            action: 'compile',
-            contract: 'erc721',
-          });
+            let contractDeploy = contract.deploy({
+              data: ERC721Bytecode,
+              arguments: [values.name, values.symbol, contractURI],
+            });
 
-          worker.addEventListener('message', async (event) => {
-            if (event.data.cmd === 'compiled') {
-              if (web3) {
-                let contract = new web3.eth.Contract(event.data.abi);
-
-                console.log(event.data.abi);
-
-                let contractDeploy = contract.deploy({
-                  data: event.data.bytecode,
-                  arguments: [values.name, values.symbol, contractURI],
-                });
-
-                await contractDeploy
-                  .send({
-                    from: userDefaultAcount,
-                  })
-                  .on('transactionHash', (transactionHash: string) => {
-                    setTransactionHash(transactionHash);
-                  })
-                  .on('confirmation', () => {})
-                  .on('error', (reason) => {
-                    reject(reason);
-                  })
-                  .then((contract: Contract) => {
-                    resolve(contract.options.address);
-                  });
-              }
-            }
-          });
+            await contractDeploy
+              .send({
+                from: userDefaultAcount,
+              })
+              .on('transactionHash', (transactionHash: string) => {
+                setTransactionHash(transactionHash);
+              })
+              .on('confirmation', () => {})
+              .on('error', (reason) => {
+                reject(reason);
+              })
+              .then((contract: Contract) => {
+                resolve(contract.options.address);
+              });
+          }
         }
       });
-
       return promise;
     },
     [userDefaultAcount, getWeb3, values, items],

@@ -7,13 +7,14 @@ import {
   makeStyles,
   Typography,
   Box,
+  Tooltip,
   useTheme,
   Chip,
 } from '@material-ui/core';
 import TokenLogo from '../TokenLogo';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 const useStyles = makeStyles((theme) => ({
   icon: {
     height: theme.spacing(8),
@@ -83,14 +84,21 @@ export const TokenListItem = (props: TokenListItemProps) => {
                 <Chip
                   size='small'
                   variant='outlined'
-                  label={network.toUpperCase()}
+                  label={
+                    network == EthereumNetwork.ethereum
+                      ? 'ETH'
+                      : network === 'bsc'
+                      ? 'BSC'
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item>
-                <Typography color='textSecondary' variant='caption'>
-                  {name}{' '}
-                </Typography>
-                <Typography variant='body2'>{symbol.toUpperCase()}</Typography>
+                <Tooltip title={name}>
+                  <Typography variant='body2'>
+                    {symbol.toUpperCase()}
+                  </Typography>
+                </Tooltip>
               </Grid>
             </Grid>
           </Grid>
@@ -98,7 +106,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography align='right' variant='body1'>
-                  {amount}
+                  {amount.toFixed(4)}
                 </Typography>
                 {amountUsd ? (
                   <Typography align='right' variant='body2'>

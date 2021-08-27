@@ -32,6 +32,9 @@ import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 
 import {GreenSquare} from '../GreenSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import {useAccountsModal} from 'hooks/useAccountsModal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -234,6 +237,14 @@ const TotalBalance = (props: Props) => {
     setShowTrade(false);
   }, []);
 
+  const {usdFormatter} = useUSDFormatter();
+
+  const accountsModal = useAccountsModal();
+
+  const handleShowAccounts = useCallback(() => {
+    accountsModal.setShow(true);
+  }, [accountsModal]);
+
   return (
     <>
       <Sender
@@ -274,7 +285,14 @@ const TotalBalance = (props: Props) => {
                       </Grid>
                       <Grid item>
                         <Typography variant='body2'>
-                          {truncateAddress(address)}
+                          <Box display='flex' alignItems='center'>
+                            <span>{truncateAddress(address)} </span>
+                            <IconButton
+                              onClick={handleShowAccounts}
+                              size='small'>
+                              <KeyboardArrowDownIcon />
+                            </IconButton>
+                          </Box>
                         </Typography>
                         <Typography className={classes.usdAmount}>
                           {loading || usdAvailable === 0 ? (
@@ -283,7 +301,8 @@ const TotalBalance = (props: Props) => {
                             <>
                               <span className={classes.usdAmountSign}>$</span>
                               {amountsVisible
-                                ? onlyTokenValueInUsd || usdAvailable.toFixed(2)
+                                ? onlyTokenValueInUsd ||
+                                  usdFormatter.format(usdAvailable)
                                 : '****,**'}
                             </>
                           )}

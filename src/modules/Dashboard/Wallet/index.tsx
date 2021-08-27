@@ -13,6 +13,7 @@ import {
   Card,
   CardContent,
   Backdrop,
+  useTheme,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
@@ -66,8 +67,8 @@ const WalletTabs: React.FC<Props> = (props) => {
   } = props;
   const {account: urlAccount} = params;
   const history = useHistory();
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-  const classes = useStyles(theme);
+  const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
+  const classes = useStyles(cremaTheme);
   const defaultAccount = useDefaultAccount();
   const defaultLabel = useDefaultLabelAccount();
   const dispatch = useDispatch();
@@ -100,6 +101,9 @@ const WalletTabs: React.FC<Props> = (props) => {
 
   const favoritesWithMarket = useFavoritesWithMarket();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
       <TabContext value={value}>
@@ -129,7 +133,9 @@ const WalletTabs: React.FC<Props> = (props) => {
                         alignItems='center'
                         justify='space-between'>
                         <Grid item>
-                          <Typography variant='body1'>Favorites</Typography>
+                          <Typography variant='body1' style={{fontWeight: 600}}>
+                            Favorites
+                          </Typography>
                         </Grid>
                         <Grid item>
                           <Button
@@ -159,8 +165,9 @@ const WalletTabs: React.FC<Props> = (props) => {
                           </Grid>
                         </Grid>
                       ) : (
-                        favoritesWithMarket.data.map((favorite) => (
+                        favoritesWithMarket.data.map((favorite, index) => (
                           <TokenListItem
+                            key={index}
                             address={favorite.coin.address}
                             dayChange={
                               favorite.market.price_change_percentage_24h || 0
@@ -177,7 +184,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={8}>
                   <Grid container spacing={4}>
-                    <Grid item>
+                    <Grid item xs={isMobile ? 12 : undefined}>
                       <CustomTabs
                         value={value}
                         onChange={handleChange}
@@ -191,7 +198,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                       </CustomTabs>
                     </Grid>
                     <Grid item xs={12}>
-                      <TabPanel value='assets'>
+                      <TabPanel className={classes.zeroPadding} value='assets'>
                         <AssetTableTab
                           account={account as string}
                           loading={loading}

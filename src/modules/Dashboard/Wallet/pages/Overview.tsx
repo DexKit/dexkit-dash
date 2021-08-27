@@ -122,9 +122,9 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const handleBack = useCallback(() => history.push(`/wallet/`), []);
 
   return (
-    <>
-      <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
-        <Box>
+    <Box py={4}>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
           <Grid
             container
             justify='space-between'
@@ -156,6 +156,10 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
             <Grid item xs={12}>
               <Grid container justify='space-between' alignItems='center'>
                 <Grid item xs={12} sm={4}>
@@ -167,7 +171,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                     />
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={isMobile ? 12 : undefined}>
                   <CoinTools balances={balances} />
                 </Grid>
               </Grid>
@@ -182,21 +186,23 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               )}
             </Grid>
           </Grid>
-        </Box>
-        <Box mt={4}>
+        </Grid>
+        <Grid item xs={12}>
           <Grid container spacing={3}>
             {isMobile ? (
               <>
-                <Card>
-                  <BuySell
-                    tokenAddress={address}
-                    balances={balances}
-                    networkName={networkName}
-                    tokenInfo={tokenInfo}
-                    disableReceive
-                  />
-                </Card>
-                <Grid item xs={12} className={classes.mobileChartsContainer}>
+                <Grid item xs={12}>
+                  <Card>
+                    <BuySell
+                      tokenAddress={address}
+                      balances={balances}
+                      networkName={networkName}
+                      tokenInfo={tokenInfo}
+                      disableReceive
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12}>
                   <Accordion>
                     <AccordionSummary
                       expandIcon={<ArrowDownIcon />}
@@ -263,9 +269,9 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               </>
             )}
           </Grid>
-        </Box>
-      </Box>
-    </>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

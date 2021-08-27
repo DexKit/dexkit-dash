@@ -36,28 +36,27 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
 
   const classes = useStyles();
   return (
-    <TableRow className={classes.tableRowRoot}>
-      <TableCell align='left' className={classes.tableCellRoot}>
+    <TableRow>
+      <TableCell align='left'>
         <IntlMessages id='app.exchange' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.sellAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.buyAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.tradeAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.created' />
       </TableCell>
-
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left'></TableCell>
     </TableRow>
   );
 };
