@@ -9,6 +9,8 @@ export const GET_NETWORK_NAME = (chainId?: ChainId) => {
     case ChainId.Kovan:
     case ChainId.Goerli:
       return EthereumNetwork.ethereum;
+    case ChainId.Matic:
+      return EthereumNetwork.matic;
     case ChainId.Binance:
       return EthereumNetwork.bsc;
     case ChainId.BinanceTest:
@@ -26,6 +28,8 @@ export const GET_NATIVE_COIN_FROM_NETWORK_NAME = (
       return 'eth';
     case EthereumNetwork.bsc:
       return 'bnb';
+    case EthereumNetwork.matic:
+      return 'matic';
     default:
       return 'eth';
   }
@@ -41,6 +45,8 @@ export const FORMAT_NETWORK_NAME = (
       return 'BSC';
     case MainnetNetwork.btc:
       return 'BTC';
+    case EthereumNetwork.matic:
+      return 'MATIC';
     case MainnetNetwork.dogecoin:
       return 'DOGE';
     default:
@@ -56,6 +62,8 @@ export const GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME = (
       return 'weth';
     case EthereumNetwork.bsc:
       return 'wbnb';
+    case EthereumNetwork.matic:
+      return 'wmatic';
     default:
       return 'weth';
   }

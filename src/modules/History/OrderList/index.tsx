@@ -72,10 +72,10 @@ const TradeHistory: React.FC<Props> = (props) => {
     if (dataMaker && dataTaker && tokenList.length > 0) {
       const newDataMaker = dataMaker.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['side'] = 'SELL';
@@ -99,10 +99,10 @@ const TradeHistory: React.FC<Props> = (props) => {
 
       const newDataTaker = dataTaker.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['side'] = 'BUY';
