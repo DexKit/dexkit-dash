@@ -70,6 +70,20 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
           valueInUsd: value
         }
       }
+    },
+    matic: ethereum(network: matic) {
+      address(address: {is: $address}) {
+        balances {
+          currency {
+            name
+            symbol
+            decimals
+            address
+          }
+          value
+          valueInUsd: value
+        }
+      }
     }
   }
 `;

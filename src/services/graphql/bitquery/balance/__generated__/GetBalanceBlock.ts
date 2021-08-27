@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface GetBalanceBlock_ethereum_blocks {
-  __typename: 'EthereumBlocks';
+  __typename: "EthereumBlocks";
   /**
    * Block number (height) in blockchain
    */
@@ -16,7 +16,7 @@ export interface GetBalanceBlock_ethereum_blocks {
 }
 
 export interface GetBalanceBlock_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Blockchain Blocks
    */

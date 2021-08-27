@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import {
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 
 import {makeStyles} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
+import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
 
 
@@ -50,6 +50,7 @@ import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
 import ContainedInput from 'shared/components/ContainedInput';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
+import AppContext from '@crema/utility/AppContext';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const Accounts = () => {
-
+  const {theme} = useContext<AppContextPropsType>(AppContext);
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
   const [copyText, setCopyText] = useState('Copy to clipboard');

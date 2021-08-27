@@ -13,7 +13,7 @@ export const useDefaultLabelAccount = (network?: Network) => {
     (state) => state.ui.wallet,
   );
   const accounts = wallet[type];
-  if (accounts) {
+  if (accounts && accounts.length) {
     return accounts[0].label || accounts[0].address;
   }
 };

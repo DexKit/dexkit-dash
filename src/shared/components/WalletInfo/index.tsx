@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 import {
   makeStyles,
   Button,
@@ -16,14 +15,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import {green, grey, orange} from '@material-ui/core/colors';
 import {Fonts} from '../../constants/AppEnums';
-import  {
-  CremaTheme,
-} from '../../../types/AppContextPropsType';
+import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 import {useBalance} from 'hooks/balance/useBalance';
 import {tokenAmountInUnits} from 'utils/tokens';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
-
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
 import {useHistory, useLocation} from 'react-router-dom';
@@ -33,7 +29,6 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDefaultAccount} from 'redux/_ui/actions';
-
 
 import {UIAccount} from 'redux/_ui/reducers';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
@@ -100,7 +95,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   };
 });
 
-
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -162,7 +156,7 @@ const WalletInfo = (props: any) => {
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     }
   };
- 
+
   const notConnected = !web3Account;
 
   const classes = useStyles(props);

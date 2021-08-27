@@ -51,6 +51,8 @@ export const ZRX_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
       return 'https://kovan.api.0x.org'; //'/swap/v1/quote'
     case EthereumNetwork.bsc:
       return 'https://bsc.api.0x.org'; //'/swap/v1/quote'
+    case EthereumNetwork.matic:
+      return 'https://polygon.api.0x.org'; //'/swap/v1/quote'
     default:
       return 'https://api.0x.org';
   }
@@ -62,6 +64,8 @@ export const ETHERSCAN_API_URL = (chainId: ChainId | undefined) => {
       return 'https://etherscan.io';
     case ChainId.Binance:
       return 'https://bscscan.com/';
+    case ChainId.Matic:
+      return 'https://polygonscan.com/';
     case ChainId.Kovan:
       return 'https://kovan.etherscan.io';
     default:
@@ -74,6 +78,8 @@ export const ETHERSCAN_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
       return 'https://etherscan.io';
     case EthereumNetwork.bsc:
       return 'https://bscscan.com/';
+    case EthereumNetwork.matic:
+      return 'https://polygonscan.com/';
     default:
       return 'https://etherscan.io';
   }

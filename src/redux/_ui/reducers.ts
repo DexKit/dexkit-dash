@@ -11,6 +11,7 @@ import {
   setDefaultAccount,
   setAccountLabel,
   setUserEncryptedSeed,
+  initWallet,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {  Network, WalletType, SupportedNetworkType } from 'types/blockchain';
@@ -40,20 +41,27 @@ export interface UIState {
     readonly wallet: Wallet
 }
 
+export const WALLET_INIT_STATE: Wallet = {
+  [WalletType.evm]: [],
+  [Network.bitcoin] : [],
+  [Network.dogecoin]:  [],
+  [Network.cardano]: [],
+  [Network.dash]:  [],
+  [Network.eos]:  [],
+}
+
+
 const initialUIState: UIState = {
   favoriteCoins: [],
-  wallet: {
-    [WalletType.evm]: [],
-    [Network.bitcoin] : [],
-    [Network.dogecoin]:  [],
-    [Network.cardano]: [],
-    [Network.dash]:  [],
-    [Network.eos]:  [],
-  }
+  wallet: WALLET_INIT_STATE
 };
 
 export default createReducer(initialUIState, (builder) =>
   builder
+    .addCase(initWallet, (state, action) => {
+      const {wallet} = action.payload;
+      state.wallet = wallet;
+    })
     .addCase(setAccounts, (state, action) => {
       const {accounts, type} = action.payload;
 
