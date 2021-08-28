@@ -31,10 +31,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     justifyContent: 'space-between',
   },
-  smallContent: {
-    fontSize: '0.875rem',
-    paddingBottom: theme.spacing(3),
-  },
 }));
 
 interface Props {
@@ -45,9 +41,8 @@ interface Props {
   value: {qty: number; coin?: string};
 }
 
-const strPad = (str: number): string => {
-  return (new Array(3).join('0') + str).slice(-2);
-};
+const strPad = (str: number): string =>
+  (new Array(3).join('0') + str).slice(-2);
 
 function CardTimer(props: {time: number}) {
   const time = props.time;
