@@ -27,6 +27,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
+import AppBottomNavigation from 'shared/components/AppBottomNavigation';
 
 interface MiniSidebarToggleProps {
   props?: any;

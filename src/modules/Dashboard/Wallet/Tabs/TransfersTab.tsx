@@ -9,45 +9,21 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 type Props = {
   address?: string;
-  enableNetworkChips?: boolean;
+  networkName?: EthereumNetwork;
 };
 
 export const TransferTab = (props: Props) => {
   const history = useHistory();
+
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
   }, []);
-  const [networkName, setNetworkName] = useState<EthereumNetwork>(
-    (searchParams.get('network') as EthereumNetwork) ??
-      EthereumNetwork.ethereum,
-  );
-  const {address, enableNetworkChips = true} = props;
 
-  const onChangeNetwork = (net: EthereumNetwork | 'all') => {
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.set('network', net);
-    history.push({search: searchParams.toString()});
-    setNetworkName(net as EthereumNetwork);
-  };
+  const {address, networkName} = props;
 
-  return (
-    <>
-      {address && (
-        <>
-          {enableNetworkChips && (
-            <Box display={'flex'}>
-              <NetworkChips
-                networkName={networkName}
-                onClick={onChangeNetwork}
-                enableAll={false}
-              />
-            </Box>
-          )}
-
-          <TransferListContainer address={address} networkName={networkName} />
-        </>
-      )}
-      {!address && <NoWallet />}
-    </>
+  return address && networkName ? (
+    <TransferListContainer address={address} networkName={networkName} />
+  ) : (
+    <NoWallet />
   );
 };

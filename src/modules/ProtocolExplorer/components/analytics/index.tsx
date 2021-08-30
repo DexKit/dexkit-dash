@@ -29,38 +29,40 @@ export const Analytics = (props: Props) => {
     return loading ? '-' : usdFormatter.format(tokenMarket?.volume24Usd || 0);
   }, [tokenMarket?.volume24Usd, loading]);
   return (
-    <Grid container alignItems='center' spacing={2}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant='h6'>Overall Analytics</Typography>
       </Grid>
-          <Grid item>
-            <Grid container justifyContent='center' spacing={4}>
-              <Grid  item>
-                <AnalyticsAmountCard
-                  isLoading={loading}
-                  icon={<ChartSuccessIcon />}
-                  amount={volumeUSD || '-'}
-                  caption={'Daily Volume'}
-                />
-              </Grid>
-              <Grid  item>
-                <AnalyticsAmountCard
-                  isLoading={loading}
-                  icon={<GraphIcon />}
-                  amount={loading ? '-' : (tokenMarket?.trades || '-')}
-                  caption={'Total Trades (24h)'}
-                />
-              </Grid>
-              <Grid  item>
-                <AnalyticsAmountCard
-                  isLoading={loading}
-                  icon={<PresentationChartIcon />}
-                  amount={ loading ? '-' : (tokenMarket?.volume24Base || '-')}
-                  caption={`Amount ${token ? token.symbol?.toUpperCase() : ''} (24h)`}
-                />
-              </Grid>
-            </Grid>
+      <Grid item>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6}>
+            <AnalyticsAmountCard
+              isLoading={loading}
+              icon={<ChartSuccessIcon />}
+              amount={volumeUSD || '-'}
+              caption={'Daily Volume'}
+            />
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <AnalyticsAmountCard
+              isLoading={loading}
+              icon={<GraphIcon />}
+              amount={loading ? '-' : tokenMarket?.trades || '-'}
+              caption={'Total Trades (24h)'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <AnalyticsAmountCard
+              isLoading={loading}
+              icon={<PresentationChartIcon />}
+              amount={loading ? '-' : tokenMarket?.volume24Base || '-'}
+              caption={`Amount ${
+                token ? token.symbol?.toUpperCase() : ''
+              } (24h)`}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };

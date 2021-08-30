@@ -125,6 +125,36 @@ const WalletTabs: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
+                <Grid item xs={12} sm={8}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={isMobile ? 12 : undefined}>
+                      <CustomTabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='standard'
+                        TabIndicatorProps={{
+                          style: {display: 'none'},
+                        }}
+                        aria-label='wallet tabs'>
+                        <CustomTab value='assets' label={'Assets'} />
+                        <CustomTab value='trade-history' label={'History'} />
+                      </CustomTabs>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TabPanel className={classes.zeroPadding} value='assets'>
+                        <AssetTableTab
+                          account={account as string}
+                          loading={loading}
+                          error={error}
+                          data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel value='trade-history'>
+                        <TradeHistoryTab address={defaultAccount} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
@@ -179,39 +209,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                           />
                         ))
                       )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={isMobile ? 12 : undefined}>
-                      <CustomTabs
-                        value={value}
-                        onChange={handleChange}
-                        variant='standard'
-                        TabIndicatorProps={{
-                          style: {display: 'none'},
-                        }}
-                        aria-label='wallet tabs'>
-                        <CustomTab value='assets' label={'Assets'} />
-                        <CustomTab value='trade-history' label={'History'} />
-                      </CustomTabs>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TabPanel className={classes.zeroPadding} value='assets'>
-                        <AssetTableTab
-                          account={account as string}
-                          loading={loading}
-                          error={error}
-                          data={data}
-                        />
-                      </TabPanel>
-                      <TabPanel value='transfers'>
-                        <TransferTab address={defaultAccount} />
-                      </TabPanel>
-                      <TabPanel value='trade-history'>
-                        <TradeHistoryTab address={defaultAccount} />
-                      </TabPanel>
                     </Grid>
                   </Grid>
                 </Grid>
