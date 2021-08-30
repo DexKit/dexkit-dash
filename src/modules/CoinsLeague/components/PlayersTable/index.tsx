@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -61,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
 interface IRow {
   hash: string;
   coins: {name: string; icon: string}[];
-  claimed: boolean;
   position: number;
 }
 
@@ -69,7 +67,7 @@ interface Props {
   data?: IRow[];
 }
 
-function OnePlayerTable(props: Props): JSX.Element {
+function PlayersTable(props: Props): JSX.Element {
   const classes = useStyles();
 
   const getIconByCoin = (coin: string) => {
@@ -98,7 +96,6 @@ function OnePlayerTable(props: Props): JSX.Element {
           <TableCell className={classes.header}>Position</TableCell>
           <TableCell className={classes.header}>Coins</TableCell>
           <TableCell className={classes.header}>Position</TableCell>
-          <TableCell className={classes.header}>Position</TableCell>
         </TableHead>
 
         <TableBody>
@@ -112,7 +109,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               </TableCell>
             </TableRow>
           )}
-          {props.data.map((row, i) => (
+          {props.data?.map((row, i) => (
             <TableRow>
               <TableCell className={classes.noBorder}>
                 <Typography style={{color: '#fff'}}>
@@ -152,18 +149,6 @@ function OnePlayerTable(props: Props): JSX.Element {
                   label={`${row.position > 0 ? '+' : ''}${row.position}%`}
                 />
               </TableCell>
-              <TableCell className={classes.noBorder}>
-                <Button
-                  className={classes.button}
-                  disabled={!row.claimed}
-                  style={{
-                    width: '66.66%',
-                    color: !row.claimed ? '#646672' : '#000',
-                    background: !row.claimed ? '#3A3D4A' : '#ffa552',
-                  }}>
-                  {!row.claimed ? 'REQUESTED' : 'CLAIM'}
-                </Button>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -172,4 +157,4 @@ function OnePlayerTable(props: Props): JSX.Element {
   );
 }
 
-export default OnePlayerTable;
+export default PlayersTable;
