@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useState, useCallback} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 
 import {
@@ -15,7 +15,7 @@ import {
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
 import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
 
-import {Token} from 'types/app';
+
 
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import {AppContext} from '@crema';
@@ -36,6 +36,7 @@ import {useStyles} from './index.style';
 import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 import TokenCard from 'shared/components/TokenCard';
 import TokenLogo from 'shared/components/TokenLogo';
+import { useFavoritesWithMarket } from 'hooks/useFavoritesWithMarket';
 
 type Params = {
   address: string;
@@ -49,6 +50,8 @@ const Explorer: React.FC<TokenProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+
+  const {isFavorite, onToggleFavorite} = useFavoritesWithMarket();
 
   const {address} = params;
   const history = useHistory();
@@ -75,39 +78,13 @@ const Explorer: React.FC<TokenProps> = (props) => {
   }, [history.location.search]);
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
-  const [value, setValue] = React.useState(
-    searchParams.get('tab') ?? 'overview',
-  );
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.set('tab', newValue);
-    history.push({search: searchParams.toString()});
-
-    setValue(newValue);
-  };
-
-  const baseAddress =
-    address ||
-    (networkName === 'ethereum'
-      ? (process.env.REACT_APP_DEFAULT_ETH_TOKEN as string)
-      : (process.env.REACT_APP_DEFAULT_BSC_TOKEN as string));
-
-  const onClickSearch = (token: Token) => {
-    if (!token) {
-      return;
+  const onMakeFavorite = useCallback(()=>{
+    if(tokenInfo){
+      onToggleFavorite(tokenInfo, tokenInfo.coingecko_id)
     }
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.set('network', token.networkName ?? EthereumNetwork.ethereum);
-    setNetworkName(token.networkName ?? EthereumNetwork.ethereum);
-    history.push({
-      pathname: `/protocol-explorer/token-explorer/${
-        token.address || token.symbol
-      }`,
-      search: searchParams.toString(),
-    });
-  };
+   
+  },[tokenInfo])
+
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
@@ -174,7 +151,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
           )}
         </Grid>
         <Grid item xs={12} md={6}>
-          {balances.data && <CoinTools balances={balances.data} />}
+          {balances.data && <CoinTools balances={balances.data} isFavorite={isFavorite(tokenInfo)} onMakeFavorite={onMakeFavorite}  />}
         </Grid>
 
         <Grid item xs={12} md={4}>

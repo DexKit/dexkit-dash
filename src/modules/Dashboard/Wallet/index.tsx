@@ -66,7 +66,6 @@ const WalletTabs: React.FC<Props> = (props) => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
     history.push({search: searchParams.toString()});
-
     setValue(newValue);
   };
   const {loading, error, data} = useAllBalance(defaultAccount);

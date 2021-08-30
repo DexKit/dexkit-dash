@@ -1,11 +1,10 @@
 import {useEffect, useState} from 'react';
-import {useWeb3} from 'hooks/useWeb3';
 
 import {
   BITQUERY_BALANCE_BLOCK,
   BITQUERY_SINGLE_BALANCE_HISTORY,
 } from 'services/graphql/bitquery/balance/gql';
-import {useNetwork} from 'hooks/useNetwork';
+
 import {client} from 'services/graphql';
 import {
   GetBalanceBlock,

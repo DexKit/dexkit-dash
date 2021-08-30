@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {useChainId} from '../useChainId';
 import usePagination from 'hooks/usePagination';
 import {
   GetTokenPairs,

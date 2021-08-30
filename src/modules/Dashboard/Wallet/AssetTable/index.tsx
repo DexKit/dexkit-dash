@@ -12,8 +12,6 @@ import {
   InputAdornment,
   useTheme,
   useMediaQuery,
-  Accordion,
-  AccordionSummary,
   MenuItem,
   Select,
   FormControl,
@@ -37,15 +35,6 @@ interface AssetTableProps {
   loading?: boolean;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  toolbar: {
-    padding: '0 24px',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-}));
 
 enum TokenOrderBy {
   Name,
@@ -54,7 +43,6 @@ enum TokenOrderBy {
 }
 
 const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
-  const classes = useStyles();
 
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
@@ -76,6 +64,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
     }
     if (filter === 'bnb') {
       results = results.filter((b) => b.network === EthereumNetwork.bsc);
+    }
+
+    if (filter === 'matic') {
+      results = results.filter((b) => b.network === EthereumNetwork.matic);
     }
 
     if (search !== '') {
@@ -184,6 +176,13 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                 size='small'
                 variant={filter === 'bnb' ? 'default' : 'outlined'}
                 onClick={() => setFilter('bnb')}
+              />
+              <Chip
+                label='MATIC'
+                clickable
+                size='small'
+                variant={filter === 'matic' ? 'default' : 'outlined'}
+                onClick={() => setFilter('matic')}
               />
             </Grid>
             <Grid item xs={12}>

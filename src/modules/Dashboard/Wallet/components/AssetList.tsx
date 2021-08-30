@@ -7,6 +7,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import {EmptyWallet} from 'shared/components/EmptyWallet';
 
 interface AssetListProps {
   balances: MyBalances[];
@@ -51,7 +52,7 @@ export const AssetList = (props: AssetListProps) => {
 
   return (
     <Grid container spacing={2}>
-      {loading || balances.length == 0 ? (
+      {loading ? (
         <>
           <Grid item xs={12}>
             <TokenListItemSkeleton />
@@ -69,6 +70,10 @@ export const AssetList = (props: AssetListProps) => {
             <TokenListItemSkeleton />
           </Grid>
         </>
+      ) : balances.length === 0 ? (
+        <Grid item xs={12}>
+          <EmptyWallet />
+        </Grid>
       ) : (
         <>
           {paginate(balances, 5, page).map(

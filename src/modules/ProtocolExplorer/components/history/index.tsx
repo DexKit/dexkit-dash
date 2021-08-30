@@ -52,7 +52,7 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         <CustomTab label={'History'} />
         <CustomTab label={'Pairs'} />
       </CustomTabs>
-      {tableActive == 0 && (
+      {tableActive === 0 && (
         <TokenOrders
           baseAddress={address}
           quoteAddress={null}
@@ -61,7 +61,7 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
           exchange={EXCHANGE.ALL}
         />
       )}
-      {tableActive == 1 && pair && (
+      {tableActive === 1 && pair && (
         <PairHistory networkName={networkName} pair={pair} />
       )}
     </>
