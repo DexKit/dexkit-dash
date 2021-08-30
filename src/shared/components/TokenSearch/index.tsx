@@ -28,7 +28,7 @@ interface TokenSearchProps {
   filters?: Map<string, string>;
 }
 
-const LISTBOX_PADDING = 12; // px
+const LISTBOX_PADDING = 20; // px
 
 function useResetCache(data: any) {
   const ref = React.useRef<VariableSizeList>(null);
@@ -117,6 +117,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
   const tokenListEth = useTokenList(EthereumNetwork.ethereum);
   const tokenListBsc = useTokenList(EthereumNetwork.bsc);
+  const tokenListMatic = useTokenList(EthereumNetwork.matic);
 
   const searchByAddress = (value: string) => {
     return client.query<
@@ -141,12 +142,12 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
 
     if (searchKey && !Web3.utils.isAddress(searchKey)) {
       const searchTokens = filterTokensInfoByString(
-        tokenListEth.concat(tokenListBsc),
+        tokenListEth.concat(tokenListBsc).concat(tokenListMatic),
         searchKey,
       );
       setFound(searchTokens);
     }
-  }, [searchKey, tokenListEth, tokenListBsc]);
+  }, [searchKey, tokenListEth, tokenListBsc, tokenListMatic]);
 
   const getOptionLabel = (option: Token) => {
     if (searchKey && Web3.utils.isAddress(searchKey)) {
@@ -159,7 +160,7 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
   };
   const renderOption = (option: Token) => {
     return (
-      <Box display={'flex'} alignItems={'center'} mt={1}>
+      <Box display={'flex'} alignItems={'center'} mt={2} mb={2}>
         <TokenLogo
           token={option.address ?? option.symbol}
           logoURL={option.logoURI}

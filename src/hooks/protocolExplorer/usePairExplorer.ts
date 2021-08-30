@@ -12,6 +12,7 @@ import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_DEFAULT_QUOTE,
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK
 } from 'shared/constants/Blockchain';
 import {EXCHANGE} from 'shared/constants/AppEnums';
 import {useEffect, useState} from 'react';
@@ -45,7 +46,7 @@ export const usePairExplorer = ({
       exchangeName:
         exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
+      quoteAddress: quoteAddress || baseAddress?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
       from: yesterday,
     },
     pollInterval: POLL_INTERVAL,

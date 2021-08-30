@@ -120,6 +120,9 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         },
       },
     },
+    accountsDialgContent: {
+      padding: theme.spacing(4),
+    },
   };
 });
 export default useStyles;

@@ -1,4 +1,5 @@
 import {BigNumber} from '@0x/utils';
+import {Web3Wrapper} from '@0x/web3-wrapper';
 import {ChainId} from 'types/blockchain';
 import {EthereumNetwork} from './AppEnums';
 
@@ -36,8 +37,25 @@ export const GET_DEFAULT_QUOTE = (chainId: ChainId | undefined) => {
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
     case ChainId.Binance:
       return '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c';
+    case ChainId.Matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     default:
       return null;
+  }
+};
+
+// Handle special cases of ETH, MATIC and BSC
+export const GET_ADDRESS_FOR_PROTOCOL = (
+  address: string,
+  networkName: EthereumNetwork,
+) => {
+  if (Web3Wrapper.isAddress(address)) {
+    return address;
+  } else {
+    return (
+      GET_DEFAULT_TOKEN_BY_NETWORK(networkName) ||
+      '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+    );
   }
 };
 
@@ -53,6 +71,8 @@ export const GET_DEFAULT_BASE = (chainId: ChainId | undefined) => {
       return '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4';
     case ChainId.Binance:
       return '0x314593fa9a2fa16432913dbccc96104541d32d11';
+    case ChainId.Matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     default:
       return null;
   }
@@ -62,6 +82,8 @@ export const GET_DEFAULT_TOKEN_NETWORK = (chainId: ChainId | undefined) => {
   const id = Number(chainId);
 
   switch (id) {
+    case ChainId.Matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     case ChainId.Binance:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     case ChainId.Mainnet:
@@ -75,14 +97,31 @@ export const GET_DEFAULT_TOKEN_NETWORK = (chainId: ChainId | undefined) => {
   }
 };
 
-export const GET_DEFAULT_TOKEN_BY_NETWORK = (network: EthereumNetwork | undefined) => {
-
-
+export const GET_DEFAULT_TOKEN_BY_NETWORK = (
+  network: EthereumNetwork | undefined,
+) => {
   switch (network) {
     case EthereumNetwork.bsc:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     case EthereumNetwork.ethereum:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+    case EthereumNetwork.matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+    default:
+      return null;
+  }
+};
+
+export const GET_DEFAULT_USD_TOKEN_BY_NETWORK = (
+  network: EthereumNetwork | undefined,
+) => {
+  switch (network) {
+    case EthereumNetwork.bsc:
+      return '0xe9e7cea3dedca5984780bafc599bd69add087d56';
+    case EthereumNetwork.ethereum:
+      return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+    case EthereumNetwork.matic:
+      return '0x2791bca1f2de4661ed88a30c99a7a9449aa84174';
     default:
       return null;
   }
@@ -117,6 +156,8 @@ export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
       return ChainId.Mainnet;
     case EthereumNetwork.bsc:
       return ChainId.Binance;
+    case EthereumNetwork.matic:
+      return ChainId.Matic;
     default:
       return ChainId.Mainnet;
   }

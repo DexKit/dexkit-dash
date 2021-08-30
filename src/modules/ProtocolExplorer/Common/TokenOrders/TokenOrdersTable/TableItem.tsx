@@ -6,19 +6,15 @@ import {
   TableCell,
   makeStyles,
   Chip,
-  Link,
   useMediaQuery,
 } from '@material-ui/core';
-import {Link as RouterLink} from 'react-router-dom';
-// import {OrderData} from 'types/app';
 
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_PAIR_URL, GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
-import {GET_CORRECT_ADDRESS_FROM_NETWORK} from 'utils';
+
 import ExchangeLogo from 'shared/components/ExchangeLogo';
-import {useIntl} from 'react-intl';
+
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import IntlMessages from '@crema/utility/IntlMessages';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';

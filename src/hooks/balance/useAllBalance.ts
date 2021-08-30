@@ -5,18 +5,55 @@ import {
   GetAllMyBalanceVariables,
 } from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
 import {BITQUERY_ALL_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
-import {useNetwork} from 'hooks/useNetwork';
 import {getTokens} from 'services/rest/coingecko';
 import {client} from 'services/graphql';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {MyBalances} from 'types/blockchain';
 
-// Get balance from BSC and ETH at once
+export const MapBalancesToNetwork = (
+  balances: any,
+  network: any,
+  coin: string,
+): MyBalances[] => {
+  if (!balances) {
+    return [];
+  }
+  return balances.map((t: any) => {
+    const addr =
+      t.currency?.address === '-' ? coin : t?.currency?.address?.toLowerCase();
+
+    return (<MyBalances>{
+      currency: {
+        ...t.currency,
+        address: addr,
+      },
+      network: network,
+      value: t.value,
+      // enquanto não vem a solução pela bitquery
+    }) as MyBalances;
+  });
+};
+
+export const MapBalancesToUSDValue = (balances: any, usdValues: any): MyBalances[] => {
+  if (!balances) {
+    return [];
+  }
+  return balances.map((t: any) => {
+    return (<MyBalances>{
+      ...t,
+      price24hPercentage:
+        usdValues[t.addr || '']?.price_change_percentage_24h || 0,
+      valueInUsd:
+        (t.value || 0) * (usdValues[t.addr || '']?.current_price || 0),
+      // enquanto não vem a solução pela bitquery
+    }) as MyBalances;
+  });
+};
+
+// Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
-  const network = useNetwork();
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>();
   const [data, setData] = useState<MyBalances[]>([]);
@@ -30,6 +67,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           variables: {
             address: account,
           },
+          errorPolicy: 'none'
         })
         .then((balances) => {
           const tokensmeta_eth = balances.data.ethereum?.address[0].balances
@@ -45,77 +83,43 @@ export const useAllBalance = (defaultAccount?: string) => {
             ?.map((a) => {
               return {network: EthereumNetwork.bsc, address: a};
             });
-          const tokensmeta = (tokensmeta_bnb ?? []).concat(
-            tokensmeta_eth ?? [],
-          );
 
-          if (
-            tokensmeta.length ||
-            balances.data.ethereum?.address[0].balances?.length ||
-            balances.data.bsc?.address[0].balances?.length
-          ) {
-            getTokens(tokensmeta)
-              .then((coingeckoList) => {
-                const dataFn = balances.data.ethereum?.address[0].balances?.map(
-                  (t) => {
-                    const addr =
-                      t.currency?.address === '-'
-                        ? 'eth'
-                        : t?.currency?.address?.toLowerCase();
+          const tokensmeta_matic = balances.data.matic?.address[0].balances
+            ?.map((t) => t.currency?.address?.toLowerCase() || '')
+            ?.filter((e) => e !== '-')
+            ?.map((a) => {
+              return {network: EthereumNetwork.matic, address: a};
+            });
+          const tokensmeta = (tokensmeta_bnb ?? [])
+            .concat(tokensmeta_eth ?? [])
+            .concat(tokensmeta_matic ?? []);
 
-                    return <MyBalances>{
-                      currency: {
-                        ...t.currency,
-                        address: addr,
-                      },
-                      network: EthereumNetwork.ethereum,
-                      value: t.value,
-                      // enquanto não vem a solução pela bitquery
-                      price24hPercentage:
-                        coingeckoList[addr || '']?.price_change_percentage_24h ||
-                        0,
-                      valueInUsd:
-                        (t.value || 0) *
-                        (coingeckoList[addr || '']?.current_price || 0),
-                    };
-                  },
-                );
-                const dataFnBNB = balances.data.bsc?.address[0].balances?.map(
-                  (t) => {
-                    const addr =
-                      t.currency?.address == '-'
-                        ? 'bnb'
-                        : t?.currency?.address?.toLowerCase();
-
-                    return <MyBalances>{
-                      currency: {
-                        ...t.currency,
-                        address: addr,
-                      },
-                      network: EthereumNetwork.bsc,
-                      value: t.value,
-                      price24hPercentage:
-                      coingeckoList[addr || '']?.price_change_percentage_24h ||
-                      0,
-                      // enquanto não vem a solução pela bitquery
-                      valueInUsd:
-                        (t.value || 0) *
-                        (coingeckoList[addr || '']?.current_price || 0),
-                    };
-                  },
-                );
-
-                const allData = (dataFn ?? []).concat(dataFnBNB ?? []);
-                setData(allData.filter((b) => b?.value && b?.value > 0));
-              })
-              .catch((e) => setError(e))
-              .finally(() => setLoading(false));
-          } else {
-            setData([]);
+         
+          const allMyBalances = MapBalancesToNetwork(
+            balances.data.ethereum?.address[0].balances,
+            EthereumNetwork.ethereum,
+            'eth',
+          )
+            .concat(MapBalancesToNetwork(
+              balances.data.bsc?.address[0].balances,
+              EthereumNetwork.bsc,
+              'bnb',
+            ))
+            .concat(MapBalancesToNetwork(
+              balances.data.matic?.address[0].balances,
+              EthereumNetwork.matic,
+              'matic',
+            ));
+          setData(allMyBalances.filter((b) => b?.value && b?.value > 0) || []);
+        //  setMetaTokens(tokensmeta);
+          if(tokensmeta.length){
+            getTokens(tokensmeta).then((coingeckoList) => {
+              const tokensWithUSDValue = MapBalancesToUSDValue(allMyBalances, coingeckoList);
+              setData(tokensWithUSDValue.filter((b) => b?.value && b?.value > 0));
+            }).catch(e=> console.log('Error fetching USD'))
           }
         })
         .catch((e) => {
-          console.info(e);
           setError(e);
           setLoading(false);
         })
@@ -125,7 +129,7 @@ export const useAllBalance = (defaultAccount?: string) => {
       setError(undefined);
       setData([]);
     }
-  }, [account, network]);
-
+  }, [account]);
+  
   return {loading, error, data};
 };

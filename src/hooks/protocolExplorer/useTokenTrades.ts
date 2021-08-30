@@ -13,7 +13,9 @@ import {EXCHANGE} from 'shared/constants/AppEnums';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_DEFAULT_QUOTE,
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK
 } from 'shared/constants/Blockchain';
+
 import {EthereumNetwork} from '../../../__generated__/globalTypes';
 import {FilterContext} from 'providers/protocol/filterContext';
 import {getFilterValueById} from 'utils';
@@ -37,6 +39,8 @@ export const useTokenTrades = ({
   const [toDate, setTo] = useState(getAfer24HoursDate());
   const [seconds, setSeconds] = useState(0);
   const {filters} = useContext(FilterContext);
+
+
 
   const from = getFilterValueById('from', filters);
   const toFilter = getFilterValueById('to', filters);
@@ -75,11 +79,11 @@ export const useTokenTrades = ({
     variables: {
       network: networkName,
       exchangeName:
-        GET_EXCHANGE_NAME(exchange) == ''
+        GET_EXCHANGE_NAME(exchange) === ''
           ? undefined
           : GET_EXCHANGE_NAME(exchange),
-      baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
+      baseAddress:  baseAddress,
+      quoteAddress: quoteAddress ||  baseAddress?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
       limit: rowsPerPage,
       offset: skipRows,
       from,
@@ -126,3 +130,4 @@ export const useTokenTrades = ({
     seconds,
   };
 };
+

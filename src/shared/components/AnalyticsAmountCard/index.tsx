@@ -1,13 +1,8 @@
 import React from 'react';
 
-import {
-  Paper,
-  Grid,
-  makeStyles,
-  Box,
-  Typography,
-} from '@material-ui/core';
+import {Paper, Grid, makeStyles, Box, Typography} from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 
 const useStyles = makeStyles(() => ({
   icon: {
@@ -18,6 +13,9 @@ const useStyles = makeStyles(() => ({
     textAlign: 'left',
     borderRadius: 6,
     backgroundColor: '#2E3243',
+  },
+  caption: {
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -34,15 +32,20 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
 
   const classes = useStyles();
 
+  const {usdFormatter} = useUSDFormatter();
+
   return isLoading ? (
-    <Paper  className={classes.paper} onClick={onClick}>
+    <Paper className={classes.paper} onClick={onClick}>
       <Box p={4}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             {icon}
           </Grid>
           <Grid item xs={12}>
-            <Typography color='textSecondary' variant='caption'>
+            <Typography
+              className={classes.caption}
+              color='textSecondary'
+              variant='caption'>
               {caption}
             </Typography>
             <Skeleton>
@@ -60,10 +63,17 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
             {icon}
           </Grid>
           <Grid item xs={12}>
-            <Typography color='textSecondary' variant='caption'>
+            <Typography
+              className={classes.caption}
+              color='textSecondary'
+              variant='caption'>
               {caption}
             </Typography>
-            <Typography variant='h5'>{amount}</Typography>
+            <Typography variant='h5'>
+              {typeof amount === 'number'
+                ? usdFormatter.format(amount)
+                : amount}
+            </Typography>
           </Grid>
         </Grid>
       </Box>

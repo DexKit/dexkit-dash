@@ -10,6 +10,10 @@ export const getLast24HoursDate = () => {
   return new Date(new Date().getTime() - 24 * 3600 * 1000);
 };
 
+export const getLast72HoursDate = () => {
+  return new Date(new Date().getTime() - 24 * 3600 * 1000* 3);
+};
+
 export const getAfer24HoursDate = () => {
   return new Date(new Date().getTime() + 24 * 3600 * 1000);
 };

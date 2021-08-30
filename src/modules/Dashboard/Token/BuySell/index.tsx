@@ -20,9 +20,10 @@ import {
 import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
-import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL} from 'shared/constants/Coins';
+import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL, MATIC_SYMBOL_URL} from 'shared/constants/Coins';
 
 interface Props {
+  disableReceive?: boolean;
   tokenAddress?: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
@@ -71,6 +72,7 @@ const BuySell: React.FC<Props> = ({
   balances,
   networkName,
   tokenInfo,
+  disableReceive,
 }) => {
   let history = useHistory();
 
@@ -83,6 +85,7 @@ const BuySell: React.FC<Props> = ({
 
   const tokensETH = useTokenList(EthereumNetwork.ethereum);
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
+  const tokensMATIC = useTokenList(EthereumNetwork.matic);
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
   const [tokenTo, setTokenTo] = useState<Token>();
@@ -106,10 +109,12 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (networkName === EthereumNetwork.bsc) {
       setSelect1(tokensBSC);
-    } else {
+    } else if(networkName === EthereumNetwork.matic) {
+      setSelect1(tokensMATIC);
+    }else{
       setSelect1(tokensETH);
     }
-  }, [networkName, tokensETH, tokensBSC]);
+  }, [networkName, tokensETH, tokensBSC, tokensMATIC]);
 
   // Here, we map the balances with logos from the token lists
   useEffect(() => {
@@ -122,7 +127,7 @@ const BuySell: React.FC<Props> = ({
             tokenLogoUri = ETH_SYMBOL_URL;
           } else {
             const token = tokensETH.find(
-              (t) =>
+              (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
             if (token) {
@@ -135,7 +140,21 @@ const BuySell: React.FC<Props> = ({
             tokenLogoUri = BINANCE_SYMBOL_URL;
           } else {
             const token = tokensBSC.find(
-              (t) =>
+              (t: any) =>
+                t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
+            );
+            if (token) {
+              tokenLogoUri = token.logoURI;
+            }
+          }
+        }
+
+        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0) {
+          if (e?.currency?.symbol.toLowerCase() === 'matic') {
+            tokenLogoUri = MATIC_SYMBOL_URL;
+          } else {
+            const token = tokensMATIC.find(
+              (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
             if (token) {
@@ -245,9 +264,7 @@ const BuySell: React.FC<Props> = ({
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${
-                token.networkName
-              }/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+              `/${token.networkName}/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
                 token.networkName,
               ).toLowerCase()}`,
             );
@@ -340,6 +357,7 @@ const BuySell: React.FC<Props> = ({
             balances={balances}
             select0={select0}
             select1={select1}
+            disableReceive={disableReceive}
             tokenFrom={tokenFrom}
             tokenTo={tokenTo}
             onChangeToken={handleChangeToken}

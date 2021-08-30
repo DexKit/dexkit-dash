@@ -78,6 +78,19 @@ export interface Coin {
   changelly_id: string;
 }
 
+export interface CoinData {
+  name: string;
+  symbol: string;
+  networkName?: Network;
+  decimals: number;
+  displayDecimals?: 4;
+  icon?: string;
+  price_usd?: BigNumber;
+  price_usd_24h_change?: BigNumber;
+  coingecko_id?: string;
+  logoURI: string;
+}
+
 export interface TokenBalance {
   balance: BigNumber;
   approved: BigNumber;
