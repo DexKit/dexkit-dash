@@ -115,7 +115,9 @@ export async function getTokens(
         addresses.includes(a.address_bnb?.toLowerCase()) ||
         addresses.includes(a.address_polygon?.toLowerCase()),
     )
-    .map((a) => a.id);
+    .map((a) => a.id).concat(['ethereum','binancecoin','matic-network']);
+
+  const uniqueGeckoIds = [...new Set(geckoIds)];
 
   const geckoCoins = geckoData.filter(
     (a) =>
@@ -124,10 +126,14 @@ export async function getTokens(
       addresses.includes(a.address_polygon?.toLowerCase()),
   );
 
-  const concatId = `ethereum,binancecoin,${geckoIds.reduce(
-    (p, c) => `${p},${c}`,
-    '',
+  const concatId = `${uniqueGeckoIds.reduce(
+    (p, c) => `${p},${c}`
   )}`;
+  console.log(concatId);
+
+  // remove duplicates
+
+  console.log(concatId);
   const coinsUsd = await getCoinsData(concatId);
   //const coinsNative = await getCoinsData(concatId, 'eth');
 
@@ -201,7 +207,7 @@ export async function getTokenCoingeckoItemList(
 export async function getTokensById(
   ids: string[],
 ): Promise<CoinItemCoinGecko[]> {
-  const concatId = `ethereum,binancecoin,matic-network,${ids.reduce(
+  const concatId = `ethereum,binancecoin,matic-network${ids.reduce(
     (p, c) => `${p},${c}`,
     '',
   )}`;

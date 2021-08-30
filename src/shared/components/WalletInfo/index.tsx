@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {
   makeStyles,
@@ -8,6 +8,8 @@ import {
   Grid,
   Hidden,
   Typography,
+  useTheme,
+  Divider,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -34,6 +36,8 @@ import {UIAccount} from 'redux/_ui/reducers';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
+import {useAccountsModal} from 'hooks/useAccountsModal';
+import {GreenSquare} from '../GreenSquare';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -131,6 +135,14 @@ const WalletInfo = (props: any) => {
     handleClose();
     history.push('/wallet');
   };
+
+  const accountsModal = useAccountsModal();
+
+  const handleShowAccounts = useCallback(() => {
+    handleClose();
+    accountsModal.setShow(true);
+  }, [handleClose, accountsModal]);
+
   const onGoToManageWallet = () => {
     handleClose();
     history.push('/wallet/manage-accounts');
@@ -160,6 +172,8 @@ const WalletInfo = (props: any) => {
   const notConnected = !web3Account;
 
   const classes = useStyles(props);
+
+  const theme = useTheme();
 
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
@@ -221,21 +235,28 @@ const WalletInfo = (props: any) => {
                 )
                 .map((a, i) => (
                   <MenuItem key={i} onClick={() => onSetDefaultAccount(a)}>
-                    {truncateIsAddress(a.label) || truncateAddress(a.address)}
-                    {a?.address?.toLowerCase() ===
-                      web3Account?.toLowerCase() && (
-                      <Tooltip title={'Wallet Connected'}>
-                        <IconButton
-                          aria-label='connected'
-                          style={{color: green[500]}}
-                          size='small'>
-                          <FiberManualRecordIcon />
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    <Box display='flex' alignItems='center'>
+                      {a?.address?.toLowerCase() ===
+                      web3Account?.toLowerCase() ? (
+                        <Box
+                          mr={2}
+                          display='flex'
+                          alignItems='center '
+                          alignContent='center'
+                          justifyContent='center'>
+                          <FiberManualRecordIcon
+                            style={{color: theme.palette.success.main}}
+                          />
+                        </Box>
+                      ) : null}
+                      <Box>
+                        {truncateIsAddress(a.label) ||
+                          truncateAddress(a.address)}
+                      </Box>
+                    </Box>
                   </MenuItem>
                 ))}
-              <MenuItem onClick={onGoToManageWallet}>Manage Accounts</MenuItem>
+              <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
               <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
             </Menu>
           </Box>

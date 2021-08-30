@@ -2,16 +2,9 @@ import React, {useCallback} from 'react';
 import {
   IconButton,
   IconButtonProps,
-  makeStyles,
   Tooltip,
 } from '@material-ui/core';
 
-import {CremaTheme} from 'types/AppContextPropsType';
-
-interface ButtonCopyProps {
-  copyText: string;
-  titleText: string;
-}
 
 interface Props extends IconButtonProps {
   copyText: string;

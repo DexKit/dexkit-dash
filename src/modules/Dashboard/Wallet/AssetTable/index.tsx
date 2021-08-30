@@ -12,6 +12,12 @@ import {
   InputAdornment,
   useTheme,
   useMediaQuery,
+  Accordion,
+  AccordionSummary,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@material-ui/core';
 
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -50,7 +56,7 @@ enum TokenOrderBy {
 const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const classes = useStyles();
 
-  const [orderBy, setOrderBy] = useState(TokenOrderBy.Name);
+  const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -90,8 +96,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
         let firstValue = a.value || 0;
         let lastValue = b.value || 0;
 
-        if (firstValue < lastValue) return -1;
-        else if (firstValue > lastValue) return 1;
+        if (firstValue > lastValue) return -1;
+        else if (firstValue < lastValue) return 1;
 
         return 0;
       });
@@ -100,8 +106,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
         let firstValue = a.valueInUsd || 0;
         let lastValue = b.valueInUsd || 0;
 
-        if (firstValue < lastValue) return -1;
-        else if (firstValue > lastValue) return 1;
+        if (firstValue > lastValue) return -1;
+        else if (firstValue < lastValue) return 1;
 
         return 0;
       });
@@ -112,6 +118,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
+  }, []);
+
+  const handleOrderByChange = useCallback((e) => {
+    setOrderBy(e.target.value);
   }, []);
 
   const theme = useTheme();
@@ -143,9 +153,39 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                   </Grid>
                 </Grid>
               </Box>
+              <Divider />
             </Grid>
 
-            <Divider />
+            <Grid item xs={12}>
+              <Typography gutterBottom variant='body1'>
+                Network
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Chip
+                style={{marginRight: 10}}
+                label='All'
+                size='small'
+                clickable
+                variant={filter === 'all' ? 'default' : 'outlined'}
+                onClick={() => setFilter('all')}
+              />
+              <Chip
+                style={{marginRight: 10}}
+                label='ETH'
+                clickable
+                size='small'
+                variant={filter === 'eth' ? 'default' : 'outlined'}
+                onClick={() => setFilter('eth')}
+              />
+              <Chip
+                label='BSC'
+                clickable
+                size='small'
+                variant={filter === 'bnb' ? 'default' : 'outlined'}
+                onClick={() => setFilter('bnb')}
+              />
+            </Grid>
             <Grid item xs={12}>
               <ContainedInput
                 value={search}
@@ -160,29 +200,22 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography gutterBottom variant='body1'>
-                Network
-              </Typography>
-              <Chip
-                style={{marginRight: 10}}
-                label='All'
-                clickable
-                color={filter === 'all' ? 'primary' : 'default'}
-                onClick={() => setFilter('all')}
-              />
-              <Chip
-                style={{marginRight: 10}}
-                label='ETH'
-                clickable
-                color={filter === 'eth' ? 'primary' : 'default'}
-                onClick={() => setFilter('eth')}
-              />
-              <Chip
-                label='BSC'
-                clickable
-                color={filter === 'bnb' ? 'primary' : 'default'}
-                onClick={() => setFilter('bnb')}
-              />
+              <FormControl variant='outlined' fullWidth>
+                <InputLabel>Order by</InputLabel>
+                <Select
+                  style={{backgroundColor: 'transparent'}}
+                  label='Order by'
+                  value={orderBy}
+                  variant='outlined'
+                  onChange={handleOrderByChange}
+                  fullWidth>
+                  <MenuItem value={TokenOrderBy.Name}>Name</MenuItem>
+                  <MenuItem value={TokenOrderBy.TokenAmount}>
+                    Token amount
+                  </MenuItem>
+                  <MenuItem value={TokenOrderBy.UsdAmount}>USD Amount</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </Box>

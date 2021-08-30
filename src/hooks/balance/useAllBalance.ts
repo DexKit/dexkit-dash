@@ -29,6 +29,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           variables: {
             address: account,
           },
+          errorPolicy: 'none'
         })
         .then((balances) => {
           const tokensmeta_eth = balances.data.ethereum?.address[0].balances

@@ -1,10 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  Box,
-  Grid,
-  useTheme,
-  Backdrop,
-} from '@material-ui/core';
+import {Box, Grid, useTheme, Backdrop} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -92,13 +87,7 @@ interface Props {
 }
 
 const CoinTools = (props: Props) => {
-  const {
-    balances,
-    only,
-    onMakeFavorite,
-    onShare,
-    isFavorite,
-  } = props;
+  const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
@@ -150,7 +139,6 @@ const CoinTools = (props: Props) => {
       setTokens(balances);
     }
   }, [only, balances]);
-
 
   const classes = useStyles();
   const [showSender, setShowSender] = useState(false);
@@ -205,16 +193,16 @@ const CoinTools = (props: Props) => {
         </Grid>
       </Backdrop>
       <Box>
-            <TradeToolsSection
-              onSend={handleShowSender}
-              onReceive={handleShowReceiver}
-              onBuyCrypto={handleBuyCrypto}
-              onSwap={handleSwap}
-              onTrade={handleTrade}
-              onShare={onShare}
-              onMakeFavorite={onMakeFavorite}
-              isFavorite={isFavorite}
-            />
+        <TradeToolsSection
+          onSend={handleShowSender}
+          onReceive={handleShowReceiver}
+          onBuyCrypto={handleBuyCrypto}
+          onSwap={handleSwap}
+          onTrade={handleTrade}
+          onShare={onShare}
+          onMakeFavorite={onMakeFavorite}
+          isFavorite={isFavorite}
+        />
       </Box>
     </>
   );
