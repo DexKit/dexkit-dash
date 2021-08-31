@@ -1,10 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  Box,
-  Grid,
-  useTheme,
-  Backdrop,
-} from '@material-ui/core';
+import {Box, Grid, useTheme, Backdrop} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -18,6 +13,7 @@ import {useTransak} from 'hooks/useTransak';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
+import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -92,14 +88,8 @@ interface Props {
 }
 
 const CoinTools = (props: Props) => {
-  const {
-    balances,
-    only,
-    onMakeFavorite,
-    onShare,
-    isFavorite,
-  } = props;
-
+  const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
+ 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const networkName = useNetwork();
@@ -151,12 +141,12 @@ const CoinTools = (props: Props) => {
     }
   }, [only, balances]);
 
-
   const classes = useStyles();
   const [showSender, setShowSender] = useState(false);
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
-
+  const [showTrade, setShowTrade] = useState(false);
+  
   const handleShowSender = useCallback(() => {
     setShowSender(true);
   }, []);
@@ -180,10 +170,14 @@ const CoinTools = (props: Props) => {
     setShowSwap(true);
   }, [init]);
 
-  const handleTrade = useCallback(() => {}, [init]);
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false);
   }, []);
 
   return (
@@ -192,6 +186,12 @@ const CoinTools = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop
@@ -205,16 +205,16 @@ const CoinTools = (props: Props) => {
         </Grid>
       </Backdrop>
       <Box>
-            <TradeToolsSection
-              onSend={handleShowSender}
-              onReceive={handleShowReceiver}
-              onBuyCrypto={handleBuyCrypto}
-              onSwap={handleSwap}
-              onTrade={handleTrade}
-              onShare={onShare}
-              onMakeFavorite={onMakeFavorite}
-              isFavorite={isFavorite}
-            />
+        <TradeToolsSection
+          onSend={handleShowSender}
+          onReceive={handleShowReceiver}
+          onBuyCrypto={handleBuyCrypto}
+          onSwap={handleSwap}
+          onTrade={handleTrade}
+          onShare={onShare}
+          onMakeFavorite={onMakeFavorite}
+          isFavorite={isFavorite}
+        />
       </Box>
     </>
   );

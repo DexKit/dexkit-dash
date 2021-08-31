@@ -23,6 +23,7 @@ import {useHistory} from 'react-router-dom';
 import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL, MATIC_SYMBOL_URL} from 'shared/constants/Coins';
 
 interface Props {
+  disableReceive?: boolean;
   tokenAddress?: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
@@ -71,6 +72,7 @@ const BuySell: React.FC<Props> = ({
   balances,
   networkName,
   tokenInfo,
+  disableReceive,
 }) => {
   const history = useHistory();
 
@@ -262,9 +264,7 @@ const BuySell: React.FC<Props> = ({
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
-              `/${
-                token.networkName
-              }/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
+              `/${token.networkName}/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
                 token.networkName,
               ).toLowerCase()}`,
             );
@@ -357,6 +357,7 @@ const BuySell: React.FC<Props> = ({
             balances={balances}
             select0={select0}
             select1={select1}
+            disableReceive={disableReceive}
             tokenFrom={tokenFrom}
             tokenTo={tokenTo}
             onChangeToken={handleChangeToken}

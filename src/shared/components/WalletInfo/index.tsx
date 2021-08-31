@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   makeStyles,
@@ -8,6 +8,7 @@ import {
   Grid,
   Hidden,
   Typography,
+  useTheme,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -34,6 +35,9 @@ import {UIAccount} from 'redux/_ui/reducers';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
+import {useAccountsModal} from 'hooks/useAccountsModal';
+import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { useNetwork } from 'hooks/useNetwork';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -98,7 +102,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const networkName = useNetwork();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -118,8 +122,10 @@ const WalletInfo = (props: any) => {
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const defaultAccountLabel = useDefaultLabelAccount();
-  const connected =
-    web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
+  const connected = useMemo(() => {
+    return  web3Account?.toLowerCase() === defaultAccount?.toLowerCase()
+  }, [ web3Account, defaultAccount ] );
+
   const wallet = useSelector<AppState, AppState['ui']['wallet']>(
     (state) => state.ui.wallet,
   );
@@ -132,14 +138,22 @@ const WalletInfo = (props: any) => {
     handleClose();
     history.push('/wallet');
   };
+
+  const accountsModal = useAccountsModal();
+
+  const handleShowAccounts = useCallback(() => {
+    handleClose();
+    accountsModal.setShow(true);
+  }, [handleClose, accountsModal]);
+
   const onGoToManageWallet = () => {
     handleClose();
     history.push('/wallet/manage-accounts');
   };
 
-  const filteredBalances = balances?.filter(
-    (e) => e.currency?.symbol === 'ETH',
-  );
+  const filteredBalances = useMemo(() => balances?.filter(
+    (e) => e.currency?.symbol.toUpperCase() === 'ETH',
+  ),[balances]);
 
   let ethBalanceValue;
 
@@ -150,10 +164,12 @@ const WalletInfo = (props: any) => {
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
     if (pathname && pathname.indexOf('/wallet') === 1) {
-      // This is need because it was not changing the url and causing loop on update
       history.push(`/wallet/${a.address}`);
+      // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
+     
     } else {
+      history.push(`/wallet/${a.address}`);
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     }
   };
@@ -161,6 +177,8 @@ const WalletInfo = (props: any) => {
   const notConnected = !web3Account;
 
   const classes = useStyles(props);
+
+  const theme = useTheme();
 
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
@@ -194,7 +212,7 @@ const WalletInfo = (props: any) => {
                   {ethBalanceValue
                     ? ethBalanceValue.toFixed(4)
                     : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-                  ETH
+                  {FORMAT_NETWORK_NAME(networkName)}
                 </Typography>
               </Hidden>
             </Grid>
@@ -222,21 +240,28 @@ const WalletInfo = (props: any) => {
                 )
                 .map((a, i) => (
                   <MenuItem key={i} onClick={() => onSetDefaultAccount(a)}>
-                    {truncateIsAddress(a.label) || truncateAddress(a.address)}
-                    {a?.address?.toLowerCase() ===
-                      web3Account?.toLowerCase() && (
-                      <Tooltip title={'Wallet Connected'}>
-                        <IconButton
-                          aria-label='connected'
-                          style={{color: green[500]}}
-                          size='small'>
-                          <FiberManualRecordIcon />
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    <Box display='flex' alignItems='center'>
+                      {a?.address?.toLowerCase() ===
+                      web3Account?.toLowerCase() ? (
+                        <Box
+                          mr={2}
+                          display='flex'
+                          alignItems='center '
+                          alignContent='center'
+                          justifyContent='center'>
+                          <FiberManualRecordIcon
+                            style={{color: theme.palette.success.main}}
+                          />
+                        </Box>
+                      ) : null}
+                      <Box>
+                        {truncateIsAddress(a.label) ||
+                          truncateAddress(a.address)}
+                      </Box>
+                    </Box>
                   </MenuItem>
                 ))}
-              <MenuItem onClick={onGoToManageWallet}>Manage Accounts</MenuItem>
+              <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
               <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
             </Menu>
           </Box>

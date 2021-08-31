@@ -73,7 +73,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
     },
     matic: ethereum(network: matic) {
       address(address: {is: $address}) {
-        balances {
+        balances{
           currency {
             name
             symbol

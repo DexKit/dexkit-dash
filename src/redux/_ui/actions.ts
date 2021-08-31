@@ -18,6 +18,10 @@ export const setDefaultAccount = createAction<{account: UIAccount, type: Support
 
 export const setAccount = createAction<{account: UIAccount, type: SupportedNetworkType}>('ui/ACCOUNT_set');
 
+export const setShowAccounts = createAction<boolean>(
+  'ui/ACCOUNTS_set_show_accounts',
+);
+
 export const removeAccount = createAction<{account: UIAccount, type: SupportedNetworkType}>('ui/ACCOUNT_remove');
 
 type FavoriteCoin = Token & CoinDetailCoinGecko;

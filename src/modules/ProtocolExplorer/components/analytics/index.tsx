@@ -47,7 +47,7 @@ export const Analytics = (props: Props) => {
                 <AnalyticsAmountCard
                   isLoading={loading}
                   icon={<GraphIcon />}
-                  amount={loading ? '-' : (tokenMarket?.trades || '-')}
+                  amount={loading ? '-' : tokenMarket?.trades ? String(tokenMarket?.trades) : '-'}
                   caption={'Total Trades (24h)'}
                 />
               </Grid>
@@ -55,7 +55,7 @@ export const Analytics = (props: Props) => {
                 <AnalyticsAmountCard
                   isLoading={loading}
                   icon={<PresentationChartIcon />}
-                  amount={ loading ? '-' : (tokenMarket?.volume24Base || '-')}
+                  amount={ loading ? '-' : tokenMarket?.volume24Base ? String(tokenMarket?.volume24Base.toFixed(4)) : '-'}
                   caption={`Amount ${token ? token.symbol?.toUpperCase() : ''} (24h)`}
                 />
               </Grid>

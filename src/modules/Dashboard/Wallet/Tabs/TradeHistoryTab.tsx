@@ -1,10 +1,23 @@
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TradeAllHistoryContainer from 'modules/History/TradeAllHistory/container';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useCallback} from 'react';
 import {useHistory} from 'react-router-dom';
 import NetworkChips from 'shared/components/NetworkChips';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+
+import {
+  Box,
+  Divider,
+  Drawer,
+  Grid,
+  Typography,
+  Chip,
+  IconButton,
+} from '@material-ui/core';
+
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+import Close from '@material-ui/icons/Close';
 
 type Props = {
   address?: string;
@@ -32,34 +45,78 @@ export const TradeHistoryTab = (props: Props) => {
     setNetworkName(net as EthereumNetwork);
   };
 
-  return (
+  const [showFilters, setShowFilters] = useState(false);
+
+  const handleToggleFilters = useCallback(() => {
+    setShowFilters((value) => !value);
+  }, []);
+
+  return address ? (
     <>
-      {address && (
-        <>
-          {enableNetworkChips && (
-            <NetworkChips
-              networkName={networkName}
-              onClick={onChangeNetwork}
-              enableAll={false}
-            />
-          )}
-          {token && (
+      <Drawer open={showFilters} anchor='right' onClose={handleToggleFilters}>
+        <Box p={4}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Box mb={2}>
+                <Grid container justify='space-between' alignItems='center'>
+                  <Grid item>
+                    <Grid container spacing={2} alignItems='center'>
+                      <Grid item>
+                        <FilterSearchIcon style={{}} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='body1'>Filter</Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <IconButton size='small' onClick={handleToggleFilters}>
+                      <Close />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography gutterBottom variant='body1'>
+                Network
+              </Typography>
+            </Grid>
+            {enableNetworkChips ? (
+              <Grid item xs={12}>
+                <NetworkChips
+                  networkName={networkName}
+                  onClick={onChangeNetwork}
+                  enableAll={false}
+                />
+              </Grid>
+            ) : null}
+          </Grid>
+        </Box>
+      </Drawer>
+      <Grid container spacing={4}>
+        {token ? (
+          <Grid item xs={12}>
             <TradeHistoryContainer
               address={address}
               token={token}
               networkName={networkName}
             />
-          )}
-          {!token && (
+          </Grid>
+        ) : null}
+        {!token ? (
+          <Grid item xs={12}>
             <TradeAllHistoryContainer
               address={address}
               networkName={networkName}
             />
-          )}
-        </>
-      )}
-
-      {!address && <NoWallet />}
+          </Grid>
+        ) : null}
+      </Grid>
     </>
+  ) : (
+    <NoWallet />
   );
 };

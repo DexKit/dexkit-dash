@@ -12,6 +12,7 @@ import {
   setAccountLabel,
   setUserEncryptedSeed,
   initWallet,
+  setShowAccounts,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {  Network, WalletType, SupportedNetworkType } from 'types/blockchain';
@@ -39,6 +40,7 @@ export interface UIState {
     readonly favoriteCoins: FavoriteCoin[];
     readonly encryptedSeed?: string;
     readonly wallet: Wallet
+    readonly showAccounts: boolean;
 }
 
 export const WALLET_INIT_STATE: Wallet = {
@@ -53,7 +55,8 @@ export const WALLET_INIT_STATE: Wallet = {
 
 const initialUIState: UIState = {
   favoriteCoins: [],
-  wallet: WALLET_INIT_STATE
+  wallet: WALLET_INIT_STATE,
+  showAccounts: false,
 };
 
 export default createReducer(initialUIState, (builder) =>
@@ -116,6 +119,11 @@ export default createReducer(initialUIState, (builder) =>
           state.wallet[type].push(acc);
         }
       });
+    })
+    .addCase(setShowAccounts, (state, action) => {
+      let value = action.payload;
+
+      state.showAccounts = value;
     })
     .addCase(removeFavoriteCoin, (state, action) => {
       const token = action.payload;

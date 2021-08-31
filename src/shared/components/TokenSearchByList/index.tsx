@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import Web3 from 'web3';
-import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 // import {searchByAddress} from 'services/graphql/bitquery';
 import {ChainId} from 'types/blockchain';

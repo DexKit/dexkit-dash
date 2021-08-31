@@ -5,8 +5,8 @@ import {
   Box,
   Typography,
   Button,
-  Card,
-  CardContent,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
@@ -36,7 +36,6 @@ import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
 import {TransferTab} from './Tabs/TransfersTab';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
@@ -54,8 +53,8 @@ const WalletTabs: React.FC<Props> = (props) => {
   } = props;
   const {account: urlAccount} = params;
   const history = useHistory();
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-  const classes = useStyles(theme);
+  const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
+  const classes = useStyles(cremaTheme);
   const defaultAccount = useDefaultAccount();
   const defaultLabel = useDefaultLabelAccount();
   const dispatch = useDispatch();
@@ -67,7 +66,6 @@ const WalletTabs: React.FC<Props> = (props) => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
     history.push({search: searchParams.toString()});
-
     setValue(newValue);
   };
   const {loading, error, data} = useAllBalance(defaultAccount);
@@ -97,6 +95,9 @@ const WalletTabs: React.FC<Props> = (props) => {
 
   const favoritesWithMarket = useFavoritesWithMarket();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
       <TabContext value={value}>
@@ -118,130 +119,97 @@ const WalletTabs: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={5}>
-                  <Card>
-                    <CardContent>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            alignItems='center'
-                            justify='space-between'>
-                            <Grid item>
-                              <Typography variant='body1'>Groups</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Button endIcon={<KeyboardArrowRightIcon />}>
-                                View more
-                              </Button>
-                            </Grid>
-                          </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        justify='space-between'>
+                        <Grid item>
+                          <Typography variant='body1' style={{fontWeight: 600}}>
+                            Favorites
+                          </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                          <TokensGroupActionButton
-                            title='Explorer'
-                            subtitle='lorem ipsum indolor'
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TokensGroupActionButton
-                            title='Explorer'
-                            subtitle='lorem ipsum indolor'
-                          />
+                        <Grid item>
+                          <Button
+                            to='/dashboard/favorite-coins'
+                            component={RouterLink}
+                            size='small'
+                            endIcon={<KeyboardArrowRightIcon />}>
+                            View more
+                          </Button>
                         </Grid>
                       </Grid>
-                    </CardContent>
-                  </Card>
+                    </Grid>
+                    <Grid item xs={12}>
+                      {favoritesWithMarket.loading ? (
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TokenListItemSkeleton />
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        favoritesWithMarket.data.map((favorite, index) => (
+                          <TokenListItem
+                            key={index}
+                            address={favorite.coin.address}
+                            dayChange={
+                              favorite.market.price_change_percentage_24h || 0
+                            }
+                            amount={favorite.market.current_price}
+                            symbol={favorite.coin.symbol}
+                            name={favorite.coin.name}
+                            network={favorite.coin?.networkName || ''}
+                          />
+                        ))
+                      )}
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={7}>
-                  <Card>
-                    <CardContent>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            alignItems='center'
-                            justify='space-between'>
-                            <Grid item>
-                              <Typography variant='body1'>Favorites</Typography>
-                            </Grid>
-                            <Grid item>
-                              <Button
-                                to='/favorite-coins'
-                                component={RouterLink}
-                                size='small'
-                                endIcon={<KeyboardArrowRightIcon />}>
-                                View more
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                          {favoritesWithMarket.loading ? (
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                            </Grid>
-                          ) : (
-                            favoritesWithMarket.data.map((favorite) => (
-                              <TokenListItem
-                                address={favorite.coin.address}
-                                dayChange={
-                                  favorite.market.price_change_percentage_24h ||
-                                  0
-                                }
-                                amount={favorite.market.current_price}
-                                symbol={favorite.coin.symbol}
-                                name={favorite.coin.name}
-                                network={favorite.coin?.networkName || ''}
-                              />
-                            ))
-                          )}
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                <Grid item xs={12} sm={8}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={isMobile ? 12 : undefined}>
+                      <CustomTabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='standard'
+                        TabIndicatorProps={{
+                          style: {display: 'none'},
+                        }}
+                        aria-label='wallet tabs'>
+                        <CustomTab value='assets' label={'Assets'} />
+                        <CustomTab value='trade-history' label={'History'} />
+                      </CustomTabs>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TabPanel className={classes.zeroPadding} value='assets'>
+                        <AssetTableTab
+                          account={account as string}
+                          loading={loading}
+                          error={error}
+                          data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel value='transfers'>
+                        <TransferTab address={defaultAccount} />
+                      </TabPanel>
+                      <TabPanel value='trade-history'>
+                        <TradeHistoryTab address={defaultAccount} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item>
-              <CustomTabs
-                value={value}
-                onChange={handleChange}
-                variant='standard'
-                TabIndicatorProps={{
-                  style: {display: 'none'},
-                }}
-                aria-label='wallet tabs'>
-                <CustomTab value='assets' label={'Assets'} />
-                <CustomTab value='trade-history' label={'History'} />
-              </CustomTabs>
-            </Grid>
-            <Grid item xs={12}>
-              <TabPanel value='assets'>
-                <AssetTableTab
-                  account={account as string}
-                  loading={loading}
-                  error={error}
-                  data={data}
-                />
-              </TabPanel>
-              <TabPanel value='transfers'>
-                <TransferTab address={defaultAccount} />
-              </TabPanel>
-              <TabPanel value='trade-history'>
-                <TradeHistoryTab address={defaultAccount} />
-              </TabPanel>
             </Grid>
           </Grid>
         </Box>

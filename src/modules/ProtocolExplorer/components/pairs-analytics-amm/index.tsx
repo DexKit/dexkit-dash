@@ -98,7 +98,7 @@ export const PairAnalyticsAMM = (props: Props) => {
             <AnalyticsAmountCard
               isLoading={loading}
               icon={<GraphIcon />}
-              amount={data?.trades || '-'}
+              amount={loading ? '-' : data?.trades ? String(data?.trades) : '-'}
               caption={'Total Trades (24h)'}
             />
           </Grid>

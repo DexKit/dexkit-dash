@@ -6,17 +6,11 @@ import {
   CoinListItemCoingecko,
 } from 'types/coingecko';
 
-
-const COINS_ID = ['ethereum' ,' binancecoin' ,'matic-network'];
+const COINS_ID = ['ethereum', ' binancecoin', 'matic-network'];
 
 const getCoinsIdForAPI = () => {
-  return `${COINS_ID.reduce(
-    (p, c) => `${p},${c}`,
-    '',
-  )}`
-}
-
-
+  return `${COINS_ID.reduce((p, c) => `${p},${c}`, '')}`;
+};
 
 const coinGecko = axios.create({
   baseURL: COINGECKO_URL,
@@ -90,16 +84,19 @@ export async function getTokens(
   }
 
   const geckoData = coingeckoIdTokens
-    .filter((c) => c.platforms.ethereum || c.platforms['binance-smart-chain'] || c.platforms['polygon-pos'])
+    .filter(
+      (c) =>
+        c.platforms.ethereum ||
+        c.platforms['binance-smart-chain'] ||
+        c.platforms['polygon-pos'],
+    )
     .map((c) => {
       return {
         address_eth: c.platforms.ethereum?.toLowerCase() as string,
         address_bnb: c.platforms[
           'binance-smart-chain'
         ]?.toLowerCase() as string,
-        address_polygon: c.platforms[
-          'polygon-pos'
-        ]?.toLowerCase() as string,
+        address_polygon: c.platforms['polygon-pos']?.toLowerCase() as string,
         id: c.id,
         symbol: c.symbol,
       };
@@ -115,7 +112,10 @@ export async function getTokens(
         addresses.includes(a.address_bnb?.toLowerCase()) ||
         addresses.includes(a.address_polygon?.toLowerCase()),
     )
-    .map((a) => a.id);
+    .map((a) => a.id)
+    .concat(['ethereum', 'binancecoin', 'matic-network']);
+
+  const uniqueGeckoIds = [...new Set(geckoIds)];
 
   const geckoCoins = geckoData.filter(
     (a) =>
@@ -124,10 +124,8 @@ export async function getTokens(
       addresses.includes(a.address_polygon?.toLowerCase()),
   );
 
-  const concatId = `ethereum,binancecoin,${geckoIds.reduce(
-    (p, c) => `${p},${c}`,
-    '',
-  )}`;
+  const concatId = `${uniqueGeckoIds.reduce((p, c) => `${p},${c}`)}`;
+
   const coinsUsd = await getCoinsData(concatId);
   //const coinsNative = await getCoinsData(concatId, 'eth');
 
@@ -152,7 +150,7 @@ export async function getTokens(
       address_polygon: 'matic',
       id: 'matic-network',
       symbol: 'MATIC',
-    })  ;
+    });
 
   return allCoins.reduce<any>((acc, current) => {
     const address_eth = current.address_eth;
@@ -181,15 +179,17 @@ export async function getTokenCoingeckoItemList(
   }
 
   const geckoData = coingeckoIdTokens.filter(
-    (c) => c.platforms.ethereum || c.platforms['binance-smart-chain'] || c.platforms['polygon-pos'],
+    (c) =>
+      c.platforms.ethereum ||
+      c.platforms['binance-smart-chain'] ||
+      c.platforms['polygon-pos'],
   );
   const findToken = geckoData.find(
     (c) =>
       c?.platforms?.ethereum?.toLowerCase() === address.toLowerCase() ||
       c?.platforms['binance-smart-chain']?.toLowerCase() ===
         address.toLowerCase() ||
-        c?.platforms['polygon-pos']?.toLowerCase() ===
-        address.toLowerCase(),
+      c?.platforms['polygon-pos']?.toLowerCase() === address.toLowerCase(),
   );
   if (findToken) {
     return findToken;
@@ -201,7 +201,7 @@ export async function getTokenCoingeckoItemList(
 export async function getTokensById(
   ids: string[],
 ): Promise<CoinItemCoinGecko[]> {
-  const concatId = `ethereum,binancecoin,matic-network,${ids.reduce(
+  const concatId = `ethereum,binancecoin,matic-network${ids.reduce(
     (p, c) => `${p},${c}`,
     '',
   )}`;
