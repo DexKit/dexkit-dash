@@ -1,3 +1,4 @@
+import React from 'react';
 import {BigNumber} from 'ethers';
 import {Game} from 'types/coinsleague';
 import {AbortGame} from '../../components/Abort/Abort';

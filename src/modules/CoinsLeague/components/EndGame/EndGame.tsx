@@ -1,3 +1,4 @@
+import React from 'react';
 import {BigNumber} from 'ethers';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 

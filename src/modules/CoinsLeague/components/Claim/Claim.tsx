@@ -1,3 +1,4 @@
+import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 

@@ -16,6 +16,7 @@ export enum ChainId {
   Binance = 56,
   BinanceTest = 97,
   Matic = 137,
+  Mumbai = 80001,
 }
 
 export enum Web3State {

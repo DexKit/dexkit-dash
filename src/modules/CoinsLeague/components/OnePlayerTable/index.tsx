@@ -112,7 +112,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               </TableCell>
             </TableRow>
           )}
-          {props.data.map((row, i) => (
+          {props?.data?.map((row, i) => (
             <TableRow>
               <TableCell className={classes.noBorder}>
                 <Typography style={{color: '#fff'}}>

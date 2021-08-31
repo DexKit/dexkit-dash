@@ -1,3 +1,4 @@
+import React from 'react';
 import {MumbaiPriceFeeds} from 'modules/CoinsLeague/constants';
 import {useState} from 'react';
 import {CoinFeed} from 'types/coinsleague';

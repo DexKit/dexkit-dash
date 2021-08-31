@@ -1,3 +1,4 @@
+import React from 'react';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 
 interface Props {

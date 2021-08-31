@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
-import Modal from '@material-ui/core/Modal';
+import Modal, { ModalProps } from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import Divider from '@material-ui/core/Divider';
@@ -66,9 +66,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {}
+interface Props {};
 
-function CreateGameModal(props: Props): JSX.Element {
+const CreateGameModal = (props: Props) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(true);
@@ -177,9 +177,16 @@ function CreateGameModal(props: Props): JSX.Element {
                 inputProps={{
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -200,9 +207,15 @@ function CreateGameModal(props: Props): JSX.Element {
                 }}
                 inputProps={{
                   style: {color: '#fff', backgroundColor: '#3C4255'},
-                }}>
-                <MenuItem value={1}>1</MenuItem>
+                }}>  
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>

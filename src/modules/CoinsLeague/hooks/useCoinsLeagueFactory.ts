@@ -36,9 +36,9 @@ export const useCoinsLeagueFactory = () => {
     }
     getGamesAddressFromFactory(
       COINS_LEAGUE_FACTORY_ADDRESS['MUMBAI'],
-      0,
-      10,
+      50,
     ).then((a) => {
+      console.log(a);
       setGamesAddress(a[0]);
       setTotalGames(a[1]);
     });

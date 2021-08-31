@@ -3,8 +3,7 @@ import { useWeb3 } from "hooks/useWeb3";
 import { useCallback,  useEffect,  useState } from "react"
 
 import { Web3State } from "types/blockchain";
-import { Game } from "types/coinsleague";
-import { joinGame, startGame, endGame, withdrawGame, abortGame, getWinner } from "../services/coinsLeague";
+import { joinGame, startGame, endGame, withdrawGame, abortGame, getWinner, claim } from "../services/coinsLeague";
 
 /**
  * return all data related to game
@@ -35,7 +34,6 @@ export const useCoinsLeague = (address?: string) => {
         if(web3State !== Web3State.Done || !address){
             return;
         }
-
         const tx = await joinGame(address, feeds, amount);
         await tx.wait();
         alert('Game Joined');
@@ -45,7 +43,6 @@ export const useCoinsLeague = (address?: string) => {
         if(web3State !== Web3State.Done || !address){
             return;
         }
-
         const tx = await startGame(address);
         await tx.wait();
         alert('Game Joined');
@@ -64,7 +61,7 @@ export const useCoinsLeague = (address?: string) => {
         if(web3State !== Web3State.Done || !address){
             return;
         }
-        const tx = await endGame(address);
+        const tx = await claim(address);
         await tx.wait();
         alert('Game Joined');
     },[web3State, address])

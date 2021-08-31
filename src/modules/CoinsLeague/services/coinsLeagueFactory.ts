@@ -38,8 +38,7 @@ export const createGame = async (address: string, params: GameParams) => {
 
 export const getGamesAddressFromFactory = async (
   factoryAddress: string,
-  start: number,
-  end: number,
+  maxGames: number,
 ) => {
   const iface = new Interface(coinsLeagueFactoryAbi);
   const multicall = await getMulticall();
@@ -50,6 +49,8 @@ export const getGamesAddressFromFactory = async (
     function: 'totalGames',
   });
   const [, totalGames] = await multicall.multiCall(calls);
+  const start = totalGames[0].toNumber()-maxGames <= 0 ? 0 : totalGames[0].toNumber()-maxGames
+
   calls = [];
   calls.push({
     interface: iface,

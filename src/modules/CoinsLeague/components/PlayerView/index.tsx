@@ -1,3 +1,4 @@
+import React from 'react';
 import {Player} from 'types/coinsleague';
 import {CoinFeedView} from '../CoinFeed';
 interface Props {
