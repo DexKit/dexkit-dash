@@ -28,7 +28,7 @@ interface TokenSearchProps {
   filters?: Map<string, string>;
 }
 
-const LISTBOX_PADDING = 20; // px
+const LISTBOX_PADDING = 28; // px
 
 function useResetCache(data: any) {
   const ref = React.useRef<VariableSizeList>(null);
@@ -66,21 +66,18 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
       noSsr: true,
     });
     const itemCount = itemData.length;
-    const itemSize = smUp ? 40 : 58;
+    const itemSize = smUp ? 48 : 58;
 
     const getChildSize = (child: React.ReactNode) => {
       if (React.isValidElement(child) && child.type === ListSubheader) {
-        return 58;
+        return 68;
       }
 
       return itemSize;
     };
 
     const getHeight = () => {
-      if (itemCount > 8) {
-        return 8 * itemSize;
-      }
-      return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
+      return 68 * itemSize;
     };
 
     const gridRef = useResetCache(itemCount);
@@ -158,27 +155,42 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
       return `${option.name.slice(0, 8)} - ${option.symbol}`;
     }
   };
+
   const renderOption = (option: Token) => {
     return (
-      <Box display={'flex'} alignItems={'center'} mt={2} mb={2}>
-        <TokenLogo
-          token={option.address ?? option.symbol}
-          logoURL={option.logoURI}
-          network={option.networkName as EthereumNetwork}
-        />
-        <Typography component={'h6'} style={{marginLeft: '3px'}}>
-          {option.name} - {option.symbol.toUpperCase()}
-        </Typography>
-
-        <Box style={{marginLeft: '4px'}}>
-          <Chip
-            label={FORMAT_NETWORK_NAME(option.networkName as EthereumNetwork)}
-            color={'default'}
-          />
-        </Box>
+      <Box width='100%' display='block' py={4}>
+        <Grid container alignItems='center' spacing={4}>
+          <Grid item>
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='center '
+              alignContent='center'>
+              <TokenLogo
+                token={option.address ?? option.symbol}
+                logoURL={option.logoURI}
+                network={option.networkName as EthereumNetwork}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs>
+            <Typography variant='body1'>{option.name}</Typography>
+            <Typography color='textSecondary' variant='body2'>
+              {option.symbol.toUpperCase()}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Chip
+              size='small'
+              label={FORMAT_NETWORK_NAME(option.networkName as EthereumNetwork)}
+              color='default'
+            />
+          </Grid>
+        </Grid>
       </Box>
     );
   };
+
   useEffect(() => {
     if (!val && selectedTokenAddress) {
       const tk = findTokensInfoByAddress(

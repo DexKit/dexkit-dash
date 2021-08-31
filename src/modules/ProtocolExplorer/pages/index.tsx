@@ -181,7 +181,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 />
               )}
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={isMobile ? 12 : undefined}>
               {balances.data && <CoinTools balances={balances.data} />}
             </Grid>
           </Grid>
@@ -212,42 +212,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 Chart
               )}
             </Grid>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {balances.data && (
-              <CoinTools
-                balances={balances.data}
-                isFavorite={isFavorite(tokenInfo)}
-                onMakeFavorite={onMakeFavorite}
-              />
-            )}
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Paper className={classes.paper}>
-              <Analytics
-                token={tokenInfo}
-                tokenMarket={tokenMarket}
-                loading={loadingToken || loadingTokenMarket}
-              />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            {isMobile ? (
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ArrowDownIcon />}
-                  aria-controls='panel1a-content'
-                  id='panel1a-header'>
-                  <Typography>
-                    <GraphicsIcon /> Chart
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails> {Chart}</AccordionDetails>
-              </Accordion>
-            ) : (
-              Chart
-            )}
           </Grid>
           <Grid item xs={12} md={12}>
             <TokenFilterProvider>

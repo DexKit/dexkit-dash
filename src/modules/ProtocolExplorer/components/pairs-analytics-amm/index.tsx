@@ -17,10 +17,21 @@ import {useMobile} from 'hooks/useMobile';
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
-    overflowX: 'scroll',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+
+    [theme.breakpoints.down('sm')]: {
+      overflowY: 'hidden',
+      overflowX: 'scroll',
+      flexWrap: 'nowrap',
+      '&::-webkit-scrollbar': {
+        display: 'none',
+      },
+    },
   },
   item: {
-    padding: theme.spacing(2),
+    marginRight: theme.spacing(4),
+    objectFit: 'contain',
   },
 }));
 

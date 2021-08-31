@@ -301,7 +301,6 @@ const TotalBalance = (props: Props) => {
                             '$ -'
                           ) : (
                             <>
-                              <span className={classes.usdAmountSign}>$</span>
                               {amountsVisible
                                 ? onlyTokenValueInUsd ||
                                   usdFormatter.format(usdAvailable)

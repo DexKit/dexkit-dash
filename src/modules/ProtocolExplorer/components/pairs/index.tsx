@@ -99,7 +99,6 @@ export const Pairs = (props: Props) => {
             selectedPair?.protocol,
           ) ? (
             <>
-              1
               <PairAnalyticsAMM
                 exchange={selectedPair?.exchange?.fullName as EXCHANGE}
                 address={selectedPair?.smartContract?.address.address as string}
@@ -110,7 +109,6 @@ export const Pairs = (props: Props) => {
           ) : (
             selectedPair && (
               <>
-                2
                 <PairAnalytics
                   exchange={selectedPair?.exchange?.fullName as EXCHANGE}
                   networkName={networkName}
