@@ -1,45 +1,29 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import {
   Box,
-  CardHeader,
-  ListItemIcon,
   Typography,
   useMediaQuery,
   Theme,
-  Menu,
-  MenuItem,
   Snackbar,
-  CardContent,
-  Breadcrumbs,
-  Link,
+  Chip,
 } from '@material-ui/core';
-import PageTitle from 'shared/components/PageTitle';
-import GridContainer from '@crema/core/GridContainer';
-import Card from '@material-ui/core/Card';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
+
+import {makeStyles} from '@material-ui/core/styles';
+import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+
 
 import {
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   Grid,
   Tooltip,
-  Divider,
-  Chip,
   Button,
 } from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import TextField from '@material-ui/core/TextField';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {Web3Wrapper} from '@0x/web3-wrapper';
@@ -49,28 +33,25 @@ import {
   setDefaultAccount,
   setAccountLabel,
 } from 'redux/_ui/actions';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+
 import {useWeb3} from 'hooks/useWeb3';
-import {green} from '@material-ui/core/colors';
-import HomeIcon from '@material-ui/icons/Home';
-import {AboutDialog} from './aboutDialog';
+
+
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
-import {Web3State} from 'types/blockchain';
+import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
 
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import ClearIcon from '@material-ui/icons/Clear';
-import {Fonts} from 'shared/constants/AppEnums';
-import {truncateAddress} from 'utils';
+
 import AccountListItem from './components/AccountListItem';
 import {Alert} from '@material-ui/lab';
-import {Link as RouterLink} from 'react-router-dom';
-import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
 import ContainedInput from 'shared/components/ContainedInput';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
+import AppContext from '@crema/utility/AppContext';
+
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -82,12 +63,9 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const Accounts = () => {
-  const classes = useStyles();
-  const theme = useTheme();
+  const {theme} = useContext<AppContextPropsType>(AppContext);
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
-  const [editLabel, setEditLabel] = useState<number | undefined>();
-  const [label, setLabel] = useState<string>();
   const [copyText, setCopyText] = useState('Copy to clipboard');
 
   const [anchorEl, setAnchorEl] = useState<Element>();
@@ -103,9 +81,8 @@ const Accounts = () => {
   );
 
   const dispatch = useDispatch();
-
-  const accounts = useSelector<AppState, AppState['ui']['accounts']>(
-    (state) => state.ui.accounts,
+  const wallet = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
   );
 
   const {web3State, onConnectWeb3, account} = useWeb3();
@@ -132,12 +109,16 @@ const Accounts = () => {
   const handleAddAccount = useCallback(() => {
     if (address && Web3Wrapper.isAddress(address)) {
       dispatch(
-        addAccounts([
+        addAccounts({accounts: [
           {
             address: address,
             label: address,
+            networkType: SupportedNetworkType.evm    
           },
-        ]),
+        ], type: SupportedNetworkType.evm    
+      }
+      
+      ),
       );
 
       setAddNew(false);
@@ -198,16 +179,18 @@ const Accounts = () => {
     [],
   );
 
-  const handleMakeDefault = useCallback(
-    (account: UIAccount) => {
-      dispatch(setDefaultAccount(account));
-    },
-    [dispatch, setDefaultAccount],
-  );
+  const handleMakeDefault = useCallback(() => {
+    if (selectedAccount) {
+      dispatch(setDefaultAccount({account: selectedAccount, type: SupportedNetworkType.evm}));
+    }
+
+    setAnchorEl(undefined);
+    setSelectedAccount(null);
+  }, [dispatch, setDefaultAccount, selectedAccount]);
 
   const handleRemove = useCallback(() => {
     if (selectedAccount) {
-      dispatch(removeAccount(selectedAccount));
+      dispatch(removeAccount({account: selectedAccount, type: SupportedNetworkType.evm}));
     }
 
     setAnchorEl(undefined);
@@ -250,11 +233,12 @@ const Accounts = () => {
   const handleLabelChange = useCallback(
     (account: UIAccount, newLabel: string) => {
       dispatch(
-        setAccountLabel({
+        setAccountLabel({account: {
           address: account.address,
           label: newLabel,
-        }),
-      );
+          networkType: account.networkType
+        }, type: SupportedNetworkType.evm}
+      ));
 
       setIsEditing(false);
       setSelectedAccount(null);
@@ -310,7 +294,7 @@ const Accounts = () => {
   // TODO: put a confirm modal before this
   const handleRemoveMultiple = useCallback(() => {
     for (let account of selectedAccounts) {
-      dispatch(removeAccount(account));
+      dispatch(removeAccount({account: account, type:SupportedNetworkType.evm}));
 
       let newAccounts = [...selectedAccounts];
 
@@ -403,7 +387,7 @@ const Accounts = () => {
             display='flex'
             justifyContent='space-between'
             alignItems='center'>
-            <Typography variant='body1'>{accounts.length} Accounts</Typography>
+            <Typography variant='body1'>{wallet[SupportedNetworkType.evm].length} Accounts</Typography>
 
             {selectActive ? (
               <Box>
@@ -433,7 +417,7 @@ const Accounts = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            {accounts.map((a, index: number) => (
+            {wallet[SupportedNetworkType.evm].map((a, index: number) => (
               <Grid item xs={12} key={index}>
                 <AccountListItem
                   account={a}

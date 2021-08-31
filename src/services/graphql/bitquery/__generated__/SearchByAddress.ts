@@ -3,21 +3,18 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {
-  Network,
-  SmartContractType,
-} from './../../../../../__generated__/globalTypes';
+import { Network, SmartContractType } from "./../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: SearchByAddress
 // ====================================================
 
 export interface SearchByAddress_search_subject_HederaAccount {
-  __typename: 'HederaAccount';
+  __typename: "HederaAccount";
 }
 
 export interface SearchByAddress_search_subject_Address {
-  __typename: 'Address';
+  __typename: "Address";
   /**
    * String address representation
    */
@@ -29,7 +26,7 @@ export interface SearchByAddress_search_subject_Address {
 }
 
 export interface SearchByAddress_search_subject_Currency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Currency symbol
    */
@@ -57,7 +54,7 @@ export interface SearchByAddress_search_subject_Currency {
 }
 
 export interface SearchByAddress_search_subject_SmartContract {
-  __typename: 'SmartContract';
+  __typename: "SmartContract";
   /**
    * String address representation
    */
@@ -77,22 +74,17 @@ export interface SearchByAddress_search_subject_SmartContract {
 }
 
 export interface SearchByAddress_search_subject_TransactionHash {
-  __typename: 'TransactionHash';
+  __typename: "TransactionHash";
   /**
    * Hash hex representation
    */
   hash: string;
 }
 
-export type SearchByAddress_search_subject =
-  | SearchByAddress_search_subject_HederaAccount
-  | SearchByAddress_search_subject_Address
-  | SearchByAddress_search_subject_Currency
-  | SearchByAddress_search_subject_SmartContract
-  | SearchByAddress_search_subject_TransactionHash;
+export type SearchByAddress_search_subject = SearchByAddress_search_subject_HederaAccount | SearchByAddress_search_subject_Address | SearchByAddress_search_subject_Currency | SearchByAddress_search_subject_SmartContract | SearchByAddress_search_subject_TransactionHash;
 
 export interface SearchByAddress_search {
-  __typename: 'Result';
+  __typename: "Result";
   /**
    * Subject in blockchain
    */

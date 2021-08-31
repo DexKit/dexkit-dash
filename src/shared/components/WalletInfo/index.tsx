@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   makeStyles,
@@ -9,7 +9,6 @@ import {
   Hidden,
   Typography,
   useTheme,
-  Divider,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -21,7 +20,7 @@ import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 import {useBalance} from 'hooks/balance/useBalance';
 import {tokenAmountInUnits} from 'utils/tokens';
-import {Web3State} from 'types/blockchain';
+import {SupportedNetworkType, Web3State} from 'types/blockchain';
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
 import {useHistory, useLocation} from 'react-router-dom';
@@ -37,7 +36,8 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {GreenSquare} from '../GreenSquare';
+import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { useNetwork } from 'hooks/useNetwork';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const networkName = useNetwork();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -121,11 +121,14 @@ const WalletInfo = (props: any) => {
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const defaultAccountLabel = useDefaultLabelAccount();
-  const connected =
-    web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
-  const accounts = useSelector<AppState, AppState['ui']['accounts']>(
-    (state) => state.ui.accounts,
+  const connected = useMemo(() => {
+    return  web3Account?.toLowerCase() === defaultAccount?.toLowerCase()
+  }, [ web3Account, defaultAccount ] );
+
+  const wallet = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
   );
+  const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
   const {data: balances} = useBalance(defaultAccount);
@@ -147,9 +150,9 @@ const WalletInfo = (props: any) => {
     history.push('/wallet/manage-accounts');
   };
 
-  const filteredBalances = balances?.filter(
-    (e) => e.currency?.symbol === 'ETH',
-  );
+  const filteredBalances = useMemo(() => balances?.filter(
+    (e) => e.currency?.symbol.toUpperCase() === 'ETH',
+  ),[balances]);
 
   let ethBalanceValue;
 
@@ -160,11 +163,13 @@ const WalletInfo = (props: any) => {
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
     if (pathname && pathname.indexOf('/wallet') === 1) {
-      // This is need because it was not changing the url and causing loop on update
       history.push(`/wallet/${a.address}`);
-      dispatch(setDefaultAccount(a));
+      // This is need because it was not changing the url and causing loop on update
+      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
+     
     } else {
-      dispatch(setDefaultAccount(a));
+      history.push(`/wallet/${a.address}`);
+      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     }
   };
 
@@ -206,7 +211,7 @@ const WalletInfo = (props: any) => {
                   {ethBalanceValue
                     ? ethBalanceValue.toFixed(4)
                     : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-                  ETH
+                  {FORMAT_NETWORK_NAME(networkName)}
                 </Typography>
               </Hidden>
             </Grid>

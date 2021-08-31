@@ -61,10 +61,10 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
       const newData = dataFn.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['makerTokenFn'] = makerToken;

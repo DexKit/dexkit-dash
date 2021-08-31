@@ -87,4 +87,12 @@ export const dashBoardConfigs = [
       },
     ],
   },
+  {
+    routes: [
+      {
+        path: '/create-wallet',
+        component: React.lazy(() => import('./Wallet/CreateWallet')),
+      },
+    ],
+  },
 ];

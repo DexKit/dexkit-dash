@@ -133,7 +133,6 @@ const OrderContent: React.FC<Props> = (props) => {
   const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
-  const [initGasPrice, setInitGastPrice] = useState<number | undefined>();
   const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isPriceInverted, setIsPriceInverted] = useState<boolean>(false);

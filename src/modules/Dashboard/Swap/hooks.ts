@@ -27,16 +27,16 @@ export function useSwapTransactions() {
       const newTx = {...tx, status};
       dispatch(swapUpdateTransaction(newTx));
     },
-    [transactions],
+    [transactions, dispatch],
   );
 
   const clear = useCallback(() => {
     dispatch(swapClearTransactions());
-  }, []);
+  }, [dispatch]);
 
   const remove = useCallback((id: string) => {
     dispatch(swapRemoveTransaction(id));
-  }, []);
+  }, [dispatch]);
 
   return {
     transactions: transactions || [],

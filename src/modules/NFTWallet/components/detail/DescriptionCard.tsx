@@ -186,13 +186,14 @@ export default (props: Props) => {
                   {isAssetOwner(asset, userAccountAddress || '') ? (
                     <>
                       <Grid item>
-                        <IconButton onClick={onTransfer}>
+                        <IconButton onClick={onTransfer}  className={classes.actionButton}>
                           <MoneySendIcon />
                         </IconButton>
                       </Grid>
                       <Grid item>
                         <IconButton
                           component={RouterLink}
+                          className={classes.actionButton}
                           to={`/nfts/assets/${asset?.asset_contract?.address}/${asset?.token_id}/sell`}
                           color='primary'>
                           <DollarCircleIcon />

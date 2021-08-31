@@ -6,6 +6,9 @@ export const ETH_SYMBOL_URL =
 export const BINANCE_SYMBOL_URL =
   'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
 
+export const MATIC_SYMBOL_URL =
+  'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
+
 export const COINS: Coin[] = [
   {
     name: 'Bitcoin',

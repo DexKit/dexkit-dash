@@ -33,7 +33,7 @@ export const Analytics = (props: Props) => {
       <Grid item xs={12}>
         <Typography variant='h6'>Overall Analytics</Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6}>
             <AnalyticsAmountCard

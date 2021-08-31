@@ -3,19 +3,19 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetTokenExplorer
 // ====================================================
 
 export interface GetTokenExplorer_ethereum_data24_timeInterval {
-  __typename: 'TimeInterval';
+  __typename: "TimeInterval";
   day: string;
 }
 
 export interface GetTokenExplorer_ethereum_data24_baseCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Currency name
    */
@@ -35,7 +35,7 @@ export interface GetTokenExplorer_ethereum_data24_baseCurrency {
 }
 
 export interface GetTokenExplorer_ethereum_data24_quoteCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Currency name
    */
@@ -55,7 +55,7 @@ export interface GetTokenExplorer_ethereum_data24_quoteCurrency {
 }
 
 export interface GetTokenExplorer_ethereum_data24 {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   /**
    * Time interval
    */
@@ -83,7 +83,7 @@ export interface GetTokenExplorer_ethereum_data24 {
 }
 
 export interface GetTokenExplorer_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

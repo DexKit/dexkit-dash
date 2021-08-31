@@ -31,6 +31,29 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
     if (item.url === location.pathname) {
       return true;
     }
+    //TODO: special case for the Wallet path
+    if (item.url && location.pathname) {
+      // parsing the url's here
+      const parsedPath = item.url.split('/').filter((e) => e);
+      const currentPath = location.pathname.split('/').filter((e) => e);
+      if(currentPath.length > 1 && currentPath[0] === 'wallet' && parsedPath.length > 0 && parsedPath[0] === 'wallet'){
+        return true
+      }
+    
+    }
+
+     //TODO: special case for the Explorer path
+     if (item.url && location.pathname) {
+      // parsing the url's here
+      const parsedPath = item.url.split('/').filter((e) => e);
+      const currentPath = location.pathname.split('/').filter((e) => e);
+      if(currentPath.length > 1 && currentPath[0] === 'explorer' && parsedPath.length > 0 && parsedPath[0] === 'explorer'){
+        return true
+      }
+    
+    }
+
+
     if (item.url && location.pathname) {
       // parsing the url's here
       const parsedPath = item.url.split('/').filter((e) => e);

@@ -295,8 +295,10 @@ const TotalBalance = (props: Props) => {
                           </Box>
                         </Typography>
                         <Typography className={classes.usdAmount}>
-                          {loading || usdAvailable === 0 ? (
+                          {loading ? (
                             <Skeleton />
+                          ) : balances.length === 0 ? (
+                            '$ -'
                           ) : (
                             <>
                               <span className={classes.usdAmountSign}>$</span>

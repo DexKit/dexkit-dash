@@ -3,23 +3,14 @@ import {Link as RouterLink} from 'react-router-dom';
 import {
   Grid,
   Box,
-  Tabs,
-  Paper,
-  Tab,
   Typography,
-  Link,
-  Tooltip,
   Button,
-  Card,
-  CardContent,
-  Backdrop,
   useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-
-import GridContainer from '@crema/core/GridContainer';
 
 import {useIntl} from 'react-intl';
 
@@ -32,6 +23,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
+import {SupportedNetworkType} from 'types/blockchain';
 import AppContextPropsType from 'types/AppContextPropsType';
 import AppContext from '@crema/utility/AppContext';
 import {useStyles} from './index.style';
@@ -42,17 +34,11 @@ import TabPanel from '@material-ui/lab/TabPanel';
 import {AssetTableTab} from './Tabs/AssetTableTab';
 import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
 import {TransferTab} from './Tabs/TransfersTab';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {TokensGroupActionButton} from 'shared/components/TokensGroupActionButton';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
-import TokenCard from 'shared/components/TokenCard';
-import TokenLogo from 'shared/components/TokenLogo';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 
 type Params = {
   account: string;
@@ -80,7 +66,6 @@ const WalletTabs: React.FC<Props> = (props) => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
     history.push({search: searchParams.toString()});
-
     setValue(newValue);
   };
   const {loading, error, data} = useAllBalance(defaultAccount);
@@ -92,7 +77,16 @@ const WalletTabs: React.FC<Props> = (props) => {
       defaultAccount !== urlAccount
     ) {
       history.push(`/wallet/${urlAccount}`);
-      dispatch(setDefaultAccount({address: urlAccount, label: urlAccount}));
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: urlAccount,
+            label: urlAccount,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
     }
     if (!urlAccount && defaultAccount) {
       history.push(`/wallet/${defaultAccount}`);

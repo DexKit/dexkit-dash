@@ -19,6 +19,7 @@ import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
 import {AppState} from 'redux/store';
 import ReceiveAddressMenuItem from './ReceiveAddressMenuItem';
+import { SupportedNetworkType } from 'types/blockchain';
 
 interface Props {
   coin?: ChangellyCoin;
@@ -31,7 +32,7 @@ export const ReceiveAddressInput = (props: Props) => {
   const {address, coin, onChange, onPaste} = props;
   const theme = useTheme();
 
-  const {accounts} = useSelector<AppState, AppState['ui']>((state) => state.ui);
+  const {wallet} = useSelector<AppState, AppState['ui']>((state) => state.ui);
 
   const [isAddressValid, setIsAddressValid] = useState(false);
 
@@ -89,7 +90,7 @@ export const ReceiveAddressInput = (props: Props) => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleCloseMenu}>
-        {accounts.map((account: UIAccount, index: number) => (
+        {wallet[SupportedNetworkType.evm].map((account: UIAccount, index: number) => (
           <ReceiveAddressMenuItem
             key={index}
             label={account.label}
@@ -99,7 +100,7 @@ export const ReceiveAddressInput = (props: Props) => {
         ))}
       </Menu>
     ),
-    [anchorEl, handleCloseMenu, accounts, onPaste],
+    [anchorEl, handleCloseMenu, wallet[SupportedNetworkType.evm], onPaste],
   );
 
   useEffect(() => {

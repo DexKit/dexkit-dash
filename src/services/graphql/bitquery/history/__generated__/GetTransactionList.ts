@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetTransactionList
 // ====================================================
 
 export interface GetTransactionList_ethereum_sender_block_timestamp {
-  __typename: 'DateTime';
+  __typename: "DateTime";
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -22,7 +22,7 @@ export interface GetTransactionList_ethereum_sender_block_timestamp {
 }
 
 export interface GetTransactionList_ethereum_sender_block {
-  __typename: 'Block';
+  __typename: "Block";
   /**
    * Block timestamp
    */
@@ -34,7 +34,7 @@ export interface GetTransactionList_ethereum_sender_block {
 }
 
 export interface GetTransactionList_ethereum_sender_sender {
-  __typename: 'EthereumAddressInfo';
+  __typename: "EthereumAddressInfo";
   /**
    * String address representation
    */
@@ -46,7 +46,7 @@ export interface GetTransactionList_ethereum_sender_sender {
 }
 
 export interface GetTransactionList_ethereum_sender_receiver {
-  __typename: 'EthereumAddressInfo';
+  __typename: "EthereumAddressInfo";
   /**
    * String address representation
    */
@@ -58,7 +58,7 @@ export interface GetTransactionList_ethereum_sender_receiver {
 }
 
 export interface GetTransactionList_ethereum_sender_currency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -78,7 +78,7 @@ export interface GetTransactionList_ethereum_sender_currency {
 }
 
 export interface GetTransactionList_ethereum_sender_transaction {
-  __typename: 'EthereumTransactionInfo';
+  __typename: "EthereumTransactionInfo";
   /**
    * Hash hex representation
    */
@@ -86,7 +86,7 @@ export interface GetTransactionList_ethereum_sender_transaction {
 }
 
 export interface GetTransactionList_ethereum_sender {
-  __typename: 'EthereumTransfers';
+  __typename: "EthereumTransfers";
   /**
    * Block where transfer transaction is included
    */
@@ -116,7 +116,7 @@ export interface GetTransactionList_ethereum_sender {
 }
 
 export interface GetTransactionList_ethereum_receiver_block_timestamp {
-  __typename: 'DateTime';
+  __typename: "DateTime";
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -124,7 +124,7 @@ export interface GetTransactionList_ethereum_receiver_block_timestamp {
 }
 
 export interface GetTransactionList_ethereum_receiver_block {
-  __typename: 'Block';
+  __typename: "Block";
   /**
    * Block timestamp
    */
@@ -136,7 +136,7 @@ export interface GetTransactionList_ethereum_receiver_block {
 }
 
 export interface GetTransactionList_ethereum_receiver_sender {
-  __typename: 'EthereumAddressInfo';
+  __typename: "EthereumAddressInfo";
   /**
    * String address representation
    */
@@ -148,7 +148,7 @@ export interface GetTransactionList_ethereum_receiver_sender {
 }
 
 export interface GetTransactionList_ethereum_receiver_receiver {
-  __typename: 'EthereumAddressInfo';
+  __typename: "EthereumAddressInfo";
   /**
    * String address representation
    */
@@ -160,7 +160,7 @@ export interface GetTransactionList_ethereum_receiver_receiver {
 }
 
 export interface GetTransactionList_ethereum_receiver_currency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -180,7 +180,7 @@ export interface GetTransactionList_ethereum_receiver_currency {
 }
 
 export interface GetTransactionList_ethereum_receiver_transaction {
-  __typename: 'EthereumTransactionInfo';
+  __typename: "EthereumTransactionInfo";
   /**
    * Hash hex representation
    */
@@ -188,7 +188,7 @@ export interface GetTransactionList_ethereum_receiver_transaction {
 }
 
 export interface GetTransactionList_ethereum_receiver {
-  __typename: 'EthereumTransfers';
+  __typename: "EthereumTransfers";
   /**
    * Block where transfer transaction is included
    */
@@ -218,17 +218,17 @@ export interface GetTransactionList_ethereum_receiver {
 }
 
 export interface GetTransactionList_ethereum_receiverCount {
-  __typename: 'EthereumTransfers';
+  __typename: "EthereumTransfers";
   count: number | null;
 }
 
 export interface GetTransactionList_ethereum_senderCount {
-  __typename: 'EthereumTransfers';
+  __typename: "EthereumTransfers";
   count: number | null;
 }
 
 export interface GetTransactionList_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Currency Transfers
    */

@@ -8,5 +8,6 @@ export interface CoinListItemCoingecko {
   platforms: {
     ethereum: string | null;
     'binance-smart-chain': string | null;
+    'polygon-pos': string | null;
   };
 }

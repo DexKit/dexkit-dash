@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Button, ButtonProps, makeStyles} from '@material-ui/core';
 import transakSDK from '@transak/transak-sdk';
 import {useWeb3} from 'hooks/useWeb3';
-import {ReactComponent as Mastercard} from '../../../assets/images/mastercard.svg';
 import styled from 'styled-components';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
@@ -16,48 +15,9 @@ interface StyleProps {
   height: string;
 }
 
-interface DefaultProps {
-  styles?: StyleProps;
-}
-
-const IconContainer = styled.div<DefaultProps>`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin: 0 5px 0 5px;
-
-  svg {
-    height: ${(props) => props.style?.height};
-    width: ${(props) => props.style?.width};
-  }
-`;
 
 const Transak: React.FC<Props> = (props) => {
   const windowSize = useWindowSize();
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    btnPrimary: {
-      color: 'white',
-      borderColor: 'white',
-      fontFamily: Fonts.BOLD,
-      textTransform: 'capitalize',
-      width: 106,
-      fontSize: 16,
-      '&:hover, &:focus': {
-        // backgroundColor: theme.palette.primary.dark,
-        color: '#F15A2B',
-        borderColor: '#F15A2B',
-      },
-      lineHeight: '16px',
-      [theme.breakpoints.up('sm')]: {
-        lineHeight: '20px',
-      },
-      [theme.breakpoints.up('xl')]: {
-        lineHeight: '26px',
-      },
-    },
-  }));
-
-  const classes = useStyles();
 
   const {account} = useWeb3();
 

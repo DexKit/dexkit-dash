@@ -13,6 +13,7 @@ import {useTransak} from 'hooks/useTransak';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
+import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -88,7 +89,7 @@ interface Props {
 
 const CoinTools = (props: Props) => {
   const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
-
+ 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const networkName = useNetwork();
@@ -144,7 +145,8 @@ const CoinTools = (props: Props) => {
   const [showSender, setShowSender] = useState(false);
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
-
+  const [showTrade, setShowTrade] = useState(false);
+  
   const handleShowSender = useCallback(() => {
     setShowSender(true);
   }, []);
@@ -168,10 +170,14 @@ const CoinTools = (props: Props) => {
     setShowSwap(true);
   }, [init]);
 
-  const handleTrade = useCallback(() => {}, [init]);
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false);
   }, []);
 
   return (
@@ -180,6 +186,12 @@ const CoinTools = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop

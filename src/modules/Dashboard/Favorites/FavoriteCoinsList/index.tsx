@@ -34,8 +34,6 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   const history = useHistory();
 
   const handleClick = useCallback((network: string, address: string) => {
-    console.log(network, address);
-
     history.push(`/${network}/token/${address}`);
   }, []);
 
