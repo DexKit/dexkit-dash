@@ -31,7 +31,7 @@ function SimpleCardGame(props: Props): JSX.Element {
   const classes = useStyles();
 
   return (
-    <Container className={classes.container} maxWidth='xs'>
+    <Container className={classes.container}>
       <Grid container style={{color: '#7a8398'}}>
         <Typography variant='h6'>Game Time:</Typography>
         <Typography variant='h6' style={{fontWeight: 600}}>

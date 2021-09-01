@@ -33,13 +33,15 @@ function CardPrize(props: Props): JSX.Element {
   }).format(props.prizePool);
 
   return (
-    <Container className={classes.container} maxWidth='xs'>
+    <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
             Prize Pool
           </Typography>
-          <Typography variant='h4'>{value}</Typography>
+          <Typography variant='h4' style={{color: '#fff'}}>
+            {value}
+          </Typography>
         </Grid>
       </Grid>
     </Container>
