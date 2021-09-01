@@ -81,7 +81,7 @@ function CardGame(props: Props): JSX.Element {
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h5'>ID #{props.id}</Typography>
       <Grid container className={classes.innerContent}>
-        <Grid xs={6} item>
+        <Grid xs={5} item>
           <Typography
             variant='h6'
             style={{color: '#fcc591', alignItems: 'baseline'}}>
@@ -90,7 +90,7 @@ function CardGame(props: Props): JSX.Element {
           </Typography>
         </Grid>
         <Grid
-          xs={6}
+          xs={7}
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>

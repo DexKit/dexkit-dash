@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
-import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import Divider from '@material-ui/core/Divider';
@@ -82,7 +82,7 @@ function CreateGameModal(props: Props): JSX.Element {
   }
 
   return (
-    <Modal open={open}>
+    <Dialog open={open}>
       <Container className={classes.container} maxWidth='xs'>
         <Grid container style={{paddingLeft: 10, paddingRight: 5}}>
           <Grid item xs={11}>
@@ -246,7 +246,7 @@ function CreateGameModal(props: Props): JSX.Element {
           CREATE A GAME
         </Button>
       </Container>
-    </Modal>
+    </Dialog>
   );
 }
 
