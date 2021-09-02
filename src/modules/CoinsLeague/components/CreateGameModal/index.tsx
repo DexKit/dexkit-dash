@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
-import Modal, { ModalProps } from '@material-ui/core/Modal';
+import Modal, {ModalProps} from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import Divider from '@material-ui/core/Divider';
@@ -17,9 +17,11 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {makeStyles} from '@material-ui/core/styles';
-
+import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
-import TransferIcon from 'src/assets/images/icons/bitcoin-convert-white.svg';
+import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
+import {GameParams} from 'types/coinsleague';
+import {ethers} from 'ethers';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -66,20 +68,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {};
+interface Props {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
 
 const CreateGameModal = (props: Props) => {
   const classes = useStyles();
+  const {onGameCreateCallback} = useCoinsLeagueFactory();
 
-  const [open, setOpen] = useState(true);
+  const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
   const [gameType, setGameType] = useState('winner-game');
   const [entryAmount, setEntryAmount] = useState<number>();
+  const [duration, setGameDuration] = useState<number>();
   const [totalPlayers, setTotalPlayers] = useState<number>();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }
+  const onCreateGame = useCallback(
+    (ev?: any) => {
+      if (totalPlayers && entryAmount && duration && coins && gameType) {
+        const params: GameParams = {
+          numPlayers: totalPlayers,
+          duration,
+          amountUnit: ethers.utils.parseEther(String(entryAmount)),
+          numCoins: coins,
+          abortTimestamp: duration * 3,
+        };
+
+        onGameCreateCallback(params);
+      }
+    },
+    [coins, gameType, entryAmount, duration, totalPlayers],
+  );
 
   return (
     <Modal open={open}>
@@ -124,6 +147,7 @@ const CreateGameModal = (props: Props) => {
               size='small'
               inputMode='decimal'
               value={entryAmount}
+              onChange={(event) => setEntryAmount(Number(event.target.value))}
               inputProps={{
                 style: {
                   color: '#fff',
@@ -143,14 +167,17 @@ const CreateGameModal = (props: Props) => {
             <Select
               variant='outlined'
               placeholder='Select'
+              onChange={(event) => setGameDuration(Number(event.target.value))}
               style={{
                 color: '#fff',
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={10}>1 hr</MenuItem>
-              <MenuItem value={20}>2 hrs</MenuItem>
-              <MenuItem value={30}>3 hrs</MenuItem>
+              <MenuItem value={60 * 60}>1 hr</MenuItem>
+              <MenuItem value={4 * 60 * 60}>4 hrs</MenuItem>
+              <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>
+              <MenuItem value={24 * 60 * 60}>24 hrs</MenuItem>
+              <MenuItem value={7 * 24 * 60 * 60}>1 week</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -168,6 +195,7 @@ const CreateGameModal = (props: Props) => {
                 value={coins}
                 variant='outlined'
                 placeholder='Select'
+                onChange={(event) => setCoins(Number(event.target.value))}
                 style={{
                   marginRight: 5,
                   color: '#fff',
@@ -177,15 +205,7 @@ const CreateGameModal = (props: Props) => {
                 inputProps={{
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>
@@ -197,6 +217,9 @@ const CreateGameModal = (props: Props) => {
               </FormLabel>
               <Select
                 value={totalPlayers}
+                onChange={(event) =>
+                  setTotalPlayers(Number(event.target.value))
+                }
                 variant='outlined'
                 placeholder='Select'
                 style={{
@@ -207,15 +230,9 @@ const CreateGameModal = (props: Props) => {
                 }}
                 inputProps={{
                   style: {color: '#fff', backgroundColor: '#3C4255'},
-                }}>  
+                }}>
                 <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>
@@ -255,12 +272,13 @@ const CreateGameModal = (props: Props) => {
         <Button
           fullWidth
           className={classes.button}
+          onClick={onCreateGame}
           disabled={!!coins && !!entryAmount && !!totalPlayers}>
           CREATE A GAME
         </Button>
       </Container>
     </Modal>
   );
-}
+};
 
 export default CreateGameModal;

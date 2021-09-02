@@ -171,11 +171,9 @@ export const useWeb3 = () => {
       dispatch(setBlockNumber(blocknumber));
     });
 
-    /*provider.on("networkChanged", async (networkId: number) => {
-      const chainId = await web3.eth.chainId();
-      await this.setState({ chainId, networkId });
-      await this.getAccountAssets();
-    });*/
+    pr.on("networkChanged", async (networkId: number) => {
+      dispatch(setChainId(networkId));
+    });
   };
 
   return {

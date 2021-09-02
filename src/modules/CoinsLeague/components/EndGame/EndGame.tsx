@@ -14,7 +14,7 @@ export const EndGame = (props: Props) => {
   return (
     <section>
       <h1> End Game</h1>
-      <button onClick={onEndGameCallback}>End Game</button>
+      <button onClick={() => onEndGameCallback}>End Game</button>
       <p>
         Game will end at {new Date(timestamp.mul(1000).toNumber()).toString()}{' '}
       </p>

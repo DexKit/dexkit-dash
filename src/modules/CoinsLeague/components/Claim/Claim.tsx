@@ -16,7 +16,7 @@ export const ClaimGame = (props: Props) => {
       <h1>Claim Game</h1>
       {account && account.toLowerCase() === winner?.address.toLowerCase() ? (
         <>
-          {!winner.claimed && <button onClick={onClaimCallback}>Claim</button>}
+          {!winner.claimed && <button onClick={()=>onClaimCallback}>Claim</button>}
           <p>Place: {winner.place}</p>
           <p>Score: {winner.score.toString()}</p>
         </>

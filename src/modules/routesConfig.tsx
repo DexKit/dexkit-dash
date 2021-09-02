@@ -100,7 +100,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         {
           id: 'all',
           title: 'Coins League',
-          messageId: 'sidebar.protocols.coins-league',
+          messageId: 'sidebar.coin-league',
           type: 'item',
           customIcon: true,
           icon: 'buy.crypto',

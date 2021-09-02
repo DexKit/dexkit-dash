@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Button, Grid, Typography} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
@@ -6,16 +6,19 @@ import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFac
 import {ChainId} from 'types/blockchain';
 
 import {GameView} from '../GamesView';
+import CreateGameModal from 'modules/CoinsLeague/components/CreateGameModal';
 
 const GamesList = () => {
   const {chainId} = useWeb3();
+  const [open, setOpen] = useState(false);
   const {games, totalGames} = useCoinsLeagueFactory();
 
   return chainId ? (
     chainId === ChainId.Mumbai ? (
       <Grid container>
+        <CreateGameModal open={open} setOpen={setOpen}/>
          <Grid item xs={6}>
-            Games in Progress: games?.filter(g => g.started && !g.finished)
+            Games in Progress: {games?.filter(g => g.started && !g.finished).length}
 
          </Grid>
          <Grid item xs={6}>
@@ -39,7 +42,7 @@ const GamesList = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Button  fullWidth variant={'contained'}>
+            <Button  fullWidth variant={'contained'} onClick={()=> setOpen(true)}>
              {'CREATE GAME'}
             </Button>
           </Grid>

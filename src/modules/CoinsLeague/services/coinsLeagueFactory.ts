@@ -49,15 +49,16 @@ export const getGamesAddressFromFactory = async (
     function: 'totalGames',
   });
   const [, totalGames] = await multicall.multiCall(calls);
-  const start = totalGames[0].toNumber()-maxGames <= 0 ? 0 : totalGames[0].toNumber()-maxGames
+  const total = totalGames[0] ? totalGames[0].toNumber() : 0
+  const start = total-maxGames <= 0 ? 0 : total-maxGames
 
   calls = [];
   calls.push({
     interface: iface,
     target: factoryAddress,
     function: 'getGames',
-    args: [start, totalGames[0].toNumber()],
+    args: [start, maxGames],
   });
   const [, gamesAddress] = await multicall.multiCall(calls);
-  return [gamesAddress[0], totalGames[0].toNumber()];
+  return [gamesAddress[0], total];
 };

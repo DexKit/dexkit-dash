@@ -13,8 +13,8 @@ export const AbortGame = (props: Props) => {
   return (
     <div>
       <h1> Abort Game</h1>
-      <button onClick={onAbortGameCallback}>Abort</button>
-      <button onClick={onWithdrawCallback}>Withdraw</button>
+      <button onClick={() => onAbortGameCallback}>Abort</button>
+      <button onClick={() => onWithdrawCallback}>Withdraw</button>
     </div>
   );
 };

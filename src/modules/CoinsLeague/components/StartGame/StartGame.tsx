@@ -12,7 +12,7 @@ export const StartGame = (props: Props) => {
   return (
     <>
       <h1> Start Game</h1>
-      <button onClick={onStartGameCallback}>Start</button>
+      <button onClick={() => onStartGameCallback}>Start</button>
     </>
   );
 };
