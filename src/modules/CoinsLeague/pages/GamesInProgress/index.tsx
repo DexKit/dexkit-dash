@@ -14,6 +14,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import CardGame from '../../components/CardGame';
 
@@ -24,8 +25,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -33,8 +35,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -42,8 +45,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -51,8 +55,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -60,8 +65,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -69,8 +75,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -78,8 +85,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -87,8 +95,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -96,8 +105,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -105,8 +115,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -114,8 +125,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
 ];
 
@@ -129,6 +141,29 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     background: '#1F1D2B',
     border: '2px solid #2e3243',
+    '&:hover': {
+      background: '#2e3243',
+    },
+    '&:focus': {
+      background: '#2e3243',
+    },
+  },
+  btnFilter: {
+    order: 3,
+    [theme.breakpoints.only('xs')]: {
+      order: 2,
+    },
+  },
+  chipFilter: {
+    order: 2,
+    [theme.breakpoints.only('xs')]: {
+      order: 3,
+      margin: theme.spacing(1.5),
+    },
+  },
+  btnLoadMore: {
+    color: '#fff',
+    background: '#2e3243',
   },
 }));
 
@@ -140,42 +175,60 @@ function GamesInProgress() {
       <Grid container xs={12} xl={8} sm={8}>
         <Grid container>
           <Breadcrumbs
-            style={{color: '#fff', fontSize: '0.75rem'}}
+            style={{color: '#fff', fontSize: '0.8rem'}}
             separator={<NavigateNextIcon fontSize='small' />}>
             <Link color='inherit' href=''>
-              Dashboard
+              <Typography variant='subtitle2'>Dashboard</Typography>
             </Link>
             <Link color='inherit' href=''>
-              Games
+              <Typography variant='subtitle2'>Games</Typography>
             </Link>
-            <Typography color='textPrimary'>Games in progress</Typography>
+            <Typography variant='subtitle2' style={{color: '#2e3243'}}>
+              Games in progress
+            </Typography>
           </Breadcrumbs>
         </Grid>
-        <Grid container xs={10} xl={10} sm={10}>
-          <Typography variant='h4' style={{margin: 5}}>
-            <ArrowBackIcon /> Games in progress
+        <Grid container xs={12} xl={10} sm={10} alignContent='center'>
+          <Typography variant='h6' style={{margin: 5, fontWeight: 600}}>
+            <ArrowBackIcon
+              fontSize='small'
+              fontWeight={600}
+              style={{verticalAlign: 'text-top'}}
+            />
+            &nbsp;Games in progress
           </Typography>
         </Grid>
       </Grid>
       <Grid container>
-        <Grid container xs={6} style={{border: '1px solid #fff', margin: 5}}>
+        <Grid
+          container
+          sm={6}
+          xs={12}
+          style={{border: '1px solid #fff', margin: 5}}>
           <Typography>[ Search Component ]</Typography>
         </Grid>
       </Grid>
 
-      <Grid container>
-        <Grid container sm={3}>
+      <Grid container style={{order: -1}}>
+        <Grid container sm={3} xs={6}>
           <Grid item xs={12} sm={12}>
-            <Typography variant='h6'>21Games</Typography>
+            <Typography variant='h6'>{cardMock.length} Games</Typography>
           </Grid>
           <Grid item xs={12} sm={12}>
             <Typography gutterBottom>
-              Recently added &nbsp;
+              Recently added&nbsp;
               <ExpandMoreIcon fontSize='small' style={{verticalAlign: 'top'}} />
             </Typography>
           </Grid>
         </Grid>
-        <Grid container sm={6} spacing={1} justifyContent='center'>
+        <Grid
+          className={classes.chipFilter}
+          container
+          sm={6}
+          xs={12}
+          spacing={1}
+          justifyContent='center'
+          alignContent='center'>
           <Grid item>
             <Chip clickable className={classes.chip} label='All' />
           </Grid>
@@ -189,10 +242,18 @@ function GamesInProgress() {
             <Chip clickable className={classes.chip} label='24hrs' />
           </Grid>
         </Grid>
-        <Grid container sm={3} justifyContent='flex-end'>
-          <Button variant='text'>
-            <FilterListIcon style={{color: '#fff'}} />
-          </Button>
+        <Grid
+          container
+          xs={6}
+          sm={3}
+          className={classes.btnFilter}
+          justifyContent='flex-end'
+          alignContent='center'>
+          <Grid item>
+            <Button size='large' style={{background: '#2e3243'}}>
+              <FilterListIcon style={{color: '#fff'}} />
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -202,6 +263,18 @@ function GamesInProgress() {
             <CardGame {...card} />
           </Grid>
         ))}
+      </Grid>
+
+      <Grid
+        container
+        xs={12}
+        style={{paddingTop: 25, paddingBottom: 50}}
+        justifyContent='center'
+        alignContent='center'>
+        <Button className={classes.btnLoadMore} size='large'>
+          <ArrowDropDownIcon fontSize='large' />
+          <Typography variant='h6'>LOAD MORE</Typography>
+        </Button>
       </Grid>
     </Container>
   );
