@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import {useCallback, useMemo} from 'react';
 import {useQuery} from 'react-query';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
-import { toggleFavoriteCoin } from 'redux/_ui/actions';
+import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {getTokenById, getTokensById} from 'services/rest/coingecko';
-import { Token } from 'types/app';
+import {Token} from 'types/app';
 
 export function useFavoritesWithMarket() {
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
@@ -35,21 +35,23 @@ export function useFavoritesWithMarket() {
     {staleTime: 60 * 60},
   );
 
-  const isFavorite = useCallback((token?: {symbol: string}) => {
-    if (token) {
-      const favorite =  favoriteCoins.find(
-        (t) => t.symbol.toLowerCase() === token.symbol.toLowerCase(),
-      );
-      if(favorite){
-        return true;
-      }else{
+  const isFavorite = useCallback(
+    (token?: {symbol: string}) => {
+      if (token) {
+        const favorite = favoriteCoins.find(
+          (t) => t.symbol.toLowerCase() === token.symbol.toLowerCase(),
+        );
+        if (favorite) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
         return false;
       }
-
-    } else {
-      return false;
-    }
-  }, [favoriteCoins]);
+    },
+    [favoriteCoins],
+  );
 
   const onToggleFavorite = useCallback((token?: Token, id?: string) => {
     if (token && id) {
@@ -57,7 +59,7 @@ export function useFavoritesWithMarket() {
         dispatch(toggleFavoriteCoin({...token, ...tokenDetail}));
       });
     }
-  },[])
+  }, []);
 
   return {data: data || [], loading: isLoading, onToggleFavorite, isFavorite};
 }

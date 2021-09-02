@@ -4,7 +4,15 @@ import {useTokenList} from 'hooks/useTokenList';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {filterTokensInfoByString, findTokensInfoByAddress} from 'utils/tokens';
-import {Box, Chip, Grid, TextField, Typography} from '@material-ui/core';
+import {
+  Box,
+  Chip,
+  Grid,
+  TextField,
+  Typography,
+  useTheme,
+  makeStyles,
+} from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import GridContainer from '@crema/core/GridContainer';
 import {Token} from 'types/app';
@@ -102,6 +110,19 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
     );
   },
 );
+
+const useStyles = makeStyles((theme) => ({
+  input: {
+    backgroundColor: '#252836',
+    border: 'none !important',
+    borderWidth: 0,
+    color: '#7A8398',
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    fontWeight: 500,
+    fontStyle: 'normal',
+  },
+}));
 
 export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
   const {filters, onClick, selectedTokenAddress} = props;
@@ -252,6 +273,10 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
     }
     setSearchKey(key);
   };
+
+  const theme = useTheme();
+
+  const classes = useStyles();
 
   return (
     <GridContainer>

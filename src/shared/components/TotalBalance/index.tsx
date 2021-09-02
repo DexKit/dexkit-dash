@@ -264,7 +264,7 @@ const TotalBalance = (props: Props) => {
         {/* TODO: transform this in a dialog */}
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
-            <SwapComponent onClose={handleSwapClose} />
+            {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}
           </Grid>
         </Grid>
       </Backdrop>

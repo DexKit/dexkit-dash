@@ -13,7 +13,7 @@ import {useTransak} from 'hooks/useTransak';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
-import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -89,7 +89,7 @@ interface Props {
 
 const CoinTools = (props: Props) => {
   const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
- 
+
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const networkName = useNetwork();
@@ -146,7 +146,7 @@ const CoinTools = (props: Props) => {
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
   const [showTrade, setShowTrade] = useState(false);
-  
+
   const handleShowSender = useCallback(() => {
     setShowSender(true);
   }, []);
@@ -200,7 +200,7 @@ const CoinTools = (props: Props) => {
         onClick={handleSwapClose}>
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
-            <SwapComponent onClose={handleSwapClose} />
+            {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}
           </Grid>
         </Grid>
       </Backdrop>

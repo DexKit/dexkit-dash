@@ -20,7 +20,11 @@ import {
 import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
-import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL, MATIC_SYMBOL_URL} from 'shared/constants/Coins';
+import {
+  ETH_SYMBOL_URL,
+  BINANCE_SYMBOL_URL,
+  MATIC_SYMBOL_URL,
+} from 'shared/constants/Coins';
 
 interface Props {
   disableReceive?: boolean;
@@ -109,9 +113,9 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (networkName === EthereumNetwork.bsc) {
       setSelect1(tokensBSC);
-    } else if(networkName === EthereumNetwork.matic) {
+    } else if (networkName === EthereumNetwork.matic) {
       setSelect1(tokensMATIC);
-    }else{
+    } else {
       setSelect1(tokensETH);
     }
   }, [networkName, tokensETH, tokensBSC, tokensMATIC]);
@@ -309,7 +313,7 @@ const BuySell: React.FC<Props> = ({
           setTokenTo(token);
         }
 
-        history.push(isNative ? token.symbol.toLowerCase() : token.address);
+        // history.push(isNative ? token.symbol.toLowerCase() : token.address);
       }
     }
   };

@@ -34,7 +34,10 @@ export const MapBalancesToNetwork = (
   });
 };
 
-export const MapBalancesToUSDValue = (balances: any, usdValues: any): MyBalances[] => {
+export const MapBalancesToUSDValue = (
+  balances: any,
+  usdValues: any,
+): MyBalances[] => {
   if (!balances) {
     return [];
   }
@@ -67,7 +70,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           variables: {
             address: account,
           },
-          errorPolicy: 'none'
+          errorPolicy: 'none',
         })
         .then((balances) => {
           const tokensmeta_eth = balances.data.ethereum?.address[0].balances
@@ -94,30 +97,33 @@ export const useAllBalance = (defaultAccount?: string) => {
             .concat(tokensmeta_eth ?? [])
             .concat(tokensmeta_matic ?? []);
 
-         
           const allMyBalances = MapBalancesToNetwork(
             balances.data.ethereum?.address[0].balances,
             EthereumNetwork.ethereum,
             'eth',
           )
-            .concat(MapBalancesToNetwork(
-              balances.data.bsc?.address[0].balances,
-              EthereumNetwork.bsc,
-              'bnb',
-            ))
-            .concat(MapBalancesToNetwork(
-              balances.data.matic?.address[0].balances,
-              EthereumNetwork.matic,
-              'matic',
-            ));
+            .concat(
+              MapBalancesToNetwork(
+                balances.data.bsc?.address[0].balances,
+                EthereumNetwork.bsc,
+                'bnb',
+              ),
+            )
+            .concat(
+              MapBalancesToNetwork(
+                balances.data.matic?.address[0].balances,
+                EthereumNetwork.matic,
+                'matic',
+              ),
+            );
           setData(allMyBalances.filter((b) => b?.value && b?.value > 0) || []);
-        //  setMetaTokens(tokensmeta);
-          if(tokensmeta.length){
-            getTokens(tokensmeta).then((coingeckoList) => {
-              const tokensWithUSDValue = MapBalancesToUSDValue(allMyBalances, coingeckoList);
-              setData(tokensWithUSDValue.filter((b) => b?.value && b?.value > 0));
-            }).catch(e=> console.log('Error fetching USD'))
-          }
+          //  setMetaTokens(tokensmeta);
+          // if(tokensmeta.length){
+          //   getTokens(tokensmeta).then((coingeckoList) => {
+          //     const tokensWithUSDValue = MapBalancesToUSDValue(allMyBalances, coingeckoList);
+          //     setData(tokensWithUSDValue.filter((b) => b?.value && b?.value > 0));
+          //   }).catch(e=> console.log('Error fetching USD'))
+          // }
         })
         .catch((e) => {
           setError(e);
@@ -130,6 +136,6 @@ export const useAllBalance = (defaultAccount?: string) => {
       setData([]);
     }
   }, [account]);
-  
+
   return {loading, error, data};
 };
