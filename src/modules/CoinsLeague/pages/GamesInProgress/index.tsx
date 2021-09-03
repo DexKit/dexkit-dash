@@ -14,6 +14,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import CardGame from '../../components/CardGame';
 
@@ -24,8 +25,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -33,8 +35,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -42,8 +45,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -51,8 +55,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -60,8 +65,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -69,8 +75,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -78,8 +85,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -87,8 +95,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -96,8 +105,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -105,8 +115,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
   {
     id: 5345345224,
@@ -114,8 +125,9 @@ const cardMock = [
     coins: 60,
     startsIn: 123123123,
     prizePool: 1000,
-    entries: {in: 100, out: 200},
+    entries: {in: 10, out: 20},
     value: {qty: 1000, coin: 'ETH'},
+    btnMessage: 'VIEW',
   },
 ];
 
@@ -129,6 +141,29 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     background: '#1F1D2B',
     border: '2px solid #2e3243',
+    '&:hover': {
+      background: '#2e3243',
+    },
+    '&:focus': {
+      background: '#2e3243',
+    },
+  },
+  btnFilter: {
+    order: 3,
+    [theme.breakpoints.only('xs')]: {
+      order: 2,
+    },
+  },
+  chipFilter: {
+    order: 2,
+    [theme.breakpoints.only('xs')]: {
+      order: 3,
+      margin: theme.spacing(1.5),
+    },
+  },
+  btnLoadMore: {
+    color: '#fff',
+    background: '#2e3243',
   },
 }));
 
@@ -213,6 +248,18 @@ function GamesInProgress() {
             ))*/}
           </Grid>
         </Grid>
+      </Grid>
+
+      <Grid
+        container
+        xs={12}
+        style={{paddingTop: 25, paddingBottom: 50}}
+        justifyContent='center'
+        alignContent='center'>
+        <Button className={classes.btnLoadMore} size='large'>
+          <ArrowDropDownIcon fontSize='large' />
+          <Typography variant='h6'>LOAD MORE</Typography>
+        </Button>
       </Grid>
     </Container>
   );
