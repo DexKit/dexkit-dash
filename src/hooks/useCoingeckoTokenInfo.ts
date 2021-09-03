@@ -1,5 +1,6 @@
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {useState, useEffect} from 'react';
+import {useQuery} from 'react-query';
 import {
   COINGECKO_URL,
   getCoingeckoContractUrlFromNetwork,
@@ -11,44 +12,59 @@ export const useCoingeckoTokenInfo = (
   address?: string,
   network?: EthereumNetwork,
 ) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{message: string} | undefined>();
-  const [data, setData] = useState<CoinDetailCoinGecko | undefined>();
+  const tokenInfoQuery = useQuery(
+    ['GetCoingeckoTokenInfo', address, network],
+    () => {
+      if (address && network) {
+        let url = '';
+        if (address === 'eth' && network === EthereumNetwork.ethereum) {
+          url = `${COINGECKO_URL}/ethereum`;
+        }
+        
+        if (address === 'bnb' && network === EthereumNetwork.bsc) {
+          url = `${COINGECKO_URL}/binancecoin`;
+        }
 
-  useEffect(() => {
-    setLoading(true);
+        if (address === 'matic' && network === EthereumNetwork.matic) {
+          url = `${COINGECKO_URL}/matic-network`;
+        }
 
-    let url = `${COINGECKO_URL}/ethereum`;
-    if (address === 'bnb' && network === EthereumNetwork.bsc) {
-      url = `${COINGECKO_URL}/binancecoin`;
-    }
-    if (
-      Web3Wrapper.isAddress(address ?? '') &&
-      network === EthereumNetwork.ethereum
-    ) {
-      url = `${getCoingeckoContractUrlFromNetwork(
-        EthereumNetwork.ethereum,
-      )}/${address}`;
-    }
+        if (
+          Web3Wrapper.isAddress(address ?? '') &&
+          network === EthereumNetwork.ethereum
+        ) {
+          url = `${getCoingeckoContractUrlFromNetwork(
+            EthereumNetwork.ethereum,
+          )}/${address}`;
+        }
 
-    if (
-      Web3Wrapper.isAddress(address ?? '') &&
-      network === EthereumNetwork.bsc
-    ) {
-      url = `${getCoingeckoContractUrlFromNetwork(
-        EthereumNetwork.bsc,
-      )}/${address}`;
-    }
+        if (
+          Web3Wrapper.isAddress(address ?? '') &&
+          network === EthereumNetwork.bsc
+        ) {
+          url = `${getCoingeckoContractUrlFromNetwork(
+            EthereumNetwork.bsc,
+          )}/${address}`;
+        }
 
-    fetch(url)
-      .then((r) => r.json())
-      .then((d) => setData(d))
-      .catch((e) => {
-        //console.log(e);
-        setError({message: 'No Data on Coingecko for this token'});
-      })
-      .finally(() => setLoading(false));
-  }, [address, network]);
+        if (
+          Web3Wrapper.isAddress(address ?? '') &&
+          network === EthereumNetwork.matic
+        ) {
+          url = `${getCoingeckoContractUrlFromNetwork(
+            EthereumNetwork.matic,
+          )}/${address}`;
+        }
+        return fetch(url)
+          .then((r) => r.json())
+          .then((r) => r as CoinDetailCoinGecko);
+      }
+    }, {staleTime: 60*60}
+  );
 
-  return {loading, error, data};
+  return {
+    loading: tokenInfoQuery.isLoading,
+    error: tokenInfoQuery.error && {message: 'Error loading details from Coingecko'},
+    data: tokenInfoQuery.data,
+  };
 };

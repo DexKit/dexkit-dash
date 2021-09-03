@@ -18,9 +18,8 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
 
-
-import {ReactComponent as BcdIcon} from 'assets/images/icons/send-square.svg';
-import {ReactComponent as RedCoinIcon} from 'assets/images/icons/export.svg';
+import { CoinFeed } from 'types/coinsleague';
+import { MumbaiPriceFeeds } from 'modules/CoinsLeague/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -60,36 +59,28 @@ const useStyles = makeStyles((theme) => ({
 
 interface IRow {
   hash: string;
-  coins: {name: string; icon: string}[];
+  coins: CoinFeed[];
   claimed: boolean;
+  showClaim?: boolean;
   position: number;
 }
 
 interface Props {
-  data?: IRow[];
+  data?: IRow;
 }
 
 function OnePlayerTable(props: Props): JSX.Element {
   const classes = useStyles();
 
   const getIconByCoin = (coin: string) => {
-    switch (coin) {
-      case 'BCD':
-        return <BcdIcon />;
-      case 'RDC':
-        return <RedCoinIcon />;
-      case 'BTC':
-      case 'DOG':
-      case 'KIT':
-      case 'ADA':
-      default:
-        return coin;
-    }
+    return MumbaiPriceFeeds.find((c)=> c.address.toLowerCase() === coin)?.logo || ''
   };
 
   const truncHash = (hash: string): string => {
     return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
   };
+
+  const row = props.data;
 
   return (
     <TableContainer className={classes.container} component={Paper}>
@@ -97,12 +88,12 @@ function OnePlayerTable(props: Props): JSX.Element {
         <TableHead>
           <TableCell className={classes.header}>Position</TableCell>
           <TableCell className={classes.header}>Coins</TableCell>
-          <TableCell className={classes.header}>Position</TableCell>
-          <TableCell className={classes.header}>Position</TableCell>
+          <TableCell className={classes.header}>Score</TableCell>
+         {row?.showClaim && <TableCell className={classes.header}>Action</TableCell>}
         </TableHead>
 
         <TableBody>
-          {!props.data?.length && (
+          {!row && (
             <TableRow>
               <TableCell
                 colSpan={4}
@@ -112,23 +103,22 @@ function OnePlayerTable(props: Props): JSX.Element {
               </TableCell>
             </TableRow>
           )}
-          {props?.data?.map((row, i) => (
-            <TableRow>
+         {row && (   <TableRow>
               <TableCell className={classes.noBorder}>
                 <Typography style={{color: '#fff'}}>
-                  <Chip className={classes.chip} label={`${i + 1}º`} />
-                  &nbsp; {truncHash(row.hash)}
+                  <Chip className={classes.chip} label={`1º`} />
+                  &nbsp; {truncHash(row?.hash)}
                 </Typography>
               </TableCell>
 
               <TableCell className={classes.noBorder}>
                 <Grid container>
                   <AvatarGroup max={10} spacing={17}>
-                    {row.coins.map((coin) => (
+                    {row?.coins.map((coin) => (
                       <Avatar
                         className={classes.chip}
                         style={{height: 35, width: 35}}>
-                        {getIconByCoin(coin.name)}
+                        {getIconByCoin(coin.address)}
                       </Avatar>
                     ))}
                   </AvatarGroup>
@@ -147,25 +137,24 @@ function OnePlayerTable(props: Props): JSX.Element {
                   clickable
                   style={{
                     background: '#343A49',
-                    color: row.position > 0 ? '#0e0' : '#e00',
+                    color: row?.position > 0 ? '#0e0' : '#e00',
                   }}
-                  label={`${row.position > 0 ? '+' : ''}${row.position}%`}
+                  label={`${row?.position > 0 ? '+' : ''}${row?.position}%`}
                 />
               </TableCell>
-              <TableCell className={classes.noBorder}>
+              {row?.showClaim &&  <TableCell className={classes.noBorder}>
                 <Button
                   className={classes.button}
-                  disabled={!row.claimed}
+                  disabled={!row?.claimed}
                   style={{
                     width: '66.66%',
-                    color: !row.claimed ? '#646672' : '#000',
-                    background: !row.claimed ? '#3A3D4A' : '#ffa552',
+                    color: !row?.claimed ? '#646672' : '#000',
+                    background: !row?.claimed ? '#3A3D4A' : '#ffa552',
                   }}>
-                  {!row.claimed ? 'REQUESTED' : 'CLAIM'}
+                  {!row?.claimed ? 'REQUESTED' : 'CLAIM'}
                 </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+              </TableCell>}
+            </TableRow>)}
         </TableBody>
       </Table>
     </TableContainer>

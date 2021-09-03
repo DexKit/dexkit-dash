@@ -124,6 +124,13 @@ const getWeb3Wrapper = () => {
   return web3Wrapper;
 };
 
+const getBalance = (account: string) => {
+  return getWeb3()?.eth.getBalance(account)
+
+}
+
+
+
 export {
   connectWeb3,
   getWeb3,
@@ -133,4 +140,5 @@ export {
   web3Modal,
   web3Transaction,
   getEthers,
+  getBalance
 };

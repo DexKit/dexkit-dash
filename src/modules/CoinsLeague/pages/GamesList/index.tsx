@@ -18,6 +18,7 @@ import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinsLeague/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
+import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,9 +49,9 @@ const GamesList = () => {
     return games?.filter((g) => !g.started);
   }, [games]);
 
-  const onClickEnterGame = useCallback((address: string)=> {
-    history.push(`${COINSLEAGUE_ROUTE}/enter/${address}`)
-  },[])
+  const onClickEnterGame = useCallback((address: string) => {
+    history.push(`${COINSLEAGUE_ROUTE}/enter/${address}`);
+  }, []);
 
   return chainId ? (
     chainId === ChainId.Mumbai ? (
@@ -79,6 +80,18 @@ const GamesList = () => {
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h6' style={{margin: 5}}>
+                Connected Wallet
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <ActiveChainBalance />
+            </Grid>
+          </Grid>
+        </Grid>
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>

@@ -142,7 +142,7 @@ function Game(props: Props) {
         </Grid>
 
         <Grid item xs={12} spacing={2}>
-          <PlayersTable data={rowsMock} />
+         {/* <PlayersTable data={rowsMock} />*/}
         </Grid>
       </Grid>
     </Container>

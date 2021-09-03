@@ -35,8 +35,9 @@ import {CoinItem} from 'modules/CoinsLeague/components/CoinItem';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { red } from '@material-ui/core/colors';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {red} from '@material-ui/core/colors';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -71,14 +72,16 @@ const GetButtonState = (state: SubmitState) => {
         </>
       );
     case SubmitState.Error:
-      return <>
-       <Icon style={{ color: red[500] }}>error</Icon>
-      Error
-       </>;
+      return (
+        <>
+          <Icon style={{color: red[500]}}>error</Icon>
+          Error
+        </>
+      );
     case SubmitState.Submitted:
       return (
         <>
-          <CircularProgress color={'secondary'}/>
+          <CircularProgress color={'secondary'} />
           Waiting for Confirmation
         </>
       );
@@ -108,12 +111,22 @@ function GameEnter(props: Props) {
     setOpen(true);
   }, []);
 
-  const player = useMemo(()=> {
-    if(account && game?.players){
-        return game.players.find(p=> p?.player_address?.toLowerCase() === account?.toLowerCase());
+  const player = useMemo(() => {
+    if (account && game?.players && game?.players.length) {
+      return game.players.find((p) => {
+        console.log(p);
+        //TODO: We did this because sometimes it is not returning the player_address
+        //@ts-ignore
+        const addr = p[1];
+        return addr.toLowerCase() === account.toLowerCase();
+        /*if (p?.player_address && account) {
+          return p?.player_address.toLowerCase() === account.toLowerCase();
+        } else {
+          return false;
+        }*/
+      });
     }
-  },[account, game?.players])
-
+  }, [account, game?.players]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
@@ -170,7 +183,7 @@ function GameEnter(props: Props) {
             onConfirmation: onConfirmTx,
             onError,
             onSubmit: onSubmitTx,
-          }
+          },
         );
       }
     },
@@ -248,54 +261,83 @@ function GameEnter(props: Props) {
           {isLoading && <CardInfoPlayersSkeleton />}
         </Grid>
 
-        {!player && <Grid item xs={12} md={6} alignContent='space-around'>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant='h5' style={{margin: 5}}>
-                Choose Currencies {selectedCoins?.length}/{game?.num_coins || 0}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                disabled={isDisabled}
-                onClick={onOpenSelectDialog}
-                startIcon={<CryptocurrencyIcon />}
-                endIcon={<ExpandMoreIcon />}
-                variant='outlined'>
-                {'Choose your Coins'}
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={4}>
-                {selectedCoins?.map((c, i) => (
-                  <Grid item xs={12}>
-                    <CoinItem
-                      coin={c}
-                      key={i}
-                      handleDelete={onDeleteCoin}
-                      index={i}
-                    />
-                  </Grid>
-                ))}
+        {!player && (
+          <Grid item xs={12} md={6} alignContent='space-around'>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant='h5' style={{margin: 5}}>
+                  Choose Currencies {selectedCoins?.length}/
+                  {game?.num_coins || 0}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  disabled={isDisabled}
+                  onClick={onOpenSelectDialog}
+                  startIcon={<CryptocurrencyIcon />}
+                  endIcon={<ExpandMoreIcon />}
+                  variant='outlined'>
+                  {'Choose your Coins'}
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={4}>
+                  {selectedCoins?.map((c, i) => (
+                    <Grid item xs={12}>
+                      <CoinItem
+                        coin={c}
+                        key={i}
+                        handleDelete={onDeleteCoin}
+                        index={i}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>}
+        )}
 
-        {!player &&  <Grid item xs={12} md={12}>
-          <Grid container spacing={4} justifyContent={'flex-end'}>
-            <Grid item xs={12} md={6}>
-              <Button
-                disabled={!isDisabled}
-                onClick={onEnterGame}
-                variant={'contained'}
-                color={submitState === SubmitState.Error ? 'default' : 'primary'}>
-                {GetButtonState(submitState)}
-              </Button>
+        {!player && (
+          <Grid item xs={12} md={12}>
+            <Grid container spacing={4} justifyContent={'flex-end'}>
+              <Grid item xs={12} md={6}>
+                <Button
+                  disabled={!isDisabled}
+                  onClick={onEnterGame}
+                  variant={'contained'}
+                  color={
+                    submitState === SubmitState.Error ? 'default' : 'primary'
+                  }>
+                  {GetButtonState(submitState)}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>}
+        )}
+        {player && (
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant='h6' style={{margin: 5}}>
+                  Your Coins
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <OnePlayerTable
+                  data={{
+                    hash: player.player_address,
+                    position: player.score.toNumber(),
+                    coins: player.coin_feeds || [],
+                    showClaim: false,
+                    claimed: false,
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );
