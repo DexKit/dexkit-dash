@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
@@ -10,6 +10,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -24,10 +25,18 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {useTransfer} from 'hooks/useTransfer';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNetwork} from 'hooks/useNetwork';
 import {useSenderTokens} from 'hooks/useSenderTokens';
 import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
+import {SelectTokenButton} from './SelectTokenButton';
+import {Token} from 'types/app';
+import {isNativeCoinFromNetworkName} from 'utils';
+import {useAllBalance} from 'hooks/balance/useAllBalance';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {Web3Wrapper} from '@0x/web3-wrapper';
+import SelectAddressDialog from 'shared/components/SelectAddressDialog';
+import {AppState} from 'redux/store';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -59,41 +68,36 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const SenderForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {account, chainId} = useWeb3();
-  const network = useNetwork();
+  const networkName = useNetwork();
+
+  const accounts = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
+  );
+
+  const {chainId} = useWeb3();
+
+  const account = useDefaultAccount();
+
   const {onTransfer} = useTransfer();
+  const {data: balances} = useAllBalance(account);
 
   const [amount, setAmount] = useState<string>(String(props.amount || ''));
   const [address, setAddress] = useState<string>('');
-  const [selected, setSelected] =
-    useState<GetMyBalance_ethereum_address_balances>(
-      props.balances[0] || undefined,
-    );
 
   const handleCopy = async () => {
     const cpy: any = await navigator.clipboard.readText();
     setAddress(cpy);
   };
 
-  const handleMax = async () => {
-    if (selected && selected.value) {
-      setAmount(selected.value.toString());
-    }
-  };
-
-  const handleToken = (idx: any) => {
-    setSelected(props.balances[idx]);
-  };
-
   const handleSend = () => {
-    if (account && selected && selected.currency) {
+    if (account) {
       try {
-        if (selected.currency.address && selected.currency.name && chainId) {
+        if (token && chainId) {
           onTransfer(account, address, amount, {
-            address: selected.currency.address,
-            decimals: selected.currency.decimals,
-            name: selected.currency.name,
-            symbol: selected.currency.symbol,
+            address: token?.address,
+            decimals: token?.decimals,
+            name: token?.name,
+            symbol: token?.symbol,
             chainId: chainId,
           });
         }
@@ -127,13 +131,83 @@ const SenderForm: React.FC<Props> = (props) => {
   };
 
   const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
+  const [token, setToken] = useState<Token>();
   const {tokens} = useSenderTokens();
 
-  const [selectedToken, setSelectedToken] = useState(false);
+  const handleShowDialog = useCallback(() => {
+    setShowSelectTokenDialog(true);
+  }, []);
 
-  const handleSelectTokenDialogClose = useCallback(() => {}, []);
+  const handleSelectTokenDialogClose = useCallback(() => {
+    setShowSelectTokenDialog(false);
+  }, []);
 
-  const handleSelectToken = useCallback(() => {}, []);
+  const handleSelectToken = useCallback((token: Token) => {
+    setToken(token);
+    setShowSelectTokenDialog(false);
+  }, []);
+
+  const handleClearToken = useCallback(() => {
+    setToken(undefined);
+  }, []);
+
+  const [tokenBalance, setTokenBalance] = useState(0);
+
+  const amountError = useCallback((): undefined | string => {
+    if (parseFloat(amount) > tokenBalance) {
+      return 'Insufficient balance';
+    }
+
+    return undefined;
+  }, [amount, tokenBalance]);
+
+  const handleMax = useCallback(() => {
+    setAmount(String(tokenBalance));
+  }, [tokenBalance]);
+
+  useEffect(() => {
+    if (balances) {
+      let value = balances.find((e) => {
+        if (
+          token?.symbol &&
+          isNativeCoinFromNetworkName(token?.symbol, networkName)
+        ) {
+          return (
+            e.currency?.symbol?.toLowerCase() === token?.symbol.toLowerCase()
+          );
+        } else {
+          return (
+            e.currency?.address?.toLowerCase() === token?.address.toLowerCase()
+          );
+        }
+      })?.value;
+
+      if (value) {
+        setTokenBalance(value);
+      }
+    }
+  }, [balances, token, networkName]);
+
+  const [showSelectAddress, setShowSelectAddress] = useState(false);
+
+  const handleCloseSelectAddress = useCallback(() => {
+    setShowSelectAddress(false);
+  }, []);
+
+  const handleSelectAccount = useCallback((address: string) => {
+    setAddress(address);
+    setShowSelectAddress(false);
+  }, []);
+
+  const handleOpenSelectAddress = useCallback(() => {
+    setShowSelectAddress(true);
+  }, []);
+
+  useEffect(() => {
+    if (tokens.length > 0) {
+      setToken(tokens[0]);
+    }
+  }, [tokens]);
 
   return (
     <>
@@ -143,64 +217,44 @@ const SenderForm: React.FC<Props> = (props) => {
         tokens={tokens}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
+        showNetwork
+      />
+      <SelectAddressDialog
+        open={showSelectAddress}
+        accounts={accounts.evm}
+        onSelectAccount={handleSelectAccount}
+        onClose={handleCloseSelectAddress}
       />
       <Box>
         <form noValidate autoComplete='off'>
           <Box mb={5}>
-            <Select
-              fullWidth
-              native
-              variant='outlined'
-              onChange={(e) => handleToken(e.target.value)}
-              inputProps={{name: 'Token', id: 'token'}}>
-              {props?.balances?.map((balance, i) => {
-                return (
-                  <option
-                    defaultValue={balance?.currency?.name || ''}
-                    value={i}
-                    key={
-                      i
-                    }>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>
-                );
-              })}
-            </Select>
+            <SelectTokenButton
+              onClick={handleShowDialog}
+              token={token}
+              onClear={handleClearToken}
+            />
           </Box>
 
           <Box mb={5}>
-            {
-              <Box
-                mb={2}
-                color='grey.400'
-                textAlign='right'
-                className={classes.textRes}>
-                {selected?.value
-                  ? `${selected.value.toFixed(6)} ${
-                      selected.currency?.symbol
-                    } ($${selected.valueInUsd?.toFixed(2)})`
-                  : `0`}
-              </Box>
-            }
-            {/* <TextField
-            fullWidth
-            variant='outlined'
-            label={<IntlMessages id='Amount' />}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            InputProps={{
-              className: classes.inputText,
-            }}
-          /> */}
+            <Box
+              mb={2}
+              color='grey.400'
+              textAlign='right'
+              className={classes.textRes}>
+              {tokenBalance} {token?.symbol?.toUpperCase()}
+            </Box>
             <FormControl className={clsx(classes.inputText)} variant='outlined'>
               <InputLabel htmlFor='outlined-adornment-amount'>
-                <IntlMessages id='Amount' />
+                Amount
               </InputLabel>
               <OutlinedInput
                 id='outlined-adornment-amount'
                 fullWidth
-                type={'text'}
-                label={<IntlMessages id='Amount' />}
+                type='text'
+                label='Amount'
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                error={amountError() !== undefined}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton onClick={handleMax} edge='end'>
@@ -209,29 +263,34 @@ const SenderForm: React.FC<Props> = (props) => {
                   </InputAdornment>
                 }
               />
+              {amountError() !== undefined ? (
+                <FormHelperText error>{amountError()}</FormHelperText>
+              ) : null}
             </FormControl>
           </Box>
 
           <Box mb={5}>
             <FormControl className={clsx(classes.inputText)} variant='outlined'>
-              <InputLabel htmlFor='outlined-adornment-to'>
-                <IntlMessages id='To' />
-              </InputLabel>
+              <InputLabel htmlFor='outlined-adornment-to'>To</InputLabel>
               <OutlinedInput
                 id='outlined-adornment-to'
                 fullWidth
                 type={'text'}
-                label={<IntlMessages id='To' />}
+                label='To'
                 value={address}
+                error={address.length > 0 && !isAddress(address ?? '')}
                 onChange={(e) => setAddress(e.target.value)}
                 endAdornment={
                   <InputAdornment position='end'>
-                    <IconButton onClick={handleCopy} edge='end'>
+                    <IconButton onClick={handleOpenSelectAddress} edge='end'>
                       <FileCopyIcon />
                     </IconButton>
                   </InputAdornment>
                 }
               />
+              {!isAddress(address ?? '') && address.length > 0 ? (
+                <FormHelperText error>Invalid address</FormHelperText>
+              ) : null}
             </FormControl>
           </Box>
 
@@ -243,18 +302,9 @@ const SenderForm: React.FC<Props> = (props) => {
               color='primary'
               onClick={handleSend}
               disabled={
-                !isAddress(address) ||
-                (selected?.value || 0) < parseFloat(amount) ||
-                parseFloat(amount) == 0 ||
-                amount == ''
+                !isAddress(address) || parseFloat(amount) == 0 || amount == ''
               }>
-              {address == '' || amount == '0'
-                ? 'Send'
-                : !isAddress(address)
-                ? 'Invalid Address'
-                : (selected?.value || 0) < parseFloat(amount)
-                ? 'Insufficient funds'
-                : 'Send'}
+              Send
             </Button>
           </Box>
         </form>

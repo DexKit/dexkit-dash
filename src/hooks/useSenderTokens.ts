@@ -70,11 +70,13 @@ export function useSenderTokens() {
         decimals: e.currency?.decimals || 18,
         networkName: e.network,
         logoURI: tokenLogoUri,
+        icon: tokenLogoUri,
       } as Token;
     });
 
+    console.log('token-list', tokenList);
     setTokens(tokenList);
-  }, []);
+  }, [balances]);
 
   return {tokens};
 }
