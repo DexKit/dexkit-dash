@@ -29,7 +29,7 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
     case UPDATE_TRANSACTION:
       const newTransactions = state.transactions;
 
-      let index = newTransactions.findIndex(
+      const index = newTransactions.findIndex(
         (tx: ChangellyTransaction) => tx.id == action.transaction.id,
       );
 
@@ -40,9 +40,9 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
         transactions: [...newTransactions],
       };
     case REMOVE_TRANSACTION:
-      let transactions = state.transactions;
+      const transactions = state.transactions;
 
-      let removeIndex = transactions.findIndex(
+      const removeIndex = transactions.findIndex(
         (tx: ChangellyTransaction) => tx.id == action.id,
       );
 

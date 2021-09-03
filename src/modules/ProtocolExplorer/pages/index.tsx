@@ -74,6 +74,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
     EXCHANGE.ALL,
     tokenInfo,
   );
+  
 
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {

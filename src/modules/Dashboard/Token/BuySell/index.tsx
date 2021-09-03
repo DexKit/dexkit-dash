@@ -78,7 +78,7 @@ const BuySell: React.FC<Props> = ({
   tokenInfo,
   disableReceive,
 }) => {
-  let history = useHistory();
+  const history = useHistory();
 
   const classes = useStyles();
 

@@ -3,7 +3,6 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-
 import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme) => ({

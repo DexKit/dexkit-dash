@@ -57,6 +57,7 @@ const TokenPage: React.FC<Props> = (props) => {
     (state) => state.ui.favoriteCoins,
   );
   const {account: web3Account, chainId} = useWeb3();
+
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);

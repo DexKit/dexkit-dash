@@ -168,6 +168,7 @@ export const getNativeCoinWrapped = (chainId: ChainId) => {
     case ChainId.Binance:
       return 'wbnb';
     case ChainId.Matic:
+    case ChainId.Mumbai:
       return 'wmatic';
   }
 };

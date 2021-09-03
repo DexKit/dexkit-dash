@@ -8,10 +8,14 @@ import {getWeb3Wrapper} from './web3modal';
 let contractWrappers: ContractWrappers;
 
 export const initContractWrappers = (provider: any, chainId: number) => {
-  if (!contractWrappers) {
-    contractWrappers = new ContractWrappers(provider, {chainId});
+  try {
+    if (!contractWrappers) {
+      contractWrappers = new ContractWrappers(provider, {chainId});
+    }
+    return contractWrappers;
+  } catch {
+    return null;
   }
-  return contractWrappers;
 };
 
 export const getContractWrappers = (chainId: ChainId | undefined) => {
@@ -20,9 +24,13 @@ export const getContractWrappers = (chainId: ChainId | undefined) => {
     if (!web3Wrapper) {
       return null;
     }
-    contractWrappers = new ContractWrappers(web3Wrapper?.getProvider(), {
-      chainId: chainId || 1,
-    });
+    try {
+      contractWrappers = new ContractWrappers(web3Wrapper?.getProvider(), {
+        chainId: chainId || 1,
+      });
+    } catch {
+      return null;
+    }
   }
   return contractWrappers;
 };

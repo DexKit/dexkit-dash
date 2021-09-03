@@ -9,6 +9,7 @@ export const GET_NETWORK_NAME = (chainId?: ChainId) => {
     case ChainId.Kovan:
     case ChainId.Goerli:
       return EthereumNetwork.ethereum;
+    case ChainId.Mumbai:
     case ChainId.Matic:
       return EthereumNetwork.matic;
     case ChainId.Binance:

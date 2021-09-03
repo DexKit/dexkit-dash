@@ -92,6 +92,23 @@ const useRoutesConfig = (): NavItemProps[] => {
       ],
     },
     {
+      id: 'coins-league',
+      title: 'Coins League',
+      messageId: 'sidebar.coin-league',
+      type: 'group',
+      children: [
+        {
+          id: 'all',
+          title: 'Coins League',
+          messageId: 'sidebar.coin-league',
+          type: 'item',
+          customIcon: true,
+          icon: 'buy.crypto',
+          url: `/coins-league`,
+        },
+      ],
+    },
+    {
       id: 'myapps',
       title: 'My Apps',
       messageId: 'sidebar.myapps',

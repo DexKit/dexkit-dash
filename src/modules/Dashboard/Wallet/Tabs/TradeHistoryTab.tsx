@@ -32,7 +32,7 @@ type Props = {
 
 export const TradeHistoryTab = (props: Props) => {
   const history = useHistory();
-  let searchParams = useMemo(() => {
+  const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
   }, []);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
@@ -43,7 +43,7 @@ export const TradeHistoryTab = (props: Props) => {
   const {address, token, enableNetworkChips = true} = props;
 
   const onChangeNetwork = (net: EthereumNetwork | 'all') => {
-    let searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('network', net);
     history.push({search: searchParams.toString()});
     setNetworkName(net as EthereumNetwork);

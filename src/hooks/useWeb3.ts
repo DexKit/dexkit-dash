@@ -3,14 +3,28 @@ import {
   TransactionReceipt,
   // PromiEvent
 } from 'web3-core';
-import { connectWeb3, closeWeb3, getWeb3, getProvider, web3Transaction,  } from "services/web3modal"
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, AppState } from "redux/store";
-import { setWeb3State, setEthAccount, setEthBalance, setChainId, setBlockNumber } from "redux/actions";
-import {  Web3State, SupportedNetworkType } from "types/blockchain";
-import { BigNumber } from "@0x/utils";
-import { addAccounts} from 'redux/_ui/actions';
+import {
+  connectWeb3,
+  closeWeb3,
+  getWeb3,
+  getProvider,
+  web3Transaction,
+} from 'services/web3modal';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, AppState} from 'redux/store';
+import {
+  setWeb3State,
+  setEthAccount,
+  setEthBalance,
+  setChainId,
+  setBlockNumber,
+} from 'redux/actions';
+import {SupportedNetworkType, Web3State} from 'types/blockchain';
+import {BigNumber} from '@0x/utils';
+import {addAccounts, setAccount} from 'redux/_ui/actions';
+import {getMulticall} from 'services/multicall';
+
 
 
 // @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
@@ -157,11 +171,9 @@ export const useWeb3 = () => {
       dispatch(setBlockNumber(blocknumber));
     });
 
-    /*provider.on("networkChanged", async (networkId: number) => {
-      const chainId = await web3.eth.chainId();
-      await this.setState({ chainId, networkId });
-      await this.getAccountAssets();
-    });*/
+    pr.on("networkChanged", async (networkId: number) => {
+      dispatch(setChainId(networkId));
+    });
   };
 
   return {

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {
   GetAllMyBalance,
@@ -9,6 +9,7 @@ import {getTokens} from 'services/rest/coingecko';
 import {client} from 'services/graphql';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {MyBalances} from 'types/blockchain';
+import {useQuery} from 'react-query';
 
 export const MapBalancesToNetwork = (
   balances: any,
@@ -41,13 +42,14 @@ export const MapBalancesToUSDValue = (
   if (!balances) {
     return [];
   }
-  return balances.map((t: any) => {
+  return balances.map((t: MyBalances) => {
     return (<MyBalances>{
       ...t,
       price24hPercentage:
-        usdValues[t.addr || '']?.price_change_percentage_24h || 0,
+        usdValues[t.currency?.address || '']?.price_change_percentage_24h || 0,
       valueInUsd:
-        (t.value || 0) * (usdValues[t.addr || '']?.current_price || 0),
+        (t.value || 0) *
+        (usdValues[t.currency?.address || '']?.current_price || 0),
       // enquanto não vem a solução pela bitquery
     }) as MyBalances;
   });
@@ -57,95 +59,83 @@ export const MapBalancesToUSDValue = (
 export const useAllBalance = (defaultAccount?: string) => {
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>();
-  const [data, setData] = useState<MyBalances[]>([]);
 
-  useEffect(() => {
-    if (account) {
-      setLoading(true);
-      client
-        .query<GetAllMyBalance, GetAllMyBalanceVariables>({
-          query: BITQUERY_ALL_BALANCE_INFO,
-          variables: {
-            address: account,
-          },
-          errorPolicy: 'none',
-        })
-        .then((balances) => {
-          const tokensmeta_eth = balances.data.ethereum?.address[0].balances
-            ?.map((t) => t.currency?.address?.toLowerCase() || '')
-            ?.filter((e) => e !== '-')
-            ?.map((a) => {
-              return {network: EthereumNetwork.ethereum, address: a};
-            });
-
-          const tokensmeta_bnb = balances.data.bsc?.address[0].balances
-            ?.map((t) => t.currency?.address?.toLowerCase() || '')
-            ?.filter((e) => e !== '-')
-            ?.map((a) => {
-              return {network: EthereumNetwork.bsc, address: a};
-            });
-
-          const tokensmeta_matic = balances.data.matic?.address[0].balances
-            ?.map((t) => t.currency?.address?.toLowerCase() || '')
-            ?.filter((e) => e !== '-')
-            ?.map((a) => {
-              return {network: EthereumNetwork.matic, address: a};
-            });
-          const tokensmeta = (tokensmeta_bnb ?? [])
-            .concat(tokensmeta_eth ?? [])
-            .concat(tokensmeta_matic ?? []);
-
-          const allMyBalances = MapBalancesToNetwork(
-            balances.data.ethereum?.address[0].balances,
-            EthereumNetwork.ethereum,
-            'eth',
-          )
-            .concat(
-              MapBalancesToNetwork(
-                balances.data.bsc?.address[0].balances,
-                EthereumNetwork.bsc,
-                'bnb',
-              ),
+  const myBalancesQuery = useQuery(
+    ['GetMyBalancesQuery', account],
+    () => {
+      if (account) {
+        return client
+          .query<GetAllMyBalance, GetAllMyBalanceVariables>({
+            query: BITQUERY_ALL_BALANCE_INFO,
+            variables: {
+              address: account,
+            },
+            errorPolicy: 'none',
+          })
+          .then((balances) => {
+            const allMyBalances = MapBalancesToNetwork(
+              balances.data.ethereum?.address[0].balances,
+              EthereumNetwork.ethereum,
+              'eth',
             )
-            .concat(
-              MapBalancesToNetwork(
-                balances.data.matic?.address[0].balances,
-                EthereumNetwork.matic,
-                'matic',
-              ),
-            );
-          setData(allMyBalances.filter((b) => b?.value && b?.value > 0) || []);
-          // setMetaTokens(tokensmeta);
+              .concat(
+                MapBalancesToNetwork(
+                  balances.data.bsc?.address[0].balances,
+                  EthereumNetwork.bsc,
+                  'bnb',
+                ),
+              )
+              .concat(
+                MapBalancesToNetwork(
+                  balances.data.matic?.address[0].balances,
+                  EthereumNetwork.matic,
+                  'matic',
+                ),
+              );
+            return allMyBalances.filter((b) => b?.value && b?.value > 0) || [];
+          });
+      }
+    },
+    {staleTime: 60 * 60},
+  );
 
-          // if (tokensmeta.length) {
-          //   getTokens(tokensmeta)
-          //     .then((coingeckoList) => {
-          //       console.log('coingecko', coingeckoList);
-
-          //       // const tokensWithUSDValue = MapBalancesToUSDValue(
-          //       //   allMyBalances,
-          //       //   coingeckoList,
-          //       // );
-          //       // setData(
-          //       //   tokensWithUSDValue.filter((b) => b?.value && b?.value > 0),
-          //       // );
-          //     })
-          //     .catch((e) => console.log('Error fetching USD'));
-          // }
-        })
-        .catch((e) => {
-          setError(e);
-          setLoading(false);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-      setError(undefined);
-      setData([]);
+  const usdValuesQuery = useQuery(
+    ['GetCoingeckoUsdValues', myBalancesQuery.data],
+    () => {
+      const balances = myBalancesQuery.data;
+      if (balances) {
+        const tokens = balances.map((b) => {
+          return {
+            network: b.network,
+            address: b.currency?.address as string,
+          };
+        });
+        return getTokens(tokens);
+      }
+    },
+    {staleTime: 60 * 60},
+  );
+  const data = useMemo(() => {
+    if (usdValuesQuery.data && myBalancesQuery.data) {
+      return (
+        MapBalancesToUSDValue(myBalancesQuery.data, usdValuesQuery.data).filter(
+          (b) => b?.value && b?.value > 0,
+        ) || []
+      );
     }
-  }, [account]);
+    if (myBalancesQuery.data) {
+      return myBalancesQuery.data || [];
+    }
+    return [];
+  }, [usdValuesQuery.data, myBalancesQuery.data]);
 
-  return {loading, error, data};
+  const error = myBalancesQuery.isError && {message: 'Error Fetching Data'};
+
+  return {
+    loading: myBalancesQuery.isLoading,
+    error,
+    data,
+    loadingUsd: usdValuesQuery.isLoading,
+    errorUSD: usdValuesQuery.error,
+  };
 };
