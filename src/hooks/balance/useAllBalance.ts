@@ -117,12 +117,22 @@ export const useAllBalance = (defaultAccount?: string) => {
               ),
             );
           setData(allMyBalances.filter((b) => b?.value && b?.value > 0) || []);
-          //  setMetaTokens(tokensmeta);
-          // if(tokensmeta.length){
-          //   getTokens(tokensmeta).then((coingeckoList) => {
-          //     const tokensWithUSDValue = MapBalancesToUSDValue(allMyBalances, coingeckoList);
-          //     setData(tokensWithUSDValue.filter((b) => b?.value && b?.value > 0));
-          //   }).catch(e=> console.log('Error fetching USD'))
+          // setMetaTokens(tokensmeta);
+
+          // if (tokensmeta.length) {
+          //   getTokens(tokensmeta)
+          //     .then((coingeckoList) => {
+          //       console.log('coingecko', coingeckoList);
+
+          //       // const tokensWithUSDValue = MapBalancesToUSDValue(
+          //       //   allMyBalances,
+          //       //   coingeckoList,
+          //       // );
+          //       // setData(
+          //       //   tokensWithUSDValue.filter((b) => b?.value && b?.value > 0),
+          //       // );
+          //     })
+          //     .catch((e) => console.log('Error fetching USD'));
           // }
         })
         .catch((e) => {

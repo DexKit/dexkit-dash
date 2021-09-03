@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
@@ -26,6 +26,8 @@ import {useTransfer} from 'hooks/useTransfer';
 
 import {useDispatch} from 'react-redux';
 import {useNetwork} from 'hooks/useNetwork';
+import {useSenderTokens} from 'hooks/useSenderTokens';
+import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -124,44 +126,61 @@ const SenderForm: React.FC<Props> = (props) => {
     }
   };
 
-  return (
-    <Box>
-      <form noValidate autoComplete='off'>
-        <Box mb={5}>
-          <Select
-            fullWidth
-            native
-            variant='outlined'
-            onChange={(e) => handleToken(e.target.value)}
-            inputProps={{name: 'Token', id: 'token'}}>
-            {props?.balances?.map((balance, i) => {
-              return (
-                <option
-                  defaultValue={balance?.currency?.name || ''}
-                  value={i}
-                  key={
-                    i
-                  }>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>
-              );
-            })}
-          </Select>
-        </Box>
+  const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
+  const {tokens} = useSenderTokens();
 
-        <Box mb={5}>
-          {
-            <Box
-              mb={2}
-              color='grey.400'
-              textAlign='right'
-              className={classes.textRes}>
-              {selected?.value
-                ? `${selected.value.toFixed(6)} ${
-                    selected.currency?.symbol
-                  } ($${selected.valueInUsd?.toFixed(2)})`
-                : `0`}
-            </Box>
-          }
-          {/* <TextField
+  const [selectedToken, setSelectedToken] = useState(false);
+
+  const handleSelectTokenDialogClose = useCallback(() => {}, []);
+
+  const handleSelectToken = useCallback(() => {}, []);
+
+  return (
+    <>
+      <SelectTokenDialog
+        title='You send'
+        open={showSelectTokenDialog}
+        tokens={tokens}
+        onSelectToken={handleSelectToken}
+        onClose={handleSelectTokenDialogClose}
+      />
+      <Box>
+        <form noValidate autoComplete='off'>
+          <Box mb={5}>
+            <Select
+              fullWidth
+              native
+              variant='outlined'
+              onChange={(e) => handleToken(e.target.value)}
+              inputProps={{name: 'Token', id: 'token'}}>
+              {props?.balances?.map((balance, i) => {
+                return (
+                  <option
+                    defaultValue={balance?.currency?.name || ''}
+                    value={i}
+                    key={
+                      i
+                    }>{`${balance?.currency?.name?.toUpperCase()} (${balance?.currency?.symbol.toUpperCase()})`}</option>
+                );
+              })}
+            </Select>
+          </Box>
+
+          <Box mb={5}>
+            {
+              <Box
+                mb={2}
+                color='grey.400'
+                textAlign='right'
+                className={classes.textRes}>
+                {selected?.value
+                  ? `${selected.value.toFixed(6)} ${
+                      selected.currency?.symbol
+                    } ($${selected.valueInUsd?.toFixed(2)})`
+                  : `0`}
+              </Box>
+            }
+            {/* <TextField
             fullWidth
             variant='outlined'
             label={<IntlMessages id='Amount' />}
@@ -171,75 +190,76 @@ const SenderForm: React.FC<Props> = (props) => {
               className: classes.inputText,
             }}
           /> */}
-          <FormControl className={clsx(classes.inputText)} variant='outlined'>
-            <InputLabel htmlFor='outlined-adornment-amount'>
-              <IntlMessages id='Amount' />
-            </InputLabel>
-            <OutlinedInput
-              id='outlined-adornment-amount'
-              fullWidth
-              type={'text'}
-              label={<IntlMessages id='Amount' />}
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton onClick={handleMax} edge='end'>
-                    <CallReceivedIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Box>
+            <FormControl className={clsx(classes.inputText)} variant='outlined'>
+              <InputLabel htmlFor='outlined-adornment-amount'>
+                <IntlMessages id='Amount' />
+              </InputLabel>
+              <OutlinedInput
+                id='outlined-adornment-amount'
+                fullWidth
+                type={'text'}
+                label={<IntlMessages id='Amount' />}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton onClick={handleMax} edge='end'>
+                      <CallReceivedIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </Box>
 
-        <Box mb={5}>
-          <FormControl className={clsx(classes.inputText)} variant='outlined'>
-            <InputLabel htmlFor='outlined-adornment-to'>
-              <IntlMessages id='To' />
-            </InputLabel>
-            <OutlinedInput
-              id='outlined-adornment-to'
-              fullWidth
-              type={'text'}
-              label={<IntlMessages id='To' />}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton onClick={handleCopy} edge='end'>
-                    <FileCopyIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Box>
+          <Box mb={5}>
+            <FormControl className={clsx(classes.inputText)} variant='outlined'>
+              <InputLabel htmlFor='outlined-adornment-to'>
+                <IntlMessages id='To' />
+              </InputLabel>
+              <OutlinedInput
+                id='outlined-adornment-to'
+                fullWidth
+                type={'text'}
+                label={<IntlMessages id='To' />}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton onClick={handleCopy} edge='end'>
+                      <FileCopyIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </Box>
 
-        <Box textAlign='center' mb={5}>
-          <Button
-            fullWidth
-            size='large'
-            variant='contained'
-            color='primary'
-            onClick={handleSend}
-            disabled={
-              !isAddress(address) ||
-              (selected?.value || 0) < parseFloat(amount) ||
-              parseFloat(amount) == 0 ||
-              amount == ''
-            }>
-            {address == '' || amount == '0'
-              ? 'Send'
-              : !isAddress(address)
-              ? 'Invalid Address'
-              : (selected?.value || 0) < parseFloat(amount)
-              ? 'Insufficient funds'
-              : 'Send'}
-          </Button>
-        </Box>
-      </form>
-    </Box>
+          <Box textAlign='center' mb={5}>
+            <Button
+              fullWidth
+              size='large'
+              variant='contained'
+              color='primary'
+              onClick={handleSend}
+              disabled={
+                !isAddress(address) ||
+                (selected?.value || 0) < parseFloat(amount) ||
+                parseFloat(amount) == 0 ||
+                amount == ''
+              }>
+              {address == '' || amount == '0'
+                ? 'Send'
+                : !isAddress(address)
+                ? 'Invalid Address'
+                : (selected?.value || 0) < parseFloat(amount)
+                ? 'Insufficient funds'
+                : 'Send'}
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </>
   );
 };
 

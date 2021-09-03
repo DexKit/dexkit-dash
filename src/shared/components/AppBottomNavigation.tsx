@@ -1,5 +1,13 @@
 import React from 'react';
-import {Box, Grid, ButtonBase, makeStyles, withStyles} from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  ButtonBase,
+  makeStyles,
+  withStyles,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core';
 
 import {ReactComponent as MoneyWalletIcon} from 'assets/images/icons/wallet-money.svg';
 import {ReactComponent as BitcoinConvertIcon} from 'assets/images/icons/bitcoin-convert.svg';
@@ -8,15 +16,18 @@ import {ReactComponent as SliderHorizontalIcon} from 'assets/images/icons/slider
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#2F3142',
-    zIndex: theme.zIndex.speedDial,
-    position: 'sticky',
-    bottom: theme.spacing(12),
-    left: theme.spacing(4),
-    right: theme.spacing(4),
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
     borderRadius: 20,
     boxShadow: '0px 0px 60px #000000',
+    margin: theme.spacing(4),
+  },
+  container: {
+    zIndex: theme.zIndex.speedDial,
+    position: 'sticky',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 }));
 
@@ -37,27 +48,32 @@ export const AppBottomNavigation = (props: AppBottomNavigationProps) => {
 
   const classes = useStyles();
 
-  return (
-    <Box className={classes.root}>
-      <Grid container>
-        <Grid item>
-          <ActionButton>
-            <MoneyWalletIcon />
-          </ActionButton>
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return isMobile ? (
+    <Box className={classes.container}>
+      <Box className={classes.root}>
+        <Grid container justify='center'>
+          <Grid item>
+            <ActionButton>
+              <MoneyWalletIcon />
+            </ActionButton>
+          </Grid>
+          <Grid item>
+            <ActionButton>
+              <BitcoinConvertIcon />
+            </ActionButton>
+          </Grid>
+          <Grid item>
+            <ActionButton>
+              <SliderHorizontalIcon />
+            </ActionButton>
+          </Grid>
         </Grid>
-        <Grid item>
-          <ActionButton>
-            <BitcoinConvertIcon />
-          </ActionButton>
-        </Grid>
-        <Grid item>
-          <ActionButton>
-            <SliderHorizontalIcon />
-          </ActionButton>
-        </Grid>
-      </Grid>
+      </Box>
     </Box>
-  );
+  ) : null;
 };
 
 export default AppBottomNavigation;

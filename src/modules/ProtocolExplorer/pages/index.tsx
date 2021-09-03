@@ -13,6 +13,7 @@ import {
   AccordionSummary,
   Box,
   Breadcrumbs,
+  Chip,
   Grid,
   Paper,
   Typography,
@@ -136,6 +137,15 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item>
+              {networkName.toLowerCase() == 'eth' ? (
+                <Chip label='ETH' />
+              ) : networkName.toLowerCase() == 'bsc' ? (
+                <Chip label='BSC' />
+              ) : networkName.toLowerCase() == 'matic' ? (
+                <Chip label='MATIC' />
+              ) : null}
+            </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -182,7 +192,13 @@ const Explorer: React.FC<TokenProps> = (props) => {
               )}
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
-              {balances.data && <CoinTools balances={balances.data} />}
+              {balances.data && (
+                <CoinTools
+                  isFavorite={isFavorite(tokenInfo)}
+                  onMakeFavorite={onToggleFavorite}
+                  balances={balances.data}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>

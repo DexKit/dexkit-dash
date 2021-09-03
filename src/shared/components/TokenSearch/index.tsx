@@ -114,13 +114,18 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
 const useStyles = makeStyles((theme) => ({
   input: {
     backgroundColor: '#252836',
+    borderStyle: 'none !important',
+    borderWidth: '0 !important',
     border: 'none !important',
-    borderWidth: 0,
     color: '#7A8398',
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
     fontWeight: 500,
     fontStyle: 'normal',
+  },
+  noBorder: {
+    borderWidth: '0 !important',
+    border: 'none !important',
   },
 }));
 
@@ -291,6 +296,12 @@ export const TokenSearch: React.FC<TokenSearchProps> = (props) => {
               React.HTMLAttributes<HTMLElement>
             >
           }
+          className={classes.noBorder}
+          classes={{
+            inputRoot: classes.input,
+            input: classes.input,
+            root: classes.noBorder,
+          }}
           renderInput={(params) => (
             <TextField
               {...params}

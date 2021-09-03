@@ -46,26 +46,19 @@ interface ContentViewProps {
 const ContentView: React.FC<ContentViewProps> = () => {
   const theme = useTheme();
   return isMobile() ? (
-    <Container
-      maxWidth='sm'
-      style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'relative',
-        paddingBottom: theme.spacing(4),
-      }}>
+    <Scrollbar>
       <Box
         display='flex'
         flex={1}
         flexDirection='column'
-        className='main-content-view'>
+        className='main-content-view'
+        pb={40}>
         <Suspense>
           <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
         </Suspense>
       </Box>
       <AppFooter />
-      <AppBottomNavigation />
-    </Container>
+    </Scrollbar>
   ) : (
     <Scrollbar>
       <Box

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Box,
@@ -23,6 +23,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
+import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
+import {useSenderTokens} from 'hooks/useSenderTokens';
 
 interface Props {
   open: boolean;
@@ -75,6 +77,17 @@ const Sender: React.FC<Props> = (props) => {
     };
   };
 
+  const {open, onClose} = props;
+
+  const handleClose = useCallback(
+    (e) => {
+      if (onClose) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   return (
     <Dialog
       fullWidth
@@ -98,7 +111,7 @@ const Sender: React.FC<Props> = (props) => {
             </Typography>
           </Box>
           <Box>
-            <IconButton>
+            <IconButton size='small' onClick={handleClose}>
               <CloseIcon />
             </IconButton>
           </Box>

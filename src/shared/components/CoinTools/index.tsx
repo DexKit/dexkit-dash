@@ -14,6 +14,7 @@ import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
