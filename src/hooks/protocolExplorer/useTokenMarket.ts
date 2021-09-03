@@ -32,7 +32,7 @@ export const useTokenMarket = (
   const {priceQuote} = useTokenPriceUSD(
     token?.address,
     networkName,
-    OrderSide.Sell,
+    OrderSide.Buy,
     1,
     token?.decimals,
     seconds === 0,

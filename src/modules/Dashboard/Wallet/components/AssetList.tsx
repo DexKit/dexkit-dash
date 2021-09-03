@@ -1,5 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Button, Grid} from '@material-ui/core';
+import {
+  IconButton,
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import {MyBalances} from 'types/blockchain';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useHistory} from 'react-router';
@@ -8,6 +16,15 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import {EmptyWallet} from 'shared/components/EmptyWallet';
+
+const INITIAL_PAGE_SIZE = 10;
+
+const PAGE_SIZES = [
+  INITIAL_PAGE_SIZE,
+  2 * INITIAL_PAGE_SIZE,
+  5 * INITIAL_PAGE_SIZE,
+  10 * INITIAL_PAGE_SIZE,
+];
 
 interface AssetListProps {
   balances: MyBalances[];
@@ -50,6 +67,12 @@ export const AssetList = (props: AssetListProps) => {
     setPage(1);
   }, [balances]);
 
+  const [itemsPerPage, setItemsPerPage] = useState(INITIAL_PAGE_SIZE);
+
+  const handleItemsPerPageChange = useCallback((e) => {
+    setItemsPerPage(e.target.value);
+  }, []);
+
   return (
     <Grid container spacing={2}>
       {loading ? (
@@ -76,7 +99,7 @@ export const AssetList = (props: AssetListProps) => {
         </Grid>
       ) : (
         <>
-          {paginate(balances, 5, page).map(
+          {paginate(balances, itemsPerPage, page).map(
             (balance: MyBalances, index: number) => (
               <Grid item xs={12} key={index}>
                 <TokenListItem
@@ -93,23 +116,32 @@ export const AssetList = (props: AssetListProps) => {
             ),
           )}
           <Grid item xs={12}>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'>
-              <Button
-                startIcon={<KeyboardArrowLeftIcon />}
-                disabled={page == 1}
-                onClick={handleGoPrevious}>
-                Previous
-              </Button>
-              <Button
-                endIcon={<KeyboardArrowRightIcon />}
-                disabled={page >= 1 && paginate(balances, 5, page).length < 5}
-                onClick={handleGoNext}>
-                Next
-              </Button>
-            </Box>
+            <Grid justify='flex-end' container alignItems='center' spacing={2}>
+              <Grid item>
+                <FormControl variant='outlined' size='small'>
+                  <Select
+                    value={itemsPerPage}
+                    onChange={handleItemsPerPageChange}
+                    variant='outlined'>
+                    {PAGE_SIZES.map((pageSize) => (
+                      <MenuItem value={pageSize}>{pageSize}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <IconButton disabled={page == 1} onClick={handleGoPrevious}>
+                  <KeyboardArrowLeftIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  disabled={page >= 1 && paginate(balances, 5, page).length < 5}
+                  onClick={handleGoNext}>
+                  <KeyboardArrowRightIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           </Grid>
         </>
       )}

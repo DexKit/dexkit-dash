@@ -9,6 +9,7 @@ import {
   Hidden,
   Typography,
   useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -104,8 +105,17 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const networkName = useNetwork();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const accountsModal = useAccountsModal();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    if (isMobile) {
+      accountsModal.setShow(true);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const history = useHistory();
@@ -125,8 +135,8 @@ const WalletInfo = (props: any) => {
   const network = useNetwork();
   const defaultAccountLabel = useDefaultLabelAccount();
   const connected = useMemo(() => {
-    return  web3Account?.toLowerCase() === defaultAccount?.toLowerCase()
-  }, [ web3Account, defaultAccount ] );
+    return web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
+  }, [web3Account, defaultAccount]);
 
   const wallet = useSelector<AppState, AppState['ui']['wallet']>(
     (state) => state.ui.wallet,
@@ -141,8 +151,6 @@ const WalletInfo = (props: any) => {
     history.push('/wallet');
   };
 
-  const accountsModal = useAccountsModal();
-
   const handleShowAccounts = useCallback(() => {
     handleClose();
     accountsModal.setShow(true);
@@ -152,7 +160,6 @@ const WalletInfo = (props: any) => {
     handleClose();
     history.push('/wallet/manage-accounts');
   };
-
 
 
   let ethBalanceValue;
@@ -166,7 +173,6 @@ const WalletInfo = (props: any) => {
       history.push(`/wallet/${a.address}`);
       // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-     
     } else {
       history.push(`/wallet/${a.address}`);
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
@@ -177,11 +183,14 @@ const WalletInfo = (props: any) => {
 
   const classes = useStyles(props);
 
-  const theme = useTheme();
-
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
-      <Grid container alignItems='center' alignContent='center' spacing={2}>
+      <Grid
+        container
+        alignItems='center'
+        alignContent='center'
+        justify='space-between'
+        spacing={2}>
         <Grid item>
           <Grid container alignItems='center' alignContent='center' spacing={2}>
             <Grid item>

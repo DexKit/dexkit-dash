@@ -50,20 +50,9 @@ const ErrorStep: React.FC<Props> = (props) => {
   }, [step]);
 
   return (
-    <>
-      <Typography align='center' style={{paddingBottom: 10}}>
-        {message}
-      </Typography>
-      <Button
-        style={{margin: 0}}
-        fullWidth
-        variant='outlined'
-        color='primary'
-        size='large'
-        onClick={onClose}>
-        Close
-      </Button>
-    </>
+    <Typography align='center' style={{paddingBottom: 10}}>
+      {message}
+    </Typography>
   );
 };
 

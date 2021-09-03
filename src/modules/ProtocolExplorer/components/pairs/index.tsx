@@ -14,6 +14,7 @@ import Box from '@material-ui/core/Box';
 import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
 import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
+import {useMediaQuery, useTheme} from '@material-ui/core';
 type Props = {
   baseAddress: string;
   exchange: EXCHANGE;
@@ -63,57 +64,61 @@ export const Pairs = (props: Props) => {
     }
   }, [data]);
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
-      <Paper className={classes.paper}>
-        <Grid container alignItems='center' spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant='h6'>
-              {data ? data.length : ''} Pairs
-            </Typography>
+      <Grid container alignItems='center' spacing={4}>
+        <Grid item xs={12}>
+          <Typography variant='h6'>{data ? data.length : ''} Pairs</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            {data &&
+              data?.map((pair, k) => (
+                <Grid key={k} item xs={isMobile ? 12 : undefined}>
+                  <TokenPairCard
+                    firstToken={pair.baseCurrency?.symbol as string}
+                    secondToken={pair.quoteCurrency?.symbol as string}
+                    firstIcon={''}
+                    secondIcon={''}
+                    selected={pair === selectedPair}
+                    exchange={pair.exchange?.fullName as EXCHANGE}
+                    onSelect={() => setSelectedPair(pair)}
+                  />
+                </Grid>
+              ))}
           </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={4}>
-              {data &&
-                data?.map((pair, k) => (
-                  <Grid key={k} item>
-                    {
-                      <TokenPairCard
-                        firstToken={pair.baseCurrency?.symbol as string}
-                        secondToken={pair.quoteCurrency?.symbol as string}
-                        firstIcon={''}
-                        secondIcon={''}
-                        selected={pair === selectedPair}
-                        exchange={pair.exchange?.fullName as EXCHANGE}
-                        onSelect={() => setSelectedPair(pair)}
-                      />
-                    }
-                  </Grid>
-                ))}
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            {selectedPair &&
-            IS_AMM(selectedPair?.exchange?.fullName as EXCHANGE, selectedPair?.protocol) ? (
+        </Grid>
+        <Grid item xs={12}>
+          {selectedPair &&
+          IS_AMM(
+            selectedPair?.exchange?.fullName as EXCHANGE,
+            selectedPair?.protocol,
+          ) ? (
+            <>
               <PairAnalyticsAMM
                 exchange={selectedPair?.exchange?.fullName as EXCHANGE}
                 address={selectedPair?.smartContract?.address.address as string}
                 networkName={networkName}
                 pair={selectedPair}
               />
-            ) : (
-              selectedPair && (
+            </>
+          ) : (
+            selectedPair && (
+              <>
                 <PairAnalytics
                   exchange={selectedPair?.exchange?.fullName as EXCHANGE}
                   networkName={networkName}
                   pair={selectedPair}
                 />
-              )
-            )}
-          </Grid>
-          <Grid item xs={12}></Grid>
+              </>
+            )
+          )}
         </Grid>
-      </Paper>
+      </Grid>
       <Box mt={2}>
         <Grid container alignItems='center' spacing={2}>
           <Grid item xs={12}>

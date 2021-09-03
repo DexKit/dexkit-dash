@@ -12,6 +12,8 @@ import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
 import {isMobile} from 'web3modal';
 import Container from '@material-ui/core/Container';
+import AppBottomNavigation from 'shared/components/AppBottomNavigation';
+import {useTheme} from '@material-ui/core';
 
 interface TransitionWrapperProps {
   children: ReactNode;
@@ -42,21 +44,21 @@ interface ContentViewProps {
 }
 
 const ContentView: React.FC<ContentViewProps> = () => {
+  const theme = useTheme();
   return isMobile() ? (
-    <Container
-      maxWidth='sm'
-      style={{overflow: 'auto', height: '100%', position: 'relative'}}>
+    <Scrollbar>
       <Box
         display='flex'
         flex={1}
         flexDirection='column'
-        className='main-content-view'>
+        className='main-content-view'
+        pb={40}>
         <Suspense>
           <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
         </Suspense>
       </Box>
       <AppFooter />
-    </Container>
+    </Scrollbar>
   ) : (
     <Scrollbar>
       <Box

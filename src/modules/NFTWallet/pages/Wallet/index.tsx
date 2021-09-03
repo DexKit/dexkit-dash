@@ -21,6 +21,8 @@ import {
   Button,
   Paper,
   Container,
+  Breadcrumbs,
+  Link,
 } from '@material-ui/core';
 
 import AssetCard from '../../components/detail/AssetCard';
@@ -53,11 +55,15 @@ import ActionSelect, {
   Actions,
 } from 'modules/NFTWallet/components/wallet/ActionSelect';
 
+import {Link as RouterLink} from 'react-router-dom';
+
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/state/wallet-01.svg';
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
+import CopyButton from 'shared/components/CopyButton';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -305,7 +311,7 @@ export default () => {
   }, []);
 
   const handleToggleFilters = useCallback((e) => {
-    setShowFilters(false);
+    setShowFilters((value) => !value);
   }, []);
 
   const handleSelectCollection = useCallback(
@@ -445,27 +451,39 @@ export default () => {
   return (
     <>
       <Box pt={{xs: 8}}>
-        <PageTitle
-          breadcrumbs={{
-            history: [
-              {
-                url: '/',
-                name: messages['nfts.walletBreadcrumbDashboard'].toString(),
-              },
-            ],
-            active: {
-              name: messages['nfts.walletActiveName'].toString(),
-            },
-          }}
-          title={{
-            hasCopy: `${getWindowUrl()}/nfts/wallet/${address}`,
-            name: isWalletOwner(address, userAddress)
-              ? messages['nfts.walletTitle'].toString()
-              : isUpXs
-              ? address
-              : truncateTokenAddress(address),
-          }}
-        />
+        <Box mb={4}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Breadcrumbs>
+                <Link to='/' color='textPrimary' component={RouterLink}>
+                  {messages['nfts.walletBreadcrumbDashboard'].toString()}
+                </Link>
+                <Link color='textSecondary'>
+                  {messages['nfts.walletActiveName'].toString()}
+                </Link>
+              </Breadcrumbs>
+            </Grid>
+            <Grid item xs={12}>
+              <Box display='flex' alignItems='center' alignContent='center'>
+                <Box mr={2}>
+                  <Typography variant='h5'>
+                    {isWalletOwner(address, userAddress)
+                      ? messages['nfts.walletTitle'].toString()
+                      : isUpXs
+                      ? address
+                      : truncateTokenAddress(address)}
+                  </Typography>
+                </Box>
+                <CopyButton
+                  size='small'
+                  copyText={`${getWindowUrl()}/nfts/wallet/${address}`}
+                  tooltip='Copied!'>
+                  <FileCopyIcon />
+                </CopyButton>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
         <>
           <Box>
             <Grid container spacing={4}>

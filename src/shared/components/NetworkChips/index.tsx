@@ -27,7 +27,7 @@ const NetworkChips = (props: Props) => {
           style={{marginRight: 10}}
           label='All'
           clickable
-          color={filter === 'all' ? 'primary' : 'default'}
+          variant={filter === 'all' ? 'default' : 'outlined'}
           onClick={() => onClickChip('all')}
         />
       )}
@@ -35,13 +35,13 @@ const NetworkChips = (props: Props) => {
         style={{marginRight: 10}}
         label='ETH'
         clickable
-        color={filter === EthereumNetwork.ethereum ? 'primary' : 'default'}
+        variant={filter === EthereumNetwork.ethereum ? 'default' : 'outlined'}
         onClick={() => onClickChip(EthereumNetwork.ethereum)}
       />
       <Chip
         label='BSC'
         clickable
-        color={filter === EthereumNetwork.bsc ? 'primary' : 'default'}
+        variant={filter === EthereumNetwork.bsc ? 'default' : 'outlined'}
         onClick={() => onClickChip(EthereumNetwork.bsc)}
       />
     </Grid>

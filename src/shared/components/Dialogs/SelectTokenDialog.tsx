@@ -34,10 +34,11 @@ const useStyles = makeStyles((theme) => ({
 interface Props extends DialogProps {
   tokens: Token[];
   onSelectToken: (coin: Token) => void;
+  showNetwork?: boolean;
 }
 
 export const SelectTokenDialog = (props: Props) => {
-  const {onSelectToken, tokens, onClose} = props;
+  const {onSelectToken, tokens, onClose, showNetwork} = props;
   const theme = useTheme();
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -56,7 +57,7 @@ export const SelectTokenDialog = (props: Props) => {
       setFilterText(value);
 
       const filtered = tokens.filter((token: Token) =>
-        token.name.startsWith(value),
+        token.name.toLowerCase().startsWith(value.toLowerCase()),
       );
 
       setFilteredTokens(filtered);
@@ -78,7 +79,7 @@ export const SelectTokenDialog = (props: Props) => {
   }, [onClose]);
 
   return (
-    <Dialog maxWidth='xl' {...props} fullScreen={fullScreen}>
+    <Dialog maxWidth='sm' fullWidth {...props} fullScreen={fullScreen}>
       <DialogTitle>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography variant='body1'>Select a token</Typography>
@@ -105,6 +106,7 @@ export const SelectTokenDialog = (props: Props) => {
           <List>
             {filteredTokens.map((token, index: number) => (
               <SelectTokenListItem
+                showNetwork={showNetwork}
                 onClick={handleSelectToken}
                 token={token}
                 key={index}

@@ -4,6 +4,9 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
+    drawer: {
+      width: '100%',
+    },
     container: {
       paddingLeft: 0,
       paddingTop: 0,

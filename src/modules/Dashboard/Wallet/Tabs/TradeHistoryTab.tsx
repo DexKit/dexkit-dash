@@ -14,10 +14,14 @@ import {
   Typography,
   Chip,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import Close from '@material-ui/icons/Close';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
+import {TransferTab} from './TransfersTab';
 
 type Props = {
   address?: string;
@@ -51,6 +55,16 @@ export const TradeHistoryTab = (props: Props) => {
     setShowFilters((value) => !value);
   }, []);
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [showTransfers, setShowTransfers] = useState(false);
+
+  const handleToggleTransfers = useCallback(() => {
+    setShowTransfers((value) => !value);
+  }, []);
+
   return address ? (
     <>
       <Drawer open={showFilters} anchor='right' onClose={handleToggleFilters}>
@@ -62,7 +76,7 @@ export const TradeHistoryTab = (props: Props) => {
                   <Grid item>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item>
-                        <FilterSearchIcon style={{}} />
+                        <FilterSearchIcon />
                       </Grid>
                       <Grid item>
                         <Typography variant='body1'>Filter</Typography>
@@ -97,23 +111,63 @@ export const TradeHistoryTab = (props: Props) => {
         </Box>
       </Drawer>
       <Grid container spacing={4}>
-        {token ? (
-          <Grid item xs={12}>
-            <TradeHistoryContainer
-              address={address}
-              token={token}
-              networkName={networkName}
-            />
+        <Grid item xs={12}>
+          <Grid
+            container
+            spacing={2}
+            justify='space-between'
+            alignItems='baseline'>
+            <Grid item></Grid>
+            <Grid item>
+              <Grid container spacing={4}>
+                <Grid item>
+                  <Chip
+                    clickable
+                    onClick={handleToggleTransfers}
+                    variant={!showTransfers ? 'default' : 'outlined'}
+                    label='History'
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    onClick={handleToggleTransfers}
+                    variant={showTransfers ? 'default' : 'outlined'}
+                    label='Transfers'
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <SquaredIconButton onClick={handleToggleFilters}>
+                <FilterSearchIcon />
+              </SquaredIconButton>
+            </Grid>
           </Grid>
-        ) : null}
-        {!token ? (
-          <Grid item xs={12}>
-            <TradeAllHistoryContainer
-              address={address}
-              networkName={networkName}
-            />
-          </Grid>
-        ) : null}
+        </Grid>
+        {showTransfers ? (
+          <TransferTab address={address} networkName={networkName} />
+        ) : (
+          <>
+            {token ? (
+              <Grid item xs={12}>
+                <TradeHistoryContainer
+                  address={address}
+                  token={token}
+                  networkName={networkName}
+                />
+              </Grid>
+            ) : null}
+            {!token ? (
+              <Grid item xs={12}>
+                <TradeAllHistoryContainer
+                  address={address}
+                  networkName={networkName}
+                />
+              </Grid>
+            ) : null}
+          </>
+        )}
       </Grid>
     </>
   ) : (

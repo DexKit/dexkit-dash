@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(6),
   },
   container: {
+    justifyContent: 'flex-start',
     display: 'flex',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
@@ -57,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
   item: {
     marginRight: theme.spacing(4),
     objectFit: 'contain',
-    width: '100%',
   },
   itemText: {
     whiteSpace: 'nowrap',

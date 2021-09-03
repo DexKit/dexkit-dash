@@ -30,50 +30,22 @@ const TransferListContainer: React.FC<Props> = (props) => {
 
   return (
     <GridContainer>
-      <Grid item xs={12} md={12}>
-        <Paper className={classes.paper}>
-          <Toolbar className={classes.toolbar}>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              style={{width: '100%'}}>
-              <Box>
-                <Typography variant='h5'>Transfers List</Typography>
-              </Box>
-              {/* <Select
-                    className={classes.selectBox}
-                    value={filterValue}
-                    onChange={handleChange}
-                    disableUnderline={true}>
-                    <option value='all' className={classes.selectOption}>
-                      {messages['app.all']}
-                    </option>
-                    <option value='send' className={classes.selectOption}>
-                      {messages['app.send']}
-                    </option>
-                    <option value='receive' className={classes.selectOption}>
-                      {messages['app.receive']}
-                    </option>
-                  </Select> */}
-            </Box>
-          </Toolbar>
-          {loading ? (
-            <LoadingTable columns={6} rows={10} />
-          ) : error ? (
-            <ErrorView message={error.message} />
-          ) : (
-            <TransferTable
-              networkName={networkName}
-              data={data}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              rowsPerPageOptions={rowsPerPageOptions}
-              onChangePage={(newPage) => onChangePage(newPage)}
-              onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-            />
-          )}
-        </Paper>
+      <Grid item xs={12}>
+        {loading ? (
+          <LoadingTable columns={6} rows={10} />
+        ) : error ? (
+          <ErrorView message={error.message} />
+        ) : (
+          <TransferTable
+            networkName={networkName}
+            data={data}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangePage={(newPage) => onChangePage(newPage)}
+            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+          />
+        )}
       </Grid>
     </GridContainer>
   );

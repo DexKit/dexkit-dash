@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Box,
@@ -7,7 +7,11 @@ import {
   Tab,
   Card,
   makeStyles,
+  Typography,
+  DialogTitle,
+  DialogContent,
   Chip,
+  IconButton,
 } from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -16,6 +20,11 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 import {useNetwork} from 'hooks/useNetwork';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import Tooltip from '@material-ui/core/Tooltip';
+import {ExportWhiteIcon} from 'shared/components/Icons';
+
+import CloseIcon from '@material-ui/icons/Close';
+import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
+import {useSenderTokens} from 'hooks/useSenderTokens';
 
 interface Props {
   open: boolean;
@@ -51,6 +60,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       marginRight: 20,
     },
   },
+  icon: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
 }));
 
 const Sender: React.FC<Props> = (props) => {
@@ -64,45 +77,50 @@ const Sender: React.FC<Props> = (props) => {
     };
   };
 
-  return (
-    <div>
-      <Dialog
-        fullWidth
-        maxWidth='xs'
-        open={props.open}
-        onClose={props.onClose}
-        aria-labelledby='form-dialog-title'>
-        <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card>
-            <Tabs
-              indicatorColor='primary'
-              textColor='primary'
-              aria-label='simple tabs example'
-              className={classes.muiTabsRoot}>
-              <Tab
-                className={classes.muiTab}
-                style={{fontWeight: 'bold'}}
-                label={
-                  <Box display={'flex'}>
-                    <Tooltip title={'Current Connected Network'}>
-                      <Chip
-                        label={FORMAT_NETWORK_NAME(networkName)}
-                        style={{marginRight: '8px'}}
-                      />
-                    </Tooltip>
-                    <IntlMessages id='Send' />{' '}
-                  </Box>
-                }
-                {...a11yProps(0)}
-                // disabled={address != null && address.length > 0}
-              />
-            </Tabs>
+  const {open, onClose} = props;
 
-            <SenderForm balances={props.balances} amount={props.amount} />
-          </Card>
+  const handleClose = useCallback(
+    (e) => {
+      if (onClose) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
+  return (
+    <Dialog
+      fullWidth
+      maxWidth='xs'
+      open={props.open}
+      onClose={props.onClose}
+      aria-labelledby='form-dialog-title'>
+      <DialogTitle>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              alignItems='center'
+              alignContent='center'
+              mr={2}>
+              <ExportWhiteIcon className={classes.icon} />
+            </Box>
+            <Typography variant='body1'>
+              <IntlMessages id='Send' />
+            </Typography>
+          </Box>
+          <Box>
+            <IconButton size='small' onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </Box>
-      </Dialog>
-    </div>
+      </DialogTitle>
+      <DialogContent dividers>
+        <SenderForm balances={props.balances} amount={props.amount} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

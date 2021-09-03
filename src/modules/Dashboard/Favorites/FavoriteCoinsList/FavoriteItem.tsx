@@ -3,7 +3,6 @@ import {FavoriteCoin} from 'redux/_ui/reducers';
 import {CoinItemCoinGecko} from 'types/coingecko';
 import TokenListItem from 'shared/components/TokenListItem';
 
-
 interface FavoriteItemProps {
   row: FavoriteCoin;
   marketData?: CoinItemCoinGecko;
