@@ -8,6 +8,7 @@ import {
 import {Web3State} from 'types/blockchain';
 import {Game, GameParams} from 'types/coinsleague';
 import {getGamesData} from '../services/coinsLeague';
+import {useQuery} from 'react-query';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -35,31 +36,45 @@ export const useCoinsLeagueFactory = () => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
+        console.log(e);
         callbacks?.onError(e);
       }
     },
     [web3State],
   );
 
-  useEffect(() => {
+  const gamesAddressQuery = useQuery(['GetGamesAdddress', web3State], () => {
     if (web3State !== Web3State.Done) {
       return;
     }
-    getGamesAddressFromFactory(COINS_LEAGUE_FACTORY_ADDRESS['MUMBAI'], 50).then(
-      (a) => {
-        console.log(a);
-        setGamesAddress(a[0]);
-        setTotalGames(a[1]);
-      },
+    return getGamesAddressFromFactory(
+      COINS_LEAGUE_FACTORY_ADDRESS['MUMBAI'],
+      50,
     );
-  }, [web3State]);
+  });
 
-  useEffect(() => {
-    if (web3State !== Web3State.Done || !gamesAddress?.length) {
-      return;
-    }
-    getGamesData(gamesAddress).then((g) => setGames(g));
-  }, [web3State]);
+  const gamesQuery = useQuery(
+    ['GetGamesAdddress', web3State, gamesAddressQuery.data],
+    () => {
+      if (
+        web3State !== Web3State.Done ||
+        !gamesAddressQuery?.data ||
+        !gamesAddressQuery?.data[0].length
+      ) {
+        return;
+      }
+      const gAddress = gamesAddressQuery?.data[0];
+      return getGamesData(gAddress);
+    },
+  );
 
-  return {onGameCreateCallback, gamesAddress, games, totalGames};
+  
+  return {
+    onGameCreateCallback,
+    gamesAddress: gamesAddressQuery?.data ? gamesAddressQuery?.data[0] : [],
+    games: gamesQuery?.data,
+    totalGames: gamesAddressQuery?.data && gamesAddressQuery?.data[1],
+    gamesAddressQuery,
+    gamesQuery
+  };
 };

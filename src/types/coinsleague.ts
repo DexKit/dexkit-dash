@@ -2,7 +2,7 @@ import {BigNumber} from 'ethers';
 
 export interface Player {
   score: BigNumber;
-  address: string;
+  player_address: string;
   coin_feeds?: CoinFeed[];
 }
 
@@ -21,10 +21,10 @@ export interface Game {
   aborted: boolean;
   scores_done: boolean;
   duration: BigNumber;
-  num_players: BigNumber;
+  num_players: number;
   amount_to_play: BigNumber;
   total_amount_collected: BigNumber;
-  num_coins: BigNumber;
+  num_coins: number;
   start_timestamp: BigNumber;
   address: string;
 }

@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
-import Modal, {ModalProps} from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import Divider from '@material-ui/core/Divider';
@@ -15,6 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
@@ -55,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     borderRadius: 6,
     fontSize: '1rem',
-    background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
     marginTop: theme.spacing(1),
@@ -89,15 +90,15 @@ const CreateGameModal = (props: Props) => {
   }
   const onCreateGame = useCallback(
     (ev?: any) => {
-      if (totalPlayers && entryAmount && duration && coins && gameType) {
+      if (totalPlayers && entryAmount && duration && coins) {
         const params: GameParams = {
           numPlayers: totalPlayers,
           duration,
           amountUnit: ethers.utils.parseEther(String(entryAmount)),
           numCoins: coins,
-          abortTimestamp: duration * 3,
+          abortTimestamp: Math.round((new Date().getTime())/1000 + duration * 3),
         };
-
+        console.log('Callaback called');
         onGameCreateCallback(params);
       }
     },
@@ -105,14 +106,18 @@ const CreateGameModal = (props: Props) => {
   );
 
   return (
-    <Modal open={open}>
-      <Container className={classes.container} maxWidth='xs'>
-        <Grid container style={{paddingLeft: 10, paddingRight: 5}}>
+    <Dialog open={open}>
+      <DialogTitle>
+        <Grid container spacing={2}>
           <Grid item xs={11}>
-            <Typography variant='h6'>
-              <TransferIcon />
-              Create a game
-            </Typography>
+            <Grid container spacing={2} justifyContent={'flex-start'}>
+              <Grid item>
+                <TransferIcon />
+              </Grid>
+              <Grid item>
+                <Typography variant='h6'>Create a game</Typography>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={1}>
             <IconButton onClick={() => setOpen(false)} size='small'>
@@ -120,44 +125,42 @@ const CreateGameModal = (props: Props) => {
             </IconButton>
           </Grid>
         </Grid>
+      </DialogTitle>
 
-        <Divider
-          style={{
-            marginTop: 10,
-            marginLeft: 10,
-            marginRight: 10,
-            backgroundColor: '#525C75',
-          }}
-        />
-
-        <Grid container className={classes.innerContent}>
-          <Typography variant='h6' style={{fontWeight: 600}}>
-            Basic information
-          </Typography>
-          <Typography variant='subtitle2'>
-            Answer all of the options below to continue
-          </Typography>
+      <DialogContent dividers>
+        <Grid container className={classes.innerContent} spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant='h6' style={{fontWeight: 600}}>
+              Basic information
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant='subtitle2'>
+              Answer all of the options below to continue
+            </Typography>
+          </Grid>
         </Grid>
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Entry amount</FormLabel>
-            <TextField
+            <FormLabel className={classes.label}>Entry Amount</FormLabel>
+            <Select
               variant='outlined'
-              size='small'
-              inputMode='decimal'
-              value={entryAmount}
+              placeholder='Select'
               onChange={(event) => setEntryAmount(Number(event.target.value))}
-              inputProps={{
-                style: {
-                  color: '#fff',
-                  borderRadius: 6,
-                  border: '1px solid #525C75',
-                  backgroundColor: '#3C4255',
-                },
-              }}
-              placeholder='enter a value'
-            />
+              style={{
+                color: '#fff',
+                borderRadius: 6,
+                backgroundColor: '#3C4255',
+              }}>
+              <MenuItem value={0.01}>0.01 Matic</MenuItem>
+              <MenuItem value={1}>1 Matic</MenuItem>
+              <MenuItem value={5}>5 Matic</MenuItem>
+              <MenuItem value={10}>10 Matic</MenuItem>
+              <MenuItem value={50}>50 Matic</MenuItem>
+              <MenuItem value={100}>100 Matic</MenuItem>
+              <MenuItem value={500}>500 Matic</MenuItem>
+            </Select>
           </FormControl>
         </Grid>
 
@@ -205,6 +208,7 @@ const CreateGameModal = (props: Props) => {
                 inputProps={{
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
+                <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>
@@ -271,13 +275,15 @@ const CreateGameModal = (props: Props) => {
 
         <Button
           fullWidth
+          variant={'contained'}
+          color={'primary'}
           className={classes.button}
           onClick={onCreateGame}
-          disabled={!!coins && !!entryAmount && !!totalPlayers}>
+          disabled={!coins || !entryAmount || !totalPlayers || !duration}>
           CREATE A GAME
         </Button>
-      </Container>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 };
 

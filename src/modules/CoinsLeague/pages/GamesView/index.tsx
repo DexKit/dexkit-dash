@@ -6,7 +6,6 @@ import {ClaimGame} from '../../components/Claim/Claim';
 import {EndGame} from '../../components/EndGame/EndGame';
 import {JoinGame} from '../../components/JoinGame';
 import {PlayerView} from '../../components/PlayerView';
-import {StartGame} from '../../components/StartGame/StartGame';
 
 interface Props {
   game: Game;
@@ -53,9 +52,7 @@ export const GameView = (props: Props) => {
       </div>
       {game && (
         <div>
-          {totalPlayers.sub(game.num_players).eq('0') && !game.started && (
-            <StartGame address={game.address} />
-          )}
+        
           {!totalPlayers.sub(game.num_players).eq('0') && !game.started && (
             <JoinGame address={game.address} />
           )}

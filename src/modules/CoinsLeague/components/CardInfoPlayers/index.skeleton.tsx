@@ -2,9 +2,11 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import {ReactComponent as People} from 'assets/images/icons/people.svg'
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -14,38 +16,28 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   innerContent: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     justifyContent: 'space-between',
     fontSize: '1rem',
   },
 }));
 
-interface Props {
-  prizePool: number;
-}
 
-function CardPrize(props: Props): JSX.Element {
+
+function CardInfoPlayersSkeleton(): JSX.Element {
   const classes = useStyles();
-  const { prizePool } = props;
-  /*const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
 
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Prize Pool
-          </Typography>
-          <Typography variant='h4' style={{color: '#fff'}}>
-            {prizePool} MATIC
-          </Typography>
+        <Grid item xs={12} justifyContent={'center'} alignItems={'center'} alignContent={'center'} >
+          <Button fullWidth variant={'contained'}  startIcon={<People/>}>
+          <Skeleton>  {`PLAYERS ${0} (${10})`}</Skeleton>
+          </Button>
         </Grid>
       </Grid>
     </Container>
   );
 }
 
-export default CardPrize;
+export default CardInfoPlayersSkeleton;

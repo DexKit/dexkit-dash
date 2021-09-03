@@ -15,7 +15,7 @@ export const getCoinsLeagueContract = async (address: string) => {
   if (!coinsLeague) {
     const web3Wrapper = await getWeb3Wrapper();
     //@ts-ignore
-    const provider = new providers.Web3Provider(web3Wrapper.getProvider());
+    const provider = new providers.Web3Provider(web3Wrapper.getProvider()).getSigner();
     coinsLeague = new ethers.Contract(address, coinsLeagueAbi, provider);
   }
 
@@ -34,6 +34,7 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
 
   for (let index = 0; index < gamesAddress.length; index++) {
     const addr = gamesAddress[index];
+    console.log(addr);
     calls.push({interface: iface, target: addr, function: 'game'});
     calls.push({interface: iface, target: addr, function: 'getPlayers'});
   }
@@ -87,7 +88,7 @@ export const joinGame = async (
   amount: string,
 ) => {
   return (await getCoinsLeagueContract(gameAddress)).joinGame(feeds, {
-    value: ethers.utils.parseEther(amount),
+    value: amount,
   }) as Promise<ContractTransaction>;
 };
 

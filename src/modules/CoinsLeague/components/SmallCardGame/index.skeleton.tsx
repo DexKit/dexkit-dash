@@ -4,11 +4,11 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import {ethers} from 'ethers';
+
 import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-
+import Skeleton from '@material-ui/lab/Skeleton';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -33,15 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  address: string;
-  amount_to_play: ethers.BigNumber;
-  start_timestamp: ethers.BigNumber;
-  duration: ethers.BigNumber;
-  num_players: number;
-  btnMessage?: string;
-}
-
 const strPad = (str: number): string =>
   (new Array(3).join('0') + str).slice(-2);
 
@@ -60,27 +51,16 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-function SmallCardGame(props: Props): JSX.Element {
-  const { amount_to_play, start_timestamp, num_players, duration, address} = props;
+function SmallCardGameSkeleton(): JSX.Element {
   const classes = useStyles();
-
-  /* const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
-
-  const prizeTotalValue = ethers.utils.formatEther(
-    amount_to_play.mul(num_players),
-  );
-  const entryAmount = ethers.utils.formatEther(amount_to_play);
-  const time = duration.toNumber();
-  const startTime =
-    Math.round(new Date().getTime() / 1000) - start_timestamp.toNumber();
-  const countDownTime = time - startTime;
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h5'>ID #{truncateAddress(address)}</Typography>
+      <Skeleton>
+        <Typography variant='h5'>
+          ID #{truncateAddress('0x0000000000000000000000000000000000')}
+        </Typography>
+      </Skeleton>
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Grid container>
@@ -92,29 +72,36 @@ function SmallCardGame(props: Props): JSX.Element {
                 alignItems: 'baseline',
               }}>
               <SendIcon />
-              &nbsp;{entryAmount} {'Matic'}
+              <Skeleton>
+                &nbsp;{0} {'Matic'}
+              </Skeleton>
             </Typography>
           </Grid>
 
           <Grid container>
             <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
-            <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
+            <Skeleton>
+              <Typography variant='h6'>{1000} Matic</Typography>
+            </Skeleton>
           </Grid>
 
           <Grid container style={{color: '#7a8398'}}>
             <Typography variant='h6'>Countdown:&nbsp;</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
-              <CardTimer time={countDownTime} />
+              <Skeleton>
+                <CardTimer time={1000} />
+              </Skeleton>
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-
-      <Button className={classes.button} fullWidth>
-        {props.btnMessage || 'VIEW'}
-      </Button>
+      <Skeleton>
+        <Button className={classes.button} fullWidth>
+          {'VIEW'}
+        </Button>
+      </Skeleton>
     </Container>
   );
 }
 
-export default SmallCardGame;
+export default SmallCardGameSkeleton;

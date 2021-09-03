@@ -13,7 +13,7 @@ export const PlayerView = (props: Props) => {
     <div className='Game-View-Detail'>
       <h3>Player Details</h3>
       <ul>
-        <li>Address: {String(player?.address)}</li>
+        <li>Address: {String(player?.player_address)}</li>
         <li>Score: {player.score.toString()}</li>
       </ul>
       <div className='Player-Coin-Feeds'>

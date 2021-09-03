@@ -16,7 +16,7 @@ export const TransferTab = (props: Props) => {
   const history = useHistory();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
-  }, []);
+  }, [history.location.search]);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
       EthereumNetwork.ethereum,

@@ -1,5 +1,6 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useEffect, useState} from 'react';
+import { useQuery } from 'react-query';
 
 import {Web3State} from 'types/blockchain';
 import {
@@ -10,6 +11,7 @@ import {
   abortGame,
   getWinner,
   claim,
+  getGamesData,
 } from '../services/coinsLeague';
 
 interface CallbackProps {
@@ -146,6 +148,18 @@ export const useCoinsLeague = (address?: string) => {
     [web3State, address],
   );
 
+  const gameQuery = useQuery(
+    ['GetGameAdddress', web3State, address],
+    () => {
+      if (
+        web3State !== Web3State.Done ||!address
+      ) {
+        return;
+      }
+      return getGamesData([address]);
+    },
+  );
+
   return {
     onJoinGameCallback,
     onStartGameCallback,
@@ -154,5 +168,7 @@ export const useCoinsLeague = (address?: string) => {
     onWithdrawCallback,
     onAbortGameCallback,
     winner,
+    game: gameQuery.data && gameQuery.data[0],
+    gameQuery,
   };
 };

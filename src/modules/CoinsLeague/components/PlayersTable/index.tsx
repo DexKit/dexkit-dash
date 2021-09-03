@@ -18,8 +18,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
 
 // TODO: Fix the icons import
-import BcdIcon from '../../../../assets/images/icons/send-square.svg';
-import RedCoinIcon from '../../../../assets/images/icons/export.svg';
+import {ReactComponent as BcdIcon} from 'assets/images/icons/send-square.svg';
+import {ReactComponent as RedCoinIcon} from 'assets/images/icons/export.svg';
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,17 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  prizePool: number;
-}
 
-function CardPrize(props: Props): JSX.Element {
+
+function CardPrizeSkeleton(): JSX.Element {
   const classes = useStyles();
-  const { prizePool } = props;
-  /*const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
+
+
 
   return (
     <Container className={classes.container}>
@@ -40,7 +36,7 @@ function CardPrize(props: Props): JSX.Element {
             Prize Pool
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
-            {prizePool} MATIC
+            <Skeleton>- MATIC</Skeleton>
           </Typography>
         </Grid>
       </Grid>
@@ -48,4 +44,4 @@ function CardPrize(props: Props): JSX.Element {
   );
 }
 
-export default CardPrize;
+export default CardPrizeSkeleton;
