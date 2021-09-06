@@ -22,8 +22,8 @@ import {
 } from 'redux/actions';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
-import {addAccounts, setAccount} from 'redux/_ui/actions';
-import {getMulticall} from 'services/multicall';
+import {addAccounts} from 'redux/_ui/actions';
+
 
 
 
@@ -94,10 +94,12 @@ export const useWeb3 = () => {
   const onCloseWeb3 = () => {
     const provider = getProvider();
     if (provider) {
-      closeWeb3();
-      dispatch(setEthAccount(undefined));
-      dispatch(setChainId(undefined));
-      dispatch(setWeb3State(Web3State.NotConnected));
+      closeWeb3().then(()=>{
+        dispatch(setEthAccount(undefined));
+        dispatch(setChainId(undefined));
+        dispatch(setWeb3State(Web3State.NotConnected));
+      });
+   
     }
   };
 
@@ -153,8 +155,9 @@ export const useWeb3 = () => {
     pr.on('close', () => {
       dispatch(setEthAccount(undefined));
       dispatch(setChainId(undefined));
-      closeWeb3();
-      dispatch(setWeb3State(Web3State.NotConnected));
+      closeWeb3().then(()=>{
+        dispatch(setWeb3State(Web3State.NotConnected));
+      });
     });
 
     pr.on('accountsChanged', async (accounts: string[]) => {

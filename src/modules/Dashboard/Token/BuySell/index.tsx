@@ -177,7 +177,7 @@ const BuySell: React.FC<Props> = ({
       });
       setSelect0(balancesFn);
     }
-  }, [balances, tokensETH, tokensBSC]);
+  }, [balances, tokensETH, tokensBSC, tokensMATIC]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
@@ -248,7 +248,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select0]);
+  }, [select0, networkName]);
 
   const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
     if (token) {
@@ -260,11 +260,8 @@ const BuySell: React.FC<Props> = ({
             (isNative &&
               token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
         ) {
-          const aux = tokenFrom;
           setTokenFrom(tokenTo);
-          setTokenTo(aux);
-
-          history.push(isNative ? token.symbol.toLowerCase() : token.address);
+          setTokenTo(tokenFrom);
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
@@ -291,9 +288,8 @@ const BuySell: React.FC<Props> = ({
             );
 
             if (availableTokenFrom) {
-              const aux = tokenTo;
               setTokenTo(tokenFrom);
-              setTokenFrom(aux);
+              setTokenFrom(tokenTo);
             } else {
               const newTokenFrom = select0.find((e) =>
                 isNative
@@ -305,15 +301,12 @@ const BuySell: React.FC<Props> = ({
               setTokenFrom(newTokenFrom);
             }
           } else {
-            const aux = tokenTo;
             setTokenTo(tokenFrom);
-            setTokenFrom(aux);
+            setTokenFrom(tokenTo);
           }
         } else {
           setTokenTo(token);
         }
-
-        // history.push(isNative ? token.symbol.toLowerCase() : token.address);
       }
     }
   };

@@ -270,7 +270,7 @@ const WalletInfo = (props: any) => {
                   </MenuItem>
                 ))}
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
-              <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              {!notConnected && <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>}
             </Menu>
           </Box>
         </Grid>
