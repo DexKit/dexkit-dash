@@ -20,6 +20,7 @@ import SelectTokenListItem from '../../components/SelectTokenListItem';
 import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
+import { MyBalances } from 'types/blockchain';
 
 interface Props extends DialogProps {
   title?: string;

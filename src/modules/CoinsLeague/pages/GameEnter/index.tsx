@@ -38,6 +38,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {red} from '@material-ui/core/colors';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -62,7 +64,11 @@ enum SubmitState {
   Error,
   Confirmed,
 }
-const GetButtonState = (state: SubmitState) => {
+const GetButtonState = (
+  state: SubmitState,
+  defaultMsg: string,
+  confirmedMsg: string,
+) => {
   switch (state) {
     case SubmitState.WaitingWallet:
       return (
@@ -86,10 +92,10 @@ const GetButtonState = (state: SubmitState) => {
         </>
       );
     case SubmitState.Confirmed:
-      return <>You Entered Game</>;
+      return <>{confirmedMsg}</>;
 
     default:
-      return 'ENTER GAME';
+      return defaultMsg;
   }
 };
 
@@ -189,8 +195,18 @@ function GameEnter(props: Props) {
     },
     [game],
   );
-
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
+
+  const started = useMemo(() => game?.started, [game]);
+  const finished = useMemo(() => game?.finished, [gameQuery.data]);
+  const totalPlayers = useMemo(() => game?.num_players, [game]);
+  const currentPlayers = useMemo(() => game?.players.length, [game]);
+  const gameFull = useMemo(() => {
+    if (totalPlayers && currentPlayers) {
+      return totalPlayers === currentPlayers;
+    }
+  }, [started, totalPlayers, currentPlayers]);
+
   const isDisabled = useMemo(() => {
     return selectedCoins?.length === game?.num_coins;
   }, [selectedCoins, game?.num_coins]);
@@ -261,7 +277,7 @@ function GameEnter(props: Props) {
           {isLoading && <CardInfoPlayersSkeleton />}
         </Grid>
 
-        {!player && (
+        {!player && !isLoading && !gameFull && (
           <Grid item xs={12} md={6} alignContent='space-around'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -299,7 +315,7 @@ function GameEnter(props: Props) {
           </Grid>
         )}
 
-        {!player && (
+        {!player && !isLoading && !gameFull && (
           <Grid item xs={12} md={12}>
             <Grid container spacing={4} justifyContent={'flex-end'}>
               <Grid item xs={12} md={6}>
@@ -310,7 +326,11 @@ function GameEnter(props: Props) {
                   color={
                     submitState === SubmitState.Error ? 'default' : 'primary'
                   }>
-                  {GetButtonState(submitState)}
+                  {GetButtonState(
+                    submitState,
+                    'ENTER GAME',
+                    'You Entered Game',
+                  )}
                 </Button>
               </Grid>
             </Grid>
@@ -336,6 +356,44 @@ function GameEnter(props: Props) {
                 />
               </Grid>
             </Grid>
+          </Grid>
+        )}
+        {gameFull && (
+          <Grid item xs={12}>
+            <Paper>
+              <Box m={2}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12} md={9}>
+                    <Typography variant='h6' style={{margin: 5}}>
+                      {currentPlayers} / {totalPlayers}
+                    </Typography>
+                    <Typography variant='h6' style={{margin: 5}}>
+                      Everybody is here
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <Box m={2}>
+                      <Button
+                        disabled={!isDisabled}
+                        onClick={onEnterGame}
+                        fullWidth
+                        variant={'contained'}
+                        color={
+                          submitState === SubmitState.Error
+                            ? 'default'
+                            : 'primary'
+                        }>
+                        {GetButtonState(
+                          submitState,
+                          'START GAME',
+                          'Game Started',
+                        )}
+                      </Button>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
           </Grid>
         )}
       </Grid>

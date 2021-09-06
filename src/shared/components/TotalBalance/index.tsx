@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   Box,
   Paper,
@@ -101,6 +101,7 @@ interface Props {
   balances: MyBalances[];
   only?: Token;
   loading?: boolean;
+  loadingUsd?: boolean;
   address?: string;
   tokenName?: string;
   onShare?: () => void;
@@ -113,6 +114,7 @@ const TotalBalance = (props: Props) => {
     balances,
     only,
     loading,
+    loadingUsd,
     address,
     tokenName,
     onMakeFavorite,
@@ -120,7 +122,6 @@ const TotalBalance = (props: Props) => {
     isFavorite,
   } = props;
   const [tokens, setTokens] = useState<MyBalances[]>([]);
-  const [usdAvailable, setUsdAvailable] = useState<number>(0);
   const [amountsVisible, setAmountsVisible] = useState(true);
 
   const networkName = useNetwork();
@@ -172,26 +173,41 @@ const TotalBalance = (props: Props) => {
     }
   }, [only, balances]);
 
-  useEffect(() => {
-    setUsdAvailable(
+  const usdTotalAmount = useMemo(() => {
+    return (
       tokens?.reduce((acc, current) => {
         return (acc += current.valueInUsd || 0);
-      }, 0) || 0,
+      }, 0) || 0
     );
   }, [tokens]);
 
+  const usdTotalPercentage = useMemo(() => {
+    if (!usdTotalAmount) {
+      return;
+    }
+    const ratios = tokens.map(
+      (c) =>
+        ((c.valueInUsd || 0) / usdTotalAmount) * (c.price24hPercentage || 0),
+    );
+    const totalChange = ratios.reduce((acc, curr) => acc + curr);
+    return totalChange;
+  }, [tokens, usdTotalAmount]);
+
   const classes = useStyles();
 
-  let onlyTokenValue = null;
-  let onlyTokenValueInUsd = null;
-
-  if (only) {
-    if (tokens.length > 0) {
-      onlyTokenValue =
-        tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
-      onlyTokenValueInUsd = tokens[0].valueInUsd?.toFixed(2);
+  const onlyTokenValueInUsd = useMemo(() => {
+    if (only && tokens.length > 0) {
+      return tokens[0].valueInUsd?.toFixed(2);
     }
-  }
+    return null;
+  }, [only, tokens.length]);
+
+  const onlyTokenValue = useMemo(() => {
+    if (only && tokens.length > 0) {
+      return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
+    }
+    return null;
+  }, [only, tokens.length]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -294,20 +310,38 @@ const TotalBalance = (props: Props) => {
                             </IconButton>
                           </Box>
                         </Typography>
-                        <Typography className={classes.usdAmount}>
-                          {loading ? (
-                            <Skeleton />
-                          ) : balances.length === 0 ? (
-                            '$ -'
-                          ) : (
-                            <>
-                              {amountsVisible
-                                ? onlyTokenValueInUsd ||
-                                  usdFormatter.format(usdAvailable)
-                                : '****,**'}
-                            </>
+                        <Grid container spacing={2}>
+                          <Grid item>
+                            <Typography className={classes.usdAmount}>
+                              {loadingUsd ? (
+                                <Skeleton />
+                              ) : balances.length === 0 ? (
+                                '$ -'
+                              ) : (
+                                <>
+                                  {amountsVisible
+                                    ? onlyTokenValueInUsd ||
+                                      usdFormatter.format(usdTotalAmount)
+                                    : '****,**'}
+                                </>
+                              )}
+                            </Typography>
+                          </Grid>
+                          {usdTotalPercentage && (
+                            <Grid item>
+                              <Typography
+                                style={{
+                                  color:
+                                    usdTotalPercentage >= 0
+                                      ? theme.palette.success.main
+                                      : theme.palette.error.main,
+                                }}
+                                variant={'h6'}>
+                                {usdTotalPercentage.toFixed(2)}%
+                              </Typography>
+                            </Grid>
                           )}
-                        </Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>

@@ -68,7 +68,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     history.push({search: searchParams.toString()});
     setValue(newValue);
   };
-  const {loading, error, data} = useAllBalance(defaultAccount);
+  const {loading, error, data, loadingUsd} = useAllBalance(defaultAccount);
 
   useEffect(() => {
     if (
@@ -114,6 +114,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                   address={account}
                   balances={data}
                   loading={loading}
+                  loadingUsd={loadingUsd}
                 />
               )}
             </Grid>
@@ -163,7 +164,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         </Grid>
                         <Grid item>
                           <Button
-                            to='/dashboard/favorite-coins'
+                            to='/favorite-coins'
                             component={RouterLink}
                             size='small'
                             endIcon={<KeyboardArrowRightIcon />}>

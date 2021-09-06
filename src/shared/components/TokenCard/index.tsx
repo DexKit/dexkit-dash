@@ -15,7 +15,7 @@ import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 interface TokenCardProps {
   icon: React.ReactNode | React.ReactNode[];
   pair: string;
-  amount: number | string;
+  amount?: number | string;
   price24Change?: number;
   onClick?: () => void;
 }
@@ -49,8 +49,9 @@ export const TokenCard = (props: TokenCardProps) => {
   const {icon, price24Change, pair, amount, onClick} = props;
   const {usdFormatter} = useUSDFormatter();
   const amountUSD = useMemo(()=> {
-    return usdFormatter.format(Number(amount));
-
+    if(amount){
+      return usdFormatter.format(Number(amount));
+    }
   }, [amount])
 
   const classes = useStyles();
@@ -72,7 +73,7 @@ export const TokenCard = (props: TokenCardProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography className={classes.amount} variant='h5'>
-                {amountUSD}
+                {amountUSD || '-'}
                 </Typography>
               </Grid>
               {price24Change && <Grid item>

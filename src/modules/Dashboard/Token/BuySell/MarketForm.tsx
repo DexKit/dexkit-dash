@@ -72,6 +72,8 @@ const MarketForm: React.FC<Props> = (props) => {
   const network = useNetwork();
 
   const {web3State, onConnectWeb3} = useWeb3();
+  const [disableSelect, setDisableSelect] = useState(disableReceive ? 'to' : '');
+
 
   const [tokenBalance, setTokenBalance] =
     useState<GetMyBalance_ethereum_address_balances>();
@@ -102,6 +104,14 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
+    if(disableSelect){
+      if(disableSelect === 'to'){
+        setDisableSelect('from')
+      }else{
+        setDisableSelect('to')
+      }
+    }
+
   }, [tokenFrom, tokenTo]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
@@ -370,7 +380,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   id={'marketSel0'}
                   label={'Your Coins'}
                   selected={tokenFrom}
-                  disabled={disabled}
+                  disabled={disabled || disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
                 />
               </Grid>
@@ -412,7 +422,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <SelectTokenV2
                     id={'marketSel1'}
                     selected={tokenTo}
-                    disabled={disabled || disableReceive}
+                    disabled={disabled || disableSelect === 'to'}
                     onClick={handleSelectTokenTo}
                   />
                 )}

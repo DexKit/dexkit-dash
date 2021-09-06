@@ -115,6 +115,9 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
               {data.network === EthereumNetwork.ethereum && (
                 <Chip size='small' label='ETH' />
               )}
+              {data.network === EthereumNetwork.matic && (
+                <Chip size='small' label='MATIC' />
+              )}
             </Box>
           </Box>
         </Box>

@@ -1,7 +1,8 @@
-import {BigNumber, fromTokenUnitAmount} from '@0x/utils';
-import {useEffect, useState} from 'react';
+import { fromTokenUnitAmount} from '@0x/utils';
+
+import { useQuery } from 'react-query';
 import {fetchPrice} from 'services/rest/0x-api/fetchPrice';
-import {QuotePriceParams, SwapQuoteResponse} from 'services/rest/0x-api/types';
+import {QuotePriceParams} from 'services/rest/0x-api/types';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {OrderSide} from 'types/app';
@@ -24,25 +25,19 @@ export const useTokenPriceUSD = (
   decimals?: number,
   refresh?: boolean,
 ) => {
-  const [priceQuote, setPriceQuote] = useState<SwapQuoteResponse>();
-  const [loading, setLoading] = useState<boolean>();
 
-  useEffect(() => {
-    if (address && amount && network && decimals) {
-      const amountAPI = fromTokenUnitAmount(amount, decimals);
-      const quote: QuotePriceParams = {
-        baseToken: address.toLowerCase(),
-        quoteToken: 'USDC',
-        orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
-        baseAmount: amountAPI,
-      };
-      setLoading(true);
-      fetchPrice(quote, network)
-        .then((p) => setPriceQuote(p))
-        .catch(console.log)
-        .finally(() => setLoading(false));
+  const swapQuoteResponse = useQuery(['GetUSDPriceZRXApi', address, amount, network, decimals, refresh, side], ()=>{
+      if(address && amount && network && decimals) {
+        const amountAPI = fromTokenUnitAmount(amount, decimals);
+        const quote: QuotePriceParams = {
+          baseToken: address.toLowerCase(),
+          quoteToken: 'USDC',
+          orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
+          baseAmount: amountAPI,
+        };
+        return  fetchPrice(quote, network);
     }
-  }, [address, network, amount, side, refresh, decimals]);
+  })
 
-  return {priceQuote, loading};
+  return {priceQuote: swapQuoteResponse.data, loading: swapQuoteResponse.isLoading, error: swapQuoteResponse.error };
 };

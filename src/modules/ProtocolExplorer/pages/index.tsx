@@ -69,7 +69,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
       EthereumNetwork.ethereum,
   );
   const {tokenInfo, loading: loadingToken} = useTokenInfo(address);
-  const {loading: loadingTokenMarket, data: tokenMarket} = useTokenMarket(
+  const {loading: loadingTokenMarket, data: tokenMarket, priceQuote} = useTokenMarket(
     networkName,
     EXCHANGE.ALL,
     tokenInfo,
@@ -187,7 +187,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     />
                   }
                   pair={tokenInfo?.symbol as string}
-                  amount={tokenMarket?.priceUsd as number}
+                  amount={priceQuote?.price}
                   price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
                 />
               )}
@@ -196,7 +196,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
               {balances.data && (
                 <CoinTools
                   isFavorite={isFavorite(tokenInfo)}
-                  onMakeFavorite={onToggleFavorite}
+                  onMakeFavorite={onMakeFavorite}
                   balances={balances.data}
                 />
               )}

@@ -131,7 +131,7 @@ const GamesList = () => {
             <Grid item sm={3}>
               <Grid item xs={12} sm={12}>
                 <Typography variant='h6'>
-                  {gamesToJoin?.length || 0}Games
+                  {gamesToJoin?.length || 0} Games
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
