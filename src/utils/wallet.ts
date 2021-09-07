@@ -21,3 +21,7 @@ export function switchChain(provider: any, to: number): Promise<any> {
     params: [{chainId: `0x${to.toString(16)}`}],
   });
 }
+
+export function switchAddress(provider: any): Promise<any> {
+  return provider.request({method: 'eth_requestAccounts'});
+}

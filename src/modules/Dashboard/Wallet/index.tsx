@@ -190,19 +190,23 @@ const WalletTabs: React.FC<Props> = (props) => {
                           </Grid>
                         </Grid>
                       ) : (
-                        favoritesWithMarket.data.map((favorite, index) => (
-                          <TokenListItem
-                            key={index}
-                            address={favorite.coin.address}
-                            dayChange={
-                              favorite.market.price_change_percentage_24h || 0
-                            }
-                            amount={favorite.market.current_price}
-                            symbol={favorite.coin.symbol}
-                            name={favorite.coin.name}
-                            network={favorite.coin?.networkName || ''}
-                          />
-                        ))
+                        <Grid container spacing={2}>
+                          {favoritesWithMarket.data.map((favorite, index) => (
+                            <Grid item xs={12} key={index}>
+                              <TokenListItem
+                                address={favorite.coin.address}
+                                dayChange={
+                                  favorite.market.price_change_percentage_24h ||
+                                  0
+                                }
+                                amount={favorite.market.current_price}
+                                symbol={favorite.coin.symbol}
+                                name={favorite.coin.name}
+                                network={favorite.coin?.networkName || ''}
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
                       )}
                     </Grid>
                   </Grid>

@@ -38,6 +38,7 @@ interface Props {
   token?: Token;
   address?: string;
   onResult?: (err?: any) => void;
+  error?: string;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -74,7 +75,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const Sender: React.FC<Props> = (props) => {
-  const {token: defaultToken, disableClose, onResult} = props;
+  const {token: defaultToken, disableClose, onResult, error} = props;
 
   const classes = useStyles();
   const networkName = useNetwork();
@@ -140,6 +141,7 @@ const Sender: React.FC<Props> = (props) => {
           token={defaultToken}
           address={props.address}
           onResult={onResult}
+          error={error}
         />
       </DialogContent>
     </Dialog>

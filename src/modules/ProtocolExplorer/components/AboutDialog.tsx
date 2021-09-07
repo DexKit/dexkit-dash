@@ -1,57 +1,36 @@
 import React, {useCallback} from 'react';
-import ReceiverForm from './ReceiverForm';
+
 import {
+  DialogProps,
   Dialog,
   DialogTitle,
   DialogContent,
   Box,
   Typography,
-  makeStyles,
+  DialogActions,
   IconButton,
-  useTheme,
-  useMediaQuery,
+  Button,
 } from '@material-ui/core';
-import {ImportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
+import Info from '@material-ui/icons/Info';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
-  },
-}));
-
-interface Props {
-  open: boolean;
-  onClose: () => void;
+interface Props extends DialogProps {
+  textInfo: string;
 }
 
-const Receiver: React.FC<Props> = (props) => {
-  const classes = useStyles();
-  const {open, onClose} = props;
+export const AbountDialog = (props: Props) => {
+  const {open, onClose, textInfo} = props;
 
-  const handleClose = useCallback(
-    (e) => {
-      if (onClose) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose({}, 'backdropClick');
+    }
+  }, [onClose]);
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth='xs'
-      open={open}
-      onClose={onClose}
-      fullScreen={isMobile}>
+    <Dialog open={open}>
       <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center'>
@@ -61,7 +40,7 @@ const Receiver: React.FC<Props> = (props) => {
               alignItems='center'
               alignContent='center'
               mr={2}>
-              <ImportWhiteIcon className={classes.icon} />
+              <Info />
             </Box>
             <Typography variant='body1'>
               <IntlMessages id='Receive' />
@@ -74,11 +53,14 @@ const Receiver: React.FC<Props> = (props) => {
           </Box>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
-        <ReceiverForm />
+      <DialogContent>
+        <Typography variant='body1'>{textInfo}</Typography>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} startIcon={<CloseIcon />}>
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
-
-export default Receiver;

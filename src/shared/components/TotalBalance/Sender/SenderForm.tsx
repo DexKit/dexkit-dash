@@ -1,14 +1,11 @@
 import React, {useCallback, useState, useEffect} from 'react';
 
-import {CircularProgress, useTheme} from '@material-ui/core';
-import IntlMessages from '@crema/utility/IntlMessages';
+import {CircularProgress, useTheme, Grid} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {
   FormControl,
@@ -42,7 +39,7 @@ import {AppState} from 'redux/store';
 import {Alert} from '@material-ui/lab';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {SupportedNetworkType} from 'types/blockchain';
-import {switchChain} from 'utils/wallet';
+import {switchAddress, switchChain} from 'utils/wallet';
 import {AccountSelect} from 'shared/components/AccountSelect';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
@@ -52,6 +49,7 @@ interface Props {
   token?: Token;
   address?: string;
   onResult?: (err?: any) => void;
+  error?: string;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -77,7 +75,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const SenderForm: React.FC<Props> = (props) => {
-  const {token: defaultToken, address: defaultAddress, onResult} = props;
+  const {token: defaultToken, address: defaultAddress, onResult, error} = props;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -106,19 +104,21 @@ const SenderForm: React.FC<Props> = (props) => {
   };
 
   const handleConnect = useCallback(() => {
-    if (userAccount) {
-      dispatch(
-        setDefaultAccount({
-          account: {
-            address: userAccount,
-            label: userAccount,
-            networkType: SupportedNetworkType.evm,
-          },
-          type: SupportedNetworkType.evm,
-        }),
-      );
-    }
-  }, [userAccount, dispatch]);
+    switchAddress(getProvider()).then(() => {
+      if (userAccount) {
+        dispatch(
+          setDefaultAccount({
+            account: {
+              address: userAccount,
+              label: userAccount,
+              networkType: SupportedNetworkType.evm,
+            },
+            type: SupportedNetworkType.evm,
+          }),
+        );
+      }
+    });
+  }, [userAccount, dispatch, getProvider]);
 
   const [sending, setSending] = useState(false);
 
@@ -266,7 +266,8 @@ const SenderForm: React.FC<Props> = (props) => {
 
   // default address is not connected
   const notConnected = userAccount !== account;
-  const invalidChain = token?.chainId != chainId;
+  const invalidChain =
+    token?.chainId !== chainId && token?.networkName !== networkName;
 
   const [showSenderSelectAddress, setShowSenderSelectAddress] = useState(false);
   const handleSelectSenderAddress = useCallback((address: string) => {
@@ -305,12 +306,14 @@ const SenderForm: React.FC<Props> = (props) => {
         showNetwork
       />
       <SelectAddressDialog
+        key={'to-address'}
         open={showSelectAddress}
         accounts={accounts.evm}
         onSelectAccount={handleSelectAccount}
         onClose={handleCloseSelectAddress}
       />
       <SelectAddressDialog
+        key={'sender-address'}
         open={showSenderSelectAddress}
         accounts={accounts.evm}
         onSelectAccount={handleSelectSenderAddress}
@@ -318,121 +321,127 @@ const SenderForm: React.FC<Props> = (props) => {
       />
       <Box>
         <form noValidate autoComplete='off'>
-          <Box mb={5}>
-            <SelectTokenButton onClick={handleShowDialog} token={token} />
-          </Box>
-          {account ? (
-            <Box mb={5}>
-              <Box>
+          <Grid container spacing={4}>
+            {account ? (
+              <Grid item xs={12}>
                 <AccountSelect
                   onClick={handleShowSenderSelectAddress}
                   account={{label: accountLabel, address: account || ''}}
                 />
+              </Grid>
+            ) : null}
+            <Grid item xs={12}>
+              <SelectTokenButton onClick={handleShowDialog} token={token} />
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                mb={2}
+                color='grey.400'
+                textAlign='right'
+                className={classes.textRes}>
+                {tokenBalance} {token?.symbol?.toUpperCase()}
               </Box>
-            </Box>
-          ) : null}
-
-          <Box mb={5}>
-            <Box
-              mb={2}
-              color='grey.400'
-              textAlign='right'
-              className={classes.textRes}>
-              {tokenBalance} {token?.symbol?.toUpperCase()}
-            </Box>
-            <FormControl className={clsx(classes.inputText)} variant='outlined'>
-              <InputLabel htmlFor='outlined-adornment-amount'>
-                Amount
-              </InputLabel>
-              <OutlinedInput
-                id='outlined-adornment-amount'
+              <FormControl
+                className={clsx(classes.inputText)}
+                variant='outlined'>
+                <InputLabel htmlFor='outlined-adornment-amount'>
+                  Amount
+                </InputLabel>
+                <OutlinedInput
+                  id='outlined-adornment-amount'
+                  fullWidth
+                  type='text'
+                  label='Amount'
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  error={amountError() !== undefined}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton onClick={handleMax} edge='end'>
+                        <CallReceivedIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+                {amountError() !== undefined ? (
+                  <FormHelperText error>{amountError()}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                className={clsx(classes.inputText)}
+                variant='outlined'>
+                <InputLabel htmlFor='outlined-adornment-to'>To</InputLabel>
+                <OutlinedInput
+                  id='outlined-adornment-to'
+                  fullWidth
+                  type={'text'}
+                  label='To'
+                  value={address}
+                  error={address.length > 0 && !isAddress(address ?? '')}
+                  onChange={(e) => setAddress(e.target.value)}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton onClick={handleOpenSelectAddress} edge='end'>
+                        <AccountBoxIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+                {!isAddress(address ?? '') && address.length > 0 ? (
+                  <FormHelperText error>Invalid address</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Grid>
+            {notConnected ? (
+              <Grid item xs={12}>
+                <Alert
+                  severity='warning'
+                  action={<Button onClick={handleConnect}>Connect</Button>}>
+                  Please, switch to your connected account to make transactions.
+                </Alert>
+              </Grid>
+            ) : null}
+            {invalidChain ? (
+              <Grid item xs={12}>
+                <Alert
+                  severity='warning'
+                  action={<Button onClick={handleSwitchChain}>Switch</Button>}>
+                  Please, switch to the to te correct blockhain to make
+                  transactions.
+                </Alert>
+              </Grid>
+            ) : null}
+            {error ? (
+              <Grid item xs={12}>
+                <Alert severity='error'>{error}</Alert>
+              </Grid>
+            ) : null}
+            <Grid item xs={12}>
+              <Button
                 fullWidth
-                type='text'
-                label='Amount'
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                error={amountError() !== undefined}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton onClick={handleMax} edge='end'>
-                      <CallReceivedIcon />
-                    </IconButton>
-                  </InputAdornment>
+                size='large'
+                variant='contained'
+                color='primary'
+                onClick={handleSend}
+                startIcon={
+                  sending ? (
+                    <CircularProgress size={theme.spacing(6)} color='inherit' />
+                  ) : undefined
                 }
-              />
-              {amountError() !== undefined ? (
-                <FormHelperText error>{amountError()}</FormHelperText>
-              ) : null}
-            </FormControl>
-          </Box>
-
-          <Box mb={5}>
-            <FormControl className={clsx(classes.inputText)} variant='outlined'>
-              <InputLabel htmlFor='outlined-adornment-to'>To</InputLabel>
-              <OutlinedInput
-                id='outlined-adornment-to'
-                fullWidth
-                type={'text'}
-                label='To'
-                value={address}
-                error={address.length > 0 && !isAddress(address ?? '')}
-                onChange={(e) => setAddress(e.target.value)}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton onClick={handleOpenSelectAddress} edge='end'>
-                      <AccountBoxIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {!isAddress(address ?? '') && address.length > 0 ? (
-                <FormHelperText error>Invalid address</FormHelperText>
-              ) : null}
-            </FormControl>
-          </Box>
-          {notConnected ? (
-            <Box mb={4}>
-              <Alert
-                severity='warning'
-                action={<Button onClick={handleConnect}>Connect</Button>}>
-                Please, switch to your connected account to make transactions.
-              </Alert>
-            </Box>
-          ) : null}
-          {invalidChain ? (
-            <Box mb={4}>
-              <Alert
-                severity='warning'
-                action={<Button onClick={handleSwitchChain}>Switch</Button>}>
-                Please, switch to the to te correct blockhain to make
-                transactions.
-              </Alert>
-            </Box>
-          ) : null}
-
-          <Box textAlign='center' mb={5}>
-            <Button
-              fullWidth
-              size='large'
-              variant='contained'
-              color='primary'
-              onClick={handleSend}
-              startIcon={
-                sending ? (
-                  <CircularProgress size={theme.spacing(6)} color='inherit' />
-                ) : undefined
-              }
-              disabled={
-                !isAddress(address) ||
-                parseFloat(amount) == 0 ||
-                amount == '' ||
-                notConnected ||
-                sending ||
-                amountError() !== undefined
-              }>
-              Send
-            </Button>
-          </Box>
+                disabled={
+                  !isAddress(address) ||
+                  parseFloat(amount) == 0 ||
+                  amount == '' ||
+                  notConnected ||
+                  sending ||
+                  amountError() !== undefined
+                }>
+                Send
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Box>
     </>

@@ -62,7 +62,7 @@ export const useTransfer = () => {
               body: error.message,
             };
             dispatch(onAddNotification([notification], NotificationType.ERROR));
-            reject(error);
+            reject(error.message);
           });
       } else {
         const contract = getContractToken(currency.address, web3);
@@ -78,13 +78,13 @@ export const useTransfer = () => {
             dispatch(onAddNotification([notification]));
             resolve(tx);
           })
-          .catch((e: any) => {
+          .catch((error: any) => {
             const notification: Notification = {
               title: 'Error',
-              body: e.message || '',
+              body: error.message || '',
             };
             dispatch(onAddNotification([notification], NotificationType.ERROR));
-            reject(e);
+            reject(error.message);
           });
       }
     });

@@ -43,6 +43,12 @@ import {TokenFilterProvider} from 'providers/protocol/tokenFilterProvider';
 import TokenCard from 'shared/components/TokenCard';
 import TokenLogo from 'shared/components/TokenLogo';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
+import {useDispatch} from 'react-redux';
+import {toggleFavoriteCoin} from 'redux/_ui/actions';
+import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
+import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
+import {Token} from 'types/app';
+import {useTokenLists} from 'hooks/useTokenLists';
 
 type Params = {
   address: string;
@@ -54,6 +60,8 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const {
     match: {params},
   } = props;
+
+  const dispatch = useDispatch();
 
   const theme = useTheme();
   const classes = useStyles();
@@ -86,11 +94,13 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-  const onMakeFavorite = useCallback(() => {
-    if (tokenInfo) {
-      onToggleFavorite(tokenInfo, tokenInfo.coingecko_id);
+  const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
+
+  const onMakeFavorite = () => {
+    if (tokenInfo && data) {
+      dispatch(toggleFavoriteCoin({...tokenInfo, ...data}));
     }
-  }, [tokenInfo]);
+  };
 
   const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
   const isDark = cremaTheme.palette.type === ThemeMode.DARK;
@@ -116,132 +126,170 @@ const Explorer: React.FC<TokenProps> = (props) => {
     </Paper>
   );
 
+  const [showSelectTokens, setShowSelectTokens] = useState(false);
+
+  const {binanceTokens, ethTokens, maticTokens} = useTokenLists();
+
+  const handleToggleSelectToken = useCallback(() => {
+    setShowSelectTokens((value) => !value);
+  }, []);
+
+  const handleSelectToken = useCallback((token: Token) => {
+    setShowSelectTokens(false);
+
+    let isEthereum = token.symbol.toUpperCase() === 'ETH';
+    let isPolygon = token.symbol.toUpperCase() === 'MATIC';
+    let isBsc = token.symbol.toUpperCase() === 'BNB';
+
+    if (isEthereum) {
+      history.push(`/explorer/eth?network=${token?.networkName}`);
+    } else if (isPolygon) {
+      history.push(`/explorer/matic?network=${token?.networkName}`);
+    } else if (isBsc) {
+      history.push(`/explorer/bnb?network=${token?.networkName}`);
+    } else {
+      history.push(`/explorer/${token.address}?network=${token?.networkName}`);
+    }
+  }, []);
+
   return (
-    <Box>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <Grid container justify='space-between' alignItems='center'>
-            <Grid item>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Breadcrumbs aria-label='breadcrumb'>
-                    <Typography variant='body2' color='textSecondary'>
-                      Home
+    <>
+      {ethTokens && maticTokens && binanceTokens ? (
+        <SelectTokenDialog
+          title='Select a token'
+          open={showSelectTokens}
+          tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
+          onSelectToken={handleSelectToken}
+          onClose={handleToggleSelectToken}
+        />
+      ) : null}
+      <Box>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Grid container justify='space-between' alignItems='center'>
+              <Grid item>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Breadcrumbs aria-label='breadcrumb'>
+                      <Typography variant='body2' color='textSecondary'>
+                        Home
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary'>
+                        Explorer
+                      </Typography>
+                    </Breadcrumbs>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant='h6'>
+                      Explorer{' '}
+                      {networkName.toLowerCase() == 'ethereum' ? (
+                        <Chip size='small' label='ETH' />
+                      ) : networkName.toLowerCase() == 'bsc' ? (
+                        <Chip size='small' label='BSC' />
+                      ) : networkName.toLowerCase() == 'matic' ? (
+                        <Chip size='small' label='MATIC' />
+                      ) : null}
                     </Typography>
-                    <Typography variant='body2' color='textSecondary'>
-                      Explorer
-                    </Typography>
-                  </Breadcrumbs>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant='h6'>Explorer</Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              {networkName.toLowerCase() == 'eth' ? (
-                <Chip label='ETH' />
-              ) : networkName.toLowerCase() == 'bsc' ? (
-                <Chip label='BSC' />
-              ) : networkName.toLowerCase() == 'matic' ? (
-                <Chip label='MATIC' />
-              ) : null}
-            </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid
-            container
-            justify='space-between'
-            alignItems='center'
-            spacing={2}>
-            <Grid item xs={12} md={6}>
-              {loadingToken || !tokenInfo || !tokenMarket ? (
-                <Paper>
-                  <Box p={4}>
-                    <Grid container spacing={4}>
-                      <Grid item>
-                        <Skeleton
-                          variant='circle'
-                          width={theme.spacing(8)}
-                          height={theme.spacing(8)}
-                        />
+          <Grid item xs={12}>
+            <Grid
+              container
+              justify='space-between'
+              alignItems='center'
+              spacing={2}>
+              <Grid item xs={12} md={6}>
+                {loadingToken || !tokenInfo || !tokenMarket ? (
+                  <Paper>
+                    <Box p={4}>
+                      <Grid container spacing={4}>
+                        <Grid item>
+                          <Skeleton
+                            variant='circle'
+                            width={theme.spacing(8)}
+                            height={theme.spacing(8)}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <Typography variant='body1'>
+                            <Skeleton width={theme.spacing(24)} />
+                          </Typography>
+                          <Typography variant='body2'>
+                            <Skeleton width={theme.spacing(16)} />
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs>
-                        <Typography variant='body1'>
-                          <Skeleton width={theme.spacing(24)} />
-                        </Typography>
-                        <Typography variant='body2'>
-                          <Skeleton width={theme.spacing(16)} />
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              ) : (
-                <TokenCard
-                  icon={
-                    <TokenLogo
-                      token0={tokenInfo?.address || ''}
-                      networkName={networkName}
-                    />
-                  }
-                  pair={tokenInfo?.symbol as string}
-                  amount={tokenMarket?.priceUsd as number}
-                  price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
-                />
-              )}
+                    </Box>
+                  </Paper>
+                ) : (
+                  <TokenCard
+                    icon={
+                      <TokenLogo
+                        token0={tokenInfo?.address || ''}
+                        networkName={networkName}
+                      />
+                    }
+                    pair={tokenInfo?.symbol as string}
+                    amount={tokenMarket?.priceUsd as number}
+                    price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
+                    onClick={handleToggleSelectToken}
+                  />
+                )}
+              </Grid>
+              <Grid item xs={isMobile ? 12 : undefined}>
+                {balances.data && (
+                  <CoinTools
+                    isFavorite={isFavorite(tokenInfo)}
+                    onMakeFavorite={onMakeFavorite}
+                    balances={balances.data}
+                  />
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={isMobile ? 12 : undefined}>
-              {balances.data && (
-                <CoinTools
-                  isFavorite={isFavorite(tokenInfo)}
-                  onMakeFavorite={onMakeFavorite}
-                  balances={balances.data}
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                <Analytics
+                  token={tokenInfo}
+                  tokenMarket={tokenMarket}
+                  loading={loadingToken || loadingTokenMarket}
                 />
-              )}
+              </Grid>
+              <Grid item xs={12} md={8}>
+                {isMobile ? (
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ArrowDownIcon />}
+                      aria-controls='panel1a-content'
+                      id='panel1a-header'>
+                      <Typography>
+                        <GraphicsIcon /> Chart
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>{Chart}</AccordionDetails>
+                  </Accordion>
+                ) : (
+                  Chart
+                )}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <TokenFilterProvider>
+                <Pairs
+                  baseAddress={address}
+                  networkName={networkName}
+                  exchange={EXCHANGE.ALL}
+                />
+              </TokenFilterProvider>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Analytics
-                token={tokenInfo}
-                tokenMarket={tokenMarket}
-                loading={loadingToken || loadingTokenMarket}
-              />
-            </Grid>
-            <Grid item xs={12} md={8}>
-              {isMobile ? (
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ArrowDownIcon />}
-                    aria-controls='panel1a-content'
-                    id='panel1a-header'>
-                    <Typography>
-                      <GraphicsIcon /> Chart
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>{Chart}</AccordionDetails>
-                </Accordion>
-              ) : (
-                Chart
-              )}
-            </Grid>
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <TokenFilterProvider>
-              <Pairs
-                baseAddress={address}
-                networkName={networkName}
-                exchange={EXCHANGE.ALL}
-              />
-            </TokenFilterProvider>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 };
 

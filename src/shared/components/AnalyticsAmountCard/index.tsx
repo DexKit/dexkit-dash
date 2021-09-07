@@ -33,10 +33,19 @@ interface AnalyticsAmountCardProps {
   isLoading?: boolean;
   onClick?: () => void;
   colorsEnabled?: boolean;
+  notUsdValue?: boolean;
 }
 
 export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
-  const {amount, caption, onClick, icon, isLoading, colorsEnabled} = props;
+  const {
+    amount,
+    caption,
+    onClick,
+    icon,
+    isLoading,
+    colorsEnabled,
+    notUsdValue,
+  } = props;
 
   const classes = useStyles();
 
@@ -93,7 +102,9 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
               }
               variant='h5'>
               {typeof amount === 'number'
-                ? usdFormatter.format(amount)
+                ? notUsdValue
+                  ? amount
+                  : usdFormatter.format(amount)
                 : amount}
             </Typography>
           </Grid>

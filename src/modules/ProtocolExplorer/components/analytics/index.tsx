@@ -49,16 +49,20 @@ export const Analytics = (props: Props) => {
               icon={<GraphIcon />}
               amount={loading ? '-' : tokenMarket?.trades || '-'}
               caption={'Total Trades (24h)'}
+              notUsdValue
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <AnalyticsAmountCard
               isLoading={loading}
               icon={<PresentationChartIcon />}
-              amount={loading ? '-' : tokenMarket?.volume24Base || '-'}
+              amount={
+                loading ? '-' : tokenMarket?.volume24Base.toFixed(2) || '-'
+              }
               caption={`Amount ${
                 token ? token.symbol?.toUpperCase() : ''
               } (24h)`}
+              notUsdValue
             />
           </Grid>
         </Grid>

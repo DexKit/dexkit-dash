@@ -169,8 +169,8 @@ export const TokenAnalytics = (props: Props) => {
               colorsEnabled
             />
           </Box>
-          {properties.map((p) => (
-            <Box className={classes.analyticsItem}>
+          {properties.map((p, index: number) => (
+            <Box key={index} className={classes.analyticsItem}>
               <AnalyticsAmountCard
                 amount={
                   p.field.toString() === 'totalTx'

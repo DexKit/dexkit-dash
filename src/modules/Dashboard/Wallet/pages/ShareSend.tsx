@@ -14,6 +14,8 @@ interface Props {}
 export const ShareSend = (props: Props) => {
   const [token, setToken] = useState<Token>();
 
+  const [error, setError] = useState<string>();
+
   const history = useHistory();
 
   const balances = useAllBalance();
@@ -29,10 +31,18 @@ export const ShareSend = (props: Props) => {
 
   const handleResult = useCallback(
     (err?: any) => {
-      history.push('/wallet');
+      if (err) {
+        setError(String(err));
+      } else {
+        history.push('/wallet');
+      }
     },
     [history],
   );
+
+  const handleClose = useCallback(() => {
+    history.push('/wallet');
+  }, [history]);
 
   useEffect(() => {
     let tokenAddress = searchParams.get('token');
@@ -56,11 +66,11 @@ export const ShareSend = (props: Props) => {
         open
         amount={amount}
         token={token}
-        onClose={() => {}}
+        onClose={handleClose}
         balances={balances.data}
         address={address}
-        disableClose
         onResult={handleResult}
+        error={error}
       />
     </Box>
   );
