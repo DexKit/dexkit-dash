@@ -39,7 +39,6 @@ const providerOptions = {
       try {
         isLogged = await magic.user.isLoggedIn();
         if (isLogged) {
-          localStorage.setItem(magicGoogleStorage, 'true');
           return magic.rpcProvider;
         }
       } catch (e) {
@@ -51,8 +50,9 @@ const providerOptions = {
           localStorage.setItem(magicGoogleStorage, 'true');
           await magic.oauth.loginWithRedirect({
            provider: 'google' /* 'google', 'facebook', 'apple', or 'github' */,
-           redirectURI: 'http://localhost:3000/magic/callback',
+           redirectURI: 'http://localhost:3000/magic/callback-social',
           }); 
+
           return magic.rpcProvider;
          }
       
@@ -102,6 +102,8 @@ const getProvider = (): any | undefined => {
   if (!provider) {
     return;
   }
+
+  console.log(provider);
   return provider;
 };
 
@@ -111,6 +113,7 @@ const getWeb3 = () => {
   }
   if (!web3) {
     web3 = new Web3(provider);
+
     return web3;
   }
   return web3;
