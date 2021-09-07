@@ -16,30 +16,54 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import SelectTokenListItem from '../../components/SelectTokenListItem';
 import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-
+import {MyBalances} from 'types/blockchain';
+import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
 
 interface Props extends DialogProps {
   title?: string;
   tokens: Token[];
+  balances: MyBalances[];
   onSelectToken: (token: Token) => void;
 }
 
+export type TokenBalance = Token & {
+  value?: number | null;
+  valueInUsd?: number | null;
+}
 
-export const SelectTokenDialog = (props: Props) => {
-  const {onSelectToken, tokens, onClose, title} = props;
+
+export const SelectTokenBalanceDialog = (props: Props) => {
+  const {onSelectToken, tokens, balances, onClose, title} = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
-
-  const [filteredTokens, setFilteredCoins] = useState<Token[]>([]);
+  const [allTokens, setAllTokens] = useState<TokenBalance[]>([]);
+  const [filteredTokens, setFilteredCoins] = useState<TokenBalance[]>([]);
 
   useEffect(() => {
-    setFilteredCoins(tokens);
-  }, [tokens]);
+    if(tokens && tokens.length && balances && balances.length ){
+    const tokenBalances = tokens.map((t) => {
+      const balance = balances
+      .find(b => b.currency?.address?.toLowerCase() === t.address.toLowerCase())
+      return {
+        ...t,
+        ...balance,
+      } as TokenBalance
+      // Sort coins first by usd and then by balance
+    }).sort((a, b) => {
+      if(a?.valueInUsd || b?.valueInUsd){
+       return  (b?.valueInUsd || 0)  - (a?.valueInUsd || 0)
+      }
+      return (b?.value || 0)  - (a?.value || 0) 
+    });
+
+    setAllTokens(tokenBalances)
+    setFilteredCoins(tokenBalances);
+  }
+  }, [tokens, balances]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +71,7 @@ export const SelectTokenDialog = (props: Props) => {
 
       setFilterText(value);
 
-      const filtered = tokens.filter(
+      const filtered = allTokens.filter(
         (coin: Token) =>
           coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
           coin.symbol.toLowerCase().startsWith(value.toLowerCase()),
@@ -55,7 +79,7 @@ export const SelectTokenDialog = (props: Props) => {
 
       setFilteredCoins(filtered);
     },
-    [tokens],
+    [allTokens],
   );
 
   const handleSelectToken = useCallback(
@@ -117,7 +141,7 @@ export const SelectTokenDialog = (props: Props) => {
               width='100%'
               height={250}>
               {({index, data, style}) => (
-                <SelectTokenListItem
+                <SelectTokenBalanceListItem
                   style={style}
                   onClick={handleSelectToken}
                   token={data[index]}
@@ -132,4 +156,4 @@ export const SelectTokenDialog = (props: Props) => {
   );
 };
 
-export default SelectTokenDialog;
+export default SelectTokenBalanceDialog;

@@ -5,10 +5,7 @@ import Radio from '@material-ui/core/Radio';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
-import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
-import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
@@ -24,6 +21,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
+import Icon from '@material-ui/core/Icon';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -74,23 +74,83 @@ interface Props {
   setOpen: (open: boolean) => void;
 }
 
+enum SubmitState {
+  None,
+  WaitingWallet,
+  Submitted,
+  Error,
+  Confirmed,
+}
+
+const GetButtonState = (
+  state: SubmitState,
+  defaultMsg: string,
+  confirmedMsg: string,
+) => {
+  switch (state) {
+    case SubmitState.WaitingWallet:
+      return (
+        <>
+          <CircularProgress color={'secondary'} />
+          Waiting Wallet
+        </>
+      );
+    case SubmitState.Error:
+      return (
+        <>
+          <Icon style={{color: red[500]}}>error</Icon>
+          Error
+        </>
+      );
+    case SubmitState.Submitted:
+      return (
+        <>
+          <CircularProgress color={'secondary'} />
+          Waiting for Confirmation
+        </>
+      );
+    case SubmitState.Confirmed:
+      return <>{confirmedMsg}</>;
+
+    default:
+      return defaultMsg;
+  }
+};
+
 const CreateGameModal = (props: Props) => {
   const classes = useStyles();
-  const {onGameCreateCallback} = useCoinsLeagueFactory();
-
+  const {onGameCreateCallback, refetch} = useCoinsLeagueFactory();
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
   const [gameType, setGameType] = useState('winner-game');
   const [entryAmount, setEntryAmount] = useState<number>();
   const [duration, setGameDuration] = useState<number>();
   const [totalPlayers, setTotalPlayers] = useState<number>();
-
+  const [tx, setTx] = useState<string>();
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }
   const onCreateGame = useCallback(
     (ev?: any) => {
       if (totalPlayers && entryAmount && duration && coins) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetch();
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+
         const params: GameParams = {
           numPlayers: totalPlayers,
           duration,
@@ -99,7 +159,15 @@ const CreateGameModal = (props: Props) => {
           abortTimestamp: Math.round((new Date().getTime())/1000 + duration * 3),
         };
         console.log('Callaback called');
-        onGameCreateCallback(params);
+        onGameCreateCallback(params,
+          {
+            onConfirmation: onConfirmTx,
+            onError,
+            onSubmit: onSubmitTx,
+          },
+          
+          
+          );
       }
     },
     [coins, gameType, entryAmount, duration, totalPlayers],
@@ -276,11 +344,17 @@ const CreateGameModal = (props: Props) => {
         <Button
           fullWidth
           variant={'contained'}
-          color={'primary'}
+          color={
+            submitState === SubmitState.Error ? 'default' : 'primary'
+          }
           className={classes.button}
           onClick={onCreateGame}
           disabled={!coins || !entryAmount || !totalPlayers || !duration}>
-          CREATE A GAME
+          {GetButtonState(
+                    submitState,
+                    'CREATE GAME',
+                    'Game Created',
+                  )}
         </Button>
       </DialogContent>
     </Dialog>

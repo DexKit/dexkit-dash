@@ -124,9 +124,10 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (balances) {
       const balancesFn = balances.map((e) => {
+        // Fetch image from balances first, if not take it from list
+        let tokenLogoUri = e.logoURI;
         // Add images from token list
-        let tokenLogoUri;
-        if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0) {
+        if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'eth') {
             tokenLogoUri = ETH_SYMBOL_URL;
           } else {
@@ -139,7 +140,7 @@ const BuySell: React.FC<Props> = ({
             }
           }
         }
-        if (e.network === EthereumNetwork.bsc && tokensBSC.length > 0) {
+        if (e.network === EthereumNetwork.bsc && tokensBSC.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'bnb') {
             tokenLogoUri = BINANCE_SYMBOL_URL;
           } else {
@@ -153,7 +154,7 @@ const BuySell: React.FC<Props> = ({
           }
         }
 
-        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0) {
+        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'matic') {
             tokenLogoUri = MATIC_SYMBOL_URL;
           } else {

@@ -31,16 +31,13 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
   const multicall = await getMulticall();
   const calls: CallInput[] = [];
   const games: Game[] = [];
-
   for (let index = 0; index < gamesAddress.length; index++) {
     const addr = gamesAddress[index];
-    console.log(addr);
     calls.push({interface: iface, target: addr, function: 'game'});
     calls.push({interface: iface, target: addr, function: 'getPlayers'});
   }
   const response = await multicall.multiCall(calls);
   const [blockNumber, results] = response;
-
   for (let index = 0; index < results.length; index += 2) {
     const g = results[index];
     const players = results[index + 1];
@@ -50,6 +47,7 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
       ...g,
     });
   }
+
   return games;
 };
 

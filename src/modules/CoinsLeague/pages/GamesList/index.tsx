@@ -105,7 +105,7 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             {gamesInProgress?.map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
                 <SmallCardGame {...g} key={id} />
@@ -169,7 +169,7 @@ const GamesList = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             {gamesToJoin?.map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
                 <CardGame game={g} id={g.address} onClick={onClickEnterGame} />

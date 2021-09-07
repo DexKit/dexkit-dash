@@ -126,6 +126,28 @@ export const useWeb3 = () => {
         });
     }
   };
+  // Used to reconnect again, even if provider already exists
+  const forceWeb3Connect = () => {
+      dispatch(setWeb3State(Web3State.Connecting));
+      connectWeb3()
+        .then((p) => {
+          subscribeProvider(p);
+          dispatch(setWeb3State(Web3State.Done));
+        })
+        .catch(() => {
+          dispatch(setWeb3State(Web3State.Error));
+        });  
+        const web3 = getWeb3();
+        if(web3){
+          web3.eth
+          .getChainId()
+          .then((n) => {
+            dispatch(setChainId(n));
+          })
+          .finally(() => (loadingChainId = false));
+      }
+
+  };
 
   function onActionWeb3Transaction(
     transactionConfig: TransactionConfig,
@@ -181,6 +203,7 @@ export const useWeb3 = () => {
 
   return {
     onConnectWeb3,
+    forceWeb3Connect,
     getWeb3,
     account,
     chainId,

@@ -14,7 +14,8 @@ import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
-import {Web3State} from 'types/blockchain';
+import {MyBalances, Web3State} from 'types/blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {
@@ -25,8 +26,6 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
-import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {Skeleton} from '@material-ui/lab';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -35,6 +34,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
 import VerticalSwap from './VerticalSwap';
 import {marketFormStyles as useStyles} from './index.styles';
+import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 
 interface Props {
   chainId: number | undefined;
@@ -345,8 +345,9 @@ const MarketForm: React.FC<Props> = (props) => {
 
   return (
     <Box className={classes.marketContainer}>
-      <SelectTokenDialog
+      <SelectTokenBalanceDialog
         title={selectTo === 'from' ? 'You send' : 'You receive'}
+        balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}

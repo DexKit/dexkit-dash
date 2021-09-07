@@ -9,12 +9,17 @@ import {
 import React, {useCallback} from 'react';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
-import { MyBalances } from 'types/blockchain';
+
+const noFoundSrc = require('assets/images/logo-not-found.png');
+
+type TokenBalance = Token & {
+  value?: number | null;
+  valueInUsd?: number | null;
+}
 
 export interface Props {
-  token: Token;
-  balance: MyBalances;
-  onClick: (token: Token) => void;
+  token: TokenBalance;
+  onClick: (token: TokenBalance) => void;
   style: React.CSSProperties;
 }
 
@@ -41,14 +46,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const SelectTokenListItem = (props: Props) => {
-  const {token, balance, onClick, style} = props;
+
+export const SelectTokenBalanceListItem = (props: Props) => {
+  const {token, onClick, style} = props;
   const theme = useTheme();
   const classes = useStyles();
 
   const handleClick = useCallback(() => {
     onClick(token);
   }, [token, onClick]);
+
+  const addDefaultSrc = useCallback((ev: any) => {
+    ev.target.src = noFoundSrc;
+  },[]);
 
   return (
     <Box
@@ -58,17 +68,18 @@ export const SelectTokenListItem = (props: Props) => {
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-            <img src={token.logoURI} className={classes.token} />
+            <img src={token.logoURI} className={classes.token} onError={addDefaultSrc}  />
           </Box>
         </Grid>
      
-        <Grid item xs>
+        <Grid item>
           <Typography variant='body1'>{token.symbol?.toUpperCase()}</Typography>
           <Typography variant='body2' color='textSecondary'>
             {token.name}
           </Typography>
         </Grid>
-        <Grid item>
+
+        <Grid item xs>
           {token?.networkName ? (
             <Chip
               size='small'
@@ -76,9 +87,10 @@ export const SelectTokenListItem = (props: Props) => {
             />
           ) : null}
         </Grid>
+     
         
         <Grid item>
-            {balance.value || 0}
+            {token?.value || 0}
         </Grid>
        
       </Grid>
@@ -86,4 +98,4 @@ export const SelectTokenListItem = (props: Props) => {
   );
 };
 
-export default SelectTokenListItem;
+export default SelectTokenBalanceListItem;

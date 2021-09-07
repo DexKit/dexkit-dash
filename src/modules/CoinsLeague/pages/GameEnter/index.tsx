@@ -37,9 +37,11 @@ import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {red} from '@material-ui/core/colors';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import {Player} from 'types/coinsleague';
+import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -107,11 +109,14 @@ function GameEnter(props: Props) {
   const history = useHistory();
   const account = useDefaultAccount();
   const {address} = params;
-  const {game, gameQuery, onJoinGameCallback} = useCoinsLeague(address);
+  const {game, gameQuery, refetch, onJoinGameCallback, onStartGameCallback} =
+    useCoinsLeague(address);
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [open, setOpen] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
+  const [tx, setTx] = useState<string>();
 
   const onOpenSelectDialog = useCallback((ev: any) => {
     setOpen(true);
@@ -119,24 +124,43 @@ function GameEnter(props: Props) {
 
   const player = useMemo(() => {
     if (account && game?.players && game?.players.length) {
-      return game.players.find((p) => {
-        console.log(p);
-        //TODO: We did this because sometimes it is not returning the player_address
-        //@ts-ignore
-        const addr = p[1];
-        return addr.toLowerCase() === account.toLowerCase();
-        /*if (p?.player_address && account) {
-          return p?.player_address.toLowerCase() === account.toLowerCase();
-        } else {
-          return false;
-        }*/
+      //TODO: We did this because sometimes it is not returning the player_address and as objects
+      return game.players
+        .map((p: any) => {
+          return {
+            coin_feeds: p[0],
+            player_address: p[1],
+            score: p[2],
+          } as Player;
+        })
+        .find((p) => {
+          if (p?.player_address && account) {
+            return p?.player_address.toLowerCase() === account.toLowerCase();
+          } else {
+            return false;
+          }
+        });
+    }
+  }, [account, game?.players, game]);
+
+  const players = useMemo(() => {
+    if (account && game?.players && game?.players.length) {
+      //TODO: We did this because sometimes it is not returning the player_address and as objects
+      return game.players.map((p: any) => {
+        return {
+          coin_feeds: p[0],
+          player_address: p[1],
+          score: p[2],
+        } as Player;
       });
     }
-  }, [account, game?.players]);
+  }, [account, game?.players, game]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
   }, []);
+
+
 
   const onSelectCoin = useCallback(
     (coin: CoinFeed) => {
@@ -169,11 +193,13 @@ function GameEnter(props: Props) {
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = () => {
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
           setSubmitState(SubmitState.Submitted);
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
+          refetch();
         };
         const onError = () => {
           setSubmitState(SubmitState.Error);
@@ -181,6 +207,8 @@ function GameEnter(props: Props) {
             setSubmitState(SubmitState.None);
           }, 3000);
         };
+        console.log('selectedCoins');
+        console.log(selectedCoins);
 
         onJoinGameCallback(
           selectedCoins.map((c) => c.address),
@@ -193,8 +221,38 @@ function GameEnter(props: Props) {
         );
       }
     },
-    [game],
+    [game, selectedCoins, refetch],
   );
+
+  const onStartGame = useCallback(
+    (ev: any) => {
+      if (game?.amount_to_play) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetch();
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+        onStartGameCallback({
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+      }
+    },
+    [game, refetch],
+  );
+
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
 
   const started = useMemo(() => game?.started, [game]);
@@ -211,6 +269,17 @@ function GameEnter(props: Props) {
     return selectedCoins?.length === game?.num_coins;
   }, [selectedCoins, game?.num_coins]);
 
+  const isDisabledToStart = useMemo(() => {
+    return selectedCoins?.length !== game?.num_coins;
+  }, [selectedCoins, game?.num_coins]);
+
+  const goToExplorer = useCallback(
+    (_ev: any) => {
+      window.open(`https://mumbai.polygonscan.com/tx/${tx}`);
+    },
+    [tx],
+  );
+
   return (
     <Container maxWidth='xl' className={classes.container}>
       <SelectCoinLeagueDialog
@@ -218,6 +287,7 @@ function GameEnter(props: Props) {
         onSelectCoin={onSelectCoin}
         onClose={onCloseSelectDialog}
       />
+
       <Grid container spacing={4}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
@@ -319,24 +389,41 @@ function GameEnter(props: Props) {
           <Grid item xs={12} md={12}>
             <Grid container spacing={4} justifyContent={'flex-end'}>
               <Grid item xs={12} md={6}>
-                <Button
-                  disabled={!isDisabled}
-                  onClick={onEnterGame}
-                  variant={'contained'}
-                  color={
-                    submitState === SubmitState.Error ? 'default' : 'primary'
-                  }>
-                  {GetButtonState(
-                    submitState,
-                    'ENTER GAME',
-                    'You Entered Game',
-                  )}
-                </Button>
+                <Grid container>
+                  <Grid item xs={12} md={12}>
+                    {tx && (
+                      <Button variant={'text'} onClick={goToExplorer}>
+                        {SubmitState.Submitted
+                          ? 'Submitted Tx'
+                          : SubmitState.Error
+                          ? 'Tx Error'
+                          : 'Confirmed Tx'}
+                      </Button>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Button
+                      disabled={!isDisabled}
+                      onClick={onEnterGame}
+                      variant={'contained'}
+                      color={
+                        submitState === SubmitState.Error
+                          ? 'default'
+                          : 'primary'
+                      }>
+                      {GetButtonState(
+                        submitState,
+                        'ENTER GAME',
+                        'You Entered Game',
+                      )}
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
         )}
-        {player && (
+        {player && player?.player_address && (
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
@@ -345,37 +432,74 @@ function GameEnter(props: Props) {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <OnePlayerTable
-                  data={{
-                    hash: player.player_address,
-                    position: player.score.toNumber(),
-                    coins: player.coin_feeds || [],
-                    showClaim: false,
-                    claimed: false,
-                  }}
+                <PlayersTable
+                  data={[
+                    {
+                      hash: player?.player_address,
+                      score: player?.score?.toNumber() || 0,
+                      coins: (player?.coin_feeds as unknown as string[]) || [],
+                      showClaim: false,
+                      claimed: false,
+                    },
+                
+                  ]}
+                  address={address}
                 />
               </Grid>
             </Grid>
           </Grid>
         )}
-        {gameFull && (
+        {players && (
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant='h6' style={{margin: 5}}>
+                  Players
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <PlayersTable
+                  data={players.map((p) => {
+                    return {
+                      hash: p?.player_address,
+                      score: p?.score?.toNumber() || 0,
+                      coins: (p?.coin_feeds as unknown as string[]) || [],
+                      showClaim: false,
+                      claimed: false,
+                    };
+                  })}
+                  address={address}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+
+        {currentPlayers && currentPlayers > 0 && (
           <Grid item xs={12}>
             <Paper>
               <Box m={2}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} md={9}>
+                    {!gameFull && (
+                      <Typography variant='h6' style={{margin: 5}}>
+                        Waiting For Players
+                      </Typography>
+                    )}
                     <Typography variant='h6' style={{margin: 5}}>
                       {currentPlayers} / {totalPlayers}
                     </Typography>
-                    <Typography variant='h6' style={{margin: 5}}>
-                      Everybody is here
-                    </Typography>
+                    {gameFull && (
+                      <Typography variant='h6' style={{margin: 5}}>
+                        Everybody is here
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item xs={12} md={3}>
                     <Box m={2}>
                       <Button
-                        disabled={!isDisabled}
-                        onClick={onEnterGame}
+                        disabled={!gameFull}
+                        onClick={onStartGame}
                         fullWidth
                         variant={'contained'}
                         color={

@@ -75,7 +75,7 @@ export const useTokenMarket = (
       const tokenMarket = dataFn.ethereum.dexTrades[0];
       setData({
         volume24Usd: tokenMarket.baseAmountInUsd as number,
-        volume24Base: tokenMarket.baseAmountInUsd as number,
+        volume24Base: tokenMarket.baseAmount as number,
         trades: tokenMarket.trades as number,
       });
     }

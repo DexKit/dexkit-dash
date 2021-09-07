@@ -76,6 +76,7 @@ function CardGame(props: Props): JSX.Element {
   const time = game.duration.toNumber();
   const coins = game.num_coins;
   const startTime =  game.start_timestamp.toNumber() - Math.round(new Date().getTime()/1000);
+  console.log(startTime);
   // Format number values
   const entriesIn = strPad(game.players.length || 0);
   const entriesOut = strPad(game.num_players || 0);
@@ -115,7 +116,10 @@ function CardGame(props: Props): JSX.Element {
           <Typography variant='subtitle2'>
             Starts
           </Typography>
-           <CardTimer time={startTime} />
+          {startTime < 0 ? 
+            <Typography variant='subtitle2'>Ready </Typography> :
+            
+           <CardTimer time={startTime} />}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>

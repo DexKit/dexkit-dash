@@ -44,6 +44,9 @@ interface Props {
   token1?: string | undefined;
 }
 
+const noFoundSrc = require('assets/images/logo-not-found.png');
+const dexkitLogo = require('assets/images/dexkit-logo.png');
+
 const TokenLogo: React.FC<Props> = (props) => {
   const net = useNetwork();
   const classes = useStyles();
@@ -68,16 +71,18 @@ const TokenLogo: React.FC<Props> = (props) => {
       : '';
 
   const networkName =
-    currentNetwork === EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
-
-  const noFoundSrc = require('assets/images/logo-not-found.png');
-  const dexkitLogo = require('assets/images/dexkit-logo.png');
+    currentNetwork === EthereumNetwork.ethereum
+      ? 'ethereum'
+      : currentNetwork === EthereumNetwork.bsc
+      ? 'smartchain'
+      : 'polygon';
 
   const currencyLogo =
     networkName === 'ethereum'
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
-      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
-
+      : currentNetwork === EthereumNetwork.bsc
+      ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
+      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
   const getIconUrl = (address: string, logoUrl?: string) => {
     if (logoUrl) {
       return logoUrl;
@@ -89,6 +94,10 @@ const TokenLogo: React.FC<Props> = (props) => {
 
     if (address.toLowerCase() === 'eth') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
+    }
+
+    if (address.toLowerCase() === 'matic') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
     }
 
     if (address.toLowerCase() === '') {

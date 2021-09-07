@@ -8,13 +8,13 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import {Magic} from 'magic-sdk';
 import {Web3Wrapper} from '@0x/web3-wrapper';
-import {OAuthExtension} from '@magic-ext/oauth';
 import {ethers, providers} from 'ethers';
-import { magic } from './magic';
+import { getCachedMagicNetwork, getMagic } from './magic';
 
 const storageKeyNamespace = 'DexKitWallet:';
 const magicGoogleStorage = `${storageKeyNamespace}:magic-google`;
 const magicGoogleId = 'custom-magiclink-google';
+
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider, // required
@@ -33,23 +33,26 @@ const providerOptions = {
       apiKey: process.env.REACT_APP_MAGIC_LINK_API_KEY,
     },
     connector: async (ProviderPackage: Magic, options: any) => {
+      const network =  getCachedMagicNetwork();
+      const magic = getMagic(network)
+
       await magic.preload()
       let isLogged;
       const tryLogin =  localStorage.getItem(magicGoogleStorage);
       try {
-        isLogged = await magic.user.isLoggedIn();
+        isLogged = await magic.user.isLoggedIn(); 
         if (isLogged) {
           return magic.rpcProvider;
         }
       } catch (e) {
         
       }
-    
       try {  
         if(tryLogin === 'false'){
           localStorage.setItem(magicGoogleStorage, 'true');
           await magic.oauth.loginWithRedirect({
            provider: 'google' /* 'google', 'facebook', 'apple', or 'github' */,
+           // TODO: When production use main site
            redirectURI: 'http://localhost:3000/magic/callback-social',
           }); 
 
@@ -91,6 +94,8 @@ const closeWeb3 = async () => {
   web3 = null;
   const  storageMagic = localStorage.getItem(magicGoogleStorage);
   if(storageMagic === 'true'){
+    const network =  getCachedMagicNetwork();
+    const magic = getMagic(network)
     await magic.user.logout();
     localStorage.setItem(magicGoogleStorage, 'false');
   }

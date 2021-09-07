@@ -10,6 +10,7 @@ import {client} from 'services/graphql';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {MyBalances} from 'types/blockchain';
 import {useQuery} from 'react-query';
+import { CoinItemCoinGecko } from 'types/coingecko/coin.interface';
 
 export const MapBalancesToNetwork = (
   balances: any,
@@ -37,7 +38,7 @@ export const MapBalancesToNetwork = (
 
 export const MapBalancesToUSDValue = (
   balances: any,
-  usdValues: any,
+  usdValues: {[address: string]: CoinItemCoinGecko}
 ): MyBalances[] => {
   if (!balances) {
     return [];
@@ -50,6 +51,8 @@ export const MapBalancesToUSDValue = (
       valueInUsd:
         (t.value || 0) *
         (usdValues[t.currency?.address || '']?.current_price || 0),
+
+      logoURI: usdValues[t.currency?.address || '']?.image
       // enquanto não vem a solução pela bitquery
     }) as MyBalances;
   });

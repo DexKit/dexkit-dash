@@ -24,7 +24,7 @@ import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoinFromNetworkName} from 'utils';
-import {Web3State} from 'types/blockchain';
+import {MyBalances, Web3State} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
@@ -37,8 +37,8 @@ import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
-import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {limitFormStyles as useStyles} from './index.styles';
+import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 
 interface Props {
   chainId: number | undefined;
@@ -304,7 +304,9 @@ const LimitForm: React.FC<Props> = (props) => {
 
   return (
     <Box className={classes.limitContainer}>
-      <SelectTokenDialog
+     <SelectTokenBalanceDialog
+        title={selectTo === 'from' ? 'You send' : 'You receive'}
+        balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}
