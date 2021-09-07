@@ -8,6 +8,8 @@ import {
   Typography,
   makeStyles,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 import {ImportWhiteIcon} from 'shared/components/Icons';
 
@@ -39,8 +41,17 @@ const Receiver: React.FC<Props> = (props) => {
     [onClose],
   );
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <Dialog fullWidth maxWidth='xs' open={open} onClose={onClose}>
+    <Dialog
+      fullWidth
+      maxWidth='xs'
+      open={open}
+      onClose={onClose}
+      fullScreen={isMobile}>
       <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center'>

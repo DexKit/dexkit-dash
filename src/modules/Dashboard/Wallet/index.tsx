@@ -52,6 +52,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {account: urlAccount} = params;
+
   const history = useHistory();
   const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(cremaTheme);

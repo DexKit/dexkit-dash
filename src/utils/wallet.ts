@@ -14,3 +14,10 @@ export const isSupportedWalletType = (network: Network) => {
   }
   return false;
 };
+
+export function switchChain(provider: any, to: number): Promise<any> {
+  return provider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{chainId: `0x${to.toString(16)}`}],
+  });
+}

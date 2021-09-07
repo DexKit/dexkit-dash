@@ -166,12 +166,21 @@ export const TokenAnalytics = (props: Props) => {
               amount={profitLoss}
               caption='Profit/Loss'
               icon={<></>}
+              colorsEnabled
             />
           </Box>
           {properties.map((p) => (
             <Box className={classes.analyticsItem}>
               <AnalyticsAmountCard
-                amount={p.isUSD ? data[p.field] : data[p.field]}
+                amount={
+                  p.field.toString() === 'totalTx'
+                    ? p.isUSD
+                      ? String(data[p.field])
+                      : String(data[p.field])
+                    : p.isUSD
+                    ? data[p.field]
+                    : data[p.field]
+                }
                 caption={p.label}
                 icon={<></>}
               />

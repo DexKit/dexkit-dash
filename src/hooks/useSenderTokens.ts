@@ -6,6 +6,7 @@ import {
   MATIC_SYMBOL_URL,
 } from 'shared/constants/Coins';
 import {Token} from 'types/app';
+import {getNetworkChainId} from 'utils/blockchain';
 import {useAllBalance} from './balance/useAllBalance';
 import {useDefaultAccount} from './useDefaultAccount';
 import {useTokenList} from './useTokenList';
@@ -71,10 +72,10 @@ export function useSenderTokens() {
         networkName: e.network,
         logoURI: tokenLogoUri,
         icon: tokenLogoUri,
+        chainId: getNetworkChainId(e.network),
       } as Token;
     });
 
-    console.log('token-list', tokenList);
     setTokens(tokenList);
   }, [balances]);
 

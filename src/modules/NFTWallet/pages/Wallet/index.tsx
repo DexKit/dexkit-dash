@@ -91,8 +91,7 @@ function useCollections() {
 
 const SORT_BY_SALE_DATE = 'sale_date';
 const SORT_BY_SALE_COUNT = 'sale_count';
-const SORT_BY_VISITOR_COUNT = 'visitor_count';
-const SORT_BY_TOTAL_PRICE = 'total_price';
+const SORT_BY_TOTAL_PRICE = 'sale_price';
 
 interface RouteParams {
   address: string;
@@ -145,7 +144,7 @@ export default () => {
   const [page, setPage] = useState(1);
 
   const [collection, setCollection] = useState('');
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState('pk');
   const [query, setQuery] = useState('');
   const [hasOffers, setHasOffers] = useState(false);
 
@@ -627,7 +626,7 @@ export default () => {
                             value={sortBy}
                             displayEmpty
                             onChange={handleChangeSortBy}>
-                            <MenuItem selected value=''>
+                            <MenuItem selected value='pk'>
                               <IntlMessages id='nfts.walletSortBy' />
                             </MenuItem>
                             <MenuItem selected value={SORT_BY_SALE_DATE}>
@@ -635,9 +634,6 @@ export default () => {
                             </MenuItem>
                             <MenuItem selected value={SORT_BY_SALE_COUNT}>
                               <IntlMessages id='nfts.walletSortBySaleCount' />
-                            </MenuItem>
-                            <MenuItem selected value={SORT_BY_VISITOR_COUNT}>
-                              <IntlMessages id='nfts.walletSortByVisitorCount' />
                             </MenuItem>
                             <MenuItem selected value={SORT_BY_TOTAL_PRICE}>
                               <IntlMessages id='nfts.walletSortByTotalPrice' />

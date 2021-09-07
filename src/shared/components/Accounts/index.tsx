@@ -1,6 +1,8 @@
 import React, {useCallback, useState} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
+import {useAccountsModal} from 'hooks/useAccountsModal';
+
 import {Box, Typography, Snackbar} from '@material-ui/core';
 
 import {makeStyles, useTheme} from '@material-ui/core/styles';
@@ -118,12 +120,19 @@ const Accounts = () => {
     }
   }, [address, dispatch, addAccounts]);
 
+  const accountsModal = useAccountsModal();
+
+  const handleConnectWeb3 = useCallback(() => {
+    onConnectWeb3();
+    accountsModal.setShow(false);
+  }, [onConnectWeb3]);
+
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
       <Button
         variant='contained'
         color='primary'
-        onClick={onConnectWeb3}
+        onClick={handleConnectWeb3}
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()

@@ -38,7 +38,12 @@ import {ShareButton} from 'shared/components/ShareButton';
 import InfoIcon from '@material-ui/icons/Info';
 import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
-import {useStyles} from './index.style'
+import {useStyles} from './index.style';
+import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
+import {Share} from '@material-ui/icons';
+import {HeartEmptyIcon, HeartPurpleIcon} from 'shared/components/Icons';
+import ShareDialog from 'shared/components/ShareDialog';
+import {getWindowUrl} from 'utils/browser';
 
 type Params = {
   address: string;
@@ -119,9 +124,21 @@ const TokenPage: React.FC<Props> = (props) => {
     setShowAboutDialog(true);
   }, []);
 
+  const [showShareDialog, setShowShareDialog] = useState(false);
+
+  const toggleShare = useCallback(() => {
+    setShowShareDialog((value) => !value);
+  }, []);
+
   return (
     <>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
+      <ShareDialog
+        open={showShareDialog}
+        shareText='Sharing token'
+        shareUrl={`${getWindowUrl()}/${networkName}/token/${address}`}
+        onClose={toggleShare}
+      />
       <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
         <Box>
           <Grid container justify='space-between' alignItems='center'>
@@ -152,19 +169,38 @@ const TokenPage: React.FC<Props> = (props) => {
               </Grid>
             </Grid>
             <Grid item>
-              <Grid container spacing={1}>
+              <Grid container spacing={4}>
                 <Grid item>
-                  <ShareButton />
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    alignItems='center'>
+                    <RoundedIconButton
+                      style={
+                        isFavorite
+                          ? {borderColor: '#F76F8E !important'}
+                          : undefined
+                      }
+                      onClick={onToggleFavorite}>
+                      {isFavorite ? (
+                        <HeartPurpleIcon className={classes.icon} />
+                      ) : (
+                        <HeartEmptyIcon className={classes.icon} />
+                      )}
+                    </RoundedIconButton>
+                    <Typography variant='caption'>Favorite</Typography>
+                  </Box>
                 </Grid>
                 <Grid item>
-                  <Tooltip title='Add to Favorites'>
-                    <IconButton
-                      aria-label='add favorite coin'
-                      color='primary'
-                      onClick={onToggleFavorite}>
-                      {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                  </Tooltip>
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    alignItems='center'>
+                    <RoundedIconButton onClick={toggleShare}>
+                      <Share className={classes.icon} />
+                    </RoundedIconButton>
+                    <Typography variant='caption'>Share</Typography>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>

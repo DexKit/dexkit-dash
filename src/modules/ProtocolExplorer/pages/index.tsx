@@ -74,7 +74,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
     EXCHANGE.ALL,
     tokenInfo,
   );
-  
 
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
@@ -86,6 +85,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
   }, [history.location.search]);
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
   const onMakeFavorite = useCallback(() => {
     if (tokenInfo) {
       onToggleFavorite(tokenInfo, tokenInfo.coingecko_id);
@@ -196,7 +196,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
               {balances.data && (
                 <CoinTools
                   isFavorite={isFavorite(tokenInfo)}
-                  onMakeFavorite={onToggleFavorite}
+                  onMakeFavorite={onMakeFavorite}
                   balances={balances.data}
                 />
               )}

@@ -13,7 +13,7 @@ import {
   isNativeCoinWithoutChainId,
 } from 'utils';
 import Web3 from 'web3';
-import { useTokenLists } from './useTokenLists';
+import {useTokenLists} from './useTokenLists';
 
 export const useTokenInfo = (address: string) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,7 +36,12 @@ export const useTokenInfo = (address: string) => {
     if (
       address &&
       Web3.utils.isAddress(address) &&
-      ethTokens && binanceTokens && ethTokens.length && binanceTokens.length && maticTokens && maticTokens.length
+      ethTokens &&
+      binanceTokens &&
+      ethTokens.length &&
+      binanceTokens.length &&
+      maticTokens &&
+      maticTokens.length
     ) {
       setLoading(true);
       const tk = findTokensInfoByAddress(

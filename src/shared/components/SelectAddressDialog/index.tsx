@@ -17,11 +17,14 @@ import React from 'react';
 import {WalletAddIcon} from '../Icons';
 import {SelectAccountListItem} from './SelectAddressListItem';
 import CloseIcon from '@material-ui/icons/Close';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
     width: theme.spacing(6),
     height: theme.spacing(6),
+    stroke: theme.palette.common.white,
+    fill: theme.palette.common.white,
   },
 }));
 

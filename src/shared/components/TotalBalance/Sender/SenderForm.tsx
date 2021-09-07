@@ -1,5 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react';
 
+import {CircularProgress, useTheme} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -8,6 +9,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {
   FormControl,
   FormHelperText,
@@ -37,10 +39,19 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {AppState} from 'redux/store';
+import {Alert} from '@material-ui/lab';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {SupportedNetworkType} from 'types/blockchain';
+import {switchChain} from 'utils/wallet';
+import {AccountSelect} from 'shared/components/AccountSelect';
+import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
   amount?: number;
+  token?: Token;
+  address?: string;
+  onResult?: (err?: any) => void;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -66,7 +77,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const SenderForm: React.FC<Props> = (props) => {
+  const {token: defaultToken, address: defaultAddress, onResult} = props;
   const classes = useStyles();
+  const theme = useTheme();
+
+  const dispatch = useDispatch();
 
   const networkName = useNetwork();
 
@@ -74,9 +89,10 @@ const SenderForm: React.FC<Props> = (props) => {
     (state) => state.ui.wallet,
   );
 
-  const {chainId} = useWeb3();
+  const {chainId, account: userAccount, getProvider} = useWeb3();
 
   const account = useDefaultAccount();
+  const accountLabel = useDefaultLabelAccount();
 
   const {onTransfer} = useTransfer();
   const {data: balances} = useAllBalance(account);
@@ -89,17 +105,48 @@ const SenderForm: React.FC<Props> = (props) => {
     setAddress(cpy);
   };
 
+  const handleConnect = useCallback(() => {
+    if (userAccount) {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: userAccount,
+            label: userAccount,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
+    }
+  }, [userAccount, dispatch]);
+
+  const [sending, setSending] = useState(false);
+
   const handleSend = () => {
     if (account) {
       try {
         if (token && chainId) {
+          setSending(true);
           onTransfer(account, address, amount, {
             address: token?.address,
             decimals: token?.decimals,
             name: token?.name,
             symbol: token?.symbol,
             chainId: chainId,
-          });
+          })
+            .then((result) => {
+              if (onResult) {
+                onResult();
+              }
+            })
+            .catch((err) => {
+              if (onResult) {
+                onResult(err);
+              }
+            })
+            .finally(() => {
+              setSending(false);
+            });
         }
 
         // if(isNativeCoin(selected.currency.symbol, chainId as ChainId)){
@@ -147,10 +194,6 @@ const SenderForm: React.FC<Props> = (props) => {
     setShowSelectTokenDialog(false);
   }, []);
 
-  const handleClearToken = useCallback(() => {
-    setToken(undefined);
-  }, []);
-
   const [tokenBalance, setTokenBalance] = useState(0);
 
   const amountError = useCallback((): undefined | string => {
@@ -190,6 +233,12 @@ const SenderForm: React.FC<Props> = (props) => {
 
   const [showSelectAddress, setShowSelectAddress] = useState(false);
 
+  const handleSwitchChain = useCallback(() => {
+    if (token && token?.chainId) {
+      switchChain(getProvider(), token?.chainId);
+    }
+  }, [getProvider, token]);
+
   const handleCloseSelectAddress = useCallback(() => {
     setShowSelectAddress(false);
   }, []);
@@ -204,10 +253,46 @@ const SenderForm: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (tokens.length > 0) {
+    if (defaultToken !== undefined) {
+      setToken(defaultToken);
+    } else if (tokens.length > 0) {
       setToken(tokens[0]);
     }
-  }, [tokens]);
+
+    if (defaultAddress !== undefined) {
+      setAddress(defaultAddress);
+    }
+  }, [tokens, defaultToken, defaultAddress]);
+
+  // default address is not connected
+  const notConnected = userAccount !== account;
+  const invalidChain = token?.chainId != chainId;
+
+  const [showSenderSelectAddress, setShowSenderSelectAddress] = useState(false);
+  const handleSelectSenderAddress = useCallback((address: string) => {
+    dispatch(
+      setDefaultAccount({
+        account: {
+          address: address,
+          label: address,
+          networkType: SupportedNetworkType.evm,
+        },
+        type: SupportedNetworkType.evm,
+      }),
+    );
+
+    setShowSenderSelectAddress(false);
+  }, []);
+
+  const handleShowSenderSelectAddress = useCallback(() => {
+    setShowSenderSelectAddress(true);
+  }, []);
+
+  const handeCloseSenderAddress = useCallback(() => {
+    setShowSenderSelectAddress(false);
+  }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -225,15 +310,27 @@ const SenderForm: React.FC<Props> = (props) => {
         onSelectAccount={handleSelectAccount}
         onClose={handleCloseSelectAddress}
       />
+      <SelectAddressDialog
+        open={showSenderSelectAddress}
+        accounts={accounts.evm}
+        onSelectAccount={handleSelectSenderAddress}
+        onClose={handeCloseSenderAddress}
+      />
       <Box>
         <form noValidate autoComplete='off'>
           <Box mb={5}>
-            <SelectTokenButton
-              onClick={handleShowDialog}
-              token={token}
-              onClear={handleClearToken}
-            />
+            <SelectTokenButton onClick={handleShowDialog} token={token} />
           </Box>
+          {account ? (
+            <Box mb={5}>
+              <Box>
+                <AccountSelect
+                  onClick={handleShowSenderSelectAddress}
+                  account={{label: accountLabel, address: account || ''}}
+                />
+              </Box>
+            </Box>
+          ) : null}
 
           <Box mb={5}>
             <Box
@@ -283,7 +380,7 @@ const SenderForm: React.FC<Props> = (props) => {
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton onClick={handleOpenSelectAddress} edge='end'>
-                      <FileCopyIcon />
+                      <AccountBoxIcon />
                     </IconButton>
                   </InputAdornment>
                 }
@@ -293,6 +390,25 @@ const SenderForm: React.FC<Props> = (props) => {
               ) : null}
             </FormControl>
           </Box>
+          {notConnected ? (
+            <Box mb={4}>
+              <Alert
+                severity='warning'
+                action={<Button onClick={handleConnect}>Connect</Button>}>
+                Please, switch to your connected account to make transactions.
+              </Alert>
+            </Box>
+          ) : null}
+          {invalidChain ? (
+            <Box mb={4}>
+              <Alert
+                severity='warning'
+                action={<Button onClick={handleSwitchChain}>Switch</Button>}>
+                Please, switch to the to te correct blockhain to make
+                transactions.
+              </Alert>
+            </Box>
+          ) : null}
 
           <Box textAlign='center' mb={5}>
             <Button
@@ -301,8 +417,18 @@ const SenderForm: React.FC<Props> = (props) => {
               variant='contained'
               color='primary'
               onClick={handleSend}
+              startIcon={
+                sending ? (
+                  <CircularProgress size={theme.spacing(6)} color='inherit' />
+                ) : undefined
+              }
               disabled={
-                !isAddress(address) || parseFloat(amount) == 0 || amount == ''
+                !isAddress(address) ||
+                parseFloat(amount) == 0 ||
+                amount == '' ||
+                notConnected ||
+                sending ||
+                amountError() !== undefined
               }>
               Send
             </Button>
