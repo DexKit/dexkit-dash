@@ -39,6 +39,7 @@ import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import FavoriteListItem from 'shared/components/FavoriteListItem';
 
 type Params = {
   account: string;
@@ -164,7 +165,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         </Grid>
                         <Grid item>
                           <Button
-                            to='/dashboard/favorite-coins'
+                            to='/favorite-coins'
                             component={RouterLink}
                             size='small'
                             endIcon={<KeyboardArrowRightIcon />}>
@@ -193,16 +194,13 @@ const WalletTabs: React.FC<Props> = (props) => {
                         <Grid container spacing={2}>
                           {favoritesWithMarket.data.map((favorite, index) => (
                             <Grid item xs={12} key={index}>
-                              <TokenListItem
-                                address={favorite.coin.address}
+                              <FavoriteListItem
+                                coin={favorite.coin}
+                                amount={favorite.market?.current_price || 0}
                                 dayChange={
-                                  favorite.market.price_change_percentage_24h ||
-                                  0
+                                  favorite.market
+                                    ?.price_change_percentage_24h || 0
                                 }
-                                amount={favorite.market.current_price}
-                                symbol={favorite.coin.symbol}
-                                name={favorite.coin.name}
-                                network={favorite.coin?.networkName || ''}
                               />
                             </Grid>
                           ))}

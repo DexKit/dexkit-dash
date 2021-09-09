@@ -5,7 +5,13 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import {RouteComponentProps, useHistory} from 'react-router-dom';
+import {
+  RouteComponentProps,
+  useHistory,
+  Link as RouterLink,
+} from 'react-router-dom';
+
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import {
   Accordion,
@@ -13,6 +19,7 @@ import {
   AccordionSummary,
   Box,
   Breadcrumbs,
+  Button,
   Chip,
   Grid,
   Paper,
@@ -49,6 +56,8 @@ import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
 import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import {Token} from 'types/app';
 import {useTokenLists} from 'hooks/useTokenLists';
+import FavoriteListItem from 'shared/components/FavoriteListItem';
+import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 
 type Params = {
   address: string;
@@ -66,7 +75,12 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const theme = useTheme();
   const classes = useStyles();
 
-  const {isFavorite, onToggleFavorite} = useFavoritesWithMarket();
+  const {
+    isFavorite,
+    onToggleFavorite,
+    loading: favoritesWithMarketLoading,
+    data: favoritesWithMarket,
+  } = useFavoritesWithMarket();
 
   const {address} = params;
   const history = useHistory();
@@ -152,6 +166,22 @@ const Explorer: React.FC<TokenProps> = (props) => {
     }
   }, []);
 
+  const handleEthereum = useCallback(() => {
+    history.push(
+      `/explorer/${data?.platforms?.ethereum}?network=${EthereumNetwork.ethereum}`,
+    );
+  }, [history, data]);
+  const handleBsc = useCallback(() => {
+    history.push(
+      `/explorer/${data?.platforms?.['binance-smart-chain']}?network=${EthereumNetwork.bsc}`,
+    );
+  }, [history, data]);
+  const handlePolygon = useCallback(() => {
+    history.push(
+      `/explorer/${data?.platforms?.['polygon-pos']}?network=${EthereumNetwork.matic}`,
+    );
+  }, [history, data]);
+
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
@@ -180,16 +210,57 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     </Breadcrumbs>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant='h6'>
-                      Explorer{' '}
-                      {networkName.toLowerCase() == 'ethereum' ? (
-                        <Chip size='small' label='ETH' />
-                      ) : networkName.toLowerCase() == 'bsc' ? (
-                        <Chip size='small' label='BSC' />
-                      ) : networkName.toLowerCase() == 'matic' ? (
-                        <Chip size='small' label='MATIC' />
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Typography variant='h6'>Explorer</Typography>
+                      </Grid>
+                      {data?.platforms?.ethereum ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='ETH'
+                            variant={
+                              networkName === EthereumNetwork.ethereum
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handleEthereum}
+                          />
+                        </Grid>
                       ) : null}
-                    </Typography>
+                      {data?.platforms?.['binance-smart-chain'] ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='BSC'
+                            variant={
+                              networkName === EthereumNetwork.bsc
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handleBsc}
+                          />
+                        </Grid>
+                      ) : null}
+                      {data?.platforms?.['polygon-pos'] ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='MATIC'
+                            variant={
+                              networkName === EthereumNetwork.matic
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handlePolygon}
+                          />
+                        </Grid>
+                      ) : null}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -234,8 +305,12 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     }
                     pair={tokenInfo?.symbol as string}
                     amount={tokenMarket?.priceUsd as number}
-                    price24Change={tokenInfo?.price_usd_24h_change?.toNumber()}
                     onClick={handleToggleSelectToken}
+                    coinInfo={data}
+                    networkName={networkName}
+                    price24Change={
+                      data?.market_data?.price_change_percentage_24h || 0
+                    }
                   />
                 )}
               </Grid>
@@ -252,6 +327,56 @@ const Explorer: React.FC<TokenProps> = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Grid container alignItems='center' justify='space-between'>
+                  <Grid item>
+                    <Typography variant='body1' style={{fontWeight: 600}}>
+                      Favorites
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      to='/favorite-coins'
+                      component={RouterLink}
+                      size='small'
+                      endIcon={<KeyboardArrowRightIcon />}>
+                      View more
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                {favoritesWithMarketLoading ? (
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TokenListItemSkeleton />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TokenListItemSkeleton />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TokenListItemSkeleton />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TokenListItemSkeleton />
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid container spacing={2}>
+                    {favoritesWithMarket.slice(0, 5).map((favorite, index) => (
+                      <Grid item xs={12} key={index}>
+                        <FavoriteListItem
+                          coin={favorite.coin}
+                          amount={favorite.market?.current_price || 0}
+                          dayChange={
+                            favorite.market?.price_change_percentage_24h || 0
+                          }
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
+              </Grid>
               <Grid item xs={12} md={4}>
                 <Analytics
                   token={tokenInfo}

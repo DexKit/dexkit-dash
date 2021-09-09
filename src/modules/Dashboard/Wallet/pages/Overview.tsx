@@ -10,6 +10,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Chip,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
@@ -155,6 +156,24 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     }
   }, []);
 
+  const handleEthereum = useCallback(() => {
+    history.push(
+      `/wallet/overview/${EthereumNetwork.ethereum}/${data?.platforms?.ethereum}`,
+    );
+  }, [history, data]);
+
+  const handleBsc = useCallback(() => {
+    history.push(
+      `/wallet/overview/${EthereumNetwork.bsc}/${data?.platforms?.['binance-smart-chain']}`,
+    );
+  }, [history, data]);
+
+  const handlePolygon = useCallback(() => {
+    history.push(
+      `/wallet/overview/${EthereumNetwork.matic}/${data?.platforms?.['polygon-pos']}`,
+    );
+  }, [history, data]);
+
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
@@ -197,7 +216,57 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                     </IconButton>
                   </Grid>
                   <Grid item>
-                    <Typography variant='h5'>Overview</Typography>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Typography variant='h6'>Overview</Typography>
+                      </Grid>
+                      {data?.platforms?.ethereum ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='ETH'
+                            variant={
+                              networkName === EthereumNetwork.ethereum
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handleEthereum}
+                          />
+                        </Grid>
+                      ) : null}
+                      {data?.platforms?.['binance-smart-chain'] ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='BSC'
+                            variant={
+                              networkName === EthereumNetwork.bsc
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handleBsc}
+                          />
+                        </Grid>
+                      ) : null}
+                      {data?.platforms?.['polygon-pos'] ? (
+                        <Grid item>
+                          <Chip
+                            size='small'
+                            label='MATIC'
+                            variant={
+                              networkName === EthereumNetwork.matic
+                                ? 'default'
+                                : 'outlined'
+                            }
+                            onClick={handlePolygon}
+                          />
+                        </Grid>
+                      ) : null}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -219,6 +288,11 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                         pair={tokenInfo?.symbol}
                         amount={priceUSD?.priceQuote?.price || 0}
                         onClick={handleToggleSelectToken}
+                        coinInfo={data}
+                        networkName={networkName}
+                        price24Change={
+                          data?.market_data?.price_change_percentage_24h || 0
+                        }
                       />
                     )}
                   </Grid>
@@ -233,6 +307,16 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            {token && (
+              <TokenAnalytics
+                account={account}
+                token={token.address}
+                networkName={networkName}
+              />
+            )}
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={3}>
@@ -305,15 +389,6 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                     <Grid item xs={12}>
                       <InfoTab error={error} loading={loading} data={data} />
                     </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    {token && (
-                      <TokenAnalytics
-                        account={account}
-                        token={token.address}
-                        networkName={networkName}
-                      />
-                    )}
                   </Grid>
                   <Grid item xs={12}>
                     <HistoryTables

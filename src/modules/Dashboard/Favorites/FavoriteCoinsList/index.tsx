@@ -8,6 +8,8 @@ import {CoinItemCoinGecko} from 'types/coingecko';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
+import FavoriteListItem from 'shared/components/FavoriteListItem';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 const useStyles = makeStyles(() => ({
   borderBottomClass: {
@@ -26,10 +28,7 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   marketData,
   onRemoveCoin,
 }) => {
-  const coinsWithMarketData = favoriteCoins.map((f) => {
-    const market = marketData && marketData.find((m) => m.id === f.id);
-    return {f, market: market};
-  });
+  const favoritesWithMarket = useFavoritesWithMarket();
 
   const history = useHistory();
 
@@ -39,18 +38,16 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
 
   return (
     <Box>
-      <Grid>
-        <Grid item xs={12}>
-          {coinsWithMarketData.map((row) => (
-            <FavoriteItem
-              key={row.f.name}
-              row={row.f}
-              marketData={row.market}
-              onRemoveCoin={onRemoveCoin}
-              onClick={handleClick}
+      <Grid container spacing={2}>
+        {favoritesWithMarket.data.map((favorite, index) => (
+          <Grid key={index} item xs={12}>
+            <FavoriteListItem
+              coin={favorite.coin}
+              amount={favorite.market?.current_price || 0}
+              dayChange={favorite.market?.price_change_percentage_24h || 0}
             />
-          ))}
-        </Grid>
+          </Grid>
+        ))}
       </Grid>
       {favoriteCoins && favoriteCoins.length === 0 && (
         <Grid item xs={12}>

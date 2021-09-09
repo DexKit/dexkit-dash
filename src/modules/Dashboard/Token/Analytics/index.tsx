@@ -148,7 +148,7 @@ export const TokenAnalytics = (props: Props) => {
   // loading
   // error
 
-  return (
+  return error || !data ? null : (
     <Box>
       {error ? <ErrorView message={'Error fetching analytics'} /> : null}
       {loading ? <Skeleton variant='rect' height={100} /> : null}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useMemo, useCallback} from 'react';
 
 import {
   Paper,
@@ -8,9 +8,17 @@ import {
   makeStyles,
   IconButton,
   alpha,
+  Tooltip,
+  Link,
+  useTheme,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {truncateAddress} from 'utils';
+import FileCopy from '@material-ui/icons/FileCopy';
+import CopyLink from '../CopyLink';
 
 interface TokenCardProps {
   icon: React.ReactNode | React.ReactNode[];
@@ -18,12 +26,13 @@ interface TokenCardProps {
   amount: number | string;
   price24Change?: number;
   onClick?: () => void;
+  coinInfo?: CoinDetailCoinGecko;
+  networkName?: EthereumNetwork;
 }
 
 const useStyles = makeStyles((theme) => ({
   paper: {},
   price24Change: {
-    color: theme.palette.success.main,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
 
@@ -32,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.1),
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 500,
   },
   amount: {
@@ -46,14 +55,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TokenCard = (props: TokenCardProps) => {
-  const {icon, price24Change, pair, amount, onClick} = props;
+  const {icon, price24Change, pair, amount, onClick, coinInfo, networkName} =
+    props;
   const {usdFormatter} = useUSDFormatter();
-  const amountUSD = useMemo(()=> {
+  const amountUSD = useMemo(() => {
     return usdFormatter.format(Number(amount));
+  }, [amount]);
 
-  }, [amount])
-
+  const theme = useTheme();
   const classes = useStyles();
+
+  const getTokenAddress = useCallback(() => {
+    if (networkName && coinInfo) {
+      if (networkName === EthereumNetwork.ethereum) {
+        return coinInfo?.platforms?.ethereum;
+      } else if (networkName === EthereumNetwork.bsc) {
+        return coinInfo?.platforms?.['binance-smart-chain'];
+      } else if (networkName === EthereumNetwork.matic) {
+        return coinInfo?.platforms?.['polygon-pos'];
+      }
+    }
+  }, [coinInfo, networkName]);
 
   return (
     <Paper className={classes.paper}>
@@ -71,19 +93,43 @@ export const TokenCard = (props: TokenCardProps) => {
           <Grid item xs>
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
-                <Typography className={classes.amount} variant='h5'>
-                {amountUSD}
-                </Typography>
+                {getTokenAddress() ? (
+                  <Typography color='textSecondary' variant='caption'>
+                    <CopyLink copyText={getTokenAddress()} tooltip='Copied!'>
+                      {truncateAddress(getTokenAddress())}{' '}
+                      <FileCopy color='inherit' fontSize='inherit' />
+                    </CopyLink>
+                  </Typography>
+                ) : null}
+                <Box display='flex' alignItems='center' alignContent='center'>
+                  <Box mr={2}>
+                    <Typography className={classes.amount} variant='h5'>
+                      {amountUSD}{' '}
+                    </Typography>
+                  </Box>
+                  {price24Change && (
+                    <span
+                      className={classes.price24Change}
+                      style={
+                        price24Change > 0
+                          ? {
+                              color: theme.palette.success.main,
+                            }
+                          : {
+                              color: theme.palette.error.main,
+                            }
+                      }>
+                      {price24Change}%
+                    </span>
+                  )}
+                </Box>
               </Grid>
-              {price24Change && <Grid item>
-                <Typography className={classes.price24Change}>
-                  {price24Change}%
-                </Typography>
-              </Grid>}
             </Grid>
-            <Typography className={classes.pair} variant='body1'>
-              {pair.toUpperCase()}
-            </Typography>
+            <Tooltip title={coinInfo?.name || ''}>
+              <Typography className={classes.pair} variant='body1'>
+                {pair.toUpperCase()}
+              </Typography>
+            </Tooltip>
           </Grid>
           <Grid item>
             <IconButton onClick={onClick}>
