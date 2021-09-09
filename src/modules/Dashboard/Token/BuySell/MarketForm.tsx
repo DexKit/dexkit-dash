@@ -79,6 +79,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
+
   useEffect(() => {
     if (web3State !== Web3State.Done && tokenFrom === undefined) {
       const tokenETH = select1.find(
@@ -126,6 +127,7 @@ const MarketForm: React.FC<Props> = (props) => {
     amountFrom,
     tokenFrom?.decimals,
   );
+
   const onFetch = useCallback(
     (newValue: number | undefined, side: 'to' | 'from') => {
       if (side === 'from') {
@@ -135,6 +137,7 @@ const MarketForm: React.FC<Props> = (props) => {
           setAmountTo(newValue);
         }
       }
+
       if (tokenFrom && tokenTo && chainId && newValue) {
         fetchQuote(
           {

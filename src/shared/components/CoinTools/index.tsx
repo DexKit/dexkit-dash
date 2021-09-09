@@ -13,6 +13,8 @@ import {useTransak} from 'hooks/useTransak';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -84,10 +86,11 @@ interface Props {
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  token?: Token;
 }
 
 const CoinTools = (props: Props) => {
-  const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
+  const {balances, only, onMakeFavorite, onShare, isFavorite, token} = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
@@ -144,6 +147,7 @@ const CoinTools = (props: Props) => {
   const [showSender, setShowSender] = useState(false);
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
+  const [showTrade, setShowTrade] = useState(false);
 
   const handleShowSender = useCallback(() => {
     setShowSender(true);
@@ -168,10 +172,14 @@ const CoinTools = (props: Props) => {
     setShowSwap(true);
   }, [init]);
 
-  const handleTrade = useCallback(() => {}, [init]);
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false);
   }, []);
 
   return (
@@ -180,6 +188,13 @@ const CoinTools = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+        token={token}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop
@@ -188,7 +203,7 @@ const CoinTools = (props: Props) => {
         onClick={handleSwapClose}>
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
-            <SwapComponent onClose={handleSwapClose} />
+            {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}
           </Grid>
         </Grid>
       </Backdrop>

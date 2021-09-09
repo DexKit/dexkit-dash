@@ -18,6 +18,7 @@ export interface CoinDetailCoinGecko {
   platforms?: {
     ethereum?: string;
     'binance-smart-chain'?: string;
+    'polygon-pos'?: string;
   };
   links: {
     homepage: string[];

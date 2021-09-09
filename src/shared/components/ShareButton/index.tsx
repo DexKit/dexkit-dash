@@ -25,7 +25,7 @@ interface Props extends IconButtonProps {
 export const ShareButton = (props: Props) => {
   const {shareText} = props;
 
-  let tradeShareText =
+  const tradeShareText =
     shareText || `Trade and Analyze Your Favourite Tokens at DexKit`;
   const shareUrl = window.location.href;
 

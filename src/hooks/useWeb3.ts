@@ -20,9 +20,12 @@ import {
   setChainId,
   setBlockNumber,
 } from 'redux/actions';
-import {Web3State} from 'types/blockchain';
+import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
 import {addAccounts, setAccount} from 'redux/_ui/actions';
+import {getMulticall} from 'services/multicall';
+
+
 
 // @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
 // the app to break as wallet was being called multiple times. useState inside the hook was not working as solution
@@ -41,8 +44,8 @@ export const useWeb3 = () => {
   const account = useSelector<AppState, AppState['blockchain']['ethAccount']>(
     (state) => state.blockchain.ethAccount,
   );
-  const accounts = useSelector<AppState, AppState['ui']['accounts']>(
-    (state) => state.ui.accounts,
+  const accounts = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
   );
   const chainId = useSelector<AppState, AppState['blockchain']['chainId']>(
     (state) => state.blockchain.chainId,
@@ -57,25 +60,12 @@ export const useWeb3 = () => {
     if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
       // subscribeProvider(provider);
       loadingAccount = true;
-      web3.eth
-        .getAccounts()
-        .then((a) => {
-          const uiAccount = {
-            address: a[0],
-            label: a[0],
-          };
+      web3.eth.getAccounts().then((a) => {
+        const accounts = a.map(ac=> {return  {address: ac, label: ac,  networkType: SupportedNetworkType.evm}});
+        dispatch(setEthAccount(a[0]));
+        dispatch(addAccounts({accounts: accounts, type: SupportedNetworkType.evm} ));
 
-          dispatch(setAccount(uiAccount));
-          dispatch(setEthAccount(a[0]));
-          dispatch(
-            addAccounts(
-              a.map((ac) => {
-                return {address: ac, label: ac};
-              }),
-            ),
-          );
-        })
-        .finally(() => (loadingAccount = false));
+      }).finally(() => loadingAccount = false);
     }
     if (web3State === Web3State.Done && web3 && !loadingChainId) {
       loadingChainId = true;
@@ -114,8 +104,8 @@ export const useWeb3 = () => {
   const onSetDefaultAccount = (index: number) => {
     const web3 = getWeb3();
     if (web3 && accounts) {
-      web3.eth.defaultAccount = accounts[index].address;
-      dispatch(setEthAccount(accounts[index].address));
+      web3.eth.defaultAccount = accounts[SupportedNetworkType.evm][index].address;
+      dispatch(setEthAccount(accounts[SupportedNetworkType.evm][index].address));
     }
   };
 
@@ -168,29 +158,22 @@ export const useWeb3 = () => {
     });
 
     pr.on('accountsChanged', async (accounts: string[]) => {
-      const uiAccount = {
-        label: accounts[0],
-        address: accounts[0],
-      };
-      dispatch(setAccount(uiAccount));
+      
       dispatch(setEthAccount(accounts[0]));
     });
 
-    pr.on('chainChanged', async (chainId: number) => {
-      console.log('chainChanged');
+    pr.on("chainChanged", async (chainId: number) => {
       dispatch(setChainId(chainId));
     });
 
-    pr.on('block', (blocknumber: number) => {
-      console.log('blocknumber', blocknumber);
+
+    pr.on("block", (blocknumber: number) => {
       dispatch(setBlockNumber(blocknumber));
     });
 
-    /*provider.on("networkChanged", async (networkId: number) => {
-      const chainId = await web3.eth.chainId();
-      await this.setState({ chainId, networkId });
-      await this.getAccountAssets();
-    });*/
+    pr.on("networkChanged", async (networkId: number) => {
+      dispatch(setChainId(networkId));
+    });
   };
 
   return {

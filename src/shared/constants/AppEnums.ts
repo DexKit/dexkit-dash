@@ -67,6 +67,11 @@ export enum CoinIcons {
   RIPPLE = 'assets/images/ripple.png',
 }
 
+export enum MainnetNetworks {
+  bitcoin = 'bitcoin',
+  dogecoin = 'dogecoin',
+}
+
 export enum EthereumNetwork {
   bsc = 'bsc',
   bsc_testnet = 'bsc_testnet',
@@ -77,6 +82,12 @@ export enum EthereumNetwork {
   ethclassic_reorg = 'ethclassic_reorg',
   ethereum = 'ethereum',
   goerli = 'goerli',
+  matic = 'matic',
+}
+
+export enum MainnetNetwork {
+  btc = 'btc',
+  dogecoin = 'dogecoin',
 }
 
 export enum EXCHANGE {

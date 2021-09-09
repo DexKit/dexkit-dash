@@ -12,6 +12,14 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
+        path: '/wallet/send',
+        component: React.lazy(() => import('./Wallet/pages/ShareSend')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/swap/coins',
         component: React.lazy(() => import('./Swap')),
       },
@@ -59,7 +67,6 @@ export const dashBoardConfigs = [
     ],
   },
 
-
   // {
   //   auth: ['wallet'],
   //   routes: [
@@ -84,6 +91,14 @@ export const dashBoardConfigs = [
       {
         path: '/:networkName/token/:address',
         component: React.lazy(() => import('./Token')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/create-wallet',
+        component: React.lazy(() => import('./Wallet/CreateWallet')),
       },
     ],
   },

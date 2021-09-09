@@ -35,28 +35,30 @@ const TransactionTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+
+  if (data && data.length === 0) {
+    return (
+      <Typography variant='h5' align={'center'} color={'primary'}>
+        You don't have trades yet
+      </Typography>
+    );
+  }
+
   return (
     <>
-      <Box className={classes.tableResponsiveMaterial}>
+      <Box mb={4}>
         <Table stickyHeader>
-          <TableHead className={classes.borderBottomClass}>
+          <TableHead>
             <TableHeading />
           </TableHead>
 
-          <TableBody className={classes.borderBottomClass}>
-            {data &&
-              data.map((row, index) => (
-                <TableItem row={row} networkName={networkName} key={index} />
-              ))}
+          <TableBody>
+            {data?.map((row, index) => (
+              <TableItem row={row} networkName={networkName} key={index} />
+            ))}
           </TableBody>
         </Table>
-        {data && data.length === 0 && (
-          <Typography variant='h5' align={'center'} color={'primary'}>
-            You don't have trades yet
-          </Typography>
-        )}
       </Box>
-
       <TablePagination
         className={classes.paginationDesktop}
         component='div'

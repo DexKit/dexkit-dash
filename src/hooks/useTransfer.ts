@@ -27,59 +27,67 @@ export const useTransfer = () => {
     amount: string,
     currency: Currency,
   ) => {
-    const web3: any = getWeb3();
+    return new Promise<any>((resolve, reject) => {
+      const web3: any = getWeb3();
 
-    if (!web3) {
-      return null;
-    }
+      if (!web3) {
+        return null;
+      }
 
-    const amountFn = fromTokenUnitAmount(amount, currency.decimals);
+      const amountFn = fromTokenUnitAmount(amount, currency.decimals);
 
-    if (isNativeCoin(currency.symbol, chainId as ChainId)) {
-      web3.eth
-        .sendTransaction({from, to, value: amountFn.toString()})
-        .once('transactionHash', (hash: string) => {
-          const notification: Notification = {
-            title: 'Processing',
-            body: truncateAddress(hash),
-          };
-          dispatch(onAddNotification([notification], NotificationType.INFO));
-        })
-        .then((e: any) => {
-          const notification: Notification = {
-            title: 'Send',
-            body: `Sent with success ${truncateAddress(e.transactionHash)}`,
-          };
-          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
-        })
-        .catch((error: Error) => {
-          const notification: Notification = {
-            title: 'Error',
-            body: error.message,
-          };
-          dispatch(onAddNotification([notification], NotificationType.ERROR));
-        });
-    } else {
-      const contract = getContractToken(currency.address, web3);
+      if (isNativeCoin(currency.symbol, chainId as ChainId)) {
+        web3.eth
+          .sendTransaction({from, to, value: amountFn.toString()})
+          .once('transactionHash', (hash: string) => {
+            const notification: Notification = {
+              title: 'Processing',
+              body: truncateAddress(hash),
+            };
+            dispatch(onAddNotification([notification], NotificationType.INFO));
+          })
+          .then((e: any) => {
+            const notification: Notification = {
+              title: 'Send',
+              body: `Sent with success ${truncateAddress(e.transactionHash)}`,
+            };
+            dispatch(
+              onAddNotification([notification], NotificationType.SUCCESS),
+            );
+            resolve(e);
+          })
+          .catch((error: Error) => {
+            const notification: Notification = {
+              title: 'Error',
+              body: error.message,
+            };
+            dispatch(onAddNotification([notification], NotificationType.ERROR));
+            reject(error.message);
+          });
+      } else {
+        const contract = getContractToken(currency.address, web3);
 
-      contract.methods
-        .transfer(to, amountFn.toString())
-        .send({from: from})
-        .then((tx: string) => {
-          const notification: Notification = {
-            title: 'Send',
-            body: 'Sent with success',
-          };
-          dispatch(onAddNotification([notification]));
-        })
-        .catch((e: any) => {
-          const notification: Notification = {
-            title: 'Error',
-            body: e.message || '',
-          };
-          dispatch(onAddNotification([notification], NotificationType.ERROR));
-        });
-    }
+        contract.methods
+          .transfer(to, amountFn.toString())
+          .send({from: from})
+          .then((tx: string) => {
+            const notification: Notification = {
+              title: 'Send',
+              body: 'Sent with success',
+            };
+            dispatch(onAddNotification([notification]));
+            resolve(tx);
+          })
+          .catch((error: any) => {
+            const notification: Notification = {
+              title: 'Error',
+              body: error.message || '',
+            };
+            dispatch(onAddNotification([notification], NotificationType.ERROR));
+            reject(error.message);
+          });
+      }
+    });
   };
 
   return {onTransfer};

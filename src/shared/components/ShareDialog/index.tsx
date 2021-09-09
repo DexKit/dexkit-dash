@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -16,8 +16,10 @@ import {
   EmailShareButton,
 } from 'react-share';
 import ShareIcon from '@material-ui/icons/Share';
-import {Box, Tooltip, DialogProps} from '@material-ui/core';
+import {Box, Tooltip, DialogProps, Typography} from '@material-ui/core';
 import IconButton, {IconButtonProps} from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+import {Share} from '@material-ui/icons';
 
 interface ShareDialogProps extends DialogProps {
   shareText?: string;
@@ -25,11 +27,34 @@ interface ShareDialogProps extends DialogProps {
 }
 
 export const ShareDialog = (props: ShareDialogProps) => {
-  const {shareText, shareUrl} = props;
+  const {shareText, shareUrl, onClose} = props;
+
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose({}, 'backdropClick');
+    }
+  }, [onClose]);
 
   return (
     <Dialog {...props}>
-      <MuiDialogTitle>Share URL</MuiDialogTitle>
+      <MuiDialogTitle>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'
+              mr={2}>
+              <ShareIcon />
+            </Box>
+            <Typography variant='body1'>Share URL</Typography>
+          </Box>
+          <IconButton size='small' onClick={handleClose}>
+            <Close />
+          </IconButton>
+        </Box>
+      </MuiDialogTitle>
       <MuiDialogContent dividers>
         <Box display={'flex'} justifyContent={'center'}>
           <TelegramShareButton
@@ -67,3 +92,5 @@ export const ShareDialog = (props: ShareDialogProps) => {
     </Dialog>
   );
 };
+
+export default ShareDialog;

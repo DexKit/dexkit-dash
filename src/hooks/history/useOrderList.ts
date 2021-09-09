@@ -59,17 +59,17 @@ export const useOrderList = ({address, networkName}: Props) => {
       const newSellData = sellData.records.map((e: any) => {
         e.order['makerAmountFn'] = toTokenUnitAmount(
           e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.makerToken)?.decimals ||
             18,
         ).toString();
         e.order['takerAmountFn'] = toTokenUnitAmount(
           e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
           e.metaData.remainingFillableTakerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.order['side'] = 'SELL';
@@ -80,12 +80,12 @@ export const useOrderList = ({address, networkName}: Props) => {
         console.log(e);
         e.order['makerAmountFn'] = toTokenUnitAmount(
           e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.makerToken)?.decimals ||
             18,
         ).toString();
         e.order['takerAmountFn'] = toTokenUnitAmount(
           e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(

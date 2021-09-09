@@ -3,23 +3,18 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-
 import {CremaTheme} from 'types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   pair: {
     display: 'flex',
   },
   iconLeft: {
-    borderRadius: '100%',
-    width: '40px',
-    height: '40px',
+    borderRadius: '50%',
+    width: theme.spacing(8),
+    height: theme.spacing(8),
     position: 'relative',
     zIndex: 2,
-    [theme.breakpoints.down('md')]: {
-      width: '25px',
-      height: '25px',
-    },
   },
 }));
 

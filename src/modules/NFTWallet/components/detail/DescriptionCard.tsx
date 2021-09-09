@@ -10,6 +10,9 @@ import {
   Box,
   Paper,
   makeStyles,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
@@ -131,12 +134,15 @@ export default (props: Props) => {
     })();
   }, [userAccountAddress, getProvider, chainId]);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Grid container spacing={2} justify='space-between'>
-            <Grid item xs>
+          <Grid container spacing={4} justify='space-between'>
+            <Grid item xs={isMobile ? 12 : true}>
               <Box mb={2}>
                 <Typography variant='subtitle2' color='primary'>
                   {loading ? <Skeleton /> : asset?.collection?.name}
@@ -150,7 +156,7 @@ export default (props: Props) => {
                 </Typography>
               </Box>
               {asset && isAssetSingleOwner(asset) ? (
-                <Box mb={2}>
+                <Box mb={4}>
                   <Typography gutterBottom variant='body2'>
                     <IntlMessages id='nfts.detail.ownedBy' />{' '}
                     {isAssetOwner(asset, userAccountAddress || '') ? (
@@ -173,30 +179,60 @@ export default (props: Props) => {
                 <Grid container spacing={4}>
                   {loading ? null : (
                     <Grid item>
-                      <CopyButton
-                        className={classes.actionButton}
-                        copyText={`${getWindowUrl()}/nfts/assets/${
-                          asset?.asset_contract?.address
-                        }/${asset?.token_id}`}
-                        tooltip='Copied!'>
-                        <DocumentCopyIcon />
-                      </CopyButton>
+                      <Tooltip title='Copy URL'>
+                        <Box
+                          flexDirection='column'
+                          display='flex'
+                          alignItems='center'
+                          justifyContent='center'>
+                          <CopyButton
+                            title='Copy URL'
+                            className={classes.actionButton}
+                            copyText={`${getWindowUrl()}/nfts/assets/${
+                              asset?.asset_contract?.address
+                            }/${asset?.token_id}`}
+                            tooltip='Copied!'>
+                            <DocumentCopyIcon />
+                          </CopyButton>
+                          <Typography variant='caption'>Copy</Typography>
+                        </Box>
+                      </Tooltip>
                     </Grid>
                   )}
                   {isAssetOwner(asset, userAccountAddress || '') ? (
                     <>
                       <Grid item>
-                        <IconButton onClick={onTransfer}>
-                          <MoneySendIcon />
-                        </IconButton>
+                        <Box
+                          flexDirection='column'
+                          display='flex'
+                          alignItems='center'
+                          justifyContent='center'>
+                          <Tooltip title='Transfer'>
+                            <IconButton
+                              title='Transfer'
+                              onClick={onTransfer}
+                              className={classes.actionButton}>
+                              <MoneySendIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Typography variant='caption'>Transfer</Typography>
+                        </Box>
                       </Grid>
                       <Grid item>
-                        <IconButton
-                          component={RouterLink}
-                          to={`/nfts/assets/${asset?.asset_contract?.address}/${asset?.token_id}/sell`}
-                          color='primary'>
-                          <DollarCircleIcon />
-                        </IconButton>
+                        <Box
+                          flexDirection='column'
+                          display='flex'
+                          alignItems='center'
+                          justifyContent='center'>
+                          <IconButton
+                            component={RouterLink}
+                            className={classes.actionButton}
+                            to={`/nfts/assets/${asset?.asset_contract?.address}/${asset?.token_id}/sell`}
+                            color='primary'>
+                            <DollarCircleIcon />
+                          </IconButton>
+                          <Typography variant='caption'>Sell</Typography>
+                        </Box>
                       </Grid>
                     </>
                   ) : null}
@@ -204,7 +240,7 @@ export default (props: Props) => {
               </Box>
             </Grid>
             {!loading ? (
-              <Grid item>
+              <Grid item xs={isMobile ? 12 : undefined}>
                 <Link
                   target='_blank'
                   href={`https://${

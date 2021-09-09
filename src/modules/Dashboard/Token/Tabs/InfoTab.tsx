@@ -33,7 +33,7 @@ export const InfoTab = (props: Props) => {
           <Skeleton width={theme.spacing(16)} />
         ) : (
           <>
-            About {data?.name} ({data?.symbol.toUpperCase()})
+            About {data?.name} ({data?.symbol?.toUpperCase()})
           </>
         )}
       </AccordionSummary>

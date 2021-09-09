@@ -143,6 +143,15 @@ export const GET_NATIVE_COINS = () => {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
     },
+    {
+      address: '',
+      decimals: 18,
+      name: 'Polygon',
+      symbol: 'MATIC',
+      networkName: EthereumNetwork.matic,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
+    },
   ];
 };
 
@@ -159,6 +168,7 @@ export const getNativeCoinWrapped = (chainId: ChainId) => {
     case ChainId.Binance:
       return 'wbnb';
     case ChainId.Matic:
+    case ChainId.Mumbai:
       return 'wmatic';
   }
 };

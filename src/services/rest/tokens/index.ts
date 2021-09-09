@@ -16,6 +16,15 @@ const binanceTokens = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+const maticTokens = axios.create({
+  baseURL: 'https://raw.githubusercontent.com',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
 let cacheEthTokens: Token[];
 export async function getEthereumTokens(): Promise<Token[]> {
   if (cacheEthTokens) {
@@ -72,6 +81,34 @@ export async function getBinanceTokens(): Promise<Token[]> {
       logoURI: '/assets/images/dexkit-logo.png',
     });
     cacheBscTokens = tokens;
+    return Promise.resolve(tokens);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+let cacheMaticTokens: Token[];
+
+export async function getMaticTokens(): Promise<Token[]> {
+  if (cacheMaticTokens) {
+    return Promise.resolve(cacheMaticTokens);
+  }
+  try {
+    const response = await maticTokens.get(
+      '/BlockTimeWorld/SwapMatic/master/swapmatic.tokenlist.json',
+    );
+    const tokens = response.data.tokens.map((t: any) => {
+      return {...t, networkName: EthereumNetwork.matic};
+    });
+    tokens.unshift({
+      address: '',
+      decimals: 18,
+      name: 'Polygon',
+      symbol: 'Matic',
+      networkName: EthereumNetwork.matic,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
+    });
+    cacheMaticTokens = tokens;
     return Promise.resolve(tokens);
   } catch (e) {
     return Promise.reject(e);

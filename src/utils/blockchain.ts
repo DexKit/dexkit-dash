@@ -1,3 +1,5 @@
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+
 export enum NetworkCodes {
   Ethereum = 1,
   Ropsten = 3,
@@ -43,5 +45,20 @@ export function getTransactionScannerUrl(
       return `https://rinkeby.etherscan.io/tx/${transactionHash}`;
     default:
       return '';
+  }
+}
+
+export function getNetworkChainId(networkName: EthereumNetwork) {
+  switch (networkName) {
+    case EthereumNetwork.bsc:
+      return NetworkCodes.SmartChain;
+    case EthereumNetwork.bsc_testnet:
+      return NetworkCodes.SmartChainTestnet;
+    case EthereumNetwork.ethereum:
+      return NetworkCodes.Ethereum;
+    case EthereumNetwork.matic:
+      return NetworkCodes.Matic;
+    default:
+      return 0;
   }
 }

@@ -3,17 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {
-  EthereumNetwork,
-  TradeSide,
-} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork, TradeSide } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetTokenTrades
 // ====================================================
 
 export interface GetTokenTrades_ethereum_dexTrades_block_timestamp {
-  __typename: 'DateTime';
+  __typename: "DateTime";
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -21,7 +18,7 @@ export interface GetTokenTrades_ethereum_dexTrades_block_timestamp {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_block {
-  __typename: 'BlockExtended';
+  __typename: "BlockExtended";
   /**
    * Block timestamp
    */
@@ -33,7 +30,7 @@ export interface GetTokenTrades_ethereum_dexTrades_block {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_exchange {
-  __typename: 'EthereumDex';
+  __typename: "EthereumDex";
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -41,7 +38,7 @@ export interface GetTokenTrades_ethereum_dexTrades_exchange {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_smartContract_address {
-  __typename: 'Address';
+  __typename: "Address";
   /**
    * String address representation
    */
@@ -53,7 +50,7 @@ export interface GetTokenTrades_ethereum_dexTrades_smartContract_address {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_smartContract {
-  __typename: 'EthereumSmartContract';
+  __typename: "EthereumSmartContract";
   /**
    * Smart Contract Address
    */
@@ -61,7 +58,7 @@ export interface GetTokenTrades_ethereum_dexTrades_smartContract {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_transaction {
-  __typename: 'EthereumTransactionInfoExtended';
+  __typename: "EthereumTransactionInfoExtended";
   /**
    * Hash hex representation
    */
@@ -69,7 +66,7 @@ export interface GetTokenTrades_ethereum_dexTrades_transaction {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_baseCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -89,7 +86,7 @@ export interface GetTokenTrades_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades_quoteCurrency {
-  __typename: 'Currency';
+  __typename: "Currency";
   /**
    * Token Smart Contract Address
    */
@@ -109,7 +106,7 @@ export interface GetTokenTrades_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetTokenTrades_ethereum_dexTrades {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   /**
    * Index of trade in transaction, used to separate trades in transaction
    */
@@ -155,7 +152,7 @@ export interface GetTokenTrades_ethereum_dexTrades {
 }
 
 export interface GetTokenTrades_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

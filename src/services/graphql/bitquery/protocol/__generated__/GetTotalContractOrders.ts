@@ -3,19 +3,19 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
+import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetTotalContractOrders
 // ====================================================
 
 export interface GetTotalContractOrders_ethereum_dexTrades {
-  __typename: 'EthereumDexTrades';
+  __typename: "EthereumDexTrades";
   totalTrades: number | null;
 }
 
 export interface GetTotalContractOrders_ethereum {
-  __typename: 'Ethereum';
+  __typename: "Ethereum";
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

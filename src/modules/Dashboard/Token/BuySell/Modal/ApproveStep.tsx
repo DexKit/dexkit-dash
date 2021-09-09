@@ -50,8 +50,9 @@ const ApproveStep: React.FC<Props> = (props) => {
 
   const isApprove = async () => {
     if (
-      tokenFrom.symbol.toUpperCase() === 'ETH' ||
-      (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance)
+      (tokenFrom.symbol.toUpperCase() === 'ETH' && chainId === ChainId.Mainnet) ||
+      (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance) ||
+      (tokenFrom.symbol.toUpperCase() === 'MATIC' && chainId === ChainId.Matic)
     ) {
       return true;
     }

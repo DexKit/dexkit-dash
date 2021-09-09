@@ -44,16 +44,20 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(6),
   },
   container: {
+    justifyContent: 'flex-start',
     display: 'flex',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     overflowY: 'hidden',
     overflowX: 'scroll',
+    flexWrap: 'nowrap',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
   item: {
     marginRight: theme.spacing(4),
     objectFit: 'contain',
-    width: '100%',
   },
   itemText: {
     whiteSpace: 'nowrap',

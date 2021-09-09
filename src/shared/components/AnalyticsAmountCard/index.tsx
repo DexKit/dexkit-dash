@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {Paper, Grid, makeStyles, Box, Typography} from '@material-ui/core';
+import {
+  Paper,
+  Grid,
+  makeStyles,
+  Box,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 
@@ -25,14 +32,26 @@ interface AnalyticsAmountCardProps {
   caption: string;
   isLoading?: boolean;
   onClick?: () => void;
+  colorsEnabled?: boolean;
+  notUsdValue?: boolean;
 }
 
 export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
-  const {amount, caption, onClick, icon, isLoading} = props;
+  const {
+    amount,
+    caption,
+    onClick,
+    icon,
+    isLoading,
+    colorsEnabled,
+    notUsdValue,
+  } = props;
 
   const classes = useStyles();
 
   const {usdFormatter} = useUSDFormatter();
+
+  const theme = useTheme();
 
   return isLoading ? (
     <Paper className={classes.paper} onClick={onClick}>
@@ -69,9 +88,23 @@ export const AnalyticsAmountCard = (props: AnalyticsAmountCardProps) => {
               variant='caption'>
               {caption}
             </Typography>
-            <Typography variant='h5'>
+
+            <Typography
+              style={
+                colorsEnabled
+                  ? {
+                      color:
+                        typeof amount === 'number' && amount < 0
+                          ? theme.palette.error.main
+                          : theme.palette.success.main,
+                    }
+                  : undefined
+              }
+              variant='h5'>
               {typeof amount === 'number'
-                ? usdFormatter.format(amount)
+                ? notUsdValue
+                  ? amount
+                  : usdFormatter.format(amount)
                 : amount}
             </Typography>
           </Grid>

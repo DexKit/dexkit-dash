@@ -28,7 +28,6 @@ import {Steps} from './Provider';
 import {ReviewOrder} from './Components/ReviewOrder';
 import {SelectCoinsDialog} from './Modal/SelectCoins';
 
-import _ from 'lodash';
 import {CoinSelectButton} from './Components/CoinSelectButton';
 import {ReceiveAddressStep} from './Components/ReceiveAddressStep';
 import {SwapHistoricDialog} from './Components/SwapHistoricDialog';
@@ -58,7 +57,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
 
   const [loading, setLoading] = useState(false);
   const [toLoading, setToLoading] = useState(false);
-  const [step, setStep] = useState(Steps.Exchange);
+  const [step] = useState(Steps.Exchange);
   const [acceptAML, setAcceptAML] = useState(false);
   const [fromLoading, setFromLoading] = useState(false);
   const [coins, setCoins] = useState<ChangellyCoin[]>([]);
@@ -545,7 +544,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
         toAddress={transferAddress}
         balance={balance}
         toToken={
-          tokens.filter((token) => token.symbol.toUpperCase() === 'ETH')[0]
+          tokens.filter((token: any) => token.symbol.toUpperCase() === 'ETH')[0]
         }
         open={showTransfer}
         onSend={handleSendCoin}
