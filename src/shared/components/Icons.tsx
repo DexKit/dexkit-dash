@@ -6,3 +6,4 @@ export {ReactComponent as ExportWhiteIcon} from 'assets/images/icons/export-whit
 export {ReactComponent as ImportWhiteIcon} from 'assets/images/icons/import-white.svg';
 export {ReactComponent as HeartPurpleIcon} from 'assets/images/icons/heart-purple.svg';
 export {ReactComponent as HeartEmptyIcon} from 'assets/images/icons/heart-empty.svg';
+export {ReactComponent as MetamaskFoxIcon} from 'assets/images/icons/metamask-fox.svg';

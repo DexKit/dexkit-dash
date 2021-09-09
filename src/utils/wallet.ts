@@ -25,3 +25,23 @@ export function switchChain(provider: any, to: number): Promise<any> {
 export function switchAddress(provider: any): Promise<any> {
   return provider.request({method: 'eth_requestAccounts'});
 }
+
+interface WatchAssetParams {
+  address: string;
+  symbol: string;
+  decimals: number;
+  image: string;
+}
+
+export function watchAsset(
+  provider: any,
+  params: WatchAssetParams,
+): Promise<any> {
+  return provider.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20',
+      options: params,
+    },
+  });
+}

@@ -48,6 +48,7 @@ import {useTokenList} from 'hooks/useTokenList';
 import {useTokenLists} from 'hooks/useTokenLists';
 import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import TokenLogo from 'shared/components/TokenLogo';
+import {watchAsset} from 'utils/wallet';
 
 type Params = {
   address: string;
@@ -61,6 +62,8 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, networkName} = params;
+  const {getProvider} = useWeb3();
+
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
@@ -137,6 +140,17 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const handleToggleSelectToken = useCallback(() => {
     setShowSelectTokens((value) => !value);
   }, []);
+
+  const handleAddToken = useCallback(() => {
+    if (tokenInfo) {
+      watchAsset(getProvider(), {
+        address: tokenInfo?.address,
+        decimals: tokenInfo?.decimals,
+        image: tokenInfo?.logoURI || '',
+        symbol: tokenInfo?.symbol,
+      });
+    }
+  }, [getProvider, tokenInfo]);
 
   const handleSelectToken = useCallback((token: Token) => {
     setShowSelectTokens(false);
@@ -293,6 +307,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                         price24Change={
                           data?.market_data?.price_change_percentage_24h || 0
                         }
+                        onAddToken={handleAddToken}
                       />
                     )}
                   </Grid>

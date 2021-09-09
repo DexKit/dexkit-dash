@@ -126,9 +126,31 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <DexkitLogoImage />
                 </Grid>
                 <Grid item>
-                  <AppBarButton onClick={handleMobileMenuToggle}>
-                    <MenuIcon />
-                  </AppBarButton>
+                  <Grid
+                    container
+                    alignItems='center'
+                    alignContent='center'
+                    spacing={2}>
+                    <Grid item>
+                      {chainId !== undefined ? (
+                        <Grid item>
+                          <Box
+                            className={classes.badgeRoot}
+                            style={{
+                              color: 'rgba(226, 167, 46)',
+                              backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                            }}>
+                            {GET_CHAIN_ID_NAME(chainId)}
+                          </Box>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                    <Grid item>
+                      <AppBarButton onClick={handleMobileMenuToggle}>
+                        <MenuIcon />
+                      </AppBarButton>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Box>

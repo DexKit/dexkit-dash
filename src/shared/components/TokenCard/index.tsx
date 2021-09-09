@@ -19,6 +19,8 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils';
 import FileCopy from '@material-ui/icons/FileCopy';
 import CopyLink from '../CopyLink';
+import {MetamaskFoxIcon} from '../Icons';
+import CopyButton from '../CopyButton';
 
 interface TokenCardProps {
   icon: React.ReactNode | React.ReactNode[];
@@ -28,6 +30,7 @@ interface TokenCardProps {
   onClick?: () => void;
   coinInfo?: CoinDetailCoinGecko;
   networkName?: EthereumNetwork;
+  onAddToken?: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -55,8 +58,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TokenCard = (props: TokenCardProps) => {
-  const {icon, price24Change, pair, amount, onClick, coinInfo, networkName} =
-    props;
+  const {
+    icon,
+    price24Change,
+    pair,
+    amount,
+    onClick,
+    coinInfo,
+    networkName,
+    onAddToken,
+  } = props;
   const {usdFormatter} = useUSDFormatter();
   const amountUSD = useMemo(() => {
     return usdFormatter.format(Number(amount));
@@ -93,14 +104,39 @@ export const TokenCard = (props: TokenCardProps) => {
           <Grid item xs>
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
-                {getTokenAddress() ? (
-                  <Typography color='textSecondary' variant='caption'>
-                    <CopyLink copyText={getTokenAddress()} tooltip='Copied!'>
-                      {truncateAddress(getTokenAddress())}{' '}
-                      <FileCopy color='inherit' fontSize='inherit' />
-                    </CopyLink>
-                  </Typography>
-                ) : null}
+                <Grid
+                  container
+                  alignItems='center'
+                  alignContent='center'
+                  spacing={1}>
+                  {getTokenAddress() ? (
+                    <>
+                      <Grid item>
+                        <Typography color='textSecondary' variant='caption'>
+                          {truncateAddress(getTokenAddress())}{' '}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <CopyButton
+                          size='small'
+                          copyText={getTokenAddress() || ''}
+                          tooltip='Copied!'>
+                          <FileCopy color='inherit' style={{fontSize: 16}} />
+                        </CopyButton>
+                      </Grid>
+                    </>
+                  ) : null}
+                  {onAddToken ? (
+                    <Grid item>
+                      <Tooltip title='Add to Metamask'>
+                        <IconButton onClick={onAddToken} size='small'>
+                          <MetamaskFoxIcon style={{width: 16, height: 16}} />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
+                </Grid>
+
                 <Box display='flex' alignItems='center' alignContent='center'>
                   <Box mr={2}>
                     <Typography className={classes.amount} variant='h5'>

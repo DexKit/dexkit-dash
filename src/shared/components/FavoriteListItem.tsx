@@ -38,10 +38,11 @@ interface FavoriteListItemProps {
   amount: number;
   onClick?: (networkName: EthereumNetwork, address: string) => void;
   onRemove?: () => void;
+  variant?: 'outlined' | 'elevation';
 }
 
 export const FavoriteListItem = (props: FavoriteListItemProps) => {
-  const {coin, amount, dayChange, onClick, onRemove} = props;
+  const {coin, amount, dayChange, onClick, onRemove, variant} = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -128,7 +129,7 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
   }, [history, coin]);
 
   return (
-    <Paper onClick={handleClick} className={classes.paper}>
+    <Paper variant={variant} onClick={handleClick} className={classes.paper}>
       <Box p={4}>
         <Grid container alignItems='center' justify='space-between'>
           <Grid item>
