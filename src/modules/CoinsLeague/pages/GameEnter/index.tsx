@@ -33,14 +33,19 @@ import SimpleCardGameSkeleton from 'modules/CoinsLeague/components/SimpleCardGam
 import {SelectCoinLeagueDialog} from 'modules/CoinsLeague/components/SelectCoins/index.modal';
 import {CoinItem} from 'modules/CoinsLeague/components/CoinItem';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {red} from '@material-ui/core/colors';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import Paper from '@material-ui/core/Paper';
+
 import Box from '@material-ui/core/Box';
 import {Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
+import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
+import Chip from '@material-ui/core/Chip';
+import {useWeb3} from 'hooks/useWeb3';
+import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ChainId} from 'types/blockchain';
+import {EndGame} from 'modules/CoinsLeague/components/EndGame';
+import {StartGame} from 'modules/CoinsLeague/components/StartGame';
+import {ButtonState} from 'modules/CoinsLeague/components/ButtonState';
+import Countdown from 'modules/CoinsLeague/components/Countdown';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -66,40 +71,6 @@ enum SubmitState {
   Error,
   Confirmed,
 }
-const GetButtonState = (
-  state: SubmitState,
-  defaultMsg: string,
-  confirmedMsg: string,
-) => {
-  switch (state) {
-    case SubmitState.WaitingWallet:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting Wallet
-        </>
-      );
-    case SubmitState.Error:
-      return (
-        <>
-          <Icon style={{color: red[500]}}>error</Icon>
-          Error
-        </>
-      );
-    case SubmitState.Submitted:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting for Confirmation
-        </>
-      );
-    case SubmitState.Confirmed:
-      return <>{confirmedMsg}</>;
-
-    default:
-      return defaultMsg;
-  }
-};
 
 function GameEnter(props: Props) {
   const classes = useStyles();
@@ -107,15 +78,15 @@ function GameEnter(props: Props) {
     match: {params},
   } = props;
   const history = useHistory();
-  const account = useDefaultAccount();
+  const {account, chainId} = useWeb3();
+
   const {address} = params;
-  const {game, gameQuery, refetch, onJoinGameCallback, onStartGameCallback} =
+  const {game, gameQuery, refetch, onJoinGameCallback, winner} =
     useCoinsLeague(address);
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [open, setOpen] = useState(false);
-  const [openViewDialog, setOpenViewDialog] = useState(false);
   const [tx, setTx] = useState<string>();
 
   const onOpenSelectDialog = useCallback((ev: any) => {
@@ -159,8 +130,6 @@ function GameEnter(props: Props) {
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
   }, []);
-
-
 
   const onSelectCoin = useCallback(
     (coin: CoinFeed) => {
@@ -207,8 +176,6 @@ function GameEnter(props: Props) {
             setSubmitState(SubmitState.None);
           }, 3000);
         };
-        console.log('selectedCoins');
-        console.log(selectedCoins);
 
         onJoinGameCallback(
           selectedCoins.map((c) => c.address),
@@ -224,41 +191,13 @@ function GameEnter(props: Props) {
     [game, selectedCoins, refetch],
   );
 
-  const onStartGame = useCallback(
-    (ev: any) => {
-      if (game?.amount_to_play) {
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          setSubmitState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          setSubmitState(SubmitState.Confirmed);
-          refetch();
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
-
-        onStartGameCallback({
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
-        });
-      }
-    },
-    [game, refetch],
-  );
-
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
 
-  const started = useMemo(() => game?.started, [game]);
-  const finished = useMemo(() => game?.finished, [gameQuery.data]);
-  const totalPlayers = useMemo(() => game?.num_players, [game]);
-  const currentPlayers = useMemo(() => game?.players.length, [game]);
+  const started = useMemo(() => game?.started, [game?.started]);
+  const finished = useMemo(() => game?.finished, [game?.finished]);
+  const aborted = useMemo(() => game?.aborted, [game?.aborted]);
+  const totalPlayers = useMemo(() => game?.num_players, [game?.num_players]);
+  const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
@@ -275,9 +214,11 @@ function GameEnter(props: Props) {
 
   const goToExplorer = useCallback(
     (_ev: any) => {
-      window.open(`https://mumbai.polygonscan.com/tx/${tx}`);
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+        window.open(`${ExplorerURL[chainId]}${tx}`);
+      }
     },
-    [tx],
+    [tx, chainId],
   );
 
   return (
@@ -306,26 +247,34 @@ function GameEnter(props: Props) {
               <Link
                 color='inherit'
                 component={RouterLink}
-                to={`${COINSLEAGUE_ROUTE}/enter/${address}`}>
+                to={`${COINSLEAGUE_ROUTE}/${address}`}>
                 {truncateAddress(address)}
               </Link>
             </Breadcrumbs>
           </Grid>
-          <Grid container xs={12} xl={12} sm={12}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant='h5' style={{margin: 5}}>
-              Game #{truncateAddress(address)}
-            </Typography>
+          <Grid item xs={12} xl={12} sm={12}>
+            <Box display={'flex'} alignItems={'center'}>
+              <IconButton onClick={handleBack}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant='h5' style={{margin: 5}}>
+                Game #{truncateAddress(address)}
+              </Typography>
+
+              {finished && <Chip label='Ended' color='primary' />}
+              {aborted && <Chip label='Aborted' color='primary' />}
+              {started && !finished && !aborted && (
+                <Chip label='Started' color='primary' />
+              )}
+            </Box>
           </Grid>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           {game && <SimpleCardGame {...game} />}
           {isLoading && <SimpleCardGameSkeleton />}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6} sm={4}>
           {game && (
             <CardPrize
               prizePool={Number(
@@ -337,17 +286,22 @@ function GameEnter(props: Props) {
           )}
           {isLoading && <CardPrizeSkeleton />}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6} sm={4}>
           {game && (
             <CardInfoPlayers
               num_players={game.num_players}
               current_players={game.players.length}
             />
           )}
+          {game && started && !aborted && !finished && (
+            <Box pt={2}>
+              <Countdown address={game.address} />
+            </Box>
+          )}
           {isLoading && <CardInfoPlayersSkeleton />}
         </Grid>
 
-        {!player && !isLoading && !gameFull && (
+        {!player && !isLoading && !gameFull && !aborted && (
           <Grid item xs={12} md={6} alignContent='space-around'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -385,7 +339,7 @@ function GameEnter(props: Props) {
           </Grid>
         )}
 
-        {!player && !isLoading && !gameFull && (
+        {!player && !isLoading && !gameFull && !aborted && (
           <Grid item xs={12} md={12}>
             <Grid container spacing={4} justifyContent={'flex-end'}>
               <Grid item xs={12} md={6}>
@@ -393,17 +347,21 @@ function GameEnter(props: Props) {
                   <Grid item xs={12} md={12}>
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
-                        {SubmitState.Submitted
+                        {submitState === SubmitState.Submitted
                           ? 'Submitted Tx'
-                          : SubmitState.Error
+                          : submitState === SubmitState.Error
                           ? 'Tx Error'
-                          : 'Confirmed Tx'}
+                          : submitState === SubmitState.Confirmed
+                          ? 'Confirmed Tx'
+                          : ''}
                       </Button>
                     )}
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <Button
-                      disabled={!isDisabled}
+                      disabled={
+                        !isDisabled || submitState === SubmitState.Confirmed
+                      }
                       onClick={onEnterGame}
                       variant={'contained'}
                       color={
@@ -411,11 +369,11 @@ function GameEnter(props: Props) {
                           ? 'default'
                           : 'primary'
                       }>
-                      {GetButtonState(
-                        submitState,
-                        'ENTER GAME',
-                        'You Entered Game',
-                      )}
+                      <ButtonState
+                        state={submitState}
+                        defaultMsg={'ENTER GAME'}
+                        confirmedMsg={'You Entered Game'}
+                      />
                     </Button>
                   </Grid>
                 </Grid>
@@ -441,9 +399,10 @@ function GameEnter(props: Props) {
                       showClaim: false,
                       claimed: false,
                     },
-                
                   ]}
                   address={address}
+                  account={account}
+                  winner={winner}
                 />
               </Grid>
             </Grid>
@@ -471,53 +430,23 @@ function GameEnter(props: Props) {
                   address={address}
                 />
               </Grid>
+              {!gameFull && (
+                <Grid item xs={12}>
+                  <WaitingPlayers />
+                </Grid>
+              )}
             </Grid>
           </Grid>
         )}
 
-        {currentPlayers && currentPlayers > 0 && (
+        {currentPlayers && currentPlayers > 0 && !started && (
           <Grid item xs={12}>
-            <Paper>
-              <Box m={2}>
-                <Grid container spacing={4}>
-                  <Grid item xs={12} md={9}>
-                    {!gameFull && (
-                      <Typography variant='h6' style={{margin: 5}}>
-                        Waiting For Players
-                      </Typography>
-                    )}
-                    <Typography variant='h6' style={{margin: 5}}>
-                      {currentPlayers} / {totalPlayers}
-                    </Typography>
-                    {gameFull && (
-                      <Typography variant='h6' style={{margin: 5}}>
-                        Everybody is here
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <Box m={2}>
-                      <Button
-                        disabled={!gameFull}
-                        onClick={onStartGame}
-                        fullWidth
-                        variant={'contained'}
-                        color={
-                          submitState === SubmitState.Error
-                            ? 'default'
-                            : 'primary'
-                        }>
-                        {GetButtonState(
-                          submitState,
-                          'START GAME',
-                          'Game Started',
-                        )}
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
+            <StartGame address={address} />
+          </Grid>
+        )}
+        {started && !finished && !aborted && (
+          <Grid item xs={12}>
+            <EndGame address={address} />
           </Grid>
         )}
       </Grid>

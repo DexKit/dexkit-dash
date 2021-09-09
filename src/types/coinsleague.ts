@@ -26,6 +26,7 @@ export interface Game {
   total_amount_collected: BigNumber;
   num_coins: number;
   start_timestamp: BigNumber;
+  abort_timestamp: BigNumber;
   address: string;
 }
 

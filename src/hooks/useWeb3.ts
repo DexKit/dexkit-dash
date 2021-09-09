@@ -137,15 +137,7 @@ export const useWeb3 = () => {
         .catch(() => {
           dispatch(setWeb3State(Web3State.Error));
         });  
-        const web3 = getWeb3();
-        if(web3){
-          web3.eth
-          .getChainId()
-          .then((n) => {
-            dispatch(setChainId(n));
-          })
-          .finally(() => (loadingChainId = false));
-      }
+
 
   };
 

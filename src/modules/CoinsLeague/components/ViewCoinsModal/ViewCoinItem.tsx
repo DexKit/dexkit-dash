@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import {CoinFeed} from 'modules/CoinsLeague/utils/types';
 import { CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import { BigNumber } from 'ethers';
 
 export interface Props {
   coin: CoinFeed;
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const USD_POWER = BigNumber.from(10**8);
+
 export const ViewCoinListItem = (props: Props) => {
   const {coin, style, feedOnchain} = props;
   const {usdFormatter} = useUSDFormatter()
@@ -41,7 +44,7 @@ export const ViewCoinListItem = (props: Props) => {
   const classes = useStyles();
   const priceStart = useMemo(()=>{
     if(feedOnchain.start_price){
-      return usdFormatter.format(feedOnchain.start_price.toNumber())
+      return usdFormatter.format(feedOnchain.start_price.div(USD_POWER).toNumber())
     }
     return '-'
 
@@ -49,7 +52,7 @@ export const ViewCoinListItem = (props: Props) => {
 
   const priceEnd = useMemo(()=>{
     if(feedOnchain.end_price){
-      return usdFormatter.format(feedOnchain.end_price.toNumber())
+      return usdFormatter.format(feedOnchain.end_price.div(USD_POWER).toNumber())
     }
     return '-'
 
@@ -57,15 +60,20 @@ export const ViewCoinListItem = (props: Props) => {
 
   const priceScore = useMemo(()=>{
     if(feedOnchain.start_price && feedOnchain.end_price){
-   
-      return ((feedOnchain.end_price.sub(feedOnchain.start_price)).div(feedOnchain.start_price)).mul('100').toString()
+      if(feedOnchain.start_price.eq('0')){
+        return '0';
+      }
+      const endPrice = feedOnchain.end_price.toNumber();
+      const startPrice = feedOnchain.start_price.toNumber();
 
-
+      return (((endPrice - startPrice)/startPrice) * 100).toFixed(2)
     }
 
 
   },[feedOnchain.start_price, feedOnchain.end_price])
-
+  console.log(feedOnchain.start_price.toNumber())
+  console.log(feedOnchain.end_price.toNumber())
+  console.log(priceScore)
 
   return (
     <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>
@@ -89,7 +97,7 @@ export const ViewCoinListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item xs>
-          <Typography variant='body1'>{`Now`}</Typography>
+          <Typography variant='body1'>{`End`}</Typography>
           <Typography variant='body2' color='textSecondary'>
             {priceEnd}
           </Typography>

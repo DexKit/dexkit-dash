@@ -3996,10 +3996,10 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@transak/transak-sdk@^1.0.28":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@transak/transak-sdk/-/transak-sdk-1.0.29.tgz#6eb7ae6ccb0ecaff58fb8b7786f48b340555060f"
-  integrity sha512-2eEXB1You53ERUCs2wt9o9ioG0vclJ2HoQRMi+6TMojxxFN9WlQTlt7WPjBki5OSSJIrWybtMmweWpo9/YN84w==
+"@transak/transak-sdk@^1.0.30":
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/@transak/transak-sdk/-/transak-sdk-1.0.30.tgz#82748eee25c551b134134fa587afc703519162f3"
+  integrity sha512-8P1wfMwW/+DpD0aHMh0/8C4sa5rOamd0yeVUoGZRwEsmSUub+WBVB9WhiI9c/H4IOnZb470CJSsGu8PS/N927g==
   dependencies:
     events "^3.1.0"
     query-string "^6.12.1"
@@ -20240,6 +20240,14 @@ roarr@^2.15.3:
     json-stringify-safe "^5.0.1"
     semver-compare "^1.0.0"
     sprintf-js "^1.1.2"
+
+rooks@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/rooks/-/rooks-5.7.0.tgz#012364d2dcf932253fa0e54264e5c604cef0db10"
+  integrity sha512-U5PVwWjGKrdd006oSQxt+BdXZQY2RfMYtlGvs9SAK0kBItxocmFJpLKU1xHpLrVnikarYC99WkzV5SfPN1Z59A==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    raf "^3.4.1"
 
 rss-parser@3.11.0:
   version "3.11.0"

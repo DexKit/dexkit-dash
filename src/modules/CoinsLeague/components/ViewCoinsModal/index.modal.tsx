@@ -33,7 +33,7 @@ interface Props extends DialogProps {
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, title, coins, address} = props;
   const theme = useTheme();
-  const {allFeeds} = useCoinsLeague(address)
+  const { allFeeds } = useCoinsLeague(address)
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
@@ -51,7 +51,6 @@ export const ViewCoinLeagueDialog = (props: Props) => {
     }
     return [];
   },[coins, allFeeds])
-
 
   useEffect(() => {
     if(allCoins && allCoins.length){

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -8,10 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-import {Game} from 'types/coinsleague';
-import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
-import {useInterval} from 'rooks';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,13 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  id: string;
-  game: Game;
-  onClick: (address: string) => void;
-  btnMessage?: string;
-}
-
 const strPad = (str: number): string => {
   return (new Array(3).join('0') + str).slice(-2);
 };
@@ -65,65 +56,34 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-function CardGame(props: Props): JSX.Element {
-  const {game, onClick} = props;
+function CardGameProgressSkeleton(): JSX.Element {
   const classes = useStyles();
-  /* const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(game.amount_to_play.toNumber()  );*/
-  const [countdown, setCountdown] = useState<number>();
-  const prizeTotalValue = ethers.utils.formatEther(
-    game.amount_to_play.mul(game.num_players),
-  );
-  const entryAmount = ethers.utils.formatEther(game.amount_to_play);
-  const time = game.duration.toNumber();
-  const coins = game.num_coins;
-
-  // Format number values
-  const entriesIn = strPad(game.players.length || 0);
-  const entriesOut = strPad(game.num_players || 0);
-  const onClickEnter = useCallback(
-    (ev: any) => {
-      onClick(game.address);
-    },
-    [game.address],
-  );
-
-  useInterval(
-    () => {
-      const time = game.duration.toNumber();
-      const startTime =
-        Math.round(new Date().getTime() / 1000) - game.start_timestamp.toNumber();
-      setCountdown(time - startTime);
-    },
-    1000,
-    true,
-  );
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h5'>ID #{truncateAddress(props.id)}</Typography>
+      <Typography variant='h5'>
+        <Skeleton>ID #{truncateAddress('0x000000000000000000')}</Skeleton>
+      </Typography>
       <Grid container className={classes.innerContent}>
-        <Grid xs={6} item>
-          <Grid container alignContent={'center'}>
-          <SendIcon />
+        <Grid xs={5} item>
           <Typography
             variant='h6'
             style={{color: '#fcc591', alignItems: 'baseline'}}>
-            
-            &nbsp;{entryAmount} {'MATIC'}
+            <SendIcon />
+            <Skeleton>
+              &nbsp;{'0'} {'MATIC'}
+            </Skeleton>
           </Typography>
-          </Grid>
         </Grid>
         <Grid
-          xs={6}
+          xs={7}
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
+
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{Math.floor(time / 3600)}Hrs
+            <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
         </Grid>
       </Grid>
@@ -132,40 +92,45 @@ function CardGame(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Starts</Typography>
-          {countdown && countdown > 0 ? (
-            <CardTimer time={countdown} />
-          ) : (
-            <Typography variant='subtitle2'>Ready </Typography>
-          )}
+          <Typography variant='subtitle2'>Countdown</Typography>
+          <CardTimer time={100} />
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
             Entries
             <Typography variant='subtitle2'>
-              {entriesIn}/{entriesOut}
+              <Skeleton>
+                {' '}
+                {1} {1}{' '}
+              </Skeleton>
             </Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
             Coins
-            <Typography variant='subtitle2'>{strPad(coins)}</Typography>
+            <Typography variant='subtitle2'>
+              {' '}
+              <Skeleton>{strPad(1)} </Skeleton>
+            </Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
             Prize Pool
-            <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
+            <Typography variant='subtitle2'>
+              {' '}
+              <Skeleton>{100} Matic </Skeleton>
+            </Typography>
           </Typography>
         </Grid>
       </Grid>
 
-      <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || 'ENTER THE GAME'}
+      <Button className={classes.button} fullWidth>
+        <Skeleton>{'ENTER THE GAME'}</Skeleton>
       </Button>
     </Container>
   );
 }
 
-export default CardGame;
+export default CardGameProgressSkeleton;

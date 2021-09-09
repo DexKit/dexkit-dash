@@ -103,6 +103,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     address: process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
     decimals: 18,
     name: 'DexKit',
+    tokenType: 'ERC20',
     __typename: 'Currency',
   });
   const [showDialog, setShowDialog] = useState(false);

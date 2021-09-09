@@ -9,6 +9,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,14 +37,25 @@ function SimpleCardGame(props: Props): JSX.Element {
   const entryAmount = ethers.utils.formatEther(amount_to_play);
   return (
     <Container className={classes.container}>
-      <Grid container style={{color: '#7a8398'}}>
-        <Typography variant='h6'>Game Time:</Typography>
-        <Typography variant='h6' style={{fontWeight: 600}}>
-          &nbsp;{Math.floor(time / 3600)}Hrs
-        </Typography>
+      <Grid container style={{color: '#7a8398'}} spacing={2}  alignContent={'center'} alignItems={'center'}>
+        <Grid item xs={12} sm={12}>
+          <Box display={'flex'}>
+            <Typography variant='h6'>Game Time:</Typography>
+            <Typography variant='h6' style={{fontWeight: 600}}>
+              &nbsp;{Math.floor(time / 3600)}Hrs
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant='h5'>ID #{truncateAddress(id)}</Typography>
+        </Grid>
       </Grid>
-      <Typography variant='h5'>ID #{truncateAddress(id)}</Typography>
-      <Grid container className={classes.innerContent} alignContent={'center'} alignItems={'center'}>
+
+      <Grid
+        container
+        className={classes.innerContent}
+        alignContent={'center'}
+        >
         <Grid item>
           <SendIcon />
         </Grid>

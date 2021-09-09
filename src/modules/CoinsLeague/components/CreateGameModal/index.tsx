@@ -23,8 +23,11 @@ import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { red } from '@material-ui/core/colors';
-
+import {red} from '@material-ui/core/colors';
+import {ButtonState} from '../ButtonState';
+import { ExplorerURL } from 'modules/CoinsLeague/utils/constants';
+import { ChainId } from 'types/blockchain';
+import { useWeb3 } from 'hooks/useWeb3';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -82,43 +85,9 @@ enum SubmitState {
   Confirmed,
 }
 
-const GetButtonState = (
-  state: SubmitState,
-  defaultMsg: string,
-  confirmedMsg: string,
-) => {
-  switch (state) {
-    case SubmitState.WaitingWallet:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting Wallet
-        </>
-      );
-    case SubmitState.Error:
-      return (
-        <>
-          <Icon style={{color: red[500]}}>error</Icon>
-          Error
-        </>
-      );
-    case SubmitState.Submitted:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting for Confirmation
-        </>
-      );
-    case SubmitState.Confirmed:
-      return <>{confirmedMsg}</>;
-
-    default:
-      return defaultMsg;
-  }
-};
-
 const CreateGameModal = (props: Props) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
   const {onGameCreateCallback, refetch} = useCoinsLeagueFactory();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
@@ -128,6 +97,7 @@ const CreateGameModal = (props: Props) => {
   const [duration, setGameDuration] = useState<number>();
   const [totalPlayers, setTotalPlayers] = useState<number>();
   const [tx, setTx] = useState<string>();
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }
@@ -150,27 +120,33 @@ const CreateGameModal = (props: Props) => {
           }, 3000);
         };
 
-
         const params: GameParams = {
           numPlayers: totalPlayers,
           duration,
           amountUnit: ethers.utils.parseEther(String(entryAmount)),
           numCoins: coins,
-          abortTimestamp: Math.round((new Date().getTime())/1000 + duration * 3),
+          abortTimestamp: Math.round(
+            new Date().getTime() / 1000 + duration * 3,
+          ),
         };
         console.log('Callaback called');
-        onGameCreateCallback(params,
-          {
-            onConfirmation: onConfirmTx,
-            onError,
-            onSubmit: onSubmitTx,
-          },
-          
-          
-          );
+        onGameCreateCallback(params, {
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
       }
     },
     [coins, gameType, entryAmount, duration, totalPlayers],
+  );
+
+  const goToExplorer = useCallback(
+    (_ev: any) => {
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+        window.open(`${ExplorerURL[chainId]}${tx}`);
+      }
+    },
+    [tx, chainId],
   );
 
   return (
@@ -341,20 +317,30 @@ const CreateGameModal = (props: Props) => {
           </FormControl>
         </Grid>
 
+        {tx && (
+          <Button variant={'text'} onClick={goToExplorer}>
+            {submitState === SubmitState.Submitted
+              ? 'Submitted Tx'
+              : submitState === SubmitState.Error
+              ? 'Tx Error'
+              : submitState === SubmitState.Confirmed
+              ? 'Confirmed Tx'
+              : ''}
+          </Button>
+        )}
+
         <Button
           fullWidth
           variant={'contained'}
-          color={
-            submitState === SubmitState.Error ? 'default' : 'primary'
-          }
+          color={submitState === SubmitState.Error ? 'default' : 'primary'}
           className={classes.button}
           onClick={onCreateGame}
           disabled={!coins || !entryAmount || !totalPlayers || !duration}>
-          {GetButtonState(
-                    submitState,
-                    'CREATE GAME',
-                    'Game Created',
-                  )}
+          <ButtonState
+            state={submitState}
+            defaultMsg={'CREATE GAME'}
+            confirmedMsg={'Game Created'}
+          />
         </Button>
       </DialogContent>
     </Dialog>

@@ -33,8 +33,8 @@ function CardInfoPlayers(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container}>
-      <Grid container className={classes.innerContent}>
-        <Grid item xs={12} justifyContent={'center'} alignItems={'center'} alignContent={'center'} >
+      <Grid container className={classes.innerContent} justifyContent={'center'} alignItems={'center'} alignContent={'center'}>
+        <Grid item xs={12}  >
           <Button fullWidth variant={'contained'} disabled={num_players !== current_players} startIcon={<People/>}>
               {`PLAYERS ${current_players} (${num_players})`}
           </Button>

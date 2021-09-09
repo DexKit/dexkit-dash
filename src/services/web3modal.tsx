@@ -107,8 +107,6 @@ const getProvider = (): any | undefined => {
   if (!provider) {
     return;
   }
-
-  console.log(provider);
   return provider;
 };
 

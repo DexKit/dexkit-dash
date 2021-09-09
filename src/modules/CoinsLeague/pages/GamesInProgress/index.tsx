@@ -1,268 +1,263 @@
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+import {
+  Breadcrumbs,
+  Grid,
+  InputAdornment,
+  Link,
+  Typography,
+} from '@material-ui/core';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
 
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
+import {ChainId} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-
+import Box from '@material-ui/core/Box';
 import {makeStyles} from '@material-ui/core/styles';
-
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import {Empty} from 'shared/components/Empty';
+import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
+import SmallCardGameSkeleton from 'modules/CoinsLeague/components/SmallCardGame/index.skeleton';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
+import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
-import CardGame from '../../components/CardGame';
+import ContainedInput from 'shared/components/ContainedInput';
+import {Search} from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import CardGameProgress from 'modules/CoinsLeague/components/CardGameProgress';
+import CardGameProgressSkeleton from 'modules/CoinsLeague/components/CardGameProgress/index.skeleton';
 
-const cardMock = [
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-  {
-    id: 5345345224,
-    time: 110,
-    coins: 60,
-    startsIn: 123123123,
-    prizePool: 1000,
-    entries: {in: 10, out: 20},
-    value: {qty: 1000, coin: 'ETH'},
-    btnMessage: 'VIEW',
-  },
-];
+enum FilterGame {
+  ALL = 'All',
+  Fast = 'Fast',
+  Medium = 'Medium',
+  Day = '24hrs',
+}
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    color: '#fff',
-    padding: theme.spacing(2),
-    backgroundColor: '#1F1D2B',
-  },
-  chip: {
-    color: '#fff',
-    background: '#1F1D2B',
-    border: '2px solid #2e3243',
-    '&:hover': {
-      background: '#2e3243',
-    },
-    '&:focus': {
-      background: '#2e3243',
-    },
-  },
-  btnFilter: {
-    order: 3,
-    [theme.breakpoints.only('xs')]: {
-      order: 2,
-    },
-  },
-  chipFilter: {
-    order: 2,
-    [theme.breakpoints.only('xs')]: {
-      order: 3,
-      margin: theme.spacing(1.5),
-    },
-  },
-  btnLoadMore: {
-    color: '#fff',
-    background: '#2e3243',
-  },
-}));
+const GamesInProgress = () => {
+  const history = useHistory();
+  const {chainId} = useWeb3();
 
-function GamesInProgress() {
-  const classes = useStyles();
+  const [filterGame, setFilterGame] = useState(FilterGame.ALL);
+  const [search, setSearch] = useState('');
 
-  return (
-    <Container maxWidth='xl' className={classes.container}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} xl={12} sm={12}>
-          <Grid item xs={12}>
+  const {games, gamesQuery, gamesAddressQuery} = useCoinsLeagueFactory();
+  const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
+  const gamesInProgress = useMemo(() => {
+    if (filterGame === FilterGame.ALL) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Fast) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Medium) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter(
+          (g) =>
+            g?.duration?.toNumber() > 60 * 60 &&
+            g?.duration?.toNumber() < 24 * 60 * 60,
+        )
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Day) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+  }, [games, filterGame, search]);
+
+  const onClickEnterGame = useCallback((address: string) => {
+    history.push(`${COINSLEAGUE_ROUTE}/${address}`);
+  }, []);
+
+  const handleSearch = useCallback((e) => {
+    setSearch(e.target.value);
+  }, []);
+
+  const handleBack = useCallback((ev: any) => {
+    history.push(COINSLEAGUE_ROUTE);
+  }, []);
+  return chainId ? (
+    chainId === ChainId.Mumbai ? (
+      <Grid container spacing={4} alignItems={'center'}>
+        <Grid item xs={12} sm={12} xl={12}>
+          <Grid container>
             <Breadcrumbs
               style={{color: '#fff', fontSize: '0.75rem'}}
               separator={<NavigateNextIcon fontSize='small' />}>
-              <Link color='inherit' href=''>
+              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
                 Dashboard
               </Link>
-              <Link color='inherit' href=''>
+              <Link
+                color='inherit'
+                component={RouterLink}
+                to={COINSLEAGUE_ROUTE}>
                 Games
               </Link>
-              <Typography color='textPrimary'>Games in progress</Typography>
+              <Link
+                color='inherit'
+                component={RouterLink}
+                to={COINSLEAGUE_ROUTE}>
+                Games In Progress
+              </Link>
             </Breadcrumbs>
           </Grid>
-          <Grid item xs={12} xl={12} sm={12}>
-            <Typography variant='h4' style={{margin: 5}}>
-              <ArrowBackIcon /> Games in progress
-            </Typography>
-          </Grid>
         </Grid>
+
         <Grid item xs={12}>
-          <Grid item xs={6} style={{border: '1px solid #fff', margin: 5}}>
-            <Typography>[ Search Component ]</Typography>
-          </Grid>
+          <Box display={'flex'} alignItems={'center'}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant='h6' style={{margin: 5}}>
+              Games in Progress
+            </Typography>
+          </Box>
         </Grid>
 
         <Grid item xs={12}>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <ActiveChainBalance />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12}>
+          <ContainedInput
+            value={search}
+            onChange={handleSearch}
+            placeholder='Search'
+            startAdornment={
+              <InputAdornment position='start'>
+                <Search />
+              </InputAdornment>
+            }
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
             <Grid item sm={3}>
               <Grid item xs={12} sm={12}>
-                <Typography variant='h6'>21Games</Typography>
+                <Typography variant='h6'>
+                  {gamesInProgress?.length || 0} Games
+                </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
                 <Typography gutterBottom>
                   Recently added &nbsp;
-                  <ExpandMoreIcon
+                  {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
-                  />
+                 />*/}
                 </Typography>
               </Grid>
             </Grid>
             <Grid item sm={6} spacing={1} justifyContent='center'>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
-                  <Chip clickable className={classes.chip} label='All' />
+                  <Chip
+                    clickable
+                    label='All'
+                    color={
+                      filterGame === FilterGame.ALL ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.ALL)}
+                  />
                 </Grid>
                 <Grid item>
-                  <Chip clickable className={classes.chip} label='Fast' />
+                  <Chip
+                    clickable
+                    label='Fast'
+                    color={
+                      filterGame === FilterGame.Fast ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Fast)}
+                  />
                 </Grid>
                 <Grid item>
-                  <Chip clickable className={classes.chip} label='Medium' />
+                  <Chip
+                    clickable
+                    label='Medium'
+                    color={
+                      filterGame === FilterGame.Medium ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Medium)}
+                  />
                 </Grid>
                 <Grid item>
-                  <Chip clickable className={classes.chip} label='24hrs' />
+                  <Chip
+                    clickable
+                    label='24hrs'
+                    color={
+                      filterGame === FilterGame.Day ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Day)}
+                  />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container sm={3} justifyContent='flex-end'>
-              <Button variant='text'>
-                <FilterListIcon style={{color: '#fff'}} />
-              </Button>
-            </Grid>
+            <Grid container sm={3} justifyContent='flex-end'></Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} justifyContent='flex-start'>
-          <Grid container spacing={2}>
-            {/*cardMock.map((card) => (
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-                <CardGame {...card} />
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            {gamesInProgress?.map((g, id) => (
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
+                <CardGameProgress game={g} key={id} onClick={onClickEnterGame} />
               </Grid>
-            ))*/}
+            ))}
+            {isLoading &&
+              [1, 2, 3, 4, 6, 7, 8].map((v, i) => (
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
+                  <CardGameProgressSkeleton />
+                </Grid>
+              ))}
           </Grid>
         </Grid>
       </Grid>
-
-      <Grid
-        container
-        xs={12}
-        style={{paddingTop: 25, paddingBottom: 50}}
-        justifyContent='center'
-        alignContent='center'>
-        <Button className={classes.btnLoadMore} size='large'>
-          <ArrowDropDownIcon fontSize='large' />
-          <Typography variant='h6'>LOAD MORE</Typography>
-        </Button>
+    ) : (
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Empty
+            title={'Wrong Network'}
+            message={'Please connect your wallet to Mumbai Polygon Testnet'}
+          />
+        </Grid>
       </Grid>
-    </Container>
+    )
+  ) : (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Empty title={'No Wallet'} message={'Please connect your wallet'} />
+      </Grid>
+    </Grid>
   );
-}
+};
 
 export default GamesInProgress;

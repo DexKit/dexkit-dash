@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  id: string;
   game: Game;
   onClick: (address: string) => void;
   btnMessage?: string;
@@ -65,7 +64,7 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-function CardGame(props: Props): JSX.Element {
+function CardGameProgress(props: Props): JSX.Element {
   const {game, onClick} = props;
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
@@ -94,7 +93,8 @@ function CardGame(props: Props): JSX.Element {
     () => {
       const time = game.duration.toNumber();
       const startTime =
-        Math.round(new Date().getTime() / 1000) - game.start_timestamp.toNumber();
+        Math.round(new Date().getTime() / 1000) -
+        game.start_timestamp.toNumber();
       setCountdown(time - startTime);
     },
     1000,
@@ -103,17 +103,16 @@ function CardGame(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h5'>ID #{truncateAddress(props.id)}</Typography>
+      <Typography variant='h5'>ID #{truncateAddress(game.address)}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Grid container alignContent={'center'}>
-          <SendIcon />
-          <Typography
-            variant='h6'
-            style={{color: '#fcc591', alignItems: 'baseline'}}>
-            
-            &nbsp;{entryAmount} {'MATIC'}
-          </Typography>
+            <SendIcon />
+            <Typography
+              variant='h6'
+              style={{color: '#fcc591', alignItems: 'baseline'}}>
+              &nbsp;{entryAmount} {'MATIC'}
+            </Typography>
           </Grid>
         </Grid>
         <Grid
@@ -132,11 +131,11 @@ function CardGame(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Starts</Typography>
+          <Typography variant='subtitle2'>Countdown</Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>Ready </Typography>
+            <Typography variant='subtitle2'>Ended </Typography>
           )}
         </Grid>
         <Grid item>
@@ -162,10 +161,10 @@ function CardGame(props: Props): JSX.Element {
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || 'ENTER THE GAME'}
+        {props.btnMessage || 'VIEW'}
       </Button>
     </Container>
   );
 }
 
-export default CardGame;
+export default CardGameProgress;

@@ -10,6 +10,7 @@ export const BITQUERY_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -33,6 +34,7 @@ export const BITQUERY_SINGLE_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
         }
@@ -51,6 +53,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -65,6 +68,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -79,6 +83,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -136,6 +141,7 @@ export const BITQUERY_SINGLE_BALANCE_HISTORY = gql`
             symbol
             decimals
             address
+            tokenType
           }
         }
       }

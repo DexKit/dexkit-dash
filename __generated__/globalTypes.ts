@@ -49,7 +49,9 @@ export enum Network {
   hedera = "hedera",
   libra_testnet = "libra_testnet",
   litecoin = "litecoin",
+  matic = "matic",
   medalla = "medalla",
+  solana = "solana",
   tron = "tron",
   zcash = "zcash",
 }

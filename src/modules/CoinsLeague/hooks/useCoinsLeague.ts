@@ -50,8 +50,6 @@ export const useCoinsLeague = (address?: string) => {
         return;
       }
       try {
-        console.log('choosen feeds');
-        console.log(feeds);
         const tx = await joinGame(address, feeds, amount);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
