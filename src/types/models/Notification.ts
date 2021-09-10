@@ -24,7 +24,7 @@ export interface Notification {
    */
   timestamp?: number;
 
-  /**
+  /**k,
    * The Date of visualization
    */
   check?: Date;

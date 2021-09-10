@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import {useCountdown} from 'rooks';
+import {useCountdown} from 'hooks/utils/useCountdown';
 import {makeStyles} from '@material-ui/core/styles';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 
