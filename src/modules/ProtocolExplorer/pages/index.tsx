@@ -326,7 +326,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     price24Change={
                       data?.market_data?.price_change_percentage_24h || 0
                     }
-                    onAddToken={handleAddToken}
+                    onAddToken={!isMobile ? handleAddToken : undefined}
                   />
                 )}
               </Grid>
