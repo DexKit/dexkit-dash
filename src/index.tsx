@@ -11,6 +11,7 @@ import 'react-table/react-table.css';
 
 import './shared/styles/index.css';
 import './assets/vendors/country-flag/sprite-flags-24x24.css';
+
 import App from './App';
 import '@crema/services';
 /*import { 

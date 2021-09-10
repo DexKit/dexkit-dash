@@ -9,7 +9,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 
-import {useInterval} from 'rooks';
+import {useInterval} from 'hooks/utils/useInterval';
 
 const useStyles = makeStyles((theme) => ({
   container: {

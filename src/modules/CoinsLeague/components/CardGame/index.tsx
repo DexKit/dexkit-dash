@@ -11,7 +11,7 @@ import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {Game} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
-import {useInterval} from 'rooks';
+import {useInterval} from 'hooks/utils/useInterval';
 
 const useStyles = makeStyles((theme) => ({
   container: {
