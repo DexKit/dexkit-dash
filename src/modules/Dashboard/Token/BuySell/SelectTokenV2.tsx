@@ -45,7 +45,7 @@ const SelectTokenV2: React.FC<Props> = ({
       variant='outlined'
       onClick={onClick}>
       {selected?.symbol}
-    </StyledButton> :
+    </StyledButton>) : (
 
       <StyledButton
       fullWidth
@@ -55,16 +55,7 @@ const SelectTokenV2: React.FC<Props> = ({
       onClick={onClick}>
       {'Choose Coin'}
     </StyledButton>
-  ) : (
-    <StyledButton
-      fullWidth
-      disabled={disabled}
-      endIcon={<ExpandMoreIcon />}
-      variant='outlined'
-      onClick={onClick}>
-      {'Choose Coin'}
-    </StyledButton>
-  );
+  ) 
 };
 
 export default SelectTokenV2;
