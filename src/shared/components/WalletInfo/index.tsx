@@ -9,6 +9,7 @@ import {
   Hidden,
   Typography,
   useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -19,7 +20,7 @@ import {Fonts} from '../../constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 import {useBalance} from 'hooks/balance/useBalance';
-import {tokenAmountInUnits} from 'utils/tokens';
+import {GET_NATIVE_COINS, tokenAmountInUnits} from 'utils/tokens';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
@@ -36,8 +37,12 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useNetwork } from 'hooks/useNetwork';
+import {
+  FORMAT_NETWORK_NAME,
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
+import {useNetwork} from 'hooks/useNetwork';
+import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -102,8 +107,17 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const networkName = useNetwork();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const accountsModal = useAccountsModal();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    if (isMobile) {
+      accountsModal.setShow(true);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const history = useHistory();
@@ -120,10 +134,11 @@ const WalletInfo = (props: any) => {
     onCloseWeb3,
   } = useWeb3();
   const defaultAccount = useDefaultAccount();
+  const network = useNetwork();
   const defaultAccountLabel = useDefaultLabelAccount();
   const connected = useMemo(() => {
-    return  web3Account?.toLowerCase() === defaultAccount?.toLowerCase()
-  }, [ web3Account, defaultAccount ] );
+    return web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
+  }, [web3Account, defaultAccount]);
 
   const wallet = useSelector<AppState, AppState['ui']['wallet']>(
     (state) => state.ui.wallet,
@@ -131,14 +146,16 @@ const WalletInfo = (props: any) => {
   const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
-  const {data: balances} = useBalance(defaultAccount);
+  const {data: balances} = useSingleBalance(
+    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
+    network,
+    defaultAccount,
+  );
 
   const onGoToWallet = () => {
     handleClose();
     history.push('/wallet');
   };
-
-  const accountsModal = useAccountsModal();
 
   const handleShowAccounts = useCallback(() => {
     handleClose();
@@ -150,15 +167,9 @@ const WalletInfo = (props: any) => {
     history.push('/wallet/manage-accounts');
   };
 
-  const filteredBalances = useMemo(() => balances?.filter(
-    (e) => e.currency?.symbol.toUpperCase() === 'ETH',
-  ),[balances]);
-
   let ethBalanceValue;
 
-  if (filteredBalances.length > 0) {
-    ethBalanceValue = filteredBalances[0].value;
-  }
+  ethBalanceValue = balances?.value;
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
@@ -166,7 +177,6 @@ const WalletInfo = (props: any) => {
       history.push(`/wallet/${a.address}`);
       // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-     
     } else {
       history.push(`/wallet/${a.address}`);
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
@@ -181,7 +191,12 @@ const WalletInfo = (props: any) => {
 
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
-      <Grid container alignItems='center' alignContent='center' spacing={2}>
+      <Grid
+        container
+        alignItems='center'
+        alignContent='center'
+        justify='space-between'
+        spacing={2}>
         <Grid item>
           <Grid container alignItems='center' alignContent='center' spacing={2}>
             <Grid item>
@@ -261,7 +276,9 @@ const WalletInfo = (props: any) => {
                   </MenuItem>
                 ))}
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
-              <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              {!notConnected && (
+                <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              )}
             </Menu>
           </Box>
         </Grid>

@@ -3,14 +3,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
-import {useStyles} from './index.style';
+
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {
   getNativeCoinWrappedAddressFromNetworkName,
   getNativeCoinWrappedFromNetworkName,
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-
 import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
 

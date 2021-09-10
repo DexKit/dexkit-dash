@@ -13,7 +13,8 @@ import {useTransak} from 'hooks/useTransak';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
-import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -85,11 +86,12 @@ interface Props {
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  token?: Token;
 }
 
 const CoinTools = (props: Props) => {
-  const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
- 
+  const {balances, only, onMakeFavorite, onShare, isFavorite, token} = props;
+
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const networkName = useNetwork();
@@ -113,6 +115,7 @@ const CoinTools = (props: Props) => {
               decimals: only.decimals,
               name: only.name || '',
               symbol: only.symbol || '',
+              tokenType: 'ERC20',
             },
             network: networkName,
             value: 0,
@@ -129,6 +132,7 @@ const CoinTools = (props: Props) => {
               decimals: dataFn.currency?.decimals ?? 18,
               name: dataFn.currency?.name || '',
               symbol: dataFn.currency?.symbol || '',
+              tokenType: 'ERC20',
             },
             network: dataFn.network,
             value: dataFn.value ?? 0,
@@ -146,7 +150,6 @@ const CoinTools = (props: Props) => {
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
   const [showTrade, setShowTrade] = useState(false);
-  
   const handleShowSender = useCallback(() => {
     setShowSender(true);
   }, []);
@@ -186,6 +189,19 @@ const CoinTools = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+        token={token}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <BuySellModal
         networkName={networkName}
@@ -200,7 +216,7 @@ const CoinTools = (props: Props) => {
         onClick={handleSwapClose}>
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
-            <SwapComponent onClose={handleSwapClose} />
+            {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}
           </Grid>
         </Grid>
       </Backdrop>

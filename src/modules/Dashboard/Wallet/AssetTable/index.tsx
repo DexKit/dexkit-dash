@@ -1,8 +1,7 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 
 import {
   Chip,
-  makeStyles,
   Box,
   Grid,
   Typography,
@@ -16,9 +15,8 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Badge,
 } from '@material-ui/core';
-
-import {CremaTheme} from 'types/AppContextPropsType';
 
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -35,7 +33,6 @@ interface AssetTableProps {
   loading?: boolean;
 }
 
-
 enum TokenOrderBy {
   Name,
   UsdAmount,
@@ -43,7 +40,6 @@ enum TokenOrderBy {
 }
 
 const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
-
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -120,6 +116,16 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const [showFiltersActive, setShowFiltersActive] = useState(false);
+
+  useEffect(() => {
+    if (filter !== 'all' || orderBy !== TokenOrderBy.UsdAmount) {
+      setShowFiltersActive(true);
+    } else {
+      setShowFiltersActive(false);
+    }
+  }, [filter, orderBy]);
+
   return (
     <>
       <Drawer open={showFilters} anchor='right' onClose={handleToggleFilters}>
@@ -154,36 +160,47 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Chip
-                style={{marginRight: 10}}
-                label='All'
-                size='small'
-                clickable
-                variant={filter === 'all' ? 'default' : 'outlined'}
-                onClick={() => setFilter('all')}
-              />
-              <Chip
-                style={{marginRight: 10}}
-                label='ETH'
-                clickable
-                size='small'
-                variant={filter === 'eth' ? 'default' : 'outlined'}
-                onClick={() => setFilter('eth')}
-              />
-              <Chip
-                label='BSC'
-                clickable
-                size='small'
-                variant={filter === 'bnb' ? 'default' : 'outlined'}
-                onClick={() => setFilter('bnb')}
-              />
-              <Chip
-                label='MATIC'
-                clickable
-                size='small'
-                variant={filter === 'matic' ? 'default' : 'outlined'}
-                onClick={() => setFilter('matic')}
-              />
+              <Grid container spacing={1}>
+                <Grid item>
+                  <Chip
+                    style={{marginRight: 10}}
+                    label='All'
+                    size='small'
+                    clickable
+                    variant={filter === 'all' ? 'default' : 'outlined'}
+                    onClick={() => setFilter('all')}
+                  />
+                </Grid>
+
+                <Grid item>
+                  <Chip
+                    style={{marginRight: 10}}
+                    label='ETH'
+                    clickable
+                    size='small'
+                    variant={filter === 'eth' ? 'default' : 'outlined'}
+                    onClick={() => setFilter('eth')}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    label='BSC'
+                    clickable
+                    size='small'
+                    variant={filter === 'bnb' ? 'default' : 'outlined'}
+                    onClick={() => setFilter('bnb')}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    label='MATIC'
+                    clickable
+                    size='small'
+                    variant={filter === 'matic' ? 'default' : 'outlined'}
+                    onClick={() => setFilter('matic')}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <ContainedInput
@@ -248,7 +265,12 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                 </Grid>
                 <Grid item>
                   <SquaredIconButton onClick={handleToggleFilters}>
-                    <FilterSearchIcon />
+                    <Badge
+                      color='primary'
+                      variant='dot'
+                      invisible={!showFiltersActive}>
+                      <FilterSearchIcon />
+                    </Badge>
                   </SquaredIconButton>
                 </Grid>
               </Grid>

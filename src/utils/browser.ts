@@ -3,7 +3,7 @@ export function getWindowUrl() {
   let hostname = window.location.hostname;
   let port = window.location.port;
 
-  return `${protocol}://${hostname}${port ? ':' + port : ''}`;
+  return `${protocol}//${hostname}${port ? ':' + port : ''}`;
 }
 
 export function isValidURL(url: string): boolean {

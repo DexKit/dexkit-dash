@@ -5,7 +5,6 @@ import AppContext from '../AppContext';
 import PropTypes from 'prop-types';
 import {ThemeMode} from '../../../shared/constants/AppEnums';
 import routes from '../../../modules';
-import {Theme} from '@material-ui/core';
 
 const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
   const [theme, updateTheme] = useState(defaultDarkConfig.theme); // FIXME: change in the future

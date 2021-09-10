@@ -1,11 +1,7 @@
 import React from 'react';
 
 import {Token} from 'types/app';
-import {
-  makeStyles,
-  Button,
-  withStyles,
-} from '@material-ui/core';
+import {makeStyles, Button, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -40,9 +36,7 @@ const SelectTokenV2: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  return (
-    selected ? 
-
+  return selected ? (
     <StyledButton
       fullWidth
       disabled={disabled}
@@ -61,7 +55,15 @@ const SelectTokenV2: React.FC<Props> = ({
       onClick={onClick}>
       {'Choose Coin'}
     </StyledButton>
-
+  ) : (
+    <StyledButton
+      fullWidth
+      disabled={disabled}
+      endIcon={<ExpandMoreIcon />}
+      variant='outlined'
+      onClick={onClick}>
+      {'Choose Coin'}
+    </StyledButton>
   );
 };
 

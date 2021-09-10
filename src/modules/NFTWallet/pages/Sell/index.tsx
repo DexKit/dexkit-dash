@@ -23,6 +23,7 @@ import {
   InputAdornment,
   IconButton,
   Tooltip,
+  Breadcrumbs,
 } from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
@@ -417,104 +418,109 @@ export default () => {
         success={showSuccess}
       />
       <Box pt={{xs: 8}}>
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Breadcrumbs>
+              <Link
+                to='/nfts/wallet'
+                color='textPrimary'
+                component={RouterLink}>
+                NFT Wallet
+              </Link>
+              <Link color='textPrimary'>{data?.collection?.name}</Link>
+              <Link color='textPrimary'>{data?.name}</Link>
+              <Link color='textSecondary'>You are listing</Link>
+            </Breadcrumbs>
+          </Grid>
           {loading ? null : (
             <Grid item xs={12}>
-              <Paper>
-                <Box p={4}>
-                  <Grid
-                    container
-                    spacing={2}
-                    alignItems='center'
-                    alignContent='center'>
-                    <Grid item>
-                      <IconButton
-                        component={RouterLink}
-                        to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
-                        <KeyboardBackspaceIcon />
-                      </IconButton>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='body1'>
-                        <IntlMessages id='nfts.sell.goBackTo' />{' '}
-                        <span style={{color: theme.palette.primary.main}}>
-                          {data?.name}
-                        </span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Paper>
+              <Grid
+                container
+                spacing={2}
+                alignItems='center'
+                alignContent='center'>
+                <Grid item>
+                  <IconButton
+                    component={RouterLink}
+                    to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
+                    <KeyboardBackspaceIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <Typography variant='h5'>{data?.name}</Typography>
+                </Grid>
+              </Grid>
             </Grid>
           )}
           <Grid item xs={12} sm={8}>
-            <Card>
-              <CardContent>
-                <Box mb={4}>
-                  <Paper variant='outlined'>
-                    <Box p={4}>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          <Typography variant='body1' color='textSecondary'>
-                            <IntlMessages id='nfts.sell.youAreListing' />:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={3}>
-                          {loading ? (
-                            <Skeleton
-                              style={{display: 'block'}}
-                              component='div'
-                              className={classes.assetImageSkeleton}
-                            />
-                          ) : (
-                            <img
-                              src={data?.image_url}
-                              className={classes.assetImage}
-                            />
-                          )}
-                        </Grid>
-                        <Grid item xs={12} sm={9}>
-                          <Typography gutterBottom variant='caption'>
-                            {loading ? <Skeleton /> : data?.collection?.name}
-                          </Typography>
-                          <Typography gutterBottom variant='h5'>
-                            {loading ? <Skeleton /> : data?.name}
-                          </Typography>
-                          <Link
-                            component={RouterLink}
-                            to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
-                            <IntlMessages id='nfts.sell.viewItem' />
-                          </Link>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </Paper>
-                </Box>
-                <Grid container spacing={8}>
-                  <Grid item xs={12}>
-                    <Box mb={2}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6} sm={4}>
-                          <SaleTypeButton
-                            active={saleType == SALE_BY_PRICE}
-                            header={messages['nfts.sell.setPrice'].toString()}
-                            subheader={messages[
-                              'nfts.sell.sellFixedPrice'
-                            ].toString()}
-                            onClick={handleSelectByPrice}
-                          />
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <SaleTypeButton
-                            active={saleType == SALE_HIGHEST_BID}
-                            header={messages['nfts.sell.highestBid'].toString()}
-                            subheader={messages[
-                              'nfts.sell.actionToHighestBidder'
-                            ].toString()}
-                            onClick={handleSelectHighestBid}
-                          />
-                        </Grid>
-                        {/* <Grid item xs={6} sm={4}>
+            <Box mb={4}>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Typography variant='body1' color='textSecondary'>
+                    <IntlMessages id='nfts.sell.youAreListing' />:
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  {loading ? (
+                    <Skeleton
+                      style={{display: 'block'}}
+                      component='div'
+                      className={classes.assetImageSkeleton}
+                    />
+                  ) : (
+                    <Paper>
+                      <img
+                        src={data?.image_url}
+                        style={{
+                          backgroundColor: data?.background_color
+                            ? data?.background_color
+                            : '#fff',
+                        }}
+                        className={classes.assetImage}
+                      />
+                    </Paper>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={9}>
+                  <Typography gutterBottom variant='caption'>
+                    {loading ? <Skeleton /> : data?.collection?.name}
+                  </Typography>
+                  <Typography gutterBottom variant='h5'>
+                    {loading ? <Skeleton /> : data?.name}
+                  </Typography>
+                  <Link
+                    component={RouterLink}
+                    to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}`}>
+                    <IntlMessages id='nfts.sell.viewItem' />
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Box mb={2}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} sm={4}>
+                      <SaleTypeButton
+                        active={saleType == SALE_BY_PRICE}
+                        header={messages['nfts.sell.setPrice'].toString()}
+                        subheader={messages[
+                          'nfts.sell.sellFixedPrice'
+                        ].toString()}
+                        onClick={handleSelectByPrice}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4}>
+                      <SaleTypeButton
+                        active={saleType == SALE_HIGHEST_BID}
+                        header={messages['nfts.sell.highestBid'].toString()}
+                        subheader={messages[
+                          'nfts.sell.actionToHighestBidder'
+                        ].toString()}
+                        onClick={handleSelectHighestBid}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={6} sm={4}>
                           <SaleTypeButton
                             header={messages['nfts.sell.bundle'].toString()}
                             subheader={messages[
@@ -523,19 +529,21 @@ export default () => {
                             onClick={handleGoCreateBundle}
                           />
                         </Grid> */}
-                      </Grid>
-                    </Box>
                   </Grid>
-                  {errorMessage != '' ? (
-                    <Grid item xs={12}>
-                      <Alert onClose={handleCloseError} severity='error'>
-                        {errorMessage}
-                      </Alert>
-                    </Grid>
-                  ) : null}
-                  {!hasEndingPrice ? (
-                    <>
-                      <Grid item xs={12}>
+                </Box>
+              </Grid>
+              {errorMessage != '' ? (
+                <Grid item xs={12}>
+                  <Alert onClose={handleCloseError} severity='error'>
+                    {errorMessage}
+                  </Alert>
+                </Grid>
+              ) : null}
+              {!hasEndingPrice ? (
+                <>
+                  <Grid item xs={12}>
+                    <Paper>
+                      <Box p={4}>
                         <Grid
                           container
                           justify='space-between'
@@ -561,10 +569,14 @@ export default () => {
                             />
                           </Grid>
                         </Grid>
-                      </Grid>
+                      </Box>
+                    </Paper>
+                  </Grid>
 
-                      {saleType == SALE_HIGHEST_BID ? (
-                        <Grid item xs={12}>
+                  {saleType == SALE_HIGHEST_BID ? (
+                    <Grid item xs={12}>
+                      <Paper>
+                        <Box p={4}>
                           <Grid
                             container
                             justify='space-between'
@@ -599,12 +611,16 @@ export default () => {
                               />
                             </Grid>
                           </Grid>
-                        </Grid>
-                      ) : null}
-                    </>
+                        </Box>
+                      </Paper>
+                    </Grid>
                   ) : null}
-                  {saleType != SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                </>
+              ) : null}
+              {saleType != SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -628,10 +644,14 @@ export default () => {
                           />
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+              {hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -657,10 +677,14 @@ export default () => {
                           />
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+              {hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -690,10 +714,14 @@ export default () => {
                           />
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {hasEndingPrice || saleType == SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+              {hasEndingPrice || saleType == SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -761,10 +789,14 @@ export default () => {
                           </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {!hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+              {!hasEndingPrice && saleType != SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -831,10 +863,14 @@ export default () => {
                           </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {saleType != SALE_HIGHEST_BID ? (
-                    <Grid item xs={12}>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : null}
+              {saleType != SALE_HIGHEST_BID ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
                       <Grid
                         container
                         justify='space-between'
@@ -858,173 +894,171 @@ export default () => {
                           />
                         </Grid>
                       </Grid>
-                    </Grid>
-                  ) : null}
-                  {isPrivate ? (
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        variant='outlined'
-                        placeholder={messages[
-                          'nfts.sell.buyerAddress'
-                        ].toString()}
-                        value={buyerAddress}
-                        error={!isAddress(buyerAddress) && buyerAddress != ''}
-                        helperText={
-                          !isAddress(buyerAddress) && buyerAddress != ''
-                            ? messages['nfts.sell.invalidAddress'].toString()
-                            : undefined
-                        }
-                        onChange={handleBuyerAddressChange}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position='end' variant='standard'>
-                              <PasteIconButton onPaste={handlePaste} />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                  ) : null}
+                    </Box>
+                  </Paper>
                 </Grid>
-              </CardContent>
-            </Card>
+              ) : null}
+              {isPrivate ? (
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    variant='outlined'
+                    placeholder={messages['nfts.sell.buyerAddress'].toString()}
+                    value={buyerAddress}
+                    error={!isAddress(buyerAddress) && buyerAddress != ''}
+                    helperText={
+                      !isAddress(buyerAddress) && buyerAddress != ''
+                        ? messages['nfts.sell.invalidAddress'].toString()
+                        : undefined
+                    }
+                    onChange={handleBuyerAddressChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end' variant='standard'>
+                          <PasteIconButton onPaste={handlePaste} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+              ) : null}
+            </Grid>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card>
-              <CardHeader title={<IntlMessages id='nfts.sell.summary' />} />
-              <CardContent>
-                <Box mb={4}>
-                  <Grid container spacing={2}>
-                    {!hasEndingPrice ? (
-                      <Grid item xs={12}>
-                        <Box
-                          display='flex'
-                          justifyContent='space-between'
-                          alignItems='center'>
-                          <Typography>
-                            <IntlMessages id='nfts.sell.price' />
-                          </Typography>
-                          <Typography>
-                            <Grid
-                              container
-                              alignItems='center'
-                              alignContent='center'
-                              spacing={2}>
-                              <Grid item>
-                                <Avatar className={classes.avatar}>
-                                  <img
-                                    src={paymentToken.imageUrl}
-                                    className={classes.img}
-                                  />
-                                </Avatar>
-                              </Grid>
-                              <Grid item>{startingPrice}</Grid>
-                              <Grid item>{paymentToken.symbol}</Grid>
-                            </Grid>
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ) : null}
-                    {hasEndingPrice ? (
-                      <Grid item xs={12}>
-                        <Box
-                          display='flex'
-                          justifyContent='space-between'
-                          alignItems='center'>
-                          <Typography>
-                            <IntlMessages id='nfts.sell.startingPrice' />
-                          </Typography>
-                          <Typography>
-                            <Grid
-                              container
-                              alignItems='center'
-                              alignContent='center'
-                              spacing={2}>
-                              <Grid item>
-                                <Avatar className={classes.avatar}>
-                                  <img
-                                    src={paymentToken.imageUrl}
-                                    className={classes.img}
-                                  />
-                                </Avatar>
-                              </Grid>
-                              <Grid item>{startingPrice}</Grid>
-                              <Grid item>{paymentToken.symbol}</Grid>
-                            </Grid>
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ) : null}
-                    {hasEndingPrice ? (
-                      <Grid item xs={12}>
-                        <Box
-                          display='flex'
-                          justifyContent='space-between'
-                          alignItems='center'>
-                          <Typography>
-                            <IntlMessages id='nfts.sell.endingPrice' />
-                          </Typography>
-                          <Typography>
-                            <Grid
-                              container
-                              alignItems='center'
-                              alignContent='center'
-                              spacing={2}>
-                              <Grid item>
-                                <Avatar className={classes.avatar}>
-                                  <img
-                                    src={paymentToken.imageUrl}
-                                    className={classes.img}
-                                  />
-                                </Avatar>
-                              </Grid>
-                              <Grid item>{endingPrice}</Grid>
-                              <Grid item>{paymentToken.symbol}</Grid>
-                            </Grid>
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ) : null}
-                    {expiration > 0 ? (
-                      <Grid item xs={12}>
-                        <Box
-                          display='flex'
-                          justifyContent='space-between'
-                          alignItems='center'>
-                          <Typography>
-                            <IntlMessages id='nfts.sell.expiresIn' />
-                          </Typography>
-                          <Typography>
-                            {moment
-                              .unix(expiration)
-                              .format('DD/MM/YYYY HH:mm:ss')}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ) : null}
-                    {hasEndingPrice && endingPrice == 0 ? (
-                      <Grid item xs={12}>
-                        <Alert severity='warning'>
-                          <IntlMessages id='nfts.sell.endingPriceIsZero' />
-                        </Alert>
-                      </Grid>
-                    ) : null}
-                    <Grid item xs={12}>
-                      <Button
-                        disabled={!canSubmit()}
-                        onClick={handlePostOrder}
-                        variant='contained'
-                        color='primary'
-                        fullWidth
-                        size='large'>
-                        <IntlMessages id='nfts.sell.postYourListing' />
-                      </Button>
-                    </Grid>
+            <Box mb={4}>
+              <Typography variant='h5'>
+                <IntlMessages id='nfts.sell.summary' />
+              </Typography>
+            </Box>
+            <Box mb={4}>
+              <Grid container spacing={2}>
+                {!hasEndingPrice ? (
+                  <Grid item xs={12}>
+                    <Box
+                      display='flex'
+                      justifyContent='space-between'
+                      alignItems='center'>
+                      <Typography>
+                        <IntlMessages id='nfts.sell.price' />
+                      </Typography>
+                      <Typography>
+                        <Grid
+                          container
+                          alignItems='center'
+                          alignContent='center'
+                          spacing={2}>
+                          <Grid item>
+                            <Avatar className={classes.avatar}>
+                              <img
+                                src={paymentToken.imageUrl}
+                                className={classes.img}
+                              />
+                            </Avatar>
+                          </Grid>
+                          <Grid item>{startingPrice}</Grid>
+                          <Grid item>{paymentToken.symbol}</Grid>
+                        </Grid>
+                      </Typography>
+                    </Box>
                   </Grid>
-                </Box>
-                <Grid container spacing={4}>
-                  {/* <Grid item xs={12}>
+                ) : null}
+                {hasEndingPrice ? (
+                  <Grid item xs={12}>
+                    <Box
+                      display='flex'
+                      justifyContent='space-between'
+                      alignItems='center'>
+                      <Typography>
+                        <IntlMessages id='nfts.sell.startingPrice' />
+                      </Typography>
+                      <Typography>
+                        <Grid
+                          container
+                          alignItems='center'
+                          alignContent='center'
+                          spacing={2}>
+                          <Grid item>
+                            <Avatar className={classes.avatar}>
+                              <img
+                                src={paymentToken.imageUrl}
+                                className={classes.img}
+                              />
+                            </Avatar>
+                          </Grid>
+                          <Grid item>{startingPrice}</Grid>
+                          <Grid item>{paymentToken.symbol}</Grid>
+                        </Grid>
+                      </Typography>
+                    </Box>
+                  </Grid>
+                ) : null}
+                {hasEndingPrice ? (
+                  <Grid item xs={12}>
+                    <Box
+                      display='flex'
+                      justifyContent='space-between'
+                      alignItems='center'>
+                      <Typography>
+                        <IntlMessages id='nfts.sell.endingPrice' />
+                      </Typography>
+                      <Typography>
+                        <Grid
+                          container
+                          alignItems='center'
+                          alignContent='center'
+                          spacing={2}>
+                          <Grid item>
+                            <Avatar className={classes.avatar}>
+                              <img
+                                src={paymentToken.imageUrl}
+                                className={classes.img}
+                              />
+                            </Avatar>
+                          </Grid>
+                          <Grid item>{endingPrice}</Grid>
+                          <Grid item>{paymentToken.symbol}</Grid>
+                        </Grid>
+                      </Typography>
+                    </Box>
+                  </Grid>
+                ) : null}
+                {expiration > 0 ? (
+                  <Grid item xs={12}>
+                    <Box
+                      display='flex'
+                      justifyContent='space-between'
+                      alignItems='center'>
+                      <Typography>
+                        <IntlMessages id='nfts.sell.expiresIn' />
+                      </Typography>
+                      <Typography>
+                        {moment.unix(expiration).format('DD/MM/YYYY HH:mm:ss')}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                ) : null}
+                {hasEndingPrice && endingPrice == 0 ? (
+                  <Grid item xs={12}>
+                    <Alert severity='warning'>
+                      <IntlMessages id='nfts.sell.endingPriceIsZero' />
+                    </Alert>
+                  </Grid>
+                ) : null}
+                <Grid item xs={12}>
+                  <Button
+                    disabled={!canSubmit()}
+                    onClick={handlePostOrder}
+                    variant='contained'
+                    color='primary'
+                    fullWidth
+                    size='large'>
+                    <IntlMessages id='nfts.sell.postYourListing' />
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            <Grid container spacing={4}>
+              {/* <Grid item xs={12}>
                     <Typography
                       gutterBottom
                       style={{fontWeight: 800}}
@@ -1033,20 +1067,18 @@ export default () => {
                     </Typography>
                     <Slider defaultValue={30} />
                   </Grid> */}
-                  <Grid item xs={12}>
-                    <Typography
-                      gutterBottom
-                      style={{fontWeight: 800}}
-                      variant='body1'>
-                      <IntlMessages id='nfts.sell.fees' />
-                    </Typography>
-                    <Typography variant='body2' color='textSecondary'>
-                      <IntlMessages id='nfts.sell.listingFeeDescription' />
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+              <Grid item xs={12}>
+                <Typography
+                  gutterBottom
+                  style={{fontWeight: 800}}
+                  variant='body1'>
+                  <IntlMessages id='nfts.sell.fees' />
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  <IntlMessages id='nfts.sell.listingFeeDescription' />
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

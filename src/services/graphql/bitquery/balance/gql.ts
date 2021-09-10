@@ -10,6 +10,7 @@ export const BITQUERY_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -33,6 +34,7 @@ export const BITQUERY_SINGLE_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
         }
@@ -51,6 +53,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
             symbol
             decimals
             address
+            tokenType
           }
           value
           valueInUsd: value
@@ -60,6 +63,36 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
     bsc: ethereum(network: bsc) {
       address(address: {is: $address}) {
         balances {
+          currency {
+            name
+            symbol
+            decimals
+            address
+            tokenType
+          }
+          value
+          valueInUsd: value
+        }
+      }
+    },
+    matic: ethereum(network: matic) {
+      address(address: {is: $address}) {
+        balances{
+          currency {
+            name
+            symbol
+            decimals
+            address
+            tokenType
+          }
+          value
+          valueInUsd: value
+        }
+      }
+    },
+    matic: ethereum(network: matic) {
+      address(address: {is: $address}) {
+        balances{
           currency {
             name
             symbol
@@ -136,6 +169,7 @@ export const BITQUERY_SINGLE_BALANCE_HISTORY = gql`
             symbol
             decimals
             address
+            tokenType
           }
         }
       }

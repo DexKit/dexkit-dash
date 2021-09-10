@@ -55,8 +55,8 @@ const NetworkSwitcher = (props: Props) => {
         onClose={handleClose}>
         {supportedNetworks
           .filter((n) => n !== networkName)
-          .map((n) => (
-            <MenuItem onClick={() => handleNetworkClick(n)}>
+          .map((n, index) => (
+            <MenuItem onClick={() => handleNetworkClick(n)} key={index}>
               <Chip color={'default'} label={FORMAT_NETWORK_NAME(n)} />
             </MenuItem>
           ))}

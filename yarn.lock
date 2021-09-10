@@ -3311,10 +3311,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.72.0.tgz#43df23af013ad1135407e5cf33ca6e4c4c7708d5"
   integrity sha512-o+TYF8vBcyySRsb2kqBDv/KMeme8a2nwWoG+lAWzbDmWfb2/MrVWYCVYDYvjXdSoI/Cujqy1i0gIDrkdxa9chA==
 
-"@magic-ext/oauth@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-0.8.0.tgz#ae5381aaab8b3a56d24512344717e86b70f7dbfc"
-  integrity sha512-iLSkkvMBfH45mcsfavsRKhpnRlWycXwzn0ortR0FCITEk4YcmOsNgpsnXgLLr1CzbuEAhsmEA/Zz8bpWlNL5bw==
+"@magic-ext/oauth@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-0.9.0.tgz#6cf64f6a3bbbf830f201d226a9fd368b21c60c7d"
+  integrity sha512-dEaN/5S7HqIdpaygTUwl0JEH+gzfH4QcjFbqYnNen3KNPqYf8lRyRBUk+yoLXhtKCibUxEu9n27bVWEjk/EYag==
   dependencies:
     "@magic-sdk/types" "^1.1.0"
     crypto-js "^3.3.0"
@@ -3324,25 +3324,26 @@
   resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-1.2.1.tgz#519f8caa6e92373f760867b477bca1de8f9a1d95"
   integrity sha512-OtPoWxGs48jZHedro7a44kpKsb2dBvA5gIne2goLQ4S8lgQpCoQPoK85zLdQAAXBrc9FFkeq9CLTaoVc1+7nSQ==
 
-"@magic-sdk/provider@^4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-4.4.2.tgz#9f64736291825a7c601fb7775266219c98b709bd"
-  integrity sha512-3LSw1UlYWQiOGBYDheorWLs5hLhoz5Ete3bfcXriqN7/3bJqt3RcqEGLEUwvk1k5xt0g09+CIHq/sfKLqYTEOA==
+"@magic-sdk/provider@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-5.1.0.tgz#e747a601351b81a411f012cced31405f79f0b523"
+  integrity sha512-UwE9e2Rr1VP4qrUDFBcH5iY9QmkREbbLTWWuSF/5+Rv62Pj9W+9C87BAs1dzwRg88KsPC3UgaZd88+jiukrZkQ==
   dependencies:
-    "@magic-sdk/types" "^3.2.2"
+    "@magic-sdk/types" "^4.0.0"
     eventemitter3 "^4.0.4"
     semver "^7.3.2"
     tslib "^2.0.3"
+    web3-core "1.5.2"
 
 "@magic-sdk/types@^1.1.0":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-1.6.0.tgz#b2a45be001194358b3d8fa0c63b649b73735660e"
   integrity sha512-CvVUPTF9tSLNFA4JhcAFjheiqWyVp9r9ooy/AheK+0rWRZCxE5QCwc81d2FduDTqzEJZeUV9+9F9R0AplhnX7w==
 
-"@magic-sdk/types@^3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-3.2.2.tgz#6e6d7d6146dacf98c97d734d7960f2817b2b3dde"
-  integrity sha512-Z+FiyYCDIG4rX/KQdAW55467Sb+28RGeQoX9XS1v2OiEUmFlPMSnsm51U8GpKms3g73LcJAmUNmUSwyjeyBEmg==
+"@magic-sdk/types@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-4.0.0.tgz#d533a969e645f09ea530e33698b183d5ad516f5d"
+  integrity sha512-RpUvTmyLHc7ntOdQzFrKfPtfylY2WuVWsd7MKoMb35xJCNHsBEvDv07CvG09QOQgF6Equo5rmaUIrqClaXtNzQ==
   dependencies:
     tslib "^2.0.3"
 
@@ -3995,10 +3996,10 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@transak/transak-sdk@^1.0.28":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@transak/transak-sdk/-/transak-sdk-1.0.29.tgz#6eb7ae6ccb0ecaff58fb8b7786f48b340555060f"
-  integrity sha512-2eEXB1You53ERUCs2wt9o9ioG0vclJ2HoQRMi+6TMojxxFN9WlQTlt7WPjBki5OSSJIrWybtMmweWpo9/YN84w==
+"@transak/transak-sdk@^1.0.30":
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/@transak/transak-sdk/-/transak-sdk-1.0.30.tgz#82748eee25c551b134134fa587afc703519162f3"
+  integrity sha512-8P1wfMwW/+DpD0aHMh0/8C4sa5rOamd0yeVUoGZRwEsmSUub+WBVB9WhiI9c/H4IOnZb470CJSsGu8PS/N927g==
   dependencies:
     events "^3.1.0"
     query-string "^6.12.1"
@@ -15536,16 +15537,16 @@ lz-string@^1.4.4:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
   integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
-magic-sdk@^4.1.1:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-4.4.2.tgz#37a32c5cf3b9e22202b1fce917359dce64dfdc10"
-  integrity sha512-vZBUQu5vyTUREFkzEKjrdcL8mKk4olU0vOqKVx6RCXFGlU46I2e7C024EmXTs4egAWO+dHSTDemKSh5nWgqSQA==
+magic-sdk@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-5.1.0.tgz#70b4800bf87852b4f514be1fa5db5a8207a08a98"
+  integrity sha512-9Ewr34BwwoTaV9ih65toiZ5zhxNzG8Ro2uJE8MDoGbR5sRQROBX76TqUF4VpYpL7q52B40PiUcBMF5xs7GJbAg==
   dependencies:
     "@babel/core" "^7.9.6"
     "@babel/runtime" "^7.9.6"
     "@magic-sdk/commons" "^1.2.1"
-    "@magic-sdk/provider" "^4.4.2"
-    "@magic-sdk/types" "^3.2.2"
+    "@magic-sdk/provider" "^5.1.0"
+    "@magic-sdk/types" "^4.0.0"
     localforage "^1.7.4"
     localforage-driver-memory "^1.0.5"
     regenerator-runtime "0.13.5"
@@ -20239,6 +20240,14 @@ roarr@^2.15.3:
     json-stringify-safe "^5.0.1"
     semver-compare "^1.0.0"
     sprintf-js "^1.1.2"
+
+rooks@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/rooks/-/rooks-5.7.0.tgz#012364d2dcf932253fa0e54264e5c604cef0db10"
+  integrity sha512-U5PVwWjGKrdd006oSQxt+BdXZQY2RfMYtlGvs9SAK0kBItxocmFJpLKU1xHpLrVnikarYC99WkzV5SfPN1Z59A==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    raf "^3.4.1"
 
 rss-parser@3.11.0:
   version "3.11.0"

@@ -12,37 +12,33 @@ import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
 import WalletInfo from 'shared/components/WalletInfo';
-import {ChainId} from 'types/blockchain';
-import {useWeb3} from 'hooks/useWeb3';
-import {GET_CHAIN_ID_NAME, GET_DEFAULT_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
+import {useWeb3} from 'hooks/useWeb3';
+import {
+  GET_CHAIN_ID_NAME,
+  GET_DEFAULT_TOKEN_BY_NETWORK,
+} from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
 import {AppState} from 'redux/store';
 
-import {
-  Grid,
-  useTheme,
-  useMediaQuery,
-  Container,
-} from '@material-ui/core';
+import {Grid, useTheme, useMediaQuery, Container} from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
 import {ReactComponent as SettingsIcon} from 'assets/images/icons/settings.svg';
 
-
 import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
-import { TokenSearch } from 'shared/components/TokenSearch';
-import { useHistory } from 'react-router';
-import { Token } from 'types/app';
+import {TokenSearch} from 'shared/components/TokenSearch';
+import {useHistory} from 'react-router';
+import {Token} from 'types/app';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId} = useWeb3();
+  const {chainId, forceWeb3Connect} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -90,21 +86,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     dispatch(toggleNavCollapsed());
   }, [dispatch]);
 
-  const onClickSearchToken = (token: Token)=> {
-    if(token){
-      if(token.address){
-        history.push(`/explorer/${token.address}?network=${token.networkName}`)
-      }else{
-        const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName)
-        if(add){
-          history.push(`/explorer/${add}?network=${token.networkName}`)
+  const onClickSearchToken = (token: Token) => {
+    if (token) {
+      if (token.address) {
+        history.push(`/explorer/${token.address}?network=${token.networkName}`);
+      } else {
+        const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
+        if (add) {
+          history.push(`/explorer/${add}?network=${token.networkName}`);
         }
-       
       }
     }
-  }
-
-
+  };
 
   return (
     <>
@@ -133,9 +126,31 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <DexkitLogoImage />
                 </Grid>
                 <Grid item>
-                  <AppBarButton onClick={handleMobileMenuToggle}>
-                    <MenuIcon />
-                  </AppBarButton>
+                  <Grid
+                    container
+                    alignItems='center'
+                    alignContent='center'
+                    spacing={2}>
+                    <Grid item>
+                      {chainId !== undefined ? (
+                        <Grid item>
+                          <Box
+                            className={classes.badgeRoot}
+                            style={{
+                              color: 'rgba(226, 167, 46)',
+                              backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                            }}>
+                            {GET_CHAIN_ID_NAME(chainId)}
+                          </Box>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                    <Grid item>
+                      <AppBarButton onClick={handleMobileMenuToggle}>
+                        <MenuIcon />
+                      </AppBarButton>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Box>
@@ -151,7 +166,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 </Box>
               </Grid>
               <Grid item xs>
-              {/*  <AppBarSearchInput
+                {/*  <AppBarSearchInput
                   placeholder='Search for tokens, pools and vaults'
                   startAdornment={
                     <InputAdornment position='start'>
@@ -160,9 +175,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   }
                   fullWidth
                 /> */}
-              <TokenSearch onClick={onClickSearchToken}/>
-
-
+                <TokenSearch onClick={onClickSearchToken} />
               </Grid>
               <Grid item>
                 <Grid
@@ -170,7 +183,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  {chainId !== ChainId.Mainnet && chainId !== undefined ? (
+                  {chainId !== undefined ? (
                     <Grid item>
                       <Box
                         className={classes.badgeRoot}

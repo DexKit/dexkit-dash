@@ -21,13 +21,17 @@ import {
   IconButton,
   useMediaQuery,
   useTheme,
+  Divider,
 } from '@material-ui/core';
 
 import {ReactComponent as SupportImage} from 'assets/images/state/support.svg';
 import {ReactComponent as TwoFourSupportIcon} from 'assets/images/icons/24-support.svg';
 
+import CloseIcon from '@material-ui/icons/Close';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
+import WalletInfo from 'shared/components/WalletInfo';
 
 interface AppSidebarProps {
   variant?: string;
@@ -60,14 +64,30 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         <Drawer
           anchor={position}
           open={navCollapsed}
-          onClose={(ev) => handleToggleDrawer()}
+          onClose={handleToggleDrawer}
           classes={{
-            root: clsx(variant),
-            paper: clsx(variant),
+            paper: classes.drawer,
           }}
           style={{position: 'absolute'}}>
           <Box height='100%'>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
+              <Box p={4}>
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems='center'
+                  alignContent='center'>
+                  <Grid item xs>
+                    <WalletInfo />
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={handleToggleDrawer}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider />
               <Scrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
               </Scrollbar>

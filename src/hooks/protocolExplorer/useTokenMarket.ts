@@ -15,7 +15,6 @@ import useInterval from 'hooks/useInterval';
 import {getLast24HoursDate} from 'utils/time_utils';
 
 type TokenMarket = {
-  priceUsd: number;
   volume24Usd: number;
   volume24Base: number;
   trades: number;
@@ -29,7 +28,7 @@ export const useTokenMarket = (
   const [seconds, setSeconds] = useState(0);
   const [data, setData] = useState<TokenMarket>();
 
-  const {priceQuote} = useTokenPriceUSD(
+  const {priceQuote, loading: loadingPrice, error: errorPrice} = useTokenPriceUSD(
     token?.address,
     networkName,
     OrderSide.Sell,
@@ -71,23 +70,23 @@ export const useTokenMarket = (
     if (
       dataFn &&
       dataFn.ethereum?.dexTrades &&
-      dataFn.ethereum.dexTrades.length &&
-      priceQuote
+      dataFn.ethereum.dexTrades.length 
     ) {
       const tokenMarket = dataFn.ethereum.dexTrades[0];
       setData({
-        priceUsd: Number(priceQuote.price),
         volume24Usd: tokenMarket.baseAmountInUsd as number,
-        volume24Base: tokenMarket.baseAmountInUsd as number,
+        volume24Base: tokenMarket.baseAmount as number,
         trades: tokenMarket.trades as number,
       });
     }
-  }, [loading, error, dataFn, priceQuote]);
+  }, [loading, error, dataFn]);
 
   return {
     priceQuote,
     data,
     loading,
+    loadingPrice,
+    errorPrice,
     nextRefresh: (seconds / (POLL_INTERVAL / 1000)) * 100,
     seconds,
   };

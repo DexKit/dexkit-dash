@@ -50,20 +50,20 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
                   style={{marginRight: 10}}
                   label='Trade History'
                   clickable
-                  color={
+                  variant={
                     historyState === HistoryStateEnum.Trade
-                      ? 'primary'
-                      : 'default'
+                      ? 'default'
+                      : 'outlined'
                   }
                   onClick={() => setHistoryState(HistoryStateEnum.Trade)}
                 />
                 <Chip
                   label='Pool History'
                   clickable
-                  color={
+                  variant={
                     historyState === HistoryStateEnum.Pool
-                      ? 'primary'
-                      : 'default'
+                      ? 'default'
+                      : 'outlined'
                   }
                   onClick={() => setHistoryState(HistoryStateEnum.Pool)}
                 />
@@ -92,19 +92,19 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
         </Grid>
       ) : (
         <Grid container alignItems='center' spacing={2}>
-             <Grid item xs={12}>
-                <Typography variant='h5'>{title}</Typography>
-              </Grid>
-             <Grid item xs={12}>
-                <TokenOrders
-                baseAddress={pair.baseCurrency?.address as string}
-                quoteAddress={pair.quoteCurrency?.address as string}
-                networkName={networkName}
-                type={'pair'}
-                exchange={pair?.exchange?.fullName as EXCHANGE}
-                />
-              </Grid>
+          <Grid item xs={12}>
+            <Typography variant='h5'>{title}</Typography>
           </Grid>
+          <Grid item xs={12}>
+            <TokenOrders
+              baseAddress={pair.baseCurrency?.address as string}
+              quoteAddress={pair.quoteCurrency?.address as string}
+              networkName={networkName}
+              type={'pair'}
+              exchange={pair?.exchange?.fullName as EXCHANGE}
+            />
+          </Grid>
+        </Grid>
       )}
     </Box>
   );

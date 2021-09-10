@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {
   Grid,
@@ -39,6 +39,7 @@ import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import FavoriteListItem from 'shared/components/FavoriteListItem';
 
 type Params = {
   account: string;
@@ -52,6 +53,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {account: urlAccount} = params;
+
   const history = useHistory();
   const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(cremaTheme);
@@ -68,7 +70,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     history.push({search: searchParams.toString()});
     setValue(newValue);
   };
-  const {loading, error, data} = useAllBalance(defaultAccount);
+  const {loading, error, data, loadingUsd} = useAllBalance(defaultAccount);
 
   useEffect(() => {
     if (
@@ -114,11 +116,42 @@ const WalletTabs: React.FC<Props> = (props) => {
                   address={account}
                   balances={data}
                   loading={loading}
+                  loadingUsd={loadingUsd}
                 />
               )}
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
+                <Grid item xs={12} sm={8}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={isMobile ? 12 : undefined}>
+                      <CustomTabs
+                        value={value}
+                        onChange={handleChange}
+                        variant='standard'
+                        TabIndicatorProps={{
+                          style: {display: 'none'},
+                        }}
+                        aria-label='wallet tabs'>
+                        <CustomTab value='assets' label={'Assets'} />
+                        <CustomTab value='trade-history' label={'History'} />
+                      </CustomTabs>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TabPanel className={classes.zeroPadding} value='assets'>
+                        <AssetTableTab
+                          account={account as string}
+                          loading={loading}
+                          error={error}
+                          data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel value='trade-history'>
+                        <TradeHistoryTab address={defaultAccount} />
+                      </TabPanel>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
@@ -133,7 +166,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         </Grid>
                         <Grid item>
                           <Button
-                            to='/dashboard/favorite-coins'
+                            to='/favorite-coins'
                             component={RouterLink}
                             size='small'
                             endIcon={<KeyboardArrowRightIcon />}>
@@ -159,53 +192,21 @@ const WalletTabs: React.FC<Props> = (props) => {
                           </Grid>
                         </Grid>
                       ) : (
-                        favoritesWithMarket.data.map((favorite, index) => (
-                          <TokenListItem
-                            key={index}
-                            address={favorite.coin.address}
-                            dayChange={
-                              favorite.market.price_change_percentage_24h || 0
-                            }
-                            amount={favorite.market.current_price}
-                            symbol={favorite.coin.symbol}
-                            name={favorite.coin.name}
-                            network={favorite.coin?.networkName || ''}
-                          />
-                        ))
+                        <Grid container spacing={2}>
+                          {favoritesWithMarket.data.map((favorite, index) => (
+                            <Grid item xs={12} key={index}>
+                              <FavoriteListItem
+                                coin={favorite.coin}
+                                amount={favorite.market?.current_price || 0}
+                                dayChange={
+                                  favorite.market
+                                    ?.price_change_percentage_24h || 0
+                                }
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
                       )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={isMobile ? 12 : undefined}>
-                      <CustomTabs
-                        value={value}
-                        onChange={handleChange}
-                        variant='standard'
-                        TabIndicatorProps={{
-                          style: {display: 'none'},
-                        }}
-                        aria-label='wallet tabs'>
-                        <CustomTab value='assets' label={'Assets'} />
-                        <CustomTab value='trade-history' label={'History'} />
-                      </CustomTabs>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TabPanel className={classes.zeroPadding} value='assets'>
-                        <AssetTableTab
-                          account={account as string}
-                          loading={loading}
-                          error={error}
-                          data={data}
-                        />
-                      </TabPanel>
-                      <TabPanel value='transfers'>
-                        <TransferTab address={defaultAccount} />
-                      </TabPanel>
-                      <TabPanel value='trade-history'>
-                        <TradeHistoryTab address={defaultAccount} />
-                      </TabPanel>
                     </Grid>
                   </Grid>
                 </Grid>

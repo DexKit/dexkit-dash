@@ -12,6 +12,14 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
+        path: '/wallet/send',
+        component: React.lazy(() => import('./Wallet/pages/ShareSend')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/swap/coins',
         component: React.lazy(() => import('./Swap')),
       },
@@ -22,6 +30,22 @@ export const dashBoardConfigs = [
       {
         path: '/favorite-coins',
         component: React.lazy(() => import('./Favorites')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/magic/callback-social',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackSocial')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/magic/callback',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackEmail')),
       },
     ],
   },
@@ -58,7 +82,6 @@ export const dashBoardConfigs = [
       },
     ],
   },
-
 
   // {
   //   auth: ['wallet'],

@@ -36,13 +36,12 @@ const TransferTable: React.FC<Props> = ({
 
   return (
     <>
-      <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader>
-          <TableHead className={classes.borderBottomClass}>
+      <Box mb={4}>
+        <Table>
+          <TableHead>
             <TableHeading />
           </TableHead>
-
-          <TableBody className={classes.borderBottomClass}>
+          <TableBody>
             {data &&
               data.map((row, index) => (
                 <TableItem row={row} networkName={networkName} key={index} />

@@ -12,7 +12,7 @@ interface Props extends React.SVGProps<SVGSVGElement> {
 }
 
 export const CustomIcon = (props: Props) => {
-  const {icon, fill} = props;
+  const {icon} = props;
 
   if (icon === 'money.wallet') {
     return <MoneyWalletIcon {...props} />;

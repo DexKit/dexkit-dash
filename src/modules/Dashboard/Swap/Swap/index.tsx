@@ -57,7 +57,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
 
   const [loading, setLoading] = useState(false);
   const [toLoading, setToLoading] = useState(false);
-  const [step, ] = useState(Steps.Exchange);
+  const [step] = useState(Steps.Exchange);
   const [acceptAML, setAcceptAML] = useState(false);
   const [fromLoading, setFromLoading] = useState(false);
   const [coins, setCoins] = useState<ChangellyCoin[]>([]);
@@ -544,7 +544,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
         toAddress={transferAddress}
         balance={balance}
         toToken={
-          tokens.filter((token:any) => token.symbol.toUpperCase() === 'ETH')[0]
+          tokens.filter((token: any) => token.symbol.toUpperCase() === 'ETH')[0]
         }
         open={showTransfer}
         onSend={handleSendCoin}

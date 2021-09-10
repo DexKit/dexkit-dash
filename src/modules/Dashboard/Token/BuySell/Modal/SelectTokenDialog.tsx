@@ -21,11 +21,13 @@ import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 
+
 interface Props extends DialogProps {
   title?: string;
   tokens: Token[];
   onSelectToken: (token: Token) => void;
 }
+
 
 export const SelectTokenDialog = (props: Props) => {
   const {onSelectToken, tokens, onClose, title} = props;
@@ -41,11 +43,11 @@ export const SelectTokenDialog = (props: Props) => {
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let value = e.target.value;
+      const value = e.target.value;
 
       setFilterText(value);
 
-      let filtered = tokens.filter(
+      const filtered = tokens.filter(
         (coin: Token) =>
           coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
           coin.symbol.toLowerCase().startsWith(value.toLowerCase()),

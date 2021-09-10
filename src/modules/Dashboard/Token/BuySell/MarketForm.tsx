@@ -14,7 +14,8 @@ import {ModalOrderData} from 'types/models/ModalOrderData';
 import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
-import {Web3State} from 'types/blockchain';
+import {MyBalances, Web3State} from 'types/blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {
@@ -25,8 +26,6 @@ import {
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {useNetwork} from 'hooks/useNetwork';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
-import SelectTokenDialog from './Modal/SelectTokenDialog';
 import {Skeleton} from '@material-ui/lab';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -35,6 +34,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
 import VerticalSwap from './VerticalSwap';
 import {marketFormStyles as useStyles} from './index.styles';
+import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
 
 interface Props {
   chainId: number | undefined;
@@ -72,6 +72,8 @@ const MarketForm: React.FC<Props> = (props) => {
   const network = useNetwork();
 
   const {web3State, onConnectWeb3} = useWeb3();
+  const [disableSelect, setDisableSelect] = useState(disableReceive ? 'to' : '');
+
 
   const [tokenBalance, setTokenBalance] =
     useState<GetMyBalance_ethereum_address_balances>();
@@ -79,6 +81,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const [amountFrom, setAmountFrom] = useState<number | undefined>(0);
   const [amountTo, setAmountTo] = useState<number>(0);
   const [allowanceTarget, setAllowanceTarget] = useState<string>();
+
   useEffect(() => {
     if (web3State !== Web3State.Done && tokenFrom === undefined) {
       const tokenETH = select1.find(
@@ -101,6 +104,14 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
+    if(disableSelect){
+      if(disableSelect === 'to'){
+        setDisableSelect('from')
+      }else{
+        setDisableSelect('to')
+      }
+    }
+
   }, [tokenFrom, tokenTo]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
@@ -126,6 +137,7 @@ const MarketForm: React.FC<Props> = (props) => {
     amountFrom,
     tokenFrom?.decimals,
   );
+
   const onFetch = useCallback(
     (newValue: number | undefined, side: 'to' | 'from') => {
       if (side === 'from') {
@@ -135,6 +147,7 @@ const MarketForm: React.FC<Props> = (props) => {
           setAmountTo(newValue);
         }
       }
+
       if (tokenFrom && tokenTo && chainId && newValue) {
         fetchQuote(
           {
@@ -332,8 +345,9 @@ const MarketForm: React.FC<Props> = (props) => {
 
   return (
     <Box className={classes.marketContainer}>
-      <SelectTokenDialog
+      <SelectTokenBalanceDialog
         title={selectTo === 'from' ? 'You send' : 'You receive'}
+        balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}
@@ -367,7 +381,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   id={'marketSel0'}
                   label={'Your Coins'}
                   selected={tokenFrom}
-                  disabled={disabled}
+                  disabled={disabled || disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
                 />
               </Grid>
@@ -409,7 +423,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <SelectTokenV2
                     id={'marketSel1'}
                     selected={tokenTo}
-                    disabled={disabled || disableReceive}
+                    disabled={disabled || disableSelect === 'to'}
                     onClick={handleSelectTokenTo}
                   />
                 )}

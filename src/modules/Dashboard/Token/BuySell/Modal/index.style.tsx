@@ -2,6 +2,18 @@ import {makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 export const useStyles = makeStyles((theme: CremaTheme) => ({
+  label: {
+    fontWeight: 400,
+    color: '#8F96A7',
+  },
+  value: {
+    fontWeight: 500,
+  },
+  iconColor: {
+    '& > path': {
+      stroke: '#fff',
+    },
+  },
   dialogTitle: {
     // width: '98vw',
     // maxWidth: '600px',

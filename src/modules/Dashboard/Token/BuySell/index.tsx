@@ -20,7 +20,11 @@ import {
 import {MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
-import {ETH_SYMBOL_URL, BINANCE_SYMBOL_URL, MATIC_SYMBOL_URL} from 'shared/constants/Coins';
+import {
+  ETH_SYMBOL_URL,
+  BINANCE_SYMBOL_URL,
+  MATIC_SYMBOL_URL,
+} from 'shared/constants/Coins';
 
 interface Props {
   disableReceive?: boolean;
@@ -74,7 +78,7 @@ const BuySell: React.FC<Props> = ({
   tokenInfo,
   disableReceive,
 }) => {
-  let history = useHistory();
+  const history = useHistory();
 
   const classes = useStyles();
 
@@ -109,9 +113,9 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (networkName === EthereumNetwork.bsc) {
       setSelect1(tokensBSC);
-    } else if(networkName === EthereumNetwork.matic) {
+    } else if (networkName === EthereumNetwork.matic) {
       setSelect1(tokensMATIC);
-    }else{
+    } else {
       setSelect1(tokensETH);
     }
   }, [networkName, tokensETH, tokensBSC, tokensMATIC]);
@@ -120,9 +124,10 @@ const BuySell: React.FC<Props> = ({
   useEffect(() => {
     if (balances) {
       const balancesFn = balances.map((e) => {
+        // Fetch image from balances first, if not take it from list
+        let tokenLogoUri = e.logoURI;
         // Add images from token list
-        let tokenLogoUri;
-        if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0) {
+        if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'eth') {
             tokenLogoUri = ETH_SYMBOL_URL;
           } else {
@@ -135,7 +140,7 @@ const BuySell: React.FC<Props> = ({
             }
           }
         }
-        if (e.network === EthereumNetwork.bsc && tokensBSC.length > 0) {
+        if (e.network === EthereumNetwork.bsc && tokensBSC.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'bnb') {
             tokenLogoUri = BINANCE_SYMBOL_URL;
           } else {
@@ -149,7 +154,7 @@ const BuySell: React.FC<Props> = ({
           }
         }
 
-        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0) {
+        if (e.network === EthereumNetwork.matic && tokensMATIC.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'matic') {
             tokenLogoUri = MATIC_SYMBOL_URL;
           } else {
@@ -173,7 +178,7 @@ const BuySell: React.FC<Props> = ({
       });
       setSelect0(balancesFn);
     }
-  }, [balances, tokensETH, tokensBSC]);
+  }, [balances, tokensETH, tokensBSC, tokensMATIC]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
@@ -244,7 +249,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select0]);
+  }, [select0, networkName]);
 
   const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
     if (token) {
@@ -256,11 +261,8 @@ const BuySell: React.FC<Props> = ({
             (isNative &&
               token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
         ) {
-          const aux = tokenFrom;
           setTokenFrom(tokenTo);
-          setTokenTo(aux);
-
-          history.push(isNative ? token.symbol.toLowerCase() : token.address);
+          setTokenTo(tokenFrom);
         } else {
           if (token.networkName && token.networkName !== networkName) {
             history.push(
@@ -287,9 +289,8 @@ const BuySell: React.FC<Props> = ({
             );
 
             if (availableTokenFrom) {
-              const aux = tokenTo;
               setTokenTo(tokenFrom);
-              setTokenFrom(aux);
+              setTokenFrom(tokenTo);
             } else {
               const newTokenFrom = select0.find((e) =>
                 isNative
@@ -301,15 +302,12 @@ const BuySell: React.FC<Props> = ({
               setTokenFrom(newTokenFrom);
             }
           } else {
-            const aux = tokenTo;
             setTokenTo(tokenFrom);
-            setTokenFrom(aux);
+            setTokenFrom(tokenTo);
           }
         } else {
           setTokenTo(token);
         }
-
-        history.push(isNative ? token.symbol.toLowerCase() : token.address);
       }
     }
   };
