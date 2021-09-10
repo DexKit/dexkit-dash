@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import { useMemo} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {
   GetAllMyBalance,

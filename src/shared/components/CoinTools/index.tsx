@@ -86,10 +86,11 @@ interface Props {
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  token?: Token;
 }
 
 const CoinTools = (props: Props) => {
-  const {balances, only, onMakeFavorite, onShare, isFavorite} = props;
+  const {balances, only, onMakeFavorite, onShare, isFavorite, token} = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
@@ -189,6 +190,13 @@ const CoinTools = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+        token={token}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <BuySellModal
         networkName={networkName}

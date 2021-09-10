@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {
   Box,
@@ -7,13 +7,13 @@ import {
   withStyles,
   makeStyles,
   Chip,
+  Typography,
 } from '@material-ui/core';
 import {Token} from 'types/app';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_CHAIN_ID_NAME,
 } from 'shared/constants/Blockchain';
-import Close from '@material-ui/icons/Close';
 
 const CustomButtom = withStyles((theme) => ({
   root: {
@@ -35,36 +35,20 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(6),
     borderRadius: '50%',
   },
-  name: {
-    fontSize: theme.spacing(4),
-  },
-  symbol: {
-    color: theme.palette.text.secondary,
-    fontSize: theme.spacing(3),
-  },
 }));
 
 interface SelectTokenButtonProps extends ButtonBaseProps {
   token?: Token;
-  onClear: () => void;
   onClick: () => void;
 }
 
 export const SelectTokenButton = (props: SelectTokenButtonProps) => {
-  const {token, onClear, onClick} = props;
+  const {token, onClick} = props;
 
   const classes = useStyles();
 
-  const handleClick = useCallback(() => {
-    if (token) {
-      onClear();
-    } else {
-      onClick();
-    }
-  }, [token, onClick, onClear]);
-
   return (
-    <CustomButtom onClick={handleClick}>
+    <CustomButtom onClick={onClick}>
       {token ? (
         <>
           <Box display='flex' alignItems='center' alignContent='center'>
@@ -72,8 +56,12 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
               <img className={classes.icon} src={token?.logoURI} />
             </Box>
             <Box display='flex' alignItems='flex-start' flexDirection='column'>
-              <Box className={classes.name}>{token?.name}</Box>
-              <Box className={classes.symbol}>{token?.symbol}</Box>
+              <Typography variant='body2' noWrap>
+                {token?.name}
+              </Typography>
+              <Typography variant='caption' color='textSecondary'>
+                {token?.symbol}
+              </Typography>
             </Box>
           </Box>
           {token?.networkName ? (
@@ -86,11 +74,6 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
                   )}
                 />
               </Box>
-              {token ? (
-                <Box ml={2}>
-                  <Close />
-                </Box>
-              ) : null}
             </Box>
           ) : null}
         </>

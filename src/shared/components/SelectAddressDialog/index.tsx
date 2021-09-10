@@ -2,11 +2,7 @@ import {
   DialogProps,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogActions,
   List,
-  ListItem,
-  ListItemText,
   Box,
   Typography,
   IconButton,
@@ -22,6 +18,8 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     width: theme.spacing(6),
     height: theme.spacing(6),
+    stroke: theme.palette.common.white,
+    fill: theme.palette.common.white,
   },
 }));
 

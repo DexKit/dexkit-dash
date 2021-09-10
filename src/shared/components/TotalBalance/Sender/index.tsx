@@ -1,36 +1,37 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Box,
   Dialog,
-  Tabs,
-  Tab,
-  Card,
   makeStyles,
   Typography,
   DialogTitle,
   DialogContent,
-  Chip,
+
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {useNetwork} from 'hooks/useNetwork';
-import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
-import Tooltip from '@material-ui/core/Tooltip';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
-import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
-import {useSenderTokens} from 'hooks/useSenderTokens';
+import {Token} from 'types/app';
 
 interface Props {
   open: boolean;
   balances: GetMyBalance_ethereum_address_balances[];
   onClose: () => void;
+  disableClose?: boolean;
   amount?: number;
+  token?: Token;
+  address?: string;
+  onResult?: (err?: any) => void;
+  error?: string;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -67,6 +68,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const Sender: React.FC<Props> = (props) => {
+  const {token: defaultToken, disableClose, onResult, error} = props;
+
   const classes = useStyles();
   const networkName = useNetwork();
 
@@ -88,9 +91,14 @@ const Sender: React.FC<Props> = (props) => {
     [onClose],
   );
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Dialog
       fullWidth
+      fullScreen={isMobile}
       maxWidth='xs'
       open={props.open}
       onClose={props.onClose}
@@ -111,14 +119,23 @@ const Sender: React.FC<Props> = (props) => {
             </Typography>
           </Box>
           <Box>
-            <IconButton size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
+            {disableClose ? null : (
+              <IconButton size='small' onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            )}
           </Box>
         </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <SenderForm balances={props.balances} amount={props.amount} />
+        <SenderForm
+          balances={props.balances}
+          amount={props.amount}
+          token={defaultToken}
+          address={props.address}
+          onResult={onResult}
+          error={error}
+        />
       </DialogContent>
     </Dialog>
   );

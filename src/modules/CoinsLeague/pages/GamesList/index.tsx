@@ -86,58 +86,89 @@ const GamesList = () => {
 
   const gamesToJoin = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
-      return games?.filter((g) => !g.started).filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
-    }
-    if (filterGame === FilterGame.Fast) {
-      return games
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
-        .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
-    }
-
-    if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => !g.started)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        ).filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
-    }
-
-    if (filterGame === FilterGame.Day) {
-      return games
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
-        .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
-    }
-  }, [games, filterGame, search]);
-
-  const gamesEnded = useMemo(() => {
-    if (filterGame === FilterGame.ALL) {
-      return games?.filter((g) => g.finished)
-      .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
     }
     if (filterGame === FilterGame.Fast) {
-      return games?.filter((g) => g.finished)
+      return games
+        ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() <= 60 * 60)
-        .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
     }
 
     if (filterGame === FilterGame.Medium) {
-      return games?.filter((g) => g.finished)
+      return games
+        ?.filter((g) => !g.started)
         .filter(
           (g) =>
             g?.duration?.toNumber() > 60 * 60 &&
             g?.duration?.toNumber() < 24 * 60 * 60,
         )
-        .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
     }
 
     if (filterGame === FilterGame.Day) {
-      return games?.filter((g) => g.finished)
+      return games
+        ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
-        .filter(g => g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1);
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+  }, [games, filterGame, search]);
+
+  const gamesEnded = useMemo(() => {
+    if (filterGame === FilterGame.ALL) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Fast) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Medium) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter(
+          (g) =>
+            g?.duration?.toNumber() > 60 * 60 &&
+            g?.duration?.toNumber() < 24 * 60 * 60,
+        )
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Day) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
     }
   }, [games, filterGame, search]);
 
@@ -148,7 +179,6 @@ const GamesList = () => {
   const onClickGoGamesInProgress = useCallback((_ev: any) => {
     history.push(`${COINSLEAGUE_ROUTE}/active-games`);
   }, []);
-
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
@@ -175,9 +205,7 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} xl={12} sm={12}>
-            <Typography variant='h5'>
-              Coins League
-            </Typography>
+          <Typography variant='h5'>Coins League</Typography>
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
@@ -196,11 +224,9 @@ const GamesList = () => {
         </Grid>
         <Grid item xs={6}>
           <Box display={'flex'} justifyContent={'flex-end'}>
-          <Button
-            variant={'text'}
-            onClick={onClickGoGamesInProgress}>
-                View More
-          </Button>
+            <Button variant={'text'} onClick={onClickGoGamesInProgress}>
+              View More
+            </Button>
           </Box>
         </Grid>
 
@@ -260,23 +286,26 @@ const GamesList = () => {
           <Grid container spacing={2}>
             <Grid item sm={3}>
               <Grid item xs={12} sm={12}>
-              {value === Tabs.Games ?   <Typography variant='h6'>
-                  {gamesToJoin?.length || 0} Games
-                </Typography> :
-                   <Typography variant='h6'>
-                   {gamesEnded?.length || 0} Games
-                 </Typography> 
-                
-                }
+                {value === Tabs.Games ? (
+                  <Typography variant='h6'>
+                    {gamesToJoin?.length || 0} Games
+                  </Typography>
+                ) : (
+                  <Typography variant='h6'>
+                    {gamesEnded?.length || 0} Games
+                  </Typography>
+                )}
               </Grid>
               <Grid item xs={12} sm={12}>
-              {value === Tabs.Games &&   <Typography gutterBottom>
-                  Recently added &nbsp;
-                 {/* <ExpandMoreIcon
+                {value === Tabs.Games && (
+                  <Typography gutterBottom>
+                    Recently added &nbsp;
+                    {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
                  />*/}
-                </Typography>}
+                  </Typography>
+                )}
               </Grid>
             </Grid>
             <Grid item sm={6} spacing={1} justifyContent='center'>
@@ -324,7 +353,7 @@ const GamesList = () => {
               </Grid>
             </Grid>
             <Grid container sm={3} justifyContent='flex-end'>
-             {/* <Button variant='text'>
+              {/* <Button variant='text'>
                 <FilterListIcon style={{color: '#fff'}} />
                   </Button>*/}
             </Grid>

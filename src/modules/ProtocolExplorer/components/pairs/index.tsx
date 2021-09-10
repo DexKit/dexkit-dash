@@ -75,10 +75,10 @@ export const Pairs = (props: Props) => {
           <Typography variant='h6'>{data ? data.length : ''} Pairs</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Grid container spacing={4}>
+          <Box className={classes.container}>
             {data &&
               data?.map((pair, k) => (
-                <Grid key={k} item xs={isMobile ? 12 : undefined}>
+                <Box className={classes.item} key={k}>
                   <TokenPairCard
                     firstToken={pair.baseCurrency?.symbol as string}
                     secondToken={pair.quoteCurrency?.symbol as string}
@@ -88,9 +88,9 @@ export const Pairs = (props: Props) => {
                     exchange={pair.exchange?.fullName as EXCHANGE}
                     onSelect={() => setSelectedPair(pair)}
                   />
-                </Grid>
+                </Box>
               ))}
-          </Grid>
+          </Box>
         </Grid>
         <Grid item xs={12}>
           {selectedPair &&

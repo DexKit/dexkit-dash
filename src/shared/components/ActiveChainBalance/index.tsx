@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo} from 'react';
+import React, { useCallback, useMemo} from 'react';
 import {
   Box,
   Paper,
@@ -16,16 +16,12 @@ import {CremaTheme} from 'types/AppContextPropsType';
 
 import {truncateAddress} from 'utils';
 
-
-
-
-
 import {GreenSquare} from '../GreenSquare';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
-import { ethers } from 'ethers';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {ethers} from 'ethers';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -88,25 +84,17 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-
-
 const ActiveChainBalance = () => {
- 
   const {account, balance, isLoading, network} = useActiveChainBalance();
-
-
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-
-  const formattedBalance = useMemo(()=> {
-    if(balance){
+  const formattedBalance = useMemo(() => {
+    if (balance) {
       return ethers.utils.formatEther(balance);
     }
-  },[balance])
-
-
+  }, [balance]);
 
   const accountsModal = useAccountsModal();
 
@@ -149,15 +137,16 @@ const ActiveChainBalance = () => {
                             `- ${FORMAT_NETWORK_NAME(network)}`
                           ) : (
                             <>
-                             {`${formattedBalance} ${FORMAT_NETWORK_NAME(network)}`}
+                              {`${formattedBalance} ${FORMAT_NETWORK_NAME(
+                                network,
+                              )}`}
                             </>
                           )}
                         </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                  </Grid>
+                  <Grid item></Grid>
                 </Grid>
               </Box>
             </Paper>

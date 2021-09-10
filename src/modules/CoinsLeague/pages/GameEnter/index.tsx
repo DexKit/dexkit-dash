@@ -228,7 +228,6 @@ function GameEnter(props: Props) {
         onSelectCoin={onSelectCoin}
         onClose={onCloseSelectDialog}
       />
-
       <Grid container spacing={4}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>

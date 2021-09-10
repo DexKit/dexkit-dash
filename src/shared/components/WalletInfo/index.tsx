@@ -37,9 +37,12 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import { FORMAT_NETWORK_NAME, GET_NATIVE_COIN_FROM_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useNetwork } from 'hooks/useNetwork';
-import { useSingleBalance } from 'hooks/balance/useSingleBalance';
+import {
+  FORMAT_NETWORK_NAME,
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
+import {useNetwork} from 'hooks/useNetwork';
+import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -101,7 +104,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
   };
 });
 
-
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const networkName = useNetwork();
@@ -144,7 +146,11 @@ const WalletInfo = (props: any) => {
   const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
-  const {data: balances} = useSingleBalance(GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(), network, defaultAccount);
+  const {data: balances} = useSingleBalance(
+    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
+    network,
+    defaultAccount,
+  );
 
   const onGoToWallet = () => {
     handleClose();
@@ -161,11 +167,9 @@ const WalletInfo = (props: any) => {
     history.push('/wallet/manage-accounts');
   };
 
-
   let ethBalanceValue;
 
   ethBalanceValue = balances?.value;
-
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
@@ -270,7 +274,9 @@ const WalletInfo = (props: any) => {
                   </MenuItem>
                 ))}
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
-              {!notConnected && <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>}
+              {!notConnected && (
+                <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              )}
             </Menu>
           </Box>
         </Grid>

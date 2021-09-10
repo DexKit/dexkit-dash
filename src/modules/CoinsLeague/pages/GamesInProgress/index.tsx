@@ -12,13 +12,10 @@ import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFac
 import {ChainId} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
-import {makeStyles} from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
-import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
-import SmallCardGameSkeleton from 'modules/CoinsLeague/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
@@ -229,7 +226,11 @@ const GamesInProgress = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                <CardGameProgress game={g} key={id} onClick={onClickEnterGame} />
+                <CardGameProgress
+                  game={g}
+                  key={id}
+                  onClick={onClickEnterGame}
+                />
               </Grid>
             ))}
             {isLoading &&

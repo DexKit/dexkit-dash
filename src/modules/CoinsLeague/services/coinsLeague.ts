@@ -50,7 +50,6 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
       ...g,
     });
   }
-
   return games;
 };
 

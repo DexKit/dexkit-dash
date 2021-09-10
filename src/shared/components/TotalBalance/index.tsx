@@ -12,7 +12,6 @@ import {
 import {Skeleton} from '@material-ui/lab';
 
 import {makeStyles} from '@material-ui/core/styles';
-import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import Receiver from './Receiver';

@@ -37,7 +37,12 @@ function SimpleCardGame(props: Props): JSX.Element {
   const entryAmount = ethers.utils.formatEther(amount_to_play);
   return (
     <Container className={classes.container}>
-      <Grid container style={{color: '#7a8398'}} spacing={2}  alignContent={'center'} alignItems={'center'}>
+      <Grid
+        container
+        style={{color: '#7a8398'}}
+        spacing={2}
+        alignContent={'center'}
+        alignItems={'center'}>
         <Grid item xs={12} sm={12}>
           <Box display={'flex'}>
             <Typography variant='h6'>Game Time:</Typography>
@@ -51,11 +56,7 @@ function SimpleCardGame(props: Props): JSX.Element {
         </Grid>
       </Grid>
 
-      <Grid
-        container
-        className={classes.innerContent}
-        alignContent={'center'}
-        >
+      <Grid container className={classes.innerContent} alignContent={'center'}>
         <Grid item>
           <SendIcon />
         </Grid>

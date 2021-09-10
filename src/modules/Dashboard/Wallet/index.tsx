@@ -39,6 +39,7 @@ import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
+import FavoriteListItem from 'shared/components/FavoriteListItem';
 
 type Params = {
   account: string;
@@ -52,6 +53,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {account: urlAccount} = params;
+
   const history = useHistory();
   const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(cremaTheme);
@@ -190,19 +192,20 @@ const WalletTabs: React.FC<Props> = (props) => {
                           </Grid>
                         </Grid>
                       ) : (
-                        favoritesWithMarket.data.map((favorite, index) => (
-                          <TokenListItem
-                            key={index}
-                            address={favorite.coin.address}
-                            dayChange={
-                              favorite.market.price_change_percentage_24h || 0
-                            }
-                            amount={favorite.market.current_price}
-                            symbol={favorite.coin.symbol}
-                            name={favorite.coin.name}
-                            network={favorite.coin?.networkName || ''}
-                          />
-                        ))
+                        <Grid container spacing={2}>
+                          {favoritesWithMarket.data.map((favorite, index) => (
+                            <Grid item xs={12} key={index}>
+                              <FavoriteListItem
+                                coin={favorite.coin}
+                                amount={favorite.market?.current_price || 0}
+                                dayChange={
+                                  favorite.market
+                                    ?.price_change_percentage_24h || 0
+                                }
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
                       )}
                     </Grid>
                   </Grid>

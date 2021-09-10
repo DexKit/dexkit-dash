@@ -22,8 +22,8 @@ import {
 } from 'redux/actions';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
-import {addAccounts} from 'redux/_ui/actions';
-
+import {addAccounts, setAccount} from 'redux/_ui/actions';
+import {getMulticall} from 'services/multicall';
 
 
 
