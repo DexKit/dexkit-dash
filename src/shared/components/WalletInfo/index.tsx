@@ -187,6 +187,8 @@ const WalletInfo = (props: any) => {
 
   const classes = useStyles(props);
 
+  const theme = useTheme();
+
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid

@@ -150,7 +150,6 @@ const CoinTools = (props: Props) => {
   const [showReceiver, setShowReceiver] = useState(false);
   const [showSwap, setShowSwap] = useState(false);
   const [showTrade, setShowTrade] = useState(false);
-
   const handleShowSender = useCallback(() => {
     setShowSender(true);
   }, []);
@@ -191,6 +190,12 @@ const CoinTools = (props: Props) => {
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
         token={token}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <BuySellModal
         networkName={networkName}
