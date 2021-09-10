@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   GET_CHAIN_FROM_NETWORK,
   GET_CHAIN_ID_NAME,
 } from 'shared/constants/Blockchain';
-import Close from '@material-ui/icons/Close';
 
 const CustomButtom = withStyles((theme) => ({
   root: {

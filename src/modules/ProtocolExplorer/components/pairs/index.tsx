@@ -15,7 +15,6 @@ import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
 import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
 import {useMediaQuery, useTheme} from '@material-ui/core';
-
 type Props = {
   baseAddress: string;
   exchange: EXCHANGE;

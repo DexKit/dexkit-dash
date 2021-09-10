@@ -115,6 +115,7 @@ const CoinTools = (props: Props) => {
               decimals: only.decimals,
               name: only.name || '',
               symbol: only.symbol || '',
+              tokenType: 'ERC20',
             },
             network: networkName,
             value: 0,
@@ -131,6 +132,7 @@ const CoinTools = (props: Props) => {
               decimals: dataFn.currency?.decimals ?? 18,
               name: dataFn.currency?.name || '',
               symbol: dataFn.currency?.symbol || '',
+              tokenType: 'ERC20',
             },
             network: dataFn.network,
             value: dataFn.value ?? 0,
@@ -189,6 +191,12 @@ const CoinTools = (props: Props) => {
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
         token={token}
+      />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
       <BuySellModal
         networkName={networkName}

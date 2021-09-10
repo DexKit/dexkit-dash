@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useMemo} from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {
   BINANCE_SYMBOL_URL,
@@ -6,6 +6,7 @@ import {
   MATIC_SYMBOL_URL,
 } from 'shared/constants/Coins';
 import {Token} from 'types/app';
+import {ChainId} from 'types/blockchain';
 import {getNetworkChainId} from 'utils/blockchain';
 import {useAllBalance} from './balance/useAllBalance';
 import {useDefaultAccount} from './useDefaultAccount';
@@ -17,11 +18,8 @@ export function useSenderTokens() {
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
   const tokensMATIC = useTokenList(EthereumNetwork.matic);
   const {data: balances} = useAllBalance(account);
-
-  const [tokens, setTokens] = useState<Token[]>([]);
-
-  useEffect(() => {
-    const tokenList = balances.map((e) => {
+  const tokens = useMemo(() => {
+    return balances.map((e) => {
       // Add images from token list
       let tokenLogoUri;
       if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0) {
@@ -72,12 +70,10 @@ export function useSenderTokens() {
         networkName: e.network,
         logoURI: tokenLogoUri,
         icon: tokenLogoUri,
-        chainId: getNetworkChainId(e.network),
+        chainId: getNetworkChainId(e.network) as ChainId,
       } as Token;
     });
-
-    setTokens(tokenList);
-  }, [balances]);
+  }, [balances, tokensBSC, tokensMATIC, tokensETH]);
 
   return {tokens};
 }

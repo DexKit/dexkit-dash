@@ -75,6 +75,7 @@ export const useCoinsLeagueFactory = () => {
     games: gamesQuery?.data,
     totalGames: gamesAddressQuery?.data && gamesAddressQuery?.data[1],
     gamesAddressQuery,
-    gamesQuery
+    gamesQuery,
+    refetch: gamesQuery.refetch
   };
 };

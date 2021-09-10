@@ -33,11 +33,20 @@ import SimpleCardGameSkeleton from 'modules/CoinsLeague/components/SimpleCardGam
 import {SelectCoinLeagueDialog} from 'modules/CoinsLeague/components/SelectCoins/index.modal';
 import {CoinItem} from 'modules/CoinsLeague/components/CoinItem';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {red} from '@material-ui/core/colors';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
+
+import Box from '@material-ui/core/Box';
+import {Player} from 'types/coinsleague';
+import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
+import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
+import Chip from '@material-ui/core/Chip';
+import {useWeb3} from 'hooks/useWeb3';
+import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ChainId} from 'types/blockchain';
+import {EndGame} from 'modules/CoinsLeague/components/EndGame';
+import {StartGame} from 'modules/CoinsLeague/components/StartGame';
+import {ButtonState} from 'modules/CoinsLeague/components/ButtonState';
+import Countdown from 'modules/CoinsLeague/components/Countdown';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -62,36 +71,6 @@ enum SubmitState {
   Error,
   Confirmed,
 }
-const GetButtonState = (state: SubmitState) => {
-  switch (state) {
-    case SubmitState.WaitingWallet:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting Wallet
-        </>
-      );
-    case SubmitState.Error:
-      return (
-        <>
-          <Icon style={{color: red[500]}}>error</Icon>
-          Error
-        </>
-      );
-    case SubmitState.Submitted:
-      return (
-        <>
-          <CircularProgress color={'secondary'} />
-          Waiting for Confirmation
-        </>
-      );
-    case SubmitState.Confirmed:
-      return <>You Entered Game</>;
-
-    default:
-      return 'ENTER GAME';
-  }
-};
 
 function GameEnter(props: Props) {
   const classes = useStyles();
@@ -99,13 +78,16 @@ function GameEnter(props: Props) {
     match: {params},
   } = props;
   const history = useHistory();
-  const account = useDefaultAccount();
+  const {account, chainId} = useWeb3();
+
   const {address} = params;
-  const {game, gameQuery, onJoinGameCallback} = useCoinsLeague(address);
+  const {game, gameQuery, refetch, onJoinGameCallback, winner} =
+    useCoinsLeague(address);
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [open, setOpen] = useState(false);
+  const [tx, setTx] = useState<string>();
 
   const onOpenSelectDialog = useCallback((ev: any) => {
     setOpen(true);
@@ -113,20 +95,37 @@ function GameEnter(props: Props) {
 
   const player = useMemo(() => {
     if (account && game?.players && game?.players.length) {
-      return game.players.find((p) => {
-        console.log(p);
-        //TODO: We did this because sometimes it is not returning the player_address
-        //@ts-ignore
-        const addr = p[1];
-        return addr.toLowerCase() === account.toLowerCase();
-        /*if (p?.player_address && account) {
-          return p?.player_address.toLowerCase() === account.toLowerCase();
-        } else {
-          return false;
-        }*/
+      //TODO: We did this because sometimes it is not returning the player_address and as objects
+      return game.players
+        .map((p: any) => {
+          return {
+            coin_feeds: p[0],
+            player_address: p[1],
+            score: p[2],
+          } as Player;
+        })
+        .find((p) => {
+          if (p?.player_address && account) {
+            return p?.player_address.toLowerCase() === account.toLowerCase();
+          } else {
+            return false;
+          }
+        });
+    }
+  }, [account, game?.players, game]);
+
+  const players = useMemo(() => {
+    if (account && game?.players && game?.players.length) {
+      //TODO: We did this because sometimes it is not returning the player_address and as objects
+      return game.players.map((p: any) => {
+        return {
+          coin_feeds: p[0],
+          player_address: p[1],
+          score: p[2],
+        } as Player;
       });
     }
-  }, [account, game?.players]);
+  }, [account, game?.players, game]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
@@ -163,11 +162,13 @@ function GameEnter(props: Props) {
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = () => {
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
           setSubmitState(SubmitState.Submitted);
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
+          refetch();
         };
         const onError = () => {
           setSubmitState(SubmitState.Error);
@@ -187,13 +188,38 @@ function GameEnter(props: Props) {
         );
       }
     },
-    [game],
+    [game, selectedCoins, refetch],
   );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
+
+  const started = useMemo(() => game?.started, [game?.started]);
+  const finished = useMemo(() => game?.finished, [game?.finished]);
+  const aborted = useMemo(() => game?.aborted, [game?.aborted]);
+  const totalPlayers = useMemo(() => game?.num_players, [game?.num_players]);
+  const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
+  const gameFull = useMemo(() => {
+    if (totalPlayers && currentPlayers) {
+      return totalPlayers === currentPlayers;
+    }
+  }, [started, totalPlayers, currentPlayers]);
+
   const isDisabled = useMemo(() => {
     return selectedCoins?.length === game?.num_coins;
   }, [selectedCoins, game?.num_coins]);
+
+  const isDisabledToStart = useMemo(() => {
+    return selectedCoins?.length !== game?.num_coins;
+  }, [selectedCoins, game?.num_coins]);
+
+  const goToExplorer = useCallback(
+    (_ev: any) => {
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+        window.open(`${ExplorerURL[chainId]}${tx}`);
+      }
+    },
+    [tx, chainId],
+  );
 
   return (
     <Container maxWidth='xl' className={classes.container}>
@@ -220,26 +246,34 @@ function GameEnter(props: Props) {
               <Link
                 color='inherit'
                 component={RouterLink}
-                to={`${COINSLEAGUE_ROUTE}/enter/${address}`}>
+                to={`${COINSLEAGUE_ROUTE}/${address}`}>
                 {truncateAddress(address)}
               </Link>
             </Breadcrumbs>
           </Grid>
-          <Grid container xs={12} xl={12} sm={12}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant='h5' style={{margin: 5}}>
-              Game #{truncateAddress(address)}
-            </Typography>
+          <Grid item xs={12} xl={12} sm={12}>
+            <Box display={'flex'} alignItems={'center'}>
+              <IconButton onClick={handleBack}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant='h5' style={{margin: 5}}>
+                Game #{truncateAddress(address)}
+              </Typography>
+
+              {finished && <Chip label='Ended' color='primary' />}
+              {aborted && <Chip label='Aborted' color='primary' />}
+              {started && !finished && !aborted && (
+                <Chip label='Started' color='primary' />
+              )}
+            </Box>
           </Grid>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           {game && <SimpleCardGame {...game} />}
           {isLoading && <SimpleCardGameSkeleton />}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6} sm={4}>
           {game && (
             <CardPrize
               prizePool={Number(
@@ -251,17 +285,22 @@ function GameEnter(props: Props) {
           )}
           {isLoading && <CardPrizeSkeleton />}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6} sm={4}>
           {game && (
             <CardInfoPlayers
               num_players={game.num_players}
               current_players={game.players.length}
             />
           )}
+          {game && started && !aborted && !finished && (
+            <Box pt={2}>
+              <Countdown address={game.address} />
+            </Box>
+          )}
           {isLoading && <CardInfoPlayersSkeleton />}
         </Grid>
 
-        {!player && (
+        {!player && !isLoading && !gameFull && !aborted && (
           <Grid item xs={12} md={6} alignContent='space-around'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -299,24 +338,49 @@ function GameEnter(props: Props) {
           </Grid>
         )}
 
-        {!player && (
+        {!player && !isLoading && !gameFull && !aborted && (
           <Grid item xs={12} md={12}>
             <Grid container spacing={4} justifyContent={'flex-end'}>
               <Grid item xs={12} md={6}>
-                <Button
-                  disabled={!isDisabled}
-                  onClick={onEnterGame}
-                  variant={'contained'}
-                  color={
-                    submitState === SubmitState.Error ? 'default' : 'primary'
-                  }>
-                  {GetButtonState(submitState)}
-                </Button>
+                <Grid container>
+                  <Grid item xs={12} md={12}>
+                    {tx && (
+                      <Button variant={'text'} onClick={goToExplorer}>
+                        {submitState === SubmitState.Submitted
+                          ? 'Submitted Tx'
+                          : submitState === SubmitState.Error
+                          ? 'Tx Error'
+                          : submitState === SubmitState.Confirmed
+                          ? 'Confirmed Tx'
+                          : ''}
+                      </Button>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Button
+                      disabled={
+                        !isDisabled || submitState === SubmitState.Confirmed
+                      }
+                      onClick={onEnterGame}
+                      variant={'contained'}
+                      color={
+                        submitState === SubmitState.Error
+                          ? 'default'
+                          : 'primary'
+                      }>
+                      <ButtonState
+                        state={submitState}
+                        defaultMsg={'ENTER GAME'}
+                        confirmedMsg={'You Entered Game'}
+                      />
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
         )}
-        {player && (
+        {player && player?.player_address && (
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
@@ -325,17 +389,63 @@ function GameEnter(props: Props) {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <OnePlayerTable
-                  data={{
-                    hash: player.player_address,
-                    position: player.score.toNumber(),
-                    coins: player.coin_feeds || [],
-                    showClaim: false,
-                    claimed: false,
-                  }}
+                <PlayersTable
+                  data={[
+                    {
+                      hash: player?.player_address,
+                      score: player?.score?.toNumber() || 0,
+                      coins: (player?.coin_feeds as unknown as string[]) || [],
+                      showClaim: false,
+                      claimed: false,
+                    },
+                  ]}
+                  address={address}
+                  account={account}
+                  winner={winner}
                 />
               </Grid>
             </Grid>
+          </Grid>
+        )}
+        {players && (
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant='h6' style={{margin: 5}}>
+                  Players
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <PlayersTable
+                  data={players.map((p) => {
+                    return {
+                      hash: p?.player_address,
+                      score: p?.score?.toNumber() || 0,
+                      coins: (p?.coin_feeds as unknown as string[]) || [],
+                      showClaim: false,
+                      claimed: false,
+                    };
+                  })}
+                  address={address}
+                />
+              </Grid>
+              {!gameFull && (
+                <Grid item xs={12}>
+                  <WaitingPlayers />
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        )}
+
+        {currentPlayers && currentPlayers > 0 && !started && (
+          <Grid item xs={12}>
+            <StartGame address={address} />
+          </Grid>
+        )}
+        {started && !finished && !aborted && (
+          <Grid item xs={12}>
+            <EndGame address={address} />
           </Grid>
         )}
       </Grid>

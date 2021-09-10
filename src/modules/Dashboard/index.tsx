@@ -36,6 +36,22 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
+        path: '/magic/callback-social',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackSocial')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/magic/callback',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackEmail')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/wallet/manage-accounts',
         component: React.lazy(() => import('./Wallet/Accounts')),
       },

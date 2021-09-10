@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -8,6 +8,8 @@ import {ethers} from 'ethers';
 import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
+
+import {useInterval} from 'rooks';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,6 +42,7 @@ interface Props {
   duration: ethers.BigNumber;
   num_players: number;
   btnMessage?: string;
+  onClick: any;
 }
 
 const strPad = (str: number): string =>
@@ -61,9 +64,18 @@ function CardTimer(props: {time: number}) {
 }
 
 function SmallCardGame(props: Props): JSX.Element {
-  const { amount_to_play, start_timestamp, num_players, duration, address} = props;
+  const {
+    amount_to_play,
+    start_timestamp,
+    num_players,
+    duration,
+    address,
+    onClick,
+  } = props;
+
   const classes = useStyles();
 
+  const [countdown, setCountdown] = useState<number>();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -73,10 +85,23 @@ function SmallCardGame(props: Props): JSX.Element {
     amount_to_play.mul(num_players),
   );
   const entryAmount = ethers.utils.formatEther(amount_to_play);
-  const time = duration.toNumber();
-  const startTime =
-    Math.round(new Date().getTime() / 1000) - start_timestamp.toNumber();
-  const countDownTime = time - startTime;
+  useInterval(
+    () => {
+      const time = duration.toNumber();
+      const startTime =
+        Math.round(new Date().getTime() / 1000) - start_timestamp.toNumber();
+      setCountdown(time - startTime);
+    },
+    1000,
+    true,
+  );
+
+  const onClickEnter = useCallback(
+    (ev: any) => {
+      onClick(address);
+    },
+    [address],
+  );
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -104,13 +129,14 @@ function SmallCardGame(props: Props): JSX.Element {
           <Grid container style={{color: '#7a8398'}}>
             <Typography variant='h6'>Countdown:&nbsp;</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
-              <CardTimer time={countDownTime} />
+              {countdown && countdown > 0 && <CardTimer time={countdown} />}
+              {countdown && countdown < 0 && 'ENDED'}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
 
-      <Button className={classes.button} fullWidth>
+      <Button className={classes.button} fullWidth onClick={onClickEnter}>
         {props.btnMessage || 'VIEW'}
       </Button>
     </Container>

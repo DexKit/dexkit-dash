@@ -2,7 +2,6 @@ import React, {useState, useCallback, useEffect} from 'react';
 
 import {
   Chip,
-  makeStyles,
   Box,
   Grid,
   Typography,
@@ -18,8 +17,6 @@ import {
   InputLabel,
   Badge,
 } from '@material-ui/core';
-
-import {CremaTheme} from 'types/AppContextPropsType';
 
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';

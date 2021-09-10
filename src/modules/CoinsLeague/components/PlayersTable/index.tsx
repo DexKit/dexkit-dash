@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
@@ -17,9 +17,15 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
 
-// TODO: Fix the icons import
-import {ReactComponent as BcdIcon} from 'assets/images/icons/send-square.svg';
-import {ReactComponent as RedCoinIcon} from 'assets/images/icons/export.svg';
+import {MumbaiPriceFeeds} from 'modules/CoinsLeague/constants';
+import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
+import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
+import {ButtonState, SubmitState} from '../ButtonState';
+import Button from '@material-ui/core/Button';
+import {useWeb3} from 'hooks/useWeb3';
+import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ChainId} from 'types/blockchain';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,101 +65,319 @@ const useStyles = makeStyles((theme) => ({
 
 interface IRow {
   hash: string;
-  coins: {name: string; icon: string}[];
-  position: number;
+  coins: string[];
+  claimed: boolean;
+  showClaim?: boolean;
+  score: number;
 }
 
 interface Props {
   data?: IRow[];
+  address: string;
+  winner?: any;
+  account?: string;
 }
 
+const getIconByCoin = (coin: string) => {
+  return (
+    MumbaiPriceFeeds.find(
+      (c) => c.address.toLowerCase() === coin?.toLowerCase(),
+    )?.logo || ''
+  );
+};
+
+const getIconSymbol = (coin: string) => {
+  return (
+    MumbaiPriceFeeds.find(
+      (c) => c.address.toLowerCase() === coin?.toLowerCase(),
+    )?.base || ''
+  );
+};
+
+const truncHash = (hash: string): string => {
+  return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
+};
+
 function PlayersTable(props: Props): JSX.Element {
+  const {address, account, winner, data} = props;
   const classes = useStyles();
+  const {chainId} = useWeb3();
+  const [coins, setCoins] = useState([]);
+  const [tx, setTx] = useState<string>();
+  const {onClaimCallback, refetch, onWithdrawCallback, game} =
+    useCoinsLeague(address);
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const [submitWithdrawState, setSubmitWithdrawState] = useState<SubmitState>(
+    SubmitState.None,
+  );
 
-  const getIconByCoin = (coin: string) => {
-    switch (coin) {
-      case 'BCD':
-        return <BcdIcon />;
-      case 'RDC':
-        return <RedCoinIcon />;
-      case 'BTC':
-      case 'DOG':
-      case 'KIT':
-      case 'ADA':
-      default:
-        return coin;
+  const isWinner = useMemo(() => {
+    if (account && winner) {
+      return winner.address.toLowerCase() === account.toLowerCase();
     }
-  };
+    return false;
+  }, [account, winner]);
 
-  const truncHash = (hash: string): string => {
-    return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-  };
+  const canClaim = useMemo(() => {
+    if (isWinner && winner && data && data.length === 1) {
+      return !winner.claimed;
+    }
+  }, [isWinner, winner, data]);
+
+  const canWithdraw = useMemo(() => {
+    if (game) {
+      return game.aborted;
+    }
+  }, [game]);
+
+  const claimed = useMemo(() => {
+    if (isWinner && winner && data && data.length === 1) {
+      return winner.claimed;
+    }
+  }, [isWinner, winner, data]);
+
+  const [openViewDialog, setOpenViewDialog] = useState(false);
+  const onCloseViewCoinsDialog = useCallback((ev: any) => {
+    setOpenViewDialog(false);
+  }, []);
+
+  const onViewCoins = useCallback((c: any) => {
+    setCoins(c);
+    setOpenViewDialog(true);
+  }, []);
+
+  const onClaimGame = useCallback(
+    (ev: any) => {
+      if (address && account) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetch();
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+        onClaimCallback({
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+      }
+    },
+    [address, account, refetch, onClaimCallback],
+  );
+  const onWithdrawGame = useCallback(
+    (ev: any) => {
+      if (address && account) {
+        setSubmitWithdrawState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitWithdrawState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitWithdrawState(SubmitState.Confirmed);
+          refetch();
+        };
+        const onError = () => {
+          setSubmitWithdrawState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitWithdrawState(SubmitState.None);
+          }, 3000);
+        };
+
+        onWithdrawCallback({
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+      }
+    },
+    [address, account, refetch, onWithdrawCallback],
+  );
+
+  const goToExplorer = useCallback(
+    (_ev: any) => {
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+        window.open(`${ExplorerURL[chainId]}${tx}`);
+      }
+    },
+    [tx, chainId],
+  );
 
   return (
-    <TableContainer className={classes.container} component={Paper}>
-      <Table size='small'>
-        <TableHead>
-          <TableCell className={classes.header}>Position</TableCell>
-          <TableCell className={classes.header}>Coins</TableCell>
-          <TableCell className={classes.header}>Position</TableCell>
-        </TableHead>
+    <>
+      <ViewCoinLeagueDialog
+        open={openViewDialog}
+        onClose={onCloseViewCoinsDialog}
+        coins={coins}
+        address={address}
+      />
+      <TableContainer className={classes.container} component={Paper}>
+        <Table size='small'>
+          <TableHead>
+            <TableCell className={classes.header}>Position</TableCell>
+            <TableCell className={classes.header}>Coins</TableCell>
+            <TableCell className={classes.header}>Score</TableCell>
+            {(canClaim || claimed) && (
+              <TableCell className={classes.header}>Action</TableCell>
+            )}
+          </TableHead>
 
-        <TableBody>
-          {!props.data?.length && (
-            <TableRow>
-              <TableCell
-                colSpan={4}
-                className={classes.noBorder}
-                style={{textAlign: 'center', color: '#ffa552'}}>
-                <Typography variant='h5'>No data was found!</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-          {props.data?.map((row, i) => (
-            <TableRow>
-              <TableCell className={classes.noBorder}>
-                <Typography style={{color: '#fff'}}>
-                  <Chip className={classes.chip} label={`${i + 1}º`} />
-                  &nbsp; {truncHash(row.hash)}
-                </Typography>
-              </TableCell>
+          <TableBody>
+            {!props.data?.length && (
+              <TableRow>
+                <TableCell
+                  colSpan={4}
+                  className={classes.noBorder}
+                  style={{textAlign: 'center', color: '#ffa552'}}>
+                  <Typography variant='h5'>No data was found!</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {props.data
+              ?.sort((a, b) => b.score - a.score)
+              .map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell className={classes.noBorder}>
+                    <Typography style={{color: '#fff'}}>
+                      <Chip className={classes.chip} label={`${i + 1}º`} />
+                      &nbsp; {truncHash(row.hash)}
+                    </Typography>
+                  </TableCell>
 
-              <TableCell className={classes.noBorder}>
-                <Grid container>
-                  <AvatarGroup max={10} spacing={17}>
-                    {row.coins.map((coin) => (
-                      <Avatar
-                        className={classes.chip}
-                        style={{height: 35, width: 35}}>
-                        {getIconByCoin(coin.name)}
-                      </Avatar>
-                    ))}
-                  </AvatarGroup>
-                  <RemoveRedEye
-                    style={{
-                      color: '#fff',
-                      marginLeft: 10,
-                      alignSelf: 'center',
-                    }}
-                  />
-                </Grid>
-              </TableCell>
+                  <TableCell className={classes.noBorder}>
+                    <Grid container>
+                      <AvatarGroup max={10} spacing={17}>
+                        {row?.coins.map((coin) => (
+                          <Avatar
+                            className={classes.chip}
+                            src={getIconByCoin(coin)}
+                            style={{height: 35, width: 35}}>
+                            {getIconSymbol(coin)}
+                          </Avatar>
+                        ))}
+                      </AvatarGroup>
+                      <IconButton onClick={() => onViewCoins(row.coins)}>
+                        <RemoveRedEye
+                          style={{
+                            color: '#fff',
+                            marginLeft: 10,
+                            alignSelf: 'center',
+                          }}
+                        />
+                      </IconButton>
+                    </Grid>
+                  </TableCell>
 
-              <TableCell className={classes.noBorder}>
-                <Chip
-                  clickable
-                  style={{
-                    background: '#343A49',
-                    color: row.position > 0 ? '#0e0' : '#e00',
-                  }}
-                  label={`${row.position > 0 ? '+' : ''}${row.position}%`}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <TableCell className={classes.noBorder}>
+                    <Chip
+                      clickable
+                      style={{
+                        background: '#343A49',
+                        color: row.score > 0 ? '#0e0' : '#e00',
+                      }}
+                      label={`${row.score > 0 ? '+' : ''}${row.score}%`}
+                    />
+                  </TableCell>
+
+                  {(canClaim || claimed || canWithdraw) && (
+                    <TableCell className={classes.noBorder}>
+                      {canClaim && (
+                        <Grid
+                          container
+                          justifyContent={'center'}
+                          alignContent={'center'}
+                          alignItems={'center'}>
+                          <Grid item xs={12} md={12}>
+                            {tx && (
+                              <Button variant={'text'} onClick={goToExplorer}>
+                                {submitState === SubmitState.Submitted
+                                  ? 'Submitted Tx'
+                                  : submitState === SubmitState.Error
+                                  ? 'Tx Error'
+                                  : submitState === SubmitState.Confirmed
+                                  ? 'Confirmed Tx'
+                                  : ''}
+                              </Button>
+                            )}
+                          </Grid>
+                          <Grid item xs={12} md={12}>
+                            <Button
+                              onClick={onClaimGame}
+                              fullWidth
+                              disabled={submitState === SubmitState.Confirmed}
+                              variant={'contained'}
+                              color={
+                                submitState === SubmitState.Error
+                                  ? 'default'
+                                  : 'primary'
+                              }>
+                              <ButtonState
+                                state={submitState}
+                                defaultMsg={'CLAIM'}
+                                confirmedMsg={'Claimed'}
+                              />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                      {canWithdraw && (
+                        <Grid
+                          container
+                          justifyContent={'center'}
+                          alignContent={'center'}
+                          alignItems={'center'}>
+                          <Grid item xs={12} md={12}>
+                            {tx && (
+                              <Button variant={'text'} onClick={goToExplorer}>
+                                {submitWithdrawState === SubmitState.Submitted
+                                  ? 'Submitted Tx'
+                                  : submitWithdrawState === SubmitState.Error
+                                  ? 'Tx Error'
+                                  : submitWithdrawState ===
+                                    SubmitState.Confirmed
+                                  ? 'Confirmed Tx'
+                                  : ''}
+                              </Button>
+                            )}
+                          </Grid>
+                          <Grid item xs={12} md={12}>
+                            <Button
+                              onClick={onWithdrawGame}
+                              fullWidth
+                              variant={'contained'}
+                              disabled={submitWithdrawState === SubmitState.Confirmed}
+                              color={
+                                submitWithdrawState === SubmitState.Error
+                                  ? 'default'
+                                  : 'primary'
+                              }>
+                              <ButtonState
+                                state={submitWithdrawState}
+                                defaultMsg={'WITHDRAW'}
+                                confirmedMsg={'Withdrawed'}
+                              />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                      {claimed && 'Claimed'}
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 

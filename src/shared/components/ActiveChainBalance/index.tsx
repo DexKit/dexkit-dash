@@ -1,4 +1,4 @@
-import React, { useState, useCallback} from 'react';
+import React, { useCallback, useMemo} from 'react';
 import {
   Box,
   Paper,
@@ -14,23 +14,14 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 
-import {MyBalances} from 'types/blockchain';
-import {useNetwork} from 'hooks/useNetwork';
-// import {tokenSymbolToDisplayString} from 'utils';
-
 import {truncateAddress} from 'utils';
 
-
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-
-
 import {GreenSquare} from '../GreenSquare';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {ethers} from 'ethers';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -93,22 +84,17 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-
-
 const ActiveChainBalance = () => {
- 
-  const [amountsVisible, setAmountsVisible] = useState(true);
   const {account, balance, isLoading, network} = useActiveChainBalance();
-
-
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleToggleVisibility = useCallback(() => {
-    setAmountsVisible((value) => !value);
-  }, []);
-
+  const formattedBalance = useMemo(() => {
+    if (balance) {
+      return ethers.utils.formatEther(balance);
+    }
+  }, [balance]);
 
   const accountsModal = useAccountsModal();
 
@@ -147,26 +133,20 @@ const ActiveChainBalance = () => {
                         <Typography className={classes.usdAmount}>
                           {isLoading ? (
                             <Skeleton />
-                          ) : !balance ? (
+                          ) : !formattedBalance ? (
                             `- ${FORMAT_NETWORK_NAME(network)}`
                           ) : (
                             <>
-                             {`${balance} ${FORMAT_NETWORK_NAME(network)}`}
+                              {`${formattedBalance} ${FORMAT_NETWORK_NAME(
+                                network,
+                              )}`}
                             </>
                           )}
                         </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <IconButton onClick={handleToggleVisibility}>
-                      {amountsVisible ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
-                    </IconButton>
-                  </Grid>
+                  <Grid item></Grid>
                 </Grid>
               </Box>
             </Paper>

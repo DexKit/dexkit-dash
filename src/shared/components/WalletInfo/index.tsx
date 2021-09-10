@@ -37,14 +37,12 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-
 import {
   FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
-
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -169,11 +167,6 @@ const WalletInfo = (props: any) => {
     history.push('/wallet/manage-accounts');
   };
 
-  // const filteredBalances = useMemo(
-  //   () => balances?.filter((e) => e.currency?.symbol.toUpperCase() === 'ETH'),
-  //   [balances],
-  // );
-
   let ethBalanceValue;
 
   ethBalanceValue = balances?.value;
@@ -281,7 +274,9 @@ const WalletInfo = (props: any) => {
                   </MenuItem>
                 ))}
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
-              <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              {!notConnected && (
+                <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+              )}
             </Menu>
           </Box>
         </Grid>

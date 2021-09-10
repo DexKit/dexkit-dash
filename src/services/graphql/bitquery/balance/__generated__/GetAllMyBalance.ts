@@ -25,6 +25,10 @@ export interface GetAllMyBalance_ethereum_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetAllMyBalance_ethereum_address_balances {
@@ -71,6 +75,10 @@ export interface GetAllMyBalance_bsc_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetAllMyBalance_bsc_address_balances {
@@ -117,6 +125,10 @@ export interface GetAllMyBalance_matic_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetAllMyBalance_matic_address_balances {

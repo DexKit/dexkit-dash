@@ -25,7 +25,7 @@ import CopyButton from '../CopyButton';
 interface TokenCardProps {
   icon: React.ReactNode | React.ReactNode[];
   pair: string;
-  amount: number | string;
+  amount?: number | string;
   price24Change?: number;
   onClick?: () => void;
   coinInfo?: CoinDetailCoinGecko;

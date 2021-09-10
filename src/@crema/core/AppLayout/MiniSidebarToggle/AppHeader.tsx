@@ -12,7 +12,7 @@ import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
 import WalletInfo from 'shared/components/WalletInfo';
-import {ChainId} from 'types/blockchain';
+
 import {useWeb3} from 'hooks/useWeb3';
 import {
   GET_CHAIN_ID_NAME,
@@ -35,7 +35,7 @@ import {Token} from 'types/app';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId} = useWeb3();
+  const {chainId, forceWeb3Connect} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -183,7 +183,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  {chainId !== ChainId.Mainnet && chainId !== undefined ? (
+                  {chainId !== undefined ? (
                     <Grid item>
                       <Box
                         className={classes.badgeRoot}

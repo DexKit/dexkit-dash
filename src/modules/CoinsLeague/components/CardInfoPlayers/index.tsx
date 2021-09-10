@@ -5,8 +5,7 @@ import Container from '@material-ui/core/Container';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Game } from 'types/coinsleague';
-import {ReactComponent as People} from 'assets/images/icons/people.svg'
+import {ReactComponent as People} from 'assets/images/icons/people.svg';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -30,13 +29,21 @@ function CardInfoPlayers(props: Props): JSX.Element {
   const classes = useStyles();
   const {num_players, current_players} = props;
 
-
   return (
     <Container className={classes.container}>
-      <Grid container className={classes.innerContent}>
-        <Grid item xs={12} justifyContent={'center'} alignItems={'center'} alignContent={'center'} >
-          <Button fullWidth variant={'contained'} disabled={num_players !== current_players} startIcon={<People/>}>
-              {`PLAYERS ${current_players} (${num_players})`}
+      <Grid
+        container
+        className={classes.innerContent}
+        justifyContent={'center'}
+        alignItems={'center'}
+        alignContent={'center'}>
+        <Grid item xs={12}>
+          <Button
+            fullWidth
+            variant={'contained'}
+            disabled={num_players !== current_players}
+            startIcon={<People />}>
+            {`PLAYERS ${current_players} (${num_players})`}
           </Button>
         </Grid>
       </Grid>

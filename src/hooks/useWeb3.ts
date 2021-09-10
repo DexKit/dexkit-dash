@@ -94,10 +94,12 @@ export const useWeb3 = () => {
   const onCloseWeb3 = () => {
     const provider = getProvider();
     if (provider) {
-      closeWeb3();
-      dispatch(setEthAccount(undefined));
-      dispatch(setChainId(undefined));
-      dispatch(setWeb3State(Web3State.NotConnected));
+      closeWeb3().then(()=>{
+        dispatch(setEthAccount(undefined));
+        dispatch(setChainId(undefined));
+        dispatch(setWeb3State(Web3State.NotConnected));
+      });
+   
     }
   };
 
@@ -123,6 +125,20 @@ export const useWeb3 = () => {
           dispatch(setWeb3State(Web3State.Error));
         });
     }
+  };
+  // Used to reconnect again, even if provider already exists
+  const forceWeb3Connect = () => {
+      dispatch(setWeb3State(Web3State.Connecting));
+      connectWeb3()
+        .then((p) => {
+          subscribeProvider(p);
+          dispatch(setWeb3State(Web3State.Done));
+        })
+        .catch(() => {
+          dispatch(setWeb3State(Web3State.Error));
+        });  
+
+
   };
 
   function onActionWeb3Transaction(
@@ -153,8 +169,9 @@ export const useWeb3 = () => {
     pr.on('close', () => {
       dispatch(setEthAccount(undefined));
       dispatch(setChainId(undefined));
-      closeWeb3();
-      dispatch(setWeb3State(Web3State.NotConnected));
+      closeWeb3().then(()=>{
+        dispatch(setWeb3State(Web3State.NotConnected));
+      });
     });
 
     pr.on('accountsChanged', async (accounts: string[]) => {
@@ -178,6 +195,7 @@ export const useWeb3 = () => {
 
   return {
     onConnectWeb3,
+    forceWeb3Connect,
     getWeb3,
     account,
     chainId,

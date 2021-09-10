@@ -2,11 +2,7 @@ import {
   DialogProps,
   Dialog,
   DialogTitle,
-  DialogContent,
-  DialogActions,
   List,
-  ListItem,
-  ListItemText,
   Box,
   Typography,
   IconButton,
@@ -17,7 +13,6 @@ import React from 'react';
 import {WalletAddIcon} from '../Icons';
 import {SelectAccountListItem} from './SelectAddressListItem';
 import CloseIcon from '@material-ui/icons/Close';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 const useStyles = makeStyles((theme) => ({
   icon: {

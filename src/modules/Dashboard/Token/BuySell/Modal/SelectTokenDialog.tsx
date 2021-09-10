@@ -21,11 +21,13 @@ import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 
+
 interface Props extends DialogProps {
   title?: string;
   tokens: Token[];
   onSelectToken: (token: Token) => void;
 }
+
 
 export const SelectTokenDialog = (props: Props) => {
   const {onSelectToken, tokens, onClose, title} = props;

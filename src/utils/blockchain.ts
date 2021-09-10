@@ -1,4 +1,5 @@
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { ChainId } from 'types/blockchain';
 
 export enum NetworkCodes {
   Ethereum = 1,
@@ -51,14 +52,14 @@ export function getTransactionScannerUrl(
 export function getNetworkChainId(networkName: EthereumNetwork) {
   switch (networkName) {
     case EthereumNetwork.bsc:
-      return NetworkCodes.SmartChain;
+      return ChainId.Binance;
     case EthereumNetwork.bsc_testnet:
-      return NetworkCodes.SmartChainTestnet;
+      return ChainId.BinanceTest;
     case EthereumNetwork.ethereum:
-      return NetworkCodes.Ethereum;
+      return ChainId.Mainnet;
     case EthereumNetwork.matic:
-      return NetworkCodes.Matic;
+      return ChainId.Matic;
     default:
-      return 0;
+      return ChainId.Mainnet;
   }
 }

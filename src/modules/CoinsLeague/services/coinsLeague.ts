@@ -15,7 +15,10 @@ export const getCoinsLeagueContract = async (address: string) => {
   if (!coinsLeague) {
     const web3Wrapper = await getWeb3Wrapper();
     //@ts-ignore
-    const provider = new providers.Web3Provider(web3Wrapper.getProvider()).getSigner();
+    const provider = new providers.Web3Provider(
+       //@ts-ignore
+      web3Wrapper.getProvider(),
+    ).getSigner();
     coinsLeague = new ethers.Contract(address, coinsLeagueAbi, provider);
   }
 
@@ -31,16 +34,13 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
   const multicall = await getMulticall();
   const calls: CallInput[] = [];
   const games: Game[] = [];
-
   for (let index = 0; index < gamesAddress.length; index++) {
     const addr = gamesAddress[index];
-    console.log(addr);
     calls.push({interface: iface, target: addr, function: 'game'});
     calls.push({interface: iface, target: addr, function: 'getPlayers'});
   }
   const response = await multicall.multiCall(calls);
   const [blockNumber, results] = response;
-
   for (let index = 0; index < results.length; index += 2) {
     const g = results[index];
     const players = results[index + 1];
@@ -79,7 +79,18 @@ export const getCoinFeeds = async (
   for (let index = 0; index < feeds.length; index++) {
     coins.push(results[index]);
   }
-  return coins;
+  // TODO: check how the returned value is without object
+  // We need to map manually to properties in order to work properly
+  const mappedFeeds = coins.map((c: any) => {
+    return {
+      address: c[0],
+      start_price: c[1],
+      end_price: c[2],
+      score: c[3],
+    } as CoinFeed;
+  });
+  console.log(mappedFeeds);
+  return mappedFeeds;
 };
 
 export const joinGame = async (

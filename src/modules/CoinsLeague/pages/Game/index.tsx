@@ -2,8 +2,6 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -11,14 +9,11 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import {makeStyles} from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import CardPrize from '../../components/CardPrize';
-import SmallCardGame from '../../components/SmallCardGame';
-import PlayersTable from '../../components/OnePlayerTable';
-import SimpleCardGame from '../../components/SimpleCardGame';
+
 
 const coins = [
   {name: 'RDC', icon: '0'},

@@ -1,16 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Box,
   Dialog,
-  Tabs,
-  Tab,
-  Card,
   makeStyles,
   Typography,
   DialogTitle,
   DialogContent,
-  Chip,
+
   IconButton,
   useMediaQuery,
   useTheme,
@@ -20,13 +17,9 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {useNetwork} from 'hooks/useNetwork';
-import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
-import Tooltip from '@material-ui/core/Tooltip';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
-import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
-import {useSenderTokens} from 'hooks/useSenderTokens';
 import {Token} from 'types/app';
 
 interface Props {
