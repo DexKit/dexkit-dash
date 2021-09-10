@@ -1,1 +1,1 @@
-declare module 'browser-passworder'
+declare module 'browser-passworder';
