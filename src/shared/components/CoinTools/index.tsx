@@ -197,18 +197,6 @@ const CoinTools = (props: Props) => {
         open={showTrade}
         onClose={handleTradeClose}
       />
-      <BuySellModal
-        networkName={networkName}
-        balances={tokens}
-        open={showTrade}
-        onClose={handleTradeClose}
-      />
-      <BuySellModal
-        networkName={networkName}
-        balances={tokens}
-        open={showTrade}
-        onClose={handleTradeClose}
-      />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop
         className={classes.backdrop}
