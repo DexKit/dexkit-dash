@@ -167,6 +167,12 @@ const WalletInfo = (props: any) => {
     history.push('/wallet/manage-accounts');
   };
 
+  const onGoToLoginWallet = () => {
+    handleClose();
+    history.push('/onboarding/login-wallet')
+
+  }
+
   let ethBalanceValue;
 
   ethBalanceValue = balances?.value;
@@ -245,7 +251,7 @@ const WalletInfo = (props: any) => {
               onClose={handleClose}>
               <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
               {notConnected && (
-                <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>
+                <MenuItem onClick={onGoToLoginWallet}>Connect Wallet</MenuItem>
               )}
               {accounts
                 .filter(

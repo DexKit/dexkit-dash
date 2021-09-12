@@ -56,17 +56,17 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
       currentRoute.auth.length >= 1 &&
       currentRoute.auth.includes('wallet')
     ) {
-      history.push('/no-wallet');
+      history.push('/onboarding/login-wallet');
     } else if (pathname === '/no-wallet' && ethAccount) {
       // @ts-ignore
       if (pathname === '/') {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
       // @ts-ignore
       else if (initialPath !== '/no-wallet') {
         history.push(initialPath);
       } else {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
     }
 
@@ -76,17 +76,17 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
       currentRoute.auth.length >= 1 &&
       currentRoute.auth.includes('connect-wallet')
     ) {
-      history.push('/connect-wallet');
+      history.push('/onboarding/login-wallet');
     } else if (pathname === '/connect-wallet' && ethAccount) {
       // @ts-ignore
       if (pathname === '/') {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
       // @ts-ignore
       else if (initialPath !== '/no-wallet') {
         history.push(initialPath);
       } else {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
     }
   }, [

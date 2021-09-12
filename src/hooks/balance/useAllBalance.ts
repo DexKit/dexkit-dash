@@ -99,7 +99,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           });
       }
     },
-    {staleTime: 60 * 60},
+    {staleTime: 1000  * 20},
   );
 
   const usdValuesQuery = useQuery(
@@ -116,7 +116,7 @@ export const useAllBalance = (defaultAccount?: string) => {
         return getTokens(tokens);
       }
     },
-    {staleTime: 60 * 60},
+    {staleTime: 1000  * 20},
   );
   const data = useMemo(() => {
     if (usdValuesQuery.data && myBalancesQuery.data) {
