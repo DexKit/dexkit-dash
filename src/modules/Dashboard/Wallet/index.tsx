@@ -40,6 +40,7 @@ import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
+import NFTTable from './components/NFTTable';
 
 type Params = {
   account: string;
@@ -70,7 +71,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     history.push({search: searchParams.toString()});
     setValue(newValue);
   };
-  const {loading, error, data, loadingUsd} = useAllBalance(defaultAccount);
+  const {loading, error, data, nftBalances, loadingUsd} = useAllBalance(defaultAccount);
 
   useEffect(() => {
     if (
@@ -134,6 +135,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         }}
                         aria-label='wallet tabs'>
                         <CustomTab value='assets' label={'Assets'} />
+                        <CustomTab value='nfts' label={'NFTs'} />
                         <CustomTab value='trade-history' label={'History'} />
                       </CustomTabs>
                     </Grid>
@@ -144,6 +146,14 @@ const WalletTabs: React.FC<Props> = (props) => {
                           loading={loading}
                           error={error}
                           data={data}
+                        />
+                      </TabPanel>
+                      <TabPanel className={classes.zeroPadding} value='nfts'>
+                        <NFTTable
+                          account={account as string}
+                          loading={loading}
+                          error={error}
+                          data={nftBalances}
                         />
                       </TabPanel>
                       <TabPanel value='trade-history'>

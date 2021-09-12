@@ -3,6 +3,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {
   GetAllMyBalance,
   GetAllMyBalanceVariables,
+  GetAllMyBalance_ethereum_address_balances,
 } from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
 import {BITQUERY_ALL_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
 import {getTokens} from 'services/rest/coingecko';
@@ -21,6 +22,30 @@ export const MapBalancesToNetwork = (
     return [];
   }
   return balances.map((t: any) => {
+    const addr =
+      t.currency?.address === '-' ? coin : t?.currency?.address?.toLowerCase();
+
+    return (<MyBalances>{
+      currency: {
+        ...t.currency,
+        address: addr,
+      },
+      network: network,
+      value: t.value,
+      // enquanto não vem a solução pela bitquery
+    }) as MyBalances;
+  });
+};
+
+export const MapNFTBalancesToNetwork = (
+  balances: GetAllMyBalance_ethereum_address_balances[] | null | undefined,
+  network: any,
+  coin: string,
+): MyBalances[] => {
+  if (!balances) {
+    return [];
+  }
+  return balances.filter(b=> b.currency?.tokenType === 'ERC721').map((t: any) => {
     const addr =
       t.currency?.address === '-' ? coin : t?.currency?.address?.toLowerCase();
 
@@ -95,7 +120,28 @@ export const useAllBalance = (defaultAccount?: string) => {
                   'matic',
                 ),
               );
-            return allMyBalances.filter((b) => b?.value && b?.value > 0) || [];
+              const allMyNFTBalances = MapNFTBalancesToNetwork(
+                balances.data.ethereum?.address[0].balances,
+                EthereumNetwork.ethereum,
+                'eth',
+              )
+                .concat(
+                  MapNFTBalancesToNetwork(
+                    balances.data.bsc?.address[0].balances,
+                    EthereumNetwork.bsc,
+                    'bnb',
+                  ),
+                )
+                .concat(
+                  MapNFTBalancesToNetwork(
+                    balances.data.matic?.address[0].balances,
+                    EthereumNetwork.matic,
+                    'matic',
+                  ),
+                );
+
+
+            return {balances: allMyBalances.filter((b) => b?.value && b?.value > 0) || [], nftBalances: allMyNFTBalances   };
           });
       }
     },
@@ -105,9 +151,9 @@ export const useAllBalance = (defaultAccount?: string) => {
   const usdValuesQuery = useQuery(
     ['GetCoingeckoUsdValues', myBalancesQuery.data],
     () => {
-      const balances = myBalancesQuery.data;
-      if (balances) {
-        const tokens = balances.map((b) => {
+      const myBalances = myBalancesQuery.data;
+      if (myBalances && myBalances.balances) {
+        const tokens = myBalances.balances.map((b) => {
           return {
             network: b.network,
             address: b.currency?.address as string,
@@ -119,15 +165,15 @@ export const useAllBalance = (defaultAccount?: string) => {
     {staleTime: 60 * 60},
   );
   const data = useMemo(() => {
-    if (usdValuesQuery.data && myBalancesQuery.data) {
+    if (usdValuesQuery.data && myBalancesQuery.data?.balances) {
       return (
-        MapBalancesToUSDValue(myBalancesQuery.data, usdValuesQuery.data).filter(
+        MapBalancesToUSDValue(myBalancesQuery.data?.balances, usdValuesQuery.data).filter(
           (b) => b?.value && b?.value > 0,
         ) || []
       );
     }
-    if (myBalancesQuery.data) {
-      return myBalancesQuery.data || [];
+    if (myBalancesQuery.data?.balances) {
+      return myBalancesQuery.data?.balances || [];
     }
     return [];
   }, [usdValuesQuery.data, myBalancesQuery.data]);
@@ -138,6 +184,7 @@ export const useAllBalance = (defaultAccount?: string) => {
     loading: myBalancesQuery.isLoading,
     error,
     data,
+    nftBalances: myBalancesQuery.data?.nftBalances,
     loadingUsd: usdValuesQuery.isLoading,
     errorUSD: usdValuesQuery.error,
   };
