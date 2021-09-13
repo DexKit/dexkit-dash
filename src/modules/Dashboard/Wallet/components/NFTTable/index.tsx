@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 
 import {
   Chip,
@@ -26,11 +26,12 @@ import {Search} from '@material-ui/icons';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import AssetList from '../AssetList'
+import NFTList from './NFTList'
 
 interface AssetTableProps {
-  balances: MyBalances[];
+  balances?: MyBalances[];
   loading?: boolean;
+  error?: boolean | { message: string };
 }
 
 enum TokenOrderBy {
@@ -52,8 +53,11 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
     setSearch(e.target.value);
   }, []);
 
-  const filteredBalances = useCallback(() => {
+  const filteredBalances = useMemo(() => {
     let results = balances;
+    if(!results){
+      return [];
+    }
 
     if (filter === 'eth') {
       results = results.filter((b) => b.network === EthereumNetwork.ethereum);
@@ -245,7 +249,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances().length} Collections
+                {filteredBalances.length} Collections
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -278,7 +282,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <AssetList balances={filteredBalances()} />
+          <NFTList balances={filteredBalances} />
         </Grid>
       </Grid>
     </>

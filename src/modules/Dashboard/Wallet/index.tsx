@@ -150,10 +150,9 @@ const WalletTabs: React.FC<Props> = (props) => {
                       </TabPanel>
                       <TabPanel className={classes.zeroPadding} value='nfts'>
                         <NFTTable
-                          account={account as string}
                           loading={loading}
                           error={error}
-                          data={nftBalances}
+                          balances={nftBalances}
                         />
                       </TabPanel>
                       <TabPanel value='trade-history'>

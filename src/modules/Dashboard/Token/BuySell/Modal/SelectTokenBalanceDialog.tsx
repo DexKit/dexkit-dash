@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState} from 'react';
+import React, {useMemo, useCallback, useState} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -32,54 +32,54 @@ interface Props extends DialogProps {
 export type TokenBalance = Token & {
   value?: number | null;
   valueInUsd?: number | null;
-}
-
+};
 
 export const SelectTokenBalanceDialog = (props: Props) => {
   const {onSelectToken, tokens, balances, onClose, title} = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
-  const [allTokens, setAllTokens] = useState<TokenBalance[]>([]);
-  const [filteredTokens, setFilteredCoins] = useState<TokenBalance[]>([]);
 
-  useEffect(() => {
-    if(tokens && tokens.length && balances && balances.length ){
-    const tokenBalances = tokens.map((t) => {
-      const balance = balances
-      .find(b => b.currency?.address?.toLowerCase() === t.address.toLowerCase())
-      return {
-        ...t,
-        ...balance,
-      } as TokenBalance
-      // Sort coins first by usd and then by balance
-    }).sort((a, b) => {
-      if(a?.valueInUsd || b?.valueInUsd){
-       return  (b?.valueInUsd || 0)  - (a?.valueInUsd || 0)
-      }
-      return (b?.value || 0)  - (a?.value || 0) 
-    });
-
-    setAllTokens(tokenBalances)
-    setFilteredCoins(tokenBalances);
-  }
+  const allTokens = useMemo(() => {
+    if (tokens && tokens.length) {
+      return  tokens
+        .map((t) => {
+          const balance = balances.find(
+            (b) =>
+              b.currency?.address?.toLowerCase() === t.address.toLowerCase(),
+          );
+          return {
+            ...t,
+            ...balance,
+          } as TokenBalance;
+          // Sort coins first by usd and then by balance
+        })
+        .sort((a, b) => {
+          if (a?.valueInUsd || b?.valueInUsd) {
+            return (b?.valueInUsd || 0) - (a?.valueInUsd || 0);
+          }
+          return (b?.value || 0) - (a?.value || 0);
+        });
+    }
+    return [];
   }, [tokens, balances]);
+
+  const filteredTokens = useMemo(()=> {
+    return allTokens.filter(
+      (coin: Token) =>
+        coin.name.toLowerCase().startsWith(filterText.toLowerCase()) ||
+        coin.symbol.toLowerCase().startsWith(filterText.toLowerCase()),
+    );
+  },[allTokens, filterText])
+
+
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-
       setFilterText(value);
-
-      const filtered = allTokens.filter(
-        (coin: Token) =>
-          coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          coin.symbol.toLowerCase().startsWith(value.toLowerCase()),
-      );
-
-      setFilteredCoins(filtered);
     },
-    [allTokens],
+    [],
   );
 
   const handleSelectToken = useCallback(
@@ -91,7 +91,6 @@ export const SelectTokenBalanceDialog = (props: Props) => {
 
   const handleClose = useCallback(() => {
     setFilterText('');
-
     if (onClose) {
       onClose({}, 'escapeKeyDown');
     }

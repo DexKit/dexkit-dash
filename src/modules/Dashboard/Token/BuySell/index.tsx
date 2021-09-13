@@ -25,6 +25,7 @@ import {
   BINANCE_SYMBOL_URL,
   MATIC_SYMBOL_URL,
 } from 'shared/constants/Coins';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
 interface Props {
   disableReceive?: boolean;
@@ -81,8 +82,8 @@ const BuySell: React.FC<Props> = ({
   const history = useHistory();
 
   const classes = useStyles();
-
-  const {chainId, account, web3State} = useWeb3();
+  const account = useDefaultAccount();
+  const {chainId, account: web3Account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -130,6 +131,7 @@ const BuySell: React.FC<Props> = ({
         if (e.network === EthereumNetwork.ethereum && tokensETH.length > 0 && !tokenLogoUri) {
           if (e?.currency?.symbol.toLowerCase() === 'eth') {
             tokenLogoUri = ETH_SYMBOL_URL;
+            console.log('eth logo set');
           } else {
             const token = tokensETH.find(
               (t: any) =>
