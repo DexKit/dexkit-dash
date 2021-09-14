@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   Box,
   Paper,
@@ -16,7 +16,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 
 import {truncateAddress} from 'utils';
 
-import {GreenSquare} from '../GreenSquare';
+import {StatusSquare} from '../StatusSquare';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
@@ -117,7 +117,7 @@ const ActiveChainBalance = () => {
                   <Grid item>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item>
-                        <GreenSquare />
+                        <StatusSquare color={theme.palette.success.main} />
                       </Grid>
                       <Grid item>
                         <Typography variant='body2'>

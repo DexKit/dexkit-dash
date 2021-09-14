@@ -41,7 +41,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     display: 'flex',
   },
   mobileContainer: {
-    margin: '0 24px',
+    margin: '0 0px',
   },
   mobileChartsContainer: {
     padding: 0,

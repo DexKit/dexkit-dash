@@ -10,10 +10,9 @@ import AppFooter from '../AppLayout/AppFooter';
 import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
-import {isMobile} from 'web3modal';
-import Container from '@material-ui/core/Container';
-import AppBottomNavigation from 'shared/components/AppBottomNavigation';
 import {useTheme} from '@material-ui/core';
+import {useMobile} from 'hooks/useMobile';
+import {makeStyles} from '@material-ui/core';
 
 interface TransitionWrapperProps {
   children: ReactNode;
@@ -43,10 +42,26 @@ interface ContentViewProps {
   children?: ReactNode;
 }
 
+const useStyles = makeStyles((theme) => ({
+  mobileScrollContainer: {
+    display: 'flex',
+    overflowY: 'scroll',
+    flexDirection: 'column',
+    position: 'relative',
+    height: '100%',
+    padding: theme.spacing(4),
+  },
+}));
+
 const ContentView: React.FC<ContentViewProps> = () => {
   const theme = useTheme();
-  return isMobile() ? (
-    <Scrollbar>
+
+  const isMobile = useMobile();
+
+  const classes = useStyles();
+
+  return isMobile ? (
+    <div className={classes.mobileScrollContainer}>
       <Box
         display='flex'
         flex={1}
@@ -58,7 +73,7 @@ const ContentView: React.FC<ContentViewProps> = () => {
         </Suspense>
       </Box>
       <AppFooter />
-    </Scrollbar>
+    </div>
   ) : (
     <Scrollbar>
       <Box

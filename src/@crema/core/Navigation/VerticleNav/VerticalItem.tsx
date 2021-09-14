@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 
 import {Badge, NavLink} from '../../../index';
@@ -8,6 +8,8 @@ import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
 import CustomIcon from 'shared/components/CustomIcon';
+import {useDispatch} from 'react-redux';
+import {toggleNavCollapsed} from 'redux/actions';
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -36,23 +38,30 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
       // parsing the url's here
       const parsedPath = item.url.split('/').filter((e) => e);
       const currentPath = location.pathname.split('/').filter((e) => e);
-      if(currentPath.length > 1 && currentPath[0] === 'wallet' && parsedPath.length > 0 && parsedPath[0] === 'wallet'){
-        return true
+      if (
+        currentPath.length > 1 &&
+        currentPath[0] === 'wallet' &&
+        parsedPath.length > 0 &&
+        parsedPath[0] === 'wallet'
+      ) {
+        return true;
       }
-    
     }
 
-     //TODO: special case for the Explorer path
-     if (item.url && location.pathname) {
+    //TODO: special case for the Explorer path
+    if (item.url && location.pathname) {
       // parsing the url's here
       const parsedPath = item.url.split('/').filter((e) => e);
       const currentPath = location.pathname.split('/').filter((e) => e);
-      if(currentPath.length > 1 && currentPath[0] === 'explorer' && parsedPath.length > 0 && parsedPath[0] === 'explorer'){
-        return true
+      if (
+        currentPath.length > 1 &&
+        currentPath[0] === 'explorer' &&
+        parsedPath.length > 0 &&
+        parsedPath[0] === 'explorer'
+      ) {
+        return true;
       }
-    
     }
-
 
     if (item.url && location.pathname) {
       // parsing the url's here
@@ -72,13 +81,22 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
     return false;
   };
 
+  const dispatch = useDispatch();
+
+  const handleClick = useCallback(() => {
+    let url = getUrl();
+
+    dispatch(toggleNavCollapsed());
+
+    history.push(url);
+  }, [dispatch, history, getUrl]);
+
   return (
     <ListItem
       className={classes.item}
       selected={isActive()}
       button
-      to={getUrl()}
-      component={NavLink}>
+      onClick={handleClick}>
       {item.icon && (
         <ListItemIcon className={classes.itemIcon}>
           {item.customIcon ? (
