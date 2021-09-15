@@ -22,6 +22,8 @@ import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import TokensList from '../components/setups/erc20/TokensList';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 export default () => {
   const history = useHistory();
 
@@ -46,14 +48,32 @@ export default () => {
   return (
     <Box py={{xs: 8}}>
       <Box mb={4}>
-        <Breadcrumbs>
-          <Link color='inherit' component={RouterLink} to='/'>
-            <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-          </Link>
-          <Link color='inherit' component={RouterLink} to='/wizard'>
-            Wizard
-          </Link>
-        </Breadcrumbs>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Breadcrumbs>
+              <Link color='inherit' component={RouterLink} to='/'>
+                <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+              </Link>
+              <Link color='inherit' component={RouterLink} to='/wizard'>
+                Wizard
+              </Link>
+            </Breadcrumbs>
+          </Grid>
+          <Grid item xs={12}>
+            <Box display='flex' alignItems='center' alignContent='center'>
+              <Box
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                mr={2}>
+                <IconButton size='small' component={RouterLink} to={'/'}>
+                  <ArrowBackIcon />
+                </IconButton>
+              </Box>
+              <Typography variant='h5'>Wizard</Typography>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12} sm={6}>

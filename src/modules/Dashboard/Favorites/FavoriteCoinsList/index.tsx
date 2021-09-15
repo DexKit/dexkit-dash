@@ -1,21 +1,15 @@
-import React, {useCallback} from 'react';
-import {makeStyles, Typography, Link, Box, Grid} from '@material-ui/core';
+import React from 'react';
+import {Typography, Link, Box, Grid} from '@material-ui/core';
 
-import FavoriteItem from './FavoriteItem';
 import {FavoriteCoin} from 'redux/_ui/reducers';
 
 import {CoinItemCoinGecko} from 'types/coingecko';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
-const useStyles = makeStyles(() => ({
-  borderBottomClass: {
-    borderBottom: '0 none',
-  },
-}));
+import {ReactComponent as EmptyGhost} from 'assets/images/state/empty-ghost.svg';
 
 interface FavoriteCoinsListProps {
   favoriteCoins: FavoriteCoin[];
@@ -25,52 +19,45 @@ interface FavoriteCoinsListProps {
 
 const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   favoriteCoins,
-  marketData,
-  onRemoveCoin,
 }) => {
   const favoritesWithMarket = useFavoritesWithMarket();
-
-  const history = useHistory();
-
-  const handleClick = useCallback((network: string, address: string) => {
-    history.push(`/${network}/token/${address}`);
-  }, []);
 
   return (
     <Box>
       <Grid container spacing={2}>
-        {favoritesWithMarket.data.map((favorite, index) => (
-          <Grid key={index} item xs={12}>
-            <FavoriteListItem
-              coin={favorite.coin}
-              amount={favorite.market?.current_price || 0}
-              dayChange={favorite.market?.price_change_percentage_24h || 0}
-            />
+        {favoriteCoins && favoriteCoins.length > 0 ? (
+          favoritesWithMarket.data.map((favorite, index) => (
+            <Grid key={index} item xs={12}>
+              <FavoriteListItem
+                coin={favorite.coin}
+                amount={favorite.market?.current_price || 0}
+                dayChange={favorite.market?.price_change_percentage_24h || 0}
+              />
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              py={4}
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'>
+              <EmptyGhost />
+            </Box>
+            <Typography gutterBottom variant='body1' align='center'>
+              You don't have favorites yet.
+            </Typography>
+            <Typography variant='body2' align='center' color='primary'>
+              <Link
+                to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+                component={RouterLink}>
+                Go to explorer
+              </Link>
+            </Typography>
           </Grid>
-        ))}
+        )}
       </Grid>
-      {favoriteCoins && favoriteCoins.length === 0 && (
-        <Grid item xs={12}>
-          <Typography
-            variant='h5'
-            display={'block'}
-            align={'center'}
-            color={'primary'}>
-            You don't have favorite coins yet, explore coins on
-          </Typography>
-          <Typography
-            variant='h5'
-            display={'block'}
-            align={'center'}
-            color={'primary'}>
-            <Link
-              to={`/${EthereumNetwork.ethereum}/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
-              component={RouterLink}>
-              Trade page.
-            </Link>
-          </Typography>
-        </Grid>
-      )}
     </Box>
   );
 };

@@ -20,7 +20,7 @@ import {Fonts} from '../../constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
 
-import { tokenAmountInUnits} from 'utils/tokens';
+import {tokenAmountInUnits} from 'utils/tokens';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
@@ -43,11 +43,10 @@ import {
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 
-import { useNativeSingleBalance } from 'hooks/balance/useNativeSingleBalance';
+import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import SwitchNetworkDialog from '../SwitchNetworkDialog';
 import {StatusSquare} from '../StatusSquare';
-
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -289,7 +288,7 @@ const WalletInfo = (props: any) => {
       <Button
         variant='contained'
         color='primary'
-        size='large'
+        size={isMobile ? 'small' : 'large'}
         onClick={onGoToManageWallet}
         startIcon={<WalletAddIcon />}>
         Connect wallet

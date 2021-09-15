@@ -248,11 +248,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <Grid item>
                     <Notifications />
                   </Grid>
-                  <Grid item>
+                  {/* <Grid item>
                     <AppBarButton>
                       <SettingsIcon />
                     </AppBarButton>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
             </Grid>

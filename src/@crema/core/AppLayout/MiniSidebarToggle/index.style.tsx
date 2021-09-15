@@ -123,6 +123,9 @@ const useStyles = makeStyles((theme: CremaTheme) => {
     accountsDialgContent: {
       padding: theme.spacing(4),
     },
+    accountsFixedHeight: {
+      minHeight: '80vh',
+    },
   };
 });
 export default useStyles;

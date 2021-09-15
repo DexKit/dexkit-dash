@@ -139,6 +139,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           </ListItemIcon>
           <ListItemText primary='Polygon' />
         </ListItem>
+        <Divider />
         <ListItem
           button
           onClick={handleRopsten}
