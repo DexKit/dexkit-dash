@@ -158,7 +158,6 @@ const OrderContent: React.FC<Props> = (props) => {
         currentStep === Steps.LIMIT) &&
       !isRequestConfirmed
     ) {
-      console.log('OrderContent: data changed');
       fetchInfo();
       setSeconds(0);
     } else if (currentStepIndex === -1) {

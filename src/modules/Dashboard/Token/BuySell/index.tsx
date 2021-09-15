@@ -17,14 +17,17 @@ import {
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
-import {MyBalances, Web3State} from 'types/blockchain';
+import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {useHistory} from 'react-router-dom';
 import {
   ETH_SYMBOL_URL,
   BINANCE_SYMBOL_URL,
   MATIC_SYMBOL_URL,
+  ETHEREUM_NATIVE_COINS_BY_CHAIN,
 } from 'shared/constants/Coins';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { TOKENS_LIST } from "shared/constants/tokens";
 
 interface Props {
   disableReceive?: boolean;
@@ -81,8 +84,8 @@ const BuySell: React.FC<Props> = ({
   const history = useHistory();
 
   const classes = useStyles();
-
-  const {chainId, account, web3State} = useWeb3();
+  const account = useDefaultAccount();
+  const {chainId, account: web3Account, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -111,6 +114,12 @@ const BuySell: React.FC<Props> = ({
   });
 
   useEffect(() => {
+    if(chainId && chainId === ChainId.Ropsten){
+      const coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
+      setSelect1([coin, ...TOKENS_LIST[chainId] as Token[]]);
+      return;
+    }
+
     if (networkName === EthereumNetwork.bsc) {
       setSelect1(tokensBSC);
     } else if (networkName === EthereumNetwork.matic) {
@@ -118,7 +127,7 @@ const BuySell: React.FC<Props> = ({
     } else {
       setSelect1(tokensETH);
     }
-  }, [networkName, tokensETH, tokensBSC, tokensMATIC]);
+  }, [networkName, tokensETH, tokensBSC, tokensMATIC, chainId]);
 
   // Here, we map the balances with logos from the token lists
   useEffect(() => {
@@ -224,7 +233,7 @@ const BuySell: React.FC<Props> = ({
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list
   useEffect(() => {
-    if (tokenFrom === undefined && select0.length > 0) {
+    if (tokenFrom === undefined && select0.length > 0 && currentTab === 0) {
       const _token = select0.find(
         (t) =>
           t.symbol.toUpperCase() ===

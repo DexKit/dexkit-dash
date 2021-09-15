@@ -1,6 +1,6 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useEffect, useState} from 'react';
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query';
 
 import {Web3State} from 'types/blockchain';
 import {
@@ -13,6 +13,7 @@ import {
   claim,
   getGamesData,
   getCoinFeeds,
+  getCurrentCoinFeedsPrice,
 } from '../services/coinsLeague';
 
 interface CallbackProps {
@@ -149,33 +150,42 @@ export const useCoinsLeague = (address?: string) => {
     [web3State, address],
   );
 
-  const gameQuery = useQuery(
-    ['GetGameAdddress', web3State, address],
-    () => {
-      if (
-        web3State !== Web3State.Done ||!address
-      ) {
-        return;
-      }
-      return getGamesData([address]);
-    },
-  );
+  const gameQuery = useQuery(['GetGameAdddress', web3State, address], () => {
+    if (web3State !== Web3State.Done || !address) {
+      return;
+    }
+    return getGamesData([address]);
+  });
   const coinFeedQuery = useQuery(
     ['GetCoinsFeed', web3State, address, gameQuery.data],
     () => {
       if (
-        web3State !== Web3State.Done ||!address || !gameQuery.data || !gameQuery.data[0]
+        web3State !== Web3State.Done ||
+        !address ||
+        !gameQuery.data ||
+        !gameQuery.data[0]
       ) {
         return;
       }
       // TODO: Error on query is returning data without being on object
-      const feeds = gameQuery.data[0].players.map((p: any)=> (p[0] as string[]))
+      const feeds = gameQuery.data[0].players.map((p: any) => p[0] as string[]);
       const flatFeeds = feeds.flat(1);
       const uniqueFeeds = [...new Set(flatFeeds)];
       return getCoinFeeds(uniqueFeeds, address);
     },
   );
 
+  const currentFeedPriceQuery = useQuery(
+    ['GetCurrentFeedQuery', web3State, address, coinFeedQuery.data],
+    () => {
+      if (web3State !== Web3State.Done || !address || !coinFeedQuery.data) {
+        return;
+      }
+      // TODO: Error on query is returning data without being on object
+      const feeds = coinFeedQuery.data.map((a) => a.address);
+      return getCurrentCoinFeedsPrice(feeds, address);
+    },
+  );
 
   return {
     onJoinGameCallback,
@@ -190,7 +200,9 @@ export const useCoinsLeague = (address?: string) => {
     gameQuery,
     coinFeedQuery,
     allFeeds: coinFeedQuery.data && coinFeedQuery.data,
+    currentPrices: currentFeedPriceQuery.data && currentFeedPriceQuery.data,
     loadingFeeds: coinFeedQuery.isLoading,
-
+    currentFeedPriceQuery,
+    loadingCurrentFeeds: currentFeedPriceQuery.isLoading,
   };
 };

@@ -410,6 +410,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 <Analytics
                   token={tokenInfo}
                   tokenMarket={tokenMarket}
+                  priceUSD={priceQuote?.price as string}
                   loading={loadingToken || loadingTokenMarket}
                 />
               </Grid>

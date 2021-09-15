@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState} from 'react';
+import React, {useEffect, useCallback, useState, useMemo} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -35,28 +35,21 @@ export const SelectTokenDialog = (props: Props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
-  const [filteredTokens, setFilteredCoins] = useState<Token[]>([]);
-
-  useEffect(() => {
-    setFilteredCoins(tokens);
-  }, [tokens]);
-
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-
       setFilterText(value);
-
-      const filtered = tokens.filter(
-        (coin: Token) =>
-          coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          coin.symbol.toLowerCase().startsWith(value.toLowerCase()),
-      );
-
-      setFilteredCoins(filtered);
     },
     [tokens],
   );
+
+  const filteredTokens = useMemo(()=> {
+    return tokens.filter(
+      (coin: Token) =>
+        coin.name.toLowerCase().startsWith(filterText.toLowerCase()) ||
+        coin.symbol.toLowerCase().startsWith(filterText.toLowerCase()),
+    );
+  },[tokens, filterText])
 
   const handleSelectToken = useCallback(
     (token: Token) => {

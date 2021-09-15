@@ -138,6 +138,10 @@ const getBalance = (account: string) => {
   return getWeb3()?.eth.getBalance(account);
 };
 
+const getBalanceWithProvider = (account: string, pr: any) => {
+ return new Web3(provider).eth.getBalance(account);
+};
+
 export {
   connectWeb3,
   getWeb3,
@@ -151,4 +155,5 @@ export {
   web3Transaction,
   getEthers,
   getBalance,
+  getBalanceWithProvider,
 };

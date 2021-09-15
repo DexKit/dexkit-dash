@@ -29,6 +29,10 @@ interface OrderProps {
   onClose: () => void;
 }
 
+
+
+
+
 const OrderDialog: React.FC<OrderProps> = (props) => {
   const {
     open,
@@ -76,7 +80,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
         name: '',
         symbol: getNativeCoinWrappedFromNetworkName(networkName).toUpperCase(),
       });
-
+      // Refactor this 
       if (
         (((tokenFrom.symbol.toUpperCase() === 'ETH' &&
           tokenTo.symbol.toUpperCase() === 'WETH') ||
@@ -87,7 +91,12 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
           tokenTo.symbol.toUpperCase() === 'WBNB') ||
           (tokenFrom.symbol.toUpperCase() === 'WBNB' &&
             tokenTo.symbol.toUpperCase() === 'BNB')) &&
-          networkName === EthereumNetwork.bsc)
+          networkName === EthereumNetwork.bsc)  ||
+          (((tokenFrom.symbol.toUpperCase() === 'MATIC' &&
+            tokenTo.symbol.toUpperCase() === 'WMATIC') ||
+            (tokenFrom.symbol.toUpperCase() === 'WMATIC' &&
+              tokenTo.symbol.toUpperCase() === 'MATIC')) &&
+            networkName === EthereumNetwork.matic)
       ) {
         setIsConvert(true);
         stepsFn = [Steps.APPROVE, Steps.CONVERT];

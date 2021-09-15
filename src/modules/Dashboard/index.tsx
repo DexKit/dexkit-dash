@@ -4,14 +4,6 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/overview',
-        component: React.lazy(() => import('./Overview')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
         path: '/wallet/send',
         component: React.lazy(() => import('./Wallet/pages/ShareSend')),
       },
@@ -62,6 +54,14 @@ export const dashBoardConfigs = [
       {
         path: '/wallet/overview/:networkName/:address',
         component: React.lazy(() => import('./Wallet/pages/Overview')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/wallet/overview-collection/:networkName/:address',
+        component: React.lazy(() => import('./Wallet/pages/OverviewCollection')),
       },
     ],
   },
