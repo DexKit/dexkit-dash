@@ -36,7 +36,7 @@ export const NFTList = (props: AssetListProps) => {
 
   const handleClick = useCallback(
     (network: string, address: string) => {
-      history.push(`/wallet/overview/${network}/${address}`);
+      history.push(`/wallet/overview-collection/${network}/${address}`);
     },
     [history],
   );

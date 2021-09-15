@@ -1,4 +1,6 @@
-import {Coin} from 'types/app';
+import {Coin, Token} from 'types/app';
+import { ChainId } from 'types/blockchain';
+import { GET_NATIVE_COINS } from 'utils';
 import {Network} from './Bitquery';
 
 export const ETH_SYMBOL_URL =
@@ -33,3 +35,41 @@ export const COINS: Coin[] = [
     coingecko_id: 'dogecoin',
   },
 ];
+
+const ETH: Token = {
+  name: 'Ether',
+  symbol: 'ETH',
+  decimals: 18,
+  address: 'eth',
+
+};
+
+const BNB: Token = {
+  name: 'Binance',
+  symbol: 'BNB',
+  decimals: 18,
+  address: 'bnb',
+
+};
+
+const MATIC: Token = {
+  name: 'Polygon',
+  symbol: 'MATIC',
+  decimals: 18,
+  address: 'matic',
+}
+
+export const ETHEREUM_NATIVE_COINS_BY_CHAIN = {
+  [ChainId.Mainnet]: ETH,
+  [ChainId.Rinkeby]: ETH,
+  [ChainId.Ropsten]: ETH,
+  [ChainId.Kovan]: ETH,
+  [ChainId.Goerli]: ETH,
+  [ChainId.Ganache]: ETH,
+  [ChainId.Binance]: BNB,
+  [ChainId.BinanceTest]: BNB,
+  [ChainId.Mumbai]: MATIC,
+  [ChainId.Matic]: MATIC,
+  
+  
+}

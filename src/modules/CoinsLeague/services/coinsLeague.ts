@@ -1,5 +1,5 @@
 import {CallInput} from '@indexed-finance/multicall';
-import {Contract, ContractTransaction, ethers, providers} from 'ethers';
+import {BigNumber, Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {getMulticall} from 'services/multicall';
 import {getWeb3Wrapper} from 'services/web3modal';
@@ -89,7 +89,45 @@ export const getCoinFeeds = async (
       score: c[3],
     } as CoinFeed;
   });
-  console.log(mappedFeeds);
+  return mappedFeeds;
+};
+
+/**
+ * return all coin feeds at once
+ * @param games
+ */
+ export const getCurrentCoinFeedsPrice = async (
+  feeds: string[],
+  gameAddress: string,
+): Promise<{price: BigNumber, feed: string}[]> => {
+  const iface = new Interface(coinsLeagueAbi);
+  const multicall = await getMulticall();
+  const calls: CallInput[] = [];
+  const coins: CoinFeed[] = [];
+  for (let index = 0; index < feeds.length; index++) {
+    const addr = feeds[index];
+    calls.push({
+      interface: iface,
+      target: gameAddress,
+      function: 'getPriceFeed',
+      args: [addr],
+    });
+  }
+  const response = await multicall.multiCall(calls);
+  const [blockNumber, results] = response;
+  for (let index = 0; index < feeds.length; index++) {
+    coins.push(results[index]);
+  }
+  // TODO: check how the returned value is without object
+  // We need to map manually to properties in order to work properly
+  const mappedFeeds = coins.map((c: any, i) => {
+    return {
+     price: c[0],
+     feed: feeds[i]
+    } as {
+      feed: string,
+      price: BigNumber};
+  });
   return mappedFeeds;
 };
 

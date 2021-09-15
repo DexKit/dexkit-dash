@@ -61,6 +61,8 @@ export const useTokenPairs = ({baseAddress, exchange, networkName}: Props) => {
 
           j['closePriceUsd'] = (j.closePrice || 0) * quotePerDolar;
           j['priceUsd'] = (j.quotePrice || 0) * quotePerDolar;
+          j['maxPriceUsd'] = (j.maximumPrice || 0) * quotePerDolar;
+          j['minPriceUsd'] = (j.minimumPrice || 0) * quotePerDolar;
           j['volume24'] = j.tradeAmount;
           j['volume24InUsd'] = j.tradeAmountInUsd;
           j['quoteVolume24'] = j.quoteAmount;

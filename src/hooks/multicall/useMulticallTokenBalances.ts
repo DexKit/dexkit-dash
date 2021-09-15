@@ -1,27 +1,32 @@
-import { useWeb3 } from "hooks/useWeb3";
-import { useEffect, useState } from "react";
-import { getMulticall,  getTokenBalances } from "services/multicall";
-import { Web3State } from "types/blockchain";
+import {useWeb3} from 'hooks/useWeb3';
+import {useQuery} from 'react-query';
+import {getTokenBalances} from 'services/multicall';
+import {Web3State} from 'types/blockchain';
 
+export const useMulticallTokenBalances = (
+  token_addresses?: string[],
+  account?: string,
+) => {
+  const {web3State} = useWeb3();
 
-export const useMulticallTokenBalances = (tokens?: string[], account?: string) => {
-    const {web3State} = useWeb3();
-    const [tokenBalances, setTokenBalances] = useState<any>();
+  const tokenBalancesQuery = useQuery(
+    ['GET_TOKEN_BALANCES', web3State, account, token_addresses],
+    async () => {
+      if (web3State !== Web3State.Done) {
+        return;
+      }
+      if (!account || !token_addresses) {
+        return;
+      }
+      const [, tb] = await getTokenBalances(token_addresses, account);
+      return token_addresses.map((a) => {
+        return {
+          address: a,
+          balance: tb[a],
+        };
+      });
+    },
+  );
 
-    useEffect(()=> {
-        if(web3State !== Web3State.Done){
-            return;
-        }
-        if(!account || !tokens){
-            return;
-        }
-       getTokenBalances(tokens, account)
-       .then(t => setTokenBalances(t));
-
-    }, [web3State, account, tokens])
-
-    return tokenBalances;
-
-
-  
-}
+  return tokenBalancesQuery;
+};

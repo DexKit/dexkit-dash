@@ -21,6 +21,7 @@ type TokenMarket = {
 type Props = {
   tokenMarket?: TokenMarket;
   token?: Token;
+  priceUSD?: string;
   loading: boolean;
 };
 
@@ -40,11 +41,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Analytics = (props: Props) => {
-  const {tokenMarket, token, loading} = props;
+  const {tokenMarket, token, loading, priceUSD} = props;
   const {usdFormatter} = useUSDFormatter();
   const volumeUSD = useMemo(() => {
-    return loading ? '-' : usdFormatter.format(tokenMarket?.volume24Usd || 0);
-  }, [tokenMarket?.volume24Usd, loading]);
+    return loading
+      ? '-'
+      : tokenMarket?.volume24Usd
+      ? usdFormatter.format(tokenMarket?.volume24Usd || 0)
+      : priceUSD
+      ? usdFormatter.format(
+          (tokenMarket?.volume24Base || 0) * Number(priceUSD || 0),
+        )
+      : '-';
+  }, [tokenMarket?.volume24Usd, tokenMarket?.volume24Base, loading, priceUSD]);
 
   const theme = useTheme();
 

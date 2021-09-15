@@ -38,17 +38,27 @@ export const ZRX_API_URL = (chainId: ChainId | undefined) => {
       return 'https://api.0x.org'; //'/swap/v1/quote'
     case ChainId.Kovan:
       return 'https://kovan.api.0x.org'; //'/swap/v1/quote'
+    case ChainId.Ropsten:
+        return 'https://ropsten.api.0x.org'; //'/swap/v1/quote'
     default:
       return '';
   }
 };
 
-export const ZRX_API_URL_FROM_NETWORK = (network: EthereumNetwork) => {
+export const ZRX_API_URL_FROM_NETWORK = (network: EthereumNetwork, chainId?: ChainId) => {
+  if(chainId){
+    // we bypass here the API if we need to test it on testnet by passing the chainId
+   return ZRX_API_URL(chainId);
+  }
+
+
   switch (network) {
     case EthereumNetwork.ethereum:
       return 'https://api.0x.org'; //'/swap/v1/quote'
     case EthereumNetwork.ethereum:
       return 'https://kovan.api.0x.org'; //'/swap/v1/quote'
+    case EthereumNetwork.ethereum:
+      return 'https://ropsten.api.0x.org'; //'/swap/v1/quote'
     case EthereumNetwork.bsc:
       return 'https://bsc.api.0x.org'; //'/swap/v1/quote'
     case EthereumNetwork.matic:
