@@ -7,6 +7,8 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Link,
+  Paper,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
@@ -41,6 +43,8 @@ import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import NFTTable from './components/NFTTable';
+
+import {ReactComponent as EmptyGhost} from 'assets/images/state/empty-ghost.svg';
 
 type Params = {
   account: string;
@@ -175,6 +179,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         </Grid>
                         <Grid item>
                           <Button
+                            disabled={favoritesWithMarket.data.length === 0}
                             to='/favorite-coins'
                             component={RouterLink}
                             size='small'
@@ -185,36 +190,73 @@ const WalletTabs: React.FC<Props> = (props) => {
                       </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                      {favoritesWithMarket.loading ? (
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <TokenListItemSkeleton />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <TokenListItemSkeleton />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <TokenListItemSkeleton />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <TokenListItemSkeleton />
-                          </Grid>
-                        </Grid>
-                      ) : (
-                        <Grid container spacing={2}>
-                          {favoritesWithMarket.data.map((favorite, index) => (
-                            <Grid item xs={12} key={index}>
-                              <FavoriteListItem
-                                coin={favorite.coin}
-                                amount={favorite.market?.current_price || 0}
-                                dayChange={
-                                  favorite.market
-                                    ?.price_change_percentage_24h || 0
-                                }
-                              />
+                      {favoritesWithMarket.data.length > 0 ? (
+                        <>
+                          {favoritesWithMarket.loading ? (
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TokenListItemSkeleton />
+                              </Grid>
                             </Grid>
-                          ))}
-                        </Grid>
+                          ) : (
+                            <Grid container spacing={2}>
+                              {favoritesWithMarket.data.map(
+                                (favorite, index) => (
+                                  <Grid item xs={12} key={index}>
+                                    <FavoriteListItem
+                                      coin={favorite.coin}
+                                      amount={
+                                        favorite.market?.current_price || 0
+                                      }
+                                      dayChange={
+                                        favorite.market
+                                          ?.price_change_percentage_24h || 0
+                                      }
+                                    />
+                                  </Grid>
+                                ),
+                              )}
+                            </Grid>
+                          )}
+                        </>
+                      ) : (
+                        <Paper>
+                          <Box p={4}>
+                            <Box
+                              display='flex'
+                              py={4}
+                              alignItems='center'
+                              alignContent='center'
+                              justifyContent='center'>
+                              <EmptyGhost />
+                            </Box>
+                            <Typography
+                              gutterBottom
+                              variant='body1'
+                              align='center'>
+                              You don't have favorites yet.
+                            </Typography>
+                            <Typography
+                              variant='body2'
+                              align='center'
+                              color='primary'>
+                              <Link
+                                to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
+                                component={RouterLink}>
+                                Go to explorer
+                              </Link>
+                            </Typography>
+                          </Box>
+                        </Paper>
                       )}
                     </Grid>
                   </Grid>
