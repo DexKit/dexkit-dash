@@ -28,4 +28,9 @@ export interface Notification {
    * The Date of visualization
    */
   check?: Date;
+
+  /**
+   * loading
+   */
+  loading?: boolean;
 }

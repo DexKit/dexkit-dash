@@ -584,9 +584,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
         {transaction ? (
           <>
             <CardHeader
-              title={
-                <Typography variant='subtitle1'>Multichain Swap</Typography>
-              }
+              title={<Typography variant='body1'>Multichain Swap</Typography>}
               action={
                 <Button onClick={handleReset} startIcon={<ArrowBackIcon />}>
                   Back
@@ -605,9 +603,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
         {goToReceiveAddress ? (
           <>
             <CardHeader
-              title={
-                <Typography variant='subtitle1'>Multichain Swap</Typography>
-              }
+              title={<Typography variant='body1'>Multichain Swap</Typography>}
               action={
                 <Button onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
                   Back
@@ -632,26 +628,36 @@ export const SwapComponent = (props: SwapComponentProps) => {
         ) : null}
         {!loading && !goToReceiveAddress && !transaction ? (
           <>
-            <CardHeader
-              title={
-                <Typography variant='subtitle1'>Multichain Swap</Typography>
-              }
-              action={
-                <IconButton onClick={handleOpenTransactions}>
-                  <Badge
-                    color='primary'
-                    badgeContent={
-                      transactions?.filter(
-                        (tx: ChangellyTransaction) =>
-                          tx.status == STATUS_WAITING ||
-                          tx.status == STATUS_CONFIRMING,
-                      ).length
-                    }>
-                    <HistoryIcon />
-                  </Badge>
+            <CardContent>
+              <Box
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                justifyContent='space-between'>
+                <Box display='flex' alignItems='center' alignContent='center'>
+                  <Box mr={2}>
+                    <IconButton size='small' onClick={handleOpenTransactions}>
+                      <Badge
+                        color='primary'
+                        badgeContent={
+                          transactions?.filter(
+                            (tx: ChangellyTransaction) =>
+                              tx.status == STATUS_WAITING ||
+                              tx.status == STATUS_CONFIRMING,
+                          ).length
+                        }>
+                        <HistoryIcon />
+                      </Badge>
+                    </IconButton>
+                  </Box>
+                  <Typography variant='body1'>Multichain Swap</Typography>
+                </Box>
+
+                <IconButton onClick={onClose} size='small'>
+                  <Close />
                 </IconButton>
-              }
-            />
+              </Box>
+            </CardContent>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12}>

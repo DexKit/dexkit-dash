@@ -198,10 +198,7 @@ const CoinTools = (props: Props) => {
         onClose={handleTradeClose}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <Backdrop
-        className={classes.backdrop}
-        open={showSwap}
-        onClick={handleSwapClose}>
+      <Backdrop className={classes.backdrop} open={showSwap}>
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={12} sm={4}>
             {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}

@@ -296,7 +296,7 @@ const TotalBalance = (props: Props) => {
                   justify='space-between'
                   spacing={4}>
                   <Grid item>
-                    <Grid container spacing={2} alignItems='center'>
+                    <Grid container spacing={2} alignItems='stretch'>
                       <Grid item>
                         <StatusSquare color={theme.palette.success.main} />
                       </Grid>

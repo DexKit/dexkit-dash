@@ -286,7 +286,7 @@ const WalletInfo = (props: any) => {
       <Button
         variant='contained'
         color='primary'
-        size='large'
+        size={isMobile ? 'small' : 'large'}
         onClick={onGoToManageWallet}
         startIcon={<WalletAddIcon />}>
         Connect wallet

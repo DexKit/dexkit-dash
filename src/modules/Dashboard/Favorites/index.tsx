@@ -1,4 +1,3 @@
-import AppCard from '@crema/core/AppCard';
 import {
   Box,
   Breadcrumbs,
@@ -8,17 +7,12 @@ import {
   IconButton,
 } from '@material-ui/core';
 import {useFavoriteCoinsData} from 'hooks/useFavoriteCoinsData';
-import LoadingTable from 'modules/Common/LoadingTable';
 import React, {useCallback} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
-import {useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import FavoriteCoinsList from './FavoriteCoinsList';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import {AboutDialog} from './AboutDialog';
-import {Fonts} from 'shared/constants/AppEnums';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {removeFavoriteCoin} from 'redux/_ui/actions';
 import {FavoriteCoin} from 'redux/_ui/reducers';
@@ -26,8 +20,6 @@ import {TokenListItemSkeleton} from 'shared/components/TokenListItemSkeleton';
 
 export const Favorites = () => {
   const dispatch = useDispatch();
-
-  const {messages} = useIntl();
 
   const {data, loading} = useFavoriteCoinsData();
 
@@ -48,7 +40,14 @@ export const Favorites = () => {
           </Link>
           <Link color='textSecondary'>Favorites</Link>
         </Breadcrumbs>
-        <Typography variant='h5'>Favorites</Typography>
+        <Box display='flex' alignItems='center' alignContent='center'>
+          <Box mr={2}>
+            <IconButton size='small' component={RouterLink} to={'/wallet'}>
+              <ArrowBackIcon />
+            </IconButton>
+          </Box>
+          <Typography variant='h5'>Favorites</Typography>
+        </Box>
       </Box>
 
       <Grid container spacing={4}>

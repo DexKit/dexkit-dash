@@ -116,27 +116,41 @@ export const CreateWallet = (props: Props) => {
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const {onConnectWeb3} = useWeb3();
 
+  const [loading, setLoading] = useState(false);
+
   const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
 
   const [email, setEmail] = useState('');
 
   //const handleTelegram = useCallback(() => {}, []);
 
+  const toggleLoading = useCallback(() => {
+    setLoading((value) => !value);
+  }, []);
+
   const handleDiscord = useCallback(() => {
-    onConnectMagicSocial('discord');
+    onConnectMagicSocial('discord').finally(() => {
+      toggleLoading();
+    });
   }, []);
 
   const handleGoogle = useCallback(() => {
-    onConnectMagicSocial('google');
+    onConnectMagicSocial('google').finally(() => {
+      toggleLoading();
+    });
   }, []);
 
   const handleApple = useCallback(() => {
-    onConnectMagicSocial('apple');
+    onConnectMagicSocial('apple').finally(() => {
+      toggleLoading();
+    });
   }, []);
 
   const handleTwitter = useCallback(() => {
-    onConnectMagicSocial('twitter');
-  }, []);
+    onConnectMagicSocial('twitter').finally(() => {
+      toggleLoading();
+    });
+  }, [toggleLoading]);
 
   const handleChange = useCallback((e) => {
     setEmail(e.target.value);

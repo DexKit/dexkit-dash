@@ -276,14 +276,6 @@ const BuySell: React.FC<Props> = ({
           setTokenFrom(tokenTo);
           setTokenTo(tokenFrom);
         } else {
-          if (token.networkName && token.networkName !== networkName) {
-            history.push(
-              `/${token.networkName}/token/${GET_NATIVE_COIN_FROM_NETWORK_NAME(
-                token.networkName,
-              ).toLowerCase()}`,
-            );
-            setTokenTo(undefined);
-          }
           setTokenFrom(token);
         }
       } else {
