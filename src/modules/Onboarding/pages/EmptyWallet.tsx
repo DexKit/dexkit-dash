@@ -157,7 +157,7 @@ export const EmptyWallet = (props: Props) => {
                               gutterBottom
                               variant='body1'
                               className={classes.primaryCardTitle}>
-                              Create your portifolio
+                              Create your portfolio
                             </Typography>
                             <Typography
                               variant='body2'

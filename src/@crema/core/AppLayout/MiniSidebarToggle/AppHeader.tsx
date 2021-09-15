@@ -22,20 +22,30 @@ import {
 import clsx from 'clsx';
 import {AppState} from 'redux/store';
 
-import {Grid, useTheme, useMediaQuery, Container} from '@material-ui/core';
+import {
+  Grid,
+  useTheme,
+  useMediaQuery,
+  Container,
+  ButtonBase,
+} from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
 import {ReactComponent as SettingsIcon} from 'assets/images/icons/settings.svg';
 
 import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
+import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
+
 import {TokenSearch} from 'shared/components/TokenSearch';
 import {useHistory} from 'react-router';
 import {Token} from 'types/app';
+import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
+import {switchChain} from 'utils/wallet';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId, forceWeb3Connect} = useWeb3();
+  const {chainId, forceWeb3Connect, getProvider} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -99,8 +109,34 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     }
   };
 
+  const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+
+  const handleCloseSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(false);
+  }, []);
+
+  const handleSelectChain = useCallback(
+    (chainId: number) => {
+      setShowSwitchNetwork(false);
+      switchChain(getProvider(), chainId);
+    },
+    [getProvider],
+  );
+
+  const handleOpenSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(true);
+  }, []);
+
   return (
     <>
+      {chainId ? (
+        <SwitchNetworkDialog
+          selected={chainId}
+          open={showSwitchNetwork}
+          onSelectChain={handleSelectChain}
+          onClose={handleCloseSwitchNetwork}
+        />
+      ) : null}
       <Box className={clsx(classes.appBar, 'app-bar')}>
         <Container
           maxWidth='xl'
@@ -123,7 +159,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  <DexkitLogoImage />
+                  {isMobile ? <DexkitLogoIconImage /> : <DexkitLogoImage />}
                 </Grid>
                 <Grid item>
                   <Grid
@@ -134,16 +170,23 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     <Grid item>
                       {chainId !== undefined ? (
                         <Grid item>
-                          <Box
-                            className={classes.badgeRoot}
-                            style={{
-                              color: 'rgba(226, 167, 46)',
-                              backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                            }}>
-                            {GET_CHAIN_ID_NAME(chainId)}
-                          </Box>
+                          <ButtonBase
+                            onClick={handleOpenSwitchNetwork}
+                            className={classes.switchNetworkButton}>
+                            <Box
+                              className={classes.badgeRoot}
+                              style={{
+                                color: 'rgba(226, 167, 46)',
+                                backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                              }}>
+                              {GET_CHAIN_ID_NAME(chainId)}
+                            </Box>
+                          </ButtonBase>
                         </Grid>
                       ) : null}
+                    </Grid>
+                    <Grid item>
+                      <WalletInfo />
                     </Grid>
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
@@ -185,14 +228,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   alignContent='center'>
                   {chainId !== undefined ? (
                     <Grid item>
-                      <Box
-                        className={classes.badgeRoot}
-                        style={{
-                          color: 'rgba(226, 167, 46)',
-                          backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                        }}>
-                        {GET_CHAIN_ID_NAME(chainId)}
-                      </Box>
+                      <ButtonBase
+                        onClick={handleOpenSwitchNetwork}
+                        className={classes.switchNetworkButton}>
+                        <Box
+                          className={classes.badgeRoot}
+                          style={{
+                            color: 'rgba(226, 167, 46)',
+                            backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                          }}>
+                          {GET_CHAIN_ID_NAME(chainId)}
+                        </Box>
+                      </ButtonBase>
                     </Grid>
                   ) : null}
                   <Grid item>

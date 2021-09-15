@@ -1,4 +1,4 @@
-import { useWeb3 } from "hooks/useWeb3";
+import { useMagicProvider } from "hooks/provider/useMagicProvider";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 
@@ -7,7 +7,7 @@ import { getMagic, getCachedMagicNetwork } from "services/magic";
 
 
 const  MagicCallbackSocial = () => {
- const {onConnectWeb3} = useWeb3();
+  const {onConnectMagic} = useMagicProvider();
   const history = useHistory();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const  MagicCallbackSocial = () => {
     const magic = getMagic(network)
     magic.oauth.getRedirectResult().finally(() => {
       history.push('/wallet');
-      onConnectWeb3()
+      onConnectMagic()
     });
   }, []);
 

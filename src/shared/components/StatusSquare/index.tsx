@@ -3,16 +3,21 @@ import React from 'react';
 import {Box, makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  greenSquare: {
-    backgroundColor: theme.palette.success.main,
-    height: theme.spacing(8),
+  square: {
+    height: '100%',
     width: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
   },
 }));
 
-export const GreenSquare = () => {
+interface Props {
+  color: string;
+}
+
+export const StatusSquare = (props: Props) => {
+  const {color} = props;
+
   const classes = useStyles();
 
-  return <Box className={classes.greenSquare} />;
+  return <Box className={classes.square} style={{backgroundColor: color}} />;
 };

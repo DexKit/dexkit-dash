@@ -19,6 +19,7 @@ import clsx from 'clsx';
 import React, {useCallback, useState} from 'react';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
+  FlashIcon,
   GoogleIcon,
   TwitterIcon,
   ReceiptAddIcon,
@@ -30,7 +31,8 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
+import {isEmailValid} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -113,7 +115,7 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const {onConnectWeb3} = useWeb3();
- 
+
   const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
 
   const [email, setEmail] = useState('');
@@ -122,25 +124,18 @@ export const CreateWallet = (props: Props) => {
 
   const handleDiscord = useCallback(() => {
     onConnectMagicSocial('discord');
-
-
   }, []);
 
   const handleGoogle = useCallback(() => {
     onConnectMagicSocial('google');
-
-
   }, []);
 
   const handleApple = useCallback(() => {
     onConnectMagicSocial('apple');
-
   }, []);
 
   const handleTwitter = useCallback(() => {
     onConnectMagicSocial('twitter');
-
-
   }, []);
 
   const handleChange = useCallback((e) => {
@@ -156,9 +151,32 @@ export const CreateWallet = (props: Props) => {
     [email],
   );
 
+  const handleConnectWalletLater = useCallback(() => {}, []);
+
   return (
     <Box>
       <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Typography variant='h5'>Welcome</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Slider slideCount={2} onNext={() => {}} onPrevious={() => {}}>
+            <Box p={4}>
+              <Typography variant='h5'>Many other</Typography>
+              <Typography variant='h5'>Tools</Typography>
+            </Box>
+            <Box>2</Box>
+          </Slider>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant='body1'>
+            Welcome to Super App Dexkit, here you can make your transactions and
+            maintenance in the wallet, in addition to several other tools.
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -174,14 +192,24 @@ export const CreateWallet = (props: Props) => {
                 <TextField
                   value={email}
                   onChange={handleChange}
-                  label='email@example.com'
+                  label='E-mail'
                   variant='outlined'
+                  size='small'
+                  error={!isEmailValid(email) && email !== ''}
+                  helperText={
+                    !isEmailValid(email) && email !== ''
+                      ? 'E-mail is not valid'
+                      : undefined
+                  }
                   fullWidth
                 />
                 <Box marginLeft={2}>
-                  <SquaredIconButton onClick={handleEmail}>
-                    <AddIcon />
-                  </SquaredIconButton>
+                  <Button
+                    disabled={email === '' || !isEmailValid(email)}
+                    variant='contained'
+                    onClick={handleEmail}>
+                    login
+                  </Button>
                 </Box>
               </Box>
             </Grid>
@@ -355,42 +383,71 @@ export const CreateWallet = (props: Props) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-                  <ButtonBase
-                    onClick={handleConnectWeb3}
-                    className={classes.actionButton}>
-                    <Paper
-                      variant='outlined'
-                      className={classes.actionButtonPaper}>
-                      <Box p={4}>
-                        <Grid
-                          container
-                          spacing={2}
-                          alignItems='center'
-                          alignContent='center'>
-                          <Grid item>
-                            <Box className={classes.boxCircle}>
-                              <ReceiptAddIcon />
-                            </Box>
-                          </Grid>
-                          <Grid item xs>
-                            <Typography
-                              variant='body1'
-                              style={{fontWeight: 500}}>
-                              Connect the external wallet
-                            </Typography>
-                            <Typography variant='body2' color='textSecondary'>
-                              Click here to choose external wallets like Metamask
-                            </Typography>
-                          </Grid>
+              <ButtonBase
+                onClick={handleConnectWeb3}
+                className={classes.actionButton}>
+                <Paper variant='outlined' className={classes.actionButtonPaper}>
+                  <Box p={4}>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Box className={classes.boxCircle}>
+                          <ReceiptAddIcon />
+                        </Box>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography variant='body1' style={{fontWeight: 500}}>
+                          Connect the external wallet
+                        </Typography>
+                        <Typography variant='body2' color='textSecondary'>
+                          Click here to choose external wallets like Metamask
+                        </Typography>
+                      </Grid>
 
-                          <Grid item>
-                            <NavigateNextIcon />
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                </Grid>
+                      <Grid item>
+                        <NavigateNextIcon />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </ButtonBase>
+            </Grid>
+            <Grid item xs={12}>
+              <ButtonBase
+                onClick={handleConnectWalletLater}
+                className={classes.actionButton}>
+                <Paper variant='outlined' className={classes.actionButtonPaper}>
+                  <Box p={4}>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Box className={classes.boxCircle}>
+                          <FlashIcon />
+                        </Box>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography variant='body1' style={{fontWeight: 500}}>
+                          Connect the wallet later
+                        </Typography>
+                        <Typography variant='body2' color='textSecondary'>
+                          Click here to open the app demo.
+                        </Typography>
+                      </Grid>
+
+                      <Grid item>
+                        <NavigateNextIcon />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </ButtonBase>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
