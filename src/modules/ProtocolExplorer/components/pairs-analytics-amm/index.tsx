@@ -11,8 +11,8 @@ import {ReactComponent as HashtagIcon} from 'assets/images/icons/hashtag.svg';
 import {useAMMPairExplorer} from 'hooks/protocolExplorer/useAMMPairExplorer';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import {Box, useMediaQuery, makeStyles} from '@material-ui/core';
-import {useMobile} from 'hooks/useMobile';
+import {Box,  makeStyles} from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,7 +63,6 @@ export const PairAnalyticsAMM = (props: Props) => {
     return loading ? '-' : usdFormatter.format(data?.liquidity || 0);
   }, [data?.liquidity, loading]);
 
-  const isMobile = useMobile();
 
   return (
     <Grid container alignItems='center' spacing={2}>

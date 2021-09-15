@@ -17,9 +17,18 @@ export async function fetchPrice(
 
   const isSell = quoteParams.orderSide === OrderSide.Sell ? true : false;
 
-  const currency = network === EthereumNetwork.ethereum ? 'ETH' : 'BNB';
+  const currency =
+    network === EthereumNetwork.ethereum
+      ? 'ETH'
+      : network === EthereumNetwork.bsc
+      ? 'BNB'
+      : 'MATIC';
 
-  const wrapper = network === EthereumNetwork.ethereum ? 'WETH' : 'WBNB';
+  const wrapper =  network === EthereumNetwork.ethereum
+  ? 'WETH'
+  : network === EthereumNetwork.bsc
+  ? 'WBNB'
+  : 'WMATIC';
 
   const baseName = quoteParams.baseToken.toUpperCase();
   const quoteName = quoteParams.quoteToken.toUpperCase();

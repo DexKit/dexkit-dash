@@ -150,6 +150,29 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
   }
 };
 
+export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
+  const id = Number(chainId);
+
+  switch (id) {
+    case ChainId.Mainnet:
+      return 'ETH';
+    case ChainId.Rinkeby:
+      return 'ETH';
+    case ChainId.Matic:
+      return 'MATIC';
+    case ChainId.Kovan:
+      return 'ETH';
+    case ChainId.Ropsten:
+      return 'ETH';
+    case ChainId.Binance:
+      return 'BNB';
+    case ChainId.BinanceTest:
+      return 'BNB';
+    default:
+      return undefined;
+  }
+};
+
 export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {
   switch (network) {
     case EthereumNetwork.ethereum:

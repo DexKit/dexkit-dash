@@ -34,6 +34,8 @@ import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
+import CopyButton from '../CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -303,7 +305,13 @@ const TotalBalance = (props: Props) => {
                       <Grid item>
                         <Typography variant='body2'>
                           <Box display='flex' alignItems='center'>
-                            <span>{truncateAddress(address)} </span>
+                            <span>{amountsVisible ? truncateAddress(address) : '******'} </span>
+                            <CopyButton
+                              size='small'
+                              copyText={address || ''}
+                              tooltip='Copied!'>
+                              <FileCopy color='inherit' style={{fontSize: 16}} />
+                            </CopyButton>        
                             <IconButton
                               onClick={handleShowAccounts}
                               size='small'>

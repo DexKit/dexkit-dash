@@ -13,8 +13,8 @@ import HistoryTables from '../history';
 import Box from '@material-ui/core/Box';
 import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
-import TokenPairCard, {TokenPairIcon} from 'shared/components/TokenPairCard';
-import {useMediaQuery, useTheme} from '@material-ui/core';
+import TokenPairCard from 'shared/components/TokenPairCard';
+
 type Props = {
   baseAddress: string;
   exchange: EXCHANGE;
@@ -47,26 +47,20 @@ export const Pairs = (props: Props) => {
   const [selectedPair, setSelectedPair] =
     useState<GetTokenPairs_ethereum_dexTrades>();
   const {
-    loading,
-    error,
     data,
-    currentPage,
-    rowsPerPage,
-    rowsPerPageOptions,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTokenPairs({exchange, baseAddress, networkName});
   const classes = useStyles();
-
+  
   useEffect(() => {
     if (!selectedPair && data && data.length) {
       setSelectedPair(data[0]);
     }
-  }, [data]);
+    // when we change the address on route we set again the selected Pair
+    if(selectedPair &&  data && data.length && selectedPair.baseCurrency?.address?.toLowerCase() !== baseAddress.toLowerCase()){
+      setSelectedPair(data[0]);
+    }
+  }, [data, selectedPair, baseAddress, networkName]);
 
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>

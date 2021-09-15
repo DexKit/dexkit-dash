@@ -115,9 +115,7 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const {onConnectWeb3} = useWeb3();
-
   const [loading, setLoading] = useState(false);
-
   const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
 
   const [email, setEmail] = useState('');

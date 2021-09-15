@@ -243,6 +243,14 @@ const GamesList = () => {
                   <SmallCardGameSkeleton />
                 </Grid>
               ))}
+            {!isLoading && !gamesInProgress?.length && (
+              <Grid item xs={12} >
+                <Empty
+                  title={'No games in progress'}
+                  message={'Search created games and enter to start games'}
+                />
+              </Grid>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={6}>

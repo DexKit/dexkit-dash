@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState, useMemo, useRef} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -38,28 +38,21 @@ export const SelectTokenDialog = (props: Props) => {
   const contentRef = useRef<HTMLElement>();
   const searchBoxRef = useRef<HTMLDivElement>(null);
 
-  const [filteredTokens, setFilteredCoins] = useState<Token[]>([]);
-
-  useEffect(() => {
-    setFilteredCoins(tokens);
-  }, [tokens]);
-
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-
       setFilterText(value);
-
-      const filtered = tokens.filter(
-        (coin: Token) =>
-          coin.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          coin.symbol.toLowerCase().startsWith(value.toLowerCase()),
-      );
-
-      setFilteredCoins(filtered);
     },
     [tokens],
   );
+
+  const filteredTokens = useMemo(() => {
+    return tokens.filter(
+      (coin: Token) =>
+        coin.name.toLowerCase().startsWith(filterText.toLowerCase()) ||
+        coin.symbol.toLowerCase().startsWith(filterText.toLowerCase()),
+    );
+  }, [tokens, filterText]);
 
   const handleSelectToken = useCallback(
     (token: Token) => {

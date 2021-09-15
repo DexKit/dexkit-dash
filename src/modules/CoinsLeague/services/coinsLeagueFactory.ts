@@ -7,7 +7,7 @@ import {getMulticall} from '../../../services/multicall';
 import {getWeb3Wrapper} from '../../../services/web3modal';
 
 export const COINS_LEAGUE_FACTORY_ADDRESS = {
-  MUMBAI: '0xa1B3a09D5f83a52085fd37becb229038bCeacFf3',
+  MUMBAI: '0xF71a5F8DA88c8b4a322901D776D4A310F85200Bb',
 };
 
 let coinsLeagueFactory: Contract;
