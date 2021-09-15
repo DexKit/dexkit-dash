@@ -16,3 +16,4 @@ export {ReactComponent as DiscordIcon} from 'assets/images/icons/discord.svg';
 export {ReactComponent as TelegramIcon} from 'assets/images/icons/telegram.svg';
 export {ReactComponent as AppleIcon} from 'assets/images/icons/apple.svg';
 export {ReactComponent as ReceiptAddIcon} from 'assets/images/icons/receipt-add.svg';
+export {ReactComponent as MagicpenIcon} from 'assets/images/icons/magicpen.svg';

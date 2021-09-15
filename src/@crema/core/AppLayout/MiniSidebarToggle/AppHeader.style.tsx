@@ -101,5 +101,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
   },
+  switchNetworkButton: {
+    borderRadius: theme.shape.borderRadius,
+  },
 }));
 export default useStyles;

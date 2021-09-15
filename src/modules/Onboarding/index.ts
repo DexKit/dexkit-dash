@@ -13,7 +13,7 @@ export const onboardingConfig = [
       },
       {
         path: '/onboarding/login-wallet',
-        component: React.lazy(() => import('./pages/CreateWallet')),
+        component: React.lazy(() => import('./pages/LoginWallet')),
       },
       {
         path: '/onboarding',

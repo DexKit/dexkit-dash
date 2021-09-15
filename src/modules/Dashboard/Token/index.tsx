@@ -139,7 +139,7 @@ const TokenPage: React.FC<Props> = (props) => {
         shareUrl={`${getWindowUrl()}/${networkName}/token/${address}`}
         onClose={toggleShare}
       />
-      <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
+      <Box py={0} className={isMobile ? classes.mobileContainer : ''}>
         <Box>
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>

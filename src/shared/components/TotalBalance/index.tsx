@@ -29,7 +29,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 
-import {GreenSquare} from '../GreenSquare';
+import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -161,7 +161,7 @@ const TotalBalance = (props: Props) => {
               decimals: dataFn.currency?.decimals ?? 18,
               name: dataFn.currency?.name || '',
               symbol: dataFn.currency?.symbol || '',
-              tokenType: 'ERC20'
+              tokenType: 'ERC20',
             },
             network: dataFn.network,
             value: dataFn.value ?? 0,
@@ -298,7 +298,7 @@ const TotalBalance = (props: Props) => {
                   <Grid item>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item>
-                        <GreenSquare />
+                        <StatusSquare color={theme.palette.success.main} />
                       </Grid>
                       <Grid item>
                         <Typography variant='body2'>

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {
   makeStyles,
@@ -43,6 +43,8 @@ import {
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
+import SwitchNetworkDialog from '../SwitchNetworkDialog';
+import {StatusSquare} from '../StatusSquare';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -113,11 +115,7 @@ const WalletInfo = (props: any) => {
   const accountsModal = useAccountsModal();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (isMobile) {
-      accountsModal.setShow(true);
-    } else {
-      setAnchorEl(event.currentTarget);
-    }
+    setAnchorEl(event.currentTarget);
   };
 
   const history = useHistory();
@@ -169,9 +167,8 @@ const WalletInfo = (props: any) => {
 
   const onGoToLoginWallet = () => {
     handleClose();
-    history.push('/onboarding/login-wallet')
-
-  }
+    history.push('/onboarding/login-wallet');
+  };
 
   let ethBalanceValue;
 
@@ -193,8 +190,6 @@ const WalletInfo = (props: any) => {
 
   const classes = useStyles(props);
 
-
-
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -204,23 +199,19 @@ const WalletInfo = (props: any) => {
         justify='space-between'
         spacing={2}>
         <Grid item>
-          <Grid container alignItems='center' alignContent='center' spacing={2}>
+          <Grid
+            container
+            alignItems='stretch'
+            alignContent='center'
+            spacing={2}>
             <Grid item>
               <Tooltip
                 title={connected ? 'Wallet Connected' : 'Wallet Not Connected'}>
-                <IconButton
-                  aria-label='connected'
-                  style={{
-                    color: connected ? green[500] : grey[500],
-                    paddingLeft: '5px',
-                  }}
-                  size='small'>
-                  {connected ? (
-                    <FiberManualRecordIcon />
-                  ) : (
-                    <RadioButtonUncheckedIcon />
-                  )}
-                </IconButton>
+                {connected ? (
+                  <StatusSquare color={green[500]} />
+                ) : (
+                  <StatusSquare color={grey[500]} />
+                )}
               </Tooltip>
             </Grid>
             <Grid item>
@@ -239,7 +230,7 @@ const WalletInfo = (props: any) => {
           </Grid>
         </Grid>
         <Grid item>
-          <Box ml={3} className={classes.pointer} color={'text.primary'}>
+          <Box className={classes.pointer} color={'text.primary'}>
             <IconButton size='small' onClick={handleClick}>
               <ExpandMoreIcon />
             </IconButton>

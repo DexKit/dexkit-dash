@@ -77,9 +77,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  <Grid item xs>
-                    <WalletInfo />
-                  </Grid>
                   <Grid item>
                     <IconButton onClick={handleToggleDrawer}>
                       <CloseIcon />

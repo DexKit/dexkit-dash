@@ -7,13 +7,12 @@ const cachedNetworkMagicKey = `${storageKeyNamespace}:magic-network`;
 const providerMagicKey = `${storageKeyNamespace}:magic-provider`;
 export const magicStorage = `${storageKeyNamespace}:is-magic`;
 
-export const enum MagicAuthProviders{
-  email =  'email',
+export const enum MagicAuthProviders {
+  email = 'email',
   google = 'google',
   twitter = 'twitter',
   discord = 'discord',
 }
-
 
 const rpcUrls = {
   [EthereumNetwork.bsc]: {
@@ -41,7 +40,7 @@ const magicETH = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
 });
 
 export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
-  if (networkName === EthereumNetwork.bsc) {  
+  if (networkName === EthereumNetwork.bsc) {
     return magicBSC.rpcProvider;
   }
 
@@ -55,13 +54,13 @@ export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
 export const getMagicProvider = async () => {
   const network = getCachedMagicNetwork();
   const magic = getMagic(network);
-  await magic.preload()
+  await magic.preload();
   const isLogged = await magic.user.isLoggedIn();
   if (isLogged) {
     return magic.rpcProvider;
   }
   throw new Error('Magic not logged');
-} 
+};
 
 /*export const magic = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
     extensions: [new OAuthExtension()],
@@ -100,8 +99,12 @@ export const setCachedMagicNetwork = (network: EthereumNetwork) => {
   localStorage.setItem(cachedNetworkMagicKey, network);
 };
 
-type supportedMagicProviders =  'email' | 'google' | 'twitter' | 'discord' | 'apple';
-
+type supportedMagicProviders =
+  | 'email'
+  | 'google'
+  | 'twitter'
+  | 'discord'
+  | 'apple';
 
 export const setAuthMagicProvider = (provider: supportedMagicProviders) => {
   localStorage.setItem(providerMagicKey, provider);
@@ -109,15 +112,15 @@ export const setAuthMagicProvider = (provider: supportedMagicProviders) => {
 
 export const getAuthMagicProvider = () => {
   return (
-    (localStorage.getItem(providerMagicKey) as supportedMagicProviders) || 'email'
+    (localStorage.getItem(providerMagicKey) as supportedMagicProviders) ||
+    'email'
   );
 };
 
 export const isMagicProvider = () => {
   return localStorage.getItem(magicStorage) === 'true';
-}
+};
 
 export const setIsMagicProvider = (status: 'false' | 'true') => {
   localStorage.setItem(magicStorage, status);
-}
-
+};
