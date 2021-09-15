@@ -1,27 +1,22 @@
-import { Box, Button, Chip, Menu, MenuItem, Typography } from "@material-ui/core";
-import React from "react";
-import { EthereumNetwork } from "shared/constants/AppEnums";
-import { FORMAT_NETWORK_NAME } from "shared/constants/Bitquery";
+import {Box, Button, Chip, Menu, MenuItem, Typography} from '@material-ui/core';
+import React from 'react';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
-
-
-interface Props{
- networkName: EthereumNetwork;
- onClick: (network: EthereumNetwork) => any;
- style?: any;
+interface Props {
+  networkName: EthereumNetwork;
+  onClick: (network: EthereumNetwork) => any;
+  style?: any;
 }
-
 
 const supportedNetworks = [EthereumNetwork.bsc, EthereumNetwork.ethereum];
 
 const NetworkSwitcher = (props: Props) => {
-    const {networkName, onClick, style} = props;
+  const {networkName, onClick, style} = props;
 
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -34,33 +29,40 @@ const NetworkSwitcher = (props: Props) => {
   const handleNetworkClick = (network: EthereumNetwork) => {
     handleClose();
     onClick(network);
-
-  }
+  };
 
   return (
     <div style={style}>
       <Box display={'flex'} alignItems={'center'}>
-      <Typography style={{paddingRight: '2px'}}>Chain:</Typography>{' '} <Chip  color={'default'}  clickable label={<Box display={'flex'} alignItems={'center'}>{FORMAT_NETWORK_NAME(networkName)}<ExpandMoreIcon/> </Box>} onClick={handleClick} />
-     </Box>
+        <Typography style={{paddingRight: '2px'}}>Chain:</Typography>{' '}
+        <Chip
+          color={'default'}
+          clickable
+          label={
+            <Box display={'flex'} alignItems={'center'}>
+              {FORMAT_NETWORK_NAME(networkName)}
+              <ExpandMoreIcon />{' '}
+            </Box>
+          }
+          onClick={handleClick}
+        />
+      </Box>
       <Menu
-        id="network-menu"
+        id='network-menu'
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-     {supportedNetworks.filter(n => n !== networkName).map(n => 
-                    <MenuItem onClick={() => handleNetworkClick(n)}>
-                      <Chip  color={ 'default'}  label={FORMAT_NETWORK_NAME(n)}  />  
-                   </MenuItem>) } 
-        </Menu>
-       
+        onClose={handleClose}>
+        {supportedNetworks
+          .filter((n) => n !== networkName)
+          .map((n, index) => (
+            <MenuItem onClick={() => handleNetworkClick(n)} key={index}>
+              <Chip color={'default'} label={FORMAT_NETWORK_NAME(n)} />
+            </MenuItem>
+          ))}
+      </Menu>
     </div>
   );
+};
 
-
-
-
-}
-
-export default NetworkSwitcher
+export default NetworkSwitcher;

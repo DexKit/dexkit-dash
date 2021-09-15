@@ -2,7 +2,7 @@ export interface Message {
   /**
    * The id of a message
    */
-  id?: string | number
+  id?: string | number;
   /**
    * The title of a message.
    */
@@ -14,8 +14,7 @@ export interface Message {
   body: string;
 
   /**
-   * The URL of the image or local image that is shown with the message. 
+   * The URL of the image or local image that is shown with the message.
    */
   image?: string;
-
 }

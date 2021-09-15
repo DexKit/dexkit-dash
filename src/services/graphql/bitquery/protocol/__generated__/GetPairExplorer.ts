@@ -66,11 +66,11 @@ export interface GetPairExplorer_ethereum_dexTrades {
    */
   quoteCurrency: GetPairExplorer_ethereum_dexTrades_quoteCurrency | null;
   tradeAmount: number | null;
-  tradeAmountInUsd: number | null;
   maximum_price: number | null;
   minimum_price: number | null;
   open_price: string | null;
   close_price: string | null;
+  tradeAmountInUsd: number | null;
 }
 
 export interface GetPairExplorer_ethereum {

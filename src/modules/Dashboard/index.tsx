@@ -1,27 +1,58 @@
 import React from 'react';
 
-
 export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/overview',
-        component: React.lazy(() => import('./Overview'))
+        path: '/overview',
+        component: React.lazy(() => import('./Overview')),
       },
     ],
   },
   {
     routes: [
       {
-        path: '/dashboard/favorite-coins',
-        component: React.lazy(() => import('./Favorites'))
+        path: '/wallet/send',
+        component: React.lazy(() => import('./Wallet/pages/ShareSend')),
       },
     ],
   },
   {
     routes: [
       {
-        path: '/dashboard/wallet/manage-accounts',
+        path: '/swap/coins',
+        component: React.lazy(() => import('./Swap')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/favorite-coins',
+        component: React.lazy(() => import('./Favorites')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/magic/callback-social',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackSocial')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/magic/callback',
+        component: React.lazy(() => import('./Wallet/pages/MagicCallbackEmail')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/wallet/manage-accounts',
         component: React.lazy(() => import('./Wallet/Accounts')),
       },
     ],
@@ -29,8 +60,16 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/dashboard/wallet/:account',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        path: '/wallet/overview/:networkName/:address',
+        component: React.lazy(() => import('./Wallet/pages/Overview')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/wallet/:account',
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },
@@ -38,12 +77,12 @@ export const dashBoardConfigs = [
     auth: ['wallet'],
     routes: [
       {
-        path: '/dashboard/wallet',
-        component: React.lazy(() => import('./Wallet/index_tabs')),
+        path: '/wallet',
+        component: React.lazy(() => import('./Wallet')),
       },
     ],
   },
- 
+
   // {
   //   auth: ['wallet'],
   //   routes: [
@@ -66,9 +105,17 @@ export const dashBoardConfigs = [
     auth: ['token'],
     routes: [
       {
-        path: '/:networkName/dashboard/token/:address',
-        component: React.lazy(() => import('./Token/index_tabs')),
+        path: '/:networkName/token/:address',
+        component: React.lazy(() => import('./Token')),
       },
     ],
-  }
+  },
+  {
+    routes: [
+      {
+        path: '/create-wallet',
+        component: React.lazy(() => import('./Wallet/CreateWallet')),
+      },
+    ],
+  },
 ];

@@ -9,6 +9,11 @@ import AppContextPropsType, {
 const useStyles = makeStyles((theme: CremaTheme) => {
   const {themeMode} = useContext<AppContextPropsType>(AppContext);
   return {
+    svgActive: {
+      '& > path': {
+        fill: '#FFA552',
+      },
+    },
     navItem: {
       height: 48,
       paddingLeft:

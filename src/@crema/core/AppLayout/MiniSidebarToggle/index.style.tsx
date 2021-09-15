@@ -10,10 +10,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       flexDirection: 'row',
       position: 'relative',
       backgroundColor: theme.palette.background.default,
-      paddingTop: 56,
-      [theme.breakpoints.up('sm')]: {
-        paddingTop: 70,
-      },
       '&.appMainFixedFooter': {
         paddingBottom: 48,
         [theme.breakpoints.up('xl')]: {
@@ -123,6 +119,12 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           },
         },
       },
+    },
+    accountsDialgContent: {
+      padding: theme.spacing(4),
+    },
+    accountsFixedHeight: {
+      minHeight: '80vh',
     },
   };
 });

@@ -5,7 +5,7 @@ export enum Actions {
   CREATE_BUNDLE = 'CREATE_BUNDLE',
 }
 
-export interface ActionSelectProps extends SelectProps {}
+export type ActionSelectProps = SelectProps;
 
 export default (props: ActionSelectProps) => {
   return (

@@ -3,15 +3,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
 import OrderContent from './OrderContent';
-import {useStyles} from './index.style';
+
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {
-  getNativeCoinWrapped,
   getNativeCoinWrappedAddressFromNetworkName,
   getNativeCoinWrappedFromNetworkName,
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {isMobile} from 'web3modal';
 import {AppContext} from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
 
@@ -47,7 +45,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     onClose,
   } = props;
 
-  const classes = useStyles();
   const {chainId, account} = useWeb3();
 
   const [steps, setSteps] = useState<Steps[]>([]);
@@ -81,11 +78,15 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       });
 
       if (
-        (((tokenFrom.symbol.toUpperCase() === 'ETH' && tokenTo.symbol.toUpperCase() === 'WETH') ||
-          (tokenFrom.symbol.toUpperCase() === 'WETH' && tokenTo.symbol.toUpperCase() === 'ETH')) &&
+        (((tokenFrom.symbol.toUpperCase() === 'ETH' &&
+          tokenTo.symbol.toUpperCase() === 'WETH') ||
+          (tokenFrom.symbol.toUpperCase() === 'WETH' &&
+            tokenTo.symbol.toUpperCase() === 'ETH')) &&
           networkName === EthereumNetwork.ethereum) ||
-        (((tokenFrom.symbol.toUpperCase() === 'BNB' && tokenTo.symbol.toUpperCase() === 'WBNB') ||
-          (tokenFrom.symbol.toUpperCase() === 'WBNB' && tokenTo.symbol.toUpperCase() === 'BNB')) &&
+        (((tokenFrom.symbol.toUpperCase() === 'BNB' &&
+          tokenTo.symbol.toUpperCase() === 'WBNB') ||
+          (tokenFrom.symbol.toUpperCase() === 'WBNB' &&
+            tokenTo.symbol.toUpperCase() === 'BNB')) &&
           networkName === EthereumNetwork.bsc)
       ) {
         setIsConvert(true);
@@ -126,10 +127,8 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     setCurrentStepIndex(nextStepIndex);
 
     if (nextStepIndex < steps.length) {
-   
       setCurrentStep(steps[nextStepIndex]);
     } else {
-   
       setCurrentStep(Steps.DONE);
     }
 
@@ -138,11 +137,8 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
 
   const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
     if (hasNext) {
-     
-
       handleNextWithDelay();
     } else {
- 
       setError(errorMesage);
       setCurrentStep(Steps.ERROR);
       setLoading(false);

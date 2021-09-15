@@ -57,7 +57,7 @@ const TokenBalanceSpan = (props: TokenBalanceSpanProps) => {
   useEffect(() => {
     (async () => {
       if (token) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const seaport = await getOpenSeaPort(provider);
 
@@ -158,7 +158,11 @@ export default (props: Props) => {
   }, []);
 
   const handleAmountChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    if (parseInt(e.target.value) < 0) {
+      setAmount('0');
+    } else {
+      setAmount(e.target.value);
+    }
   }, []);
 
   const handleQuantityChange = useCallback(
@@ -244,7 +248,7 @@ export default (props: Props) => {
           ) : null}
         </Grid>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography variant='body1' color='textSecondary'>

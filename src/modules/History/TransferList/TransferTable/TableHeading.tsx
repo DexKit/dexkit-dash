@@ -42,31 +42,31 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
   const classes = useStyles();
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.created' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.sender' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.type' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.receiver' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.amount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}>
+      <TableCell align='left'>
         <IntlMessages id='app.total' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left'></TableCell>
     </TableRow>
   );
 };

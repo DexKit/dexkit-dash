@@ -49,7 +49,7 @@ export default (props: Props) => {
       .then((response) => {
         console.log(response);
 
-        let result = response.data?.asset_events;
+        const result = response.data?.asset_events;
 
         if (result?.length < 20) {
           setHasMore(false);
@@ -57,7 +57,7 @@ export default (props: Props) => {
           setHasMore(true);
         }
 
-        let newData = [...data, ...result];
+        const newData = [...data, ...result];
 
         setData(newData);
       })
@@ -82,17 +82,15 @@ export default (props: Props) => {
     }
   }, [asset]);
 
-  const handleChange = useCallback(() => setExpanded((value) => !value), []);
-
   return (
-    <Accordion expanded={expanded} onChange={handleChange}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+    <Box p={4}>
+      <Box mb={4} display='flex' alignItems='center'>
         <SwapVertIcon />{' '}
-        <Typography>
+        <Typography variant='h6'>
           <IntlMessages id='nfts.detail.historicLabel' />
         </Typography>
-      </AccordionSummary>
-      <AccordionDetails style={{display: 'block'}}>
+      </Box>
+      <Box>
         {loading && data?.length < 20 ? (
           <Box py={8}>
             <Grid container justify='center' alignItems='center'>
@@ -128,7 +126,7 @@ export default (props: Props) => {
             ) : null}
           </>
         )}
-      </AccordionDetails>
-    </Accordion>
+      </Box>
+    </Box>
   );
 };

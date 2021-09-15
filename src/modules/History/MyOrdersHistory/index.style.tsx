@@ -12,4 +12,7 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   row: {
     display: 'flex',
   },
+  paginationDesktop: {
+    display: 'block',
+  },
 }));

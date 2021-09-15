@@ -11,14 +11,30 @@ export const useMyAssets = () => {
     async (query: AssetsQuery) => {
       const provider = getProvider();
       const chainId = await getChainId(provider);
+      const params = new Map<string, string>();
 
-      const url = `https://${
+      if(query.owner){
+        params.set('owner', query.owner);
+      }
+      if(query.sortBy){
+        params.set('order_by', query.sortBy);
+      }
+      if(query.offset){
+        params.set('offset', String(query.offset));
+      }
+      if(query.limit){
+        params.set('limit', String(query.limit));
+      }
+      if(query.collection){
+        params.set('collection', query.collection);
+      }
+     let url = `https://${
         chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-      }.opensea.io/api/v1/assets?owner=${query.owner}&order_by=${
-        query.sortBy
-      }&order_direction=desc&offset=${query.offset}&limit=${
-        query.limit
-      }&collection=${query.collection || ''}`;
+      }.opensea.io/api/v1/assets?`
+
+      for (const [key, value] of params) {
+        url += `${key}=${value}&`;
+      }
 
       return axios.get(url, {
         headers: {'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY},

@@ -79,24 +79,19 @@ export default (props: Props) => {
             <IntlMessages id='nfts.detail.listingCancel' />
           </Button>
         ) : (
-          <Tooltip title={'Huahuhdasuhdau'}>
-            <Button
-              disabled={listing?.listing_time > moment().unix()}
-              onClick={handleBuy}
-              variant='outlined'
-              size='small'
-              color='primary'>
-              <IntlMessages id='nfts.detail.listingBuy' />
-            </Button>
-          </Tooltip>
+          <Button
+            disabled={listing?.listing_time > moment().unix()}
+            onClick={handleBuy}
+            variant='outlined'
+            size='small'
+            color='primary'>
+            <IntlMessages id='nfts.detail.listingBuy' />
+          </Button>
         )}
       </TableCell>
       <TableCell>
-        {listing?.expiration_time > 0
-          ? moment
-              .unix(listing?.expiration_time)
-              .add(moment.duration({minutes: moment().utcOffset()}))
-              .fromNow()
+        {listing?.closing_date
+          ? moment(listing?.closing_date).utc().fromNow()
           : 'never'}
       </TableCell>
       <TableCell>

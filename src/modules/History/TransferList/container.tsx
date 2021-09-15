@@ -6,17 +6,13 @@ import ErrorView from 'modules/Common/ErrorView';
 import TransferTable from './TransferTable';
 import LoadingTable from 'modules/Common/LoadingTable';
 
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useTransferList} from 'hooks/history/useTransferList';
 
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { useTransferList } from 'hooks/history/useTransferList';
-
-
-type  Props  = {
+type Props = {
   address: string;
   networkName: EthereumNetwork;
 };
-
-
 
 const TransferListContainer: React.FC<Props> = (props) => {
   const {address, networkName} = props;
@@ -32,55 +28,26 @@ const TransferListContainer: React.FC<Props> = (props) => {
     onChangeRowsPerPage,
   } = useTransferList({address, networkName});
 
- 
   return (
-      <GridContainer>
-        <Grid item xs={12} md={12}>
-          <Paper className={classes.paper}>
-            <Toolbar className={classes.toolbar}>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-                style={{width: '100%'}}>
-                <Box>
-                  <Typography variant='h5'>Transfers List</Typography>
-                </Box>
-                {/* <Select
-                    className={classes.selectBox}
-                    value={filterValue}
-                    onChange={handleChange}
-                    disableUnderline={true}>
-                    <option value='all' className={classes.selectOption}>
-                      {messages['app.all']}
-                    </option>
-                    <option value='send' className={classes.selectOption}>
-                      {messages['app.send']}
-                    </option>
-                    <option value='receive' className={classes.selectOption}>
-                      {messages['app.receive']}
-                    </option>
-                  </Select> */}
-              </Box>
-            </Toolbar>
-            {loading ? (
-              <LoadingTable columns={6} rows={10} />
-            ) : error ? (
-              <ErrorView message={error.message} />
-            ) : (
-              <TransferTable
-                networkName={networkName}
-                data={data}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={rowsPerPageOptions}
-                onChangePage={(newPage) => onChangePage(newPage)}
-                onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-              />
-            )}
-          </Paper>
-        </Grid>
-      </GridContainer>
+    <GridContainer>
+      <Grid item xs={12}>
+        {loading ? (
+          <LoadingTable columns={6} rows={10} />
+        ) : error ? (
+          <ErrorView message={error.message} />
+        ) : (
+          <TransferTable
+            networkName={networkName}
+            data={data}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangePage={(newPage) => onChangePage(newPage)}
+            onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+          />
+        )}
+      </Grid>
+    </GridContainer>
   );
 };
 

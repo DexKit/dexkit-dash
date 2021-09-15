@@ -125,15 +125,6 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
               ml={{xs: 0, xl: 'auto'}}
               mt={{xs: 2, xl: 0}}>
               <Box>
-                {/* <Button
-                  variant="contained"
-                  color={'primary'}
-                  onClick={() => {
-                    history.push(`/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`);
-                  }}
-                  className={classes.root}>
-                  <IntlMessages id='common.buyKit' />
-                </Button> */}
                 <Transak
                   variant='outlined'
                   size='medium'

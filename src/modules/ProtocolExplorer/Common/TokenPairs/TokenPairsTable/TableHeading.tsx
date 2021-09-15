@@ -6,7 +6,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts, EXCHANGE} from 'shared/constants/AppEnums';
-import { IS_AMM } from 'utils/protocol';
+import {IS_AMM} from 'utils/protocol';
 
 interface TableHeadingProps {
   exchange: EXCHANGE;
@@ -43,56 +43,44 @@ const TableHeading: React.FC<TableHeadingProps> = (props) => {
   }));
 
   const classes = useStyles();
- 
 
   return (
     <TableRow className={classes.tableRowRoot}>
-     
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.pair' />
-        </TableCell>
-      
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.price' />
-        </TableCell>
-   
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.pair' />
+      </TableCell>
 
-    
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.baseAmount24' />
-        </TableCell>
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.price' />
+      </TableCell>
 
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.baseAmount24' />
+      </TableCell>
 
-      
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.quoteAmount24' />
-        </TableCell>
-  
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.quoteAmount24' />
+      </TableCell>
 
-      
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.volume24' />
-        </TableCell>
- 
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.volume24' />
+      </TableCell>
 
-     
-        <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.trades24' />
-        </TableCell>
-   
+      <TableCell align='left' className={classes.tableCellRoot}>
+        <IntlMessages id='app.trades24' />
+      </TableCell>
 
       {props.exchange === EXCHANGE.ALL && (
-        
-          <TableCell align='left' className={classes.tableCellRoot}>
-            <IntlMessages id='app.exchange' />
-          </TableCell>
+        <TableCell align='left' className={classes.tableCellRoot}>
+          <IntlMessages id='app.exchange' />
+        </TableCell>
       )}
-      
-      {IS_AMM(props.exchange)  && (      
+
+      {IS_AMM(props.exchange) && (
         <TableCell align='left' className={classes.tableCellRoot}>
           <IntlMessages id='app.pool' />
         </TableCell>
-    )}
+      )}
     </TableRow>
   );
 };

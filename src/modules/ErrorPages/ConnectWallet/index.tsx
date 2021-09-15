@@ -10,16 +10,15 @@ import {makeStyles, Link} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {useWeb3} from 'hooks/useWeb3';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 import FaqList from './FaqList';
-
 
 interface ComingSoonProps {}
 
 const ConnectWallet: React.FC<ComingSoonProps> = () => {
   const {onConnectWeb3} = useWeb3();
 
-  const {messages} = useIntl(); 
+  const {messages} = useIntl();
 
   const useStyles = makeStyles(() => {
     return {
@@ -78,7 +77,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
               type='submit'
               className={classes.button}
               onClick={onConnectWeb3}>
-                Connect Wallet
+              Connect Wallet
             </Button>
           </Box>
           <Box
@@ -86,7 +85,10 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
             display={'flex'}>
-             <Typography  variant="h4"> To use this feature you need to connect your wallet</Typography>
+            <Typography variant='h4'>
+              {' '}
+              To use this feature you need to connect your wallet
+            </Typography>
             {/*<img
               src={require('assets/images/errorPageImages/connect-wallet.png')}
               alt='Connect Wallet'
@@ -96,11 +98,7 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
             mb={5}
             maxWidth={{xs: 300, sm: 400, xl: 672}}
             width='100%'
-            display={'flex'}>
-            
-         
-          </Box>
-
+            display={'flex'}></Box>
         </Box>
         <InfoView />
       </Box>
@@ -112,8 +110,8 @@ const ConnectWallet: React.FC<ComingSoonProps> = () => {
         justifyContent='center'
         alignItems='center'
         textAlign='center'>
-        <FaqList/>
-    </Box>
+        <FaqList />
+      </Box>
     </>
   );
 };

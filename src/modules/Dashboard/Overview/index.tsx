@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import Grid from '@material-ui/core/Grid';
 import GridContainer from '../../../@crema/core/GridContainer';
@@ -13,9 +13,9 @@ import News from 'shared/components/News/';
 import InfoToken from './InfoToken';
 import {ReportCards} from 'types/models/Ecommerce';
 import {getOverviewCoinsData} from 'services/rest/coingecko';
-import { Button } from '@material-ui/core';
-import { onAddNotification } from 'redux/actions';
-import { Notification } from 'types/models/Notification';
+import {Button} from '@material-ui/core';
+import {onAddNotification} from 'redux/actions';
+import {Notification} from 'types/models/Notification';
 
 interface Props {}
 
@@ -65,25 +65,25 @@ const Overview: React.FC<Props> = () => {
           <InfoToken data={btcData} timeout={1000} />
         </Grid>
 
-        <Grid item xs={12} lg={8}> 
-            <GridContainer>
-              <Grid item xs={12} md={6}>
-                <ProtocolNavigationUniswap />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <ProtocolNavigationSushiSwap />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <ProtocolNavigationZRXProtocol />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <ProtocolNavigationBalancer />
-              </Grid>
-            </GridContainer>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <News />
-          </Grid>
+        <Grid item xs={12} lg={8}>
+          <GridContainer>
+            <Grid item xs={12} md={6}>
+              <ProtocolNavigationUniswap />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ProtocolNavigationSushiSwap />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ProtocolNavigationZRXProtocol />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ProtocolNavigationBalancer />
+            </Grid>
+          </GridContainer>
+        </Grid>
+        <Grid item xs={12} lg={4}>
+          <News />
+        </Grid>
         {/*TODO: remover isso aqui após os testes de notificação */}
         {/* <Grid>
           <Button 
@@ -100,7 +100,6 @@ const Overview: React.FC<Props> = () => {
             Enviar notificação
           </Button>
         </Grid> */}
-
       </GridContainer>
     </Box>
   );

@@ -7,6 +7,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  useTheme,
+  useMediaQuery,
 } from '@material-ui/core';
 
 import React from 'react';
@@ -15,6 +17,8 @@ import {truncateAddress} from 'utils';
 import SubjectIcon from '@material-ui/icons/Subject';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Skeleton} from '@material-ui/lab';
+import CopyButton from 'shared/components/CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
 
 interface Props {
   asset?: any;
@@ -24,54 +28,64 @@ interface Props {
 
 export default (props: Props) => {
   const {asset, loading, error} = props;
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <SubjectIcon />{' '}
-        <Typography>
-          <IntlMessages id='nfts.detail.detailLabel' />
+    <Box py={4}>
+      <Box mb={4}>
+        <Typography
+          style={{lineHeight: '140%'}}
+          variant='body1'
+          color='textSecondary'>
+          {loading ? <Skeleton /> : asset?.description}
         </Typography>
-      </AccordionSummary>
-      <AccordionDetails style={{display: 'block'}}>
-        <Box p={2}>
-          <Box mb={2}>
-            <Typography variant='body1' color='textSecondary'>
-              {loading ? <Skeleton /> : asset?.description}
-            </Typography>
-          </Box>
-          <Grid container justify='space-between'>
-            <Grid item>
-              <Typography variant='body1'>
-                <IntlMessages id='nfts.detail.detailContractAddress' />
-              </Typography>
+      </Box>
+      {asset ? (
+        <Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Grid container justify='space-between' spacing={2}>
+                <Grid item xs={isMobile ? 12 : undefined}>
+                  <Typography variant='body1'>
+                    <IntlMessages id='nfts.detail.detailContractAddress' />
+                  </Typography>
+                </Grid>
+                <Grid item xs={isMobile ? 12 : undefined}>
+                  <Typography color='textSecondary' variant='body1'>
+                    {/* <Link
+                      href={`https://etherscan.io/address/${asset?.asset_contract?.address}`}
+                      target='_blank'> */}
+                    {truncateAddress(asset?.asset_contract?.address)}
+                    {/* </Link> */}
+                    <CopyButton
+                      copyText={asset?.asset_contract?.address}
+                      tooltip='Copied to Clipboard'
+                      size='small'>
+                      <FileCopy />
+                    </CopyButton>
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography>
-                <Link
-                  href={`https://etherscan.io/address/${asset?.asset_contract?.address}`}
-                  target='_blank'>
-                  {truncateAddress(asset?.asset_contract?.address)}
-                </Link>
-                <ButtonCopy
-                  copyText={asset?.asset_contract?.address}
-                  titleText='Copied to Clipboard'
-                />
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container justify='space-between'>
-            <Grid item>
-              <Typography variant='body1'>
-                <IntlMessages id='nfts.detail.detailTokenIdLabel' />
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='body1'>{asset?.token_id}</Typography>
+            <Grid item xs={12}>
+              <Grid container justify='space-between' spacing={2}>
+                <Grid item xs={isMobile ? 12 : undefined}>
+                  <Typography variant='body1'>
+                    <IntlMessages id='nfts.detail.detailTokenIdLabel' />
+                  </Typography>
+                </Grid>
+                <Grid item xs={isMobile ? 12 : undefined}>
+                  <Typography color='textSecondary' variant='body1'>
+                    {asset?.token_id}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Box>
-      </AccordionDetails>
-    </Accordion>
+      ) : null}
+    </Box>
   );
 };

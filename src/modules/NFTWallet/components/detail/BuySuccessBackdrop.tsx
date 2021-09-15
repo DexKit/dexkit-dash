@@ -16,6 +16,8 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import {useWeb3} from 'hooks/useWeb3';
 
+import {ReactComponent as SuccessIcon} from 'assets/images/icons/success-icon.svg';
+
 const useStyles = makeStyles((theme) => ({
   assetImage: {
     height: '100%',
@@ -70,12 +72,7 @@ export default (props: Props) => {
             spacing={4}
             direction='column'>
             <Grid item>
-              <CheckCircleIcon
-                style={{
-                  fontSize: theme.spacing(16),
-                  color: theme.palette.success.main,
-                }}
-              />
+              <SuccessIcon />
             </Grid>
             <Grid item>
               <Typography variant='h5'>

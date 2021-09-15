@@ -86,7 +86,7 @@ export default (props: Props) => {
 
   const handleChangeToken = useCallback(
     (e: ChangeEvent<any>) => {
-      let index = parseInt(e.target.value);
+      const index = parseInt(e.target.value);
 
       onChangeToken(index);
     },

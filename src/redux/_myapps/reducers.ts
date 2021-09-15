@@ -18,7 +18,7 @@ const initialState: MyAppsState = {
   kitsData: [],
   userKits: [],
   tokenData: [],
-  insufficientAmountAlert: true
+  insufficientAmountAlert: true,
 };
 
 export default (
@@ -35,7 +35,7 @@ export default (
     case getType(actions.setAllTokens):
       return {...state, tokenData: action.payload};
     case getType(actions.setInsufficientAmountAlert):
-      return {...state, insufficientAmountAlert: action.payload };
+      return {...state, insufficientAmountAlert: action.payload};
     default:
       return state;
   }

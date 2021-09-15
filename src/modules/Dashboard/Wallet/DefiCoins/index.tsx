@@ -43,8 +43,8 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
     if (assets) {
       const defis: CoinProps[] = [];
 
-      for (let asset of assets) {
-        for (let coin of asset?.coinsData || []) {
+      for (const asset of assets) {
+        for (const coin of asset?.coinsData || []) {
           defis.push(coin);
         }
       }
@@ -57,7 +57,7 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
 
   return (
     <Box className='card-hover'>
-      <Fade in={true} timeout={1000}>
+      <Fade timeout={1000}>
         <Paper>
           <Box key='defi-assets'>
             <Toolbar className={classes.toolbar}>
@@ -69,28 +69,8 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
                 <Box>
                   <Typography variant='h5'>Defi Assets</Typography>
                 </Box>
-                {/* <Box>
-              <Link color='secondary' component='button' underline='none'>
-                <IntlMessages id='common.viewAll' />
-              </Link>
-            </Box> */}
               </Box>
             </Toolbar>
-            {/* <Box display='flex' alignItems='center'>
-          <Box
-            component='h2'
-            color='text.primary'
-            fontSize={16}
-            mb={{xs: 4, sm: 4, xl: 6}}
-            fontWeight={Fonts.BOLD}>
-            <IntlMessages id='DEFI ASSETS' />
-          </Box>
-          <Box component='span' ml='auto'>
-            <Link color='secondary' component='button' underline='none'>
-              <IntlMessages id='common.viewAll' />
-            </Link>
-          </Box>
-        </Box> */}
 
             <GridContainer>
               {defiData.length > 0 ? (

@@ -1,59 +1,66 @@
-import { gql } from '@apollo/client';
+import {gql} from '@apollo/client';
 
 export const SEARCH_BY_ADDRESS = gql`
-   query SearchByAddress($value: String!, $network: Network!) {
-     search(string: $value, network: $network ){
-       subject {
-         ... on Address {
-           address
-           annotation
-         }
+  query SearchByAddress($value: String!, $network: Network!) {
+    search(string: $value, network: $network) {
+      subject {
+        ... on Address {
+          address
+          annotation
+        }
         ... on Currency {
-           symbol
-           name
-           currencyAddress: address
-           tokenId
-           tokenType
-           decimals
-         }
-         ... on SmartContract {
-           contractAdress: address
-           annotation
-           contractType
-           protocol
-       }
-         ... on TransactionHash {
-           hash
-         }
-       }
-     }
-   }
- `;
+          symbol
+          name
+          currencyAddress: address
+          tokenId
+          tokenType
+          decimals
+        }
+        ... on SmartContract {
+          contractAdress: address
+          annotation
+          contractType
+          protocol
+        }
+        ... on TransactionHash {
+          hash
+        }
+      }
+    }
+  }
+`;
 
- export const SEARCH_CURRENCY_BY_ADDRESS = gql`
-   query SearchCurrencyByAddress($value: String!) {
-     search(string: $value ){
-       subject {
+export const SEARCH_CURRENCY_BY_ADDRESS = gql`
+  query SearchCurrencyByAddress($value: String!) {
+    search(string: $value) {
+      subject {
         ... on Currency {
-           symbol
-           name
-           currencyAddress: address
-           tokenId
-           tokenType
-           decimals
-         }
-       }
-       network {
+          symbol
+          name
+          currencyAddress: address
+          tokenId
+          tokenType
+          decimals
+        }
+      }
+      network {
         network
       }
-     }
-   }
- `;
+    }
+  }
+`;
 
 export const BITQUERY_SEARCH = gql`
-  query BitquerySearch($network: EthereumNetwork!, $exchangeName: String!, $addresses: [String!]) {
+  query BitquerySearch(
+    $network: EthereumNetwork!
+    $exchangeName: String!
+    $addresses: [String!]
+  ) {
     ethereum(network: $network) {
-      dexTrades(exchangeName: {is: $exchangeName}, baseCurrency: {in: $addresses}) {
+      dexTrades(
+        exchangeName: {is: $exchangeName}
+        baseCurrency: {in: $addresses}
+      ) {
         baseCurrency {
           address
           decimals
@@ -74,7 +81,7 @@ export const BITQUERY_SEARCH = gql`
       }
     }
   }
-`
+`;
 
 // export const BITQUERY_LAST_TRADE_PAIR_EXPLORER = gql`
 //   query GetLastTradePairExplorer($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $quoteAddress: String!) {
@@ -101,10 +108,6 @@ export const BITQUERY_SEARCH = gql`
 //     }
 //   }
 // `;
-
-
-
-
 
 // export const BITQUERY_TOKEN_PAIRS = gql`
 //   query GetTokenPairs1($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String!, $from: ISO8601DateTime) {
@@ -150,8 +153,6 @@ export const BITQUERY_SEARCH = gql`
 //     }
 //   }
 // `;
-
-
 
 // export const BITQUERY_TOKEN_TRADES = gql`
 //   query GetTokenTrades($network: EthereumNetwork!, $exchangeName: String, $baseAddress: String, $quoteAddress: String, $limit: Int!, $offset: Int!) {
@@ -363,7 +364,7 @@ export const BITQUERY_SEARCH = gql`
 //           symbol
 //           address
 //         }
-//         buyAmount 
+//         buyAmount
 //         count
 //         median_price: price(calculate: median)
 //         last_price: maximum(of: block, get: price)

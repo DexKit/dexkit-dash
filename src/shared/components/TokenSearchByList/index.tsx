@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import Web3 from 'web3';
-import {useWeb3} from 'hooks/useWeb3';
 import {useTokenList} from 'hooks/useTokenList';
 // import {searchByAddress} from 'services/graphql/bitquery';
 import {ChainId} from 'types/blockchain';
@@ -17,11 +16,14 @@ import {
 } from '@material-ui/core';
 import {Autocomplete} from '@material-ui/lab';
 import GridContainer from '@crema/core/GridContainer';
-import { Token } from 'types/app';
-import { SearchByAddress, SearchByAddressVariables } from 'services/graphql/bitquery/__generated__/SearchByAddress';
-import { SEARCH_BY_ADDRESS } from 'services/graphql/bitquery/gql';
-import { client } from 'services/graphql';
-import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
+import {Token} from 'types/app';
+import {
+  SearchByAddress,
+  SearchByAddressVariables,
+} from 'services/graphql/bitquery/__generated__/SearchByAddress';
+import {SEARCH_BY_ADDRESS} from 'services/graphql/bitquery/gql';
+import {client} from 'services/graphql';
+import {GET_CHAIN_FROM_NETWORK} from 'shared/constants/Blockchain';
 
 interface TokenSearchProps {
   exchangeName: EXCHANGE;
@@ -46,21 +48,21 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
       query: SEARCH_BY_ADDRESS,
       variables: {
         network: network,
-        value: value
-      }
-    })
-  }
+        value: value,
+      },
+    });
+  };
 
   useEffect(() => {
     if (tokenList && searchKey) {
       if (Web3.utils.isAddress(searchKey)) {
-
         setLoading(true);
         searchByAddress(searchKey, networkName)
           .then((result: any) => {
             if (!result.loading && result?.data) {
               const founds = result?.data?.search?.map((s: any) => s.subject);
-              const parsedFounds = founds?.filter((f: any) => f.currencyAddress)
+              const parsedFounds = founds
+                ?.filter((f: any) => f.currencyAddress)
                 .map((f: any) => {
                   return {
                     ...f,
@@ -81,7 +83,6 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
           })
           .catch((error: any) => console.error('search', error))
           .finally(() => setLoading(false));
-
       } else {
         const searchTokens = filterTokensInfoByString(
           tokenList,
@@ -122,7 +123,7 @@ export const TokenSearchByList: React.FC<TokenSearchProps> = (props) => {
       }
     }
   };
-  
+
   const getOptionLabel = (option: Token) => {
     if (type === 'token' || (searchKey && Web3.utils.isAddress(searchKey))) {
       return `${option.name} (${option.symbol}) - ${option.address.slice(

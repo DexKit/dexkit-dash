@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import IntlMessages from '../../utility/IntlMessages';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   emptyListContainer: {
     flexDirection: 'column',
     minHeight: 450,

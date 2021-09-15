@@ -9,10 +9,15 @@ import {
 import {extractPairFromAddress, getFilterValueById} from 'utils';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
-import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {
+  GET_CHAIN_FROM_NETWORK,
+  GET_DEFAULT_QUOTE,
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK
+} from 'shared/constants/Blockchain';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {BITQUERY_CONTRACT_ORDERS} from 'services/graphql/bitquery/protocol/amm.gql';
-import { FilterContext } from 'providers/protocol/filterContext';
+import {FilterContext} from 'providers/protocol/filterContext';
+
 
 interface Props {
   networkName: EthereumNetwork;
@@ -20,18 +25,13 @@ interface Props {
   address: string;
 }
 export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
-  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
 
   const {quoteAddress} = extractPairFromAddress(address, chainId);
-  const {
-    filters
-  } = useContext(FilterContext);
-
+  const {filters} = useContext(FilterContext);
   const from = getFilterValueById('from', filters);
   const to = getFilterValueById('to', filters);
   const tradeAmount = getFilterValueById('tradeAmount', filters);
-
-
 
   const {
     currentPage,
@@ -52,10 +52,10 @@ export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
       network: networkName,
       exchangeName: GET_EXCHANGE_NAME(exchange),
       address: address,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
+      quoteAddress: quoteAddress ||  address?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
       limit: rowsPerPage,
       offset: skipRows,
-      from,
+      from: from,
       till: to,
       tradeAmount: tradeAmount ? Number(tradeAmount) : null,
     },

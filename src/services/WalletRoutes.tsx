@@ -7,7 +7,7 @@ import {matchRoutes} from 'react-router-config';
 import AppContext from '../@crema/utility/AppContext';
 import {AppState} from '../redux/store';
 import AppContextPropsType from '../types/AppContextPropsType';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 interface AuthRoutesProps {
   children: ReactNode;
@@ -19,9 +19,14 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   const history = useHistory();
   const {routes} = useContext<AppContextPropsType>(AppContext);
 
-  const ethAccount = useSelector<AppState, AppState['blockchain']['ethAccount']>(state => state.blockchain.ethAccount);
+  const ethAccount = useSelector<
+    AppState,
+    AppState['blockchain']['ethAccount']
+  >((state) => state.blockchain.ethAccount);
   const defaultAccount = useDefaultAccount();
-  const {initialPath} = useSelector<AppState, AppState['settings']>(({settings}) => settings);
+  const {initialPath} = useSelector<AppState, AppState['settings']>(
+    ({settings}) => settings,
+  );
   const currentRoute = matchRoutes(routes, pathname)[0].route;
 
   useEffect(() => {
@@ -44,42 +49,54 @@ const WalletRoutes: React.FC<AuthRoutesProps> = ({children}) => {
   }, [dispatch, initialPath, pathname, ethAccount]);
 
   useEffect(() => {
-      if ((!ethAccount && !defaultAccount) && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('wallet')) {
-        history.push('/no-wallet');
-      } else if (
-        pathname === '/no-wallet'  && ethAccount
-      ) {
-        // @ts-ignore
-        if (pathname === '/') {
-          history.push('/dashboards/overview');
-        }
-        // @ts-ignore
-        else if (initialPath !== '/no-wallet') {
-          history.push(initialPath);
-        } else {
-          history.push('/dashboards/overview');
-        }
-    }
-
-    if (!ethAccount  && currentRoute.auth && currentRoute.auth.length >= 1 && currentRoute.auth.includes('connect-wallet')) {
-      history.push('/connect-wallet');
-    } else if (
-      pathname === '/connect-wallet'  && ethAccount
+    if (
+      !ethAccount &&
+      !defaultAccount &&
+      currentRoute.auth &&
+      currentRoute.auth.length >= 1 &&
+      currentRoute.auth.includes('wallet')
     ) {
+      history.push('/onboarding/login-wallet');
+    } else if (pathname === '/no-wallet' && ethAccount) {
       // @ts-ignore
       if (pathname === '/') {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
       // @ts-ignore
       else if (initialPath !== '/no-wallet') {
         history.push(initialPath);
       } else {
-        history.push('/dashboards/overview');
+        history.push('/wallet');
       }
-  }
+    }
 
-
-  }, [ethAccount, pathname, initialPath, currentRoute.auth, history, defaultAccount]);
+    if (
+      !ethAccount &&
+      currentRoute.auth &&
+      currentRoute.auth.length >= 1 &&
+      currentRoute.auth.includes('connect-wallet')
+    ) {
+      history.push('/onboarding/login-wallet');
+    } else if (pathname === '/connect-wallet' && ethAccount) {
+      // @ts-ignore
+      if (pathname === '/') {
+        history.push('/wallet');
+      }
+      // @ts-ignore
+      else if (initialPath !== '/no-wallet') {
+        history.push(initialPath);
+      } else {
+        history.push('/wallet');
+      }
+    }
+  }, [
+    ethAccount,
+    pathname,
+    initialPath,
+    currentRoute.auth,
+    history,
+    defaultAccount,
+  ]);
 
   return <>{children}</>;
 };

@@ -1,10 +1,6 @@
-import React, {useState} from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+import React, {useState, useCallback} from 'react';
+
 import MenuIcon from '@material-ui/icons/Menu';
-import MenuOpenIcon from '@material-ui/icons/MenuOpen';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
@@ -16,25 +12,47 @@ import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
 import WalletInfo from 'shared/components/WalletInfo';
-import { ChainId } from 'types/blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
-import ThemeModeSwitcher from '@crema/core/ThemeModeSwitcher';
+
+import {useWeb3} from 'hooks/useWeb3';
+import {
+  GET_CHAIN_ID_NAME,
+  GET_DEFAULT_TOKEN_BY_NETWORK,
+} from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
-import { AppState } from 'redux/store';
-import { isMobile } from 'web3modal';
+import {AppState} from 'redux/store';
+
+import {
+  Grid,
+  useTheme,
+  useMediaQuery,
+  Container,
+  ButtonBase,
+} from '@material-ui/core';
+import AppBarButton from 'shared/components/AppBar/AppBarButton';
+
+import {ReactComponent as SettingsIcon} from 'assets/images/icons/settings.svg';
+
+import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
+import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
+
+import {TokenSearch} from 'shared/components/TokenSearch';
+import {useHistory} from 'react-router';
+import {Token} from 'types/app';
+import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
+import {switchChain} from 'utils/wallet';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId} = useWeb3();
+  const {chainId, forceWeb3Connect, getProvider} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [
-    mobileMoreAnchorEl,
-    setMobileMoreAnchorEl,
-  ] = useState<null | HTMLElement>(null);
+  const history = useHistory();
+
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
+    useState<null | HTMLElement>(null);
+
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   function handleMobileMenuClose() {
@@ -44,11 +62,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setMobileMoreAnchorEl(event.currentTarget);
   }
+
   const {navCollapsed} = useSelector<AppState, AppState['settings']>(
     ({settings}) => settings,
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -68,79 +88,179 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     </Menu>
   );
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleMobileMenuToggle = useCallback(() => {
+    dispatch(toggleNavCollapsed());
+  }, [dispatch]);
+
+  const onClickSearchToken = (token: Token) => {
+    if (token) {
+      if (token.address) {
+        history.push(`/explorer/${token.address}?network=${token.networkName}`);
+      } else {
+        const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
+        if (add) {
+          history.push(`/explorer/${add}?network=${token.networkName}`);
+        }
+      }
+    }
+  };
+
+  const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+
+  const handleCloseSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(false);
+  }, []);
+
+  const handleSelectChain = useCallback(
+    (chainId: number) => {
+      setShowSwitchNetwork(false);
+      switchChain(getProvider(), chainId);
+    },
+    [getProvider],
+  );
+
+  const handleOpenSwitchNetwork = useCallback(() => {
+    setShowSwitchNetwork(true);
+  }, []);
+
   return (
     <>
-      <AppBar color='inherit' className={clsx(classes.appBar, 'app-bar')}>
-        <Toolbar className={classes.appToolbar}>
-        {!isMobile() && 
-        <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-            onClick={() => dispatch(toggleNavCollapsed())}>
-            {navCollapsed  ? <MenuOpenIcon className={classes.menuIconCollapsed} /> :  <MenuOpenIcon className={classes.menuIcon} />}
-          </IconButton>}
-          {isMobile() && 
-        <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-            onClick={() => dispatch(toggleNavCollapsed())}>
-           <MenuIcon className={classes.menuIcon} />
-          </IconButton>}
-
-
-         {/* <AppLogo />*/}
-         <Box className={classes.grow} />
-          {/* <SearchBar borderLight placeholder='Search…' />*/}
-          <Box className={classes.sectionDesktop}>
-          {/*<Hidden mdDown >
-            <IconButton
-              edge='start'
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='open drawer'
-              onClick={onChangeNavStyle}>
-              <MenuIcon className={classes.menuIcon} />
-            </IconButton>
-          </Hidden> 
-            <LanguageSwitcher />*/}
-            <ThemeModeSwitcher />
-          {/*  <HeaderMessages />*/}
-            <Notifications />
-            {
-              (chainId !== ChainId.Mainnet && chainId !== undefined) ? (
-                <Box
-                  className={classes.badgeRoot}
-                  style={{
-                    color: 'rgba(226, 167, 46)',
-                    backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                  }}>
-                  {GET_CHAIN_ID_NAME(chainId)}
+      {chainId ? (
+        <SwitchNetworkDialog
+          selected={chainId}
+          open={showSwitchNetwork}
+          onSelectChain={handleSelectChain}
+          onClose={handleCloseSwitchNetwork}
+        />
+      ) : null}
+      <Box className={clsx(classes.appBar, 'app-bar')}>
+        <Container
+          maxWidth='xl'
+          style={
+            !isMobile
+              ? {
+                  paddingLeft: theme.spacing(8),
+                  paddingRight: theme.spacing(8),
+                }
+              : {
+                  paddingLeft: theme.spacing(2),
+                  paddingRight: theme.spacing(2),
+                }
+          }>
+          {isMobile ? (
+            <Box>
+              <Grid
+                container
+                justify='space-between'
+                alignItems='center'
+                alignContent='center'>
+                <Grid item>
+                  {isMobile ? <DexkitLogoIconImage /> : <DexkitLogoImage />}
+                </Grid>
+                <Grid item>
+                  <Grid
+                    container
+                    alignItems='center'
+                    alignContent='center'
+                    spacing={2}>
+                    <Grid item>
+                      {chainId !== undefined ? (
+                        <Grid item>
+                          <ButtonBase
+                            onClick={handleOpenSwitchNetwork}
+                            className={classes.switchNetworkButton}>
+                            <Box
+                              className={classes.badgeRoot}
+                              style={{
+                                color: 'rgba(226, 167, 46)',
+                                backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                              }}>
+                              {GET_CHAIN_ID_NAME(chainId)}
+                            </Box>
+                          </ButtonBase>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                    <Grid item>
+                      <WalletInfo />
+                    </Grid>
+                    <Grid item>
+                      <AppBarButton onClick={handleMobileMenuToggle}>
+                        <MenuIcon />
+                      </AppBarButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            <Grid
+              container
+              alignItems='center'
+              alignContent='center'
+              spacing={2}>
+              <Grid item>
+                <Box mr={4}>
+                  <DexkitLogoImage />
                 </Box>
-              ) : null
-            }
-          </Box>
-          <Box className={classes.sectionMobile}>
-            <IconButton
-              aria-label='show more'
-              aria-controls={mobileMenuId}
-              aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
-              color='inherit'>
-              <MoreIcon />
-            </IconButton>
-          </Box>
-          <Box className={classes.wallet}>
-            <WalletInfo />
-          </Box>
-        </Toolbar>
-      </AppBar>
+              </Grid>
+              <Grid item xs>
+                {/*  <AppBarSearchInput
+                  placeholder='Search for tokens, pools and vaults'
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  }
+                  fullWidth
+                /> */}
+                <TokenSearch onClick={onClickSearchToken} />
+              </Grid>
+              <Grid item>
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems='center'
+                  alignContent='center'>
+                  {chainId !== undefined ? (
+                    <Grid item>
+                      <ButtonBase
+                        onClick={handleOpenSwitchNetwork}
+                        className={classes.switchNetworkButton}>
+                        <Box
+                          className={classes.badgeRoot}
+                          style={{
+                            color: 'rgba(226, 167, 46)',
+                            backgroundColor: 'rgba(226, 167, 46, 0.267)',
+                          }}>
+                          {GET_CHAIN_ID_NAME(chainId)}
+                        </Box>
+                      </ButtonBase>
+                    </Grid>
+                  ) : null}
+                  <Grid item>
+                    <WalletInfo />
+                  </Grid>
+                  <Grid item>
+                    <Notifications />
+                  </Grid>
+                  {/* <Grid item>
+                    <AppBarButton>
+                      <SettingsIcon />
+                    </AppBarButton>
+                  </Grid> */}
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+        </Container>
+      </Box>
       {renderMobileMenu}
     </>
   );
 };
 export default AppHeader;
-

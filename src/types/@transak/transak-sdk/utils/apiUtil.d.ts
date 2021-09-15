@@ -1,1 +1,4 @@
-export declare function fetchAPIKey(apiKey: string, apiURl: string): Promise<any>;
+export declare function fetchAPIKey(
+  apiKey: string,
+  apiURl: string,
+): Promise<any>;

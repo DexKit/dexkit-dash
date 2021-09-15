@@ -1,29 +1,27 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import GridContainer from '@crema/core/GridContainer';
-import {
-  Grid, 
-  TextField, 
-} from '@material-ui/core';
+import {Grid, TextField} from '@material-ui/core';
 
-import { ConfigFileExchange, GeneralConfig, SocialNetworks} from 'types/myApps';
-import { WizardProps } from '../shared';
+import {ConfigFileExchange, GeneralConfig, SocialNetworks} from 'types/myApps';
+import {WizardProps} from '../shared';
 import isURL from 'validator/lib/isURL';
 import {isAddress} from '@ethersproject/address';
 import {capitalize} from 'utils/text';
-import  { CustomLabel } from 'shared/components/Wizard/Label';
-import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
-import { error } from '../shared/';
-import { HELP_TEXT } from './helpText';
-import { getHelpText } from '../shared';
-import { InfoComponent } from '../shared/Buttons/infoComponent';
-import { WizardData } from '.';
+import {CustomLabel} from 'shared/components/Wizard/Label';
+import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
+import {error} from '../shared/';
+import {HELP_TEXT} from './helpText';
+import {getHelpText} from '../shared';
+import {InfoComponent} from '../shared/Buttons/infoComponent';
+import {WizardData} from '.';
 
 interface GeneralFormProps {
   title: string;
   fields: GeneralConfig;
 }
 
-type Props = GeneralFormProps & WizardProps<ConfigFileExchange, keyof ConfigFileExchange>;
+type Props = GeneralFormProps &
+  WizardProps<ConfigFileExchange, keyof ConfigFileExchange>;
 
 // const contactsType = ['Telegram Url', 'Twitter Url', 'Facebook Url', 'Discord Url', 'Reddit Url', 'BitcoinTalk Url']
 
@@ -33,7 +31,7 @@ const GeneralForm: React.FC<Props> = (props) => {
     changeIssuerForm,
     validator,
     isValid: startValidation,
-    editable: startEditable
+    editable: startEditable,
   } = props;
   const [errors, setErrors] = useState<error>({});
   const [fields, setFields] = useState<GeneralConfig>(startData);
@@ -41,10 +39,13 @@ const GeneralForm: React.FC<Props> = (props) => {
   const [editable] = useState(Boolean(startEditable));
   const maxPercente = 0.5;
   const changeFields = (
-    $event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string | undefined,
+    $event:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | string
+      | undefined,
     key: string,
   ) => {
-    const value = typeof($event) === 'string' ? $event : $event?.target?.value;
+    const value = typeof $event === 'string' ? $event : $event?.target?.value;
     setFields({
       ...fields,
       [key]: value,
@@ -94,10 +95,12 @@ const GeneralForm: React.FC<Props> = (props) => {
           }
           case 'feePercentage': {
             const perc = Number(feePercentage);
-              errors.feePercentage =
-              (perc < 0 || perc > 100) || isNaN(perc) || !isFinite(perc)
+            errors.feePercentage =
+              perc < 0 || perc > 100 || isNaN(perc) || !isFinite(perc)
                 ? 'Fee Percentage number is invalid'
-                : (perc > maxPercente ? `The value max to Feet Percentage is ${maxPercente}` : undefined);
+                : perc > maxPercente
+                ? `The value max to Feet Percentage is ${maxPercente}`
+                : undefined;
             break;
           }
           case 'feeRecipient': {
@@ -174,13 +177,13 @@ const GeneralForm: React.FC<Props> = (props) => {
     );
     // setErrors(_errors);
     const keys = Object.keys(_errors ?? {});
-    keys.forEach( (k,i) => {
+    keys.forEach((k, i) => {
       validatorToOtherFields(k as keyof GeneralConfig, _errors ?? {});
-    })
+    });
   }, []);
 
   useEffect(() => {
-    if(Boolean(editable)){
+    if (Boolean(editable)) {
       changeIssuerForm(WizardData.GENERAL as keyof ConfigFileExchange, fields);
     }
   }, [fields, changeIssuerForm, editable]);
@@ -191,115 +194,119 @@ const GeneralForm: React.FC<Props> = (props) => {
 
   return (
     <GridContainer>
-      <Grid item xs={12} md={6} sm={6} key="title">
-      <TextField
-        type='text'
-        key='exchange-title'
-        id='exchange-title'
-        fullWidth
-        label={
-          <CustomLabel required={true}>
-            Title
-          </CustomLabel>
-        }
-        variant='outlined'
-        value={fields.title}
-        helperText={!valid ? errors?.title : undefined}
-        error={errors?.title != null}
-        onBlur={($e) => {
-          if(!Boolean(editable)){
-            return;
-          }
-          validatorToOtherFields('title', errors);
-          setErrors({ ...errors });
-          $e.preventDefault()
-        }}
-        onChange={($e) => {
-          if(!Boolean(editable)){
-            return;
-          }
-          changeFields($e, 'title');
-          $e.preventDefault()
-        }}
-        disabled={!Boolean(editable)}
-        InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'title', 0)}/>)}}
-      />
+      <Grid item xs={12} md={6} sm={6} key='title'>
+        <TextField
+          type='text'
+          key='exchange-title'
+          id='exchange-title'
+          fullWidth
+          label={<CustomLabel required={true}>Title</CustomLabel>}
+          variant='outlined'
+          value={fields.title}
+          helperText={!valid ? errors?.title : undefined}
+          error={errors?.title != null}
+          onBlur={($e) => {
+            if (!Boolean(editable)) {
+              return;
+            }
+            validatorToOtherFields('title', errors);
+            setErrors({...errors});
+            $e.preventDefault();
+          }}
+          onChange={($e) => {
+            if (!Boolean(editable)) {
+              return;
+            }
+            changeFields($e, 'title');
+            $e.preventDefault();
+          }}
+          disabled={!Boolean(editable)}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent text={getHelpText(HELP_TEXT, 'title', 0)} />
+            ),
+          }}
+        />
       </Grid>
-      <Grid item xs={12} md={6} sm={6} key="icon">
+      <Grid item xs={12} md={6} sm={6} key='icon'>
         <TextField
           type='text'
           key='exchange-icon'
           id='exchange-icon'
           fullWidth
-          label={
-            <CustomLabel required={true}>
-              Icon URL
-            </CustomLabel>
-          }
+          label={<CustomLabel required={true}>Icon URL</CustomLabel>}
           variant='outlined'
           placeholder={'https://pin.it/73XYbnZ'}
           value={fields.icon}
           helperText={!valid ? errors?.icon : undefined}
           error={errors?.icon != null}
           onBlur={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             validatorToOtherFields('icon', errors);
-            setErrors({ ...errors });
+            setErrors({...errors});
           }}
           InputLabelProps={{
             shrink: true,
           }}
           onChange={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             changeFields($e, 'icon');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'icon', 0)}/>)}}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent text={getHelpText(HELP_TEXT, 'icon', 0)} />
+            ),
+          }}
         />
       </Grid>
-      <Grid item xs={12} md={6} sm={6} key="domain">
+      <Grid item xs={12} md={6} sm={6} key='domain'>
         <TextField
           type='text'
           key='exchange-domain'
           id='exchange-domain'
           fullWidth
-          label={<CustomLabel text="Domain URL" required={true} />}
+          label={<CustomLabel text='Domain URL' required={true} />}
           InputLabelProps={{
             shrink: true,
           }}
-          placeholder="http://www.domainofmyproject.com"
+          placeholder='http://www.domainofmyproject.com'
           variant='outlined'
           value={fields.domain}
           helperText={!valid ? errors?.domain : undefined}
           error={errors?.domain != null}
           onBlur={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             validatorToOtherFields('domain', errors);
-            setErrors({ ...errors });
+            setErrors({...errors});
           }}
           onChange={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             changeFields($e, 'domain');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'domain', 0)}/>)}}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent text={getHelpText(HELP_TEXT, 'domain', 0)} />
+            ),
+          }}
         />
       </Grid>
-      <Grid item xs={12} md={6} sm={6} key="feeRecipient">
+      <Grid item xs={12} md={6} sm={6} key='feeRecipient'>
         <TextField
           type='text'
           key='exchange-feeRecipient'
           id='exchange-feeRecipient'
           fullWidth
-          label={<CustomLabel text="Fee Address" required={true} />}
+          label={<CustomLabel text='Fee Address' required={true} />}
           placeholder={ZERO_ADDRESS}
           InputLabelProps={{
             shrink: true,
@@ -309,53 +316,55 @@ const GeneralForm: React.FC<Props> = (props) => {
           helperText={!valid ? errors?.feeRecipient : undefined}
           error={errors?.feeRecipient != null}
           onBlur={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             validatorToOtherFields('feeRecipient', errors);
-            setErrors({ ...errors });
+            setErrors({...errors});
           }}
           onChange={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             changeFields($e, 'feeRecipient');
           }}
           disabled={!Boolean(editable)}
-          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'feeRecipient', 0)}/>)}}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent text={getHelpText(HELP_TEXT, 'feeRecipient', 0)} />
+            ),
+          }}
         />
       </Grid>
-      <Grid item xs={12} md={6} sm={6} key="feePercentage">
+      <Grid item xs={12} md={6} sm={6} key='feePercentage'>
         <TextField
-          type="number"
+          type='number'
           key='exchange-feePercentage'
           id='exchange-feePercentage'
           fullWidth
-          label={<CustomLabel text="Fee Percentage" required={true} />}
-          placeholder="0.0% - 0.5%"
+          label={<CustomLabel text='Fee Percentage' required={true} />}
+          placeholder='0.0% - 0.5%'
           variant='outlined'
           value={fields.feePercentage}
           InputLabelProps={{
             shrink: true,
           }}
-          inputProps={
-            {
-              min: 0.0,
-              max: maxPercente,
-              step: 0.001
-            }
-          }
+          inputProps={{
+            min: 0.0,
+            max: maxPercente,
+            step: 0.001,
+          }}
           helperText={!valid ? errors?.feePercentage : undefined}
           error={errors?.feePercentage != null}
           onBlur={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             validatorToOtherFields('feePercentage', errors);
-            setErrors({ ...errors });
+            setErrors({...errors});
           }}
           onChange={($e) => {
-            if(!Boolean(editable)){
+            if (!Boolean(editable)) {
               return;
             }
             changeFields($e, 'feePercentage');
@@ -364,13 +373,23 @@ const GeneralForm: React.FC<Props> = (props) => {
           // InputProps={{
           //   endAdornment: <InputAdornment position="end">%</InputAdornment>,
           // }}
-          InputProps={{ endAdornment: (<InfoComponent text={getHelpText(HELP_TEXT, 'feePercentage', 0)}/>)}}
+          InputProps={{
+            endAdornment: (
+              <InfoComponent
+                text={getHelpText(HELP_TEXT, 'feePercentage', 0)}
+              />
+            ),
+          }}
         />
-
       </Grid>
 
       {Object.keys(fields?.social ?? {}).map((key: string, i) => (
-        <Grid item xs={12} md={6} sm={6} key={`exchange-${key.replace('_', '-').toLowerCase()}`}>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sm={6}
+          key={`exchange-${key.replace('_', '-').toLowerCase()}`}>
           <TextField
             type='url'
             error={errors != null ? errors[key] != null : false}
@@ -382,20 +401,28 @@ const GeneralForm: React.FC<Props> = (props) => {
             variant='outlined'
             value={fields?.social ? Object.values(fields?.social)[i] : ''}
             onBlur={($e) => {
-              if(!Boolean(editable)){
+              if (!Boolean(editable)) {
                 return;
               }
               type k = keyof typeof fields.social;
               socialvalidator(key as k);
             }}
             onChange={($e) => {
-              if(!Boolean(editable)){
+              if (!Boolean(editable)) {
                 return;
               }
               changeSocialFields($e, key);
             }}
             disabled={!Boolean(editable)}
-            InputProps={{ endAdornment: (<InfoComponent text={`Enter with a valid ${capitalize(`${key.replace('_', ' ').toLowerCase()}`)}`}/>)}}
+            InputProps={{
+              endAdornment: (
+                <InfoComponent
+                  text={`Enter with a valid ${capitalize(
+                    `${key.replace('_', ' ').toLowerCase()}`,
+                  )}`}
+                />
+              ),
+            }}
           />
         </Grid>
       ))}

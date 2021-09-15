@@ -25,6 +25,10 @@ export interface GetAllMyBalance_ethereum_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetAllMyBalance_ethereum_address_balances {
@@ -71,6 +75,10 @@ export interface GetAllMyBalance_bsc_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetAllMyBalance_bsc_address_balances {
@@ -99,6 +107,56 @@ export interface GetAllMyBalance_bsc {
   address: GetAllMyBalance_bsc_address[];
 }
 
+export interface GetAllMyBalance_matic_address_balances_currency {
+  __typename: "Currency";
+  /**
+   * Currency name
+   */
+  name: string | null;
+  /**
+   * Currency symbol
+   */
+  symbol: string;
+  /**
+   * Decimals
+   */
+  decimals: number;
+  /**
+   * Token Smart Contract Address
+   */
+  address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
+}
+
+export interface GetAllMyBalance_matic_address_balances {
+  __typename: "EthereumBalance";
+  /**
+   * Currency of transfer
+   */
+  currency: GetAllMyBalance_matic_address_balances_currency | null;
+  value: number | null;
+  valueInUsd: number | null;
+}
+
+export interface GetAllMyBalance_matic_address {
+  __typename: "EthereumAddressInfoWithBalance";
+  /**
+   * DEPRECATED Balances by currencies for the address
+   */
+  balances: GetAllMyBalance_matic_address_balances[] | null;
+}
+
+export interface GetAllMyBalance_matic {
+  __typename: "Ethereum";
+  /**
+   * Basic information about address ( or smart contract )
+   */
+  address: GetAllMyBalance_matic_address[];
+}
+
 export interface GetAllMyBalance {
   /**
    * Ethereum Mainnet / Classic Chain Datasets
@@ -108,6 +166,10 @@ export interface GetAllMyBalance {
    * Ethereum Mainnet / Classic Chain Datasets
    */
   bsc: GetAllMyBalance_bsc | null;
+  /**
+   * Ethereum Mainnet / Classic Chain Datasets
+   */
+  matic: GetAllMyBalance_matic | null;
 }
 
 export interface GetAllMyBalanceVariables {

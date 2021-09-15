@@ -4,7 +4,7 @@ import {RootAction} from '../store';
 import * as actions from '../actions';
 import {Web3State} from 'types/blockchain';
 import {TokenBalance} from 'types/app';
-import { ZERO } from 'shared/constants/Blockchain';
+import {ZERO} from 'shared/constants/Blockchain';
 
 export interface BlockchainState {
   readonly ethAccount: string | undefined;
@@ -14,6 +14,7 @@ export interface BlockchainState {
   readonly tokenBalances: TokenBalance[];
   readonly ethBalance: BigNumber;
   readonly wethTokenBalance: TokenBalance | undefined;
+  readonly walletSeed: string | undefined;
 }
 
 const initialBlockchainState: BlockchainState = {
@@ -28,6 +29,7 @@ const initialBlockchainState: BlockchainState = {
       gasPriceInWei: DEFAULT_GAS_PRICE,
       estimatedTimeMs: DEFAULT_ESTIMATED_TRANSACTION_TIME_MS,
   },*/
+  walletSeed: undefined,
 };
 
 export default (

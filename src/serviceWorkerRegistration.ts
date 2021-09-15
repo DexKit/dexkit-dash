@@ -15,7 +15,9 @@ const isLocalhost = Boolean(
     // [::1] is the IPv6 localhost address.
     window.location.hostname === '[::1]' ||
     // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
+    ),
 );
 
 type Config = {
@@ -47,7 +49,7 @@ export function register(config?: Config) {
           console.log(
             'This web app is being served cache-first by a service ' +
               'worker. To learn more, visit https://cra.link/PWA',
-              serviceWorkerRegistration
+            serviceWorkerRegistration,
           );
           // messaging.useServiceWorker(serviceWorkerRegistration);
           // askForPermissionTOReceiveNotification(serviceWorkerRegistration)
@@ -60,7 +62,6 @@ export function register(config?: Config) {
         // Is not localhost. Just register service worker
         registerValidSW(swUrl, config);
       }
-
     });
   }
 }
@@ -82,7 +83,7 @@ function registerValidSW(swUrl: string, config?: Config) {
               // content until all client tabs are closed.
               console.log(
                 'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://cra.link/PWA.'
+                  'tabs for this page are closed. See https://cra.link/PWA.',
               );
               // Execute callback
               if (config && config.onUpdate) {
@@ -96,7 +97,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 
               // Execute callback
               if (config && config.onSuccess) {
-                console.log('entrou aqui')
+                console.log('entrou aqui');
                 config.onSuccess(registration);
               }
             }
@@ -112,7 +113,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 function checkValidServiceWorker(swUrl: string, config?: Config) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl, {
-    headers: { 'Service-Worker': 'script' },
+    headers: {'Service-Worker': 'script'},
   })
     .then((response) => {
       // Ensure service worker exists, and that we really are getting a JS file.
@@ -133,7 +134,9 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
       }
     })
     .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
+      console.log(
+        'No internet connection found. App is running in offline mode.',
+      );
     });
 }
 

@@ -36,23 +36,27 @@ const TransferTable: React.FC<Props> = ({
 
   return (
     <>
-      <Box className={classes.tableResponsiveMaterial}>
-        <Table stickyHeader>
-          <TableHead className={classes.borderBottomClass}>
+      <Box mb={4}>
+        <Table>
+          <TableHead>
             <TableHeading />
           </TableHead>
-
-          <TableBody className={classes.borderBottomClass}>
+          <TableBody>
             {data &&
               data.map((row, index) => (
                 <TableItem row={row} networkName={networkName} key={index} />
               ))}
           </TableBody>
         </Table>
-        {(data && data.length === 0) &&
-          <Typography variant='h5' display={'block'}  align={'center'} color={'primary'}>
-                        You don't have made transfers with this wallet yet
-          </Typography>}
+        {data && data.length === 0 && (
+          <Typography
+            variant='h5'
+            display={'block'}
+            align={'center'}
+            color={'primary'}>
+            You don't have made transfers with this wallet yet
+          </Typography>
+        )}
       </Box>
 
       <TablePagination
@@ -62,7 +66,7 @@ const TransferTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
         onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -76,7 +80,7 @@ const TransferTable: React.FC<Props> = ({
         page={currentPage}
         rowsPerPage={25}
         rowsPerPageOptions={[]}
-        onChangePage={(event: unknown, newPage: number) =>
+        onPageChange={(event: unknown, newPage: number) =>
           onChangePage(newPage)
         }
       />

@@ -1,14 +1,22 @@
 import {useQuery} from '@apollo/client';
 
 import {BITQUERY_PAIR_EXPLORER} from 'services/graphql/bitquery/protocol/gql';
-import { GetPairExplorer, GetPairExplorerVariables, GetPairExplorer_ethereum_dexTrades } from 'services/graphql/bitquery/protocol/__generated__/GetPairExplorer';
+import {
+  GetPairExplorer,
+  GetPairExplorerVariables,
+  GetPairExplorer_ethereum_dexTrades,
+} from 'services/graphql/bitquery/protocol/__generated__/GetPairExplorer';
 
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
-import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
+import {
+  GET_CHAIN_FROM_NETWORK,
+  GET_DEFAULT_QUOTE,
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK
+} from 'shared/constants/Blockchain';
 import {EXCHANGE} from 'shared/constants/AppEnums';
-import { useEffect, useState } from 'react';
-import { EthereumNetwork } from '../../../__generated__/globalTypes';
+import {useEffect, useState} from 'react';
+import {EthereumNetwork} from '../../../__generated__/globalTypes';
 
 interface Props {
   baseAddress: string;
@@ -25,28 +33,42 @@ export const usePairExplorer = ({
 }: Props) => {
   const chainId = GET_CHAIN_FROM_NETWORK(networkName);
   const [data, setData] = useState<GetPairExplorer_ethereum_dexTrades | any>();
-  const [yesterday, setYesterday] = useState<Date>(new Date(new Date().getTime() - 24 * 3600 * 1000));
+  const [yesterday, setYesterday] = useState<Date>(
+    new Date(new Date().getTime() - 24 * 3600 * 1000),
+  );
 
-  const {loading, error, data: dataFn} = useQuery<GetPairExplorer, GetPairExplorerVariables>(BITQUERY_PAIR_EXPLORER, {
+  const {loading, error, data: dataFn} = useQuery<
+    GetPairExplorer,
+    GetPairExplorerVariables
+  >(BITQUERY_PAIR_EXPLORER, {
     variables: {
       network: networkName,
-      exchangeName: exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
+      exchangeName:
+        exchange == EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
       baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
-      from: yesterday
+      quoteAddress: quoteAddress || baseAddress?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
+      from: yesterday,
     },
     pollInterval: POLL_INTERVAL,
   });
 
   useEffect(() => {
-    if (dataFn && dataFn?.ethereum?.dexTrades && dataFn?.ethereum?.dexTrades.length > 0) {
-      let d: any = {...dataFn.ethereum?.dexTrades[0]};
-      
+    if (
+      dataFn &&
+      dataFn?.ethereum?.dexTrades &&
+      dataFn?.ethereum?.dexTrades.length > 0
+    ) {
+      const d: any = {...dataFn.ethereum?.dexTrades[0]};
+
       const quotePerDolar = d.quoteAmountInUsd / d.quoteAmount;
-      const priceChange = Number(d.open_price) !== 0 ? (Number(d.close_price) - Number(d.open_price))/ (Number(d.open_price)) : 0;
+      const priceChange =
+        Number(d.open_price) !== 0
+          ? (Number(d.close_price) - Number(d.open_price)) /
+            Number(d.open_price)
+          : 0;
 
       d['price'] = Number(d.close_price);
-      d['priceUsd'] = (Number(d.close_price) * quotePerDolar);
+      d['priceUsd'] = Number(d.close_price) * quotePerDolar;
       d['priceChange'] = priceChange;
 
       console.log(d);

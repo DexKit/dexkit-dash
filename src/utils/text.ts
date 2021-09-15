@@ -1,17 +1,16 @@
-import { Web3Wrapper } from "@0x/web3-wrapper";
-import isURL from "validator/lib/isURL";
-import { isNativeCoinWithoutChainId } from "./tokens";
+import {Web3Wrapper} from '@0x/web3-wrapper';
+import isURL from 'validator/lib/isURL';
+import {isNativeCoinWithoutChainId} from './tokens';
 
-export const truncateAddress = (address: string|undefined ) => {
+export const truncateAddress = (address: string | undefined) => {
   if (address) {
     return `${address.slice(0, 7)}...${address.slice(address.length - 5)}`;
   }
   return '';
 };
 
-
-export const truncateTokenAddress = (address: string|undefined ) => {
-  if(address && isNativeCoinWithoutChainId(address) ){
+export const truncateTokenAddress = (address: string | undefined) => {
+  if (address && isNativeCoinWithoutChainId(address)) {
     return address.toUpperCase();
   }
   if (address) {
@@ -25,39 +24,53 @@ export const truncateText = (address: string, maxLen: number) => {
     return '';
   }
 
-  return `${address.slice(0, maxLen-1)}${address?.length > maxLen ? '...' : ''}`;
+  return `${address.slice(0, maxLen - 1)}${
+    address?.length > maxLen ? '...' : ''
+  }`;
 };
 
-
-export function capitalize(str: string, separator: string = ' ', separatorToJoinString: string = ' ') {
-  return str?.split(separator)
-    .map(s => s.replace(s?.charAt(0), s?.charAt(0)?.toUpperCase()))
+export function capitalize(
+  str: string,
+  separator = ' ',
+  separatorToJoinString = ' ',
+) {
+  return str
+    ?.split(separator)
+    .map((s) => s.replace(s?.charAt(0), s?.charAt(0)?.toUpperCase()))
     .join(separatorToJoinString);
 }
 
 export const urlValidator = (url: string) => {
   return isURL(url, {
-    protocols: ['http','https']
+    protocols: ['http', 'https'],
   });
-}
-
+};
 
 /**
  * Truncate if address, pass maxLen if you wanna to truncate the text as well
  * @param address Text
- * @param maxLen 
- * @returns 
+ * @param maxLen
+ * @returns
  */
- export const truncateIsAddress = (address: string|undefined, maxLen?: number ) => {
+export const truncateIsAddress = (
+  address: string | undefined,
+  maxLen?: number,
+) => {
   if (address) {
-    if(Web3Wrapper.isAddress(address)){
+    if (Web3Wrapper.isAddress(address)) {
       return `${address.slice(0, 7)}...${address.slice(address.length - 5)}`;
-    }else{
-      if(maxLen){
-        return truncateText(address, maxLen)
+    } else {
+      if (maxLen) {
+        return truncateText(address, maxLen);
       }
       return address;
     }
   }
   return '';
 };
+
+export function isEmailValid(email: string) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}

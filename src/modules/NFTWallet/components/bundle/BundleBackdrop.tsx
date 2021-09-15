@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props extends BackdropProps {}
+type Props = BackdropProps;
 
 export default (props: Props) => {
   const {open, onClick} = props;

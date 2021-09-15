@@ -2,6 +2,9 @@ import {makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 export const useStyles = makeStyles((theme: CremaTheme) => ({
+  zeroPadding: {
+    padding: 0,
+  },
   btnPrimary: {
     '&:hover > div, &:focus > div': {
       // backgroundColor: `${theme.palette.primary.dark} !important`,
@@ -17,5 +20,4 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
     flexGrow: 1,
   },
- 
 }));

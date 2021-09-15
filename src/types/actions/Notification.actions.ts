@@ -1,9 +1,6 @@
-import { Notification } from 'types/models/Notification';
+import {Notification} from 'types/models/Notification';
 
-import {
-  NotificationType, 
-  NotificationPosition
-} from 'services/notification';
+import {NotificationType, NotificationPosition} from 'services/notification';
 
 export enum NotificationAction {
   GET_NOTIFICATION = 'GET_NOTIFICATION',
@@ -12,7 +9,7 @@ export enum NotificationAction {
   CHECK_NOTIFICATION = 'CHECK_NOTIFICATION',
   UNCHECKED_NOTIFICATION = 'UNCHECKED_NOTIFICATION',
   CHECK_ALL_NOTIFICATION = 'CHECK_ALL_NOTIFICATION',
-  NOTIFICATION_LIST = 'NOTIFICATION_LIST'
+  NOTIFICATION_LIST = 'NOTIFICATION_LIST',
 }
 
 export interface GetNotification {
@@ -22,7 +19,11 @@ export interface GetNotification {
 
 export interface AddNotification {
   type: typeof NotificationAction.ADD_NOTIFICATION;
-  payload: { notifications: Notification[], type: NotificationType, position: NotificationPosition };
+  payload: {
+    notifications: Notification[];
+    type: NotificationType;
+    position: NotificationPosition;
+  };
 }
 
 export interface RemoveNotification {
@@ -47,4 +48,11 @@ export interface CheckAllNotification {
 export interface NotificationList {
   type: typeof NotificationAction.NOTIFICATION_LIST;
 }
-export type NotificationActions = GetNotification | AddNotification | RemoveNotification | CheckNotification | UncheckedNotification | CheckAllNotification | NotificationList;
+export type NotificationActions =
+  | GetNotification
+  | AddNotification
+  | RemoveNotification
+  | CheckNotification
+  | UncheckedNotification
+  | CheckAllNotification
+  | NotificationList;

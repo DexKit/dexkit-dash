@@ -4,8 +4,8 @@ import {useTokenList} from 'hooks/useTokenList';
 import usePagination from 'hooks/usePagination';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {toTokenUnitAmount} from '@0x/utils';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GET_CHAIN_FROM_NETWORK} from 'shared/constants/Blockchain';
 
 interface Props {
   address: string;
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const useOrderList = ({address, networkName}: Props) => {
-
   const tokenList = useTokenList(networkName);
   const currentChainId = GET_CHAIN_FROM_NETWORK(networkName);
 
@@ -60,17 +59,17 @@ export const useOrderList = ({address, networkName}: Props) => {
       const newSellData = sellData.records.map((e: any) => {
         e.order['makerAmountFn'] = toTokenUnitAmount(
           e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.makerToken)?.decimals ||
             18,
         ).toString();
         e.order['takerAmountFn'] = toTokenUnitAmount(
           e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(
           e.metaData.remainingFillableTakerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.order['side'] = 'SELL';
@@ -81,12 +80,12 @@ export const useOrderList = ({address, networkName}: Props) => {
         console.log(e);
         e.order['makerAmountFn'] = toTokenUnitAmount(
           e.order.makerAmount,
-          tokenList.find((t) => t.address === e.order.makerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.makerToken)?.decimals ||
             18,
         ).toString();
         e.order['takerAmountFn'] = toTokenUnitAmount(
           e.order.takerAmount,
-          tokenList.find((t) => t.address === e.order.takerToken)?.decimals ||
+          tokenList.find((t: any) => t.address === e.order.takerToken)?.decimals ||
             18,
         ).toString();
         e.metaData['remainingFillableTakerAmountFn'] = toTokenUnitAmount(

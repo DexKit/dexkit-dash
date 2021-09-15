@@ -115,30 +115,12 @@ export interface GetTransferList_ethereum_transfers {
   external: boolean | null;
 }
 
-export interface GetTransferList_ethereum_receiverCount {
-  __typename: "EthereumTransfers";
-  count: number | null;
-}
-
-export interface GetTransferList_ethereum_senderCount {
-  __typename: "EthereumTransfers";
-  count: number | null;
-}
-
 export interface GetTransferList_ethereum {
   __typename: "Ethereum";
   /**
    * Currency Transfers
    */
   transfers: GetTransferList_ethereum_transfers[] | null;
-  /**
-   * Currency Transfers
-   */
-  receiverCount: GetTransferList_ethereum_receiverCount[] | null;
-  /**
-   * Currency Transfers
-   */
-  senderCount: GetTransferList_ethereum_senderCount[] | null;
 }
 
 export interface GetTransferList {

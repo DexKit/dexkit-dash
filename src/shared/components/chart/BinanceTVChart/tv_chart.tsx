@@ -83,7 +83,7 @@ export default class TVChartContainer extends React.PureComponent<
   public componentDidMount(): void {
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: this.props.symbol as string,
-      datafeed: new BinanceAPI({ debug: false }),
+      datafeed: new BinanceAPI({debug: false}),
       interval: this.props.interval as ChartingLibraryWidgetOptions['interval'],
       container_id: this.props
         .containerId as ChartingLibraryWidgetOptions['container_id'],

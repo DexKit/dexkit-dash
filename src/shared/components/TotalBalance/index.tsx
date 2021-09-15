@@ -1,37 +1,131 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button, Card, Fade} from '@material-ui/core';
-import {indigo} from '@material-ui/core/colors';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  Grid,
+  useTheme,
+  useMediaQuery,
+  Backdrop,
+  IconButton,
+} from '@material-ui/core';
+import {Skeleton} from '@material-ui/lab';
+
 import {makeStyles} from '@material-ui/core/styles';
-import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
-import CoinsInfo from './CoinsInfo';
 import Receiver from './Receiver';
 import Sender from './Sender';
-import CallMadeIcon from '@material-ui/icons/CallMade';
-import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import {Token} from 'types/app';
-import {Skeleton} from '@material-ui/lab';
-import { MyBalances } from 'types/blockchain';
-import { useNetwork } from 'hooks/useNetwork';
-import Transak from 'shared/components/Transak';
+import {MyBalances} from 'types/blockchain';
+import {useNetwork} from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
+
+import {truncateAddress} from 'utils';
+import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
+import {useTransak} from 'hooks/useTransak';
+
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
+
+import {StatusSquare} from '../StatusSquare';
+import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import {useAccountsModal} from 'hooks/useAccountsModal';
+
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  greenSquare: {
+    backgroundColor: theme.palette.success.main,
+    height: theme.spacing(8),
+    width: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+  },
+  usdAmount: {
+    fontSize: 32,
+    fontWeight: 600,
+  },
+  usdAmountSign: {
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  btnPrimary: {
+    color: 'white',
+    borderColor: 'white',
+    fontFamily: Fonts.BOLD,
+    textTransform: 'capitalize',
+    width: 106,
+    fontSize: 16,
+    '&:hover, &:focus': {
+      // backgroundColor: theme.palette.primary.dark,
+      color: '#F15A2B',
+      borderColor: '#F15A2B',
+    },
+    lineHeight: '16px',
+    [theme.breakpoints.up('sm')]: {
+      lineHeight: '20px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      lineHeight: '26px',
+    },
+  },
+  backdrop: {
+    zIndex: theme.zIndex.modal,
+    color: '#fff',
+  },
+  btnSecondary: {
+    color: '#F15A2B',
+    borderColor: '#F15A2B',
+    fontFamily: Fonts.BOLD,
+    textTransform: 'capitalize',
+    width: 106,
+    fontSize: 16,
+    '&:hover, &:focus': {
+      // backgroundColor: theme.palette.secondary.dark,
+      color: 'white',
+      borderColor: 'white',
+    },
+    lineHeight: '16px',
+    [theme.breakpoints.up('sm')]: {
+      lineHeight: '20px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      lineHeight: '26px',
+    },
+  },
+}));
 
 interface Props {
   balances: MyBalances[];
   only?: Token;
   loading?: boolean;
+  loadingUsd?: boolean;
+  address?: string;
+  tokenName?: string;
+  onShare?: () => void;
+  onMakeFavorite?: () => void;
+  isFavorite?: boolean;
 }
 
-const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
-  const [senderModal, setSenderModal] = useState(false);
-  const [receiverModal, setReceiverModal] = useState(false);
-  const [tokens, setTokens] = useState<
-    MyBalances[]
-  >([]);
-  const [usdAvailable, setUsdAvailable] = useState<number>(0);
+const TotalBalance = (props: Props) => {
+  const {
+    balances,
+    only,
+    loading,
+    loadingUsd,
+    address,
+    tokenName,
+    onMakeFavorite,
+    onShare,
+    isFavorite,
+  } = props;
+  const [tokens, setTokens] = useState<MyBalances[]>([]);
+  const [amountsVisible, setAmountsVisible] = useState(true);
 
   const networkName = useNetwork();
+
+  const theme = useTheme();
 
   useEffect(() => {
     if (only) {
@@ -50,6 +144,7 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
               decimals: only.decimals,
               name: only.name || '',
               symbol: only.symbol || '',
+              tokenType: 'ERC20',
             },
             network: networkName,
             value: 0,
@@ -65,7 +160,8 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
               address: dataFn.currency?.address ?? '',
               decimals: dataFn.currency?.decimals ?? 18,
               name: dataFn.currency?.name || '',
-              symbol:  dataFn.currency?.symbol || '',
+              symbol: dataFn.currency?.symbol || '',
+              tokenType: 'ERC20',
             },
             network: dataFn.network,
             value: dataFn.value ?? 0,
@@ -78,185 +174,206 @@ const TotalBalance: React.FC<Props> = ({balances, only, loading}) => {
     }
   }, [only, balances]);
 
-  useEffect(() => {
-    setUsdAvailable(
+  const usdTotalAmount = useMemo(() => {
+    return (
       tokens?.reduce((acc, current) => {
         return (acc += current.valueInUsd || 0);
-      }, 0) || 0,
+      }, 0) || 0
     );
   }, [tokens]);
 
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    btnPrimary: {
-      color: 'white',
-      borderColor: 'white',
-      fontFamily: Fonts.BOLD,
-      textTransform: 'capitalize',
-      width: 106,
-      fontSize: 16,
-      '&:hover, &:focus': {
-        // backgroundColor: theme.palette.primary.dark,
-        color: '#F15A2B',
-        borderColor: '#F15A2B',
-      },
-      lineHeight: '16px',
-      [theme.breakpoints.up('sm')]: {
-        lineHeight: '20px',
-      },
-      [theme.breakpoints.up('xl')]: {
-        lineHeight: '26px',
-      },
-    },
-    btnSecondary: {
-      color: '#F15A2B',
-      borderColor: '#F15A2B',
-      fontFamily: Fonts.BOLD,
-      textTransform: 'capitalize',
-      width: 106,
-      fontSize: 16,
-      '&:hover, &:focus': {
-        // backgroundColor: theme.palette.secondary.dark,
-        color: 'white',
-        borderColor: 'white',
-      },
-      lineHeight: '16px',
-      [theme.breakpoints.up('sm')]: {
-        lineHeight: '20px',
-      },
-      [theme.breakpoints.up('xl')]: {
-        lineHeight: '26px',
-      },
-    },
-  }));
+  const usdTotalPercentage = useMemo(() => {
+    if (!usdTotalAmount) {
+      return;
+    }
+    const ratios = tokens.map(
+      (c) =>
+        ((c.valueInUsd || 0) / usdTotalAmount) * (c.price24hPercentage || 0),
+    );
+    const totalChange = ratios.reduce((acc, curr) => acc + curr);
+    return totalChange;
+  }, [tokens, usdTotalAmount]);
 
   const classes = useStyles();
 
-  let onlyTokenValue = null;
-  let onlyTokenValueInUsd = null;
-
-  if (only) {
-    if (tokens.length > 0) {
-      onlyTokenValue =
-        tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
-      onlyTokenValueInUsd = tokens[0].valueInUsd?.toFixed(2);
+  const onlyTokenValueInUsd = useMemo(() => {
+    if (only && tokens.length > 0) {
+      return tokens[0].valueInUsd?.toFixed(2);
     }
-  }
+    return null;
+  }, [only, tokens.length]);
+
+  const onlyTokenValue = useMemo(() => {
+    if (only && tokens.length > 0) {
+      return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
+    }
+    return null;
+  }, [only, tokens.length]);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [showSender, setShowSender] = useState(false);
+  const [showReceiver, setShowReceiver] = useState(false);
+  const [showSwap, setShowSwap] = useState(false);
+  const [showTrade, setShowTrade] = useState(false);
+
+  const handleShowSender = useCallback(() => {
+    setShowSender(true);
+  }, []);
+  const handleShowReceiver = useCallback(() => {
+    setShowReceiver(true);
+  }, []);
+  const handleCloseSender = useCallback(() => {
+    setShowSender(false);
+  }, []);
+  const handleCloseReceiver = useCallback(() => {
+    setShowReceiver(false);
+  }, []);
+
+  const {init} = useTransak();
+
+  const handleBuyCrypto = useCallback(() => {
+    init();
+  }, [init]);
+
+  const handleSwap = useCallback(() => {
+    setShowSwap(true);
+  }, [init]);
+
+  const handleTrade = useCallback(() => setShowTrade(true), [init]);
+
+  const handleToggleVisibility = useCallback(() => {
+    setAmountsVisible((value) => !value);
+  }, []);
+
+  const handleSwapClose = useCallback(() => {
+    setShowSwap(false);
+  }, []);
+
+  const handleTradeClose = useCallback(() => {
+    setShowTrade(false);
+  }, []);
+
+  const {usdFormatter} = useUSDFormatter();
+
+  const accountsModal = useAccountsModal();
+
+  const handleShowAccounts = useCallback(() => {
+    accountsModal.setShow(true);
+  }, [accountsModal]);
 
   return (
-    <Box>
-    {/*  <Fade in={true} timeout={1000}>*/}
-        <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card>
-            <Box
-              display='flex'
-              // flexDirection={{xs: 'column', xl: 'row'}}
-              alignItems={{xl: 'center'}}
-              flexDirection={'row'}
-              flexWrap={'wrap'}
-              justifyContent={'space-between'}>
-              {loading ? (
-                <>
-                  <Skeleton variant='rect' width='40%' height={20} />
-                  <Box display='flex' alignItems='end'>
-                    <Skeleton
-                        variant='rect'
-                        width={106}
-                        height={40}
-                        style={{marginRight: 10}}
-                      />
-                    <Skeleton
-                      variant='rect'
-                      width={106}
-                      height={40}
-                      style={{marginRight: 10}}
-                    />
-                    <Skeleton variant='rect' width={106} height={40} />
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Box display='flex' alignItems='baseline' mr={2}>
-                    <Box
-                      component='h3'
-                      color='text.primary'
-                      fontFamily={Fonts.BOLD}
-                      fontSize={{xs: 20, sm: 22, xl: 24}}>
-                      ${onlyTokenValueInUsd || usdAvailable.toFixed(2)}
-                    </Box>
-                    <Box
-                      component='span'
-                      ml={3}
-                      color={indigo[100]}
-                      fontSize={{xs: 16, xl: 18}}
-                      whiteSpace='nowrap'>
-                      {onlyTokenValue || 'Avl. Balance'}
-                    </Box>
-                  </Box>
-
-                  <Box
-                    display='flex'
-                    alignItems='center'
-                    ml={{xs: 0, xl: 'auto'}}
-                    mt={{xs: 2, lg: 0}}>
-                    <Box>
-                      <Transak />
-                    </Box>
-                    <Box ml={3}>
-                      <Button
-                        variant='outlined'
-                        onClick={() => setSenderModal(true)}
-                        className={classes.btnPrimary}>
-                        <IntlMessages id='common.send' />
-                        <CallMadeIcon style={{marginLeft: 5}} />
-                      </Button>
-                    </Box>
-                    <Box ml={3}>
-                      <Button
-                        variant='outlined'
-                        onClick={() => setReceiverModal(true)}
-                        className={classes.btnSecondary}>
-                        <IntlMessages id='common.receive' />
-                        <CallReceivedIcon style={{marginLeft: 5}} />
-                      </Button>
-                    </Box>
-                  </Box>
-                </>
-              )}
-            </Box>
-            {/* <Box
-            component='p'
-            mb={{xs: 3.5, md: 4, xl: 6}}
-            fontSize={{xs: 16, xl: 18}}
-            color={indigo[100]}>
-            <IntlMessages id='dashboard.buyCurrency' />
-          </Box> */}
-            {!only && loading ? (
-              <Skeleton
-                style={{marginTop: 10}}
-                variant='rect'
-                width='100%'
-                height={40}
-              />
-            ) : (
-              !only &&
-              tokens.length > 0 && (
-                <Box pt={{lg: 5}}>
-                  <CoinsInfo coins={tokens} />
-                </Box>
-              )
-            )}
-          </Card>
-        </Box>
-  {/*    </Fade>*/}
-
+    <>
       <Sender
-        open={senderModal}
-        onClose={() => setSenderModal(false)}
-        balances={tokens.filter(t => t.network === networkName)}
+        open={showSender}
+        onClose={handleCloseSender}
+        balances={tokens.filter((t) => t.network === networkName)}
+      />
+      <Receiver open={showReceiver} onClose={handleCloseReceiver} />
+      <BuySellModal
+        networkName={networkName}
+        balances={tokens}
+        open={showTrade}
+        onClose={handleTradeClose}
       />
 
-      <Receiver open={receiverModal} onClose={() => setReceiverModal(false)} />
-    </Box>
+      <Backdrop className={classes.backdrop} open={showSwap}>
+        {/* TODO: transform this in a dialog */}
+        <Grid container alignItems='center' justify='center'>
+          <Grid item xs={12} sm={4}>
+            {showSwap ? <SwapComponent onClose={handleSwapClose} /> : null}
+          </Grid>
+        </Grid>
+      </Backdrop>
+      <Box>
+        <Grid container spacing={2} alignItems='center' justify='space-between'>
+          <Grid item xs={isMobile ? 12 : undefined} sm={4}>
+            <Paper>
+              <Box p={4}>
+                <Grid
+                  container
+                  alignItems='center'
+                  justify='space-between'
+                  spacing={4}>
+                  <Grid item>
+                    <Grid container spacing={2} alignItems='stretch'>
+                      <Grid item>
+                        <StatusSquare color={theme.palette.success.main} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='body2'>
+                          <Box display='flex' alignItems='center'>
+                            <span>{truncateAddress(address)} </span>
+                            <IconButton
+                              onClick={handleShowAccounts}
+                              size='small'>
+                              <KeyboardArrowDownIcon />
+                            </IconButton>
+                          </Box>
+                        </Typography>
+                        <Grid container spacing={2}>
+                          <Grid item>
+                            <Typography className={classes.usdAmount}>
+                              {loadingUsd ? (
+                                <Skeleton />
+                              ) : balances.length === 0 ? (
+                                '$ -'
+                              ) : (
+                                <>
+                                  {amountsVisible
+                                    ? onlyTokenValueInUsd ||
+                                      usdFormatter.format(usdTotalAmount)
+                                    : '****,**'}
+                                </>
+                              )}
+                            </Typography>
+                          </Grid>
+                          {usdTotalPercentage && (
+                            <Grid item>
+                              <Typography
+                                style={{
+                                  color:
+                                    usdTotalPercentage >= 0
+                                      ? theme.palette.success.main
+                                      : theme.palette.error.main,
+                                }}
+                                variant={'h6'}>
+                                {usdTotalPercentage.toFixed(2)}%
+                              </Typography>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={handleToggleVisibility}>
+                      {amountsVisible ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
+          </Grid>
+          <Grid item xs={isMobile ? 12 : undefined}>
+            <TradeToolsSection
+              onSend={handleShowSender}
+              onReceive={handleShowReceiver}
+              onBuyCrypto={handleBuyCrypto}
+              onSwap={handleSwap}
+              onTrade={handleTrade}
+              onShare={onShare}
+              onMakeFavorite={onMakeFavorite}
+              isFavorite={isFavorite}
+            />
+          </Grid>
+        </Grid>
+      </Box>
+    </>
   );
 };
 

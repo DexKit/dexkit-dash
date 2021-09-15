@@ -5,6 +5,8 @@ import {createRoutes} from '../@crema/utility/Utils';
 import {errorPagesConfigs} from './ErrorPages';
 
 import {dashBoardConfigs} from './Dashboard';
+
+import {coinsLeagueConfigs} from './CoinsLeague';
 import {changelogConfigs} from './Changelog';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';
@@ -13,6 +15,8 @@ import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
+import {wizardConfig} from './Wizard';
+import {onboardingConfig} from './Onboarding';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -22,19 +26,17 @@ const routeConfigs = [
   ...historyConfigs,
   ...affiliateConfigs,
   ...nftWalletConfig,
+  ...wizardConfig,
   ...changelogConfigs,
-
+  ...coinsLeagueConfigs,
+  ...onboardingConfig,
 ];
 
 const routes = [
   ...createRoutes(routeConfigs),
   {path: '/', exact: true, component: () => <Redirect to={initialUrl} />},
   {
-    component: () => (
-      <Redirect
-        to={`/${EthereumNetwork.ethereum}/dashboard/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
-      />
-    ),
+    component: () => <Redirect to={`/wallet`} />,
   },
 ];
 

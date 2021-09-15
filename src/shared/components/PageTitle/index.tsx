@@ -14,10 +14,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {CremaTheme} from 'types/AppContextPropsType';
 import ButtonCopy from '../ButtonCopy';
 import TokenLogo from '../TokenLogo';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { FORMAT_NETWORK_NAME } from 'shared/constants/Bitquery';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import NetworkSwitcher from '../NetworkSwitcher';
-import { ShareButton } from '../ShareButton';
+import {ShareButton} from '../ShareButton';
 
 // import {truncateAddress} from 'utils';
 
@@ -26,20 +26,30 @@ interface Props {
     history: {url: string; name: string; hasCopy?: string}[];
     active: {name: string; hasCopy?: string};
   };
-  title: {name?: string; hasCopy?: string, component?: React.ReactNode};
+  title: {name?: string; hasCopy?: string; component?: React.ReactNode};
   subtitle?: {name: string; hasCopy?: string};
   network?: EthereumNetwork;
-  networkSwitcher?: {networkName: EthereumNetwork, onClick: (network: EthereumNetwork) => any}
+  networkSwitcher?: {
+    networkName: EthereumNetwork;
+    onClick: (network: EthereumNetwork) => any;
+  };
   icon?: string;
   shareButton?: boolean;
 }
 
-const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network, networkSwitcher, shareButton}) => {
-  
+const PageTitle: React.FC<Props> = ({
+  breadcrumbs,
+  title,
+  subtitle,
+  icon,
+  network,
+  networkSwitcher,
+  shareButton,
+}) => {
   const useStyles = makeStyles((theme: CremaTheme) => ({
     breadcrumbs: {
       fontSize: '16px',
-      
+
       [theme.breakpoints.down('sm')]: {
         fontSize: '14px',
       },
@@ -64,9 +74,8 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
     },
     container: {
       [theme.breakpoints.down('sm')]: {
-        marginTop: '5px'
+        marginTop: '5px',
       },
- 
     },
   }));
 
@@ -75,7 +84,7 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
   return (
     <GridContainer className={classes.container}>
       <Grid item xs={12} md={12}>
-        {  breadcrumbs && (
+        {breadcrumbs && (
           <Breadcrumbs className={classes.breadcrumbs} aria-label='breadcrumb'>
             {breadcrumbs.history.map((e) => (
               <Link
@@ -106,34 +115,44 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
         )}
 
         <Box className={classes.boxTitle}>
-        {networkSwitcher && <Box mr={3}>
-              <NetworkSwitcher networkName={networkSwitcher.networkName} onClick={networkSwitcher.onClick} />
-            </Box>}
-
-          {network && <Box mr={5}>
-          <Tooltip title="Network">
-              <Chip
-                label={FORMAT_NETWORK_NAME(network)}   
-                color={ 'default'}
+          {networkSwitcher && (
+            <Box mr={3}>
+              <NetworkSwitcher
+                networkName={networkSwitcher.networkName}
+                onClick={networkSwitcher.onClick}
               />
+            </Box>
+          )}
+
+          {network && (
+            <Box mr={5}>
+              <Tooltip title='Network'>
+                <Chip label={FORMAT_NETWORK_NAME(network)} color={'default'} />
               </Tooltip>
-            </Box>}
+            </Box>
+          )}
 
-          {icon && <Box mr={2}>{<TokenLogo token0={icon} networkName={network} />}</Box>}
+          {icon && (
+            <Box mr={2}>
+              {<TokenLogo token0={icon} networkName={network as any} />}
+            </Box>
+          )}
 
-          {(!title.component && title.name) && <Typography className={classes.title} color='textPrimary'>
-            {title.name}
-            {title.hasCopy !== undefined && (
-              <ButtonCopy
-                copyText={title.hasCopy}
-                titleText='Copied to Clipboard!'
-              />
-            )}
-          </Typography>}
+          {!title.component && title.name && (
+            <Typography className={classes.title} color='textPrimary'>
+              {title.name}
+              {title.hasCopy !== undefined && (
+                <ButtonCopy
+                  copyText={title.hasCopy}
+                  titleText='Copied to Clipboard!'
+                />
+              )}
+            </Typography>
+          )}
 
           {title.component && title.component}
 
-          { subtitle && (
+          {subtitle && (
             <Typography className={classes.title} color='textPrimary'>
               &nbsp;-&nbsp;{subtitle.name}
               {subtitle.hasCopy !== undefined && (
@@ -143,9 +162,8 @@ const PageTitle: React.FC<Props> = ({breadcrumbs, title, subtitle, icon, network
               )}
             </Typography>
           )}
-            {shareButton && <ShareButton/>}
+          {shareButton && <ShareButton />}
         </Box>
-    
       </Grid>
     </GridContainer>
   );

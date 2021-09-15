@@ -84,14 +84,14 @@ export default (props: Props) => {
 
   const handleMakeOfferResult = useCallback(
     async (params: any) => {
-      let provider = getProvider();
+      const provider = getProvider();
 
       const openSeaPort = await getOpenSeaPort(provider);
 
       if (userAccountAddress) {
         setShowMakeOffer(true);
 
-        let orderParams: any = {
+        const orderParams: any = {
           asset: {
             tokenId: asset?.token_id,
             tokenAddress: asset?.asset_contract?.address,
@@ -125,7 +125,7 @@ export default (props: Props) => {
   const acceptOffer = useCallback(
     async (offer: any) => {
       if (userAccountAddress) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const openSeaPort = await getOpenSeaPort(provider);
 
@@ -135,10 +135,10 @@ export default (props: Props) => {
         });
 
         // lowercase
-        let orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
+        const orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
 
         if (orderIndex > -1) {
-          let order = orders[orderIndex];
+          const order = orders[orderIndex];
 
           setShowAccept(true);
 
@@ -183,21 +183,21 @@ export default (props: Props) => {
   const handleCancelOffer = useCallback(
     async (offer: any) => {
       if (userAccountAddress) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const openSeaPort = await getOpenSeaPort(provider);
 
-        let {orders} = await openSeaPort.api.getOrders({
+        const {orders} = await openSeaPort.api.getOrders({
           asset_contract_address: asset?.asset_contract?.address,
           token_id: asset?.token_id,
         });
 
-        let orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
+        const orderIndex = orders.findIndex((o) => o.hash == offer.order_hash);
 
         if (orderIndex > -1) {
           setShowCancel(true);
 
-          let order = orders[orderIndex];
+          const order = orders[orderIndex];
 
           openSeaPort
             .cancelOrder({
@@ -327,10 +327,20 @@ export default (props: Props) => {
       />
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <ListIcon />{' '}
-          <Typography variant='body1'>
-            <IntlMessages id='nfts.detail.offersAccordionLabel' />
-          </Typography>
+          <Box>
+            <Grid container spacing={2} alignItems='center'>
+              <Grid item>
+                <Typography variant='body1'>
+                  <ListIcon fontSize='inherit' />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant='body1'>
+                  <IntlMessages id='nfts.detail.offersAccordionLabel' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>

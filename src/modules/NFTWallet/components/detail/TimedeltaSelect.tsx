@@ -39,7 +39,7 @@ export default (props: Props) => {
 
   const handleChange = useCallback(
     (e) => {
-      let index = parseInt(e.target.value);
+      const index = parseInt(e.target.value);
       setSelectedIndex(index);
       onSelect(DEFAULT_OPTIONS[index]);
     },

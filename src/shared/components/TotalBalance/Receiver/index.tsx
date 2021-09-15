@@ -1,83 +1,83 @@
-import React from 'react';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import React, {useCallback} from 'react';
 import ReceiverForm from './ReceiverForm';
-import Card from '@material-ui/core/Card';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Box,
+  Typography,
+  makeStyles,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from '@material-ui/core';
+import {ImportWhiteIcon} from 'shared/components/Icons';
+
+import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Box, Dialog, makeStyles} from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
+}));
 
 interface Props {
-  open: boolean,
-  onClose: () => void,
+  open: boolean;
+  onClose: () => void;
 }
 
 const Receiver: React.FC<Props> = (props) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    muiTabsRoot: {
-      position: 'relative',
-      marginTop: -8,
-      marginLeft: -8,
-      marginBottom: 16,
-      [theme.breakpoints.up('xl')]: {
-        marginLeft: -20,
-        marginBottom: 32,
-      },
-      '& .Mui-selected': {
-        fontFamily: Fonts.LIGHT,
-      },
-    },
-    muiTab: {
-      fontSize: 16,
-      textTransform: 'capitalize',
-      padding: 0,
-      marginLeft: 8,
-      marginRight: 8,
-      minWidth: 10,
-      [theme.breakpoints.up('xl')]: {
-        fontSize: 18,
-        marginLeft: 20,
-        marginRight: 20,
-      },
-    },
-  }));
-
   const classes = useStyles();
+  const {open, onClose} = props;
 
-  const a11yProps = (index: number) => {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  };
+  const handleClose = useCallback(
+    (e) => {
+      if (onClose) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <div>
-      <Dialog fullWidth maxWidth="xs"  open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">
-
-        <Box py={{xs: 5, sm: 5, xl: 5}} px={{xs: 6, sm: 6, xl: 6}} clone>
-          <Card >
-            <Tabs
-              indicatorColor='primary'
-              textColor='primary'
-              aria-label='simple tabs example'
-              className={classes.muiTabsRoot}>
-              <Tab
-                className={classes.muiTab}
-                style={{fontWeight: 'bold'}}
-                label={<IntlMessages id='Receive' />}
-                {...a11yProps(0)}
-              />
-            </Tabs>
-
-            <ReceiverForm  />
-          
-          </Card>
+    <Dialog
+      fullWidth
+      maxWidth='xs'
+      open={open}
+      onClose={onClose}
+      fullScreen={isMobile}>
+      <DialogTitle>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              alignItems='center'
+              alignContent='center'
+              mr={2}>
+              <ImportWhiteIcon className={classes.icon} />
+            </Box>
+            <Typography variant='body1'>
+              <IntlMessages id='Receive' />
+            </Typography>
+          </Box>
+          <Box>
+            <IconButton size='small' onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </Box>
-
-      </Dialog>
-    </div>
+      </DialogTitle>
+      <DialogContent dividers>
+        <ReceiverForm />
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -4,6 +4,9 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
+    drawer: {
+      width: '100%',
+    },
     container: {
       paddingLeft: 0,
       paddingTop: 0,
@@ -19,15 +22,15 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       [theme.breakpoints.up('lg')]: {
         position: 'fixed',
         '&.mini-sidebar-collapsed': {
-          width: '4rem',
+          width: theme.spacing(18),
 
           '& + .main-content': {
-            marginLeft: '4rem',
-            width: 'calc(100vw - 4rem)',
+            marginLeft: theme.spacing(18),
+            width: `calc(100vw - ${theme.spacing(18)}px)`,
             flex: 'auto',
 
             '& .app-bar': {
-              width: 'calc(100vw - 4rem)',
+              width: `calc(100vw - ${theme.spacing(18)}px)`,
             },
           },
 
@@ -43,6 +46,12 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           '& .nav-item-text, & .nav-item-icon-arrow': {
             opecity: 0,
             visibility: 'hidden',
+          },
+
+          '& .visible-hover': {
+            opecity: 0,
+            visibility: 'hidden',
+            display: 'none',
           },
 
           '& .nav-item-header, & .user-info, & .collapse-children': {
@@ -90,6 +99,12 @@ const useStyles = makeStyles((theme: CremaTheme) => {
           '&.mini-sidebar-collapsed': {
             width: '21.6rem',
 
+            '& .visible-hover': {
+              opacity: 1,
+              visibility: 'visible',
+              display: 'block',
+            },
+
             '& .nav-item-text, & .nav-item-icon-arrow': {
               opecity: 1,
               visibility: 'visible',
@@ -111,9 +126,10 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             '& .collapse-children .collapse-children .nav-item': {
               paddingLeft: 117,
             },
-            '& .collapse-children .collapse-children .collapse-children .nav-item': {
-              paddingLeft: 167,
-            },
+            '& .collapse-children .collapse-children .collapse-children .nav-item':
+              {
+                paddingLeft: 167,
+              },
           },
         },
 
@@ -129,9 +145,10 @@ const useStyles = makeStyles((theme: CremaTheme) => {
             '& .collapse-children .collapse-children .nav-item': {
               paddingLeft: 124,
             },
-            '& .collapse-children .collapse-children .collapse-children .nav-item': {
-              paddingLeft: 174,
-            },
+            '& .collapse-children .collapse-children .collapse-children .nav-item':
+              {
+                paddingLeft: 174,
+              },
           },
         },
       },

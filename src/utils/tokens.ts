@@ -1,10 +1,14 @@
-import { BigNumber } from '@0x/utils';
-import { isWeth } from './knownTokens';
-import { ChainId } from 'types/blockchain';
+import {BigNumber} from '@0x/utils';
+import {isWeth} from './knownTokens';
+import {ChainId} from 'types/blockchain';
 import Web3 from 'web3';
-import { GET_DEFAULT_QUOTE, GET_DEFAULT_BASE, GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { Token } from 'types/app';
+import {
+  GET_DEFAULT_QUOTE,
+  GET_DEFAULT_BASE,
+  GET_CHAIN_FROM_NETWORK,
+} from 'shared/constants/Blockchain';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {Token} from 'types/app';
 
 export const tokenAmountInUnitsToBigNumber = (
   amount: BigNumber,
@@ -16,7 +20,7 @@ export const tokenAmountInUnitsToBigNumber = (
 
 export const tokenAmountInUnits = (
   amount: BigNumber,
-  decimals: number = 18,
+  decimals = 18,
   toFixedDecimals = 2,
 ): string => {
   return tokenAmountInUnitsToBigNumber(amount, decimals).toFixed(
@@ -48,18 +52,21 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
     case ChainId.Goerli:
     case ChainId.Rinkeby:
     case ChainId.Ganache:
-      const isETH = symbol.toLowerCase() === 'eth'
+      const isETH = symbol.toLowerCase() === 'eth';
       return isETH;
     case ChainId.BinanceTest:
     case ChainId.Binance:
-      const isBNB = symbol.toLowerCase() === 'bnb'
+      const isBNB = symbol.toLowerCase() === 'bnb';
       return isBNB;
     case ChainId.Matic:
       return symbol.toLowerCase() === 'matic';
   }
 };
 
-export const isNativeCoinFromNetworkName = (symbol: string, network: EthereumNetwork) => {
+export const isNativeCoinFromNetworkName = (
+  symbol: string,
+  network: EthereumNetwork,
+) => {
   switch (network) {
     case EthereumNetwork.ethereum:
       const isETH = symbol.toLowerCase() === 'eth';
@@ -74,14 +81,21 @@ export const isNativeCoinFromNetworkName = (symbol: string, network: EthereumNet
 
 export const isNativeCoinWithoutChainId = (symbol: string) => {
   const lowercaseSymbol = symbol.toLowerCase();
-  if(lowercaseSymbol === 'eth' || lowercaseSymbol === 'bnb' || lowercaseSymbol === 'matic'){
+  if (
+    lowercaseSymbol === 'eth' ||
+    lowercaseSymbol === 'bnb' ||
+    lowercaseSymbol === 'matic'
+  ) {
     return true;
-  }else{
+  } else {
     return false;
   }
 };
 
-export const filterTokensInfoByString = (tokens: Token[], str: string): Token[] => {
+export const filterTokensInfoByString = (
+  tokens: Token[],
+  str: string,
+): Token[] => {
   return tokens.filter((token) => {
     return (
       token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
@@ -91,19 +105,21 @@ export const filterTokensInfoByString = (tokens: Token[], str: string): Token[] 
   });
 };
 
-export const findTokensInfoByAddress = (tokens: Token[], str: string): Token | undefined => {
+export const findTokensInfoByAddress = (
+  tokens: Token[],
+  str: string,
+): Token | undefined => {
   return tokens.find((token) => {
-    return (
-      token.address.toLowerCase().indexOf(str.toLowerCase()) !== -1 
-    );
+    return token.address.toLowerCase().indexOf(str.toLowerCase()) !== -1;
   });
 };
 
-export const findTokensInfoBySymbol = (tokens: Token[], str: string): Token | undefined => {
+export const findTokensInfoBySymbol = (
+  tokens: Token[],
+  str: string,
+): Token | undefined => {
   return tokens.find((token) => {
-    return (
-      token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1 
-    );
+    return token.symbol.toLowerCase().indexOf(str.toLowerCase()) !== -1;
   });
 };
 
@@ -114,18 +130,30 @@ export const GET_NATIVE_COINS = () => {
       decimals: 18,
       name: 'Ethereum',
       symbol: 'ETH',
-      networkName: EthereumNetwork.ethereum
+      networkName: EthereumNetwork.ethereum,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     },
     {
       address: '',
       decimals: 18,
       name: 'Binance',
       symbol: 'BNB',
-      networkName: EthereumNetwork.bsc
-    }
-  ]
-}
-
+      networkName: EthereumNetwork.bsc,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
+    },
+    {
+      address: '',
+      decimals: 18,
+      name: 'Polygon',
+      symbol: 'MATIC',
+      networkName: EthereumNetwork.matic,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
+    },
+  ];
+};
 
 export const getNativeCoinWrapped = (chainId: ChainId) => {
   switch (chainId) {
@@ -140,6 +168,7 @@ export const getNativeCoinWrapped = (chainId: ChainId) => {
     case ChainId.Binance:
       return 'wbnb';
     case ChainId.Matic:
+    case ChainId.Mumbai:
       return 'wmatic';
   }
 };
@@ -159,20 +188,22 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
   }
 };
 
-
-
-export const getNativeCoinWrappedAddressFromNetworkName = (network: EthereumNetwork) => {
+export const getNativeCoinWrappedAddressFromNetworkName = (
+  network: EthereumNetwork,
+) => {
   switch (network) {
     case EthereumNetwork.ethereum:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
     case EthereumNetwork.bsc:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     default:
-       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+      return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
   }
 };
 
-export const getNativeCoinWrappedFromNetworkName = (network: EthereumNetwork) => {
+export const getNativeCoinWrappedFromNetworkName = (
+  network: EthereumNetwork,
+) => {
   switch (network) {
     case EthereumNetwork.ethereum:
       return 'weth';
@@ -196,22 +227,27 @@ export const GetNativeCoinFromNetworkName = (network: EthereumNetwork) => {
 
 /**
  * API returns '-' for native coin, format it correctly
- * @param symbol 
- * @param address 
- * @param network 
- * @returns 
+ * @param symbol
+ * @param address
+ * @param network
+ * @returns
  */
-export const GET_CORRECT_ADDRESS_FROM_NETWORK = (network: EthereumNetwork, token?: {symbol?: string | null, address?: string | null} | null ) => {
-  if(token?.address === '-' && token?.symbol && isNativeCoinFromNetworkName(token?.symbol, network)){
+export const GET_CORRECT_ADDRESS_FROM_NETWORK = (
+  network: EthereumNetwork,
+  token?: {symbol?: string | null; address?: string | null} | null,
+) => {
+  if (
+    token?.address === '-' &&
+    token?.symbol &&
+    isNativeCoinFromNetworkName(token?.symbol, network)
+  ) {
     return token?.symbol;
-  }else{
-    if(token?.address){
-     return token?.address;
+  } else {
+    if (token?.address) {
+      return token?.address;
     }
   }
-}
-
-
+};
 
 export const extractPairFromAddress = (address: string, chainId: ChainId) => {
   if (!address) {
@@ -232,10 +268,13 @@ export const extractPairFromAddress = (address: string, chainId: ChainId) => {
       quoteAddress = GET_DEFAULT_QUOTE(chainId);
     }
   }
-  return { baseAddress, quoteAddress };
+  return {baseAddress, quoteAddress};
 };
 
-export const extractPairFromAddressFromNetworkName = (address: string, networkName: EthereumNetwork) => {
+export const extractPairFromAddressFromNetworkName = (
+  address: string,
+  networkName: EthereumNetwork,
+) => {
   const chainId = GET_CHAIN_FROM_NETWORK(networkName);
 
   if (!address) {
@@ -256,9 +295,12 @@ export const extractPairFromAddressFromNetworkName = (address: string, networkNa
       quoteAddress = GET_DEFAULT_QUOTE(chainId);
     }
   }
-  return { baseAddress, quoteAddress };
+  return {baseAddress, quoteAddress};
 };
 
-export const GET_TRADE_TOKEN_URL = (address: string, network: EthereumNetwork) => {
-  return `/${network}/dashboard/token/${address}`
-}
+export const GET_TRADE_TOKEN_URL = (
+  address: string,
+  network: EthereumNetwork,
+) => {
+  return `/${network}/dashboard/token/${address}`;
+};

@@ -21,6 +21,8 @@ import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
 import {Link as RouterLink} from 'react-router-dom';
+import {Cancel as CancelIcon} from '@material-ui/icons';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -40,17 +42,19 @@ const EVENT_LISTING = 'listing';
 const EVENT_CREATED = 'created';
 const EVENT_TRANSFER = 'transfer';
 const EVENT_SALE = 'sale';
+const EVENT_CANCELLED = 'cancelled';
 
 function getEventType(event: any) {
-  let is_transfer_event = event.event_type === 'transfer';
-  let is_created_event = event.event_type === 'created';
-  let is_offer_event = event.event_type === 'offer_entered';
-  let is_sale_event = event.event_type === 'successful';
+  const is_transfer_event = event.event_type === 'transfer';
+  const is_created_event = event.event_type === 'created';
+  const is_offer_event = event.event_type === 'offer_entered';
+  const is_sale_event = event.event_type === 'successful';
+  const is_event_cancelled = event.event_type === 'cancelled';
 
-  let is_from_null_address = event.from_account?.address === NULL_ADDRESS;
+  const is_from_null_address = event.from_account?.address === NULL_ADDRESS;
 
-  let is_to_owner = event.to_account?.address === event.asset.owner.address;
-  let has_starting_price = event.starting_price != null;
+  const is_to_owner = event.to_account?.address === event.asset.owner.address;
+  const has_starting_price = event.starting_price != null;
 
   if (is_from_null_address && is_transfer_event) {
     return EVENT_CREATED;
@@ -72,6 +76,10 @@ function getEventType(event: any) {
     return EVENT_SALE;
   }
 
+  if (is_event_cancelled) {
+    return EVENT_CANCELLED;
+  }
+
   return '';
 }
 
@@ -87,6 +95,8 @@ const getEventIntlID = (event: any) => {
       return 'nfts.detail.listingEventOffer';
     case EVENT_CREATED:
       return 'nfts.detail.listingEventCreated';
+    case EVENT_CANCELLED:
+      return 'nfts.detail.listingEventCancelled';
     default:
       return '';
   }
@@ -104,6 +114,8 @@ const getEventIcon = (event: any) => {
       return <PanToolIcon />;
     case EVENT_CREATED:
       return <ChildFriendlyIcon />;
+    case EVENT_CANCELLED:
+      return <CancelIcon />;
     default:
       return '';
   }
@@ -124,9 +136,10 @@ function AssetEventPrice(props: any) {
       tokenAmount = event.starting_price;
     }
 
-    return toTokenUnitAmount(tokenAmount, event.payment_token?.decimals)
-      .toNumber()
-      .toFixed(2);
+    return toTokenUnitAmount(
+      tokenAmount,
+      event.payment_token?.decimals,
+    ).toNumber();
   }, []);
 
   return (
@@ -134,16 +147,57 @@ function AssetEventPrice(props: any) {
       {getEventType(event) == EVENT_CREATED ? null : (
         <Grid alignItems='center' alignContent='center' container spacing={2}>
           <Grid item>
-            <Tooltip title={event.payment_token?.symbol} aria-label='add'>
-              <Avatar
-                className={classes.tokenImageSmall}
-                src={event.payment_token?.image_url as string}
-              />
-            </Tooltip>
+            <Grid
+              alignItems='center'
+              alignContent='center'
+              container
+              spacing={2}>
+              <Grid item>
+                <Tooltip title={event.payment_token?.symbol} aria-label='add'>
+                  <Avatar
+                    className={classes.tokenImageSmall}
+                    src={event.payment_token?.image_url as string}
+                  />
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Typography>{getPriceFromEvent(event)}</Typography>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography>{getPriceFromEvent(event)}</Typography>
-          </Grid>
+          {event.ending_price ? (
+            <>
+              <Grid item>
+                <KeyboardArrowRightIcon />
+              </Grid>
+              <Grid item>
+                <Grid
+                  alignItems='center'
+                  alignContent='center'
+                  container
+                  spacing={2}>
+                  <Grid item>
+                    <Tooltip
+                      title={event.payment_token?.symbol}
+                      aria-label='add'>
+                      <Avatar
+                        className={classes.tokenImageSmall}
+                        src={event.payment_token?.image_url as string}
+                      />
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      {toTokenUnitAmount(
+                        event?.ending_price,
+                        event.payment_token?.decimals,
+                      ).toNumber()}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </>
+          ) : null}
         </Grid>
       )}
     </>
@@ -169,9 +223,7 @@ function AssetEventFrom(props: any) {
     <Link
       component={RouterLink}
       to={`/nfts/wallet/${event.from_account?.address}`}>
-      {event.from_account?.user
-        ? event.from_account?.user?.username
-        : deriveUserFromAddr(event.from_account?.address)}
+      {deriveUserFromAddr(event.from_account?.address)}
     </Link>
   );
 }
@@ -221,7 +273,8 @@ export default (props: Props) => {
         </Grid>
       </TableCell>
       <TableCell>
-        {getEventType(event) != EVENT_TRANSFER ? (
+        {getEventType(event) != EVENT_TRANSFER &&
+        getEventType(event) != EVENT_CANCELLED ? (
           <AssetEventPrice event={event} />
         ) : null}
       </TableCell>

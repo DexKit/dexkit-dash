@@ -10,8 +10,9 @@ import AppFooter from '../AppLayout/AppFooter';
 import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
-import { isMobile } from 'web3modal';
-import Container from '@material-ui/core/Container';
+import {useTheme} from '@material-ui/core';
+import {useMobile} from 'hooks/useMobile';
+import {makeStyles} from '@material-ui/core';
 
 interface TransitionWrapperProps {
   children: ReactNode;
@@ -41,36 +42,52 @@ interface ContentViewProps {
   children?: ReactNode;
 }
 
+const useStyles = makeStyles((theme) => ({
+  mobileScrollContainer: {
+    display: 'flex',
+    overflowY: 'scroll',
+    flexDirection: 'column',
+    position: 'relative',
+    height: '100%',
+    padding: theme.spacing(4),
+  },
+}));
+
 const ContentView: React.FC<ContentViewProps> = () => {
-  return isMobile() ?
-      ( 
-        <Container maxWidth="sm" style={{overflow:'auto', height:'100%', position: 'relative'}}>
-            <Box
-              display='flex'
-              flex={1}
-              flexDirection='column'
-              className='main-content-view'
-              
-              >
-              <Suspense>
-                <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
-              </Suspense>
-            </Box>
-            <AppFooter />
-          </Container>
-    ) : ( 
-          <Scrollbar>
-            <Box
-              display='flex'
-              flex={1}
-              flexDirection='column'
-              className='main-content-view'>
-              <Suspense>
-                <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
-              </Suspense>
-            </Box>
-            <AppFooter />
-        </Scrollbar>
+  const theme = useTheme();
+
+  const isMobile = useMobile();
+
+  const classes = useStyles();
+
+  return isMobile ? (
+    <div className={classes.mobileScrollContainer}>
+      <Box
+        display='flex'
+        flex={1}
+        flexDirection='column'
+        className='main-content-view'
+        pb={40}>
+        <Suspense>
+          <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
+        </Suspense>
+      </Box>
+      <AppFooter />
+    </div>
+  ) : (
+    <Scrollbar>
+      <Box
+        display='flex'
+        flex={1}
+        flexDirection='column'
+        className='main-content-view'
+        pb={20}>
+        <Suspense>
+          <TransitionWrapper>{renderRoutes(routes)}</TransitionWrapper>
+        </Suspense>
+      </Box>
+      <AppFooter />
+    </Scrollbar>
   );
 };
 

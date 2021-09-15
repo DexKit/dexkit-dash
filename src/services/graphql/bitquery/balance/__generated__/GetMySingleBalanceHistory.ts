@@ -44,6 +44,10 @@ export interface GetMySingleBalanceHistory_ethereum_address_balances_currency {
    * Token Smart Contract Address
    */
   address: string | null;
+  /**
+   * Token Type
+   */
+  tokenType: string | null;
 }
 
 export interface GetMySingleBalanceHistory_ethereum_address_balances {

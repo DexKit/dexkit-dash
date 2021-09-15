@@ -53,30 +53,41 @@ export enum RouteTransition {
 }
 
 export enum Fonts {
-  LIGHT = 'Gilroy-Light',
-  REGULAR = 'Gilroy-Regular',
-  MEDIUM = 'Gilroy-Medium',
-  BOLD = 'Gilroy-Bold',
-  EXTRA_BOLD = 'Gilroy-ExtraBold',
+  LIGHT = 'Noto Sans',
+  REGULAR = 'Noto Sans',
+  MEDIUM = 'Noto Sans',
+  BOLD = 'Noto Sans',
+  EXTRA_BOLD = 'Noto Sans',
 }
 
 export enum CoinIcons {
   BITCOIN_WHITE = 'assets/images/bitcoin.png',
   ETHERIUM = 'assets/images/etherium.png',
   LITECOIN = 'assets/images/litcoin.png',
-  RIPPLE = 'assets/images/ripple.png'
+  RIPPLE = 'assets/images/ripple.png',
+}
+
+export enum MainnetNetworks {
+  bitcoin = 'bitcoin',
+  dogecoin = 'dogecoin',
 }
 
 export enum EthereumNetwork {
-  bsc = "bsc",
-  bsc_testnet = "bsc_testnet",
-  celo_alfajores = "celo_alfajores",
-  celo_baklava = "celo_baklava",
-  celo_rc1 = "celo_rc1",
-  ethclassic = "ethclassic",
-  ethclassic_reorg = "ethclassic_reorg",
-  ethereum = "ethereum",
-  goerli = "goerli",
+  bsc = 'bsc',
+  bsc_testnet = 'bsc_testnet',
+  celo_alfajores = 'celo_alfajores',
+  celo_baklava = 'celo_baklava',
+  celo_rc1 = 'celo_rc1',
+  ethclassic = 'ethclassic',
+  ethclassic_reorg = 'ethclassic_reorg',
+  ethereum = 'ethereum',
+  goerli = 'goerli',
+  matic = 'matic',
+}
+
+export enum MainnetNetwork {
+  btc = 'btc',
+  dogecoin = 'dogecoin',
 }
 
 export enum EXCHANGE {
@@ -97,7 +108,7 @@ export enum EXCHANGE {
   //bsc
   PANCAKE = 'Pancake',
   PANCAKEV2 = 'Pancake v2',
-  ALL = 'all'
+  ALL = 'all',
 }
 
 export enum EXCHANGE_NAME_ON_URL {
@@ -112,7 +123,7 @@ export enum EXCHANGE_NAME_ON_URL {
   //bsc
   PANCAKE = 'pancake',
   PANCAKEV2 = 'pancake-v2',
-  ALL = 'all'
+  ALL = 'all',
 }
 
 export enum PROTOCOL {
@@ -124,10 +135,10 @@ export enum PROTOCOL {
   ZEROX = 'Zerox Exchange',
   BANCOR_V2 = 'Bancor Network v2',
   CURVE = 'Curve',
-  BALANCER =  'Balancer Pool Token',
+  BALANCER = 'Balancer Pool Token',
   MOONISWAP = 'Mooniswap',
-  DODO =  'Dodo',
+  DODO = 'Dodo',
   //bsc
   PANCAKE = 'Pancake',
-  ALL = ''
+  ALL = '',
 }

@@ -10,11 +10,16 @@ import {BITQUERY_TOKEN_TRADES} from 'services/graphql/bitquery/protocol/gql';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {EXCHANGE} from 'shared/constants/AppEnums';
-import {GET_CHAIN_FROM_NETWORK, GET_DEFAULT_QUOTE} from 'shared/constants/Blockchain';
-import { EthereumNetwork } from '../../../__generated__/globalTypes';
-import { FilterContext } from 'providers/protocol/filterContext';
-import { getFilterValueById} from 'utils';
-import { getAfer24HoursDate } from 'utils/time_utils';
+import {
+  GET_CHAIN_FROM_NETWORK,
+  GET_DEFAULT_QUOTE,
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK
+} from 'shared/constants/Blockchain';
+
+import {EthereumNetwork} from '../../../__generated__/globalTypes';
+import {FilterContext} from 'providers/protocol/filterContext';
+import {getFilterValueById} from 'utils';
+import {getAfer24HoursDate} from 'utils/time_utils';
 import useInterval from 'hooks/useInterval';
 
 interface Props {
@@ -29,28 +34,31 @@ export const useTokenTrades = ({
   exchange,
   networkName,
 }: Props) => {
-  const chainId =  GET_CHAIN_FROM_NETWORK(networkName);
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
 
-  const [toDate, setTo] = useState(getAfer24HoursDate())
+  const [toDate, setTo] = useState(getAfer24HoursDate());
   const [seconds, setSeconds] = useState(0);
-  const {
-    filters
-  } = useContext(FilterContext);
+  const {filters} = useContext(FilterContext);
+
+
 
   const from = getFilterValueById('from', filters);
   const toFilter = getFilterValueById('to', filters);
   const tradeAmount = getFilterValueById('tradeAmount', filters);
-   // TODO: investigate 
-  useInterval( () => {
-    if(!toFilter){
-      setTo(new Date(getAfer24HoursDate()))
-    }
-     
-  }, POLL_INTERVAL, false)
+  // TODO: investigate
+  useInterval(
+    () => {
+      if (!toFilter) {
+        setTo(new Date(getAfer24HoursDate()));
+      }
+    },
+    POLL_INTERVAL,
+    false,
+  );
 
-  useInterval(()=> {
-    setSeconds(seconds +1)
-  }, 1000)
+  useInterval(() => {
+    setSeconds(seconds + 1);
+  }, 1000);
   const to = toFilter || toDate;
 
   const {
@@ -64,12 +72,18 @@ export const useTokenTrades = ({
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
 
-  const {loading, error, data: dataFn, networkStatus} = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
+  const {loading, error, data: dataFn, networkStatus} = useQuery<
+    GetTokenTrades,
+    GetTokenTradesVariables
+  >(BITQUERY_TOKEN_TRADES, {
     variables: {
-      network:  networkName,
-      exchangeName: GET_EXCHANGE_NAME(exchange) == '' ? undefined : GET_EXCHANGE_NAME(exchange),
-      baseAddress: baseAddress,
-      quoteAddress: quoteAddress || (GET_DEFAULT_QUOTE(chainId) as string),
+      network: networkName,
+      exchangeName:
+        GET_EXCHANGE_NAME(exchange) === ''
+          ? undefined
+          : GET_EXCHANGE_NAME(exchange),
+      baseAddress:  baseAddress,
+      quoteAddress: quoteAddress ||  baseAddress?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
       limit: rowsPerPage,
       offset: skipRows,
       from,
@@ -78,19 +92,16 @@ export const useTokenTrades = ({
     },
     pollInterval: POLL_INTERVAL,
   });
-  useEffect(()=> {
-   if(networkStatus === NetworkStatus.ready){
-     setSeconds(0)
-   }
-
-  },[networkStatus])
-
-
-
+  useEffect(() => {
+    if (networkStatus === NetworkStatus.ready) {
+      setSeconds(0);
+    }
+  }, [networkStatus]);
 
   useEffect(() => {
     if (dataFn && dataFn.ethereum?.dexTrades) {
-      const dexTrades: GetTokenTrades_ethereum_dexTrades[] = [...dataFn.ethereum?.dexTrades] || [];
+      const dexTrades: GetTokenTrades_ethereum_dexTrades[] =
+        [...dataFn.ethereum?.dexTrades] || [];
 
       const newData = dexTrades
         .sort((a, b) => (b.block?.height || 0) - (a.block?.height || 0))
@@ -115,7 +126,8 @@ export const useTokenTrades = ({
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-    nextRefresh: (seconds / (POLL_INTERVAL/1000)) * 100,
+    nextRefresh: (seconds / (POLL_INTERVAL / 1000)) * 100,
     seconds,
   };
 };
+

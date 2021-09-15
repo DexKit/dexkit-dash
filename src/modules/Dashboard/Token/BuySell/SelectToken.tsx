@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Autocomplete,
   createFilterOptions,
   FilterOptionsState,
 } from '@material-ui/lab';
 import {Token} from 'types/app';
-import {Chip, makeStyles, TextField, Box} from '@material-ui/core';
+import {Chip, makeStyles, TextField, Box, Typography} from '@material-ui/core';
 import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
-import { VariableSizeList, ListChildComponentProps } from 'react-window';
+import {VariableSizeList, ListChildComponentProps} from 'react-window';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import { filterTokensInfoByString } from 'utils/tokens';
+import {filterTokensInfoByString} from 'utils/tokens';
 interface Props {
   id: string;
   selected: Token | undefined;
@@ -37,7 +37,7 @@ function useResetCache(data: any) {
 }
 
 function renderRow(props: ListChildComponentProps) {
-  const { data, index, style } = props;
+  const {data, index, style} = props;
   return React.cloneElement(data[index], {
     style: {
       ...style,
@@ -46,7 +46,6 @@ function renderRow(props: ListChildComponentProps) {
   });
 }
 
-
 const OuterElementContext = React.createContext({});
 
 const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
@@ -54,62 +53,70 @@ const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
   return <div ref={ref} {...props} {...outerProps} />;
 });
 
-
 // Adapter for react-window
-const ListboxComponent = React.forwardRef<HTMLDivElement>(function ListboxComponent(props, ref) {
-  const { children, ...other } = props;
-  const itemData = React.Children.toArray(children);
-  const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'), { noSsr: true });
-  const itemCount = itemData.length;
-  const itemSize = smUp ? 40 : 58;
+const ListboxComponent = React.forwardRef<HTMLDivElement>(
+  function ListboxComponent(props, ref) {
+    const {children, ...other} = props;
+    const itemData = React.Children.toArray(children);
+    const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'), {
+      noSsr: true,
+    });
+    const itemCount = itemData.length;
+    const itemSize = smUp ? 40 : 58;
 
-  const getChildSize = (child: React.ReactNode) => {
-    if (React.isValidElement(child) && child.type === ListSubheader) {
-      return 58;
-    }
+    const getChildSize = (child: React.ReactNode) => {
+      if (React.isValidElement(child) && child.type === ListSubheader) {
+        return 58;
+      }
 
-    return itemSize;
-  };
+      return itemSize;
+    };
 
-  const getHeight = () => {
-    if (itemCount > 8) {
-      return 8 * itemSize;
-    }
-    return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
-  };
+    const getHeight = () => {
+      if (itemCount > 8) {
+        return 8 * itemSize;
+      }
+      return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
+    };
 
-  const gridRef = useResetCache(itemCount);
+    const gridRef = useResetCache(itemCount);
 
-  return (
-    <div ref={ref}>
-      <OuterElementContext.Provider value={other}>
-        <VariableSizeList
-          itemData={itemData}
-          height={getHeight() + 2 * LISTBOX_PADDING}
-          width="100%"
-          ref={gridRef}
-          outerElementType={OuterElementType}
-          innerElementType="ul"
-          itemSize={(index: number) => getChildSize(itemData[index])}
-          overscanCount={5}
-          itemCount={itemCount}
-        >
-          {renderRow}
-        </VariableSizeList>
-      </OuterElementContext.Provider>
-    </div>
-  );
-});
+    return (
+      <div ref={ref}>
+        <OuterElementContext.Provider value={other}>
+          <VariableSizeList
+            itemData={itemData}
+            height={getHeight() + 2 * LISTBOX_PADDING}
+            width='100%'
+            ref={gridRef}
+            outerElementType={OuterElementType}
+            innerElementType='ul'
+            itemSize={(index: number) => getChildSize(itemData[index])}
+            overscanCount={5}
+            itemCount={itemCount}>
+            {renderRow}
+          </VariableSizeList>
+        </OuterElementContext.Provider>
+      </div>
+    );
+  },
+);
 
 const useStyles = makeStyles({
   textField: {
     '& .MuiOutlinedInput-root': {
-      paddingLeft: '55px',
+      padding: '5px 50px'
     },
     // '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
     //   border: 'none',
     // },
   },
+  bold: {
+    fontWeight: 'bold',
+  },
+  selectLabel: {
+    marginBottom: '4px'
+  }
 });
 
 const SelectBox = styled.div`
@@ -130,13 +137,13 @@ const SelectBox = styled.div`
   border-radius: 5px;
   pointer-events: none;
   border-color: rgba(255, 255, 255, 0.23);
-  display: flex;
   align-items: center;
   justify-content: center; */
 `;
 
 const SelectOption = styled.div`
   display: flex;
+  width: 100px;
   align-items: center;
 
   & img {
@@ -151,7 +158,6 @@ const SelectToken: React.FC<Props> = ({
   disabled,
   onChange,
   label,
-  limitCoins
 }) => {
   const classes = useStyles();
 
@@ -160,23 +166,13 @@ const SelectToken: React.FC<Props> = ({
   const filterOptions = (options: any, state: FilterOptionsState<any>): any => {
     const filterValue = state.inputValue;
     return filterTokensInfoByString(options, filterValue);
-  
-  
   };
   //NOTE: This is due to bug on autocomplete
-  useEffect(()=> {
-    if(selected){
+  useEffect(() => {
+    if (selected) {
       setInputValue(selected?.symbol);
     }
-   
-  },[selected])
-
-  const getSymbol = (sel:any)=>{
-    console.log(sel)
-    return sel.symbol;
-
-
-  }
+  }, [selected]);
 
   return (
     <>
@@ -200,22 +196,35 @@ const SelectToken: React.FC<Props> = ({
           )}
         />
       ) : (
-        (id && selected) && (
+        id &&
+        selected && (
           <Autocomplete
             id={id}
             closeIcon={false}
             disabled={disabled || false}
             filterOptions={filterOptions}
-            ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
+            ListboxComponent={
+              ListboxComponent as React.ComponentType<
+                React.HTMLAttributes<HTMLElement>
+              >
+            }
             options={options.filter(
-              (option) => option.symbol.toLowerCase() || option.address.toLowerCase() || option.name.toLowerCase(),
+              (option) =>
+                option.symbol.toLowerCase() ||
+                option.address.toLowerCase() ||
+                option.name.toLowerCase(),
             )}
             defaultValue={selected}
+            value={selected}
             onChange={(event, value) => onChange(value ?? undefined)}
             getOptionLabel={(e) => `${e.symbol}`}
             renderOption={(option) => (
               <SelectOption>
-                <TokenLogo token0={option.address} networkName={option?.networkName} logoURL0={option?.logoURI}/>
+                <TokenLogo
+                  token0={option.address}
+                  networkName={option?.networkName as any}
+                  logoURL0={option?.logoURI}
+                />
                 {option.name}
                 {option?.networkName && (
                   <Box pl={1}>
@@ -229,22 +238,31 @@ const SelectToken: React.FC<Props> = ({
               </SelectOption>
             )}
             renderInput={(params) => (
-              <SelectBox>
-                { selected && <TokenLogo token0={selected?.address} networkName={selected?.networkName} logoURL0={selected?.logoURI}/>}
-                 <TextField
-                  {...params}
-                  defaultValue={selected?.symbol}
-                  label={label || "Search a coin"}
-                  placeholder={
-                    selected
-                      ? selected.symbol
-                      : 'Search by name, symbol or paste address'
-                  }
-                  variant='outlined'
-                  className={classes.textField}
-                />
-        
-              </SelectBox>
+              <>
+                <Typography variant="body2" className={`${classes.bold} ${!label ? classes.selectLabel : ''}`}>
+                  {label || 'Search a coin'}
+                </Typography>
+                <SelectBox>
+                  {selected && (
+                    <TokenLogo
+                      token0={selected?.address}
+                      networkName={selected?.networkName as any}
+                      logoURL0={selected?.logoURI}
+                    />
+                  )}
+                  <TextField
+                    {...params}
+                    defaultValue={selected?.symbol}
+                    placeholder={
+                      selected
+                        ? selected.symbol
+                        : 'Search by name, symbol or paste address'
+                    }
+                    variant='outlined'
+                    className={classes.textField}
+                  />
+                </SelectBox>
+              </>
             )}
           />
         )
@@ -253,4 +271,4 @@ const SelectToken: React.FC<Props> = ({
   );
 };
 
-export default SelectToken;
+export default  SelectToken;

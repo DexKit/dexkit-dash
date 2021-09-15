@@ -4,9 +4,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
-import {useChainId} from 'hooks/useChainId';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {GET_DEFAULT_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   pair: {
@@ -40,24 +39,26 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 interface Props {
   token0: string;
+  networkName: EthereumNetwork;
   logoURL0?: string;
   token1?: string | undefined;
-  networkName?: EthereumNetwork;
 }
 
+const noFoundSrc = require('assets/images/logo-not-found.png');
+const dexkitLogo = require('assets/images/dexkit-logo.png');
+
 const TokenLogo: React.FC<Props> = (props) => {
-  const {currentChainId} = useChainId();
   const net = useNetwork();
   const classes = useStyles();
   const currentNetwork = props.networkName || net;
 
   const provToken0 =
     props.token0 === '-'
-      ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId)
+      ? GET_DEFAULT_TOKEN_BY_NETWORK(currentNetwork)
       : props.token0;
   const provToken1 =
     props.token1 === '-'
-      ? GET_DEFAULT_TOKEN_NETTOWRK(currentChainId)
+      ? GET_DEFAULT_TOKEN_BY_NETWORK(currentNetwork)
       : props.token1;
 
   const token0 =
@@ -70,31 +71,36 @@ const TokenLogo: React.FC<Props> = (props) => {
       : '';
 
   const networkName =
-  currentNetwork === EthereumNetwork.ethereum ? 'ethereum' : 'smartchain';
-
-  const noFoundSrc = require('assets/images/logo-not-found.png');
-  const dexkitLogo = require('assets/images/dexkit-logo.png');
+    currentNetwork === EthereumNetwork.ethereum
+      ? 'ethereum'
+      : currentNetwork === EthereumNetwork.bsc
+      ? 'smartchain'
+      : 'polygon';
 
   const currencyLogo =
     networkName === 'ethereum'
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
-      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
-
+      : currentNetwork === EthereumNetwork.bsc
+      ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
+      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
   const getIconUrl = (address: string, logoUrl?: string) => {
-    if(logoUrl){
+    if (logoUrl) {
       return logoUrl;
     }
-    
-    if(address.toLowerCase() === 'bsc') {
+
+    if (address.toLowerCase() === 'bsc' || address.toLowerCase() === 'bnb') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
     }
 
-    if(address.toLowerCase() === 'eth') {
+    if (address.toLowerCase() === 'eth') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
     }
 
+    if (address.toLowerCase() === 'matic') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
+    }
 
-    if(address.toLowerCase() === '') {
+    if (address.toLowerCase() === '') {
       return currencyLogo;
     }
     if (

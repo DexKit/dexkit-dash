@@ -9,20 +9,20 @@ interface Props {
 
 const LoadingTable: React.FC<Props> = (props) => {
   const {columns, rows} = props;
-  let tableBodyRow = [];
+  const tableBodyRow = [];
 
   for (let i = 0; i < columns; i++) {
     tableBodyRow.push(
-      <TableCell style={{paddingTop: 12, paddingBottom: 12}}>
+      <TableCell style={{paddingTop: 12, paddingBottom: 12}} key={`loading-cell-key-${i}`}>
         <Skeleton variant='text' />
       </TableCell>,
     );
   }
 
-  let tableBodyRows = [];
+  const tableBodyRows = [];
 
   for (let i = 0; i < rows; i++) {
-    tableBodyRows.push(<TableRow>{tableBodyRow}</TableRow>);
+    tableBodyRows.push(<TableRow key={`loading-row-key-${i}`}>{tableBodyRow}</TableRow>);
   }
 
   return (

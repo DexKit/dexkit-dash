@@ -15,7 +15,7 @@ import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
 import {truncateAddress} from 'utils';
-import { isAddress } from 'web3-utils';
+import {isAddress} from 'web3-utils';
 
 type Params = {
   address: string;
@@ -72,10 +72,10 @@ const TradeHistory: React.FC<Props> = (props) => {
     if (dataMaker && dataTaker && tokenList.length > 0) {
       const newDataMaker = dataMaker.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['side'] = 'SELL';
@@ -99,10 +99,10 @@ const TradeHistory: React.FC<Props> = (props) => {
 
       const newDataTaker = dataTaker.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['side'] = 'BUY';
@@ -141,14 +141,13 @@ const TradeHistory: React.FC<Props> = (props) => {
         breadcrumbs={{
           history: [
             {url: '/', name: 'Dashboard'},
-            {url: `/${networkName}/dashboard/token/${address}`, name: 'Token'},
+            {url: `/${networkName}/token/${address}`, name: 'Token'},
           ],
           active: {name: 'Order List'},
         }}
         title={{name: 'Order List'}}
         subtitle={{name: truncateAddress(address), hasCopy: address}}
       />
-
 
       <GridContainer>
         <Grid item xs={12} md={12}>

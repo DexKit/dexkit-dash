@@ -13,6 +13,25 @@ import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
 import AppLogo from 'shared/components/AppLogo';
+import {
+  Paper,
+  Grid,
+  Typography,
+  Button,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  Divider,
+} from '@material-ui/core';
+
+import {ReactComponent as SupportImage} from 'assets/images/state/support.svg';
+import {ReactComponent as TwoFourSupportIcon} from 'assets/images/icons/24-support.svg';
+
+import CloseIcon from '@material-ui/icons/Close';
+
+import MenuIcon from '@material-ui/icons/Menu';
+import Close from '@material-ui/icons/Close';
+import WalletInfo from 'shared/components/WalletInfo';
 
 interface AppSidebarProps {
   variant?: string;
@@ -34,7 +53,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   };
 
   const classes = useStyles({themeMode});
-  let sidebarClasses = classes.sidebarStandard;
+  const sidebarClasses = classes.sidebarStandard;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
@@ -42,14 +64,27 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         <Drawer
           anchor={position}
           open={navCollapsed}
-          onClose={ev => handleToggleDrawer()}
+          onClose={handleToggleDrawer}
           classes={{
-            root: clsx(variant),
-            paper: clsx(variant),
+            paper: classes.drawer,
           }}
           style={{position: 'absolute'}}>
           <Box height='100%'>
             <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
+              <Box p={4}>
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems='center'
+                  alignContent='center'>
+                  <Grid item>
+                    <IconButton onClick={handleToggleDrawer}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider />
               <Scrollbar className={classes.drawerScrollAppSidebar}>
                 <Navigation />
               </Scrollbar>
@@ -66,17 +101,51 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             !navCollapsed ? '' : 'mini-sidebar-collapsed',
           )}>
           <Box className={clsx(classes.sidebarBg, sidebarClasses)}>
-           {/* <AppLogo
-              justifyContent='center'
-              logo={require('assets/images/logo_white_kit.png')}
-           />*/}
-
-            <AppLogo
-              justifyContent='center'
-              logo={require('assets/images/dexkit_logo.png')}
-            />
+            <Box p={4}>
+              <IconButton onClick={() => dispatch(toggleNavCollapsed())}>
+                {navCollapsed ? <MenuIcon /> : <Close />}
+              </IconButton>
+            </Box>
             <Scrollbar className={classes.scrollAppSidebar}>
               <Navigation />
+              <Box p={4} className='visible-hover'>
+                <Paper>
+                  <Box p={4}>
+                    <Grid
+                      spacing={4}
+                      container
+                      direction='column'
+                      justify='center'
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <SupportImage />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography align='center' variant='h5'>
+                          Doubts?
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography align='center' variant='body1'>
+                          Do you have any questions? Please, contact our
+                          support.
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          fullWidth
+                          color='primary'
+                          startIcon={<TwoFourSupportIcon />}
+                          variant='contained'
+                          size='large'>
+                          Support
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </Box>
             </Scrollbar>
           </Box>
         </Box>

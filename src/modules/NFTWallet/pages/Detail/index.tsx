@@ -11,6 +11,7 @@ import {
   useTheme,
   Button,
   Typography,
+  Paper,
 } from '@material-ui/core';
 import {useHistory, useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
@@ -42,12 +43,13 @@ import BuySuccessBackdrop from 'modules/NFTWallet/components/detail/BuySuccessBa
 import {AxiosResponse} from 'axios';
 import NotFound from 'modules/NFTWallet/components/detail/NotFound';
 
+import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
+
 const useStyles = makeStyles((theme) => ({
   assetImage: {
-    height: '100%',
+    height: 'auto',
     width: '100%',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    borderRadius: theme.shape.borderRadius,
   },
   backdrop: {
     zIndex: theme.zIndex.modal + 1,
@@ -119,7 +121,7 @@ export const AssetDetail = () => {
 
       if (userAccountAddress) {
         const provider = getProvider();
-        let seaport = await getOpenSeaPort(provider);
+        const seaport = await getOpenSeaPort(provider);
 
         setWaitingConfirmation(true);
 
@@ -183,12 +185,13 @@ export const AssetDetail = () => {
           asset_contract_address: data?.asset_contract?.address,
         });
 
-        let orderIndex = orders.findIndex(
-          (order) => order.hash == listing.order_hash,
+        const orderIndex = orders.findIndex(
+          (order) =>
+            order.hash.toLowerCase() === listing.order_hash.toLowerCase(),
         );
 
         if (orderIndex > -1) {
-          let order = orders[orderIndex];
+          const order = orders[orderIndex];
 
           setIsCancellingListing(true);
 
@@ -230,12 +233,12 @@ export const AssetDetail = () => {
         asset_contract_address: data?.asset_contract?.address,
       });
 
-      let orderIndex = orders.findIndex(
+      const orderIndex = orders.findIndex(
         (order) => order.hash == buyOrder.order_hash,
       );
 
       if (orderIndex > -1) {
-        let order = orders[orderIndex];
+        const order = orders[orderIndex];
 
         setIsBuying(true);
 
@@ -320,26 +323,36 @@ export const AssetDetail = () => {
               alignContent='center'
               spacing={4}>
               <Grid item>
-                <ErrorIcon style={{fontSize: theme.spacing(8)}} />
+                <ConnectivityImage />
               </Grid>
               <Grid item>
-                <Typography gutterBottom variant='h5'>
-                  <IntlMessages id='nfts.walletAssetsListErrorTitle' />
-                </Typography>
-                <Button
-                  onClick={handleTryAgain}
-                  size='small'
-                  variant='contained'
-                  color='primary'>
-                  <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
-                </Button>
+                <Grid
+                  direction='column'
+                  container
+                  alignItems='center'
+                  alignContent='center'
+                  spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography gutterBottom variant='h5'>
+                      <IntlMessages id='nfts.walletAssetsListErrorTitle' />
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      onClick={handleTryAgain}
+                      size='small'
+                      color='primary'>
+                      <IntlMessages id='nfts.walletAssetsListErrorTryAgain' />
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
         )
       ) : (
         <Box pt={{xs: 8}}>
-          <Box mb={2}>
+          <Box mb={4}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to='/'>
                 <IntlMessages id='nfts.walletBreadcrumbDashboard' />
@@ -362,7 +375,7 @@ export const AssetDetail = () => {
               </Link>
             </Breadcrumbs>
           </Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             {errorMessage ? (
               <Grid item xs={12}>
                 <Alert severity='error' onClose={handleAlertClose}>
@@ -371,80 +384,45 @@ export const AssetDetail = () => {
               </Grid>
             ) : null}
             <Grid item xs={12}>
-              <Grid container spacing={2}>
+              <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Card>
-                        {loading ? (
-                          <Skeleton
-                            className={classes.assetImage}
-                            height='100%'
-                          />
-                        ) : null}
-                        <CardMedia>
-                          <img
-                            style={{
-                              backgroundColor: `#${
-                                data?.background_color
-                                  ? data?.background_color
-                                  : 'fff'
-                              }`,
-                            }}
-                            src={data?.image_url}
-                            className={classes.assetImage}
-                          />
-                        </CardMedia>
-                      </Card>
+                      {loading ? (
+                        <Skeleton className={classes.assetImage} />
+                      ) : (
+                        <Paper>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            alignItems='center'
+                            alignContent='center'>
+                            <img
+                              src={data?.image_url}
+                              className={classes.assetImage}
+                              style={{
+                                backgroundColor: `#${
+                                  data?.background_color
+                                    ? data?.background_color
+                                    : 'fff'
+                                }`,
+                              }}
+                            />
+                          </Box>
+                        </Paper>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Box mb={2}>
-                        <Grid container spacing={2}>
-                          {loading ? null : (
-                            <Grid item>
-                              <CopyAddressButton
-                                copyText={`${getWindowUrl()}/nfts/assets/${
-                                  data?.asset_contract?.address
-                                }/${data?.token_id}`}
-                              />
-                            </Grid>
-                          )}
-                          {isAssetOwner(data, userAccountAddress || '') ? (
-                            <>
-                              <Grid item>
-                                <Button
-                                  onClick={handleShowTransferDialog}
-                                  variant='outlined'
-                                  size='small'
-                                  startIcon={<SwapHorizIcon />}
-                                  color='primary'>
-                                  <IntlMessages id='nfts.detail.transfer' />
-                                </Button>
-                              </Grid>
-                              <Grid item>
-                                <Button
-                                  component={RouterLink}
-                                  variant='outlined'
-                                  size='small'
-                                  startIcon={<AttachMoney />}
-                                  to={`/nfts/assets/${data?.asset_contract?.address}/${data?.token_id}/sell`}
-                                  color='primary'>
-                                  Sell
-                                </Button>
-                              </Grid>
-                            </>
-                          ) : null}
-                        </Grid>
-                      </Box>
                       <DescriptionCard
                         asset={data}
                         loading={loading}
                         error={error}
                         onBuy={handleBuyListing}
+                        onTransfer={handleShowTransferDialog}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -454,35 +432,41 @@ export const AssetDetail = () => {
                         error={error}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <ListingAccordion
-                        listings={data?.orders?.filter(
-                          (order: any) => order.side == ORDER_LISTING,
-                        )}
-                        loading={loading}
-                        error={error}
-                        onCancel={handleCancelListing}
-                        onBuy={handleBuyListing}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <OffersAccordion
-                        asset={data}
-                        offers={data?.orders?.filter(
-                          (order: any) => order.side == ORDER_OFFER,
-                        )}
-                        loading={loading}
-                        error={error}
-                        onRefresh={handleRefresh}
-                      />
-                    </Grid>
                   </Grid>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <ListingAccordion
+                    listings={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_LISTING,
+                    )}
+                    loading={loading}
+                    error={error}
+                    onCancel={handleCancelListing}
+                    onBuy={handleBuyListing}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <OffersAccordion
+                    asset={data}
+                    offers={data?.orders?.filter(
+                      (order: any) => order.side == ORDER_OFFER,
+                    )}
+                    loading={loading}
+                    error={error}
+                    onRefresh={handleRefresh}
+                  />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={12}>
-              <HistoricAccordion asset={data} loading={loading} error={error} />
-            </Grid>
+            {data ? (
+              <Grid item xs={12} sm={12}>
+                <HistoricAccordion
+                  asset={data}
+                  loading={loading}
+                  error={error}
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </Box>
       )}

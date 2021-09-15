@@ -100,16 +100,16 @@ export default () => {
       const openSeaPort = await getOpenSeaPort(provider);
 
       const {orders} = await openSeaPort.api.getOrders({
-        token_id: data?.token_id,
         asset_contract_address: data?.asset_contract?.address,
+        token_ids: data?.token_id,
       });
 
-      let orderIndex = orders.findIndex(
-        (order) => order.hash == listingOrder.order_hash,
+      const orderIndex = orders.findIndex(
+        (order) => order.hash.toLowerCase() === listingOrder.order_hash,
       );
 
       if (orderIndex > -1) {
-        let order = orders[orderIndex];
+        const order = orders[orderIndex];
 
         // setIsBuying(true);
 
@@ -149,17 +149,17 @@ export default () => {
   const acceptOffer = useCallback(
     async (offer: any) => {
       if (userAccountAddress) {
-        let provider = getProvider();
+        const provider = getProvider();
 
         const openSeaPort = await getOpenSeaPort(provider);
 
         const {orders} = await openSeaPort.api.getOrders({});
 
         // lowercase
-        let orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
+        const orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
 
         if (orderIndex > -1) {
-          let order = orders[orderIndex];
+          const order = orders[orderIndex];
 
           setShowAccept(true);
 
@@ -201,12 +201,12 @@ export default () => {
 
         const openSeaPort = await getOpenSeaPort(getProvider());
 
-        let {orders} = await openSeaPort.api.getOrders({
+        const {orders} = await openSeaPort.api.getOrders({
           asset_contract_address: data?.asset_contract?.address,
           token_ids: data?.assets?.map((a: any) => a.token_id),
         });
 
-        let orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
+        const orderIndex = orders.findIndex((o) => o.hash === offer.order_hash);
 
         if (orderIndex > -1) {
           openSeaPort
@@ -235,7 +235,7 @@ export default () => {
 
   const handleMakeOfferResult = useCallback(
     async (params: any) => {
-      let provider = getProvider();
+      const provider = getProvider();
 
       const openSeaPort = await getOpenSeaPort(provider);
 

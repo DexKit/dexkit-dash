@@ -7,11 +7,13 @@ import {
   RouteTransition,
   ThemeMode,
   ThemeStyle,
-  ThemeStyleRadius,
 } from '../../../shared/constants/AppEnums';
 
 const breakpoints = createBreakpoints({});
-const cardRadius = ThemeStyleRadius.STANDARD;
+const cardRadius = 12;
+const inputBorderRadius = 8;
+const buttonBorderRadius = 8;
+
 const defaultConfig: any = {
   theme: {
     spacing: 4,
@@ -20,18 +22,17 @@ const defaultConfig: any = {
       type: ThemeMode.LIGHT,
       background: {
         paper: '#FFFFFF',
-        default: '#f4f5f7',
-      //  default: '#fafbfc',
+        default: '#f3f4f6',
       },
       primary: {
-        main: '#ff7149',
+        main: '#FFA552',
         contrastText: '#fff',
       },
       secondary: {
-        main: '#c52b00',
+        main: '#FCEFE4',
       },
       sidebar: {
-        bgColor: '#181a1f',
+        bgColor: '#2E3243',
         textColor: '#fff',
       },
       common: {
@@ -40,7 +41,7 @@ const defaultConfig: any = {
       },
       text: {
         primary: 'rgba(0, 0, 0, 0.87)',
-        secondary: 'rgba(0, 0, 0, 0.54)',
+        secondary: '#8F96A7',
         disabled: 'rgba(0, 0, 0, 0.38)',
         hint: 'rgba(0, 0, 0, 0.38)',
       },
@@ -55,28 +56,28 @@ const defaultConfig: any = {
     overrides: {
       MuiTypography: {
         h1: {
-          fontSize: 36,
+          fontSize: 28,
         },
         h2: {
-          fontSize: 30,
-        },
-        h3: {
           fontSize: 24,
         },
+        h3: {
+          fontSize: 18,
+        },
         h4: {
-          fontSize: 22,
+          fontSize: 18,
         },
         h5: {
-          fontSize: 18,
+          fontSize: 16,
         },
         h6: {
           fontSize: 16,
         },
         subtitle1: {
-          fontSize: 18,
+          fontSize: 16,
         },
         subtitle2: {
-          fontSize: 20,
+          fontSize: 18,
         },
         body1: {
           fontSize: 16,
@@ -92,10 +93,7 @@ const defaultConfig: any = {
       },
       MuiCardLg: {
         root: {
-          borderRadius:
-            cardRadius === ThemeStyleRadius.STANDARD
-              ? ThemeStyleRadius.STANDARD
-              : ThemeStyleRadius.MODERN + 20,
+          borderRadius: cardRadius,
         },
       },
       MuiCard: {
@@ -104,10 +102,20 @@ const defaultConfig: any = {
           // boxShadow: '0px 5px 6px rgba(0, 0, 0, 0.04)',
         },
       },
-      MuiButton: {
+      MuiPaper: {
         root: {
           borderRadius: cardRadius,
-          // boxShadow: '0px 5px 6px rgba(0, 0, 0, 0.04)',
+        },
+      },
+      MuiAppBar: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+      MuiButton: {
+        root: {
+          borderRadius: buttonBorderRadius,
+          boxShadow: '0px 14px 22px rgba(255, 165, 82, 0.34)',
           [breakpoints.down('md')]: {
             paddingTop: '8px !important',
             paddingBottom: '8px !important',

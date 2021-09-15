@@ -36,7 +36,7 @@ const ProgressBar: React.FC<Props> = (props) => {
 
   const {theme} = useContext<AppContextPropsType>(AppContext);
 
-  let dynamicProgressBar = [];
+  const dynamicProgressBar = [];
   dynamicProgressBar.push(
     <Circle
       key={0}

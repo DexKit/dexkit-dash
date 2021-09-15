@@ -10,10 +10,10 @@ interface Props {
 export default (props: Props) => {
   const {count} = props;
 
-  let [arr, setArr] = useState<any[]>([]);
+  const [arr, setArr] = useState<any[]>([]);
 
   useEffect(() => {
-    let tmp = new Array(count).fill(null);
+    const tmp = new Array(count).fill(null);
     setArr(tmp);
   }, [count]);
 

@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: 4,
     margin: 18,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 export default useStyles;

@@ -1,27 +1,20 @@
 import React from 'react';
-import {Box} from '@material-ui/core';
+
 import {makeStyles} from '@material-ui/core/styles';
-import {useNetwork} from 'hooks/useNetwork';
 import {utils} from 'ethers';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_TOKEN_NETTOWRK} from 'shared/constants/Blockchain';
-import {useChainId} from 'hooks/useChainId';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {CremaTheme} from 'types/AppContextPropsType';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   pair: {
     display: 'flex',
   },
   iconLeft: {
-    borderRadius: '100%',
-    width: '40px',
-    height: '40px',
+    borderRadius: '50%',
+    width: theme.spacing(8),
+    height: theme.spacing(8),
     position: 'relative',
     zIndex: 2,
-    [theme.breakpoints.down('md')]: {
-      width: '25px',
-      height: '25px',
-    },
   },
 }));
 
@@ -29,7 +22,6 @@ interface Props {
   token: string;
   network: EthereumNetwork;
   logoURL?: string;
- 
 }
 
 const TokenLogo: React.FC<Props> = (props) => {
@@ -58,24 +50,25 @@ const TokenLogo: React.FC<Props> = (props) => {
       return dexkitLogo;
     }
 
-    if(url){
+    if (url) {
       return url;
     }
-    
-    if(address.toLowerCase() === 'bsc') {
+
+    if (address.toLowerCase() === 'bsc') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
     }
 
-    if(address.toLowerCase() === 'eth') {
+    if (address.toLowerCase() === 'eth') {
       return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
     }
 
-
-    if(address.toLowerCase() === '') {
+    if (address.toLowerCase() === '') {
       return currencyLogo;
     }
-    
-    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${utils.getAddress(address)}/logo.png`;
+
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${networkName}/assets/${utils.getAddress(
+      address,
+    )}/logo.png`;
   };
 
   const addDefaultSrc = (ev: any) => {

@@ -17,18 +17,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   grow: {
     flexGrow: 1,
   },
-  wallet: {
-    verticalAlign: 'middle',
-    display: 'inline-block',
-    height: '100%',
-    width: '28.6%',
-    [theme.breakpoints.down('sm')]: {
-      width: '50%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '70%',
-    },
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -82,25 +70,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       width: 200,
     },
   },
-  sectionDesktop: {
-    minHeight: 56,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 70,
-    },
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
   appBar: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     width: '100%',
-    boxShadow: '4px 3px 4px 0px rgba(0,0,0,0.12)',
     transition: 'all 0.5s ease',
     [theme.breakpoints.up('lg')]: {
       width: 'calc(100vw - 19rem)',
@@ -125,12 +98,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     height: '2.5rem',
   },
   badgeRoot: {
-    display: 'flex',
-    padding: '3px 10px',
-    borderRadius: 4,
-    margin: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+  },
+  switchNetworkButton: {
+    borderRadius: theme.shape.borderRadius,
   },
 }));
 export default useStyles;

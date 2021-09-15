@@ -1,33 +1,24 @@
 import React from 'react';
-import { ListItem, ListItemText} from '@material-ui/core';
+import {ListItem, ListItemText} from '@material-ui/core';
 import clsx from 'clsx';
-import { NavLink} from '../../../index';
+import {NavLink} from '../../../index';
 import useStyles from './VerticalItem.style';
-import { useHistory } from 'react-router';
-
+import {useHistory} from 'react-router';
 
 export const Version = () => {
-    const history = useHistory();
-    const onClick = () => {
-        history.push('/changelog');
-    }
-    const level = 0;
-    const classes = useStyles({level});
-   return (
-        <ListItem
-          button
-          onClick={onClick}
-          component={NavLink}
-          className={clsx(classes.navItem, 'nav-item')}>
-          
-          <ListItemText
-            primary={'v0.0.4'}
-            classes={{primary: 'nav-item-text'}}
-          />
-    
-        </ListItem>
-      );
-
-
-
-}
+  const history = useHistory();
+  const onClick = () => {
+    history.push('/changelog');
+  };
+  const level = 0;
+  const classes = useStyles({level});
+  return (
+    <ListItem
+      button
+      onClick={onClick}
+      component={NavLink}
+      className={clsx(classes.navItem, 'nav-item')}>
+      <ListItemText primary={'v0.0.5'} classes={{primary: 'nav-item-text'}} />
+    </ListItem>
+  );
+};

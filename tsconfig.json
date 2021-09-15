@@ -7,10 +7,7 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "es2017"
-    ],
+    "lib": ["dom", "es2017"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -34,15 +31,6 @@
       "name": "typescript-tslint-plugin"
     }
   ],
-  "exclude": [
-    "node_modules",
-    "src/@crema",
-    "oldCode",
-    "merge"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", "src/@crema", "oldCode", "merge"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

@@ -1,13 +1,16 @@
-import React from 'react';
-import {Icon, ListItem, ListItemText} from '@material-ui/core';
-import clsx from 'clsx';
+import React, {useCallback} from 'react';
+import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+
 import {Badge, NavLink} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
-
+import CustomIcon from 'shared/components/CustomIcon';
+import {useDispatch} from 'react-redux';
+import {toggleNavCollapsed} from 'redux/actions';
+import {useMobile} from 'hooks/useMobile';
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -28,48 +31,91 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
     return '/';
   };
   const isActive = () => {
-      if(item.url === location.pathname){
+    if (item.url === location.pathname) {
+      return true;
+    }
+    //TODO: special case for the Wallet path
+    if (item.url && location.pathname) {
+      // parsing the url's here
+      const parsedPath = item.url.split('/').filter((e) => e);
+      const currentPath = location.pathname.split('/').filter((e) => e);
+      if (
+        currentPath.length > 1 &&
+        currentPath[0] === 'wallet' &&
+        parsedPath.length > 0 &&
+        parsedPath[0] === 'wallet'
+      ) {
         return true;
       }
-      if(item.url && location.pathname){
-        // parsing the url's here
-        const parsedPath = item.url.split('/').filter(e=> e);
-        const currentPath = location.pathname.split('/').filter(e=> e);
-        let counter = 0;
-        parsedPath.forEach((p)=> {
-              if(currentPath.includes(p)){
-                counter = counter +1;
-          }});
-          // NOTE: We are assuming that if field have at least 2 match's we can consider it activate
-          if(counter > 1){
-            return true
-          }
-      }
-      return false;
-  
-  }
+    }
 
+    //TODO: special case for the Explorer path
+    if (item.url && location.pathname) {
+      // parsing the url's here
+      const parsedPath = item.url.split('/').filter((e) => e);
+      const currentPath = location.pathname.split('/').filter((e) => e);
+      if (
+        currentPath.length > 1 &&
+        currentPath[0] === 'explorer' &&
+        parsedPath.length > 0 &&
+        parsedPath[0] === 'explorer'
+      ) {
+        return true;
+      }
+    }
+
+    if (item.url && location.pathname) {
+      // parsing the url's here
+      const parsedPath = item.url.split('/').filter((e) => e);
+      const currentPath = location.pathname.split('/').filter((e) => e);
+      let counter = 0;
+      parsedPath.forEach((p) => {
+        if (currentPath.includes(p)) {
+          counter = counter + 1;
+        }
+      });
+      // NOTE: We are assuming that if field have at least 2 match's we can consider it activate
+      if (counter > 1) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const isMobile = useMobile();
+  const dispatch = useDispatch();
+
+  const handleClick = useCallback(() => {
+    let url = getUrl();
+
+    if (isMobile) {
+      dispatch(toggleNavCollapsed());
+    }
+
+    history.push(url);
+  }, [dispatch, history, getUrl, isMobile]);
 
   return (
     <ListItem
+      className={classes.item}
+      selected={isActive()}
       button
-      to={getUrl()}
-      component={NavLink}
-      className={clsx(classes.navItem, 'nav-item', {
-        active: isActive(),
-      })}>
+      onClick={handleClick}>
       {item.icon && (
-        <Box component='span' mr={6}>
-          <Icon
-            className={clsx(classes.listIcon, 'nav-item-icon')}
-            color='action'>
-            {item.icon}
-          </Icon>
-        </Box>
+        <ListItemIcon className={classes.itemIcon}>
+          {item.customIcon ? (
+            <CustomIcon
+              icon={item.icon as string}
+              className={isActive() ? classes.svgActive : undefined}
+            />
+          ) : (
+            <Icon>{item.icon}</Icon>
+          )}
+        </ListItemIcon>
       )}
       <ListItemText
+        className={classes.listItemText}
         primary={<IntlMessages id={item.messageId} />}
-        classes={{primary: 'nav-item-text'}}
       />
       {item.count && (
         <Box mr={4} clone>
