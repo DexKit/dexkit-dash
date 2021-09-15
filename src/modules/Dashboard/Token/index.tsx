@@ -101,10 +101,10 @@ const TokenPage: React.FC<Props> = (props) => {
   }, [tokenInfo, address]);
 
   const infoMyTakerOrders = useFetch(
-    `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
+    `${ZRX_API_URL_FROM_NETWORK(networkName, chainId)}/sra/v4/orders`,
   );
   const infoMyMakerOrders = useFetch(
-    `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
+    `${ZRX_API_URL_FROM_NETWORK(networkName, chainId)}/sra/v4/orders`,
   );
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const TokenPage: React.FC<Props> = (props) => {
         shareUrl={`${getWindowUrl()}/${networkName}/token/${address}`}
         onClose={toggleShare}
       />
-      <Box py={4} className={isMobile ? classes.mobileContainer : ''}>
+      <Box py={0} className={isMobile ? classes.mobileContainer : ''}>
         <Box>
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>

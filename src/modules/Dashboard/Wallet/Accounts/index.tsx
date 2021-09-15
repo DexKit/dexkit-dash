@@ -51,6 +51,7 @@ import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circl
 import ContainedInput from 'shared/components/ContainedInput';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AppContext from '@crema/utility/AppContext';
+import { useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -66,6 +67,7 @@ const Accounts = () => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
+  const history = useHistory();
   const [copyText, setCopyText] = useState('Copy to clipboard');
 
   const [anchorEl, setAnchorEl] = useState<Element>();
@@ -85,7 +87,7 @@ const Accounts = () => {
     (state) => state.ui.wallet,
   );
 
-  const {web3State, onConnectWeb3, account} = useWeb3();
+  const {web3State,  account} = useWeb3();
 
   const handlePaste = async () => {
     const cpy: any = await navigator.clipboard.readText();
@@ -131,7 +133,7 @@ const Accounts = () => {
       <Button
         variant='contained'
         color='primary'
-        onClick={onConnectWeb3}
+        onClick={() => history.push('/onboarding/login-wallet')}
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()
@@ -367,7 +369,7 @@ const Accounts = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+      {/*  <Grid item xs={12}>
           <SwipeableViews>
             <Box display='flex'>
               <Box mr={2}>
@@ -381,7 +383,7 @@ const Accounts = () => {
               </Box>
             </Box>
           </SwipeableViews>
-        </Grid>
+                </Grid>*/}
         <Grid item xs={12}>
           <Box
             display='flex'

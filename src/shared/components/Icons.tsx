@@ -7,3 +7,13 @@ export {ReactComponent as ImportWhiteIcon} from 'assets/images/icons/import-whit
 export {ReactComponent as HeartPurpleIcon} from 'assets/images/icons/heart-purple.svg';
 export {ReactComponent as HeartEmptyIcon} from 'assets/images/icons/heart-empty.svg';
 export {ReactComponent as MetamaskFoxIcon} from 'assets/images/icons/metamask-fox.svg';
+export {ReactComponent as WalletConnectIcon} from 'assets/images/icons/wallet-connect.svg';
+export {ReactComponent as WalletCheckPrimaryIcon} from 'assets/images/icons/wallet-check-primary.svg';
+export {ReactComponent as FlashIcon} from 'assets/images/icons/flash.svg';
+export {ReactComponent as GoogleIcon} from 'assets/images/icons/google.svg';
+export {ReactComponent as TwitterIcon} from 'assets/images/icons/twitter.svg';
+export {ReactComponent as DiscordIcon} from 'assets/images/icons/discord.svg';
+export {ReactComponent as TelegramIcon} from 'assets/images/icons/telegram.svg';
+export {ReactComponent as AppleIcon} from 'assets/images/icons/apple.svg';
+export {ReactComponent as ReceiptAddIcon} from 'assets/images/icons/receipt-add.svg';
+export {ReactComponent as MagicpenIcon} from 'assets/images/icons/magicpen.svg';

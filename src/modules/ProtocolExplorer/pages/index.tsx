@@ -327,7 +327,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     price24Change={
                       data?.market_data?.price_change_percentage_24h || 0
                     }
-                    onAddToken={handleAddToken}
+                    onAddToken={!isMobile ? handleAddToken : undefined}
                   />
                 )}
               </Grid>
@@ -410,6 +410,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 <Analytics
                   token={tokenInfo}
                   tokenMarket={tokenMarket}
+                  priceUSD={priceQuote?.price as string}
                   loading={loadingToken || loadingTokenMarket}
                 />
               </Grid>

@@ -45,6 +45,7 @@ const SelectTokenV2: React.FC<Props> = ({
       variant='outlined'
       onClick={onClick}>
       {selected?.symbol}
+
     </StyledButton>) : (
 
       <StyledButton

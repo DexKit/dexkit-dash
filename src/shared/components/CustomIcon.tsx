@@ -6,6 +6,7 @@ import {ReactComponent as LovelyIcon} from 'assets/images/icons/lovely.svg';
 import {ReactComponent as BuyCryptoIcon} from 'assets/images/icons/buy-crypto.svg';
 import {ReactComponent as ElementPlusIcon} from 'assets/images/icons/element-plus.svg';
 import {ReactComponent as UserOctagonIcon} from 'assets/images/icons/user-octagon.svg';
+import {MagicpenIcon} from './Icons';
 
 interface Props extends React.SVGProps<SVGSVGElement> {
   icon: string;
@@ -28,6 +29,8 @@ export const CustomIcon = (props: Props) => {
     return <ElementPlusIcon {...props} />;
   } else if (icon === 'user.octagon') {
     return <UserOctagonIcon {...props} />;
+  } else if (icon === 'magicpen') {
+    return <MagicpenIcon {...props} />;
   }
 
   return <></>;

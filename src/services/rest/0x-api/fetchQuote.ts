@@ -17,7 +17,12 @@ export async function fetchQuote(
 
   const isSell = quoteParams.orderSide === OrderSide.Sell ? true : false;
 
-  const currency = network === EthereumNetwork.ethereum ? 'ETH' : 'BNB';
+  const currency =
+    network === EthereumNetwork.ethereum
+      ? 'ETH'
+      : network === EthereumNetwork.bsc
+      ? 'BNB'
+      : 'MATIC';
 
   // const wrapper = network === EthereumNetwork.ethereum ? 'WETH' : 'WBNB';
 
@@ -79,7 +84,7 @@ export async function fetchQuote(
     params.set('skipValidation', 'true');
   }
 
-  let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/quote?';
+  let url = ZRX_API_URL_FROM_NETWORK(network, quoteParams.chainId) + '/swap/v1/quote?';
 
   for (const [key, value] of params) {
     url += `${key}=${value}&`;

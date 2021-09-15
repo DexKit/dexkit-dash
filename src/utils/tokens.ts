@@ -190,7 +190,12 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
 
 export const getNativeCoinWrappedAddressFromNetworkName = (
   network: EthereumNetwork,
+  chainId?: ChainId,
 ) => {
+  if(chainId && chainId === ChainId.Ropsten){
+    return '0xc778417E063141139Fce010982780140Aa0cD5Ab'
+  }
+
   switch (network) {
     case EthereumNetwork.ethereum:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
@@ -204,6 +209,7 @@ export const getNativeCoinWrappedAddressFromNetworkName = (
 export const getNativeCoinWrappedFromNetworkName = (
   network: EthereumNetwork,
 ) => {
+
   switch (network) {
     case EthereumNetwork.ethereum:
       return 'weth';
@@ -215,6 +221,7 @@ export const getNativeCoinWrappedFromNetworkName = (
 };
 
 export const GetNativeCoinFromNetworkName = (network: EthereumNetwork) => {
+ 
   switch (network) {
     case EthereumNetwork.ethereum:
       return 'eth';
@@ -304,3 +311,10 @@ export const GET_TRADE_TOKEN_URL = (
 ) => {
   return `/${network}/dashboard/token/${address}`;
 };
+
+
+export const mapTokenBalancesToNetworkTokenBalances = () => {
+
+
+  
+}

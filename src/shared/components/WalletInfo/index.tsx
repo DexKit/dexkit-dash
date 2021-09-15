@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {
   makeStyles,
@@ -19,8 +19,8 @@ import {green, grey, orange} from '@material-ui/core/colors';
 import {Fonts} from '../../constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
 import {useWeb3} from 'hooks/useWeb3';
-import {useBalance} from 'hooks/balance/useBalance';
-import {GET_NATIVE_COINS, tokenAmountInUnits} from 'utils/tokens';
+
+import { tokenAmountInUnits} from 'utils/tokens';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 
 import {truncateAddress, truncateIsAddress} from 'utils/text';
@@ -42,7 +42,12 @@ import {
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
+
+import { useNativeSingleBalance } from 'hooks/balance/useNativeSingleBalance';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
+import SwitchNetworkDialog from '../SwitchNetworkDialog';
+import {StatusSquare} from '../StatusSquare';
+
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -113,11 +118,7 @@ const WalletInfo = (props: any) => {
   const accountsModal = useAccountsModal();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (isMobile) {
-      accountsModal.setShow(true);
-    } else {
-      setAnchorEl(event.currentTarget);
-    }
+    setAnchorEl(event.currentTarget);
   };
 
   const history = useHistory();
@@ -146,7 +147,7 @@ const WalletInfo = (props: any) => {
   const accounts = wallet[SupportedNetworkType.evm];
   const dispatch = useDispatch();
 
-  const {data: balances} = useSingleBalance(
+  const {data: balances} = useNativeSingleBalance(
     GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
     network,
     defaultAccount,
@@ -165,6 +166,11 @@ const WalletInfo = (props: any) => {
   const onGoToManageWallet = () => {
     handleClose();
     history.push('/wallet/manage-accounts');
+  };
+
+  const onGoToLoginWallet = () => {
+    handleClose();
+    history.push('/onboarding/login-wallet');
   };
 
   let ethBalanceValue;
@@ -187,8 +193,6 @@ const WalletInfo = (props: any) => {
 
   const classes = useStyles(props);
 
-
-
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -198,23 +202,19 @@ const WalletInfo = (props: any) => {
         justify='space-between'
         spacing={2}>
         <Grid item>
-          <Grid container alignItems='center' alignContent='center' spacing={2}>
+          <Grid
+            container
+            alignItems='stretch'
+            alignContent='center'
+            spacing={2}>
             <Grid item>
               <Tooltip
                 title={connected ? 'Wallet Connected' : 'Wallet Not Connected'}>
-                <IconButton
-                  aria-label='connected'
-                  style={{
-                    color: connected ? green[500] : grey[500],
-                    paddingLeft: '5px',
-                  }}
-                  size='small'>
-                  {connected ? (
-                    <FiberManualRecordIcon />
-                  ) : (
-                    <RadioButtonUncheckedIcon />
-                  )}
-                </IconButton>
+                {connected ? (
+                  <StatusSquare color={green[500]} />
+                ) : (
+                  <StatusSquare color={grey[500]} />
+                )}
               </Tooltip>
             </Grid>
             <Grid item>
@@ -233,7 +233,7 @@ const WalletInfo = (props: any) => {
           </Grid>
         </Grid>
         <Grid item>
-          <Box ml={3} className={classes.pointer} color={'text.primary'}>
+          <Box className={classes.pointer} color={'text.primary'}>
             <IconButton size='small' onClick={handleClick}>
               <ExpandMoreIcon />
             </IconButton>
@@ -245,7 +245,7 @@ const WalletInfo = (props: any) => {
               onClose={handleClose}>
               <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
               {notConnected && (
-                <MenuItem onClick={onConnectWeb3}>Connect Wallet</MenuItem>
+                <MenuItem onClick={onGoToLoginWallet}>Connect Wallet</MenuItem>
               )}
               {accounts
                 .filter(

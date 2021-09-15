@@ -72,8 +72,9 @@ const MarketForm: React.FC<Props> = (props) => {
   const network = useNetwork();
 
   const {web3State, onConnectWeb3} = useWeb3();
-  const [disableSelect, setDisableSelect] = useState(disableReceive ? 'to' : '');
-
+  const [disableSelect, setDisableSelect] = useState(
+    disableReceive ? 'to' : '',
+  );
 
   const [tokenBalance, setTokenBalance] =
     useState<GetMyBalance_ethereum_address_balances>();
@@ -104,14 +105,13 @@ const MarketForm: React.FC<Props> = (props) => {
     if (tokenTo) {
       onChangeToken(tokenTo, 'from');
     }
-    if(disableSelect){
-      if(disableSelect === 'to'){
-        setDisableSelect('from')
-      }else{
-        setDisableSelect('to')
+    if (disableSelect) {
+      if (disableSelect === 'to') {
+        setDisableSelect('from');
+      } else {
+        setDisableSelect('to');
       }
     }
-
   }, [tokenFrom, tokenTo]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
@@ -330,13 +330,12 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const getTokens = useCallback(
     (target: string) => {
-      return target === 'from' &&
-        web3State === Web3State.Done &&
-        select0.length > 0
+      return (target === 'from' &&
+        select0.length > 0)
         ? select0
         : select1;
     },
-    [web3State, select0, select1],
+    [select0, select1],
   );
 
   const handleSelectTokenDialogClose = useCallback(() => {

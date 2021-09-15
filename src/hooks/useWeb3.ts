@@ -9,6 +9,7 @@ import {
   getWeb3,
   getProvider,
   web3Transaction,
+  setProvider,
 } from 'services/web3modal';
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,16 +23,11 @@ import {
 } from 'redux/actions';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
-import {addAccounts, setAccount} from 'redux/_ui/actions';
-import {getMulticall} from 'services/multicall';
+import {addAccounts} from 'redux/_ui/actions';
+import { useQuery } from 'react-query';
 
 
 
-// @NOTE: We needed to use this auxiliary variables here to not allow app to call multiple times web3 callbacks, this caused
-// the app to break as wallet was being called multiple times. useState inside the hook was not working as solution
-let loadingAccount = false;
-let loadingChainId = false;
-let loadingEthBalance = false;
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(
@@ -55,7 +51,58 @@ export const useWeb3 = () => {
     AppState['blockchain']['blockNumber']
   >((state) => state.blockchain.blockNumber);
 
-  useEffect(() => {
+  const chainIdQuery = useQuery(['GetChainID', web3State ], () => {
+    const web3 = getWeb3();
+    console.log('called chainId');
+    console.log(web3State);
+    if(web3 && web3State === Web3State.Done){
+     return  web3.eth
+      .getChainId()
+    }
+  },{staleTime: 1000*60 * 5});
+
+  const accountsQuery = useQuery(['GetWeb3Accounts', web3State], () => {
+    const web3 = getWeb3();
+    if(web3 && web3State === Web3State.Done){
+     return  web3.eth
+     .getAccounts()
+    }
+  }, {staleTime: 1000*60 *5})
+
+  const ethBalanceQuery = useQuery(['GetWeb3Balance', web3State, account], () => {
+    const web3 = getWeb3();
+    if(web3 && web3State === Web3State.Done && account){
+     return  web3.eth
+     .getBalance(account)
+    }
+  }, {staleTime: 1000*60 *1})
+
+  useEffect(()=>{
+    if(accountsQuery.data){
+      console.log(accountsQuery.data)
+      const a = accountsQuery.data;
+      const accounts = a.map(ac=> {return  {address: ac, label: ac,  networkType: SupportedNetworkType.evm}});
+      dispatch(setEthAccount(a[0]));
+      dispatch(addAccounts({accounts: accounts, type: SupportedNetworkType.evm} ));
+    }
+
+  },[accountsQuery.data])
+
+  useEffect(()=>{
+    if(chainIdQuery.data){
+      setChainId(chainIdQuery.data);
+    }
+
+  },[chainIdQuery.data])
+
+  useEffect(()=>{
+    if(ethBalanceQuery.data){
+      setEthBalance(new BigNumber(ethBalanceQuery.data));
+    }
+  },[ethBalanceQuery.data])
+
+
+ /* useEffect(() => {
     const web3 = getWeb3();
     if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
       // subscribeProvider(provider);
@@ -76,6 +123,7 @@ export const useWeb3 = () => {
         })
         .finally(() => (loadingChainId = false));
     }
+
   }, [web3State, account]);
 
   useEffect(() => {
@@ -89,7 +137,7 @@ export const useWeb3 = () => {
         })
         .finally(() => (loadingEthBalance = false));
     }
-  }, [account]);
+  }, [account]);*/
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
@@ -174,8 +222,7 @@ export const useWeb3 = () => {
       });
     });
 
-    pr.on('accountsChanged', async (accounts: string[]) => {
-      
+    pr.on('accountsChanged', async (accounts: string[]) => {   
       dispatch(setEthAccount(accounts[0]));
     });
 
@@ -202,8 +249,12 @@ export const useWeb3 = () => {
     blocknumber,
     ethBalance,
     web3State,
+    accountsQuery,
+    ethBalanceQuery,
+    chainIdQuery,
     onCloseWeb3,
     getProvider,
+    setProvider,
     onActionWeb3Transaction,
     onSetDefaultAccount,
   };

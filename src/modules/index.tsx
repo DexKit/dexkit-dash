@@ -16,6 +16,7 @@ import {initialUrl} from '../shared/constants/AppConst';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
 import {wizardConfig} from './Wizard';
+import {onboardingConfig} from './Onboarding';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -28,17 +29,14 @@ const routeConfigs = [
   ...wizardConfig,
   ...changelogConfigs,
   ...coinsLeagueConfigs,
+  ...onboardingConfig,
 ];
 
 const routes = [
   ...createRoutes(routeConfigs),
   {path: '/', exact: true, component: () => <Redirect to={initialUrl} />},
   {
-    component: () => (
-      <Redirect
-        to={`/wallet`}
-      />
-    ),
+    component: () => <Redirect to={`/wallet`} />,
   },
 ];
 
