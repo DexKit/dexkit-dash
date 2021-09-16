@@ -80,7 +80,7 @@
     "jss-extend": "^6.2.0",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.15",
-    "magic-sdk": "^6.2.0",
+    "magic-sdk": "^6.0.2",
     "match-sorter": "^4.1.0",
     "material-table": "^1.69.2",
     "material-ui-popup-state": "^1.5.4",
