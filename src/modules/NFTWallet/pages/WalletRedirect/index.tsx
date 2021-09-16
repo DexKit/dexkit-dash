@@ -11,7 +11,7 @@ export default () => {
     if (userAccount) {
       history.replace(`/nfts/wallet/${userAccount}`);
     } else {
-      history.replace('/connect-wallet');
+      history.replace('/onboarding/login-wallet');
     }
   }, [userAccount, history]);
 

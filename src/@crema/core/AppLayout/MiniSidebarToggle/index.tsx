@@ -60,32 +60,39 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
       <AppSidebar />
       {isMobile ? (
         <BottomDrawer open={accountsModal.showAccounts} anchor='bottom'>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Box
-                display='flex'
-                alignItems='center'
-                justifyContent='space-between'>
-                <Box>
-                  <Grid container alignItems='center' spacing={2}>
-                    <Grid item>
-                      <WalletSearchIcon />
+          <Box className={isMobile ? classes.accountsFixedHeight : undefined}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='space-between'
+                  alignContent='center'>
+                  <Box>
+                    <Grid
+                      alignContent='center'
+                      container
+                      alignItems='center'
+                      spacing={2}>
+                      <Grid item>
+                        <WalletSearchIcon />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='body1'>Accounts</Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography variant='body1'>Accounts</Typography>
-                    </Grid>
-                  </Grid>
+                  </Box>
+                  <IconButton onClick={handleCloseAccounts} size='small'>
+                    <CloseIcon />
+                  </IconButton>
                 </Box>
-                <IconButton onClick={handleCloseAccounts} size='small'>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-              <Divider />
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Accounts />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Accounts />
-            </Grid>
-          </Grid>
+          </Box>
         </BottomDrawer>
       ) : (
         <Dialog open={accountsModal.showAccounts}>

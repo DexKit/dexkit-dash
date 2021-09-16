@@ -9,6 +9,8 @@ import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
 import CustomIcon from 'shared/components/CustomIcon';
 import {useDispatch} from 'react-redux';
+import {toggleNavCollapsed} from 'redux/actions';
+import {useMobile} from 'hooks/useMobile';
 
 
 interface VerticalItemProps extends RouteComponentProps<any> {
@@ -81,13 +83,18 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
     return false;
   };
 
+  const isMobile = useMobile();
   const dispatch = useDispatch();
 
   const handleClick = useCallback(() => {
     let url = getUrl();
 
+
+    if (isMobile) {
+      dispatch(toggleNavCollapsed());
+    }
     history.push(url);
-  }, [dispatch, history, getUrl]);
+  }, [dispatch, history, getUrl, isMobile]);
 
   return (
     <ListItem

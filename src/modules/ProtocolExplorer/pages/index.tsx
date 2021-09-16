@@ -95,12 +95,11 @@ const Explorer: React.FC<TokenProps> = (props) => {
       EthereumNetwork.ethereum,
   );
   const {tokenInfo, loading: loadingToken} = useTokenInfo(address);
-  const {loading: loadingTokenMarket, data: tokenMarket, priceQuote} = useTokenMarket(
-    networkName,
-    EXCHANGE.ALL,
-    tokenInfo,
-  );
-  
+  const {
+    loading: loadingTokenMarket,
+    data: tokenMarket,
+    priceQuote,
+  } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
 
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
@@ -344,68 +343,72 @@ const Explorer: React.FC<TokenProps> = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant='body1' style={{fontWeight: 600}}>
-                      Favorites
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Box>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                          {favoritesWithMarketLoading ? (
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
+              {favoritesWithMarket.length > 0 ? (
+                <Grid item xs={12}>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography variant='body1' style={{fontWeight: 600}}>
+                        Favorites
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box>
+                        <Grid container spacing={4}>
+                          <Grid item xs={12}>
+                            {favoritesWithMarketLoading ? (
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <TokenListItemSkeleton />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <TokenListItemSkeleton />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <TokenListItemSkeleton />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <TokenListItemSkeleton />
+                                </Grid>
                               </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
+                            ) : (
+                              <Grid container spacing={2}>
+                                {favoritesWithMarket
+                                  .slice(0, 5)
+                                  .map((favorite, index) => (
+                                    <Grid item xs={12} key={index}>
+                                      <FavoriteListItem
+                                        variant='outlined'
+                                        coin={favorite.coin}
+                                        amount={
+                                          favorite.market?.current_price || 0
+                                        }
+                                        dayChange={
+                                          favorite.market
+                                            ?.price_change_percentage_24h || 0
+                                        }
+                                      />
+                                    </Grid>
+                                  ))}
                               </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <TokenListItemSkeleton />
-                              </Grid>
+                            )}
+                          </Grid>
+                          {favoritesWithMarket.length > 5 ? (
+                            <Grid item xs={12}>
+                              <Button
+                                to='/favorite-coins'
+                                component={RouterLink}
+                                size='small'
+                                endIcon={<KeyboardArrowRightIcon />}>
+                                View more
+                              </Button>
                             </Grid>
-                          ) : (
-                            <Grid container spacing={2}>
-                              {favoritesWithMarket
-                                .slice(0, 5)
-                                .map((favorite, index) => (
-                                  <Grid item xs={12} key={index}>
-                                    <FavoriteListItem
-                                      variant='outlined'
-                                      coin={favorite.coin}
-                                      amount={
-                                        favorite.market?.current_price || 0
-                                      }
-                                      dayChange={
-                                        favorite.market
-                                          ?.price_change_percentage_24h || 0
-                                      }
-                                    />
-                                  </Grid>
-                                ))}
-                            </Grid>
-                          )}
+                          ) : null}
                         </Grid>
-                        <Grid item xs={12}>
-                          <Button
-                            to='/favorite-coins'
-                            component={RouterLink}
-                            size='small'
-                            endIcon={<KeyboardArrowRightIcon />}>
-                            View more
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </Grid>
+              ) : null}
               <Grid item xs={12} md={4}>
                 <Analytics
                   token={tokenInfo}
