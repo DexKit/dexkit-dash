@@ -244,7 +244,7 @@ const GamesList = () => {
                 </Grid>
               ))}
             {!isLoading && !gamesInProgress?.length && (
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 <Empty
                   title={'No games in progress'}
                   message={'Search created games and enter to start games'}
@@ -386,6 +386,14 @@ const GamesList = () => {
                     <CardGameSkeleton />
                   </Grid>
                 ))}
+              {!isLoading && !gamesToJoin?.length && (
+                <Grid item xs={12}>
+                  <Empty
+                    title={'No games to join'}
+                    message={'Create games to join'}
+                  />
+                </Grid>
+              )}
             </Grid>
           </Grid>
         )}
@@ -408,6 +416,14 @@ const GamesList = () => {
                     <CardGameSkeleton />
                   </Grid>
                 ))}
+                 {!isLoading && !gamesEnded?.length && (
+                <Grid item xs={12}>
+                  <Empty
+                    title={'No history'}
+                    message={'Join and play games'}
+                  />
+                </Grid>
+              )}
             </Grid>
           </Grid>
         )}

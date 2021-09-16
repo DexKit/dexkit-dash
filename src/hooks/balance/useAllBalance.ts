@@ -41,7 +41,7 @@ export const useAllBalance = (defaultAccount?: string) => {
     async () => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
-        if (chainId === ChainId.Ropsten && web3State === Web3State.Done) {
+        if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
          return getAllBlockchainBalances(chainId, account);
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH

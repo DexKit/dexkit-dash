@@ -51,15 +51,13 @@ export const useWeb3 = () => {
     AppState['blockchain']['blockNumber']
   >((state) => state.blockchain.blockNumber);
 
-  const chainIdQuery = useQuery(['GetChainID', web3State ], () => {
+  const chainIdQuery = useQuery(['GetChainID', web3State], () => {
     const web3 = getWeb3();
-    console.log('called chainId');
-    console.log(web3State);
     if(web3 && web3State === Web3State.Done){
      return  web3.eth
       .getChainId()
     }
-  },{staleTime: 1000*60 * 5});
+  });
 
   const accountsQuery = useQuery(['GetWeb3Accounts', web3State], () => {
     const web3 = getWeb3();
@@ -67,7 +65,7 @@ export const useWeb3 = () => {
      return  web3.eth
      .getAccounts()
     }
-  }, {staleTime: 1000*60 *5})
+  })
 
   const ethBalanceQuery = useQuery(['GetWeb3Balance', web3State, account], () => {
     const web3 = getWeb3();
@@ -75,11 +73,10 @@ export const useWeb3 = () => {
      return  web3.eth
      .getBalance(account)
     }
-  }, {staleTime: 1000*60 *1})
+  })
 
   useEffect(()=>{
     if(accountsQuery.data){
-      console.log(accountsQuery.data)
       const a = accountsQuery.data;
       const accounts = a.map(ac=> {return  {address: ac, label: ac,  networkType: SupportedNetworkType.evm}});
       dispatch(setEthAccount(a[0]));
@@ -90,54 +87,18 @@ export const useWeb3 = () => {
 
   useEffect(()=>{
     if(chainIdQuery.data){
-      setChainId(chainIdQuery.data);
+      dispatch(setChainId(chainIdQuery.data));
     }
 
   },[chainIdQuery.data])
 
   useEffect(()=>{
     if(ethBalanceQuery.data){
-      setEthBalance(new BigNumber(ethBalanceQuery.data));
+      dispatch(setEthBalance(new BigNumber(ethBalanceQuery.data)));
     }
   },[ethBalanceQuery.data])
 
 
- /* useEffect(() => {
-    const web3 = getWeb3();
-    if (web3State === Web3State.Done && web3 && !account && !loadingAccount) {
-      // subscribeProvider(provider);
-      loadingAccount = true;
-      web3.eth.getAccounts().then((a) => {
-        const accounts = a.map(ac=> {return  {address: ac, label: ac,  networkType: SupportedNetworkType.evm}});
-        dispatch(setEthAccount(a[0]));
-        dispatch(addAccounts({accounts: accounts, type: SupportedNetworkType.evm} ));
-
-      }).finally(() => loadingAccount = false);
-    }
-    if (web3State === Web3State.Done && web3 && !loadingChainId) {
-      loadingChainId = true;
-      web3.eth
-        .getChainId()
-        .then((n) => {
-          dispatch(setChainId(n));
-        })
-        .finally(() => (loadingChainId = false));
-    }
-
-  }, [web3State, account]);
-
-  useEffect(() => {
-    const web3 = getWeb3();
-    if (account && web3 && !loadingEthBalance && !ethBalance) {
-      loadingEthBalance = true;
-      web3.eth
-        .getBalance(account)
-        .then((e) => {
-          dispatch(setEthBalance(new BigNumber(e)));
-        })
-        .finally(() => (loadingEthBalance = false));
-    }
-  }, [account]);*/
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
@@ -227,6 +188,7 @@ export const useWeb3 = () => {
     });
 
     pr.on("chainChanged", async (chainId: number) => {
+      console.log('called chain ID changed')
       dispatch(setChainId(chainId));
     });
 

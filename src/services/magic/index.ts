@@ -1,6 +1,7 @@
 import {OAuthExtension} from '@magic-ext/oauth';
 import {Magic} from 'magic-sdk';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {ChainId} from 'types/blockchain';
 
 const storageKeyNamespace = 'DexKitWallet:';
 const cachedNetworkMagicKey = `${storageKeyNamespace}:magic-network`;
@@ -21,6 +22,7 @@ const rpcUrls = {
   },
   [EthereumNetwork.matic]: {
     rpcUrl: 'https://rpc-mainnet.matic.network',
+    //rpcUrl: 'https://polygon-rpc.com/',
     chainId: 137,
   },
 };
@@ -39,6 +41,20 @@ const magicETH = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
   extensions: [new OAuthExtension()],
 });
 
+const magicRopsten = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
+  extensions: [new OAuthExtension()],
+  network: 'ropsten',
+});
+
+const magicMumbai = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
+  extensions: [new OAuthExtension()],
+  network: {
+    //rpcUrl: 'https://rpc-mainnet.matic.network',
+    rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+    chainId: 80001,
+  },
+});
+
 export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
   if (networkName === EthereumNetwork.bsc) {
     return magicBSC.rpcProvider;
@@ -48,6 +64,31 @@ export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
     return magicMatic.rpcProvider;
   }
 
+  return magicETH.rpcProvider;
+};
+let magic: any;
+export const getMagicRPCProviderByChainId = async (chainId: ChainId) => {
+  if (chainId === ChainId.Binance) {
+    setCachedMagicNetwork(EthereumNetwork.bsc);
+    return magicBSC.rpcProvider;
+  }
+
+  if (chainId === ChainId.Matic) {
+    setCachedMagicNetwork(EthereumNetwork.matic);
+    return magicMatic.rpcProvider;
+  }
+
+  if (chainId === ChainId.Mumbai) {
+    setCachedMagicNetwork(EthereumNetwork.matic);
+    return magicMumbai.rpcProvider;
+  }
+
+  if (chainId === ChainId.Ropsten) {
+    setCachedMagicNetwork(EthereumNetwork.ethereum);
+    return magicRopsten.rpcProvider;
+  }
+  
+  setCachedMagicNetwork(EthereumNetwork.ethereum);
   return magicETH.rpcProvider;
 };
 
@@ -66,8 +107,6 @@ export const getMagicProvider = async () => {
     extensions: [new OAuthExtension()],
   });*/
 
-let magic: any;
-
 export const getMagic = (networkName: EthereumNetwork) => {
   let network;
   if (
@@ -77,7 +116,6 @@ export const getMagic = (networkName: EthereumNetwork) => {
     network = rpcUrls[networkName as 'bsc'];
   }
   const oldNetwork = getCachedMagicNetwork();
-
   if (!magic || oldNetwork !== networkName) {
     magic = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
       extensions: [new OAuthExtension()],

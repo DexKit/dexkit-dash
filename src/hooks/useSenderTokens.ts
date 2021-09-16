@@ -1,4 +1,4 @@
-import { useMemo} from 'react';
+import {useMemo} from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {
   BINANCE_SYMBOL_URL,
@@ -74,6 +74,11 @@ export function useSenderTokens() {
       } as Token;
     });
   }, [balances, tokensBSC, tokensMATIC, tokensETH]);
+  const allTokens = useMemo(() => {
+    return (tokensETH || [])
+      .concat(tokensBSC || [])
+      .concat(tokensMATIC || []);
+  }, [tokensETH, tokensBSC, tokensMATIC]);
 
-  return {tokens};
+  return {tokens, allTokens};
 }

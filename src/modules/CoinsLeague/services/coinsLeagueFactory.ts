@@ -1,13 +1,13 @@
 import {CallInput} from '@indexed-finance/multicall';
 import {Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
-import {CoinFeed, Game, GameParams} from 'types/coinsleague';
+import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
 import {getMulticall} from '../../../services/multicall';
 import {getWeb3Wrapper} from '../../../services/web3modal';
 
 export const COINS_LEAGUE_FACTORY_ADDRESS = {
-  MUMBAI: '0xF71a5F8DA88c8b4a322901D776D4A310F85200Bb',
+  MUMBAI: '0xd7b9843ea2681EDFf668333a1d908fa1e99953C9',
 };
 
 let coinsLeagueFactory: Contract;
@@ -15,7 +15,10 @@ export const getCoinsLeagueFactoryContract = async (address: string) => {
   if (!coinsLeagueFactory) {
     const web3Wrapper = await getWeb3Wrapper();
     //@ts-ignore
-    const provider = new providers.Web3Provider(web3Wrapper.getProvider()).getSigner();
+    const provider = new providers.Web3Provider(
+      //@ts-ignore
+      web3Wrapper.getProvider(),
+    ).getSigner();
 
     coinsLeagueFactory = new ethers.Contract(
       address,
@@ -39,7 +42,7 @@ export const createGame = async (address: string, params: GameParams) => {
 export const getGamesAddressFromFactory = async (
   factoryAddress: string,
   maxGames: number,
-):Promise<[string[], number]> => {
+): Promise<[string[], number]> => {
   const iface = new Interface(coinsLeagueFactoryAbi);
   const multicall = await getMulticall();
   let calls: CallInput[] = [];
@@ -49,11 +52,10 @@ export const getGamesAddressFromFactory = async (
     function: 'totalGames',
   });
   const [, totalGames] = await multicall.multiCall(calls);
-  const total = totalGames[0] ? totalGames[0].toNumber() : 0
-  const start = total-maxGames <= 0 ? 0 : total-maxGames
-  console.log(totalGames)
+  const total = totalGames[0] ? totalGames[0].toNumber() : 0;
+  const start = total - maxGames <= 0 ? 0 : total - maxGames;
   calls = [];
- /* calls.push({
+  /* calls.push({
     interface: iface,
     target: factoryAddress,
     function: 'getGames',
@@ -65,10 +67,13 @@ export const getGamesAddressFromFactory = async (
       interface: iface,
       target: factoryAddress,
       function: 'coinsLeague',
-      args:  [index],
-    })
+      args: [index],
+    });
   }
-
-  const [, gamesAddress] = await multicall.multiCall(calls);
-  return [gamesAddress as string[], total as number];
+  if (calls.length) {
+    const [, gamesAddress] = await multicall.multiCall(calls);
+    return [gamesAddress as string[], total as number];
+  } else {
+    return [[], total as number];
+  }
 };

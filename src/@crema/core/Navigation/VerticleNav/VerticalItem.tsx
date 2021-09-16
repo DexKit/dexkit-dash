@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 
-import {Badge, NavLink} from '../../../index';
+import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
@@ -9,7 +9,7 @@ import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
 import CustomIcon from 'shared/components/CustomIcon';
 import {useDispatch} from 'react-redux';
-import {toggleNavCollapsed} from 'redux/actions';
+
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -85,8 +85,6 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
 
   const handleClick = useCallback(() => {
     let url = getUrl();
-
-    dispatch(toggleNavCollapsed());
 
     history.push(url);
   }, [dispatch, history, getUrl]);

@@ -71,9 +71,7 @@ export const ViewCoinListItem = (props: Props) => {
 
 
   },[feedOnchain.start_price, feedOnchain.end_price])
-  console.log(feedOnchain.start_price.toNumber())
-  console.log(feedOnchain.end_price.toNumber())
-  console.log(priceScore)
+
 
   return (
     <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>

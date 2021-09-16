@@ -6,6 +6,7 @@ import {QuotePriceParams} from 'services/rest/0x-api/types';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {OrderSide} from 'types/app';
+import { ChainId } from 'types/blockchain';
 
 /**
  * Fetch price in real time
@@ -24,9 +25,9 @@ export const useTokenPriceUSD = (
   amount?: number,
   decimals?: number,
   refresh?: boolean,
+  chainId?: ChainId,
 ) => {
-
-  const swapQuoteResponse = useQuery(['GetUSDPriceZRXApi', address, amount, network, decimals, refresh, side], ()=>{
+  const swapQuoteResponse = useQuery(['GetUSDPriceZRXApi', address, amount, network, decimals, refresh, side, chainId], ()=>{
       if(address && amount && network && decimals) {
         const amountAPI = fromTokenUnitAmount(amount, decimals);
         const quote: QuotePriceParams = {
@@ -35,7 +36,7 @@ export const useTokenPriceUSD = (
           orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
           baseAmount: amountAPI,
         };
-        return  fetchPrice(quote, network);
+        return  fetchPrice(quote, network, chainId);
     }
   })
 

@@ -120,6 +120,8 @@ const MarketForm: React.FC<Props> = (props) => {
     OrderSide.Buy,
     amountTo,
     tokenTo?.decimals,
+    undefined,
+    chainId,
   );
 
   const {priceQuote: priceQuoteToUnit} = useTokenPriceUSD(
@@ -128,6 +130,8 @@ const MarketForm: React.FC<Props> = (props) => {
     OrderSide.Buy,
     1,
     tokenTo?.decimals,
+    undefined,
+    chainId,
   );
 
   const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(
@@ -136,6 +140,8 @@ const MarketForm: React.FC<Props> = (props) => {
     OrderSide.Sell,
     amountFrom,
     tokenFrom?.decimals,
+    undefined,
+    chainId,
   );
 
   const onFetch = useCallback(

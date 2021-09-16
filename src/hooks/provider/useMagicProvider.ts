@@ -43,16 +43,13 @@ export const useMagicProvider = () => {
     }
   }, []);
   const onConnectMagic = useCallback( async () => {
-    try{
-        console.log('on-connect magic'); 
+    try{  
         dispatch(setWeb3State(Web3State.Connecting));
         const provider = await getMagicProvider();
         setProvider(provider);
-        console.log(provider);
         dispatch(setWeb3State(Web3State.Done));
         setIsMagicProvider('true');
     }catch(e){
-      console.log(e);
       dispatch(setWeb3State(Web3State.NotConnected));
         setIsMagicProvider('false');
     }

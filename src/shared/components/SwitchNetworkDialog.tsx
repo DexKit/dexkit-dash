@@ -69,6 +69,10 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
     onSelectChain(NetworkCodes.Ropsten);
   }, [onSelectChain]);
 
+  const handleMumbai = useCallback(() => {
+    onSelectChain(NetworkCodes.MaticTestnet);
+  }, [onSelectChain]);
+
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='xs'>
       <DialogTitle>
@@ -97,7 +101,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
         <ListItem
           button
           onClick={handleEthereum}
-          selected={NetworkCodes.Ethereum == selected}>
+          selected={NetworkCodes.Ethereum === selected}>
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
@@ -112,7 +116,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
         <ListItem
           button
           onClick={handleBsc}
-          selected={NetworkCodes.SmartChain == selected}>
+          selected={NetworkCodes.SmartChain === selected}>
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
@@ -127,7 +131,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
         <ListItem
           button
           onClick={handlePolygon}
-          selected={NetworkCodes.Matic == selected}>
+          selected={NetworkCodes.Matic === selected}>
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
@@ -142,7 +146,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
         <ListItem
           button
           onClick={handleRopsten}
-          selected={NetworkCodes.Ropsten == selected}>
+          selected={NetworkCodes.Ropsten === selected}>
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
@@ -153,6 +157,21 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
             </Box>
           </ListItemIcon>
           <ListItemText primary='Ropsten' secondary='Testnet' />
+        </ListItem>
+        <ListItem
+          button
+          onClick={handleMumbai}
+          selected={NetworkCodes.MaticTestnet === selected}>
+          <ListItemIcon>
+            <Box className={classes.icon}>
+              <img
+                height={theme.spacing(6)}
+                width={theme.spacing(6)}
+                src={require('assets/images/chains/polygon-matic-logo.svg')}
+              />
+            </Box>
+          </ListItemIcon>
+          <ListItemText primary='Polygon' secondary='Mumbai Testnet' />
         </ListItem>
       </List>
     </Dialog>

@@ -156,7 +156,7 @@ export const StartGame = (props: Props) => {
 
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!gameFull}
+                    disabled={!gameFull || submitState === SubmitState.Confirmed }
                     onClick={onStartGame}
                     fullWidth
                     variant={'contained'}

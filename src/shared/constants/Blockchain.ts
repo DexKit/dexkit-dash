@@ -129,7 +129,6 @@ export const GET_DEFAULT_USD_TOKEN_BY_NETWORK = (
 
 export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
   const id = Number(chainId);
-
   switch (id) {
     case ChainId.Mainnet:
       return 'ETH';
@@ -137,6 +136,8 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
       return 'Rinkeby';
     case ChainId.Matic:
       return 'MATIC';
+    case ChainId.Mumbai:
+      return 'Mumbai';
     case ChainId.Kovan:
       return 'Kovan';
     case ChainId.Ropsten:

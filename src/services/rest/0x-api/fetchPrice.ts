@@ -4,6 +4,7 @@ import {OrderSide} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {QuotePriceParams, SwapQuoteResponse} from './types';
+import { ChainId } from 'types/blockchain';
 
 /**
  * Fetch quote right before confirm, with final validation
@@ -12,6 +13,7 @@ import {QuotePriceParams, SwapQuoteResponse} from './types';
 export async function fetchPrice(
   quoteParams: QuotePriceParams,
   network: EthereumNetwork,
+  chainId?: ChainId,
 ): Promise<SwapQuoteResponse> {
   const params = new Map<string, string>();
 
@@ -64,8 +66,10 @@ export async function fetchPrice(
     // params.set('slippagePercentage', quoteParams.allowedSlippage.div(10000).toString())
     params.set('slippagePercentage', quoteParams.allowedSlippage.toString());
   }
-
   let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/price?';
+  if(chainId === ChainId.Ropsten){
+    url = ZRX_API_URL_FROM_NETWORK(network, chainId) + '/swap/v1/price?';
+  }
 
   for (const [key, value] of params) {
     url += `${key}=${value}&`;
