@@ -1,5 +1,5 @@
 
-importScripts('https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js');
+/*importScripts('https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.2.7/firebase-messaging.js');
 
 const  firebaseConfig  = {
@@ -30,4 +30,4 @@ messaging.onBackgroundMessage(function (payload) {
   });
   console.log('registration', self.registration);
   // self.registration.sync.register('nova notificação');
-}, undefined, () => console.log('conclusion: self', self));
+}, undefined, () => console.log('conclusion: self', self));*/

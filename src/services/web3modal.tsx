@@ -31,15 +31,8 @@ let web3: null | Web3;
 let provider: any;
 
 const connectWeb3 = async () => {
-  const isMagic = isMagicProvider();
- /* if (isMagic === 'true') {
-    const magic = getAuthMagicProvider()
-    provider = await web3Modal.connectTo(magicGoogleId);
-  } else {
-    provider = await web3Modal.connect();
-  }*/
-
   provider = await web3Modal.connect();
+  setProvider(provider);
   return provider;
 };
 

@@ -72,7 +72,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
   const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
   const [token, setToken] = useState<Token>();
   const [shareUrl, setShareURL] = useState('');
-  const {tokens} = useSenderTokens();
+  const {tokens, allTokens} = useSenderTokens();
 
   const [qrCodeText, setQRCodeText] = useState(inputAddress ?? '');
 

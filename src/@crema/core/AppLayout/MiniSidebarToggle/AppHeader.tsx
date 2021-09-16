@@ -4,7 +4,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
-import {toggleNavCollapsed} from '../../../../redux/actions';
+import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
@@ -41,11 +41,13 @@ import {useHistory} from 'react-router';
 import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
+import { getMagicRPCProviderByChainId, isMagicProvider } from 'services/magic';
+import { Web3State } from 'types/blockchain';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId, forceWeb3Connect, getProvider} = useWeb3();
+  const {chainId,  getProvider, setProvider} = useWeb3();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -116,11 +118,24 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const handleSelectChain = useCallback(
-    (chainId: number) => {
+    async (chainId: number) => {
       setShowSwitchNetwork(false);
-      switchChain(getProvider(), chainId);
+      if(isMagicProvider()){
+        dispatch(setWeb3State(Web3State.Connecting));
+        const provider = await getMagicRPCProviderByChainId(chainId);
+        setProvider(provider);
+        dispatch(setWeb3State(Web3State.Done));
+
+       
+      }else{
+        dispatch(setWeb3State(Web3State.Connecting));
+        switchChain(getProvider(), chainId);
+        dispatch(setWeb3State(Web3State.Done));
+      }
+
+     
     },
-    [getProvider],
+    [getProvider, isMagicProvider],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {

@@ -96,7 +96,7 @@ const CreateGameModal = (props: Props) => {
   const [entryAmount, setEntryAmount] = useState<number>();
   const [duration, setGameDuration] = useState<number>();
   const [totalPlayers, setTotalPlayers] = useState<number>();
-  const [tx, setTx] = useState<string>();
+  const [tx, setTx] = useState<string>('asda');
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
@@ -129,7 +129,6 @@ const CreateGameModal = (props: Props) => {
             new Date().getTime() / 1000 + duration * 3,
           ),
         };
-        console.log('Callaback called');
         onGameCreateCallback(params, {
           onConfirmation: onConfirmTx,
           onError,
@@ -317,17 +316,21 @@ const CreateGameModal = (props: Props) => {
           </FormControl>
         </Grid>
 
-        {tx && (
-          <Button variant={'text'} onClick={goToExplorer}>
-            {submitState === SubmitState.Submitted
-              ? 'Submitted Tx'
-              : submitState === SubmitState.Error
-              ? 'Tx Error'
-              : submitState === SubmitState.Confirmed
-              ? 'Confirmed Tx'
-              : ''}
-          </Button>
-        )}
+        <Grid container justifyContent={'center'}>
+          <Grid item xs>
+            {tx && (
+              <Button variant={'text'} onClick={goToExplorer}>
+                {submitState === SubmitState.Submitted
+                  ? 'Submitted Tx'
+                  : submitState === SubmitState.Error
+                  ? 'Tx Error'
+                  : submitState === SubmitState.Confirmed
+                  ? 'Confirmed Tx'
+                  : ''}
+              </Button>
+            )}
+          </Grid>
+        </Grid>
 
         <Button
           fullWidth
@@ -335,7 +338,13 @@ const CreateGameModal = (props: Props) => {
           color={submitState === SubmitState.Error ? 'default' : 'primary'}
           className={classes.button}
           onClick={onCreateGame}
-          disabled={!coins || !entryAmount || !totalPlayers || !duration}>
+          disabled={
+            !coins ||
+            !entryAmount ||
+            !totalPlayers ||
+            !duration ||
+            submitState !== SubmitState.None
+          }>
           <ButtonState
             state={submitState}
             defaultMsg={'CREATE GAME'}

@@ -359,7 +359,7 @@ const Accounts = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        {/*<Grid item xs={12}>
           <SwipeableViews>
             <Box display='flex'>
               <Box mr={2}>
@@ -373,7 +373,7 @@ const Accounts = () => {
               </Box>
             </Box>
           </SwipeableViews>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Box
             display='flex'

@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 
-import {Badge, NavLink} from '../../../index';
+import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
@@ -11,6 +11,7 @@ import CustomIcon from 'shared/components/CustomIcon';
 import {useDispatch} from 'react-redux';
 import {toggleNavCollapsed} from 'redux/actions';
 import {useMobile} from 'hooks/useMobile';
+
 
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
@@ -88,10 +89,10 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
   const handleClick = useCallback(() => {
     let url = getUrl();
 
+
     if (isMobile) {
       dispatch(toggleNavCollapsed());
     }
-
     history.push(url);
   }, [dispatch, history, getUrl, isMobile]);
 

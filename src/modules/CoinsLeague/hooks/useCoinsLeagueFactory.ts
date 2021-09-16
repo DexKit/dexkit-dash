@@ -18,9 +18,6 @@ interface CallbackProps {
 
 export const useCoinsLeagueFactory = () => {
   const {web3State} = useWeb3();
-  const [gamesAddress, setGamesAddress] = useState<string[]>();
-  const [games, setGames] = useState<Game[]>();
-  const [totalGames, setTotalGames] = useState<number>();
 
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {
@@ -76,6 +73,6 @@ export const useCoinsLeagueFactory = () => {
     totalGames: gamesAddressQuery?.data && gamesAddressQuery?.data[1],
     gamesAddressQuery,
     gamesQuery,
-    refetch: gamesQuery.refetch
+    refetch: gamesAddressQuery.refetch
   };
 };

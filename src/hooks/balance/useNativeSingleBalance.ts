@@ -26,7 +26,7 @@ export const useNativeSingleBalance = (
   const provider = useNetworkProvider(networkName, chainId);
 
   const nativeBalanceQuery = useQuery(['GetNativeBalanceNetwork', provider, chainId, account ], async () => {
-    if(chainId && chainId === ChainId.Ropsten && provider && account){
+    if(chainId && (chainId === ChainId.Ropsten || chainId === ChainId.Mumbai ) && provider && account){
      const ethBalance = await getBalanceWithProvider(account, provider);
      const coin =  ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
       return {

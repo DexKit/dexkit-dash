@@ -22,6 +22,8 @@ import {useAccountsModal} from 'hooks/useAccountsModal';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
+import CopyButton from '../CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -123,6 +125,12 @@ const ActiveChainBalance = () => {
                         <Typography variant='body2'>
                           <Box display='flex' alignItems='center'>
                             <span>{truncateAddress(account)} </span>
+                            <CopyButton
+                              size='small'
+                              copyText={account || ''}
+                              tooltip='Copied!'>
+                              <FileCopy color='inherit' style={{fontSize: 16}} />
+                            </CopyButton>  
                             <IconButton
                               onClick={handleShowAccounts}
                               size='small'>

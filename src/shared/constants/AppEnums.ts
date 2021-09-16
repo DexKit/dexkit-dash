@@ -72,7 +72,7 @@ export enum MainnetNetworks {
   dogecoin = 'dogecoin',
 }
 
-export enum EthereumNetwork {
+export enum EthereumNetwork{
   bsc = 'bsc',
   bsc_testnet = 'bsc_testnet',
   celo_alfajores = 'celo_alfajores',
@@ -84,6 +84,7 @@ export enum EthereumNetwork {
   goerli = 'goerli',
   matic = 'matic',
 }
+
 
 export enum MainnetNetwork {
   btc = 'btc',

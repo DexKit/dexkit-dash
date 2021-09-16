@@ -46,7 +46,7 @@ export const ZRX_API_URL = (chainId: ChainId | undefined) => {
 };
 
 export const ZRX_API_URL_FROM_NETWORK = (network: EthereumNetwork, chainId?: ChainId) => {
-  if(chainId){
+  if(chainId === ChainId.Ropsten){
     // we bypass here the API if we need to test it on testnet by passing the chainId
    return ZRX_API_URL(chainId);
   }
