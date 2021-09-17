@@ -69,7 +69,7 @@ export const BuySellModal = (props: Props) => {
         </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <BuySell {...props} />
+        <BuySell {...props} disableLimit />
       </DialogContent>
     </Dialog>
   );

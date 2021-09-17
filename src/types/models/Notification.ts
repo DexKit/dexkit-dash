@@ -33,4 +33,19 @@ export interface Notification {
    * loading
    */
   loading?: boolean;
+
+  /**
+   * url
+   */
+  url?: string;
+
+  /**
+   *
+   */
+  urlCaption?: string;
+
+  /**
+   * Notification metadata;
+   */
+  metadata?: any;
 }

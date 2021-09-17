@@ -10,6 +10,7 @@ import LowIcon from 'assets/images/metricsIcons/low-price.png';
 import HighIcon from 'assets/images/metricsIcons/high-price.png';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {MoneyReciveIcon, MoneySendIcon} from 'shared/components/Icons';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -30,13 +31,18 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(4),
     objectFit: 'contain',
   },
+  icon: {
+    '& > path': {
+      stroke: '#FFA552',
+    },
+  },
 }));
 
 type Props = {
   exchange: EXCHANGE;
   networkName: EthereumNetwork;
   pair: any;
- // pair: GetTokenPairs_ethereum_dexTrades;
+  // pair: GetTokenPairs_ethereum_dexTrades;
 };
 
 export const PairAnalytics = (props: Props) => {
@@ -55,19 +61,19 @@ export const PairAnalytics = (props: Props) => {
   const classes = useStyles();
 
   const tradeAmountInUSD = useMemo(() => {
-    return  usdFormatter.format(pair?.tradeAmountInUsd || 0);
+    return usdFormatter.format(pair?.tradeAmountInUsd || 0);
   }, [pair?.tradeAmountInUsd]);
 
   const lastPriceInUSD = useMemo(() => {
-    return  usdFormatter.format(Number(pair?.closePriceUsd || 0));
+    return usdFormatter.format(Number(pair?.closePriceUsd || 0));
   }, [pair?.closePriceUsd]);
 
   const maxPriceInUSD = useMemo(() => {
-    return  usdFormatter.format(pair?.maxPriceUsd || 0);
+    return usdFormatter.format(pair?.maxPriceUsd || 0);
   }, [pair?.maximumPrice]);
 
   const minPriceInUSD = useMemo(() => {
-    return  usdFormatter.format(pair?.minPriceUsd || 0);
+    return usdFormatter.format(pair?.minPriceUsd || 0);
   }, [pair?.minPriceUsd]);
 
   return (
@@ -96,7 +102,7 @@ export const PairAnalytics = (props: Props) => {
           </Box>
           <Box className={classes.item}>
             <AnalyticsAmountCard
-              icon={ <Avatar src={HighIcon} alt='icon' style={{height: 30, width: 30}} />}
+              icon={<MoneySendIcon className={classes.icon} />}
               isLoading={loading}
               amount={maxPriceInUSD}
               caption={'Max Price'}
@@ -104,7 +110,7 @@ export const PairAnalytics = (props: Props) => {
           </Box>
           <Box className={classes.item}>
             <AnalyticsAmountCard
-              icon={ <Avatar src={LowIcon} alt='icon' style={{height: 30, width: 30}} />}
+              icon={<MoneyReciveIcon className={classes.icon} />}
               isLoading={loading}
               amount={minPriceInUSD}
               caption={'Min Price'}

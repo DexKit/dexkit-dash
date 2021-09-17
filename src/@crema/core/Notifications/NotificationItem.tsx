@@ -9,15 +9,12 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
+  Box,
+  Typography,
+  Button,
 } from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Notification} from 'types/models/Notification';
-import {FilterTiltShiftSharp, MoreVertOutlined} from '@material-ui/icons';
-import {
-  NotificationItemOptions,
-  NotificationItemOptionsData,
-} from './NotificationItemOptions';
 import {useDispatch} from 'react-redux';
 import {onRemoveNotification, onUncheckedNotification} from 'redux/actions';
 import Delete from '@material-ui/icons/Delete';
@@ -59,7 +56,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
   return (
     <ListItem
-      button
+      disabled
       id={item?.id?.toString() ?? id.toString()}
       onClick={handleClick}>
       <ListItemAvatar>
@@ -75,7 +72,27 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           </>
         )}
       </ListItemAvatar>
-      <ListItemText primary={item.title} secondary={item.body ?? ''} />
+      <ListItemText
+        primary={item.title}
+        secondary={
+          <>
+            <Box mb={2}>
+              <Typography variant='body1'>{item.body ?? ''}</Typography>
+            </Box>
+            {item.url && item.urlCaption ? (
+              <Box>
+                <Button
+                  size='small'
+                  color='primary'
+                  target='_blank'
+                  href={item.url}>
+                  {item.urlCaption}
+                </Button>
+              </Box>
+            ) : null}
+          </>
+        }
+      />
       <ListItemSecondaryAction>
         <IconButton onClick={handleRemove}>
           <Delete />

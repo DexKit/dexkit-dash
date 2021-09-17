@@ -1,5 +1,5 @@
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 
 export enum NetworkCodes {
   Ethereum = 1,
@@ -62,4 +62,17 @@ export function getNetworkChainId(networkName: EthereumNetwork) {
     default:
       return ChainId.Mainnet;
   }
+}
+
+export async function isTransactionMined(
+  provider: any,
+  transactionHash: string,
+) {
+  const txReceipt = await provider.getTransactionReceipt(transactionHash);
+
+  if (txReceipt && txReceipt.blockNumber) {
+    return txReceipt;
+  }
+
+  return null;
 }

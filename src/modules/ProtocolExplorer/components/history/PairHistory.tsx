@@ -41,32 +41,43 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
       {IS_AMM(pair?.exchange?.fullName as EXCHANGE, pair?.protocol) ? (
         <Grid container alignItems='center' spacing={2}>
           <Grid item xs={12}>
-            <Grid container alignItems='center' spacing={2}>
-              <Grid item xs={6}>
+            <Grid
+              container
+              alignItems='center'
+              justify='space-between'
+              spacing={2}>
+              <Grid item xs={isMobile ? 12 : undefined}>
                 <Typography variant='h5'>{title}</Typography>
               </Grid>
-              <Grid item xs={6}>
-                <Chip
-                  style={{marginRight: 10}}
-                  label='Trade History'
-                  clickable
-                  variant={
-                    historyState === HistoryStateEnum.Trade
-                      ? 'default'
-                      : 'outlined'
-                  }
-                  onClick={() => setHistoryState(HistoryStateEnum.Trade)}
-                />
-                <Chip
-                  label='Pool History'
-                  clickable
-                  variant={
-                    historyState === HistoryStateEnum.Pool
-                      ? 'default'
-                      : 'outlined'
-                  }
-                  onClick={() => setHistoryState(HistoryStateEnum.Pool)}
-                />
+              <Grid item xs={isMobile ? 12 : undefined}>
+                <Box pt={{xs: 2, sm: 0}}>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <Chip
+                        label='Trade History'
+                        clickable
+                        variant={
+                          historyState === HistoryStateEnum.Trade
+                            ? 'default'
+                            : 'outlined'
+                        }
+                        onClick={() => setHistoryState(HistoryStateEnum.Trade)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Chip
+                        label='Pool History'
+                        clickable
+                        variant={
+                          historyState === HistoryStateEnum.Pool
+                            ? 'default'
+                            : 'outlined'
+                        }
+                        onClick={() => setHistoryState(HistoryStateEnum.Pool)}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
             </Grid>
           </Grid>

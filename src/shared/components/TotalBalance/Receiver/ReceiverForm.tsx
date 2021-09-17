@@ -22,10 +22,10 @@ import {useHistory} from 'react-router';
 import {useNetwork} from 'hooks/useNetwork';
 import {Token} from 'types/app';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+
 import {useSenderTokens} from 'hooks/useSenderTokens';
 import SelectTokenButton from '../Sender/SelectTokenButton';
-import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
+import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
 
@@ -92,7 +92,15 @@ const ReceiverForm: React.FC<Props> = (props) => {
     }
 
     if (token) {
-      urlParams.append('token', token?.address);
+      if (token.symbol === 'ETH') {
+        urlParams.append('token', 'eth');
+      } else if (token.symbol === 'BNB') {
+        urlParams.append('token', 'bnb');
+      } else if (token.symbol === 'MATIC') {
+        urlParams.append('token', 'matic');
+      } else {
+        urlParams.append('token', token?.address);
+      }
     }
 
     setShareURL(`${getWindowUrl()}/wallet/send?${urlParams.toString()}`);
@@ -136,10 +144,9 @@ const ReceiverForm: React.FC<Props> = (props) => {
       <SelectTokenDialog
         title='Select a token'
         open={showSelectTokenDialog}
-        tokens={tokens}
+        tokens={allTokens}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
-        showNetwork
       />
       <ShareDialog
         open={showSharedDialog}
