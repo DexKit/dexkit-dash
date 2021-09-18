@@ -18,7 +18,6 @@ export const Web3Manager = () => {
     if(isMagicProvider()){
          // We don't try to connect if we are on magic callback path
       if(history.location.pathname.indexOf('/magic/callback-social') === -1 || history.location.pathname.indexOf('/magic/callback') === -1 ){
-        console.log('calling magic provider');
         onConnectMagic();
        }
       
