@@ -89,14 +89,14 @@ const BSC_TESTNET_LIST: Token[] = [
 ]
 
 const MUMBAI_TESTNET_LIST: Token[] = [
-  {
+  /*{
     address: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB',
     chainId: ChainId.Mumbai,
     name: 'ChainLink Token',
     symbol: 'LINK',
     decimals: 18,
     logoURI: '',
-  },
+  },*/
 ]
 
 export const TOKENS_LIST: Partial<ChainTokenList> = {
