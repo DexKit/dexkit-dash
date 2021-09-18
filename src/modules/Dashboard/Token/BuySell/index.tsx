@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
 
@@ -19,22 +19,23 @@ import {
 } from 'shared/constants/Bitquery';
 import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
-import {useHistory} from 'react-router-dom';
 import {
   ETH_SYMBOL_URL,
   BINANCE_SYMBOL_URL,
   MATIC_SYMBOL_URL,
   ETHEREUM_NATIVE_COINS_BY_CHAIN,
 } from 'shared/constants/Coins';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { TOKENS_LIST } from "shared/constants/tokens";
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {TOKENS_LIST} from 'shared/constants/tokens';
 
 interface Props {
   disableReceive?: boolean;
   tokenAddress?: string;
+  tokenFromInfo?: Token;
   networkName: EthereumNetwork;
   balances: MyBalances[];
   tokenInfo?: Token;
+  onChangeTokens?: (from?: Token, to?: Token) => void;
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
@@ -76,13 +77,13 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 //TODO: This select1 and select0 logic is bugged and it is not working well, investigate way to change all this logic
 const BuySell: React.FC<Props> = ({
   tokenAddress,
+  tokenFromInfo,
   balances,
   networkName,
   tokenInfo,
   disableReceive,
+  onChangeTokens,
 }) => {
-  const history = useHistory();
-
   const classes = useStyles();
   const account = useDefaultAccount();
   const {chainId, account: web3Account, web3State} = useWeb3();
@@ -114,9 +115,9 @@ const BuySell: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    if(chainId && chainId === ChainId.Ropsten){
+    if (chainId && chainId === ChainId.Ropsten) {
       const coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
-      setSelect1([coin, ...TOKENS_LIST[chainId] as Token[]]);
+      setSelect1([coin, ...(TOKENS_LIST[chainId] as Token[])]);
       return;
     }
 
@@ -148,7 +149,7 @@ const BuySell: React.FC<Props> = ({
               (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
-            if (token) {
+            if (token && token.logoURI) {
               tokenLogoUri = token.logoURI;
             }
           }
@@ -165,7 +166,7 @@ const BuySell: React.FC<Props> = ({
               (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
-            if (token) {
+            if (token && token.logoURI) {
               tokenLogoUri = token.logoURI;
             }
           }
@@ -183,7 +184,7 @@ const BuySell: React.FC<Props> = ({
               (t: any) =>
                 t.address.toLowerCase() === e.currency?.address?.toLowerCase(),
             );
-            if (token) {
+            if (token && token.logoURI) {
               tokenLogoUri = token.logoURI;
             }
           }
@@ -197,9 +198,17 @@ const BuySell: React.FC<Props> = ({
           logoURI: tokenLogoUri,
         } as Token;
       });
-      setSelect0(balancesFn);
+      // If disable receive enabled we just show tokens from current networkName
+      if(disableReceive){
+        setSelect0(balancesFn.filter(b => b.networkName === networkName));
+      }else{
+        setSelect0(balancesFn);
+      }
+
+
+      
     }
-  }, [balances, tokensETH, tokensBSC, tokensMATIC]);
+  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
@@ -228,8 +237,37 @@ const BuySell: React.FC<Props> = ({
           setTokenTo(tokenInfo);
         }
       }
+    }else{
+        // if tokenTo is different from incoming tokenAddress and disable receive is not enable 
+      if(tokenTo && tokenAddress && tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase() && !disableReceive){
+        let _token;
+        if (isNativeCoinWithoutChainId(tokenAddress)) {
+          _token = select1.find(
+            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+          );
+        } else {
+          _token = select1.find(
+            (t) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
+          );
+        }
+        if (_token) {
+          setTokenTo(_token);
+          return;
+        }
+      }
     }
-  }, [select1, tokenInfo, tokenTo, tokenInfo]);
+   
+
+
+  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress]);
+  useEffect(()=> {
+    if (tokenFromInfo) {  
+      if(tokenFrom?.address.toLowerCase() !== tokenFromInfo.address.toLowerCase()){
+        setTokenFrom(tokenFromInfo);
+      }
+    }
+  }, [tokenFromInfo, select0, currentTab, tokenFrom])
+
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list
   useEffect(() => {
@@ -239,6 +277,7 @@ const BuySell: React.FC<Props> = ({
           t.symbol.toUpperCase() ===
           GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
       );
+      // If token not equal to tokenInfo
       if (
         _token &&
         _token.symbol.toLowerCase() !== tokenInfo?.symbol.toLowerCase()
@@ -270,60 +309,81 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select0, networkName]);
+  }, [select0, networkName, tokenInfo]);
 
-  const handleChangeToken = (token: Token | undefined, type: 'from' | 'to') => {
-    if (token) {
-      const isNative = isNativeCoinWithoutChainId(token.symbol);
-      if (type === 'from') {
-        if (
-          tokenTo &&
-          (token.address.toLowerCase() === tokenTo.address.toLowerCase() ||
-            (isNative &&
-              token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
-        ) {
-          setTokenFrom(tokenTo);
-          setTokenTo(tokenFrom);
-        } else {
-          setTokenFrom(token);
-        }
-      } else {
-        if (
-          tokenFrom &&
-          (token.address.toLowerCase() === tokenFrom.address.toLowerCase() ||
-            (isNative &&
-              token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
-        ) {
-          if (web3State === Web3State.Done) {
-            const availableTokenFrom = select0.find((e) =>
-              isNative
-                ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase()
-                : e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
-            );
-
-            if (availableTokenFrom) {
-              setTokenTo(tokenFrom);
-              setTokenFrom(tokenTo);
-            } else {
-              const newTokenFrom = select0.find((e) =>
-                isNative
-                  ? e.symbol.toLowerCase() === token?.symbol.toLowerCase()
-                  : e.address.toLowerCase() === token?.address.toLowerCase(),
-              );
-
-              setTokenTo(tokenFrom);
-              setTokenFrom(newTokenFrom);
+  const handleChangeToken = useCallback(
+    (token: Token | undefined, type: 'from' | 'to') => {
+      if (token) {
+        const isNative = isNativeCoinWithoutChainId(token.symbol);
+        if (type === 'from') {
+          if (
+            tokenTo &&
+            (token.address.toLowerCase() === tokenTo.address.toLowerCase() ||
+              (isNative &&
+                token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
+          ) {
+            setTokenFrom(tokenTo);
+            setTokenTo(tokenFrom);
+            if (onChangeTokens) {
+              onChangeTokens(tokenTo, tokenFrom);
             }
           } else {
-            setTokenTo(tokenFrom);
-            setTokenFrom(tokenTo);
+            setTokenFrom(token);
+            if (onChangeTokens) {
+              onChangeTokens(token, tokenTo);
+            }
           }
         } else {
-          setTokenTo(token);
+          if (
+            tokenFrom &&
+            (token.address.toLowerCase() === tokenFrom.address.toLowerCase() ||
+              (isNative &&
+                token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
+          ) {
+            if (web3State === Web3State.Done) {
+              const availableTokenFrom = select0.find((e) =>
+                isNative
+                  ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase()
+                  : e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
+              );
+
+              if (availableTokenFrom) {
+                setTokenTo(tokenFrom);
+                setTokenFrom(tokenTo);
+                if (onChangeTokens) {
+                  onChangeTokens(tokenTo, tokenFrom);
+                }
+              } else {
+                const newTokenFrom = select0.find((e) =>
+                  isNative
+                    ? e.symbol.toLowerCase() === token?.symbol.toLowerCase()
+                    : e.address.toLowerCase() === token?.address.toLowerCase(),
+                );
+
+                setTokenTo(tokenFrom);
+                setTokenFrom(newTokenFrom);
+                if (onChangeTokens) {
+                  onChangeTokens(newTokenFrom, tokenFrom);
+                }
+              }
+            } else {
+              setTokenTo(tokenFrom);
+              setTokenFrom(tokenTo);
+              if (onChangeTokens) {
+                onChangeTokens(tokenTo, tokenFrom);
+              }
+            }
+          } else {
+            setTokenTo(token);
+            if (onChangeTokens) {
+              onChangeTokens(tokenFrom, token);
+            }
+          }
         }
       }
-    }
-  };
+    },
+    [onChangeTokens, web3State, tokenFrom, tokenTo],
+  );
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
     setCurrentTab(newValue);

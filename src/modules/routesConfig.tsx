@@ -44,7 +44,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           icon: 'bitcoin.convert',
           customIcon: true,
-          url: `/${networkName}/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+          url: `/trade`,
         },
         {
           id: 'favorites',
