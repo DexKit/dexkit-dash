@@ -3,23 +3,25 @@ import clsx from 'clsx';
 import {useDispatch, useSelector} from 'react-redux';
 import {makeStyles, Popover} from '@material-ui/core';
 import {Box, Button, Badge, List, Hidden} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import Scrollbar from '../Scrollbar';
-import IntlMessages from '../../utility/IntlMessages';
-import NotificationItem from './NotificationItem';
-import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
+import {ethers} from 'ethers';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+
 import {
   onNotificationList,
   onCheckNotification,
   onCheckAllNotification,
+  updateNotification,
 } from 'redux/_notification/actions';
 import {AppState} from 'redux/store';
 
 import {ReactComponent as NotificationIcon} from 'assets/images/icons/notification.svg';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 import {NotificationsDialog} from 'shared/components/NotificationsDialog';
+
+import {useBlockNumber} from 'hooks/useBlockNumber';
+import {isTransactionMined} from 'utils/blockchain';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   crPopover: {
@@ -101,6 +103,8 @@ const Notifications: React.FC<NotificationsProps> = () => {
   const [anchorNotification, setAnchorNotification] =
     React.useState<HTMLButtonElement | null>(null);
 
+  const {getProvider} = useWeb3();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -120,50 +124,51 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setShowNotifications((value) => !value);
   }, []);
 
+  const {blockNumber} = useBlockNumber();
+
+  useEffect(() => {
+    let transactionNotifications = notifications.filter((notification) => {
+      let isTransaction = notification.type === NotificationType.TRANSACTION;
+      let isPending =
+        (notification.metadata as TxNotificationMetadata).status == 'pending';
+      return isTransaction && isPending;
+    });
+
+    for (let notificaiton of transactionNotifications) {
+      let metadata = notificaiton.metadata as TxNotificationMetadata;
+
+      isTransactionMined(getProvider(), metadata.transactionHash).then(
+        (result: ethers.providers.TransactionReceipt | null) => {
+          if (result !== null) {
+            if ((result.status || 0) === 1) {
+              dispatch(
+                updateNotification({
+                  ...notificaiton,
+                  metadata: {
+                    ...metadata,
+                    status: 'done',
+                  } as TxNotificationMetadata,
+                }),
+              );
+            } else if ((result.status || 0) === 0) {
+              dispatch(
+                updateNotification({
+                  ...notificaiton,
+                  metadata: {
+                    ...metadata,
+                    status: 'failed',
+                  } as TxNotificationMetadata,
+                }),
+              );
+            }
+          }
+        },
+      );
+    }
+  }, [getProvider, blockNumber]);
+
   return (
     <>
-      {/* <Popover
-        anchorEl={anchorNotification}
-        id='language-switcher'
-        className={classes.crPopover}
-        keepMounted
-        open={Boolean(anchorNotification)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        onClose={() => setAnchorNotification(null)}>
-        <Box>
-          <Box px={5} py={3}>
-            <Box component='h5' fontFamily={Fonts.LIGHT}>
-              <IntlMessages id='common.notifications' />({notifications.length})
-            </Box>
-          </Box>
-          <Scrollbar className='scroll-submenu'>
-            <List
-              disablePadding
-              onClick={() => {
-                setAnchorNotification(null);
-              }}>
-              {notifications.map((item, i) => (
-                <NotificationItem
-                  onClick={() => {
-                    dispatch(onCheckNotification(Number(item.id)));
-                  }}
-                  id={Number(item?.id ?? i)}
-                  listStyle={classes.notificationItem}
-                  key={item?.id?.toString() ?? i}
-                  item={item}
-                />
-              ))}
-            </List>
-          </Scrollbar>
-        </Box>
-      </Popover> */}
       <NotificationsDialog
         open={showNotifications}
         onClose={handleToggleNotifications}
@@ -171,7 +176,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
       <AppBarButton onClick={handleToggleNotifications}>
         <Badge
           badgeContent={
-            notifications.filter((notification) => notification.check == null)
+            notifications.filter((notification) => notification.check === null)
               .length
           }
           color='secondary'>

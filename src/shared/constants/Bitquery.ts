@@ -122,3 +122,28 @@ export enum Network {
   tron = 'tron',
   zcash = 'zcash',
 }
+
+export const getNetworkName = (chainId?: ChainId) => {
+  switch (Number(chainId)) {
+    case ChainId.Mainnet:
+      return 'Ethereum';
+    case ChainId.Ropsten:
+      return 'Ropsten';
+    case ChainId.Rinkeby:
+      return 'Rinkeby';
+    case ChainId.Kovan:
+      return 'Kovan';
+    case ChainId.Goerli:
+      return 'Goerli';
+    case ChainId.Mumbai:
+      return 'Mumbai';
+    case ChainId.Matic:
+      return 'Polygon';
+    case ChainId.Binance:
+      return 'Binance Smart Chain';
+    case ChainId.BinanceTest:
+      return 'Binance Testnet';
+    default:
+      return '';
+  }
+};

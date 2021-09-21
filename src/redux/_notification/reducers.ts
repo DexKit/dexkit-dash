@@ -52,6 +52,21 @@ export default (
         selected: getNotification(id),
       };
     }
+    case NotificationAction.UPDATE_NOTIFICATION: {
+      let newNotification: Notification = action.payload;
+      let newNotifications = [...state.notifications];
+
+      let updateIndex = newNotifications.findIndex(
+        (n) => n.id == newNotification.id,
+      );
+
+      newNotifications[updateIndex] = newNotification;
+
+      return {
+        notifications: newNotifications,
+        selected: state.selected,
+      };
+    }
     case NotificationAction.REMOVE_NOTIFICATION: {
       const id = action.payload;
       const notification = removeNotification(id);

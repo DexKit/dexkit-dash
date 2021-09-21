@@ -1,6 +1,8 @@
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId} from 'types/blockchain';
 
+import {ethers} from 'ethers';
+
 export enum NetworkCodes {
   Ethereum = 1,
   Ropsten = 3,
@@ -68,10 +70,13 @@ export async function isTransactionMined(
   provider: any,
   transactionHash: string,
 ) {
-  const txReceipt = await provider.getTransactionReceipt(transactionHash);
+  if (provider) {
+    let pr = new ethers.providers.Web3Provider(provider);
+    const txReceipt = await pr.getTransactionReceipt(transactionHash);
 
-  if (txReceipt && txReceipt.blockNumber) {
-    return txReceipt;
+    if (txReceipt && txReceipt.blockNumber) {
+      return txReceipt;
+    }
   }
 
   return null;

@@ -43,6 +43,8 @@ import {
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 
+import {GetNativeCoinFromNetworkName} from 'utils/tokens';
+
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import SwitchNetworkDialog from '../SwitchNetworkDialog';
@@ -164,7 +166,7 @@ const WalletInfo = (props: any) => {
 
   const onGoToManageWallet = () => {
     handleClose();
-    history.push('/wallet/manage-accounts');
+    history.push('/onboarding/login-wallet');
   };
 
   const onGoToLoginWallet = () => {
@@ -225,7 +227,7 @@ const WalletInfo = (props: any) => {
                   {ethBalanceValue
                     ? ethBalanceValue.toFixed(4)
                     : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-                  {FORMAT_NETWORK_NAME(networkName)}
+                  {GetNativeCoinFromNetworkName(networkName)}
                 </Typography>
               </Hidden>
             </Grid>

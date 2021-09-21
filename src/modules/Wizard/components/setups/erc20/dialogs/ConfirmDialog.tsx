@@ -13,12 +13,16 @@ import {
   DialogTitle,
   makeStyles,
   Divider,
+  CircularProgress,
   Grid,
+  useTheme,
 } from '@material-ui/core';
 import {DollarSquareIcon} from 'shared/components/Icons';
 import clsx from 'clsx';
 
 import CloseIcon from '@material-ui/icons/Close';
+import {useWeb3} from 'hooks/useWeb3';
+import {getNetworkName} from 'shared/constants/Bitquery';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -39,12 +43,16 @@ const useStyles = makeStyles((theme) => ({
 interface ConfirmDialogProps extends DialogProps {
   onConfirm: () => void;
   data: any;
+  pending: boolean;
 }
 
 export const ConfirmDialog = (props: ConfirmDialogProps) => {
-  const {onConfirm, onClose, data} = props;
+  const {onConfirm, onClose, data, pending} = props;
+
+  const {chainId} = useWeb3();
 
   const classes = useStyles();
+  const theme = useTheme();
 
   const handleClose = useCallback(() => {
     if (onClose) {
@@ -72,7 +80,7 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
             </Box>
             <Typography variant='body1'>Creating token</Typography>
           </Box>
-          <IconButton onClick={handleClose}>
+          <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -107,6 +115,15 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
+              <Typography variant='body1'>Network</Typography>
+              <Typography variant='body1'>{getNetworkName(chainId)}</Typography>
+            </Box>
+            <Box
+              mb={2}
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
               <Typography variant='body1'>Token name</Typography>
               <Typography variant='body1'>{data.name}</Typography>
             </Box>
@@ -131,10 +148,19 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onConfirm} variant='contained' color='primary'>
+        <Button
+          startIcon={
+            pending ? (
+              <CircularProgress color='inherit' size={theme.spacing(6)} />
+            ) : undefined
+          }
+          disabled={pending}
+          onClick={onConfirm}
+          variant='contained'
+          color='primary'>
           Create
         </Button>
-        <Button onClick={handleClose} variant='contained'>
+        <Button disabled={pending} onClick={handleClose} variant='contained'>
           Cancel
         </Button>
       </DialogActions>

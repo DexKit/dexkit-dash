@@ -8,6 +8,7 @@ import {
   StepLabel,
   Breadcrumbs,
   Typography,
+  Tooltip,
   Link,
 } from '@material-ui/core';
 
@@ -39,6 +40,10 @@ import {addCollection} from 'redux/_wizard/actions';
 import {ethers} from 'ethers';
 import {Link as RouterLink} from 'react-router-dom';
 import axios from 'axios';
+
+import GitHubIcon from '@material-ui/icons/GitHub';
+
+import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 
 const ERC721_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC721_BASE.sol/COLLECTION.json';
@@ -329,7 +334,9 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
         setContractStatus(ContractStatus.Minting);
 
-        await mintItems(address, itemsHashes);
+        if (items.length > 0) {
+          await mintItems(address, itemsHashes);
+        }
 
         setContractStatus(ContractStatus.Finalized);
       }
@@ -342,6 +349,10 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     uploadCollectionImage,
     uploadImages,
   ]);
+
+  const handleOpenGithub = useCallback(() => {
+    window.open('https://github.com/DexKit/wizard-contracts', '_blank');
+  }, []);
 
   return (
     <>
@@ -359,34 +370,50 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           mintTransaction={mintTransactionHash}
           maxWidth='sm'
           fullWidth
+          skipMinting={items.length === 0}
         />
       </DialogPortal>
       <Grid container spacing={4} justify='center'>
         <Grid item xs={12} sm={10}>
-          <Box mb={2}>
-            <Breadcrumbs>
-              <Link color='inherit' to='/' component={RouterLink}>
-                <Typography variant='body1'>Dashboard</Typography>
-              </Link>
-              <Link color='inherit' to='/wizard' component={RouterLink}>
-                <Typography variant='body1'>Wizard</Typography>
-              </Link>
-            </Breadcrumbs>
-          </Box>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <IconButton to='/wizard' component={RouterLink} size='small'>
-                <ArrowBackIcon />
-              </IconButton>
-            </Box>
-            <Typography color='inherit' variant='h5'>
-              Create collection
-            </Typography>
-          </Box>
+          <Grid
+            container
+            justify='space-between'
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              <Box mb={2}>
+                <Breadcrumbs>
+                  <Link color='inherit' to='/' component={RouterLink}>
+                    <Typography variant='body1'>Dashboard</Typography>
+                  </Link>
+                  <Link color='inherit' to='/wizard' component={RouterLink}>
+                    <Typography variant='body1'>Wizard</Typography>
+                  </Link>
+                </Breadcrumbs>
+              </Box>
+              <Box display='flex' alignItems='center' alignContent='center'>
+                <Box
+                  mr={2}
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'>
+                  <IconButton to='/wizard' component={RouterLink} size='small'>
+                    <ArrowBackIcon />
+                  </IconButton>
+                </Box>
+                <Typography color='inherit' variant='h5'>
+                  Create collection
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Tooltip title='View source on GitHub'>
+                <RoundedIconButton onClick={handleOpenGithub}>
+                  <GitHubIcon />
+                </RoundedIconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={10}>
           <Paper>
