@@ -197,6 +197,7 @@ export const useCoinsLeague = (address?: string) => {
     winner,
     game: gameQuery.data && gameQuery.data[0],
     refetch: gameQuery.refetch,
+    refetchCurrentFeeds: currentFeedPriceQuery.refetch,
     gameQuery,
     coinFeedQuery,
     allFeeds: coinFeedQuery.data && coinFeedQuery.data,

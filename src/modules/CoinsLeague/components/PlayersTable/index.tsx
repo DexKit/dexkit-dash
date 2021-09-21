@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import Chip from '@material-ui/core/Chip';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
@@ -26,6 +27,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
+import {BigNumber} from '@ethersproject/bignumber';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -98,14 +100,22 @@ const truncHash = (hash: string): string => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
 };
 
+const USD_POWER = BigNumber.from(10 ** 8);
+
 function PlayersTable(props: Props): JSX.Element {
   const {address, account, winner, data} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
   const [tx, setTx] = useState<string>();
-  const {onClaimCallback, refetch, onWithdrawCallback, game} =
-    useCoinsLeague(address);
+  const {
+    onClaimCallback,
+    refetch,
+    onWithdrawCallback,
+    game,
+    currentPrices,
+    allFeeds,
+  } = useCoinsLeague(address);
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const [submitWithdrawState, setSubmitWithdrawState] = useState<SubmitState>(
     SubmitState.None,
@@ -211,6 +221,48 @@ function PlayersTable(props: Props): JSX.Element {
     },
     [tx, chainId],
   );
+  // We need to this to calculate the monster of score in real time
+  const playerRowData = useMemo(() => {
+    if (game && !game.finished && game.started && !game.aborted) {
+      return props?.data?.map((d) => {
+        const currentFeedPrice = currentPrices?.filter((f) =>
+          d.coins.map((c) => c.toLowerCase()).includes(f.feed.toLowerCase()),
+        );
+        if (currentFeedPrice?.length) {
+          const prices = currentFeedPrice.map((f) => {
+            const startFeed = allFeeds?.find(
+              (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
+            );
+            return {
+              endPrice: f.price.div(USD_POWER).toNumber() as number,
+              startPrice: startFeed?.start_price
+                .div(USD_POWER)
+                .toNumber() as number,
+            };
+          });
+          const scores = prices.map(
+            (p) => (p.endPrice - p.startPrice) / p.endPrice,
+          );
+          const score = scores.reduce((p, c) => p + c) * 100;
+          return {
+            ...d,
+            score,
+          };
+        } else {
+          return {
+            ...d,
+            score: d.score / 10,
+          };
+        }
+      });
+    }
+    return props?.data?.map((d) => {
+      return {
+        ...d,
+        score: d.score / 10,
+      }
+    });
+  }, [props.data, game, currentPrices, allFeeds]);
 
   return (
     <>
@@ -242,19 +294,21 @@ function PlayersTable(props: Props): JSX.Element {
                 </TableCell>
               </TableRow>
             )}
-            {props.data
+            {playerRowData
               ?.sort((a, b) => b.score - a.score)
               .map((row, i) => (
                 <TableRow key={i}>
                   <TableCell className={classes.noBorder}>
-                    <Typography style={{color: '#fff'}}>
+                    <Box display={'flex'} alignItems={'center'}>
                       <Chip className={classes.chip} label={`${i + 1}º`} />
-                      &nbsp; {truncHash(row.hash)}
-                    </Typography>
+                      <Typography style={{color: '#fff'}}>
+                        &nbsp; {truncHash(row.hash)}
+                      </Typography>
+                    </Box>
                   </TableCell>
 
                   <TableCell className={classes.noBorder}>
-                    <Grid container>
+                    <Box display={'flex'} alignItems={'center'}>
                       <AvatarGroup max={10} spacing={17}>
                         {row?.coins.map((coin) => (
                           <Avatar
@@ -274,7 +328,7 @@ function PlayersTable(props: Props): JSX.Element {
                           }}
                         />
                       </IconButton>
-                    </Grid>
+                    </Box>
                   </TableCell>
 
                   <TableCell className={classes.noBorder}>
@@ -284,7 +338,9 @@ function PlayersTable(props: Props): JSX.Element {
                         background: '#343A49',
                         color: row.score > 0 ? '#0e0' : '#e00',
                       }}
-                      label={`${row.score > 0 ? '+' : ''}${row.score}%`}
+                      label={`${row.score > 0 ? '+' : ''}${row.score?.toFixed(
+                        2,
+                      )}%`}
                     />
                   </TableCell>
 
@@ -354,7 +410,9 @@ function PlayersTable(props: Props): JSX.Element {
                               onClick={onWithdrawGame}
                               fullWidth
                               variant={'contained'}
-                              disabled={submitWithdrawState === SubmitState.Confirmed}
+                              disabled={
+                                submitWithdrawState === SubmitState.Confirmed
+                              }
                               color={
                                 submitWithdrawState === SubmitState.Error
                                   ? 'default'

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Breadcrumbs,
   Button,
@@ -10,7 +10,7 @@ import {
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
 
-import {ChainId} from 'types/blockchain';
+import {ChainId, SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinsLeague/components/CreateGameModal';
@@ -18,8 +18,6 @@ import CardGame from 'modules/CoinsLeague/components/CardGame';
 import CardGameSkeleton from 'modules/CoinsLeague/components/CardGame/index.skeleton';
 import {makeStyles} from '@material-ui/core/styles';
 
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
 import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
@@ -30,6 +28,9 @@ import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,9 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
 enum FilterGame {
   ALL = 'All',
-  Fast = 'Fast',
-  Medium = 'Medium',
+  Fast = '1hr',
+  Medium = '4hrs',
+  Eight = '8hrs',
   Day = '24hrs',
+  Week = 'Week',
+  Mine = 'My Games',
 }
 
 enum Tabs {
@@ -62,7 +66,9 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
-  const {chainId} = useWeb3();
+  const {chainId, account} = useWeb3();
+  const defaultAccount = useDefaultAccount();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
@@ -84,6 +90,22 @@ const GamesList = () => {
     return games?.filter((g) => g.started && !g.finished);
   }, [games]);
 
+  // TODO: We are doing this to user see connected account
+  useEffect(() => {
+    if (account && account !== defaultAccount) {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: account,
+            label: account,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
+    }
+  }, [account]);
+
   const gamesToJoin = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
       return games
@@ -96,7 +118,22 @@ const GamesList = () => {
     if (filterGame === FilterGame.Fast) {
       return games
         ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Mine) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) =>
+          g?.players
+             //@ts-ignore
+             .map((p) => p[1]?.toLowerCase())
+            .includes(account?.toLowerCase() || ''),
+        )
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -106,11 +143,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        )
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Eight) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -120,7 +162,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Day) {
       return games
         ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Week) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -140,7 +191,22 @@ const GamesList = () => {
     if (filterGame === FilterGame.Fast) {
       return games
         ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Mine) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) =>
+          g?.players
+           //@ts-ignore
+            .map((p) => p[1]?.toLowerCase())
+            .includes(account?.toLowerCase() || ''),
+        )
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -150,11 +216,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        )
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Eight) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -164,7 +235,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Day) {
       return games
         ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Week) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -321,7 +401,7 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='All'
+                    label={FilterGame.ALL}
                     color={
                       filterGame === FilterGame.ALL ? 'primary' : 'default'
                     }
@@ -331,7 +411,7 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Fast'
+                    label={FilterGame.Fast}
                     color={
                       filterGame === FilterGame.Fast ? 'primary' : 'default'
                     }
@@ -341,7 +421,7 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Medium'
+                    label={FilterGame.Medium}
                     color={
                       filterGame === FilterGame.Medium ? 'primary' : 'default'
                     }
@@ -351,11 +431,41 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='24hrs'
+                    label={FilterGame.Eight}
+                    color={
+                      filterGame === FilterGame.Eight ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Eight)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Day}
                     color={
                       filterGame === FilterGame.Day ? 'primary' : 'default'
                     }
                     onClick={() => setFilterGame(FilterGame.Day)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Week}
+                    color={
+                      filterGame === FilterGame.Week ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Week)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Mine}
+                    color={
+                      filterGame === FilterGame.Mine ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Mine)}
                   />
                 </Grid>
               </Grid>
@@ -416,12 +526,9 @@ const GamesList = () => {
                     <CardGameSkeleton />
                   </Grid>
                 ))}
-                 {!isLoading && !gamesEnded?.length && (
+              {!isLoading && !gamesEnded?.length && (
                 <Grid item xs={12}>
-                  <Empty
-                    title={'No history'}
-                    message={'Join and play games'}
-                  />
+                  <Empty title={'No history'} message={'Join and play games'} />
                 </Grid>
               )}
             </Grid>

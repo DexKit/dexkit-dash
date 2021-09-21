@@ -45,7 +45,7 @@ function CardTimer(props: {time: number}) {
 
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
-  const {game, refetch} = useCoinsLeague(props.address);
+  const {game, refetch, refetchCurrentFeeds} = useCoinsLeague(props.address);
   const endTime = useMemo(() => {
     if (game) {
       const time = game?.duration.toNumber();
@@ -57,6 +57,11 @@ function Countdown(props: Props): JSX.Element {
   const count = useCountdown(endTime, {
     interval: 1000,
     onEnd: () => refetch(),
+  });
+  //TODO: Check if this is the best place to refresh data
+  useCountdown(endTime, {
+    interval: 10000,
+    onDown: () => refetchCurrentFeeds(),
   });
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
