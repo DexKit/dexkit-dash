@@ -93,6 +93,10 @@ function GameEnter(props: Props) {
     setOpen(true);
   }, []);
 
+
+
+
+
   const player = useMemo(() => {
     if (account && game?.players && game?.players.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects

@@ -33,7 +33,6 @@ export const useCoinsLeagueFactory = () => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
-        console.log(e);
         callbacks?.onError(e);
       }
     },
