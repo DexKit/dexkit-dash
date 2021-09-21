@@ -15,7 +15,6 @@ import LoadingTable from '../../Common/LoadingTable';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useTokenList} from 'hooks/useTokenList';
 import {truncateAddress} from 'utils';
-import {isAddress} from 'web3-utils';
 
 type Params = {
   address: string;
@@ -133,7 +132,6 @@ const TradeHistory: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  console.log(data);
 
   return (
     <Box pt={{xl: 4}}>

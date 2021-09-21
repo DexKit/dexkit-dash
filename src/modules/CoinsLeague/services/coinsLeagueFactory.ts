@@ -5,9 +5,10 @@ import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
 import {getMulticall} from '../../../services/multicall';
 import {getWeb3Wrapper} from '../../../services/web3modal';
-
+// 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
+//0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COINS_LEAGUE_FACTORY_ADDRESS = {
-  MUMBAI: '0xd7b9843ea2681EDFf668333a1d908fa1e99953C9',
+  MUMBAI: '0x7560E5Ee0734B59E7D1D8508c39AF744256e8509',
 };
 
 let coinsLeagueFactory: Contract;

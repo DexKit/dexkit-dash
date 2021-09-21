@@ -28,14 +28,17 @@ import CardGameProgressSkeleton from 'modules/CoinsLeague/components/CardGamePro
 
 enum FilterGame {
   ALL = 'All',
-  Fast = 'Fast',
-  Medium = 'Medium',
+  Fast = '1hr',
+  Medium = '4hrs',
+  Eight = '8hrs',
   Day = '24hrs',
+  Week = 'Week',
+  Mine = 'My Games',
 }
 
 const GamesInProgress = () => {
   const history = useHistory();
-  const {chainId} = useWeb3();
+  const {chainId, account} = useWeb3();
 
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
@@ -54,7 +57,22 @@ const GamesInProgress = () => {
     if (filterGame === FilterGame.Fast) {
       return games
         ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Mine) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) =>
+          g?.players
+          //@ts-ignore
+            .map((p) => p[1]?.toLowerCase())
+            .includes(account?.toLowerCase() || ''),
+        )
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -64,11 +82,16 @@ const GamesInProgress = () => {
     if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        )
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Eight) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -78,7 +101,16 @@ const GamesInProgress = () => {
     if (filterGame === FilterGame.Day) {
       return games
         ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Week) {
+      return games
+        ?.filter((g) => g.started && !g.finished && !g.aborted)
+        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -179,7 +211,7 @@ const GamesInProgress = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='All'
+                    label={FilterGame.ALL}
                     color={
                       filterGame === FilterGame.ALL ? 'primary' : 'default'
                     }
@@ -189,7 +221,7 @@ const GamesInProgress = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Fast'
+                    label={FilterGame.Fast}
                     color={
                       filterGame === FilterGame.Fast ? 'primary' : 'default'
                     }
@@ -199,7 +231,7 @@ const GamesInProgress = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Medium'
+                    label={FilterGame.Medium}
                     color={
                       filterGame === FilterGame.Medium ? 'primary' : 'default'
                     }
@@ -209,11 +241,41 @@ const GamesInProgress = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='24hrs'
+                    label={FilterGame.Eight}
+                    color={
+                      filterGame === FilterGame.Eight ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Eight)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Day}
                     color={
                       filterGame === FilterGame.Day ? 'primary' : 'default'
                     }
                     onClick={() => setFilterGame(FilterGame.Day)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Week}
+                    color={
+                      filterGame === FilterGame.Week ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Week)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Mine}
+                    color={
+                      filterGame === FilterGame.Mine ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Mine)}
                   />
                 </Grid>
               </Grid>
@@ -239,8 +301,8 @@ const GamesInProgress = () => {
                   <CardGameProgressSkeleton />
                 </Grid>
               ))}
-          {!isLoading && !gamesInProgress?.length && (
-              <Grid item xs={12} >
+            {!isLoading && !gamesInProgress?.length && (
+              <Grid item xs={12}>
                 <Empty
                   title={'No games in progress'}
                   message={'Search created games and enter to start games'}

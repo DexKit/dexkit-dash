@@ -252,6 +252,7 @@ const CreateGameModal = (props: Props) => {
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>

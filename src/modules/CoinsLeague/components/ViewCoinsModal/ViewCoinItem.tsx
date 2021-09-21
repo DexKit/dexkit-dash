@@ -1,14 +1,16 @@
 import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
-import React, { useMemo } from 'react';
-
+import React, {useMemo} from 'react';
+import Chip from '@material-ui/core/Chip';
 import {CoinFeed} from 'modules/CoinsLeague/utils/types';
-import { CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
-import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
-import { BigNumber } from 'ethers';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {BigNumber} from 'ethers';
 
 export interface Props {
   coin: CoinFeed;
   feedOnchain: CoinFeedOnChain;
+  currentPrice: any;
+  started?: boolean;
   style: React.CSSProperties;
 }
 
@@ -35,43 +37,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const USD_POWER = BigNumber.from(10**8);
+const USD_POWER = BigNumber.from(10 ** 8);
 
 export const ViewCoinListItem = (props: Props) => {
-  const {coin, style, feedOnchain} = props;
-  const {usdFormatter} = useUSDFormatter()
+  const {coin, style, feedOnchain, started, currentPrice} = props;
+  const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
   const classes = useStyles();
-  const priceStart = useMemo(()=>{
-    if(feedOnchain.start_price){
-      return usdFormatter.format(feedOnchain.start_price.div(USD_POWER).toNumber())
+  const priceStart = useMemo(() => {
+    if (feedOnchain.start_price) {
+      return usdFormatter.format(
+        feedOnchain.start_price.div(USD_POWER).toNumber(),
+      );
     }
-    return '-'
+    return '-';
+  }, [feedOnchain.start_price]);
 
-  },[feedOnchain.start_price])
-
-  const priceEnd = useMemo(()=>{
-    if(feedOnchain.end_price){
-      return usdFormatter.format(feedOnchain.end_price.div(USD_POWER).toNumber())
+  const priceEnd = useMemo(() => {
+    if (started) {
+      if (currentPrice?.price) {
+        return usdFormatter.format(
+          currentPrice.price.div(USD_POWER).toNumber(),
+        );
+      }
     }
-    return '-'
 
-  },[feedOnchain.end_price])
+    if (feedOnchain.end_price) {
+      return usdFormatter.format(
+        feedOnchain.end_price.div(USD_POWER).toNumber(),
+      );
+    }
+    return '-';
+  }, [feedOnchain.end_price, started, currentPrice]);
 
-  const priceScore = useMemo(()=>{
-    if(feedOnchain.start_price && feedOnchain.end_price){
-      if(feedOnchain.start_price.eq('0')){
+  const priceScore = useMemo(() => {
+
+    if (feedOnchain.start_price && feedOnchain.end_price && currentPrice) {
+      if (feedOnchain.start_price.eq('0')) {
         return '0';
       }
-      const endPrice = feedOnchain.end_price.toNumber();
+      if(!started){
+        return feedOnchain.score.toNumber()/10;
+      }
+
+      const endPrice = started
+        ? currentPrice?.price.toNumber()
+        : feedOnchain.end_price.toNumber();
       const startPrice = feedOnchain.start_price.toNumber();
-
-      return (((endPrice - startPrice)/startPrice) * 100).toFixed(2)
+      return (((endPrice - startPrice) / startPrice) * 100).toFixed(2);
     }
-
-
-  },[feedOnchain.start_price, feedOnchain.end_price])
-
+  }, [feedOnchain.start_price, feedOnchain.end_price, started, currentPrice]);
 
   return (
     <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>
@@ -91,18 +106,38 @@ export const ViewCoinListItem = (props: Props) => {
         <Grid item>
           <Typography variant='body1'>{`Start`}</Typography>
           <Typography variant='body2' color='textSecondary'>
-           {priceStart}
+            {priceStart}
           </Typography>
         </Grid>
-        <Grid item xs>
-          <Typography variant='body1'>{`End`}</Typography>
-          <Typography variant='body2' color='textSecondary'>
-            {priceEnd}
-          </Typography>
-        </Grid>
+        {started ? (
+          <Grid item xs>
+            <Typography variant='body1'>{`Current`}</Typography>
+            <Typography variant='body2' color='textSecondary'>
+              {priceEnd}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item xs>
+            <Typography variant='body1'>{`End`}</Typography>
+            <Typography variant='body2' color='textSecondary'>
+              {priceEnd}
+            </Typography>
+          </Grid>
+        )}
 
         <Grid item>
-          <Typography variant='body1'>{priceScore}</Typography>
+          {priceScore ? (
+            <Chip
+              clickable
+              style={{
+                background: '#343A49',
+                color: Number(priceScore) > 0 ? '#0e0' : '#e00',
+              }}
+              label={`${Number(priceScore) > 0 ? '+' : ''}${priceScore}%`}
+            />
+          ) : (
+            <Typography variant='body1'> -</Typography>
+          )}
         </Grid>
       </Grid>
     </Box>
