@@ -58,12 +58,7 @@ const AppFooter: React.FC<AppFooterProps> = (props) => {
             alignItems='center'
             flexDirection='row'
             display='flex'>
-            <Box>Copy right @crema 2020</Box>
-            <Box ml='auto'>
-              <Button className={classes.btnRoot} color='primary'>
-                Buy Now
-              </Button>
-            </Box>
+            <Box>Copyright DexKit 2021</Box>
           </Box>
         </Box>
       ) : null}

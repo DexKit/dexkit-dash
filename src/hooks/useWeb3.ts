@@ -102,12 +102,16 @@ export const useWeb3 = () => {
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
+ 
     if (provider) {
+      dispatch(setEthAccount(undefined));
+      dispatch(setChainId(undefined));
+      dispatch(setWeb3State(Web3State.NotConnected));
       closeWeb3().then(() => {
         dispatch(setEthAccount(undefined));
         dispatch(setChainId(undefined));
         dispatch(setWeb3State(Web3State.NotConnected));
-      });
+      }).catch(console.log);
     }
   };
 

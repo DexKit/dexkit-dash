@@ -1,10 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, ButtonProps, makeStyles} from '@material-ui/core';
+import {Button, ButtonProps} from '@material-ui/core';
 import transakSDK from '@transak/transak-sdk';
 import {useWeb3} from 'hooks/useWeb3';
-import styled from 'styled-components';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {Fonts} from 'shared/constants/AppEnums';
 import {useWindowSize} from 'hooks/useWindowSize';
 import {ReactComponent as CoinIcon} from 'assets/images/icons/coin.svg';
 
@@ -58,10 +55,10 @@ const Transak: React.FC<Props> = (props) => {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
-        defaultCryptoCurrency: 'KIT',
+        defaultCryptoCurrency: 'ETH',
         walletAddress: account ?? '', // Your customer wallet address
         themeColor: '000000', // App theme color in hex
-        fiatCurrency: 'USD',
+        fiatCurrency: '',
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field

@@ -28,10 +28,11 @@ import {
   useMediaQuery,
   Container,
   ButtonBase,
+  IconButton,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
-import {ReactComponent as SettingsIcon} from 'assets/images/icons/settings.svg';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
 import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
@@ -41,13 +42,15 @@ import {useHistory} from 'react-router';
 import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
-import { getMagicRPCProviderByChainId, isMagicProvider } from 'services/magic';
-import { Web3State } from 'types/blockchain';
+import { getMagicNetworkFromChainId, isMagicProvider } from 'services/magic';
+import { ChainId, Web3State } from 'types/blockchain';
+import { useMagicProvider } from 'hooks/provider/useMagicProvider';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const {chainId,  getProvider, setProvider} = useWeb3();
+  const { onSwitchMagicNetwork } = useMagicProvider();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -121,12 +124,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     async (chainId: number) => {
       setShowSwitchNetwork(false);
       if(isMagicProvider()){
-        dispatch(setWeb3State(Web3State.Connecting));
-        const provider = await getMagicRPCProviderByChainId(chainId);
-        setProvider(provider);
-        dispatch(setWeb3State(Web3State.Done));
-
-       
+        const network = getMagicNetworkFromChainId(chainId  as ChainId);
+        onSwitchMagicNetwork(network);  
       }else{
         dispatch(setWeb3State(Web3State.Connecting));
         switchChain(getProvider(), chainId);
@@ -195,7 +194,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                                 backgroundColor: 'rgba(226, 167, 46, 0.267)',
                               }}>
                               {GET_CHAIN_ID_NAME(chainId)}
+                              <IconButton size='small'>
+                                <ExpandMoreIcon />
+                              </IconButton>
                             </Box>
+                            
                           </ButtonBase>
                         </Grid>
                       ) : null}
@@ -248,11 +251,14 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         className={classes.switchNetworkButton}>
                         <Box
                           className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}
                           style={{
                             color: 'rgba(226, 167, 46)',
                             backgroundColor: 'rgba(226, 167, 46, 0.267)',
                           }}>
                           {GET_CHAIN_ID_NAME(chainId)}
+                            <ExpandMoreIcon />
                         </Box>
                       </ButtonBase>
                     </Grid>

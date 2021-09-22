@@ -38,6 +38,7 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
 import ContainedInput from 'shared/components/ContainedInput';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const Accounts = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
   const [editLabel, setEditLabel] = useState<number | undefined>();
@@ -123,9 +125,9 @@ const Accounts = () => {
   const accountsModal = useAccountsModal();
 
   const handleConnectWeb3 = useCallback(() => {
-    onConnectWeb3();
+    history.push('/onboarding/login-wallet');
     accountsModal.setShow(false);
-  }, [onConnectWeb3]);
+  }, []);
 
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
@@ -171,6 +173,9 @@ const Accounts = () => {
   const handleMakeDefault = useCallback(
     (account: UIAccount) => {
       dispatch(setDefaultAccount({account: account, type: selectedNetwork}));
+      if(history.location.pathname.startsWith('/wallet')){
+        history.push(`/wallet/${account.address}`);
+      }
     },
     [dispatch, setDefaultAccount],
   );
