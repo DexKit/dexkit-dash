@@ -49,8 +49,8 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         value={tableActive}
         onChange={onChangeTab}
         variant='standard'>
-        <CustomTab label={'History'} />
-        <CustomTab label={'Pairs'} />
+        <CustomTab label='History' />
+        <CustomTab label='Pairs' />
       </CustomTabs>
       {tableActive === 0 && (
         <TokenOrders

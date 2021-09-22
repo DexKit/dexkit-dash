@@ -1,3 +1,5 @@
+import {NotificationType} from 'types/notifications';
+
 export interface Notification {
   /**
    * The id of a notification
@@ -33,4 +35,24 @@ export interface Notification {
    * loading
    */
   loading?: boolean;
+
+  /**
+   * url
+   */
+  url?: string;
+
+  /**
+   *
+   */
+  urlCaption?: string;
+
+  /**
+   * Notification metadata;
+   */
+  metadata?: any;
+
+  /**
+   * notification type {TRANSACTION, OTHERS}
+   */
+  type?: NotificationType;
 }

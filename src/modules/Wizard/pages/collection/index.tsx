@@ -12,6 +12,7 @@ import {
   Link,
   Button,
   makeStyles,
+  IconButton,
   useTheme,
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -24,6 +25,8 @@ import {CollectionItems} from 'modules/Wizard/components/setups/erc721/Collectio
 import {Skeleton} from '@material-ui/lab';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import {MintItemsDialog} from 'modules/Wizard/components/setups/erc721/dialogs/MintItemsDialog';
+
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 function useForceUpdate() {
   const [update, set] = useState(false);
@@ -91,17 +94,30 @@ const CollectionPage = () => {
       </DialogPortal>
       <Box py={{xs: 8}}>
         <Box mb={4}>
-          <Breadcrumbs>
-            <Link color='inherit' component={RouterLink} to='/'>
-              <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-            </Link>
-            <Link color='inherit' component={RouterLink} to='/wizard'>
-              Collections
-            </Link>
-            <Link color='inherit' component={RouterLink} to='/wizard'>
-              {loading ? <Skeleton /> : data?.name}
-            </Link>
-          </Breadcrumbs>
+          <Box mb={2}>
+            <Breadcrumbs>
+              <Link color='inherit' component={RouterLink} to='/'>
+                <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+              </Link>
+              <Link color='inherit' component={RouterLink} to='/wizard'>
+                Collections
+              </Link>
+            </Breadcrumbs>
+          </Box>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box
+              mr={2}
+              display='flex'
+              alignItems='center'
+              alignContent='center'>
+              <IconButton to='/wizard' component={RouterLink} size='small'>
+                <ArrowBackIcon />
+              </IconButton>
+            </Box>
+            <Typography color='inherit' variant='h5'>
+              {loading ? <Skeleton width={theme.spacing(32)} /> : data?.name}
+            </Typography>
+          </Box>
         </Box>
         <Grid container spacing={4}>
           <Grid item xs={3}>

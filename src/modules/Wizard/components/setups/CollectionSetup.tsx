@@ -1,25 +1,16 @@
 import {
-  Button,
   Grid,
-  Card,
-  Paper,
-  CardContent,
-  TextField,
-  InputAdornment,
-  Tooltip,
   Box,
-  Accordion,
-  AccordionSummary,
   IconButton,
-  FormControlLabel,
-  Typography,
-  Switch,
-  Chip,
+  Paper,
   Stepper,
   Step,
   StepLabel,
+  Breadcrumbs,
+  Typography,
+  Tooltip,
+  Link,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 
 import React, {useCallback, useState, useEffect} from 'react';
 import MainLayout from 'shared/components/layouts/main';
@@ -33,30 +24,29 @@ import {
   CollectionItemData,
   CollectionSetupSteps,
   ContractStatus,
-  Erc721Data,
 } from 'modules/Wizard/types';
 import {useWeb3} from 'hooks/useWeb3';
-import DeployingDialog from './erc721/DeployingDialog';
-import DeployErrorDialog from './erc721/DeployErrorDialog';
-import DeploySuccessDialog from './erc721/DeploySuccessDialog';
 
-import SolcWorker from 'worker-loader!../../solc.worker'; // eslint-disable-line import/no-webpack-loader-syntax
-import Web3 from 'web3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Contract} from 'web3-eth-contract';
-import CollectionItem from './erc721/CollecttionItem';
-import ImageUploadButton from './erc721/ImageUploadButton';
 import ItemsStep from './erc721/steps/ItemsStep';
 import CollectionStep from './erc721/steps/CollectionStep';
 import DeployStep from './erc721/steps/DeployStep';
 import {useWizardApi} from 'modules/Wizard/hooks';
 import CreatingCollectionDialog from './erc721/dialogs/CreatingCollectionDialog';
-import {String} from 'lodash';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {useDispatch} from 'react-redux';
 import {addCollection} from 'redux/_wizard/actions';
 import {ethers} from 'ethers';
-import {ERC721Bytecode} from 'contracts/bytecodes/ERC721';
+import {Link as RouterLink} from 'react-router-dom';
+import axios from 'axios';
+
+import GitHubIcon from '@material-ui/icons/GitHub';
+
+import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
+
+const ERC721_CONTRACT_DATA_URL =
+  'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC721_BASE.sol/COLLECTION.json';
 
 export interface CollectionSetupProps {}
 
@@ -98,10 +88,14 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       let promise = new Promise<string>(async (resolve, reject) => {
         if (userDefaultAcount) {
           if (web3) {
-            let contract = new web3.eth.Contract(ERC721Abi);
+            let response = await axios.get(ERC721_CONTRACT_DATA_URL);
+
+            let contractData = response.data;
+
+            let contract = new web3.eth.Contract(contractData.abi);
 
             let contractDeploy = contract.deploy({
-              data: ERC721Bytecode,
+              data: contractData.bytecode,
               arguments: [values.name, values.symbol, contractURI],
             });
 
@@ -340,7 +334,9 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
         setContractStatus(ContractStatus.Minting);
 
-        await mintItems(address, itemsHashes);
+        if (items.length > 0) {
+          await mintItems(address, itemsHashes);
+        }
 
         setContractStatus(ContractStatus.Finalized);
       }
@@ -353,6 +349,10 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     uploadCollectionImage,
     uploadImages,
   ]);
+
+  const handleOpenGithub = useCallback(() => {
+    window.open('https://github.com/DexKit/wizard-contracts', '_blank');
+  }, []);
 
   return (
     <>
@@ -370,9 +370,51 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           mintTransaction={mintTransactionHash}
           maxWidth='sm'
           fullWidth
+          skipMinting={items.length === 0}
         />
       </DialogPortal>
       <Grid container spacing={4} justify='center'>
+        <Grid item xs={12} sm={10}>
+          <Grid
+            container
+            justify='space-between'
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              <Box mb={2}>
+                <Breadcrumbs>
+                  <Link color='inherit' to='/' component={RouterLink}>
+                    <Typography variant='body1'>Dashboard</Typography>
+                  </Link>
+                  <Link color='inherit' to='/wizard' component={RouterLink}>
+                    <Typography variant='body1'>Wizard</Typography>
+                  </Link>
+                </Breadcrumbs>
+              </Box>
+              <Box display='flex' alignItems='center' alignContent='center'>
+                <Box
+                  mr={2}
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'>
+                  <IconButton to='/wizard' component={RouterLink} size='small'>
+                    <ArrowBackIcon />
+                  </IconButton>
+                </Box>
+                <Typography color='inherit' variant='h5'>
+                  Create collection
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Tooltip title='View source on GitHub'>
+                <RoundedIconButton onClick={handleOpenGithub}>
+                  <GitHubIcon />
+                </RoundedIconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid item xs={12} sm={10}>
           <Paper>
             <Stepper activeStep={step} alternativeLabel>

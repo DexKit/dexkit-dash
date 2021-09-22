@@ -10,6 +10,7 @@ export enum NotificationAction {
   UNCHECKED_NOTIFICATION = 'UNCHECKED_NOTIFICATION',
   CHECK_ALL_NOTIFICATION = 'CHECK_ALL_NOTIFICATION',
   NOTIFICATION_LIST = 'NOTIFICATION_LIST',
+  UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION',
 }
 
 export interface GetNotification {
@@ -48,6 +49,12 @@ export interface CheckAllNotification {
 export interface NotificationList {
   type: typeof NotificationAction.NOTIFICATION_LIST;
 }
+
+export interface UpdateNotification {
+  type: typeof NotificationAction.UPDATE_NOTIFICATION;
+  payload: Notification;
+}
+
 export type NotificationActions =
   | GetNotification
   | AddNotification
@@ -55,4 +62,5 @@ export type NotificationActions =
   | CheckNotification
   | UncheckedNotification
   | CheckAllNotification
-  | NotificationList;
+  | NotificationList
+  | UpdateNotification;

@@ -40,13 +40,14 @@ const FilterMenu = () => {
   return (
     <div>
       <IconButton
+        size='small'
         aria-label='delete'
         id='fade-button'
         aria-controls='fade-menu'
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}>
-        <FilterListIcon fontSize='large' />
+        <FilterListIcon />
       </IconButton>
       <Menu
         id='fade-menu'

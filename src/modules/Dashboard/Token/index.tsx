@@ -1,9 +1,8 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Grid,
   Box,
   IconButton,
-  Tooltip,
   Card,
   Breadcrumbs,
   Typography,
@@ -22,8 +21,6 @@ import BuySell from './BuySell';
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {toggleFavoriteCoin} from 'redux/_ui/actions';
@@ -34,14 +31,12 @@ import Charts from './Charts';
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {AboutDialog} from './AboutDialog';
-import {ShareButton} from 'shared/components/ShareButton';
 import InfoIcon from '@material-ui/icons/Info';
 import {ReactComponent as GraphicsIcon} from '../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../assets/images/icons/arrow-down.svg';
 import {useStyles} from './index.style';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import {Share} from '@material-ui/icons';
-import {HeartEmptyIcon, HeartPurpleIcon} from 'shared/components/Icons';
 import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
 
@@ -71,23 +66,7 @@ const TokenPage: React.FC<Props> = (props) => {
   const {data} = useCoingeckoTokenInfo(address, networkName);
   const classes = useStyles();
 
-  const onToggleFavorite = () => {
-    if (token && data) {
-      dispatch(toggleFavoriteCoin({...token, ...data}));
-    }
-  };
-
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
-  const isFavorite = useMemo(() => {
-    if (token) {
-      return favoriteCoins.find(
-        (t) => t.symbol.toLowerCase() === token.symbol.toLowerCase(),
-      );
-    } else {
-      return false;
-    }
-  }, [favoriteCoins, token]);
 
   useEffect(() => {
     if (tokenInfo && tokenInfo.symbol) {
@@ -170,27 +149,6 @@ const TokenPage: React.FC<Props> = (props) => {
             </Grid>
             <Grid item>
               <Grid container spacing={4}>
-                <Grid item>
-                  <Box
-                    display='flex'
-                    flexDirection='column'
-                    alignItems='center'>
-                    <RoundedIconButton
-                      style={
-                        isFavorite
-                          ? {borderColor: '#F76F8E !important'}
-                          : undefined
-                      }
-                      onClick={onToggleFavorite}>
-                      {isFavorite ? (
-                        <HeartPurpleIcon className={classes.icon} />
-                      ) : (
-                        <HeartEmptyIcon className={classes.icon} />
-                      )}
-                    </RoundedIconButton>
-                    <Typography variant='caption'>Favorite</Typography>
-                  </Box>
-                </Grid>
                 <Grid item>
                   <Box
                     display='flex'

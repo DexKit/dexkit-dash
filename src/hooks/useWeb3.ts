@@ -11,7 +11,7 @@ import {
   web3Transaction,
   setProvider,
 } from 'services/web3modal';
-import {useEffect} from 'react';
+import {useEffect, useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, AppState} from 'redux/store';
 import {
@@ -25,7 +25,7 @@ import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
 import {addAccounts, setDefaultAccount} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();

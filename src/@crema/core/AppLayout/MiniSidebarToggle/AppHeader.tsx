@@ -42,15 +42,21 @@ import {useHistory} from 'react-router';
 import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
-import { getMagicNetworkFromChainId, isMagicProvider } from 'services/magic';
-import { ChainId, Web3State } from 'types/blockchain';
-import { useMagicProvider } from 'hooks/provider/useMagicProvider';
+import {
+  getMagicRPCProviderByChainId,
+  isMagicProvider,
+  MagicNetworks,
+} from 'services/magic';
+import {ChainId, Web3State} from 'types/blockchain';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId,  getProvider, setProvider} = useWeb3();
-  const { onSwitchMagicNetwork } = useMagicProvider();
+  const {chainId, getProvider, setProvider} = useWeb3();
+  const {onSwitchMagicNetwork} = useMagicProvider();
+
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -123,16 +129,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const handleSelectChain = useCallback(
     async (chainId: number) => {
       setShowSwitchNetwork(false);
-      if(isMagicProvider()){
-        const network = getMagicNetworkFromChainId(chainId  as ChainId);
-        onSwitchMagicNetwork(network);  
-      }else{
+
+      if (isMagicProvider()) {
+        if (chainId === ChainId.Ropsten) {
+          onSwitchMagicNetwork(MagicNetworks.ropsten);
+        } else if (chainId === ChainId.Mainnet) {
+          onSwitchMagicNetwork(MagicNetworks.ethereum);
+        }
+      } else {
         dispatch(setWeb3State(Web3State.Connecting));
         switchChain(getProvider(), chainId);
         dispatch(setWeb3State(Web3State.Done));
       }
-
-     
     },
     [getProvider, isMagicProvider],
   );
@@ -198,7 +206,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                                 <ExpandMoreIcon />
                               </IconButton>
                             </Box>
-                            
                           </ButtonBase>
                         </Grid>
                       ) : null}
@@ -258,7 +265,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                             backgroundColor: 'rgba(226, 167, 46, 0.267)',
                           }}>
                           {GET_CHAIN_ID_NAME(chainId)}
-                            <ExpandMoreIcon />
+                          <ExpandMoreIcon />
                         </Box>
                       </ButtonBase>
                     </Grid>

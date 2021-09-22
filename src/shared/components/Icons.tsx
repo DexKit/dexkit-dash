@@ -19,3 +19,6 @@ export {ReactComponent as ReceiptAddIcon} from 'assets/images/icons/receipt-add.
 export {ReactComponent as MagicpenIcon} from 'assets/images/icons/magicpen.svg';
 export {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 export {ReactComponent as NotificationOutlinedIcon} from 'assets/images/icons/notification-outlined.svg';
+export {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
+export {ReactComponent as MoneyReciveIcon} from 'assets/images/icons/money-recive.svg';
+export {ReactComponent as DollarSquareIcon} from 'assets/images/icons/dollar-square.svg';
