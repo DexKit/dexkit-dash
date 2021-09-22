@@ -27,7 +27,7 @@ import {truncateAddress, truncateIsAddress} from 'utils/text';
 import {useHistory, useLocation} from 'react-router-dom';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {setDefaultAccount} from 'redux/_ui/actions';
@@ -46,8 +46,6 @@ import {useNetwork} from 'hooks/useNetwork';
 import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
-import {useSingleBalance} from 'hooks/balance/useSingleBalance';
-import SwitchNetworkDialog from '../SwitchNetworkDialog';
 import {StatusSquare} from '../StatusSquare';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
@@ -180,14 +178,11 @@ const WalletInfo = (props: any) => {
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;
-    if (pathname && pathname.indexOf('/wallet') === 1) {
+    if (pathname && pathname.startsWith('/wallet')) {
       history.push(`/wallet/${a.address}`);
       // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-    } else {
-      history.push(`/wallet/${a.address}`);
-      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-    }
+    } 
   };
 
   const notConnected = !web3Account;

@@ -303,22 +303,30 @@ const TotalBalance = (props: Props) => {
                         <StatusSquare color={theme.palette.success.main} />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body2'>
-                          <Box display='flex' alignItems='center'>
-                            <span>{amountsVisible ? truncateAddress(address) : '******'} </span>
+                        <Box display='flex' alignItems='center'>
+                          <Typography variant='body2'>
+                            <span>
+                              {amountsVisible
+                                ? truncateAddress(address)
+                                : '******'}{' '}
+                            </span>
                             <CopyButton
                               size='small'
                               copyText={address || ''}
                               tooltip='Copied!'>
-                              <FileCopy color='inherit' style={{fontSize: 16}} />
-                            </CopyButton>        
+                              <FileCopy
+                                color='inherit'
+                                style={{fontSize: 16}}
+                              />
+                            </CopyButton>
                             <IconButton
                               onClick={handleShowAccounts}
                               size='small'>
                               <KeyboardArrowDownIcon />
                             </IconButton>
-                          </Box>
-                        </Typography>
+                          </Typography>
+                        </Box>
+
                         <Grid container spacing={2}>
                           <Grid item>
                             <Typography className={classes.usdAmount}>

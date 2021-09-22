@@ -46,7 +46,7 @@ import {
 } from 'shared/constants/Bitquery';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import {FEE_PERCENTAGE, FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
@@ -218,7 +218,7 @@ const OrderContent: React.FC<Props> = (props) => {
           // Parameters used to prevalidate quote at final
           allowedSlippage: slippage,
           ethAccount: props.account,
-          buyTokenPercentage: undefined,
+          buyTokenPercentage: FEE_PERCENTAGE,
           feeRecipient: FEE_RECIPIENT,
           affiliateAddress: FEE_RECIPIENT,
           intentOnFill: true,

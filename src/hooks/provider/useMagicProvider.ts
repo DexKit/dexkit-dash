@@ -10,6 +10,7 @@ import {
 } from 'services/magic/social-connectos';
 import { Web3State } from 'types/blockchain';
 import {Magic} from 'magic-sdk';
+import { getWeb3 } from 'services/web3modal';
 
 export const useMagicProvider = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ export const useMagicProvider = () => {
         setProvider(provider);
         dispatch(setWeb3State(Web3State.Done));
         setIsMagicProvider('true'); 
+        const web3 = getWeb3();
+        const accounts = await web3?.eth.getAccounts();
+        return accounts;
     }catch(e){
       dispatch(setWeb3State(Web3State.NotConnected));
       setIsMagicProvider('false');

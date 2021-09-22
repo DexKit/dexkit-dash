@@ -15,6 +15,7 @@ import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
 import {getERC20Contract} from 'utils/ethers';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 
 
 interface Props {
@@ -50,10 +51,7 @@ const ApproveStep: React.FC<Props> = (props) => {
 
   const isApprove = async () => {
     if (
-      (tokenFrom.symbol.toUpperCase() === 'ETH' && chainId === ChainId.Mainnet) ||
-      (tokenFrom.symbol.toUpperCase() === 'BNB' && chainId === ChainId.Binance) ||
-      (tokenFrom.symbol.toUpperCase() === 'MATIC' && chainId === ChainId.Matic) || 
-      (tokenFrom.symbol.toUpperCase() === 'ETH' && chainId === ChainId.Ropsten) 
+      tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)
     ) {
       return true;
     }

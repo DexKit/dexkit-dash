@@ -15,7 +15,7 @@ import {fetchQuote} from 'services/rest/0x-api';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {isNativeCoin, isNativeCoinFromNetworkName} from 'utils';
 import {MyBalances, Web3State} from 'types/blockchain';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import {FEE_PERCENTAGE, FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {
@@ -35,6 +35,7 @@ import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade
 import VerticalSwap from './VerticalSwap';
 import {marketFormStyles as useStyles} from './index.styles';
 import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   chainId: number | undefined;
@@ -70,7 +71,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const network = useNetwork();
-
+  const history = useHistory();
   const {web3State, onConnectWeb3} = useWeb3();
   const [disableSelect, setDisableSelect] = useState(
     disableReceive ? 'to' : '',
@@ -165,7 +166,7 @@ const MarketForm: React.FC<Props> = (props) => {
             // Parameters used to prevalidate quote at final
             allowedSlippage: 0.03,
             ethAccount: account,
-            buyTokenPercentage: undefined,
+            buyTokenPercentage: FEE_PERCENTAGE,
             feeRecipient: FEE_RECIPIENT,
             affiliateAddress: FEE_RECIPIENT,
             intentOnFill: false,
@@ -280,14 +281,16 @@ const MarketForm: React.FC<Props> = (props) => {
   let errorMessage = null;
   const disabled = false;
   const notConnected = web3State !== Web3State.Done;
-
+  const handleConnectWallet = useCallback(()=>{
+    history.push('/onboarding/login-wallet');
+  },[])
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
       <Button
         size='large'
         variant='contained'
         color='primary'
-        onClick={onConnectWeb3}
+        onClick={handleConnectWallet}
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()

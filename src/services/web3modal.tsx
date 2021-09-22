@@ -45,6 +45,7 @@ const closeWeb3 = async () => {
     await magic.user.logout();
     setIsMagicProvider('false');
   }
+  setIsMagicProvider('false');
 
   web3Modal.clearCachedProvider();
 };
