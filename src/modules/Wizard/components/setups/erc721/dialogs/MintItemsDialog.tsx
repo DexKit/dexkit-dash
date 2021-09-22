@@ -21,6 +21,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {ethers} from 'ethers';
+import {useProviderWrapper} from 'hooks/useProviderWrapper';
 
 interface MintItemsDialogProps extends DialogProps {
   contractAddress: string;
@@ -37,6 +38,8 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
   const wizardApi = useWizardApi();
 
   const {getWeb3, getProvider, chainId} = useWeb3();
+
+  const providerWrapper = useProviderWrapper();
 
   const [mintTransactionHash, setMintTransactionHash] = useState('');
   const [items, setItems] = useState<CollectionItemData[]>([]);
@@ -118,7 +121,9 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
   const mintItems = useCallback(
     async (contractAddress: string, hashes: string[]) => {
       if (userDefaultAcount) {
-        let provider = new ethers.providers.Web3Provider(getProvider());
+        let wrappedProvider = providerWrapper.wrapProvider(getProvider());
+
+        let provider = new ethers.providers.Web3Provider(wrappedProvider);
 
         var contract = new ethers.Contract(
           contractAddress,
@@ -181,6 +186,12 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
     return false;
   }, [items]);
+
+  useEffect(() => {
+    providerWrapper.watch((args) => {
+      providerWrapper.cancel();
+    });
+  }, []);
 
   return (
     <Dialog {...props} disableBackdropClick>

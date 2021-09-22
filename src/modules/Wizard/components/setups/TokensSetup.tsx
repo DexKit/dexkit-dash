@@ -5,6 +5,8 @@ import {
   Paper,
   CardContent,
   TextField,
+  IconButton,
+  Typography,
   InputAdornment,
   Tooltip,
   Box,
@@ -176,6 +178,10 @@ export const TokenSetup = (props: TokenSetupProps) => {
     history.push('/wizard');
   }, []);
 
+  const handleGoWizard = useCallback(() => {
+    history.push('/wizard');
+  }, [history]);
+
   return (
     <>
       <ConfirmDialog
@@ -190,7 +196,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
         onClose={handleCloseCreated}
         transactionHash={transactionHash}
       />
-      <Box mb={4}>
+      <Box mb={2}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to='/'>
             <IntlMessages id='nfts.walletBreadcrumbDashboard' />
@@ -198,8 +204,18 @@ export const TokenSetup = (props: TokenSetupProps) => {
           <Link color='inherit' component={RouterLink} to='/wizard'>
             Wizard
           </Link>
-          <Link color='inherit'>Create token</Link>
+          <Link color='inherit'>Tokens</Link>
         </Breadcrumbs>
+      </Box>
+      <Box mb={2} display='flex' alignItems='center' alignContent='center'>
+        <Box mr={2} display='flex' alignItems='center' alignContent='center'>
+          <IconButton onClick={handleGoWizard} size='small'>
+            <ArrowBackIcon />
+          </IconButton>
+        </Box>
+        <Box>
+          <Typography variant='h5'>Create token</Typography>
+        </Box>
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>

@@ -11,7 +11,7 @@ export function useBlockNumber() {
   useEffect(() => {
     let interval: any = null;
 
-    if (web3State == Web3State.Done) {
+    if (web3State === Web3State.Done) {
       let provider = getProvider();
 
       if (provider) {
