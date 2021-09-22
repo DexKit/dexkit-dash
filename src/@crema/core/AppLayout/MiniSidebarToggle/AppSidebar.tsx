@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import clsx from 'clsx';
-import UserInfo from '../../../../shared/components/UserInfo';
 import Navigation from '../../Navigation/VerticleNav';
 import {toggleNavCollapsed} from '../../../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,7 +11,7 @@ import Scrollbar from '../../Scrollbar';
 import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
-import AppLogo from 'shared/components/AppLogo';
+
 import {
   Paper,
   Grid,
@@ -31,7 +30,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
-import WalletInfo from 'shared/components/WalletInfo';
 
 interface AppSidebarProps {
   variant?: string;
@@ -56,7 +54,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const sidebarClasses = classes.sidebarStandard;
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>

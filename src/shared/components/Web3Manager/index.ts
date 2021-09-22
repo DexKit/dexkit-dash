@@ -18,13 +18,20 @@ export const Web3Manager = () => {
     if(isMagicProvider()){
          // We don't try to connect if we are on magic callback path
       if(history.location.pathname.indexOf('/magic/callback-social') === -1 || history.location.pathname.indexOf('/magic/callback') === -1 ){
-        onConnectMagic();
+        
+        onConnectMagic().then((acc) => {
+             // When we connect wallet we want to see our connected wallet
+            if(history.location.pathname.startsWith('/wallet') && acc && acc.length  ){
+              history.push(`/wallet/${acc[0]}`);
+            }
+
+
+        })
        }
       
      
     }else{
       if (web3Modal.cachedProvider || (isMobile() && (web3 || ethereum))) {
-     
           onConnectWeb3();
       }
 

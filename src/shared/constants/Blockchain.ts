@@ -12,6 +12,9 @@ export const STAKING_POOL =
 export const FEE_RECIPIENT =
   process.env.REACT_APP_FEE_RECIPIENT || ZERO_ADDRESS;
 
+export const FEE_PERCENTAGE =
+  process.env.REACT_APP_FEE_PERCENTAGE || ZERO_ADDRESS;
+
 export const TAKER_FEE_PERCENTAGE: string =
   process.env.REACT_APP_TAKER_FEE_PERCENTAGE || '0';
 

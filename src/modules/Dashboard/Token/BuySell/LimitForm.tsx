@@ -35,10 +35,11 @@ import {
 } from 'shared/constants/Bitquery';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import {FEE_PERCENTAGE, FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
 import {limitFormStyles as useStyles} from './index.styles';
 import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   chainId: number | undefined;
@@ -69,8 +70,8 @@ const LimitForm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const {web3State, onConnectWeb3} = useWeb3();
-
+  const {web3State} = useWeb3();
+  const history = useHistory();
   const network = useNetwork();
   const [isInverted, setIsInverted] = useState(false);
 
@@ -139,7 +140,7 @@ const LimitForm: React.FC<Props> = (props) => {
           makerAmount: fromTokenUnitAmount(1, tokenFrom.decimals),
           allowedSlippage: 0.03,
           ethAccount: account,
-          buyTokenPercentage: undefined,
+          buyTokenPercentage: FEE_PERCENTAGE,
           feeRecipient: FEE_RECIPIENT,
           affiliateAddress: FEE_RECIPIENT,
           intentOnFill: false,
@@ -206,13 +207,17 @@ const LimitForm: React.FC<Props> = (props) => {
   let errorMessage: string | undefined;
   const disabled = false;
 
+  const handleConnectWallet = useCallback(()=>{
+    history.push('/onboarding/login-wallet');
+  },[])
+
   const connectButton = (
     <Box m={6} display='flex' alignItems='center' justifyContent='center'>
       <Button
         size='large'
         variant='contained'
         color='primary'
-        onClick={onConnectWeb3}
+        onClick={handleConnectWallet}
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()

@@ -15,7 +15,8 @@ import {
   InputAdornment,
 } from '@material-ui/core';
 import clsx from 'clsx';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import React, {useCallback, useState} from 'react';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
@@ -33,6 +34,9 @@ import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid} from 'utils';
+import { useMobile } from 'hooks/useMobile';
+import { useHistory } from 'react-router-dom';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -107,6 +111,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(10),
     width: theme.spacing(10),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 interface Props {}
@@ -114,10 +122,11 @@ interface Props {}
 export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
+  const isMobile = useMobile();
   const {onConnectWeb3} = useWeb3();
   const [loading, setLoading] = useState(false);
   const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
-
+  const history = useHistory();
   const [email, setEmail] = useState('');
 
   //const handleTelegram = useCallback(() => {}, []);
@@ -127,12 +136,14 @@ export const CreateWallet = (props: Props) => {
   }, []);
 
   const handleDiscord = useCallback(() => {
+    setLoading(true);
     onConnectMagicSocial('discord').finally(() => {
       toggleLoading();
     });
   }, []);
 
   const handleGoogle = useCallback(() => {
+    setLoading(true);
     onConnectMagicSocial('google').finally(() => {
       toggleLoading();
     });
@@ -145,6 +156,7 @@ export const CreateWallet = (props: Props) => {
   }, []);
 
   const handleTwitter = useCallback(() => {
+    setLoading(true);
     onConnectMagicSocial('twitter').finally(() => {
       toggleLoading();
     });
@@ -157,18 +169,30 @@ export const CreateWallet = (props: Props) => {
   const handleEmail = useCallback(
     (e) => {
       if (email) {
-        onConnectMagicEmail(email);
+        setLoading(true);
+        onConnectMagicEmail(email).finally(()=>{
+          toggleLoading();
+        });
       }
     },
     [email],
   );
 
-  const handleConnectWalletLater = useCallback(() => {}, []);
+  const handleConnectWalletLater = useCallback(() => {
+      history.push(`/wallet/${FEE_RECIPIENT}`);
+
+  }, []);
 
   return (
-    <Box>
+    <Box pr={isMobile ? 0 : 8} pl={isMobile ? 0 :8}>
+       <Backdrop className={classes.backdrop}  open={loading}>
+        <CircularProgress color="inherit" />
+        <Box pl={2}>
+        <Typography variant='body1'>Connecting to Wallet...</Typography>
+        </Box>
+      </Backdrop>
       <Grid container spacing={4}>
-        <Grid item xs={12}>
+       {/* <Grid item xs={12}>
           <Typography variant='h5'>Welcome</Typography>
         </Grid>
         <Grid item xs={12}>
@@ -188,7 +212,7 @@ export const CreateWallet = (props: Props) => {
         </Grid>
         <Grid item xs={12}>
           <Divider />
-        </Grid>
+        </Grid>*/}
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -232,7 +256,7 @@ export const CreateWallet = (props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={6} sm={4}>
+                <Grid item xs={4} sm={4}>
                   <ButtonBase
                     onClick={handleTwitter}
                     className={classes.actionButton}>
@@ -325,7 +349,7 @@ export const CreateWallet = (props: Props) => {
                     </Paper>
                   </ButtonBase>
                 </Grid>*/}
-                <Grid item xs={6} sm={4}>
+                <Grid item xs={4} sm={4}>
                   <ButtonBase
                     onClick={handleDiscord}
                     className={classes.actionButton}>
@@ -356,7 +380,7 @@ export const CreateWallet = (props: Props) => {
                     </Paper>
                   </ButtonBase>
                 </Grid>
-                <Grid item xs={6} sm={4}>
+                <Grid item xs={4} sm={4}>
                   <ButtonBase
                     onClick={handleGoogle}
                     className={classes.actionButton}>
@@ -448,7 +472,7 @@ export const CreateWallet = (props: Props) => {
                           Connect the wallet later
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                          Click here to open the app demo.
+                          Click here to open the app with a demo wallet.
                         </Typography>
                       </Grid>
 

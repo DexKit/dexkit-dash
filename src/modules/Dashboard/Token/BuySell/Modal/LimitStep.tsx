@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
+import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
 // import {useStyles} from './index.style';
 
 interface Props {
@@ -48,13 +49,13 @@ const LimitStep: React.FC<Props> = (props) => {
       onLoading(true);
       onRequestConfirmed(true);
 
-      if (account == null) {
+      if (!account) {
         throw new Error('Account address cannot be null or empty');
       }
 
       const web3 = getWeb3();
 
-      if (web3 == null) {
+      if (!web3) {
         throw new Error('Provider cannot be null');
       }
 
@@ -64,7 +65,7 @@ const LimitStep: React.FC<Props> = (props) => {
         amountFrom,
         price,
         expiry,
-        '0x000000000000000000000000000',
+        FEE_RECIPIENT,
       )
         .then((e) => {
           const notification: Notification = {

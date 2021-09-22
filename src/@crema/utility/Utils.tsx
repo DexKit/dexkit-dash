@@ -1,4 +1,4 @@
-import {useMediaQuery, useTheme, createMuiTheme} from '@material-ui/core';
+import {useMediaQuery, useTheme, createTheme} from '@material-ui/core';
 
 export const useBreakPointDown = (key: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
   const theme = useTheme();
@@ -45,6 +45,6 @@ export const getBreakPointsValue = (valueSet: any, breakpoint: string) => {
 };
 
 export const isBreakPointDown = (key: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
-  const defaultTheme = createMuiTheme();
+  const defaultTheme = createTheme();
   return defaultTheme.breakpoints.width(key) > window.innerWidth;
 };

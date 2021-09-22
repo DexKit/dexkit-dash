@@ -7,16 +7,13 @@ const cachedNetworkMagicKey = `${storageKeyNamespace}:magic-network`;
 const providerMagicKey = `${storageKeyNamespace}:magic-provider`;
 export const magicStorage = `${storageKeyNamespace}:is-magic`;
 
-export const enum MagicNetworks{
+export const enum MagicNetworks {
   ethereum = 'ethereum',
   bsc = 'bsc',
   matic = 'matic',
   mumbai = 'mumbai',
-  ropsten = 'ropsten'
-
+  ropsten = 'ropsten',
 }
-
-
 
 export const enum MagicAuthProviders {
   email = 'email',
@@ -51,19 +48,27 @@ const magicETH = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
   extensions: [new OAuthExtension()],
 });
 
-const magicRopsten = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
-  extensions: [new OAuthExtension()],
-  network: 'ropsten',
-});
-
-const magicMumbai = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
-  extensions: [new OAuthExtension()],
-  network: {
-    //rpcUrl: 'https://rpc-mainnet.matic.network',
-    rpcUrl: 'https://rpc-mumbai.maticvigil.com',
-    chainId: 80001,
+const magicRopsten = new Magic(
+  process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
+    'pk_test_D1D2C225CC7848C6',
+  {
+    extensions: [new OAuthExtension()],
+    network: 'ropsten',
   },
-});
+);
+
+const magicMumbai = new Magic(
+  process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
+    'pk_test_D1D2C225CC7848C6',
+  {
+    extensions: [new OAuthExtension()],
+    network: {
+      //rpcUrl: 'https://rpc-mainnet.matic.network',
+      rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+      chainId: 80001,
+    },
+  },
+);
 
 export const getMagicRPCProvider = (networkName: MagicNetworks) => {
   if (networkName === MagicNetworks.bsc) {
@@ -105,7 +110,7 @@ export const getMagicRPCProviderByChainId = async (chainId: ChainId) => {
     setCachedMagicNetwork(MagicNetworks.ethereum);
     return magicRopsten.rpcProvider;
   }
-  
+
   setCachedMagicNetwork(MagicNetworks.ethereum);
   return magicETH.rpcProvider;
 };
@@ -125,12 +130,12 @@ export const getMagicProvider = async () => {
   });*/
 
 export const getMagic = (networkName: MagicNetworks) => {
-  if(networkName === MagicNetworks.ropsten){
+  if (networkName === MagicNetworks.ropsten) {
     setCachedMagicNetwork(networkName);
     return magicRopsten;
   }
 
-  if(networkName === MagicNetworks.mumbai){
+  if (networkName === MagicNetworks.mumbai) {
     setCachedMagicNetwork(networkName);
     return magicMumbai;
   }
@@ -154,7 +159,7 @@ export const getMagic = (networkName: MagicNetworks) => {
 
 export const isMagicTestnet = (network: MagicNetworks) => {
   return network === MagicNetworks.ropsten || network === MagicNetworks.mumbai;
-}
+};
 
 export const getCachedMagicNetwork = () => {
   return (
@@ -191,4 +196,21 @@ export const isMagicProvider = () => {
 
 export const setIsMagicProvider = (status: 'false' | 'true') => {
   localStorage.setItem(magicStorage, status);
+};
+
+export const getMagicNetworkFromChainId = (chainId: ChainId) => {
+  switch (chainId) {
+    case ChainId.Mainnet:
+      return MagicNetworks.ethereum;
+    case ChainId.Binance:
+      return MagicNetworks.bsc;
+    case ChainId.Matic:
+      return MagicNetworks.matic;
+    case ChainId.Ropsten:
+      return MagicNetworks.ropsten;
+    case ChainId.Mumbai:
+      return MagicNetworks.mumbai;
+    default:
+      return MagicNetworks.ethereum;
+  }
 };

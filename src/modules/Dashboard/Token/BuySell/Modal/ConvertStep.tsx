@@ -14,6 +14,7 @@ import {onAddNotification} from 'redux/actions';
 import {truncateAddress} from 'utils';
 import {NotificationType} from 'services/notification';
 import { BigNumber } from '@0x/utils';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 
 // get tokens ta sendo chamado 3x
 
@@ -85,7 +86,7 @@ const ConvertStep: React.FC<Props> = (props) => {
       onLoading(true);
       onRequestConfirmed(true);
 
-      if (account == null) {
+      if (!account) {
         throw new Error('Account address cannot be null or empty');
       }
 
@@ -94,9 +95,9 @@ const ConvertStep: React.FC<Props> = (props) => {
       const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();
 
-      if (provider == null || web3Wrapper == null) {
+      if (!provider || !web3Wrapper) {
         throw new Error('Connect your wallet');
-      } else if (contractWrappers == null) {
+      } else if (!contractWrappers) {
         throw new Error('Contract Error');
       }
 
@@ -104,7 +105,7 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       let txHash = '';
 
-      if (tokenFrom.symbol.toUpperCase() === 'ETH') {
+      if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
         await wethToken
           .deposit()
           .sendTransactionAsync({
@@ -157,7 +158,7 @@ const ConvertStep: React.FC<Props> = (props) => {
     }
   };
 
-  const to = tokenFrom.symbol === 'ETH' ? 'WETH' : 'ETH';
+  const to = tokenFrom.symbol === GET_CHAIN_NATIVE_COIN(chainId) ? `W${GET_CHAIN_NATIVE_COIN(chainId)}` : GET_CHAIN_NATIVE_COIN(chainId);
 
   return (
     <>
