@@ -132,8 +132,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         dispatch(setWeb3State(Web3State.Connecting));
         switchChain(getProvider(), chainId);
         dispatch(setWeb3State(Web3State.Done));
-    },
-    [getProvider, isMagicProvider],
+    }},[getProvider, isMagicProvider]
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
