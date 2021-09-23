@@ -123,8 +123,8 @@ export const AssetList = (props: AssetListProps) => {
                     value={itemsPerPage}
                     onChange={handleItemsPerPageChange}
                     variant='outlined'>
-                    {PAGE_SIZES.map((pageSize) => (
-                      <MenuItem value={pageSize}>{pageSize}</MenuItem>
+                    {PAGE_SIZES.map((pageSize, i) => (
+                      <MenuItem value={pageSize} key={`menu-${i}`}>{pageSize}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>

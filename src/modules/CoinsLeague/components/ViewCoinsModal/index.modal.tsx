@@ -19,10 +19,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
-import { useCoinsLeague } from 'modules/CoinsLeague/hooks/useCoinsLeague';
-import { CoinFeed } from 'modules/CoinsLeague/utils/types';
-import { CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
-import { MumbaiPriceFeeds } from 'modules/CoinsLeague/constants';
+import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
+import {CoinFeed} from 'modules/CoinsLeague/utils/types';
+import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
+import {PriceFeeds} from 'modules/CoinsLeague/constants';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ChainId } from 'types/blockchain';
 
 interface Props extends DialogProps {
   title?: string;
@@ -32,28 +34,58 @@ interface Props extends DialogProps {
 
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, title, coins, address} = props;
+  const {chainId} = useWeb3(); 
   const theme = useTheme();
-  const { allFeeds } = useCoinsLeague(address)
+  const {allFeeds, currentPrices, game} = useCoinsLeague(address);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
-  const [filteredCoins, setFilteredCoins] = useState<{coin: CoinFeed, feed: CoinFeedOnChain}[]>([]);
+  const [filteredCoins, setFilteredCoins] = useState<
+    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any}[]
+  >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
-  const allCoins = useMemo(()=>{
-    if(coins && coins.length && allFeeds && allFeeds.length){
-      const coinsWithFeeds = allFeeds.filter((cf)=> coins.map(c=> c?.toLowerCase()).includes(cf?.address?.toLowerCase()));
-      const coinsList = MumbaiPriceFeeds.filter((c)=>  coinsWithFeeds.map(cf => cf?.address?.toLowerCase()).includes(c?.address?.toLowerCase()));
-        return coins.map(c => {return {
-          coin: coinsList.find(cl => cl.address.toLowerCase() === c.toLowerCase()),
-          feed: coinsWithFeeds.find(cl => cl.address.toLowerCase() === c.toLowerCase()),
-        }}
-        ).filter(c=> c.coin && c.feed) as {coin: CoinFeed, feed: CoinFeedOnChain}[]
+  const allCoins = useMemo(() => {
+    if(chainId !== ChainId.Matic && chainId !== ChainId.Mumbai){
+        return []
+    }
+
+    if (coins && coins.length && allFeeds && allFeeds.length) {
+      const coinsWithFeeds = allFeeds.filter((cf) =>
+        coins.map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
+      );
+      const coinsList = PriceFeeds[chainId].filter((c) =>
+        coinsWithFeeds
+          .map((cf) => cf?.address?.toLowerCase())
+          .includes(c?.address?.toLowerCase()),
+      );
+      return coins
+        .map((c) => {
+          return {
+            coin: coinsList.find(
+              (cl) => cl.address.toLowerCase() === c.toLowerCase(),
+            ),
+            feed: coinsWithFeeds.find(
+              (cl) => cl.address.toLowerCase() === c.toLowerCase(),
+            ),
+            currentFeed: currentPrices?.find(
+              (cl) => cl.feed.toLowerCase() === c.toLowerCase(),
+            ),
+          };
+        })
+        .filter((c) => c.coin && c.feed) as {
+        coin: CoinFeed;
+        feed: CoinFeedOnChain;
+        currentFeed: any;
+      }[];
     }
     return [];
-  },[coins, allFeeds])
+  }, [coins, allFeeds, currentPrices, chainId]);
+  const gameStarted = useMemo(() => {
+    return game?.started && !game.finished && !game.aborted;
+  }, [game]);
 
   useEffect(() => {
-    if(allCoins && allCoins.length){
+    if (allCoins && allCoins.length) {
       setFilteredCoins(allCoins);
     }
   }, [allCoins]);
@@ -129,6 +161,8 @@ export const ViewCoinLeagueDialog = (props: Props) => {
                   style={style}
                   coin={data[index].coin}
                   feedOnchain={data[index].feed}
+                  currentPrice={data[index].currentFeed}
+                  started={gameStarted}
                   key={index}
                 />
               )}

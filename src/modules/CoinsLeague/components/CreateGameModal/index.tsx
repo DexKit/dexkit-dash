@@ -128,6 +128,7 @@ const CreateGameModal = (props: Props) => {
           abortTimestamp: Math.round(
             new Date().getTime() / 1000 + duration * 3,
           ),
+          type: gameType === 'winner-game' ? 0 : 1
         };
         onGameCreateCallback(params, {
           onConfirmation: onConfirmTx,
@@ -196,7 +197,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={0.01}>0.01 Matic</MenuItem>
+              <MenuItem value={0.1}>0.1 Matic</MenuItem>
               <MenuItem value={1}>1 Matic</MenuItem>
               <MenuItem value={5}>5 Matic</MenuItem>
               <MenuItem value={10}>10 Matic</MenuItem>
@@ -252,6 +253,7 @@ const CreateGameModal = (props: Props) => {
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>

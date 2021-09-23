@@ -1,12 +1,19 @@
 import {OAuthExtension} from '@magic-ext/oauth';
 import {Magic} from 'magic-sdk';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId} from 'types/blockchain';
 
 const storageKeyNamespace = 'DexKitWallet:';
 const cachedNetworkMagicKey = `${storageKeyNamespace}:magic-network`;
 const providerMagicKey = `${storageKeyNamespace}:magic-provider`;
 export const magicStorage = `${storageKeyNamespace}:is-magic`;
+
+export const enum MagicNetworks {
+  ethereum = 'ethereum',
+  bsc = 'bsc',
+  matic = 'matic',
+  mumbai = 'mumbai',
+  ropsten = 'ropsten',
+}
 
 export const enum MagicAuthProviders {
   email = 'email',
@@ -16,11 +23,11 @@ export const enum MagicAuthProviders {
 }
 
 const rpcUrls = {
-  [EthereumNetwork.bsc]: {
+  [MagicNetworks.bsc]: {
     rpcUrl: 'https://bsc-dataseed.binance.org',
     chainId: 56,
   },
-  [EthereumNetwork.matic]: {
+  [MagicNetworks.matic]: {
     rpcUrl: 'https://rpc-mainnet.matic.network',
     //rpcUrl: 'https://polygon-rpc.com/',
     chainId: 137,
@@ -29,39 +36,55 @@ const rpcUrls = {
 // @DEV SEE https://magic.link/posts/magic-polygon
 const magicBSC = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
   extensions: [new OAuthExtension()],
-  network: rpcUrls[EthereumNetwork.bsc],
+  network: rpcUrls[MagicNetworks.bsc],
 });
 
 const magicMatic = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
   extensions: [new OAuthExtension()],
-  network: rpcUrls[EthereumNetwork.matic],
+  network: rpcUrls[MagicNetworks.matic],
 });
 
 const magicETH = new Magic(process.env.REACT_APP_MAGIC_LINK_API_KEY || '', {
   extensions: [new OAuthExtension()],
 });
 
-const magicRopsten = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
-  extensions: [new OAuthExtension()],
-  network: 'ropsten',
-});
-
-const magicMumbai = new Magic(process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY || 'pk_test_D1D2C225CC7848C6', {
-  extensions: [new OAuthExtension()],
-  network: {
-    //rpcUrl: 'https://rpc-mainnet.matic.network',
-    rpcUrl: 'https://rpc-mumbai.maticvigil.com',
-    chainId: 80001,
+const magicRopsten = new Magic(
+  process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
+    'pk_test_D1D2C225CC7848C6',
+  {
+    extensions: [new OAuthExtension()],
+    network: 'ropsten',
   },
-});
+);
 
-export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
-  if (networkName === EthereumNetwork.bsc) {
+const magicMumbai = new Magic(
+  process.env.REACT_APP_MAGIC_TESTNET_LINK_API_KEY ||
+    'pk_test_D1D2C225CC7848C6',
+  {
+    extensions: [new OAuthExtension()],
+    network: {
+      //rpcUrl: 'https://rpc-mainnet.matic.network',
+      rpcUrl: 'https://rpc-mumbai.maticvigil.com',
+      chainId: 80001,
+    },
+  },
+);
+
+export const getMagicRPCProvider = (networkName: MagicNetworks) => {
+  if (networkName === MagicNetworks.bsc) {
     return magicBSC.rpcProvider;
   }
 
-  if (networkName === EthereumNetwork.matic) {
+  if (networkName === MagicNetworks.matic) {
     return magicMatic.rpcProvider;
+  }
+
+  if (networkName === MagicNetworks.ropsten) {
+    return magicRopsten.rpcProvider;
+  }
+
+  if (networkName === MagicNetworks.mumbai) {
+    return magicMumbai.rpcProvider;
   }
 
   return magicETH.rpcProvider;
@@ -69,33 +92,32 @@ export const getMagicRPCProvider = (networkName: EthereumNetwork) => {
 let magic: any;
 export const getMagicRPCProviderByChainId = async (chainId: ChainId) => {
   if (chainId === ChainId.Binance) {
-    setCachedMagicNetwork(EthereumNetwork.bsc);
+    setCachedMagicNetwork(MagicNetworks.bsc);
     return magicBSC.rpcProvider;
   }
 
   if (chainId === ChainId.Matic) {
-    setCachedMagicNetwork(EthereumNetwork.matic);
+    setCachedMagicNetwork(MagicNetworks.matic);
     return magicMatic.rpcProvider;
   }
 
   if (chainId === ChainId.Mumbai) {
-    setCachedMagicNetwork(EthereumNetwork.matic);
+    setCachedMagicNetwork(MagicNetworks.matic);
     return magicMumbai.rpcProvider;
   }
 
   if (chainId === ChainId.Ropsten) {
-    setCachedMagicNetwork(EthereumNetwork.ethereum);
+    setCachedMagicNetwork(MagicNetworks.ethereum);
     return magicRopsten.rpcProvider;
   }
-  
-  setCachedMagicNetwork(EthereumNetwork.ethereum);
+
+  setCachedMagicNetwork(MagicNetworks.ethereum);
   return magicETH.rpcProvider;
 };
 
 export const getMagicProvider = async () => {
   const network = getCachedMagicNetwork();
   const magic = getMagic(network);
-  await magic.preload();
   const isLogged = await magic.user.isLoggedIn();
   if (isLogged) {
     return magic.rpcProvider;
@@ -107,11 +129,20 @@ export const getMagicProvider = async () => {
     extensions: [new OAuthExtension()],
   });*/
 
-export const getMagic = (networkName: EthereumNetwork) => {
+export const getMagic = (networkName: MagicNetworks) => {
+  if (networkName === MagicNetworks.ropsten) {
+    setCachedMagicNetwork(networkName);
+    return magicRopsten;
+  }
+
+  if (networkName === MagicNetworks.mumbai) {
+    setCachedMagicNetwork(networkName);
+    return magicMumbai;
+  }
   let network;
   if (
-    networkName === EthereumNetwork.matic ||
-    networkName === EthereumNetwork.bsc
+    networkName === MagicNetworks.matic ||
+    networkName === MagicNetworks.bsc
   ) {
     network = rpcUrls[networkName as 'bsc'];
   }
@@ -126,14 +157,18 @@ export const getMagic = (networkName: EthereumNetwork) => {
   return magic;
 };
 
+export const isMagicTestnet = (network: MagicNetworks) => {
+  return network === MagicNetworks.ropsten || network === MagicNetworks.mumbai;
+};
+
 export const getCachedMagicNetwork = () => {
   return (
-    (localStorage.getItem(cachedNetworkMagicKey) as EthereumNetwork) ||
-    EthereumNetwork.ethereum
+    (localStorage.getItem(cachedNetworkMagicKey) as MagicNetworks) ||
+    MagicNetworks.ethereum
   );
 };
 
-export const setCachedMagicNetwork = (network: EthereumNetwork) => {
+export const setCachedMagicNetwork = (network: MagicNetworks) => {
   localStorage.setItem(cachedNetworkMagicKey, network);
 };
 
@@ -161,4 +196,21 @@ export const isMagicProvider = () => {
 
 export const setIsMagicProvider = (status: 'false' | 'true') => {
   localStorage.setItem(magicStorage, status);
+};
+
+export const getMagicNetworkFromChainId = (chainId: ChainId) => {
+  switch (chainId) {
+    case ChainId.Mainnet:
+      return MagicNetworks.ethereum;
+    case ChainId.Binance:
+      return MagicNetworks.bsc;
+    case ChainId.Matic:
+      return MagicNetworks.matic;
+    case ChainId.Ropsten:
+      return MagicNetworks.ropsten;
+    case ChainId.Mumbai:
+      return MagicNetworks.mumbai;
+    default:
+      return MagicNetworks.ethereum;
+  }
 };

@@ -5,9 +5,12 @@ import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
 import {getMulticall} from '../../../services/multicall';
 import {getWeb3Wrapper} from '../../../services/web3modal';
-
+import { ChainId } from 'types/blockchain';
+// 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
+//0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COINS_LEAGUE_FACTORY_ADDRESS = {
-  MUMBAI: '0xd7b9843ea2681EDFf668333a1d908fa1e99953C9',
+  [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
+  [ChainId.Matic]: '0x34C21825ef6Bfbf69cb8748B4587f88342da7aFb',
 };
 
 let coinsLeagueFactory: Contract;
@@ -36,6 +39,7 @@ export const createGame = async (address: string, params: GameParams) => {
     params.amountUnit,
     params.numCoins,
     params.abortTimestamp,
+    params.type
   ) as Promise<ContractTransaction>;
 };
 

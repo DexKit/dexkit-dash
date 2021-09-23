@@ -44,6 +44,12 @@ const NetworkChips = (props: Props) => {
         variant={filter === EthereumNetwork.bsc ? 'default' : 'outlined'}
         onClick={() => onClickChip(EthereumNetwork.bsc)}
       />
+       <Chip
+        label='MATIC'
+        clickable
+        variant={filter === EthereumNetwork.matic ? 'default' : 'outlined'}
+        onClick={() => onClickChip(EthereumNetwork.matic)}
+      />
     </Grid>
   );
 };

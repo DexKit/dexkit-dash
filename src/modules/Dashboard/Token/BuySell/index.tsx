@@ -30,6 +30,7 @@ import {TOKENS_LIST} from 'shared/constants/tokens';
 
 interface Props {
   disableReceive?: boolean;
+  disableLimit?: boolean;
   tokenAddress?: string;
   tokenFromInfo?: Token;
   networkName: EthereumNetwork;
@@ -83,6 +84,7 @@ const BuySell: React.FC<Props> = ({
   tokenInfo,
   disableReceive,
   onChangeTokens,
+  disableLimit,
 }) => {
   const classes = useStyles();
   const account = useDefaultAccount();
@@ -407,17 +409,19 @@ const BuySell: React.FC<Props> = ({
 
   return (
     <Box>
-      <Box display='flex' justifyContent='center'>
-        <Tabs
-          className={classes.tabsContainer}
-          value={currentTab}
-          indicatorColor='primary'
-          onChange={handleChangeTab}
-          variant='standard'>
-          <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-          <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
-        </Tabs>
-      </Box>
+      {!disableLimit && (
+        <Box display='flex' justifyContent='center'>
+          <Tabs
+            className={classes.tabsContainer}
+            value={currentTab}
+            indicatorColor='primary'
+            onChange={handleChangeTab}
+            variant='standard'>
+            <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+            <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+      )}
       <Box py={2} padding={4}>
         {currentTab === 0 && (
           <MarketForm

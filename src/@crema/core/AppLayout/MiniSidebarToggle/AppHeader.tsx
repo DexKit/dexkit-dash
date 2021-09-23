@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
 import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
@@ -20,7 +20,6 @@ import {
 } from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
-import {AppState} from 'redux/store';
 
 import {
   Grid,
@@ -28,10 +27,11 @@ import {
   useMediaQuery,
   Container,
   ButtonBase,
+  IconButton,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
-import {ReactComponent as SettingsIcon} from 'assets/images/icons/settings.svg';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
 import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
@@ -41,13 +41,21 @@ import {useHistory} from 'react-router';
 import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
-import { getMagicRPCProviderByChainId, isMagicProvider } from 'services/magic';
-import { Web3State } from 'types/blockchain';
+import {
+  getMagicRPCProviderByChainId,
+  isMagicProvider,
+  MagicNetworks,
+} from 'services/magic';
+import {ChainId, Web3State} from 'types/blockchain';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId,  getProvider, setProvider} = useWeb3();
+
+  const {chainId,  getProvider} = useWeb3();
+  const { onSwitchMagicNetwork } = useMagicProvider();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -61,14 +69,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     setMobileMoreAnchorEl(null);
   }
 
-  function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
-    setMobileMoreAnchorEl(event.currentTarget);
-  }
-
-  const {navCollapsed} = useSelector<AppState, AppState['settings']>(
-    ({settings}) => settings,
-  );
-
+  
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
   const renderMobileMenu = (
@@ -120,22 +121,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const handleSelectChain = useCallback(
     async (chainId: number) => {
       setShowSwitchNetwork(false);
-      if(isMagicProvider()){
-        dispatch(setWeb3State(Web3State.Connecting));
-        const provider = await getMagicRPCProviderByChainId(chainId);
-        setProvider(provider);
-        dispatch(setWeb3State(Web3State.Done));
 
-       
-      }else{
+      if (isMagicProvider()) {
+        if (chainId === ChainId.Ropsten) {
+          onSwitchMagicNetwork(MagicNetworks.ropsten);
+        } else if (chainId === ChainId.Mainnet) {
+          onSwitchMagicNetwork(MagicNetworks.ethereum);
+        }
+      } else {
         dispatch(setWeb3State(Web3State.Connecting));
         switchChain(getProvider(), chainId);
         dispatch(setWeb3State(Web3State.Done));
-      }
-
-     
-    },
-    [getProvider, isMagicProvider],
+    }},[getProvider, isMagicProvider]
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -195,6 +192,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                                 backgroundColor: 'rgba(226, 167, 46, 0.267)',
                               }}>
                               {GET_CHAIN_ID_NAME(chainId)}
+                              <IconButton size='small'>
+                                <ExpandMoreIcon />
+                              </IconButton>
                             </Box>
                           </ButtonBase>
                         </Grid>
@@ -248,11 +248,14 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         className={classes.switchNetworkButton}>
                         <Box
                           className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}
                           style={{
                             color: 'rgba(226, 167, 46)',
                             backgroundColor: 'rgba(226, 167, 46, 0.267)',
                           }}>
                           {GET_CHAIN_ID_NAME(chainId)}
+                          <ExpandMoreIcon />
                         </Box>
                       </ButtonBase>
                     </Grid>

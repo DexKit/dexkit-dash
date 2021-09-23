@@ -2,21 +2,16 @@ import {
   Box,
   Grid,
   Card,
-  CardContent,
   Typography,
   IconButton,
-  Button,
-  Avatar,
+  Divider,
   Link,
-  ListItemSecondaryAction,
-  Paper,
   CardHeader,
   Breadcrumbs,
 } from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
 import React, {useCallback} from 'react';
 import {useHistory} from 'react-router';
-import FeatureButton from '../components/FeatureButton';
 import CollectionsList from '../components/setups/erc721/CollectionsList';
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -30,13 +25,6 @@ export default () => {
   const handleCreateCollection = useCallback(
     (e) => {
       history.push('/wizard/deploy/collection');
-    },
-    [history],
-  );
-
-  const handleInteractClick = useCallback(
-    (e) => {
-      history.push('/wizard/contract');
     },
     [history],
   );
@@ -91,6 +79,7 @@ export default () => {
                 </IconButton>
               }
             />
+            <Divider />
             <CollectionsList />
           </Card>
         </Grid>
@@ -98,12 +87,18 @@ export default () => {
           <Card>
             <CardHeader
               title='My Tokens'
+              subheader='Create and manage your tokens'
+              subheaderTypographyProps={{
+                variant: 'body2',
+                color: 'textSecondary',
+              }}
               action={
                 <IconButton color='primary' onClick={handleCreateToken}>
                   <Add />
                 </IconButton>
               }
             />
+            <Divider />
             <TokensList />
           </Card>
         </Grid>

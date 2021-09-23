@@ -1,30 +1,34 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {
-  Avatar,
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
+  ListItemSecondaryAction,
+  Typography,
 } from '@material-ui/core';
 
 import {useTokensList} from 'modules/Wizard/hooks';
 
 export const TokensList = () => {
-  const {data, error, loading} = useTokensList();
+  const {list, data, error, loading} = useTokensList();
+
+  useEffect(() => {
+    list();
+  }, []);
 
   return (
-    <List>
+    <List disablePadding>
       {data.map((token: any, index: number) => (
-        <ListItem key={index}>
-          <ListItemAvatar>
-            <Avatar />
-          </ListItemAvatar>
+        <ListItem button key={index}>
           <ListItemText
-            primary=''
-            secondary=''
+            primary={token.name}
+            secondary={token.symbol}
             secondaryTypographyProps={{color: 'textSecondary'}}
           />
+          <ListItemSecondaryAction>
+            <Typography variant='body1'>{token.supply}</Typography>
+          </ListItemSecondaryAction>
         </ListItem>
       ))}
     </List>

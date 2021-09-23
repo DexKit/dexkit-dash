@@ -2,7 +2,10 @@ import {Dispatch} from 'react';
 import {AppActions} from 'types';
 import {fetchError, fetchStart, fetchSuccess} from '../_common/actions';
 import {Notification} from 'types/models/Notification';
-import {NotificationAction} from 'types/actions/Notification.actions';
+import {
+  NotificationAction,
+  UpdateNotification,
+} from 'types/actions/Notification.actions';
 import {NotificationType, NotificationPosition} from 'services/notification';
 
 export const onNotificationList = () => {
@@ -94,5 +97,14 @@ export const onCheckAllNotification = () => {
     } catch (error) {
       dispatch(fetchError(error.message));
     }
+  };
+};
+
+export const updateNotification = (
+  notification: Notification,
+): UpdateNotification => {
+  return {
+    type: NotificationAction.UPDATE_NOTIFICATION,
+    payload: notification,
   };
 };

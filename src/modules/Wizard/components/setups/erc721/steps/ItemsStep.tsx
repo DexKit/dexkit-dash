@@ -81,13 +81,14 @@ export const ItemsStep = (props: ItemsStepProps) => {
                 variant='outlined'>
                 Back
               </Button>
+
               <Button
                 disabled={hasInvalidItems()}
                 startIcon={<ArrowForwardIcon />}
                 onClick={onNext}
                 variant='contained'
                 color='primary'>
-                Next
+                {items.length > 0 ? 'Next' : 'Skip'}
               </Button>
             </Box>
           </Box>

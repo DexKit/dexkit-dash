@@ -104,6 +104,10 @@ export const getCoinFeeds = async (
   const multicall = await getMulticall();
   const calls: CallInput[] = [];
   const coins: CoinFeed[] = [];
+  if(feeds.length === 0){
+    return [];
+  }
+  
   for (let index = 0; index < feeds.length; index++) {
     const addr = feeds[index];
     calls.push({
@@ -122,7 +126,7 @@ export const getCoinFeeds = async (
   // We need to map manually to properties in order to work properly
   const mappedFeeds = coins.map((c: any, i) => {
     return {
-     price: c[0],
+     price: c,
      feed: feeds[i]
     } as {
       feed: string,

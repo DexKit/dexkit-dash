@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Breadcrumbs,
   Button,
@@ -10,16 +10,16 @@ import {
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
 
-import {ChainId} from 'types/blockchain';
+import {ChainId, SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinsLeague/components/CreateGameModal';
 import CardGame from 'modules/CoinsLeague/components/CardGame';
+import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
+import NoWallet from 'modules/CoinsLeague/components/NoWallet';
 import CardGameSkeleton from 'modules/CoinsLeague/components/CardGame/index.skeleton';
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 
-import FilterListIcon from '@material-ui/icons/FilterList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
 import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
@@ -30,6 +30,12 @@ import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,9 +55,12 @@ const useStyles = makeStyles((theme) => ({
 
 enum FilterGame {
   ALL = 'All',
-  Fast = 'Fast',
-  Medium = 'Medium',
+  Fast = '1hr',
+  Medium = '4hrs',
+  Eight = '8hrs',
   Day = '24hrs',
+  Week = 'Week',
+  Mine = 'My Games',
 }
 
 enum Tabs {
@@ -62,11 +71,15 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
-  const {chainId} = useWeb3();
+  const {chainId, account} = useWeb3();
+  const defaultAccount = useDefaultAccount();
+
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
   const [value, setValue] = React.useState(Tabs.Games);
+
   const handleChange = useCallback(
     (_event: React.ChangeEvent<{}>, _newValue: string) => {
       if (value === Tabs.Games) {
@@ -84,6 +97,22 @@ const GamesList = () => {
     return games?.filter((g) => g.started && !g.finished);
   }, [games]);
 
+  // TODO: We are doing this to user see connected account
+  useEffect(() => {
+    if (account && account !== defaultAccount) {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: account,
+            label: account,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
+    }
+  }, [account]);
+
   const gamesToJoin = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
       return games
@@ -96,7 +125,22 @@ const GamesList = () => {
     if (filterGame === FilterGame.Fast) {
       return games
         ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Mine) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) =>
+          g?.players
+            //@ts-ignore
+            .map((p) => p[1]?.toLowerCase())
+            .includes(account?.toLowerCase() || ''),
+        )
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -106,11 +150,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        )
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Eight) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -120,7 +169,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Day) {
       return games
         ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Week) {
+      return games
+        ?.filter((g) => !g.started)
+        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -140,7 +198,22 @@ const GamesList = () => {
     if (filterGame === FilterGame.Fast) {
       return games
         ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() <= 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+
+    if (filterGame === FilterGame.Mine) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) =>
+          g?.players
+            //@ts-ignore
+            .map((p) => p[1]?.toLowerCase())
+            .includes(account?.toLowerCase() || ''),
+        )
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -150,11 +223,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Medium) {
       return games
         ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
           (g) =>
-            g?.duration?.toNumber() > 60 * 60 &&
-            g?.duration?.toNumber() < 24 * 60 * 60,
-        )
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Eight) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -164,7 +242,16 @@ const GamesList = () => {
     if (filterGame === FilterGame.Day) {
       return games
         ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() >= 24 * 60 * 60)
+        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
+        .filter(
+          (g) =>
+            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        );
+    }
+    if (filterGame === FilterGame.Week) {
+      return games
+        ?.filter((g) => g.finished)
+        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
           (g) =>
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
@@ -185,7 +272,7 @@ const GamesList = () => {
   }, []);
 
   return chainId ? (
-    chainId === ChainId.Mumbai ? (
+    chainId === ChainId.Mumbai || chainId === ChainId.Matic ? (
       <Grid container spacing={4} alignItems={'center'}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
@@ -209,12 +296,11 @@ const GamesList = () => {
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <ActiveChainBalance />
-            </Grid>
-          </Grid>
+        <Grid item xs={12} sm={4}>
+          <ActiveChainBalance />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
 
         <Grid item xs={6}>
@@ -246,6 +332,7 @@ const GamesList = () => {
             {!isLoading && !gamesInProgress?.length && (
               <Grid item xs={12}>
                 <Empty
+                  image={<EmptyGame />}
                   title={'No games in progress'}
                   message={'Search created games and enter to start games'}
                 />
@@ -316,12 +403,12 @@ const GamesList = () => {
                 )}
               </Grid>
             </Grid>
-            <Grid item sm={6} spacing={1} justifyContent='center'>
+            <Grid item sm={6} justifyContent='center'>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
                   <Chip
                     clickable
-                    label='All'
+                    label={FilterGame.ALL}
                     color={
                       filterGame === FilterGame.ALL ? 'primary' : 'default'
                     }
@@ -331,7 +418,7 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Fast'
+                    label={FilterGame.Fast}
                     color={
                       filterGame === FilterGame.Fast ? 'primary' : 'default'
                     }
@@ -341,7 +428,7 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='Medium'
+                    label={FilterGame.Medium}
                     color={
                       filterGame === FilterGame.Medium ? 'primary' : 'default'
                     }
@@ -351,16 +438,46 @@ const GamesList = () => {
                 <Grid item>
                   <Chip
                     clickable
-                    label='24hrs'
+                    label={FilterGame.Eight}
+                    color={
+                      filterGame === FilterGame.Eight ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Eight)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Day}
                     color={
                       filterGame === FilterGame.Day ? 'primary' : 'default'
                     }
                     onClick={() => setFilterGame(FilterGame.Day)}
                   />
                 </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Week}
+                    color={
+                      filterGame === FilterGame.Week ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Week)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    label={FilterGame.Mine}
+                    color={
+                      filterGame === FilterGame.Mine ? 'primary' : 'default'
+                    }
+                    onClick={() => setFilterGame(FilterGame.Mine)}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container sm={3} justifyContent='flex-end'>
+            <Grid item sm={3} justifyContent='flex-end'>
               {/* <Button variant='text'>
                 <FilterListIcon style={{color: '#fff'}} />
                   </Button>*/}
@@ -389,6 +506,7 @@ const GamesList = () => {
               {!isLoading && !gamesToJoin?.length && (
                 <Grid item xs={12}>
                   <Empty
+                    image={<EmptyGame />}
                     title={'No games to join'}
                     message={'Create games to join'}
                   />
@@ -416,9 +534,10 @@ const GamesList = () => {
                     <CardGameSkeleton />
                   </Grid>
                 ))}
-                 {!isLoading && !gamesEnded?.length && (
+              {!isLoading && !gamesEnded?.length && (
                 <Grid item xs={12}>
                   <Empty
+                    image={<EmptyGame />}
                     title={'No history'}
                     message={'Join and play games'}
                   />
@@ -429,21 +548,10 @@ const GamesList = () => {
         )}
       </Grid>
     ) : (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Empty
-            title={'Wrong Network'}
-            message={'Please connect your wallet to Mumbai Polygon Testnet'}
-          />
-        </Grid>
-      </Grid>
+      <WrongNetwork />
     )
   ) : (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Empty title={'No Wallet'} message={'Please connect your wallet'} />
-      </Grid>
-    </Grid>
+    <NoWallet />
   );
 };
 

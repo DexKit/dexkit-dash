@@ -223,11 +223,13 @@ export const getNativeCoinWrappedFromNetworkName = (
 export const GetNativeCoinFromNetworkName = (network: EthereumNetwork) => {
   switch (network) {
     case EthereumNetwork.ethereum:
-      return 'eth';
+      return 'ETH';
     case EthereumNetwork.bsc:
-      return 'bnb';
+      return 'BNB';
+    case EthereumNetwork.matic:
+      return 'MATIC';
     default:
-      return 'eth';
+      return 'ETH';
   }
 };
 
