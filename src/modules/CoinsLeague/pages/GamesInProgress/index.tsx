@@ -25,7 +25,9 @@ import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CardGameProgress from 'modules/CoinsLeague/components/CardGameProgress';
 import CardGameProgressSkeleton from 'modules/CoinsLeague/components/CardGameProgress/index.skeleton';
-
+import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
+import NoWallet from 'modules/CoinsLeague/components/NoWallet';
 enum FilterGame {
   ALL = 'All',
   Fast = '1hr',
@@ -167,12 +169,12 @@ const GamesInProgress = () => {
           </Box>
         </Grid>
 
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <ActiveChainBalance />
-            </Grid>
-          </Grid>
+        <Grid item xs={12} sm={4}>
+              <ActiveChainBalance />  
+        </Grid>
+
+        <Grid item xs={12}  sm={8}>
+              <img src={CoinsLeagueBanner} style={{borderRadius:'12px'}} />
         </Grid>
 
         <Grid item xs={12}>
@@ -313,21 +315,10 @@ const GamesInProgress = () => {
         </Grid>
       </Grid>
     ) : (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Empty
-            title={'Wrong Network'}
-            message={'Please connect your wallet to Mumbai Polygon Testnet'}
-          />
-        </Grid>
-      </Grid>
+      <WrongNetwork />
     )
   ) : (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Empty title={'No Wallet'} message={'Please connect your wallet'} />
-      </Grid>
-    </Grid>
+    <NoWallet />
   );
 };
 

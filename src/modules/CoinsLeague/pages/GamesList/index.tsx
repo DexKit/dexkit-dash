@@ -15,8 +15,10 @@ import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinsLeague/components/CreateGameModal';
 import CardGame from 'modules/CoinsLeague/components/CardGame';
+import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
+import NoWallet from 'modules/CoinsLeague/components/NoWallet';
 import CardGameSkeleton from 'modules/CoinsLeague/components/CardGame/index.skeleton';
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
@@ -31,6 +33,9 @@ import {Search} from '@material-ui/icons';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -68,11 +73,13 @@ const GamesList = () => {
   const history = useHistory();
   const {chainId, account} = useWeb3();
   const defaultAccount = useDefaultAccount();
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
   const [value, setValue] = React.useState(Tabs.Games);
+
   const handleChange = useCallback(
     (_event: React.ChangeEvent<{}>, _newValue: string) => {
       if (value === Tabs.Games) {
@@ -130,8 +137,8 @@ const GamesList = () => {
         ?.filter((g) => !g.started)
         .filter((g) =>
           g?.players
-             //@ts-ignore
-             .map((p) => p[1]?.toLowerCase())
+            //@ts-ignore
+            .map((p) => p[1]?.toLowerCase())
             .includes(account?.toLowerCase() || ''),
         )
         .filter(
@@ -203,7 +210,7 @@ const GamesList = () => {
         ?.filter((g) => g.finished)
         .filter((g) =>
           g?.players
-           //@ts-ignore
+            //@ts-ignore
             .map((p) => p[1]?.toLowerCase())
             .includes(account?.toLowerCase() || ''),
         )
@@ -265,7 +272,7 @@ const GamesList = () => {
   }, []);
 
   return chainId ? (
-    chainId === ChainId.Mumbai ? (
+    chainId === ChainId.Mumbai || chainId === ChainId.Matic ? (
       <Grid container spacing={4} alignItems={'center'}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
@@ -289,12 +296,11 @@ const GamesList = () => {
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <ActiveChainBalance />
-            </Grid>
-          </Grid>
+        <Grid item xs={12} sm={4}>
+          <ActiveChainBalance />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
 
         <Grid item xs={6}>
@@ -326,6 +332,7 @@ const GamesList = () => {
             {!isLoading && !gamesInProgress?.length && (
               <Grid item xs={12}>
                 <Empty
+                  image={<EmptyGame />}
                   title={'No games in progress'}
                   message={'Search created games and enter to start games'}
                 />
@@ -396,7 +403,7 @@ const GamesList = () => {
                 )}
               </Grid>
             </Grid>
-            <Grid item sm={6} spacing={1} justifyContent='center'>
+            <Grid item sm={6} justifyContent='center'>
               <Grid container justifyContent='center' spacing={2}>
                 <Grid item>
                   <Chip
@@ -470,7 +477,7 @@ const GamesList = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container sm={3} justifyContent='flex-end'>
+            <Grid item sm={3} justifyContent='flex-end'>
               {/* <Button variant='text'>
                 <FilterListIcon style={{color: '#fff'}} />
                   </Button>*/}
@@ -499,6 +506,7 @@ const GamesList = () => {
               {!isLoading && !gamesToJoin?.length && (
                 <Grid item xs={12}>
                   <Empty
+                    image={<EmptyGame />}
                     title={'No games to join'}
                     message={'Create games to join'}
                   />
@@ -528,7 +536,11 @@ const GamesList = () => {
                 ))}
               {!isLoading && !gamesEnded?.length && (
                 <Grid item xs={12}>
-                  <Empty title={'No history'} message={'Join and play games'} />
+                  <Empty
+                    image={<EmptyGame />}
+                    title={'No history'}
+                    message={'Join and play games'}
+                  />
                 </Grid>
               )}
             </Grid>
@@ -536,21 +548,10 @@ const GamesList = () => {
         )}
       </Grid>
     ) : (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Empty
-            title={'Wrong Network'}
-            message={'Please connect your wallet to Mumbai Polygon Testnet'}
-          />
-        </Grid>
-      </Grid>
+      <WrongNetwork />
     )
   ) : (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Empty title={'No Wallet'} message={'Please connect your wallet'} />
-      </Grid>
-    </Grid>
+    <NoWallet />
   );
 };
 

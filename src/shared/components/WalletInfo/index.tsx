@@ -127,7 +127,6 @@ const WalletInfo = (props: any) => {
   };
 
   const {
-    onConnectWeb3,
     account: web3Account,
     ethBalance,
     web3State,
@@ -174,7 +173,7 @@ const WalletInfo = (props: any) => {
 
   let ethBalanceValue;
 
-  ethBalanceValue = balances?.value;
+  ethBalanceValue = balances;
 
   const onSetDefaultAccount = (a: UIAccount) => {
     const pathname = location.pathname;

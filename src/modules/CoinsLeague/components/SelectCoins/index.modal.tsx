@@ -20,16 +20,19 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import { CoinFeed } from 'modules/CoinsLeague/utils/types';
 import {SelectCoinListItem} from './SelectCoinItem'
-import { MumbaiPriceFeeds } from 'modules/CoinsLeague/constants';
+import { PriceFeeds } from 'modules/CoinsLeague/constants';
+import { ChainId } from 'types/blockchain';
+
 interface Props extends DialogProps {
   title?: string;
+  chainId: ChainId.Matic | ChainId.Mumbai;
   onSelectCoin: (coin: CoinFeed) => void;
 }
 
 export const SelectCoinLeagueDialog = (props: Props) => {
-  const {onSelectCoin,  onClose, title} = props;
+  const {onSelectCoin,  onClose, chainId, title} = props;
   // TODO: Change to Mainnet
-  const coins = MumbaiPriceFeeds;
+  const coins = PriceFeeds[chainId];
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
