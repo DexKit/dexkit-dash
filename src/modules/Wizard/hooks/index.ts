@@ -1,7 +1,7 @@
 import {useCallback, useState, useRef} from 'react';
 import axios, {AxiosInstance} from 'axios';
 import {AppState} from 'redux/store';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Web3 from 'web3';
 import {Collection} from 'redux/_wizard/reducers';
 import {useWeb3} from 'hooks/useWeb3';
@@ -232,7 +232,13 @@ export function useTokensList() {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<string | null>(null);
 
+  const {tokens} = useSelector<AppState, AppState['wizard']>(
+    ({wizard}) => wizard,
+  );
+
+  console.log('tokens', tokens);
+
   const list = useCallback(() => {}, []);
 
-  return {list, data: [], error, loading};
+  return {list, data: tokens || [], error, loading};
 }

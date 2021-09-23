@@ -19,9 +19,14 @@ import {
   Button,
   IconButton,
   Link,
+  Box,
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
 import HelpIcon from '@material-ui/icons/Help';
+import CloseIcon from '@material-ui/icons/Close';
 
 import {ContractStatus} from 'modules/Wizard/types';
 
@@ -33,12 +38,14 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useHistory} from 'react-router';
+import clsx from 'clsx';
 
 interface CreatingCollectionBackdropProps extends DialogProps {
   step: ContractStatus;
   contractAddress?: string;
   contractTransaction?: string;
   mintTransaction?: string;
+  skipMinting?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -46,12 +53,23 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  icon: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
 }));
 
 export const CreatingCollectionDialog = (
   props: CreatingCollectionBackdropProps,
 ) => {
-  const {step, contractAddress, contractTransaction, mintTransaction} = props;
+  const {
+    step,
+    contractAddress,
+    contractTransaction,
+    mintTransaction,
+    skipMinting,
+    onClose,
+  } = props;
 
   const classes = useStyles();
 
@@ -67,8 +85,35 @@ export const CreatingCollectionDialog = (
     }
   }, [history, contractAddress]);
 
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose({}, 'backdropClick');
+    }
+  }, [onClose]);
+
   return (
     <Dialog {...props}>
+      <DialogTitle>
+        <Box
+          display='flex'
+          alignItems='center'
+          alignContent='center'
+          justifyContent='space-between'>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box
+              mr={2}
+              display='flex'
+              alignItems='center'
+              alignContent='center'>
+              <CheckCircleOutlineIcon className={clsx(classes.icon)} />
+            </Box>
+            <Typography variant='body1'>Transaction created</Typography>
+          </Box>
+          <IconButton size='small' onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <Stepper activeStep={step} orientation='vertical'>
           <Step>
@@ -177,7 +222,7 @@ export const CreatingCollectionDialog = (
                   />
                 )
               }>
-              Mint items
+              Mint items {skipMinting ? '(Skiped)' : null}
             </StepLabel>
             <StepContent>
               <Typography gutterBottom variant='h5'>

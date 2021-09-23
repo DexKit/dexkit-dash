@@ -45,22 +45,25 @@ const TokenOrders: React.FC<Props> = (props) => {
 
   return (
     <Box>
-      <Toolbar className={classes.toolbar}>
-        <Box
-          display={'flex'}
-          justifyContent={'flex-start'}
-          alignItems={'center'}>
-          <Typography variant='h5' display={'block'} align={'center'}>
-            {messages['app.tradeHistory']}
-          </Typography>
-        </Box>
+      <Box
+        py={4}
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        alignContent='center'>
+        <Typography variant='h5' display={'block'} align={'center'}>
+          {messages['app.tradeHistory']}
+        </Typography>
         <Hidden mdDown>
-          <Box
-            display={'flex'}
-            justifyContent={'flex-end'}
-            alignItems={'center'}>
-            <FilterList />
-            <FilterMenu />
+          <Box display='flex' justifyContent='flex-end' alignItems='center'>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              mr={2}>
+              <FilterList />
+              <FilterMenu />
+            </Box>
             <Tooltip title={`Last update ${seconds} s `}>
               <CircularProgress
                 size={20}
@@ -70,7 +73,7 @@ const TokenOrders: React.FC<Props> = (props) => {
             </Tooltip>
           </Box>
         </Hidden>
-      </Toolbar>
+      </Box>
 
       {loading ? (
         <LoadingTable columns={8} rows={10} />

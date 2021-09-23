@@ -26,11 +26,12 @@ import {
   MATIC_SYMBOL_URL,
   ETHEREUM_NATIVE_COINS_BY_CHAIN,
 } from 'shared/constants/Coins';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { TOKENS_LIST } from "shared/constants/tokens";
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {TOKENS_LIST} from 'shared/constants/tokens';
 
 interface Props {
   disableReceive?: boolean;
+  disableLimit?: boolean;
   tokenAddress?: string;
   networkName: EthereumNetwork;
   balances: MyBalances[];
@@ -80,6 +81,7 @@ const BuySell: React.FC<Props> = ({
   networkName,
   tokenInfo,
   disableReceive,
+  disableLimit,
 }) => {
   const history = useHistory();
 
@@ -114,9 +116,9 @@ const BuySell: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    if(chainId && chainId === ChainId.Ropsten){
+    if (chainId && chainId === ChainId.Ropsten) {
       const coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
-      setSelect1([coin, ...TOKENS_LIST[chainId] as Token[]]);
+      setSelect1([coin, ...(TOKENS_LIST[chainId] as Token[])]);
       return;
     }
 
@@ -347,17 +349,19 @@ const BuySell: React.FC<Props> = ({
 
   return (
     <Box>
-      <Box display='flex' justifyContent='center'>
-        <Tabs
-          className={classes.tabsContainer}
-          value={currentTab}
-          indicatorColor='primary'
-          onChange={handleChangeTab}
-          variant='standard'>
-          <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-          <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
-        </Tabs>
-      </Box>
+      {!disableLimit && (
+        <Box display='flex' justifyContent='center'>
+          <Tabs
+            className={classes.tabsContainer}
+            value={currentTab}
+            indicatorColor='primary'
+            onChange={handleChangeTab}
+            variant='standard'>
+            <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
+            <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+      )}
       <Box py={2} padding={4}>
         {currentTab === 0 && (
           <MarketForm
