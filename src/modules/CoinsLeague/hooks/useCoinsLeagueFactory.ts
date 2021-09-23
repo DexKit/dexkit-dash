@@ -5,7 +5,7 @@ import {
   createGame,
   getGamesAddressFromFactory,
 } from 'modules/CoinsLeague/services/coinsLeagueFactory';
-import {Web3State} from 'types/blockchain';
+import {ChainId, Web3State} from 'types/blockchain';
 import {Game, GameParams} from 'types/coinsleague';
 import {getGamesData} from '../services/coinsLeague';
 import {useQuery} from 'react-query';
@@ -17,34 +17,37 @@ interface CallbackProps {
 }
 
 export const useCoinsLeagueFactory = () => {
-  const {web3State} = useWeb3();
+  const {web3State, chainId} = useWeb3();
 
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {
-      if (web3State !== Web3State.Done) {
+      if (web3State !== Web3State.Done || !chainId ||  (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic )) {
         return;
       }
       try {
         const tx = await createGame(
-          COINS_LEAGUE_FACTORY_ADDRESS['MUMBAI'],
+          COINS_LEAGUE_FACTORY_ADDRESS[chainId],
           params,
         );
+        console.log(params);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
+        console.log(e)
         callbacks?.onError(e);
       }
     },
-    [web3State],
+    [web3State, chainId],
   );
 
-  const gamesAddressQuery = useQuery(['GetGamesAdddress', web3State], () => {
-    if (web3State !== Web3State.Done) {
+  const gamesAddressQuery = useQuery(['GetGamesAdddress', web3State, chainId], () => {
+    if (web3State !== Web3State.Done || !chainId ||  (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic )) {
       return;
     }
+    
     return getGamesAddressFromFactory(
-      COINS_LEAGUE_FACTORY_ADDRESS['MUMBAI'],
+      COINS_LEAGUE_FACTORY_ADDRESS[chainId],
       50,
     );
   });

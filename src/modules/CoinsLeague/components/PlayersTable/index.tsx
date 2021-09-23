@@ -18,7 +18,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
 
-import {MumbaiPriceFeeds} from 'modules/CoinsLeague/constants';
+import {PriceFeeds} from 'modules/CoinsLeague/constants';
 import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 import {ButtonState, SubmitState} from '../ButtonState';
@@ -68,8 +68,6 @@ const useStyles = makeStyles((theme) => ({
 interface IRow {
   hash: string;
   coins: string[];
-  claimed: boolean;
-  showClaim?: boolean;
   score: number;
 }
 
@@ -80,17 +78,23 @@ interface Props {
   account?: string;
 }
 
-const getIconByCoin = (coin: string) => {
+const getIconByCoin = (
+  coin: string,
+  chainId: ChainId.Mumbai | ChainId.Matic,
+) => {
   return (
-    MumbaiPriceFeeds.find(
+    PriceFeeds[chainId].find(
       (c) => c.address.toLowerCase() === coin?.toLowerCase(),
     )?.logo || ''
   );
 };
 
-const getIconSymbol = (coin: string) => {
+const getIconSymbol = (
+  coin: string,
+  chainId: ChainId.Mumbai | ChainId.Matic,
+) => {
   return (
-    MumbaiPriceFeeds.find(
+    PriceFeeds[chainId].find(
       (c) => c.address.toLowerCase() === coin?.toLowerCase(),
     )?.base || ''
   );
@@ -260,7 +264,7 @@ function PlayersTable(props: Props): JSX.Element {
       return {
         ...d,
         score: d.score / 10,
-      }
+      };
     });
   }, [props.data, game, currentPrices, allFeeds]);
 
@@ -275,7 +279,13 @@ function PlayersTable(props: Props): JSX.Element {
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
-            <TableCell className={classes.header}>Position</TableCell>
+            <TableCell className={classes.header}>
+              {props.data?.length === 1
+                ? winner
+                  ? 'Position'
+                  : ''
+                : 'Position'}
+            </TableCell>
             <TableCell className={classes.header}>Coins</TableCell>
             <TableCell className={classes.header}>Score</TableCell>
             {(canClaim || claimed) && (
@@ -300,7 +310,17 @@ function PlayersTable(props: Props): JSX.Element {
                 <TableRow key={i}>
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
-                      <Chip className={classes.chip} label={`${i + 1}º`} />
+                      {props.data?.length === 1 && winner && isWinner && (
+                        <Chip
+                          className={classes.chip}
+                          label={`${winner.place + 1}º`}
+                        />
+                      )}
+
+                      {props.data && props.data?.length > 1 && (
+                        <Chip className={classes.chip} label={`${i + 1}º`} />
+                      )}
+
                       <Typography style={{color: '#fff'}}>
                         &nbsp; {truncHash(row.hash)}
                       </Typography>
@@ -310,14 +330,16 @@ function PlayersTable(props: Props): JSX.Element {
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <AvatarGroup max={10} spacing={17}>
-                        {row?.coins.map((coin) => (
-                          <Avatar
-                            className={classes.chip}
-                            src={getIconByCoin(coin)}
-                            style={{height: 35, width: 35}}>
-                            {getIconSymbol(coin)}
-                          </Avatar>
-                        ))}
+                        {(chainId === ChainId.Matic ||
+                          chainId === ChainId.Mumbai) &&
+                          row?.coins.map((coin) => (
+                            <Avatar
+                              className={classes.chip}
+                              src={getIconByCoin(coin, chainId)}
+                              style={{height: 35, width: 35}}>
+                              {getIconSymbol(coin, chainId)}
+                            </Avatar>
+                          ))}
                       </AvatarGroup>
                       <IconButton onClick={() => onViewCoins(row.coins)}>
                         <RemoveRedEye

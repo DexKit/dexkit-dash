@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
 import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
@@ -20,7 +20,6 @@ import {
 } from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
-import {AppState} from 'redux/store';
 
 import {
   Grid,
@@ -49,7 +48,7 @@ import { useMagicProvider } from 'hooks/provider/useMagicProvider';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId,  getProvider, setProvider} = useWeb3();
+  const {chainId,  getProvider} = useWeb3();
   const { onSwitchMagicNetwork } = useMagicProvider();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -64,14 +63,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     setMobileMoreAnchorEl(null);
   }
 
-  function handleMobileMenuOpen(event: React.MouseEvent<HTMLElement>) {
-    setMobileMoreAnchorEl(event.currentTarget);
-  }
-
-  const {navCollapsed} = useSelector<AppState, AppState['settings']>(
-    ({settings}) => settings,
-  );
-
+  
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
   const renderMobileMenu = (
@@ -130,9 +122,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         dispatch(setWeb3State(Web3State.Connecting));
         switchChain(getProvider(), chainId);
         dispatch(setWeb3State(Web3State.Done));
-      }
-
-     
+      } 
     },
     [getProvider, isMagicProvider],
   );

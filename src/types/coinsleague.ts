@@ -36,4 +36,5 @@ export interface GameParams {
   amountUnit: BigNumber;
   numCoins: number;
   abortTimestamp: number;
+  type: number;
 }

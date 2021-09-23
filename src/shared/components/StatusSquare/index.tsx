@@ -14,10 +14,11 @@ interface Props {
   color: string;
 }
 
-export const StatusSquare = (props: Props) => {
+export const StatusSquare = React.forwardRef((props:Props, ref) => {
   const {color} = props;
 
-  const classes = useStyles();
+  const classes = useStyles();  
+  //@ts-ignore
+  return <Box {...props} className={classes.square} style={{backgroundColor: color}} ref={ref}  />;
+});
 
-  return <Box className={classes.square} style={{backgroundColor: color}} />;
-};

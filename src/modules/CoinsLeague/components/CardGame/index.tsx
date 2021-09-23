@@ -142,22 +142,22 @@ function CardGame(props: Props): JSX.Element {
         <Grid item>
           <Typography variant='subtitle2'>
             Entries
-            <Typography variant='subtitle2'>
+          </Typography>
+          <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
-          </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
             Coins
-            <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
+          <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
             Prize Pool
-            <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
           </Typography>
+          <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 

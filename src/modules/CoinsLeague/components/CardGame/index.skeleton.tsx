@@ -76,9 +76,8 @@ function CardGameSkeleton(): JSX.Element {
           </Typography>
         </Grid>
         <Grid
+          item
           xs={7}
-          container
-          justifyContent='flex-end'
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
 
@@ -96,32 +95,26 @@ function CardGameSkeleton(): JSX.Element {
           <CardTimer time={100} />
         </Grid>
         <Grid item>
+          <Typography variant='subtitle2'>Entries</Typography>
           <Typography variant='subtitle2'>
-            Entries
-            <Typography variant='subtitle2'>
-              <Skeleton>
-                {' '}
-                {1} {1}{' '}
-              </Skeleton>
-            </Typography>
+            <Skeleton>
+              {' '}
+              {1} {1}{' '}
+            </Skeleton>
           </Typography>
         </Grid>
         <Grid item>
+          <Typography variant='subtitle2'>Coins</Typography>
           <Typography variant='subtitle2'>
-            Coins
-            <Typography variant='subtitle2'>
-              {' '}
-              <Skeleton>{strPad(1)} </Skeleton>
-            </Typography>
+            {' '}
+            <Skeleton>{strPad(1)} </Skeleton>
           </Typography>
         </Grid>
         <Grid item>
+          <Typography variant='subtitle2'>Prize Pool</Typography>
           <Typography variant='subtitle2'>
-            Prize Pool
-            <Typography variant='subtitle2'>
-              {' '}
-              <Skeleton>{100} Matic </Skeleton>
-            </Typography>
+            {' '}
+            <Skeleton>{100} Matic </Skeleton>
           </Typography>
         </Grid>
       </Grid>
