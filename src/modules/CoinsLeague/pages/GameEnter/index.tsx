@@ -36,6 +36,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
 import {Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
+import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
 import Chip from '@material-ui/core/Chip';
 import {useWeb3} from 'hooks/useWeb3';
@@ -49,7 +50,11 @@ import {ShareButton} from 'shared/components/ShareButton';
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
-
+import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import Hidden from '@material-ui/core/Hidden';
+import PlayersTableSkeleton from 'modules/CoinsLeague/components/PlayersTable/index.skeleton';
+import Skeleton from '@material-ui/lab/Skeleton';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -252,7 +257,12 @@ function GameEnter(props: Props) {
           </Link>
         </Breadcrumbs>
       </Grid>
-      <Grid item xs={8} xl={6} sm={6}>
+      <Hidden smUp={true}>
+        <Grid item xs={12}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+        </Grid>
+      </Hidden>
+      <Grid item xs={8} sm={4} xl={4}>
         <Box display={'flex'} alignItems={'center'}>
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
@@ -271,10 +281,16 @@ function GameEnter(props: Props) {
           )}
         </Box>
       </Grid>
-      <Grid item xs={4} xl={6} sm={6}>
+      <Hidden xsDown={true}>
+        <Grid item sm={5} xl={5}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+        </Grid>
+      </Hidden>
+      <Grid item xs={4} sm={3} xl={3}>
         <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
           <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
-          <BuyCryptoButton />
+          <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          <MaticBridgeButton/>
         </Box>
       </Grid>
 
@@ -352,23 +368,23 @@ function GameEnter(props: Props) {
             <Grid item xs={12} md={6}>
               <Grid container>
                 <Grid item xs={12} md={12}>
-                  {tx && (
-                    <Button variant={'text'} onClick={goToExplorer}>
-                      {submitState === SubmitState.Submitted
-                        ? 'Submitted Tx'
-                        : submitState === SubmitState.Error
-                        ? 'Tx Error'
-                        : submitState === SubmitState.Confirmed
-                        ? 'Confirmed Tx'
-                        : ''}
-                    </Button>
-                  )}
+                  <Box display={'flex'} justifyContent={'center'}>
+                    {tx && (
+                      <Button variant={'text'} onClick={goToExplorer}>
+                        {submitState === SubmitState.Submitted
+                          ? 'Submitted Tx'
+                          : submitState === SubmitState.Error
+                          ? 'Tx Error'
+                          : submitState === SubmitState.Confirmed
+                          ? 'Confirmed Tx'
+                          : ''}
+                      </Button>
+                    )}
+                  </Box>
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={
-                      !isDisabled || submitState === SubmitState.Confirmed
-                    }
+                    disabled={!isDisabled || submitState !== SubmitState.Error}
                     onClick={onEnterGame}
                     variant={'contained'}
                     color={
@@ -395,14 +411,12 @@ function GameEnter(props: Props) {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <PlayersTable
-                data={[
-                  {
-                    hash: player?.player_address,
-                    score: player?.score?.toNumber() || 0,
-                    coins: (player?.coin_feeds as unknown as string[]) || [],
-                  },
-                ]}
+              <OnePlayerTable
+                data={{
+                  hash: player?.player_address,
+                  score: player?.score?.toNumber() || 0,
+                  coins: (player?.coin_feeds as unknown as string[]) || [],
+                }}
                 address={address}
                 account={account}
                 winner={winner}
@@ -429,7 +443,30 @@ function GameEnter(props: Props) {
                   };
                 })}
                 address={address}
+                account={account}
+                winner={winner}
               />
+            </Grid>
+            {!gameFull && (
+              <Grid item xs={12}>
+                <WaitingPlayers />
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      )}
+      {isLoading && (
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Skeleton>
+                <Typography variant='h6' style={{margin: 5}}>
+                  Players
+                </Typography>
+              </Skeleton>
+            </Grid>
+            <Grid item xs={12}>
+              <PlayersTableSkeleton players={5} />
             </Grid>
             {!gameFull && (
               <Grid item xs={12}>

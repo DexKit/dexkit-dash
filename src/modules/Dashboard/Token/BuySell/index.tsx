@@ -445,6 +445,7 @@ const BuySell: React.FC<Props> = ({
             chainId={chainId}
             account={account}
             networkName={networkName}
+            disableReceive={disableReceive}
             balances={balances}
             select0={select0}
             select1={select1}

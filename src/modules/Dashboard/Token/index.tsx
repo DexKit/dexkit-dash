@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   Grid,
   Box,
@@ -41,6 +41,7 @@ import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
 import {useNetwork} from 'hooks/useNetwork';
 import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
+import { GET_DEFAULT_USD_TOKEN_BY_NETWORK } from 'shared/constants/Blockchain';
 
 const TokenPage = () => {
   const history = useHistory();
@@ -55,16 +56,12 @@ const TokenPage = () => {
       searchParams.get('to') ||
       GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()
     );
-  }, [searchParams]);
+  }, [searchParams, networkName]);
 
   const tokenFromAddress = useMemo(() => {
-    return searchParams.get('from') || '';
+    return searchParams.get('from') || GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) ;
   }, [searchParams]);
 
-  const dispatch = useDispatch();
-  const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
-    (state) => state.ui.favoriteCoins,
-  );
   const {account: web3Account, chainId} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
@@ -73,7 +70,6 @@ const TokenPage = () => {
   const {tokenInfo} = useTokenInfo(address);
   const {tokenInfo: tokenFromInfo} = useTokenInfo(tokenFromAddress);
   const [token, setToken] = useState<Token>();
-  const {data} = useCoingeckoTokenInfo(address, networkName);
   const classes = useStyles();
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));

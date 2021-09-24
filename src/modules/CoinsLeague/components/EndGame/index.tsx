@@ -78,6 +78,7 @@ export const EndGame = (props: Props) => {
                 alignContent={'center'}
                 alignItems={'center'}>
                 <Grid item xs={12} md={12}>
+                  <Box display={'flex'} justifyContent={'center'}>
                   {tx && (
                     <Button variant={'text'} onClick={goToExplorer}>
                       {submitState === SubmitState.Submitted
@@ -88,12 +89,13 @@ export const EndGame = (props: Props) => {
                          'Confirmed Tx' : ''}
                     </Button>
                   )}
+                  </Box>
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Button
                     onClick={onEndGame}
                     fullWidth
-                    disabled={!canEndGame ||  submitState === SubmitState.Confirmed}
+                    disabled={!canEndGame ||  submitState !== SubmitState.Error}
                     variant={'contained'}
                     color={
                       submitState === SubmitState.Error ? 'default' : 'primary'

@@ -18,7 +18,7 @@ import CardGame from 'modules/CoinsLeague/components/CardGame';
 import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
 import NoWallet from 'modules/CoinsLeague/components/NoWallet';
 import CardGameSkeleton from 'modules/CoinsLeague/components/CardGame/index.skeleton';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
@@ -35,7 +35,7 @@ import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
-import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -292,7 +292,7 @@ const GamesList = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} xl={12} sm={12}>
-          <Typography variant='h5'>Coins League</Typography>
+          <Typography variant='h5'>Coin Leagues</Typography>
         </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />

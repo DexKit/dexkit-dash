@@ -232,7 +232,7 @@ const TotalBalance = (props: Props) => {
     setShowReceiver(false);
   }, []);
 
-  const {init} = useTransak();
+  const {init} = useTransak({});
 
   const handleBuyCrypto = useCallback(() => {
     init();

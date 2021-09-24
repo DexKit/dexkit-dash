@@ -338,6 +338,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     isFavorite={isFavorite(tokenInfo)}
                     onMakeFavorite={onMakeFavorite}
                     balances={balances.data}
+                    network={networkName}
+                    token={tokenInfo}
+                    disableReceive={true}
+                    address={tokenInfo?.address}
                   />
                 )}
               </Grid>
