@@ -21,7 +21,7 @@ import {MyBalances} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {truncateAddress} from 'utils';
+import {truncateAddress, truncateIsAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
 
@@ -307,7 +307,7 @@ const TotalBalance = (props: Props) => {
                           <Typography variant='body2'>
                             <span>
                               {amountsVisible
-                                ? truncateAddress(address)
+                                ? truncateIsAddress(address)
                                 : '******'}{' '}
                             </span>
                             <CopyButton

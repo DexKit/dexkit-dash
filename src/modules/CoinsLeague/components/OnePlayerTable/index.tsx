@@ -27,10 +27,9 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
-import {BigNumber} from '@ethersproject/bignumber';
 import {ethers} from 'ethers';
-import { useLabelAccounts } from 'hooks/useLabelAccounts';
-
+import {useLabelAccounts} from 'hooks/useLabelAccounts';
+import { GameType } from 'types/coinsleague';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -74,7 +73,7 @@ interface IRow {
 }
 
 interface Props {
-  data?: IRow;
+  data?: IRow[];
   address: string;
   winner?: any;
   account?: string;
@@ -110,7 +109,7 @@ const truncHash = (hash: string): string => {
   }
 };
 
-const USD_POWER = BigNumber.from(10 ** 8);
+const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
   const {address, account, winner, data} = props;
@@ -232,58 +231,87 @@ function OnePlayerTable(props: Props): JSX.Element {
     },
     [tx, chainId],
   );
+  const playerRowData = useMemo(() => {
+    if (game && !game.finished && game.started && !game.aborted) {
+      return props?.data?.map((d) => {
+        const label = accountLabels
+          ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+          : d.hash;
+
+        const currentFeedPrice = currentPrices?.filter((f) =>
+          d.coins.map((c) => c.toLowerCase()).includes(f.feed.toLowerCase()),
+        );
+
+        if (currentFeedPrice?.length) {
+          const prices = currentFeedPrice.map((f) => {
+            const startFeed = allFeeds?.find(
+              (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
+            );
+            return {
+              endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
+              startPrice: startFeed
+                ? ((startFeed?.start_price.toNumber() /
+                    USD_POWER_NUMBER) as number)
+                : 0,
+            };
+          });
+
+          const scores = prices
+            .filter((p) => p.endPrice && p.startPrice)
+            .map((p) => ((p.endPrice - p.startPrice) / p.endPrice) * 100);
+          const score = scores.reduce((p, c) => p + c) / scores.length;
+          return {
+            ...d,
+            account: d.hash,
+            hash: label,
+            score,
+          };
+        } else {
+          return {
+            ...d,
+            account: d.hash,
+            hash: label,
+            score: d.score / 10,
+          };
+        }
+      });
+    }
+    return props?.data?.map((d) => {
+      const label = accountLabels
+        ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+        : d.hash;
+      return {
+        ...d,
+        account: d.hash,
+        hash: label,
+        score: d.score / 10,
+      };
+    });
+  }, [props.data, game, currentPrices, allFeeds]);
+
   // We need to this to calculate the monster of score in real time
   const playerData = useMemo(() => {
-    if (game && !game.finished && game.started && !game.aborted && data) {
-      const label = accountLabels
-      ? accountLabels.find((a) => a.address === data.hash)?.label || data.hash
-      : data.hash;
-      const currentFeedPrice = currentPrices?.filter((f) =>
-        data.coins.map((c) => c.toLowerCase()).includes(f.feed.toLowerCase()),
+    if (account && playerRowData) {
+      const place = playerRowData
+        .sort((a, b) => {
+          if (game?.game_type === GameType.Winner) {
+            return b.score - a.score;
+          } else {
+            return a.score - b.score;
+          }
+        })
+        .findIndex((p) => p.account.toLowerCase() === account.toLowerCase());
+      const pl = playerRowData.find(
+        (p) => p.account.toLowerCase() === account.toLowerCase(),
       );
-
-      if (currentFeedPrice?.length) {
-        const prices = currentFeedPrice.map((f) => {
-          const startFeed = allFeeds?.find(
-            (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
-          );
-          return {
-            endPrice: f.price.div(USD_POWER).toNumber() as number,
-            startPrice: startFeed?.start_price
-              .div(USD_POWER)
-              .toNumber() as number,
-          };
-        });
-
-        const scores = prices
-          .filter((p) => p.endPrice !== 0)
-          .map((p) => (p.endPrice - p.startPrice) / p.endPrice);
-        const score = scores.reduce((p, c) => p + c);
+      if (pl) {
         return {
-          ...data,
-          hash: label,
-          score,
-        };
-      } else {
-        return {
-          ...data,
-          hash: label,
-          score: data.score / 10,
-        };
-      }
-    } else {
-      if(data){
-        const label = accountLabels
-        ? accountLabels.find((a) => a.address === data.hash)?.label || data.hash
-        : data.hash;
-        return {
-          ...data,
-          hash: label,
-          score: data.score / 10,
+          ...pl,
+          place,
         };
       }
     }
-  }, [data, game, currentPrices, allFeeds]);
+  }, [playerRowData, account]);
 
   return (
     <>
@@ -305,7 +333,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           </TableHead>
 
           <TableBody>
-            {!data && (
+            {!playerData && (
               <TableRow>
                 <TableCell
                   colSpan={4}
@@ -315,21 +343,19 @@ function OnePlayerTable(props: Props): JSX.Element {
                 </TableCell>
               </TableRow>
             )}
-            {(data && playerData) && (
+            {playerData && (
               <TableRow>
                 <TableCell className={classes.noBorder}>
                   <Box display={'flex'} alignItems={'center'}>
-                    {winner && isWinner && (
-                      <Chip
-                        className={classes.chip}
-                        label={`${winner.place + 1}º`}
-                      />
-                    )}
+                    <Chip
+                      className={classes.chip}
+                      label={`${playerData.place + 1}º`}
+                    />
 
                     {/*data && <Chip className={classes.chip} label={`${1}º`} />*/}
 
                     <Typography style={{color: '#fff'}}>
-                      &nbsp; {truncHash(playerData.hash)}
+                      &nbsp; {truncHash(playerData?.hash)}
                     </Typography>
                   </Box>
                 </TableCell>
@@ -339,7 +365,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                     <AvatarGroup max={10} spacing={17}>
                       {(chainId === ChainId.Matic ||
                         chainId === ChainId.Mumbai) &&
-                        data?.coins.map((coin) => (
+                        playerData?.coins.map((coin) => (
                           <Avatar
                             className={classes.chip}
                             src={getIconByCoin(coin, chainId)}
@@ -348,7 +374,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                           </Avatar>
                         ))}
                     </AvatarGroup>
-                    <IconButton onClick={() => onViewCoins(data.coins)}>
+                    <IconButton onClick={() => onViewCoins(playerData.coins)}>
                       <RemoveRedEye
                         style={{
                           color: '#fff',
@@ -367,9 +393,9 @@ function OnePlayerTable(props: Props): JSX.Element {
                       background: '#343A49',
                       color: playerData?.score > 0 ? '#0e0' : '#e00',
                     }}
-                    label={`${playerData?.score >= 0 ? '+' : ''}${playerData?.score?.toFixed(
-                      2,
-                    )}%`}
+                    label={`${
+                      playerData?.score >= 0 ? '+' : ''
+                    }${playerData?.score?.toFixed(2)}%`}
                   />
                 </TableCell>
 
@@ -398,7 +424,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                           <Button
                             onClick={onClaimGame}
                             fullWidth
-                            disabled={submitState === SubmitState.Confirmed}
+                            disabled={submitState !== SubmitState.None}
                             variant={'contained'}
                             color={
                               submitState === SubmitState.Error
@@ -438,9 +464,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                             onClick={onWithdrawGame}
                             fullWidth
                             variant={'contained'}
-                            disabled={
-                              submitWithdrawState !== SubmitState.None
-                            }
+                            disabled={submitWithdrawState !== SubmitState.None}
                             color={
                               submitWithdrawState === SubmitState.Error
                                 ? 'default'

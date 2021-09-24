@@ -95,7 +95,7 @@ export const EndGame = (props: Props) => {
                   <Button
                     onClick={onEndGame}
                     fullWidth
-                    disabled={!canEndGame ||  submitState !== SubmitState.Error}
+                    disabled={!canEndGame ||  submitState !== SubmitState.None}
                     variant={'contained'}
                     color={
                       submitState === SubmitState.Error ? 'default' : 'primary'

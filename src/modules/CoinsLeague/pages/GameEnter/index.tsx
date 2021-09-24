@@ -34,7 +34,7 @@ import {CoinItem} from 'modules/CoinsLeague/components/CoinItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
-import {Player} from 'types/coinsleague';
+import {GameType, Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
 import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
@@ -55,6 +55,7 @@ import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinsLeague/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Paper from '@material-ui/core/Paper';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -65,6 +66,11 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     background: '#1F1D2B',
     border: '2px solid #2e3243',
+  },
+  gameTypePaper: {
+    backgroundColor: '#2e3243',
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2),
   },
 }));
 type Params = {
@@ -290,7 +296,7 @@ function GameEnter(props: Props) {
         <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
           <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
           <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
-          <MaticBridgeButton/>
+          <MaticBridgeButton />
         </Box>
       </Grid>
 
@@ -308,7 +314,38 @@ function GameEnter(props: Props) {
             )}
           />
         )}
+        {game && (
+          <Paper className={classes.gameTypePaper}>
+            <Box display={'flex'}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
+                Game Type:
+              </Typography>
+              <Typography
+                variant='h5'
+                style={{color: '#fff', marginLeft: '20px'}}>
+                {game.game_type === GameType.Winner ? 'Winner' : 'Loser'}
+              </Typography>
+            </Box>
+          </Paper>
+        )}
+
         {isLoading && <CardPrizeSkeleton />}
+        {isLoading && (
+          <Paper className={classes.gameTypePaper}>
+            <Box display={'flex'}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
+                Game Type:
+              </Typography>
+              <Skeleton>
+                <Typography
+                  variant='h5'
+                  style={{color: '#fff', marginLeft: '20px'}}>
+                  Winner
+                </Typography>
+              </Skeleton>
+            </Box>
+          </Paper>
+        )}
       </Grid>
       <Grid item xs={6} sm={4}>
         {game && (
@@ -384,7 +421,7 @@ function GameEnter(props: Props) {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!isDisabled || submitState !== SubmitState.Error}
+                    disabled={!isDisabled || submitState !== SubmitState.None}
                     onClick={onEnterGame}
                     variant={'contained'}
                     color={
@@ -412,11 +449,13 @@ function GameEnter(props: Props) {
             </Grid>
             <Grid item xs={12}>
               <OnePlayerTable
-                data={{
-                  hash: player?.player_address,
-                  score: player?.score?.toNumber() || 0,
-                  coins: (player?.coin_feeds as unknown as string[]) || [],
-                }}
+                data={players?.map((p) => {
+                  return {
+                    hash: p?.player_address,
+                    score: p?.score?.toNumber() || 0,
+                    coins: (p?.coin_feeds as unknown as string[]) || [],
+                  };
+                })}
                 address={address}
                 account={account}
                 winner={winner}
@@ -443,6 +482,7 @@ function GameEnter(props: Props) {
                   };
                 })}
                 address={address}
+                finished={finished}
                 account={account}
                 winner={winner}
               />

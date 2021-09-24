@@ -3,6 +3,7 @@ import {
   Breadcrumbs,
   Button,
   Grid,
+  Hidden,
   InputAdornment,
   Link,
   Typography,
@@ -35,8 +36,9 @@ import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
-
-
+import BuyCryptoButton from 'shared/components/BuyCryptoButton';
+import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import {ShareButton} from 'shared/components/ShareButton';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -291,17 +293,31 @@ const GamesList = () => {
             </Breadcrumbs>
           </Grid>
         </Grid>
-        <Grid item xs={12} xl={12} sm={12}>
+        <Hidden smUp={true}>
+          <Grid item xs={12}>
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          </Grid>
+        </Hidden>
+        <Grid item xs={6} xl={6} sm={6}>
           <Typography variant='h5'>Coin Leagues</Typography>
         </Grid>
+        <Grid item xs={6} sm={6} xl={6}>
+          <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+            <ShareButton shareText={`Coin Leagues Games`} />
+            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <MaticBridgeButton />
+          </Box>
+    </Grid>
 
         <CreateGameModal open={open} setOpen={setOpen} />
         <Grid item xs={12} sm={4}>
           <ActiveChainBalance />
         </Grid>
-        <Grid item xs={12} sm={8}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
-        </Grid>
+        <Hidden xsDown={true}>
+          <Grid item xs={12} sm={8}>
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          </Grid>
+        </Hidden>
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{margin: 5}}>
@@ -319,13 +335,13 @@ const GamesList = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             {gamesInProgress?.map((g, id) => (
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
                 <SmallCardGame {...g} key={id} onClick={onClickEnterGame} />
               </Grid>
             ))}
             {isLoading &&
               [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
+                <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={i}>
                   <SmallCardGameSkeleton />
                 </Grid>
               ))}

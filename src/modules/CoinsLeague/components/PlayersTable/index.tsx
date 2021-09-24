@@ -2,7 +2,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -26,7 +25,8 @@ import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {ethers} from 'ethers';
-
+import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
+import { GameType } from 'types/coinsleague';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -74,6 +74,7 @@ interface Props {
   address: string;
   winner?: any;
   account?: string;
+  finished?: boolean;
 }
 
 const getIconByCoin = (
@@ -109,7 +110,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, winner, data} = props;
+  const {address, account, finished} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
@@ -213,17 +214,73 @@ function PlayersTable(props: Props): JSX.Element {
               </TableRow>
             )}
             {playerRowData
-              ?.sort((a, b) => b.score - a.score)
+              ?.sort((a, b) => {
+                if (game?.game_type === GameType.Winner) {
+                  return b.score - a.score;
+                } else {
+                  return a.score - b.score;
+                }
+              })
               .map((row, i) => (
                 <TableRow
                   key={i}
-                  selected={row.account.toLowerCase() === account?.toLowerCase()}>
+                  selected={
+                    row.account.toLowerCase() === account?.toLowerCase()
+                  }>
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <Chip className={classes.chip} label={`${i + 1}º`} />
                       <Typography style={{color: '#fff'}}>
                         &nbsp; {truncHash(row.hash)}
                       </Typography>
+
+                      {finished && playerRowData.length === 2 && i === 0 && (
+                        <Box ml={2}>
+                          {' '}
+                          <Chip
+                            color='primary'
+                            icon={<CupIcon />}
+                            label={`Winner`}
+                            size='small'
+                          />{' '}
+                        </Box>
+                      )}
+
+                      {finished && playerRowData.length > 2 && i === 0 && (
+                        <Box ml={2}>
+                          {' '}
+                          <Chip
+                            color='primary'
+                            icon={<CupIcon />}
+                            label={`Winner`}
+                            size='medium'
+                          />{' '}
+                        </Box>
+                      )}
+
+                      {finished && playerRowData.length > 2 && i === 1 && (
+                        <Box ml={2}>
+                          {' '}
+                          <Chip
+                            color='primary'
+                            icon={<CupIcon />}
+                            label={`Winner`}
+                            size='small'
+                          />{' '}
+                        </Box>
+                      )}
+
+                      {finished && playerRowData.length > 2 && i === 2 && (
+                        <Box ml={2}>
+                          {' '}
+                          <Chip
+                            color='primary'
+                            icon={<CupIcon />}
+                            label={`Winner`}
+                            size='small'
+                          />{' '}
+                        </Box>
+                      )}
                     </Box>
                   </TableCell>
 
