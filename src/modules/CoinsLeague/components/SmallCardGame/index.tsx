@@ -136,7 +136,7 @@ function SmallCardGame(props: Props): JSX.Element {
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography variant='h6'>
-            {game_type === GameType.Winner ? 'Winner' : 'Loser'}
+            {game_type === GameType.Winner ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>

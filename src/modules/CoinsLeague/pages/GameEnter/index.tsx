@@ -46,7 +46,7 @@ import {EndGame} from 'modules/CoinsLeague/components/EndGame';
 import {StartGame} from 'modules/CoinsLeague/components/StartGame';
 import {ButtonState} from 'modules/CoinsLeague/components/ButtonState';
 import Countdown from 'modules/CoinsLeague/components/Countdown';
-import {ShareButton} from 'shared/components/ShareButton';
+
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
@@ -56,6 +56,7 @@ import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinsLeague/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
+import { ShareButton } from 'shared/components/ShareButton';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -323,7 +324,7 @@ function GameEnter(props: Props) {
               <Typography
                 variant='h5'
                 style={{color: '#fff', marginLeft: '20px'}}>
-                {game.game_type === GameType.Winner ? 'Winner' : 'Loser'}
+                {game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
               </Typography>
             </Box>
           </Paper>

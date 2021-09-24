@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-import {Game} from 'types/coinsleague';
+import {Game, GameType} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
@@ -129,7 +129,7 @@ function CardGame(props: Props): JSX.Element {
 
           <Typography variant='h6'>Type:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;Winner
+            &nbsp;{game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
           </Typography>
         </Grid>
       </Grid>
