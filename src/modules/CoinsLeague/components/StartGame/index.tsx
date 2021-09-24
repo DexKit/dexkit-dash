@@ -141,22 +141,24 @@ export const StartGame = (props: Props) => {
                 spacing={2}
                 alignItems={'center'}>
                 <Grid item xs={12} md={12}>
-                  {tx && (
-                    <Button variant={'text'} onClick={goToExplorer}>
-                      {submitState === SubmitState.Submitted
-                        ? 'Submitted Tx'
-                        : submitState === SubmitState.Error
-                        ? 'Tx Error'
-                        : submitState === SubmitState.Confirmed
-                        ? 'Confirmed Tx'
-                        : ''}
-                    </Button>
-                  )}
+                  <Box display={'flex'} justifyContent={'center'}>
+                    {tx && (
+                      <Button variant={'text'} onClick={goToExplorer}>
+                        {submitState === SubmitState.Submitted
+                          ? 'Submitted Tx'
+                          : submitState === SubmitState.Error
+                          ? 'Tx Error'
+                          : submitState === SubmitState.Confirmed
+                          ? 'Confirmed Tx'
+                          : ''}
+                      </Button>
+                    )}
+                  </Box>
                 </Grid>
 
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!gameFull || submitState === SubmitState.Confirmed }
+                    disabled={!gameFull || submitState !== SubmitState.None}
                     onClick={onStartGame}
                     fullWidth
                     variant={'contained'}
@@ -173,7 +175,9 @@ export const StartGame = (props: Props) => {
                 {canAbort && (
                   <Grid item xs={12} md={12}>
                     <Button
-                      disabled={!canAbort}
+                      disabled={
+                        !canAbort || submitAbortState !== SubmitState.None
+                      }
                       onClick={onAbortGame}
                       variant={'contained'}
                       fullWidth

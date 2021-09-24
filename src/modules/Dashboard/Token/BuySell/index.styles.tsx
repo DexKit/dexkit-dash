@@ -145,5 +145,11 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
   },
   submit: {
     marginTop: '20px',
+  },
+  inputPriceAddornment: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   }
 }));

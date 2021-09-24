@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {Box, Grid, useTheme, Backdrop} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import {Fonts} from 'shared/constants/AppEnums';
+import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Token} from 'types/app';
 import {MyBalances} from 'types/blockchain';
@@ -79,6 +79,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 interface Props {
   balances: MyBalances[];
+  network?: EthereumNetwork;
+  disableReceive?: boolean;
   only?: Token;
   loading?: boolean;
   address?: string;
@@ -90,13 +92,13 @@ interface Props {
 }
 
 const CoinTools = (props: Props) => {
-  const {balances, only, onMakeFavorite, onShare, isFavorite, token} = props;
+  const {balances, only, onMakeFavorite, onShare, isFavorite, token, network, disableReceive} = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
-  const networkName = useNetwork();
+  const net = useNetwork();
+  const networkName = network || net;
 
-  const theme = useTheme();
 
   useEffect(() => {
     if (only) {
@@ -163,7 +165,7 @@ const CoinTools = (props: Props) => {
     setShowReceiver(false);
   }, []);
 
-  const {init} = useTransak();
+  const {init} = useTransak({});
 
   const handleBuyCrypto = useCallback(() => {
     init();
@@ -194,6 +196,9 @@ const CoinTools = (props: Props) => {
       <BuySellModal
         networkName={networkName}
         balances={tokens}
+        tokenInfo={token}
+        disableReceive={disableReceive}
+        tokenAddress={token?.address}
         open={showTrade}
         onClose={handleTradeClose}
       />

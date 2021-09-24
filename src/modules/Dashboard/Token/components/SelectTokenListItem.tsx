@@ -9,7 +9,8 @@ import {
 import React, {useCallback} from 'react';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
-
+import Logo from 'shared/components/Logo';
+import { getLogoSrcs } from 'utils';
 export interface Props {
   token: Token;
   onClick: (token: Token) => void;
@@ -56,7 +57,7 @@ export const SelectTokenListItem = (props: Props) => {
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-            <img src={token.logoURI} className={classes.token} />
+             <Logo srcs={getLogoSrcs(token.address, token.networkName, token.logoURI)} className={classes.token} />
           </Box>
         </Grid>
      

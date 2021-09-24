@@ -10,15 +10,14 @@ import AppsTable from './apps-table';
 import TotalRewards from './TotalRewards';
 import KitMarket from './kit-market';
 import Ripple from 'assets/images/ripple.png';
-
 import LockUnlock from './LockUnlock';
 import Alert from '@material-ui/lab/Alert';
 import {useBalance} from 'hooks/balance/useBalance';
 import ErrorView from 'modules/Common/ErrorView';
-import LoadingInfo from 'modules/ProtocolExplorer/TokenExplorer/TokenInfo/LoadingInfo';
 import AppsIcon from '@material-ui/icons/Apps';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
+import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
 const MyApps: React.FC = () => {

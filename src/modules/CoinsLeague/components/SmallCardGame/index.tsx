@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -8,7 +9,7 @@ import {ethers} from 'ethers';
 import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-
+import {GameType} from 'types/coinsleague';
 import {useInterval} from 'hooks/utils/useInterval';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     borderRadius: 6,
     background: '#2e3243',
-    width: '66.66%',
     padding: theme.spacing(2),
   },
   button: {
@@ -41,6 +41,7 @@ interface Props {
   start_timestamp: ethers.BigNumber;
   duration: ethers.BigNumber;
   num_players: number;
+  game_type?: GameType;
   btnMessage?: string;
   onClick: any;
 }
@@ -71,6 +72,7 @@ function SmallCardGame(props: Props): JSX.Element {
     duration,
     address,
     onClick,
+    game_type,
   } = props;
 
   const classes = useStyles();
@@ -105,10 +107,13 @@ function SmallCardGame(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h5'>ID #{truncateAddress(address)}</Typography>
-      <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Grid container>
+      <Grid container className={classes.innerContent} spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant='h5'>ID #{truncateAddress(address)}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display={'flex'} alignItems={'center'}>
+            <SendIcon />
             <Typography
               variant='h6'
               style={{
@@ -116,29 +121,41 @@ function SmallCardGame(props: Props): JSX.Element {
                 color: '#fcc591',
                 alignItems: 'baseline',
               }}>
-              <SendIcon />
               &nbsp;{entryAmount} {'Matic'}
             </Typography>
-          </Grid>
+          </Box>
+        </Grid>
 
-          <Grid container>
+        <Grid item xs={12}>
+          <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
             <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
-          </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={12} style={{color: '#7a8398'}}>
+          <Box display={'flex'} alignItems={'center'}>
+            <Typography variant='h6'>Game Type:&nbsp;</Typography>
+            <Typography variant='h6'>
+            {game_type === GameType.Winner ? 'Bull' : 'Bear'}
+            </Typography>
+          </Box>
+        </Grid>
 
-          <Grid container style={{color: '#7a8398'}}>
+        <Grid item xs={12} style={{color: '#7a8398'}}>
+          <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Countdown:&nbsp;</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}
               {countdown && countdown < 0 && 'ENDED'}
             </Typography>
-          </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={12} style={{color: '#7a8398'}}>
+          <Button className={classes.button} fullWidth onClick={onClickEnter}>
+            {props.btnMessage || 'VIEW'}
+          </Button>
         </Grid>
       </Grid>
-
-      <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || 'VIEW'}
-      </Button>
     </Container>
   );
 }

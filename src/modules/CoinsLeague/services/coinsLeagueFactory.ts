@@ -4,7 +4,7 @@ import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
 import {getMulticall} from '../../../services/multicall';
-import {getWeb3Wrapper} from '../../../services/web3modal';
+import {getEthers, getWeb3Wrapper} from '../../../services/web3modal';
 import { ChainId } from 'types/blockchain';
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
 //0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
@@ -31,15 +31,17 @@ export const getCoinsLeagueFactoryContract = async (address: string) => {
   }
   return coinsLeagueFactory;
 };
-
+const GAS_PRICE_MULTIPLIER = 2
 export const createGame = async (address: string, params: GameParams) => {
+  const ethers = getEthers()
+  const gasPrice = await (await ethers?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER );
   return (await getCoinsLeagueFactoryContract(address)).createGame(
     params.numPlayers,
     params.duration,
     params.amountUnit,
     params.numCoins,
     params.abortTimestamp,
-    params.type
+    params.type, { gasPrice }
   ) as Promise<ContractTransaction>;
 };
 

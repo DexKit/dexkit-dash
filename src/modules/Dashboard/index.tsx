@@ -28,6 +28,14 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
+        path: '/trade',
+        component: React.lazy(() => import('./Token')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/magic/callback-social',
         component: React.lazy(() => import('./Wallet/pages/MagicCallbackSocial')),
       },
@@ -101,15 +109,7 @@ export const dashBoardConfigs = [
   //     },
   //   ],
   // },
-  {
-    auth: ['token'],
-    routes: [
-      {
-        path: '/:networkName/token/:address',
-        component: React.lazy(() => import('./Token')),
-      },
-    ],
-  },
+
   {
     routes: [
       {

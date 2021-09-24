@@ -4,6 +4,7 @@ import {
   Grid,
   InputAdornment,
   Link,
+  Hidden,
   Typography,
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
@@ -28,6 +29,7 @@ import CardGameProgressSkeleton from 'modules/CoinsLeague/components/CardGamePro
 import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
 import NoWallet from 'modules/CoinsLeague/components/NoWallet';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 enum FilterGame {
   ALL = 'All',
   Fast = '1hr',
@@ -132,7 +134,7 @@ const GamesInProgress = () => {
     history.push(COINSLEAGUE_ROUTE);
   }, []);
   return chainId ? (
-    chainId === ChainId.Mumbai ? (
+    chainId === ChainId.Mumbai || chainId === ChainId.Matic ? (
       <Grid container spacing={4} alignItems={'center'}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
@@ -157,6 +159,11 @@ const GamesInProgress = () => {
             </Breadcrumbs>
           </Grid>
         </Grid>
+        <Hidden smUp={true}>
+          <Grid item xs={12}>
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          </Grid>
+        </Hidden>
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
@@ -172,10 +179,11 @@ const GamesInProgress = () => {
         <Grid item xs={12} sm={4}>
               <ActiveChainBalance />  
         </Grid>
-
-        <Grid item xs={12}  sm={8}>
-              <img src={CoinsLeagueBanner} style={{borderRadius:'12px'}} />
-        </Grid>
+        <Hidden smDown={true}>
+          <Grid item xs={12}  sm={8}>
+                <img src={CoinsLeagueBanner} style={{borderRadius:'12px'}} />
+          </Grid>
+        </Hidden>
 
         <Grid item xs={12}>
           <ContainedInput
@@ -195,12 +203,12 @@ const GamesInProgress = () => {
             <Grid item sm={3}>
               <Grid item xs={12} sm={12}>
                 <Typography variant='h6'>
-                  {gamesInProgress?.length || 0} Games
+                  {gamesInProgress?.length || 0} Games in Progress
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
                 <Typography gutterBottom>
-                  Recently added &nbsp;
+                
                   {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
@@ -306,6 +314,7 @@ const GamesInProgress = () => {
             {!isLoading && !gamesInProgress?.length && (
               <Grid item xs={12}>
                 <Empty
+                  image={<EmptyGame />}
                   title={'No games in progress'}
                   message={'Search created games and enter to start games'}
                 />
