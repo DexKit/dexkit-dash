@@ -27,6 +27,7 @@ import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 import { GameType } from 'types/coinsleague';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinsLeague/utils/constants';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -287,14 +288,12 @@ function PlayersTable(props: Props): JSX.Element {
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <AvatarGroup max={10} spacing={17}>
-                        {(chainId === ChainId.Matic ||
-                          chainId === ChainId.Mumbai) &&
-                          row?.coins.map((coin) => (
+                        { row?.coins.map((coin) => (
                             <Avatar
                               className={classes.chip}
-                              src={getIconByCoin(coin, chainId)}
+                              src={getIconByCoin(coin, GET_LEAGUES_CHAIN_ID(chainId))}
                               style={{height: 35, width: 35}}>
-                              {getIconSymbol(coin, chainId)}
+                              {getIconSymbol(coin, GET_LEAGUES_CHAIN_ID(chainId))}
                             </Avatar>
                           ))}
                       </AvatarGroup>

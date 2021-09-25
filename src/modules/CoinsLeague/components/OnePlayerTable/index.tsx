@@ -24,7 +24,7 @@ import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {ethers} from 'ethers';
@@ -363,8 +363,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                 <TableCell className={classes.noBorder}>
                   <Box display={'flex'} alignItems={'center'}>
                     <AvatarGroup max={10} spacing={17}>
-                      {(chainId === ChainId.Matic ||
-                        chainId === ChainId.Mumbai) &&
+                      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
                         playerData?.coins.map((coin) => (
                           <Avatar
                             className={classes.chip}

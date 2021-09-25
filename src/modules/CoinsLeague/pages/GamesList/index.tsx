@@ -26,7 +26,11 @@ import {Empty} from 'shared/components/Empty';
 import SmallCardGame from 'modules/CoinsLeague/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinsLeague/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
+import {
+  COINSLEAGUE_ROUTE,
+  HOME_ROUTE,
+  LOGIN_WALLET_ROUTE,
+} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
@@ -39,6 +43,8 @@ import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
+import Alert from '@material-ui/lab/Alert';
+import { IS_SUPPORTED_LEAGUES_CHAIN_ID } from 'modules/CoinsLeague/utils/constants';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -273,294 +279,287 @@ const GamesList = () => {
     setSearch(e.target.value);
   }, []);
 
-  return   <Grid container spacing={4} alignItems={'center'}>
-        <Grid item xs={12} sm={12} xl={12}>
-          <Grid container>
-            <Breadcrumbs
-              style={{color: '#fff', fontSize: '0.75rem'}}
-              separator={<NavigateNextIcon fontSize='small' />}>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                Dashboard
-              </Link>
-              <Link
-                color='inherit'
-                component={RouterLink}
-                to={COINSLEAGUE_ROUTE}>
-                Games
-              </Link>
-            </Breadcrumbs>
-          </Grid>
+  return (
+    <Grid container spacing={4} alignItems={'center'}>
+      <Grid item xs={12} sm={12} xl={12}>
+        <Grid container>
+          <Breadcrumbs
+            style={{color: '#fff', fontSize: '0.75rem'}}
+            separator={<NavigateNextIcon fontSize='small' />}>
+            <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
+              Dashboard
+            </Link>
+            <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+              Games
+            </Link>
+          </Breadcrumbs>
         </Grid>
-        <Hidden smUp={true}>
-          <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
-          </Grid>
-        </Hidden>
-        <Grid item xs={6} xl={6} sm={6}>
-          <Typography variant='h5'>Coin Leagues</Typography>
+      </Grid>
+      <Hidden smUp={true}>
+        <Grid item xs={12}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
-        <Grid item xs={6} sm={6} xl={6}>
-          <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-            <ShareButton shareText={`Coin Leagues Games`} />
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
-            <MaticBridgeButton />
-          </Box>
-    </Grid>
+      </Hidden>
+      <Grid item xs={6} xl={6} sm={6}>
+        <Typography variant='h5'>Coin Leagues</Typography>
+      </Grid>
+      <Grid item xs={6} sm={6} xl={6}>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+          <ShareButton shareText={`Coin Leagues Games`} />
+          <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          <MaticBridgeButton />
+        </Box>
+      </Grid>
 
-        <CreateGameModal open={open} setOpen={setOpen} />
-        <Grid item xs={12} sm={4}>
+      <CreateGameModal open={open} setOpen={setOpen} />
+      <Grid item xs={12} sm={4}>
+        {account ? (
           <ActiveChainBalance />
+        ) : (
+          <Button
+            variant={'contained'}
+            onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
+            Connect Wallet{' '}
+          </Button>
+        )}
+      </Grid>
+      <Hidden xsDown={true}>
+        <Grid item xs={12} sm={8}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
-        <Hidden xsDown={true}>
-          <Grid item xs={12} sm={8}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+      </Hidden>
+
+      <Grid item xs={6}>
+        <Typography variant='h6' style={{margin: 5}}>
+          Games in Progress: {gamesInProgress?.length || 0}
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Box display={'flex'} justifyContent={'flex-end'}>
+          <Button variant={'text'} onClick={onClickGoGamesInProgress}>
+            View More
+          </Button>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Grid container spacing={4}>
+          {gamesInProgress?.map((g, id) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
+              <SmallCardGame {...g} key={id} onClick={onClickEnterGame} />
+            </Grid>
+          ))}
+          {isLoading &&
+            [1, 2, 3].map((v, i) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={i}>
+                <SmallCardGameSkeleton />
+              </Grid>
+            ))}
+          {!isLoading && !gamesInProgress?.length && (
+            <Grid item xs={12}>
+              <Empty
+                image={<EmptyGame />}
+                title={'No games in progress'}
+                message={'Search created games and enter to start games'}
+              />
+            </Grid>
+          )}
+        </Grid>
+      </Grid>
+      <Grid item xs={6}>
+        <CustomTabs
+          value={value}
+          onChange={handleChange}
+          variant='standard'
+          TabIndicatorProps={{
+            style: {display: 'none'},
+          }}
+          aria-label='wallet tabs'>
+          <CustomTab value={Tabs.Games} label={Tabs.Games} />
+          <CustomTab value={Tabs.History} label={Tabs.History} />
+        </CustomTabs>
+      </Grid>
+      <Grid item xs={6}>
+        <ContainedInput
+          value={search}
+          onChange={handleSearch}
+          placeholder='Search'
+          startAdornment={
+            <InputAdornment position='start'>
+              <Search />
+            </InputAdornment>
+          }
+          fullWidth
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <Button
+          className={classes.createGame}
+          fullWidth
+          variant={'contained'}
+          onClick={() => setOpen(true)}>
+          {'CREATE GAME'}
+        </Button>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item sm={3}>
+            <Grid item xs={12} sm={12}>
+              {value === Tabs.Games ? (
+                <Typography variant='h6'>
+                  {gamesToJoin?.length || 0} Games
+                </Typography>
+              ) : (
+                <Typography variant='h6'>
+                  {gamesEnded?.length || 0} Games
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              {value === Tabs.Games && (
+                <Typography gutterBottom>
+                  Recently added &nbsp;
+                  {/* <ExpandMoreIcon
+                    fontSize='small'
+                    style={{verticalAlign: 'top'}}
+                 />*/}
+                </Typography>
+              )}
+            </Grid>
           </Grid>
-        </Hidden>
-
-        <Grid item xs={6}>
-          <Typography variant='h6' style={{margin: 5}}>
-            Games in Progress: {gamesInProgress?.length || 0}
-          </Typography>
+          <Grid item sm={6} justifyContent='center'>
+            <Grid container justifyContent='center' spacing={2}>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.ALL}
+                  color={filterGame === FilterGame.ALL ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.ALL)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Fast}
+                  color={filterGame === FilterGame.Fast ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.Fast)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Medium}
+                  color={
+                    filterGame === FilterGame.Medium ? 'primary' : 'default'
+                  }
+                  onClick={() => setFilterGame(FilterGame.Medium)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Eight}
+                  color={
+                    filterGame === FilterGame.Eight ? 'primary' : 'default'
+                  }
+                  onClick={() => setFilterGame(FilterGame.Eight)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Day}
+                  color={filterGame === FilterGame.Day ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.Day)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Week}
+                  color={filterGame === FilterGame.Week ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.Week)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.Mine}
+                  color={filterGame === FilterGame.Mine ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.Mine)}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item sm={3} justifyContent='flex-end'>
+            {/* <Button variant='text'>
+                <FilterListIcon style={{color: '#fff'}} />
+                  </Button>*/}
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-              View More
-            </Button>
-          </Box>
-        </Grid>
+      </Grid>
 
+      {value === Tabs.Games && (
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            {gamesInProgress?.map((g, id) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
-                <SmallCardGame {...g} key={id} onClick={onClickEnterGame} />
+            {gamesToJoin?.map((g, id) => (
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
+                <CardGame game={g} id={g.address} onClick={onClickEnterGame} />
               </Grid>
             ))}
             {isLoading &&
               [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={i}>
-                  <SmallCardGameSkeleton />
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
+                  <CardGameSkeleton />
                 </Grid>
               ))}
-            {!isLoading && !gamesInProgress?.length && (
+            {!isLoading && !gamesToJoin?.length && (
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games in progress'}
-                  message={'Search created games and enter to start games'}
+                  title={'No games to join'}
+                  message={'Create games to join'}
                 />
               </Grid>
             )}
           </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <CustomTabs
-            value={value}
-            onChange={handleChange}
-            variant='standard'
-            TabIndicatorProps={{
-              style: {display: 'none'},
-            }}
-            aria-label='wallet tabs'>
-            <CustomTab value={Tabs.Games} label={Tabs.Games} />
-            <CustomTab value={Tabs.History} label={Tabs.History} />
-          </CustomTabs>
-        </Grid>
-        <Grid item xs={6}>
-          <ContainedInput
-            value={search}
-            onChange={handleSearch}
-            placeholder='Search'
-            startAdornment={
-              <InputAdornment position='start'>
-                <Search />
-              </InputAdornment>
-            }
-            fullWidth
-          />
-        </Grid>
-
+      )}
+      {value === Tabs.History && (
         <Grid item xs={12}>
-          <Button
-            className={classes.createGame}
-            fullWidth
-            variant={'contained'}
-            onClick={() => setOpen(true)}>
-            {'CREATE GAME'}
-          </Button>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item sm={3}>
-              <Grid item xs={12} sm={12}>
-                {value === Tabs.Games ? (
-                  <Typography variant='h6'>
-                    {gamesToJoin?.length || 0} Games
-                  </Typography>
-                ) : (
-                  <Typography variant='h6'>
-                    {gamesEnded?.length || 0} Games
-                  </Typography>
-                )}
+          <Grid container spacing={4}>
+            {gamesEnded?.map((g, id) => (
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
+                <CardGame
+                  game={g}
+                  id={g.address}
+                  onClick={onClickEnterGame}
+                  btnMessage={'VIEW GAME'}
+                />
               </Grid>
-              <Grid item xs={12} sm={12}>
-                {value === Tabs.Games && (
-                  <Typography gutterBottom>
-                    Recently added &nbsp;
-                    {/* <ExpandMoreIcon
-                    fontSize='small'
-                    style={{verticalAlign: 'top'}}
-                 />*/}
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid item sm={6} justifyContent='center'>
-              <Grid container justifyContent='center' spacing={2}>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.ALL}
-                    color={
-                      filterGame === FilterGame.ALL ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.ALL)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Fast}
-                    color={
-                      filterGame === FilterGame.Fast ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Fast)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Medium}
-                    color={
-                      filterGame === FilterGame.Medium ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Medium)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Eight}
-                    color={
-                      filterGame === FilterGame.Eight ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Eight)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Day}
-                    color={
-                      filterGame === FilterGame.Day ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Day)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Week}
-                    color={
-                      filterGame === FilterGame.Week ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Week)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    label={FilterGame.Mine}
-                    color={
-                      filterGame === FilterGame.Mine ? 'primary' : 'default'
-                    }
-                    onClick={() => setFilterGame(FilterGame.Mine)}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item sm={3} justifyContent='flex-end'>
-              {/* <Button variant='text'>
-                <FilterListIcon style={{color: '#fff'}} />
-                  </Button>*/}
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {value === Tabs.Games && (
-          <Grid item xs={12}>
-            <Grid container spacing={4}>
-              {gamesToJoin?.map((g, id) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                  <CardGame
-                    game={g}
-                    id={g.address}
-                    onClick={onClickEnterGame}
-                  />
+            ))}
+            {isLoading &&
+              [1, 2, 3].map((v, i) => (
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
+                  <CardGameSkeleton />
                 </Grid>
               ))}
-              {isLoading &&
-                [1, 2, 3].map((v, i) => (
-                  <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                    <CardGameSkeleton />
-                  </Grid>
-                ))}
-              {!isLoading && !gamesToJoin?.length && (
-                <Grid item xs={12}>
-                  <Empty
-                    image={<EmptyGame />}
-                    title={'No games to join'}
-                    message={'Create games to join'}
-                  />
-                </Grid>
-              )}
-            </Grid>
+            {!isLoading && !gamesEnded?.length && (
+              <Grid item xs={12}>
+                <Empty
+                  image={<EmptyGame />}
+                  title={'No history'}
+                  message={'Join and play games'}
+                />
+              </Grid>
+            )}
           </Grid>
-        )}
-        {value === Tabs.History && (
-          <Grid item xs={12}>
-            <Grid container spacing={4}>
-              {gamesEnded?.map((g, id) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                  <CardGame
-                    game={g}
-                    id={g.address}
-                    onClick={onClickEnterGame}
-                    btnMessage={'VIEW GAME'}
-                  />
-                </Grid>
-              ))}
-              {isLoading &&
-                [1, 2, 3].map((v, i) => (
-                  <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                    <CardGameSkeleton />
-                  </Grid>
-                ))}
-              {!isLoading && !gamesEnded?.length && (
-                <Grid item xs={12}>
-                  <Empty
-                    image={<EmptyGame />}
-                    title={'No history'}
-                    message={'Join and play games'}
-                  />
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
+        </Grid>
+      )}
+    </Grid>
+  );
 };
 
 export default GamesList;

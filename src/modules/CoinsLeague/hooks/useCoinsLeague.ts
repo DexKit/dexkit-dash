@@ -17,6 +17,7 @@ import {
   getCoinFeeds,
   getCurrentCoinFeedsPrice,
 } from '../services/coinsLeague';
+import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -32,7 +33,7 @@ interface CallbackProps {
 export const useCoinsLeague = (address?: string) => {
   const [winner, setWinner] = useState<any>();
   const {web3State, account, chainId} = useWeb3();
-  const provider = useNetworkProvider(EthereumNetwork.matic, chainId === ChainId.Mumbai ? ChainId.Mumbai : undefined );
+  const provider = useNetworkProvider(EthereumNetwork.matic, GET_LEAGUES_CHAIN_ID(chainId) );
   useEffect(() => {
     if (!address || !account) {
       return;
@@ -152,17 +153,16 @@ export const useCoinsLeague = (address?: string) => {
     [web3State, address],
   );
 
-  const gameQuery = useQuery(['GetGameAdddress', web3State, address, provider], () => {
-    if (web3State !== Web3State.Done || !address || !provider) {
+  const gameQuery = useQuery(['GetGameAdddress',  address], () => {
+    if ( !address || !provider) {
       return;
     }
     return getGamesData([address], provider);
   });
   const coinFeedQuery = useQuery(
-    ['GetCoinsFeed', web3State, address, gameQuery.data, provider],
+    ['GetCoinsFeed',  address, gameQuery.data],
     () => {
       if (
-        web3State !== Web3State.Done ||
         !address ||
         !gameQuery.data ||
         !gameQuery.data[0] ||
@@ -179,9 +179,9 @@ export const useCoinsLeague = (address?: string) => {
   );
 
   const currentFeedPriceQuery = useQuery(
-    ['GetCurrentFeedQuery', web3State, address, coinFeedQuery.data, provider],
+    ['GetCurrentFeedQuery', address, coinFeedQuery.data],
     () => {
-      if (web3State !== Web3State.Done || !address || !coinFeedQuery.data || !provider) {
+      if (  !address || !coinFeedQuery.data || !provider) {
         return;
       }
       // TODO: Error on query is returning data without being on object

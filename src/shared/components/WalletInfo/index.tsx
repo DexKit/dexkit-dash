@@ -181,7 +181,9 @@ const WalletInfo = (props: any) => {
       history.push(`/wallet/${a.address}`);
       // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-    } 
+    } else{
+      dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
+    }
   };
 
   const notConnected = !web3Account;

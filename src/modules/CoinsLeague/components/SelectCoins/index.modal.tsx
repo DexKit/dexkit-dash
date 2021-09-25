@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState} from 'react';
+import React, {useEffect, useCallback, useState, useMemo} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -26,36 +26,32 @@ import { ChainId } from 'types/blockchain';
 interface Props extends DialogProps {
   title?: string;
   chainId: ChainId.Matic | ChainId.Mumbai;
+  selectedCoins?: CoinFeed[]
   onSelectCoin: (coin: CoinFeed) => void;
 }
 
 export const SelectCoinLeagueDialog = (props: Props) => {
-  const {onSelectCoin,  onClose, chainId, title} = props;
+  const {onSelectCoin,  onClose, chainId, title, selectedCoins} = props;
   // TODO: Change to Mainnet
   const coins = PriceFeeds[chainId];
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
-  const [filteredCoins, setFilteredCoins] = useState<CoinFeed[]>([]);
+  const filteredCoins = useMemo(()=> {
+    return coins.filter(
+      (coin: CoinFeed) =>
+        coin.baseName.toLowerCase().startsWith(filterText?.toLowerCase()) ||
+        coin.base.toLowerCase().startsWith(filterText?.toLowerCase()),
+    ).filter(c => !selectedCoins?.includes(c));
+  },[filterText, selectedCoins ])
 
-  useEffect(() => {
-    setFilteredCoins(coins);
-  }, [coins]);
+
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-
       setFilterText(value);
-
-      const filtered = coins.filter(
-        (coin: CoinFeed) =>
-          coin.baseName.toLowerCase().startsWith(value.toLowerCase()) ||
-          coin.base.toLowerCase().startsWith(value.toLowerCase()),
-      );
-
-      setFilteredCoins(filtered);
     },
     [coins],
   );

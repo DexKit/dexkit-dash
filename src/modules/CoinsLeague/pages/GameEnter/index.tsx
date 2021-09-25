@@ -40,7 +40,10 @@ import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
 import Chip from '@material-ui/core/Chip';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {EndGame} from 'modules/CoinsLeague/components/EndGame';
 import {StartGame} from 'modules/CoinsLeague/components/StartGame';
@@ -56,7 +59,8 @@ import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinsLeague/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
-import { ShareButton } from 'shared/components/ShareButton';
+import {ShareButton} from 'shared/components/ShareButton';
+import Alert from '@material-ui/lab/Alert';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -130,7 +134,7 @@ function GameEnter(props: Props) {
   }, [account, game?.players, game]);
 
   const players = useMemo(() => {
-    if (account && game?.players && game?.players.length) {
+    if (game?.players && game?.players.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
       return game.players.map((p: any) => {
         return {
@@ -140,7 +144,7 @@ function GameEnter(props: Props) {
         } as Player;
       });
     }
-  }, [account, game?.players, game]);
+  }, [game?.players, game]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
@@ -238,10 +242,19 @@ function GameEnter(props: Props) {
 
   return (
     <Grid container spacing={2}>
-      {(chainId === ChainId.Mumbai || chainId === ChainId.Matic) && (
+      {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+        <Grid item xs={12} sm={12} xl={12}>
+          <Alert severity='info'>
+            To play this game you need to connect your wallet to Polygon network
+          </Alert>
+        </Grid>
+      )}
+
+      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <SelectCoinLeagueDialog
           chainId={chainId}
           open={open}
+          selectedCoins={selectedCoins}
           onSelectCoin={onSelectCoin}
           onClose={onCloseSelectDialog}
         />
@@ -363,7 +376,7 @@ function GameEnter(props: Props) {
         {isLoading && <CardInfoPlayersSkeleton />}
       </Grid>
 
-      {!player && !isLoading && !gameFull && !aborted && (
+      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} md={6} alignContent='space-around'>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -400,7 +413,7 @@ function GameEnter(props: Props) {
         </Grid>
       )}
 
-      {!player && !isLoading && !gameFull && !aborted && (
+      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} md={12}>
           <Grid container spacing={4} justifyContent={'flex-end'}>
             <Grid item xs={12} md={6}>
@@ -422,7 +435,11 @@ function GameEnter(props: Props) {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!isDisabled || submitState !== SubmitState.None}
+                    disabled={
+                      !isDisabled ||
+                      submitState !== SubmitState.None ||
+                      !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                    }
                     onClick={onEnterGame}
                     variant={'contained'}
                     color={
