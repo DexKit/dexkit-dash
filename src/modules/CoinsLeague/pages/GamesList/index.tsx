@@ -271,9 +271,7 @@ const GamesList = () => {
     setSearch(e.target.value);
   }, []);
 
-  return chainId ? (
-    chainId === ChainId.Mumbai || chainId === ChainId.Matic ? (
-      <Grid container spacing={4} alignItems={'center'}>
+  return   <Grid container spacing={4} alignItems={'center'}>
         <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
             <Breadcrumbs
@@ -547,12 +545,6 @@ const GamesList = () => {
           </Grid>
         )}
       </Grid>
-    ) : (
-      <WrongNetwork />
-    )
-  ) : (
-    <NoWallet />
-  );
 };
 
 export default GamesList;
