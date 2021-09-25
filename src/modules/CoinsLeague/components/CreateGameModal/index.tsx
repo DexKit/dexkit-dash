@@ -346,7 +346,7 @@ const CreateGameModal = (props: Props) => {
             !totalPlayers ||
             !duration ||
             submitState !== SubmitState.None ||
-            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+            !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
           }>
           <ButtonState
             state={submitState}
