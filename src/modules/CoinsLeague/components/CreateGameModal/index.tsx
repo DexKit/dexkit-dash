@@ -300,7 +300,7 @@ const CreateGameModal = (props: Props) => {
             <RadioGroup value={gameType}>
               <FormControlLabel
                 value='winner-game'
-                label='Winner Game'
+                label='Bull'
                 onClick={() => setGameType('winner-game')}
                 labelPlacement='start'
                 className={classes.radio}
@@ -309,7 +309,7 @@ const CreateGameModal = (props: Props) => {
               <FormControlLabel
                 value='loser-game'
                 onClick={() => setGameType('loser-game')}
-                label='Loser Game'
+                label='Bear'
                 labelPlacement='start'
                 className={classes.radio}
                 control={<Radio style={{color: '#ffa552'}} />}

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     borderRadius: 6,
     background: '#2e3243',
-    width: '66.66%',
     padding: theme.spacing(2),
   },
   button: {
@@ -56,14 +56,17 @@ function SmallCardGameSkeleton(): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Skeleton>
-        <Typography variant='h5'>
-          ID #{truncateAddress('0x0000000000000000000000000000000000')}
-        </Typography>
-      </Skeleton>
       <Grid container className={classes.innerContent}>
-        <Grid item>
-          <Grid container>
+        <Grid item xs={12}>
+          <Skeleton>
+            <Typography variant='h5'>
+              ID #{truncateAddress('0x0000000000000000000000000000000000')}
+            </Typography>
+          </Skeleton>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display={'flex'} alignItems={'center'}>
+            <SendIcon />
             <Typography
               variant='h6'
               style={{
@@ -71,35 +74,50 @@ function SmallCardGameSkeleton(): JSX.Element {
                 color: '#fcc591',
                 alignItems: 'baseline',
               }}>
-              <SendIcon />
               <Skeleton>
                 &nbsp;{0} {'Matic'}
               </Skeleton>
             </Typography>
-          </Grid>
+          </Box>
+        </Grid>
 
-          <Grid container>
+        <Grid item xs={12}>
+          <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
             <Skeleton>
               <Typography variant='h6'>{1000} Matic</Typography>
             </Skeleton>
-          </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={12} style={{color: '#7a8398'}}>
+          <Box display={'flex'} alignItems={'center'}>
+            <Typography variant='h6'>Game Type:&nbsp;</Typography>
+            <Typography variant='h6' style={{fontWeight: 600}}>
+              <Skeleton>
+                <Typography variant='h6'>Winner</Typography>
+              </Skeleton>
+            </Typography>
+          </Box>
+        </Grid>
 
-          <Grid container style={{color: '#7a8398'}}>
+        <Grid item xs={12} style={{color: '#7a8398'}}>
+          <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Countdown:&nbsp;</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
                 <CardTimer time={1000} />
               </Skeleton>
             </Typography>
-          </Grid>
+          </Box>
         </Grid>
       </Grid>
-      <Skeleton>
-        <Button className={classes.button} fullWidth>
-          {'VIEW'}
-        </Button>
-      </Skeleton>
+      <Grid item xs={12} style={{color: '#7a8398'}}>
+        <Skeleton>
+          <Button className={classes.button} fullWidth>
+            {'VIEW'}
+          </Button>
+        </Skeleton>
+      </Grid>
     </Container>
   );
 }

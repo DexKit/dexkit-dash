@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const USD_POWER = BigNumber.from(10 ** 8);
+const USD_POWER_NUMBER = 10 ** 8;
 
 export const ViewCoinListItem = (props: Props) => {
   const {coin, style, feedOnchain, started, currentPrice} = props;
@@ -47,7 +48,7 @@ export const ViewCoinListItem = (props: Props) => {
   const priceStart = useMemo(() => {
     if (feedOnchain.start_price) {
       return usdFormatter.format(
-        feedOnchain.start_price.div(USD_POWER).toNumber(),
+        feedOnchain.start_price.toNumber() / USD_POWER_NUMBER,
       );
     }
     return '-';
@@ -57,14 +58,14 @@ export const ViewCoinListItem = (props: Props) => {
     if (started) {
       if (currentPrice?.price) {
         return usdFormatter.format(
-          currentPrice.price.div(USD_POWER).toNumber(),
+          currentPrice.price.toNumber() / USD_POWER_NUMBER,
         );
       }
     }
 
     if (feedOnchain.end_price) {
       return usdFormatter.format(
-        feedOnchain.end_price.div(USD_POWER).toNumber(),
+        feedOnchain.end_price.toNumber() / USD_POWER_NUMBER,
       );
     }
     return '-';

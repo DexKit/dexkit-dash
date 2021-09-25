@@ -45,6 +45,7 @@ interface Props {
   chainId: number | undefined;
   account: string | undefined;
   networkName: EthereumNetwork;
+  
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
   select1: Token[];
@@ -52,6 +53,7 @@ interface Props {
   tokenTo: Token | undefined;
   onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
   onTrade: (data: ModalOrderData) => void;
+  disableReceive?: boolean;
 }
 
 const LimitForm: React.FC<Props> = (props) => {
@@ -66,6 +68,7 @@ const LimitForm: React.FC<Props> = (props) => {
     tokenTo,
     onChangeToken,
     onTrade,
+    disableReceive
   } = props;
 
   const classes = useStyles();
@@ -90,6 +93,10 @@ const LimitForm: React.FC<Props> = (props) => {
   const [showSelectTokenDialog, setShowSelectTokenDialog] =
     useState<boolean>(false);
   const [selectTo, setSelectTo] = useState<'from' | 'to'>('from');
+  const [disableSelect, setDisableSelect] = useState(
+    disableReceive ? 'to' : '',
+  );
+
   const notConnected = useMemo(() => web3State !== Web3State.Done, [web3State]);
 
   if (notConnected && tokenFrom === undefined) {
@@ -113,6 +120,14 @@ const LimitForm: React.FC<Props> = (props) => {
     }
 
     setPrice((amountTo || 0) / (amountFrom || 1));
+
+    if (disableSelect) {
+      if (disableSelect === 'to') {
+        setDisableSelect('from');
+      } else {
+        setDisableSelect('to');
+      }
+    }
   };
 
   useEffect(() => {
@@ -205,7 +220,6 @@ const LimitForm: React.FC<Props> = (props) => {
   };
 
   let errorMessage: string | undefined;
-  const disabled = false;
 
   const handleConnectWallet = useCallback(()=>{
     history.push('/onboarding/login-wallet');
@@ -307,6 +321,7 @@ const LimitForm: React.FC<Props> = (props) => {
     setShowSelectTokenDialog(false);
   }, []);
 
+
   return (
     <Box className={classes.limitContainer}>
      <SelectTokenBalanceDialog
@@ -355,8 +370,8 @@ const LimitForm: React.FC<Props> = (props) => {
                     <SelectTokenV2
                       id={'marketSel1'}
                       label={' '}
+                      disabled={disableSelect === 'from'}
                       selected={tokenFrom}
-                      disabled={disabled}
                       onClick={handleSelectTokenFrom}
                     />
                   </Box>
@@ -367,7 +382,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     color='textSecondary'
                     className={classes.balance}>
                     {account ? (
-                      `Balance ${tokenFromBalance?.value?.toFixed(4) || 0} ${
+                      `${tokenFromBalance?.value?.toFixed(4) || 0} ${
                         tokenFromBalance?.currency?.symbol || ''
                       }`
                     ) : (
@@ -416,7 +431,7 @@ const LimitForm: React.FC<Props> = (props) => {
                           id={'marketSel0'}
                           label={' '}
                           selected={tokenTo}
-                          disabled={disabled}
+                          disabled={disableSelect === 'to'}
                           onClick={handleSelectTokenTo}
                         />
                       </Box>
@@ -427,13 +442,13 @@ const LimitForm: React.FC<Props> = (props) => {
                         color='textSecondary'
                         className={classes.balance}>
                         {account ? (
-                          `Balance ${tokenToBalance?.value?.toFixed(4) || 0} ${
+                          `${tokenToBalance?.value?.toFixed(4) || 0} ${
                             tokenToBalance?.currency?.symbol || ''
                           }`
                         ) : (
                           <Skeleton width={'100%'} />
                         )}
-                      </Typography>
+                        </Typography>
                       <TextField
                         variant='outlined'
                         fullWidth
@@ -479,6 +494,7 @@ const LimitForm: React.FC<Props> = (props) => {
                               <InputAdornment
                                 position='end'
                                 style={{fontSize: '13px'}}
+                                className={classes.inputPriceAddornment}
                                 onClick={() => setIsInverted(!isInverted)}>
                                 {tokenFrom && tokenTo && (
                                   <>

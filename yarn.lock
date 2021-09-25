@@ -3480,6 +3480,11 @@
     prop-types "^15.7.2"
     react-is "^17.0.0"
 
+"@maticnetwork/wallet-widget@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@maticnetwork/wallet-widget/-/wallet-widget-1.0.6.tgz#88c25ac8a2f52ef096834365d2ff14f6b554e144"
+  integrity sha512-8rEl7PFbjIIWKxJgYrWOkkeDXOhp7xofvzCa5MSBMU8iDuzq6LJgZh5Z/vU59Q/Rpy361wscXaI5NhrFJ0hLsg==
+
 "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"

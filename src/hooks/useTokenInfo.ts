@@ -15,7 +15,7 @@ import {
 import Web3 from 'web3';
 import {useTokenLists} from './useTokenLists';
 
-export const useTokenInfo = (address: string) => {
+export const useTokenInfo = (address?: string) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [tokenInfo, setTokenInfo] = useState<Token>();
   const {ethTokens, binanceTokens, maticTokens} = useTokenLists();
@@ -83,7 +83,7 @@ export const useTokenInfo = (address: string) => {
         .finally(() => setLoading(false));
     }
 
-    if (isNativeCoinWithoutChainId(address)) {
+    if (address && isNativeCoinWithoutChainId(address)) {
       const tk = GET_NATIVE_COINS().find(
         (c) => c.symbol.toLowerCase() === address.toLowerCase(),
       );

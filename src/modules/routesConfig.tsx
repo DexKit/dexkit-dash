@@ -44,7 +44,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           icon: 'bitcoin.convert',
           customIcon: true,
-          url: `/${networkName}/token/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
+          url: `/trade`,
         },
         {
           id: 'favorites',
@@ -94,18 +94,18 @@ const useRoutesConfig = (): NavItemProps[] => {
     },
     {
       id: 'coins-league',
-      title: 'Coins League',
+      title: 'Coin Leagues',
       messageId: 'sidebar.coin-league',
       type: 'group',
       children: [
         {
           id: 'all',
-          title: 'Coins League',
+          title: 'Coin Leagues',
           messageId: 'sidebar.coin-league',
           type: 'item',
           customIcon: true,
           icon: 'coinleague',
-          url: `/coins-league`,
+          url: `/coin-leagues`,
         },
       ],
     },

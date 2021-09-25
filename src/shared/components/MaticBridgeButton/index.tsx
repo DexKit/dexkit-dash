@@ -1,12 +1,8 @@
 import React, {useCallback} from 'react';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
-import {
-  Box,
-  Typography,
-  makeStyles,
-} from '@material-ui/core';
-import {useTransak} from 'hooks/useTransak';
-import {ReactComponent as CardIcon} from 'assets/images/icons/card-white.svg';
+import {Box, Typography, makeStyles} from '@material-ui/core';
+import {useMaticBridge} from 'hooks/useMaticBridge';
+import {ReactComponent as ProgrammingArrowsIcon} from 'assets/images/icons/programming-arrows-white.svg';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -16,34 +12,30 @@ const useStyles = makeStyles((theme) => ({
   itemText: {
     whiteSpace: 'nowrap',
   },
-
 }));
 type Props = {
-    btnMsg?: string,
-    defaultCurrency?: string,
+  btnMsg?: string;
+  defaultCurrency?: string;
+};
 
- }
-
-
-const BuyCryptoButton = (props: Props) => {
-  const {btnMsg, defaultCurrency} = props;
+const MaticBridgeButton = (props: Props) => {
   const classes = useStyles();
-  const {init} = useTransak({defaultCurrency});
+  const {initBridge} = useMaticBridge();
 
   const handleBuyCrypto = useCallback(() => {
-    init();
-  }, [init, defaultCurrency]);
+    initBridge();
+  }, [initBridge]);
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>
       <RoundedIconButton onClick={handleBuyCrypto}>
-        <CardIcon className={classes.icon} />
+        <ProgrammingArrowsIcon className={classes.icon} />
       </RoundedIconButton>
       <Typography variant='caption' className={classes.itemText}>
-       {btnMsg || 'Buy Crypto'}
+         Bridge
       </Typography>
     </Box>
   );
 };
 
-export default BuyCryptoButton;
+export default MaticBridgeButton;

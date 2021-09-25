@@ -26,6 +26,7 @@ interface Props extends DialogProps {
   balances: MyBalances[];
   tokenAddress?: string;
   tokenInfo?: Token;
+  disableReceive?: boolean;
 }
 
 export const BuySellModal = (props: Props) => {

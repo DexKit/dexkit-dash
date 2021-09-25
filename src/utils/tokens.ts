@@ -9,6 +9,7 @@ import {
 } from 'shared/constants/Blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {Token} from 'types/app';
+import {ethers} from 'ethers';
 
 export const tokenAmountInUnitsToBigNumber = (
   amount: BigNumber,
@@ -126,7 +127,7 @@ export const findTokensInfoBySymbol = (
 export const GET_NATIVE_COINS = () => {
   return [
     {
-      address: '',
+      address: 'eth',
       decimals: 18,
       name: 'Ethereum',
       symbol: 'ETH',
@@ -135,7 +136,7 @@ export const GET_NATIVE_COINS = () => {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     },
     {
-      address: '',
+      address: 'bnb',
       decimals: 18,
       name: 'Binance',
       symbol: 'BNB',
@@ -144,7 +145,7 @@ export const GET_NATIVE_COINS = () => {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png',
     },
     {
-      address: '',
+      address: 'matic',
       decimals: 18,
       name: 'Polygon',
       symbol: 'MATIC',
@@ -313,3 +314,60 @@ export const GET_TRADE_TOKEN_URL = (
 };
 
 export const mapTokenBalancesToNetworkTokenBalances = () => {};
+const noFoundSrc = require('assets/images/logo-not-found.png');
+const dexkitLogo = require('assets/images/dexkit-logo.png');
+export const getLogoSrcs = (
+  address: string,
+  networkName?: EthereumNetwork,
+  logoURI?: string,
+) => {
+  let srcs = [];
+
+  if (logoURI) {
+    srcs.push(logoURI);
+  }
+  const trustSrc = () => {
+    if (address.toLowerCase() === 'bsc' || address.toLowerCase() === 'bnb') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png';
+    }
+
+    if (address.toLowerCase() === 'eth') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png';
+    }
+
+    if (address.toLowerCase() === 'matic') {
+      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
+    }
+
+    if (address.toLowerCase() === '' && networkName) {
+      return networkName === EthereumNetwork.ethereum
+        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
+        : networkName === EthereumNetwork.bsc
+        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
+        : networkName === EthereumNetwork.matic
+        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png'
+        : '';
+    }
+    if (
+      address.toLowerCase() ===
+        (process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN as string).toLowerCase() ||
+      address.toLowerCase() ===
+        (process.env.REACT_APP_DEFAULT_BSC_KIT_TOKEN as string).toLowerCase()
+    ) {
+      return dexkitLogo;
+    }
+    const net =
+      networkName === EthereumNetwork.ethereum
+        ? 'ethereum'
+        : networkName === EthereumNetwork.bsc
+        ? 'smartchain'
+        : 'polygon';
+
+    const addr = ethers.utils.getAddress(address);
+
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${net}/assets/${addr}/logo.png`;
+  };
+  srcs.push(trustSrc());
+  srcs.push(noFoundSrc);
+  return srcs;
+};

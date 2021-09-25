@@ -279,7 +279,6 @@ const MarketForm: React.FC<Props> = (props) => {
   }, [amountFrom, tokenFrom, tokenTo, account, allowanceTarget, amountTo]);
 
   let errorMessage = null;
-  const disabled = false;
   const notConnected = web3State !== Web3State.Done;
   const handleConnectWallet = useCallback(()=>{
     history.push('/onboarding/login-wallet');
@@ -389,7 +388,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   id={'marketSel0'}
                   label={'Your Coins'}
                   selected={tokenFrom}
-                  disabled={disabled || disableSelect === 'from'}
+                  disabled={disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
                 />
               </Grid>
@@ -431,7 +430,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <SelectTokenV2
                     id={'marketSel1'}
                     selected={tokenTo}
-                    disabled={disabled || disableSelect === 'to'}
+                    disabled={disableSelect === 'to'}
                     onClick={handleSelectTokenTo}
                   />
                 )}

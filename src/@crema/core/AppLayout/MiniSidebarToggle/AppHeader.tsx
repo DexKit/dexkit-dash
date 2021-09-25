@@ -49,6 +49,7 @@ import {
 import {ChainId, Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { connectWeb3, setProvider } from 'services/web3modal';
 
 interface AppHeaderProps {}
 
@@ -130,8 +131,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
-        switchChain(getProvider(), chainId);
-        dispatch(setWeb3State(Web3State.Done));
+        try{
+         await switchChain(getProvider(), chainId)
+         window.location.reload();
+         dispatch(setWeb3State(Web3State.Done));
+        }catch{
+          dispatch(setWeb3State(Web3State.Done));
+        }
+       
+      
+      
+       
     }},[getProvider, isMagicProvider]
   );
 
