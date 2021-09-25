@@ -3,7 +3,7 @@ import {Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
-import {getMulticall} from '../../../services/multicall';
+import { getMulticallFromProvider} from '../../../services/multicall';
 import {getEthers, getWeb3Wrapper} from '../../../services/web3modal';
 import { ChainId } from 'types/blockchain';
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
@@ -48,9 +48,10 @@ export const createGame = async (address: string, params: GameParams) => {
 export const getGamesAddressFromFactory = async (
   factoryAddress: string,
   maxGames: number,
+  provider: any,
 ): Promise<[string[], number]> => {
   const iface = new Interface(coinsLeagueFactoryAbi);
-  const multicall = await getMulticall();
+  const multicall = await getMulticallFromProvider(provider);
   let calls: CallInput[] = [];
   calls.push({
     interface: iface,

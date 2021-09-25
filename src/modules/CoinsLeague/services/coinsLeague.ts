@@ -1,8 +1,8 @@
 import {CallInput} from '@indexed-finance/multicall';
 import {BigNumber, Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
-import {getMulticall} from 'services/multicall';
-import {getEthers, getProvider, getWeb3Wrapper} from 'services/web3modal';
+import {getMulticallFromProvider} from 'services/multicall';
+import {getEthers, getProvider} from 'services/web3modal';
 import {CoinFeed, Game} from 'types/coinsleague';
 import coinsLeagueAbi from '../../../shared/constants/ABI/coinsLeague.json';
 
@@ -27,9 +27,9 @@ export const getCoinsLeagueContract = async (address: string) => {
  * return all games data at once
  * @param games
  */
-export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
+export const getGamesData = async (gamesAddress: string[], provider: any): Promise<Game[]> => {
   const iface = new Interface(coinsLeagueAbi);
-  const multicall = await getMulticall();
+  const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   const games: Game[] = [];
   for (let index = 0; index < gamesAddress.length; index++) {
@@ -58,9 +58,10 @@ export const getGamesData = async (gamesAddress: string[]): Promise<Game[]> => {
 export const getCoinFeeds = async (
   feeds: string[],
   gameAddress: string,
+  provider: any
 ): Promise<CoinFeed[]> => {
   const iface = new Interface(coinsLeagueAbi);
-  const multicall = await getMulticall();
+  const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   const coins: CoinFeed[] = [];
   for (let index = 0; index < feeds.length; index++) {
@@ -98,9 +99,10 @@ export const getCoinFeeds = async (
  export const getCurrentCoinFeedsPrice = async (
   feeds: string[],
   gameAddress: string,
+  provider: any
 ): Promise<{price: BigNumber, feed: string}[]> => {
   const iface = new Interface(coinsLeagueAbi);
-  const multicall = await getMulticall();
+  const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   const coins: CoinFeed[] = [];
   if(feeds.length === 0){

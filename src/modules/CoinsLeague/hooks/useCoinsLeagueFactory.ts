@@ -9,6 +9,9 @@ import {ChainId, Web3State} from 'types/blockchain';
 import {Game, GameParams} from 'types/coinsleague';
 import {getGamesData} from '../services/coinsLeague';
 import {useQuery} from 'react-query';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -18,7 +21,7 @@ interface CallbackProps {
 
 export const useCoinsLeagueFactory = () => {
   const {web3State, chainId} = useWeb3();
-
+  const provider = useNetworkProvider(EthereumNetwork.matic, GET_LEAGUES_CHAIN_ID(chainId) );
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done || !chainId ||  (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic )) {
@@ -41,29 +44,30 @@ export const useCoinsLeagueFactory = () => {
     [web3State, chainId],
   );
 
-  const gamesAddressQuery = useQuery(['GetGamesAdddress', web3State, chainId], () => {
-    if (web3State !== Web3State.Done || !chainId ||  (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic )) {
+  const gamesAddressQuery = useQuery(['GetGamesAdddress', chainId], () => {
+    if ( !provider) {
       return;
     }
     
     return getGamesAddressFromFactory(
-      COINS_LEAGUE_FACTORY_ADDRESS[chainId],
+      COINS_LEAGUE_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
       50,
+      provider
     );
   });
 
   const gamesQuery = useQuery(
-    ['GetGamesAdddress', web3State, gamesAddressQuery.data],
+    ['GetGamesAdddress', gamesAddressQuery.data],
     () => {
       if (
-        web3State !== Web3State.Done ||
         !gamesAddressQuery?.data ||
-        !gamesAddressQuery?.data[0].length
+        !gamesAddressQuery?.data[0].length || 
+        !provider
       ) {
         return;
       }
       const gAddress = gamesAddressQuery?.data[0];
-      return getGamesData(gAddress);
+      return getGamesData(gAddress, provider);
     },
   );
 

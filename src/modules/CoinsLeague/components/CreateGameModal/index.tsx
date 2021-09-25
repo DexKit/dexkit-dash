@@ -25,7 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {red} from '@material-ui/core/colors';
 import {ButtonState} from '../ButtonState';
-import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 const useStyles = makeStyles((theme) => ({
@@ -345,11 +345,12 @@ const CreateGameModal = (props: Props) => {
             !entryAmount ||
             !totalPlayers ||
             !duration ||
-            submitState !== SubmitState.None
+            submitState !== SubmitState.None ||
+            IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
           }>
           <ButtonState
             state={submitState}
-            defaultMsg={'CREATE GAME'}
+            defaultMsg={IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ? 'CREATE GAME' : 'Connect Wallet on Polygon'}
             confirmedMsg={'Game Created'}
           />
         </Button>

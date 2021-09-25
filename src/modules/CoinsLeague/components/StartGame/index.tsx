@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 
 interface Props {
@@ -158,7 +158,7 @@ export const StartGame = (props: Props) => {
 
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!gameFull || submitState !== SubmitState.None}
+                    disabled={!gameFull || submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
                     onClick={onStartGame}
                     fullWidth
                     variant={'contained'}
@@ -176,7 +176,7 @@ export const StartGame = (props: Props) => {
                   <Grid item xs={12} md={12}>
                     <Button
                       disabled={
-                        !canAbort || submitAbortState !== SubmitState.None
+                        !canAbort || submitAbortState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
                       }
                       onClick={onAbortGame}
                       variant={'contained'}
