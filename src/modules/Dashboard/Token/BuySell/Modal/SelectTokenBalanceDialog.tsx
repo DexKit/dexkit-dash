@@ -72,8 +72,6 @@ export const SelectTokenBalanceDialog = (props: Props) => {
     );
   },[allTokens, filterText])
 
-
-
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;

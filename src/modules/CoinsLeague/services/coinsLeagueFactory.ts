@@ -3,12 +3,14 @@ import {Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
 import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
-import {getMulticall} from '../../../services/multicall';
-import {getWeb3Wrapper} from '../../../services/web3modal';
+import { getMulticallFromProvider} from '../../../services/multicall';
+import {getEthers, getWeb3Wrapper} from '../../../services/web3modal';
+import { ChainId } from 'types/blockchain';
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
 //0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COINS_LEAGUE_FACTORY_ADDRESS = {
-  MUMBAI: '0x7560E5Ee0734B59E7D1D8508c39AF744256e8509',
+  [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
+  [ChainId.Matic]: '0x34C21825ef6Bfbf69cb8748B4587f88342da7aFb',
 };
 
 let coinsLeagueFactory: Contract;
@@ -29,23 +31,27 @@ export const getCoinsLeagueFactoryContract = async (address: string) => {
   }
   return coinsLeagueFactory;
 };
-
+const GAS_PRICE_MULTIPLIER = 2
 export const createGame = async (address: string, params: GameParams) => {
+  const ethers = getEthers()
+  const gasPrice = await (await ethers?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER );
   return (await getCoinsLeagueFactoryContract(address)).createGame(
     params.numPlayers,
     params.duration,
     params.amountUnit,
     params.numCoins,
     params.abortTimestamp,
+    params.type, { gasPrice }
   ) as Promise<ContractTransaction>;
 };
 
 export const getGamesAddressFromFactory = async (
   factoryAddress: string,
   maxGames: number,
+  provider: any,
 ): Promise<[string[], number]> => {
   const iface = new Interface(coinsLeagueFactoryAbi);
-  const multicall = await getMulticall();
+  const multicall = await getMulticallFromProvider(provider);
   let calls: CallInput[] = [];
   calls.push({
     interface: iface,

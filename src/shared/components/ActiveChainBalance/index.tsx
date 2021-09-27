@@ -108,7 +108,7 @@ const ActiveChainBalance = () => {
     <>
       <Box>
         <Grid container spacing={2} alignItems='center' justify='space-between'>
-          <Grid item xs={isMobile ? 12 : undefined} sm={4}>
+          <Grid item xs={12} sm={12}>
             <Paper>
               <Box p={4}>
                 <Grid
@@ -122,22 +122,25 @@ const ActiveChainBalance = () => {
                         <StatusSquare color={theme.palette.success.main} />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body2'>
-                          <Box display='flex' alignItems='center'>
+                        <Box display='flex' alignItems='center'>
+                          <Typography variant='body2'>
                             <span>{truncateAddress(account)} </span>
                             <CopyButton
                               size='small'
                               copyText={account || ''}
                               tooltip='Copied!'>
-                              <FileCopy color='inherit' style={{fontSize: 16}} />
-                            </CopyButton>  
+                              <FileCopy
+                                color='inherit'
+                                style={{fontSize: 16}}
+                              />
+                            </CopyButton>
                             <IconButton
                               onClick={handleShowAccounts}
                               size='small'>
                               <KeyboardArrowDownIcon />
                             </IconButton>
-                          </Box>
-                        </Typography>
+                          </Typography>
+                        </Box>
                         <Typography className={classes.usdAmount}>
                           {isLoading ? (
                             <Skeleton />

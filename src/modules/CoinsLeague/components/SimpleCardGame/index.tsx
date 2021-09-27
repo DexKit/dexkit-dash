@@ -54,16 +54,16 @@ function SimpleCardGame(props: Props): JSX.Element {
         <Grid item xs={12}>
           <Typography variant='h5'>ID #{truncateAddress(id)}</Typography>
         </Grid>
-      </Grid>
 
-      <Grid container className={classes.innerContent} alignContent={'center'}>
-        <Grid item>
-          <SendIcon />
-        </Grid>
-        <Grid item>
-          <Typography variant='h6' style={{color: '#fcc591', fontWeight: 600}}>
-            &nbsp;{entryAmount} {'MATIC'}
-          </Typography>
+        <Grid item xs={12}>
+          <Box display={'flex'} alignItems={'center'}>
+            <SendIcon />
+            <Typography
+              variant='h6'
+              style={{color: '#fcc591', fontWeight: 600}}>
+              &nbsp;{entryAmount} {'MATIC'}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
     </Container>

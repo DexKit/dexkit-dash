@@ -13,9 +13,15 @@ export interface CoinFeed {
   score: BigNumber;
 }
 
+export enum GameType{
+  Winner,
+  Loser
+}
+
 export interface Game {
   players: Player[];
   coinFeeds?: CoinFeed[];
+  game_type: GameType;
   started: boolean;
   finished: boolean;
   aborted: boolean;
@@ -36,4 +42,5 @@ export interface GameParams {
   amountUnit: BigNumber;
   numCoins: number;
   abortTimestamp: number;
+  type: number;
 }

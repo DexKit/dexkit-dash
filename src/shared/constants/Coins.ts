@@ -1,6 +1,5 @@
 import {Coin, Token} from 'types/app';
 import { ChainId } from 'types/blockchain';
-import { GET_NATIVE_COINS } from 'utils';
 import {Network} from './Bitquery';
 
 export const ETH_SYMBOL_URL =

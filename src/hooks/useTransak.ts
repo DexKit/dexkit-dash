@@ -3,7 +3,13 @@ import {useEffect, useCallback, useState} from 'react';
 import {useWeb3} from './useWeb3';
 import {useWindowSize} from './useWindowSize';
 
-export function useTransak() {
+type Props = {
+  defaultCurrency?: string;
+}
+
+
+export function useTransak(props: Props) {
+  const {defaultCurrency} = props;
   const windowSize = useWindowSize();
 
   const {account} = useWeb3();
@@ -41,14 +47,14 @@ export function useTransak() {
   );
 
   useEffect(() => {
-    if (!transakClient && windowSize && windowSize.height && windowSize.width) {
+    if ( windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
-        defaultCryptoCurrency: 'KIT',
+        defaultCryptoCurrency: defaultCurrency || '',
         walletAddress: account ?? '', // Your customer wallet address
         themeColor: '000000', // App theme color in hex
-        fiatCurrency: 'USD',
+        fiatCurrency: '',
         email: '', // Your customer email address (Optional)
         redirectURL: '',
         hostURL: window.location.origin, // Required field
@@ -63,7 +69,7 @@ export function useTransak() {
       transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
       setTransakInstance(transak);
     }
-  }, [account, transakClient, windowSize]);
+  }, [account, windowSize, defaultCurrency]);
 
   const init = useCallback(() => {
     transakClient.init();

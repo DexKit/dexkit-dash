@@ -1,8 +1,10 @@
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useEffect, useState} from 'react';
 import {useQuery} from 'react-query';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
-import {Web3State} from 'types/blockchain';
+import {ChainId, Web3State} from 'types/blockchain';
 import {
   joinGame,
   startGame,
@@ -15,6 +17,7 @@ import {
   getCoinFeeds,
   getCurrentCoinFeedsPrice,
 } from '../services/coinsLeague';
+import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -29,8 +32,8 @@ interface CallbackProps {
  */
 export const useCoinsLeague = (address?: string) => {
   const [winner, setWinner] = useState<any>();
-  const {web3State, account} = useWeb3();
-
+  const {web3State, account, chainId} = useWeb3();
+  const provider = useNetworkProvider(EthereumNetwork.matic, GET_LEAGUES_CHAIN_ID(chainId) );
   useEffect(() => {
     if (!address || !account) {
       return;
@@ -150,20 +153,20 @@ export const useCoinsLeague = (address?: string) => {
     [web3State, address],
   );
 
-  const gameQuery = useQuery(['GetGameAdddress', web3State, address], () => {
-    if (web3State !== Web3State.Done || !address) {
+  const gameQuery = useQuery(['GetGameAdddress',  address], () => {
+    if ( !address || !provider) {
       return;
     }
-    return getGamesData([address]);
+    return getGamesData([address], provider);
   });
   const coinFeedQuery = useQuery(
-    ['GetCoinsFeed', web3State, address, gameQuery.data],
+    ['GetCoinsFeed',  address, gameQuery.data],
     () => {
       if (
-        web3State !== Web3State.Done ||
         !address ||
         !gameQuery.data ||
-        !gameQuery.data[0]
+        !gameQuery.data[0] ||
+        !provider
       ) {
         return;
       }
@@ -171,19 +174,19 @@ export const useCoinsLeague = (address?: string) => {
       const feeds = gameQuery.data[0].players.map((p: any) => p[0] as string[]);
       const flatFeeds = feeds.flat(1);
       const uniqueFeeds = [...new Set(flatFeeds)];
-      return getCoinFeeds(uniqueFeeds, address);
+      return getCoinFeeds(uniqueFeeds, address, provider);
     },
   );
 
   const currentFeedPriceQuery = useQuery(
-    ['GetCurrentFeedQuery', web3State, address, coinFeedQuery.data],
+    ['GetCurrentFeedQuery', address, coinFeedQuery.data],
     () => {
-      if (web3State !== Web3State.Done || !address || !coinFeedQuery.data) {
+      if (  !address || !coinFeedQuery.data || !provider) {
         return;
       }
       // TODO: Error on query is returning data without being on object
       const feeds = coinFeedQuery.data.map((a) => a.address);
-      return getCurrentCoinFeedsPrice(feeds, address);
+      return getCurrentCoinFeedsPrice(feeds, address, provider);
     },
   );
 

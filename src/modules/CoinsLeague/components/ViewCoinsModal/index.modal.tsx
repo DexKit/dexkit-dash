@@ -22,7 +22,9 @@ import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinsLeague} from 'modules/CoinsLeague/hooks/useCoinsLeague';
 import {CoinFeed} from 'modules/CoinsLeague/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
-import {MumbaiPriceFeeds} from 'modules/CoinsLeague/constants';
+import {PriceFeeds} from 'modules/CoinsLeague/constants';
+import {useWeb3} from 'hooks/useWeb3';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinsLeague/utils/constants';
 
 interface Props extends DialogProps {
   title?: string;
@@ -32,6 +34,7 @@ interface Props extends DialogProps {
 
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, title, coins, address} = props;
+  const {chainId} = useWeb3();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinsLeague(address);
 
@@ -42,11 +45,13 @@ export const ViewCoinLeagueDialog = (props: Props) => {
   >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
   const allCoins = useMemo(() => {
+    const chain = GET_LEAGUES_CHAIN_ID(chainId);
+
     if (coins && coins.length && allFeeds && allFeeds.length) {
       const coinsWithFeeds = allFeeds.filter((cf) =>
         coins.map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
       );
-      const coinsList = MumbaiPriceFeeds.filter((c) =>
+      const coinsList = PriceFeeds[chain].filter((c) =>
         coinsWithFeeds
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
@@ -72,7 +77,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
       }[];
     }
     return [];
-  }, [coins, allFeeds, currentPrices]);
+  }, [coins, allFeeds, currentPrices, chainId]);
   const gameStarted = useMemo(() => {
     return game?.started && !game.finished && !game.aborted;
   }, [game]);

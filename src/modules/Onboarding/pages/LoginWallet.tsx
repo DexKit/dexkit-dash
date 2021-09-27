@@ -125,7 +125,17 @@ export const CreateWallet = (props: Props) => {
   const isMobile = useMobile();
   const {onConnectWeb3} = useWeb3();
   const [loading, setLoading] = useState(false);
-  const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
+  const handleConnectWeb3 = useCallback(() => {
+    
+    const onConnectSuccess = (a: string) =>{
+      setLoading(true);
+      history.push(`/wallet/${a}`);
+    }
+    const onFinalConnect = () =>{
+      setLoading(false);
+    }
+    onConnectWeb3(onConnectSuccess, onFinalConnect);
+  },[]);
   const history = useHistory();
   const [email, setEmail] = useState('');
 

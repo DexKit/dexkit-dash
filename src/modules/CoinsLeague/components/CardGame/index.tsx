@@ -2,13 +2,14 @@ import React, {useCallback, useState} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-import {Game} from 'types/coinsleague';
+import {Game, GameType} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
@@ -94,7 +95,8 @@ function CardGame(props: Props): JSX.Element {
     () => {
       const time = game.duration.toNumber();
       const startTime =
-        Math.round(new Date().getTime() / 1000) - game.start_timestamp.toNumber();
+        Math.round(new Date().getTime() / 1000) -
+        game.start_timestamp.toNumber();
       setCountdown(time - startTime);
     },
     1000,
@@ -106,15 +108,14 @@ function CardGame(props: Props): JSX.Element {
       <Typography variant='h5'>ID #{truncateAddress(props.id)}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
-          <Grid container alignContent={'center'}>
-          <SendIcon />
-          <Typography
-            variant='h6'
-            style={{color: '#fcc591', alignItems: 'baseline'}}>
-            
-            &nbsp;{entryAmount} {'MATIC'}
-          </Typography>
-          </Grid>
+          <Box display={'flex'} alignItems={'center'}>
+            <SendIcon />
+            <Typography
+              variant='h6'
+              style={{color: '#fcc591', alignItems: 'baseline'}}>
+              &nbsp;{entryAmount} {'MATIC'}
+            </Typography>
+          </Box>
         </Grid>
         <Grid
           xs={6}
@@ -124,6 +125,11 @@ function CardGame(props: Props): JSX.Element {
           <Typography variant='h6'>Game Time:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             &nbsp;{Math.floor(time / 3600)}Hrs
+          </Typography>
+
+          <Typography variant='h6'>Type:</Typography>
+          <Typography variant='h6' style={{fontWeight: 600}}>
+            &nbsp;{game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
           </Typography>
         </Grid>
       </Grid>
@@ -140,24 +146,18 @@ function CardGame(props: Props): JSX.Element {
           )}
         </Grid>
         <Grid item>
+          <Typography variant='subtitle2'>Entries</Typography>
           <Typography variant='subtitle2'>
-            Entries
-            <Typography variant='subtitle2'>
-              {entriesIn}/{entriesOut}
-            </Typography>
+            {entriesIn}/{entriesOut}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>
-            Coins
-            <Typography variant='subtitle2'>{strPad(coins)}</Typography>
-          </Typography>
+          <Typography variant='subtitle2'>Coins</Typography>
+          <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>
-            Prize Pool
-            <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
-          </Typography>
+          <Typography variant='subtitle2'>Prize Pool</Typography>
+          <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 

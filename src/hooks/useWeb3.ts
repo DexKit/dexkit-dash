@@ -23,13 +23,11 @@ import {
 } from 'redux/actions';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {BigNumber} from '@0x/utils';
-import {addAccounts, setDefaultAccount} from 'redux/_ui/actions';
+import {addAccounts} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
-import {useHistory} from 'react-router-dom';
 
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const history = useHistory();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(
     (state) => state.blockchain.web3State,
   );
@@ -102,16 +100,18 @@ export const useWeb3 = () => {
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
- 
+
     if (provider) {
       dispatch(setEthAccount(undefined));
       dispatch(setChainId(undefined));
       dispatch(setWeb3State(Web3State.NotConnected));
-      closeWeb3().then(() => {
-        dispatch(setEthAccount(undefined));
-        dispatch(setChainId(undefined));
-        dispatch(setWeb3State(Web3State.NotConnected));
-      }).catch(console.log);
+      closeWeb3()
+        .then(() => {
+          dispatch(setEthAccount(undefined));
+          dispatch(setChainId(undefined));
+          dispatch(setWeb3State(Web3State.NotConnected));
+        })
+        .catch(console.log);
     }
   };
 
@@ -126,7 +126,7 @@ export const useWeb3 = () => {
     }
   };
 
-  const onConnectWeb3 = () => {
+  const onConnectWeb3 = (onConnect?: any, onFinalConnect?: any) => {
     const web3 = getWeb3();
     if (!web3) {
       dispatch(setWeb3State(Web3State.Connecting));
@@ -135,9 +135,22 @@ export const useWeb3 = () => {
         .then((p) => {
           subscribeProvider(p);
           dispatch(setWeb3State(Web3State.Done));
+          if (onConnect) {
+            const web3 = getWeb3();
+            if (web3) {
+              web3.eth.getAccounts().then((a) => {
+                onConnect(a[0]);
+              });
+            }
+          }
         })
         .catch(() => {
           dispatch(setWeb3State(Web3State.Error));
+        })
+        .finally(() => {
+          if (onFinalConnect) {
+            onFinalConnect();
+          }
         });
     }
   };
@@ -192,7 +205,6 @@ export const useWeb3 = () => {
     });
 
     pr.on('chainChanged', async (chainId: number) => {
-      console.log('called chain ID changed');
       dispatch(setChainId(chainId));
     });
 

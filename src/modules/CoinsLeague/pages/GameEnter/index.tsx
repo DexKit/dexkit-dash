@@ -3,7 +3,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
@@ -35,18 +34,33 @@ import {CoinItem} from 'modules/CoinsLeague/components/CoinItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
-import {Player} from 'types/coinsleague';
+import {GameType, Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinsLeague/components/PlayersTable';
+import OnePlayerTable from 'modules/CoinsLeague/components/OnePlayerTable';
 import {WaitingPlayers} from 'modules/CoinsLeague/components/WaitingPlayers';
 import Chip from '@material-ui/core/Chip';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL} from 'modules/CoinsLeague/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinsLeague/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {EndGame} from 'modules/CoinsLeague/components/EndGame';
 import {StartGame} from 'modules/CoinsLeague/components/StartGame';
 import {ButtonState} from 'modules/CoinsLeague/components/ButtonState';
 import Countdown from 'modules/CoinsLeague/components/Countdown';
 
+import {CopyButton} from 'shared/components/CopyButton';
+import {FileCopy} from '@material-ui/icons';
+import BuyCryptoButton from 'shared/components/BuyCryptoButton';
+import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import Hidden from '@material-ui/core/Hidden';
+import PlayersTableSkeleton from 'modules/CoinsLeague/components/PlayersTable/index.skeleton';
+import Skeleton from '@material-ui/lab/Skeleton';
+import Paper from '@material-ui/core/Paper';
+import {ShareButton} from 'shared/components/ShareButton';
+import Alert from '@material-ui/lab/Alert';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -57,6 +71,11 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     background: '#1F1D2B',
     border: '2px solid #2e3243',
+  },
+  gameTypePaper: {
+    backgroundColor: '#2e3243',
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(2),
   },
 }));
 type Params = {
@@ -93,10 +112,6 @@ function GameEnter(props: Props) {
     setOpen(true);
   }, []);
 
-
-
-
-
   const player = useMemo(() => {
     if (account && game?.players && game?.players.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
@@ -119,7 +134,7 @@ function GameEnter(props: Props) {
   }, [account, game?.players, game]);
 
   const players = useMemo(() => {
-    if (account && game?.players && game?.players.length) {
+    if (game?.players && game?.players.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
       return game.players.map((p: any) => {
         return {
@@ -129,7 +144,7 @@ function GameEnter(props: Props) {
         } as Player;
       });
     }
-  }, [account, game?.players, game]);
+  }, [game?.players, game]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setOpen(false);
@@ -226,128 +241,185 @@ function GameEnter(props: Props) {
   );
 
   return (
-    <Container maxWidth='xl' className={classes.container}>
-      <SelectCoinLeagueDialog
-        open={open}
-        onSelectCoin={onSelectCoin}
-        onClose={onCloseSelectDialog}
-      />
-      <Grid container spacing={4}>
+    <Grid container spacing={2}>
+      {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
-          <Grid container>
-            <Breadcrumbs
-              style={{color: '#fff', fontSize: '0.75rem'}}
-              separator={<NavigateNextIcon fontSize='small' />}>
-              <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                Dashboard
-              </Link>
-              <Link
-                color='inherit'
-                component={RouterLink}
-                to={COINSLEAGUE_ROUTE}>
-                Games
-              </Link>
-              <Link
-                color='inherit'
-                component={RouterLink}
-                to={`${COINSLEAGUE_ROUTE}/${address}`}>
-                {truncateAddress(address)}
-              </Link>
-            </Breadcrumbs>
-          </Grid>
-          <Grid item xs={12} xl={12} sm={12}>
-            <Box display={'flex'} alignItems={'center'}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Typography variant='h5' style={{margin: 5}}>
-                Game #{truncateAddress(address)}
+          <Alert severity='info'>
+            To play this game you need to connect your wallet to Polygon network
+          </Alert>
+        </Grid>
+      )}
+
+      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+        <SelectCoinLeagueDialog
+          chainId={chainId}
+          open={open}
+          selectedCoins={selectedCoins}
+          onSelectCoin={onSelectCoin}
+          onClose={onCloseSelectDialog}
+        />
+      )}
+      <Grid item xs={12} sm={12} xl={12}>
+        <Breadcrumbs
+          style={{color: '#fff', fontSize: '0.75rem'}}
+          separator={<NavigateNextIcon fontSize='small' />}>
+          <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
+            Dashboard
+          </Link>
+          <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+            Games
+          </Link>
+          <Link
+            color='inherit'
+            component={RouterLink}
+            to={`${COINSLEAGUE_ROUTE}/${address}`}>
+            {truncateAddress(address)}
+          </Link>
+        </Breadcrumbs>
+      </Grid>
+      <Hidden smUp={true}>
+        <Grid item xs={12}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+        </Grid>
+      </Hidden>
+      <Grid item xs={8} sm={4} xl={4}>
+        <Box display={'flex'} alignItems={'center'}>
+          <IconButton onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant='h5' style={{margin: 5}}>
+            Game #{truncateAddress(address)}
+            <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
+              <FileCopy color='inherit' style={{fontSize: 16}} />
+            </CopyButton>
+          </Typography>
+
+          {finished && <Chip label='Ended' color='primary' />}
+          {aborted && <Chip label='Aborted' color='primary' />}
+          {started && !finished && !aborted && (
+            <Chip label='Started' color='primary' />
+          )}
+        </Box>
+      </Grid>
+      <Hidden xsDown={true}>
+        <Grid item sm={5} xl={5}>
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+        </Grid>
+      </Hidden>
+      <Grid item xs={4} sm={3} xl={3}>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+          <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
+          <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          <MaticBridgeButton />
+        </Box>
+      </Grid>
+
+      <Grid item xs={12} sm={4}>
+        {game && <SimpleCardGame {...game} />}
+        {isLoading && <SimpleCardGameSkeleton />}
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        {game && (
+          <CardPrize
+            prizePool={Number(
+              ethers.utils.formatEther(
+                game.amount_to_play.mul(game.num_players),
+              ),
+            )}
+          />
+        )}
+        {game && (
+          <Paper className={classes.gameTypePaper}>
+            <Box display={'flex'}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
+                Game Type:
               </Typography>
-
-              {finished && <Chip label='Ended' color='primary' />}
-              {aborted && <Chip label='Aborted' color='primary' />}
-              {started && !finished && !aborted && (
-                <Chip label='Started' color='primary' />
-              )}
+              <Typography
+                variant='h5'
+                style={{color: '#fff', marginLeft: '20px'}}>
+                {game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
+              </Typography>
             </Box>
-          </Grid>
-        </Grid>
+          </Paper>
+        )}
 
-        <Grid item xs={12} sm={4}>
-          {game && <SimpleCardGame {...game} />}
-          {isLoading && <SimpleCardGameSkeleton />}
-        </Grid>
-        <Grid item xs={6} sm={4}>
-          {game && (
-            <CardPrize
-              prizePool={Number(
-                ethers.utils.formatEther(
-                  game.amount_to_play.mul(game.num_players),
-                ),
-              )}
-            />
-          )}
-          {isLoading && <CardPrizeSkeleton />}
-        </Grid>
-        <Grid item xs={6} sm={4}>
-          {game && (
-            <CardInfoPlayers
-              num_players={game.num_players}
-              current_players={game.players.length}
-            />
-          )}
-          {game && started && !aborted && !finished && (
-            <Box pt={2}>
-              <Countdown address={game.address} />
-            </Box>
-          )}
-          {isLoading && <CardInfoPlayersSkeleton />}
-        </Grid>
-
-        {!player && !isLoading && !gameFull && !aborted && (
-          <Grid item xs={12} md={6} alignContent='space-around'>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant='h5' style={{margin: 5}}>
-                  Choose Currencies {selectedCoins?.length}/
-                  {game?.num_coins || 0}
+        {isLoading && <CardPrizeSkeleton />}
+        {isLoading && (
+          <Paper className={classes.gameTypePaper}>
+            <Box display={'flex'}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
+                Game Type:
+              </Typography>
+              <Skeleton>
+                <Typography
+                  variant='h5'
+                  style={{color: '#fff', marginLeft: '20px'}}>
+                  Winner
                 </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  fullWidth
-                  disabled={isDisabled}
-                  onClick={onOpenSelectDialog}
-                  startIcon={<CryptocurrencyIcon />}
-                  endIcon={<ExpandMoreIcon />}
-                  variant='outlined'>
-                  {'Choose your Coins'}
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={4}>
-                  {selectedCoins?.map((c, i) => (
-                    <Grid item xs={12}>
-                      <CoinItem
-                        coin={c}
-                        key={i}
-                        handleDelete={onDeleteCoin}
-                        index={i}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
+              </Skeleton>
+            </Box>
+          </Paper>
+        )}
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        {game && (
+          <CardInfoPlayers
+            num_players={game.num_players}
+            current_players={game.players.length}
+          />
+        )}
+        {game && started && !aborted && !finished && (
+          <Box pt={2}>
+            <Countdown address={game.address} />
+          </Box>
+        )}
+        {isLoading && <CardInfoPlayersSkeleton />}
+      </Grid>
+
+      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+        <Grid item xs={12} md={6} alignContent='space-around'>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h5' style={{margin: 5}}>
+                Choose Currencies {selectedCoins?.length}/{game?.num_coins || 0}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                disabled={isDisabled}
+                onClick={onOpenSelectDialog}
+                startIcon={<CryptocurrencyIcon />}
+                endIcon={<ExpandMoreIcon />}
+                variant='outlined'>
+                {'Choose your Coins'}
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={4}>
+                {selectedCoins?.map((c, i) => (
+                  <Grid item xs={12} key={i}>
+                    <CoinItem
+                      coin={c}
+                      key={i}
+                      handleDelete={onDeleteCoin}
+                      index={i}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
           </Grid>
-        )}
+        </Grid>
+      )}
 
-        {!player && !isLoading && !gameFull && !aborted && (
-          <Grid item xs={12} md={12}>
-            <Grid container spacing={4} justifyContent={'flex-end'}>
-              <Grid item xs={12} md={6}>
-                <Grid container>
-                  <Grid item xs={12} md={12}>
+      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+        <Grid item xs={12} md={12}>
+          <Grid container spacing={4} justifyContent={'flex-end'}>
+            <Grid item xs={12} md={6}>
+              <Grid container>
+                <Grid item xs={12} md={12}>
+                  <Box display={'flex'} justifyContent={'center'}>
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
                         {submitState === SubmitState.Submitted
@@ -359,101 +431,121 @@ function GameEnter(props: Props) {
                           : ''}
                       </Button>
                     )}
-                  </Grid>
-                  <Grid item xs={12} md={12}>
-                    <Button
-                      disabled={
-                        !isDisabled || submitState === SubmitState.Confirmed
-                      }
-                      onClick={onEnterGame}
-                      variant={'contained'}
-                      color={
-                        submitState === SubmitState.Error
-                          ? 'default'
-                          : 'primary'
-                      }>
-                      <ButtonState
-                        state={submitState}
-                        defaultMsg={'ENTER GAME'}
-                        confirmedMsg={'You Entered Game'}
-                      />
-                    </Button>
-                  </Grid>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <Button
+                    disabled={
+                      !isDisabled ||
+                      submitState !== SubmitState.None ||
+                      !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                    }
+                    onClick={onEnterGame}
+                    variant={'contained'}
+                    color={
+                      submitState === SubmitState.Error ? 'default' : 'primary'
+                    }>
+                    <ButtonState
+                      state={submitState}
+                      defaultMsg={'ENTER GAME'}
+                      confirmedMsg={'You Entered Game'}
+                    />
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        )}
-        {player && player?.player_address && (
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant='h6' style={{margin: 5}}>
-                  Your Coins
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <PlayersTable
-                  data={[
-                    {
-                      hash: player?.player_address,
-                      score: player?.score?.toNumber() || 0,
-                      coins: (player?.coin_feeds as unknown as string[]) || [],
-                      showClaim: false,
-                      claimed: false,
-                    },
-                  ]}
-                  address={address}
-                  account={account}
-                  winner={winner}
-                />
-              </Grid>
+        </Grid>
+      )}
+      {player && player?.player_address && (
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant='h6' style={{margin: 5}}>
+                Your Coins
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <OnePlayerTable
+                data={players?.map((p) => {
+                  return {
+                    hash: p?.player_address,
+                    score: p?.score?.toNumber() || 0,
+                    coins: (p?.coin_feeds as unknown as string[]) || [],
+                  };
+                })}
+                address={address}
+                account={account}
+                winner={winner}
+              />
             </Grid>
           </Grid>
-        )}
-        {players && (
-          <Grid item xs={12}>
-            <Grid container>
+        </Grid>
+      )}
+      {players && (
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant='h6' style={{margin: 5}}>
+                Players
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <PlayersTable
+                data={players.map((p) => {
+                  return {
+                    hash: p?.player_address,
+                    score: p?.score?.toNumber() || 0,
+                    coins: (p?.coin_feeds as unknown as string[]) || [],
+                  };
+                })}
+                address={address}
+                finished={finished}
+                account={account}
+                winner={winner}
+              />
+            </Grid>
+            {!gameFull && (
               <Grid item xs={12}>
+                <WaitingPlayers />
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      )}
+      {isLoading && (
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Skeleton>
                 <Typography variant='h6' style={{margin: 5}}>
                   Players
                 </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <PlayersTable
-                  data={players.map((p) => {
-                    return {
-                      hash: p?.player_address,
-                      score: p?.score?.toNumber() || 0,
-                      coins: (p?.coin_feeds as unknown as string[]) || [],
-                      showClaim: false,
-                      claimed: false,
-                    };
-                  })}
-                  address={address}
-                />
-              </Grid>
-              {!gameFull && (
-                <Grid item xs={12}>
-                  <WaitingPlayers />
-                </Grid>
-              )}
+              </Skeleton>
             </Grid>
+            <Grid item xs={12}>
+              <PlayersTableSkeleton players={5} />
+            </Grid>
+            {!gameFull && (
+              <Grid item xs={12}>
+                <WaitingPlayers />
+              </Grid>
+            )}
           </Grid>
-        )}
+        </Grid>
+      )}
 
-        {currentPlayers && currentPlayers > 0 && !started && (
-          <Grid item xs={12}>
-            <StartGame address={address} />
-          </Grid>
-        )}
-        {started && !finished && !aborted && (
-          <Grid item xs={12}>
-            <EndGame address={address} />
-          </Grid>
-        )}
-      </Grid>
-    </Container>
+      {currentPlayers && currentPlayers > 0 && !started && (
+        <Grid item xs={12}>
+          <StartGame address={address} />
+        </Grid>
+      )}
+      {started && !finished && !aborted && (
+        <Grid item xs={12}>
+          <EndGame address={address} />
+        </Grid>
+      )}
+    </Grid>
   );
 }
 

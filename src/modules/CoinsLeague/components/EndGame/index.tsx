@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import { useWeb3 } from 'hooks/useWeb3';
-import { ExplorerURL } from 'modules/CoinsLeague/utils/constants';
+import { ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID } from 'modules/CoinsLeague/utils/constants';
 import { ChainId } from 'types/blockchain';
 
 interface Props {
@@ -66,6 +66,7 @@ export const EndGame = (props: Props) => {
     [game, refetch],
   );
 
+
   return (
     <Paper>
       <Box m={2}>
@@ -78,6 +79,7 @@ export const EndGame = (props: Props) => {
                 alignContent={'center'}
                 alignItems={'center'}>
                 <Grid item xs={12} md={12}>
+                  <Box display={'flex'} justifyContent={'center'}>
                   {tx && (
                     <Button variant={'text'} onClick={goToExplorer}>
                       {submitState === SubmitState.Submitted
@@ -88,12 +90,13 @@ export const EndGame = (props: Props) => {
                          'Confirmed Tx' : ''}
                     </Button>
                   )}
+                  </Box>
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Button
                     onClick={onEndGame}
                     fullWidth
-                    disabled={!canEndGame ||  submitState === SubmitState.Confirmed}
+                    disabled={!canEndGame ||  submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
                     variant={'contained'}
                     color={
                       submitState === SubmitState.Error ? 'default' : 'primary'

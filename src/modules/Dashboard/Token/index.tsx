@@ -1,4 +1,5 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
+
 import {
   Grid,
   Box,
@@ -11,10 +12,10 @@ import {
   AccordionSummary,
 } from '@material-ui/core';
 
-import {RouteComponentProps} from 'react-router-dom';
-import useFetch from 'use-http';
+import {useHistory} from 'react-router-dom';
+
 import {useWeb3} from 'hooks/useWeb3';
-import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import BuySell from './BuySell';
 
@@ -39,31 +40,39 @@ import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButto
 import {Share} from '@material-ui/icons';
 import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
+import {useNetwork} from 'hooks/useNetwork';
+import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
-type Params = {
-  address: string;
-  networkName: EthereumNetwork;
-};
+const TokenPage = () => {
+  const history = useHistory();
+  const network = useNetwork();
+  const searchParams = new URLSearchParams(history.location.search);
+  const networkName = useMemo(() => {
+    return (searchParams.get('network') as EthereumNetwork) || network;
+  }, [searchParams, network]);
 
-type Props = RouteComponentProps<Params>;
+  const address = useMemo(() => {
+    return (
+      searchParams.get('to') ||
+      GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase()
+    );
+  }, [searchParams, networkName]);
 
-const TokenPage: React.FC<Props> = (props) => {
-  const {
-    match: {params},
-  } = props;
-  const {address, networkName} = params;
-  const dispatch = useDispatch();
-  const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
-    (state) => state.ui.favoriteCoins,
-  );
+  const tokenFromAddress = useMemo(() => {
+    return (
+      searchParams.get('from') || GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName)
+    );
+  }, [searchParams]);
+
   const {account: web3Account, chainId} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
+  const {tokenInfo: tokenFromInfo} = useTokenInfo(tokenFromAddress);
   const [token, setToken] = useState<Token>();
-  const {data} = useCoingeckoTokenInfo(address, networkName);
   const classes = useStyles();
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
@@ -78,20 +87,6 @@ const TokenPage: React.FC<Props> = (props) => {
       });
     }
   }, [tokenInfo, address]);
-
-  const infoMyTakerOrders = useFetch(
-    `${ZRX_API_URL_FROM_NETWORK(networkName, chainId)}/sra/v4/orders`,
-  );
-  const infoMyMakerOrders = useFetch(
-    `${ZRX_API_URL_FROM_NETWORK(networkName, chainId)}/sra/v4/orders`,
-  );
-
-  useEffect(() => {
-    if (account) {
-      infoMyTakerOrders.get(`?trader=${account}&takerToken=${address}`);
-      infoMyMakerOrders.get(`?trader=${account}&makerToken=${address}`);
-    }
-  }, [account, address]);
 
   const [showAboutDialog, setShowAboutDialog] = useState(false);
 
@@ -109,13 +104,55 @@ const TokenPage: React.FC<Props> = (props) => {
     setShowShareDialog((value) => !value);
   }, []);
 
+  const onChangeTokens = useCallback(
+    (from?: Token, to?: Token) => {
+      const searchParams = new URLSearchParams(history.location.search);
+      if (from && from.networkName && from.address) {
+        searchParams.set('network', from.networkName);
+        searchParams.set('from', from.address);
+      }
+      if (to) {
+        if (from && from.networkName && from?.networkName !== to?.networkName) {
+          if (from?.networkName) {
+            searchParams.set(
+              'to',
+              GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                from?.networkName,
+              ).toUpperCase(),
+            );
+          }
+        } else {
+          if (to.address) {
+            searchParams.set('to', to.address);
+          } else {
+            if (to?.networkName) {
+              searchParams.set(
+                'to',
+                GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                  to?.networkName,
+                ).toUpperCase(),
+              );
+            }
+          }
+        }
+      }
+      history.push({search: searchParams.toString()});
+    },
+    [history.location.search],
+  );
+
+  const shareUrl = useMemo(() => {
+    const searchParams = new URLSearchParams(history.location.search);
+    return `${getWindowUrl()}/trade?${searchParams.toString()}`;
+  }, [history.location.search]);
+
   return (
     <>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
         shareText='Sharing token'
-        shareUrl={`${getWindowUrl()}/${networkName}/token/${address}`}
+        shareUrl={shareUrl}
         onClose={toggleShare}
       />
       <Box py={0} className={isMobile ? classes.mobileContainer : ''}>
@@ -174,6 +211,8 @@ const TokenPage: React.FC<Props> = (props) => {
                     balances={balances}
                     networkName={networkName}
                     tokenInfo={tokenInfo}
+                    tokenFromInfo={tokenFromInfo}
+                    onChangeTokens={onChangeTokens}
                   />
                 </Card>
                 <Grid item xs={12} className={classes.mobileChartsContainer}>
@@ -219,6 +258,8 @@ const TokenPage: React.FC<Props> = (props) => {
                       balances={balances}
                       networkName={networkName}
                       tokenInfo={tokenInfo}
+                      tokenFromInfo={tokenFromInfo}
+                      onChangeTokens={onChangeTokens}
                     />
                   </Card>
                 </Grid>
