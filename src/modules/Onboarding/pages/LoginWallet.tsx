@@ -34,9 +34,9 @@ import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid} from 'utils';
-import { useMobile } from 'hooks/useMobile';
-import { useHistory } from 'react-router-dom';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {useMobile} from 'hooks/useMobile';
+import {useHistory} from 'react-router-dom';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -115,6 +115,24 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  scrollOverflow: {
+    display: 'flex',
+    flexDirection: 'row',
+    overflowX: 'scroll',
+    flexWrap: 'nowrap',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
+  overflowItem: {
+    marginRight: theme.spacing(4),
+    '&:last-child': {
+      marginRight: 0,
+    },
+  },
+  overflowItemInner: {
+    width: '80vw',
+  },
 }));
 
 interface Props {}
@@ -180,7 +198,7 @@ export const CreateWallet = (props: Props) => {
     (e) => {
       if (email) {
         setLoading(true);
-        onConnectMagicEmail(email).finally(()=>{
+        onConnectMagicEmail(email).finally(() => {
           toggleLoading();
         });
       }
@@ -189,40 +207,18 @@ export const CreateWallet = (props: Props) => {
   );
 
   const handleConnectWalletLater = useCallback(() => {
-      history.push(`/wallet/${FEE_RECIPIENT}`);
-
+    history.push(`/wallet/${FEE_RECIPIENT}`);
   }, []);
 
   return (
-    <Box pr={isMobile ? 0 : 8} pl={isMobile ? 0 :8}>
-       <Backdrop className={classes.backdrop}  open={loading}>
-        <CircularProgress color="inherit" />
+    <Box py={{xs: 8}}>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color='inherit' />
         <Box pl={2}>
-        <Typography variant='body1'>Connecting to Wallet...</Typography>
+          <Typography variant='body1'>Connecting to Wallet...</Typography>
         </Box>
       </Backdrop>
       <Grid container spacing={4}>
-       {/* <Grid item xs={12}>
-          <Typography variant='h5'>Welcome</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Slider slideCount={2} onNext={() => {}} onPrevious={() => {}}>
-            <Box p={4}>
-              <Typography variant='h5'>Many other</Typography>
-              <Typography variant='h5'>Tools</Typography>
-            </Box>
-            <Box>2</Box>
-          </Slider>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant='body1'>
-            Welcome to Super App Dexkit, here you can make your transactions and
-            maintenance in the wallet, in addition to several other tools.
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>*/}
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -265,163 +261,208 @@ export const CreateWallet = (props: Props) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Grid container spacing={4}>
-                <Grid item xs={4} sm={4}>
-                  <ButtonBase
-                    onClick={handleTwitter}
-                    className={classes.actionButton}>
-                    <Paper
-                      className={clsx(
-                        classes.actionButtonPaper,
-                        classes.actionButtonPaperBorder,
-                      )}>
-                      <Box
-                        display='flex'
-                        justifyContent='center'
-                        flexDirection='column'
-                        py={6}>
-                        <Box display='flex' justifyContent='center' py={4}>
-                          <Box className={classes.iconContainer}>
-                            <TwitterIcon
-                              className={classes.walletActionButtonIcon}
-                            />
+              {isMobile ? (
+                <Box className={classes.scrollOverflow}>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
+                        onClick={handleTwitter}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <TwitterIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Twitter
+                            </Typography>
                           </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
+                        onClick={handleDiscord}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <DiscordIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Discord
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
+                        onClick={handleGoogle}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <GoogleIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Google
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
+                </Box>
+              ) : (
+                <Grid
+                  container
+                  spacing={4}
+                  wrap={isMobile ? 'nowrap' : undefined}>
+                  <Grid item xs={12} sm={4}>
+                    <ButtonBase
+                      onClick={handleTwitter}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <TwitterIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Twitter
+                          </Typography>
                         </Box>
-                        <Typography
-                          className={classes.walletActionButtonText}
-                          align='center'
-                          variant='body1'>
-                          Twitter
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <ButtonBase
+                      onClick={handleDiscord}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <DiscordIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Discord
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <ButtonBase
+                      onClick={handleGoogle}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <GoogleIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Google
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
                 </Grid>
-                {/*<Grid item xs={6} sm={4}>
-                  <ButtonBase
-                    onClick={handleTelegram}
-                    className={classes.actionButton}>
-                    <Paper
-                      className={clsx(
-                        classes.actionButtonPaper,
-                        classes.actionButtonPaperBorder,
-                      )}>
-                      <Box
-                        display='flex'
-                        justifyContent='center'
-                        flexDirection='column'
-                        py={6}>
-                        <Box display='flex' justifyContent='center' py={4}>
-                          <Box className={classes.iconContainer}>
-                            <TelegramIcon
-                              className={classes.walletActionButtonIcon}
-                            />
-                          </Box>
-                        </Box>
-                        <Typography
-                          className={classes.walletActionButtonText}
-                          align='center'
-                          variant='body1'>
-                          Telegram
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                      </Grid>*/}
-                {/*<Grid item xs={6} sm={4}>
-                  <ButtonBase
-                    onClick={handleApple}
-                    className={classes.actionButton}>
-                    <Paper
-                      className={clsx(
-                        classes.actionButtonPaper,
-                        classes.actionButtonPaperBorder,
-                      )}>
-                      <Box
-                        display='flex'
-                        justifyContent='center'
-                        flexDirection='column'
-                        py={6}>
-                        <Box display='flex' justifyContent='center' py={4}>
-                          <Box className={classes.iconContainer}>
-                            <AppleIcon
-                              className={classes.walletActionButtonIcon}
-                            />
-                          </Box>
-                        </Box>
-                        <Typography
-                          className={classes.walletActionButtonText}
-                          align='center'
-                          variant='body1'>
-                          Apple
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                </Grid>*/}
-                <Grid item xs={4} sm={4}>
-                  <ButtonBase
-                    onClick={handleDiscord}
-                    className={classes.actionButton}>
-                    <Paper
-                      className={clsx(
-                        classes.actionButtonPaper,
-                        classes.actionButtonPaperBorder,
-                      )}>
-                      <Box
-                        display='flex'
-                        justifyContent='center'
-                        flexDirection='column'
-                        py={6}>
-                        <Box display='flex' justifyContent='center' py={4}>
-                          <Box className={classes.iconContainer}>
-                            <DiscordIcon
-                              className={classes.walletActionButtonIcon}
-                            />
-                          </Box>
-                        </Box>
-                        <Typography
-                          className={classes.walletActionButtonText}
-                          align='center'
-                          variant='body1'>
-                          Discord
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                  <ButtonBase
-                    onClick={handleGoogle}
-                    className={classes.actionButton}>
-                    <Paper
-                      className={clsx(
-                        classes.actionButtonPaper,
-                        classes.actionButtonPaperBorder,
-                      )}>
-                      <Box
-                        display='flex'
-                        justifyContent='center'
-                        flexDirection='column'
-                        py={6}>
-                        <Box display='flex' justifyContent='center' py={4}>
-                          <Box className={classes.iconContainer}>
-                            <GoogleIcon
-                              className={classes.walletActionButtonIcon}
-                            />
-                          </Box>
-                        </Box>
-                        <Typography
-                          className={classes.walletActionButtonText}
-                          align='center'
-                          variant='body1'>
-                          Google
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>

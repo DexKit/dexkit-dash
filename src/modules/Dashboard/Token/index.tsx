@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
 
 import {
+  Link,
   Grid,
   Box,
   IconButton,
@@ -12,8 +13,12 @@ import {
   AccordionSummary,
 } from '@material-ui/core';
 
-import {useHistory} from 'react-router-dom';
-
+import {
+  RouteComponentProps,
+  useHistory,
+  Link as RouterLink,
+} from 'react-router-dom';
+import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -43,6 +48,13 @@ import {getWindowUrl} from 'utils/browser';
 import {useNetwork} from 'hooks/useNetwork';
 import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
+
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
+type Params = {
+  address: string;
+  networkName: EthereumNetwork;
+};
 
 const TokenPage = () => {
   const history = useHistory();
@@ -146,6 +158,10 @@ const TokenPage = () => {
     return `${getWindowUrl()}/trade?${searchParams.toString()}`;
   }, [history.location.search]);
 
+  const handleGoClick = useCallback(() => {
+    history.push('/wallet');
+  }, []);
+
   return (
     <>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
@@ -155,23 +171,28 @@ const TokenPage = () => {
         shareUrl={shareUrl}
         onClose={toggleShare}
       />
-      <Box py={0} className={isMobile ? classes.mobileContainer : ''}>
+      <Box py={{xs: 8}}>
         <Box>
           <Grid container justify='space-between' alignItems='center'>
             <Grid item>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Breadcrumbs aria-label='breadcrumb'>
-                    <Typography variant='body2' color='textSecondary'>
-                      Home
-                    </Typography>
-                    <Typography variant='body2' color='textSecondary'>
+                    <Link component={RouterLink} to='/wallet' color='inherit'>
+                      Wallet
+                    </Link>
+                    <Typography variant='body2' color='inherit'>
                       Trade
                     </Typography>
                   </Breadcrumbs>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container spacing={2} alignItems='center'>
+                    <Grid item>
+                      <IconButton onClick={handleGoClick} size='small'>
+                        <ArrowBackIcon />
+                      </IconButton>
+                    </Grid>
                     <Grid item>
                       <Typography variant='h5'>Trade</Typography>
                     </Grid>

@@ -32,7 +32,7 @@ export const Favorites = () => {
   }, []);
 
   return (
-    <Box pt={{xl: 4}}>
+    <Box py={{xs: 8}}>
       <Box mb={2}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={'/wallet'}>
@@ -40,16 +40,15 @@ export const Favorites = () => {
           </Link>
           <Link color='textSecondary'>Favorites</Link>
         </Breadcrumbs>
-        <Box display='flex' alignItems='center' alignContent='center'>
-          <Box mr={2}>
-            <IconButton size='small' component={RouterLink} to={'/wallet'}>
-              <ArrowBackIcon />
-            </IconButton>
-          </Box>
-          <Typography variant='h5'>Favorites</Typography>
-        </Box>
       </Box>
-
+      <Box mb={2} display='flex' alignItems='center' alignContent='center'>
+        <Box mr={2}>
+          <IconButton size='small' component={RouterLink} to={'/wallet'}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Box>
+        <Typography variant='h5'>Favorites</Typography>
+      </Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>
           {favoriteCoins.length > 0 && loading && (

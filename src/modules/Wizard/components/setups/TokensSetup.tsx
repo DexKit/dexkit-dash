@@ -35,6 +35,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import CreatedDialog from './erc20/dialogs/CreatedDialog';
 import {useDispatch} from 'react-redux';
 import {addToken} from 'redux/_wizard/actions';
+import {useAppGlobalState} from 'hooks/useGlobalState';
 
 const ERC20_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC20_BASE.sol/Token.json';
@@ -104,34 +105,36 @@ export const TokenSetup = (props: TokenSetupProps) => {
 
     let contractData = response.data;
 
-    let contract = new web3.eth.Contract(contractData.abi);
+    let pr = new ethers.providers.Web3Provider(getProvider());
 
-    let contractDeploy = contract.deploy({
-      data: contractData.bytecode,
-      arguments: [values.name, values.symbol, values.supply],
-    });
+    let factory = new ethers.ContractFactory(
+      contractData.abi,
+      contractData.bytecode,
+      pr.getSigner(),
+    );
 
-    await contractDeploy
-      .send({
-        from: userDefaultAcount,
-      })
-      .on('transactionHash', (transactionHash: string) => {
+    factory
+      .deploy(values.name, values.symbol, values.supply)
+      .then((contract) => {
+        setShowCreated(true);
+        setTransactionHash(contract.deployTransaction.hash);
+
         createNotification({
           title: 'Create collection',
           body: `Creating a new NFT collection named ${values.name}`,
           timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, transactionHash),
+          url: getTransactionScannerUrl(
+            chainId,
+            contract.deployTransaction.hash,
+          ),
           urlCaption: 'View transaction',
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,
-            transactionHash: transactionHash,
+            transactionHash: contract.deployTransaction.hash,
             status: 'pending',
           } as TxNotificationMetadata,
         });
-        setTransactionHash(transactionHash);
-        setShowConfirm(false);
-        setShowCreated(true);
 
         dispatch(
           addToken({
@@ -140,15 +143,12 @@ export const TokenSetup = (props: TokenSetupProps) => {
             supply: values.supply,
           }),
         );
-
-        console.log('aqui', values);
       })
-      .on('confirmation', () => {})
-      .on('error', (reason) => {
-        console.log(reason);
+      .catch((err) => {
+        console.log(err);
       })
-      .then((contract: Contract) => {})
       .finally(() => {
+        setShowConfirm(false);
         setConfirmPending(false);
       });
   }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch]);

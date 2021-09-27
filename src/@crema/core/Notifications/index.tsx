@@ -124,8 +124,6 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setShowNotifications((value) => !value);
   }, []);
 
-  const {blockNumber} = useBlockNumber();
-
   useEffect(() => {
     let transactionNotifications = notifications.filter((notification) => {
       let isTransaction = notification.type === NotificationType.TRANSACTION;
@@ -139,6 +137,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
 
       isTransactionMined(getProvider(), metadata.transactionHash).then(
         (result: ethers.providers.TransactionReceipt | null) => {
+          console.log('aquui');
           if (result !== null) {
             if ((result.status || 0) === 1) {
               dispatch(
@@ -165,7 +164,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
         },
       );
     }
-  }, [getProvider, blockNumber]);
+  }, []);
 
   return (
     <>

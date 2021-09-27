@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   item: {
+    cursor: 'pointer',
     marginRight: theme.spacing(1),
     '&:last-child': {
       marginRight: 0,
@@ -17,16 +18,21 @@ const useStyles = makeStyles((theme) => ({
 interface SliderPaginationProps {
   index: number;
   dots: number;
+  onSelectIndex(index: number): void;
 }
 
 export const SliderPagination = (props: SliderPaginationProps) => {
-  const {dots, index} = props;
+  const {dots, index, onSelectIndex} = props;
 
   const classes = useStyles();
   return (
     <Box className={classes.container}>
       {new Array(dots).fill(null).map((item, itemIndex) => (
-        <div className={classes.item}>
+        <div
+          onClick={() => {
+            onSelectIndex(itemIndex);
+          }}
+          className={classes.item}>
           <SliderPaginationDot active={itemIndex == index} />
         </div>
       ))}

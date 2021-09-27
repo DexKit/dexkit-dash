@@ -13,10 +13,11 @@ import SliderPagination from './SliderPagination';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
+  container: {
     position: 'relative',
   },
   anchor: {
+    padding: theme.spacing(2),
     position: 'absolute',
     zIndex: 2,
     display: 'flex',
@@ -46,39 +47,54 @@ const useStyles = makeStyles((theme) => ({
 interface SliderProps {
   onPrevious?: () => void;
   onNext?: () => void;
+  onSelectIndex: (index: number) => void;
+  onChangeIndex: (index: number) => void;
   children?: React.ReactNode | React.ReactNode[];
   slideCount: number;
+  index: number;
+  interval: number;
 }
 
 export const Slider = (props: SliderProps) => {
-  const {children, onPrevious, onNext, slideCount} = props;
+  const {
+    children,
+    index,
+    interval,
+    onSelectIndex,
+    onChangeIndex,
+    onPrevious,
+    onNext,
+    slideCount,
+  } = props;
+
   const classes = useStyles();
 
-  const [index, setIndex] = useState(0);
-
-  const handleChangeIndex = useCallback((itemIndex: number) => {
-    setIndex(itemIndex);
-  }, []);
-
   return (
-    <Paper className={classes.paper}>
+    <div className={classes.container}>
       <div className={clsx(classes.anchor, classes.anchorLeft)}>
-        <IconButton>
+        <IconButton onClick={onPrevious} size='small'>
           <NavigateBeforeIcon />
         </IconButton>
       </div>
       <div className={clsx(classes.anchor, classes.anchorRight)}>
-        <IconButton>
+        <IconButton onClick={onNext} size='small'>
           <NavigateNextIcon />
         </IconButton>
       </div>
       <div className={clsx(classes.anchor, classes.anchorBottom)}>
-        <SliderPagination dots={slideCount} index={index} />
+        <SliderPagination
+          onSelectIndex={onSelectIndex}
+          dots={slideCount}
+          index={index}
+        />
       </div>
-      <AutoPlaySwipeableViews onChangeIndex={handleChangeIndex}>
+      <AutoPlaySwipeableViews
+        interval={interval}
+        index={index}
+        onChangeIndex={onChangeIndex}>
         {children}
       </AutoPlaySwipeableViews>
-    </Paper>
+    </div>
   );
 };
 

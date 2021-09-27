@@ -105,7 +105,7 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
                 Transaction created
               </Typography>
               <Typography align='center' variant='body1'>
-                Please, check your token settings
+                Please, view the transaction for more information
               </Typography>
             </Box>
             <Button onClick={handleViewTransaction} color='primary' fullWidth>

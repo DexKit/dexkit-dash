@@ -26,6 +26,10 @@ import {BigNumber} from '@0x/utils';
 import {addAccounts} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
 
+import {useHistory} from 'react-router-dom';
+import {useAppGlobalState} from './useGlobalState';
+import {isMagicProvider} from 'services/magic';
+
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(
@@ -217,6 +221,12 @@ export const useWeb3 = () => {
     });
   };
 
+  const globalState = useAppGlobalState();
+
+  useEffect(() => {
+    globalState.handleChangeWeb3State(web3State);
+  }, [web3State]);
+
   return {
     onConnectWeb3,
     forceWeb3Connect,
@@ -230,7 +240,7 @@ export const useWeb3 = () => {
     ethBalanceQuery,
     chainIdQuery,
     onCloseWeb3,
-    getProvider,
+    getProvider: globalState.getProvider,
     setProvider,
     onActionWeb3Transaction,
     onSetDefaultAccount,

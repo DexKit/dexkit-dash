@@ -418,7 +418,7 @@ export default () => {
         success={showSuccess}
       />
       <Box pt={{xs: 8}}>
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Breadcrumbs>
               <Link

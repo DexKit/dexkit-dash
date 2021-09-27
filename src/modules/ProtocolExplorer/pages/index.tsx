@@ -13,9 +13,12 @@ import {
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import {
+  Link,
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -27,6 +30,7 @@ import {
   Paper,
   Typography,
   useTheme,
+  IconButton,
 } from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
@@ -199,6 +203,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
     );
   }, [history, data]);
 
+  const handleGoBack = useCallback(() => {
+    history.push('/wallet');
+  }, []);
+
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
@@ -210,7 +218,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
           onClose={handleToggleSelectToken}
         />
       ) : null}
-      <Box>
+      <Box py={{xs: 8}}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Grid container justify='space-between' alignItems='center'>
@@ -218,10 +226,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Breadcrumbs aria-label='breadcrumb'>
-                      <Typography variant='body2' color='textSecondary'>
-                        Home
-                      </Typography>
-                      <Typography variant='body2' color='textSecondary'>
+                      <Link color='inherit' component={RouterLink} to='/wallet'>
+                        Wallet
+                      </Link>
+                      <Typography variant='body2' color='inherit'>
                         Explorer
                       </Typography>
                     </Breadcrumbs>
@@ -233,7 +241,12 @@ const Explorer: React.FC<TokenProps> = (props) => {
                       alignItems='center'
                       alignContent='center'>
                       <Grid item>
-                        <Typography variant='h6'>Explorer</Typography>
+                        <IconButton size='small' onClick={handleGoBack}>
+                          <ArrowBackIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='h5'>Explorer</Typography>
                       </Grid>
                       {data?.platforms?.ethereum ? (
                         <Grid item>

@@ -140,13 +140,13 @@ export const Index = (props: Props) => {
           <Typography variant='h5'>Welcome</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Slider slideCount={2} onNext={() => {}} onPrevious={() => {}}>
+          {/* <Slider slideCount={2} onNext={() => {}} onPrevious={() => {}}>
             <Box p={4}>
               <Typography variant='h5'>Many other</Typography>
               <Typography variant='h5'>Tools</Typography>
             </Box>
             <Box>2</Box>
-          </Slider>
+          </Slider> */}
         </Grid>
         <Grid item xs={12}>
           <Typography variant='body1'>
