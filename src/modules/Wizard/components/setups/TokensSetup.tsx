@@ -17,7 +17,10 @@ import HelpIcon from '@material-ui/icons/Help';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
-import {getTransactionScannerUrl} from 'utils/blockchain';
+import {
+  getTransactionScannerUrl,
+  hasLondonHardForkSupport,
+} from 'utils/blockchain';
 import {Link as RouterLink} from 'react-router-dom';
 
 import React, {useCallback, useState, useEffect} from 'react';
@@ -30,12 +33,10 @@ import axios from 'axios';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
 import {useNotifications} from 'hooks/useNotifications';
-import {Contract} from 'web3-eth-contract';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import CreatedDialog from './erc20/dialogs/CreatedDialog';
 import {useDispatch} from 'react-redux';
 import {addToken} from 'redux/_wizard/actions';
-import {useAppGlobalState} from 'hooks/useGlobalState';
 
 const ERC20_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC20_BASE.sol/Token.json';
@@ -86,14 +87,9 @@ export const TokenSetup = (props: TokenSetupProps) => {
   }, []);
 
   const handleConfirm = useCallback(async () => {
-    let web3 = getWeb3();
     setConfirmPending(true);
 
     if (!userDefaultAcount) {
-      return;
-    }
-
-    if (!web3) {
       return;
     }
 
@@ -113,8 +109,23 @@ export const TokenSetup = (props: TokenSetupProps) => {
       pr.getSigner(),
     );
 
-    factory
-      .deploy(values.name, values.symbol, values.supply)
+    let factoryContract: Promise<ethers.Contract>;
+
+    if (hasLondonHardForkSupport(chainId)) {
+      factoryContract = factory.deploy(
+        values.name,
+        values.symbol,
+        values.supply,
+      );
+    } else {
+      factoryContract = factory.deploy(
+        values.name,
+        values.symbol,
+        values.supply,
+      );
+    }
+
+    factoryContract
       .then((contract) => {
         setShowCreated(true);
         setTransactionHash(contract.deployTransaction.hash);

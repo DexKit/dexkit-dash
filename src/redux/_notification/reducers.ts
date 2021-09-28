@@ -1,13 +1,5 @@
 import {Notification} from 'types/models/Notification';
-import {
-  addNotification,
-  checkNotification,
-  uncheckedNotification,
-  getNotification,
-  getNotificationList,
-  removeNotification,
-  checkAllNotification,
-} from 'services/notification';
+import {checkAllNotification} from 'services/notification';
 
 import {
   NotificationAction,
@@ -19,37 +11,29 @@ export interface NotificationState {
   readonly selected?: Notification;
 }
 const initialState: NotificationState = {
-  notifications: getNotificationList(),
+  notifications: [],
 };
 
-export default (
-  state = initialState,
-  action: NotificationActions,
-): NotificationState => {
+export default (state = initialState, action: any): NotificationState => {
   switch (action.type) {
     case NotificationAction.ADD_NOTIFICATION: {
-      const {notifications, type, position} = action.payload;
-      let _notifications: Notification[] = [];
-      notifications.forEach((notification) => {
-        _notifications = addNotification(notification, type, position);
-      });
-      return {
-        notifications: _notifications,
-        selected: state.selected,
-      };
+      const {notifications} = action.payload;
+
+      const newAddNotifications = [...state.notifications, ...notifications];
+
+      return {...state, notifications: newAddNotifications};
     }
-    // eslint-disable-next-line no-lone-blocks
     case NotificationAction.NOTIFICATION_LIST: {
-      return {
-        notifications: getNotificationList(),
-        selected: state.selected,
-      };
+      return {...state};
     }
     case NotificationAction.GET_NOTIFICATION: {
       const id = action.payload;
+
+      let getIndex = state.notifications.findIndex((n) => n.id == id);
+
       return {
         notifications: state.notifications,
-        selected: getNotification(id),
+        selected: getIndex > -1 ? state.notifications[getIndex] : undefined,
       };
     }
     case NotificationAction.UPDATE_NOTIFICATION: {
@@ -69,70 +53,48 @@ export default (
     }
     case NotificationAction.REMOVE_NOTIFICATION: {
       const id = action.payload;
-      const notification = removeNotification(id);
-      if (notification != null) {
-        let selected: Notification | undefined = state?.selected;
-        if (selected != null) {
-          selected =
-            selected?.id?.toString() === notification?.id?.toString()
-              ? undefined
-              : selected;
-        }
-        return {
-          notifications: getNotificationList(),
-          selected: selected,
-        };
-      }
-      return state;
+
+      let newNotifications = state.notifications;
+
+      let removeIndex = newNotifications.findIndex((n) => n.id === id);
+
+      newNotifications.splice(removeIndex, 1);
+
+      return {...state, notifications: newNotifications};
     }
     case NotificationAction.CHECK_NOTIFICATION: {
       const id = action.payload;
-      const notification = checkNotification(id);
-      if (notification != null) {
-        let selected: Notification | undefined = state?.selected;
-        if (selected != null) {
-          selected =
-            selected?.id?.toString() === notification?.id?.toString()
-              ? notification
-              : selected;
-        }
-        return {
-          notifications: getNotificationList(),
-          selected: selected,
-        };
+
+      let newCheckedNotifications = [...state.notifications];
+
+      let checkIndex = state.notifications.findIndex((n) => n.id === id);
+
+      if (checkIndex > -1) {
+        newCheckedNotifications[checkIndex].check = new Date();
       }
-      return state;
+
+      return {...state, notifications: newCheckedNotifications};
     }
     case NotificationAction.UNCHECKED_NOTIFICATION: {
       const id = action.payload;
-      const notification = uncheckedNotification(id);
-      if (notification != null) {
-        let selected: Notification | undefined = state?.selected;
-        if (selected != null) {
-          selected =
-            selected?.id?.toString() === notification?.id?.toString()
-              ? notification
-              : selected;
-        }
-        return {
-          notifications: getNotificationList(),
-          selected: selected,
-        };
+
+      let newUncheckNotifications = [...state.notifications];
+
+      let uncheckIndex = state.notifications.findIndex((n) => n.id === id);
+
+      if (uncheckIndex > -1) {
+        newUncheckNotifications[uncheckIndex].check = undefined;
       }
-      return state;
+
+      return {...state, notifications: newUncheckNotifications};
     }
     case NotificationAction.CHECK_ALL_NOTIFICATION: {
-      const notifications = checkAllNotification();
-      let selected: Notification | undefined = state?.selected;
-      if (selected != null) {
-        selected = notifications.find(
-          (x) => x.id?.toString() === selected?.id?.toString(),
-        );
-      }
-      return {
-        notifications,
-        selected,
-      };
+      let checkAllnotifications = state.notifications.map((n) => ({
+        ...n,
+        check: new Date(),
+      }));
+
+      return {...state, notifications: checkAllnotifications};
     }
     default: {
       return state;

@@ -66,7 +66,7 @@
     "downshift": "^5.4.5",
     "draft-js": "^0.11.6",
     "ethereumjs-vm": "^4.2.0",
-    "ethers": "^5.0.32",
+    "ethers": "^5.4.7",
     "final-form-arrays": "^3.0.2",
     "firebase": "^7.15.4",
     "flag-icon-css": "^3.5.0",

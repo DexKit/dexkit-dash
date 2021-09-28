@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import {ProviderWrapper} from 'types/ProviderWrapper';
 
+import Web3 from 'web3';
+
 import {getProvider as getWeb3Provider} from 'services/web3modal';
 import {isMagicProvider} from 'services/magic';
 import EventEmitter from 'events';
@@ -22,6 +24,7 @@ export interface GlobalState {
   handleChangeWeb3State: (web3State: Web3State) => void;
   data?: any;
   getProvider(): any;
+  getWeb3(): Web3 | null;
 }
 
 type Callback = (
@@ -68,8 +71,11 @@ export function useGlobalState(): GlobalState {
   }, []);
 
   const getProvider = useCallback((): any => {
-    console.log(providerRef.current);
     return providerRef.current;
+  }, []);
+
+  const getWeb3 = useCallback((): any => {
+    return new Web3(providerRef.current);
   }, []);
 
   useEffect(() => {
@@ -104,6 +110,7 @@ export function useGlobalState(): GlobalState {
     handleTransactionConfirm,
     handleTransactionCancel,
     data,
+    getWeb3,
   };
 }
 
@@ -113,6 +120,9 @@ export const GlobalStateContext = React.createContext<GlobalState>({
   handleShowTransactionModal: () => {},
   showTransactionModal: false,
   handleChangeWeb3State: (web3State: Web3State) => {},
+  getWeb3: () => {
+    return null;
+  },
 });
 
 export function useAppGlobalState() {

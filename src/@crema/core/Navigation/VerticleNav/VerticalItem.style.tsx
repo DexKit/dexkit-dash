@@ -102,7 +102,6 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       },
     },
     listItemText: {
-      overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       fontSize: 18,

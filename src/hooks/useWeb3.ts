@@ -230,7 +230,7 @@ export const useWeb3 = () => {
   return {
     onConnectWeb3,
     forceWeb3Connect,
-    getWeb3,
+    getWeb3: globalState.getWeb3,
     account,
     chainId,
     blocknumber,

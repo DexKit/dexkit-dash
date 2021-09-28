@@ -26,6 +26,7 @@ import {ExpandLess} from '@material-ui/icons';
 import {BigNumber, ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
 import {Web3State} from 'types/blockchain';
+import {hasLondonHardForkSupport} from 'utils/blockchain';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -38,7 +39,12 @@ export const TransactionConfirmDialog = (
 ) => {
   const {data, onCancel, onConfirm} = props;
 
-  const [values, setValues] = useState({gasPrice: 0, gasLimit: 0});
+  const [values, setValues] = useState({
+    gasPrice: 0,
+    gasLimit: 0,
+    maxFeePerGas: 0,
+    maxPriorityFeePerGas: 0,
+  });
 
   const handleCancel = useCallback(() => {
     if (onCancel) {
@@ -46,25 +52,47 @@ export const TransactionConfirmDialog = (
     }
   }, [onCancel]);
 
-  const {web3State, getProvider} = useWeb3();
+  const {web3State, getProvider, chainId} = useWeb3();
+
+  const isEIP1559Transaction = useCallback(() => {
+    if (data) {
+      let params = data.params;
+
+      if (params.length > 0) {
+        let firstParams = params[0];
+
+        return firstParams.maxFeePerGas;
+      }
+    }
+
+    return false;
+  }, [data]);
 
   const handleConfirm = useCallback(() => {
     if (onConfirm) {
       let dataCopy = {...data};
 
-      if (!dataCopy.maxFeePerGas && !dataCopy.maxPriorityFeePerGas) {
-        dataCopy.params[0].gasPrice = BigNumber.from(
-          values.gasPrice,
-        ).toHexString();
+      if (dataCopy.params.length > 0) {
+        if (
+          isEIP1559Transaction() ||
+          (chainId && hasLondonHardForkSupport(chainId))
+        ) {
+          delete dataCopy.params[0]['gasPrice'];
+          delete dataCopy.params[0]['gasLimit'];
 
-        dataCopy.params[0].gasLimit = BigNumber.from(
-          values.gasLimit,
-        ).toHexString();
+          dataCopy.params[0].maxFeePerGas = BigNumber.from(
+            values.maxFeePerGas,
+          ).toHexString();
+
+          dataCopy.params[0].maxPriorityFeePerGas = BigNumber.from(
+            values.maxPriorityFeePerGas,
+          ).toHexString();
+        }
       }
 
       onConfirm(dataCopy);
     }
-  }, [web3State, getProvider, data, onConfirm, values]);
+  }, [onConfirm, data, isEIP1559Transaction, values, chainId]);
 
   const defaultAccount = useDefaultAccount();
   const network = useNetwork();
@@ -83,7 +111,7 @@ export const TransactionConfirmDialog = (
 
   const handleChange = useCallback(
     (e: ChangeEvent<any>) => {
-      setValues({...values, [e.target.nae]: e.target.value});
+      setValues({...values, [e.target.name]: e.target.value});
     },
     [values],
   );
@@ -91,27 +119,10 @@ export const TransactionConfirmDialog = (
   useEffect(() => {
     const provider = getProvider();
 
-    if (web3State == Web3State.Done && data) {
+    if (web3State === Web3State.Done && data) {
       if (provider) {
-        let pr = new ethers.providers.Web3Provider(provider);
-        pr.getGasPrice().then(async (gasPrice: BigNumber) => {
-          console.log(data);
-          if (data.params.length > 0) {
-            if (data.params[0].gas) {
-              let gasLimit = BigNumber.from(data.params[0].gas);
-
-              setValues({
-                gasLimit: gasLimit.toNumber(),
-                gasPrice: gasPrice.toNumber(),
-              });
-            } else {
-              setValues({
-                gasLimit: 200000,
-                gasPrice: gasPrice.toNumber(),
-              });
-            }
-          }
-        });
+        if (data.params.length > 0) {
+        }
       }
     }
   }, [web3State, getProvider, data]);
@@ -151,24 +162,58 @@ export const TransactionConfirmDialog = (
             {balances?.toFixed(4)} {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
-        <Box
-          mb={2}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography>Gas price</Typography>
-          <Typography></Typography>
-        </Box>
-        <Box
-          mb={4}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography>Gas Limit</Typography>
-          <Typography></Typography>
-        </Box>
+
+        {isEIP1559Transaction() ? (
+          <>
+            <Box
+              mb={2}
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography>Max Priority Fee</Typography>
+              <Typography>
+                {ethers.utils.formatEther(BigNumber.from(values.gasPrice))}
+              </Typography>
+            </Box>
+            <Box
+              mb={4}
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography>Max Fee</Typography>
+              <Typography>
+                {ethers.utils.formatEther(BigNumber.from(values.maxFeePerGas))}
+              </Typography>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box
+              mb={2}
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography>Gas price</Typography>
+              <Typography>
+                {ethers.utils.formatEther(BigNumber.from(values.gasPrice))}
+              </Typography>
+            </Box>
+            <Box
+              mb={4}
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography>Gas Limit</Typography>
+              <Typography>
+                {ethers.utils.formatEther(BigNumber.from(values.gasLimit))}
+              </Typography>
+            </Box>
+          </>
+        )}
         <Paper variant='outlined'>
           <Box p={4}>
             <Box
@@ -184,26 +229,57 @@ export const TransactionConfirmDialog = (
             <Collapse in={showAdvanced}>
               <Box mt={4}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12}>
-                    <TextField
-                      value={values.gasPrice}
-                      onChange={handleChange}
-                      name='gasPrice'
-                      fullWidth
-                      variant='outlined'
-                      label='Gas Price'
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      value={values.gasLimit}
-                      onChange={handleChange}
-                      name='gasLimit'
-                      fullWidth
-                      variant='outlined'
-                      label='Gas Limit'
-                    />
-                  </Grid>
+                  {isEIP1559Transaction() ? (
+                    <>
+                      <Grid item xs={12}>
+                        <TextField
+                          size='small'
+                          value={values.maxPriorityFeePerGas}
+                          onChange={handleChange}
+                          name='maxPriorityFeePerGas'
+                          fullWidth
+                          variant='outlined'
+                          label='Priority Fee'
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          size='small'
+                          value={values.maxFeePerGas}
+                          onChange={handleChange}
+                          name='maxFeePerGas'
+                          fullWidth
+                          variant='outlined'
+                          label='Max fee'
+                        />
+                      </Grid>
+                    </>
+                  ) : (
+                    <>
+                      <Grid item xs={12}>
+                        <TextField
+                          size='small'
+                          value={values.gasPrice}
+                          onChange={handleChange}
+                          name='gasPrice'
+                          fullWidth
+                          variant='outlined'
+                          label='Gas Price'
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          size='small'
+                          value={values.gasLimit}
+                          onChange={handleChange}
+                          name='gasLimit'
+                          fullWidth
+                          variant='outlined'
+                          label='Gas Limit'
+                        />
+                      </Grid>
+                    </>
+                  )}
                 </Grid>
               </Box>
             </Collapse>
@@ -211,7 +287,11 @@ export const TransactionConfirmDialog = (
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleConfirm} color='primary' variant='contained'>
+        <Button
+          disabled={balances === 0}
+          onClick={handleConfirm}
+          color='primary'
+          variant='contained'>
           Confirm
         </Button>
         <Button onClick={handleCancel} variant='contained'>

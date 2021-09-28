@@ -1,4 +1,4 @@
-import {NotificationType} from 'types/notifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
 export interface Notification {
   /**

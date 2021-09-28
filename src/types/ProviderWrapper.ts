@@ -28,7 +28,6 @@ export class ProviderWrapper {
       args.method === 'eth_sendRawTransaction'
     ) {
       this._eventEmitter?.emit('request', args);
-
       return new Promise((resolve, reject) => {
         this._eventEmitter?.on('confirm', (newArgs) => {
           resolve(this.provider.request(newArgs));

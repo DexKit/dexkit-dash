@@ -10,11 +10,16 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
+  Chip,
 } from '@material-ui/core';
 import {ImportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useNetwork} from 'hooks/useNetwork';
+import {getNetworkName} from 'shared/constants/Bitquery';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -45,6 +50,8 @@ const Receiver: React.FC<Props> = (props) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const {chainId} = useWeb3();
+
   return (
     <Dialog
       fullWidth
@@ -67,7 +74,14 @@ const Receiver: React.FC<Props> = (props) => {
               <IntlMessages id='Receive' />
             </Typography>
           </Box>
-          <Box>
+          <Box alignContent='center' alignItems='center' display='flex'>
+            <Box
+              alignContent='center'
+              alignItems='center'
+              display='flex'
+              mr={2}>
+              <Chip size='small' label={GET_CHAIN_ID_NAME(chainId)} />
+            </Box>
             <IconButton size='small' onClick={handleClose}>
               <CloseIcon />
             </IconButton>
