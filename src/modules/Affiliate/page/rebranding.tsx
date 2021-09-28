@@ -28,6 +28,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
+import {useIntl} from 'react-intl';
 import {Link, BrowserRouter as Router} from 'react-router-dom';
 
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
@@ -119,6 +120,7 @@ interface Props {
 
 function AffiliatePage(props: Props) {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Container maxWidth='xl' className={classes.container}>
@@ -132,7 +134,7 @@ function AffiliatePage(props: Props) {
                 <Typography variant='subtitle2'>Dashboard</Typography>
               </Link>
               <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-                Página de Afiliados
+                {messages['affiliate.page.title']}
               </Typography>
             </Breadcrumbs>
           </Router>
@@ -141,7 +143,7 @@ function AffiliatePage(props: Props) {
           <Typography
             variant='h5'
             style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
-            Página de afiliados
+            {messages['affiliate.page.title']}
           </Typography>
         </Grid>
       </Grid>
