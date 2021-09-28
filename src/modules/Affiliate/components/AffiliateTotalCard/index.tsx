@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 
 import {makeStyles} from '@material-ui/core/styles';
-import {toCurrency} from '../../../../utils/currency';
+import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,6 +28,7 @@ interface Props {
 
 function AffiliateTotalCard(props: Props): JSX.Element {
   const classes = useStyles();
+  const {usdFormatter} = useUSDFormatter();
 
   return (
     <Container className={classes.container}>
@@ -44,7 +45,7 @@ function AffiliateTotalCard(props: Props): JSX.Element {
         <Grid item xs={10}>
           <Typography variant='subtitle2'>Total</Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
-            {toCurrency(value)}
+            {usdFormatter.format(props.total)}
           </Typography>
         </Grid>
       </Grid>
