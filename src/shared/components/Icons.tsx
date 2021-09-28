@@ -22,3 +22,4 @@ export {ReactComponent as NotificationOutlinedIcon} from 'assets/images/icons/no
 export {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 export {ReactComponent as MoneyReciveIcon} from 'assets/images/icons/money-recive.svg';
 export {ReactComponent as DollarSquareIcon} from 'assets/images/icons/dollar-square.svg';
+export {ReactComponent as ReceiptTextIcon} from 'assets/images/icons/receipt-text.svg';

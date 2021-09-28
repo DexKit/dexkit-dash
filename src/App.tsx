@@ -17,8 +17,6 @@ import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import {QueryClient, QueryClientProvider} from 'react-query';
 
-import {AppBottomNavigation} from 'shared/components/AppBottomNavigation';
-
 const queryClient = new QueryClient();
 
 const App = () => (

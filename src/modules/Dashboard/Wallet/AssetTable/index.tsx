@@ -27,6 +27,7 @@ import {Search} from '@material-ui/icons';
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AssetList from '../components/AssetList';
+import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 
 interface AssetTableProps {
   balances: MyBalances[];
@@ -278,7 +279,27 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <AssetList balances={filteredBalances()} />
+          {loading ? (
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TokenListItemSkeleton />
+              </Grid>
+              <Grid item xs={12}>
+                <TokenListItemSkeleton />
+              </Grid>
+              <Grid item xs={12}>
+                <TokenListItemSkeleton />
+              </Grid>
+              <Grid item xs={12}>
+                <TokenListItemSkeleton />
+              </Grid>
+              <Grid item xs={12}>
+                <TokenListItemSkeleton />
+              </Grid>
+            </Grid>
+          ) : (
+            <AssetList balances={filteredBalances()} />
+          )}
         </Grid>
       </Grid>
     </>

@@ -65,7 +65,7 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
         try {
           if (account) {
             const ethAccount = account;
-            const provider = new MetamaskSubprovider(getProvider());
+            const provider = new MetamaskSubprovider(getProvider() as any);
 
             const msgParams: EIP712TypedData = {
               types: {

@@ -11,6 +11,7 @@ import {
   Tooltip,
   Link,
 } from '@material-ui/core';
+import Web3 from 'web3';
 
 import React, {useCallback, useState, useEffect} from 'react';
 import MainLayout from 'shared/components/layouts/main';
@@ -83,10 +84,9 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
   const createContract = useCallback(
     async (contractURI: string) => {
-      let web3 = getWeb3();
-
       let promise = new Promise<string>(async (resolve, reject) => {
         if (userDefaultAcount) {
+          let web3 = new Web3(getProvider());
           if (web3) {
             let response = await axios.get(ERC721_CONTRACT_DATA_URL);
 
@@ -118,7 +118,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       });
       return promise;
     },
-    [userDefaultAcount, getWeb3, values, items],
+    [userDefaultAcount, getWeb3, values, items, getProvider],
   );
 
   const handleBack = useCallback(() => {

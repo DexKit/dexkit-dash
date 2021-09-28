@@ -13,50 +13,50 @@ import {
   setUserEncryptedSeed,
   initWallet,
   setShowAccounts,
+  toggleWelcomeModal,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
-import {  Network, WalletType, SupportedNetworkType } from 'types/blockchain';
+import {Network, WalletType, SupportedNetworkType} from 'types/blockchain';
 
 export type FavoriteCoin = Token & CoinDetailCoinGecko;
 
-
 export type Wallet = {
-  [WalletType.evm]: UIAccount[],
-  [Network.bitcoin]: UIAccount[],
-  [Network.dogecoin]: UIAccount[],
-  [Network.cardano]: UIAccount[],
-  [Network.dash]: UIAccount[],
-  [Network.eos]: UIAccount[],
-}
-
+  [WalletType.evm]: UIAccount[];
+  [Network.bitcoin]: UIAccount[];
+  [Network.dogecoin]: UIAccount[];
+  [Network.cardano]: UIAccount[];
+  [Network.dash]: UIAccount[];
+  [Network.eos]: UIAccount[];
+};
 
 export type UIAccount = {
   address: string;
   label: string;
   networkType: SupportedNetworkType;
-}
+};
 
 export interface UIState {
-    readonly favoriteCoins: FavoriteCoin[];
-    readonly encryptedSeed?: string;
-    readonly wallet: Wallet
-    readonly showAccounts: boolean;
+  readonly favoriteCoins: FavoriteCoin[];
+  readonly encryptedSeed?: string;
+  readonly wallet: Wallet;
+  readonly showAccounts: boolean;
+  readonly showWelcome: boolean;
 }
 
 export const WALLET_INIT_STATE: Wallet = {
   [WalletType.evm]: [],
-  [Network.bitcoin] : [],
-  [Network.dogecoin]:  [],
+  [Network.bitcoin]: [],
+  [Network.dogecoin]: [],
   [Network.cardano]: [],
-  [Network.dash]:  [],
-  [Network.eos]:  [],
-}
-
+  [Network.dash]: [],
+  [Network.eos]: [],
+};
 
 const initialUIState: UIState = {
   favoriteCoins: [],
   wallet: WALLET_INIT_STATE,
   showAccounts: false,
+  showWelcome: true,
 };
 
 export default createReducer(initialUIState, (builder) =>
@@ -157,7 +157,7 @@ export default createReducer(initialUIState, (builder) =>
     .addCase(setUserEncryptedSeed, (state, action) => {
       state.encryptedSeed = action.payload;
     })
-    
-)
-  
-
+    .addCase(toggleWelcomeModal, (state, action) => {
+      state.showWelcome = !state.showWelcome;
+    }),
+);

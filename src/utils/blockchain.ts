@@ -81,3 +81,17 @@ export async function isTransactionMined(
 
   return null;
 }
+
+export function hasLondonHardForkSupport(chainId: number) {
+  switch (chainId) {
+    case ChainId.Rinkeby:
+    case ChainId.Ropsten:
+    case ChainId.Mainnet:
+    case ChainId.Goerli:
+    case ChainId.Kovan:
+      return true;
+
+    default:
+      return false;
+  }
+}

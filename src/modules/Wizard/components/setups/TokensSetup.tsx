@@ -17,7 +17,10 @@ import HelpIcon from '@material-ui/icons/Help';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
-import {getTransactionScannerUrl} from 'utils/blockchain';
+import {
+  getTransactionScannerUrl,
+  hasLondonHardForkSupport,
+} from 'utils/blockchain';
 import {Link as RouterLink} from 'react-router-dom';
 
 import React, {useCallback, useState, useEffect} from 'react';
@@ -30,7 +33,6 @@ import axios from 'axios';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
 import {useNotifications} from 'hooks/useNotifications';
-import {Contract} from 'web3-eth-contract';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import CreatedDialog from './erc20/dialogs/CreatedDialog';
 import {useDispatch} from 'react-redux';
@@ -85,14 +87,9 @@ export const TokenSetup = (props: TokenSetupProps) => {
   }, []);
 
   const handleConfirm = useCallback(async () => {
-    let web3 = getWeb3();
     setConfirmPending(true);
 
     if (!userDefaultAcount) {
-      return;
-    }
-
-    if (!web3) {
       return;
     }
 
@@ -104,34 +101,51 @@ export const TokenSetup = (props: TokenSetupProps) => {
 
     let contractData = response.data;
 
-    let contract = new web3.eth.Contract(contractData.abi);
+    let pr = new ethers.providers.Web3Provider(getProvider());
 
-    let contractDeploy = contract.deploy({
-      data: contractData.bytecode,
-      arguments: [values.name, values.symbol, values.supply],
-    });
+    let factory = new ethers.ContractFactory(
+      contractData.abi,
+      contractData.bytecode,
+      pr.getSigner(),
+    );
 
-    await contractDeploy
-      .send({
-        from: userDefaultAcount,
-      })
-      .on('transactionHash', (transactionHash: string) => {
+    let factoryContract: Promise<ethers.Contract>;
+
+    if (hasLondonHardForkSupport(chainId)) {
+      factoryContract = factory.deploy(
+        values.name,
+        values.symbol,
+        values.supply,
+      );
+    } else {
+      factoryContract = factory.deploy(
+        values.name,
+        values.symbol,
+        values.supply,
+      );
+    }
+
+    factoryContract
+      .then((contract) => {
+        setShowCreated(true);
+        setTransactionHash(contract.deployTransaction.hash);
+
         createNotification({
           title: 'Create collection',
           body: `Creating a new NFT collection named ${values.name}`,
           timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, transactionHash),
+          url: getTransactionScannerUrl(
+            chainId,
+            contract.deployTransaction.hash,
+          ),
           urlCaption: 'View transaction',
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,
-            transactionHash: transactionHash,
+            transactionHash: contract.deployTransaction.hash,
             status: 'pending',
           } as TxNotificationMetadata,
         });
-        setTransactionHash(transactionHash);
-        setShowConfirm(false);
-        setShowCreated(true);
 
         dispatch(
           addToken({
@@ -140,15 +154,12 @@ export const TokenSetup = (props: TokenSetupProps) => {
             supply: values.supply,
           }),
         );
-
-        console.log('aqui', values);
       })
-      .on('confirmation', () => {})
-      .on('error', (reason) => {
-        console.log(reason);
+      .catch((err) => {
+        console.log(err);
       })
-      .then((contract: Contract) => {})
       .finally(() => {
+        setShowConfirm(false);
         setConfirmPending(false);
       });
   }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch]);

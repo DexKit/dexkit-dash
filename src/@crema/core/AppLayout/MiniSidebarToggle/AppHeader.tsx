@@ -49,14 +49,14 @@ import {
 import {ChainId, Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import { connectWeb3, setProvider } from 'services/web3modal';
 
+import {connectWeb3, setProvider} from 'services/web3modal';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
+  const {chainId, getProvider, setProvider} = useWeb3();
+  const {onSwitchMagicNetwork} = useMagicProvider();
 
-  const {chainId,  getProvider} = useWeb3();
-  const { onSwitchMagicNetwork } = useMagicProvider();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -70,7 +70,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     setMobileMoreAnchorEl(null);
   }
 
-  
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
   const renderMobileMenu = (
@@ -131,18 +130,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
-        try{
-         await switchChain(getProvider(), chainId)
-         window.location.reload();
-         dispatch(setWeb3State(Web3State.Done));
-        }catch{
+        try {
+          await switchChain(getProvider(), chainId);
+          window.location.reload();
+          dispatch(setWeb3State(Web3State.Done));
+        } catch {
           dispatch(setWeb3State(Web3State.Done));
         }
-       
-      
-      
-       
-    }},[getProvider, isMagicProvider]
+      }
+    },
+    [getProvider, isMagicProvider],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {

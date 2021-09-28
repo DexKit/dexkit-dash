@@ -64,6 +64,7 @@ import {ReactComponent as EmptyWalletImage} from 'assets/images/state/wallet-01.
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -434,6 +435,10 @@ export default () => {
     }
   }, [userAddress]);
 
+  const handleGoBack = useCallback(() => {
+    history.push('/wallet');
+  }, []);
+
   const {state} = useLocation<{action: string; asset: any}>();
 
   useEffect(() => {
@@ -450,8 +455,8 @@ export default () => {
   return (
     <>
       <Box pt={{xs: 8}}>
-        <Box mb={4}>
-          <Grid container spacing={4}>
+        <Box mb={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Breadcrumbs>
                 <Link to='/' color='textPrimary' component={RouterLink}>
@@ -464,6 +469,11 @@ export default () => {
             </Grid>
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
+                <Box mr={2}>
+                  <IconButton size='small' onClick={handleGoBack}>
+                    <ArrowBackIcon />
+                  </IconButton>
+                </Box>
                 <Box mr={2}>
                   <Typography variant='h5'>
                     {isWalletOwner(address, userAddress)

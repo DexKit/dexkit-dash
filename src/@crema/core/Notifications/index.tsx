@@ -124,48 +124,52 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setShowNotifications((value) => !value);
   }, []);
 
-  const {blockNumber} = useBlockNumber();
-
   useEffect(() => {
-    let transactionNotifications = notifications.filter((notification) => {
-      let isTransaction = notification.type === NotificationType.TRANSACTION;
-      let isPending =
-        (notification.metadata as TxNotificationMetadata).status == 'pending';
-      return isTransaction && isPending;
-    });
+    let interval = setInterval(() => {
+      let transactionNotifications = notifications.filter((notification) => {
+        let isTransaction = notification.type === NotificationType.TRANSACTION;
+        let isPending =
+          (notification.metadata as TxNotificationMetadata).status == 'pending';
+        return isTransaction && isPending;
+      });
 
-    for (let notificaiton of transactionNotifications) {
-      let metadata = notificaiton.metadata as TxNotificationMetadata;
+      for (let notificaiton of transactionNotifications) {
+        let metadata = notificaiton.metadata as TxNotificationMetadata;
 
-      isTransactionMined(getProvider(), metadata.transactionHash).then(
-        (result: ethers.providers.TransactionReceipt | null) => {
-          if (result !== null) {
-            if ((result.status || 0) === 1) {
-              dispatch(
-                updateNotification({
-                  ...notificaiton,
-                  metadata: {
-                    ...metadata,
-                    status: 'done',
-                  } as TxNotificationMetadata,
-                }),
-              );
-            } else if ((result.status || 0) === 0) {
-              dispatch(
-                updateNotification({
-                  ...notificaiton,
-                  metadata: {
-                    ...metadata,
-                    status: 'failed',
-                  } as TxNotificationMetadata,
-                }),
-              );
+        isTransactionMined(getProvider(), metadata.transactionHash).then(
+          (result: ethers.providers.TransactionReceipt | null) => {
+            if (result !== null) {
+              if ((result.status || 0) === 1) {
+                dispatch(
+                  updateNotification({
+                    ...notificaiton,
+                    metadata: {
+                      ...metadata,
+                      status: 'done',
+                    } as TxNotificationMetadata,
+                  }),
+                );
+              } else if ((result.status || 0) === 0) {
+                dispatch(
+                  updateNotification({
+                    ...notificaiton,
+                    metadata: {
+                      ...metadata,
+                      status: 'failed',
+                    } as TxNotificationMetadata,
+                  }),
+                );
+              }
             }
-          }
-        },
-      );
-    }
-  }, [getProvider, blockNumber]);
+          },
+        );
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [notifications]);
 
   return (
     <>
@@ -176,8 +180,9 @@ const Notifications: React.FC<NotificationsProps> = () => {
       <AppBarButton onClick={handleToggleNotifications}>
         <Badge
           badgeContent={
-            notifications.filter((notification) => notification.check === null)
-              .length
+            notifications.filter(
+              (notification) => notification.check === undefined,
+            ).length
           }
           color='secondary'>
           <NotificationIcon />

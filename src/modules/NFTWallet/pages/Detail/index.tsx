@@ -352,7 +352,7 @@ export const AssetDetail = () => {
         )
       ) : (
         <Box pt={{xs: 8}}>
-          <Box mb={4}>
+          <Box mb={2}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to='/'>
                 <IntlMessages id='nfts.walletBreadcrumbDashboard' />
@@ -375,7 +375,7 @@ export const AssetDetail = () => {
               </Link>
             </Breadcrumbs>
           </Box>
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             {errorMessage ? (
               <Grid item xs={12}>
                 <Alert severity='error' onClose={handleAlertClose}>

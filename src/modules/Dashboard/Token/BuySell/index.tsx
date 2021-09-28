@@ -201,14 +201,11 @@ const BuySell: React.FC<Props> = ({
         } as Token;
       });
       // If disable receive enabled we just show tokens from current networkName
-      if(disableReceive){
-        setSelect0(balancesFn.filter(b => b.networkName === networkName));
-      }else{
+      if (disableReceive) {
+        setSelect0(balancesFn.filter((b) => b.networkName === networkName));
+      } else {
         setSelect0(balancesFn);
       }
-
-
-      
     }
   }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName]);
   // We fill the tokenTo field with the selected token on the url
@@ -239,9 +236,14 @@ const BuySell: React.FC<Props> = ({
           setTokenTo(tokenInfo);
         }
       }
-    }else{
-        // if tokenTo is different from incoming tokenAddress and disable receive is not enable 
-      if(tokenTo && tokenAddress && tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase() && !disableReceive){
+    } else {
+      // if tokenTo is different from incoming tokenAddress and disable receive is not enable
+      if (
+        tokenTo &&
+        tokenAddress &&
+        tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase() &&
+        !disableReceive
+      ) {
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {
           _token = select1.find(
@@ -258,17 +260,16 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-   
-
-
   }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress]);
-  useEffect(()=> {
-    if (tokenFromInfo) {  
-      if(tokenFrom?.address.toLowerCase() !== tokenFromInfo.address.toLowerCase()){
+  useEffect(() => {
+    if (tokenFromInfo) {
+      if (
+        tokenFrom?.address.toLowerCase() !== tokenFromInfo.address.toLowerCase()
+      ) {
         setTokenFrom(tokenFromInfo);
       }
     }
-  }, [tokenFromInfo, select0, currentTab, tokenFrom])
+  }, [tokenFromInfo, select0, currentTab, tokenFrom]);
 
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list

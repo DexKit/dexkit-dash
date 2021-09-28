@@ -29,14 +29,10 @@ export const onAddNotification = (
   position = NotificationPosition.BOTTOM_RIGHT,
 ) => {
   return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    const payload = {notifications, type, position};
-    try {
-      dispatch(fetchSuccess());
-      dispatch({type: NotificationAction.ADD_NOTIFICATION, payload});
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
+    dispatch({
+      type: NotificationAction.ADD_NOTIFICATION,
+      payload: {notifications},
+    });
   };
 };
 

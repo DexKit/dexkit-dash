@@ -26,6 +26,10 @@ import {BigNumber} from '@0x/utils';
 import {addAccounts} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
 
+import {useHistory} from 'react-router-dom';
+import {useAppGlobalState} from './useGlobalState';
+import {isMagicProvider} from 'services/magic';
+
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(
@@ -100,16 +104,18 @@ export const useWeb3 = () => {
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
- 
+
     if (provider) {
       dispatch(setEthAccount(undefined));
       dispatch(setChainId(undefined));
       dispatch(setWeb3State(Web3State.NotConnected));
-      closeWeb3().then(() => {
-        dispatch(setEthAccount(undefined));
-        dispatch(setChainId(undefined));
-        dispatch(setWeb3State(Web3State.NotConnected));
-      }).catch(console.log);
+      closeWeb3()
+        .then(() => {
+          dispatch(setEthAccount(undefined));
+          dispatch(setChainId(undefined));
+          dispatch(setWeb3State(Web3State.NotConnected));
+        })
+        .catch(console.log);
     }
   };
 
@@ -133,25 +139,23 @@ export const useWeb3 = () => {
         .then((p) => {
           subscribeProvider(p);
           dispatch(setWeb3State(Web3State.Done));
-          if(onConnect){
+          if (onConnect) {
             const web3 = getWeb3();
-            if(web3){
-              web3.eth.getAccounts().then((a)=> {
+            if (web3) {
+              web3.eth.getAccounts().then((a) => {
                 onConnect(a[0]);
-              })
-              
+              });
             }
           }
         })
         .catch(() => {
           dispatch(setWeb3State(Web3State.Error));
-        }).finally(()=>{
-          if(onFinalConnect){
-            onFinalConnect()
-          }
         })
-        
-        ;
+        .finally(() => {
+          if (onFinalConnect) {
+            onFinalConnect();
+          }
+        });
     }
   };
   // Used to reconnect again, even if provider already exists
@@ -217,10 +221,16 @@ export const useWeb3 = () => {
     });
   };
 
+  const globalState = useAppGlobalState();
+
+  useEffect(() => {
+    globalState.handleChangeWeb3State(web3State);
+  }, [web3State]);
+
   return {
     onConnectWeb3,
     forceWeb3Connect,
-    getWeb3,
+    getWeb3: globalState.getWeb3,
     account,
     chainId,
     blocknumber,
@@ -230,7 +240,7 @@ export const useWeb3 = () => {
     ethBalanceQuery,
     chainIdQuery,
     onCloseWeb3,
-    getProvider,
+    getProvider: globalState.getProvider,
     setProvider,
     onActionWeb3Transaction,
     onSetDefaultAccount,

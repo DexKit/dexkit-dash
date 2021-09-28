@@ -80,15 +80,6 @@ export function onNotification(callbackEvent: (args: any) => void) {
   //});
 }
 
-export function getNotification(
-  id: string | number | symbol,
-): Notification | undefined {
-  const notifications: Notification[] = getNotificationList();
-  const index = notifications.findIndex((n) => n.id === id);
-  const not = index >= 0 ? notifications[index] : undefined;
-  return not;
-}
-
 export function getNotificationList(): Notification[] {
   const notifications: Notification[] = JSON.parse(
     localStorage.getItem(STORAGE_KEY) ?? '[]',
