@@ -36,6 +36,10 @@ export const ZRX_API_URL = (chainId: ChainId | undefined) => {
   switch (Number(chainId)) {
     case ChainId.Mainnet:
       return 'https://api.0x.org'; //'/swap/v1/quote'
+    case ChainId.Binance:
+        return 'https://bsc.api.0x.org'; //'/swap/v1/quote'
+    case ChainId.Matic:
+        return 'https://polygon.api.0x.org'; //'/swap/v1/quote'
     case ChainId.Kovan:
       return 'https://kovan.api.0x.org'; //'/swap/v1/quote'
     case ChainId.Ropsten:

@@ -42,15 +42,12 @@ import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
 import {
-  getMagicRPCProviderByChainId,
+  GET_MAGIC_NETWORK_FROM_CHAIN_ID,
   isMagicProvider,
-  MagicNetworks,
 } from 'services/magic';
-import {ChainId, Web3State} from 'types/blockchain';
+import { Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {connectWeb3, setProvider} from 'services/web3modal';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -123,11 +120,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-        if (chainId === ChainId.Ropsten) {
-          onSwitchMagicNetwork(MagicNetworks.ropsten);
-        } else if (chainId === ChainId.Mainnet) {
-          onSwitchMagicNetwork(MagicNetworks.ethereum);
-        }
+          const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+          onSwitchMagicNetwork(magicNetwork );
+  
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
         try {

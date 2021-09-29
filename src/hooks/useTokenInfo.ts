@@ -6,7 +6,9 @@ import {
   SearchCurrencyByAddressVariables,
 } from 'services/graphql/bitquery/__generated__/SearchCurrencyByAddress';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { TOKENS_LIST } from 'shared/constants/tokens';
 import {Token} from 'types/app';
+import { ChainId } from 'types/blockchain';
 import {
   findTokensInfoByAddress,
   GET_NATIVE_COINS,
@@ -15,7 +17,7 @@ import {
 import Web3 from 'web3';
 import {useTokenLists} from './useTokenLists';
 
-export const useTokenInfo = (address?: string) => {
+export const useTokenInfo = (address?: string, chainId?: ChainId) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [tokenInfo, setTokenInfo] = useState<Token>();
   const {ethTokens, binanceTokens, maticTokens} = useTokenLists();
@@ -33,6 +35,20 @@ export const useTokenInfo = (address?: string) => {
   };
 
   useEffect(() => {
+    if(address && chainId === ChainId.Ropsten && !isNativeCoinWithoutChainId(address)){
+      setLoading(true);
+      const tokens = TOKENS_LIST[chainId] as Token[];
+      const tk = findTokensInfoByAddress(
+        tokens,
+        address,
+      );
+      setTokenInfo(tk);
+      setLoading(false);
+      return;
+
+    }
+
+
     if (
       address &&
       Web3.utils.isAddress(address) &&

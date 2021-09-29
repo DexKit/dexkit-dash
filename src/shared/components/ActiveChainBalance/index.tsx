@@ -90,8 +90,6 @@ const ActiveChainBalance = () => {
   const {account, balance, isLoading, network} = useActiveChainBalance();
   const theme = useTheme();
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const formattedBalance = useMemo(() => {
     if (balance) {
       return ethers.utils.formatEther(balance);

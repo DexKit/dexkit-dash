@@ -127,9 +127,9 @@ const Notifications: React.FC<NotificationsProps> = () => {
   useEffect(() => {
     let interval = setInterval(() => {
       let transactionNotifications = notifications.filter((notification) => {
-        let isTransaction = notification.type === NotificationType.TRANSACTION;
+        let isTransaction = notification?.type === NotificationType.TRANSACTION;
         let isPending =
-          (notification.metadata as TxNotificationMetadata).status == 'pending';
+          (notification?.metadata as TxNotificationMetadata)?.status == 'pending';
         return isTransaction && isPending;
       });
 

@@ -198,7 +198,7 @@ export const setIsMagicProvider = (status: 'false' | 'true') => {
   localStorage.setItem(magicStorage, status);
 };
 
-export const getMagicNetworkFromChainId = (chainId: ChainId) => {
+export const GET_MAGIC_NETWORK_FROM_CHAIN_ID = (chainId: ChainId) => {
   switch (chainId) {
     case ChainId.Mainnet:
       return MagicNetworks.ethereum;

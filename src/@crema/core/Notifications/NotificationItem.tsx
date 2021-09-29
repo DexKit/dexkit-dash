@@ -55,19 +55,19 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
     dispatch(onRemoveNotification(item?.id ?? id));
   }, [item]);
 
-  const isTranscation = item.type === NotificationType.TRANSACTION;
+  const isTransaction = item?.type === NotificationType.TRANSACTION;
 
   const isTransactionPending =
-    (item.metadata as TxNotificationMetadata).status === 'pending';
+    (item?.metadata as TxNotificationMetadata)?.status === 'pending';
   const isTransactionDone =
-    (item.metadata as TxNotificationMetadata).status === 'done';
+    (item?.metadata as TxNotificationMetadata)?.status === 'done';
   const isTransactionFailed =
-    (item.metadata as TxNotificationMetadata).status === 'failed';
+    (item?.metadata as TxNotificationMetadata)?.status === 'failed';
 
   return (
     <ListItem id={item?.id?.toString() ?? id.toString()} onClick={handleClick}>
       <ListItemAvatar>
-        {isTranscation ? (
+        {isTransaction ? (
           <>
             {isTransactionPending ? (
               <CircularProgress />

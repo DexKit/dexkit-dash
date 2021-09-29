@@ -12,6 +12,7 @@ import {Game} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
+import { GET_LABEL_FROM_DURATION } from 'modules/CoinsLeague/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -122,7 +123,7 @@ function CardGameProgress(props: Props): JSX.Element {
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{Math.floor(time / 3600)}Hrs
+            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
           </Typography>
         </Grid>
       </Grid>
