@@ -124,6 +124,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
     setShowNotifications((value) => !value);
   }, []);
 
+  // trocar pelo useinterval
   useEffect(() => {
     let interval = setInterval(() => {
       let transactionNotifications = notifications.filter((notification) => {

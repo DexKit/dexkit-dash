@@ -36,6 +36,8 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
+import {useWeb3} from 'hooks/useWeb3';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -122,12 +124,21 @@ const TotalBalance = (props: Props) => {
     onShare,
     isFavorite,
   } = props;
+
+  const theme = useTheme();
+
   const [tokens, setTokens] = useState<MyBalances[]>([]);
   const [amountsVisible, setAmountsVisible] = useState(true);
 
-  const networkName = useNetwork();
+  const {account} = useWeb3();
 
-  const theme = useTheme();
+  const defaultAccount = useDefaultAccount();
+
+  const connected = useMemo(() => {
+    return account?.toLowerCase() === defaultAccount?.toLowerCase();
+  }, [account, defaultAccount]);
+
+  const networkName = useNetwork();
 
   useEffect(() => {
     if (only) {
@@ -300,7 +311,11 @@ const TotalBalance = (props: Props) => {
                   <Grid item>
                     <Grid container spacing={2} alignItems='stretch'>
                       <Grid item>
-                        <StatusSquare color={theme.palette.success.main} />
+                        {connected ? (
+                          <StatusSquare color={theme.palette.success.main} />
+                        ) : (
+                          <StatusSquare color={theme.palette.grey[500]} />
+                        )}
                       </Grid>
                       <Grid item>
                         <Box display='flex' alignItems='center'>

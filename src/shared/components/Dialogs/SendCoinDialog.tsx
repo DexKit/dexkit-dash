@@ -24,6 +24,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {Skeleton} from '@material-ui/lab';
 import PasteIconButton from '../PasteIconButton';
 import {Token} from 'types/app';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
   imageIcon: {
@@ -111,6 +112,8 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
     }
   }, [toToken, toAddress, toAmount]);
 
+  const defaultUserAccount = useDefaultAccount();
+
   return (
     <>
       <Dialog {...props} onClose={onClose} fullWidth maxWidth='xs'>
@@ -121,7 +124,7 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
             alignItems='center'
             alignContent='center'>
             <Typography variant='inherit'>Send</Typography>
-            <IconButton onClick={onClose}>
+            <IconButton size='small' onClick={onClose}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -217,11 +220,14 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
                 <Grid item xs={12}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
-                      <Typography align='right' variant='body1'>
-                        {!balance ? <Skeleton /> : balance.toFixed(4)} ETH
-                      </Typography>
+                      <TextField
+                        label='From'
+                        fullWidth
+                        variant='outlined'
+                        disabled
+                        value={defaultUserAccount}
+                      />
                     </Grid>
-
                     <Grid item xs={3}>
                       <SelectCoinv2
                         token={selectedToken}
@@ -248,6 +254,11 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
                           ),
                         }}
                       />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography align='right' variant='body1'>
+                        {!balance ? <Skeleton /> : balance.toFixed(4)} ETH
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>

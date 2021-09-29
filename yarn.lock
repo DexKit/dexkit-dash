@@ -2493,6 +2493,11 @@
     "@ethersproject/properties" "^5.4.0"
     "@ethersproject/strings" "^5.4.0"
 
+"@findeth/abi@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@findeth/abi/-/abi-0.7.1.tgz#60d0801cb252e587dc3228f00c00581bb748aebc"
+  integrity sha512-9uNu+/UxeuIibxIB7slf7BGG2PWjgBZr+rKzohhLb7VuoZjmlCcKZkenqwErROxkPdsap7OGO/o1DuYMvObMvw==
+
 "@firebase/analytics-types@0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@firebase/analytics-types/-/analytics-types-0.4.0.tgz#d6716f9fa36a6e340bc0ecfe68af325aa6f60508"
@@ -3518,6 +3523,22 @@
   dependencies:
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
+
+"@mycrypto/eth-scan@3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@mycrypto/eth-scan/-/eth-scan-3.5.2.tgz#5dd558b06a2a3d3a0d6d799f28b895b3b772fede"
+  integrity sha512-gHTeK2inci6220bSac8oOy35CPz7bkxJyuv9fBUuQBi/ekBL2yupcf36L7nrzTiBXCMHveKwWC34m592Z1qWJw==
+  dependencies:
+    "@findeth/abi" "^0.7.1"
+    isomorphic-unfetch "^3.1.0"
+    uuid-random-es "^2.1.1"
+
+"@mycrypto/gas-estimation@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@mycrypto/gas-estimation/-/gas-estimation-1.1.0.tgz#3f7af47aa487a6eb5d324db5ee11a66845c20c1e"
+  integrity sha512-/riP5G6DYp3uQBhC9vpWqbK+g6Uebs7AYjaivRF6V581h+PoObh0LqIZuKSzWZ5M+zPCxrrZHO43yR/jtpdq1w==
+  dependencies:
+    "@mycrypto/eth-scan" "3.5.2"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -13875,6 +13896,14 @@ isomorphic-unfetch@^2.1.1:
     node-fetch "^2.1.2"
     unfetch "^3.1.0"
 
+isomorphic-unfetch@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-unfetch/-/isomorphic-unfetch-3.1.0.tgz#87341d5f4f7b63843d468438128cb087b7c3e98f"
+  integrity sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==
+  dependencies:
+    node-fetch "^2.6.1"
+    unfetch "^4.2.0"
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -22814,6 +22843,11 @@ utrie@^1.0.1:
   integrity sha512-JPaDXF3vzgZxfeEwutdGzlrNoVFL5UvZcbO6Qo9D4GoahrieUPoMU8GCpVpR7MQqcKhmShIh8VlbEN3PLM3EBg==
   dependencies:
     base64-arraybuffer "^1.0.1"
+
+uuid-random-es@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/uuid-random-es/-/uuid-random-es-2.1.1.tgz#695bbe28559d9886afdb079dd4713f3faa1651a6"
+  integrity sha512-JUGIsQZb+1O1ETxY4/p/S0rsFGPGgscECbzPXN+Xeqnlz3XmqMR3OzC64bMQ8htxDFjvuA8Gl9y3Ve/l8fQEWg==
 
 uuid@2.0.1:
   version "2.0.1"

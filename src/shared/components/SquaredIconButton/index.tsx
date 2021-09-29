@@ -7,6 +7,9 @@ export const SquaredIconButton = withStyles((theme) => ({
     borderRadius: 8,
     backgroundColor: '#252836',
   },
+  disabled: {
+    backgroundColor: `rgba(255, 255, 255, 0.15) !important`,
+  },
 }))(IconButton);
 
 export default SquaredIconButton;
