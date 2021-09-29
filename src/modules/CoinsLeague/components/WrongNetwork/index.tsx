@@ -11,7 +11,7 @@ import {useTheme} from '@material-ui/core/styles';
 import {Empty} from 'shared/components/Empty';
 import {useDispatch} from 'react-redux';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import {getMagicNetworkFromChainId, isMagicProvider} from 'services/magic';
+import { GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {switchChain} from 'utils/wallet';
 import {setWeb3State} from 'redux/actions';
 import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
@@ -25,7 +25,7 @@ const WrongNetwork = () => {
   const handleSelectChain = useCallback(
     async (chainId: number) => {
       if (isMagicProvider()) {
-        const network = getMagicNetworkFromChainId(chainId as ChainId);
+        const network = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId as ChainId);
         onSwitchMagicNetwork(network);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));

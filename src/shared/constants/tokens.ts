@@ -1,5 +1,6 @@
 import {ChainId} from 'types/blockchain';
 import {Token} from 'types/app';
+import { EthereumNetwork } from './AppEnums';
 
 const WETH: Token = {
   address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -45,6 +46,7 @@ const ROPSTEN_LIST: Token[] = [
   {
     address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     chainId: ChainId.Ropsten,
+    networkName: EthereumNetwork.ethereum,
     name: 'Wrapped Ether',
     symbol: 'WETH',
     decimals: 18,
@@ -53,6 +55,7 @@ const ROPSTEN_LIST: Token[] = [
   {
     address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     chainId: ChainId.Ropsten,
+    networkName: EthereumNetwork.ethereum,
     name: 'Uniswap',
     symbol: 'Uni',
     decimals: 18,
@@ -61,6 +64,7 @@ const ROPSTEN_LIST: Token[] = [
   {
     address: '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
     chainId: ChainId.Ropsten,
+    networkName: EthereumNetwork.ethereum,
     name: 'Dai',
     symbol: 'DAI',
     decimals: 18,

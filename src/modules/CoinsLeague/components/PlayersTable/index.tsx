@@ -26,8 +26,8 @@ import IconButton from '@material-ui/core/IconButton';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
-import { GameType } from 'types/coinsleague';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinsLeague/utils/constants';
+import {GameType} from 'types/coinsleague';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinsLeague/utils/constants';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -76,6 +76,7 @@ interface Props {
   winner?: any;
   account?: string;
   finished?: boolean;
+  hideCoins?: boolean;
 }
 
 const getIconByCoin = (
@@ -111,7 +112,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished} = props;
+  const {address, account, finished, hideCoins} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
@@ -288,24 +289,38 @@ function PlayersTable(props: Props): JSX.Element {
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <AvatarGroup max={10} spacing={17}>
-                        { row?.coins.map((coin) => (
+                        {row?.coins.map((coin) =>
+                          !hideCoins ? (
                             <Avatar
                               className={classes.chip}
-                              src={getIconByCoin(coin, GET_LEAGUES_CHAIN_ID(chainId))}
+                              src={getIconByCoin(
+                                coin,
+                                GET_LEAGUES_CHAIN_ID(chainId),
+                              )}
                               style={{height: 35, width: 35}}>
-                              {getIconSymbol(coin, GET_LEAGUES_CHAIN_ID(chainId))}
+                              {getIconSymbol(
+                                coin,
+                                GET_LEAGUES_CHAIN_ID(chainId),
+                              )}
                             </Avatar>
-                          ))}
+                          ) : (
+                            <Avatar
+                              className={classes.chip}
+                              style={{height: 35, width: 35}}></Avatar>
+                          ),
+                        )}
                       </AvatarGroup>
-                      <IconButton onClick={() => onViewCoins(row.coins)}>
-                        <RemoveRedEye
-                          style={{
-                            color: '#fff',
-                            marginLeft: 10,
-                            alignSelf: 'center',
-                          }}
-                        />
-                      </IconButton>
+                      {!hideCoins && (
+                        <IconButton onClick={() => onViewCoins(row.coins)}>
+                          <RemoveRedEye
+                            style={{
+                              color: '#fff',
+                              marginLeft: 10,
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </IconButton>
+                      )}
                     </Box>
                   </TableCell>
 
