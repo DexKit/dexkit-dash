@@ -46,6 +46,7 @@ import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
 import {connectWeb3, setProvider} from 'services/web3modal';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -138,6 +139,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     setShowSwitchNetwork(true);
   }, []);
 
+  const isOnLoginPage = useCallback(() => {
+    return history.location.pathname == LOGIN_WALLET_ROUTE;
+  }, [history]);
+
   return (
     <>
       {chainId ? (
@@ -199,9 +204,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Grid>
                       ) : null}
                     </Grid>
-                    <Grid item>
-                      <WalletInfo />
-                    </Grid>
+                    {!isOnLoginPage() ? (
+                      <Grid item>
+                        <WalletInfo />
+                      </Grid>
+                    ) : null}
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />
@@ -259,9 +266,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                   ) : null}
-                  <Grid item>
-                    <WalletInfo />
-                  </Grid>
+                  {!isOnLoginPage() ? (
+                    <Grid item>
+                      <WalletInfo />
+                    </Grid>
+                  ) : null}
                   <Grid item>
                     <Notifications />
                   </Grid>

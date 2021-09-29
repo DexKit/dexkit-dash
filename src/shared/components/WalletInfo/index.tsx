@@ -47,6 +47,7 @@ import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -126,12 +127,7 @@ const WalletInfo = (props: any) => {
     setAnchorEl(null);
   };
 
-  const {
-    account: web3Account,
-    ethBalance,
-    web3State,
-    onCloseWeb3,
-  } = useWeb3();
+  const {account: web3Account, ethBalance, web3State, onCloseWeb3} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const network = useNetwork();
   const defaultAccountLabel = useDefaultLabelAccount();
@@ -181,7 +177,7 @@ const WalletInfo = (props: any) => {
       history.push(`/wallet/${a.address}`);
       // This is need because it was not changing the url and causing loop on update
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
-    } else{
+    } else {
       dispatch(setDefaultAccount({account: a, type: SupportedNetworkType.evm}));
     }
   };
@@ -189,6 +185,10 @@ const WalletInfo = (props: any) => {
   const notConnected = !web3Account;
 
   const classes = useStyles(props);
+
+  const isOnLoginPage = useCallback(() => {
+    return history.location.pathname == LOGIN_WALLET_ROUTE;
+  }, [history]);
 
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
@@ -281,7 +281,7 @@ const WalletInfo = (props: any) => {
         </Grid>
       </Grid>
     </Box>
-  ) : (
+  ) : !isOnLoginPage() && !defaultAccount ? (
     <Box>
       <Button
         variant='contained'
@@ -292,7 +292,7 @@ const WalletInfo = (props: any) => {
         Connect wallet
       </Button>
     </Box>
-  );
+  ) : null;
 };
 
 export default WalletInfo;

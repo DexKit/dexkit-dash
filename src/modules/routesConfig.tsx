@@ -40,7 +40,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         {
           id: 'trade',
           title: 'Trade',
-          messageId: 'Trade',
+          messageId: 'app.trade',
           type: 'item',
           icon: 'bitcoin.convert',
           customIcon: true,

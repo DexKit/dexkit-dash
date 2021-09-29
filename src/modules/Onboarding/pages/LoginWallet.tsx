@@ -27,6 +27,8 @@ import {isEmailValid} from 'utils';
 import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router-dom';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import {Add as AddIcon} from '@material-ui/icons';
+import {useAccountsModal} from 'hooks/useAccountsModal';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -82,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid rgba(255, 255, 255, 0.3)',
   },
   walletActionButtonIcon: {
+    color: theme.palette.primary.main,
     height: theme.spacing(6),
     width: theme.spacing(6),
   },
@@ -121,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overflowItemInner: {
-    width: '80vw',
+    width: '60vw',
   },
 }));
 
@@ -134,16 +137,15 @@ export const CreateWallet = (props: Props) => {
   const {onConnectWeb3} = useWeb3();
   const [loading, setLoading] = useState(false);
   const handleConnectWeb3 = useCallback(() => {
-    
-    const onConnectSuccess = (a: string) =>{
+    const onConnectSuccess = (a: string) => {
       setLoading(true);
       history.push(`/wallet/${a}`);
-    }
-    const onFinalConnect = () =>{
+    };
+    const onFinalConnect = () => {
       setLoading(false);
-    }
+    };
     onConnectWeb3(onConnectSuccess, onFinalConnect);
-  },[]);
+  }, []);
   const history = useHistory();
   const [email, setEmail] = useState('');
 
@@ -199,6 +201,12 @@ export const CreateWallet = (props: Props) => {
   const handleConnectWalletLater = useCallback(() => {
     history.push(`/wallet/${FEE_RECIPIENT}`);
   }, []);
+
+  const accountsModal = useAccountsModal();
+
+  const handleToggleAccountsModal = useCallback(() => {
+    accountsModal.setShow(!accountsModal.showAccounts);
+  }, [accountsModal]);
 
   return (
     <Box py={{xs: 8}}>
@@ -352,6 +360,39 @@ export const CreateWallet = (props: Props) => {
                       </ButtonBase>
                     </Box>
                   </Box>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
+                        onClick={handleToggleAccountsModal}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <AddIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Add account
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
                 </Box>
               ) : (
                 <Grid
@@ -446,6 +487,37 @@ export const CreateWallet = (props: Props) => {
                             align='center'
                             variant='body1'>
                             Google
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <ButtonBase
+                      onClick={handleToggleAccountsModal}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <AddIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Add account
                           </Typography>
                         </Box>
                       </Paper>
