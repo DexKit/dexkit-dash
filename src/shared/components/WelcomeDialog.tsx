@@ -1,14 +1,7 @@
 import React, {useCallback, useState} from 'react';
-import {
-  Box,
-  Grid,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogProps,
-  Typography,
-} from '@material-ui/core';
+
+import {Box, Grid, Button, Dialog, DialogProps} from '@material-ui/core';
+
 import Slider from './Slider';
 import {makeStyles} from '@material-ui/styles';
 import Close from '@material-ui/icons/Close';
@@ -17,10 +10,10 @@ import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router';
 
 const DESCRIPTIONS = [
-  'Welcome to Super App Dexkit, here you can make your transactions and maintenance in the wallet, in addition to several other tools.',
-  'Manage your assets and explorer ',
-  'lorem ipsum indolor 3',
-  'Dexkit others',
+  'Welcome to Super App DexKit. A platform oriented to productivity and ease of use: you will be able to manage all your ERC, BEP and POLY assets from any device connected to the internet.',
+  'Buy, trade or swap crypto from the platform and manage them as you prefer. DeFi allow the user to have maximum control in its finances.',
+  'Enjoy all your NFTs: As designer or enthusiast, you will be able to see all your non fungible tokens in just one place, no matter the Blockchain. ',
+  'Affiliate Program: earn passive incomes inviting your friends to use the platform. You will be provided with your unique Affiliate link to share and track your earnings from referrals.',
 ];
 
 const useStyles = makeStyles(() => ({

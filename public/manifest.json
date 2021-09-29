@@ -1,6 +1,7 @@
 {
   "short_name": "DexKit",
   "name": "DexKit Dashboard",
+  "description": "DexKit Dashboard App",
   "icons": [
     {
       "src": "favicon.ico",

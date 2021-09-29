@@ -10,6 +10,7 @@ import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import Box from '@material-ui/core/Box';
+import { GET_LABEL_FROM_DURATION } from 'modules/CoinsLeague/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,7 +48,7 @@ function SimpleCardGame(props: Props): JSX.Element {
           <Box display={'flex'}>
             <Typography variant='h6'>Game Time:</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
-              &nbsp;{Math.floor(time / 3600)}Hrs
+              &nbsp;{ GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
         </Grid>

@@ -417,7 +417,6 @@ const LimitForm: React.FC<Props> = (props) => {
                     }}
                   />
                 </Grid>
-                {!isNative && (
                   <>
                     <VerticalSwap switchTokens={switchTokens} />
                     <Grid item xs={12} md={5}>
@@ -542,7 +541,7 @@ const LimitForm: React.FC<Props> = (props) => {
                       </Grid>
                     </Grid>
                   </>
-                )}
+                
                 <Grid xs={12} md={12}>
                   <Box display={'flex'} justifyContent={'space-evenly'}>
                     {priceQuoteTo && (

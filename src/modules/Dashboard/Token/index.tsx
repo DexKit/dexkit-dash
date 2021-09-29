@@ -60,6 +60,7 @@ const TokenPage = () => {
   const history = useHistory();
   const network = useNetwork();
   const searchParams = new URLSearchParams(history.location.search);
+
   const networkName = useMemo(() => {
     return (searchParams.get('network') as EthereumNetwork) || network;
   }, [searchParams, network]);
@@ -82,23 +83,11 @@ const TokenPage = () => {
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
-  const {tokenInfo} = useTokenInfo(address);
-  const {tokenInfo: tokenFromInfo} = useTokenInfo(tokenFromAddress);
-  const [token, setToken] = useState<Token>();
+  const {tokenInfo} = useTokenInfo(address, chainId);
+  const {tokenInfo: tokenFromInfo} = useTokenInfo(tokenFromAddress, chainId);
+
   const classes = useStyles();
-
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    if (tokenInfo && tokenInfo.symbol) {
-      setToken({
-        address: address,
-        name: tokenInfo.name,
-        symbol: tokenInfo.symbol.toUpperCase(),
-        decimals: tokenInfo.decimals,
-      });
-    }
-  }, [tokenInfo, address]);
 
   const [showAboutDialog, setShowAboutDialog] = useState(false);
 

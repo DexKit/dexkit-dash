@@ -105,37 +105,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
       if (!btc || !eth) {
         return;
       }
-
       setLoading(false);
-
-      const r = await Changelly.getMinAmount({
-        from: eth.ticker,
-        to: btc.ticker,
-      });
-
-      if (r.result) {
-        const newAmount = Number(r.result);
-        setMinFromAmount(newAmount);
-        setFromAmount(newAmount);
-        setFromAmountValue(r.result);
-
-        setToLoading(true);
-
-        const res = await Changelly.getExchangeAmount({
-          from: eth.ticker,
-          to: btc.ticker,
-          amount: newAmount.toString(),
-        });
-
-        if (res.result) {
-          const am = Number(res.result);
-          setToAmountValue(res.result);
-          setToAmount(am);
-        }
-        setToLoading(false);
-      } else {
-        return;
-      }
     })();
   }, []);
 
@@ -194,9 +164,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
 
     setFromCoin(toCoin);
     setToCoin(fromCoin);
-
-    fetchCoinsAmounts();
-  }, [fetchCoinsAmounts, toCoin, fromCoin]);
+  }, [toCoin, fromCoin]);
 
   const calculateRatio = useCallback(
     (from: string, to: string, amount: string) => {
@@ -397,10 +365,13 @@ export const SwapComponent = (props: SwapComponentProps) => {
 
       setSelectTo('');
       setShowSelectCoin(false);
-      fetchCoinsAmounts();
     },
-    [fetchCoinsAmounts, selectTo, fromCoin, toCoin],
+    [selectTo, fromCoin, toCoin],
   );
+
+  useEffect(() => {
+    fetchCoinsAmounts();
+  }, [fromCoin, toCoin]);
 
   const handleCancelSelectCoin = useCallback(() => {
     setShowSelectCoin(false);

@@ -376,87 +376,98 @@ function GameEnter(props: Props) {
         {isLoading && <CardInfoPlayersSkeleton />}
       </Grid>
 
-      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
-        <Grid item xs={12} md={6} alignContent='space-around'>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant='h5' style={{margin: 5}}>
-                Choose Currencies {selectedCoins?.length}/{game?.num_coins || 0}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                disabled={isDisabled}
-                onClick={onOpenSelectDialog}
-                startIcon={<CryptocurrencyIcon />}
-                endIcon={<ExpandMoreIcon />}
-                variant='outlined'>
-                {'Choose your Coins'}
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={4}>
-                {selectedCoins?.map((c, i) => (
-                  <Grid item xs={12} key={i}>
-                    <CoinItem
-                      coin={c}
-                      key={i}
-                      handleDelete={onDeleteCoin}
-                      index={i}
-                    />
-                  </Grid>
-                ))}
+      {!player &&
+        !isLoading &&
+        !gameFull &&
+        !aborted &&
+        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+          <Grid item xs={12} md={6} alignContent='space-around'>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant='h5' style={{margin: 5}}>
+                  Choose Currencies {selectedCoins?.length}/
+                  {game?.num_coins || 0}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  disabled={isDisabled}
+                  onClick={onOpenSelectDialog}
+                  startIcon={<CryptocurrencyIcon />}
+                  endIcon={<ExpandMoreIcon />}
+                  variant='outlined'>
+                  {'Choose your Coins'}
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={4}>
+                  {selectedCoins?.map((c, i) => (
+                    <Grid item xs={12} key={i}>
+                      <CoinItem
+                        coin={c}
+                        key={i}
+                        handleDelete={onDeleteCoin}
+                        index={i}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      )}
+        )}
 
-      {!player && !isLoading && !gameFull && !aborted && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
-        <Grid item xs={12} md={12}>
-          <Grid container spacing={4} justifyContent={'flex-end'}>
-            <Grid item xs={12} md={6}>
-              <Grid container>
-                <Grid item xs={12} md={12}>
-                  <Box display={'flex'} justifyContent={'center'}>
-                    {tx && (
-                      <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted
-                          ? 'Submitted Tx'
-                          : submitState === SubmitState.Error
-                          ? 'Tx Error'
-                          : submitState === SubmitState.Confirmed
-                          ? 'Confirmed Tx'
-                          : ''}
-                      </Button>
-                    )}
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <Button
-                    disabled={
-                      !isDisabled ||
-                      submitState !== SubmitState.None ||
-                      !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                    }
-                    onClick={onEnterGame}
-                    variant={'contained'}
-                    color={
-                      submitState === SubmitState.Error ? 'default' : 'primary'
-                    }>
-                    <ButtonState
-                      state={submitState}
-                      defaultMsg={'ENTER GAME'}
-                      confirmedMsg={'You Entered Game'}
-                    />
-                  </Button>
+      {!player &&
+        !isLoading &&
+        !gameFull &&
+        !aborted &&
+        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
+          <Grid item xs={12} md={12}>
+            <Grid container spacing={4} justifyContent={'flex-end'}>
+              <Grid item xs={12} md={6}>
+                <Grid container>
+                  <Grid item xs={12} md={12}>
+                    <Box display={'flex'} justifyContent={'center'}>
+                      {tx && (
+                        <Button variant={'text'} onClick={goToExplorer}>
+                          {submitState === SubmitState.Submitted
+                            ? 'Submitted Tx'
+                            : submitState === SubmitState.Error
+                            ? 'Tx Error'
+                            : submitState === SubmitState.Confirmed
+                            ? 'Confirmed Tx'
+                            : ''}
+                        </Button>
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Button
+                      disabled={
+                        !isDisabled ||
+                        submitState !== SubmitState.None ||
+                        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                      }
+                      onClick={onEnterGame}
+                      variant={'contained'}
+                      color={
+                        submitState === SubmitState.Error
+                          ? 'default'
+                          : 'primary'
+                      }>
+                      <ButtonState
+                        state={submitState}
+                        defaultMsg={'ENTER GAME'}
+                        confirmedMsg={'You Entered Game'}
+                      />
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      )}
+        )}
       {player && player?.player_address && (
         <Grid item xs={12}>
           <Grid container>
@@ -501,16 +512,17 @@ function GameEnter(props: Props) {
                 })}
                 address={address}
                 finished={finished}
+                hideCoins={!started}
                 account={account}
                 winner={winner}
               />
             </Grid>
-            {!gameFull && (
-              <Grid item xs={12}>
-                <WaitingPlayers />
-              </Grid>
-            )}
           </Grid>
+        </Grid>
+      )}
+      {!gameFull && (
+        <Grid item xs={12}>
+          <WaitingPlayers />
         </Grid>
       )}
       {isLoading && (
@@ -535,11 +547,11 @@ function GameEnter(props: Props) {
         </Grid>
       )}
 
-      {currentPlayers && currentPlayers > 0 && !started && (
+      {(currentPlayers && currentPlayers > 0 && !started) ? (
         <Grid item xs={12}>
           <StartGame address={address} />
         </Grid>
-      )}
+      ) : null}
       {started && !finished && !aborted && (
         <Grid item xs={12}>
           <EndGame address={address} />
