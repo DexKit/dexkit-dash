@@ -767,17 +767,6 @@ export const SwapComponent = (props: SwapComponentProps) => {
                     Next
                   </Button>
                 </Grid>
-                {onClose ? (
-                  <Grid item xs={12}>
-                    <Button
-                      variant='outlined'
-                      startIcon={<Close />}
-                      fullWidth
-                      onClick={onClose}>
-                      Close
-                    </Button>
-                  </Grid>
-                ) : null}
               </Grid>
             </CardContent>
           </>

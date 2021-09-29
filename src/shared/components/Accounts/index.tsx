@@ -1,9 +1,9 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
-import {Box, Typography, Snackbar} from '@material-ui/core';
+import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
 
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -26,7 +26,7 @@ import {
 
 import {useWeb3} from 'hooks/useWeb3';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import {isMobile} from 'web3modal';
+
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
 
@@ -38,7 +38,8 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
 import ContainedInput from 'shared/components/ContainedInput';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -83,9 +84,11 @@ const Accounts = () => {
 
   const {web3State, onConnectWeb3, account} = useWeb3();
 
+  const addressInputRef = useRef<HTMLInputElement>();
+
   const handlePaste = async () => {
-    const cpy: any = await navigator.clipboard.readText();
-    setAddress(cpy);
+    addressInputRef.current?.focus();
+    document.execCommand('paste');
   };
 
   const onChangeAddress = (
@@ -94,7 +97,7 @@ const Accounts = () => {
     const value = ev.currentTarget.value;
 
     if (!Web3Wrapper.isAddress(value)) {
-      setError('Address not valid');
+      setError('Address is not valid');
     } else {
       setError(undefined);
     }
@@ -129,18 +132,27 @@ const Accounts = () => {
     accountsModal.setShow(false);
   }, []);
 
+  const isMobile = useMobile();
+
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
       <Button
         variant='contained'
+        disabled={web3State === Web3State.Connecting}
+        startIcon={
+          web3State === Web3State.Connecting ? (
+            <CircularProgress color='inherit' size={theme.spacing(6)} />
+          ) : undefined
+        }
         color='primary'
+        fullWidth={isMobile}
         onClick={handleConnectWeb3}
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
-          ? isMobile()
+          ? isMobile
             ? 'Connecting...'
             : 'Connecting... Check Wallet'
-          : isMobile()
+          : isMobile
           ? 'Connect'
           : 'Connect Wallet'}
       </Button>
@@ -173,7 +185,7 @@ const Accounts = () => {
   const handleMakeDefault = useCallback(
     (account: UIAccount) => {
       dispatch(setDefaultAccount({account: account, type: selectedNetwork}));
-      if(history.location.pathname.startsWith('/wallet')){
+      if (history.location.pathname.startsWith('/wallet')) {
         history.push(`/wallet/${account.address}`);
       }
     },
@@ -330,6 +342,9 @@ const Accounts = () => {
                   <ContainedInput
                     placeholder='Address'
                     fullWidth
+                    ref={(ref: any) => {
+                      addressInputRef.current = ref;
+                    }}
                     endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
                         <Tooltip title={'Paste valid account'}>
@@ -346,19 +361,31 @@ const Accounts = () => {
                   <Tooltip title={'Add valid account'}>
                     <SquaredIconButton
                       onClick={handleAddAccount}
-                      disabled={address === '' || error !== undefined}>
-                      <DoneIcon />
+                      disabled={
+                        address === '' ||
+                        address === undefined ||
+                        error !== undefined
+                      }>
+                      <DoneIcon
+                        color={
+                          address !== '' && address !== undefined && !error
+                            ? 'primary'
+                            : 'inherit'
+                        }
+                      />
                     </SquaredIconButton>
                   </Tooltip>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
                 {error ? (
-                  <Typography
-                    variant='caption'
-                    style={{color: theme.palette.error.main}}>
-                    {error}
-                  </Typography>
+                  <Box mt={2}>
+                    <Typography
+                      variant='caption'
+                      style={{color: theme.palette.error.main}}>
+                      {error}
+                    </Typography>
+                  </Box>
                 ) : null}
               </Grid>
             </Grid>
@@ -401,7 +428,11 @@ const Accounts = () => {
                       <SquaredIconButton
                         onClick={handleRemoveMultiple}
                         disabled={selectedAccounts.length === 0}>
-                        <DeleteIcon />
+                        <DeleteIcon
+                          color={
+                            selectedAccounts.length > 0 ? 'error' : 'inherit'
+                          }
+                        />
                       </SquaredIconButton>
                     </Tooltip>
                   </Grid>

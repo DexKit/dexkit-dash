@@ -10,9 +10,14 @@ export const useNativeCoinPriceUSD = (network: EthereumNetwork) => {
   useEffect(() => {
     setLoading(true);
     let id = 'ethereum';
+
     let url = `${COINGECKO_URL_SIMPLE_PRICE}?ids=${id}&vs_currencies=usd`;
+
     if (network === EthereumNetwork.bsc) {
       id = 'binancecoin';
+      url = `${COINGECKO_URL_SIMPLE_PRICE}?ids=${id}&vs_currencies=usd`;
+    } else if (network === EthereumNetwork.matic) {
+      id = 'matic-network';
       url = `${COINGECKO_URL_SIMPLE_PRICE}?ids=${id}&vs_currencies=usd`;
     }
 

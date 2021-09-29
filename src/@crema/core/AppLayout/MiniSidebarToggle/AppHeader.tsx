@@ -41,13 +41,12 @@ import {useHistory} from 'react-router';
 import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
-import {
-  GET_MAGIC_NETWORK_FROM_CHAIN_ID,
-  isMagicProvider,
-} from 'services/magic';
-import { Web3State} from 'types/blockchain';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
+import {connectWeb3, setProvider} from 'services/web3modal';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -120,9 +119,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       setShowSwitchNetwork(false);
 
       if (isMagicProvider()) {
-          const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
-          onSwitchMagicNetwork(magicNetwork );
-  
+        const magicNetwork = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId);
+        onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
         try {
@@ -140,6 +138,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const handleOpenSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(true);
   }, []);
+
+  const isOnLoginPage = useCallback(() => {
+    return history.location.pathname == LOGIN_WALLET_ROUTE;
+  }, [history]);
 
   return (
     <>
@@ -202,9 +204,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Grid>
                       ) : null}
                     </Grid>
-                    <Grid item>
-                      <WalletInfo />
-                    </Grid>
+                    {!isOnLoginPage() ? (
+                      <Grid item>
+                        <WalletInfo />
+                      </Grid>
+                    ) : null}
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />
@@ -262,9 +266,11 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                   ) : null}
-                  <Grid item>
-                    <WalletInfo />
-                  </Grid>
+                  {!isOnLoginPage() ? (
+                    <Grid item>
+                      <WalletInfo />
+                    </Grid>
+                  ) : null}
                   <Grid item>
                     <Notifications />
                   </Grid>

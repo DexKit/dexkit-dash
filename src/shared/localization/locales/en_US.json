@@ -16,6 +16,7 @@
   "app.started": "Started",
   "app.created": "Created At",
   "app.tradesCount": "Trades Count",
+  "app.trade": "Trade",
   "app.daysTraded": "Days traded",
   "app.price": "Price",
   "app.medianPrice": "Median Price",
