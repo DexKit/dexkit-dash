@@ -13,6 +13,7 @@ import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
+    height: theme.spacing(20),
     borderRadius: 6,
     background: '#2e3243',
   },
@@ -35,12 +36,10 @@ function AffiliateTotalCard(props: Props): JSX.Element {
       <Grid
         container
         className={classes.innerContent}
-        spacing={2}
-        alignItems='flex-end'>
-        <Grid item xs={2}>
-          <Box bgcolor='#7A8398' textAlign='center' style={{borderRadius: 50}}>
-            <MoneyIcon color='primary' style={{fontSize: 35}} />
-          </Box>
+        spacing={5}
+        alignItems='center'>
+        <Grid item xs={2} style={{textAlign: 'center', padding: 0}}>
+          <MoneyIcon color='primary' style={{fontSize: 50}} />
         </Grid>
         <Grid item xs={10}>
           <Typography variant='subtitle2'>Total</Typography>
