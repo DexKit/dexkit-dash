@@ -8,7 +8,9 @@ import { EthereumNetwork } from "shared/constants/AppEnums";
 
 
 
-
+/**
+ * @dev This hook is not working at the moment due to bug on Bitquery, we are using directly transfer events 
+ */
 export const useCollectionIds = (address: string, networkName: EthereumNetwork) => {
   const account = useDefaultAccount();
   const tokenIdsQuery = useQuery(['GetCollectionTokenIds', address, account, networkName], () => {

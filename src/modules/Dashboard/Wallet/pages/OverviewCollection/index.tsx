@@ -27,7 +27,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 
 import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
-import { useCollectionIds } from 'hooks/balance/useCollectionIds';
+import { useCollectionIds } from 'hooks/nfts/useCollectionIds';
 import { NoMeetingRoom } from '@material-ui/icons';
 import { useNFTMetadataURI } from 'hooks/nfts/useNFTMetadataURI';
 
@@ -55,7 +55,6 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
 
   const metadataQuery = useNFTMetadataURI(address, networkName, tokenIdsQuery.data)
 
-  const [token, setToken] = useState<Token>();
 
   const history = useHistory();
 

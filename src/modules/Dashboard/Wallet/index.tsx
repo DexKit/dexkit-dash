@@ -41,6 +41,8 @@ import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import NFTTable from './components/NFTTable';
+import { useNFTBalances } from 'hooks/nfts/useNFTBalances';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 type Params = {
   account: string;
@@ -61,7 +63,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   const defaultAccount = useDefaultAccount();
   const defaultLabel = useDefaultLabelAccount();
   const dispatch = useDispatch();
-  const {account: web3Account} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
   const account = defaultAccount || web3Account;
   const searchParams = new URLSearchParams(history.location.search);
   const [value, setValue] = React.useState(searchParams.get('tab') ?? 'assets');
@@ -71,7 +73,8 @@ const WalletTabs: React.FC<Props> = (props) => {
     history.push({search: searchParams.toString()});
     setValue(newValue);
   };
-  const {loading, error, data, nftBalances, loadingUsd} = useAllBalance(defaultAccount);
+  const {loading, error, data, loadingUsd} = useAllBalance(defaultAccount);
+//  const nftBalancesQuery = useNFTBalances(defaultAccount, EthereumNetwork.matic)
 
   useEffect(() => {
     if (
@@ -135,7 +138,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         }}
                         aria-label='wallet tabs'>
                         <CustomTab value='assets' label={'Assets'} />
-                      {/*  <CustomTab value='nfts' label={'NFTs'} />*/}
+                       {/* <CustomTab value='nfts' label={'NFTs'} />*/}
                         <CustomTab value='trade-history' label={'History'} />
                       </CustomTabs>
                     </Grid>
@@ -149,11 +152,11 @@ const WalletTabs: React.FC<Props> = (props) => {
                         />
                       </TabPanel>
                       <TabPanel className={classes.zeroPadding} value='nfts'>
-                        <NFTTable
-                          loading={loading}
-                          error={error}
-                          balances={nftBalances}
-                        />
+                        {/*<NFTTable
+                          loading={nftBalancesQuery.isLoading}
+                          error={nftBalancesQuery.isError}
+                          balances={nftBalancesQuery.data}
+                        />*/}
                       </TabPanel>
                       <TabPanel value='trade-history'>
                         <TradeHistoryTab address={defaultAccount} />
