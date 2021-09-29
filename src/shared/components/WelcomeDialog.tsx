@@ -1,6 +1,13 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect, useRef} from 'react';
 
-import {Box, Grid, Button, Dialog, DialogProps} from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  Button,
+  Dialog,
+  DialogProps,
+  CircularProgress,
+} from '@material-ui/core';
 
 import Slider from './Slider';
 import {makeStyles} from '@material-ui/styles';
@@ -8,13 +15,6 @@ import Close from '@material-ui/icons/Close';
 import {useMobile} from 'hooks/useMobile';
 
 import {useHistory} from 'react-router';
-
-const DESCRIPTIONS = [
-  'Welcome to Super App DexKit. A platform oriented to productivity and ease of use: you will be able to manage all your ERC, BEP and POLY assets from any device connected to the internet.',
-  'Buy, trade or swap crypto from the platform and manage them as you prefer. DeFi allow the user to have maximum control in its finances.',
-  'Enjoy all your NFTs: As designer or enthusiast, you will be able to see all your non fungible tokens in just one place, no matter the Blockchain. ',
-  'Affiliate Program: earn passive incomes inviting your friends to use the platform. You will be provided with your unique Affiliate link to share and track your earnings from referrals.',
-];
 
 const useStyles = makeStyles(() => ({
   slide: {
@@ -25,6 +25,53 @@ const useStyles = makeStyles(() => ({
     overflow: 'inherit',
   },
 }));
+
+interface LazyImageProps {
+  src: string;
+  className: string;
+}
+
+const LazyImage = (props: LazyImageProps) => {
+  const {src, className} = props;
+
+  const [loading, setLoading] = useState(true);
+
+  const handleLoad = useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  const handleError = useCallback(() => {}, []);
+
+  return (
+    <>
+      <div
+        style={{
+          display: loading ? 'flex' : 'none',
+          alignItems: 'center',
+          alignContent: 'center',
+          justifyContent: 'center',
+          height: '40vh',
+        }}
+        className={className}>
+        <CircularProgress className={className} />
+      </div>
+      <img
+        style={{display: loading ? 'none' : 'block'}}
+        className={className}
+        src={src}
+        onLoad={handleLoad}
+        onError={handleError}
+      />
+    </>
+  );
+};
+
+const DESCRIPTIONS = [
+  'Welcome to Super App DexKit. A platform oriented to productivity and ease of use: you will be able to manage all your ERC, BEP and POLY assets from any device connected to the internet.',
+  'Buy, trade or swap crypto from the platform and manage them as you prefer. DeFi allow the user to have maximum control in its finances.',
+  'Enjoy all your NFTs: As designer or enthusiast, you will be able to see all your non fungible tokens in just one place, no matter the Blockchain. ',
+  'Affiliate Program: earn passive incomes inviting your friends to use the platform. You will be provided with your unique Affiliate link to share and track your earnings from referrals.',
+];
 
 interface WelcomeDialogProps extends DialogProps {}
 
@@ -82,25 +129,25 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
         interval={5000}
         onPrevious={handlePrevious}>
         <Box>
-          <img
+          <LazyImage
             src={require('assets/images/slides/welcome/trade-slide.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
-          <img
+          <LazyImage
             src={require('assets/images/slides/welcome/wallet-slide.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
-          <img
+          <LazyImage
             src={require('assets/images/slides/welcome/nft-slide.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
-          <img
+          <LazyImage
             src={require('assets/images/slides/welcome/others-slide.svg')}
             className={classes.slide}
           />
@@ -116,9 +163,8 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
               fullWidth={isMobile}
               onClick={handleGoLogin}
               variant='outlined'
-              startIcon={<Close />}
               color='primary'>
-              Skip
+              Get Started
             </Button>
           </Grid>
         </Grid>
