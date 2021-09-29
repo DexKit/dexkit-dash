@@ -1,18 +1,12 @@
 import {
   Box,
   Grid,
-  MobileStepper,
   Typography,
-  Divider,
   Paper,
-  IconButton,
   makeStyles,
   Button,
   ButtonBase,
-  useTheme,
-  useMediaQuery,
   TextField,
-  InputAdornment,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -24,13 +18,9 @@ import {
   GoogleIcon,
   TwitterIcon,
   ReceiptAddIcon,
-  AppleIcon,
   DiscordIcon,
 } from 'shared/components/Icons';
-import Slider from 'shared/components/Slider';
-import SquaredIconButton from 'shared/components/SquaredIconButton';
 
-import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid} from 'utils';
