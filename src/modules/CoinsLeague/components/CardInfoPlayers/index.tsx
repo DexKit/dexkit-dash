@@ -1,10 +1,12 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import {makeStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+
 import {ReactComponent as People} from 'assets/images/icons/people.svg';
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,13 +40,22 @@ function CardInfoPlayers(props: Props): JSX.Element {
         alignItems={'center'}
         alignContent={'center'}>
         <Grid item xs={12}>
-          <Button
+          <Paper>
+            <Box display={'flex'} justifyContent={'center'} p={2}>
+              <People />
+              <Typography>
+                &nbsp;
+                {`PLAYERS ${current_players} (${num_players})`}{' '}
+              </Typography>
+            </Box>
+          </Paper>
+          {/* <Button
             fullWidth
             variant={'contained'}
             disabled={num_players !== current_players}
-            startIcon={<People />}>
-            {`PLAYERS ${current_players} (${num_players})`}
-          </Button>
+            startIcon={}>
+           
+         </Button>*/}
         </Grid>
       </Grid>
     </Container>

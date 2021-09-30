@@ -51,7 +51,7 @@ export const useCoinsLeagueFactory = () => {
     
     return getGamesAddressFromFactory(
       COINS_LEAGUE_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
-      50,
+      13,
       provider
     );
   });

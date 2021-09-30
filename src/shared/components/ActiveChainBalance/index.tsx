@@ -5,7 +5,7 @@ import {
   Typography,
   Grid,
   useTheme,
-  useMediaQuery,
+
   IconButton,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
@@ -14,7 +14,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 
-import {truncateAddress} from 'utils';
+import {truncateIsAddress} from 'utils';
 
 import {StatusSquare} from '../StatusSquare';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -24,6 +24,7 @@ import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
+import { useAccountLabel } from 'hooks/useAccountLabel';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -92,10 +93,10 @@ const ActiveChainBalance = () => {
   const classes = useStyles();
   const formattedBalance = useMemo(() => {
     if (balance) {
-      return ethers.utils.formatEther(balance);
+      return Number(ethers.utils.formatEther(balance)).toFixed(4);
     }
   }, [balance]);
-
+  const label = useAccountLabel(account);
   const accountsModal = useAccountsModal();
 
   const handleShowAccounts = useCallback(() => {
@@ -122,7 +123,7 @@ const ActiveChainBalance = () => {
                       <Grid item>
                         <Box display='flex' alignItems='center'>
                           <Typography variant='body2'>
-                            <span>{truncateAddress(account)} </span>
+                            <span>{truncateIsAddress(label)} </span>
                             <CopyButton
                               size='small'
                               copyText={account || ''}
