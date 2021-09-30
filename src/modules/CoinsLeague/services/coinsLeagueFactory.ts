@@ -69,7 +69,7 @@ export const getGamesAddressFromFactory = async (
     args:  [0, 1],
   });*/
 
-  for (let index = 0; index < total; index++) {
+  for (let index = start; index < total; index++) {
     calls.push({
       interface: iface,
       target: factoryAddress,
