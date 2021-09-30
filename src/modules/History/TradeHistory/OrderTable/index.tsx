@@ -14,6 +14,7 @@ import {useStyles} from './index.style';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {GetTradeHistoryList_ethereum_dexTrades} from 'services/graphql/bitquery/history/__generated__/GetTradeHistoryList';
 import {Empty} from 'shared/components/Empty';
+import {OrdersEmptyImage} from 'shared/components/Icons';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -43,6 +44,7 @@ const TransactionTable: React.FC<Props> = ({
       <Box>
         {data && data.length === 0 ? (
           <Empty
+            image={<OrdersEmptyImage />}
             title={'Ops, no trades'}
             message={'Start trading to have history'}
           />

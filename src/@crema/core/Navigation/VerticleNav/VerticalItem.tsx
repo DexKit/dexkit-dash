@@ -12,7 +12,6 @@ import {useDispatch} from 'react-redux';
 import {toggleNavCollapsed} from 'redux/actions';
 import {useMobile} from 'hooks/useMobile';
 
-
 interface VerticalItemProps extends RouteComponentProps<any> {
   item: NavItemProps;
   level: number;
@@ -88,7 +87,6 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
 
   const handleClick = useCallback(() => {
     let url = getUrl();
-
 
     if (isMobile) {
       dispatch(toggleNavCollapsed());

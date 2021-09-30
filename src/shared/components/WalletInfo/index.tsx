@@ -278,11 +278,6 @@ const WalletInfo = (props: any) => {
 
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
               {!notConnected && (
-                <MenuItem onClick={onGoToLoginWallet}>
-                  Connect Other Wallet
-                </MenuItem>
-              )}
-              {!notConnected && (
                 <MenuItem onClick={onCloseWeb3}>Disconnect Wallet</MenuItem>
               )}
             </Menu>

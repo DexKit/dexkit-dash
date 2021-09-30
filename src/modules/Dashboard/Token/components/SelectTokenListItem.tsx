@@ -10,7 +10,7 @@ import React, {useCallback} from 'react';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
 import Logo from 'shared/components/Logo';
-import { getLogoSrcs } from 'utils';
+import {getLogoSrcs} from 'utils';
 export interface Props {
   token: Token;
   onClick: (token: Token) => void;
@@ -52,19 +52,36 @@ export const SelectTokenListItem = (props: Props) => {
   return (
     <Box
       onClick={handleClick}
-      style={{...style, padding: theme.spacing(2)}}
+      style={{
+        ...style,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        paddingLeft: theme.spacing(4),
+        paddingRight: theme.spacing(4),
+      }}
       className={classes.item}>
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-             <Logo srcs={getLogoSrcs(token.address, token.networkName, token.logoURI)} className={classes.token} />
+            {token ? (
+              <Logo
+                srcs={getLogoSrcs(
+                  token?.address,
+                  token?.networkName,
+                  token?.logoURI,
+                )}
+                className={classes.token}
+              />
+            ) : null}
           </Box>
         </Grid>
-     
+
         <Grid item xs>
-          <Typography variant='body1'>{token.symbol?.toUpperCase()}</Typography>
+          <Typography variant='body1'>
+            {token?.symbol?.toUpperCase()}
+          </Typography>
           <Typography variant='body2' color='textSecondary'>
-            {token.name}
+            {token?.name}
           </Typography>
         </Grid>
         <Grid item>
@@ -75,7 +92,6 @@ export const SelectTokenListItem = (props: Props) => {
             />
           ) : null}
         </Grid>
-       
       </Grid>
     </Box>
   );

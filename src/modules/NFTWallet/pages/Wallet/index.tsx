@@ -65,6 +65,7 @@ import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectiv
 import CopyButton from 'shared/components/CopyButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {NFTEmptyStateImage} from 'shared/components/Icons';
 
 function useCollections() {
   const {getProvider} = useWeb3();
@@ -704,7 +705,7 @@ export default () => {
                           alignItems='center'
                           spacing={4}>
                           <Grid item xs={12}>
-                            <EmptyWalletImage />
+                            <NFTEmptyStateImage />
                           </Grid>
                           <Grid item xs={12}>
                             <Typography align='center' variant='h5'>

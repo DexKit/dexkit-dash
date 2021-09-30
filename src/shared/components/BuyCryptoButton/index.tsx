@@ -1,10 +1,6 @@
 import React, {useCallback} from 'react';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
-import {
-  Box,
-  Typography,
-  makeStyles,
-} from '@material-ui/core';
+import {Box, Typography, makeStyles} from '@material-ui/core';
 import {useTransak} from 'hooks/useTransak';
 import {ReactComponent as CardIcon} from 'assets/images/icons/card-white.svg';
 
@@ -16,14 +12,11 @@ const useStyles = makeStyles((theme) => ({
   itemText: {
     whiteSpace: 'nowrap',
   },
-
 }));
 type Props = {
-    btnMsg?: string,
-    defaultCurrency?: string,
-
- }
-
+  btnMsg?: string;
+  defaultCurrency?: string;
+};
 
 const BuyCryptoButton = (props: Props) => {
   const {btnMsg, defaultCurrency} = props;
@@ -40,7 +33,7 @@ const BuyCryptoButton = (props: Props) => {
         <CardIcon className={classes.icon} />
       </RoundedIconButton>
       <Typography variant='caption' className={classes.itemText}>
-       {btnMsg || 'Buy Crypto'}
+        {btnMsg || 'Buy Crypto'}
       </Typography>
     </Box>
   );

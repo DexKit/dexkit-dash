@@ -30,6 +30,10 @@ import ShareDialog from 'shared/components/ShareDialog';
 import {getWindowUrl} from 'utils/browser';
 
 import ShareIcon from '@material-ui/icons/Share';
+import SelectAddressDialog from 'shared/components/SelectAddressDialog';
+import {useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 interface Props {}
 
@@ -65,7 +69,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [inputAddress] = useState(account);
+  const [inputAddress, setInputAddress] = useState(account);
   const [amount, setAmount] = useState('0.0');
 
   const [showSharedDialog, setShowShareDialog] = useState(false);
@@ -139,6 +143,21 @@ const ReceiverForm: React.FC<Props> = (props) => {
     generateQRCode(inputAddress ?? '');
   }, [inputAddress]);
 
+  const accounts = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
+  );
+
+  const [showSelectAddress, setShowSelectAddress] = useState(false);
+
+  const toggleSelectAddress = useCallback(() => {
+    setShowSelectAddress((value) => !value);
+  }, []);
+
+  const handleSelectAddress = useCallback((address: string) => {
+    setInputAddress(address);
+    setShowSelectAddress(false);
+  }, []);
+
   return (
     <>
       <SelectTokenDialog
@@ -147,12 +166,19 @@ const ReceiverForm: React.FC<Props> = (props) => {
         tokens={allTokens}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
+        enableFilters
       />
       <ShareDialog
         open={showSharedDialog}
         shareUrl={shareUrl}
         shareText='Share'
         onClose={handleCloseShareDialog}
+      />
+      <SelectAddressDialog
+        open={showSelectAddress}
+        accounts={accounts.evm}
+        onSelectAccount={handleSelectAddress}
+        onClose={toggleSelectAddress}
       />
       <Box pb={4}>
         <Grid container spacing={4}>
@@ -171,9 +197,15 @@ const ReceiverForm: React.FC<Props> = (props) => {
                 className: classes.inputText,
                 endAdornment: (
                   <InputAdornment position='end'>
-                    <CopyButton copyText={inputAddress || ''} tooltip='Copied!'>
+                    <CopyButton
+                      size='small'
+                      copyText={inputAddress || ''}
+                      tooltip='Copied!'>
                       <FileCopy />
                     </CopyButton>
+                    <IconButton size='small' onClick={toggleSelectAddress}>
+                      <AccountBoxIcon />
+                    </IconButton>
                   </InputAdornment>
                 ),
               }}
