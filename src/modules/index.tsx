@@ -13,11 +13,10 @@ import {protocolExplorerConfigs} from './ProtocolExplorer';
 import {historyConfigs} from './History';
 import {affiliateConfigs} from './Affiliate';
 import {initialUrl} from '../shared/constants/AppConst';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
 import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
-
+import {dropPadConfigs} from './DropPad';
 const routeConfigs = [
   ...errorPagesConfigs,
   ...dashBoardConfigs,
@@ -30,6 +29,7 @@ const routeConfigs = [
   ...changelogConfigs,
   ...coinsLeagueConfigs,
   ...onboardingConfig,
+  ...dropPadConfigs,
 ];
 
 const routes = [

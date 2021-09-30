@@ -11,13 +11,11 @@ import {
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinsLeagueFactory} from 'modules/CoinsLeague/hooks/useCoinsLeagueFactory';
 
-import {ChainId, SupportedNetworkType} from 'types/blockchain';
+import { SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinsLeague/components/CreateGameModal';
 import CardGame from 'modules/CoinsLeague/components/CardGame';
-import WrongNetwork from 'modules/CoinsLeague/components/WrongNetwork';
-import NoWallet from 'modules/CoinsLeague/components/NoWallet';
 import CardGameSkeleton from 'modules/CoinsLeague/components/CardGame/index.skeleton';
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -43,8 +41,6 @@ import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import Alert from '@material-ui/lab/Alert';
-import { IS_SUPPORTED_LEAGUES_CHAIN_ID } from 'modules/CoinsLeague/utils/constants';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
