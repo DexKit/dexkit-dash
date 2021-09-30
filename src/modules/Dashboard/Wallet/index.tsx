@@ -140,7 +140,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         }}
                         aria-label='wallet tabs'>
                         <CustomTab value='assets' label={'Assets'} />
-                        <CustomTab value='nfts' label={'NFTs'} />
+                        {/* <CustomTab value='nfts' label={'NFTs'} /> */}
                         <CustomTab value='trade-history' label={'History'} />
                       </CustomTabs>
                     </Grid>
