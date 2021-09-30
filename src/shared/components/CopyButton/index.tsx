@@ -1,10 +1,6 @@
 import React, {useCallback} from 'react';
-import {
-  IconButton,
-  IconButtonProps,
-  Tooltip,
-} from '@material-ui/core';
-
+import {IconButton, IconButtonProps, Tooltip} from '@material-ui/core';
+import {copyToClipboard} from 'utils/browser';
 
 interface Props extends IconButtonProps {
   copyText: string;
@@ -30,8 +26,7 @@ export const CopyButton = (props: Props) => {
 
   const handleCopy = useCallback(() => {
     handleTooltipOpen();
-    navigator.clipboard.writeText(copyText);
-    document.execCommand('copy');
+    copyToClipboard(copyText);
   }, [copyText]);
 
   return (

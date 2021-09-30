@@ -204,7 +204,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Grid>
                       ) : null}
                     </Grid>
-                    {(!isOnLoginPage() ||  account) ? (
+                    {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
                       </Grid>
@@ -266,7 +266,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                   ) : null}
-                  {(!isOnLoginPage()  ||  account) ? (
+                  {!isOnLoginPage() || account ? (
                     <Grid item>
                       <WalletInfo />
                     </Grid>

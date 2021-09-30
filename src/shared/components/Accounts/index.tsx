@@ -1,6 +1,5 @@
 import React, {useCallback, useState, useRef} from 'react';
 
-
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
 import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
@@ -9,7 +8,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {CremaTheme} from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
 
-import {Grid, Tooltip,  Button} from '@material-ui/core';
+import {Grid, Tooltip, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
@@ -408,10 +407,9 @@ const Accounts = () => {
           </SwipeableViews>
         </Grid> */}
         <Grid item xs={12}>
-            <Typography variant='body1'>Manage Accounts</Typography>
-          </Grid>
+          <Typography variant='body1'>Manage Accounts</Typography>
+        </Grid>
         <Grid item xs={12}>
-      
           <Box
             display='flex'
             justifyContent='space-between'

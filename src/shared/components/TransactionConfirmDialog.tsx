@@ -26,7 +26,7 @@ import {useNetwork} from 'hooks/useNetwork';
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {GetNativeCoinFromNetworkName} from 'utils';
+import {GetNativeCoinFromNetworkName, truncateAddress} from 'utils';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {ExpandLess} from '@material-ui/icons';
 import {BigNumber, ethers} from 'ethers';
@@ -61,7 +61,7 @@ export const TransactionConfirmDialog = (
     }
   }, [onCancel]);
 
-  const {web3State, getProvider, chainId} = useWeb3();
+  const {web3State, getProvider, chainId, account} = useWeb3();
 
   const isEIP1559Transaction = useCallback(() => {
     if (data) {
@@ -210,7 +210,18 @@ export const TransactionConfirmDialog = (
       </DialogTitle>
       <DialogContent dividers>
         <Box
-          mb={2}
+          mb={4}
+          display='flex'
+          alignItems='center'
+          alignContent='center'
+          justifyContent='space-between'>
+          <Typography variant='body1'>Account</Typography>
+          <Typography variant='body1' color='textSecondary'>
+            {account ? truncateAddress(account) : null}
+          </Typography>
+        </Box>
+        <Box
+          mb={4}
           display='flex'
           alignItems='center'
           alignContent='center'
@@ -220,7 +231,7 @@ export const TransactionConfirmDialog = (
             {balances?.toFixed(3)} {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
-        <Box mb={2}>
+        <Box mb={4}>
           <Divider />
         </Box>
         <Box
@@ -235,7 +246,7 @@ export const TransactionConfirmDialog = (
           </Typography>
         </Box>
         <Box
-          mb={2}
+          mb={4}
           display='flex'
           alignItems='center'
           alignContent='center'

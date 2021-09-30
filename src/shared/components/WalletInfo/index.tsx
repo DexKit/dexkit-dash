@@ -240,11 +240,13 @@ const WalletInfo = (props: any) => {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-             {!history.location.pathname.startsWith(WALLET_ROUTE) && <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>}
-              {notConnected && (
+              <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+              {notConnected ? (
                 <MenuItem onClick={onGoToLoginWallet}>Connect Wallet</MenuItem>
+              ) : (
+                <MenuItem onClick={onGoToLoginWallet}>Switch Wallet</MenuItem>
               )}
-              
+
               {accounts
                 .filter(
                   (a) =>
@@ -273,10 +275,12 @@ const WalletInfo = (props: any) => {
                     </Box>
                   </MenuItem>
                 ))}
-             
+
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
               {!notConnected && (
-                <MenuItem onClick={onGoToLoginWallet}>Connect Other Wallet</MenuItem>
+                <MenuItem onClick={onGoToLoginWallet}>
+                  Connect Other Wallet
+                </MenuItem>
               )}
               {!notConnected && (
                 <MenuItem onClick={onCloseWeb3}>Disconnect Wallet</MenuItem>
