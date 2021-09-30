@@ -50,7 +50,7 @@ import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId, getProvider, setProvider} = useWeb3();
+  const {chainId, getProvider, setProvider, account} = useWeb3();
   const {onSwitchMagicNetwork} = useMagicProvider();
 
   const classes = useStyles();
@@ -140,7 +140,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const isOnLoginPage = useCallback(() => {
-    return history.location.pathname == LOGIN_WALLET_ROUTE;
+    return history.location.pathname === LOGIN_WALLET_ROUTE;
   }, [history]);
 
   return (
@@ -204,7 +204,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Grid>
                       ) : null}
                     </Grid>
-                    {!isOnLoginPage() ? (
+                    {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
                       </Grid>
@@ -266,7 +266,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </ButtonBase>
                     </Grid>
                   ) : null}
-                  {!isOnLoginPage() ? (
+                  {!isOnLoginPage() || account ? (
                     <Grid item>
                       <WalletInfo />
                     </Grid>

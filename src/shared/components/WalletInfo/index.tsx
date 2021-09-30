@@ -47,7 +47,7 @@ import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
-import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {LOGIN_WALLET_ROUTE, WALLET_ROUTE} from 'shared/constants/routes';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -240,10 +240,13 @@ const WalletInfo = (props: any) => {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-              <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+              {!history.location.pathname.startsWith(WALLET_ROUTE) && (
+                <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+              )}
               {notConnected && (
                 <MenuItem onClick={onGoToLoginWallet}>Connect Wallet</MenuItem>
               )}
+
               {accounts
                 .filter(
                   (a) =>
@@ -272,9 +275,15 @@ const WalletInfo = (props: any) => {
                     </Box>
                   </MenuItem>
                 ))}
+
               <MenuItem onClick={handleShowAccounts}>Manage Accounts</MenuItem>
               {!notConnected && (
-                <MenuItem onClick={onCloseWeb3}>Logout</MenuItem>
+                <MenuItem onClick={onGoToLoginWallet}>
+                  Connect Other Wallet
+                </MenuItem>
+              )}
+              {!notConnected && (
+                <MenuItem onClick={onCloseWeb3}>Disconnect Wallet</MenuItem>
               )}
             </Menu>
           </Box>

@@ -1,5 +1,4 @@
 import React, {useCallback, useState, useRef} from 'react';
-import SwipeableViews from 'react-swipeable-views';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
 
@@ -9,11 +8,12 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {CremaTheme} from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
 
-import {Grid, Tooltip, Chip, Button} from '@material-ui/core';
+import {Grid, Tooltip, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {Web3Wrapper} from '@0x/web3-wrapper';
@@ -345,7 +345,7 @@ const Accounts = () => {
                     ref={(ref: any) => {
                       addressInputRef.current = ref;
                     }}
-                    endAdornment={
+                    /*endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
                         <Tooltip title={'Paste valid account'}>
                           <IconButton aria-label='paste' color='primary'>
@@ -353,7 +353,7 @@ const Accounts = () => {
                           </IconButton>
                         </Tooltip>
                       </InputAdornment>
-                    }
+                    }*/
                     onChange={onChangeAddress}
                   />
                 </Grid>
@@ -366,7 +366,7 @@ const Accounts = () => {
                         address === undefined ||
                         error !== undefined
                       }>
-                      <DoneIcon
+                      <AddIcon
                         color={
                           address !== '' && address !== undefined && !error
                             ? 'primary'
@@ -407,6 +407,9 @@ const Accounts = () => {
           </SwipeableViews>
         </Grid> */}
         <Grid item xs={12}>
+          <Typography variant='body1'>Manage Accounts</Typography>
+        </Grid>
+        <Grid item xs={12}>
           <Box
             display='flex'
             justifyContent='space-between'
@@ -440,7 +443,7 @@ const Accounts = () => {
               </Box>
             ) : (
               <SquaredIconButton onClick={handleToggleSelect}>
-                <EditIcon />
+                <DeleteIcon />
               </SquaredIconButton>
             )}
           </Box>

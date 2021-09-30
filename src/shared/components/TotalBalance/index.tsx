@@ -38,6 +38,7 @@ import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -133,6 +134,7 @@ const TotalBalance = (props: Props) => {
   const {account} = useWeb3();
 
   const defaultAccount = useDefaultAccount();
+  const defaultAccountLabel = useDefaultLabelAccount();
 
   const connected = useMemo(() => {
     return account?.toLowerCase() === defaultAccount?.toLowerCase();
@@ -322,7 +324,7 @@ const TotalBalance = (props: Props) => {
                           <Typography variant='body2'>
                             <span>
                               {amountsVisible
-                                ? truncateIsAddress(address)
+                                ? truncateIsAddress(defaultAccountLabel)
                                 : '******'}{' '}
                             </span>
                             <CopyButton
