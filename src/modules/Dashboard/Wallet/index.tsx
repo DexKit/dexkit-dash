@@ -74,23 +74,6 @@ const WalletTabs: React.FC<Props> = (props) => {
   const {loading, error, data, nftBalances, loadingUsd} = useAllBalance(defaultAccount);
 
   useEffect(() => {
-    if (
-      urlAccount &&
-      Web3Wrapper.isAddress(urlAccount) &&
-      defaultAccount !== urlAccount
-    ) {
-      history.push(`/wallet/${urlAccount}`);
-      dispatch(
-        setDefaultAccount({
-          account: {
-            address: urlAccount,
-            label: urlAccount,
-            networkType: SupportedNetworkType.evm,
-          },
-          type: SupportedNetworkType.evm,
-        }),
-      );
-    }
     if (!urlAccount && defaultAccount) {
       history.push(`/wallet/${defaultAccount}`);
     }

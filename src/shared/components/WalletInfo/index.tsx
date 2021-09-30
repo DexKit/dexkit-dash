@@ -222,7 +222,7 @@ const WalletInfo = (props: any) => {
                 <Typography variant='caption'>
                   {ethBalanceValue
                     ? ethBalanceValue.toFixed(4)
-                    : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
+                  : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
                   {GetNativeCoinFromNetworkName(networkName)}
                 </Typography>
               </Hidden>
