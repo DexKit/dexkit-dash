@@ -17,11 +17,18 @@ const initialState: NotificationState = {
 export default (state = initialState, action: any): NotificationState => {
   switch (action.type) {
     case NotificationAction.ADD_NOTIFICATION: {
-      const {notifications} = action.payload;
+      const {notifications: newNotifications} = action.payload;
 
-      const newAddNotifications = [...state.notifications, ...notifications];
+      const newAddNotifications = [...state.notifications, ...newNotifications];
 
-      return {...state, notifications: newAddNotifications};
+      return {
+        ...state,
+        notifications: newAddNotifications.map((n, index: number) => {
+          if (!n.id) {
+            return {...n, id: index};
+          }
+        }),
+      };
     }
     case NotificationAction.NOTIFICATION_LIST: {
       return {...state};
@@ -37,17 +44,20 @@ export default (state = initialState, action: any): NotificationState => {
       };
     }
     case NotificationAction.UPDATE_NOTIFICATION: {
-      let newNotification: Notification = action.payload;
-      let newNotifications = [...state.notifications];
+      let updateNotification: any = action.payload;
 
-      let updateIndex = newNotifications.findIndex(
-        (n) => n.id == newNotification.id,
+      console.log(updateNotification);
+
+      let updatedNotifications = [...state.notifications];
+
+      let updateIndex = updatedNotifications.findIndex(
+        (n) => n.id == updateNotification.id,
       );
 
-      newNotifications[updateIndex] = newNotification;
+      updatedNotifications[updateIndex] = updateNotification;
 
       return {
-        notifications: newNotifications,
+        notifications: updatedNotifications,
         selected: state.selected,
       };
     }

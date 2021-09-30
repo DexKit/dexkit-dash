@@ -9,18 +9,7 @@ import {
 import {NotificationType, NotificationPosition} from 'services/notification';
 
 export const onNotificationList = () => {
-  return (dispatch: Dispatch<AppActions>) => {
-    dispatch(fetchStart());
-    try {
-      dispatch(fetchSuccess());
-      dispatch({
-        type: NotificationAction.NOTIFICATION_LIST,
-        payload: undefined,
-      });
-    } catch (error) {
-      dispatch(fetchError(error.message));
-    }
-  };
+  return (dispatch: Dispatch<AppActions>) => {};
 };
 
 export const onAddNotification = (

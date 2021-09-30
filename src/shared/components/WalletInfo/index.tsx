@@ -240,11 +240,11 @@ const WalletInfo = (props: any) => {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-              {!history.location.pathname.startsWith(WALLET_ROUTE) && (
-                <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
-              )}
-              {notConnected && (
+              <MenuItem onClick={onGoToWallet}>My Wallet</MenuItem>
+              {notConnected ? (
                 <MenuItem onClick={onGoToLoginWallet}>Connect Wallet</MenuItem>
+              ) : (
+                <MenuItem onClick={onGoToLoginWallet}>Switch Wallet</MenuItem>
               )}
 
               {accounts

@@ -23,12 +23,13 @@ import {
 
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWeb3} from 'hooks/useWeb3';
-import {isEmailValid} from 'utils';
+import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router-dom';
-import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT, GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import {Add as AddIcon} from '@material-ui/icons';
 import {useAccountsModal} from 'hooks/useAccountsModal';
+import {Alert} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -134,9 +135,12 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
-  const {onConnectWeb3} = useWeb3();
+  const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
   const [loading, setLoading] = useState(false);
+
   const handleConnectWeb3 = useCallback(() => {
+    onCloseWeb3();
+
     const onConnectSuccess = (a: string) => {
       setLoading(true);
       history.push(`/wallet/${a}`);
@@ -156,6 +160,7 @@ export const CreateWallet = (props: Props) => {
   }, []);
 
   const handleDiscord = useCallback(() => {
+    onCloseWeb3();
     setLoading(true);
     onConnectMagicSocial('discord').finally(() => {
       toggleLoading();
@@ -163,6 +168,7 @@ export const CreateWallet = (props: Props) => {
   }, []);
 
   const handleGoogle = useCallback(() => {
+    onCloseWeb3();
     setLoading(true);
     onConnectMagicSocial('google').finally(() => {
       toggleLoading();
@@ -176,6 +182,7 @@ export const CreateWallet = (props: Props) => {
   }, []);
 
   const handleTwitter = useCallback(() => {
+    onCloseWeb3();
     setLoading(true);
     onConnectMagicSocial('twitter').finally(() => {
       toggleLoading();
@@ -189,6 +196,7 @@ export const CreateWallet = (props: Props) => {
   const handleEmail = useCallback(
     (e) => {
       if (email) {
+        onCloseWeb3();
         setLoading(true);
         onConnectMagicEmail(email).finally(() => {
           toggleLoading();
@@ -217,6 +225,20 @@ export const CreateWallet = (props: Props) => {
         </Box>
       </Backdrop>
       <Grid container spacing={4}>
+        {account ? (
+          <Grid item xs={12}>
+            <Alert severity='warning'>
+              <Typography variant='body1'>
+                You are already connected to{' '}
+                <strong>
+                  {isMobile && account ? truncateAddress(account) : account}
+                </strong>{' '}
+                account on <strong>{GET_CHAIN_ID_NAME(chainId)}</strong>{' '}
+                network.
+              </Typography>
+            </Alert>
+          </Grid>
+        ) : null}
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -360,39 +382,6 @@ export const CreateWallet = (props: Props) => {
                       </ButtonBase>
                     </Box>
                   </Box>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleToggleAccountsModal}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <AddIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              Add account
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
                 </Box>
               ) : (
                 <Grid
@@ -492,37 +481,6 @@ export const CreateWallet = (props: Props) => {
                       </Paper>
                     </ButtonBase>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <ButtonBase
-                      onClick={handleToggleAccountsModal}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <AddIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            Add account
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
                 </Grid>
               )}
             </Grid>
@@ -589,6 +547,38 @@ export const CreateWallet = (props: Props) => {
                         </Typography>
                       </Grid>
 
+                      <Grid item>
+                        <NavigateNextIcon />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </ButtonBase>
+            </Grid>
+            <Grid item xs={12}>
+              <ButtonBase
+                onClick={handleToggleAccountsModal}
+                className={classes.actionButton}>
+                <Paper variant='outlined' className={classes.actionButtonPaper}>
+                  <Box p={4}>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Box className={classes.boxCircle}>
+                          <AddIcon color='primary' />
+                        </Box>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography variant='body1' style={{fontWeight: 500}}>
+                          Add account
+                        </Typography>
+                        <Typography variant='body2' color='textSecondary'>
+                          Add account for read-only mode.
+                        </Typography>
+                      </Grid>
                       <Grid item>
                         <NavigateNextIcon />
                       </Grid>
