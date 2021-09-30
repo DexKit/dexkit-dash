@@ -227,7 +227,7 @@ export const CreateWallet = (props: Props) => {
       <Grid container spacing={4}>
         {account ? (
           <Grid item xs={12}>
-            <Alert severity='warning'>
+            <Alert severity='info'>
               <Typography variant='body1'>
                 You are already connected to{' '}
                 <strong>

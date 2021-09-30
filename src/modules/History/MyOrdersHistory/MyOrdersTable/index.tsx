@@ -15,6 +15,7 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {OrdersEmptyImage} from 'shared/components/Icons';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -90,7 +91,7 @@ const MyOrdersTable: React.FC<Props> = ({
             direction='column'
             spacing={2}>
             <Grid item xs={12}>
-              <ConnectivityImage />
+              <OrdersEmptyImage />
             </Grid>
             <Grid item xs={12}>
               <Typography

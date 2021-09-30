@@ -23,3 +23,7 @@ export {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 export {ReactComponent as MoneyReciveIcon} from 'assets/images/icons/money-recive.svg';
 export {ReactComponent as DollarSquareIcon} from 'assets/images/icons/dollar-square.svg';
 export {ReactComponent as ReceiptTextIcon} from 'assets/images/icons/receipt-text.svg';
+export {ReactComponent as NFTEmptyStateImage} from 'assets/images/state/nft-empy.svg';
+export {ReactComponent as FavoritesEmptyImage} from 'assets/images/state/favorites-empty.svg';
+export {ReactComponent as WalletEmptyImage} from 'assets/images/state/wallet-empty.svg';
+export {ReactComponent as OrdersEmptyImage} from 'assets/images/state/orders-empty.svg';

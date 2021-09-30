@@ -5,7 +5,7 @@ import {makeStyles, Button, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Logo from 'shared/components/Logo';
-import { getLogoSrcs } from 'utils';
+import {getLogoSrcs} from 'utils';
 
 interface Props {
   id: string;
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledButton = withStyles((theme) => ({
   root: {
     minHeight: '100%',
+    padding: theme.spacing(2),
   },
 }))(Button);
 
@@ -42,23 +43,31 @@ const SelectTokenV2: React.FC<Props> = ({
     <StyledButton
       fullWidth
       disabled={disabled}
-      startIcon={<Logo srcs={getLogoSrcs(selected.address, selected.networkName, selected.logoURI)} className={classes.icon} />}
+      startIcon={
+        <Logo
+          srcs={getLogoSrcs(
+            selected.address,
+            selected.networkName,
+            selected.logoURI,
+          )}
+          className={classes.icon}
+        />
+      }
       endIcon={<ExpandMoreIcon />}
       variant='outlined'
       onClick={onClick}>
       {selected?.symbol}
-
-    </StyledButton>) : (
-
-      <StyledButton
+    </StyledButton>
+  ) : (
+    <StyledButton
       fullWidth
       disabled={disabled}
       endIcon={<ExpandMoreIcon />}
       variant='outlined'
       onClick={onClick}>
-      {'Choose Coin'}
+      Choose
     </StyledButton>
-  ) 
+  );
 };
 
 export default SelectTokenV2;

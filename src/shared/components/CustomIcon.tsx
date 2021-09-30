@@ -33,10 +33,10 @@ export const CustomIcon = (props: Props) => {
     return <UserOctagonIcon {...props} />;
   } else if (icon === 'magicpen') {
     return <MagicpenIcon {...props} />;
-  }else if(icon === 'coinleague'){
-    return <CoinLeagueIcon {...props}/>;
-  }else if(icon === 'cup'){
-    return <CupIcon {...props}/>;
+  } else if (icon === 'coinleague') {
+    return <CoinLeagueIcon {...props} />;
+  } else if (icon === 'cup') {
+    return <CupIcon {...props} />;
   }
 
   return <></>;

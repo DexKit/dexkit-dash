@@ -1,7 +1,8 @@
-import React, {useCallback, useState, useMemo, useRef} from 'react';
+import React, {useCallback, useState, useMemo, useRef, useEffect} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
+  Grid,
   Dialog,
   DialogProps,
   Typography,
@@ -12,6 +13,7 @@ import {
   List,
   Box,
   IconButton,
+  Chip,
 } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -21,15 +23,19 @@ import {Token} from 'types/app';
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {useMobile} from 'hooks/useMobile';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useNetwork} from 'hooks/useNetwork';
+import {isUndefined} from 'util';
 
 interface Props extends DialogProps {
   title?: string;
   tokens: Token[];
   onSelectToken: (token: Token) => void;
+  enableFilters?: boolean;
 }
 
 export const SelectTokenDialog = (props: Props) => {
-  const {onSelectToken, tokens, onClose, title} = props;
+  const {onSelectToken, tokens, onClose, title, enableFilters} = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
@@ -61,6 +67,8 @@ export const SelectTokenDialog = (props: Props) => {
     [onSelectToken],
   );
 
+  const [selectedNetwork, setSelectedNetwork] = useState<EthereumNetwork>();
+
   const handleClose = useCallback(() => {
     setFilterText('');
 
@@ -68,6 +76,12 @@ export const SelectTokenDialog = (props: Props) => {
       onClose({}, 'escapeKeyDown');
     }
   }, [onClose]);
+
+  const network = useNetwork();
+
+  useEffect(() => {
+    setSelectedNetwork(network);
+  }, [network]);
 
   return (
     <Dialog
@@ -89,9 +103,9 @@ export const SelectTokenDialog = (props: Props) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent style={{padding: 0}} ref={contentRef} dividers>
+      <DialogContent style={{padding: 0}} ref={contentRef}>
         <div ref={searchBoxRef}>
-          <Box mb={4} p={4}>
+          <Box mb={2} p={4}>
             <TextField
               autoComplete='off'
               autoFocus
@@ -104,12 +118,88 @@ export const SelectTokenDialog = (props: Props) => {
             />
           </Box>
         </div>
+        <Box mb={2} px={4}>
+          {enableFilters ? (
+            <Box>
+              <Grid container spacing={2}>
+                <Grid item>
+                  <Chip
+                    clickable
+                    size='small'
+                    label='All'
+                    variant={
+                      selectedNetwork === undefined ? 'default' : 'outlined'
+                    }
+                    onClick={() => {
+                      setSelectedNetwork(undefined);
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    size='small'
+                    label='ETH'
+                    variant={
+                      selectedNetwork === EthereumNetwork.ethereum
+                        ? 'default'
+                        : 'outlined'
+                    }
+                    onClick={() => {
+                      setSelectedNetwork(EthereumNetwork.ethereum);
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    size='small'
+                    label='BSC'
+                    variant={
+                      selectedNetwork === EthereumNetwork.bsc
+                        ? 'default'
+                        : 'outlined'
+                    }
+                    onClick={() => {
+                      setSelectedNetwork(EthereumNetwork.bsc);
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    size='small'
+                    label='Polygon'
+                    variant={
+                      selectedNetwork === EthereumNetwork.matic
+                        ? 'default'
+                        : 'outlined'
+                    }
+                    onClick={() => {
+                      setSelectedNetwork(EthereumNetwork.matic);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          ) : null}
+        </Box>
         {filteredTokens.length == 0 ? (
           <Typography variant='body1'>No tokens found</Typography>
         ) : (
           <List disablePadding>
             <VariableSizeList
-              itemData={filteredTokens}
+              itemData={filteredTokens.filter((t) => {
+                if (!selectedNetwork) {
+                  return true;
+                }
+
+                if (t.networkName) {
+                  return t.networkName === selectedNetwork;
+                }
+
+                return true;
+              })}
               itemSize={() => 56}
               itemCount={filteredTokens.length}
               width='100%'

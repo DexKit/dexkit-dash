@@ -13,10 +13,13 @@ import {
   Select,
   MenuItem,
   InputAdornment,
+  IconButton,
 } from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
 import VerticalSwap from './VerticalSwap';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+
+import SwapVertIcon from '@material-ui/icons/SwapVert';
 
 import {OrderSide, Token} from 'types/app';
 import SelectTokenV2 from './SelectTokenV2';
@@ -39,13 +42,13 @@ import {FEE_PERCENTAGE, FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
 import {limitFormStyles as useStyles} from './index.styles';
 import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 interface Props {
   chainId: number | undefined;
   account: string | undefined;
   networkName: EthereumNetwork;
-  
+
   balances: GetMyBalance_ethereum_address_balances[];
   select0: Token[];
   select1: Token[];
@@ -68,7 +71,7 @@ const LimitForm: React.FC<Props> = (props) => {
     tokenTo,
     onChangeToken,
     onTrade,
-    disableReceive
+    disableReceive,
   } = props;
 
   const classes = useStyles();
@@ -221,9 +224,9 @@ const LimitForm: React.FC<Props> = (props) => {
 
   let errorMessage: string | undefined;
 
-  const handleConnectWallet = useCallback(()=>{
+  const handleConnectWallet = useCallback(() => {
     history.push('/onboarding/login-wallet');
-  },[])
+  }, []);
 
   const connectButton = (
     <Box m={6} display='flex' alignItems='center' justifyContent='center'>
@@ -321,10 +324,9 @@ const LimitForm: React.FC<Props> = (props) => {
     setShowSelectTokenDialog(false);
   }, []);
 
-
   return (
-    <Box className={classes.limitContainer}>
-     <SelectTokenBalanceDialog
+    <Box>
+      <SelectTokenBalanceDialog
         title={selectTo === 'from' ? 'You send' : 'You receive'}
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
@@ -351,8 +353,12 @@ const LimitForm: React.FC<Props> = (props) => {
       {networkName == EthereumNetwork.ethereum && (
         <Box py={4}>
           <form noValidate autoComplete='off'>
-            <Box className={classes.boxContainer}>
-              <GridContainer>
+            <Box>
+              <Grid
+                container
+                spacing={4}
+                alignItems='center'
+                alignContent='center'>
                 {isNative && (
                   <Grid item xs={12}>
                     <Alert severity='info'>
@@ -362,33 +368,39 @@ const LimitForm: React.FC<Props> = (props) => {
                     </Alert>
                   </Grid>
                 )}
-                <Grid item xs={5}>
-                  <Typography variant='body2' className={classes.inputLabel}>
-                    <IntlMessages id='app.youSend' />
-                  </Typography>
-                  <Box height={48}>
-                    <SelectTokenV2
-                      id={'marketSel1'}
-                      label={' '}
-                      disabled={disableSelect === 'from'}
-                      selected={tokenFrom}
-                      onClick={handleSelectTokenFrom}
-                    />
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='space-between'>
+                    <Typography variant='body2'>
+                      <strong>
+                        <IntlMessages id='app.youSend' />
+                      </strong>
+                    </Typography>
+
+                    <Typography variant='body2' color='textSecondary'>
+                      {account ? (
+                        `${tokenFromBalance?.value?.toFixed(4) || 0} ${
+                          tokenFromBalance?.currency?.symbol || ''
+                        }`
+                      ) : (
+                        <Skeleton width='100%' />
+                      )}
+                    </Typography>
                   </Box>
                 </Grid>
-                <Grid item sm={7}>
-                  <Typography
-                    variant='body2'
-                    color='textSecondary'
-                    className={classes.balance}>
-                    {account ? (
-                      `${tokenFromBalance?.value?.toFixed(4) || 0} ${
-                        tokenFromBalance?.currency?.symbol || ''
-                      }`
-                    ) : (
-                      <Skeleton width={'100%'} />
-                    )}
-                  </Typography>
+                <Grid item xs={5}>
+                  <SelectTokenV2
+                    id={'marketSel1'}
+                    label={' '}
+                    disabled={disableSelect === 'from'}
+                    selected={tokenFrom}
+                    onClick={handleSelectTokenFrom}
+                  />
+                </Grid>
+                <Grid item xs={7}>
                   <TextField
                     variant='outlined'
                     type='number'
@@ -397,9 +409,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     onChange={handleInputChange}
                     InputProps={{
                       endAdornment: (
-                        <InputAdornment
-                          position='end'
-                          style={{fontSize: '13px'}}>
+                        <InputAdornment position='end'>
                           {priceQuoteFrom && (
                             <>
                               ≈
@@ -417,133 +427,135 @@ const LimitForm: React.FC<Props> = (props) => {
                     }}
                   />
                 </Grid>
-                  <>
-                    <VerticalSwap switchTokens={switchTokens} />
-                    <Grid item xs={12} md={5}>
-                      <Typography
-                        variant='body2'
-                        className={classes.inputLabel}>
-                        <IntlMessages id='app.youReceive' />
-                      </Typography>
-                      <Box height={48}>
-                        <SelectTokenV2
-                          id={'marketSel0'}
-                          label={' '}
-                          selected={tokenTo}
-                          disabled={disableSelect === 'to'}
-                          onClick={handleSelectTokenTo}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} md={7}>
-                      <Typography
-                        variant='body2'
-                        color='textSecondary'
-                        className={classes.balance}>
-                        {account ? (
-                          `${tokenToBalance?.value?.toFixed(4) || 0} ${
-                            tokenToBalance?.currency?.symbol || ''
-                          }`
-                        ) : (
-                          <Skeleton width={'100%'} />
-                        )}
-                        </Typography>
-                      <TextField
-                        variant='outlined'
-                        fullWidth
-                        value={amountTo}
-                        InputProps={{
-                          readOnly: true,
-                          endAdornment: (
-                            <InputAdornment
-                              position='end'
-                              style={{fontSize: '13px'}}>
-                              {priceQuoteTo && (
-                                <>
-                                  ≈
-                                  <i>
-                                    {' '}
-                                    {usdFormatter.format(
-                                      Number(priceQuoteTo?.price) *
-                                        Number(amountTo),
-                                    )}
-                                  </i>
-                                </>
-                              )}
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Grid item xs={12}>
-                        <Typography
-                          variant='body2'
-                          className={classes.inputLabel}>
-                          <IntlMessages id='app.price' />
-                        </Typography>
-                        <TextField
-                          variant='outlined'
-                          fullWidth
-                          value={isInverted ? 1 / price : price}
-                          onChange={handlePriceChange}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment
-                                position='end'
-                                style={{fontSize: '13px'}}
-                                className={classes.inputPriceAddornment}
-                                onClick={() => setIsInverted(!isInverted)}>
-                                {tokenFrom && tokenTo && (
-                                  <>
-                                    {isInverted
-                                      ? `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}`
-                                      : `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`}
-                                  </>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <IconButton size='small' onClick={switchTokens}>
+                      <SwapVertIcon color='primary' />
+                    </IconButton>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='space-between'>
+                    <Typography variant='body2'>
+                      <IntlMessages id='app.youReceive' />
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      color='textSecondary'
+                      className={classes.balance}>
+                      {account ? (
+                        `${tokenToBalance?.value?.toFixed(4) || 0} ${
+                          tokenToBalance?.currency?.symbol || ''
+                        }`
+                      ) : (
+                        <Skeleton width={'100%'} />
+                      )}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={5}>
+                  <SelectTokenV2
+                    id={'marketSel0'}
+                    label={' '}
+                    selected={tokenTo}
+                    disabled={disableSelect === 'to'}
+                    onClick={handleSelectTokenTo}
+                  />
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    variant='outlined'
+                    fullWidth
+                    value={amountTo}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          {priceQuoteTo && (
+                            <>
+                              ≈
+                              <i>
+                                {' '}
+                                {usdFormatter.format(
+                                  Number(priceQuoteTo?.price) *
+                                    Number(amountTo),
                                 )}
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
+                              </i>
+                            </>
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='body2'>
+                    <IntlMessages id='app.price' />
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant='outlined'
+                    fullWidth
+                    value={isInverted ? 1 / price : price}
+                    onChange={handlePriceChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment
+                          position='end'
+                          style={{fontSize: '13px'}}
+                          className={classes.inputPriceAddornment}
+                          onClick={() => setIsInverted(!isInverted)}>
+                          {tokenFrom && tokenTo && (
+                            <>
+                              {isInverted
+                                ? `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}`
+                                : `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`}
+                            </>
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
 
-                    <Grid item xs={12} className={classes.expiryContainer}>
-                      <Grid item xs={5}>
-                        <Typography
-                          variant='body2'
-                          className={classes.inputLabel}>
-                          <IntlMessages id='app.expiry' />
-                        </Typography>
-                        <Box display='flex' justifyContent='center'>
-                          <Select
-                            className={classes.select}
-                            variant='outlined'
-                            value={expirySelect}
-                            onChange={handleExpirySelectChange}>
-                            <MenuItem value={86400} selected={true}>
-                              Days
-                            </MenuItem>
-                            <MenuItem value={60}>Minutes</MenuItem>
-                            <MenuItem value={1}>Seconds</MenuItem>
-                          </Select>
-                        </Box>
-                      </Grid>
-                      <Grid style={{marginTop: '24px'}} item xs={7}>
-                        <TextField
-                          variant='outlined'
-                          type='number'
-                          fullWidth
-                          value={expiryInput}
-                          onChange={handleExpiryInputChange}
-                        />
-                      </Grid>
-                    </Grid>
-                  </>
-                
-                <Grid xs={12} md={12}>
-                  <Box display={'flex'} justifyContent={'space-evenly'}>
+                <Grid item xs={12}>
+                  <Typography variant='body2'>
+                    <IntlMessages id='app.expiry' />
+                  </Typography>
+                </Grid>
+                <Grid item xs={5}>
+                  <Select
+                    className={classes.select}
+                    variant='outlined'
+                    value={expirySelect}
+                    onChange={handleExpirySelectChange}>
+                    <MenuItem value={86400} selected={true}>
+                      Days
+                    </MenuItem>
+                    <MenuItem value={60}>Minutes</MenuItem>
+                    <MenuItem value={1}>Seconds</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid item xs={7}>
+                  <TextField
+                    variant='outlined'
+                    type='number'
+                    fullWidth
+                    value={expiryInput}
+                    onChange={handleExpiryInputChange}
+                  />
+                </Grid>
+                <Grid xs={12}>
+                  <Box display='flex' justifyContent='space-evenly'>
                     {priceQuoteTo && (
                       <Box>
                         <p>
@@ -582,15 +594,14 @@ const LimitForm: React.FC<Props> = (props) => {
                     )}
                   </Box>
                 </Grid>
-              </GridContainer>
+              </Grid>
             </Box>
           </form>
 
           {!notConnected && (
-            <GridContainer>
-              <Grid item xs={12} sm={12} className={classes.submit}>
+            <Grid container spacing={4}>
+              <Grid item xs={12} className={classes.submit}>
                 <Button
-                  className={classes.btnPrimary}
                   fullWidth
                   size='large'
                   variant='contained'
@@ -604,7 +615,7 @@ const LimitForm: React.FC<Props> = (props) => {
                   }>
                   {isNative && (
                     <Box fontSize='large' fontWeight='bold'>
-                      Convert {nativeCoinSymbol} -{`>`} {wNativeCoinSymbol}
+                      Convert {nativeCoinSymbol} to {wNativeCoinSymbol}
                     </Box>
                   )}
                   {!isNative && errorMessage && account ? (
@@ -621,7 +632,7 @@ const LimitForm: React.FC<Props> = (props) => {
                   )}
                 </Button>
               </Grid>
-            </GridContainer>
+            </Grid>
           )}
           {notConnected && (
             <Grid style={{padding: '8px'}} item xs={12} sm={12}>
