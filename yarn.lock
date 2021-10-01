@@ -3506,10 +3506,10 @@
     prop-types "^15.7.2"
     react-is "^17.0.0"
 
-"@maticnetwork/wallet-widget@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@maticnetwork/wallet-widget/-/wallet-widget-1.0.6.tgz#88c25ac8a2f52ef096834365d2ff14f6b554e144"
-  integrity sha512-8rEl7PFbjIIWKxJgYrWOkkeDXOhp7xofvzCa5MSBMU8iDuzq6LJgZh5Z/vU59Q/Rpy361wscXaI5NhrFJ0hLsg==
+"@maticnetwork/wallet-widget@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@maticnetwork/wallet-widget/-/wallet-widget-1.1.0.tgz#959545bce07c00d0b5c150c6c35094bfa98886ae"
+  integrity sha512-rb7hrWpXWxILn7hqX+8hXe5jPLdIrF8XlIyso9Jb3GiX2SsYdkA4g6hT6qSZCVvBhKudq4O9R6iA2XMB8gy5ww==
 
 "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"

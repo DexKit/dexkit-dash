@@ -103,7 +103,7 @@ export async function getMaticTokens(): Promise<Token[]> {
       address: '',
       decimals: 18,
       name: 'Polygon',
-      symbol: 'Matic',
+      symbol: 'MATIC',
       networkName: EthereumNetwork.matic,
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
