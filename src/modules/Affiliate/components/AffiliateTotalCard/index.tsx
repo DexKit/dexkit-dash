@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -9,6 +8,7 @@ import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
+import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet.svg';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -41,11 +41,14 @@ function AffiliateTotalCard(props: Props): JSX.Element {
         <Grid item xs={2} style={{textAlign: 'center', padding: 0}}>
           <MoneyIcon color='primary' style={{fontSize: 50}} />
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={8}>
           <Typography variant='subtitle2'>Total</Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
             {usdFormatter.format(props.total)}
           </Typography>
+        </Grid>
+        <Grid item xs={2} style={{color: '#fff'}}>
+          <WalletIcon height={35} width={35} />
         </Grid>
       </Grid>
     </Container>
