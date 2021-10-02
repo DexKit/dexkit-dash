@@ -60,6 +60,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
   query GetAllMyBalance($address: String!) {
     ethereum(network: ethereum) {
       address(address: {is: $address}) {
+        balance
         balances {
           currency {
             name
@@ -75,6 +76,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
     }
     bsc: ethereum(network: bsc) {
       address(address: {is: $address}) {
+        balance
         balances {
           currency {
             name
@@ -90,6 +92,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
     },
     matic: ethereum(network: matic) {
       address(address: {is: $address}) {
+        balance
         balances{
           currency {
             name
@@ -103,48 +106,6 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
         }
       }
     },
-    matic: ethereum(network: matic) {
-      address(address: {is: $address}) {
-        balances{
-          currency {
-            name
-            symbol
-            decimals
-            address
-          }
-          value
-          valueInUsd: value
-        }
-      }
-    },
-    matic: ethereum(network: matic) {
-      address(address: {is: $address}) {
-        balances{
-          currency {
-            name
-            symbol
-            decimals
-            address
-          }
-          value
-          valueInUsd: value
-        }
-      }
-    },
-    matic: ethereum(network: matic) {
-      address(address: {is: $address}) {
-        balances{
-          currency {
-            name
-            symbol
-            decimals
-            address
-          }
-          value
-          valueInUsd: value
-        }
-      }
-    }
   }
 `;
 

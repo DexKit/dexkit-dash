@@ -44,6 +44,10 @@ export interface GetAllMyBalance_ethereum_address_balances {
 export interface GetAllMyBalance_ethereum_address {
   __typename: "EthereumAddressInfoWithBalance";
   /**
+   * DEPRECATED Current address balance
+   */
+  balance: number | null;
+  /**
    * DEPRECATED Balances by currencies for the address
    */
   balances: GetAllMyBalance_ethereum_address_balances[] | null;
@@ -94,6 +98,10 @@ export interface GetAllMyBalance_bsc_address_balances {
 export interface GetAllMyBalance_bsc_address {
   __typename: "EthereumAddressInfoWithBalance";
   /**
+   * DEPRECATED Current address balance
+   */
+  balance: number | null;
+  /**
    * DEPRECATED Balances by currencies for the address
    */
   balances: GetAllMyBalance_bsc_address_balances[] | null;
@@ -143,6 +151,10 @@ export interface GetAllMyBalance_matic_address_balances {
 
 export interface GetAllMyBalance_matic_address {
   __typename: "EthereumAddressInfoWithBalance";
+  /**
+   * DEPRECATED Current address balance
+   */
+  balance: number | null;
   /**
    * DEPRECATED Balances by currencies for the address
    */

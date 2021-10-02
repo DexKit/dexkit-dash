@@ -12,13 +12,14 @@ export const MapBalancesToNetwork = (
   balances: any,
   network: any,
   coin: string,
+  nativeBalance: any,
 ): MyBalances[] => {
   if (!balances) {
     return [];
   }
   return balances.map((t: any) => {
-    const addr =
-      t.currency?.address === '-' ? coin : t?.currency?.address?.toLowerCase();
+    const isNative = t.currency?.address === '-';
+    const addr = isNative ? coin : t?.currency?.address?.toLowerCase();
 
     return (<MyBalances>{
       currency: {
@@ -26,7 +27,7 @@ export const MapBalancesToNetwork = (
         address: addr,
       },
       network: network,
-      value: t.value,
+      value: isNative ? nativeBalance : t.value,
       // enquanto não vem a solução pela bitquery
     }) as MyBalances;
   });
@@ -74,12 +75,14 @@ export const getAllBitqueryBalances = (account: string) => {
         balances.data.ethereum?.address[0].balances,
         EthereumNetwork.ethereum,
         'eth',
+        balances.data.ethereum?.address[0].balance,
       )
         .concat(
           MapBalancesToNetwork(
             balances.data.bsc?.address[0].balances,
             EthereumNetwork.bsc,
             'bnb',
+            balances.data.bsc?.address[0].balance,
           ),
         )
         .concat(
@@ -87,6 +90,7 @@ export const getAllBitqueryBalances = (account: string) => {
             balances.data.matic?.address[0].balances,
             EthereumNetwork.matic,
             'matic',
+            balances.data.matic?.address[0].balance,
           ),
         );
       const allMyNFTBalances = MapNFTBalancesToNetwork(

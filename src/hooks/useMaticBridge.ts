@@ -1,10 +1,8 @@
-import { Widget } from '@maticnetwork/wallet-widget'
-import { useCallback} from 'react';
-
-
+import {Widget} from '@maticnetwork/wallet-widget';
+import {useCallback} from 'react';
 
 const widget = new Widget({
-  target: '',
+  // target: '',
   appName: 'dexkit-dash',
   autoShowTime: 0,
   position: 'center',
@@ -13,13 +11,21 @@ const widget = new Widget({
   overlay: true,
   network: 'mainnet',
   closable: true,
+  style: {
+    color: 'black',
+  },
 });
-
+// useState was not working due to how plugin works, widget.destroy() was not working, needed to create this additional variable
+let wasCreated = false
 export function useMaticBridge() {
 
-  const initBridge = useCallback(() => {
-    widget.create()
-  }, []);
+  const initBridge = useCallback(async () => {
+    if(!wasCreated){
+      await widget.create();
+    }
+    wasCreated = true
+    widget.show();
+  }, [wasCreated]);
 
   return {
     initBridge,
