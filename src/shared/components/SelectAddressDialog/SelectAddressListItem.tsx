@@ -3,14 +3,14 @@ import React, {useCallback} from 'react';
 
 interface SelectAccountListItemProps {
   account: {address: string; label?: string};
-  onSelectAccount: (address: string) => void;
+  onSelectAccount: (address: string, label?: string) => void;
 }
 
 export const SelectAccountListItem = (props: SelectAccountListItemProps) => {
   const {onSelectAccount, account} = props;
 
   const handleSelectAddress = useCallback(() => {
-    onSelectAccount(account.address);
+    onSelectAccount(account.address, account.label);
   }, [onSelectAccount, account]);
 
   return (

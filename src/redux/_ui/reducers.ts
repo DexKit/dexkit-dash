@@ -90,6 +90,8 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(setDefaultAccount, (state, action) => {
       const {account, type} = action.payload;
+
+      console.log('account', account);
       const ind = state.wallet[type].findIndex(
         (a) => a.address.toLowerCase() === account.address.toLowerCase(),
       );

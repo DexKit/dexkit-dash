@@ -17,6 +17,8 @@ import HelpIcon from '@material-ui/icons/Help';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
+import {Alert} from '@material-ui/lab';
+
 import {
   getTransactionScannerUrl,
   hasLondonHardForkSupport,
@@ -47,6 +49,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
   const history = useHistory();
   const userDefaultAcount = useDefaultAccount();
   const {getWeb3, getProvider, chainId} = useWeb3();
+
+  const [error, setError] = useState<string>();
 
   const dispatch = useDispatch();
 
@@ -131,8 +135,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
         setTransactionHash(contract.deployTransaction.hash);
 
         createNotification({
-          title: 'Create collection',
-          body: `Creating a new NFT collection named ${values.name}`,
+          title: 'Create token',
+          body: `Creating a new token named ${values.name}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(
             chainId,
@@ -157,6 +161,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
       })
       .catch((err) => {
         console.log(err);
+        setError(err.message);
       })
       .finally(() => {
         setShowConfirm(false);
@@ -192,6 +197,10 @@ export const TokenSetup = (props: TokenSetupProps) => {
   const handleGoWizard = useCallback(() => {
     history.push('/wizard');
   }, [history]);
+
+  const handleClearError = useCallback(() => {
+    setError(undefined);
+  }, []);
 
   return (
     <>
@@ -302,6 +311,13 @@ export const TokenSetup = (props: TokenSetupProps) => {
             </CardContent>
           </Card>
         </Grid>
+        {error ? (
+          <Grid item xs={12}>
+            <Alert severity='error' onClose={handleClearError}>
+              {error}
+            </Alert>
+          </Grid>
+        ) : null}
         <Grid item xs={12}>
           <Paper>
             <Box p={4}>

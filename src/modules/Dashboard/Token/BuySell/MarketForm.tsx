@@ -4,7 +4,16 @@ import {useWeb3} from 'hooks/useWeb3';
 import {AppContext} from '@crema';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import {Grid, Box, Button, TextField, Typography} from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  Button,
+  TextField,
+  Typography,
+  IconButton,
+  CircularProgress,
+  useTheme,
+} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -32,10 +41,12 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ReactComponent as TradeIcon} from '../../../../assets/images/icons/trade.svg';
-import VerticalSwap from './VerticalSwap';
+
 import {marketFormStyles as useStyles} from './index.styles';
 import SelectTokenBalanceDialog from './Modal/SelectTokenBalanceDialog';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+
+import SwapVertIcon from '@material-ui/icons/SwapVert';
 
 interface Props {
   chainId: number | undefined;
@@ -66,7 +77,8 @@ const MarketForm: React.FC<Props> = (props) => {
     onTrade,
   } = props;
 
-  const {theme} = useContext<AppContextPropsType>(AppContext);
+  const {theme: creamaTheme} = useContext<AppContextPropsType>(AppContext);
+  const theme = useTheme();
 
   const classes = useStyles();
 
@@ -280,17 +292,24 @@ const MarketForm: React.FC<Props> = (props) => {
 
   let errorMessage = null;
   const notConnected = web3State !== Web3State.Done;
-  const handleConnectWallet = useCallback(()=>{
+  const handleConnectWallet = useCallback(() => {
     history.push('/onboarding/login-wallet');
-  },[])
+  }, []);
   const connectButton = (
     <Box display='flex' alignItems='center' justifyContent='center'>
       <Button
+        fullWidth
         size='large'
         variant='contained'
         color='primary'
+        startIcon={
+          web3State === Web3State.Connecting ? (
+            <CircularProgress size={theme.spacing(6)} color='inherit' />
+          ) : undefined
+        }
         onClick={handleConnectWallet}
-        endIcon={<AccountBalanceWalletIcon />}>
+        endIcon={<AccountBalanceWalletIcon />}
+        disabled={web3State === Web3State.Connecting}>
         {web3State === Web3State.Connecting
           ? isMobile()
             ? 'Connecting...'
@@ -338,10 +357,7 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const getTokens = useCallback(
     (target: string) => {
-      return (target === 'from' &&
-        select0.length > 0)
-        ? select0
-        : select1;
+      return target === 'from' && select0.length > 0 ? select0 : select1;
     },
     [select0, select1],
   );
@@ -351,7 +367,7 @@ const MarketForm: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <Box className={classes.marketContainer}>
+    <Box>
       <SelectTokenBalanceDialog
         title={selectTo === 'from' ? 'You send' : 'You receive'}
         balances={balances as MyBalances[]}
@@ -364,24 +380,29 @@ const MarketForm: React.FC<Props> = (props) => {
         <form noValidate autoComplete='off'>
           <Box>
             <Grid container spacing={4}>
-              <Grid item xs={6} className={classes.inputLabel}>
-                <IntlMessages id='app.youSend' />
-              </Grid>
-              <Grid item xs={6} className={classes.inputLabel}>
-                <Typography
-                  className={classes.amountTotal}
-                  onClick={setMax}
-                  variant='body2'
-                  color='textSecondary'
-                  align='right'>
-                  {account ? (
-                    `${tokenBalance?.value?.toFixed(4) || 0} ${
-                      tokenBalance?.currency?.symbol || ''
-                    }`
-                  ) : (
-                    <Skeleton width={'100%'} />
-                  )}
-                </Typography>
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='space-between'>
+                  <Typography variant='body2'>
+                    <IntlMessages id='app.youSend' />
+                  </Typography>
+
+                  <Typography
+                    onClick={setMax}
+                    variant='body2'
+                    color='textSecondary'>
+                    {account ? (
+                      `${tokenBalance?.value?.toFixed(4) || 0} ${
+                        tokenBalance?.currency?.symbol || ''
+                      }`
+                    ) : (
+                      <Skeleton width={'100%'} />
+                    )}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid item xs={5} sm={5}>
                 <SelectTokenV2
@@ -402,7 +423,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end' style={{fontSize: '13px'}}>
-                        {priceQuoteFrom && (
+                        {priceQuoteFrom ? (
                           <>
                             ≈
                             <i>
@@ -413,6 +434,8 @@ const MarketForm: React.FC<Props> = (props) => {
                               )}
                             </i>
                           </>
+                        ) : (
+                          ''
                         )}
                       </InputAdornment>
                     ),
@@ -420,10 +443,21 @@ const MarketForm: React.FC<Props> = (props) => {
                 />
               </Grid>
 
-              <VerticalSwap switchTokens={switchTokens} />
-
-              <Grid item xs={12} className={classes.inputLabel}>
-                <IntlMessages id='app.youReceive' />
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='center'>
+                  <IconButton size='small' onClick={switchTokens}>
+                    <SwapVertIcon color='primary' />
+                  </IconButton>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='body1'>
+                  <IntlMessages id='app.youReceive' />
+                </Typography>
               </Grid>
               <Grid item xs={5} md={5}>
                 {select1.length > 0 && (
@@ -461,11 +495,14 @@ const MarketForm: React.FC<Props> = (props) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} md={12}>
-                <Box padding={'8px'}>
-                  {(priceQuoteTo || priceQuoteFrom) && (
+
+              {(priceQuoteTo || priceQuoteFrom) && (
+                <Grid item xs={12}>
+                  <Box>
                     <Accordion
-                      style={{backgroundColor: theme.palette.sidebar.bgColor}}>
+                      style={{
+                        backgroundColor: creamaTheme.palette.sidebar.bgColor,
+                      }}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls='panel1a-content'
@@ -532,10 +569,10 @@ const MarketForm: React.FC<Props> = (props) => {
                         </Box>
                       </AccordionDetails>
                     </Accordion>
-                  )}
-                </Box>
-              </Grid>
-              <Grid item xs={12} className={classes.submit}>
+                  </Box>
+                </Grid>
+              )}
+              <Grid item xs={12}>
                 {!notConnected && (
                   <Button
                     fullWidth

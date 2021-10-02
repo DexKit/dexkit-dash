@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
 import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 
+import clsx from 'clsx';
+
 import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
@@ -113,7 +115,7 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
         </ListItemIcon>
       )}
       <ListItemText
-        className={classes.listItemText}
+        className={clsx(classes.listItemText, 'visible-hover')}
         primary={<IntlMessages id={item.messageId} />}
       />
       {item.count && (

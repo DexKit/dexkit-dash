@@ -10,6 +10,7 @@ import FavoriteListItem from 'shared/components/FavoriteListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 import {ReactComponent as EmptyGhost} from 'assets/images/state/empty-ghost.svg';
+import {FavoritesEmptyImage} from 'shared/components/Icons';
 
 interface FavoriteCoinsListProps {
   favoriteCoins: FavoriteCoin[];
@@ -43,7 +44,7 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
               alignItems='center'
               alignContent='center'
               justifyContent='center'>
-              <EmptyGhost />
+              <FavoritesEmptyImage />
             </Box>
             <Typography gutterBottom variant='body1' align='center'>
               You don't have favorites yet.
