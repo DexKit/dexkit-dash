@@ -97,7 +97,7 @@ export const StartGame = (props: Props) => {
   }, [game]);
 
   const started = useMemo(() => game?.started, [game]);
-  const totalPlayers = useMemo(() => game?.num_players, [game]);
+  const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
   const currentPlayers = useMemo(() => game?.players.length, [game]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {

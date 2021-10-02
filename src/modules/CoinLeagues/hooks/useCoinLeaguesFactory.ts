@@ -1,9 +1,12 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useEffect, useState} from 'react';
 import {
-  COINS_LEAGUE_FACTORY_ADDRESS,
+  COIN_LEAGUES_FACTORY_ADDRESS,
   createGame,
+  getCreatedGamesAddressFromFactory,
+  getEndedGamesAddressFromFactory,
   getGamesAddressFromFactory,
+  getStartedGamesAddressFromFactory,
 } from 'modules/CoinLeagues/services/coinLeaguesFactory';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Game, GameParams} from 'types/coinsleague';
@@ -29,10 +32,9 @@ export const useCoinLeaguesFactory = () => {
       }
       try {
         const tx = await createGame(
-          COINS_LEAGUE_FACTORY_ADDRESS[chainId],
+          COIN_LEAGUES_FACTORY_ADDRESS[chainId],
           params,
         );
-        console.log(params);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -44,20 +46,20 @@ export const useCoinLeaguesFactory = () => {
     [web3State, chainId],
   );
 
-  const gamesAddressQuery = useQuery(['GetGamesAdddress', chainId], () => {
+  const gamesAddressQuery = useQuery(['GetGamesAddress', chainId], () => {
     if ( !provider) {
       return;
     }
     
     return getGamesAddressFromFactory(
-      COINS_LEAGUE_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
       13,
       provider
     );
   });
 
   const gamesQuery = useQuery(
-    ['GetGamesAdddress', gamesAddressQuery.data],
+    ['GetGamesDataAddress', gamesAddressQuery.data],
     () => {
       if (
         !gamesAddressQuery?.data ||
@@ -71,14 +73,114 @@ export const useCoinLeaguesFactory = () => {
     },
   );
 
+  const createdGamesAddressQuery = useQuery(['GetCreatedGamesAdddress', chainId], () => {
+    if ( !provider) {
+      return;
+    }
+    
+    return getCreatedGamesAddressFromFactory(
+      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      13,
+      provider
+    );
+  });
+
+  const createdGamesQuery = useQuery(
+    ['GetCreatedGamesData', createdGamesAddressQuery.data],
+    () => {
+      if (
+        !createdGamesAddressQuery?.data ||
+        !createdGamesAddressQuery?.data[0].length || 
+        !provider
+      ) {
+        return;
+      }
+      const gAddress = createdGamesAddressQuery?.data[0];
+      return getGamesData(gAddress, provider);
+    },
+  );
+
+  const startedGamesAddressQuery = useQuery(['GetStartedGamesAdddress', chainId], () => {
+    if ( !provider) {
+      return;
+    }
+    
+    return getStartedGamesAddressFromFactory(
+      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      13,
+      provider
+    );
+  });
+
+  const startedGamesQuery = useQuery(
+    ['GetStartedGamesData', startedGamesAddressQuery.data],
+    () => {
+      if (
+        !startedGamesAddressQuery?.data ||
+        !startedGamesAddressQuery?.data[0].length || 
+        !provider
+      ) {
+        return;
+      }
+      const gAddress = startedGamesAddressQuery?.data[0];
+      return getGamesData(gAddress, provider);
+    },
+  );
+
+  const endedGamesAddressQuery = useQuery(['GetEndedGamesAdddress', chainId], () => {
+    if ( !provider) {
+      return;
+    }
+    
+    return getEndedGamesAddressFromFactory(
+      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      13,
+      provider
+    );
+  });
+
+  const endedGamesQuery = useQuery(
+    ['GetEndedGamesData', endedGamesAddressQuery.data],
+    () => {
+      if (
+        !endedGamesAddressQuery?.data ||
+        !endedGamesAddressQuery?.data[0].length || 
+        !provider
+      ) {
+        return;
+      }
+      const gAddress = endedGamesAddressQuery?.data[0];
+      return getGamesData(gAddress, provider);
+    },
+  );
+
+
   
   return {
     onGameCreateCallback,
     gamesAddress: gamesAddressQuery?.data ? gamesAddressQuery?.data[0] : [],
     games: gamesQuery?.data,
     totalGames: gamesAddressQuery?.data && gamesAddressQuery?.data[1],
+    refetch: gamesAddressQuery.refetch,
     gamesAddressQuery,
     gamesQuery,
-    refetch: gamesAddressQuery.refetch
+    // created queries
+    createdGames: createdGamesQuery?.data,
+    totalCreatedGames: createdGamesAddressQuery?.data && createdGamesAddressQuery?.data[1],
+    createdGamesQuery,
+    createdGamesAddressQuery, 
+    refetchCreated: createdGamesAddressQuery.refetch,
+    // started queries
+    startedGames: startedGamesQuery?.data,
+    totalStartedGames: startedGamesAddressQuery?.data && startedGamesAddressQuery?.data[1],
+    startedGamesQuery,
+    startedGamesAddressQuery, 
+    refetchStarted: startedGamesAddressQuery.refetch,
+    // started queries
+    endedGames: endedGamesQuery?.data,
+    totalEndedGames: endedGamesAddressQuery?.data && endedGamesAddressQuery?.data[1],
+    endedGamesQuery,
+    endedGamesAddressQuery, 
+    refetchEnded: endedGamesAddressQuery.refetch
   };
 };

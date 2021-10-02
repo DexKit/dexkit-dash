@@ -33,7 +33,7 @@ export const MapBalancesToUSDValue = (
 
 // Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
-  const {account: web3Account, chainId, web3State} = useWeb3();
+  const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
   const account = defaultAccount || web3Account;
 
   const myBalancesQuery = useQuery(
@@ -42,7 +42,7 @@ export const useAllBalance = (defaultAccount?: string) => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
         if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
-         return getAllBlockchainBalances(chainId, account);
+         return getAllBlockchainBalances(chainId, account, getProvider());
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
         return getAllBitqueryBalances(account)

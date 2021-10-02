@@ -68,13 +68,12 @@ const useStyles = makeStyles((theme) => ({
 interface IRow {
   hash: string;
   coins: string[];
-
+  captainCoin?: string;
   score: number;
 }
 
 interface Props {
   data?: IRow[];
-  captainCoin?: string;
   address: string;
   winner?: any;
   account?: string;
@@ -115,10 +114,12 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins, captainCoin} = props;
+  const {address, account, finished, hideCoins} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
+  const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
+  const [selectedPlayerAddress, setSelectedPlayerAddress] = useState<string>();
   const accountLabels = useLabelAccounts();
   const {game, currentPrices, allFeeds} = useCoinLeagues(address);
 
@@ -127,8 +128,10 @@ function PlayersTable(props: Props): JSX.Element {
     setOpenViewDialog(false);
   }, []);
 
-  const onViewCoins = useCallback((c: any) => {
+  const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
+    setSelectedCaptainCoin(cap);
+    setSelectedPlayerAddress(addr);
     setOpenViewDialog(true);
   }, []);
 
@@ -142,7 +145,7 @@ function PlayersTable(props: Props): JSX.Element {
 
         const currentFeedPrice = currentPrices?.filter((f) =>
           d.coins
-            .concat(captainCoin ? captainCoin : [])
+            .concat(d.captainCoin ? d.captainCoin : [])
             .map((c) => c.toLowerCase())
             .includes(f.feed.toLowerCase()),
         );
@@ -204,14 +207,18 @@ function PlayersTable(props: Props): JSX.Element {
         open={openViewDialog}
         onClose={onCloseViewCoinsDialog}
         coins={coins}
+        captainCoin={selectedCaptainCoin}
         address={address}
+        playerAddress={selectedPlayerAddress}
       />
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
             <TableCell className={classes.header}>Position</TableCell>
             <TableCell className={classes.header}>Captain</TableCell>
-            <TableCell className={classes.header}>Coins</TableCell>
+            {(game?.num_coins.toNumber()|| 0) > 1 && (
+              <TableCell className={classes.header}>Coins</TableCell>
+            )}
             <TableCell className={classes.header}>Score</TableCell>
           </TableHead>
 
@@ -298,25 +305,21 @@ function PlayersTable(props: Props): JSX.Element {
                   </TableCell>
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
-                      {hideCoins ? (
-                        captainCoin && (
+                      {!hideCoins ? (
+                        row?.captainCoin && (
                           <Badge
                             color={'primary'}
                             overlap='circular'
-                            anchorOrigin={{
-                              vertical: 'bottom',
-                              horizontal: 'right',
-                            }}
                             badgeContent={1.3}>
                             <Avatar
                               className={classes.chip}
                               src={getIconByCoin(
-                                captainCoin,
+                                row.captainCoin,
                                 GET_LEAGUES_CHAIN_ID(chainId),
                               )}
                               style={{height: 35, width: 35}}>
                               {getIconSymbol(
-                                captainCoin,
+                                row.captainCoin,
                                 GET_LEAGUES_CHAIN_ID(chainId),
                               )}
                             </Avatar>
@@ -326,11 +329,7 @@ function PlayersTable(props: Props): JSX.Element {
                         <Badge
                           color={'primary'}
                           overlap='circular'
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                          }}
-                          badgeContent={1.3}>
+                        >
                           <Avatar
                             className={classes.chip}
                             style={{height: 35, width: 35}}></Avatar>
@@ -339,43 +338,45 @@ function PlayersTable(props: Props): JSX.Element {
                     </Box>
                   </TableCell>
 
-                  <TableCell className={classes.noBorder}>
-                    <Box display={'flex'} alignItems={'center'}>
-                      <AvatarGroup max={10} spacing={17}>
-                        {row?.coins.map((coin) =>
-                          !hideCoins ? (
-                            <Avatar
-                              className={classes.chip}
-                              src={getIconByCoin(
-                                coin,
-                                GET_LEAGUES_CHAIN_ID(chainId),
-                              )}
-                              style={{height: 35, width: 35}}>
-                              {getIconSymbol(
-                                coin,
-                                GET_LEAGUES_CHAIN_ID(chainId),
-                              )}
-                            </Avatar>
-                          ) : (
-                            <Avatar
-                              className={classes.chip}
-                              style={{height: 35, width: 35}}></Avatar>
-                          ),
+                  {row?.coins.length > 0 && (
+                    <TableCell className={classes.noBorder}>
+                      <Box display={'flex'} alignItems={'center'}>
+                        <AvatarGroup max={10} spacing={17}>
+                          {row?.coins.map((coin) =>
+                            !hideCoins ? (
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(
+                                  coin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                              </Avatar>
+                            ) : (
+                              <Avatar
+                                className={classes.chip}
+                                style={{height: 35, width: 35}}></Avatar>
+                            ),
+                          )}
+                        </AvatarGroup>
+                        {!hideCoins && (
+                          <IconButton onClick={() => onViewCoins(row.coins, row.captainCoin, row.hash as string)}>
+                            <RemoveRedEye
+                              style={{
+                                color: '#fff',
+                                marginLeft: 10,
+                                alignSelf: 'center',
+                              }}
+                            />
+                          </IconButton>
                         )}
-                      </AvatarGroup>
-                      {!hideCoins && (
-                        <IconButton onClick={() => onViewCoins(row.coins)}>
-                          <RemoveRedEye
-                            style={{
-                              color: '#fff',
-                              marginLeft: 10,
-                              alignSelf: 'center',
-                            }}
-                          />
-                        </IconButton>
-                      )}
-                    </Box>
-                  </TableCell>
+                      </Box>
+                    </TableCell>
+                  )}
 
                   <TableCell className={classes.noBorder}>
                     <Chip

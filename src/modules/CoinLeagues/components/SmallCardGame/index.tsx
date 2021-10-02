@@ -40,7 +40,7 @@ interface Props {
   amount_to_play: ethers.BigNumber;
   start_timestamp: ethers.BigNumber;
   duration: ethers.BigNumber;
-  num_players: number;
+  num_players: ethers.BigNumber;
   game_type?: GameType;
   btnMessage?: string;
   onClick: any;

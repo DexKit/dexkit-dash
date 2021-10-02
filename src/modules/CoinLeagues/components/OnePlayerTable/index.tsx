@@ -24,12 +24,18 @@ import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import {ethers} from 'ethers';
 import {useLabelAccounts} from 'hooks/useLabelAccounts';
-import { GameType } from 'types/coinsleague';
+import {GameType} from 'types/coinsleague';
+import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import Tooltip from '@material-ui/core/Tooltip';
+import Badge from '@material-ui/core/Badge';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -69,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 interface IRow {
   hash: string;
   coins: string[];
+  captainCoin: string;
   score: number;
 }
 
@@ -130,6 +137,9 @@ function OnePlayerTable(props: Props): JSX.Element {
   const [submitWithdrawState, setSubmitWithdrawState] = useState<SubmitState>(
     SubmitState.None,
   );
+
+  const {multiplier, loadingMultiplier, tooltipMessage } = useMultipliers(account);
+
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -319,12 +329,14 @@ function OnePlayerTable(props: Props): JSX.Element {
         open={openViewDialog}
         onClose={onCloseViewCoinsDialog}
         coins={coins}
+        captainCoin={playerData?.captainCoin}
         address={address}
       />
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
             <TableCell className={classes.header}>Position</TableCell>
+            <TableCell className={classes.header}>Captain</TableCell>
             <TableCell className={classes.header}>Coins</TableCell>
             <TableCell className={classes.header}>Score</TableCell>
             {(canClaim || claimed) && (
@@ -363,7 +375,38 @@ function OnePlayerTable(props: Props): JSX.Element {
                 <TableCell className={classes.noBorder}>
                   <Box display={'flex'} alignItems={'center'}>
                     <AvatarGroup max={10} spacing={17}>
-                      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                      {chainId &&
+                        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                        playerData?.captainCoin && (
+                          <Tooltip title={tooltipMessage}>
+                            <Badge
+                              color={'primary'}
+                              overlap='circular'
+                              badgeContent={!loadingMultiplier && multiplier}>
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(
+                                  playerData?.captainCoin,
+                                  chainId,
+                                )}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(
+                                  playerData?.captainCoin,
+                                  chainId,
+                                )}
+                              </Avatar>
+                            </Badge>
+                          </Tooltip>
+                        )}
+                    </AvatarGroup>
+                  </Box>
+                </TableCell>
+
+                <TableCell className={classes.noBorder}>
+                  <Box display={'flex'} alignItems={'center'}>
+                    <AvatarGroup max={10} spacing={17}>
+                      {chainId &&
+                        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
                         playerData?.coins.map((coin) => (
                           <Avatar
                             className={classes.chip}

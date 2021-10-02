@@ -5,6 +5,7 @@ import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {BigNumber} from 'ethers';
+import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 
 export interface Props {
   coin: CoinFeed;
@@ -12,6 +13,8 @@ export interface Props {
   currentPrice: any;
   started?: boolean;
   style: React.CSSProperties;
+  isCaptain?: boolean;
+  playerAddress?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +44,15 @@ const USD_POWER = BigNumber.from(10 ** 8);
 const USD_POWER_NUMBER = 10 ** 8;
 
 export const ViewCoinListItem = (props: Props) => {
-  const {coin, style, feedOnchain, started, currentPrice} = props;
+  const {
+    coin,
+    style,
+    feedOnchain,
+    started,
+    currentPrice,
+    isCaptain,
+    playerAddress,
+  } = props;
   const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
   const classes = useStyles();
@@ -72,13 +83,12 @@ export const ViewCoinListItem = (props: Props) => {
   }, [feedOnchain.end_price, started, currentPrice]);
 
   const priceScore = useMemo(() => {
-
     if (feedOnchain.start_price && feedOnchain.end_price && currentPrice) {
       if (feedOnchain.start_price.eq('0')) {
         return '0';
       }
-      if(!started){
-        return feedOnchain.score.toNumber()/10;
+      if (!started) {
+        return feedOnchain.score.toNumber() / 10;
       }
 
       const endPrice = started
@@ -88,6 +98,8 @@ export const ViewCoinListItem = (props: Props) => {
       return (((endPrice - startPrice) / startPrice) * 100).toFixed(2);
     }
   }, [feedOnchain.start_price, feedOnchain.end_price, started, currentPrice]);
+
+  const {multiplier} = useMultipliers(playerAddress);
 
   return (
     <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>
@@ -123,6 +135,11 @@ export const ViewCoinListItem = (props: Props) => {
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
             </Typography>
+          </Grid>
+        )}
+        {isCaptain && (
+          <Grid item>
+            <Chip color={'primary'} label={`x ${multiplier}`} />
           </Grid>
         )}
 

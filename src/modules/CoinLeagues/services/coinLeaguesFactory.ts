@@ -2,40 +2,38 @@ import {CallInput} from '@indexed-finance/multicall';
 import {Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
-import coinsLeagueFactoryAbi from '../../../shared/constants/ABI/coinsLeagueFactory.json';
+import coinLeaguesFactoryAbi from '../constants/ABI/coinLeaguesFactory.json';
 import { getMulticallFromProvider} from '../../../services/multicall';
-import {getEthers, getWeb3Wrapper} from '../../../services/web3modal';
+import {getEthers, getProvider} from '../../../services/web3modal';
 import { ChainId } from 'types/blockchain';
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
 //0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
-export const COINS_LEAGUE_FACTORY_ADDRESS = {
+export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
-  [ChainId.Matic]: '0x34C21825ef6Bfbf69cb8748B4587f88342da7aFb',
+  [ChainId.Matic]: '0x551c5d0D681Dd516c6b1BdA572A9891214D1d0C5',
 };
 
-let coinsLeagueFactory: Contract;
-export const getCoinsLeagueFactoryContract = async (address: string) => {
-  if (!coinsLeagueFactory) {
-    const web3Wrapper = await getWeb3Wrapper();
-    //@ts-ignore
+let coinLeaguesFactory: Contract;
+export const getCoinLeaguesFactoryContract = async (address: string) => {
+  if (!coinLeaguesFactory) {
+    const appProvider = getProvider();
     const provider = new providers.Web3Provider(
-      //@ts-ignore
-      web3Wrapper.getProvider(),
+       appProvider 
     ).getSigner();
 
-    coinsLeagueFactory = new ethers.Contract(
+    coinLeaguesFactory = new ethers.Contract(
       address,
-      coinsLeagueFactoryAbi,
+      coinLeaguesFactoryAbi,
       provider,
     );
   }
-  return coinsLeagueFactory;
+  return coinLeaguesFactory;
 };
 const GAS_PRICE_MULTIPLIER = 2
 export const createGame = async (address: string, params: GameParams) => {
   const ethers = getEthers()
   const gasPrice = await (await ethers?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER );
-  return (await getCoinsLeagueFactoryContract(address)).createGame(
+  return (await getCoinLeaguesFactoryContract(address)).createGame(
     params.numPlayers,
     params.duration,
     params.amountUnit,
@@ -50,13 +48,47 @@ export const getGamesAddressFromFactory = async (
   maxGames: number,
   provider: any,
 ): Promise<[string[], number]> => {
-  const iface = new Interface(coinsLeagueFactoryAbi);
+  const iface = new Interface(coinLeaguesFactoryAbi);
   const multicall = await getMulticallFromProvider(provider);
   let calls: CallInput[] = [];
   calls.push({
     interface: iface,
     target: factoryAddress,
     function: 'totalGames',
+  });
+  const [, totalGames] = await multicall.multiCall(calls);
+  const total = totalGames[0] ? totalGames[0].toNumber() : 0;
+  const start = total - maxGames <= 0 ? 0 : total - maxGames;
+  calls = [];
+
+  for (let index = start; index < total; index++) {
+    calls.push({
+      interface: iface,
+      target: factoryAddress,
+      function: 'allGames',
+      args: [index],
+    });
+  }
+  if (calls.length) {
+    const [, gamesAddress] = await multicall.multiCall(calls);
+    return [gamesAddress as string[], total as number];
+  } else {
+    return [[], total as number];
+  }
+};
+
+export const getCreatedGamesAddressFromFactory = async (
+  factoryAddress: string,
+  maxGames: number,
+  provider: any,
+): Promise<[string[], number]> => {
+  const iface = new Interface(coinLeaguesFactoryAbi);
+  const multicall = await getMulticallFromProvider(provider);
+  let calls: CallInput[] = [];
+  calls.push({
+    interface: iface,
+    target: factoryAddress,
+    function: 'totalCreatedGames',
   });
   const [, totalGames] = await multicall.multiCall(calls);
   const total = totalGames[0] ? totalGames[0].toNumber() : 0;
@@ -73,14 +105,94 @@ export const getGamesAddressFromFactory = async (
     calls.push({
       interface: iface,
       target: factoryAddress,
-      function: 'coinsLeague',
+      function: 'createdGames',
       args: [index],
     });
   }
   if (calls.length) {
     const [, gamesAddress] = await multicall.multiCall(calls);
-    return [gamesAddress as string[], total as number];
+    return [gamesAddress as string[], totalGames[0] as number];
   } else {
-    return [[], total as number];
+    return [[], totalGames[0] as number];
+  }
+};
+
+export const getStartedGamesAddressFromFactory = async (
+  factoryAddress: string,
+  maxGames: number,
+  provider: any,
+): Promise<[string[], number]> => {
+  const iface = new Interface(coinLeaguesFactoryAbi);
+  const multicall = await getMulticallFromProvider(provider);
+  let calls: CallInput[] = [];
+  calls.push({
+    interface: iface,
+    target: factoryAddress,
+    function: 'totalStartedGames',
+  });
+  const [, totalGames] = await multicall.multiCall(calls);
+  const total = totalGames[0] ? totalGames[0].toNumber() : 0;
+  const start = total - maxGames <= 0 ? 0 : total - maxGames;
+  calls = [];
+  /* calls.push({
+    interface: iface,
+    target: factoryAddress,
+    function: 'getGames',
+    args:  [0, 1],
+  });*/
+
+  for (let index = start; index < total; index++) {
+    calls.push({
+      interface: iface,
+      target: factoryAddress,
+      function: 'startedGames',
+      args: [index],
+    });
+  }
+  if (calls.length) {
+    const [, gamesAddress] = await multicall.multiCall(calls);
+    return [gamesAddress as string[], totalGames[0].toNumber() as number];
+  } else {
+    return [[], totalGames[0].toNumber() as number];
+  }
+};
+
+export const getEndedGamesAddressFromFactory = async (
+  factoryAddress: string,
+  maxGames: number,
+  provider: any,
+): Promise<[string[], number]> => {
+  const iface = new Interface(coinLeaguesFactoryAbi);
+  const multicall = await getMulticallFromProvider(provider);
+  let calls: CallInput[] = [];
+  calls.push({
+    interface: iface,
+    target: factoryAddress,
+    function: 'totalEndedGames',
+  });
+  const [, totalGames] = await multicall.multiCall(calls);
+  const total = totalGames[0] ? totalGames[0].toNumber() : 0;
+  const start = total - maxGames <= 0 ? 0 : total - maxGames;
+  calls = [];
+  /* calls.push({
+    interface: iface,
+    target: factoryAddress,
+    function: 'getGames',
+    args:  [0, 1],
+  });*/
+
+  for (let index = start; index < total; index++) {
+    calls.push({
+      interface: iface,
+      target: factoryAddress,
+      function: 'endedGames',
+      args: [index],
+    });
+  }
+  if (calls.length) {
+    const [, gamesAddress] = await multicall.multiCall(calls);
+    return [gamesAddress as string[], totalGames[0].toNumber() as number];
+  } else {
+    return [[], totalGames[0].toNumber() as number];
   }
 };

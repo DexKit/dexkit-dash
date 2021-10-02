@@ -18,36 +18,37 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import { CoinFeed } from 'modules/CoinLeagues/utils/types';
-import {SelectCoinListItem} from './SelectCoinItem'
-import { PriceFeeds } from 'modules/CoinLeagues/constants';
-import { ChainId } from 'types/blockchain';
+import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {SelectCoinListItem} from './SelectCoinItem';
+import {PriceFeeds} from 'modules/CoinLeagues/constants';
+import {ChainId} from 'types/blockchain';
 
 interface Props extends DialogProps {
   title?: string;
   chainId: ChainId.Matic | ChainId.Mumbai;
-  selectedCoins?: CoinFeed[]
-  onSelectCoin: (coin: CoinFeed, isChampion: boolean) => void;
-  isChampion: boolean;
+  selectedCoins?: CoinFeed[];
+  onSelectCoin: (coin: CoinFeed, isCaptainCoin: boolean) => void;
+  isCaptainCoin: boolean;
 }
 
 export const SelectCoinLeagueDialog = (props: Props) => {
-  const {onSelectCoin,  onClose, chainId, title, selectedCoins, isChampion} = props;
+  const {onSelectCoin, onClose, chainId, title, selectedCoins, isCaptainCoin} =
+    props;
   // TODO: Change to Mainnet
   const coins = PriceFeeds[chainId];
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
-  const filteredCoins = useMemo(()=> {
-    return coins.filter(
-      (coin: CoinFeed) =>
-        coin.baseName.toLowerCase().startsWith(filterText?.toLowerCase()) ||
-        coin.base.toLowerCase().startsWith(filterText?.toLowerCase()),
-    ).filter(c => !selectedCoins?.includes(c));
-  },[filterText, selectedCoins ])
-
-
+  const filteredCoins = useMemo(() => {
+    return coins
+      .filter(
+        (coin: CoinFeed) =>
+          coin.baseName.toLowerCase().startsWith(filterText?.toLowerCase()) ||
+          coin.base.toLowerCase().startsWith(filterText?.toLowerCase()),
+      )
+      .filter((c) => !selectedCoins?.includes(c));
+  }, [filterText, selectedCoins]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +60,9 @@ export const SelectCoinLeagueDialog = (props: Props) => {
 
   const handleSelectCoin = useCallback(
     (coin: CoinFeed) => {
-      onSelectCoin(coin, isChampion);
+      onSelectCoin(coin, isCaptainCoin);
     },
-    [onSelectCoin, isChampion],
+    [onSelectCoin, isCaptainCoin],
   );
 
   const handleClose = useCallback(() => {
@@ -85,7 +86,9 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             <Box display='flex' pr={2}>
               <MoneySendIcon />
             </Box>
-            <Typography variant='body1'>{isChampion ? 'Select Champion': 'Select a Coin'}</Typography>
+            <Typography variant='body1'>
+              {isCaptainCoin ? 'Select Captain Coin' : 'Select a Coin'}
+            </Typography>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />

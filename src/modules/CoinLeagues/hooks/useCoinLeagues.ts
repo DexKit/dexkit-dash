@@ -59,6 +59,7 @@ export const useCoinLeagues = (address?: string) => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
+        console.log(e);
         callbacks?.onError(e);
       }
     },
@@ -172,9 +173,12 @@ export const useCoinLeagues = (address?: string) => {
       }
       // TODO: Error on query is returning data without being on object
       const feeds = gameQuery.data[0].players.map((p: any) => p[0] as string[]);
-      const flatFeeds = feeds.flat(1);
+      const captainCoins = gameQuery.data[0].players.map((p: any) => p[2] as string);
+      const flatFeeds = feeds.flat(1).concat(captainCoins);
       const uniqueFeeds = [...new Set(flatFeeds)];
-      return getCoinFeeds(uniqueFeeds, address, provider);
+      if(uniqueFeeds.length){
+        return getCoinFeeds(uniqueFeeds, address, provider);
+      }  
     },
   );
 
@@ -186,7 +190,9 @@ export const useCoinLeagues = (address?: string) => {
       }
       // TODO: Error on query is returning data without being on object
       const feeds = coinFeedQuery.data.map((a) => a.address);
-      return getCurrentCoinFeedsPrice(feeds, address, provider);
+      if(feeds.length){
+        return getCurrentCoinFeedsPrice(feeds, address, provider);
+      }  
     },
   );
 

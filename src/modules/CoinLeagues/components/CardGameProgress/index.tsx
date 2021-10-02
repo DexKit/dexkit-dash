@@ -78,11 +78,11 @@ function CardGameProgress(props: Props): JSX.Element {
   );
   const entryAmount = ethers.utils.formatEther(game.amount_to_play);
   const time = game.duration.toNumber();
-  const coins = game.num_coins;
+  const coins = game.num_coins.toNumber();
 
   // Format number values
   const entriesIn = strPad(game.players.length || 0);
-  const entriesOut = strPad(game.num_players || 0);
+  const entriesOut = strPad(game?.num_players.toNumber() || 0);
   const onClickEnter = useCallback(
     (ev: any) => {
       onClick(game.address);

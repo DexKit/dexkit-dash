@@ -105,12 +105,17 @@ function GameEnter(props: Props) {
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
-  const [championCoin, setChampionCoin] = useState<CoinFeed>();
+  const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
   const [open, setOpen] = useState(false);
-  const [isChampion, setIsChampion] = useState(false);
+  const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
   const onOpenSelectDialog = useCallback((ev: any) => {
+    setOpen(true);
+  }, []);
+
+  const onOpenSelectCaptainDialog = useCallback((ev: any) => {
+    setIsChaptainCoin(true);
     setOpen(true);
   }, []);
 
@@ -122,7 +127,9 @@ function GameEnter(props: Props) {
           return {
             coin_feeds: p[0],
             player_address: p[1],
-            score: p[2],
+            captain_coin: p[2],
+            champion_id: p[3],
+            score: p[4],
           } as Player;
         })
         .find((p) => {
@@ -142,20 +149,24 @@ function GameEnter(props: Props) {
         return {
           coin_feeds: p[0],
           player_address: p[1],
-          score: p[2],
+          captain_coin: p[2],
+          champion_id: p[3],
+          score: p[4],
         } as Player;
       });
     }
   }, [game?.players, game]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
+    setIsChaptainCoin(false);
     setOpen(false);
   }, []);
 
   const onSelectCoin = useCallback(
-    (coin: CoinFeed, isChampion: boolean) => {
-      if (isChampion) {
-        setChampionCoin(coin);
+    (coin: CoinFeed, isCaptain: boolean) => {
+      if (isCaptain) {
+        setCaptainCoin(coin);
+        setIsChaptainCoin(false);
       } else {
         if (selectedCoins) {
           setSelectedCoins(selectedCoins?.concat(coin));
@@ -185,7 +196,7 @@ function GameEnter(props: Props) {
 
   const onEnterGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play && championCoin) {
+      if (game?.amount_to_play && captainCoin) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
@@ -203,9 +214,9 @@ function GameEnter(props: Props) {
         };
 
         onJoinGameCallback(
-          selectedCoins.map((c) => c.address),
+          selectedCoins.map((c) => c.address) || [],
           game?.amount_to_play.toString(),
-          championCoin?.address,
+          captainCoin?.address,
           {
             onConfirmation: onConfirmTx,
             onError,
@@ -222,7 +233,7 @@ function GameEnter(props: Props) {
   const started = useMemo(() => game?.started, [game?.started]);
   const finished = useMemo(() => game?.finished, [game?.finished]);
   const aborted = useMemo(() => game?.aborted, [game?.aborted]);
-  const totalPlayers = useMemo(() => game?.num_players, [game?.num_players]);
+  const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game?.num_players]);
   const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
@@ -231,12 +242,12 @@ function GameEnter(props: Props) {
   }, [started, totalPlayers, currentPlayers]);
 
   const isDisabled = useMemo(() => {
-    return selectedCoins?.length === game?.num_coins && !championCoin;
-  }, [selectedCoins, game?.num_coins, championCoin]);
-
-  const isDisabledToStart = useMemo(() => {
-    return selectedCoins?.length !== game?.num_coins;
-  }, [selectedCoins, game?.num_coins]);
+    return (
+      selectedCoins?.length === (game?.num_coins?.toNumber() || 0) - 1 &&
+      captainCoin !== undefined
+    );
+  }, [selectedCoins, game?.num_coins, captainCoin]);
+  console.log(isDisabled);
 
   const goToExplorer = useCallback(
     (_ev: any) => {
@@ -261,10 +272,10 @@ function GameEnter(props: Props) {
         <SelectCoinLeagueDialog
           chainId={chainId}
           open={open}
-          selectedCoins={selectedCoins.concat(championCoin ? championCoin : [])}
+          selectedCoins={selectedCoins.concat(captainCoin ? captainCoin : [])}
           onSelectCoin={onSelectCoin}
           onClose={onCloseSelectDialog}
-          isChampion={isChampion}
+          isCaptainCoin={isCaptainCoin}
         />
       )}
       <Grid item xs={12} sm={12} xl={12}>
@@ -372,7 +383,7 @@ function GameEnter(props: Props) {
       <Grid item xs={6} sm={4}>
         {game && (
           <CardInfoPlayers
-            num_players={game.num_players}
+            num_players={game.num_players.toNumber()}
             current_players={game.players.length}
           />
         )}
@@ -393,28 +404,29 @@ function GameEnter(props: Props) {
             <Grid item xs={12} md={6} alignContent='space-around'>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography variant='h5' style={{margin: 5}}>
-                    Choose Champion Currency {championCoin ? '0' : '1'}/ 1
+                  <Typography variant='h6' style={{margin: 5}}>
+                    Choose Captain Currency{' '}
+                    {captainCoin === undefined ? '0' : '1'}/ 1
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Button
                     fullWidth
                     disabled={isDisabled}
-                    onClick={onOpenSelectDialog}
+                    onClick={onOpenSelectCaptainDialog}
                     startIcon={<CryptocurrencyIcon />}
                     endIcon={<ExpandMoreIcon />}
                     variant='outlined'>
-                    {'Choose your Coins'}
+                    {'Choose your Captain'}
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container spacing={4}>
-                    {championCoin && (
+                    {captainCoin && (
                       <Grid item xs={12}>
                         <CoinItem
-                          coin={championCoin}
-                          handleDelete={() => setChampionCoin(undefined)}
+                          coin={captainCoin}
+                          handleDelete={() => setCaptainCoin(undefined)}
                           index={0}
                         />
                       </Grid>
@@ -424,41 +436,43 @@ function GameEnter(props: Props) {
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={6} alignContent='space-around'>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant='h5' style={{margin: 5}}>
-                    Choose Currencies {selectedCoins?.length}/
-                    {game?.num_coins || 0}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    fullWidth
-                    disabled={isDisabled}
-                    onClick={onOpenSelectDialog}
-                    startIcon={<CryptocurrencyIcon />}
-                    endIcon={<ExpandMoreIcon />}
-                    variant='outlined'>
-                    {'Choose your Coins'}
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container spacing={4}>
-                    {selectedCoins?.map((c, i) => (
-                      <Grid item xs={12} key={i}>
-                        <CoinItem
-                          coin={c}
-                          key={i}
-                          handleDelete={onDeleteCoin}
-                          index={i}
-                        />
-                      </Grid>
-                    ))}
+            {game?.num_coins.toNumber() !== 1 && (
+              <Grid item xs={12} md={6} alignContent='space-around'>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant='h6' style={{margin: 5}}>
+                      Choose Currencies {selectedCoins?.length}/
+                      {game?.num_coins.toNumber() || 0}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      disabled={isDisabled}
+                      onClick={onOpenSelectDialog}
+                      startIcon={<CryptocurrencyIcon />}
+                      endIcon={<ExpandMoreIcon />}
+                      variant='outlined'>
+                      {'Choose your Coins'}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container spacing={4}>
+                      {selectedCoins?.map((c, i) => (
+                        <Grid item xs={12} key={i}>
+                          <CoinItem
+                            coin={c}
+                            key={i}
+                            handleDelete={onDeleteCoin}
+                            index={i}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
+            )}
           </>
         )}
 
@@ -526,6 +540,7 @@ function GameEnter(props: Props) {
                   return {
                     hash: p?.player_address,
                     score: p?.score?.toNumber() || 0,
+                    captainCoin: p.captain_coin,
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
@@ -551,6 +566,7 @@ function GameEnter(props: Props) {
                   return {
                     hash: p?.player_address,
                     score: p?.score?.toNumber() || 0,
+                    captainCoin: p.captain_coin,
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}

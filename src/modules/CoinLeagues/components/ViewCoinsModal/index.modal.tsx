@@ -29,11 +29,13 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 interface Props extends DialogProps {
   title?: string;
   address: string;
+  playerAddress?: string;
   coins: string[];
+  captainCoin?: string
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose, title, coins, address} = props;
+  const {onClose, title, coins, address, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(address);
@@ -41,27 +43,29 @@ export const ViewCoinLeagueDialog = (props: Props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
-    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any}[]
+    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any; isCaptain: boolean}[]
   >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
   const allCoins = useMemo(() => {
     const chain = GET_LEAGUES_CHAIN_ID(chainId);
-
-    if (coins && coins.length && allFeeds && allFeeds.length) {
+ 
+    if (coins && captainCoin && allFeeds && allFeeds.length) {
+  
       const coinsWithFeeds = allFeeds.filter((cf) =>
-        coins.map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
+        coins.concat(captainCoin).map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
       );
       const coinsList = PriceFeeds[chain].filter((c) =>
         coinsWithFeeds
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
       );
-      return coins
+      return coins.concat(captainCoin)
         .map((c) => {
           return {
             coin: coinsList.find(
               (cl) => cl.address.toLowerCase() === c.toLowerCase(),
             ),
+            isCaptain: c.toLowerCase() === captainCoin.toLowerCase(),
             feed: coinsWithFeeds.find(
               (cl) => cl.address.toLowerCase() === c.toLowerCase(),
             ),
@@ -74,10 +78,11 @@ export const ViewCoinLeagueDialog = (props: Props) => {
         coin: CoinFeed;
         feed: CoinFeedOnChain;
         currentFeed: any;
+        isCaptain: boolean;
       }[];
     }
     return [];
-  }, [coins, allFeeds, currentPrices, chainId]);
+  }, [coins, allFeeds, currentPrices, chainId, captainCoin]);
   const gameStarted = useMemo(() => {
     return game?.started && !game.finished && !game.aborted;
   }, [game]);
@@ -162,6 +167,8 @@ export const ViewCoinLeagueDialog = (props: Props) => {
                   currentPrice={data[index].currentFeed}
                   started={gameStarted}
                   key={index}
+                  isCaptain={data[index].isCaptain}
+                  playerAddress={playerAddress}
                 />
               )}
             </VariableSizeList>

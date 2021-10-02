@@ -95,12 +95,30 @@ const GamesList = () => {
     },
     [value],
   );
-  const {games, totalGames, gamesQuery, gamesAddressQuery} =
-    useCoinLeaguesFactory();
+  const {
+    games,
+    totalGames,
+    gamesQuery,
+    gamesAddressQuery,
+    startedGames,
+    startedGamesQuery,
+    startedGamesAddressQuery,
+    createdGames,
+    createdGamesAddressQuery,
+    createdGamesQuery,
+    endedGames,
+    endedGamesAddressQuery,
+    endedGamesQuery,
+  } = useCoinLeaguesFactory();
   const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
+  const isLoadingStarted =
+    startedGamesQuery.isLoading || startedGamesAddressQuery.isLoading;
+  const isLoadingCreated =
+    createdGamesAddressQuery.isLoading || createdGamesQuery.isLoading;
+  const isLoadingEnded = endedGamesQuery.isLoading || endedGamesAddressQuery.isLoading;
   const gamesInProgress = useMemo(() => {
-    return games?.filter((g) => g.started && !g.finished);
-  }, [games]);
+    return startedGames;
+  }, [startedGames]);
 
   // TODO: We are doing this to user see connected account
   useEffect(() => {
@@ -120,7 +138,7 @@ const GamesList = () => {
 
   const gamesToJoin = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter(
           (g) =>
@@ -128,7 +146,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Fast) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() === 60 * 60)
         .filter(
@@ -138,7 +156,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Mine) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) =>
           g?.players
@@ -153,7 +171,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Medium) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
@@ -162,7 +180,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Eight) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
@@ -172,7 +190,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Day) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
         .filter(
@@ -181,7 +199,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Week) {
-      return games
+      return createdGames
         ?.filter((g) => !g.started)
         .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
@@ -189,11 +207,11 @@ const GamesList = () => {
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
         );
     }
-  }, [games, filterGame, search]);
+  }, [createdGames, filterGame, search]);
 
   const gamesEnded = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter(
           (g) =>
@@ -201,7 +219,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Fast) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) => g?.duration?.toNumber() === 60 * 60)
         .filter(
@@ -211,7 +229,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Mine) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) =>
           g?.players
@@ -226,7 +244,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Medium) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
@@ -235,7 +253,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Eight) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
@@ -245,7 +263,7 @@ const GamesList = () => {
     }
 
     if (filterGame === FilterGame.Day) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
         .filter(
@@ -254,7 +272,7 @@ const GamesList = () => {
         );
     }
     if (filterGame === FilterGame.Week) {
-      return games
+      return endedGames
         ?.filter((g) => g.finished)
         .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
@@ -262,7 +280,7 @@ const GamesList = () => {
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
         );
     }
-  }, [games, filterGame, search]);
+  }, [endedGames, filterGame, search]);
 
   const onClickEnterGame = useCallback((address: string) => {
     history.push(`${COINSLEAGUE_ROUTE}/${address}`);
@@ -346,13 +364,13 @@ const GamesList = () => {
               <SmallCardGame {...g} key={id} onClick={onClickEnterGame} />
             </Grid>
           ))}
-          {isLoading &&
+          {isLoadingStarted &&
             [1, 2, 3].map((v, i) => (
               <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={i}>
                 <SmallCardGameSkeleton />
               </Grid>
             ))}
-          {!isLoading && !gamesInProgress?.length && (
+          {!isLoadingStarted && !gamesInProgress?.length && (
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
@@ -506,13 +524,13 @@ const GamesList = () => {
                 <CardGame game={g} id={g.address} onClick={onClickEnterGame} />
               </Grid>
             ))}
-            {isLoading &&
+            {isLoadingCreated &&
               [1, 2, 3].map((v, i) => (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
                   <CardGameSkeleton />
                 </Grid>
               ))}
-            {!isLoading && !gamesToJoin?.length && (
+            {!isLoadingCreated && !gamesToJoin?.length && (
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
@@ -537,13 +555,13 @@ const GamesList = () => {
                 />
               </Grid>
             ))}
-            {isLoading &&
+            {isLoadingEnded &&
               [1, 2, 3].map((v, i) => (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
                   <CardGameSkeleton />
                 </Grid>
               ))}
-            {!isLoading && !gamesEnded?.length && (
+            {!isLoadingEnded && !gamesEnded?.length && (
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}

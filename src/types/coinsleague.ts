@@ -3,6 +3,8 @@ import {BigNumber} from 'ethers';
 export interface Player {
   score: BigNumber;
   player_address: string;
+  captain_coin: string;
+  champion_id: string;
   coin_feeds?: CoinFeed[];
 }
 
@@ -27,10 +29,10 @@ export interface Game {
   aborted: boolean;
   scores_done: boolean;
   duration: BigNumber;
-  num_players: number;
+  num_players: BigNumber;
   amount_to_play: BigNumber;
   total_amount_collected: BigNumber;
-  num_coins: number;
+  num_coins: BigNumber;
   start_timestamp: BigNumber;
   abort_timestamp: BigNumber;
   address: string;
