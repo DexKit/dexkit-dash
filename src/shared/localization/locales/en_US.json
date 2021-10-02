@@ -4,6 +4,8 @@
   "app.hash": "Hash",
   "app.protocol": "Protocol",
   "app.amount": "Amount",
+  "app.trade.limit": "Limit", 
+  "app.trade.market": "Market",
   "app.sellAmount": "Sell Amount",
   "app.buyAmount": "Buy Amount",
   "app.token": "Token",

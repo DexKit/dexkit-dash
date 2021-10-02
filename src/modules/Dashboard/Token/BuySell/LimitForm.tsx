@@ -14,6 +14,7 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
+  useTheme,
 } from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
 import VerticalSwap from './VerticalSwap';
@@ -324,6 +325,8 @@ const LimitForm: React.FC<Props> = (props) => {
     setShowSelectTokenDialog(false);
   }, []);
 
+  const theme = useTheme();
+
   return (
     <Box>
       <SelectTokenBalanceDialog
@@ -349,7 +352,6 @@ const LimitForm: React.FC<Props> = (props) => {
           </Box>
         </Box>
       )}
-
       {networkName == EthereumNetwork.ethereum && (
         <Box py={4}>
           <form noValidate autoComplete='off'>
@@ -386,19 +388,21 @@ const LimitForm: React.FC<Props> = (props) => {
                           tokenFromBalance?.currency?.symbol || ''
                         }`
                       ) : (
-                        <Skeleton width='100%' />
+                        <Skeleton width={theme.spacing(12)} />
                       )}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={5}>
-                  <SelectTokenV2
-                    id={'marketSel1'}
-                    label={' '}
-                    disabled={disableSelect === 'from'}
-                    selected={tokenFrom}
-                    onClick={handleSelectTokenFrom}
-                  />
+                  <Box height={56}>
+                    <SelectTokenV2
+                      id={'marketSel1'}
+                      label={' '}
+                      disabled={disableSelect === 'from'}
+                      selected={tokenFrom}
+                      onClick={handleSelectTokenFrom}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={7}>
                   <TextField
@@ -456,19 +460,21 @@ const LimitForm: React.FC<Props> = (props) => {
                           tokenToBalance?.currency?.symbol || ''
                         }`
                       ) : (
-                        <Skeleton width={'100%'} />
+                        <Skeleton width={theme.spacing(12)} />
                       )}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={5}>
-                  <SelectTokenV2
-                    id={'marketSel0'}
-                    label={' '}
-                    selected={tokenTo}
-                    disabled={disableSelect === 'to'}
-                    onClick={handleSelectTokenTo}
-                  />
+                  <Box height={56}>
+                    <SelectTokenV2
+                      id={'marketSel0'}
+                      label={' '}
+                      selected={tokenTo}
+                      disabled={disableSelect === 'to'}
+                      onClick={handleSelectTokenTo}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={7}>
                   <TextField
@@ -554,7 +560,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     onChange={handleExpiryInputChange}
                   />
                 </Grid>
-                <Grid xs={12}>
+                <Grid item xs={12}>
                   <Box display='flex' justifyContent='space-evenly'>
                     {priceQuoteTo && (
                       <Box>

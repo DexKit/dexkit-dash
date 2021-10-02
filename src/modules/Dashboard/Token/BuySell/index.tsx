@@ -418,12 +418,18 @@ const BuySell: React.FC<Props> = ({
             indicatorColor='primary'
             onChange={handleChangeTab}
             variant='standard'>
-            <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-            <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+            <Tab
+              label={<IntlMessages id='app.trade.market' />}
+              {...a11yProps(0)}
+            />
+            <Tab
+              label={<IntlMessages id='app.trade.limit' />}
+              {...a11yProps(1)}
+            />
           </Tabs>
         </Box>
       )}
-      <Box py={2} padding={4}>
+      <Box py={2}>
         {currentTab === 0 && (
           <MarketForm
             key='MarketForm'

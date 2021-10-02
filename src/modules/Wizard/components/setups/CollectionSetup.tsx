@@ -53,6 +53,8 @@ export interface CollectionSetupProps {}
 
 export const CollectionSetup = (props: CollectionSetupProps) => {
   const history = useHistory();
+  const [createError, setCreateError] = useState<string>();
+  const [mintError, setMintError] = useState<string>();
 
   const dispatch = useDispatch();
 
@@ -298,6 +300,41 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     [userDefaultAcount, items, getProvider],
   );
 
+  const [tempItemsHashes, setTempItemsHashes] = useState<any>();
+  const [tempCollectionMetaData, setTempCollectionMetadata] = useState<any>();
+  const [tempCollectionImagehash, setCollectionImagehash] = useState<string>();
+
+  const handleCreateTryAgain = useCallback(() => {
+    createContract(tempCollectionMetaData)
+      .then((address) => {
+        dispatch(
+          addCollection({
+            name: values.name,
+            description: values.description,
+            address,
+            abi: ERC721Abi,
+            imageUrl: `https://ipfs.io/ipfs/${tempCollectionImagehash}`,
+          }),
+        );
+
+        setContractAddress(address);
+        setContractStatus(ContractStatus.Minting);
+
+        if (items.length > 0) {
+          mintItems(address, tempItemsHashes)
+            .then(() => {
+              setContractStatus(ContractStatus.Finalized);
+            })
+            .catch((err) => {
+              setMintError(err.message);
+            });
+        }
+      })
+      .catch((err) => {
+        setCreateError(err.message);
+      });
+  }, [tempCollectionMetaData]);
+
   const handleConfirmFinalize = useCallback(async () => {
     setShowConfirmDialog(false);
     setCreatingCollection(true);
@@ -313,32 +350,44 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
         collectionImagehash,
       );
 
+      setTempCollectionMetadata(collectionMetadataHash);
+
       let itemsHashes = await sendItemsMetadata(itemImagesHashes);
+
+      setTempItemsHashes(itemsHashes);
 
       setContractStatus(ContractStatus.CreateCollection);
 
       if (collectionMetadataHash) {
-        let address = await createContract(collectionMetadataHash);
+        await createContract(collectionMetadataHash)
+          .then((address) => {
+            dispatch(
+              addCollection({
+                name: values.name,
+                description: values.description,
+                address,
+                abi: ERC721Abi,
+                imageUrl: `https://ipfs.io/ipfs/${collectionImagehash}`,
+              }),
+            );
 
-        dispatch(
-          addCollection({
-            name: values.name,
-            description: values.description,
-            address,
-            abi: ERC721Abi,
-            imageUrl: `https://ipfs.io/ipfs/${collectionImagehash}`,
-          }),
-        );
+            setContractAddress(address);
 
-        setContractAddress(address);
+            setContractStatus(ContractStatus.Minting);
 
-        setContractStatus(ContractStatus.Minting);
-
-        if (items.length > 0) {
-          await mintItems(address, itemsHashes);
-        }
-
-        setContractStatus(ContractStatus.Finalized);
+            if (items.length > 0) {
+              mintItems(address, itemsHashes)
+                .then(() => {
+                  setContractStatus(ContractStatus.Finalized);
+                })
+                .catch((err) => {
+                  setMintError(err.message);
+                });
+            }
+          })
+          .catch((err) => {
+            setCreateError(err.message);
+          });
       }
     }
   }, [
@@ -353,6 +402,10 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const handleOpenGithub = useCallback(() => {
     window.open('https://github.com/DexKit/wizard-contracts', '_blank');
   }, []);
+
+  const handleCloseCreateDialog = useCallback(() => {
+    history.push('/wizard');
+  }, [history]);
 
   return (
     <>
@@ -370,7 +423,11 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           mintTransaction={mintTransactionHash}
           maxWidth='sm'
           fullWidth
+          onClose={handleCloseCreateDialog}
           skipMinting={items.length === 0}
+          createError={createError}
+          mintError={mintError}
+          onTryCreateCollectionAgain={handleCreateTryAgain}
         />
       </DialogPortal>
       <Grid container spacing={4} justify='center'>

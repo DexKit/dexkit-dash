@@ -5,8 +5,7 @@ import {useWindowSize} from './useWindowSize';
 
 type Props = {
   defaultCurrency?: string;
-}
-
+};
 
 export function useTransak(props: Props) {
   const {defaultCurrency} = props;
@@ -47,7 +46,7 @@ export function useTransak(props: Props) {
   );
 
   useEffect(() => {
-    if ( windowSize && windowSize.height && windowSize.width) {
+    if (windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
@@ -64,12 +63,21 @@ export function useTransak(props: Props) {
           windowSize?.width < 510 ? `${windowSize.width - 10}px` : '500px',
       });
 
-      transak.on(transak.ALL_EVENTS, transakAllEvents);
-      transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
-      transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
+      let allAvents = transak.on(transak.ALL_EVENTS, transakAllEvents);
+      let widgetClose = transak.on(
+        transak.TRANSAK_WIDGET_CLOSE,
+        transakCloseEvents,
+      );
+      let orderSuccessful = transak.on(
+        transak.TRANSAK_ORDER_SUCCESSFUL,
+        transakSucessEvents,
+      );
+
       setTransakInstance(transak);
+
+      return () => {};
     }
-  }, [account, windowSize, defaultCurrency]);
+  }, [account, defaultCurrency]);
 
   const init = useCallback(() => {
     transakClient.init();

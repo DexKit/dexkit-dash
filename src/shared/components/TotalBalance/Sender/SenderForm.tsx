@@ -270,20 +270,23 @@ const SenderForm: React.FC<Props> = (props) => {
     token?.chainId !== chainId && token?.networkName !== networkName;
 
   const [showSenderSelectAddress, setShowSenderSelectAddress] = useState(false);
-  const handleSelectSenderAddress = useCallback((address: string) => {
-    dispatch(
-      setDefaultAccount({
-        account: {
-          address: address,
-          label: address,
-          networkType: SupportedNetworkType.evm,
-        },
-        type: SupportedNetworkType.evm,
-      }),
-    );
+  const handleSelectSenderAddress = useCallback(
+    (address: string, label?: string) => {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: address,
+            label: label || '',
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
 
-    setShowSenderSelectAddress(false);
-  }, []);
+      setShowSenderSelectAddress(false);
+    },
+    [dispatch],
+  );
 
   const handleShowSenderSelectAddress = useCallback(() => {
     setShowSenderSelectAddress(true);

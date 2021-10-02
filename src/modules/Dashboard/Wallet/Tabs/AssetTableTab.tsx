@@ -26,9 +26,11 @@ export const AssetTableTab = (props: Props) => {
   //   {/* <DefiCoins {...defiBalance} /> */}
   // </Grid>
 
-  // const transak = useTransak({});
+  const transak = useTransak({});
 
-  const handleTransak = useCallback(() => {}, []);
+  const handleTransak = useCallback(() => {
+    transak.init();
+  }, [transak.init]);
 
   if (data.length === 0 && !loading) {
     return (
