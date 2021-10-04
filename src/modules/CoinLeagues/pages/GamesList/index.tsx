@@ -115,7 +115,8 @@ const GamesList = () => {
     startedGamesQuery.isLoading || startedGamesAddressQuery.isLoading;
   const isLoadingCreated =
     createdGamesAddressQuery.isLoading || createdGamesQuery.isLoading;
-  const isLoadingEnded = endedGamesQuery.isLoading || endedGamesAddressQuery.isLoading;
+  const isLoadingEnded =
+    endedGamesQuery.isLoading || endedGamesAddressQuery.isLoading;
   const gamesInProgress = useMemo(() => {
     return startedGames;
   }, [startedGames]);
@@ -298,9 +299,7 @@ const GamesList = () => {
     <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
-          <Breadcrumbs
-            style={{color: '#fff', fontSize: '0.75rem'}}
-            separator={<NavigateNextIcon fontSize='small' />}>
+          <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
               Dashboard
             </Link>
@@ -319,10 +318,16 @@ const GamesList = () => {
         <Typography variant='h5'>Coin Leagues</Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
-        <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-          <ShareButton shareText={`Coin Leagues Games`} />
-          <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
-          <MaticBridgeButton />
+        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+          <Box pr={2}>
+            <ShareButton shareText={`Coin leagues Games`} />
+          </Box>
+          <Box pr={2}>
+            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          </Box>
+          <Box pr={2}>
+            <MaticBridgeButton />
+          </Box>
         </Box>
       </Grid>
 

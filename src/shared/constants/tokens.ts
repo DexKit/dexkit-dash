@@ -69,6 +69,12 @@ export const BITTOKEN: Partial<DexKitTokenList> = {
   [ChainId.Matic]: BITTOKEN_MATIC,
 };
 
+export const CHAMPIONS: Partial<DexKitTokenList> = {
+  [ChainId.Mainnet]: BITTOKEN_ETH,
+  [ChainId.Matic]: BITTOKEN_MATIC,
+};
+
+
 
 // a list of tokens by chain
 type ChainTokenList = {

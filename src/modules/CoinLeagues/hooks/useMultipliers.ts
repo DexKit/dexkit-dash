@@ -1,11 +1,14 @@
-import { useMemo } from "react";
-import { useHoldingTokenBalances } from "./useHoldingTokenBalances";
+import { useMemo, useCallback } from "react";
+import { useWeb3 } from "hooks/useWeb3";
+
+import { usePlayerHoldingTokenBalances } from "./usePlayerHoldingBalances";
 
 
 
 
-export const useMultipliers = (account?: string) => {
-    const holdingBalancesQuery = useHoldingTokenBalances(account);
+export const useMultipliers = (address?: string) => {
+    const holdingBalancesQuery = usePlayerHoldingTokenBalances(address);
+    const {account } = useWeb3();
 
     const multiplierTokens = useMemo(() => {
       if (holdingBalancesQuery.data) {
@@ -20,29 +23,34 @@ export const useMultipliers = (account?: string) => {
   
     const loadingMultiplier = holdingBalancesQuery.isLoading;
   
-    const multiplier = useMemo(() => {
-      if (multiplierTokens) {
-        return 1.3;
-      } else {
-        return 1.2;
+    const multiplier = useCallback((addr?: string) => {
+      if(multiplierTokens && addr && multiplierTokens.find(a=> a.playerAddress.toLowerCase() === addr.toLowerCase())){
+        return 1.3
+      }else{
+        return 1.2
       }
     }, [multiplierTokens]);
   
-    const tooltipMessage = useMemo(() => {
-      if (multiplierTokens) {
-        return "Congrats you are holding 50 KIT or 200 BITT to boost your multiplier to 1.3"
+    const tooltipMessage = useCallback((addr?: string) => {
+      if (multiplierTokens && addr && multiplierTokens.find(a=> a.playerAddress.toLowerCase() === addr.toLowerCase())) {
+        if(account && account.toLowerCase() === addr.toLowerCase()){
+          return "Congrats you are holding 50 KIT or 200 BITT to boost your multiplier to 1.3"
+        }else{
+          return "Player holding 50 KIT or 200 BITT"
+        }
+       
       } else {
         return "Hold 50 KIT or 200 BITT to boost multiplier to 1.3"
       }
-    }, [multiplierTokens]);
+    }, [multiplierTokens, account]);
 
 
     return {
         tooltipMessage,
         multiplier,
         loadingMultiplier,
-        holdingBalancesQuery
-
+        holdingBalancesQuery,
+      
     }
 
 }

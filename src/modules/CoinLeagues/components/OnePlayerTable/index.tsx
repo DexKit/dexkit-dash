@@ -122,7 +122,6 @@ function OnePlayerTable(props: Props): JSX.Element {
   const {address, account, winner, data} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
-  const [coins, setCoins] = useState([]);
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
   const {
@@ -138,8 +137,8 @@ function OnePlayerTable(props: Props): JSX.Element {
     SubmitState.None,
   );
 
-  const {multiplier, loadingMultiplier, tooltipMessage } = useMultipliers(account);
-
+  const {multiplier, loadingMultiplier, tooltipMessage} =
+    useMultipliers(address);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -172,7 +171,6 @@ function OnePlayerTable(props: Props): JSX.Element {
   }, []);
 
   const onViewCoins = useCallback((c: any) => {
-    setCoins(c);
     setOpenViewDialog(true);
   }, []);
 
@@ -328,20 +326,25 @@ function OnePlayerTable(props: Props): JSX.Element {
       <ViewCoinLeagueDialog
         open={openViewDialog}
         onClose={onCloseViewCoinsDialog}
-        coins={coins}
+        coins={playerData?.coins || []}
         captainCoin={playerData?.captainCoin}
         address={address}
+        playerAddress={playerData?.hash}
       />
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
-            <TableCell className={classes.header}>Position</TableCell>
-            <TableCell className={classes.header}>Captain</TableCell>
-            <TableCell className={classes.header}>Coins</TableCell>
-            <TableCell className={classes.header}>Score</TableCell>
-            {(canClaim || claimed) && (
-              <TableCell className={classes.header}>Action</TableCell>
-            )}
+            <TableRow>
+              <TableCell className={classes.header}>Position</TableCell>
+              <TableCell className={classes.header}>Captain</TableCell>
+              {playerData?.coins && playerData?.coins.length > 0 && (
+                <TableCell className={classes.header}>Coins</TableCell>
+              )}
+              <TableCell className={classes.header}>Score</TableCell>
+              {(canClaim || claimed) && (
+                <TableCell className={classes.header}>Action</TableCell>
+              )}
+            </TableRow>
           </TableHead>
 
           <TableBody>
@@ -374,15 +377,17 @@ function OnePlayerTable(props: Props): JSX.Element {
 
                 <TableCell className={classes.noBorder}>
                   <Box display={'flex'} alignItems={'center'}>
-                    <AvatarGroup max={10} spacing={17}>
-                      {chainId &&
-                        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                        playerData?.captainCoin && (
-                          <Tooltip title={tooltipMessage}>
+                    {chainId &&
+                      IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                      playerData?.captainCoin && (
+                        <>
+                          <Tooltip title={tooltipMessage(account)}>
                             <Badge
                               color={'primary'}
                               overlap='circular'
-                              badgeContent={!loadingMultiplier && multiplier}>
+                              badgeContent={
+                                !loadingMultiplier && multiplier(account)
+                              }>
                               <Avatar
                                 className={classes.chip}
                                 src={getIconByCoin(
@@ -397,36 +402,51 @@ function OnePlayerTable(props: Props): JSX.Element {
                               </Avatar>
                             </Badge>
                           </Tooltip>
-                        )}
-                    </AvatarGroup>
+                          {playerData?.coins.length === 0 &&    <IconButton
+                            onClick={() => onViewCoins(playerData.coins)}>
+                            <RemoveRedEye
+                              style={{
+                                color: '#fff',
+                                marginLeft: 10,
+                                alignSelf: 'center',
+                              }}
+                            />
+                          </IconButton>}
+                        </>
+                      )}
                   </Box>
                 </TableCell>
 
-                <TableCell className={classes.noBorder}>
-                  <Box display={'flex'} alignItems={'center'}>
-                    <AvatarGroup max={10} spacing={17}>
-                      {chainId &&
-                        IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                        playerData?.coins.map((coin) => (
-                          <Avatar
-                            className={classes.chip}
-                            src={getIconByCoin(coin, chainId)}
-                            style={{height: 35, width: 35}}>
-                            {getIconSymbol(coin, chainId)}
-                          </Avatar>
-                        ))}
-                    </AvatarGroup>
-                    <IconButton onClick={() => onViewCoins(playerData.coins)}>
-                      <RemoveRedEye
-                        style={{
-                          color: '#fff',
-                          marginLeft: 10,
-                          alignSelf: 'center',
-                        }}
-                      />
-                    </IconButton>
-                  </Box>
-                </TableCell>
+                {playerData?.coins.length > 0 && (
+                  <TableCell className={classes.noBorder}>
+                    <Box display={'flex'} alignItems={'center'}>
+                      <AvatarGroup max={10} spacing={17}>
+                        {chainId &&
+                          IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
+                          playerData?.coins.map((coin) => (
+                            <Avatar
+                              className={classes.chip}
+                              src={getIconByCoin(coin, chainId)}
+                              style={{height: 35, width: 35}}>
+                              {getIconSymbol(coin, chainId)}
+                            </Avatar>
+                          ))}
+                      </AvatarGroup>
+                      {(playerData?.coins && playerData?.coins.length > 0) && (
+                        <IconButton
+                          onClick={() => onViewCoins(playerData.coins)}>
+                          <RemoveRedEye
+                            style={{
+                              color: '#fff',
+                              marginLeft: 10,
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </IconButton>
+                      )}
+                    </Box>
+                  </TableCell>
+                )}
 
                 <TableCell className={classes.noBorder}>
                   <Chip

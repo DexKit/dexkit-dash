@@ -58,10 +58,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 interface Props {
-  players?:number
+  players?: number;
 }
 
 const getIconByCoin = (
@@ -98,66 +96,74 @@ function PlayersTableSkeleton(props: Props): JSX.Element {
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
-            <TableCell className={classes.header}>Position</TableCell>
-            <TableCell className={classes.header}>Coins</TableCell>
-            <TableCell className={classes.header}>Score</TableCell>
+            <TableRow>
+              <TableCell className={classes.header}>Position</TableCell>
+              <TableCell className={classes.header}>Coins</TableCell>
+              <TableCell className={classes.header}>Score</TableCell>
+            </TableRow>
           </TableHead>
 
           <TableBody>
-          {new Array(players || 1).fill(1).map( (_, i) => i+1 ).map((key) =>  <TableRow key={key}>
-              <TableCell className={classes.noBorder}>
-                <Box display={'flex'} alignItems={'center'}>
-                  <Chip className={classes.chip} label={`${key}º`} />
-                  <Skeleton>
-                    <Typography style={{color: '#fff'}}>
-                      &nbsp; {truncHash('0x0000000000000000000000000000')}
-                    </Typography>
-                  </Skeleton>
-                </Box>
-              </TableCell>
-
-              <TableCell className={classes.noBorder}>
-                <Box display={'flex'} alignItems={'center'}>
-                  <AvatarGroup max={10} spacing={17}>
-                    {PriceFeeds[ChainId.Matic].slice(0, 5).map((coin, i) => (
-                      <Skeleton key={i}>
-                        <Avatar
-                          className={classes.chip}
-                          src={getIconByCoin(coin.address, ChainId.Matic)}
-                          style={{height: 35, width: 35}}>
-                          {getIconSymbol(coin.address, ChainId.Matic)}
-                        </Avatar>
+            {new Array(players || 1)
+              .fill(1)
+              .map((_, i) => i + 1)
+              .map((key) => (
+                <TableRow key={key}>
+                  <TableCell className={classes.noBorder}>
+                    <Box display={'flex'} alignItems={'center'}>
+                      <Chip className={classes.chip} label={`${key}º`} />
+                      <Skeleton>
+                        <Typography style={{color: '#fff'}}>
+                          &nbsp; {truncHash('0x0000000000000000000000000000')}
+                        </Typography>
                       </Skeleton>
-                    ))}
-                  </AvatarGroup>
-                  <Skeleton>
-                    <IconButton>
-                      <RemoveRedEye
-                        style={{
-                          color: '#fff',
-                          marginLeft: 10,
-                          alignSelf: 'center',
-                        }}
-                      />
-                    </IconButton>
-                  </Skeleton>
-                </Box>
-              </TableCell>
+                    </Box>
+                  </TableCell>
 
-              <TableCell className={classes.noBorder}>
-              <Skeleton>
-                <Chip
-                  clickable
-                  style={{
-                    background: '#343A49',
-                    color: '#0e0',
-                  }}
-                  label={'+10%'}
-                />
-                  </Skeleton>
-              </TableCell>
-            
-            </TableRow>)}
+                  <TableCell className={classes.noBorder}>
+                    <Box display={'flex'} alignItems={'center'}>
+                      <AvatarGroup max={10} spacing={17}>
+                        {PriceFeeds[ChainId.Matic]
+                          .slice(0, 5)
+                          .map((coin, i) => (
+                            <Skeleton key={i}>
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(coin.address, ChainId.Matic)}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(coin.address, ChainId.Matic)}
+                              </Avatar>
+                            </Skeleton>
+                          ))}
+                      </AvatarGroup>
+                      <Skeleton>
+                        <IconButton>
+                          <RemoveRedEye
+                            style={{
+                              color: '#fff',
+                              marginLeft: 10,
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </IconButton>
+                      </Skeleton>
+                    </Box>
+                  </TableCell>
+
+                  <TableCell className={classes.noBorder}>
+                    <Skeleton>
+                      <Chip
+                        clickable
+                        style={{
+                          background: '#343A49',
+                          color: '#0e0',
+                        }}
+                        label={'+10%'}
+                      />
+                    </Skeleton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

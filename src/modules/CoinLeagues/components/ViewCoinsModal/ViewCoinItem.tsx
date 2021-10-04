@@ -4,8 +4,7 @@ import Chip from '@material-ui/core/Chip';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import {BigNumber} from 'ethers';
-import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export interface Props {
   coin: CoinFeed;
@@ -14,7 +13,9 @@ export interface Props {
   started?: boolean;
   style: React.CSSProperties;
   isCaptain?: boolean;
+  multipliers?: any;
   playerAddress?: string;
+  tooltipMessage?: any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const USD_POWER = BigNumber.from(10 ** 8);
 const USD_POWER_NUMBER = 10 ** 8;
 
 export const ViewCoinListItem = (props: Props) => {
@@ -52,7 +52,10 @@ export const ViewCoinListItem = (props: Props) => {
     currentPrice,
     isCaptain,
     playerAddress,
+    multipliers,
+    tooltipMessage,
   } = props;
+  //const {multiplier} = useMultipliers(address);
   const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
   const classes = useStyles();
@@ -95,11 +98,25 @@ export const ViewCoinListItem = (props: Props) => {
         ? currentPrice?.price.toNumber()
         : feedOnchain.end_price.toNumber();
       const startPrice = feedOnchain.start_price.toNumber();
-      return (((endPrice - startPrice) / startPrice) * 100).toFixed(2);
+      if (isCaptain) {
+        return (
+          ((endPrice - startPrice) / startPrice) *
+          100 *
+          multipliers(playerAddress)
+        ).toFixed(2);
+      } else {
+        return (((endPrice - startPrice) / startPrice) * 100).toFixed(2);
+      }
     }
-  }, [feedOnchain.start_price, feedOnchain.end_price, started, currentPrice]);
-
-  const {multiplier} = useMultipliers(playerAddress);
+  }, [
+    feedOnchain.start_price,
+    feedOnchain.end_price,
+    started,
+    currentPrice,
+    isCaptain,
+    playerAddress,
+    multipliers,
+  ]);
 
   return (
     <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>
@@ -137,22 +154,27 @@ export const ViewCoinListItem = (props: Props) => {
             </Typography>
           </Grid>
         )}
-        {isCaptain && (
-          <Grid item>
-            <Chip color={'primary'} label={`x ${multiplier}`} />
-          </Grid>
-        )}
 
         <Grid item>
           {priceScore ? (
-            <Chip
-              clickable
-              style={{
-                background: '#343A49',
-                color: Number(priceScore) > 0 ? '#0e0' : '#e00',
-              }}
-              label={`${Number(priceScore) > 0 ? '+' : ''}${priceScore}%`}
-            />
+            <>
+              {isCaptain && (
+                <Tooltip title={tooltipMessage(playerAddress)}>
+                  <Chip
+                    color={'primary'}
+                    label={`x ${multipliers(playerAddress)}`}
+                  />
+                </Tooltip>
+              )}
+              <Chip
+                clickable
+                style={{
+                  background: '#343A49',
+                  color: Number(priceScore) > 0 ? '#0e0' : '#e00',
+                }}
+                label={`${Number(priceScore) > 0 ? '+' : ''}${priceScore}%`}
+              />
+            </>
           ) : (
             <Typography variant='body1'> -</Typography>
           )}

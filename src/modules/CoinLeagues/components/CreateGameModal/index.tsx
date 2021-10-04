@@ -85,7 +85,7 @@ enum SubmitState {
 const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
-  const {onGameCreateCallback, refetch} = useCoinLeaguesFactory();
+  const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
@@ -108,7 +108,7 @@ const CreateGameModal = (props: Props) => {
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
-          refetch();
+          refetchCreated();
         };
         const onError = () => {
           setSubmitState(SubmitState.Error);
@@ -194,6 +194,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
+              <MenuItem value={0.01}>0.01 Matic</MenuItem>
               <MenuItem value={0.1}>0.1 Matic</MenuItem>
               <MenuItem value={1}>1 Matic</MenuItem>
               <MenuItem value={5}>5 Matic</MenuItem>
@@ -217,6 +218,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
+              <MenuItem value={60 * 5}>5 minutes</MenuItem>
               <MenuItem value={60 * 60}>1 hr</MenuItem>
               <MenuItem value={4 * 60 * 60}>4 hrs</MenuItem>
               <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>

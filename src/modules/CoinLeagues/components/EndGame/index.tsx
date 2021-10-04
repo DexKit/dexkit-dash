@@ -16,7 +16,7 @@ interface Props {
 export const EndGame = (props: Props) => {
   const {address} = props;
   const {chainId} = useWeb3();
-  const {onEndGameCallback, game, refetch} = useCoinLeagues(address);
+  const {onEndGameCallback, game, refetch, refetchWinner} = useCoinLeagues(address);
   const [tx, setTx] = useState<string>();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const goToExplorer = useCallback(
@@ -48,6 +48,7 @@ export const EndGame = (props: Props) => {
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
           refetch();
+          refetchWinner();
         };
         const onError = () => {
           setSubmitState(SubmitState.Error);

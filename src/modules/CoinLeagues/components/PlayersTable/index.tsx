@@ -29,6 +29,7 @@ import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 import {GameType} from 'types/coinsleague';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import Badge from '@material-ui/core/Badge';
+import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -127,7 +128,8 @@ function PlayersTable(props: Props): JSX.Element {
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-
+  const {multiplier, loadingMultiplier, tooltipMessage} =
+    useMultipliers(address);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -149,7 +151,6 @@ function PlayersTable(props: Props): JSX.Element {
             .map((c) => c.toLowerCase())
             .includes(f.feed.toLowerCase()),
         );
-
         if (currentFeedPrice?.length) {
           const prices = currentFeedPrice.map((f) => {
             const startFeed = allFeeds?.find(
@@ -214,12 +215,14 @@ function PlayersTable(props: Props): JSX.Element {
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
-            <TableCell className={classes.header}>Position</TableCell>
-            <TableCell className={classes.header}>Captain</TableCell>
-            {(game?.num_coins.toNumber()|| 0) > 1 && (
-              <TableCell className={classes.header}>Coins</TableCell>
-            )}
-            <TableCell className={classes.header}>Score</TableCell>
+            <TableRow>
+              <TableCell className={classes.header}>Position</TableCell>
+              <TableCell className={classes.header}>Captain</TableCell>
+              {(game?.num_coins.toNumber() || 0) > 1 && (
+                <TableCell className={classes.header}>Coins</TableCell>
+              )}
+              <TableCell className={classes.header}>Score</TableCell>
+            </TableRow>
           </TableHead>
 
           <TableBody>
@@ -307,29 +310,48 @@ function PlayersTable(props: Props): JSX.Element {
                     <Box display={'flex'} alignItems={'center'}>
                       {!hideCoins ? (
                         row?.captainCoin && (
-                          <Badge
-                            color={'primary'}
-                            overlap='circular'
-                            badgeContent={1.3}>
-                            <Avatar
-                              className={classes.chip}
-                              src={getIconByCoin(
-                                row.captainCoin,
-                                GET_LEAGUES_CHAIN_ID(chainId),
-                              )}
-                              style={{height: 35, width: 35}}>
-                              {getIconSymbol(
-                                row.captainCoin,
-                                GET_LEAGUES_CHAIN_ID(chainId),
-                              )}
-                            </Avatar>
-                          </Badge>
+                          <>
+                            <Badge
+                              color={'primary'}
+                              overlap='circular'
+                              badgeContent={
+                                !loadingMultiplier && multiplier(row.hash)
+                              }>
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(
+                                  row.captainCoin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(
+                                  row.captainCoin,
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )}
+                              </Avatar>
+                            </Badge>
+                            {row?.coins.length === 0 && (
+                              <IconButton
+                                onClick={() =>
+                                  onViewCoins(
+                                    row.coins,
+                                    row.captainCoin,
+                                    row.hash as string,
+                                  )
+                                }>
+                                <RemoveRedEye
+                                  style={{
+                                    color: '#fff',
+                                    marginLeft: 10,
+                                    alignSelf: 'center',
+                                  }}
+                                />
+                              </IconButton>
+                            )}
+                          </>
                         )
                       ) : (
-                        <Badge
-                          color={'primary'}
-                          overlap='circular'
-                        >
+                        <Badge color={'primary'} overlap='circular'>
                           <Avatar
                             className={classes.chip}
                             style={{height: 35, width: 35}}></Avatar>
@@ -364,7 +386,14 @@ function PlayersTable(props: Props): JSX.Element {
                           )}
                         </AvatarGroup>
                         {!hideCoins && (
-                          <IconButton onClick={() => onViewCoins(row.coins, row.captainCoin, row.hash as string)}>
+                          <IconButton
+                            onClick={() =>
+                              onViewCoins(
+                                row.coins,
+                                row.captainCoin,
+                                row.hash as string,
+                              )
+                            }>
                             <RemoveRedEye
                               style={{
                                 color: '#fff',

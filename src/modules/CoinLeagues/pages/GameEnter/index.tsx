@@ -225,7 +225,7 @@ function GameEnter(props: Props) {
         );
       }
     },
-    [game, selectedCoins, refetch],
+    [game, selectedCoins, captainCoin, refetch],
   );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
@@ -233,7 +233,10 @@ function GameEnter(props: Props) {
   const started = useMemo(() => game?.started, [game?.started]);
   const finished = useMemo(() => game?.finished, [game?.finished]);
   const aborted = useMemo(() => game?.aborted, [game?.aborted]);
-  const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game?.num_players]);
+  const totalPlayers = useMemo(
+    () => game?.num_players.toNumber(),
+    [game?.num_players],
+  );
   const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
@@ -247,7 +250,6 @@ function GameEnter(props: Props) {
       captainCoin !== undefined
     );
   }, [selectedCoins, game?.num_coins, captainCoin]);
-  console.log(isDisabled);
 
   const goToExplorer = useCallback(
     (_ev: any) => {
@@ -279,9 +281,7 @@ function GameEnter(props: Props) {
         />
       )}
       <Grid item xs={12} sm={12} xl={12}>
-        <Breadcrumbs
-          style={{color: '#fff', fontSize: '0.75rem'}}
-          separator={<NavigateNextIcon fontSize='small' />}>
+        <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
             Dashboard
           </Link>
@@ -301,7 +301,7 @@ function GameEnter(props: Props) {
           <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
-      <Grid item xs={8} sm={4} xl={4}>
+      <Grid item xs={12} sm={4} xl={4}>
         <Box display={'flex'} alignItems={'center'}>
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
@@ -325,11 +325,17 @@ function GameEnter(props: Props) {
           <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
-      <Grid item xs={4} sm={3} xl={3}>
-        <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-          <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
-          <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
-          <MaticBridgeButton />
+      <Grid item xs={12} sm={3} xl={3}>
+        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+          <Box pr={2}>
+            <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
+          </Box>
+          <Box pr={2}>
+            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          </Box>
+          <Box pr={2}>
+            <MaticBridgeButton />
+          </Box>
         </Box>
       </Grid>
 
@@ -442,7 +448,7 @@ function GameEnter(props: Props) {
                   <Grid item xs={12}>
                     <Typography variant='h6' style={{margin: 5}}>
                       Choose Currencies {selectedCoins?.length}/
-                      {game?.num_coins.toNumber() || 0}
+                      {(game?.num_coins.toNumber() || 0) - 1 }
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>

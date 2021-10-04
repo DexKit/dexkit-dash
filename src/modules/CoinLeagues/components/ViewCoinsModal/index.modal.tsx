@@ -25,7 +25,7 @@ import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
 import {useWeb3} from 'hooks/useWeb3';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-
+import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 interface Props extends DialogProps {
   title?: string;
   address: string;
@@ -35,11 +35,11 @@ interface Props extends DialogProps {
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose, title, coins, address, captainCoin, playerAddress} = props;
+  const {onClose,  coins, address, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(address);
-
+  const {multiplier, tooltipMessage} = useMultipliers(address);
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
@@ -59,7 +59,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
       );
-      return coins.concat(captainCoin)
+      return [captainCoin].concat(coins)
         .map((c) => {
           return {
             coin: coinsList.find(
@@ -169,6 +169,8 @@ export const ViewCoinLeagueDialog = (props: Props) => {
                   key={index}
                   isCaptain={data[index].isCaptain}
                   playerAddress={playerAddress}
+                  multipliers={multiplier}
+                  tooltipMessage={tooltipMessage}
                 />
               )}
             </VariableSizeList>

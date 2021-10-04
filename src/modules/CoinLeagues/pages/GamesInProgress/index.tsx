@@ -10,7 +10,6 @@ import {
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactory} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import {ChainId} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -28,8 +27,10 @@ import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
 import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import Alert from '@material-ui/lab/Alert';
-import { IS_SUPPORTED_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import BuyCryptoButton from 'shared/components/BuyCryptoButton';
+import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import {ShareButton} from 'shared/components/ShareButton';
+
 enum FilterGame {
   ALL = 'All',
   Fast = '1hr',
@@ -47,11 +48,11 @@ const GamesInProgress = () => {
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
 
-  const {games, gamesQuery, gamesAddressQuery} = useCoinLeaguesFactory();
-  const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
+  const {startedGames, startedGamesAddressQuery, startedGamesQuery} = useCoinLeaguesFactory();
+  const isLoading =  startedGamesAddressQuery.isLoading || startedGamesQuery.isLoading;
   const gamesInProgress = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter(
           (g) =>
@@ -59,7 +60,7 @@ const GamesInProgress = () => {
         );
     }
     if (filterGame === FilterGame.Fast) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) => g?.duration?.toNumber() === 60 * 60)
         .filter(
@@ -69,7 +70,7 @@ const GamesInProgress = () => {
     }
 
     if (filterGame === FilterGame.Mine) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) =>
           g?.players
@@ -84,7 +85,7 @@ const GamesInProgress = () => {
     }
 
     if (filterGame === FilterGame.Medium) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
         .filter(
@@ -93,7 +94,7 @@ const GamesInProgress = () => {
         );
     }
     if (filterGame === FilterGame.Eight) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
         .filter(
@@ -103,7 +104,7 @@ const GamesInProgress = () => {
     }
 
     if (filterGame === FilterGame.Day) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
         .filter(
@@ -112,7 +113,7 @@ const GamesInProgress = () => {
         );
     }
     if (filterGame === FilterGame.Week) {
-      return games
+      return startedGames
         ?.filter((g) => g.started && !g.finished && !g.aborted)
         .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
         .filter(
@@ -120,7 +121,7 @@ const GamesInProgress = () => {
             g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
         );
     }
-  }, [games, filterGame, search]);
+  }, [startedGames, filterGame, search]);
 
   const onClickEnterGame = useCallback((address: string) => {
     history.push(`${COINSLEAGUE_ROUTE}/${address}`);
@@ -134,12 +135,10 @@ const GamesInProgress = () => {
     history.push(COINSLEAGUE_ROUTE);
   }, []);
   return (
-    <Grid container spacing={4} alignItems={'center'}>
+    <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
-          <Breadcrumbs
-            style={{color: '#fff', fontSize: '0.75rem'}}
-            separator={<NavigateNextIcon fontSize='small' />}>
+          <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
               Dashboard
             </Link>
@@ -158,7 +157,7 @@ const GamesInProgress = () => {
         </Grid>
       </Hidden>
 
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <Box display={'flex'} alignItems={'center'}>
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
@@ -166,6 +165,19 @@ const GamesInProgress = () => {
           <Typography variant='h6' style={{margin: 5}}>
             Games in Progress
           </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={6} sm={6} xl={6}>
+        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+          <Box pr={2}>
+            <ShareButton shareText={`Coin leagues Games`} />
+          </Box>
+          <Box pr={2}>
+            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+          </Box>
+          <Box pr={2}>
+            <MaticBridgeButton />
+          </Box>
         </Box>
       </Grid>
 
