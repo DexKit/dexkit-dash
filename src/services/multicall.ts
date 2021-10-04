@@ -19,16 +19,16 @@ export const getMulticallFromProvider = async (provider: any) => {
    return new MultiCall(provider);
 };
 
-export const getTokenBalances = async (tokens: string[], account: string) => {
-  const multicall = await getMulticall();
+export const getTokenBalances = async (tokens: string[], account: string, provider: any) => {
+  const multicall = await getMulticallFromProvider(provider);
   const tokensBal = await multicall.getBalances(tokens, account);
   return tokensBal;
 };
 
 
 
-export const getTokenBalance = async (token: string, account: string) => {
-  const tokenBal = await getTokenBalances([token], account);
+export const getTokenBalance = async (token: string, account: string, provider: any) => {
+  const tokenBal = await getTokenBalances([token], account, provider);
   return tokenBal;
 };
 

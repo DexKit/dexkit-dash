@@ -4,7 +4,6 @@ import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {ethers} from 'ethers';
-import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
@@ -105,7 +104,6 @@ const ApproveStep: React.FC<Props> = (props) => {
         throw new Error('Account address cannot be null or empty');
       }
 
-      const gasInfo = await getGasEstimationInfoAsync();
       const contractWrappers = getContractWrappers(chainId);
       const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();

@@ -20,6 +20,33 @@ const DEXKIT_ETH: Token = {
   logoURI: '',
 };
 
+const DEXKIT_MATIC: Token = {
+  address: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
+  chainId: ChainId.Matic,
+  name: 'DexKit',
+  symbol: 'KIT',
+  decimals: 18,
+  logoURI: '',
+};
+
+const BITTOKEN_MATIC: Token = {
+  address: '0xfd0cbdDec28a93bB86B9db4A62258F5EF25fEfdE',
+  chainId: ChainId.Matic,
+  name: 'BITTOKEN',
+  symbol: 'BITT',
+  decimals: 18,
+  logoURI: '',
+};
+
+const BITTOKEN_ETH: Token = {
+  address: '0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51',
+  chainId: ChainId.Mainnet,
+  name: 'BITTOKEN',
+  symbol: 'BITT',
+  decimals: 18,
+  logoURI: '',
+};
+
 // a list of tokens by chain
 type DexKitTokenList = {
   readonly [chainId in ChainId]: Token;
@@ -34,7 +61,19 @@ type DexKitTokenList = {
 
 export const DEXKIT: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: DEXKIT_ETH,
+  [ChainId.Matic]: DEXKIT_MATIC,
 };
+
+export const BITTOKEN: Partial<DexKitTokenList> = {
+  [ChainId.Mainnet]: BITTOKEN_ETH,
+  [ChainId.Matic]: BITTOKEN_MATIC,
+};
+
+export const CHAMPIONS: Partial<DexKitTokenList> = {
+  [ChainId.Mainnet]: BITTOKEN_ETH,
+  [ChainId.Matic]: BITTOKEN_MATIC,
+};
+
 
 
 // a list of tokens by chain

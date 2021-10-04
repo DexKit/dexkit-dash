@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { useWeb3 } from "hooks/useWeb3";
 import { getTokenBalances } from "services/multicall";
 import { getBalance } from "services/web3modal";
 import { GET_NETWORK_NAME } from "shared/constants/Bitquery";
@@ -8,11 +9,12 @@ import { ChainId, MyBalances } from "types/blockchain";
 
 
 
-export const getAllBlockchainBalances = async (chainId: ChainId, account: string) => {
+export const getAllBlockchainBalances = async (chainId: ChainId, account: string, provider: any) => {
     const tokens = TOKENS_LIST[chainId];
     const [, tb] = await getTokenBalances(
       tokens?.map((t) => t.address) as string[],
       account,
+      provider,
     );
    
    const bal: MyBalances[] =  tokens?.map((t) => {
