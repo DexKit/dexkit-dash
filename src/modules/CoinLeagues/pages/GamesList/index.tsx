@@ -109,6 +109,7 @@ const GamesList = () => {
     endedGames,
     endedGamesAddressQuery,
     endedGamesQuery,
+    totalEndedGames,
   } = useCoinLeaguesFactory();
   const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
   const isLoadingStarted =
@@ -433,7 +434,7 @@ const GamesList = () => {
                 </Typography>
               ) : (
                 <Typography variant='h6'>
-                  {gamesEnded?.length || 0} Games
+                 Past {gamesEnded?.length || 0} Games of {totalEndedGames?.toString()}
                 </Typography>
               )}
             </Grid>

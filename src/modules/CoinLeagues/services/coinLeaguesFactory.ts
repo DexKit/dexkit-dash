@@ -181,7 +181,6 @@ export const getEndedGamesAddressFromFactory = async (
     function: 'getGames',
     args:  [0, 1],
   });*/
-
   for (let index = start; index < total; index++) {
     calls.push({
       interface: iface,
