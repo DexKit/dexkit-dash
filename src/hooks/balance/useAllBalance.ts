@@ -7,7 +7,7 @@ import {useQuery} from 'react-query';
 import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
 import { getAllBitqueryBalances } from 'services/bitquery/balances';
 import { getAllBlockchainBalances } from 'services/blockchain/balances';
-
+import {providers} from 'ethers';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -42,7 +42,8 @@ export const useAllBalance = (defaultAccount?: string) => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
         if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
-         return getAllBlockchainBalances(chainId, account, getProvider());
+         const pr =  new providers.Web3Provider(getProvider());
+         return getAllBlockchainBalances(chainId, account, pr);
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
         return getAllBitqueryBalances(account)
