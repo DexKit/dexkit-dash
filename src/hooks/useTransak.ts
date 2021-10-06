@@ -80,7 +80,9 @@ export function useTransak(props: Props) {
   }, [account, defaultCurrency]);
 
   const init = useCallback(() => {
-    transakClient.init();
+    if(transakClient){
+      transakClient.init();
+    }
   }, [transakClient]);
 
   return {
