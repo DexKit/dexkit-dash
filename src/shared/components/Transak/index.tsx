@@ -52,6 +52,7 @@ const Transak: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (!transakClient && windowSize && windowSize.height && windowSize.width) {
+      console.log('transak init')
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
