@@ -111,6 +111,7 @@ interface Props {
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  onHideBalance: () => void;
 }
 
 const TotalBalance = (props: Props) => {
@@ -124,6 +125,7 @@ const TotalBalance = (props: Props) => {
     onMakeFavorite,
     onShare,
     isFavorite,
+    onHideBalance,
   } = props;
 
   const theme = useTheme();
@@ -258,8 +260,9 @@ const TotalBalance = (props: Props) => {
   const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleToggleVisibility = useCallback(() => {
+    onHideBalance();
     setAmountsVisible((value) => !value);
-  }, []);
+  }, [onHideBalance]);
 
   const handleSwapClose = useCallback(() => {
     setShowSwap(false);
@@ -350,13 +353,13 @@ const TotalBalance = (props: Props) => {
                               {loadingUsd ? (
                                 <Skeleton />
                               ) : balances.length === 0 ? (
-                                '$ -'
+                                <Skeleton />
                               ) : (
                                 <>
                                   {amountsVisible
                                     ? onlyTokenValueInUsd ||
                                       usdFormatter.format(usdTotalAmount)
-                                    : '****,**'}
+                                    : '****.**'}
                                 </>
                               )}
                             </Typography>

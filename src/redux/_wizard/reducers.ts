@@ -15,12 +15,14 @@ export interface Collection {
   imageUrl: string;
   address: string;
   abi: any[];
+  chainId?: number;
 }
 
 export interface Token {
   name: string;
   symbol: string;
   supply: number;
+  chainId?: number;
 }
 
 export interface WizardState {

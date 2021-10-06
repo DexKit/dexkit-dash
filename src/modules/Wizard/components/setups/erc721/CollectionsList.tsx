@@ -12,6 +12,7 @@ import {useCollectionList} from 'modules/Wizard/hooks';
 import {Collection} from 'redux/_wizard/reducers';
 import CollectionsListItem from './CollectionsListItem';
 import {useHistory} from 'react-router';
+import {chainIdToSlug} from 'utils/nft';
 
 export const CollectionsList = () => {
   const {data, error, loading} = useCollectionList();
@@ -20,7 +21,13 @@ export const CollectionsList = () => {
 
   const handleClick = useCallback(
     (collection: Collection) => {
-      history.push(`/wizard/collection/${collection.address}`);
+      if (collection.chainId) {
+        history.push(
+          `/wizard/collection/${chainIdToSlug(collection.chainId)}/${
+            collection.address
+          }`,
+        );
+      }
     },
     [history],
   );

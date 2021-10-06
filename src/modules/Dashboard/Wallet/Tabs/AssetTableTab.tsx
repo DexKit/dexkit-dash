@@ -15,10 +15,11 @@ type Props = {
   loading: boolean;
   error: any;
   data: MyBalances[];
+  hideBalance?: boolean;
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {account, loading, error, data} = props;
+  const {account, loading, error, data, hideBalance} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -62,6 +63,6 @@ export const AssetTableTab = (props: Props) => {
   return error ? (
     <ErrorView message={error.message} />
   ) : (
-    <AssetTable balances={data} loading={loading} />
+    <AssetTable hideBalance={hideBalance} balances={data} loading={loading} />
   );
 };

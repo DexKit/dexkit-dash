@@ -37,3 +37,20 @@ export function copyToClipboard(textToCopy: string) {
     });
   }
 }
+
+export const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
+
+export function isIpfsUrl(url: string) {
+  return url.startsWith('ipfs://');
+}
+
+export function getNormalizedUrl(url: string) {
+  let fetchUrl = url;
+
+  if (isIpfsUrl(url)) {
+    let path = url.substring(6, url.length);
+    fetchUrl = `${IPFS_GATEWAY}${path}`;
+  }
+
+  return fetchUrl;
+}

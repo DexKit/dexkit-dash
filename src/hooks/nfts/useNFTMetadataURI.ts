@@ -1,9 +1,8 @@
-import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useQuery} from 'react-query';
 import {getTokenMetadataURI} from 'services/nfts';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { useCollectionBaseURI } from './useCollectionBaseURI';
-
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {useCollectionBaseURI} from './useCollectionBaseURI';
 
 const isIPFS = (uri: string) => {
   return uri.startsWith('ipfs://');
@@ -11,15 +10,23 @@ const isIPFS = (uri: string) => {
 
 const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
 
-export const useNFTMetadataURI = (collection: string, networkName: EthereumNetwork, tokenIds?: string[] ) => {
+export const useNFTMetadataURI = (
+  collection: string,
+  networkName: EthereumNetwork,
+  tokenIds?: string[],
+  opts: {chainId?: number} = {chainId: -1},
+) => {
   const baseURIquery = useCollectionBaseURI(collection);
-  const provider = useNetworkProvider(networkName);
+  const provider = useNetworkProvider(
+    opts.chainId === -1 ? networkName : undefined,
+    opts.chainId,
+  );
 
   const tokensMetadataQuery = useQuery(
     ['GET_TOKENS_METADATA', baseURIquery.data],
     async () => {
       const tokensMetadata = [];
-      if(!tokenIds){
+      if (!tokenIds) {
         return;
       }
       if (baseURIquery.data && baseURIquery.data.baseURI) {
@@ -44,7 +51,11 @@ export const useNFTMetadataURI = (collection: string, networkName: EthereumNetwo
         }
       } else {
         // if not base URI available we fetch directly from tokenURI's on the contract
-        const metadataURIs = await getTokenMetadataURI(tokenIds, collection, provider);
+        const metadataURIs = await getTokenMetadataURI(
+          tokenIds,
+          collection,
+          provider,
+        );
         for (let index = 0; index < metadataURIs.length; index++) {
           const element = metadataURIs[index];
 

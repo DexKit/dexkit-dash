@@ -156,18 +156,18 @@ export const TokenSetup = (props: TokenSetupProps) => {
             name: values.name,
             symbol: values.symbol,
             supply: values.supply,
+            chainId: chainId,
           }),
         );
       })
       .catch((err) => {
-        console.log(err);
         setError(err.message);
       })
       .finally(() => {
         setShowConfirm(false);
         setConfirmPending(false);
       });
-  }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch]);
+  }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch, chainId]);
 
   const handleCloseConfirm = useCallback(() => {
     setShowConfirm(false);

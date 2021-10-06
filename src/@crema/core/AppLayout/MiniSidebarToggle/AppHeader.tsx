@@ -143,6 +143,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     return history.location.pathname === LOGIN_WALLET_ROUTE;
   }, [history]);
 
+  const isMetamask = useCallback(() => {
+    if (window.ethereum) {
+      if ((window.ethereum as any).isMetaMask) {
+        return true;
+      }
+    }
+
+    return false;
+  }, []);
+
   return (
     <>
       {chainId ? (
@@ -183,27 +193,25 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    <Grid item>
-                      {chainId !== undefined ? (
-                        <Grid item>
-                          <ButtonBase
-                            onClick={handleOpenSwitchNetwork}
-                            className={classes.switchNetworkButton}>
-                            <Box
-                              className={classes.badgeRoot}
-                              style={{
-                                color: 'rgba(226, 167, 46)',
-                                backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                              }}>
-                              {GET_CHAIN_ID_NAME(chainId)}
-                              <IconButton size='small'>
-                                <ExpandMoreIcon />
-                              </IconButton>
-                            </Box>
-                          </ButtonBase>
-                        </Grid>
-                      ) : null}
-                    </Grid>
+                    {!isMetamask() ? (
+                      <Grid item>
+                        {chainId !== undefined ? (
+                          <Grid item>
+                            <ButtonBase
+                              onClick={handleOpenSwitchNetwork}
+                              className={classes.switchNetworkButton}>
+                              <Box className={classes.badgeRoot}>
+                                {GET_CHAIN_ID_NAME(chainId)}
+                                <IconButton size='small'>
+                                  <ExpandMoreIcon />
+                                </IconButton>
+                              </Box>
+                            </ButtonBase>
+                          </Grid>
+                        ) : null}
+                      </Grid>
+                    ) : null}
+
                     {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
@@ -239,7 +247,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   }
                   fullWidth
                 /> */}
-                <TokenSearch onClick={onClickSearchToken} />
+                {/* <TokenSearch onClick={onClickSearchToken} /> */}
               </Grid>
               <Grid item>
                 <Grid
@@ -255,11 +263,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         <Box
                           className={classes.badgeRoot}
                           display={'flex'}
-                          alignItems={'center'}
-                          style={{
-                            color: 'rgba(226, 167, 46)',
-                            backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                          }}>
+                          alignItems={'center'}>
                           {GET_CHAIN_ID_NAME(chainId)}
                           <ExpandMoreIcon />
                         </Box>

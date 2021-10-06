@@ -429,7 +429,7 @@ const BuySell: React.FC<Props> = ({
           </Tabs>
         </Box>
       )}
-      <Box py={2}>
+      <Box p={4}>
         {currentTab === 0 && (
           <MarketForm
             key='MarketForm'
