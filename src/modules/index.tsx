@@ -6,7 +6,7 @@ import {errorPagesConfigs} from './ErrorPages';
 
 import {dashBoardConfigs} from './Dashboard';
 
-import {coinsLeagueConfigs} from './CoinsLeague';
+import {coinLeaguesConfigs} from './CoinLeagues';
 import {changelogConfigs} from './Changelog';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';
@@ -29,7 +29,7 @@ const routeConfigs = [
   ...nftWalletConfig,
   ...wizardConfig,
   ...changelogConfigs,
-  ...coinsLeagueConfigs,
+  ...coinLeaguesConfigs,
   ...onboardingConfig,
   ...profileConfig,
 ];

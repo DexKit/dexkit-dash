@@ -7,7 +7,7 @@ import {useQuery} from 'react-query';
 import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
 import { getAllBitqueryBalances } from 'services/bitquery/balances';
 import { getAllBlockchainBalances } from 'services/blockchain/balances';
-
+import {providers} from 'ethers';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -33,7 +33,7 @@ export const MapBalancesToUSDValue = (
 
 // Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
-  const {account: web3Account, chainId, web3State} = useWeb3();
+  const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
   const account = defaultAccount || web3Account;
 
   const myBalancesQuery = useQuery(
@@ -42,7 +42,8 @@ export const useAllBalance = (defaultAccount?: string) => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
         if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
-         return getAllBlockchainBalances(chainId, account);
+         const pr =  new providers.Web3Provider(getProvider());
+         return getAllBlockchainBalances(chainId, account, pr);
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
         return getAllBitqueryBalances(account)
@@ -50,6 +51,7 @@ export const useAllBalance = (defaultAccount?: string) => {
     },
     {staleTime: 1000  * 20},
   );
+  
 
   const usdValuesQuery = useQuery(
     ['GetCoingeckoUsdValues', myBalancesQuery.data],

@@ -7,7 +7,7 @@ export const useMulticallTokenBalances = (
   token_addresses?: string[],
   account?: string,
 ) => {
-  const {web3State} = useWeb3();
+  const {web3State, getProvider} = useWeb3();
 
   const tokenBalancesQuery = useQuery(
     ['GET_TOKEN_BALANCES', web3State, account, token_addresses],
@@ -18,7 +18,7 @@ export const useMulticallTokenBalances = (
       if (!account || !token_addresses) {
         return;
       }
-      const [, tb] = await getTokenBalances(token_addresses, account);
+      const [, tb] = await getTokenBalances(token_addresses, account, getProvider());
       return token_addresses.map((a) => {
         return {
           address: a,

@@ -409,7 +409,7 @@ const BuySell: React.FC<Props> = ({
   };
 
   return (
-    <Box>
+    <Box p={2}>
       {!disableLimit && (
         <Box display='flex' justifyContent='center'>
           <Tabs
