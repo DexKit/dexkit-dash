@@ -214,7 +214,7 @@ export const endGame = async (factoryAddress: string, id: string) => {
 
   return (
     await getCoinLeaguesFactoryContract(factoryAddress)
-  ).endGame(0, {gasPrice}) as Promise<ContractTransaction>;
+  ).endGame(id, {gasPrice}) as Promise<ContractTransaction>;
 };
 
 export const abortGame = async (factoryAddress: string, id: string) => {
