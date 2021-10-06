@@ -25,6 +25,8 @@ import {ButtonState} from '../ButtonState';
 import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
+import { COINSLEAGUE_ROUTE } from 'shared/constants/routes';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -85,6 +87,7 @@ enum SubmitState {
 const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
+  const history = useHistory();
   const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
@@ -108,7 +111,15 @@ const CreateGameModal = (props: Props) => {
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
-          refetchCreated();
+          refetchCreated().then(
+            (r) => {
+              if(r.data && r.data[0].length){
+                // Sent user to created game
+                history.push(`${COINSLEAGUE_ROUTE}/${r.data[0][r.data[0].length-1]}`)
+              }
+
+            }
+          );
         };
         const onError = () => {
           setSubmitState(SubmitState.Error);

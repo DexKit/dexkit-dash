@@ -11,6 +11,7 @@ export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
   maxBalance:{
     '&:hover, &:focus': {
       cursor: 'pointer',
+      textDecoration: 'underline'
     },
   },
   root: {

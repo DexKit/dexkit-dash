@@ -50,6 +50,7 @@ export const useAllBalance = (defaultAccount?: string) => {
     },
     {staleTime: 1000  * 20},
   );
+  
 
   const usdValuesQuery = useQuery(
     ['GetCoingeckoUsdValues', myBalancesQuery.data],

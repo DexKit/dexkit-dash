@@ -16,7 +16,7 @@ export const getAllBlockchainBalances = async (chainId: ChainId, account: string
       account,
       provider,
     );
-   
+
    const bal: MyBalances[] =  tokens?.map((t) => {
       return {
         currency: {

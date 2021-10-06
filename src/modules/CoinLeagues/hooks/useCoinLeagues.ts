@@ -36,8 +36,7 @@ interface CallbackProps {
  * @returns
  */
 export const useCoinLeagues = (address?: string) => {
-  const [winner, setWinner] = useState<any>();
-  const {web3State, account, chainId} = useWeb3();
+  const {web3State, account, chainId, getProvider} = useWeb3();
   const {startedGames, createdGames} = useCoinLeaguesFactory();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
@@ -45,10 +44,10 @@ export const useCoinLeagues = (address?: string) => {
   );
 
   const winnerQuery = useQuery(['GET_WINNER', address, account], () => {
-    if (!address || !account) {
+    if (!address || !account || web3State !== Web3State.Done) {
       return;
     }
-    return getWinner(address, account).then((w) => {
+    return getWinner(address, account, getProvider()).then((w) => {
       return {
         place: w.place,
         address: w.winner_address,
@@ -69,7 +68,7 @@ export const useCoinLeagues = (address?: string) => {
         return;
       }
       try {
-        const tx = await joinGame(address, feeds, amount, captainCoin);
+        const tx = await joinGame(address, feeds, amount, captainCoin, getProvider());
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -146,7 +145,7 @@ export const useCoinLeagues = (address?: string) => {
         return;
       }
       try {
-        const tx = await claim(address);
+        const tx = await claim(address, getProvider());
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -164,7 +163,7 @@ export const useCoinLeagues = (address?: string) => {
         return;
       }
       try {
-        const tx = await withdrawGame(address);
+        const tx = await withdrawGame(address, getProvider());
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();

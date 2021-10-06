@@ -155,7 +155,7 @@ export const useCoinLeaguesFactory = () => {
   );
 
 
-  
+
   return {
     onGameCreateCallback,
     gamesAddress: gamesAddressQuery?.data ? gamesAddressQuery?.data[0] : [],

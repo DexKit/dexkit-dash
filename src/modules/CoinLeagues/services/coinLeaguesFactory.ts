@@ -16,7 +16,7 @@ export const COIN_LEAGUES_FACTORY_ADDRESS = {
 let coinLeaguesFactory: Contract;
 export const getCoinLeaguesFactoryContract = async (address: string) => {
   const appProvider = getProvider();
-  if (!coinLeaguesFactory && appProvider) {
+  if (appProvider) {
    
     const provider = new providers.Web3Provider(
        appProvider 

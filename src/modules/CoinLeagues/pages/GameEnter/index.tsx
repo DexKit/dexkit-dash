@@ -448,7 +448,7 @@ function GameEnter(props: Props) {
                   <Grid item xs={12}>
                     <Typography variant='h6' style={{margin: 5}}>
                       Choose Currencies {selectedCoins?.length}/
-                      {(game?.num_coins.toNumber() || 0) - 1 }
+                      {(game?.num_coins.toNumber() || 0) - 1}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -469,7 +469,7 @@ function GameEnter(props: Props) {
                           <CoinItem
                             coin={c}
                             key={i}
-                            handleDelete={onDeleteCoin}
+                            handleDelete={() => onDeleteCoin(i)}
                             index={i}
                           />
                         </Grid>
@@ -507,25 +507,28 @@ function GameEnter(props: Props) {
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <Button
-                      disabled={
-                        !isDisabled ||
-                        submitState !== SubmitState.None ||
-                        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                      }
-                      onClick={onEnterGame}
-                      variant={'contained'}
-                      color={
-                        submitState === SubmitState.Error
-                          ? 'default'
-                          : 'primary'
-                      }>
-                      <ButtonState
-                        state={submitState}
-                        defaultMsg={'ENTER GAME'}
-                        confirmedMsg={'You Entered Game'}
-                      />
-                    </Button>
+                    <Box display={'flex'} justifyContent={'center'} p={2}>
+                      <Button
+                        disabled={
+                          !isDisabled ||
+                          submitState !== SubmitState.None ||
+                          !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                        }
+                        size={'large'}
+                        onClick={onEnterGame}
+                        variant={'contained'}
+                        color={
+                          submitState === SubmitState.Error
+                            ? 'default'
+                            : 'primary'
+                        }>
+                        <ButtonState
+                          state={submitState}
+                          defaultMsg={'ENTER GAME'}
+                          confirmedMsg={'You Entered Game'}
+                        />
+                      </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>

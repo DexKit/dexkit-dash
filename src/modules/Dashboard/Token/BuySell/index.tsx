@@ -135,6 +135,7 @@ const BuySell: React.FC<Props> = ({
   // Here, we map the balances with logos from the token lists
   useEffect(() => {
     if (balances) {
+      console.log(balances);
       const balancesFn = balances.map((e) => {
         // Fetch image from balances first, if not take it from list
         let tokenLogoUri = e.logoURI;
@@ -409,7 +410,7 @@ const BuySell: React.FC<Props> = ({
   };
 
   return (
-    <Box>
+    <Box p={2}>
       {!disableLimit && (
         <Box display='flex' justifyContent='center'>
           <Tabs
