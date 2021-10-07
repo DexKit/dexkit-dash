@@ -80,7 +80,7 @@ export const useCoinLeaguesFactory = () => {
     
     return getCreatedGamesAddressFromFactory(
       COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
-      11,
+      10,
       provider
     );
   });
@@ -134,7 +134,7 @@ export const useCoinLeaguesFactory = () => {
     
     return getEndedGamesAddressFromFactory(
       COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
-      11,
+      7,
       provider
     );
   });
