@@ -2,6 +2,8 @@
 
 export const GET_LABEL_FROM_DURATION = (time: Number) => {
     switch (time) {
+        case 60 * 5:
+            return '5 min'
         case 60 * 60:
             return '1 hr'
         case 4 * 60 * 60:
