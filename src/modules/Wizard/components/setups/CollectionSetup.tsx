@@ -59,7 +59,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const dispatch = useDispatch();
 
   const userDefaultAcount = useDefaultAccount();
-  const {getWeb3, getProvider} = useWeb3();
+  const {getWeb3, getProvider, chainId} = useWeb3();
 
   const [step, setStep] = useState<CollectionSetupSteps>(
     CollectionSetupSteps.Collection,
@@ -294,6 +294,8 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
         let result = await contract.multiSafeMint(paramItems);
 
+        setMintTransactionHash(result.hash);
+
         await result.wait();
       }
     },
@@ -303,10 +305,22 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const [tempItemsHashes, setTempItemsHashes] = useState<any>();
   const [tempCollectionMetaData, setTempCollectionMetadata] = useState<any>();
   const [tempCollectionImagehash, setCollectionImagehash] = useState<string>();
+  const [tempAddress, setTempAddress] = useState<string>();
+
+  const clearCreateTryAgain = useCallback(() => {
+    setTempItemsHashes(undefined);
+    setTempCollectionMetadata(undefined);
+    setCollectionImagehash(undefined);
+  }, []);
 
   const handleCreateTryAgain = useCallback(() => {
+    setCreateError(undefined);
+
     createContract(tempCollectionMetaData)
       .then((address) => {
+        setTempAddress(address);
+
+        debugger;
         dispatch(
           addCollection({
             name: values.name,
@@ -314,13 +328,14 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
             address,
             abi: ERC721Abi,
             imageUrl: `https://ipfs.io/ipfs/${tempCollectionImagehash}`,
+            chainId: chainId,
           }),
         );
 
         setContractAddress(address);
-        setContractStatus(ContractStatus.Minting);
 
         if (items.length > 0) {
+          setContractStatus(ContractStatus.Minting);
           mintItems(address, tempItemsHashes)
             .then(() => {
               setContractStatus(ContractStatus.Finalized);
@@ -328,12 +343,37 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
             .catch((err) => {
               setMintError(err.message);
             });
+        } else {
+          setContractStatus(ContractStatus.Finalized);
         }
       })
       .catch((err) => {
         setCreateError(err.message);
       });
-  }, [tempCollectionMetaData]);
+  }, [
+    chainId,
+    items,
+    tempItemsHashes,
+    tempCollectionImagehash,
+    tempCollectionMetaData,
+  ]);
+
+  const handleMintItemsTryAgain = useCallback(() => {
+    setMintError(undefined);
+
+    if (items.length > 0 && tempAddress) {
+      setContractStatus(ContractStatus.Minting);
+      mintItems(tempAddress, tempItemsHashes)
+        .then(() => {
+          setContractStatus(ContractStatus.Finalized);
+        })
+        .catch((err) => {
+          setMintError(err.message);
+        });
+    } else {
+      setContractStatus(ContractStatus.Finalized);
+    }
+  }, [items, tempAddress, tempItemsHashes]);
 
   const handleConfirmFinalize = useCallback(async () => {
     setShowConfirmDialog(false);
@@ -350,6 +390,8 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
         collectionImagehash,
       );
 
+      setCollectionImagehash(collectionImagehash);
+
       setTempCollectionMetadata(collectionMetadataHash);
 
       let itemsHashes = await sendItemsMetadata(itemImagesHashes);
@@ -361,6 +403,8 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       if (collectionMetadataHash) {
         await createContract(collectionMetadataHash)
           .then((address) => {
+            setTempAddress(address);
+
             dispatch(
               addCollection({
                 name: values.name,
@@ -368,14 +412,14 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
                 address,
                 abi: ERC721Abi,
                 imageUrl: `https://ipfs.io/ipfs/${collectionImagehash}`,
+                chainId: chainId,
               }),
             );
 
             setContractAddress(address);
 
-            setContractStatus(ContractStatus.Minting);
-
             if (items.length > 0) {
+              setContractStatus(ContractStatus.Minting);
               mintItems(address, itemsHashes)
                 .then(() => {
                   setContractStatus(ContractStatus.Finalized);
@@ -383,6 +427,8 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
                 .catch((err) => {
                   setMintError(err.message);
                 });
+            } else {
+              setContractStatus(ContractStatus.Finalized);
             }
           })
           .catch((err) => {
@@ -391,6 +437,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       }
     }
   }, [
+    chainId,
     values,
     items,
     dispatch,
@@ -428,6 +475,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           createError={createError}
           mintError={mintError}
           onTryCreateCollectionAgain={handleCreateTryAgain}
+          onTryMintAgain={handleMintItemsTryAgain}
         />
       </DialogPortal>
       <Grid container spacing={4} justify='center'>

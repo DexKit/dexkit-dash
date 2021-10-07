@@ -10,6 +10,7 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  ButtonBase,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -48,6 +49,10 @@ import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
 import {LOGIN_WALLET_ROUTE, WALLET_ROUTE} from 'shared/constants/routes';
+
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -106,6 +111,12 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       backgroundColor: '#252836',
       borderRadius: 8,
     },
+    visibilityButton: {
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+      borderRadius: '50%',
+      fontSize: theme.spacing(4),
+    },
   };
 });
 
@@ -114,6 +125,8 @@ const WalletInfo = (props: any) => {
   const networkName = useNetwork();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
 
   const accountsModal = useAccountsModal();
 
@@ -190,6 +203,10 @@ const WalletInfo = (props: any) => {
     return history.location.pathname == LOGIN_WALLET_ROUTE;
   }, [history]);
 
+  const handleToggleVisibility = useCallback(() => {
+    setIsBalanceVisible((value) => !value);
+  }, []);
+
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -216,15 +233,34 @@ const WalletInfo = (props: any) => {
             </Grid>
             <Grid item>
               <Typography variant='body1'>
-                {truncateIsAddress(defaultAccountLabel)}
+                {isBalanceVisible
+                  ? truncateIsAddress(defaultAccountLabel)
+                  : '******'}{' '}
               </Typography>
               <Hidden smDown={true}>
-                <Typography variant='caption'>
-                  {ethBalanceValue
-                    ? ethBalanceValue.toFixed(4)
-                    : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-                  {GetNativeCoinFromNetworkName(networkName)}
-                </Typography>
+                <Box display='flex' alignItems='center' alignContent='center'>
+                  <Box mr={1}>
+                    <Typography variant='caption'>
+                      {ethBalanceValue
+                        ? isBalanceVisible
+                          ? ethBalanceValue.toFixed(4)
+                          : '****.**'
+                        : isBalanceVisible
+                        ? ethBalance && tokenAmountInUnits(ethBalance)
+                        : '****.**'}{' '}
+                      {GetNativeCoinFromNetworkName(networkName)}{' '}
+                    </Typography>
+                  </Box>
+                  <ButtonBase
+                    className={classes.visibilityButton}
+                    onClick={handleToggleVisibility}>
+                    {isBalanceVisible ? (
+                      <VisibilityIcon fontSize='inherit' />
+                    ) : (
+                      <VisibilityOffIcon fontSize='inherit' />
+                    )}
+                  </ButtonBase>
+                </Box>
               </Hidden>
             </Grid>
           </Grid>

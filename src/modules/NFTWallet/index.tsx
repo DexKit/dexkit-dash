@@ -3,6 +3,15 @@ import React from 'react';
 export const nftWalletConfig = [
   {
     routes: [
+      // new nfts page on chain.
+      {
+        path: '/nfts/collections/:network/:address/:token',
+        component: React.lazy(() => import('./pages/v2/AssetDetailsPage')),
+      },
+      {
+        path: '/nfts/collections/:network/:address',
+        component: React.lazy(() => import('./pages/v2/CollectionDetailsPage')),
+      },
       {
         path: '/nfts/assets/:address/:token/sell',
         component: React.lazy(() => import('./pages/Sell')),

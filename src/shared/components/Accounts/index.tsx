@@ -322,11 +322,6 @@ const Accounts = () => {
     <Box pt={{xl: 4}}>
       {renderSnackbar()}
       <Grid container spacing={4}>
-        {notConnected && (
-          <Grid item xs={12}>
-            <Box>{connectButton}</Box>
-          </Grid>
-        )}
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>

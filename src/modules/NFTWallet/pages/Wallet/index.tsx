@@ -535,7 +535,7 @@ export default () => {
                   <Collapse in={isUpXs || showFilters}>
                     <CardContent>
                       <Grid container direction='column' spacing={2}>
-                        <Grid item xs>
+                        <Grid item xs={12}>
                           <FormControlLabel
                             color='primary'
                             control={<Checkbox />}
@@ -546,38 +546,46 @@ export default () => {
                             ].toString()}
                           />
                         </Grid>
-                        <Grid item xs>
-                          <Box py={2}>
-                            <Grid container spacing={2}>
-                              <Grid item>
-                                <ViewComfyIcon />
-                              </Grid>
-                              <Grid item xs>
-                                <Typography
-                                  className={classes.collectionsTitle}
-                                  variant='body1'>
-                                  <IntlMessages id='nfts.walletCollections' />
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                          <TextField
-                            placeholder={messages[
-                              'nfts.walletCollectionFilter'
-                            ].toString()}
-                            variant='outlined'
-                            type='search'
-                            onChange={handleCollectionQueryChange}
-                            value={collectionInputState}
-                            fullWidth
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position='start'>
-                                  <SearchIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
+                        <Grid item xs={12}>
+                          {collection.length > 0 ? (
+                            <>
+                              <Box py={2}>
+                                <Grid
+                                  container
+                                  spacing={2}
+                                  alignItems='center'
+                                  alignContent='center'>
+                                  <Grid item>
+                                    <ViewComfyIcon />
+                                  </Grid>
+                                  <Grid item xs>
+                                    <Typography
+                                      className={classes.collectionsTitle}
+                                      variant='body1'>
+                                      <IntlMessages id='nfts.walletCollections' />
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Box>
+                              <TextField
+                                placeholder={messages[
+                                  'nfts.walletCollectionFilter'
+                                ].toString()}
+                                variant='outlined'
+                                type='search'
+                                onChange={handleCollectionQueryChange}
+                                value={collectionInputState}
+                                fullWidth
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <SearchIcon />
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            </>
+                          ) : null}
                         </Grid>
                         <Grid item xs>
                           {collectionLoading ? (

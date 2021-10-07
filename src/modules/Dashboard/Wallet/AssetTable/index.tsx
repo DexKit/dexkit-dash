@@ -32,6 +32,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 interface AssetTableProps {
   balances: MyBalances[];
   loading?: boolean;
+  hideBalance?: boolean;
 }
 
 enum TokenOrderBy {
@@ -40,7 +41,11 @@ enum TokenOrderBy {
   TokenAmount,
 }
 
-const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
+const AssetTable: React.FC<AssetTableProps> = ({
+  balances,
+  loading,
+  hideBalance,
+}) => {
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -298,7 +303,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               </Grid>
             </Grid>
           ) : (
-            <AssetList balances={filteredBalances()} />
+            <AssetList
+              hideBalance={hideBalance}
+              balances={filteredBalances()}
+            />
           )}
         </Grid>
       </Grid>

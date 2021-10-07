@@ -9,8 +9,11 @@ import {
   makeStyles,
   CardActionArea,
 } from '@material-ui/core';
+
 import {useCollectionItems} from 'modules/Wizard/hooks';
 import CollectionItemsSkeleton from './CollectionItemsSkeleton';
+import {useWeb3} from 'hooks/useWeb3';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -30,9 +33,13 @@ export const CollectionItems = (props: CollectionItemsProps) => {
 
   const classes = useStyles();
 
+  const {web3State} = useWeb3();
+
   useEffect(() => {
-    get(contractAddress);
-  }, [get, contractAddress, update]);
+    if (web3State === Web3State.Done) {
+      get(contractAddress);
+    }
+  }, [get, contractAddress, update, web3State]);
 
   if (loading) {
     return <CollectionItemsSkeleton />;

@@ -4,6 +4,7 @@ import {
   Card,
   Typography,
   IconButton,
+  Tooltip,
   Divider,
   Link,
   CardHeader,
@@ -18,6 +19,8 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import TokensList from '../components/setups/erc20/TokensList';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Web3State} from 'types/blockchain';
+import {useWeb3} from 'hooks/useWeb3';
 
 export default () => {
   const history = useHistory();
@@ -32,6 +35,10 @@ export default () => {
   const handleCreateToken = useCallback(() => {
     history.push('/wizard/deploy/token');
   }, [history]);
+
+  const {web3State} = useWeb3();
+
+  const isNotConnected = web3State == Web3State.NotConnected;
 
   return (
     <Box py={{xs: 8}}>
@@ -74,9 +81,14 @@ export default () => {
                 color: 'textSecondary',
               }}
               action={
-                <IconButton color='primary' onClick={handleCreateCollection}>
-                  <Add />
-                </IconButton>
+                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                  <IconButton
+                    disabled={isNotConnected}
+                    color='primary'
+                    onClick={handleCreateCollection}>
+                    <Add />
+                  </IconButton>
+                </Tooltip>
               }
             />
             <Divider />
@@ -93,9 +105,14 @@ export default () => {
                 color: 'textSecondary',
               }}
               action={
-                <IconButton color='primary' onClick={handleCreateToken}>
-                  <Add />
-                </IconButton>
+                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                  <IconButton
+                    disabled={isNotConnected}
+                    color='primary'
+                    onClick={handleCreateToken}>
+                    <Add />
+                  </IconButton>
+                </Tooltip>
               }
             />
             <Divider />

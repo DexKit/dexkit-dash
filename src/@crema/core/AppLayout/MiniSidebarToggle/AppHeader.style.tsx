@@ -100,6 +100,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   badgeRoot: {
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
+    backgroundColor: '#252836',
   },
   switchNetworkButton: {
     borderRadius: theme.shape.borderRadius,

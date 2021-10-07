@@ -41,6 +41,7 @@ interface TokenListItemProps {
   network?: any;
   onClick?: (network: string, address: string) => void;
   onRemove?: () => void;
+  hideBalance?: boolean;
 }
 
 export const TokenListItem = (props: TokenListItemProps) => {
@@ -54,6 +55,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
     network,
     onClick,
     onRemove,
+    hideBalance,
   } = props;
 
   const classes = useStyles();
@@ -97,8 +99,8 @@ export const TokenListItem = (props: TokenListItemProps) => {
                       : network === 'bsc'
                       ? 'BSC'
                       : network === 'matic'
-                      ? 'MATIC' :
-                      ''
+                      ? 'MATIC'
+                      : ''
                   }
                 />
               </Grid>
@@ -108,11 +110,11 @@ export const TokenListItem = (props: TokenListItemProps) => {
             <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Typography align='right' variant='body1'>
-                  {amount.toFixed(4)}
+                  {hideBalance ? '**.****' : amount.toFixed(4)}
                 </Typography>
                 {amountUsd ? (
                   <Typography align='right' variant='body2'>
-                    {usdFormatter.format(amountUsd)}
+                    {hideBalance ? '**.****' : usdFormatter.format(amountUsd)}
                   </Typography>
                 ) : null}
               </Grid>

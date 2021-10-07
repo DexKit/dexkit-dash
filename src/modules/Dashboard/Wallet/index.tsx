@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import {
   Paper,
@@ -64,6 +64,9 @@ const WalletTabs: React.FC<Props> = (props) => {
   const classes = useStyles(cremaTheme);
   const defaultAccount = useDefaultAccount();
   const defaultLabel = useDefaultLabelAccount();
+
+  const [hideBalance, setHideBalance] = useState(false);
+
   const dispatch = useDispatch();
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
@@ -106,6 +109,10 @@ const WalletTabs: React.FC<Props> = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const handleToggleBalance = useCallback(() => {
+    setHideBalance((value) => !value);
+  }, []);
+
   return (
     <>
       <TabContext value={value}>
@@ -123,6 +130,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                   balances={data}
                   loading={loading}
                   loadingUsd={loadingUsd}
+                  onHideBalance={handleToggleBalance}
                 />
               )}
             </Grid>
@@ -151,6 +159,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                           loading={loading}
                           error={error}
                           data={data}
+                          hideBalance={hideBalance}
                         />
                       </TabPanel>
                       <TabPanel className={classes.zeroPadding} value='nfts'>

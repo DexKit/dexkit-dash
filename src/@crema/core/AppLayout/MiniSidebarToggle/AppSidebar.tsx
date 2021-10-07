@@ -105,7 +105,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             </Box>
             <Scrollbar className={classes.scrollAppSidebar}>
               <Navigation />
-              <Box p={4} className='visible-hover'>
+              {/* <Box p={4} className='visible-hover'>
                 <Paper>
                   <Box p={4}>
                     <Grid
@@ -142,7 +142,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     </Grid>
                   </Box>
                 </Paper>
-              </Box>
+              </Box> */}
             </Scrollbar>
           </Box>
         </Box>

@@ -29,10 +29,11 @@ const PAGE_SIZES = [
 interface AssetListProps {
   balances: MyBalances[];
   loading?: boolean;
+  hideBalance?: boolean;
 }
 
 export const AssetList = (props: AssetListProps) => {
-  const {balances, loading} = props;
+  const {balances, loading, hideBalance} = props;
 
   const history = useHistory();
 
@@ -111,6 +112,7 @@ export const AssetList = (props: AssetListProps) => {
                   amountUsd={balance?.valueInUsd || 0}
                   onClick={handleClick}
                   dayChange={balance.price24hPercentage}
+                  hideBalance={hideBalance}
                 />
               </Grid>
             ),
@@ -124,7 +126,9 @@ export const AssetList = (props: AssetListProps) => {
                     onChange={handleItemsPerPageChange}
                     variant='outlined'>
                     {PAGE_SIZES.map((pageSize, i) => (
-                      <MenuItem value={pageSize} key={`menu-${i}`}>{pageSize}</MenuItem>
+                      <MenuItem value={pageSize} key={`menu-${i}`}>
+                        {pageSize}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>

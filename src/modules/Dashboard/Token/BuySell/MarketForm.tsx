@@ -393,7 +393,6 @@ const MarketForm: React.FC<Props> = (props) => {
                   <Typography
                     onClick={setMax}
                     variant='body2'
-                    className={classes.maxBalance}
                     color='textSecondary'>
                     {account ? (
                       `${tokenBalance?.value?.toFixed(4) || 0} ${

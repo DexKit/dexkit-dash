@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overflowItemInner: {
-    width: '60vw',
+    width: '30vw',
   },
 }));
 
@@ -286,6 +286,39 @@ export const CreateWallet = (props: Props) => {
                   <Box className={classes.overflowItem}>
                     <Box className={classes.overflowItemInner}>
                       <ButtonBase
+                        onClick={handleGoogle}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <GoogleIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Google
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
                         onClick={handleTwitter}
                         className={classes.actionButton}>
                         <Paper
@@ -349,46 +382,44 @@ export const CreateWallet = (props: Props) => {
                       </ButtonBase>
                     </Box>
                   </Box>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleGoogle}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <GoogleIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              Google
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
                 </Box>
               ) : (
                 <Grid
                   container
                   spacing={4}
                   wrap={isMobile ? 'nowrap' : undefined}>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
+                    <ButtonBase
+                      onClick={handleGoogle}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <GoogleIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Google
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
                     <ButtonBase
                       onClick={handleTwitter}
                       className={classes.actionButton}>
@@ -419,7 +450,7 @@ export const CreateWallet = (props: Props) => {
                       </Paper>
                     </ButtonBase>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
                     <ButtonBase
                       onClick={handleDiscord}
                       className={classes.actionButton}>
@@ -445,37 +476,6 @@ export const CreateWallet = (props: Props) => {
                             align='center'
                             variant='body1'>
                             Discord
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <ButtonBase
-                      onClick={handleGoogle}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <GoogleIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            Google
                           </Typography>
                         </Box>
                       </Paper>

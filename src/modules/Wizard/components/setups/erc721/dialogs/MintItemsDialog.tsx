@@ -114,33 +114,45 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     [items],
   );
 
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   // TODO: remove duplace
   const mintItems = useCallback(
     async (contractAddress: string, hashes: string[]) => {
-      if (userDefaultAcount) {
-        let wrappedProvider = getProvider();
+      return new Promise((resolve, reject) => {
+        setErrorMessage(undefined);
+        if (userDefaultAcount) {
+          let wrappedProvider = getProvider();
 
-        let provider = new ethers.providers.Web3Provider(wrappedProvider);
+          let provider = new ethers.providers.Web3Provider(wrappedProvider);
 
-        var contract = new ethers.Contract(
-          contractAddress,
-          ERC721Abi,
-          provider.getSigner(),
-        );
+          var contract = new ethers.Contract(
+            contractAddress,
+            ERC721Abi,
+            provider.getSigner(),
+          );
 
-        let paramItems = hashes.map((hash: string) => {
-          return {
-            to: userDefaultAcount,
-            tokenURI: hash,
-          };
-        });
+          let paramItems = hashes.map((hash: string) => {
+            return {
+              to: userDefaultAcount,
+              tokenURI: hash,
+            };
+          });
 
-        let result = await contract.multiSafeMint(paramItems);
+          contract
+            .multiSafeMint(paramItems)
+            .then(async (result: any) => {
+              setMintTransactionHash(result.hash);
 
-        setMintTransactionHash(result.hash);
-
-        await result.wait();
-      }
+              await result.wait();
+              resolve(undefined);
+            })
+            .catch((err: any) => {
+              setErrorMessage(err.message);
+              reject();
+            });
+        }
+      });
     },
     [userDefaultAcount, getProvider, items],
   );
@@ -183,6 +195,20 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
     return false;
   }, [items]);
+
+  const handleTryAgain = useCallback(async () => {
+    setLoading(true);
+
+    let itemImagesHashes = await uploadImages();
+
+    let itemsHashes = await sendItemsMetadata(itemImagesHashes);
+
+    await mintItems(contractAddress, itemsHashes);
+
+    onFinish();
+    setShowSuccess(true);
+    setLoading(false);
+  }, [contractAddress, getWeb3, items, onFinish]);
 
   return (
     <Dialog {...props} disableBackdropClick>
@@ -246,7 +272,24 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
                   confirmation.
                 </Typography>
               </Grid>
-
+              {errorMessage ? (
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    flexDirection='column'>
+                    <Box mb={2}>
+                      <Typography gutterBottom variant='body1' color='error'>
+                        {errorMessage}
+                      </Typography>
+                    </Box>
+                    <Button onClick={handleTryAgain} color='primary'>
+                      Try Again
+                    </Button>
+                  </Box>
+                </Grid>
+              ) : null}
               {mintTransactionHash && chainId ? (
                 <Grid item xs={12}>
                   <Button
