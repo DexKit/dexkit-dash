@@ -17,6 +17,7 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
 import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
+import {kittygotchiConfig} from './Kittygotchi';
 import {profileConfig} from './Profile';
 
 const routeConfigs = [
@@ -31,6 +32,7 @@ const routeConfigs = [
   ...changelogConfigs,
   ...coinLeaguesConfigs,
   ...onboardingConfig,
+  ...kittygotchiConfig,
   ...profileConfig,
 ];
 
