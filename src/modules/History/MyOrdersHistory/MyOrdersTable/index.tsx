@@ -99,7 +99,7 @@ const MyOrdersTable: React.FC<Props> = ({
                 gutterBottom
                 align='center'
                 variant='h5'>
-                Ops, no data
+                Oops, no data
               </Typography>
               <Typography align='center'>
                 We have not found any orders linked to your wallet.

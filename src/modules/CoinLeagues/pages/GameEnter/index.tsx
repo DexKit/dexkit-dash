@@ -10,7 +10,6 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import CardPrize from '../../components/CardPrize';
 import SimpleCardGame from '../../components/SimpleCardGame';
@@ -61,6 +60,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
+import { useCoinLeaguesFactory } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -102,6 +102,7 @@ function GameEnter(props: Props) {
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
     useCoinLeagues(address);
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactory();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
@@ -191,8 +192,8 @@ function GameEnter(props: Props) {
   );
 
   const handleBack = useCallback((ev: any) => {
-    history.push(COINSLEAGUE_ROUTE);
-  }, []);
+    history.push(listGamesRoute);
+  }, [listGamesRoute]);
 
   const onEnterGame = useCallback(
     (ev: any) => {
@@ -285,13 +286,13 @@ function GameEnter(props: Props) {
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
             Dashboard
           </Link>
-          <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+          <Link color='inherit' component={RouterLink} to={listGamesRoute}>
             Games
           </Link>
           <Link
             color='inherit'
             component={RouterLink}
-            to={`${COINSLEAGUE_ROUTE}/${address}`}>
+            to={enterGameRoute(address)}>
             {truncateAddress(address)}
           </Link>
         </Breadcrumbs>

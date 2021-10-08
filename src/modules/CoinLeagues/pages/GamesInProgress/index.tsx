@@ -43,13 +43,20 @@ enum FilterGame {
 
 const GamesInProgress = () => {
   const history = useHistory();
-  const {chainId, account} = useWeb3();
+  const {account} = useWeb3();
 
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
 
-  const {startedGames, startedGamesAddressQuery, startedGamesQuery} = useCoinLeaguesFactory();
-  const isLoading =  startedGamesAddressQuery.isLoading || startedGamesQuery.isLoading;
+  const {
+    startedGames,
+    startedGamesAddressQuery,
+    startedGamesQuery,
+    listGamesRoute,
+    enterGameRoute,
+  } = useCoinLeaguesFactory();
+  const isLoading =
+    startedGamesAddressQuery.isLoading || startedGamesQuery.isLoading;
   const gamesInProgress = useMemo(() => {
     if (filterGame === FilterGame.ALL) {
       return startedGames
@@ -123,17 +130,23 @@ const GamesInProgress = () => {
     }
   }, [startedGames, filterGame, search]);
 
-  const onClickEnterGame = useCallback((address: string) => {
-    history.push(`${COINSLEAGUE_ROUTE}/${address}`);
-  }, []);
+  const onClickEnterGame = useCallback(
+    (address: string) => {
+      history.push(enterGameRoute(`${address}`));
+    },
+    [enterGameRoute],
+  );
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
   }, []);
 
-  const handleBack = useCallback((ev: any) => {
-    history.push(COINSLEAGUE_ROUTE);
-  }, []);
+  const handleBack = useCallback(
+    (ev: any) => {
+      history.push(listGamesRoute);
+    },
+    [listGamesRoute],
+  );
   return (
     <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
@@ -142,10 +155,10 @@ const GamesInProgress = () => {
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
               Dashboard
             </Link>
-            <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+            <Link color='inherit' component={RouterLink} to={listGamesRoute}>
               Games
             </Link>
-            <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+            <Link color='inherit' component={RouterLink} to={listGamesRoute}>
               Games In Progress
             </Link>
           </Breadcrumbs>

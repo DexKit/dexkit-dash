@@ -88,7 +88,7 @@ const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
   const history = useHistory();
-  const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
+  const {onGameCreateCallback, refetchCreated, enterGameRoute} = useCoinLeaguesFactory();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
@@ -115,7 +115,7 @@ const CreateGameModal = (props: Props) => {
             (r) => {
               if(r.data && r.data[0].length){
                 // Sent user to created game
-                history.push(`${COINSLEAGUE_ROUTE}/${r.data[0][r.data[0].length-1]}`)
+                history.push(enterGameRoute(`${r.data[0][r.data[0].length-1]}`))
               }
 
             }
@@ -145,7 +145,7 @@ const CreateGameModal = (props: Props) => {
         });
       }
     },
-    [coins, gameType, entryAmount, duration, totalPlayers],
+    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute],
   );
 
   const goToExplorer = useCallback(
@@ -291,6 +291,7 @@ const CreateGameModal = (props: Props) => {
                   style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>

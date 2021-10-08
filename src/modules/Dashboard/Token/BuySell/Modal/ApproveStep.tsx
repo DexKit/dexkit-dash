@@ -7,14 +7,12 @@ import {ethers} from 'ethers';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
-import {NotificationType} from 'services/notification';
-// import {useStyles} from './index.style';
-import {useDispatch} from 'react-redux';
-import {Notification} from 'types/models/Notification';
-import {onAddNotification} from 'redux/actions';
-import {truncateAddress} from 'utils';
+
 import {getERC20Contract} from 'utils/ethers';
 import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { useNotifications } from 'hooks/useNotifications';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 
 
 interface Props {
@@ -42,15 +40,13 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-  // const classes = useStyles();
-  const dispatch = useDispatch();
   const {getContractWrappers} = useContractWrapper();
-
+  const {createNotification} = useNotifications()
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   const isApprove = async () => {
     if (
-      tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)
+      tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) 
     ) {
       return true;
     }
@@ -128,16 +124,27 @@ const ApproveStep: React.FC<Props> = (props) => {
         maxApproval.toString(),
       );
 
+      createNotification({
+          title: 'Approve',
+          body: `Approve ${tokenFrom.symbol.toUpperCase()} to Trade`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(
+            chainId,
+            tx.hash,
+          ),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: tx.hash,
+            status: 'pending',
+          } as TxNotificationMetadata,
+        });
+
+
       web3Wrapper
         .awaitTransactionSuccessAsync(tx.hash)
         .then(() => {
-          const notification: Notification = {
-            title: 'Approve',
-            body: truncateAddress(tx.hash),
-          };
-
-          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
-
           onNext(true);
         })
         .catch((e) => {

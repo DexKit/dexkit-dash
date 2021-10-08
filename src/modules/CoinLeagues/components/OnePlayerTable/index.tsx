@@ -247,7 +247,10 @@ function OnePlayerTable(props: Props): JSX.Element {
           : d.hash;
 
         const currentFeedPrice = currentPrices?.filter((f) =>
-          d.coins.map((c) => c.toLowerCase()).includes(f.feed.toLowerCase()),
+          d.coins
+            .concat(d.captainCoin ? d.captainCoin : [])
+            .map((c) => c.toLowerCase())
+            .includes(f.feed.toLowerCase()),
         );
 
         if (currentFeedPrice?.length) {
@@ -261,12 +264,16 @@ function OnePlayerTable(props: Props): JSX.Element {
                 ? ((startFeed?.start_price.toNumber() /
                     USD_POWER_NUMBER) as number)
                 : 0,
+              multiplier: 1,
             };
           });
 
           const scores = prices
             .filter((p) => p.endPrice && p.startPrice)
-            .map((p) => ((p.endPrice - p.startPrice) / p.endPrice) * 100);
+            .map(
+              (p) =>
+                ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
+            );
           const score = scores.reduce((p, c) => p + c) / scores.length;
           return {
             ...d,
@@ -402,16 +409,18 @@ function OnePlayerTable(props: Props): JSX.Element {
                               </Avatar>
                             </Badge>
                           </Tooltip>
-                          {playerData?.coins.length === 0 &&    <IconButton
-                            onClick={() => onViewCoins(playerData.coins)}>
-                            <RemoveRedEye
-                              style={{
-                                color: '#fff',
-                                marginLeft: 10,
-                                alignSelf: 'center',
-                              }}
-                            />
-                          </IconButton>}
+                          {playerData?.coins.length === 0 && (
+                            <IconButton
+                              onClick={() => onViewCoins(playerData.coins)}>
+                              <RemoveRedEye
+                                style={{
+                                  color: '#fff',
+                                  marginLeft: 10,
+                                  alignSelf: 'center',
+                                }}
+                              />
+                            </IconButton>
+                          )}
                         </>
                       )}
                   </Box>
@@ -432,7 +441,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                             </Avatar>
                           ))}
                       </AvatarGroup>
-                      {(playerData?.coins && playerData?.coins.length > 0) && (
+                      {playerData?.coins && playerData?.coins.length > 0 && (
                         <IconButton
                           onClick={() => onViewCoins(playerData.coins)}>
                           <RemoveRedEye

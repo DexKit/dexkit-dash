@@ -1,5 +1,5 @@
 import {CallInput} from '@indexed-finance/multicall';
-import {BigNumber, Contract, ContractTransaction, ethers, providers} from 'ethers';
+import {Contract, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
 import coinLeaguesFactoryAbi from '../constants/ABI/coinLeaguesFactory.json';
@@ -10,7 +10,7 @@ import { ChainId } from 'types/blockchain';
 //0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
-  [ChainId.Matic]: '0xa033640f5536331b3d3F395d81901C744E343767',
+  [ChainId.Matic]: '0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a',
 };
 
 let coinLeaguesFactory: Contract;

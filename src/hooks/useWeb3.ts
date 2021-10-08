@@ -26,9 +26,8 @@ import {BigNumber} from '@0x/utils';
 import {addAccounts} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
 
-import {useHistory} from 'react-router-dom';
 import {useAppGlobalState} from './useGlobalState';
-import {isMagicProvider} from 'services/magic';
+
 
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -14,7 +14,7 @@ const AffiliateRevenue = (props: Props) => {
     <AppCard style={{backgroundColor: 'primary'}} className='card-hover'>
       <Box display='flex' alignItems='center'>
         <Box mr={3} clone alignSelf='flex-start'>
-          <MonetizationOnIcon />
+          <MonetizationOnIcon style={{color: 'white'}} />
         </Box>
         <Box flex={1} color='white'>
           <Typography component='h3' variant='inherit' color='inherit'>

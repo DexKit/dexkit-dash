@@ -96,8 +96,6 @@ const GamesList = () => {
     [value],
   );
   const {
-    games,
-    totalGames,
     gamesQuery,
     gamesAddressQuery,
     startedGames,
@@ -110,6 +108,9 @@ const GamesList = () => {
     endedGamesAddressQuery,
     endedGamesQuery,
     totalEndedGames,
+    listGamesRoute,
+    activeGamesRoute,
+    enterGameRoute
   } = useCoinLeaguesFactory();
   const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
   const isLoadingStarted =
@@ -285,12 +286,12 @@ const GamesList = () => {
   }, [endedGames, filterGame, search]);
 
   const onClickEnterGame = useCallback((address: string) => {
-    history.push(`${COINSLEAGUE_ROUTE}/${address}`);
-  }, []);
+    history.push(enterGameRoute(`${address}`));
+  }, [enterGameRoute]);
 
   const onClickGoGamesInProgress = useCallback((_ev: any) => {
-    history.push(`${COINSLEAGUE_ROUTE}/active-games`);
-  }, []);
+    history.push(activeGamesRoute);
+  }, [activeGamesRoute]);
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
@@ -304,7 +305,7 @@ const GamesList = () => {
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
               Dashboard
             </Link>
-            <Link color='inherit' component={RouterLink} to={COINSLEAGUE_ROUTE}>
+            <Link color='inherit' component={RouterLink} to={listGamesRoute}>
               Games
             </Link>
           </Breadcrumbs>

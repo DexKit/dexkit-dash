@@ -15,8 +15,8 @@ import {
   EmailShareButton,
 } from 'react-share';
 
-import {Box, makeStyles, Tooltip, Typography} from '@material-ui/core';
-import IconButton, {IconButtonProps} from '@material-ui/core/IconButton';
+import {Box, makeStyles, Typography} from '@material-ui/core';
+import {IconButtonProps} from '@material-ui/core/IconButton';
 import { RoundedIconButton } from '../ActionsButtons/RoundedIconButton';
 import Share from '@material-ui/icons/Share';
 import { CremaTheme } from 'types/AppContextPropsType';

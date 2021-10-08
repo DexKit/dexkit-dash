@@ -70,7 +70,7 @@ const LimitStep: React.FC<Props> = (props) => {
         .then((e) => {
           const notification: Notification = {
             title: 'Limit Order',
-            body: 'Successfully created',
+            body: 'Order Successfully placed',
           };
           dispatch(onAddNotification([notification], NotificationType.SUCCESS));
 
