@@ -1,5 +1,5 @@
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useMemo} from 'react';
 import {
   COIN_LEAGUES_FACTORY_ADDRESS,
   createGame,
@@ -8,13 +8,15 @@ import {
   getGamesAddressFromFactory,
   getStartedGamesAddressFromFactory,
 } from 'modules/CoinLeagues/services/coinLeaguesFactory';
-import {ChainId, Web3State} from 'types/blockchain';
-import {Game, GameParams} from 'types/coinsleague';
+import { Web3State} from 'types/blockchain';
+import {GameParams} from 'types/coinsleague';
 import {getGamesData} from '../services/coinLeagues';
 import {useQuery} from 'react-query';
 import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
 import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
+import { useParams } from 'react-router-dom';
+import { COINSLEAGUE_ROUTE } from 'shared/constants/routes';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -25,14 +27,45 @@ interface CallbackProps {
 export const useCoinLeaguesFactory = () => {
   const {web3State, chainId} = useWeb3();
   const provider = useNetworkProvider(EthereumNetwork.matic, GET_LEAGUES_CHAIN_ID(chainId) );
+
+  const { room } = useParams<{room: string}>();
+  const factoryAddress = useMemo(()=> {
+      return room ? room : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
+  },[ chainId, room])
+
+  const enterGameRoute = useCallback((address: string)=> {
+    if(room){
+      return `${COINSLEAGUE_ROUTE}/room/${room}/game/${address}` 
+    }else{
+      return `${COINSLEAGUE_ROUTE}/${address}` 
+    }
+  }, [factoryAddress, room])
+
+  const activeGamesRoute = useMemo(()=> {
+    if(room){
+      return `${COINSLEAGUE_ROUTE}/room/${room}/active-games` 
+    }else{
+      return `${COINSLEAGUE_ROUTE}/active-games` 
+    }
+  }, [factoryAddress, room])
+
+  const listGamesRoute = useMemo(()=> {
+    if(room){
+      return `${COINSLEAGUE_ROUTE}/room/${room}` 
+    }else{
+      return `${COINSLEAGUE_ROUTE}` 
+    }
+  }, [factoryAddress, room])
+
+
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {
-      if (web3State !== Web3State.Done || !chainId ||  (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic )) {
+      if (web3State !== Web3State.Done || !factoryAddress) {
         return;
       }
       try {
         const tx = await createGame(
-          COIN_LEAGUES_FACTORY_ADDRESS[chainId],
+          factoryAddress,
           params,
         );
         callbacks?.onSubmit(tx.hash);
@@ -47,12 +80,12 @@ export const useCoinLeaguesFactory = () => {
   );
 
   const gamesAddressQuery = useQuery(['GetGamesAddress', chainId], () => {
-    if ( !provider) {
+    if ( !provider || !factoryAddress) {
       return;
     }
     
     return getGamesAddressFromFactory(
-      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      factoryAddress,
       13,
       provider
     );
@@ -74,12 +107,12 @@ export const useCoinLeaguesFactory = () => {
   );
 
   const createdGamesAddressQuery = useQuery(['GetCreatedGamesAdddress', chainId], () => {
-    if ( !provider) {
+    if ( !provider || !factoryAddress) {
       return;
     }
     
     return getCreatedGamesAddressFromFactory(
-      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      factoryAddress,
       10,
       provider
     );
@@ -101,12 +134,12 @@ export const useCoinLeaguesFactory = () => {
   );
 
   const startedGamesAddressQuery = useQuery(['GetStartedGamesAdddress', chainId], () => {
-    if ( !provider) {
+    if ( !provider || !factoryAddress) {
       return;
     }
     
     return getStartedGamesAddressFromFactory(
-      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      factoryAddress,
       11,
       provider
     );
@@ -128,12 +161,12 @@ export const useCoinLeaguesFactory = () => {
   );
 
   const endedGamesAddressQuery = useQuery(['GetEndedGamesAdddress', chainId], () => {
-    if ( !provider) {
+    if ( !provider || !factoryAddress) {
       return;
     }
     
     return getEndedGamesAddressFromFactory(
-      COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)],
+      factoryAddress,
       7,
       provider
     );
@@ -181,6 +214,9 @@ export const useCoinLeaguesFactory = () => {
     totalEndedGames: endedGamesAddressQuery?.data && endedGamesAddressQuery?.data[1],
     endedGamesQuery,
     endedGamesAddressQuery, 
-    refetchEnded: endedGamesAddressQuery.refetch
+    refetchEnded: endedGamesAddressQuery.refetch,
+    enterGameRoute,
+    activeGamesRoute,
+    listGamesRoute
   };
 };
