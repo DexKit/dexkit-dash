@@ -9,6 +9,10 @@ export const myAppsConfigs = [
         path: '/my-apps/manage',
         component: React.lazy(() => import('./pages/manage')),
       },
+      {
+        path: '/my-apps/aggregator',
+        component: React.lazy(() => import('./pages/aggregator')),
+      },
     ],
   },
   ...wizardConfigs,

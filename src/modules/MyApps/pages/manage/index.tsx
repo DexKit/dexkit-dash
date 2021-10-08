@@ -151,10 +151,12 @@ const MyApps: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
-          {!!loading ? (
-            <NotFoundAppCard />
+          {loading ? (
+            <LoadingInfo />
+          ) : error ? (
+            <ErrorView message={error.message} />
           ) : (
-            error && <ErrorView message={error.message} />
+            <NotFoundAppCard />
           )}
         </Grid>
       </GridContainer>

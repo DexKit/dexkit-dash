@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {Link} from 'react-router-dom';
+
 import {GridContainer} from '@crema';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -106,7 +108,9 @@ const WizardCard: React.FC<Props> = (props) => {
 
             <Grid item xs={5} style={{textAlign: 'right'}}>
               <Button size='small' className={classes.kitBtn}>
-                {props.aggregatorKit || 500} KIT +
+                <Link to='/my-apps/aggregator'>
+                  {props.aggregatorKit || 500} KIT +
+                </Link>
               </Button>
             </Grid>
           </Grid>
