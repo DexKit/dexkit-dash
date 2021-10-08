@@ -8,13 +8,12 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 // import {useStyles} from './index.style';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {useContractWrapper} from 'hooks/useContractWrapper';
-import {useDispatch} from 'react-redux';
-import {Notification} from 'types/models/Notification';
-import {onAddNotification} from 'redux/actions';
-import {truncateAddress} from 'utils';
-import {NotificationType} from 'services/notification';
-import { BigNumber } from '@0x/utils';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import {useNotifications} from 'hooks/useNotifications';
+import {BigNumber} from '@0x/utils';
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import { tokenAmountInUnits } from 'utils';
 
 // get tokens ta sendo chamado 3x
 
@@ -40,8 +39,6 @@ const ConvertStep: React.FC<Props> = (props) => {
     amountFrom,
     account,
     chainId,
-    networkName,
-    balances,
     selectedGasPrice,
     onNext,
     onLoading,
@@ -49,25 +46,11 @@ const ConvertStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-  // amountFrom is already set to BigNumber
-  // const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
-  const dispatch = useDispatch();
-
+  const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();
 
   const isConverted = () => {
-    // let mainBalance;
-    // let wrapperBalance;
-
-    // if (networkName == EthereumNetwork.ethereum) {
-    //   mainBalance = balances.find(e => e.currency?.symbol == 'ETH');
-    //   wrapperBalance = balances.find(e => e.currency?.symbol == 'WETH');
-    // } else if (networkName == EthereumNetwork.bsc) {
-    //   mainBalance = balances.find(e => e.currency?.symbol == 'BNB');
-    //   wrapperBalance = balances.find(e => e.currency?.symbol == 'WBNB');
-    // }
-
     return false;
   };
 
@@ -114,7 +97,31 @@ const ConvertStep: React.FC<Props> = (props) => {
             // gasPrice: gasInfo.gasPriceInWei,
             gasPrice: new BigNumber(selectedGasPrice),
           })
-          .then((e) => (txHash = e))
+          .then((e) => {
+            txHash = e;
+            const amountFromUnit = tokenAmountInUnits(amountFrom);
+            const amountToUnit = tokenAmountInUnits(amountFrom);
+
+            if (txHash) {
+              createNotification({
+                title: `Convert ${GET_CHAIN_NATIVE_COIN(
+                  chainId,
+                )} to W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `Converted  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(
+                  chainId,
+                )} to ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                timestamp: Date.now(),
+                url: getTransactionScannerUrl(chainId, txHash),
+                urlCaption: 'View transaction',
+                type: NotificationType.TRANSACTION,
+                metadata: {
+                  chainId: chainId,
+                  transactionHash: txHash,
+                  status: 'pending',
+                } as TxNotificationMetadata,
+              });
+            }
+          })
           .catch((e) => {
             throw new Error(e.message);
           });
@@ -126,7 +133,30 @@ const ConvertStep: React.FC<Props> = (props) => {
             // gasPrice: gasInfo.gasPriceInWei,
             gasPrice: new BigNumber(selectedGasPrice),
           })
-          .then((e) => (txHash = e))
+          .then((e) => {
+            txHash = e;
+            const amountFromUnit = tokenAmountInUnits(amountFrom);
+            const amountToUnit = tokenAmountInUnits(amountFrom);
+            if (txHash) {
+              createNotification({
+                title: `Convert W${GET_CHAIN_NATIVE_COIN(
+                  chainId,
+                )} to ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `Converted ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(
+                  chainId,
+                )} to ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                timestamp: Date.now(),
+                url: getTransactionScannerUrl(chainId, txHash),
+                urlCaption: 'View transaction',
+                type: NotificationType.TRANSACTION,
+                metadata: {
+                  chainId: chainId,
+                  transactionHash: txHash,
+                  status: 'pending',
+                } as TxNotificationMetadata,
+              });
+            }
+          })
           .catch((e) => {
             throw new Error(e.message);
           });
@@ -136,15 +166,6 @@ const ConvertStep: React.FC<Props> = (props) => {
         web3Wrapper
           .awaitTransactionSuccessAsync(txHash)
           .then(() => {
-            const notification: Notification = {
-              title: 'Convert',
-              body: truncateAddress(txHash),
-            };
-
-            dispatch(
-              onAddNotification([notification], NotificationType.SUCCESS),
-            );
-
             onNext(true);
           })
           .catch((e) => {
@@ -158,7 +179,10 @@ const ConvertStep: React.FC<Props> = (props) => {
     }
   };
 
-  const to = tokenFrom.symbol === GET_CHAIN_NATIVE_COIN(chainId) ? `W${GET_CHAIN_NATIVE_COIN(chainId)}` : GET_CHAIN_NATIVE_COIN(chainId);
+  const to =
+    tokenFrom.symbol === GET_CHAIN_NATIVE_COIN(chainId)
+      ? `W${GET_CHAIN_NATIVE_COIN(chainId)}`
+      : GET_CHAIN_NATIVE_COIN(chainId);
 
   return (
     <>

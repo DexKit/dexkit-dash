@@ -45,7 +45,7 @@ const TransactionTable: React.FC<Props> = ({
         {data && data.length === 0 ? (
           <Empty
             image={<OrdersEmptyImage />}
-            title={'Ops, no trades'}
+            title={'Oops, no trades'}
             message={'Start trading to have history'}
           />
         ) : (

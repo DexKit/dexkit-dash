@@ -1,18 +1,20 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
-import {Notification} from 'types/models/Notification';
-import {onAddNotification} from 'redux/actions';
-import {NotificationType} from 'services/notification';
-
-import {Alert} from '@material-ui/lab';
-
-// import {useStyles} from './index.style';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { SwapQuoteResponse } from 'types/zerox';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {useNotifications} from 'hooks/useNotifications';
+import { Token } from 'types/app';
+import { tokenAmountInUnits } from 'utils';
+import { BigNumber } from '@0x/utils';
 
 interface Props {
   account: string;
-  quote: any;
+  quote: SwapQuoteResponse;
+  tokenFrom: Token;
+  tokenTo: Token;
   selectedGasPrice: string;
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
@@ -27,24 +29,25 @@ const MarketStep: React.FC<Props> = (props) => {
     onNext,
     onLoading,
     onRequestConfirmed,
+    tokenFrom,
+    tokenTo
   } = props;
-  const {getWeb3} = useWeb3();
 
-  const dispatch = useDispatch();
+  const {getWeb3, chainId} = useWeb3();
 
-  // const classes = useStyles();
+  const {createNotification} = useNotifications()
 
   const handleAction = () => {
     onLoading(true);
     onRequestConfirmed(true);
 
-    if (account == null) {
+    if (!account) {
       throw new Error('Account address cannot be null or empty');
     }
 
     const web3 = getWeb3();
 
-    if (web3 == null) {
+    if (!web3 || !chainId) {
       throw new Error('Provider cannot be null');
     }
 
@@ -57,12 +60,22 @@ const MarketStep: React.FC<Props> = (props) => {
         value: quote.value,
       })
       .then((e) => {
-        const notification: Notification = {
-          title: 'Market Order',
-          body: 'Successfully created',
-        };
-        dispatch(onAddNotification([notification], NotificationType.SUCCESS));
+        const tokenFromQuantity = tokenAmountInUnits(new BigNumber(quote.sellAmount), tokenFrom.decimals);
+        const tokenToQuantity = tokenAmountInUnits(new BigNumber(quote.buyAmount), tokenTo.decimals);
 
+        createNotification({
+          title: `Market Order`,
+          body: `Swap ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, e.transactionHash),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: e.transactionHash,
+            status: 'done',
+          } as TxNotificationMetadata,
+        });
         onNext(true);
       })
       .catch((e) => {

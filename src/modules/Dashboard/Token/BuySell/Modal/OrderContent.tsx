@@ -52,6 +52,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
+import { SwapQuoteResponse } from 'types/zerox';
 
 interface Props {
   isMarket: boolean;
@@ -133,7 +134,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const classes = useStyles();
   const networkName = useNetwork();
   const {data} = useNativeCoinPriceUSD(networkName);
-  const [quote, setQuote] = useState<any>();
+  const [quote, setQuote] = useState<SwapQuoteResponse>();
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
   const [fee, setFee] = useState(0);
@@ -353,10 +354,10 @@ const OrderContent: React.FC<Props> = (props) => {
 
   if (isPriceInverted) {
     displayPrice = parseFloat(
-      (validPrice === 0 ? 0 : 1 / validPrice).toString(),
+      (validPrice === 0 ? 0 : 1 / Number(validPrice)).toString(),
     ).toFixed(6);
     displayGuaranteedPrice = parseFloat(
-      (validGuarenteedPrice === 0 ? 0 : 1 / validGuarenteedPrice).toString(),
+      (validGuarenteedPrice === 0 ? 0 : 1 / Number(validGuarenteedPrice)).toString(),
     ).toFixed(6);
     firstSymbol = tokenFrom.symbol;
     secondSymbol = tokenTo.symbol;
@@ -824,10 +825,12 @@ const OrderContent: React.FC<Props> = (props) => {
                 />
               )}
 
-              {currentStep === Steps.MARKET && (
+              {(currentStep === Steps.MARKET && quote) && (
                 <MarketStep
                   account={account}
                   quote={quote}
+                  tokenFrom={tokenFrom}
+                  tokenTo={tokenTo}
                   selectedGasPrice={selectedGasPrice}
                   onNext={onNext}
                   onLoading={onLoading}
