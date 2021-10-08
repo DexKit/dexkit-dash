@@ -1,10 +1,12 @@
 import React from 'react';
 
+import {GridContainer} from '@crema';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import {Avatar, Button, makeStyles} from '@material-ui/core';
-import {GridContainer} from '@crema';
+import {makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,9 +21,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#343A49',
   },
   kitBtn: {
+    fontSize: '1rem',
+    margin: 0,
     borderRadius: 8,
     borderWidth: 'thin',
     border: '1px solid rgba(255,255,255,.2)',
+    backgroundColor: '#3C4255',
   },
   buttonsCard: {
     margin: theme.spacing(2),

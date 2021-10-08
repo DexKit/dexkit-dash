@@ -5,22 +5,57 @@ import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {Link, BrowserRouter as Router} from 'react-router-dom';
 
-import {Grid, Box, Breadcrumbs, Typography} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import {makeStyles} from '@material-ui/core';
 import GridContainer from '@crema/core/GridContainer';
 import InfoView from '@crema/core/InfoView';
 import Alert from '@material-ui/lab/Alert';
-import {useBalance} from 'hooks/balance/useBalance';
-import ErrorView from 'modules/Common/ErrorView';
-import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
+import ErrorView from 'modules/Common/ErrorView';
+import {useBalance} from 'hooks/balance/useBalance';
+import RewardCard from '../../components/RewardCard';
 import WizardCard from '../../components/WizardCard';
 import BalanceCard from '../../components/BalanceCard';
+import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
+import NotFoundAppCard from 'modules/MyApps/components/NotFoundAppCard';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
 type Props = {rewards?: any[]};
 
+const useStyles = makeStyles((theme) => ({
+  scrollOverflow: {
+    borderRadius: 8,
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'row',
+    overflowX: 'scroll',
+    flexWrap: 'nowrap',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
+  overflowItem: {
+    borderRadius: '50%',
+    marginRight: theme.spacing(4),
+    marginLeft: theme.spacing(1),
+    '&:last-child': {
+      marginRight: 0,
+    },
+  },
+}));
+
+const rewardsMock = [
+  {title: 'Aggregator'},
+  {title: 'Marketplace'},
+  {title: 'Exchange'},
+];
+
 const MyApps: React.FC<Props> = (props) => {
+  const classes = useStyles();
   const {loading, error, data: balances} = useBalance();
   // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
 
@@ -75,7 +110,6 @@ const MyApps: React.FC<Props> = (props) => {
         )}
       </Box>
 
-      {/* SUBTITULO */}
       <GridContainer spacing={6}>
         <Grid item md={6} xs={12}>
           <BalanceCard />
@@ -84,30 +118,41 @@ const MyApps: React.FC<Props> = (props) => {
           <WizardCard />
         </Grid>
       </GridContainer>
-      {/* FIM SUBTITULO */}
 
-      {/* REWARDS */}
-      <GridContainer style={{marginTop: 10}}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography>Current Collected Total rewards</Typography>
+      <GridContainer style={{marginTop: 10}} spacing={4}>
+        <Grid item xs={12}>
+          <Typography variant='h6' style={{fontWeight: 600}}>
+            Current Collected Total rewards
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Box className={classes.scrollOverflow}>
+                {(props.rewards || rewardsMock).map((reward, i) => (
+                  <Box className={classes.overflowItem} key={i}>
+                    <RewardCard {...reward} styles={{width: 300}} />
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
           </Grid>
         </Grid>
-
-        <Grid container spacing={4}>
-          {props.rewards?.map((reward, i) => (
-            <Grid item xs={3} key={i}>
-              {reward}
-            </Grid>
-          ))}
-        </Grid>
       </GridContainer>
-      {/* FIM REWARDS */}
 
-      <GridContainer spacing={2} style={{marginTop: 10}}>
+      <GridContainer
+        spacing={6}
+        justifyContent='center'
+        style={{marginTop: 10}}>
+        <Grid item xs={12}>
+          <Typography variant='h6' style={{fontWeight: 600}}>
+            My Apps
+          </Typography>
+        </Grid>
         <Grid item xs={12} md={6}>
-          {loading ? (
-            <LoadingInfo />
+          {!!loading ? (
+            <NotFoundAppCard />
           ) : (
             error && <ErrorView message={error.message} />
           )}

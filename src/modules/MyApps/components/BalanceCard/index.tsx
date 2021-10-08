@@ -44,7 +44,7 @@ const BalanceCard: React.FC<Props> = (props) => {
         <Grid item xs={9}>
           <Grid container spacing={1}>
             <Grid item xs={12} className={classes.usdValue}>
-              <Typography variant='h5'>
+              <Typography variant='h4'>
                 {usdFormatter.format(props.value || 2300)}
               </Typography>
             </Grid>
