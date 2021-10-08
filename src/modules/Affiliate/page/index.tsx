@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -10,15 +10,15 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import FormControl from '@material-ui/core/FormControl';
-
+import Link from '@material-ui/core/Link';
 import {makeStyles} from '@material-ui/core/styles';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
 import {useIntl} from 'react-intl';
-import {Link, BrowserRouter as Router} from 'react-router-dom';
-
+import {BrowserRouter as Router} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
 import {useWeb3} from '../../../hooks/useWeb3';
 import {useDefaultAccount} from '../../../hooks/useDefaultAccount';
@@ -87,7 +87,19 @@ const AffiliatePage: React.FC = () => {
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
     </React.Fragment>
   );
-  const selectedChain = chain === 'ETH' ? '' : 'bsc/';
+  const selectedChain = useMemo(() => {
+    if (chain === 'ETH') {
+      return '';
+    }
+    if (chain === 'BSC') {
+      return 'bsc/';
+    }
+
+    if (chain === 'MATIC') {
+      return 'matic/';
+    }
+    return '';
+  }, [chain]);
 
   const affiliateLink = `https://swap.dexkit.com/#/${selectedChain}swap?account=${account}`;
 
@@ -96,24 +108,20 @@ const AffiliatePage: React.FC = () => {
   return (
     <Container maxWidth='xl' className={classes.container}>
       <GridContainer spacing={2}>
-        <Grid container>
-          <Router>
-            <Breadcrumbs
-              style={{color: '#fff', fontSize: '0.8rem'}}
-              separator={<NavigateNextIcon fontSize='small' />}>
-              <Link to='/wallet' style={{textDecoration: 'none'}}>
-                <Typography variant='subtitle2'>Dashboard</Typography>
-              </Link>
-              <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-                {messages['affiliate.page.title']}
+        <Grid item xs={12}>
+          <Breadcrumbs>
+            <Link to='/wallet' component={RouterLink}>
+              <Typography variant='body2' color='textSecondary'>
+                Dashboard
               </Typography>
-            </Breadcrumbs>
-          </Router>
+            </Link>
+            <Typography variant='body2' style={{color: '#2e3243'}}>
+              {messages['affiliate.page.title']}
+            </Typography>
+          </Breadcrumbs>
         </Grid>
-        <Grid container xs={12} sm={10} alignContent='center'>
-          <Typography
-            variant='h5'
-            style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
+        <Grid item xs={12} sm={10} alignContent='center'>
+          <Typography variant='h5' style={{margin: 5, marginBottom: 20}}>
             {messages['affiliate.page.title']}
           </Typography>
         </Grid>
@@ -140,10 +148,6 @@ const AffiliatePage: React.FC = () => {
             </Grid>
           </GridContainer>
         </Grid>
-        <Grid item md={1} xs={2}>
-          <FilterList />
-          <FilterMenu />
-        </Grid>
       </GridContainer>
 
       <GridContainer spacing={4} className={classes.affiliateCard}>
@@ -158,7 +162,7 @@ const AffiliatePage: React.FC = () => {
                 referrals.
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <LinearProgressWithLabel to={200} from={kitValue} />
             </Grid>
           </GridContainer>
@@ -186,6 +190,7 @@ const AffiliatePage: React.FC = () => {
                   renderValue={(value) => <> {value}</>}>
                   <MenuItem value='BSC'>BSC</MenuItem>
                   <MenuItem value='ETH'>ETH</MenuItem>
+                  <MenuItem value='MATIC'>MATIC</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

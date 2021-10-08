@@ -10,8 +10,6 @@ const LinearProgressWithLabel: React.FC<Props> = (props) => {
 
   return (
     <GridContainer
-      md={6}
-      xs={12}
       spacing={2}
       style={{
         padding: 5,

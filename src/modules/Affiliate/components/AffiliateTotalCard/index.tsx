@@ -8,7 +8,7 @@ import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 
 import {makeStyles} from '@material-ui/core/styles';
 import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
-import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet.svg';
+import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,8 +47,8 @@ function AffiliateTotalCard(props: Props): JSX.Element {
             {usdFormatter.format(props.total)}
           </Typography>
         </Grid>
-        <Grid item xs={2} style={{color: '#fff'}}>
-          <WalletIcon height={35} width={35} />
+        <Grid item xs={2} >
+          <WalletIcon height={35} width={35}  />
         </Grid>
       </Grid>
     </Container>
