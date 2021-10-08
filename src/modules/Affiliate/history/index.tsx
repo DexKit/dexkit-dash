@@ -4,7 +4,6 @@ import TransactionTable from './TransactionTable';
 import {Box, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
 interface Props {
@@ -35,14 +34,12 @@ const AffiliateHistory: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
 
   return (
-    // <AppCard height={1} title={messages['app.tradeHistory']}>
-    <Paper className={classes.paper}>
+    <>
       <Toolbar className={classes.toolbar}>
         <Box
           display={'flex'}
           justifyContent={'flex-start'}
           alignItems={'center'}>
-          <SwapHorizontalCircleIcon color={'primary'} />
           <Typography variant='h5' display={'block'} align={'center'}>
             {messages['app.tradeHistory']}
           </Typography>
@@ -53,7 +50,7 @@ const AffiliateHistory: React.FC<Props> = (props: Props) => {
         </Box>
       </Toolbar>
       <TransactionTable {...props} />
-    </Paper>
+      </>
     // </AppCard>
   );
 };

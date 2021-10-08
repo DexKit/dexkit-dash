@@ -11,9 +11,9 @@ const FilterList = () => {
         filters.map((f, i) => {
           switch (f.type) {
             case 'datetime':
-              return <DateAndTimePickerFilterField {...f} />;
+              return <DateAndTimePickerFilterField key={i} {...f} />;
             case 'amountusd':
-              return <AmountUsdField {...f} />;
+              return <AmountUsdField key={i} {...f} />;
             default:
               return null;
           }
