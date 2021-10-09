@@ -26,21 +26,17 @@ import {
   TextField,
 } from '@material-ui/core';
 
-import {
-  FlashOutlinedIcon,
-  NFTEmptyStateImage,
-  ShieldOutlinedIcon,
-} from 'shared/components/Icons';
+import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {ProfilePointsCard} from '../components/ProfilePointsCard';
-import {useKittygotchiMint, useProfilePoints} from '../hooks';
-
-import GavelIcon from '@material-ui/icons/Gavel';
-import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
+import {RewardDialog} from '../components/dialogs/RewardDialog';
+import {useToggler} from 'hooks/useToggler';
+import {useKittygotchiList} from '../hooks/index';
+import {KittygotchiCard} from '../components/KittygotchiCard';
+import {Kittygotchi} from 'types/kittygotchi';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -65,18 +61,31 @@ export const ProfileIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const rewardToggler = useToggler(false);
+
+  const kittygotchiList = useKittygotchiList();
+
   const history = useHistory();
 
-  const profilePoints = useProfilePoints();
+  const handleKittygotchiClick = useCallback(
+    (kittygotchi: Kittygotchi) => {
+      history.push(`/kittygotchi/${kittygotchi.id}/`);
+    },
+    [history],
+  );
 
-  const kittygotchiMint = useKittygotchiMint();
-
-  const handleMint = useCallback(() => {
-    kittygotchiMint.mint();
+  useEffect(() => {
+    kittygotchiList.get();
   }, []);
 
   return (
     <>
+      <RewardDialog
+        dialogProps={{
+          open: rewardToggler.show,
+          onClose: rewardToggler.toggle,
+        }}
+      />
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
@@ -98,37 +107,33 @@ export const ProfileIndex = () => {
                     <ArrowBackIcon />
                   </IconButton>
                 </Box>
-                <Typography variant='h5'>Profile</Typography>
+                <Typography variant='h5'>My Kitties</Typography>
               </Box>
             </Grid>
           </Grid>
         </Box>
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Typography variant='body1'>My Kittygotchi</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <ProfileKittygotchiCard
-                  onMint={handleMint}
-                  loading={kittygotchiMint.loading}
+          <Grid item xs={3}>
+            <Paper>
+              <Box p={4}>
+                <TextField
+                  fullWidth
+                  variant='outlined'
+                  placeholder='Search...'
                 />
-              </Grid>
-            </Grid>
+              </Box>
+            </Paper>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={9}>
             <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Typography variant='body1'>Reward Points</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <ProfilePointsCard
-                  loading={profilePoints.loading}
-                  amount={profilePoints.amount}
-                  maxAmount={profilePoints.maxAmount}
-                />
-              </Grid>
+              {kittygotchiList.data?.map((kittygotchi, index) => (
+                <Grid item xs={4} key={index}>
+                  <KittygotchiCard
+                    onClick={handleKittygotchiClick}
+                    kittygotchi={kittygotchi}
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Grid>
         </Grid>
