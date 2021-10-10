@@ -257,7 +257,7 @@ function PlayersTable(props: Props): JSX.Element {
                         &nbsp; {truncHash(row.hash)}
                       </Typography>
 
-                      {finished && playerRowData.length === 2 && i === 0 && (
+                      {finished && (playerRowData.length === 2 || playerRowData.length === 3) && i === 0 && (
                         <Box ml={2}>
                           {' '}
                           <Chip
@@ -269,7 +269,7 @@ function PlayersTable(props: Props): JSX.Element {
                         </Box>
                       )}
 
-                      {finished && playerRowData.length > 2 && i === 0 && (
+                      {finished && playerRowData.length > 3 && i === 0 && (
                         <Box ml={2}>
                           {' '}
                           <Chip
@@ -281,7 +281,7 @@ function PlayersTable(props: Props): JSX.Element {
                         </Box>
                       )}
 
-                      {finished && playerRowData.length > 2 && i === 1 && (
+                      {finished && playerRowData.length > 3 && i === 1 && (
                         <Box ml={2}>
                           {' '}
                           <Chip
@@ -293,7 +293,7 @@ function PlayersTable(props: Props): JSX.Element {
                         </Box>
                       )}
 
-                      {finished && playerRowData.length > 2 && i === 2 && (
+                      {finished && playerRowData.length > 3 && i === 2 && (
                         <Box ml={2}>
                           {' '}
                           <Chip
