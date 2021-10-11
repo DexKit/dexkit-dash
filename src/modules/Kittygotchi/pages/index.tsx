@@ -34,9 +34,10 @@ import {Link as RouterLink, useHistory} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
-import {useKittygotchiList} from '../hooks/index';
+import {useKittygotchiList, useKittygotchiMint} from '../hooks/index';
 import {KittygotchiCard} from '../components/KittygotchiCard';
 import {Kittygotchi} from 'types/kittygotchi';
+import { ButtonState, SubmitState } from '../components/ButtonState';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -60,10 +61,40 @@ const useStyles = makeStyles((theme) => ({
 export const ProfileIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
-
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
+  // Pass here array of id's from Local Storage
+  // useKittygotchiList(ids);
+  const kittygotchiList = useKittygotchiList(["0"]);
+  const {onMintCallback} = useKittygotchiMint();
+  const [tx, setTx] = useState<string>();
 
-  const kittygotchiList = useKittygotchiList();
+  const onMintGotchi = useCallback(
+    (_ev: any) => {  
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          // Save here the current id minted
+          setSubmitState(SubmitState.Confirmed);
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+        onMintCallback({
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+    },
+    [onMintCallback],
+  );
 
   const history = useHistory();
 
@@ -73,10 +104,6 @@ export const ProfileIndex = () => {
     },
     [history],
   );
-
-  useEffect(() => {
-    kittygotchiList.get();
-  }, []);
 
   return (
     <>
@@ -135,6 +162,21 @@ export const ProfileIndex = () => {
                 </Grid>
               ))}
             </Grid>
+            <Grid item xs={12} md={12}>
+                  <Button
+                    onClick={onMintGotchi}
+                    fullWidth
+                    variant={'contained'}
+                    color={
+                      submitState === SubmitState.Error ? 'default' : 'primary'
+                    }>
+                    <ButtonState
+                      state={submitState}
+                      defaultMsg={'Create Gotchi'}
+                      confirmedMsg={'Gotchi created'}
+                    />
+                  </Button>
+                </Grid>
           </Grid>
         </Grid>
       </Box>
