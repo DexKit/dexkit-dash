@@ -7,7 +7,7 @@ import { getMulticallFromProvider} from '../../../services/multicall';
 import {getEthers, getProvider} from '../../../services/web3modal';
 import { ChainId } from 'types/blockchain';
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
-//0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
+// 0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
   [ChainId.Matic]: '0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a',

@@ -26,8 +26,9 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link as RouterLink, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useToggler} from 'hooks/useToggler';
-import {useKittygotchi} from '../hooks';
+import {useKittygotchi, useKittygotchiUpdate} from '../hooks';
 import {ColorCircle} from '../components/ColorCircle';
+import { ButtonState, SubmitState } from '../components/ButtonState';
 
 const COLORS: string[] = [];
 
@@ -44,16 +45,38 @@ export const KittyEdit = () => {
   const theme = useTheme();
 
   const params = useParams<Params>();
-
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
 
-  const kittygotchi = useKittygotchi();
+  const kittygotchi = useKittygotchi(params.id);
+  const {onUpdateKittyCallback} = useKittygotchiUpdate();
 
-  useEffect(() => {
-    if (params.id) {
-      kittygotchi.get(params.id);
-    }
-  }, [params.id]);
+  const onUpdateGotchi = useCallback(
+    (_ev: any) => {  
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          // Save here the current id minted
+          setSubmitState(SubmitState.Confirmed);
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+        onUpdateKittyCallback({} as any,{
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+    },
+    [onUpdateKittyCallback],
+  );
+
 
   return (
     <>
@@ -124,6 +147,7 @@ export const KittyEdit = () => {
             <Button
               fullWidth
               startIcon={<DoneIcon />}
+              onClick={onUpdateGotchi}
               variant='contained'
               color='primary'>
               Save

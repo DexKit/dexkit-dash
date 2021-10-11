@@ -114,13 +114,7 @@ export const KittyDetail = () => {
 
   const rewardToggler = useToggler(false);
 
-  const kittygotchi = useKittygotchi();
-
-  useEffect(() => {
-    if (params.id) {
-      kittygotchi.get(params.id);
-    }
-  }, [params.id]);
+  const kittygotchi = useKittygotchi(params.id);
 
   const isMobile = useMobile();
 
@@ -166,7 +160,7 @@ export const KittyDetail = () => {
                   </IconButton>
                 </Box>
                 <Typography variant='h5'>
-                  {kittygotchi.loading ? (
+                  {kittygotchi.isLoading ? (
                     <Skeleton width={theme.spacing(24)} />
                   ) : (
                     <>Kittygotchi #{kittygotchi.data?.id}</>
