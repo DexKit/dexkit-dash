@@ -4,4 +4,5 @@ export interface Kittygotchi {
   defense: number;
   run: number;
   image?: string;
+  attributes: any;
 }
