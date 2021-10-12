@@ -6,16 +6,13 @@ import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
 
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {CremaTheme} from 'types/AppContextPropsType';
-import DoneIcon from '@material-ui/icons/Done';
 
 import {Grid, Tooltip, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
-import IconButton from '@material-ui/core/IconButton';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {
   addAccounts,
@@ -35,40 +32,26 @@ import {Alert} from '@material-ui/lab';
 
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
-import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circle.svg';
 import ContainedInput from 'shared/components/ContainedInput';
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  root: {
-    width: '100%',
-  },
-  inputAddress: {
-    display: 'flex',
-  },
-}));
-
 const Accounts = () => {
-  const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
-  const [editLabel, setEditLabel] = useState<number | undefined>();
-  const [label, setLabel] = useState<string>();
-  const [copyText, setCopyText] = useState('Copy to clipboard');
 
-  const [anchorEl, setAnchorEl] = useState<Element>();
-  const [addNew, setAddNew] = useState(false);
+  const [_anchorEl, setAnchorEl] = useState<Element>();
+  const [_addNew, setAddNew] = useState(false);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [_isEditing, setIsEditing] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
 
   const [selectActive, setSelectActive] = useState(false);
 
-  const [selectedNetwork, setSelectedNetwork] = useState(
+  const [selectedNetwork, _setSelectedNetwork] = useState(
     SupportedNetworkType.evm,
   );
 
@@ -82,14 +65,9 @@ const Accounts = () => {
     (state) => state.ui.wallet,
   );
 
-  const {web3State, onConnectWeb3, account} = useWeb3();
+  const {web3State, account} = useWeb3();
 
   const addressInputRef = useRef<HTMLInputElement>();
-
-  const handlePaste = async () => {
-    addressInputRef.current?.focus();
-    document.execCommand('paste');
-  };
 
   const onChangeAddress = (
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -159,19 +137,6 @@ const Accounts = () => {
     </Box>
   );
 
-  const notConnected = web3State !== Web3State.Done;
-
-  const handleTooltipOpen = () => {
-    setCopyText('Copied');
-    setTimeout(() => {
-      setCopyText('Copy to clipboard');
-    }, 1000);
-  };
-
-  const handleMenuClose = useCallback(() => {
-    setAnchorEl(undefined);
-  }, []);
-
   const handleOpenMenu = useCallback(
     (target: HTMLButtonElement, account: UIAccount) => {
       setSelectedAccount(account);
@@ -191,33 +156,6 @@ const Accounts = () => {
     },
     [dispatch, setDefaultAccount],
   );
-
-  const handleRemove = useCallback(() => {
-    if (selectedAccount) {
-      dispatch(
-        removeAccount({account: selectedAccount, type: selectedNetwork}),
-      );
-    }
-
-    setAnchorEl(undefined);
-    setSelectedAccount(null);
-  }, [dispatch, removeAccount, selectedAccount]);
-
-  const handleCopyAddress = useCallback(() => {
-    if (selectedAccount) {
-      handleTooltipOpen();
-      navigator.clipboard.writeText(selectedAccount.address);
-      document.execCommand('copy');
-      setShowSnackbar(true);
-    }
-
-    setAnchorEl(undefined);
-    setSelectedAccount(null);
-  }, [selectedAccount]);
-
-  const handleEditLabel = useCallback(() => {
-    setIsEditing(true);
-  }, []);
 
   const handleCloseSnackbar = useCallback(() => {
     setShowSnackbar(false);
@@ -254,10 +192,6 @@ const Accounts = () => {
     },
     [setAccountLabel],
   );
-
-  const handleAddNew = useCallback(() => {
-    setAddNew(true);
-  }, []);
 
   const handleToggleSelect = useCallback(() => {
     setSelectActive((active) => {

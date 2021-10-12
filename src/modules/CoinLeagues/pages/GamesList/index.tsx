@@ -41,6 +41,7 @@ import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
+import useDiscord from 'hooks/useDiscord';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -78,6 +79,8 @@ const GamesList = () => {
   const history = useHistory();
   const {chainId, account} = useWeb3();
   const defaultAccount = useDefaultAccount();
+  
+  useDiscord();
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
