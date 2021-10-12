@@ -83,7 +83,7 @@ export const useCoinLeagues = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address],
+    [web3State, address, getProvider(), chainId],
   );
 
   const onStartGameCallback = useCallback(

@@ -13,11 +13,10 @@ import {useCoinLeaguesFactory} from 'modules/CoinLeagues/hooks/useCoinLeaguesFac
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {HOME_ROUTE} from 'shared/constants/routes';
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {Empty} from 'shared/components/Empty';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
 import ContainedInput from 'shared/components/ContainedInput';
@@ -141,12 +140,14 @@ const GamesInProgress = () => {
     setSearch(e.target.value);
   }, []);
 
-  const handleBack = useCallback(
-    (ev: any) => {
-      history.push(listGamesRoute);
-    },
-    [listGamesRoute],
-  );
+  const handleBack = useCallback((ev: any) => {
+    /*if(history.length > 1){
+      history.goBack();
+     }else{
+       history.push(listGamesRoute)
+     }*/
+     history.push(listGamesRoute)
+  }, [listGamesRoute]);
   return (
     <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>

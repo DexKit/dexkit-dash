@@ -11,7 +11,7 @@ import {
   web3Transaction,
   setProvider,
 } from 'services/web3modal';
-import {useEffect, useCallback} from 'react';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, AppState} from 'redux/store';
 import {

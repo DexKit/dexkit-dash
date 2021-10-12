@@ -19,15 +19,13 @@ import {
   DEXKIT_MULTIPLIER_HOLDING,
   BITTOKEN_MULTIPLIER_HOLDING,
 } from '../constants';
-let coinsLeague: Contract;
+
 export const getCoinLeaguesContract = async (
   address: string,
   provider: any,
 ) => {
   const pr = new providers.Web3Provider(provider).getSigner();
-  coinsLeague = new ethers.Contract(address, coinLeaguesAbi, pr);
-
-  return coinsLeague;
+  return new ethers.Contract(address, coinLeaguesAbi, pr);
 };
 
 /**

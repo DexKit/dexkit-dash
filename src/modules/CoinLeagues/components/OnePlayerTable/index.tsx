@@ -36,6 +36,10 @@ import {GameType} from 'types/coinsleague';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
+
+import { useNotifications } from 'hooks/useNotifications';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -124,6 +128,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   const {chainId} = useWeb3();
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
+  const {createNotification} = useNotifications();
   const {
     onClaimCallback,
     refetch,
@@ -176,11 +181,27 @@ function OnePlayerTable(props: Props): JSX.Element {
 
   const onClaimGame = useCallback(
     (ev: any) => {
-      if (address && account) {
+      if (address && account && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           setSubmitState(SubmitState.Submitted);
+          createNotification({
+            title: 'Claim',
+            body: `Claimed for Game ${address}`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(
+              chainId,
+              tx,
+            ),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: tx,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
@@ -200,7 +221,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [address, account, refetch, onClaimCallback],
+    [address, account, refetch, onClaimCallback, chainId],
   );
   const onWithdrawGame = useCallback(
     (ev: any) => {

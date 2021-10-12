@@ -14,6 +14,7 @@ import {isMagicProvider} from 'services/magic';
 import EventEmitter from 'events';
 import {useWeb3} from './useWeb3';
 import {Web3State} from 'types/blockchain';
+import { providers } from 'ethers';
 
 export interface GlobalState {
   showTransactionModal: boolean;
@@ -24,6 +25,7 @@ export interface GlobalState {
   handleChangeWeb3State: (web3State: Web3State) => void;
   data?: any;
   getProvider(): any;
+  getEthersProvider(): any;
   getWeb3(): Web3 | null;
 }
 
@@ -78,6 +80,10 @@ export function useGlobalState(): GlobalState {
     return new Web3(providerRef.current);
   }, []);
 
+  const getEthersProvider = useCallback((): any => {
+    return new providers.Web3Provider(providerRef.current)
+  }, []);
+
   useEffect(() => {
     if (web3State === Web3State.Done) {
       if (isMagicProvider()) {
@@ -109,6 +115,7 @@ export function useGlobalState(): GlobalState {
     handleCloseTransactionModal,
     handleTransactionConfirm,
     handleTransactionCancel,
+    getEthersProvider,
     data,
     getWeb3,
   };
@@ -116,6 +123,7 @@ export function useGlobalState(): GlobalState {
 
 export const GlobalStateContext = React.createContext<GlobalState>({
   getProvider: () => {},
+  getEthersProvider: ()=> {},
   handleCloseTransactionModal: () => {},
   handleShowTransactionModal: () => {},
   showTransactionModal: false,

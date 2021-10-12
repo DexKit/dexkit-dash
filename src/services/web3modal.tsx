@@ -87,13 +87,13 @@ const setWeb3 = () => {
 
 let ethersjs: null | ethers.providers.Web3Provider;
 const getEthers = () => {
-  if (!provider) {
+  /*if (!provider) {
     return;
   }
   if (!ethersjs) {
-    ethersjs = new providers.Web3Provider(getProvider());
-  }
-  return ethersjs;
+    ethersjs = 
+  }*/
+  return new providers.Web3Provider(getProvider());
 };
 
 const setEthers = () => {

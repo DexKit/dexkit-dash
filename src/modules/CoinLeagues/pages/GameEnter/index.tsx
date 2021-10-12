@@ -48,6 +48,7 @@ import {EndGame} from 'modules/CoinLeagues/components/EndGame';
 import {StartGame} from 'modules/CoinLeagues/components/StartGame';
 import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
+import { useNotifications } from 'hooks/useNotifications';
 
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
@@ -61,6 +62,8 @@ import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
 import { useCoinLeaguesFactory } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -98,6 +101,7 @@ function GameEnter(props: Props) {
   } = props;
   const history = useHistory();
   const {account, chainId} = useWeb3();
+  const {createNotification} = useNotifications();
 
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
@@ -192,15 +196,38 @@ function GameEnter(props: Props) {
   );
 
   const handleBack = useCallback((ev: any) => {
-    history.push(listGamesRoute);
+    /*if(history.length > 1){
+      history.goBack();
+     }else{
+       history.push(listGamesRoute)
+     }*/
+     history.push(listGamesRoute)
   }, [listGamesRoute]);
 
   const onEnterGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play && captainCoin) {
+      if (game?.amount_to_play && captainCoin && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
+          createNotification({
+            title: 'Join Game',
+            body: `Joined Game ${game.address}`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(
+              chainId,
+              tx,
+            ),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: tx,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
+
+
           setSubmitState(SubmitState.Submitted);
         };
         const onConfirmTx = () => {
@@ -226,7 +253,7 @@ function GameEnter(props: Props) {
         );
       }
     },
-    [game, selectedCoins, captainCoin, refetch],
+    [game, selectedCoins, captainCoin, refetch, chainId],
   );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
