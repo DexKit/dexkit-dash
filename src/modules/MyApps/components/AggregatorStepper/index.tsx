@@ -1,18 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 
-import {GridContainer} from '@crema';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import StepLabel from '@material-ui/core/StepLabel';
+import Typography from '@material-ui/core/Typography';
 
-import {Grid, makeStyles} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 
 import GeralStep from './Geral';
 import ThemeStep from './Theme';
@@ -53,7 +53,7 @@ const AggregatorStepper: React.FC = () => {
       : setActiveStep((prev) => prev + 1);
 
   return (
-    <GridContainer spacing={2} className={classes.root}>
+    <Grid container spacing={2} className={classes.root}>
       <Grid item xs={12}>
         <Card component={Paper} style={{backgroundColor: '#252836'}}>
           <Stepper activeStep={activeStep} style={{height: '100%'}}>
@@ -65,9 +65,9 @@ const AggregatorStepper: React.FC = () => {
               );
             })}
           </Stepper>
-          <GridContainer spacing={2}>
+          <Grid container spacing={2}>
             {steps[activeStep].component}
-          </GridContainer>
+          </Grid>
           <Divider style={{marginLeft: 5, marginRight: 5, color: '#3A3D4A'}} />
           <div className={classes.buttons}>
             {activeStep === steps.length ? (
@@ -84,7 +84,8 @@ const AggregatorStepper: React.FC = () => {
                 </Box>
               </>
             ) : (
-              <GridContainer
+              <Grid
+                container
                 spacing={6}
                 style={{marginTop: 10, marginBottom: 10}}>
                 <Grid item xs={6} />
@@ -114,12 +115,12 @@ const AggregatorStepper: React.FC = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-              </GridContainer>
+              </Grid>
             )}
           </div>
         </Card>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 };
 
