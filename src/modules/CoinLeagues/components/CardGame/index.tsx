@@ -14,6 +14,8 @@ import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
 import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import { strPad } from 'modules/CoinLeagues/utils/time';
+import { CardTimer } from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,24 +50,7 @@ interface Props {
   btnMessage?: string;
 }
 
-const strPad = (str: number): string => {
-  return (new Array(3).join('0') + str).slice(-2);
-};
 
-function CardTimer(props: {time: number}) {
-  const time = props.time;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor(time / 60) - hours * 3600;
-  const seconds = time - minutes * 60;
-
-  return (
-    <Grid item>
-      <Typography variant='subtitle2'>
-        in {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
-      </Typography>
-    </Grid>
-  );
-}
 
 function CardGame(props: Props): JSX.Element {
   const {game, onClick} = props;

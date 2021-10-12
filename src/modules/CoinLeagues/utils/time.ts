@@ -1,5 +1,14 @@
 
+export const strPad = (str: number): string => {
+    if(str > 100){
+        return (new Array(3).join('0') + str).slice(-3);
+    }
 
+
+    return (new Array(3).join('0') + str).slice(-2);
+  };
+
+  
 export const GET_LABEL_FROM_DURATION = (time: Number) => {
     switch (time) {
         case 60 * 5:

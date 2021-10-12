@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {useCountdown} from 'hooks/utils/useCountdown';
 import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import { strPad } from 'modules/CoinLeagues/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,15 +26,12 @@ interface Props {
   address: string;
 }
 
-const strPad = (str: number): string =>
-  (new Array(3).join('0') + str).slice(-2);
-
 function CardTimer(props: {time: number}) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
-  const minutes = Math.floor(time / 60) - hours * 3600;
-  const seconds = time - minutes * 60;
-
+  const minutes = Math.floor( (time  - (hours * 3600)) /60);
+  const seconds =  time - (hours * 3600) - (minutes * 60);
+  console.log(hours);
   return (
     <Grid item>
       <Typography variant='h6'>
@@ -42,6 +40,7 @@ function CardTimer(props: {time: number}) {
     </Grid>
   );
 }
+
 
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();

@@ -11,6 +11,8 @@ import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {GameType} from 'types/coinsleague';
 import {useInterval} from 'hooks/utils/useInterval';
+import { strPad } from 'modules/CoinLeagues/utils/time';
+import { CardTimer } from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -46,23 +48,6 @@ interface Props {
   onClick: any;
 }
 
-const strPad = (str: number): string =>
-  (new Array(3).join('0') + str).slice(-2);
-
-function CardTimer(props: {time: number}) {
-  const time = props.time;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor(time / 60) - hours * 3600;
-  const seconds = time - minutes * 60;
-
-  return (
-    <Grid item>
-      <Typography variant='h6'>
-        {strPad(hours)}:{strPad(minutes)}:{strPad(seconds)}
-      </Typography>
-    </Grid>
-  );
-}
 
 function SmallCardGame(props: Props): JSX.Element {
   const {
