@@ -9,15 +9,14 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {makeStyles} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputAdornment from '@material-ui/core/InputAdornment';
 
 import ResetIcon from '@material-ui/icons/RotateLeft';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 type FormProps = {
   defaultDarkMode: boolean;
@@ -27,6 +26,13 @@ type FormProps = {
 
 const useStyles = makeStyles((theme) => ({
   root: {margin: theme.spacing(5)},
+  inputColor: {
+    width: '15%',
+    height: theme.spacing(8),
+    padding: theme.spacing(2),
+    borderRadius: theme.spacing(2),
+    marginLeft: 'auto',
+  },
 }));
 
 const ThemeStep: React.FC = () => {
@@ -63,19 +69,19 @@ const ThemeStep: React.FC = () => {
                 Customize aggregator theme colors:
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item md={8} xs={6}>
               <FormGroup>
                 <FormControlLabel
                   name='defaultDarkMode'
                   value={formik.values.defaultDarkMode}
                   onChange={formik.handleChange}
-                  control={<Checkbox defaultChecked />}
+                  control={<Checkbox />}
                   label='Dark Mode as Default'
                 />
               </FormGroup>
             </Grid>
 
-            <Grid item xs={4} style={{textAlignLast: 'right'}}>
+            <Grid item md={4} xs={6} style={{textAlignLast: 'right'}}>
               <Button
                 startIcon={<ResetIcon />}
                 variant='contained'
@@ -89,44 +95,46 @@ const ThemeStep: React.FC = () => {
 
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            <Grid item xs={6}>
+            <Grid item md={6} xs={12}>
               <FormControl fullWidth>
-                <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Brand Color
-                </FormLabel>
                 <OutlinedInput
                   name='brandColor'
                   type='color'
-                  value={formik.values.brandColor}
-                  onChange={formik.handleChange}
+                  startAdornment={
+                    <FormLabel style={{color: '#fff'}}>Brand Color</FormLabel>
+                  }
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
-                        <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      <ArrowDownIcon />
                     </InputAdornment>
                   }
+                  style={{justifyContent: 'space-between'}}
+                  inputProps={{className: classes.inputColor}}
+                  value={formik.values.brandColor}
+                  onChange={formik.handleChange}
                 />
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item md={6} xs={12}>
               <FormControl fullWidth>
-                <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Brand Color Dark
-                </FormLabel>
                 <OutlinedInput
+                  style={{justifyContent: 'space-between'}}
                   name='brandColorDark'
                   type='color'
-                  value={formik.values.brandColorDark}
-                  onChange={formik.handleChange}
+                  startAdornment={
+                    <FormLabel style={{color: '#fff'}}>
+                      Brand Color Dark
+                    </FormLabel>
+                  }
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
-                        <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      <ArrowDownIcon />
                     </InputAdornment>
                   }
+                  inputProps={{className: classes.inputColor}}
+                  value={formik.values.brandColorDark}
+                  onChange={formik.handleChange}
                 />
               </FormControl>
             </Grid>

@@ -7,7 +7,7 @@ import Radio from '@material-ui/core/Radio';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -19,6 +19,8 @@ import {makeStyles} from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+
+import {HELP_TEXT} from '../../../Wizard/aggregator/helpText';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
 
 type FormProps = {
   name?: string;
-  logo?: any;
-  logoDark?: any;
+  logo?: string;
+  logoDark?: string;
   buyTokenPerc?: number;
   domain?: string;
   defaultToken?: 'matic' | 'bsc';
@@ -54,6 +56,9 @@ type FormProps = {
 
 const GeralStep: React.FC = () => {
   const classes = useStyles();
+
+  const getHelpText = (field: keyof typeof HELP_TEXT) =>
+    HELP_TEXT[field]?.at(0) || '';
 
   // TODO: Send info!
   const handleSubmit = (formData: FormProps) => {
@@ -79,7 +84,7 @@ const GeralStep: React.FC = () => {
   });
 
   return (
-    <Grid container spacing={4} className={classes.root}>
+    <Grid container spacing={5} className={classes.root}>
       <form
         onSubmit={formik.handleSubmit}
         autoComplete='off'
@@ -98,9 +103,9 @@ const GeralStep: React.FC = () => {
                   onChange={formik.handleChange}
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('name')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -113,15 +118,14 @@ const GeralStep: React.FC = () => {
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
-                  type='file'
                   name='logo'
                   value={formik.values.logo}
                   onChange={formik.handleChange}
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('logo')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -139,15 +143,14 @@ const GeralStep: React.FC = () => {
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
-                  type='file'
                   name='logoDark'
                   value={formik.values.logoDark}
                   onChange={formik.handleChange}
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('logo_dark')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -165,9 +168,9 @@ const GeralStep: React.FC = () => {
                   onChange={formik.handleChange}
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('buyTokenPercentage')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -176,7 +179,7 @@ const GeralStep: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{marginTop: 5}}>
           <FormControl fullWidth required size='small'>
             <FormLabel style={{marginBottom: 5, color: '#fff'}}>
               Domain
@@ -188,9 +191,9 @@ const GeralStep: React.FC = () => {
               onChange={formik.handleChange}
               endAdornment={
                 <InputAdornment position='end'>
-                  <IconButton edge='end' size='small'>
+                  <Tooltip title={getHelpText('domain')}>
                     <InfoIcon style={{color: '#646672'}} />
-                  </IconButton>
+                  </Tooltip>
                 </InputAdornment>
               }
             />
@@ -266,9 +269,9 @@ const GeralStep: React.FC = () => {
                   placeholder='Content'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('affiliateAddress')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -286,9 +289,9 @@ const GeralStep: React.FC = () => {
                   placeholder='Content'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('default_token_address')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -311,9 +314,9 @@ const GeralStep: React.FC = () => {
                   placeholder='Content'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip title={getHelpText('default_token_address_bsc')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -331,9 +334,10 @@ const GeralStep: React.FC = () => {
                   placeholder='Content'
                   endAdornment={
                     <InputAdornment position='end'>
-                      <IconButton edge='end' size='small'>
+                      <Tooltip
+                        title={getHelpText('default_token_address_matic')}>
                         <InfoIcon style={{color: '#646672'}} />
-                      </IconButton>
+                      </Tooltip>
                     </InputAdornment>
                   }
                 />
@@ -354,9 +358,9 @@ const GeralStep: React.FC = () => {
               placeholder='Content'
               endAdornment={
                 <InputAdornment position='end'>
-                  <IconButton edge='end' size='small'>
+                  <Tooltip title={getHelpText('default_slippage')}>
                     <InfoIcon style={{color: '#646672'}} />
-                  </IconButton>
+                  </Tooltip>
                 </InputAdornment>
               }
             />
