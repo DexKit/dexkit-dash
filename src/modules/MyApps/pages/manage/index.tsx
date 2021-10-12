@@ -1,19 +1,20 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react';
 
-import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
-import {Link, BrowserRouter as Router} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {Link as RouterLink} from 'react-router-dom';
 
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Typography from '@material-ui/core/Typography';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {makeStyles} from '@material-ui/core';
-import GridContainer from '@crema/core/GridContainer';
 import InfoView from '@crema/core/InfoView';
+
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 import Alert from '@material-ui/lab/Alert';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
+import {makeStyles} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import {useBalance} from 'hooks/balance/useBalance';
@@ -27,6 +28,11 @@ import NotFoundAppCard from 'modules/MyApps/components/NotFoundAppCard';
 type Props = {rewards?: any[]};
 
 const useStyles = makeStyles((theme) => ({
+  linkBtn: {
+    color: '#fff',
+    textDecoration: 'none',
+    textTransform: 'capitalize',
+  },
   scrollOverflow: {
     borderRadius: 8,
     display: 'flex',
@@ -71,30 +77,34 @@ const MyApps: React.FC<Props> = (props) => {
   // }, [balances, dispatch]);
 
   return (
-    <GridContainer spacing={2}>
-      <GridContainer spacing={2}>
+    <Grid container spacing={2}>
+      <Grid container spacing={2}>
         <Grid container>
-          <Router>
-            <Breadcrumbs
-              style={{color: '#fff', fontSize: '0.8rem'}}
-              separator={<NavigateNextIcon fontSize='small' />}>
-              <Link to='/wallet' style={{textDecoration: 'none'}}>
-                <Typography variant='subtitle2'>Dashboard</Typography>
-              </Link>
-              <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-                Manage Apps
-              </Typography>
-            </Breadcrumbs>
-          </Router>
+          <Breadcrumbs
+            style={{color: '#fff', fontSize: '0.8rem'}}
+            separator='/'>
+            <Link
+              underline='none'
+              component={RouterLink}
+              to='/wallet'
+              className={classes.linkBtn}>
+              <Typography variant='subtitle2'>Dashboard</Typography>
+            </Link>
+            <Typography variant='subtitle2' style={{color: '#2e3243'}}>
+              Manage Apps
+            </Typography>
+          </Breadcrumbs>
         </Grid>
-        <Grid container xs={12} sm={10} alignContent='center'>
-          <Typography
-            variant='h5'
-            style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
-            Manage Apps
-          </Typography>
+        <Grid container alignContent='center'>
+          <Grid item xs={12} sm={10}>
+            <Typography
+              variant='h5'
+              style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
+              Manage Apps
+            </Typography>
+          </Grid>
         </Grid>
-      </GridContainer>
+      </Grid>
 
       <Box pb={5}>
         <Alert severity='warning'>
@@ -110,16 +120,16 @@ const MyApps: React.FC<Props> = (props) => {
         )}
       </Box>
 
-      <GridContainer spacing={6}>
+      <Grid container spacing={6}>
         <Grid item md={6} xs={12}>
           <BalanceCard />
         </Grid>
         <Grid item md={6} xs={12}>
           <WizardCard />
         </Grid>
-      </GridContainer>
+      </Grid>
 
-      <GridContainer style={{marginTop: 10}} spacing={4}>
+      <Grid container style={{marginTop: 10}} spacing={4}>
         <Grid item xs={12}>
           <Typography variant='h6' style={{fontWeight: 600}}>
             Current Collected Total rewards
@@ -139,9 +149,10 @@ const MyApps: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
         </Grid>
-      </GridContainer>
+      </Grid>
 
-      <GridContainer
+      <Grid
+        container
         spacing={6}
         justifyContent='center'
         style={{marginTop: 10}}>
@@ -159,12 +170,12 @@ const MyApps: React.FC<Props> = (props) => {
             <NotFoundAppCard />
           )}
         </Grid>
-      </GridContainer>
+      </Grid>
 
-      <GridContainer>
+      <Grid container>
         <InfoView />
-      </GridContainer>
-    </GridContainer>
+      </Grid>
+    </Grid>
   );
 };
 

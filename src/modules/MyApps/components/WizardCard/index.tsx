@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Link} from 'react-router-dom';
 
-import {GridContainer} from '@crema';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -44,7 +43,7 @@ const WizardCard: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <GridContainer spacing={2} className={classes.root}>
+    <Grid container spacing={2} className={classes.root}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography>Wizard Launch</Typography>
@@ -107,16 +106,18 @@ const WizardCard: React.FC<Props> = (props) => {
             </Grid>
 
             <Grid item xs={5} style={{textAlign: 'right'}}>
-              <Button size='small' className={classes.kitBtn}>
-                <Link to='/my-apps/aggregator'>
-                  {props.aggregatorKit || 500} KIT +
-                </Link>
+              <Button
+                size='small'
+                className={classes.kitBtn}
+                component={Link}
+                to='/my-apps/aggregator'>
+                {props.aggregatorKit || 500} KIT +
               </Button>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 };
 

@@ -9,7 +9,6 @@ import {
   Grid,
   Button,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   Typography,

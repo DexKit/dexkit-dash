@@ -1,46 +1,68 @@
 import React from 'react';
 
-import {Link, BrowserRouter as Router} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
-import {GridContainer} from '@crema';
-import {Breadcrumbs, Grid, Typography} from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
+import {makeStyles} from '@material-ui/core';
+
 import AggregatorStepper from 'modules/MyApps/components/AggregatorStepper';
 
+const useStyles = makeStyles(() => ({
+  linkBtn: {
+    color: '#fff',
+    textDecoration: 'none',
+    textTransform: 'capitalize',
+  },
+}));
+
 const AggregatorPage: React.FC = () => {
+  const classes = useStyles();
+
   return (
-    <GridContainer spacing={2}>
-      <GridContainer spacing={2}>
+    <Grid container spacing={2}>
+      <Grid container spacing={2}>
         <Grid container>
-          <Router>
-            <Breadcrumbs
-              style={{color: '#fff', fontSize: '0.8rem'}}
-              separator={<NavigateNextIcon fontSize='small' />}>
-              <Link to='/wallet' style={{textDecoration: 'none'}}>
-                <Typography variant='subtitle2'>Dashboard</Typography>
-              </Link>
-              <Link to='/my-apps/manage' style={{textDecoration: 'none'}}>
-                <Typography variant='subtitle2'>Manage apps</Typography>
-              </Link>
-              <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-                Aggregator
-              </Typography>
-            </Breadcrumbs>
-          </Router>
+          <Breadcrumbs
+            style={{color: '#fff', fontSize: '0.8rem'}}
+            separator='/'>
+            <Link
+              underline='none'
+              component={RouterLink}
+              to='/wallet'
+              className={classes.linkBtn}>
+              <Typography variant='subtitle2'>Dashboard</Typography>
+            </Link>
+            <Link
+              underline='none'
+              component={RouterLink}
+              to='/my-apps/manage'
+              className={classes.linkBtn}>
+              <Typography variant='subtitle2'>Manage apps</Typography>
+            </Link>
+            <Typography variant='subtitle2' style={{color: '#2e3243'}}>
+              Aggregator
+            </Typography>
+          </Breadcrumbs>
         </Grid>
-        <Grid container xs={12} sm={10} alignContent='center'>
-          <Typography
-            variant='h5'
-            style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
-            Aggregator
-          </Typography>
+        <Grid container alignContent='center'>
+          <Grid item xs={12} sm={10}>
+            <Typography
+              variant='h5'
+              style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
+              Aggregator
+            </Typography>
+          </Grid>
         </Grid>
-      </GridContainer>
+      </Grid>
 
       <Grid container style={{marginTop: 15}}>
         <AggregatorStepper />
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 };
 
