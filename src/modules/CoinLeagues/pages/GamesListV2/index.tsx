@@ -9,25 +9,23 @@ import {
   Typography,
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactory, useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {
+  useCoinLeaguesFactory,
+  useCoinLeaguesFactoryRoutes,
+} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
-import CardGame from 'modules/CoinLeagues/components/CardGame';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
 import {makeStyles} from '@material-ui/core/styles';
 
-
 import {Empty} from 'shared/components/Empty';
-import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
+import SmallCardGameV2 from 'modules/CoinLeagues/components/SmallCardGameV2';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
@@ -41,6 +39,13 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
+import {
+  useActiveGames,
+  useWaitingGames,
+} from 'modules/CoinLeagues/hooks/useGames';
+import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
+import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
+import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -58,27 +63,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-enum FilterGame {
-  ALL = 'All',
-  Fast = '1hr',
-  Medium = '4hrs',
-  Eight = '8hrs',
-  Day = '24hrs',
-  Week = 'Week',
-  Mine = 'My Games',
-}
-
 enum Tabs {
   History = 'History',
   Games = 'Games',
 }
 
-const GamesList = () => {
+const GamesListV2 = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { account} = useWeb3();
+  const {chainId, account} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  
+
   useDiscord();
 
   const dispatch = useDispatch();
@@ -97,35 +92,25 @@ const GamesList = () => {
     },
     [value],
   );
-  const {
-    gamesQuery,
-    gamesAddressQuery,
-    startedGames,
-    startedGamesQuery,
-    startedGamesAddressQuery,
-    createdGames,
-    createdGamesAddressQuery,
-    createdGamesQuery,
-    endedGames,
-    endedGamesAddressQuery,
-    endedGamesQuery,
-    totalEndedGames
-  } = useCoinLeaguesFactory();
+  const waitingGamesQuery = useWaitingGames(filterGame);
+  const activeGamesQuery = useActiveGames();
 
-  const {listGamesRoute,
-    activeGamesRoute,
-    enterGameRoute}= useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute, activeGamesRoute, enterGameRoute} =
+    useCoinLeaguesFactoryRoutes();
+  const gamesToJoin = useMemo(() => {
+    if (waitingGamesQuery.data) {
+      return waitingGamesQuery.data.games.filter(
+        (g) => g?.id?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+      );
+    }
+  }, [search, waitingGamesQuery.data]);
 
-  const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
-  const isLoadingStarted =
-    startedGamesQuery.isLoading || startedGamesAddressQuery.isLoading;
-  const isLoadingCreated =
-    createdGamesAddressQuery.isLoading || createdGamesQuery.isLoading;
-  const isLoadingEnded =
-    endedGamesQuery.isLoading || endedGamesAddressQuery.isLoading;
+  const isLoadingStarted = activeGamesQuery.loading;
+  const isLoadingCreated = waitingGamesQuery.loading;
+
   const gamesInProgress = useMemo(() => {
-    return startedGames;
-  }, [startedGames]);
+    return activeGamesQuery.data?.games;
+  }, [activeGamesQuery.data]);
 
   // TODO: We are doing this to user see connected account
   useEffect(() => {
@@ -143,159 +128,19 @@ const GamesList = () => {
     }
   }, [account]);
 
-  const gamesToJoin = useMemo(() => {
-    if (filterGame === FilterGame.ALL) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Fast) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() === 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
+  const onClickEnterGame = useCallback(
+    (address: string) => {
+      history.push(enterGameRoute(`${address}`));
+    },
+    [enterGameRoute],
+  );
 
-    if (filterGame === FilterGame.Mine) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) =>
-          g?.players
-            //@ts-ignore
-            .map((p) => p[1]?.toLowerCase())
-            .includes(account?.toLowerCase() || ''),
-        )
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Medium) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Eight) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Day) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Week) {
-      return createdGames
-        ?.filter((g) => !g.started)
-        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-  }, [createdGames, filterGame, search]);
-
-  const gamesEnded = useMemo(() => {
-    if (filterGame === FilterGame.ALL) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Fast) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() === 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Mine) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) =>
-          g?.players
-            //@ts-ignore
-            .map((p) => p[1]?.toLowerCase())
-            .includes(account?.toLowerCase() || ''),
-        )
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Medium) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Eight) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Day) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Week) {
-      return endedGames
-        ?.filter((g) => g.finished)
-        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-  }, [endedGames, filterGame, search]);
-
-  const onClickEnterGame = useCallback((address: string) => {
-    history.push(enterGameRoute(`${address}`));
-  }, [enterGameRoute]);
-
-  const onClickGoGamesInProgress = useCallback((_ev: any) => {
-    history.push(activeGamesRoute);
-  }, [activeGamesRoute]);
+  const onClickGoGamesInProgress = useCallback(
+    (_ev: any) => {
+      history.push(activeGamesRoute);
+    },
+    [activeGamesRoute],
+  );
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
@@ -370,9 +215,9 @@ const GamesList = () => {
 
       <Grid item xs={12}>
         <Grid container spacing={4}>
-          {gamesInProgress?.map((g, id) => (
+          {gamesInProgress?.slice(0, 4).map((g, id) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
-              <SmallCardGame {...g} key={id} onClick={onClickEnterGame} />
+              <SmallCardGameV2 game={g} key={id} onClick={onClickEnterGame} />
             </Grid>
           ))}
           {isLoadingStarted &&
@@ -434,13 +279,9 @@ const GamesList = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games ? (
-                <Typography variant='h6'>
-                  {gamesToJoin?.length || 0} Games
-                </Typography>
+                <Typography variant='h6'>Games</Typography>
               ) : (
-                <Typography variant='h6'>
-                 Past {gamesEnded?.length || 0} Games of {totalEndedGames?.toString()}
-                </Typography>
+                <Typography variant='h6'>Last Games</Typography>
               )}
             </Grid>
             <Grid item xs={12} sm={12}>
@@ -532,7 +373,7 @@ const GamesList = () => {
           <Grid container spacing={4}>
             {gamesToJoin?.map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                <CardGame game={g} id={g.address} onClick={onClickEnterGame} />
+                <CardGameV2 game={g} id={g.id} onClick={onClickEnterGame} />
               </Grid>
             ))}
             {isLoadingCreated &&
@@ -554,38 +395,10 @@ const GamesList = () => {
         </Grid>
       )}
       {value === Tabs.History && (
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            {gamesEnded?.map((g, id) => (
-              <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                <CardGame
-                  game={g}
-                  id={g.address}
-                  onClick={onClickEnterGame}
-                  btnMessage={'VIEW GAME'}
-                />
-              </Grid>
-            ))}
-            {isLoadingEnded &&
-              [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={i}>
-                  <CardGameSkeleton />
-                </Grid>
-              ))}
-            {!isLoadingEnded && !gamesEnded?.length && (
-              <Grid item xs={12}>
-                <Empty
-                  image={<EmptyGame />}
-                  title={'No history'}
-                  message={'Join and play games'}
-                />
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
+        <GamesEnded filter={filterGame} search={search} />
       )}
     </Grid>
   );
 };
 
-export default GamesList;
+export default GamesListV2;

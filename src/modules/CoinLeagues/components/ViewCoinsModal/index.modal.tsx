@@ -153,27 +153,19 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>
-            <VariableSizeList
-              itemData={filteredCoins}
-              itemSize={() => 56}
-              itemCount={filteredCoins.length}
-              width='100%'
-              height={250}>
-              {({index, data, style}) => (
+            {filteredCoins.map((coin, i) => 
                 <ViewCoinListItem
-                  style={style}
-                  coin={data[index].coin}
-                  feedOnchain={data[index].feed}
-                  currentPrice={data[index].currentFeed}
+                  coin={coin.coin}
+                  feedOnchain={coin.feed}
+                  currentPrice={coin.currentFeed}
                   started={gameStarted}
-                  key={index}
-                  isCaptain={data[index].isCaptain}
+                  key={i}
+                  isCaptain={coin.isCaptain}
                   playerAddress={playerAddress}
                   multipliers={multiplier}
                   tooltipMessage={tooltipMessage}
                 />
               )}
-            </VariableSizeList>
           </List>
         )}
       </DialogContent>

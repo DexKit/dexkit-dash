@@ -195,9 +195,9 @@
     "format": "prettier --write \"src/**/*.+(ts|tsx)\"",
     "precommit": "lint-staged",
     "apollo:get-schema": "npx apollo service:download --endpoint=https://graphql.bitquery.io graphql-schema.json",
-    "apollo:leagues-get-schema": "npx apollo service:download --endpoint=https://graphql.bitquery.io leagues-graphql-schema.json",
-    "apollo:leagues-generate-types": "npx apollo codegen:generate --localSchemaFile=leagues-graphql-schema.json --target=typescript --tagName=gql",
-    "apollo:generate-types": "npx apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
+    "apollo:leagues-get-schema": "npx apollo service:download --endpoint=https://api.thegraph.com/subgraphs/name/joaocampos89/coinleagues leagues-graphql-schema.json",
+    "apollo:leagues-generate-types": "npx apollo codegen:generate --excludes=['./src/services/graphql/**/*.ts'] --localSchemaFile=leagues-graphql-schema.json --target=typescript --tagName=gql",
+    "apollo:generate-types": "npx apollo codegen:generate  --localSchemaFile=graphql-schema.json,leagues-graphql-schema.json --target=typescript --tagName=gql"
   },
   "eslintConfig": {
     "extends": "react-app"

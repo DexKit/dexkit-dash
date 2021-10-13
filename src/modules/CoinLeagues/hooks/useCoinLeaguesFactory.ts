@@ -8,15 +8,15 @@ import {
   getGamesAddressFromFactory,
   getStartedGamesAddressFromFactory,
 } from 'modules/CoinLeagues/services/coinLeaguesFactory';
-import { Web3State} from 'types/blockchain';
+import {Web3State} from 'types/blockchain';
 import {GameParams} from 'types/coinsleague';
 import {getGamesData} from '../services/coinLeagues';
 import {useQuery} from 'react-query';
-import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
-import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
-import { useParams } from 'react-router-dom';
-import { COINSLEAGUE_ROUTE } from 'shared/constants/routes';
+import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
+import {useParams} from 'react-router-dom';
+import {COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -24,38 +24,64 @@ interface CallbackProps {
   onError?: any;
 }
 
+export const useCoinLeaguesFactoryRoutes = () => {
+  const {chainId} = useWeb3();
+  const {room} = useParams<{room: string}>();
+
+  const factoryAddress = useMemo(() => {
+    return room
+      ? room
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+  }, [chainId, room]);
+
+  const enterGameRoute = useCallback(
+    (address: string) => {
+      if (room) {
+        return `${COINSLEAGUE_ROUTE}/room/${room}/game/${address}`;
+      } else {
+        return `${COINSLEAGUE_ROUTE}/${address}`;
+      }
+    },
+    [factoryAddress, room],
+  );
+
+  const activeGamesRoute = useMemo(() => {
+    if (room) {
+      return `${COINSLEAGUE_ROUTE}/room/${room}/active-games`;
+    } else {
+      return `${COINSLEAGUE_ROUTE}/active-games`;
+    }
+  }, [factoryAddress, room]);
+
+  const listGamesRoute = useMemo(() => {
+    if (room) {
+      return `${COINSLEAGUE_ROUTE}/room/${room}`;
+    } else {
+      return `${COINSLEAGUE_ROUTE}`;
+    }
+  }, [factoryAddress, room]);
+
+
+  return {
+    enterGameRoute,
+    activeGamesRoute,
+    listGamesRoute
+  }
+};
+
 export const useCoinLeaguesFactory = () => {
   const {web3State, chainId} = useWeb3();
-  const provider = useNetworkProvider(EthereumNetwork.matic, GET_LEAGUES_CHAIN_ID(chainId) );
+  const provider = useNetworkProvider(
+    EthereumNetwork.matic,
+    GET_LEAGUES_CHAIN_ID(chainId),
+  );
 
-  const { room } = useParams<{room: string}>();
-  const factoryAddress = useMemo(()=> {
-      return room ? room : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-  },[ chainId, room])
-
-  const enterGameRoute = useCallback((address: string)=> {
-    if(room){
-      return `${COINSLEAGUE_ROUTE}/room/${room}/game/${address}` 
-    }else{
-      return `${COINSLEAGUE_ROUTE}/${address}` 
-    }
-  }, [factoryAddress, room])
-
-  const activeGamesRoute = useMemo(()=> {
-    if(room){
-      return `${COINSLEAGUE_ROUTE}/room/${room}/active-games` 
-    }else{
-      return `${COINSLEAGUE_ROUTE}/active-games` 
-    }
-  }, [factoryAddress, room])
-
-  const listGamesRoute = useMemo(()=> {
-    if(room){
-      return `${COINSLEAGUE_ROUTE}/room/${room}` 
-    }else{
-      return `${COINSLEAGUE_ROUTE}` 
-    }
-  }, [factoryAddress, room])
+  const {room} = useParams<{room: string}>();
+  const factoryAddress = useMemo(() => {
+    return room
+      ? room
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+  }, [chainId, room]);
 
 
   const onGameCreateCallback = useCallback(
@@ -64,15 +90,12 @@ export const useCoinLeaguesFactory = () => {
         return;
       }
       try {
-        const tx = await createGame(
-          factoryAddress,
-          params,
-        );
+        const tx = await createGame(factoryAddress, params);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
-        console.log(e)
+        console.log(e);
         callbacks?.onError(e);
       }
     },
@@ -80,15 +103,11 @@ export const useCoinLeaguesFactory = () => {
   );
 
   const gamesAddressQuery = useQuery(['GetGamesAddress', chainId], () => {
-    if ( !provider || !factoryAddress) {
+    if (!provider || !factoryAddress) {
       return;
     }
-    
-    return getGamesAddressFromFactory(
-      factoryAddress,
-      13,
-      provider
-    );
+
+    return getGamesAddressFromFactory(factoryAddress, 13, provider);
   });
 
   const gamesQuery = useQuery(
@@ -96,7 +115,7 @@ export const useCoinLeaguesFactory = () => {
     () => {
       if (
         !gamesAddressQuery?.data ||
-        !gamesAddressQuery?.data[0].length || 
+        !gamesAddressQuery?.data[0].length ||
         !provider
       ) {
         return;
@@ -106,24 +125,23 @@ export const useCoinLeaguesFactory = () => {
     },
   );
 
-  const createdGamesAddressQuery = useQuery(['GetCreatedGamesAdddress', chainId], () => {
-    if ( !provider || !factoryAddress) {
-      return;
-    }
-    
-    return getCreatedGamesAddressFromFactory(
-      factoryAddress,
-      10,
-      provider
-    );
-  });
+  const createdGamesAddressQuery = useQuery(
+    ['GetCreatedGamesAdddress', chainId],
+    () => {
+      if (!provider || !factoryAddress) {
+        return;
+      }
+
+      return getCreatedGamesAddressFromFactory(factoryAddress, 10, provider);
+    },
+  );
 
   const createdGamesQuery = useQuery(
     ['GetCreatedGamesData', createdGamesAddressQuery.data],
     () => {
       if (
         !createdGamesAddressQuery?.data ||
-        !createdGamesAddressQuery?.data[0].length || 
+        !createdGamesAddressQuery?.data[0].length ||
         !provider
       ) {
         return;
@@ -133,24 +151,23 @@ export const useCoinLeaguesFactory = () => {
     },
   );
 
-  const startedGamesAddressQuery = useQuery(['GetStartedGamesAdddress', chainId], () => {
-    if ( !provider || !factoryAddress) {
-      return;
-    }
-    
-    return getStartedGamesAddressFromFactory(
-      factoryAddress,
-      11,
-      provider
-    );
-  });
+  const startedGamesAddressQuery = useQuery(
+    ['GetStartedGamesAdddress', chainId],
+    () => {
+      if (!provider || !factoryAddress) {
+        return;
+      }
+
+      return getStartedGamesAddressFromFactory(factoryAddress, 11, provider);
+    },
+  );
 
   const startedGamesQuery = useQuery(
     ['GetStartedGamesData', startedGamesAddressQuery.data],
     () => {
       if (
         !startedGamesAddressQuery?.data ||
-        !startedGamesAddressQuery?.data[0].length || 
+        !startedGamesAddressQuery?.data[0].length ||
         !provider
       ) {
         return;
@@ -160,24 +177,23 @@ export const useCoinLeaguesFactory = () => {
     },
   );
 
-  const endedGamesAddressQuery = useQuery(['GetEndedGamesAdddress', chainId], () => {
-    if ( !provider || !factoryAddress) {
-      return;
-    }
-    
-    return getEndedGamesAddressFromFactory(
-      factoryAddress,
-      7,
-      provider
-    );
-  });
+  const endedGamesAddressQuery = useQuery(
+    ['GetEndedGamesAdddress', chainId],
+    () => {
+      if (!provider || !factoryAddress) {
+        return;
+      }
+
+      return getEndedGamesAddressFromFactory(factoryAddress, 7, provider);
+    },
+  );
 
   const endedGamesQuery = useQuery(
     ['GetEndedGamesData', endedGamesAddressQuery.data],
     () => {
       if (
         !endedGamesAddressQuery?.data ||
-        !endedGamesAddressQuery?.data[0].length || 
+        !endedGamesAddressQuery?.data[0].length ||
         !provider
       ) {
         return;
@@ -186,8 +202,6 @@ export const useCoinLeaguesFactory = () => {
       return getGamesData(gAddress, provider);
     },
   );
-
-
 
   return {
     onGameCreateCallback,
@@ -199,24 +213,24 @@ export const useCoinLeaguesFactory = () => {
     gamesQuery,
     // created queries
     createdGames: createdGamesQuery?.data,
-    totalCreatedGames: createdGamesAddressQuery?.data && createdGamesAddressQuery?.data[1],
+    totalCreatedGames:
+      createdGamesAddressQuery?.data && createdGamesAddressQuery?.data[1],
     createdGamesQuery,
-    createdGamesAddressQuery, 
+    createdGamesAddressQuery,
     refetchCreated: createdGamesAddressQuery.refetch,
     // started queries
     startedGames: startedGamesQuery?.data,
-    totalStartedGames: startedGamesAddressQuery?.data && startedGamesAddressQuery?.data[1],
+    totalStartedGames:
+      startedGamesAddressQuery?.data && startedGamesAddressQuery?.data[1],
     startedGamesQuery,
-    startedGamesAddressQuery, 
+    startedGamesAddressQuery,
     refetchStarted: startedGamesAddressQuery.refetch,
     // started queries
     endedGames: endedGamesQuery?.data,
-    totalEndedGames: endedGamesAddressQuery?.data && endedGamesAddressQuery?.data[1],
+    totalEndedGames:
+      endedGamesAddressQuery?.data && endedGamesAddressQuery?.data[1],
     endedGamesQuery,
-    endedGamesAddressQuery, 
+    endedGamesAddressQuery,
     refetchEnded: endedGamesAddressQuery.refetch,
-    enterGameRoute,
-    activeGamesRoute,
-    listGamesRoute
   };
 };

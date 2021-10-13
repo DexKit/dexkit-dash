@@ -25,13 +25,14 @@ import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
+import CardGameProgressV2 from 'modules/CoinLeagues/components/CardGameProgressV2';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
 import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
+import { useActiveGames } from 'modules/CoinLeagues/hooks/useGames';
 
 enum FilterGame {
   ALL = 'All',
@@ -43,91 +44,26 @@ enum FilterGame {
   Mine = 'My Games',
 }
 
-const GamesInProgress = () => {
+const GamesInProgressV2 = () => {
   const history = useHistory();
   const {account} = useWeb3();
 
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
 
-  const {startedGames, startedGamesAddressQuery, startedGamesQuery} =
-    useCoinLeaguesFactory();
+
   const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  
+  const activeGamesQuery = useActiveGames(filterGame, account ? [account] : undefined);
 
-  const isLoading =
-    startedGamesAddressQuery.isLoading || startedGamesQuery.isLoading;
+  const isLoading = activeGamesQuery.loading;
   const gamesInProgress = useMemo(() => {
-    if (filterGame === FilterGame.ALL) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
+    if (activeGamesQuery.data) {
+      return activeGamesQuery.data.games.filter(
+        (g) => g?.id?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+      );
     }
-    if (filterGame === FilterGame.Fast) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() === 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Mine) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) =>
-          g?.players
-            //@ts-ignore
-            .map((p) => p[1]?.toLowerCase())
-            .includes(account?.toLowerCase() || ''),
-        )
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Medium) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() === 4 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Eight) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() === 8 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-
-    if (filterGame === FilterGame.Day) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() === 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-    if (filterGame === FilterGame.Week) {
-      return startedGames
-        ?.filter((g) => g.started && !g.finished && !g.aborted)
-        .filter((g) => g?.duration?.toNumber() > 24 * 60 * 60)
-        .filter(
-          (g) =>
-            g?.address?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
-        );
-    }
-  }, [startedGames, filterGame, search]);
+  }, [activeGamesQuery.data, filterGame, search]);
 
   const onClickEnterGame = useCallback(
     (address: string) => {
@@ -142,12 +78,12 @@ const GamesInProgress = () => {
 
   const handleBack = useCallback(
     (ev: any) => {
-      if (history.length > 0) {
-        history.goBack();
-      } else {
-        history.push(listGamesRoute);
-      }
-      // history.push(listGamesRoute);
+      if(history.length > 0){
+      history.goBack();
+     }else{
+       history.push(listGamesRoute)
+     }
+      //history.push(listGamesRoute);
     },
     [listGamesRoute],
   );
@@ -309,7 +245,7 @@ const GamesInProgress = () => {
         <Grid container spacing={4}>
           {gamesInProgress?.map((g, id) => (
             <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-              <CardGameProgress game={g} key={id} onClick={onClickEnterGame} />
+              <CardGameProgressV2 game={g} key={id} onClick={onClickEnterGame} />
             </Grid>
           ))}
           {isLoading &&
@@ -333,4 +269,4 @@ const GamesInProgress = () => {
   );
 };
 
-export default GamesInProgress;
+export default GamesInProgressV2;
