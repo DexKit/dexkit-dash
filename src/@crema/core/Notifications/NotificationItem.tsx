@@ -91,7 +91,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           </>
         ) : (
           <>
-            {item.image ? (
+            {item?.image ? (
               <Avatar className={classes.avatar} src={item.image} />
             ) : (
               <Avatar className={classes.avatar} />
@@ -100,13 +100,13 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         )}
       </ListItemAvatar>
       <ListItemText
-        primary={<Typography variant='body1'>{item.title ?? ''}</Typography>}
+        primary={<Typography variant='body1'>{item?.title ?? ''}</Typography>}
         secondary={
           <>
             <Box mb={2}>
-              <Typography variant='body2'>{item.body ?? ''}</Typography>
+              <Typography variant='body2'>{item?.body ?? ''}</Typography>
             </Box>
-            {item.url && item.urlCaption ? (
+            {item?.url && item?.urlCaption ? (
               <Box>
                 <Button
                   size='small'

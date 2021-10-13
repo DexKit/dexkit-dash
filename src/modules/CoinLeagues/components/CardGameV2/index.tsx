@@ -12,10 +12,10 @@ import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {BigNumber, ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
-import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,8 +50,6 @@ interface Props {
   btnMessage?: string;
 }
 
-
-
 function CardGameV2(props: Props): JSX.Element {
   const {game, onClick} = props;
   const classes = useStyles();
@@ -61,7 +59,7 @@ function CardGameV2(props: Props): JSX.Element {
   }).format(game.amount_to_play.toNumber()  );*/
   const [countdown, setCountdown] = useState<number>();
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers))
+    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
   );
   const entryAmount = ethers.utils.formatEther(game.entry);
   const time = Number(game.duration);
@@ -81,8 +79,7 @@ function CardGameV2(props: Props): JSX.Element {
     () => {
       const time = Number(game.duration);
       const startTime =
-        Math.round(new Date().getTime() / 1000) -
-        Number(game.startedAt || 0);
+        Math.round(new Date().getTime() / 1000) - Number(game.startedAt || 0);
       setCountdown(time - startTime);
     },
     1000,
@@ -103,20 +100,25 @@ function CardGameV2(props: Props): JSX.Element {
             </Typography>
           </Box>
         </Grid>
-        <Grid
-          xs={6}
-          container
-          justifyContent='flex-end'
-          style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
-          <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
-          </Typography>
-
-          <Typography variant='h6'>&nbsp;Type:</Typography>
-          <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{game.type === 'Bull' ? 'Bull' : 'Bear'}
-          </Typography>
+        <Grid xs={6} item>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>Duration:</Typography>
+            <Typography variant='h6' style={{fontWeight: 500}}>
+              &nbsp;{GET_LABEL_FROM_DURATION(time)}
+            </Typography>
+          </Box>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>&nbsp;Type:</Typography>
+            <Typography variant='h6' style={{fontWeight: 500}}>
+              &nbsp;{game.type === 'Bull' ? 'Bull' : 'Bear'}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
 

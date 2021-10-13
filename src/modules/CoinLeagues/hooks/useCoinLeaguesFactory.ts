@@ -107,7 +107,7 @@ export const useCoinLeaguesFactory = () => {
       return;
     }
 
-    return getGamesAddressFromFactory(factoryAddress, 13, provider);
+    return getGamesAddressFromFactory(factoryAddress, 10, provider);
   });
 
   const gamesQuery = useQuery(

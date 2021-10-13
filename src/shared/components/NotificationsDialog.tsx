@@ -80,7 +80,7 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
             {notifications.map((item, i) => (
               <NotificationItem
                 onClick={handleClick}
-                id={Number(item.id || i)}
+                id={Number(item?.id || i)}
                 key={i}
                 item={item}
               />

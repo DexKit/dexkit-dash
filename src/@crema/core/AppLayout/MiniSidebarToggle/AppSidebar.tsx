@@ -13,18 +13,12 @@ import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
 
 import {
-  Paper,
   Grid,
-  Typography,
-  Button,
   IconButton,
-  useMediaQuery,
-  useTheme,
   Divider,
 } from '@material-ui/core';
 
-import {ReactComponent as SupportImage} from 'assets/images/state/support.svg';
-import {ReactComponent as TwoFourSupportIcon} from 'assets/images/icons/24-support.svg';
+
 
 import CloseIcon from '@material-ui/icons/Close';
 

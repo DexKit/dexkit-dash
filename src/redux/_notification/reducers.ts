@@ -18,12 +18,13 @@ export default (state = initialState, action: any): NotificationState => {
   switch (action.type) {
     case NotificationAction.ADD_NOTIFICATION: {
       const {notifications: newNotifications} = action.payload;
-
+      console.log(newNotifications);
       const newAddNotifications = [...state.notifications, ...newNotifications];
 
       return {
         ...state,
-        notifications: newAddNotifications.map((n, index: number) => {
+        //Filtering the null notifications, giving blank screen
+        notifications: newAddNotifications.filter(n => n).map((n, index: number) => {
           if (!n.id) {
             return {...n, id: index};
           }
@@ -46,8 +47,7 @@ export default (state = initialState, action: any): NotificationState => {
     case NotificationAction.UPDATE_NOTIFICATION: {
       let updateNotification: any = action.payload;
 
-      console.log(updateNotification);
-
+   
       let updatedNotifications = [...state.notifications];
 
       let updateIndex = updatedNotifications.findIndex(

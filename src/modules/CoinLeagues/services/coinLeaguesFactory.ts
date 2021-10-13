@@ -1,5 +1,5 @@
 import {CallInput} from '@indexed-finance/multicall';
-import {Contract, ContractTransaction, ethers, providers} from 'ethers';
+import {ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {GameParams} from 'types/coinsleague';
 import coinLeaguesFactoryAbi from '../constants/ABI/coinLeaguesFactory.json';
@@ -13,17 +13,16 @@ export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Matic]: '0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a',
 };
 
-let coinLeaguesFactory: Contract;
 export const getCoinLeaguesFactoryContract = async (address: string) => {
   const appProvider = getProvider();
 
   const provider = new providers.Web3Provider(appProvider).getSigner();
 
-  return (coinLeaguesFactory = new ethers.Contract(
+  return  new ethers.Contract(
     address,
     coinLeaguesFactoryAbi,
     provider,
-  ));
+  );
 };
 const GAS_PRICE_MULTIPLIER = 2;
 export const createGame = async (address: string, params: GameParams) => {
