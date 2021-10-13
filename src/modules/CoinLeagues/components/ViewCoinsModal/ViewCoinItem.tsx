@@ -5,13 +5,13 @@ import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import Tooltip from '@material-ui/core/Tooltip';
+import {useMobile} from 'hooks/useMobile';
 
 export interface Props {
   coin: CoinFeed;
   feedOnchain: CoinFeedOnChain;
   currentPrice: any;
   started?: boolean;
-  style: React.CSSProperties;
   isCaptain?: boolean;
   multipliers?: any;
   playerAddress?: string;
@@ -46,7 +46,6 @@ const USD_POWER_NUMBER = 10 ** 8;
 export const ViewCoinListItem = (props: Props) => {
   const {
     coin,
-    style,
     feedOnchain,
     started,
     currentPrice,
@@ -55,6 +54,8 @@ export const ViewCoinListItem = (props: Props) => {
     multipliers,
     tooltipMessage,
   } = props;
+  const isMobile = useMobile()
+
   //const {multiplier} = useMultipliers(address);
   const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
@@ -119,13 +120,13 @@ export const ViewCoinListItem = (props: Props) => {
   ]);
 
   return (
-    <Box style={{...style, padding: theme.spacing(4)}} className={classes.item}>
+    <Box style={{ padding: theme.spacing(4)}} className={classes.item}>
       <Grid alignItems='center' alignContent='center' container spacing={6}>
-        <Grid item>
-          <Box className={classes.tokenContainer}>
+      {!isMobile && <Grid item>
+         <Box className={classes.tokenContainer}>
             <img src={coin.logo} className={classes.token} />
           </Box>
-        </Grid>
+        </Grid>}
 
         <Grid item xs={3}>
           <Typography variant='body1'>{`${coin.base.toUpperCase()}`}</Typography>

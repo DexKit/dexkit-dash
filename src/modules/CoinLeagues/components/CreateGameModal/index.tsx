@@ -18,14 +18,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
-import {useCoinLeaguesFactory} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactory, useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {ButtonState} from '../ButtonState';
 import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
-import { COINSLEAGUE_ROUTE } from 'shared/constants/routes';
 import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -88,7 +87,8 @@ const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
   const history = useHistory();
-  const {onGameCreateCallback, refetchCreated, enterGameRoute} = useCoinLeaguesFactory();
+  const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
+  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();

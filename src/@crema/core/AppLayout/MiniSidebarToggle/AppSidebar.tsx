@@ -53,8 +53,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const classes = useStyles({themeMode});
   const sidebarClasses = classes.sidebarStandard;
 
-  const theme = useTheme();
-
   return (
     <>
       <Hidden lgUp>

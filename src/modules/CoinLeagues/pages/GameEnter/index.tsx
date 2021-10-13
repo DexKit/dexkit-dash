@@ -61,7 +61,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
-import { useCoinLeaguesFactory } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import { getTransactionScannerUrl } from 'utils/blockchain';
 import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 const useStyles = makeStyles((theme) => ({
@@ -106,7 +106,9 @@ function GameEnter(props: Props) {
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
     useCoinLeagues(address);
-  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactory();
+    const {
+      listGamesRoute,
+      enterGameRoute }= useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
@@ -196,12 +198,12 @@ function GameEnter(props: Props) {
   );
 
   const handleBack = useCallback((ev: any) => {
-    /*if(history.length > 1){
+    if(history.length > 0){
       history.goBack();
      }else{
        history.push(listGamesRoute)
-     }*/
-     history.push(listGamesRoute)
+     }
+     //history.push(listGamesRoute)
   }, [listGamesRoute]);
 
   const onEnterGame = useCallback(
