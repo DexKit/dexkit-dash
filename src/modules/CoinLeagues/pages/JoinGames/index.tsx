@@ -214,6 +214,14 @@ const JoinGames = () => {
                   onClick={() => setFilterGame(FilterGame.Mine)}
                 />
               </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.BitBoy}
+                  color={filterGame === FilterGame.BitBoy ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.BitBoy)}
+                />
+              </Grid>
             </Grid>
           </Grid>
           <Grid item sm={3} justifyContent='flex-end'>
