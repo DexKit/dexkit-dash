@@ -1,8 +1,14 @@
-import React, {useMemo, useCallback, useState} from 'react';
+import React, {useMemo, useCallback, useState, useEffect} from 'react';
 import {useTheme} from '@material-ui/core/styles';
+
+import {useNetwork} from 'hooks/useNetwork';
 
 import {
   Dialog,
+  makeStyles,
+  Chip,
+  Grid,
+  Divider,
   DialogProps,
   Typography,
   DialogContent,
@@ -21,12 +27,21 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {MyBalances} from 'types/blockchain';
 import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+
+const useStyles = makeStyles((theme) => ({
+  content: {
+    margin: 0,
+    padding: 0,
+  },
+}));
 
 interface Props extends DialogProps {
   title?: string;
   tokens: Token[];
   balances: MyBalances[];
   onSelectToken: (token: Token) => void;
+  enableFilters?: boolean;
 }
 
 export type TokenBalance = Token & {
@@ -35,14 +50,17 @@ export type TokenBalance = Token & {
 };
 
 export const SelectTokenBalanceDialog = (props: Props) => {
-  const {onSelectToken, tokens, balances, onClose, title} = props;
+  const {onSelectToken, tokens, balances, onClose, title, enableFilters} =
+    props;
+
+  const classes = useStyles();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
   const allTokens = useMemo(() => {
     if (tokens && tokens.length) {
-      return  tokens
+      return tokens
         .map((t) => {
           const balance = balances.find(
             (b) =>
@@ -64,13 +82,13 @@ export const SelectTokenBalanceDialog = (props: Props) => {
     return [];
   }, [tokens, balances]);
 
-  const filteredTokens = useMemo(()=> {
+  const filteredTokens = useMemo(() => {
     return allTokens.filter(
       (coin: Token) =>
         coin.name.toLowerCase().startsWith(filterText.toLowerCase()) ||
         coin.symbol.toLowerCase().startsWith(filterText.toLowerCase()),
     );
-  },[allTokens, filterText])
+  }, [allTokens, filterText]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +112,25 @@ export const SelectTokenBalanceDialog = (props: Props) => {
     }
   }, [onClose]);
 
+  const [selectedNetwork, setSelectedNetwork] = useState<EthereumNetwork>();
+
+  const getFilteredTokens = useCallback(
+    (tokens: Token[], selectedNetwork?: EthereumNetwork) => {
+      if (selectedNetwork) {
+        return tokens.filter((t) => t.networkName === selectedNetwork);
+      }
+
+      return tokens;
+    },
+    [selectedNetwork],
+  );
+
+  const network = useNetwork();
+
+  useEffect(() => {
+    setSelectedNetwork(network);
+  }, [network]);
+
   return (
     <Dialog
       maxWidth='sm'
@@ -109,13 +146,13 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             </Box>
             <Typography variant='body1'>{title || 'Select a token'}</Typography>
           </Box>
-          <IconButton onClick={handleClose}>
+          <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
-        <Box mb={4} p={2}>
+      <DialogContent dividers className={classes.content}>
+        <Box px={4} py={4} pb={2}>
           <TextField
             autoComplete='off'
             autoFocus
@@ -127,14 +164,87 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredTokens.length == 0 ? (
-          <Typography variant='body1'>No tokens found</Typography>
+        {enableFilters ? (
+          <>
+            <Box px={4} pt={2} pb={4}>
+              <Box>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label='All'
+                      variant={
+                        selectedNetwork === undefined ? 'default' : 'outlined'
+                      }
+                      onClick={() => {
+                        setSelectedNetwork(undefined);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label='ETH'
+                      variant={
+                        selectedNetwork === EthereumNetwork.ethereum
+                          ? 'default'
+                          : 'outlined'
+                      }
+                      onClick={() => {
+                        setSelectedNetwork(EthereumNetwork.ethereum);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label='BSC'
+                      variant={
+                        selectedNetwork === EthereumNetwork.bsc
+                          ? 'default'
+                          : 'outlined'
+                      }
+                      onClick={() => {
+                        setSelectedNetwork(EthereumNetwork.bsc);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label='MATIC'
+                      variant={
+                        selectedNetwork === EthereumNetwork.matic
+                          ? 'default'
+                          : 'outlined'
+                      }
+                      onClick={() => {
+                        setSelectedNetwork(EthereumNetwork.matic);
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+            <Divider />
+          </>
+        ) : null}
+        {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
+          <Box p={4}>
+            <Typography variant='body1'>No tokens found</Typography>
+          </Box>
         ) : (
-          <List>
+          <List disablePadding>
             <VariableSizeList
-              itemData={filteredTokens}
+              itemData={getFilteredTokens(filteredTokens, selectedNetwork)}
               itemSize={() => 56}
-              itemCount={filteredTokens.length}
+              itemCount={
+                getFilteredTokens(filteredTokens, selectedNetwork).length
+              }
               width='100%'
               height={250}>
               {({index, data, style}) => (

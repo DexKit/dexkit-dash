@@ -194,6 +194,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
           tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
           onSelectToken={handleSelectToken}
           onClose={handleToggleSelectToken}
+          enableFilters
         />
       ) : null}
 

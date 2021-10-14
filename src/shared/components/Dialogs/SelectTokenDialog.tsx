@@ -2,6 +2,9 @@ import React, {useEffect, useCallback, useState} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
+  Grid,
+  Chip,
+  Divider,
   Dialog,
   DialogProps,
   Typography,
@@ -19,15 +22,20 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {ChangellyCoin} from 'types/changelly';
 import SelectTokenListItem from './SelectTokenListItem';
 
 import {Token} from '../../../types/app';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {ChainId} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   list: {
     maxHeight: theme.spacing(150),
     overflowY: 'scroll',
+  },
+  content: {
+    padding: 0,
+    margin: 0,
   },
 }));
 
@@ -35,10 +43,11 @@ interface Props extends DialogProps {
   tokens: Token[];
   onSelectToken: (coin: Token) => void;
   showNetwork?: boolean;
+  chainId?: ChainId;
 }
 
 export const SelectTokenDialog = (props: Props) => {
-  const {onSelectToken, tokens, onClose, showNetwork} = props;
+  const {onSelectToken, tokens, onClose, showNetwork, chainId} = props;
   const theme = useTheme();
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -78,18 +87,49 @@ export const SelectTokenDialog = (props: Props) => {
     }
   }, [onClose]);
 
+  const [selectedChainId, setSelectedChainId] = useState<ChainId | undefined>(
+    chainId,
+  );
+
+  const handleAll = useCallback(() => {
+    setSelectedChainId(undefined);
+  }, []);
+
+  const handleEthereum = useCallback(() => {
+    setSelectedChainId(ChainId.Mainnet);
+  }, []);
+
+  const handleBsc = useCallback(() => {
+    setSelectedChainId(ChainId.Binance);
+  }, []);
+
+  const handleMatic = useCallback(() => {
+    setSelectedChainId(ChainId.Mumbai);
+  }, []);
+
+  const getFilteredTokens = useCallback(
+    (filteredTokens: Token[], selectedChainId?: ChainId) => {
+      if (selectedChainId) {
+        return filteredTokens.filter((t) => t.chainId === selectedChainId);
+      }
+
+      return filteredTokens;
+    },
+    [],
+  );
+
   return (
     <Dialog maxWidth='sm' fullWidth {...props} fullScreen={fullScreen}>
       <DialogTitle>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography variant='body1'>Select a token</Typography>
-          <IconButton onClick={handleClose}>
+          <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
-        <Box mb={4}>
+      <DialogContent dividers className={classes.content}>
+        <Box px={4} pt={4} pb={2}>
           <TextField
             autoFocus
             id='name'
@@ -100,18 +140,65 @@ export const SelectTokenDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredTokens.length == 0 ? (
-          <Typography variant='body1'>No tokens found</Typography>
+        <Box px={4} py={4}>
+          <Grid container spacing={2}>
+            <Grid item>
+              <Chip
+                size='small'
+                label='All'
+                variant={selectedChainId === undefined ? 'default' : 'outlined'}
+                onClick={handleAll}
+              />
+            </Grid>
+            <Grid item>
+              <Chip
+                size='small'
+                label='ETH'
+                onClick={handleEthereum}
+                variant={
+                  selectedChainId === ChainId.Mainnet ? 'default' : 'outlined'
+                }
+              />
+            </Grid>
+            <Grid item>
+              <Chip
+                size='small'
+                label='BSC'
+                onClick={handleBsc}
+                variant={
+                  selectedChainId === ChainId.Binance ? 'default' : 'outlined'
+                }
+              />
+            </Grid>
+            <Grid item>
+              <Chip
+                size='small'
+                label='Matic'
+                onClick={handleMatic}
+                variant={
+                  selectedChainId === ChainId.Matic ? 'default' : 'outlined'
+                }
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Divider />
+        {getFilteredTokens(filteredTokens, selectedChainId).length == 0 ? (
+          <Box p={4}>
+            <Typography variant='body1'>No tokens found</Typography>
+          </Box>
         ) : (
           <List>
-            {filteredTokens.map((token, index: number) => (
-              <SelectTokenListItem
-                showNetwork={showNetwork}
-                onClick={handleSelectToken}
-                token={token}
-                key={index}
-              />
-            ))}
+            {getFilteredTokens(filteredTokens, selectedChainId).map(
+              (token, index: number) => (
+                <SelectTokenListItem
+                  showNetwork={showNetwork}
+                  onClick={handleSelectToken}
+                  token={token}
+                  key={index}
+                />
+              ),
+            )}
           </List>
         )}
       </DialogContent>

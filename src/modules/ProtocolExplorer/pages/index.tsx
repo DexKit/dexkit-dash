@@ -66,7 +66,7 @@ import FavoriteListItem from 'shared/components/FavoriteListItem';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import {watchAsset} from 'utils/wallet';
 import {useWeb3} from 'hooks/useWeb3';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 type Params = {
   address: string;
@@ -94,7 +94,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const {address} = params;
   const history = useHistory();
   const searchParams = new URLSearchParams(history.location.search);
-  const account  = useDefaultAccount();
+  const account = useDefaultAccount();
   const balances = useAllBalance(account);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
@@ -216,6 +216,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
           tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
           onSelectToken={handleSelectToken}
           onClose={handleToggleSelectToken}
+          enableFilters
         />
       ) : null}
       <Box py={{xs: 8}}>
