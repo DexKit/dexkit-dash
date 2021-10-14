@@ -436,11 +436,11 @@ function GameEnter(props: Props) {
         )}
         {isLoading && <CardInfoPlayersSkeleton />}
       </Grid>
-      {!isMobile && (
+      {/*
         <Grid item xs={12} sm={12}>
           <ChartAccordion />
         </Grid>
-      )}
+      */}
 
       {!player &&
         !isLoading &&
