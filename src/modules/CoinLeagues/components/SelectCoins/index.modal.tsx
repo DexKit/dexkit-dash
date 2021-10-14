@@ -60,6 +60,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
 
   const handleSelectCoin = useCallback(
     (coin: CoinFeed) => {
+      setFilterText('');
       onSelectCoin(coin, isCaptainCoin);
     },
     [onSelectCoin, isCaptainCoin],

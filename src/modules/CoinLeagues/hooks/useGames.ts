@@ -1,4 +1,5 @@
 import {useQuery} from '@apollo/client';
+import { useEffect } from 'react';
 import { BITBOY_TEAM } from '../constants';
 import {FilterGame} from '../constants/enums';
 import {
@@ -32,10 +33,18 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
   }
 
 
-  return useQuery<{games: GameGraph[]}>(queryName, {
+  const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
   });
+  
+  useEffect(() => {
+    const refetchQuery = () => query.refetch();
+    window.addEventListener('focus', refetchQuery);
+    return () => window.removeEventListener('focus', refetchQuery);
+  });
+
+  return query;
 };
 
 export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
@@ -59,10 +68,20 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
-  return useQuery<{games: GameGraph[]}>(queryName, {
+  const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
   });
+
+  useEffect(() => {
+    const refetchQuery = () => query.refetch();
+    window.addEventListener('focus', refetchQuery);
+    return () => window.removeEventListener('focus', refetchQuery);
+  });
+
+  return query;
+
+
 };
 
 export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
@@ -87,10 +106,18 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
-  return useQuery<{games: GameGraph[]}>(queryName, {
+  const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
   });
+  
+  useEffect(() => {
+    const refetchQuery = () => query.refetch();
+    window.addEventListener('focus', refetchQuery);
+    return () => window.removeEventListener('focus', refetchQuery);
+  });
+
+  return query;
 };
 
 export const usePlayerGames = () => {};
