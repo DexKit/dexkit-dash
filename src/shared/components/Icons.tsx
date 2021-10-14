@@ -35,3 +35,4 @@ export {ReactComponent as ShieldOutlinedIcon} from 'assets/images/icons/shield.s
 export {ReactComponent as FlashSpeedIcon} from 'assets/images/icons/flash-speed.svg';
 export {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 export {ReactComponent as ShareIcon} from 'assets/images/icons/share.svg';
+export {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';

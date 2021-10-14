@@ -1,8 +1,10 @@
+import {BigNumber} from 'ethers';
+
 export interface Kittygotchi {
   id: string;
-  attack: number;
-  defense: number;
-  run: number;
+  attack: BigNumber;
+  defense: BigNumber;
+  run: BigNumber;
   image?: string;
-  attributes: any;
+  attributes?: any;
 }

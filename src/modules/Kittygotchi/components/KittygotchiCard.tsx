@@ -9,10 +9,12 @@ import {
   Card,
   CardMedia,
   CardActionArea,
+  useTheme,
 } from '@material-ui/core';
 
 import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 import {Kittygotchi} from 'types/kittygotchi';
+import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -37,55 +39,106 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface KittygotchiCardProps {
-  kittygotchi: Kittygotchi;
-  onClick: (kittygotchi: Kittygotchi) => void;
+  kittygotchi?: Kittygotchi;
+  onClick?: (kittygotchi: Kittygotchi) => void;
+  loading?: boolean;
 }
 
 export const KittygotchiCard = (props: KittygotchiCardProps) => {
-  const {kittygotchi, onClick} = props;
+  const {kittygotchi, onClick, loading} = props;
   const classes = useStyles();
 
+  const theme = useTheme();
+
   const handleClick = useCallback(() => {
-    onClick(kittygotchi);
+    if (kittygotchi && onClick) {
+      onClick(kittygotchi);
+    }
   }, [kittygotchi, onClick]);
 
   return (
     <Card>
       <CardActionArea onClick={handleClick}>
-        <CardMedia image={kittygotchi.image} className={classes.media} />
+        {loading ? (
+          <Skeleton variant='rect' className={classes.media} />
+        ) : kittygotchi?.image ? (
+          <CardMedia image={kittygotchi?.image} className={classes.media} />
+        ) : (
+          <Skeleton variant='rect' className={classes.media} />
+        )}
         <CardContent>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='h6'>Kittygotchi #1</Typography>
+              <Typography variant='h6'>
+                {loading ? <Skeleton /> : <>Kittygotchi #{kittygotchi?.id}</>}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item>
                   <Box display='flex' alignItems='center' alignContent='center'>
                     <Box className={classes.iconWrapper} mr={2}>
-                      <FlashOutlinedIcon className={classes.icon} />
+                      {loading ? (
+                        <Skeleton
+                          variant='circle'
+                          height={theme.spacing(4)}
+                          width={theme.spacing(4)}
+                        />
+                      ) : (
+                        <FlashOutlinedIcon className={classes.icon} />
+                      )}
                     </Box>
                     <Typography variant='body1'>
-                      {kittygotchi.attack}
+                      {loading ? (
+                        <Skeleton width={theme.spacing(6)} />
+                      ) : (
+                        kittygotchi?.attack?.toNumber()
+                      )}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid item>
                   <Box display='flex' alignItems='center' alignContent='center'>
                     <Box className={classes.iconWrapper} mr={2}>
-                      <ShieldOutlinedIcon className={classes.icon} />
+                      {loading ? (
+                        <Skeleton
+                          variant='circle'
+                          height={theme.spacing(4)}
+                          width={theme.spacing(4)}
+                        />
+                      ) : (
+                        <ShieldOutlinedIcon className={classes.icon} />
+                      )}
                     </Box>
                     <Typography variant='body1'>
-                      {kittygotchi.defense}
+                      {loading ? (
+                        <Skeleton width={theme.spacing(6)} />
+                      ) : (
+                        kittygotchi?.defense?.toNumber()
+                      )}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid item>
                   <Box display='flex' alignItems='center' alignContent='center'>
                     <Box className={classes.iconWrapper} mr={2}>
-                      <FlashOutlinedIcon className={classes.icon} />
+                      {loading ? (
+                        <Skeleton
+                          variant='circle'
+                          height={theme.spacing(4)}
+                          width={theme.spacing(4)}
+                        />
+                      ) : (
+                        <FlashOutlinedIcon className={classes.icon} />
+                      )}
                     </Box>
-                    <Typography variant='body1'>{kittygotchi.run}</Typography>
+                    <Typography variant='body1'>
+                      {loading ? (
+                        <Skeleton width={theme.spacing(6)} />
+                      ) : (
+                        kittygotchi?.run?.toNumber()
+                      )}
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>

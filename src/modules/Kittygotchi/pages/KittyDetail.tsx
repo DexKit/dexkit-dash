@@ -22,7 +22,7 @@ import {
   Breadcrumbs,
   Link,
 } from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
+import {Alert, Skeleton} from '@material-ui/lab';
 import {
   EditIcon,
   FastFoodOutlineIcon,
@@ -40,8 +40,13 @@ import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
-import {useKittygotchi} from '../hooks';
+import {useKittygotchi, useKittygotchiFeed, useKittygotchiV2} from '../hooks';
 import {useMobile} from 'hooks/useMobile';
+import FeedKittygotchiButton from '../components/buttons/FeedKittygotchiButton';
+import {useNotifications} from 'hooks/useNotifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -109,20 +114,74 @@ interface Params {
 export const KittyDetail = () => {
   const classes = useStyles();
   const theme = useTheme();
-
+  const [errorMessage, setErrorMessage] = useState<string>();
   const params = useParams<Params>();
+
+  const {chainId} = useWeb3();
 
   const rewardToggler = useToggler(false);
 
-  const kittygotchi = useKittygotchi(params.id);
+  const kittygotchi = useKittygotchiV2();
 
   const isMobile = useMobile();
 
   const history = useHistory();
 
+  const {createNotification} = useNotifications();
+
   const handleClickEdit = useCallback(() => {
     history.push(`/kittygotchi/${params.id}/edit`);
   }, [history, params]);
+
+  const {onFeedCallback} = useKittygotchiFeed();
+
+  const handleClearError = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+
+  const handleFeed = useCallback(() => {
+    const onSubmit = (hash?: string) => {
+      if (hash && chainId) {
+        createNotification({
+          title: 'Feeding Kittygotchi',
+          body: `Feeding Kittygotchi #${params.id}`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, hash),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: hash,
+            status: 'pending',
+          } as TxNotificationMetadata,
+        });
+      }
+    };
+
+    const onConfirmation = (hash?: string) => {
+      kittygotchi.get(params.id);
+    };
+
+    const onError = (error?: any) => {
+      if (error.data) {
+        setErrorMessage(error.data.message);
+      } else {
+        setErrorMessage(error.message);
+      }
+    };
+
+    onFeedCallback(params.id, {
+      onConfirmation,
+      onError,
+      onSubmit,
+    });
+  }, [onFeedCallback, params.id, createNotification, chainId]);
+
+  useEffect(() => {
+    if (params.id) {
+      kittygotchi.get(params.id);
+    }
+  }, [params.id]);
 
   return (
     <>
@@ -171,6 +230,13 @@ export const KittyDetail = () => {
           </Grid>
         </Box>
         <Grid container spacing={4}>
+          {errorMessage && (
+            <Grid item xs={12}>
+              <Alert severity='error' onClose={handleClearError}>
+                {errorMessage}
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
@@ -184,7 +250,17 @@ export const KittyDetail = () => {
                           alignContent='center'
                           justifyContent='center'
                           mb={2}>
-                          <Avatar className={classes.avatar} />
+                          {kittygotchi.isLoading ? (
+                            <Skeleton
+                              variant='circle'
+                              className={classes.avatar}
+                            />
+                          ) : (
+                            <Avatar
+                              className={classes.avatar}
+                              src={kittygotchi?.data?.image}
+                            />
+                          )}
                         </Box>
                         <Grid
                           alignItems='center'
@@ -194,9 +270,7 @@ export const KittyDetail = () => {
                           spacing={2}>
                           <Grid item>
                             <Tooltip title='Feed'>
-                              <RoundedIconButton>
-                                <FastFoodOutlineIcon stroke='white' />
-                              </RoundedIconButton>
+                              <FeedKittygotchiButton onClick={handleFeed} />
                             </Tooltip>
                           </Grid>
                           <Grid item>
@@ -253,7 +327,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.attack}
+                                    {kittygotchi.data?.attack.toNumber()}
                                   </Typography>
                                 </Box>
                                 <Box
@@ -276,7 +350,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.attack}
+                                    {kittygotchi.data?.defense.toNumber()}
                                   </Typography>
                                 </Box>
                                 <Box
@@ -299,7 +373,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.run}
+                                    {kittygotchi.data?.run.toNumber()}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -318,7 +392,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.attack}
+                                      {kittygotchi.data?.attack.toNumber()}
                                     </Typography>
                                   </Box>
                                 </Grid>
@@ -335,7 +409,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.defense}
+                                      {kittygotchi.data?.defense.toNumber()}
                                     </Typography>
                                   </Box>
                                 </Grid>
@@ -352,7 +426,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.run}
+                                      {kittygotchi.data?.run.toNumber()}
                                     </Typography>
                                   </Box>
                                 </Grid>

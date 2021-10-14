@@ -40,38 +40,55 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Box
-                display='flex'
-                alignItems='center'
-                alignContent='center'
-                justifyContent='center'>
-                <NFTEmptyStateImage />
-              </Box>
+          {loading ? (
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <CircularProgress color='primary' size={theme.spacing(32)} />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Typography gutterBottom align='center' variant='h6'>
-                You don't have a Kittygotchi NFT yet
-              </Typography>
+          ) : kittygotchi !== undefined ? (
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <h1></h1>
+              </Grid>
+            </Grid>
+          ) : (
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='center'>
+                  <NFTEmptyStateImage />
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography gutterBottom align='center' variant='h6'>
+                  You don't have a Kittygotchi NFT yet
+                </Typography>
 
-              <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens in your wallet to
-                mint one.
-              </Typography>
+                <Typography
+                  color='textSecondary'
+                  align='center'
+                  variant='body2'>
+                  You will need <strong>10 MATIC</strong> tokens in your wallet
+                  to mint one.
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Box display='flex' justifyContent='center'>
+                  <Button
+                    onClick={onMint}
+                    startIcon={<GavelIcon />}
+                    variant='outlined'
+                    color='primary'>
+                    Mint Kittygotchi
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Box display='flex' justifyContent='center'>
-                <Button
-                  onClick={onMint}
-                  startIcon={<GavelIcon />}
-                  variant='outlined'
-                  color='primary'>
-                  Mint Kittygotchi
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
+          )}
         </Grid>
       </Grid>
     );

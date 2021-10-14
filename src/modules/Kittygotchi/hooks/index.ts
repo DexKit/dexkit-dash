@@ -1,11 +1,17 @@
+import {BigNumber, ethers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {useQuery} from 'react-query';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI, METADATA_KITTY_ENDPOINT, PRICE} from '../constants';
+import {
+  GET_KITTY_CHAIN_ID,
+  KITTYGOTCHI,
+  METADATA_KITTY_ENDPOINT,
+  PRICE,
+} from '../constants';
 import {
   getOnchainAttritbutes,
   feed,
@@ -14,69 +20,88 @@ import {
   update,
 } from '../services/kittygotchi';
 
+import {
+  ApolloClient,
+  gql,
+  InMemoryCache,
+  useQuery as useGraphqlQuery,
+} from '@apollo/client';
+import {getTokenMetadata} from 'services/nfts';
+import {getNormalizedUrl} from 'utils/browser';
+
+const GET_MY_KITTYGOTCHIES = gql`
+  query QueryKittygotchies($owner: String!) {
+    tokens(where: {owner_contains: $owner}) {
+      id
+      owner {
+        id
+      }
+      attack
+      defense
+      run
+      uri
+    }
+  }
+`;
+
+const GET_KITTYGOTCHI = gql`
+  query QueryKittygotchi($id: String!) {
+    token(id: $id) {
+      id
+      owner {
+        id
+      }
+      attack
+      defense
+      run
+      uri
+    }
+  }
+`;
+
+const THEGRAPH_KITTYGOTCHI_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchi';
+
+let client = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
 interface CallbackProps {
-  onSubmit?: any;
-  onConfirmation?: any;
-  onError?: any;
+  onSubmit?: (hash?: string) => void;
+  onConfirmation?: (hash?: string) => void;
+  onError?: (error?: any) => void;
 }
 
 export function useKittygotchi(id?: string) {
-  const {chainId} = useWeb3();
-  const provider = useNetworkProvider(
-    EthereumNetwork.matic,
-    GET_KITTY_CHAIN_ID(chainId),
-  );
+  const {chainId, getProvider, web3State} = useWeb3();
+
+  const provider = useNetworkProvider(undefined, GET_KITTY_CHAIN_ID(chainId));
+
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
-  const query = useQuery(['GET_KITTYGOTCHI_META', id, chainId], () => {
-    if (id && provider) {
-      return fetch(`${METADATA_KITTY_ENDPOINT}${id}`)
-        .then((r) => r.json())
-        .then(async (r) => {
-          const attr = await getOnchainAttritbutes(id, kittyAddress, provider);
-          return {
-            ...r,
-            ...attr,
-          } as Kittygotchi;
-        });
-    }
-  });
-  return query;
-}
+  const query = useQuery(
+    ['GET_KITTYGOTCHI_META', id, chainId, web3State],
+    () => {
+      if (id && provider && web3State === Web3State.Done) {
+        return fetch(`${METADATA_KITTY_ENDPOINT}${id}`)
+          .then((r) => r.json())
+          .then(async (r) => {
+            const attr = await getOnchainAttritbutes(
+              id,
+              kittyAddress,
+              provider,
+            );
 
-export function useKittygotchiList(ids?: string[]) {
-  const {chainId} = useWeb3();
-  const provider = useNetworkProvider(
-    EthereumNetwork.matic,
-    GET_KITTY_CHAIN_ID(chainId),
-  );
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
-
-  const query = useQuery(['GET_KITTYGOTCHI_META_LIST', ids], async () => {
-    if (ids) {
-      const kitties = [];
-      for (const id of ids) {
-        try {
-          const result = await fetch(`${METADATA_KITTY_ENDPOINT}${id}`)
-            .then((r) => r.json())
-            .then(async (r) => {
-              const attr = await getOnchainAttritbutes(
-                id,
-                kittyAddress,
-                provider,
-              );
-              return {
-                ...r,
-                ...attr,
-              } as Kittygotchi;
-            });
-          kitties.push(result);
-        } catch {}
+            return {
+              id,
+              ...r,
+              ...attr,
+            } as Kittygotchi;
+          });
       }
-      return kitties;
-    }
-  });
-
+    },
+  );
   return query;
 }
 
@@ -97,12 +122,17 @@ export function useKittygotchiFeed() {
       }
       try {
         const tx = await feed(id, kittyAddress, getProvider());
-        callbacks?.onSubmit(tx.hash);
+        if (callbacks?.onSubmit) {
+          callbacks?.onSubmit(tx.hash);
+        }
         await tx.wait();
-        callbacks?.onConfirmation(tx.hash);
+        if (callbacks?.onConfirmation) {
+          callbacks?.onConfirmation(tx.hash);
+        }
       } catch (e) {
-        console.log(e);
-        callbacks?.onError(e);
+        if (callbacks?.onError) {
+          callbacks?.onError(e);
+        }
       }
     },
     [web3State, chainId],
@@ -128,11 +158,17 @@ export function useKittygotchiMint() {
       }
       try {
         const tx = await mint(kittyAddress, getProvider(), PRICE[chainId]);
-        callbacks?.onSubmit(tx.hash);
+        if (callbacks?.onSubmit) {
+          callbacks?.onSubmit(tx.hash);
+        }
         await tx.wait();
-        callbacks?.onConfirmation(tx.hash);
+        if (callbacks?.onConfirmation) {
+          callbacks?.onConfirmation(tx.hash);
+        }
       } catch (e) {
-        callbacks?.onError(e);
+        if (callbacks?.onError) {
+          callbacks?.onError(e);
+        }
       }
     },
     [web3State, chainId, kittyAddress],
@@ -159,11 +195,17 @@ export function useKittygotchiUpdate() {
       }
       try {
         const {sig, messageSigned} = await signUpdate(getProvider(), chainId);
-        callbacks?.onSubmit();
+        if (callbacks?.onSubmit) {
+          callbacks?.onSubmit();
+        }
         await update(sig, messageSigned, kitty.attributes, kitty.id, account);
-        callbacks?.onConfirmation();
+        if (callbacks?.onConfirmation) {
+          callbacks?.onConfirmation();
+        }
       } catch (e) {
-        callbacks?.onError(e);
+        if (callbacks?.onError) {
+          callbacks?.onError(e);
+        }
       }
     },
     [web3State, chainId, account],
@@ -171,3 +213,97 @@ export function useKittygotchiUpdate() {
 
   return {onUpdateKittyCallback};
 }
+
+export const useKittygotchiList = (address?: string) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<Kittygotchi[]>();
+  const [error, setError] = useState<any>();
+
+  const get = useCallback(async (address?: string) => {
+    setIsLoading(true);
+    client
+      .query<{tokens: any[]}>({
+        query: GET_MY_KITTYGOTCHIES,
+        variables: {owner: address?.toLowerCase()},
+      })
+      .then((result) => {
+        setData(
+          result.data.tokens.map((k) => {
+            let item: Kittygotchi = {
+              id: k.id,
+              attack: k.attack ? BigNumber.from(k.attack) : BigNumber.from(0),
+              defense: k.defense
+                ? BigNumber.from(k.defense)
+                : BigNumber.from(0),
+              run: k.run ? BigNumber.from(k.run) : BigNumber.from(0),
+            };
+
+            getTokenMetadata(k.uri).then((metadata) => {
+              if (metadata.image) {
+                item.image = getNormalizedUrl(metadata.image);
+              }
+            });
+
+            return item;
+          }),
+        );
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setIsLoading(false);
+      });
+  }, []);
+
+  return {get, data, error, isLoading};
+};
+
+export const useKittygotchiV2 = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<Kittygotchi>();
+  const [error, setError] = useState<any>();
+
+  const get = useCallback(async (id?: string) => {
+    setIsLoading(true);
+
+    client
+      .query<{token: any}>({
+        query: GET_KITTYGOTCHI,
+        variables: {id: id?.toLowerCase()},
+      })
+      .then((result) => {
+        let resultData = result.data.token;
+
+        let data: Kittygotchi = {
+          id: resultData.id,
+          attack: resultData.attack
+            ? BigNumber.from(resultData.attack)
+            : BigNumber.from(0),
+          defense: resultData.defense
+            ? BigNumber.from(resultData.defense)
+            : BigNumber.from(0),
+          run: resultData.run
+            ? BigNumber.from(resultData.run)
+            : BigNumber.from(0),
+        };
+
+        getTokenMetadata(resultData.uri).then((metadata) => {
+          if (metadata.image) {
+            data.image = getNormalizedUrl(metadata.image);
+          }
+        });
+
+        setData(data);
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+
+        setIsLoading(false);
+      });
+  }, []);
+
+  return {get, data, error, isLoading};
+};

@@ -28,7 +28,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useToggler} from 'hooks/useToggler';
 import {useKittygotchi, useKittygotchiUpdate} from '../hooks';
 import {ColorCircle} from '../components/ColorCircle';
-import { ButtonState, SubmitState } from '../components/ButtonState';
+import {ButtonState, SubmitState} from '../components/ButtonState';
 
 const COLORS: string[] = [];
 
@@ -52,31 +52,30 @@ export const KittyEdit = () => {
   const {onUpdateKittyCallback} = useKittygotchiUpdate();
 
   const onUpdateGotchi = useCallback(
-    (_ev: any) => {  
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setSubmitState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          // Save here the current id minted
-          setSubmitState(SubmitState.Confirmed);
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
+    (_ev: any) => {
+      setSubmitState(SubmitState.WaitingWallet);
+      const onSubmitTx = (hash?: string) => {
+        setSubmitState(SubmitState.Submitted);
+      };
+      const onConfirmTx = (hash?: string) => {
+        // Save here the current id minted
+        setSubmitState(SubmitState.Confirmed);
+      };
+      const onError = (error?: any) => {
+        setSubmitState(SubmitState.Error);
+        setTimeout(() => {
+          setSubmitState(SubmitState.None);
+        }, 3000);
+      };
 
-        onUpdateKittyCallback({} as any,{
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
-        });
+      onUpdateKittyCallback({} as any, {
+        onConfirmation: onConfirmTx,
+        onError,
+        onSubmit: onSubmitTx,
+      });
     },
     [onUpdateKittyCallback],
   );
-
 
   return (
     <>

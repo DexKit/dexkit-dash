@@ -1,30 +1,21 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useRef, useState, useCallback, useEffect} from 'react';
 
 import {
   makeStyles,
   Box,
   Grid,
   Typography,
-  Divider,
-  CardContent,
-  Card,
-  LinearProgress,
-  withStyles,
   Paper,
-  CircularProgress,
   useTheme,
-  Avatar,
-  ButtonBase,
   Button,
-  CardMedia,
-  alpha,
   IconButton,
   Breadcrumbs,
   Link,
-  Chip,
-  CardActionArea,
   TextField,
+  InputAdornment,
 } from '@material-ui/core';
+
+import {Alert} from '@material-ui/lab';
 
 import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 
@@ -33,11 +24,23 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
+import {MintKittygotchiDialog} from '../components/dialogs/MintKittygotchiDialog';
+
+import GavelIcon from '@material-ui/icons/Gavel';
+import SearchIcon from '@material-ui/icons/Search';
+
+import {NFTEmptyStateImage} from 'shared/components/Icons';
+
 import {useToggler} from 'hooks/useToggler';
 import {useKittygotchiList, useKittygotchiMint} from '../hooks/index';
 import {KittygotchiCard} from '../components/KittygotchiCard';
 import {Kittygotchi} from 'types/kittygotchi';
-import { ButtonState, SubmitState } from '../components/ButtonState';
+import {ButtonState, SubmitState} from '../components/ButtonState';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {useNotifications} from 'hooks/useNotifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useWeb3} from 'hooks/useWeb3';
+import {getTransactionScannerUrl} from 'utils/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -58,43 +61,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ProfileIndex = () => {
+export const KittygotchiIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const {chainId} = useWeb3();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
-  // Pass here array of id's from Local Storage
-  // useKittygotchiList(ids);
-  const kittygotchiList = useKittygotchiList(["0"]);
+  const mintKittyToggler = useToggler(false);
+
+  const emtpyArrayRef = useRef(new Array(6).fill(null));
+
+  const [errorMessage, setErrorMessage] = useState<string>();
+
+  const defaultAccount = useDefaultAccount();
+
+  const kittygotchiList = useKittygotchiList();
+
   const {onMintCallback} = useKittygotchiMint();
+
   const [tx, setTx] = useState<string>();
 
-  const onMintGotchi = useCallback(
-    (_ev: any) => {  
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          setSubmitState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          // Save here the current id minted
-          setSubmitState(SubmitState.Confirmed);
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
+  const {createNotification} = useNotifications();
 
-        onMintCallback({
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
+  const onMintGotchi = useCallback(() => {
+    setSubmitState(SubmitState.WaitingWallet);
+    const onSubmitTx = (hash?: string) => {
+      setTx(hash);
+
+      if (chainId && hash) {
+        createNotification({
+          title: 'Create new Kittygotchi',
+          body: `Creating a new Kittygotchi`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, hash),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: hash,
+            status: 'pending',
+          } as TxNotificationMetadata,
         });
-    },
-    [onMintCallback],
-  );
+      }
+      mintKittyToggler.set(false);
+
+      setSubmitState(SubmitState.Submitted);
+    };
+    const onConfirmTx = (hash?: string) => {
+      // Save here the current id minted
+      setSubmitState(SubmitState.Confirmed);
+      mintKittyToggler.set(false);
+      kittygotchiList.get(defaultAccount);
+
+      console.log('COnfirma');
+    };
+    const onError = (error: any) => {
+      setSubmitState(SubmitState.Error);
+      setErrorMessage(error.message);
+
+      mintKittyToggler.set(false);
+
+      setTimeout(() => {
+        setSubmitState(SubmitState.None);
+      }, 3000);
+    };
+
+    onMintCallback({
+      onConfirmation: onConfirmTx,
+      onError,
+      onSubmit: onSubmitTx,
+    });
+  }, [onMintCallback, createNotification, chainId, defaultAccount]);
 
   const history = useHistory();
 
@@ -105,6 +142,20 @@ export const ProfileIndex = () => {
     [history],
   );
 
+  const handleConfirmMint = useCallback(() => {
+    onMintGotchi();
+  }, [onMintGotchi]);
+
+  const handleClearError = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+
+  useEffect(() => {
+    if (defaultAccount) {
+      kittygotchiList.get(defaultAccount);
+    }
+  }, [defaultAccount]);
+
   return (
     <>
       <RewardDialog
@@ -112,6 +163,17 @@ export const ProfileIndex = () => {
           open: rewardToggler.show,
           onClose: rewardToggler.toggle,
         }}
+      />
+      <MintKittygotchiDialog
+        dialogProps={{
+          open: mintKittyToggler.show,
+          onClose: mintKittyToggler.toggle,
+        }}
+        loading={
+          submitState === SubmitState.WaitingWallet ||
+          submitState === SubmitState.Submitted
+        }
+        onConfirm={handleConfirmMint}
       />
       <Box>
         <Box mb={4}>
@@ -140,6 +202,13 @@ export const ProfileIndex = () => {
           </Grid>
         </Box>
         <Grid container spacing={4}>
+          {errorMessage && (
+            <Grid item xs={12}>
+              <Alert severity='error' onClose={handleClearError}>
+                {errorMessage}
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={3}>
             <Paper>
               <Box p={4}>
@@ -147,36 +216,78 @@ export const ProfileIndex = () => {
                   fullWidth
                   variant='outlined'
                   placeholder='Search...'
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <SearchIcon color='inherit' />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Box>
             </Paper>
           </Grid>
           <Grid item xs={9}>
             <Grid container spacing={4}>
-              {kittygotchiList.data?.map((kittygotchi, index) => (
-                <Grid item xs={4} key={index}>
-                  <KittygotchiCard
-                    onClick={handleKittygotchiClick}
-                    kittygotchi={kittygotchi}
-                  />
-                </Grid>
-              ))}
+              <Grid item xs={12}>
+                <Paper>
+                  <Box display='flex' justifyContent='space-between' p={4}>
+                    <Box></Box>
+                    <Button
+                      startIcon={<GavelIcon />}
+                      variant='contained'
+                      color='primary'
+                      onClick={mintKittyToggler.toggle}>
+                      Mint Kitty
+                    </Button>
+                  </Box>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                {kittygotchiList.isLoading ? (
+                  <Grid container spacing={4}>
+                    {emtpyArrayRef.current.map((i, index) => (
+                      <Grid item xs={4} key={index}>
+                        <KittygotchiCard loading />
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <>
+                    {kittygotchiList.data?.length === 0 && (
+                      <Box py={4}>
+                        <Grid container spacing={4}>
+                          <Grid item xs={12}>
+                            <Box
+                              display='flex'
+                              justifyContent='center'
+                              alignContent='center'
+                              alignItems='center'>
+                              <NFTEmptyStateImage />
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography align='center' variant='h5'>
+                              <IntlMessages id='nfts.wallet.noItemsFound' />
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    )}
+                    <Grid container spacing={4}>
+                      {kittygotchiList.data?.map((kittygotchi, index) => (
+                        <Grid item xs={4} key={index}>
+                          <KittygotchiCard
+                            onClick={handleKittygotchiClick}
+                            kittygotchi={kittygotchi}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </>
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={12}>
-                  <Button
-                    onClick={onMintGotchi}
-                    fullWidth
-                    variant={'contained'}
-                    color={
-                      submitState === SubmitState.Error ? 'default' : 'primary'
-                    }>
-                    <ButtonState
-                      state={submitState}
-                      defaultMsg={'Create Gotchi'}
-                      confirmedMsg={'Gotchi created'}
-                    />
-                  </Button>
-                </Grid>
           </Grid>
         </Grid>
       </Box>
@@ -184,4 +295,4 @@ export const ProfileIndex = () => {
   );
 };
 
-export default ProfileIndex;
+export default KittygotchiIndex;

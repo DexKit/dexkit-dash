@@ -37,10 +37,11 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {ProfilePointsCard} from '../components/ProfilePointsCard';
-import {useKittygotchiMint, useProfilePoints} from '../hooks';
+import {useProfileKittygotchi, useProfilePoints} from '../hooks';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
+import {useKittygotchiMint} from 'modules/Kittygotchi/hooks';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -65,15 +66,31 @@ export const ProfileIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [mintLoading, setMintLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   const history = useHistory();
 
   const profilePoints = useProfilePoints();
 
   const kittygotchiMint = useKittygotchiMint();
 
+  const kittyProfile = useProfileKittygotchi();
+
   const handleMint = useCallback(() => {
-    kittygotchiMint.mint();
-  }, []);
+    kittygotchiMint.onMintCallback({
+      onConfirmation: (hash?: string) => {
+        setMintLoading(false);
+      },
+      onSubmit: (hash?: string) => {
+        setMintLoading(true);
+      },
+      onError: (error: any) => {
+        setErrorMessage(error);
+        setMintLoading(false);
+      },
+    });
+  }, [kittygotchiMint.onMintCallback]);
 
   return (
     <>
@@ -112,12 +129,13 @@ export const ProfileIndex = () => {
               <Grid item xs={12}>
                 <ProfileKittygotchiCard
                   onMint={handleMint}
-                  loading={kittygotchiMint.loading}
+                  loading={mintLoading}
+                  kittygotchi={kittyProfile.kittygotchi}
                 />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography variant='body1'>Reward Points</Typography>
@@ -130,7 +148,7 @@ export const ProfileIndex = () => {
                 />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </>
