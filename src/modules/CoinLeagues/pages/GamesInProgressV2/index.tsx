@@ -33,16 +33,7 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import { useActiveGames } from 'modules/CoinLeagues/hooks/useGames';
-
-enum FilterGame {
-  ALL = 'All',
-  Fast = '1hr',
-  Medium = '4hrs',
-  Eight = '8hrs',
-  Day = '24hrs',
-  Week = 'Week',
-  Mine = 'My Games',
-}
+import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 
 const GamesInProgressV2 = () => {
   const history = useHistory();
@@ -233,6 +224,14 @@ const GamesInProgressV2 = () => {
                   label={FilterGame.Mine}
                   color={filterGame === FilterGame.Mine ? 'primary' : 'default'}
                   onClick={() => setFilterGame(FilterGame.Mine)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.BitBoy}
+                  color={filterGame === FilterGame.BitBoy ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.BitBoy)}
                 />
               </Grid>
             </Grid>

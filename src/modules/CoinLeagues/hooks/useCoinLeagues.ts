@@ -148,12 +148,12 @@ export const useCoinLeagues = (address?: string) => {
   );
 
   const onClaimCallback = useCallback(
-    async (callbacks?: CallbackProps) => {
+    async (winner: string, callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done || !address) {
         return;
       }
       try {
-        const tx = await claim(address, getProvider());
+        const tx = await claim(address, getProvider(), winner);
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();

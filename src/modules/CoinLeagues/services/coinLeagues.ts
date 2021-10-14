@@ -262,13 +262,13 @@ export const startGame = async (gameAddress: string, provider: any) => {
 
 
 
-export const claim = async (gameAddress: string, provider: any) => {
+export const claim = async (gameAddress: string, provider: any, winner: string) => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
 
-  return (await getCoinLeaguesContract(gameAddress, provider)).claim({
+  return (await getCoinLeaguesContract(gameAddress, provider)).claim(winner, {
     gasPrice,
   }) as Promise<ContractTransaction>;
 };

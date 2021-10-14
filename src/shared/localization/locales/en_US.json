@@ -924,5 +924,8 @@
   "nfts.bundle.summary": "Summary",
   "nfts.bundle.bundleNameRequired": "Bundle name is required",
   "nfts.bundle.listingBundle": "Listing bundle",
-  "nfts.bundle.items": "Items"
+  "nfts.bundle.items": "Items",
+  "coinleagues.charts": "Charts"
+
+
 }

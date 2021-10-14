@@ -37,9 +37,10 @@ import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 
-import { useNotifications } from 'hooks/useNotifications';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {useNotifications} from 'hooks/useNotifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -190,10 +191,7 @@ function OnePlayerTable(props: Props): JSX.Element {
             title: 'Claim',
             body: `Claimed for Game ${address}`,
             timestamp: Date.now(),
-            url: getTransactionScannerUrl(
-              chainId,
-              tx,
-            ),
+            url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
             type: NotificationType.TRANSACTION,
             metadata: {
@@ -214,7 +212,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           }, 3000);
         };
 
-        onClaimCallback({
+        onClaimCallback(account, {
           onConfirmation: onConfirmTx,
           onError,
           onSubmit: onSubmitTx,
@@ -263,10 +261,15 @@ function OnePlayerTable(props: Props): JSX.Element {
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
-        const label = accountLabels
-          ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
-          : d.hash;
-
+        let label;
+        const bitboyMember = GET_BITBOY_NAME(d.hash);
+        if (bitboyMember) {
+          label = bitboyMember.label;
+        } else {
+          label = accountLabels
+            ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+            : d.hash;
+        }
         const currentFeedPrice = currentPrices?.filter((f) =>
           d.coins
             .concat(d.captainCoin ? d.captainCoin : [])
@@ -307,20 +310,26 @@ function OnePlayerTable(props: Props): JSX.Element {
             ...d,
             account: d.hash,
             hash: label,
-            score: d.score / 10,
+            score: d.score / 1000,
           };
         }
       });
     }
     return props?.data?.map((d) => {
-      const label = accountLabels
-        ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
-        : d.hash;
+      let label;
+      const bitboyMember = GET_BITBOY_NAME(d.hash);
+      if (bitboyMember) {
+        label = bitboyMember.label;
+      } else {
+        label = accountLabels
+          ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+          : d.hash;
+      }
       return {
         ...d,
         account: d.hash,
         hash: label,
-        score: d.score / 10,
+        score: d.score / 1000,
       };
     });
   }, [props.data, game, currentPrices, allFeeds]);
@@ -487,7 +496,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                     }}
                     label={`${
                       playerData?.score >= 0 ? '+' : ''
-                    }${playerData?.score?.toFixed(2)}%`}
+                    }${playerData?.score?.toFixed(3)}%`}
                   />
                 </TableCell>
 

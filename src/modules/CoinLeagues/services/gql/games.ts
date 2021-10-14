@@ -31,7 +31,9 @@ export const GET_GAMES_WITH_PLAYER = gql`
         startedAt
         endedAt
         earnings(where: {player_contains: $player}){
-          place 
+          place
+          amount
+          claimed 
         }
       }
   }
@@ -52,7 +54,9 @@ export const GET_ALL_GAMES_WITH_PLAYER = gql`
         endedAt
         createdAt
         earnings(where: {player_contains: $player}){
-          place 
+          place
+          amount
+          claimed 
         }
       }
   }

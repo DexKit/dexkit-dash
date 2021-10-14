@@ -16,6 +16,7 @@ import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 import {strPad} from 'modules/CoinLeagues/utils/time';
 import {CardTimer} from '../CardTimer';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,6 +65,7 @@ function CardGameV2(props: Props): JSX.Element {
   const entryAmount = ethers.utils.formatEther(game.entry);
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
@@ -93,11 +95,25 @@ function CardGameV2(props: Props): JSX.Element {
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>
             <SendIcon />
-            <Typography
-              variant='h6'
-              style={{color: '#fcc591', alignItems: 'baseline'}}>
-              &nbsp;{entryAmount} {'MATIC'}
-            </Typography>
+            <Box display={'flex'} alignItems={'center'} pl={1}>
+              <Grid
+                container
+                justifyContent={'center'}
+                alignItems={'center'}
+                spacing={1}>
+                <Grid xs={12} item>
+                  <Typography
+                    variant='h6'
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    {gameLevel}
+                  </Typography>
+                  <Typography
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {'MATIC'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Grid>
         <Grid xs={6} item>

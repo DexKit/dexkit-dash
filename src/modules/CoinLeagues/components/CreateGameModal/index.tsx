@@ -205,14 +205,14 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={0.01}>0.01 Matic</MenuItem>
-              <MenuItem value={0.1}>0.1 Matic</MenuItem>
-              <MenuItem value={1}>1 Matic</MenuItem>
-              <MenuItem value={5}>5 Matic</MenuItem>
-              <MenuItem value={10}>10 Matic</MenuItem>
-              <MenuItem value={50}>50 Matic</MenuItem>
+              <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
+              <MenuItem value={0.1}>Beginner -0.1 Matic</MenuItem>
+              <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
+              <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
+              <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
+           {/*   <MenuItem value={50}>50 Matic</MenuItem>
               <MenuItem value={100}>100 Matic</MenuItem>
-              <MenuItem value={500}>500 Matic</MenuItem>
+            <MenuItem value={500}>500 Matic</MenuItem>*/}
             </Select>
           </FormControl>
         </Grid>

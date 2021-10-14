@@ -92,7 +92,12 @@ export const ViewCoinListItem = (props: Props) => {
         return '0';
       }
       if (!started) {
-        return feedOnchain.score.toNumber() / 10;
+        if(isCaptain){
+          return (feedOnchain.score.toNumber() *  multipliers(playerAddress)) / 1000 ;
+        }else{
+          return feedOnchain.score.toNumber() / 1000;
+        }
+       
       }
 
       const endPrice = started

@@ -6,12 +6,13 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
-
+import Box from '@material-ui/core/Box';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {BigNumber, ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -93,27 +94,41 @@ function CardGameProgressV2(props: Props): JSX.Element {
     () => {
       const time = Number(game.duration);
       const startTime =
-        Math.round(new Date().getTime() / 1000) -
-        Number(game.startedAt || 0);
+        Math.round(new Date().getTime() / 1000) - Number(game.startedAt || 0);
       setCountdown(time - startTime);
     },
     1000,
     true,
   );
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h6'>ID #{truncateAddress(game.id)}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
-          <Grid container alignContent={'center'}>
+          <Box display={'flex'} alignItems={'center'}>
             <SendIcon />
-            <Typography
-              variant='h6'
-              style={{color: '#fcc591', alignItems: 'baseline'}}>
-              &nbsp;{entryAmount} {'MATIC'}
-            </Typography>
-          </Grid>
+            <Box display={'flex'} alignItems={'center'} pl={1}>
+              <Grid
+                container
+                justifyContent={'center'}
+                alignItems={'center'}
+                spacing={1}>
+                <Grid xs={12} item>
+                  <Typography
+                    variant='h6'
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    {gameLevel}
+                  </Typography>
+                  <Typography
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {'MATIC'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
         </Grid>
         <Grid
           xs={6}

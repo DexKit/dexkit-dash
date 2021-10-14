@@ -19491,6 +19491,11 @@ react-transition-group@^4.0.0, react-transition-group@^4.3.0, react-transition-g
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-ts-tradingview-widgets@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-ts-tradingview-widgets/-/react-ts-tradingview-widgets-1.0.8.tgz#33006a2000bf98e540918000223afde3afa39d93"
+  integrity sha512-LOnqSx5gIfNwrXYzNlCI3afzNToWuPpiWohvk0eJmNiAyOHnIhzEsKpFp5lWMf9GUhMEDnd5Y2LlIO6s8fJp1w==
+
 react-view-pager@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/react-view-pager/-/react-view-pager-0.6.0.tgz#6c6be04b0cc3b907b5ceafec7b2ab6e7228df650"

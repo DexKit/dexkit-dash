@@ -10,7 +10,7 @@ import {ChainId} from 'types/blockchain';
 // 0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
-  [ChainId.Matic]: '0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a',
+  [ChainId.Matic]: '0x6D9993E719742a9Cf4eC1D5F5e7d49Bd48C1D9B1',
 };
 
 export const getCoinLeaguesFactoryContract = async (address: string) => {
