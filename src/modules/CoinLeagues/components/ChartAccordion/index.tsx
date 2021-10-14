@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
@@ -13,9 +13,9 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ShowChart from '@material-ui/icons/ShowChart';
 import ChartTV from '../ChartTV';
-
+import {useMobile} from 'hooks/useMobile';
 export default () => {
- 
+  const isMobile = useMobile();
 
   return (
     <Accordion style={{ background: '#2e3243'}} >
@@ -36,7 +36,7 @@ export default () => {
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-            <ChartTV />
+      {!isMobile && <ChartTV />}
       </AccordionDetails>
     </Accordion>
   );
