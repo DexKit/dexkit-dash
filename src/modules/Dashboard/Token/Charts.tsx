@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import {
   makeStyles, Tabs, Tab,
   Grid, Card, Tooltip,
-  CardContent, Fade
+  CardContent
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import {EthereumNetwork, ThemeMode} from '../../../shared/constants/AppEnums';
@@ -126,7 +126,6 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
             />
           </Tabs>
           <CardContent className={classes.iframeContainer}>
-            <Fade in={true} timeout={1000}>
               {!chartSymbol ? (
                 <Skeleton variant='rect' height={370} />
               ) : (
@@ -152,7 +151,6 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
                   </TabPanelChart>
                 </>
               )}
-            </Fade>
           </CardContent>
         </Card>
       </Grid>

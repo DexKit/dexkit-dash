@@ -241,8 +241,7 @@ const BuySell: React.FC<Props> = ({
       if (
         tokenTo &&
         tokenAddress &&
-        tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase() &&
-        !disableReceive
+        tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase()
       ) {
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {

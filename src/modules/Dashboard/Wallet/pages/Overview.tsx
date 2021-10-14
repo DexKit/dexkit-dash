@@ -22,15 +22,12 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {ShareButton} from 'shared/components/ShareButton';
 
 import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
@@ -44,7 +41,6 @@ import CoinTools from 'shared/components/CoinTools';
 import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
-import {useTokenList} from 'hooks/useTokenList';
 import {useTokenLists} from 'hooks/useTokenLists';
 import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import TokenLogo from 'shared/components/TokenLogo';
@@ -73,6 +69,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
+  
   const [token, setToken] = useState<Token>();
   const priceUSD = useTokenPriceUSD(
     address,
