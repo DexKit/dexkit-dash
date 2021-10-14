@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface FeedKittygotchiButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const FeedKittygotchiButton = (props: FeedKittygotchiButtonProps) => {
@@ -40,11 +40,11 @@ export const FeedKittygotchiButton = (props: FeedKittygotchiButtonProps) => {
       <RoundedIconButton onClick={onClick}>
         <FastFoodOutlineIcon stroke='white' />
       </RoundedIconButton>
-      <CircularProgress
+      {/* <CircularProgress
         className={classes.progress}
         variant='determinate'
         value={50}
-      />
+      /> */}
     </div>
   );
 };

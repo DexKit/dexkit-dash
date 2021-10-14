@@ -32,6 +32,8 @@ import {
   ShieldOutlinedIcon,
 } from 'shared/components/Icons';
 
+import {useNotifications} from 'hooks/useNotifications';
+
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
@@ -41,7 +43,16 @@ import {useProfileKittygotchi, useProfilePoints} from '../hooks';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
-import {useKittygotchiMint} from 'modules/Kittygotchi/hooks';
+import {
+  useKittygotchiFeed,
+  useKittygotchiList,
+  useKittygotchiMint,
+  useKittygotchiV2,
+} from 'modules/Kittygotchi/hooks';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useWeb3} from 'hooks/useWeb3';
+import {Kittygotchi} from 'types/kittygotchi';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -73,24 +84,111 @@ export const ProfileIndex = () => {
 
   const profilePoints = useProfilePoints();
 
+  const kittygotchiItem = useKittygotchiV2();
+  const kittygotchiList = useKittygotchiList();
+
   const kittygotchiMint = useKittygotchiMint();
 
   const kittyProfile = useProfileKittygotchi();
 
+  const {createNotification} = useNotifications();
+
+  const {chainId, account} = useWeb3();
+
   const handleMint = useCallback(() => {
+    setMintLoading(true);
+
     kittygotchiMint.onMintCallback({
       onConfirmation: (hash?: string) => {
         setMintLoading(false);
+
+        if (account) {
+          kittygotchiList
+            .get(account)
+            .then((items: Kittygotchi[] | undefined) => {
+              if (items && items.length > 0) {
+                kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
+              }
+            });
+        }
       },
       onSubmit: (hash?: string) => {
-        setMintLoading(true);
+        if (hash && chainId) {
+          createNotification({
+            title: 'Mint Kittygotchi',
+            body: `Minting your kittygotchi`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, hash),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: hash,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
+        }
       },
       onError: (error: any) => {
         setErrorMessage(error);
         setMintLoading(false);
       },
     });
-  }, [kittygotchiMint.onMintCallback]);
+  }, [chainId, account]);
+
+  const {onFeedCallback} = useKittygotchiFeed();
+
+  const handleClearError = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+
+  const handleFeed = useCallback(() => {
+    const onSubmit = (hash?: string) => {
+      if (hash && chainId && kittyProfile.kittygotchi) {
+        createNotification({
+          title: 'Feeding Kittygotchi',
+          body: `Feeding Kittygotchi #${kittyProfile.kittygotchi.id}`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, hash),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: hash,
+            status: 'pending',
+          } as TxNotificationMetadata,
+        });
+      }
+    };
+
+    const onConfirmation = (hash?: string) => {
+      if (kittyProfile.kittygotchi) {
+        kittygotchiItem.get(kittyProfile.kittygotchi.id);
+      }
+    };
+
+    const onError = (error?: any) => {
+      if (error.data) {
+        setErrorMessage(error.data.message);
+      } else {
+        setErrorMessage(error.message);
+      }
+    };
+
+    if (kittyProfile.kittygotchi) {
+      onFeedCallback(kittyProfile.kittygotchi.id, {
+        onConfirmation,
+        onError,
+        onSubmit,
+      });
+    }
+  }, [onFeedCallback, kittyProfile.kittygotchi, createNotification, chainId]);
+
+  const handleClickEdit = useCallback(() => {
+    if (kittyProfile.kittygotchi) {
+      history.push(`/kittygotchi/${kittyProfile.kittygotchi?.id}/edit`);
+    }
+  }, [history, kittyProfile.kittygotchi]);
 
   return (
     <>
@@ -129,6 +227,8 @@ export const ProfileIndex = () => {
               <Grid item xs={12}>
                 <ProfileKittygotchiCard
                   onMint={handleMint}
+                  onFeed={handleFeed}
+                  onEdit={handleClickEdit}
                   loading={mintLoading}
                   kittygotchi={kittyProfile.kittygotchi}
                 />

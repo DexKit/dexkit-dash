@@ -12,13 +12,9 @@ import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
 
-import {
-  Grid,
-  IconButton,
-  Divider,
-} from '@material-ui/core';
+import {Grid, IconButton, Divider, ButtonBase, Avatar} from '@material-ui/core';
 
-
+import {Link as RouterLink} from 'react-router-dom';
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -95,6 +91,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 {navCollapsed ? <MenuIcon /> : <Close />}
               </IconButton>
             </Box>
+            <Divider />
             <Scrollbar className={classes.scrollAppSidebar}>
               <Navigation />
               {/* <Box p={4} className='visible-hover'>

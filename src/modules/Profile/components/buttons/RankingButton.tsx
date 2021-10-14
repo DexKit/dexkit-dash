@@ -22,6 +22,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
+import {useMobile} from 'hooks/useMobile';
+import {truncateAddress} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -59,6 +61,8 @@ export const RankingButton = (props: RankingButtonProps) => {
     toggler.toggle();
   }, []);
 
+  const isMobile = useMobile();
+
   return (
     <Paper variant='outlined'>
       <ButtonBase onClick={handleToggle} className={classes.button}>
@@ -78,7 +82,7 @@ export const RankingButton = (props: RankingButtonProps) => {
             </Grid>
             <Grid item xs>
               <Typography align='left' variant='body1'>
-                {address}
+                {isMobile ? truncateAddress(address) : address}
               </Typography>
             </Grid>
             <Grid item>

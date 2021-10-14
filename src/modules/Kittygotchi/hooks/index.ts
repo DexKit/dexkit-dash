@@ -220,15 +220,17 @@ export const useKittygotchiList = (address?: string) => {
   const [error, setError] = useState<any>();
 
   const get = useCallback(async (address?: string) => {
-    setIsLoading(true);
-    client
-      .query<{tokens: any[]}>({
-        query: GET_MY_KITTYGOTCHIES,
-        variables: {owner: address?.toLowerCase()},
-      })
-      .then((result) => {
-        setData(
-          result.data.tokens.map((k) => {
+    return new Promise<Kittygotchi[] | undefined>((resolve, reject) => {
+      setIsLoading(true);
+      client
+        .query<{tokens: any[]}>({
+          query: GET_MY_KITTYGOTCHIES,
+          variables: {owner: address?.toLowerCase()},
+        })
+        .then(async (result) => {
+          let data: Kittygotchi[] = [];
+
+          for (let k of result.data.tokens) {
             let item: Kittygotchi = {
               id: k.id,
               attack: k.attack ? BigNumber.from(k.attack) : BigNumber.from(0),
@@ -238,22 +240,25 @@ export const useKittygotchiList = (address?: string) => {
               run: k.run ? BigNumber.from(k.run) : BigNumber.from(0),
             };
 
-            getTokenMetadata(k.uri).then((metadata) => {
-              if (metadata.image) {
-                item.image = getNormalizedUrl(metadata.image);
-              }
-            });
+            let metadata = await getTokenMetadata(k.uri);
 
-            return item;
-          }),
-        );
+            if (metadata.image) {
+              item.image = getNormalizedUrl(metadata.image);
+            }
 
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setIsLoading(false);
-      });
+            data.push(item);
+          }
+
+          setData(data);
+          resolve(data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setError(err);
+          setIsLoading(false);
+          reject(err);
+        });
+    });
   }, []);
 
   return {get, data, error, isLoading};
@@ -272,7 +277,7 @@ export const useKittygotchiV2 = () => {
         query: GET_KITTYGOTCHI,
         variables: {id: id?.toLowerCase()},
       })
-      .then((result) => {
+      .then(async (result) => {
         let resultData = result.data.token;
 
         let data: Kittygotchi = {
@@ -288,11 +293,11 @@ export const useKittygotchiV2 = () => {
             : BigNumber.from(0),
         };
 
-        getTokenMetadata(resultData.uri).then((metadata) => {
-          if (metadata.image) {
-            data.image = getNormalizedUrl(metadata.image);
-          }
-        });
+        let metadata = await getTokenMetadata(resultData.uri);
+
+        if (metadata.image) {
+          data.image = getNormalizedUrl(metadata.image);
+        }
 
         setData(data);
 

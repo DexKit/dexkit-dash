@@ -62,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(40),
     height: theme.spacing(40),
+    border: ' 1px solid #525C75',
+    backgroundColor: '#2E3243',
   },
   relative: {
     position: 'relative',
@@ -274,8 +276,10 @@ export const KittyDetail = () => {
                             </Tooltip>
                           </Grid>
                           <Grid item>
-                            <Tooltip title='Edit'>
-                              <RoundedIconButton onClick={handleClickEdit}>
+                            <Tooltip title='Edit (Coming soon)'>
+                              <RoundedIconButton
+                                disabled
+                                onClick={handleClickEdit}>
                                 <EditIcon />
                               </RoundedIconButton>
                             </Tooltip>
