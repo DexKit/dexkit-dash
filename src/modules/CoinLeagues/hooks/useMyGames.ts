@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterPlayerGame} from '../constants/enums';
 import {
   GET_GAMES_WITH_PLAYER,
@@ -24,17 +24,13 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   let queryName = GET_ALL_GAMES_WITH_PLAYER;
 
   if (accounts) {
-    variables.accounts = accounts;
+    variables.accounts = accounts.map(a=> a.toLowerCase());;
     variables.player = accounts[0].toLowerCase();
   }
   if (accounts && status) {
     variables.status = status;
     queryName = GET_GAMES_WITH_PLAYER;
   }
-
-
-
- 
 
   const onChangePage = (page: number) => {
     const current = Math.max(page, 0);
@@ -50,6 +46,12 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
+  });
+
+  useEffect(() => {
+    const refetchQuery = () => query.refetch();
+    window.addEventListener('focus', refetchQuery);
+    return () => window.removeEventListener('focus', refetchQuery);
   });
 
   return {
