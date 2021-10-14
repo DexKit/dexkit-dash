@@ -24,7 +24,7 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   let queryName = GET_ALL_GAMES_WITH_PLAYER;
 
   if (accounts) {
-    variables.accounts = accounts;
+    variables.accounts = accounts.map(a=> a.toLowerCase());;
     variables.player = accounts[0].toLowerCase();
   }
   if (accounts && status) {

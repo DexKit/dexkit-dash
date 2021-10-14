@@ -22,7 +22,7 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine) {
-    variables.accounts = accounts;
+    variables.accounts = accounts?.map(a=> a.toLowerCase());;
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
@@ -50,7 +50,7 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine) {
-    variables.accounts = accounts;
+    variables.accounts = accounts?.map(a=> a.toLowerCase());
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
@@ -77,8 +77,8 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine && accounts) {
-    variables.accounts = accounts;
-    variables.player = accounts[0];
+    variables.accounts = accounts.map(a=> a.toLowerCase());;
+    variables.player = accounts[0].toLowerCase();
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
