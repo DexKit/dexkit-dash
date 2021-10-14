@@ -33,6 +33,7 @@ import useDiscord from 'hooks/useDiscord';
 import {useWaitingGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
+import TickerTapeTV from '../../components/TickerTapeTV';
 
 const JoinGames = () => {
   const history = useHistory();
@@ -86,6 +87,9 @@ const JoinGames = () => {
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
+       <Grid item xs={12} sm={12} xl={12}>
+        <TickerTapeTV />
+      </Grid>
       <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>

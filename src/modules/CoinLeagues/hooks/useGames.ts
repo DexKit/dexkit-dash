@@ -1,4 +1,5 @@
 import {useQuery} from '@apollo/client';
+import { BITBOY_TEAM } from '../constants';
 import {FilterGame} from '../constants/enums';
 import {
   GET_GAMES,
@@ -25,6 +26,11 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
+  if (filter === FilterGame.BitBoy) {
+    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
+    queryName = GET_GAMES_WITH_PLAYER;
+  }
+
 
   return useQuery<{games: GameGraph[]}>(queryName, {
     variables,
@@ -48,6 +54,11 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
+  if (filter === FilterGame.BitBoy) {
+    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
+    queryName = GET_GAMES_WITH_PLAYER;
+  }
+
   return useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
@@ -68,6 +79,11 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
   if (filter === FilterGame.Mine && accounts) {
     variables.accounts = accounts;
     variables.player = accounts[0];
+    queryName = GET_GAMES_WITH_PLAYER;
+  }
+
+  if (filter === FilterGame.BitBoy) {
+    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
     queryName = GET_GAMES_WITH_PLAYER;
   }
 

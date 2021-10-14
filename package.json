@@ -151,6 +151,7 @@
     "react-text-mask": "^5.4.3",
     "react-toastify": "^6.0.6",
     "react-transition-group": "^4.4.1",
+    "react-ts-tradingview-widgets": "^1.0.8",
     "react-virtualized": "^9.21.2",
     "react-window": "^1.8.6",
     "recharts": "^1.8.5",

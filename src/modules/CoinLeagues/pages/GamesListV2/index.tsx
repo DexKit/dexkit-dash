@@ -46,6 +46,8 @@ import {
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
+import TickerTapeTV from '../../components/TickerTapeTV';
+import {isGameCreator} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -149,6 +151,10 @@ const GamesListV2 = () => {
   return (
     <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
+        <TickerTapeTV />
+      </Grid>
+
+      <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
@@ -160,6 +166,7 @@ const GamesListV2 = () => {
           </Breadcrumbs>
         </Grid>
       </Grid>
+
       <Hidden smUp={true}>
         <Grid item xs={12}>
           <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
@@ -264,15 +271,17 @@ const GamesListV2 = () => {
         />
       </Grid>
 
-      <Grid item xs={12}>
-        <Button
-          className={classes.createGame}
-          fullWidth
-          variant={'contained'}
-          onClick={() => setOpen(true)}>
-          {'CREATE GAME'}
-        </Button>
-      </Grid>
+      {isGameCreator(account) && (
+        <Grid item xs={12}>
+          <Button
+            className={classes.createGame}
+            fullWidth
+            variant={'contained'}
+            onClick={() => setOpen(true)}>
+            {'CREATE GAME'}
+          </Button>
+        </Grid>
+      )}
 
       <Grid item xs={12}>
         <Grid container spacing={2}>
@@ -356,6 +365,14 @@ const GamesListV2 = () => {
                   label={FilterGame.Mine}
                   color={filterGame === FilterGame.Mine ? 'primary' : 'default'}
                   onClick={() => setFilterGame(FilterGame.Mine)}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  clickable
+                  label={FilterGame.BitBoy}
+                  color={filterGame === FilterGame.BitBoy ? 'primary' : 'default'}
+                  onClick={() => setFilterGame(FilterGame.BitBoy)}
                 />
               </Grid>
             </Grid>

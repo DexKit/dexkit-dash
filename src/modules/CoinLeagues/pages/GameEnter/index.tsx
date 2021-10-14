@@ -10,16 +10,17 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import TickerTapeTV from '../../components/TickerTapeTV';
 import CardPrize from '../../components/CardPrize';
 import SimpleCardGame from '../../components/SimpleCardGame';
-import {COINSLEAGUE_ROUTE, HOME_ROUTE} from 'shared/constants/routes';
+import {HOME_ROUTE} from 'shared/constants/routes';
 import {
   Link as RouterLink,
   RouteComponentProps,
   useHistory,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
+import ChartAccordion from 'modules/CoinLeagues/components/ChartAccordion';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
 import {ethers} from 'ethers';
@@ -48,7 +49,7 @@ import {EndGame} from 'modules/CoinLeagues/components/EndGame';
 import {StartGame} from 'modules/CoinLeagues/components/StartGame';
 import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
-import { useNotifications } from 'hooks/useNotifications';
+import {useNotifications} from 'hooks/useNotifications';
 
 import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
@@ -61,9 +62,11 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useMobile} from 'hooks/useMobile';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -102,13 +105,12 @@ function GameEnter(props: Props) {
   const history = useHistory();
   const {account, chainId} = useWeb3();
   const {createNotification} = useNotifications();
+  const isMobile = useMobile();
 
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
     useCoinLeagues(address);
-    const {
-      listGamesRoute,
-      enterGameRoute }= useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
@@ -197,14 +199,17 @@ function GameEnter(props: Props) {
     [selectedCoins],
   );
 
-  const handleBack = useCallback((ev: any) => {
-    if(history.length > 0){
-      history.goBack();
-     }else{
-       history.push(listGamesRoute)
-     }
-     //history.push(listGamesRoute)
-  }, [listGamesRoute]);
+  const handleBack = useCallback(
+    (ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(listGamesRoute);
+      }
+      //history.push(listGamesRoute)
+    },
+    [listGamesRoute],
+  );
 
   const onEnterGame = useCallback(
     (ev: any) => {
@@ -216,10 +221,7 @@ function GameEnter(props: Props) {
             title: 'Join Game',
             body: `Joined Game ${game.address}`,
             timestamp: Date.now(),
-            url: getTransactionScannerUrl(
-              chainId,
-              tx,
-            ),
+            url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
             type: NotificationType.TRANSACTION,
             metadata: {
@@ -228,7 +230,6 @@ function GameEnter(props: Props) {
               status: 'pending',
             } as TxNotificationMetadata,
           });
-
 
           setSubmitState(SubmitState.Submitted);
         };
@@ -311,6 +312,10 @@ function GameEnter(props: Props) {
         />
       )}
       <Grid item xs={12} sm={12} xl={12}>
+        <TickerTapeTV />
+      </Grid>
+
+      <Grid item xs={12} sm={12} xl={12}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
             Dashboard
@@ -326,6 +331,7 @@ function GameEnter(props: Props) {
           </Link>
         </Breadcrumbs>
       </Grid>
+
       <Hidden smUp={true}>
         <Grid item xs={12}>
           <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
@@ -430,6 +436,11 @@ function GameEnter(props: Props) {
         )}
         {isLoading && <CardInfoPlayersSkeleton />}
       </Grid>
+      {!isMobile && (
+        <Grid item xs={12} sm={12}>
+          <ChartAccordion />
+        </Grid>
+      )}
 
       {!player &&
         !isLoading &&

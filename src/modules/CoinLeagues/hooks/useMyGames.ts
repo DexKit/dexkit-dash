@@ -25,7 +25,7 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
 
   if (accounts) {
     variables.accounts = accounts;
-    variables.player = accounts[0];
+    variables.player = accounts[0].toLowerCase();
   }
   if (accounts && status) {
     variables.status = status;

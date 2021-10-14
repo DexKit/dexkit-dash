@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.up('md')]: {
-          padding: '30px 32px 0',
+          padding: '10px 32px 0',
         },
       },
     },
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.up('md')]: {
-          padding: '30px 32px 0',
+          padding: '10px 32px 0',
         },
       },
     },

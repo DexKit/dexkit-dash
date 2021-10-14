@@ -30,6 +30,7 @@ import {GameType} from 'types/coinsleague';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import Badge from '@material-ui/core/Badge';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -128,8 +129,7 @@ function PlayersTable(props: Props): JSX.Element {
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-  const {multiplier, loadingMultiplier, tooltipMessage} =
-    useMultipliers(address);
+  const {multiplier, loadingMultiplier} = useMultipliers(address);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -141,9 +141,15 @@ function PlayersTable(props: Props): JSX.Element {
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
-        const label = accountLabels
-          ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
-          : d.hash;
+        let label;
+        const bitboyMember = GET_BITBOY_NAME(d.hash);
+        if (bitboyMember) {
+          label = bitboyMember.label;
+        } else {
+          label = accountLabels
+            ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+            : d.hash;
+        }
 
         const currentFeedPrice = currentPrices?.filter((f) =>
           d.coins
@@ -184,20 +190,26 @@ function PlayersTable(props: Props): JSX.Element {
             ...d,
             account: d.hash,
             hash: label,
-            score: d.score / 10,
+            score: d.score / 1000,
           };
         }
       });
     }
     return props?.data?.map((d) => {
-      const label = accountLabels
-        ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
-        : d.hash;
+      let label;
+      const bitboyMember = GET_BITBOY_NAME(d.hash);
+      if (bitboyMember) {
+        label = bitboyMember.label;
+      } else {
+        label = accountLabels
+          ? accountLabels.find((a) => a.address === d.hash)?.label || d.hash
+          : d.hash;
+      }
       return {
         ...d,
         account: d.hash,
         hash: label,
-        score: d.score / 10,
+        score: d.score / 1000,
       };
     });
   }, [props.data, game, currentPrices, allFeeds]);
@@ -257,17 +269,20 @@ function PlayersTable(props: Props): JSX.Element {
                         &nbsp; {truncHash(row.hash)}
                       </Typography>
 
-                      {finished && (playerRowData.length === 2 || playerRowData.length === 3) && i === 0 && (
-                        <Box ml={2}>
-                          {' '}
-                          <Chip
-                            color='primary'
-                            icon={<CupIcon />}
-                            label={`Winner`}
-                            size='small'
-                          />{' '}
-                        </Box>
-                      )}
+                      {finished &&
+                        (playerRowData.length === 2 ||
+                          playerRowData.length === 3) &&
+                        i === 0 && (
+                          <Box ml={2}>
+                            {' '}
+                            <Chip
+                              color='primary'
+                              icon={<CupIcon />}
+                              label={`Winner`}
+                              size='small'
+                            />{' '}
+                          </Box>
+                        )}
 
                       {finished && playerRowData.length > 3 && i === 0 && (
                         <Box ml={2}>
@@ -415,7 +430,7 @@ function PlayersTable(props: Props): JSX.Element {
                         color: row.score > 0 ? '#0e0' : '#e00',
                       }}
                       label={`${row.score > 0 ? '+' : ''}${row.score?.toFixed(
-                        2,
+                        3,
                       )}%`}
                     />
                   </TableCell>

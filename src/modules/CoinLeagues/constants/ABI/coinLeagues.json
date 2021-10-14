@@ -72,6 +72,12 @@
         "internalType": "uint256",
         "name": "place",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountSend",
+        "type": "uint256"
       }
     ],
     "name": "Claimed",
@@ -142,6 +148,44 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "first",
+        "type": "address"
+      }
+    ],
+    "name": "Winned",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "first",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "second",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "third",
+        "type": "address"
+      }
+    ],
+    "name": "WinnedMultiple",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "abortGame",
     "outputs": [],
@@ -162,7 +206,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
     "name": "claim",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -366,19 +416,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "coin_feeds",
-        "type": "address[]"
-      }
-    ],
-    "name": "joinGame",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {

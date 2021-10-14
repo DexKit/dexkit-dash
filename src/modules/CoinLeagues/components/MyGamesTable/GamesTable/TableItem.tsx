@@ -13,10 +13,10 @@ import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {CremaTheme} from 'types/AppContextPropsType';
 
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import IntlMessages from '@crema/utility/IntlMessages';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {truncateAddress} from 'utils/text';
+import {ethers} from 'ethers';
+import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 
 interface TableItemProps {
   row: any;
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
 
   const paymentTypeColor = useMemo(() => {
     switch (row.status) {
@@ -67,20 +68,54 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
 
   const place = useMemo(() => {
     if (row.earnings && row.earnings[0]) {
-      if (row.earnings[0].place === 0) {
-        return <Chip label={'1'} />;
+      if (row.earnings[0].place === '0') {
+        return (
+          <Chip color='primary' icon={<CupIcon />} label={`1`} size='small' />
+        );
       }
-      if (row.earnings[0].place === 1) {
-        return <Chip label={'2'} />;
+      if (row.earnings[0].place === '1') {
+        return (
+          <Chip color='primary' icon={<CupIcon />} label={`2`} size='small' />
+        );
       }
-      if (row.earnings[0].place === 2) {
-        return <Chip label={'3'} />;
+      if (row.earnings[0].place === '2') {
+        return (
+          <Chip color='primary' icon={<CupIcon />} label={`3`} size='small' />
+        );
+      }
+    }
+    if (row.status !== 'Ended') {
+      return '-';
+    } else {
+      return 'No wins';
+    }
+  }, [row.earnings, row.status]);
+
+  const claimed = useMemo(() => {
+    if (row.earnings && row.earnings[0]) {
+      if (row.earnings[0].claimed === true) {
+        return (
+          <Box p={2}>
+            {`Claimed ${ethers.utils.formatEther(
+              row.earnings[0].amount,
+            )} MATIC`}
+          </Box>
+        );
+      } else {
+        return (
+          <Box p={2}>
+            <Link
+              color='inherit'
+              component={RouterLink}
+              to={enterGameRoute(row.id)}>
+              {'Not Claimed Yet.'}
+            </Link>
+          </Box>
+        );
       }
     }
     return null;
   }, [row.earnings]);
-
-  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
 
   const createdDateFn = useMemo(() => {
     switch (row.status) {
@@ -102,17 +137,13 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const createdTimeFn = useMemo(() => {
     switch (row.status) {
       case 'Ended':
-        return `${new Date(
-          Number(row.endedAt) * 1000,
-        ).toLocaleTimeString()}`;
+        return `${new Date(Number(row.endedAt) * 1000).toLocaleTimeString()}`;
       case 'Started':
         return ` ${new Date(
           Number(row.startedAt) * 1000,
         ).toLocaleTimeString()}`;
       case 'Waiting':
-        return `${new Date(
-          Number(row.createdAt) * 1000,
-        ).toLocaleTimeString()}`;
+        return `${new Date(Number(row.createdAt) * 1000).toLocaleTimeString()}`;
     }
   }, [row.status]);
 
@@ -162,7 +193,12 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       {
         id: 'place',
         title: 'Place',
-        value: place,
+        value: (
+          <Box display={'flex'} alignItems={'center'}>
+            {place}
+            {claimed}
+          </Box>
+        ),
       },
     ];
 
@@ -201,7 +237,10 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         />
       </TableCell>
       <TableCell align='left' className={classes.tableCell}>
-        {place}
+        <Box display={'flex'} alignItems={'center'}>
+          {place}
+          {claimed}
+        </Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}></TableCell>
       <TableCell align='left' className={classes.tableCell}></TableCell>
