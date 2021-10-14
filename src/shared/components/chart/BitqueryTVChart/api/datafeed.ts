@@ -12,6 +12,12 @@ const wrappedNative = {
   [EthereumNetwork.bsc]: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   [EthereumNetwork.matic]: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
 };
+
+const native = {
+  [EthereumNetwork.ethereum]: 'eth',
+  [EthereumNetwork.bsc]: 'bnb',
+  [EthereumNetwork.matic]: 'matic',
+};
 // We are using USDT
 const usdReferecence = {
   [EthereumNetwork.ethereum]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -88,9 +94,9 @@ export default {
         | EthereumNetwork.matic
         | EthereumNetwork.ethereum;
       const base = symbolInfo.ticker.split(':')[2] || wrappedNative[network];
-
+   
       // Used when coin is native one
-      if (base.toLowerCase() === wrappedNative[network].toLowerCase()) {
+      if (base.toLowerCase() === wrappedNative[network].toLowerCase() || native[network] === base.toLowerCase() ) {
         const response2 = await axios.post(Bitquery.endpoint, {
           query: Bitquery.GET_COIN_BARS_NATIVE_USDT,
           variables: {

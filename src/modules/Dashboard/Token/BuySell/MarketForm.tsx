@@ -552,7 +552,7 @@ const MarketForm: React.FC<Props> = (props) => {
                               </p>
                             </Box>
                           )}
-                          {priceQuoteTo?.price && priceQuoteToUnit?.price && (
+                          {/*priceQuoteTo?.price && priceQuoteToUnit?.price && (
                             <Box>
                               <p>
                                 Price Impact:{' '}
@@ -565,7 +565,7 @@ const MarketForm: React.FC<Props> = (props) => {
                                 %
                               </p>
                             </Box>
-                          )}
+                                )*/}
                         </Box>
                       </AccordionDetails>
                     </Accordion>
