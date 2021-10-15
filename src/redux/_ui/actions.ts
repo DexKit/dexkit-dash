@@ -35,6 +35,10 @@ export const setShowAccounts = createAction<boolean>(
   'ui/ACCOUNTS_set_show_accounts',
 );
 
+export const toggleBalancesIsVisible = createAction<void>(
+  'ui/ACCOUNTS_set_show_balances_visible',
+);
+
 export const removeAccount =
   createAction<{account: UIAccount; type: SupportedNetworkType}>(
     'ui/ACCOUNT_remove',

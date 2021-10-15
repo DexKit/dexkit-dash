@@ -92,9 +92,12 @@ export const StartGame = (props: Props) => {
 
   const abortTimestamp = useMemo(() => {
     if (game?.abort_timestamp.toNumber()) {
+      console.log("Abort timestamp");
+      console.log(game?.abort_timestamp.toNumber())
       return game?.abort_timestamp.toNumber() * 1000;
     }
   }, [game]);
+ 
 
   const started = useMemo(() => game?.started, [game]);
   const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
@@ -172,7 +175,7 @@ export const StartGame = (props: Props) => {
                     />
                   </Button>
                 </Grid>
-                {canAbort && (
+                {/*canAbort && (
                   <Grid item xs={12} md={12}>
                     <Button
                       disabled={
@@ -193,7 +196,7 @@ export const StartGame = (props: Props) => {
                       />
                     </Button>
                   </Grid>
-                )}
+                    )*/}
               </Grid>
             </Box>
           </Grid>

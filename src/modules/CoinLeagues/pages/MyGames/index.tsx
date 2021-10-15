@@ -45,6 +45,8 @@ import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
+import SwapButton from 'shared/components/SwapButton';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -114,6 +116,7 @@ const MyGames = () => {
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <SwapButton/>
           <Box pr={2}>
             <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
           </Box>
