@@ -41,6 +41,8 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
+import MintKittygotchiSuccessDialog from '../components/dialogs/MintKittygotchiSuccessDialog';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -64,10 +66,11 @@ const useStyles = makeStyles((theme) => ({
 export const KittygotchiIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const {chainId} = useWeb3();
+  const {chainId, web3State} = useWeb3();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
+  const mintSuccessToggler = useToggler(false);
 
   const emtpyArrayRef = useRef(new Array(6).fill(null));
 
@@ -111,9 +114,9 @@ export const KittygotchiIndex = () => {
       // Save here the current id minted
       setSubmitState(SubmitState.Confirmed);
       mintKittyToggler.set(false);
-      kittygotchiList.get(defaultAccount);
+      mintSuccessToggler.set(true);
 
-      console.log('COnfirma');
+      kittygotchiList.get(defaultAccount);
     };
     const onError = (error: any) => {
       setSubmitState(SubmitState.Error);
@@ -151,10 +154,10 @@ export const KittygotchiIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (defaultAccount) {
+    if (defaultAccount && web3State === Web3State.Done) {
       kittygotchiList.get(defaultAccount);
     }
-  }, [defaultAccount]);
+  }, [defaultAccount, web3State]);
 
   return (
     <>
@@ -174,6 +177,12 @@ export const KittygotchiIndex = () => {
           submitState === SubmitState.Submitted
         }
         onConfirm={handleConfirmMint}
+      />
+      <MintKittygotchiSuccessDialog
+        dialogProps={{
+          open: mintSuccessToggler.show,
+          onClose: mintSuccessToggler.toggle,
+        }}
       />
       <Box>
         <Box mb={4}>
@@ -209,25 +218,7 @@ export const KittygotchiIndex = () => {
               </Alert>
             </Grid>
           )}
-          <Grid item xs={3}>
-            <Paper>
-              <Box p={4}>
-                <TextField
-                  fullWidth
-                  variant='outlined'
-                  placeholder='Search...'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <SearchIcon color='inherit' />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Paper>
@@ -238,7 +229,7 @@ export const KittygotchiIndex = () => {
                       variant='contained'
                       color='primary'
                       onClick={mintKittyToggler.toggle}>
-                      Mint Kitty
+                      Create Kitty
                     </Button>
                   </Box>
                 </Paper>

@@ -331,7 +331,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.attack.toNumber()}
+                                    {kittygotchi.data?.attack}
                                   </Typography>
                                 </Box>
                                 <Box
@@ -354,7 +354,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.defense.toNumber()}
+                                    {kittygotchi.data?.defense}
                                   </Typography>
                                 </Box>
                                 <Box
@@ -377,7 +377,7 @@ export const KittyDetail = () => {
                                     </Typography>
                                   </Box>
                                   <Typography variant='body1'>
-                                    {kittygotchi.data?.run.toNumber()}
+                                    {kittygotchi.data?.run}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -396,7 +396,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.attack.toNumber()}
+                                      {kittygotchi.data?.attack}
                                     </Typography>
                                   </Box>
                                 </Grid>
@@ -413,7 +413,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.defense.toNumber()}
+                                      {kittygotchi.data?.defense}
                                     </Typography>
                                   </Box>
                                 </Grid>
@@ -430,7 +430,7 @@ export const KittyDetail = () => {
                                       />
                                     </Box>
                                     <Typography variant='body1'>
-                                      {kittygotchi.data?.run.toNumber()}
+                                      {kittygotchi.data?.run}
                                     </Typography>
                                   </Box>
                                 </Grid>

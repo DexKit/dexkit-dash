@@ -92,7 +92,7 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
                       {loading ? (
                         <Skeleton width={theme.spacing(6)} />
                       ) : (
-                        kittygotchi?.attack?.toNumber()
+                        kittygotchi?.attack
                       )}
                     </Typography>
                   </Box>
@@ -114,7 +114,7 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
                       {loading ? (
                         <Skeleton width={theme.spacing(6)} />
                       ) : (
-                        kittygotchi?.defense?.toNumber()
+                        kittygotchi?.defense
                       )}
                     </Typography>
                   </Box>
@@ -136,7 +136,7 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
                       {loading ? (
                         <Skeleton width={theme.spacing(6)} />
                       ) : (
-                        kittygotchi?.run?.toNumber()
+                        kittygotchi?.run
                       )}
                     </Typography>
                   </Box>

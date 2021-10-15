@@ -11,8 +11,17 @@ import Scrollbar from '../../Scrollbar';
 import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
+import {Skeleton} from '@material-ui/lab';
 
-import {Grid, IconButton, Divider, ButtonBase, Avatar} from '@material-ui/core';
+import {
+  Grid,
+  IconButton,
+  Divider,
+  ButtonBase,
+  Avatar,
+  Typography,
+  Link,
+} from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -20,6 +29,9 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
+import {useProfileKittygotchi} from 'modules/Profile/hooks';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {truncateAddress} from 'utils';
 
 interface AppSidebarProps {
   variant?: string;
@@ -43,6 +55,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const classes = useStyles({themeMode});
   const sidebarClasses = classes.sidebarStandard;
 
+  const kittygotchiProfile = useProfileKittygotchi();
+
+  const defaultAddress = useDefaultAccount();
+
   return (
     <>
       <Hidden lgUp>
@@ -60,12 +76,61 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 <Grid
                   container
                   spacing={2}
+                  justifyContent='space-between'
                   alignItems='center'
                   alignContent='center'>
                   <Grid item>
-                    <IconButton onClick={handleToggleDrawer}>
-                      <CloseIcon />
-                    </IconButton>
+                    <Box p={2}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        alignContent='center'
+                        spacing={4}>
+                        <Grid item>
+                          <ButtonBase
+                            className={classes.avatarButton}
+                            to='/profile'
+                            component={RouterLink}>
+                            <Avatar
+                              className={classes.avatar}
+                              src={kittygotchiProfile.kittygotchi?.image}
+                            />
+                          </ButtonBase>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='body1'>
+                            {defaultAddress ? (
+                              truncateAddress(defaultAddress)
+                            ) : (
+                              <Skeleton />
+                            )}
+                          </Typography>
+                          <Typography color='textSecondary' variant='body2'>
+                            {defaultAddress ? (
+                              <Link
+                                onClick={handleToggleDrawer}
+                                component={RouterLink}
+                                to='/profile'>
+                                View profile
+                              </Link>
+                            ) : (
+                              <Skeleton />
+                            )}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      alignContent='center'
+                      justifyContent='center'>
+                      <IconButton onClick={handleToggleDrawer}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>

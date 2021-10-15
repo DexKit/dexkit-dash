@@ -320,7 +320,6 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       .then((address) => {
         setTempAddress(address);
 
-        debugger;
         dispatch(
           addCollection({
             name: values.name,

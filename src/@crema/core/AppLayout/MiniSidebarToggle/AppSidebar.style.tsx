@@ -4,6 +4,15 @@ import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
+    avatar: {
+      border: ' 1px solid #525C75',
+      backgroundColor: '#2E3243',
+      width: theme.spacing(12),
+      height: theme.spacing(12),
+    },
+    avatarButton: {
+      borderRadius: '50%',
+    },
     drawer: {
       width: '100%',
     },

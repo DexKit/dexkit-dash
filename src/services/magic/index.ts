@@ -28,8 +28,8 @@ const rpcUrls = {
     chainId: 56,
   },
   [MagicNetworks.matic]: {
-    rpcUrl: 'https://rpc-mainnet.matic.network',
-    //rpcUrl: 'https://polygon-rpc.com/',
+    // rpcUrl: 'https://rpc-mainnet.matic.network',
+    rpcUrl: 'https://polygon-rpc.com/',
     chainId: 137,
   },
 };

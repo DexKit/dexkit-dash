@@ -273,6 +273,10 @@ const TotalBalance = (props: Props) => {
 
   const accountsModal = useAccountsModal();
 
+  const handleResult = useCallback(() => {
+    setShowSender(false);
+  }, []);
+
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
   }, [accountsModal]);
@@ -283,6 +287,7 @@ const TotalBalance = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+        onResult={handleResult}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <BuySellModal
