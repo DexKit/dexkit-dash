@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export const KittygotchiIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const {chainId, web3State} = useWeb3();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
@@ -136,7 +137,6 @@ export const KittygotchiIndex = () => {
     });
   }, [onMintCallback, createNotification, chainId, defaultAccount]);
 
-  const history = useHistory();
 
   const handleKittygotchiClick = useCallback(
     (kittygotchi: Kittygotchi) => {
@@ -158,6 +158,10 @@ export const KittygotchiIndex = () => {
       kittygotchiList.get(defaultAccount);
     }
   }, [defaultAccount, web3State]);
+  const onClickBack = useCallback(()=>{
+    history.goBack()
+  },[])
+
 
   return (
     <>
@@ -201,7 +205,7 @@ export const KittygotchiIndex = () => {
                   alignItems='center'
                   alignContent='center'
                   mr={2}>
-                  <IconButton size='small' component={RouterLink} to={'/'}>
+                  <IconButton size='small' onClick={onClickBack}>
                     <ArrowBackIcon />
                   </IconButton>
                 </Box>
