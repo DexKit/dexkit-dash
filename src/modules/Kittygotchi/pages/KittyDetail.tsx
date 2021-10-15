@@ -275,7 +275,7 @@ export const KittyDetail = () => {
                               <FeedKittygotchiButton onClick={handleFeed} />
                             </Tooltip>
                           </Grid>
-                          <Grid item>
+                          {/*<Grid item>
                             <Tooltip title='Edit (Coming soon)'>
                               <RoundedIconButton
                                 disabled
@@ -283,7 +283,7 @@ export const KittyDetail = () => {
                                 <EditIcon />
                               </RoundedIconButton>
                             </Tooltip>
-                          </Grid>
+                          </Grid>*/}
                           <Grid item>
                             <Tooltip title='Share'>
                               <RoundedIconButton>

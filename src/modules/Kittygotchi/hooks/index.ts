@@ -65,7 +65,7 @@ const THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchimumbai';
 
 const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
-  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchimumbai';
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchi';
 
 let clientMumbai = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,

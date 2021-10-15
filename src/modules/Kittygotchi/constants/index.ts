@@ -2,7 +2,7 @@ import {BigNumber} from 'ethers';
 import {ChainId} from 'types/blockchain';
 
 export const METADATA_KITTY_ENDPOINT =
-  'https://mumbai-kittygotchi.dexkit.com/api/';
+  'https://kittygotchi.dexkit.com/api/';
 
 export const GAS_PRICE_MULTIPLIER = 2;
 

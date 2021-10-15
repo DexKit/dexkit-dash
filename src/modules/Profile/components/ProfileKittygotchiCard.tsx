@@ -109,7 +109,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                   startIcon={<GavelIcon />}
                   variant='outlined'
                   color='primary'>
-                  Creeate Kittygotchi
+                  Create Kittygotchi
                 </Button>
               </Box>
             </Grid>
