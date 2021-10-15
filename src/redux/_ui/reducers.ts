@@ -14,7 +14,8 @@ import {
   initWallet,
   setShowAccounts,
   toggleWelcomeModal,
-  toggleBalancesIsVisible
+  toggleBalancesIsVisible,
+  setLoginBackRoute,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {Network, WalletType, SupportedNetworkType} from 'types/blockchain';
@@ -43,6 +44,7 @@ export interface UIState {
   readonly showAccounts: boolean;
   readonly showWelcome: boolean;
   readonly balancesVisible: boolean;
+  readonly loginBackRoute?: string;
 }
 
 export const WALLET_INIT_STATE: Wallet = {
@@ -59,7 +61,7 @@ const initialUIState: UIState = {
   wallet: WALLET_INIT_STATE,
   showAccounts: false,
   showWelcome: true,
-  balancesVisible: true
+  balancesVisible: true,
 };
 
 export default createReducer(initialUIState, (builder) =>
@@ -165,5 +167,8 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(toggleBalancesIsVisible, (state, action) => {
       state.balancesVisible = !state.balancesVisible;
+    })
+    .addCase(setLoginBackRoute, (state, action) => {
+      state.loginBackRoute = action.payload;
     }),
 );

@@ -22,6 +22,7 @@ import {
 } from 'shared/components/Icons';
 
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
 import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
@@ -136,6 +137,7 @@ export const CreateWallet = (props: Props) => {
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
   const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const [loading, setLoading] = useState(false);
 
   const handleConnectWeb3 = useCallback(() => {
@@ -143,7 +145,13 @@ export const CreateWallet = (props: Props) => {
 
     const onConnectSuccess = (a: string) => {
       setLoading(true);
-      history.push(`/wallet/${a}`);
+      if(loginBackRoute){
+        history.push(loginBackRoute);
+        onSetLoginBackRoute(undefined);
+      }else{
+        history.push(`/wallet/${a}`);
+      }
+      
     };
     const onFinalConnect = () => {
       setLoading(false);

@@ -63,3 +63,7 @@ export const toggleWelcomeModal = createAction<void>('ui/WELCOME_MODAL_toggle');
 export const setUserEncryptedSeed = createAction<string | undefined>(
   'ui/USER_ENCRYPTED_Seed_set',
 );
+
+export const setLoginBackRoute = createAction<string | undefined>(
+  'ui/LOGIN_BACK_ROUTE',
+);
