@@ -2,6 +2,21 @@ import {fade, makeStyles} from '@material-ui/core/styles';
 import {CremaTheme} from '../../../../types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
+  avatar: {
+    border: ' 1px solid #525C75',
+    backgroundColor: '#2E3243',
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+  },
+  avatarSmall: {
+    border: ' 1px solid #525C75',
+    backgroundColor: '#2E3243',
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+  },
+  avatarButton: {
+    borderRadius: '50%',
+  },
   appToolbar: {
     paddingLeft: 20,
     paddingRight: 20,

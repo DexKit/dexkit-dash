@@ -307,6 +307,7 @@ const SenderForm: React.FC<Props> = (props) => {
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
         showNetwork
+        chainId={chainId}
       />
       <SelectAddressDialog
         key={'to-address'}

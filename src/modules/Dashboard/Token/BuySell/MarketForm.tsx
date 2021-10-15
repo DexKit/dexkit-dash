@@ -375,6 +375,7 @@ const MarketForm: React.FC<Props> = (props) => {
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
+        enableFilters
       />
       <Box py={2}>
         <form noValidate autoComplete='off'>

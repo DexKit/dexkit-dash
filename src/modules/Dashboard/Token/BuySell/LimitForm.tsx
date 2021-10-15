@@ -336,6 +336,7 @@ const LimitForm: React.FC<Props> = (props) => {
         tokens={getTokens(selectTo)}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
+        enableFilters
       />
       {networkName !== EthereumNetwork.ethereum && (
         <Box>

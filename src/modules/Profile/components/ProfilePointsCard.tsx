@@ -78,7 +78,7 @@ const CustomBackgroundCircularProgress = withStyles((theme) => ({
 interface ProfilePointsCardProps {
   amount: number;
   maxAmount: number;
-  loading: boolean;
+  loading?: boolean;
   onCollectReward?: () => void;
 }
 

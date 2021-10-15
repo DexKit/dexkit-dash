@@ -39,7 +39,6 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {
-  FORMAT_NETWORK_NAME,
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
@@ -48,11 +47,13 @@ import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
-import {LOGIN_WALLET_ROUTE, WALLET_ROUTE} from 'shared/constants/routes';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-
+import CopyButton from '../CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
+import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -126,7 +127,7 @@ const WalletInfo = (props: any) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
 
   const accountsModal = useAccountsModal();
 
@@ -204,7 +205,7 @@ const WalletInfo = (props: any) => {
   }, [history]);
 
   const handleToggleVisibility = useCallback(() => {
-    setIsBalanceVisible((value) => !value);
+    setBalanceIsVisible()
   }, []);
 
   return web3State === Web3State.Done || defaultAccount ? (
@@ -260,6 +261,15 @@ const WalletInfo = (props: any) => {
                       <VisibilityOffIcon fontSize='inherit' />
                     )}
                   </ButtonBase>
+                  <CopyButton
+                      size='small'
+                      copyText={defaultAccount || ''}
+                      tooltip='Copied!'>
+                      <FileCopy
+                        color='inherit'
+                        style={{fontSize: 16}}
+                      />
+                    </CopyButton>
                 </Box>
               </Hidden>
             </Grid>

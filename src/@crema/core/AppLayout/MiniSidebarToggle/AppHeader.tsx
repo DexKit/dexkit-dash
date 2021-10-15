@@ -23,6 +23,7 @@ import clsx from 'clsx';
 
 import {
   Grid,
+  Avatar,
   useTheme,
   useMediaQuery,
   Container,
@@ -30,6 +31,8 @@ import {
   IconButton,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
+
+import {Link as RouterLink} from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -44,6 +47,8 @@ import {switchChain} from 'utils/wallet';
 import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+
+import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
 import {connectWeb3, setProvider} from 'services/web3modal';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
@@ -153,6 +158,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     return false;
   }, []);
 
+  const kittygotchiProfile = useProfileKittygotchi();
+
   return (
     <>
       {chainId ? (
@@ -218,6 +225,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </Grid>
                     ) : null}
                     <Grid item>
+                      <ButtonBase
+                        className={classes.avatarButton}
+                        to='/profile'
+                        component={RouterLink}>
+                        <Avatar
+                          className={classes.avatarSmall}
+                          src={kittygotchiProfile.kittygotchi?.image}
+                        />
+                      </ButtonBase>
+                    </Grid>
+                    <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />
                       </AppBarButton>
@@ -278,7 +296,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <Grid item>
                     <Notifications />
                   </Grid>
-                  <Grid item></Grid>
+                  <Grid item>
+                    <ButtonBase
+                      className={classes.avatarButton}
+                      to='/profile'
+                      component={RouterLink}>
+                      <Avatar
+                        className={classes.avatar}
+                        src={kittygotchiProfile.kittygotchi?.image}
+                      />
+                    </ButtonBase>
+                  </Grid>
                   {/* <Grid item>
                     <AppBarButton>
                       <SettingsIcon />

@@ -56,9 +56,7 @@ export const RewardDialog = (props: RewardDialogProps) => {
               mr={2}>
               <GiftIcon className={classes.icon} />
             </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Send' />
-            </Typography>
+            <Typography variant='body1'>Collect reward</Typography>
           </Box>
           <Box>
             <IconButton size='small' onClick={handleClose}>
@@ -94,3 +92,5 @@ export const RewardDialog = (props: RewardDialogProps) => {
     </Dialog>
   );
 };
+
+export default RewardDialog;

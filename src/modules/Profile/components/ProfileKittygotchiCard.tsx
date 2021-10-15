@@ -10,15 +10,28 @@ import {
   Button,
   CircularProgress,
   useTheme,
+  Tooltip,
 } from '@material-ui/core';
 
-import {NFTEmptyStateImage} from 'shared/components/Icons';
+import EditIcon from '@material-ui/icons/Edit';
+
+import {NFTEmptyStateImage, ShareIcon} from 'shared/components/Icons';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 import {Kittygotchi} from 'types/kittygotchi';
+import FeedKittygotchiButton from 'modules/Kittygotchi/components/buttons/FeedKittygotchiButton';
+import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
+import {useWeb3} from 'hooks/useWeb3';
+import {useHistory} from 'react-router';
+import {useNotifications} from 'hooks/useNotifications';
+import {useKittygotchiFeed} from 'modules/Kittygotchi/hooks';
+
+import {ChainId} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
+    border: ' 1px solid #525C75',
+    backgroundColor: '#2E3243',
     width: theme.spacing(32),
     height: theme.spacing(32),
   },
@@ -27,14 +40,18 @@ const useStyles = makeStyles((theme) => ({
 interface ProfileKittygotchiCardProps {
   loading?: boolean;
   onMint?: () => void;
+  onFeed?: () => void;
+  onEdit?: () => void;
   kittygotchi?: Kittygotchi;
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, kittygotchi} = props;
+  const {loading, onMint, onEdit, onFeed, kittygotchi} = props;
   const theme = useTheme();
 
   const classes = useStyles();
+
+  const {chainId} = useWeb3();
 
   const renderEmpty = () => {
     return (
@@ -56,18 +73,21 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               </Typography>
 
               <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens in your wallet to
-                mint one.
+                You will need <strong>10 MATIC</strong> tokens on Polygon network in
+                your wallet to mint one.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Box display='flex' justifyContent='center'>
                 <Button
                   onClick={onMint}
+                  disabled={!(chainId === ChainId.Matic)}
                   startIcon={<GavelIcon />}
                   variant='outlined'
                   color='primary'>
-                  Mint Kittygotchi
+                  {chainId === ChainId.Matic
+                    ? 'Mint Kittygotchi'
+                    : 'Switch to Polygon network'}
                 </Button>
               </Box>
             </Grid>
@@ -81,16 +101,55 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
     return (
       <Grid container spacing={4}>
         <Grid item>
-          <Box
-            display='flex'
-            alignItems='center'
-            alignContent='center'
-            justifyContent='center'>
-            <Avatar className={classes.avatar} />
-          </Box>
+          <Grid container spacing={4} direction='column'>
+            <Grid item>
+              <Box
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                justifyContent='center'>
+                <Avatar className={classes.avatar} src={kittygotchi?.image} />
+              </Box>
+            </Grid>
+            <Grid item>
+              <Grid
+                container
+                alignItems='center'
+                alignContent='center'
+                justifyContent='center'
+                spacing={2}>
+                <Grid item>
+                  <Tooltip title='Feed'>
+                    <FeedKittygotchiButton onClick={onFeed} />
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title='Edit (Coming soon)'>
+                    <RoundedIconButton disabled onClick={onEdit}>
+                      <EditIcon />
+                    </RoundedIconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title='View on Opensea (Coming soon)'>
+                    <RoundedIconButton disabled>
+                      <ShareIcon />
+                    </RoundedIconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs>
-          <Typography variant='h6'>Kittygotchi #{kittygotchi?.id}</Typography>
+          <Grid container spacing={4}>
+            <Grid item>
+              <Typography variant='h6'>
+                Kittygotchi #{kittygotchi?.id}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}></Grid>
+          </Grid>
         </Grid>
       </Grid>
     );

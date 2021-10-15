@@ -8,9 +8,6 @@ import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
 import {Interface} from 'ethers/lib/utils';
 import {CallInput} from '@indexed-finance/multicall';
 
-
-
-
 export const getKittyGotchiContractSigner = async (
   address: string,
   provider: any,
@@ -38,22 +35,23 @@ export const feed = async (id: string, kittyAddress: string, provider: any) => {
   }) as Promise<ContractTransaction>;
 };
 
-export const mint = async (kittyAddress: string, provider: any, price: BigNumber) => {
+export const mint = async (
+  kittyAddress: string,
+  provider: any,
+  price: BigNumber,
+) => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
-    console.log(price.toString());
+  console.log(price.toString());
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).safeMint({
     gasPrice,
-    value: price
+    value: price,
   }) as Promise<ContractTransaction>;
 };
 
-export const signUpdate = async (
-  provider: any,
-  chainId: ChainId,
-) => {
+export const signUpdate = async (provider: any, chainId: ChainId) => {
   const pr = new providers.Web3Provider(provider);
   const signer = pr.getSigner();
   const domain = {
@@ -66,13 +64,12 @@ export const signUpdate = async (
   const types = {
     Message: [
       {name: 'message', type: 'string'},
-      {name: 'powered', type: 'string'}
-    
+      {name: 'powered', type: 'string'},
     ],
   };
   const message = {
     message: 'Update my Gotchi!',
-    powered: "Powered By DexKit"
+    powered: 'Powered By DexKit',
   };
   const populated = await _TypedDataEncoder.resolveNames(
     domain,
