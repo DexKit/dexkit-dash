@@ -41,6 +41,7 @@ import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -138,6 +139,9 @@ function OnePlayerTable(props: Props): JSX.Element {
     currentPrices,
     allFeeds,
   } = useCoinLeagues(address);
+
+  const {isBalanceVisible} = useIsBalanceVisible();
+
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const [submitWithdrawState, setSubmitWithdrawState] = useState<SubmitState>(
     SubmitState.None,
@@ -401,13 +405,18 @@ function OnePlayerTable(props: Props): JSX.Element {
                   <Box display={'flex'} alignItems={'center'}>
                     <Chip
                       className={classes.chip}
-                      label={`${playerData.place + 1}º`}
+                      label={
+                        isBalanceVisible ? `${playerData.place + 1}º` : '..'
+                      }
                     />
 
                     {/*data && <Chip className={classes.chip} label={`${1}º`} />*/}
 
                     <Typography style={{color: '#fff'}}>
-                      &nbsp; {truncHash(playerData?.hash)}
+                      &nbsp;{' '}
+                      {isBalanceVisible
+                        ? truncHash(playerData?.hash)
+                        : '*****...****'}
                     </Typography>
                   </Box>
                 </TableCell>
@@ -418,27 +427,35 @@ function OnePlayerTable(props: Props): JSX.Element {
                       IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
                       playerData?.captainCoin && (
                         <>
-                          <Tooltip title={tooltipMessage(account)}>
-                            <Badge
-                              color={'primary'}
-                              overlap='circular'
-                              badgeContent={
-                                !loadingMultiplier && multiplier(account)
-                              }>
+                          {isBalanceVisible ? (
+                            <Tooltip title={tooltipMessage(account)}>
+                              <Badge
+                                color={'primary'}
+                                overlap='circular'
+                                badgeContent={
+                                  !loadingMultiplier && multiplier(account)
+                                }>
+                                <Avatar
+                                  className={classes.chip}
+                                  src={getIconByCoin(
+                                    playerData?.captainCoin,
+                                    chainId,
+                                  )}
+                                  style={{height: 35, width: 35}}>
+                                  {getIconSymbol(
+                                    playerData?.captainCoin,
+                                    chainId,
+                                  )}
+                                </Avatar>
+                              </Badge>
+                            </Tooltip>
+                          ) : (
+                            <Badge color={'primary'} overlap='circular'>
                               <Avatar
                                 className={classes.chip}
-                                src={getIconByCoin(
-                                  playerData?.captainCoin,
-                                  chainId,
-                                )}
-                                style={{height: 35, width: 35}}>
-                                {getIconSymbol(
-                                  playerData?.captainCoin,
-                                  chainId,
-                                )}
-                              </Avatar>
+                                style={{height: 35, width: 35}}></Avatar>
                             </Badge>
-                          </Tooltip>
+                          )}
                           {playerData?.coins.length === 0 && (
                             <IconButton
                               onClick={() => onViewCoins(playerData.coins)}>
@@ -462,14 +479,22 @@ function OnePlayerTable(props: Props): JSX.Element {
                       <AvatarGroup max={10} spacing={17}>
                         {chainId &&
                           IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) &&
-                          playerData?.coins.map((coin) => (
-                            <Avatar
-                              className={classes.chip}
-                              src={getIconByCoin(coin, chainId)}
-                              style={{height: 35, width: 35}}>
-                              {getIconSymbol(coin, chainId)}
-                            </Avatar>
-                          ))}
+                          playerData?.coins.map((coin) =>
+                            isBalanceVisible ? (
+                              <Avatar
+                                className={classes.chip}
+                                src={getIconByCoin(coin, chainId)}
+                                style={{height: 35, width: 35}}>
+                                {getIconSymbol(coin, chainId)}
+                              </Avatar>
+                            ) : (
+                              <Badge color={'primary'} overlap='circular'>
+                                <Avatar
+                                  className={classes.chip}
+                                  style={{height: 35, width: 35}}></Avatar>
+                              </Badge>
+                            ),
+                          )}
                       </AvatarGroup>
                       {playerData?.coins && playerData?.coins.length > 0 && (
                         <IconButton
@@ -488,16 +513,20 @@ function OnePlayerTable(props: Props): JSX.Element {
                 )}
 
                 <TableCell className={classes.noBorder}>
-                  <Chip
-                    clickable
-                    style={{
-                      background: '#343A49',
-                      color: playerData?.score > 0 ? '#0e0' : '#e00',
-                    }}
-                    label={`${
-                      playerData?.score >= 0 ? '+' : ''
-                    }${playerData?.score?.toFixed(3)}%`}
-                  />
+                  {isBalanceVisible ? (
+                    <Chip
+                      clickable
+                      style={{
+                        background: '#343A49',
+                        color: playerData?.score > 0 ? '#0e0' : '#e00',
+                      }}
+                      label={`${
+                        playerData?.score >= 0 ? '+' : ''
+                      }${playerData?.score?.toFixed(3)}%`}
+                    />
+                  ) : (
+                    <Chip clickable label={`...%`} />
+                  )}
                 </TableCell>
 
                 {(canClaim || claimed || canWithdraw) && (

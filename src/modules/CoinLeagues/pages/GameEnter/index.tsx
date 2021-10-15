@@ -66,6 +66,7 @@ import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeag
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useMobile} from 'hooks/useMobile';
+import SwapButton from 'shared/components/SwapButton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -363,6 +364,9 @@ function GameEnter(props: Props) {
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <Box pr={2}>
+            <SwapButton/>
+          </Box>
           <Box pr={2}>
             <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
           </Box>

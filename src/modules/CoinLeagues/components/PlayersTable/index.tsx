@@ -31,6 +31,7 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import Badge from '@material-ui/core/Badge';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -214,6 +215,8 @@ function PlayersTable(props: Props): JSX.Element {
     });
   }, [props.data, game, currentPrices, allFeeds]);
 
+  const {isBalanceVisible} = useIsBalanceVisible();
+
   return (
     <>
       <ViewCoinLeagueDialog
@@ -260,7 +263,7 @@ function PlayersTable(props: Props): JSX.Element {
                 <TableRow
                   key={i}
                   selected={
-                    row.account.toLowerCase() === account?.toLowerCase()
+                    row.account.toLowerCase() === account?.toLowerCase() && isBalanceVisible
                   }>
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>

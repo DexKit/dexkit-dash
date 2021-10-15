@@ -7,9 +7,11 @@ import {useHistory} from 'react-router';
 import {getMagic, getCachedMagicNetwork} from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
 
 const MagicCallbackSocial = () => {
   const {onConnectMagic} = useMagicProvider();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const history = useHistory();
   //TODO: colocar loading nos callbacks
   useEffect(() => {
@@ -18,11 +20,16 @@ const MagicCallbackSocial = () => {
     const magic = getMagic(network);
     magic.oauth.getRedirectResult().finally(() => {
       onConnectMagic().then((acc) => {
-        if (acc && acc.length) {
-          history.push(`/wallet/${acc[0]}`);
-        } else {
-          history.push('/wallet');
-        }
+        if(loginBackRoute){
+          history.push(loginBackRoute);
+          onSetLoginBackRoute(undefined)
+        }else{
+          if(acc && acc.length){
+            history.push(`/wallet/${acc[0]}`);
+          }else{
+            history.push('/wallet');
+          }
+        }  
       });
     });
   }, []);

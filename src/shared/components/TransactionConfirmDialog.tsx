@@ -34,6 +34,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Web3State} from 'types/blockchain';
 import {hasLondonHardForkSupport} from 'utils/blockchain';
 import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
+import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -99,11 +100,7 @@ export const TransactionConfirmDialog = (
   const defaultAccount = useDefaultAccount();
   const network = useNetwork();
 
-  const {data: balances} = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
-    network,
-    defaultAccount,
-  );
+  const {balance} = useActiveChainBalance();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -228,7 +225,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Balance</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {balances?.toFixed(3)} {GetNativeCoinFromNetworkName(network)}
+            {ethers.utils.formatEther(balance || '0')} {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
         <Box mb={4}>
@@ -340,7 +337,7 @@ export const TransactionConfirmDialog = (
       </DialogContent>
       <DialogActions>
         <Button
-          disabled={balances === 0 || gasCost() === 0}
+          disabled={BigNumber.from(balance || '0').gt(0) || gasCost() === 0}
           onClick={handleConfirm}
           color='primary'
           variant='contained'>

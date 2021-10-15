@@ -79,6 +79,7 @@ export const useMagicProvider = () => {
       const cachedNetwork = getCachedMagicNetwork();
       // they are both at same Mainnet or Testnet
       if (isMagicTestnet(cachedNetwork) === isMagicTestnet(network)) {
+        setCachedMagicNetwork(network);
         const provider = await getMagicRPCProvider(network);
         setProvider(provider);
         dispatch(setWeb3State(Web3State.Done));

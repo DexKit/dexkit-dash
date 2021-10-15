@@ -34,6 +34,7 @@ import {useWaitingGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
+import SwapButton from 'shared/components/SwapButton';
 
 const JoinGames = () => {
   const history = useHistory();
@@ -118,6 +119,9 @@ const JoinGames = () => {
       </Hidden>
       <Grid item xs={6} sm={4} xl={4}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+          <Box pr={2}>
+            <SwapButton/>
+          </Box>
           <Box pr={2}>
             <ShareButton shareText={`Coin leagues Games`} />
           </Box>

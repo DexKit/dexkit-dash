@@ -49,12 +49,28 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
+             <Typography className={classes.item}>
+                Major Rebrand
+            </Typography>
             <Typography className={classes.item}>
               CoinLeagues:
               <br />
-              1. Added CoinLeagues
+              1. Added CoinLeagues on Beta
               <br />
             </Typography>
+            <Typography className={classes.item}>
+              Added Polygon support
+            </Typography>
+            <Typography className={classes.item}>
+              Added Wizard:
+              <br />
+              1. Create Collections
+              <br />
+              <br />
+              1. Create Tokens
+              <br />
+            </Typography>
+            
           </Box>
         </AccordionDetails>
       </Accordion>

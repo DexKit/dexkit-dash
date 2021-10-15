@@ -14,6 +14,8 @@ import {
   initWallet,
   setShowAccounts,
   toggleWelcomeModal,
+  toggleBalancesIsVisible,
+  setLoginBackRoute,
 } from './actions';
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {Network, WalletType, SupportedNetworkType} from 'types/blockchain';
@@ -41,6 +43,8 @@ export interface UIState {
   readonly wallet: Wallet;
   readonly showAccounts: boolean;
   readonly showWelcome: boolean;
+  readonly balancesVisible: boolean;
+  readonly loginBackRoute?: string;
 }
 
 export const WALLET_INIT_STATE: Wallet = {
@@ -57,6 +61,7 @@ const initialUIState: UIState = {
   wallet: WALLET_INIT_STATE,
   showAccounts: false,
   showWelcome: true,
+  balancesVisible: true,
 };
 
 export default createReducer(initialUIState, (builder) =>
@@ -90,8 +95,6 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(setDefaultAccount, (state, action) => {
       const {account, type} = action.payload;
-
-      console.log('account', account);
       const ind = state.wallet[type].findIndex(
         (a) => a.address.toLowerCase() === account.address.toLowerCase(),
       );
@@ -161,5 +164,11 @@ export default createReducer(initialUIState, (builder) =>
     })
     .addCase(toggleWelcomeModal, (state, action) => {
       state.showWelcome = !state.showWelcome;
+    })
+    .addCase(toggleBalancesIsVisible, (state, action) => {
+      state.balancesVisible = !state.balancesVisible;
+    })
+    .addCase(setLoginBackRoute, (state, action) => {
+      state.loginBackRoute = action.payload;
     }),
 );

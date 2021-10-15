@@ -195,7 +195,7 @@ const CreateGameModal = (props: Props) => {
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Entry Amount</FormLabel>
+            <FormLabel className={classes.label}>Select Level</FormLabel>
             <Select
               variant='outlined'
               placeholder='Select'
@@ -206,7 +206,7 @@ const CreateGameModal = (props: Props) => {
                 backgroundColor: '#3C4255',
               }}>
               <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
-              <MenuItem value={0.1}>Beginner -0.1 Matic</MenuItem>
+              <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>
               <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
               <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
               <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
