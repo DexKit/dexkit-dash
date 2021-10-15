@@ -10,7 +10,7 @@ import {ProviderWrapper} from 'types/ProviderWrapper';
 import Web3 from 'web3';
 
 import {getProvider as getWeb3Provider} from 'services/web3modal';
-import {isMagicProvider} from 'services/magic';
+import {getCachedMagicNetwork, getMagicRPCProvider, isMagicProvider} from 'services/magic';
 import EventEmitter from 'events';
 import {useWeb3} from './useWeb3';
 import {Web3State} from 'types/blockchain';
@@ -87,8 +87,9 @@ export function useGlobalState(): GlobalState {
   useEffect(() => {
     if (web3State === Web3State.Done) {
       if (isMagicProvider()) {
+        const magicNetwork = getCachedMagicNetwork()
         providerRef.current = new ProviderWrapper(
-          getWeb3Provider(),
+          getMagicRPCProvider(magicNetwork),
           eventEmitterRef.current,
         );
       } else {

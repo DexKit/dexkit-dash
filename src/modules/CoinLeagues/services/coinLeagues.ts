@@ -235,24 +235,29 @@ export const joinGame = async (
   captainCoin: string,
   provider: any,
 ) => {
-  const ethers = getEthers();
+
+  const pr = new providers.Web3Provider(provider);
+  const net =  await pr.getNetwork();
+
   const gasPrice = await (
-    await ethers?.getGasPrice()
+    await pr?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
+
   return (await getCoinLeaguesContract(gameAddress, provider)).joinGameWithCaptainCoin(
     feeds,
     captainCoin,
     '500000',
     {
       value: amount,
+      gasPrice,
     },
   ) as Promise<ContractTransaction>;
 };
 
 export const startGame = async (gameAddress: string, provider: any) => {
-  const ethers = getEthers();
+  const pr = new providers.Web3Provider(provider)
   const gasPrice = await (
-    await ethers?.getGasPrice()
+    await pr?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
 
   return (await getCoinLeaguesContract(gameAddress, provider)).startGame({
