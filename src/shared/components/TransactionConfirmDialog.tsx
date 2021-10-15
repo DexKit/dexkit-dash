@@ -110,15 +110,7 @@ export const TransactionConfirmDialog = (
   const defaultAccount = useDefaultAccount();
   const network = useNetwork();
 
-  const {
-    data: balances,
-    loading: balanceLoading,
-    error,
-  } = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(GET_NETWORK_NAME(chainId)).toUpperCase(),
-    network,
-    defaultAccount,
-  );
+  const {balance} = useActiveChainBalance();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -259,11 +251,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Balance</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {balanceLoading || !balances ? (
-              <Skeleton width={theme.spacing(12)} />
-            ) : (
-              balances?.toFixed(3)
-            )}{' '}
+            {Number(ethers.utils.formatEther(balance || '0')).toFixed(4)}{' '}
             {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
@@ -377,9 +365,8 @@ export const TransactionConfirmDialog = (
       <DialogActions>
         <Button
           disabled={
-            balances === 0 ||
-            gasCost(values) === 0 ||
-            gasCost(values) > (balances || 0)
+            Number(ethers.utils.formatEther(balance || '0')) <
+              gasCost(values) || gasCost(values) === 0
           }
           onClick={handleConfirm}
           color='primary'

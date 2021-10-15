@@ -40,6 +40,7 @@ const GET_MY_KITTYGOTCHIES = gql`
       defense
       run
       uri
+      lastUpdated
     }
   }
 `;
@@ -55,15 +56,24 @@ const GET_KITTYGOTCHI = gql`
       defense
       run
       uri
+      lastUpdated
     }
   }
 `;
 
-const THEGRAPH_KITTYGOTCHI_ENDPOINT =
-  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchi';
+const THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchimumbai';
 
-let client = new ApolloClient({
-  uri: THEGRAPH_KITTYGOTCHI_ENDPOINT,
+const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchimumbai';
+
+let clientMumbai = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+let clientMatic = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
@@ -71,6 +81,18 @@ interface CallbackProps {
   onSubmit?: (hash?: string) => void;
   onConfirmation?: (hash?: string) => void;
   onError?: (error?: any) => void;
+}
+
+export function useGraphqlClient() {
+  const getClient = useCallback((chainId?: ChainId) => {
+    if (chainId === ChainId.Mumbai) {
+      return clientMumbai;
+    }
+
+    return clientMatic;
+  }, []);
+
+  return {getClient};
 }
 
 export function useKittygotchi(id?: string) {
@@ -81,7 +103,7 @@ export function useKittygotchi(id?: string) {
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
   const query = useQuery(
-    ['GET_KITTYGOTCHI_META', id, chainId, web3State],
+    ['GET_KITTYGOTCHI_META', id, chainId, web3State, kittyAddress],
     () => {
       if (id && provider && web3State === Web3State.Done) {
         return fetch(`${METADATA_KITTY_ENDPOINT}${id}`)
@@ -218,46 +240,55 @@ export const useKittygotchiList = (address?: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Kittygotchi[]>();
   const [error, setError] = useState<any>();
+  const {chainId} = useWeb3();
 
-  const get = useCallback(async (address?: string) => {
-    return new Promise<Kittygotchi[] | undefined>((resolve, reject) => {
-      setIsLoading(true);
-      client
-        .query<{tokens: any[]}>({
-          query: GET_MY_KITTYGOTCHIES,
-          variables: {owner: address?.toLowerCase()},
-        })
-        .then(async (result) => {
-          let data: Kittygotchi[] = [];
+  const {getClient} = useGraphqlClient();
 
-          for (let k of result.data.tokens) {
-            let item: Kittygotchi = {
-              id: k.id,
-              attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
-              defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
-              run: k.run ? BigNumber.from(k.run).toNumber() : 0,
-            };
+  const get = useCallback(
+    async (address?: string) => {
+      return new Promise<Kittygotchi[] | undefined>((resolve, reject) => {
+        setIsLoading(true);
+        getClient(chainId)
+          .query<{tokens: any[]}>({
+            query: GET_MY_KITTYGOTCHIES,
+            variables: {owner: address?.toLowerCase()},
+          })
+          .then(async (result: any) => {
+            let data: Kittygotchi[] = [];
 
-            let metadata = await getTokenMetadata(k.uri);
+            for (let k of result.data.tokens) {
+              let item: Kittygotchi = {
+                id: k.id,
+                attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
+                defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
+                run: k.run ? BigNumber.from(k.run).toNumber() : 0,
+                lastUpdated: result.lastUpdated
+                  ? BigNumber.from(result.lastUpdated).toNumber()
+                  : 0,
+              };
 
-            if (metadata.image) {
-              item.image = getNormalizedUrl(metadata.image);
+              let metadata = await getTokenMetadata(k.uri);
+
+              if (metadata.image) {
+                item.image = getNormalizedUrl(metadata.image);
+              }
+
+              data.push(item);
             }
 
-            data.push(item);
-          }
-
-          setData(data);
-          resolve(data);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setIsLoading(false);
-          reject(err);
-        });
-    });
-  }, []);
+            setData(data);
+            resolve(data);
+            setIsLoading(false);
+          })
+          .catch((err: any) => {
+            setError(err);
+            setIsLoading(false);
+            reject(err);
+          });
+      });
+    },
+    [chainId],
+  );
 
   return {get, data, error, isLoading};
 };
@@ -266,45 +297,53 @@ export const useKittygotchiV2 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Kittygotchi>();
   const [error, setError] = useState<any>();
+  const {getClient} = useGraphqlClient();
+  const {chainId} = useWeb3();
 
-  const get = useCallback(async (id?: string) => {
-    setIsLoading(true);
+  const get = useCallback(
+    async (id?: string) => {
+      setIsLoading(true);
 
-    client
-      .query<{token: any}>({
-        query: GET_KITTYGOTCHI,
-        variables: {id: id?.toLowerCase()},
-      })
-      .then(async (result) => {
-        let resultData = result.data.token;
+      getClient(chainId)
+        .query<{token: any}>({
+          query: GET_KITTYGOTCHI,
+          variables: {id: id?.toLowerCase()},
+        })
+        .then(async (result: any) => {
+          let resultData = result.data.token;
 
-        let data: Kittygotchi = {
-          id: resultData.id,
-          attack: resultData.attack
-            ? BigNumber.from(resultData.attack).toNumber()
-            : 0,
-          defense: resultData.defense
-            ? BigNumber.from(resultData.defense).toNumber()
-            : 0,
-          run: resultData.run ? BigNumber.from(resultData.run).toNumber() : 0,
-        };
+          let data: Kittygotchi = {
+            id: resultData.id,
+            attack: resultData.attack
+              ? BigNumber.from(resultData.attack).toNumber()
+              : 0,
+            defense: resultData.defense
+              ? BigNumber.from(resultData.defense).toNumber()
+              : 0,
+            run: resultData.run ? BigNumber.from(resultData.run).toNumber() : 0,
+            lastUpdated: resultData.lastUpdated
+              ? BigNumber.from(resultData.lastUpdated).toNumber()
+              : 0,
+          };
 
-        let metadata = await getTokenMetadata(resultData.uri);
+          let metadata = await getTokenMetadata(resultData.uri);
 
-        if (metadata.image) {
-          data.image = getNormalizedUrl(metadata.image);
-        }
+          if (metadata.image) {
+            data.image = getNormalizedUrl(metadata.image);
+          }
 
-        setData(data);
+          setData(data);
 
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
+          setIsLoading(false);
+        })
+        .catch((err: any) => {
+          setError(err);
 
-        setIsLoading(false);
-      });
-  }, []);
+          setIsLoading(false);
+        });
+    },
+    [chainId],
+  );
 
   return {get, data, error, isLoading};
 };

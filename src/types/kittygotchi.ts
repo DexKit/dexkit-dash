@@ -7,4 +7,5 @@ export interface Kittygotchi {
   run: number;
   image?: string;
   attributes?: any;
+  lastUpdated?: number;
 }

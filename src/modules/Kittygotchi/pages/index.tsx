@@ -42,6 +42,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import MintKittygotchiSuccessDialog from '../components/dialogs/MintKittygotchiSuccessDialog';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export const KittygotchiIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const {chainId} = useWeb3();
+  const {chainId, web3State} = useWeb3();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
@@ -153,10 +154,10 @@ export const KittygotchiIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (defaultAccount) {
+    if (defaultAccount && web3State === Web3State.Done) {
       kittygotchiList.get(defaultAccount);
     }
-  }, [defaultAccount]);
+  }, [defaultAccount, web3State]);
 
   return (
     <>

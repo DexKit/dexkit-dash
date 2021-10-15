@@ -20,6 +20,6 @@ export const GET_KITTY_CHAIN_ID = (chainId?: ChainId) => {
 };
 
 export const KITTYGOTCHI = {
-  [ChainId.Matic]: '',
+  [ChainId.Matic]: '0xEA88540adb1664999524d1a698cb84F6C922D2A1',
   [ChainId.Mumbai]: '0xbdd0C521aBb19fA863917e2C807f327957D239ff',
 };
