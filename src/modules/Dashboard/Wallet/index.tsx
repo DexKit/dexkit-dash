@@ -130,7 +130,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                   balances={data}
                   loading={loading}
                   loadingUsd={loadingUsd}
-                  onHideBalance={handleToggleBalance}
                 />
               )}
             </Grid>
@@ -159,7 +158,6 @@ const WalletTabs: React.FC<Props> = (props) => {
                           loading={loading}
                           error={error}
                           data={data}
-                          hideBalance={hideBalance}
                         />
                       </TabPanel>
                       <TabPanel className={classes.zeroPadding} value='nfts'>

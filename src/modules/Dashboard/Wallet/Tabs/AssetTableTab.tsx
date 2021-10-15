@@ -9,17 +9,17 @@ import {WalletEmptyImage} from 'shared/components/Icons';
 import {useTransak} from 'hooks/useTransak';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
 
 type Props = {
   account: string;
   loading: boolean;
   error: any;
   data: MyBalances[];
-  hideBalance?: boolean;
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {account, loading, error, data, hideBalance} = props;
+  const {account, loading, error, data} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -27,6 +27,7 @@ export const AssetTableTab = (props: Props) => {
   //   {/* <DefiCoins {...defiBalance} /> */}
   // </Grid>
 
+  const {isBalanceVisible} = useIsBalanceVisible()
   const transak = useTransak({});
 
   const handleTransak = useCallback(() => {
@@ -63,6 +64,6 @@ export const AssetTableTab = (props: Props) => {
   return error ? (
     <ErrorView message={error.message} />
   ) : (
-    <AssetTable hideBalance={hideBalance} balances={data} loading={loading} />
+    <AssetTable hideBalance={!isBalanceVisible} balances={data} loading={loading} />
   );
 };

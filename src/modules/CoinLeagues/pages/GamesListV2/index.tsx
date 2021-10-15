@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {
-  useCoinLeaguesFactory,
   useCoinLeaguesFactoryRoutes,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
@@ -22,6 +21,7 @@ import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skel
 import {makeStyles} from '@material-ui/core/styles';
 
 import {Empty} from 'shared/components/Empty';
+import SwapButton from 'shared/components/SwapButton';
 import SmallCardGameV2 from 'modules/CoinLeagues/components/SmallCardGameV2';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
@@ -73,7 +73,7 @@ enum Tabs {
 const GamesListV2 = () => {
   const classes = useStyles();
   const history = useHistory();
-  const {chainId, account} = useWeb3();
+  const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
   useDiscord();
@@ -177,6 +177,9 @@ const GamesListV2 = () => {
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+          <Box pr={2}>
+            <SwapButton/>
+          </Box>
           <Box pr={2}>
             <ShareButton shareText={`Coin leagues Games`} />
           </Box>
