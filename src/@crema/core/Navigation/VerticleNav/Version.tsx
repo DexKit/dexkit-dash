@@ -18,7 +18,7 @@ export const Version = () => {
       onClick={onClick}
       component={NavLink}
       className={clsx(classes.navItem, 'nav-item')}>
-      <ListItemText primary={'v0.0.5-7'} classes={{primary: 'nav-item-text'}} />
+      <ListItemText primary={'v0.0.6'} classes={{primary: 'nav-item-text'}} />
     </ListItem>
   );
 };
