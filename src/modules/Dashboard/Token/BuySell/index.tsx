@@ -207,7 +207,7 @@ const BuySell: React.FC<Props> = ({
         setSelect0(balancesFn);
       }
     }
-  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName]);
+  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName, disableReceive]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {

@@ -21,7 +21,7 @@ import {MyBalances} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {truncateAddress, truncateIsAddress} from 'utils';
+import {truncateIsAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
 
@@ -347,7 +347,7 @@ const TotalBalance = (props: Props) => {
                         <Grid container spacing={2}>
                           <Grid item>
                             <Typography className={classes.usdAmount}>
-                              {loadingUsd && loading ? (
+                              {loadingUsd || loading ? (
                                 <Skeleton />
                               ) : (
                                 <>

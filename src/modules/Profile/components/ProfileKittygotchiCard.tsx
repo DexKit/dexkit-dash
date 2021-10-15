@@ -26,6 +26,8 @@ import {useHistory} from 'react-router';
 import {useNotifications} from 'hooks/useNotifications';
 import {useKittygotchiFeed} from 'modules/Kittygotchi/hooks';
 
+import {ChainId} from 'types/blockchain';
+
 const useStyles = makeStyles((theme) => ({
   avatar: {
     border: ' 1px solid #525C75',
@@ -71,18 +73,21 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               </Typography>
 
               <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens in your wallet to
-                mint one.
+                You will need <strong>10 MATIC</strong> tokens on Polygon network in
+                your wallet to mint one.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Box display='flex' justifyContent='center'>
                 <Button
                   onClick={onMint}
+                  disabled={!(chainId === ChainId.Matic)}
                   startIcon={<GavelIcon />}
                   variant='outlined'
                   color='primary'>
-                  Mint Kittygotchi
+                  {chainId === ChainId.Matic
+                    ? 'Mint Kittygotchi'
+                    : 'Switch to Polygon network'}
                 </Button>
               </Box>
             </Grid>
