@@ -13,7 +13,10 @@ import {
   Typography,
   TextField,
   Collapse,
+  useTheme,
 } from '@material-ui/core';
+
+import {Skeleton} from '@material-ui/lab';
 
 import {estimateFees} from '@mycrypto/gas-estimation';
 
@@ -24,7 +27,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ReceiptTextIcon} from './Icons';
 import {useNetwork} from 'hooks/useNetwork';
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {
+  GET_NATIVE_COIN_FROM_NETWORK_NAME,
+  GET_NETWORK_NAME,
+} from 'shared/constants/Bitquery';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {GetNativeCoinFromNetworkName, truncateAddress} from 'utils';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -34,7 +40,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Web3State} from 'types/blockchain';
 import {hasLondonHardForkSupport} from 'utils/blockchain';
 import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -55,6 +61,8 @@ export const TransactionConfirmDialog = (
   const {data, onCancel, onConfirm} = props;
 
   const [values, setValues] = useState<ValuesType>({});
+
+  const theme = useTheme();
 
   const handleCancel = useCallback(() => {
     if (onCancel) {
@@ -89,6 +97,8 @@ export const TransactionConfirmDialog = (
         params.maxPriorityFeePerGas =
           values.maxPriorityFeePerGas?.toHexString();
         params.maxFeePerGas = values.maxFeePerGas?.toHexString();
+      } else {
+        params.gasPrice = values.gasPrice?.toHexString();
       }
 
       dataCopy.params[0] = params;
@@ -100,7 +110,15 @@ export const TransactionConfirmDialog = (
   const defaultAccount = useDefaultAccount();
   const network = useNetwork();
 
-  const {balance} = useActiveChainBalance();
+  const {
+    data: balances,
+    loading: balanceLoading,
+    error,
+  } = useNativeSingleBalance(
+    GET_NATIVE_COIN_FROM_NETWORK_NAME(GET_NETWORK_NAME(chainId)).toUpperCase(),
+    network,
+    defaultAccount,
+  );
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -133,12 +151,12 @@ export const TransactionConfirmDialog = (
     return values.maxFeePerGas && values.maxPriorityFeePerGas;
   }, [values]);
 
-  const coinPrice = useNativeCoinPriceUSD(network);
+  const coinPrice = useNativeCoinPriceUSD(GET_NETWORK_NAME(chainId));
 
   useEffect(() => {
     const provider = getProvider();
 
-    if (web3State === Web3State.Done && data) {
+    if (web3State === Web3State.Done && data && props.open) {
       if (provider) {
         if (data.params.length > 0) {
           (async () => {
@@ -170,17 +188,33 @@ export const TransactionConfirmDialog = (
         }
       }
     }
-  }, [web3State, getProvider, data, chainId]);
+  }, [web3State, getProvider, data, chainId, props.open]);
 
-  const gasCost = useCallback(() => {
-    let cost = parseFloat(
-      ethers.utils.formatEther(
-        values.gasLimit?.mul(values.maxFeePerGas || ethers.BigNumber.from(0)) ||
-          BigNumber.from(0),
-      ),
-    );
-    return cost;
-  }, [values]);
+  const gasCost = useCallback(
+    (values: any) => {
+      let cost = 0;
+
+      if (isEIP1559()) {
+        cost = parseFloat(
+          ethers.utils.formatEther(
+            values.gasLimit?.mul(
+              values.maxFeePerGas || ethers.BigNumber.from(0),
+            ) || BigNumber.from(0),
+          ),
+        );
+      } else {
+        cost = parseFloat(
+          ethers.utils.formatEther(
+            values.gasLimit?.mul(values.gasPrice || ethers.BigNumber.from(0)) ||
+              BigNumber.from(0),
+          ),
+        );
+      }
+
+      return cost;
+    },
+    [isEIP1559],
+  );
 
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
@@ -225,7 +259,12 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Balance</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {ethers.utils.formatEther(balance || '0')} {GetNativeCoinFromNetworkName(network)}
+            {balanceLoading || !balances ? (
+              <Skeleton width={theme.spacing(12)} />
+            ) : (
+              balances?.toFixed(3)
+            )}{' '}
+            {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
         <Box mb={4}>
@@ -239,7 +278,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Gas cost</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {gasCost().toFixed(4)} {GetNativeCoinFromNetworkName(network)}
+            {gasCost(values)} {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
         <Box
@@ -250,7 +289,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Total cost</Typography>
           <Typography variant='body1' color='textSecondary'>
-            ${((coinPrice.data || 0) * gasCost()).toFixed(2)} USD
+            ${(coinPrice.data || 0) * gasCost(values)} USD
           </Typography>
         </Box>
 
@@ -337,7 +376,11 @@ export const TransactionConfirmDialog = (
       </DialogContent>
       <DialogActions>
         <Button
-          disabled={BigNumber.from(balance || '0').gt(0) || gasCost() === 0}
+          disabled={
+            balances === 0 ||
+            gasCost(values) === 0 ||
+            gasCost(values) > (balances || 0)
+          }
           onClick={handleConfirm}
           color='primary'
           variant='contained'>

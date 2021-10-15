@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   DialogProps,
   Dialog,
@@ -16,6 +16,8 @@ import {
   IconButton,
 } from '@material-ui/core';
 
+import {Alert} from '@material-ui/lab';
+
 import DoneIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/Cancel';
 
@@ -24,11 +26,19 @@ import {GiftIcon, RewardDialogIcon} from 'shared/components/Icons';
 import CloseIcon from '@material-ui/icons/Close';
 
 import GavelIcon from '@material-ui/icons/Gavel';
+import {useWeb3} from 'hooks/useWeb3';
+import {ChainId} from 'types/blockchain';
+import {getBalance} from 'services/web3modal';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
     width: theme.spacing(6),
     height: theme.spacing(6),
+  },
+  content: {
+    margin: 0,
+    padding: 0,
   },
 }));
 
@@ -42,6 +52,8 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
   const {dialogProps, loading, onConfirm} = props;
   const {onClose} = dialogProps;
 
+  const {chainId} = useWeb3();
+
   const classes = useStyles();
 
   const handleClose = useCallback(
@@ -54,6 +66,11 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
   );
 
   const theme = useTheme();
+
+  const defaultAccount = useDefaultAccount();
+  const [hasEnoughMatic, setHasEnoughMatic] = useState(false);
+
+  useEffect(() => {}, [defaultAccount]);
 
   return (
     <Dialog {...dialogProps} maxWidth='xs' fullWidth>
@@ -77,7 +94,17 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
           </Box>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers className={classes.content}>
+        {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+          <Box p={4}>
+            <Alert severity='info'>
+              <Typography variant='body2'>
+                Connect to <strong>Polygon(MATIC)</strong> network to create a
+                Kittygotchi
+              </Typography>
+            </Alert>
+          </Box>
+        ) : null}
         <Box p={4}>
           {loading ? (
             <Grid container spacing={4}>
@@ -98,14 +125,14 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Minting your Kittygotchi
+                  Creating your Kittygotchi
                 </Typography>
                 <Typography
                   color='textSecondary'
                   align='center'
                   variant='body1'>
                   You will need <strong>10 MATIC</strong> tokens in your wallet
-                  to mint one Kittygotchi.
+                  to create one Kittygotchi.
                 </Typography>
               </Grid>
             </Grid>

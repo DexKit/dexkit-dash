@@ -225,17 +225,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       </Grid>
                     ) : null}
                     <Grid item>
-                      <ButtonBase
-                        className={classes.avatarButton}
-                        to='/profile'
-                        component={RouterLink}>
-                        <Avatar
-                          className={classes.avatarSmall}
-                          src={kittygotchiProfile.kittygotchi?.image}
-                        />
-                      </ButtonBase>
-                    </Grid>
-                    <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />
                       </AppBarButton>

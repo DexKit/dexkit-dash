@@ -5,13 +5,20 @@ import {
   makeStyles,
   Box,
   Grid,
+  Link,
   Typography,
   Paper,
   Button,
   CircularProgress,
   useTheme,
   Tooltip,
+  Divider,
 } from '@material-ui/core';
+import {ChainId} from 'types/blockchain';
+
+import {Alert} from '@material-ui/lab';
+
+import {Link as RouterLink} from 'react-router-dom';
 
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -22,16 +29,20 @@ import {Kittygotchi} from 'types/kittygotchi';
 import FeedKittygotchiButton from 'modules/Kittygotchi/components/buttons/FeedKittygotchiButton';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import {useWeb3} from 'hooks/useWeb3';
-import {useHistory} from 'react-router';
-import {useNotifications} from 'hooks/useNotifications';
-import {useKittygotchiFeed} from 'modules/Kittygotchi/hooks';
+
+import {Skeleton} from '@material-ui/lab';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
     border: ' 1px solid #525C75',
     backgroundColor: '#2E3243',
-    width: theme.spacing(32),
-    height: theme.spacing(32),
+    width: theme.spacing(28),
+    height: theme.spacing(28),
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(32),
+      height: theme.spacing(32),
+    },
   },
 }));
 
@@ -41,21 +52,34 @@ interface ProfileKittygotchiCardProps {
   onFeed?: () => void;
   onEdit?: () => void;
   kittygotchi?: Kittygotchi;
+  loadingKyttie?: boolean;
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, onEdit, onFeed, kittygotchi} = props;
+  const {loading, onMint, onEdit, onFeed, kittygotchi, loadingKyttie} = props;
   const theme = useTheme();
 
   const classes = useStyles();
 
   const {chainId} = useWeb3();
 
+  const isMobile = useMobile();
+
   const renderEmpty = () => {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Grid container spacing={4}>
+            {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+              <Grid item xs={12}>
+                <Alert severity='info'>
+                  <Typography variant='body2'>
+                    Connect to <strong>Polygon(MATIC)</strong> network to create
+                    a Kittygotchi
+                  </Typography>
+                </Alert>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
               <Box
                 display='flex'
@@ -71,21 +95,21 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               </Typography>
 
               <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens on Polygon
-                network in your wallet to mint one.
+                You will need <strong>10 MATIC</strong> tokens in your wallet to
+                create one.
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Box display='flex' justifyContent='center'>
                 <Button
                   onClick={onMint}
-                  disabled={!(chainId === ChainId.Matic)}
+                  disabled={
+                    chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
+                  }
                   startIcon={<GavelIcon />}
                   variant='outlined'
                   color='primary'>
-                  {chainId === ChainId.Matic
-                    ? 'Mint Kittygotchi'
-                    : 'Switch to Polygon network'}
+                  Creeate Kittygotchi
                 </Button>
               </Box>
             </Grid>
@@ -98,55 +122,128 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const renderKittygotchi = () => {
     return (
       <Grid container spacing={4}>
-        <Grid item>
-          <Grid container spacing={4} direction='column'>
+        <Grid item xs={isMobile ? 12 : undefined}>
+          <Grid container spacing={2} direction='column'>
             <Grid item>
               <Box
                 display='flex'
                 alignItems='center'
                 alignContent='center'
                 justifyContent='center'>
-                <Avatar className={classes.avatar} src={kittygotchi?.image} />
+                {loadingKyttie ? (
+                  <Skeleton className={classes.avatar} variant='circle' />
+                ) : (
+                  <Avatar className={classes.avatar} src={kittygotchi?.image} />
+                )}
               </Box>
             </Grid>
             <Grid item>
               <Grid
                 container
+                justifyContent='center'
                 alignItems='center'
                 alignContent='center'
-                justifyContent='center'
                 spacing={2}>
                 <Grid item>
-                  <Tooltip title='Feed'>
-                    <FeedKittygotchiButton onClick={onFeed} />
-                  </Tooltip>
+                  {loadingKyttie ? (
+                    <Skeleton
+                      variant='circle'
+                      width={theme.spacing(5)}
+                      height={theme.spacing(5)}
+                    />
+                  ) : (
+                    <Tooltip title='Feed'>
+                      <FeedKittygotchiButton onClick={onFeed} />
+                    </Tooltip>
+                  )}
                 </Grid>
                 <Grid item>
-                  <Tooltip title='Edit (Coming soon)'>
-                    <RoundedIconButton disabled onClick={onEdit}>
-                      <EditIcon />
-                    </RoundedIconButton>
-                  </Tooltip>
+                  {loadingKyttie ? (
+                    <Skeleton
+                      variant='circle'
+                      width={theme.spacing(5)}
+                      height={theme.spacing(5)}
+                    />
+                  ) : (
+                    <Tooltip title='Edit (Coming soon)'>
+                      <RoundedIconButton disabled onClick={onEdit}>
+                        <EditIcon />
+                      </RoundedIconButton>
+                    </Tooltip>
+                  )}
                 </Grid>
                 <Grid item>
-                  <Tooltip title='View on Opensea (Coming soon)'>
-                    <RoundedIconButton disabled>
-                      <ShareIcon />
-                    </RoundedIconButton>
-                  </Tooltip>
+                  {loadingKyttie ? (
+                    <Skeleton
+                      variant='circle'
+                      width={theme.spacing(5)}
+                      height={theme.spacing(5)}
+                    />
+                  ) : (
+                    <Tooltip title='View on Opensea (Coming soon)'>
+                      <RoundedIconButton disabled>
+                        <ShareIcon />
+                      </RoundedIconButton>
+                    </Tooltip>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs>
+        <Grid item xs={isMobile ? 12 : undefined}>
+          <Divider orientation={isMobile ? 'horizontal' : 'vertical'} />
+        </Grid>
+        <Grid item xs={isMobile ? 12 : true}>
           <Grid container spacing={4}>
-            <Grid item>
-              <Typography variant='h6'>
+            <Grid item xs={12}>
+              <Typography align={isMobile ? 'center' : 'left'} variant='h4'>
                 Kittygotchi #{kittygotchi?.id}
               </Typography>
             </Grid>
-            <Grid item xs={12}></Grid>
+            {kittygotchi ? (
+              <Grid item xs={12}>
+                <Grid
+                  container
+                  justifyContent={isMobile ? 'center' : 'flex-start'}
+                  alignItems='center'
+                  alignContent='center'
+                  spacing={4}>
+                  <Grid item>
+                    <Typography color='textSecondary' variant='caption'>
+                      ATK
+                    </Typography>
+                    <Typography variant='h5'>
+                      {!kittygotchi?.attack ? (
+                        <Skeleton />
+                      ) : (
+                        kittygotchi?.attack
+                      )}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography color='textSecondary' variant='caption'>
+                      DEF
+                    </Typography>
+                    <Typography variant='h5'>
+                      {!kittygotchi?.defense ? (
+                        <Skeleton />
+                      ) : (
+                        kittygotchi?.defense
+                      )}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography color='textSecondary' variant='caption'>
+                      RUN
+                    </Typography>
+                    <Typography variant='h5'>
+                      {!kittygotchi?.run ? <Skeleton /> : kittygotchi?.run}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>
@@ -167,7 +264,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
         </Grid>
         <Grid item xs={12}>
           <Typography align='center' variant='h6'>
-            Minting your Kittygotchi
+            Creating your Kittygotchi
           </Typography>
           <Typography align='center' color='textSecondary' variant='body2'>
             Please, sign the transaction in your wallet
@@ -179,10 +276,10 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
 
   return (
     <Paper>
-      <Box px={4} py={8}>
+      <Box p={4}>
         {loading
           ? renderLoading()
-          : kittygotchi
+          : kittygotchi || loadingKyttie
           ? renderKittygotchi()
           : renderEmpty()}
       </Box>

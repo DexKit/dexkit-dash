@@ -77,6 +77,7 @@ export const ProfileIndex = () => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [loadingKyttie, setLoadingKyttie] = useState(false);
   const [mintLoading, setMintLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -103,12 +104,18 @@ export const ProfileIndex = () => {
         setMintLoading(false);
 
         if (account) {
+          setMintLoading(true);
           kittygotchiList
             .get(account)
             .then((items: Kittygotchi[] | undefined) => {
               if (items && items.length > 0) {
                 kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
               }
+
+              setMintLoading(false);
+            })
+            .catch((err) => {
+              setMintLoading(false);
             });
         }
       },
@@ -222,14 +229,28 @@ export const ProfileIndex = () => {
           <Grid item xs={12} sm={6}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Typography variant='body1'>My Kittygotchi</Typography>
-              </Grid>
-              <Grid item xs={12}>
+                <Box
+                  mb={2}
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='space-between'>
+                  <Typography variant='body1'>My Kittygotchi</Typography>
+
+                  <Button
+                    size='small'
+                    color='primary'
+                    to='/kittygotchi'
+                    component={RouterLink}>
+                    View more
+                  </Button>
+                </Box>
                 <ProfileKittygotchiCard
                   onMint={handleMint}
                   onFeed={handleFeed}
                   onEdit={handleClickEdit}
                   loading={mintLoading}
+                  loadingKyttie={loadingKyttie}
                   kittygotchi={kittyProfile.kittygotchi}
                 />
               </Grid>

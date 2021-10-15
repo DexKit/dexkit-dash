@@ -233,11 +233,9 @@ export const useKittygotchiList = (address?: string) => {
           for (let k of result.data.tokens) {
             let item: Kittygotchi = {
               id: k.id,
-              attack: k.attack ? BigNumber.from(k.attack) : BigNumber.from(0),
-              defense: k.defense
-                ? BigNumber.from(k.defense)
-                : BigNumber.from(0),
-              run: k.run ? BigNumber.from(k.run) : BigNumber.from(0),
+              attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
+              defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
+              run: k.run ? BigNumber.from(k.run).toNumber() : 0,
             };
 
             let metadata = await getTokenMetadata(k.uri);
@@ -283,14 +281,12 @@ export const useKittygotchiV2 = () => {
         let data: Kittygotchi = {
           id: resultData.id,
           attack: resultData.attack
-            ? BigNumber.from(resultData.attack)
-            : BigNumber.from(0),
+            ? BigNumber.from(resultData.attack).toNumber()
+            : 0,
           defense: resultData.defense
-            ? BigNumber.from(resultData.defense)
-            : BigNumber.from(0),
-          run: resultData.run
-            ? BigNumber.from(resultData.run)
-            : BigNumber.from(0),
+            ? BigNumber.from(resultData.defense).toNumber()
+            : 0,
+          run: resultData.run ? BigNumber.from(resultData.run).toNumber() : 0,
         };
 
         let metadata = await getTokenMetadata(resultData.uri);

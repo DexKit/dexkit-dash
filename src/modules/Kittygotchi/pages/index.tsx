@@ -41,6 +41,7 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
+import MintKittygotchiSuccessDialog from '../components/dialogs/MintKittygotchiSuccessDialog';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -68,6 +69,7 @@ export const KittygotchiIndex = () => {
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
+  const mintSuccessToggler = useToggler(false);
 
   const emtpyArrayRef = useRef(new Array(6).fill(null));
 
@@ -111,9 +113,9 @@ export const KittygotchiIndex = () => {
       // Save here the current id minted
       setSubmitState(SubmitState.Confirmed);
       mintKittyToggler.set(false);
-      kittygotchiList.get(defaultAccount);
+      mintSuccessToggler.set(true);
 
-      console.log('COnfirma');
+      kittygotchiList.get(defaultAccount);
     };
     const onError = (error: any) => {
       setSubmitState(SubmitState.Error);
@@ -175,6 +177,12 @@ export const KittygotchiIndex = () => {
         }
         onConfirm={handleConfirmMint}
       />
+      <MintKittygotchiSuccessDialog
+        dialogProps={{
+          open: mintSuccessToggler.show,
+          onClose: mintSuccessToggler.toggle,
+        }}
+      />
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
@@ -209,25 +217,7 @@ export const KittygotchiIndex = () => {
               </Alert>
             </Grid>
           )}
-          <Grid item xs={3}>
-            <Paper>
-              <Box p={4}>
-                <TextField
-                  fullWidth
-                  variant='outlined'
-                  placeholder='Search...'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <SearchIcon color='inherit' />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Paper>
@@ -238,7 +228,7 @@ export const KittygotchiIndex = () => {
                       variant='contained'
                       color='primary'
                       onClick={mintKittyToggler.toggle}>
-                      Mint Kitty
+                      Create Kitty
                     </Button>
                   </Box>
                 </Paper>
