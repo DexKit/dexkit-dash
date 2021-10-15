@@ -18,7 +18,7 @@ import {ChainId} from 'types/blockchain';
 
 import {Alert} from '@material-ui/lab';
 
-import {Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -57,6 +57,8 @@ interface ProfileKittygotchiCardProps {
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {loading, onMint, onEdit, onFeed, kittygotchi, loadingKyttie} = props;
+
+  const history = useHistory();
   const theme = useTheme();
 
   const classes = useStyles();
@@ -64,6 +66,12 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {chainId} = useWeb3();
 
   const isMobile = useMobile();
+
+  const goToOpenSea = useCallback(() => {
+    if (kittygotchi) {
+      window.open(`https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.id}`);
+    }
+  }, [kittygotchi]);
 
   const renderEmpty = () => {
     return (
@@ -157,7 +165,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     </Tooltip>
                   )}
                 </Grid>
-                <Grid item>
+               { /*<Grid item>
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
@@ -171,7 +179,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       </RoundedIconButton>
                     </Tooltip>
                   )}
-                </Grid>
+                </Grid>*/}
                 <Grid item>
                   {loadingKyttie ? (
                     <Skeleton
@@ -180,8 +188,8 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       height={theme.spacing(5)}
                     />
                   ) : (
-                    <Tooltip title='View on Opensea (Coming soon)'>
-                      <RoundedIconButton disabled>
+                    <Tooltip title='View on Opensea'>
+                      <RoundedIconButton onClick={goToOpenSea}>
                         <ShareIcon />
                       </RoundedIconButton>
                     </Tooltip>
@@ -213,33 +221,19 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     <Typography color='textSecondary' variant='caption'>
                       ATK
                     </Typography>
-                    <Typography variant='h5'>
-                      {!kittygotchi?.attack ? (
-                        <Skeleton />
-                      ) : (
-                        kittygotchi?.attack
-                      )}
-                    </Typography>
+                    <Typography variant='h5'>{kittygotchi?.attack}</Typography>
                   </Grid>
                   <Grid item>
                     <Typography color='textSecondary' variant='caption'>
                       DEF
                     </Typography>
-                    <Typography variant='h5'>
-                      {!kittygotchi?.defense ? (
-                        <Skeleton />
-                      ) : (
-                        kittygotchi?.defense
-                      )}
-                    </Typography>
+                    <Typography variant='h5'>{kittygotchi?.defense}</Typography>
                   </Grid>
                   <Grid item>
                     <Typography color='textSecondary' variant='caption'>
                       RUN
                     </Typography>
-                    <Typography variant='h5'>
-                      {!kittygotchi?.run ? <Skeleton /> : kittygotchi?.run}
-                    </Typography>
+                    <Typography variant='h5'>{kittygotchi?.run}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

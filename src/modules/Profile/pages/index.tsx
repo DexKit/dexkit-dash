@@ -96,6 +96,16 @@ export const ProfileIndex = () => {
 
   const {chainId, account} = useWeb3();
 
+  useEffect(() => {
+    if (kittyProfile && !kittygotchiList.isLoading) {
+      kittygotchiList.get(account).then((items: Kittygotchi[] | undefined) => {
+        if (items && items.length > 0) {
+          kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
+        }
+      });
+    }
+  }, [kittyProfile, kittygotchiList.isLoading, account]);
+
   const handleMint = useCallback(() => {
     setMintLoading(true);
 
@@ -197,6 +207,10 @@ export const ProfileIndex = () => {
     }
   }, [history, kittyProfile.kittygotchi]);
 
+  const onClickBack = useCallback(()=>{
+    history.goBack()
+  },[])
+
   return (
     <>
       <Box>
@@ -216,7 +230,7 @@ export const ProfileIndex = () => {
                   alignItems='center'
                   alignContent='center'
                   mr={2}>
-                  <IconButton size='small' component={RouterLink} to={'/'}>
+                  <IconButton size='small' onClick={onClickBack}>
                     <ArrowBackIcon />
                   </IconButton>
                 </Box>
@@ -226,9 +240,9 @@ export const ProfileIndex = () => {
           </Grid>
         </Box>
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
+          <Grid item xs={12} sm={12}>
+            <Grid container spacing={4} justifyContent={'center'}>
+              <Grid item xs={12} sm={6}>
                 <Box
                   mb={2}
                   display='flex'

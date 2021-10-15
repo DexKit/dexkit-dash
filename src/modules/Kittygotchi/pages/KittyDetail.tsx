@@ -185,6 +185,12 @@ export const KittyDetail = () => {
     }
   }, [params.id]);
 
+  const goToOpenSea = useCallback(() => {
+    if (kittygotchi.data) {
+      window.open(`https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.data?.id}`);
+    }
+  }, [kittygotchi.data]);
+
   return (
     <>
       <RewardDialog
@@ -285,8 +291,8 @@ export const KittyDetail = () => {
                             </Tooltip>
                           </Grid>*/}
                           <Grid item>
-                            <Tooltip title='Share'>
-                              <RoundedIconButton>
+                            <Tooltip title='Open on OpenSea'>
+                              <RoundedIconButton onClick={goToOpenSea}>
                                 <ShareIcon />
                               </RoundedIconButton>
                             </Tooltip>
