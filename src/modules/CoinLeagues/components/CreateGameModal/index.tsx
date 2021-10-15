@@ -205,8 +205,8 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
-              <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>
+             {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
+              <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
               <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
               <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
@@ -229,7 +229,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={60 * 5}>5 minutes</MenuItem>
+        {/*   <MenuItem value={60 * 5}>5 minutes</MenuItem>*/}
               <MenuItem value={60 * 60}>1 hr</MenuItem>
               <MenuItem value={4 * 60 * 60}>4 hrs</MenuItem>
               <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>
