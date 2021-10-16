@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 import {BigNumber, ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
@@ -24,10 +24,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 600,
     borderRadius: 6,
-    fontSize: '1.125rem',
+    fontSize: '1.0rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black'
   },
   innerContent: {
     fontSize: '1rem',

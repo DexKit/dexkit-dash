@@ -8,11 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import {BigNumber, ethers} from 'ethers';
 import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 
 import {useInterval} from 'hooks/utils/useInterval';
 import { CardTimer } from '../CardTimer';
 import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -24,10 +25,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 600,
     borderRadius: 6,
-    fontSize: '1.125rem',
+    fontSize: '1.0rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black'
   },
   innerContent: {
     fontSize: '1rem',
@@ -57,6 +59,7 @@ function SmallCardGameV2(props: Props): JSX.Element {
     style: 'currency',
     currency: 'USD',
   }).format(props.prizePool);*/
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   const prizeTotalValue = ethers.utils.formatEther(
     BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers))
@@ -89,15 +92,25 @@ function SmallCardGameV2(props: Props): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <SendIcon />
-            <Typography
-              variant='h6'
-              style={{
-                fontWeight: 500,
-                color: '#fcc591',
-                alignItems: 'baseline',
-              }}>
-              &nbsp;{entryAmount} {'Matic'}
-            </Typography>
+            <Box display={'flex'} alignItems={'center'} pl={1}>
+              <Grid
+                container
+                justifyContent={'center'}
+                alignItems={'center'}
+                spacing={1}>
+                <Grid xs={12} item>
+                  <Typography
+                    variant='h6'
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    {gameLevel}
+                  </Typography>
+                  <Typography
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {'MATIC'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Grid>
 

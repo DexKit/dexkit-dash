@@ -97,7 +97,7 @@ export const ProfileIndex = () => {
   const {chainId, account} = useWeb3();
 
   useEffect(() => {
-    if (kittyProfile && !kittygotchiList.isLoading) {
+    if (kittyProfile && !kittygotchiList.isLoading && account) {
       kittygotchiList.get(account).then((items: Kittygotchi[] | undefined) => {
         if (items && items.length > 0) {
           kittyProfile.setDefaultKittygothchi(items[items.length - 1]);

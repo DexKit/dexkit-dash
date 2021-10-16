@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black'
   },
   innerContent: {
     fontSize: '1rem',
