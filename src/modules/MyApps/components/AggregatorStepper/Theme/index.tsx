@@ -46,8 +46,8 @@ const ThemeStep: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       defaultDarkMode: false,
-      brandColor: undefined,
-      brandColorDark: undefined,
+      brandColor: '#ff7149',
+      brandColorDark: '#2172E5',
     },
     onSubmit: handleSubmit,
   });

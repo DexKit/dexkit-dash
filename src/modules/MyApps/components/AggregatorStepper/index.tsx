@@ -16,21 +16,17 @@ import {makeStyles} from '@material-ui/core';
 
 import GeralStep from './Geral';
 import ThemeStep from './Theme';
+import LinksStep from './Links';
 
 interface IStep {
-  description: string;
+  title: string;
   component: React.ReactElement;
 }
 
 const steps: IStep[] = [
-  {
-    description: 'Geral',
-    component: <GeralStep />,
-  },
-  {
-    description: 'Theme',
-    component: <ThemeStep />,
-  },
+  {title: 'Geral', component: <GeralStep />},
+  {title: 'Theme', component: <ThemeStep />},
+  {title: 'Links', component: <LinksStep />},
 ];
 
 const useStyles = makeStyles(() => ({
@@ -57,13 +53,11 @@ const AggregatorStepper: React.FC = () => {
       <Grid item xs={12}>
         <Card component={Paper} style={{backgroundColor: '#252836'}}>
           <Stepper activeStep={activeStep} style={{height: '100%'}}>
-            {steps.map((step, i) => {
-              return (
-                <Step key={i}>
-                  <StepLabel>{step.description}</StepLabel>
-                </Step>
-              );
-            })}
+            {steps.map((step, i) => (
+              <Step key={i}>
+                <StepLabel>{step.title}</StepLabel>
+              </Step>
+            ))}
           </Stepper>
           <Grid container spacing={2}>
             {steps[activeStep].component}
@@ -84,18 +78,14 @@ const AggregatorStepper: React.FC = () => {
                 </Box>
               </>
             ) : (
-              <Grid
-                container
-                spacing={6}
-                style={{marginTop: 10, marginBottom: 10}}>
-                <Grid item xs={6} />
-                <Grid item xs={5}>
+              <Grid container spacing={6} style={{margin: 10, marginLeft: 0}}>
+                <Grid item xs={8} />
+                <Grid item xs={4}>
                   <Grid container spacing={4}>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} style={{textAlign: 'right'}}>
                       <Button
-                        size='small'
+                        size='large'
                         variant='contained'
-                        fullWidth
                         color='inherit'
                         disabled={activeStep === 0}
                         onClick={handleBack}>
@@ -104,13 +94,12 @@ const AggregatorStepper: React.FC = () => {
                     </Grid>
                     <Grid item xs={6}>
                       <Button
-                        size='small'
+                        size='large'
                         variant='contained'
-                        fullWidth
                         onClick={handleNext}
                         disabled={!allowStep}
                         color='primary'>
-                        {activeStep === steps.length - 1 ? 'FINISH' : 'NEXT'}
+                        {activeStep === steps.length - 1 ? 'SUBMIT' : 'NEXT'}
                       </Button>
                     </Grid>
                   </Grid>

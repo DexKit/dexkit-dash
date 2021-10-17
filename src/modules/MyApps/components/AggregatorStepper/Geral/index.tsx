@@ -4,10 +4,10 @@ import {useFormik} from 'formik';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
+import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import Tooltip from '@material-ui/core/Tooltip';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -43,7 +43,7 @@ type FormProps = {
   name?: string;
   logo?: string;
   logoDark?: string;
-  buyTokenPerc?: number;
+  buyTokenPerc?: string;
   domain?: string;
   defaultToken?: 'matic' | 'bsc';
   hidePoweredDexKit?: boolean;
@@ -51,7 +51,7 @@ type FormProps = {
   defaultTokenAddr?: string;
   defaultTokenAddrBSC?: string;
   defaultTokenAddrMatic?: string;
-  defaultSlippage?: string;
+  defaultSlippage?: number;
 };
 
 const GeralStep: React.FC = () => {
@@ -65,26 +65,26 @@ const GeralStep: React.FC = () => {
     alert(JSON.stringify(formData));
   };
 
-  const formik = useFormik({
+  const formik = useFormik<FormProps>({
     initialValues: {
-      name: undefined,
-      logo: undefined,
-      logoDark: undefined,
-      buyTokenPerc: undefined,
-      domain: undefined,
+      name: '',
+      logo: '',
+      logoDark: '',
+      buyTokenPerc: '0.003',
+      domain: '',
       defaultToken: undefined,
       hidePoweredDexKit: false,
-      affiliateAddr: undefined,
-      defaultTokenAddr: undefined,
-      defaultTokenAddrBSC: undefined,
-      defaultTokenAddrMatic: undefined,
-      defaultSlippage: undefined,
+      affiliateAddr: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
+      defaultTokenAddr: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
+      defaultTokenAddrBSC: '0x314593fa9a2fa16432913dbccc96104541d32d11',
+      defaultTokenAddrMatic: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
+      defaultSlippage: 1,
     },
     onSubmit: handleSubmit,
   });
 
   return (
-    <Grid container spacing={5} className={classes.root}>
+    <Grid container spacing={10} className={classes.root}>
       <form
         onSubmit={formik.handleSubmit}
         autoComplete='off'
@@ -179,25 +179,29 @@ const GeralStep: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} style={{marginTop: 5}}>
-          <FormControl fullWidth required size='small'>
-            <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-              Domain
-            </FormLabel>
-            <OutlinedInput
-              placeholder='Content'
-              name='domain'
-              value={formik.values.domain}
-              onChange={formik.handleChange}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <Tooltip title={getHelpText('domain')}>
-                    <InfoIcon style={{color: '#646672'}} />
-                  </Tooltip>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+        <Grid item xs={12}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <FormControl fullWidth required size='small'>
+                <FormLabel style={{marginBottom: 5, color: '#fff'}}>
+                  Domain
+                </FormLabel>
+                <OutlinedInput
+                  placeholder='Content'
+                  name='domain'
+                  value={formik.values.domain}
+                  onChange={formik.handleChange}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <Tooltip title={getHelpText('domain')}>
+                        <InfoIcon style={{color: '#646672'}} />
+                      </Tooltip>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
         </Grid>
 
         <Grid item xs={12}>
