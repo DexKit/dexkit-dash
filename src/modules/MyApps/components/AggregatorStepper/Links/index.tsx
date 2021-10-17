@@ -4,15 +4,12 @@ import {useFormik} from 'formik';
 
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {makeStyles} from '@material-ui/core';
-
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import {HELP_TEXT_LINKS} from '../../../Wizard/aggregator/helpText';
@@ -43,28 +40,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LinksStep: React.FC = () => {
+type Props = {data: FormProps; setData: any};
+
+const LinksStep: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const getHelpText = (field: keyof typeof HELP_TEXT_LINKS) =>
     HELP_TEXT_LINKS[field]?.at(0) || '';
 
-  // TODO: Send info!
-  const handleSubmit = (formData: FormProps) => {
-    alert(JSON.stringify(formData));
-  };
-
   const formik = useFormik<FormProps>({
-    initialValues: {
-      about: '',
-      analytics: '',
-      code: '',
-      discord: '',
-      docs: '',
-      telegram: '',
-    },
-    onSubmit: handleSubmit,
+    initialValues: props.data,
+    onSubmit: console.log,
   });
+
+  React.useEffect(() => {
+    props.setData(formik.values);
+    // eslint-disable-next-line
+  }, [formik.values]);
 
   return (
     <Grid container spacing={10} className={classes.root}>

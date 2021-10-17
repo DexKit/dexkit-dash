@@ -54,34 +54,23 @@ type FormProps = {
   defaultSlippage?: number;
 };
 
-const GeralStep: React.FC = () => {
+type Props = {data: FormProps; setData: any};
+
+const GeralStep: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const getHelpText = (field: keyof typeof HELP_TEXT) =>
     HELP_TEXT[field]?.at(0) || '';
 
-  // TODO: Send info!
-  const handleSubmit = (formData: FormProps) => {
-    alert(JSON.stringify(formData));
-  };
-
   const formik = useFormik<FormProps>({
-    initialValues: {
-      name: '',
-      logo: '',
-      logoDark: '',
-      buyTokenPerc: '0.003',
-      domain: '',
-      defaultToken: undefined,
-      hidePoweredDexKit: false,
-      affiliateAddr: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
-      defaultTokenAddr: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
-      defaultTokenAddrBSC: '0x314593fa9a2fa16432913dbccc96104541d32d11',
-      defaultTokenAddrMatic: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
-      defaultSlippage: 1,
-    },
-    onSubmit: handleSubmit,
+    initialValues: props.data,
+    onSubmit: console.log,
   });
+
+  React.useEffect(() => {
+    props.setData(formik.values);
+    // eslint-disable-next-line
+  }, [formik.values]);
 
   return (
     <Grid container spacing={10} className={classes.root}>

@@ -35,22 +35,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ThemeStep: React.FC = () => {
+type Props = {data: FormProps; setData: any};
+
+const ThemeStep: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  // TODO: Send info!
-  const handleSubmit = (formData: FormProps) => {
-    alert(JSON.stringify(formData));
-  };
-
   const formik = useFormik({
-    initialValues: {
-      defaultDarkMode: false,
-      brandColor: '#ff7149',
-      brandColorDark: '#2172E5',
-    },
-    onSubmit: handleSubmit,
+    initialValues: props.data,
+    onSubmit: console.log,
   });
+
+  React.useEffect(() => {
+    props.setData(formik.values);
+    // eslint-disable-next-line
+  }, [formik.values]);
 
   return (
     <Grid

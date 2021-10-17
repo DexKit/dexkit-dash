@@ -10,13 +10,11 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {Link, Tooltip} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -61,13 +59,13 @@ const DialogContent = withStyles((theme: Theme) => ({
   },
 }))(MuiDialogContent);
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles(() => ({
   openButton: {
     marginLeft: '10px',
   },
 }));
 
-export const AboutDialog = () => {
+export const AboutDialog: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -97,7 +95,7 @@ export const AboutDialog = () => {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            The Manage section is where KITcrew members that hold at least 500
+            The Manage section is where KIT crew members that hold at least 500
             KIT can deploy their own whitelabel versions of DEXKIT apps! KIT
             holders can customize their own version of the DEXKIT aggregator,
             NFT Marketplace, and Exchange and collect fees from the platform.
