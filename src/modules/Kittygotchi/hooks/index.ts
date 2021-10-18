@@ -28,6 +28,7 @@ import {
 } from '@apollo/client';
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
+import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
 
 const GET_MY_KITTYGOTCHIES = gql`
   query QueryKittygotchies($owner: String!) {
@@ -343,6 +344,58 @@ export const useKittygotchiV2 = () => {
         });
     },
     [chainId],
+  );
+
+  return {get, data, error, isLoading};
+};
+
+export const useKittygotchiOnChain = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<Kittygotchi>();
+  const [error, setError] = useState<any>();
+  const {chainId, getProvider} = useWeb3();
+
+  const get = useCallback(
+    async (id?: string) => {
+      setIsLoading(true);
+
+      let provider = new ethers.providers.Web3Provider(getProvider());
+
+      const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+
+      const contract = new ethers.Contract(
+        kittyAddress,
+        kittygotchiAbi,
+        provider,
+      );
+
+      let attack = await contract.getAttackOf(id);
+      let defense = await contract.getDefenseOf(id);
+      let run = await contract.getRunOf(id);
+      let lastUpdated = await contract.getLastUpdateOf(id);
+      let uri = await contract.tokenURI(id);
+
+      let data: Kittygotchi = {
+        id: id ? id : '',
+        attack: attack ? BigNumber.from(attack).toNumber() : 0,
+        defense: defense ? BigNumber.from(defense).toNumber() : 0,
+        run: run ? BigNumber.from(run).toNumber() : 0,
+        lastUpdated: parseInt(lastUpdated)
+          ? BigNumber.from(lastUpdated).toNumber()
+          : 0,
+      };
+
+      let metadata = await getTokenMetadata(uri);
+
+      if (metadata.image) {
+        data.image = getNormalizedUrl(metadata.image);
+      }
+
+      setData(data);
+
+      setIsLoading(false);
+    },
+    [chainId, getProvider],
   );
 
   return {get, data, error, isLoading};

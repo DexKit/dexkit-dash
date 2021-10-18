@@ -1,9 +1,6 @@
 import {Notification} from 'types/models/Notification';
 
-
-import {
-  NotificationAction,
-} from 'types/actions/Notification.actions';
+import {NotificationAction} from 'types/actions/Notification.actions';
 
 export interface NotificationState {
   readonly notifications: Notification[];
@@ -22,11 +19,15 @@ export default (state = initialState, action: any): NotificationState => {
       return {
         ...state,
         //Filtering the null notifications, giving blank screen
-        notifications: newAddNotifications.filter(n => n).map((n, index: number) => {
-          if (!n.id) {
-            return {...n, id: index};
-          }
-        }),
+        notifications: newAddNotifications
+          .filter((n) => n)
+          .map((n, index: number) => {
+            if (!n.id) {
+              return {...n, id: index};
+            }
+
+            return n;
+          }),
       };
     }
     case NotificationAction.NOTIFICATION_LIST: {
@@ -45,7 +46,6 @@ export default (state = initialState, action: any): NotificationState => {
     case NotificationAction.UPDATE_NOTIFICATION: {
       let updateNotification: any = action.payload;
 
-   
       let updatedNotifications = [...state.notifications];
 
       let updateIndex = updatedNotifications.findIndex(

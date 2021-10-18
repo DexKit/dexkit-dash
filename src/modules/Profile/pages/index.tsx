@@ -47,6 +47,7 @@ import {
   useKittygotchiFeed,
   useKittygotchiList,
   useKittygotchiMint,
+  useKittygotchiOnChain,
   useKittygotchiV2,
 } from 'modules/Kittygotchi/hooks';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -54,7 +55,9 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {Kittygotchi} from 'types/kittygotchi';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Web3State} from 'types/blockchain';
+import {ChainId, Web3State} from 'types/blockchain';
+import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
+import {useToggler} from 'hooks/useToggler';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -83,13 +86,27 @@ export const ProfileIndex = () => {
   const [mintLoading, setMintLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
 
+  const feedingToggler = useToggler();
+
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedingDone, setFeedingDone] = useState(false);
+  const [feedErrorMessage, setFeedErrorMessage] = useState<string>();
+  const [transactionHash, setTransactionHash] = useState<string>();
+
+  const clearStates = useCallback(() => {
+    setFeedLoading(false);
+    setFeedingDone(false);
+    setFeedErrorMessage(undefined);
+    setTransactionHash(undefined);
+  }, []);
+
   const history = useHistory();
 
   const profilePoints = useProfilePoints();
 
   const kittygotchiItem = useKittygotchiV2();
 
-  const kittygotchiUpdated = useKittygotchiV2();
+  const kittygotchiUpdated = useKittygotchiOnChain();
 
   const kittygotchiList = useKittygotchiList();
 
@@ -112,10 +129,14 @@ export const ProfileIndex = () => {
   }, [account, kittyProfile.kittygotchi]);
 
   useEffect(() => {
-    if (kittyProfile.kittygotchi && web3State === Web3State.Done) {
+    if (
+      kittyProfile.kittygotchi &&
+      web3State === Web3State.Done &&
+      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+    ) {
       kittygotchiUpdated.get(kittyProfile.kittygotchi.id);
     }
-  }, [kittyProfile.kittygotchi, web3State]);
+  }, [kittyProfile.kittygotchi, web3State, chainId]);
 
   const handleMint = useCallback(() => {
     setMintLoading(true);
@@ -171,8 +192,16 @@ export const ProfileIndex = () => {
   }, []);
 
   const handleFeed = useCallback(() => {
+    clearStates();
+
+    setFeedLoading(true);
+
+    feedingToggler.set(true);
+
     const onSubmit = (hash?: string) => {
       if (hash && chainId && kittyProfile.kittygotchi) {
+        setTransactionHash(hash);
+
         createNotification({
           title: 'Feeding Kittygotchi',
           body: `Feeding Kittygotchi #${kittyProfile.kittygotchi.id}`,
@@ -191,16 +220,22 @@ export const ProfileIndex = () => {
 
     const onConfirmation = (hash?: string) => {
       if (kittyProfile.kittygotchi) {
-        kittygotchiItem.get(kittyProfile.kittygotchi.id);
+        kittygotchiUpdated.get(kittyProfile.kittygotchi.id);
       }
+
+      setFeedLoading(false);
+      setFeedingDone(true);
     };
 
     const onError = (error?: any) => {
       if (error.data) {
         setErrorMessage(error.data.message);
+        setFeedErrorMessage(error.data.message);
       } else {
         setErrorMessage(error.message);
+        setFeedErrorMessage(error.message);
       }
+      setFeedLoading(false);
     };
 
     if (kittyProfile.kittygotchi) {
@@ -222,8 +257,24 @@ export const ProfileIndex = () => {
     history.goBack();
   }, []);
 
+  const handleCloseFeedingDialog = useCallback(() => {
+    clearStates();
+    feedingToggler.toggle();
+  }, []);
+
   return (
     <>
+      <FeedingKittygotchiDialog
+        done={feedingDone}
+        loading={feedLoading}
+        transactionHash={transactionHash}
+        error={feedErrorMessage}
+        onTryAgain={handleFeed}
+        dialogProps={{
+          open: feedingToggler.show,
+          onClose: handleCloseFeedingDialog,
+        }}
+      />
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
