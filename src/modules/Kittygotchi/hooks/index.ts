@@ -262,7 +262,7 @@ export const useKittygotchiList = (address?: string) => {
                 attack: k.attack ? BigNumber.from(k.attack).toNumber() : 0,
                 defense: k.defense ? BigNumber.from(k.defense).toNumber() : 0,
                 run: k.run ? BigNumber.from(k.run).toNumber() : 0,
-                lastUpdated: result.lastUpdated
+                lastUpdated: parseInt(result.lastUpdated)
                   ? BigNumber.from(result.lastUpdated).toNumber()
                   : 0,
               };
@@ -321,7 +321,7 @@ export const useKittygotchiV2 = () => {
               ? BigNumber.from(resultData.defense).toNumber()
               : 0,
             run: resultData.run ? BigNumber.from(resultData.run).toNumber() : 0,
-            lastUpdated: resultData.lastUpdated
+            lastUpdated: parseInt(resultData.lastUpdated)
               ? BigNumber.from(resultData.lastUpdated).toNumber()
               : 0,
           };
