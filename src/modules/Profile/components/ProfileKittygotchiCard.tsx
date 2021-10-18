@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import moment from 'moment';
 
 import {
   Avatar,
@@ -67,9 +68,15 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
 
   const isMobile = useMobile();
 
+  const canFeedKitty = useCallback((kittygotchi: Kittygotchi) => {
+    return false;
+  }, []);
+
   const goToOpenSea = useCallback(() => {
     if (kittygotchi) {
-      window.open(`https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.id}`);
+      window.open(
+        `https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.id}`,
+      );
     }
   }, [kittygotchi]);
 
@@ -145,6 +152,13 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 )}
               </Box>
             </Grid>
+            {/* <Grid>
+              <Typography>
+                {kittygotchi?.lastUpdated
+                  ? moment.unix(kittygotchi?.lastUpdated).fromNow()
+                  : null}
+              </Typography>
+            </Grid> */}
             <Grid item>
               <Grid
                 container
@@ -165,7 +179,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     </Tooltip>
                   )}
                 </Grid>
-               { /*<Grid item>
+                {/*<Grid item>
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
@@ -206,7 +220,11 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
           <Grid container spacing={4}>
             <Grid item xs={12}>
               <Typography align={isMobile ? 'center' : 'left'} variant='h4'>
-                Kittygotchi #{kittygotchi?.id}
+                {loadingKyttie ? (
+                  <Skeleton />
+                ) : (
+                  <>Kittygotchi #{kittygotchi?.id}</>
+                )}
               </Typography>
             </Grid>
             {kittygotchi ? (

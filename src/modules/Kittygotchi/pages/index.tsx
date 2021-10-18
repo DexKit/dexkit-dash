@@ -137,7 +137,6 @@ export const KittygotchiIndex = () => {
     });
   }, [onMintCallback, createNotification, chainId, defaultAccount]);
 
-
   const handleKittygotchiClick = useCallback(
     (kittygotchi: Kittygotchi) => {
       history.push(`/kittygotchi/${kittygotchi.id}/`);
@@ -158,10 +157,10 @@ export const KittygotchiIndex = () => {
       kittygotchiList.get(defaultAccount);
     }
   }, [defaultAccount, web3State]);
-  const onClickBack = useCallback(()=>{
-    history.goBack()
-  },[])
 
+  const onClickBack = useCallback(() => {
+    history.goBack();
+  }, []);
 
   return (
     <>

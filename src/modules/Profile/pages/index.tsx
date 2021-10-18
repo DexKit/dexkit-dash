@@ -53,6 +53,8 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {Kittygotchi} from 'types/kittygotchi';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -86,6 +88,9 @@ export const ProfileIndex = () => {
   const profilePoints = useProfilePoints();
 
   const kittygotchiItem = useKittygotchiV2();
+
+  const kittygotchiUpdated = useKittygotchiV2();
+
   const kittygotchiList = useKittygotchiList();
 
   const kittygotchiMint = useKittygotchiMint();
@@ -94,17 +99,23 @@ export const ProfileIndex = () => {
 
   const {createNotification} = useNotifications();
 
-  const {chainId, account} = useWeb3();
+  const {chainId, account, web3State} = useWeb3();
 
   useEffect(() => {
-    if (kittyProfile && !kittygotchiList.isLoading && account) {
+    if (account && !kittyProfile.kittygotchi) {
       kittygotchiList.get(account).then((items: Kittygotchi[] | undefined) => {
         if (items && items.length > 0) {
           kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
         }
       });
     }
-  }, [kittyProfile, kittygotchiList.isLoading, account]);
+  }, [account, kittyProfile.kittygotchi]);
+
+  useEffect(() => {
+    if (kittyProfile.kittygotchi && web3State === Web3State.Done) {
+      kittygotchiUpdated.get(kittyProfile.kittygotchi.id);
+    }
+  }, [kittyProfile.kittygotchi, web3State]);
 
   const handleMint = useCallback(() => {
     setMintLoading(true);
@@ -207,9 +218,9 @@ export const ProfileIndex = () => {
     }
   }, [history, kittyProfile.kittygotchi]);
 
-  const onClickBack = useCallback(()=>{
-    history.goBack()
-  },[])
+  const onClickBack = useCallback(() => {
+    history.goBack();
+  }, []);
 
   return (
     <>
@@ -264,8 +275,8 @@ export const ProfileIndex = () => {
                   onFeed={handleFeed}
                   onEdit={handleClickEdit}
                   loading={mintLoading}
-                  loadingKyttie={loadingKyttie}
-                  kittygotchi={kittyProfile.kittygotchi}
+                  loadingKyttie={kittygotchiUpdated.isLoading || loadingKyttie}
+                  kittygotchi={kittygotchiUpdated.data}
                 />
               </Grid>
             </Grid>
