@@ -1,6 +1,11 @@
 import React from 'react';
 
-import {CircularProgress, makeStyles, useTheme} from '@material-ui/core';
+import {
+  CircularProgress,
+  makeStyles,
+  useTheme,
+  IconButtonProps,
+} from '@material-ui/core';
 
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 
@@ -25,27 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface FeedKittygotchiButtonProps {
-  onClick?: () => void;
-}
+interface FeedKittygotchiButtonProps extends IconButtonProps {}
 
 export const FeedKittygotchiButton = (props: FeedKittygotchiButtonProps) => {
-  const {onClick} = props;
+  const {onClick, disabled} = props;
   const classes = useStyles();
 
   const theme = useTheme();
 
   return (
-    <div className={classes.buttonWrapper}>
-      <RoundedIconButton onClick={onClick}>
-        <FastFoodOutlineIcon stroke='white' />
-      </RoundedIconButton>
-      {/* <CircularProgress
-        className={classes.progress}
-        variant='determinate'
-        value={50}
-      /> */}
-    </div>
+    <RoundedIconButton {...props}>
+      <FastFoodOutlineIcon stroke='white' />
+    </RoundedIconButton>
   );
 };
 

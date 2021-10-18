@@ -27,5 +27,16 @@ export function useProfileKittygotchi() {
     [dispatch],
   );
 
-  return {setDefaultKittygothchi, kittygotchi: kittygotchiState.kittygotchi};
+  const isDefault = useCallback(
+    (kittygotchi?: Kittygotchi) => {
+      return kittygotchiState.kittygotchi?.id === kittygotchi?.id;
+    },
+    [kittygotchiState.kittygotchi],
+  );
+
+  return {
+    setDefaultKittygothchi,
+    kittygotchi: kittygotchiState.kittygotchi,
+    isDefault,
+  };
 }

@@ -241,7 +241,7 @@ export const KittygotchiIndex = () => {
                 {kittygotchiList.isLoading ? (
                   <Grid container spacing={4}>
                     {emtpyArrayRef.current.map((i, index) => (
-                      <Grid item xs={4} key={index}>
+                      <Grid item xs={12} sm={3} key={index}>
                         <KittygotchiCard loading />
                       </Grid>
                     ))}
@@ -270,7 +270,7 @@ export const KittygotchiIndex = () => {
                     )}
                     <Grid container spacing={4}>
                       {kittygotchiList.data?.map((kittygotchi, index) => (
-                        <Grid item xs={4} key={index}>
+                        <Grid item xs={12} sm={3} key={index}>
                           <KittygotchiCard
                             onClick={handleKittygotchiClick}
                             kittygotchi={kittygotchi}

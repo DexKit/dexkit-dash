@@ -4,6 +4,7 @@ import {
   makeStyles,
   Box,
   Grid,
+  Chip,
   Typography,
   Divider,
   CardContent,
@@ -40,13 +41,25 @@ import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
-import {useKittygotchi, useKittygotchiFeed, useKittygotchiV2} from '../hooks';
+import {
+  useKittygotchi,
+  useKittygotchiFeed,
+  useKittygotchiV2,
+  useKittygotchiOnChain,
+} from '../hooks';
 import {useMobile} from 'hooks/useMobile';
 import FeedKittygotchiButton from '../components/buttons/FeedKittygotchiButton';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
+import {FeedingKittygotchiDialog} from '../components/dialogs/FeedingKittygotchiDialog';
+import {ChainId, Web3State} from 'types/blockchain';
+import {canFeedKitty} from '../utils';
+import moment from 'moment';
+import CountdownSpan from 'shared/components/CountdownSpan';
+import CheckIcon from '@material-ui/icons/Check';
+import {useProfileKittygotchi} from 'modules/Profile/hooks';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -119,11 +132,13 @@ export const KittyDetail = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const params = useParams<Params>();
 
-  const {chainId} = useWeb3();
+  const profileKittygotchi = useProfileKittygotchi();
+
+  const {chainId, web3State} = useWeb3();
 
   const rewardToggler = useToggler(false);
 
-  const kittygotchi = useKittygotchiV2();
+  const kittygotchi = useKittygotchiOnChain();
 
   const isMobile = useMobile();
 
@@ -141,9 +156,21 @@ export const KittyDetail = () => {
     setErrorMessage(undefined);
   }, []);
 
+  const feedingToggler = useToggler();
+
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedingDone, setFeedingDone] = useState(false);
+  const [feedErrorMessage, setFeedErrorMessage] = useState<string>();
+  const [transactionHash, setTransactionHash] = useState<string>();
+
   const handleFeed = useCallback(() => {
+    setFeedLoading(true);
+    feedingToggler.toggle();
+
     const onSubmit = (hash?: string) => {
       if (hash && chainId) {
+        setTransactionHash(hash);
+
         createNotification({
           title: 'Feeding Kittygotchi',
           body: `Feeding Kittygotchi #${params.id}`,
@@ -162,14 +189,22 @@ export const KittyDetail = () => {
 
     const onConfirmation = (hash?: string) => {
       kittygotchi.get(params.id);
+
+      setFeedLoading(false);
+      setFeedingDone(true);
     };
 
     const onError = (error?: any) => {
       if (error.data) {
         setErrorMessage(error.data.message);
+        setFeedErrorMessage(error.data.message);
       } else {
         setErrorMessage(error.message);
+        setFeedErrorMessage(error.message);
       }
+
+      setFeedLoading(false);
+      setFeedingDone(false);
     };
 
     onFeedCallback(params.id, {
@@ -180,14 +215,35 @@ export const KittyDetail = () => {
   }, [onFeedCallback, params.id, createNotification, chainId]);
 
   useEffect(() => {
-    if (params.id) {
+    if (
+      params.id &&
+      web3State === Web3State.Done &&
+      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+    ) {
       kittygotchi.get(params.id);
     }
-  }, [params.id]);
+  }, [params.id, web3State, chainId]);
 
   const goToOpenSea = useCallback(() => {
     if (kittygotchi.data) {
-      window.open(`https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.data?.id}`);
+      window.open(
+        `https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.data?.id}`,
+      );
+    }
+  }, [kittygotchi.data]);
+
+  const handleCloseFeedingDialog = useCallback(() => {
+    setFeedLoading(false);
+    setFeedingDone(false);
+    setFeedErrorMessage(undefined);
+    setTransactionHash(undefined);
+
+    feedingToggler.toggle();
+  }, []);
+
+  const handleMakeDefault = useCallback(() => {
+    if (kittygotchi.data) {
+      profileKittygotchi.setDefaultKittygothchi(kittygotchi.data);
     }
   }, [kittygotchi.data]);
 
@@ -197,6 +253,16 @@ export const KittyDetail = () => {
         dialogProps={{
           open: rewardToggler.show,
           onClose: rewardToggler.toggle,
+        }}
+      />
+      <FeedingKittygotchiDialog
+        done={feedingDone}
+        loading={feedLoading}
+        transactionHash={transactionHash}
+        error={feedErrorMessage}
+        dialogProps={{
+          open: feedingToggler.show,
+          onClose: handleCloseFeedingDialog,
         }}
       />
       <Box>
@@ -278,7 +344,10 @@ export const KittyDetail = () => {
                           spacing={2}>
                           <Grid item>
                             <Tooltip title='Feed'>
-                              <FeedKittygotchiButton onClick={handleFeed} />
+                              <FeedKittygotchiButton
+                                disabled={!canFeedKitty(kittygotchi?.data)}
+                                onClick={handleFeed}
+                              />
                             </Tooltip>
                           </Grid>
                           {/*<Grid item>
@@ -307,11 +376,56 @@ export const KittyDetail = () => {
                         <Grid container spacing={2}>
                           <Grid item xs={12}>
                             <Box mb={isMobile ? 4 : 0}>
-                              <Typography
-                                align={isMobile ? 'center' : 'left'}
-                                variant='h5'>
-                                Kittygotchi #{kittygotchi.data?.id}
-                              </Typography>
+                              <Grid
+                                container
+                                alignItems='center'
+                                alignContent='center'
+                                justifyContent='space-between'>
+                                <Grid item>
+                                  <Typography
+                                    align={isMobile ? 'center' : 'left'}
+                                    variant='h5'>
+                                    {kittygotchi.isLoading ? (
+                                      <Skeleton width={theme.spacing(12)} />
+                                    ) : (
+                                      <>Kittygotchi #{kittygotchi.data?.id}</>
+                                    )}
+                                  </Typography>
+                                </Grid>
+                                <Grid item>
+                                  {profileKittygotchi.isDefault(
+                                    kittygotchi.data,
+                                  ) ? (
+                                    <Chip label='Default' size='small' />
+                                  ) : (
+                                    <>
+                                      {kittygotchi.data ? (
+                                        <>
+                                          {isMobile ? (
+                                            <Tooltip title='Make default'>
+                                              <IconButton
+                                                color='primary'
+                                                size='small'
+                                                onClick={handleMakeDefault}>
+                                                <CheckIcon />
+                                              </IconButton>
+                                            </Tooltip>
+                                          ) : (
+                                            <Button
+                                              onClick={handleMakeDefault}
+                                              size='small'
+                                              startIcon={<CheckIcon />}
+                                              variant='outlined'
+                                              color='primary'>
+                                              Set default
+                                            </Button>
+                                          )}
+                                        </>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Grid>
+                              </Grid>
                             </Box>
                           </Grid>
                           <Grid item xs={12}>
@@ -442,6 +556,26 @@ export const KittyDetail = () => {
                                 </Grid>
                               </Grid>
                             )}
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography variant='body1'>
+                              {!canFeedKitty(kittygotchi?.data) ? (
+                                kittygotchi?.data?.lastUpdated ? (
+                                  <>
+                                    You can feed your kittygotchi in{' '}
+                                    <strong>
+                                      <CountdownSpan
+                                        toDate={moment
+                                          .unix(kittygotchi?.data?.lastUpdated)
+                                          .add(24, 'hours')}
+                                      />
+                                    </strong>
+                                  </>
+                                ) : (
+                                  <Skeleton />
+                                )
+                              ) : null}
+                            </Typography>
                           </Grid>
                         </Grid>
                       </Box>

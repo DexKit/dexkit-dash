@@ -33,6 +33,9 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import {Skeleton} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
+import {canFeedKitty} from 'modules/Kittygotchi/utils';
+import CountdownSpan from 'shared/components/CountdownSpan';
+import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -67,10 +70,6 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {chainId} = useWeb3();
 
   const isMobile = useMobile();
-
-  const canFeedKitty = useCallback((kittygotchi: Kittygotchi) => {
-    return false;
-  }, []);
 
   const goToOpenSea = useCallback(() => {
     if (kittygotchi) {
@@ -152,13 +151,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 )}
               </Box>
             </Grid>
-            {/* <Grid>
-              <Typography>
-                {kittygotchi?.lastUpdated
-                  ? moment.unix(kittygotchi?.lastUpdated).fromNow()
-                  : null}
-              </Typography>
-            </Grid> */}
+
             <Grid item>
               <Grid
                 container
@@ -170,12 +163,15 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
-                      width={theme.spacing(5)}
-                      height={theme.spacing(5)}
+                      width={theme.spacing(8)}
+                      height={theme.spacing(8)}
                     />
                   ) : (
                     <Tooltip title='Feed'>
-                      <FeedKittygotchiButton onClick={onFeed} />
+                      <FeedKittygotchiButton
+                        disabled={!canFeedKitty(kittygotchi)}
+                        onClick={onFeed}
+                      />
                     </Tooltip>
                   )}
                 </Grid>
@@ -198,8 +194,8 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
-                      width={theme.spacing(5)}
-                      height={theme.spacing(5)}
+                      width={theme.spacing(8)}
+                      height={theme.spacing(8)}
                     />
                   ) : (
                     <Tooltip title='View on Opensea'>
@@ -239,23 +235,50 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     <Typography color='textSecondary' variant='caption'>
                       ATK
                     </Typography>
-                    <Typography variant='h5'>{kittygotchi?.attack}</Typography>
+                    <Typography variant='h5'>
+                      {leftPad(kittygotchi?.attack, 2)}
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Typography color='textSecondary' variant='caption'>
                       DEF
                     </Typography>
-                    <Typography variant='h5'>{kittygotchi?.defense}</Typography>
+                    <Typography variant='h5'>
+                      {leftPad(kittygotchi?.defense, 2)}
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Typography color='textSecondary' variant='caption'>
                       RUN
                     </Typography>
-                    <Typography variant='h5'>{kittygotchi?.run}</Typography>
+                    <Typography variant='h5'>
+                      {leftPad(kittygotchi?.run, 2)}
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
             ) : null}
+
+            <Grid item xs={12}>
+              <Typography variant='body1'>
+                {!canFeedKitty(kittygotchi) ? (
+                  kittygotchi?.lastUpdated ? (
+                    <>
+                      You can feed your kittygotchi in{' '}
+                      <strong>
+                        <CountdownSpan
+                          toDate={moment
+                            .unix(kittygotchi?.lastUpdated)
+                            .add(24, 'hours')}
+                        />
+                      </strong>
+                    </>
+                  ) : (
+                    <Skeleton />
+                  )
+                ) : null}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
