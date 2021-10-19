@@ -32,6 +32,7 @@ export const feed = async (id: string, kittyAddress: string, provider: any) => {
 
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).feed(id, {
     gasPrice,
+    gasLimit: BigNumber.from(150000),
   }) as Promise<ContractTransaction>;
 };
 
