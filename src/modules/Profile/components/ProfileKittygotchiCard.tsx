@@ -33,7 +33,7 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import {Skeleton} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {canFeedKitty} from 'modules/Kittygotchi/utils';
+import {canFeedKitty, isKittyTired} from 'modules/Kittygotchi/utils';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import {leftPad} from 'utils';
 
@@ -260,7 +260,17 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
             ) : null}
 
             <Grid item xs={12}>
-              <Typography variant='body1'>
+              {isKittyTired(kittygotchi) ? (
+                <Typography
+                  align={isMobile ? 'center' : 'left'}
+                  variant='body1'>
+                  Your cat is hungry! Last time you fed him:{' '}
+                  <strong>
+                    {moment.unix(kittygotchi?.lastUpdated || 0).fromNow()}
+                  </strong>
+                </Typography>
+              ) : null}
+              <Typography align={isMobile ? 'center' : 'left'} variant='body1'>
                 {!canFeedKitty(kittygotchi) ? (
                   kittygotchi?.lastUpdated ? (
                     <>

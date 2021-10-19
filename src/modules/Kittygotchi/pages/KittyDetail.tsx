@@ -55,11 +55,12 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {FeedingKittygotchiDialog} from '../components/dialogs/FeedingKittygotchiDialog';
 import {ChainId, Web3State} from 'types/blockchain';
-import {canFeedKitty} from '../utils';
+import {canFeedKitty, isKittyTired} from '../utils';
 import moment from 'moment';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import CheckIcon from '@material-ui/icons/Check';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -163,9 +164,18 @@ export const KittyDetail = () => {
   const [feedErrorMessage, setFeedErrorMessage] = useState<string>();
   const [transactionHash, setTransactionHash] = useState<string>();
 
+  const clearState = useCallback(() => {
+    setFeedLoading(false);
+    setFeedingDone(false);
+    setFeedErrorMessage(undefined);
+    setTransactionHash(undefined);
+  }, []);
+
   const handleFeed = useCallback(() => {
+    clearState();
+
     setFeedLoading(true);
-    feedingToggler.toggle();
+    feedingToggler.set(true);
 
     const onSubmit = (hash?: string) => {
       if (hash && chainId) {
@@ -241,11 +251,21 @@ export const KittyDetail = () => {
     feedingToggler.toggle();
   }, []);
 
+  const defaultAccount = useDefaultAccount();
+
+  const [forceUpdate, setForceUpdate] = useState(false);
+
   const handleMakeDefault = useCallback(() => {
-    if (kittygotchi.data) {
-      profileKittygotchi.setDefaultKittygothchi(kittygotchi.data);
+    if (kittygotchi.data && defaultAccount && chainId) {
+      profileKittygotchi.setDefaultKittygothchi(
+        defaultAccount,
+        chainId,
+        kittygotchi.data,
+      );
+
+      setForceUpdate((value) => !value);
     }
-  }, [kittygotchi.data]);
+  }, [kittygotchi.data, chainId, defaultAccount]);
 
   return (
     <>
@@ -257,6 +277,7 @@ export const KittyDetail = () => {
       />
       <FeedingKittygotchiDialog
         done={feedingDone}
+        onTryAgain={handleFeed}
         loading={feedLoading}
         transactionHash={transactionHash}
         error={feedErrorMessage}
@@ -396,7 +417,11 @@ export const KittyDetail = () => {
                                   {profileKittygotchi.isDefault(
                                     kittygotchi.data,
                                   ) ? (
-                                    <Chip label='Default' size='small' />
+                                    kittygotchi.isLoading ? (
+                                      <Skeleton width={theme.spacing(10)} />
+                                    ) : (
+                                      <Chip label='Default' size='small' />
+                                    )
                                   ) : (
                                     <>
                                       {kittygotchi.data ? (
@@ -429,135 +454,75 @@ export const KittyDetail = () => {
                             </Box>
                           </Grid>
                           <Grid item xs={12}>
-                            {isMobile ? (
-                              <Box>
-                                <Box
-                                  mb={2}
-                                  display='flex'
-                                  alignItems='center'
-                                  alignContent='center'
-                                  justifyContent='space-between'>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box className={classes.iconWrapper} mr={1}>
-                                      <FlashOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      <strong>Attack</strong>
-                                    </Typography>
-                                  </Box>
-                                  <Typography variant='body1'>
-                                    {kittygotchi.data?.attack}
+                            <Grid
+                              container
+                              spacing={2}
+                              alignItems='center'
+                              alignContent='center'>
+                              <Grid item>
+                                {!kittygotchi.isLoading ? (
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='caption'>
+                                    ATK
                                   </Typography>
-                                </Box>
-                                <Box
-                                  mb={2}
-                                  display='flex'
-                                  alignItems='center'
-                                  alignContent='center'
-                                  justifyContent='space-between'>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box className={classes.iconWrapper} mr={1}>
-                                      <ShieldOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      <strong>Defense</strong>
-                                    </Typography>
-                                  </Box>
-                                  <Typography variant='body1'>
-                                    {kittygotchi.data?.defense}
-                                  </Typography>
-                                </Box>
-                                <Box
-                                  mb={2}
-                                  display='flex'
-                                  alignItems='center'
-                                  alignContent='center'
-                                  justifyContent='space-between'>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box className={classes.iconWrapper} mr={1}>
-                                      <FlashOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      <strong>Run</strong>
-                                    </Typography>
-                                  </Box>
-                                  <Typography variant='body1'>
-                                    {kittygotchi.data?.run}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            ) : (
-                              <Grid container spacing={2}>
-                                <Grid item>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box
-                                      className={classes.iconOutlinedWrapper}
-                                      mr={2}>
-                                      <FlashOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      {kittygotchi.data?.attack}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                                <Grid item>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box
-                                      className={classes.iconOutlinedWrapper}
-                                      mr={2}>
-                                      <ShieldOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      {kittygotchi.data?.defense}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
-                                <Grid item>
-                                  <Box
-                                    display='flex'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Box
-                                      className={classes.iconOutlinedWrapper}
-                                      mr={2}>
-                                      <FlashOutlinedIcon
-                                        className={classes.icon}
-                                      />
-                                    </Box>
-                                    <Typography variant='body1'>
-                                      {kittygotchi.data?.run}
-                                    </Typography>
-                                  </Box>
-                                </Grid>
+                                ) : null}
+                                <Typography variant='h5'>
+                                  {kittygotchi.isLoading ? (
+                                    <Skeleton width={theme.spacing(10)} />
+                                  ) : (
+                                    kittygotchi.data?.attack
+                                  )}
+                                </Typography>
                               </Grid>
-                            )}
+                              <Grid item>
+                                {!kittygotchi.isLoading ? (
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='caption'>
+                                    DEF
+                                  </Typography>
+                                ) : null}
+                                <Typography variant='h5'>
+                                  {kittygotchi.isLoading ? (
+                                    <Skeleton width={theme.spacing(10)} />
+                                  ) : (
+                                    kittygotchi.data?.defense
+                                  )}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                {!kittygotchi.isLoading ? (
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='caption'>
+                                    RUN
+                                  </Typography>
+                                ) : null}
+                                <Typography variant='h5'>
+                                  {kittygotchi.isLoading ? (
+                                    <Skeleton width={theme.spacing(10)} />
+                                  ) : (
+                                    kittygotchi.data?.run
+                                  )}
+                                </Typography>
+                              </Grid>
+                            </Grid>
                           </Grid>
                           <Grid item xs={12}>
+                            {isKittyTired(kittygotchi?.data) ? (
+                              <Typography
+                                align={isMobile ? 'center' : 'left'}
+                                variant='body1'>
+                                Your kittygotchi is hungry! Last time you fed
+                                him:{' '}
+                                <strong>
+                                  {moment
+                                    .unix(kittygotchi?.data?.lastUpdated || 0)
+                                    .fromNow()}
+                                </strong>
+                              </Typography>
+                            ) : null}
                             <Typography variant='body1'>
                               {!canFeedKitty(kittygotchi?.data) ? (
                                 kittygotchi?.data?.lastUpdated ? (

@@ -32,6 +32,7 @@ import Close from '@material-ui/icons/Close';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {truncateAddress} from 'utils';
+import {useWeb3} from 'hooks/useWeb3';
 
 interface AppSidebarProps {
   variant?: string;
@@ -58,6 +59,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const kittygotchiProfile = useProfileKittygotchi();
 
   const defaultAddress = useDefaultAccount();
+
+  const {account, chainId} = useWeb3();
 
   return (
     <>
@@ -93,7 +96,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             component={RouterLink}>
                             <Avatar
                               className={classes.avatar}
-                              src={kittygotchiProfile.kittygotchi?.image}
+                              src={
+                                account && chainId
+                                  ? kittygotchiProfile.getDefault(
+                                      account,
+                                      chainId,
+                                    )?.image
+                                  : undefined
+                              }
                             />
                           </ButtonBase>
                         </Grid>

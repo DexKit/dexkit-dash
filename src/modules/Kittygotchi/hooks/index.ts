@@ -84,6 +84,12 @@ interface CallbackProps {
   onError?: (error?: any) => void;
 }
 
+interface MintCallbacks {
+  onSubmit?: (hash?: string) => void;
+  onConfirmation?: (hash?: string, tokenId?: number) => void;
+  onError?: (error?: any) => void;
+}
+
 export function useGraphqlClient() {
   const getClient = useCallback((chainId?: ChainId) => {
     if (chainId === ChainId.Mumbai) {
@@ -170,7 +176,7 @@ export function useKittygotchiMint() {
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
   const onMintCallback = useCallback(
-    async (callbacks?: CallbackProps) => {
+    async (callbacks?: MintCallbacks) => {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
@@ -184,9 +190,28 @@ export function useKittygotchiMint() {
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit(tx.hash);
         }
-        await tx.wait();
+        let result = await tx.wait();
+
         if (callbacks?.onConfirmation) {
-          callbacks?.onConfirmation(tx.hash);
+          if (result.events) {
+            if (result.events?.length > 2) {
+              let events = result.events;
+
+              let firstEvent = events[1];
+
+              if (firstEvent.args) {
+                let topic = firstEvent.args[2];
+
+                if (topic) {
+                  let tokenId = (topic as BigNumber).toNumber();
+
+                  callbacks?.onConfirmation(tx.hash, tokenId);
+                }
+              } else {
+                callbacks?.onConfirmation(tx.hash);
+              }
+            }
+          }
         }
       } catch (e) {
         if (callbacks?.onError) {
@@ -355,45 +380,58 @@ export const useKittygotchiOnChain = () => {
   const [error, setError] = useState<any>();
   const {chainId, getProvider} = useWeb3();
 
+  const clear = useCallback(() => {
+    setData(undefined);
+    setError(undefined);
+  }, []);
+
   const get = useCallback(
     async (id?: string) => {
-      setIsLoading(true);
+      clear();
+      return new Promise<Kittygotchi | undefined>(async (resolve, reject) => {
+        try {
+          setIsLoading(true);
 
-      let provider = new ethers.providers.Web3Provider(getProvider());
+          let provider = new ethers.providers.Web3Provider(getProvider());
 
-      const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+          const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
-      const contract = new ethers.Contract(
-        kittyAddress,
-        kittygotchiAbi,
-        provider,
-      );
+          const contract = new ethers.Contract(
+            kittyAddress,
+            kittygotchiAbi,
+            provider,
+          );
 
-      let attack = await contract.getAttackOf(id);
-      let defense = await contract.getDefenseOf(id);
-      let run = await contract.getRunOf(id);
-      let lastUpdated = await contract.getLastUpdateOf(id);
-      let uri = await contract.tokenURI(id);
+          let attack = await contract.getAttackOf(id);
+          let defense = await contract.getDefenseOf(id);
+          let run = await contract.getRunOf(id);
+          let lastUpdated = await contract.getLastUpdateOf(id);
+          let uri = await contract.tokenURI(id);
 
-      let data: Kittygotchi = {
-        id: id ? id : '',
-        attack: attack ? BigNumber.from(attack).toNumber() : 0,
-        defense: defense ? BigNumber.from(defense).toNumber() : 0,
-        run: run ? BigNumber.from(run).toNumber() : 0,
-        lastUpdated: parseInt(lastUpdated)
-          ? BigNumber.from(lastUpdated).toNumber()
-          : 0,
-      };
+          let data: Kittygotchi = {
+            id: id ? id : '',
+            attack: attack ? BigNumber.from(attack).toNumber() : 0,
+            defense: defense ? BigNumber.from(defense).toNumber() : 0,
+            run: run ? BigNumber.from(run).toNumber() : 0,
+            lastUpdated: parseInt(lastUpdated)
+              ? BigNumber.from(lastUpdated).toNumber()
+              : 0,
+          };
 
-      let metadata = await getTokenMetadata(uri);
+          let metadata = await getTokenMetadata(uri);
 
-      if (metadata.image) {
-        data.image = getNormalizedUrl(metadata.image);
-      }
+          if (metadata.image) {
+            data.image = getNormalizedUrl(metadata.image);
+          }
 
-      setData(data);
+          setData(data);
+          resolve(data);
 
-      setIsLoading(false);
+          setIsLoading(false);
+        } catch (err) {
+          reject(err);
+        }
+      });
     },
     [chainId, getProvider],
   );

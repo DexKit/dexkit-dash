@@ -68,9 +68,6 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
   const theme = useTheme();
 
   const defaultAccount = useDefaultAccount();
-  const [hasEnoughMatic, setHasEnoughMatic] = useState(false);
-
-  useEffect(() => {}, [defaultAccount]);
 
   return (
     <Dialog {...dialogProps} maxWidth='xs' fullWidth>
