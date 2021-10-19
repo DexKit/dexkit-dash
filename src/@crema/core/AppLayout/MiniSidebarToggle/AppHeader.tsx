@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -292,7 +292,12 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                       component={RouterLink}>
                       <Avatar
                         className={classes.avatar}
-                        src={kittygotchiProfile.kittygotchi?.image}
+                        src={
+                          account && chainId
+                            ? kittygotchiProfile.getDefault(account, chainId)
+                                ?.image
+                            : undefined
+                        }
                       />
                     </ButtonBase>
                   </Grid>

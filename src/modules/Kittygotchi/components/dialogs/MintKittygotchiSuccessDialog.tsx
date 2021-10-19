@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   Box,
+  Button,
   Grid,
   Typography,
   DialogTitle,
@@ -33,8 +34,6 @@ export const MintKittygotchiSuccessDialog = (props: RewardDialogProps) => {
   const {dialogProps} = props;
   const {onClose} = dialogProps;
 
-  const classes = useStyles();
-
   const handleClose = useCallback(
     (e) => {
       if (onClose) {
@@ -46,29 +45,8 @@ export const MintKittygotchiSuccessDialog = (props: RewardDialogProps) => {
 
   return (
     <Dialog {...dialogProps}>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <DoneIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>Collect reward</Typography>
-          </Box>
-          <Box>
-            <IconButton size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle>
-      <Divider />
       <DialogContent>
-        <Box p={4}>
+        <Box py={4}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
               <Box
@@ -86,6 +64,11 @@ export const MintKittygotchiSuccessDialog = (props: RewardDialogProps) => {
               <Typography color='textSecondary' align='center' variant='body1'>
                 Kittygotchi created successfully
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Button onClick={handleClose} fullWidth color='primary'>
+                Close
+              </Button>
             </Grid>
           </Grid>
         </Box>

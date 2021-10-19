@@ -8,3 +8,11 @@ export const setDefaultKitty = createAction<Kittygotchi>(
 export const addKittygotchi = createAction<Kittygotchi>(
   'kittygotchi/addKittygotchi',
 );
+
+export const setDefaultKittyOnChain = createAction<{
+  chainId: number;
+  address: string;
+  kittygotchi: Kittygotchi;
+}>('kittygotchi/setDefaultKittyOnChain');
+
+export const clearOldState = createAction('kittygotchi/clearOldState');

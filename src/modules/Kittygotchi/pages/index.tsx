@@ -41,8 +41,8 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
-import MintKittygotchiSuccessDialog from '../components/dialogs/MintKittygotchiSuccessDialog';
-import {Web3State} from 'types/blockchain';
+import {ChainId, Web3State} from 'types/blockchain';
+import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -73,7 +73,7 @@ export const KittygotchiIndex = () => {
   const mintKittyToggler = useToggler(false);
   const mintSuccessToggler = useToggler(false);
 
-  const emtpyArrayRef = useRef(new Array(6).fill(null));
+  const emtpyArrayRef = useRef(new Array(8).fill(null));
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -83,15 +83,31 @@ export const KittygotchiIndex = () => {
 
   const {onMintCallback} = useKittygotchiMint();
 
-  const [tx, setTx] = useState<string>();
+  const [transactionHash, setTransactionHash] = useState<string>();
 
   const {createNotification} = useNotifications();
 
-  const onMintGotchi = useCallback(() => {
-    setSubmitState(SubmitState.WaitingWallet);
-    const onSubmitTx = (hash?: string) => {
-      setTx(hash);
+  const mintingToggler = useToggler();
 
+  const [mintingLoading, setMintingLoading] = useState(false);
+  const [mintingError, setMintingError] = useState<string>();
+  const [mintingDone, setMintingDone] = useState(false);
+  const [mintingResultTokenId, setMintingResultTokenId] = useState<number>();
+
+  const clearState = useCallback(() => {
+    setMintingError(undefined);
+    setMintingDone(false);
+    setMintingLoading(false);
+    mintingToggler.set(false);
+  }, []);
+
+  const onMintGotchi = useCallback(() => {
+    clearState();
+    setSubmitState(SubmitState.WaitingWallet);
+
+    const onSubmitTx = (hash?: string) => {
+      setTransactionHash(hash);
+      setMintingLoading(true);
       if (chainId && hash) {
         createNotification({
           title: 'Create new Kittygotchi',
@@ -109,21 +125,32 @@ export const KittygotchiIndex = () => {
       }
       mintKittyToggler.set(false);
 
+      mintingToggler.set(true);
+
       setSubmitState(SubmitState.Submitted);
     };
-    const onConfirmTx = (hash?: string) => {
+    const onConfirmTx = (hash?: string, tokenId?: number) => {
       // Save here the current id minted
       setSubmitState(SubmitState.Confirmed);
+
+      setMintingResultTokenId(tokenId);
+
       mintKittyToggler.set(false);
-      mintSuccessToggler.set(true);
 
       kittygotchiList.get(defaultAccount);
+
+      setMintingLoading(false);
+      setMintingDone(true);
     };
     const onError = (error: any) => {
       setSubmitState(SubmitState.Error);
       setErrorMessage(error.message);
+      setMintingError(error.message);
+
+      setMintingDone(false);
 
       mintKittyToggler.set(false);
+      setMintingLoading(false);
 
       setTimeout(() => {
         setSubmitState(SubmitState.None);
@@ -153,10 +180,15 @@ export const KittygotchiIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (defaultAccount && web3State === Web3State.Done) {
+    console.log('entraaaa');
+    if (
+      defaultAccount &&
+      web3State === Web3State.Done &&
+      (chainId === ChainId.Matic || ChainId.Mumbai)
+    ) {
       kittygotchiList.get(defaultAccount);
     }
-  }, [defaultAccount, web3State]);
+  }, [defaultAccount, web3State, chainId]);
 
   const onClickBack = useCallback(() => {
     history.goBack();
@@ -181,11 +213,17 @@ export const KittygotchiIndex = () => {
         }
         onConfirm={handleConfirmMint}
       />
-      <MintKittygotchiSuccessDialog
+      <MintingKittygotchiDialog
+        transactionHash={transactionHash}
         dialogProps={{
-          open: mintSuccessToggler.show,
-          onClose: mintSuccessToggler.toggle,
+          open: mintingToggler.show,
+          onClose: mintingToggler.toggle,
         }}
+        onTryAgain={onMintGotchi}
+        loading={mintingLoading}
+        done={mintingDone}
+        error={mintingError}
+        tokenId={mintingResultTokenId}
       />
       <Box>
         <Box mb={4}>

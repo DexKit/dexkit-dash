@@ -119,46 +119,37 @@ export const ProfileIndex = () => {
   const {chainId, account, web3State} = useWeb3();
 
   useEffect(() => {
-    if (account && !kittyProfile.kittygotchi) {
-      kittygotchiList.get(account).then((items: Kittygotchi[] | undefined) => {
-        if (items && items.length > 0) {
-          kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
-        }
-      });
-    }
-  }, [account, kittyProfile.kittygotchi]);
-
-  useEffect(() => {
     if (
-      kittyProfile.kittygotchi &&
+      account &&
       web3State === Web3State.Done &&
       (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
     ) {
-      kittygotchiUpdated.get(kittyProfile.kittygotchi.id);
+      let defaultKitty = kittyProfile.getDefault(account, chainId);
+
+      if (defaultKitty) {
+        kittygotchiUpdated.get(defaultKitty.id);
+      } else {
+      }
     }
-  }, [kittyProfile.kittygotchi, web3State, chainId]);
+  }, [account, web3State, chainId]);
 
   const handleMint = useCallback(() => {
     setMintLoading(true);
 
     kittygotchiMint.onMintCallback({
-      onConfirmation: (hash?: string) => {
+      onConfirmation: async (hash?: string, tokenId?: number) => {
         setMintLoading(false);
 
         if (account) {
           setMintLoading(true);
-          kittygotchiList
-            .get(account)
-            .then((items: Kittygotchi[] | undefined) => {
-              if (items && items.length > 0) {
-                kittyProfile.setDefaultKittygothchi(items[items.length - 1]);
-              }
 
-              setMintLoading(false);
-            })
-            .catch((err) => {
-              setMintLoading(false);
-            });
+          let kitty = await kittygotchiUpdated.get(tokenId?.toString());
+
+          if (account && chainId && kitty) {
+            kittyProfile.setDefaultKittygothchi(account, chainId, kitty);
+          }
+
+          setMintLoading(false);
         }
       },
       onSubmit: (hash?: string) => {
@@ -199,32 +190,42 @@ export const ProfileIndex = () => {
     feedingToggler.set(true);
 
     const onSubmit = (hash?: string) => {
-      if (hash && chainId && kittyProfile.kittygotchi) {
-        setTransactionHash(hash);
+      if (account && chainId) {
+        let defaultKitty = kittyProfile.getDefault(account, chainId);
 
-        createNotification({
-          title: 'Feeding Kittygotchi',
-          body: `Feeding Kittygotchi #${kittyProfile.kittygotchi.id}`,
-          timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, hash),
-          urlCaption: 'View transaction',
-          type: NotificationType.TRANSACTION,
-          metadata: {
-            chainId: chainId,
-            transactionHash: hash,
-            status: 'pending',
-          } as TxNotificationMetadata,
-        });
+        if (defaultKitty) {
+          if (hash) {
+            setTransactionHash(hash);
+
+            createNotification({
+              title: 'Feeding Kittygotchi',
+              body: `Feeding Kittygotchi #${defaultKitty.id}`,
+              timestamp: Date.now(),
+              url: getTransactionScannerUrl(chainId, hash),
+              urlCaption: 'View transaction',
+              type: NotificationType.TRANSACTION,
+              metadata: {
+                chainId: chainId,
+                transactionHash: hash,
+                status: 'pending',
+              } as TxNotificationMetadata,
+            });
+          }
+        }
       }
     };
 
     const onConfirmation = (hash?: string) => {
-      if (kittyProfile.kittygotchi) {
-        kittygotchiUpdated.get(kittyProfile.kittygotchi.id);
-      }
+      if (chainId && account) {
+        let defaultKitty = kittyProfile.getDefault(account, chainId);
 
-      setFeedLoading(false);
-      setFeedingDone(true);
+        if (defaultKitty) {
+          kittygotchiUpdated.get(defaultKitty.id);
+        }
+
+        setFeedLoading(false);
+        setFeedingDone(true);
+      }
     };
 
     const onError = (error?: any) => {
@@ -238,23 +239,31 @@ export const ProfileIndex = () => {
       setFeedLoading(false);
     };
 
-    if (kittyProfile.kittygotchi) {
-      onFeedCallback(kittyProfile.kittygotchi.id, {
-        onConfirmation,
-        onError,
-        onSubmit,
-      });
+    if (account && chainId) {
+      let defaultKitty = kittyProfile.getDefault(account, chainId);
+
+      if (defaultKitty) {
+        onFeedCallback(defaultKitty.id, {
+          onConfirmation,
+          onError,
+          onSubmit,
+        });
+      }
     }
-  }, [onFeedCallback, kittyProfile.kittygotchi, createNotification, chainId]);
+  }, [onFeedCallback, createNotification, account, chainId]);
 
   const handleClickEdit = useCallback(() => {
-    if (kittyProfile.kittygotchi) {
-      history.push(`/kittygotchi/${kittyProfile.kittygotchi?.id}/edit`);
+    if (account && chainId) {
+      let defaultKitty = kittyProfile.getDefault(account, chainId);
+
+      if (defaultKitty) {
+        history.push(`/kittygotchi/${defaultKitty?.id}/edit`);
+      }
     }
-  }, [history, kittyProfile.kittygotchi]);
+  }, [history]);
 
   const onClickBack = useCallback(() => {
-    history.goBack();
+    history.push('/');
   }, []);
 
   const handleCloseFeedingDialog = useCallback(() => {

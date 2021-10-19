@@ -8,12 +8,21 @@ import {
   CircularProgress,
   useTheme,
   Typography,
+  makeStyles,
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
+import {useHistory} from 'react-router';
+
+const useStyles = makeStyles((theme) => ({
+  kittygotchiImage: {
+    width: theme.spacing(40),
+    height: theme.spacing(40),
+  },
+}));
 
 interface Props {
   loading?: boolean;
@@ -22,14 +31,23 @@ interface Props {
   transactionHash?: string;
   dialogProps: DialogProps;
   onTryAgain?: () => void;
+  tokenId?: number;
 }
 
-export const FeedingKittygotchiDialog = (props: Props) => {
-  const {dialogProps, loading, error, done, transactionHash, onTryAgain} =
-    props;
+export const MintingKittygotchiDialog = (props: Props) => {
+  const {
+    dialogProps,
+    loading,
+    error,
+    done,
+    transactionHash,
+    onTryAgain,
+    tokenId,
+  } = props;
 
   const {chainId} = useWeb3();
 
+  const classes = useStyles();
   const theme = useTheme();
 
   const handleClose = useCallback(() => {
@@ -43,6 +61,12 @@ export const FeedingKittygotchiDialog = (props: Props) => {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
   }, [chainId, transactionHash]);
+
+  const history = useHistory();
+
+  const handleViewKittygotchi = useCallback(() => {
+    history.push(`/kittygotchi/${tokenId}`);
+  }, [history, tokenId]);
 
   return (
     <Dialog {...dialogProps} onClose={handleClose} fullWidth maxWidth='xs'>
@@ -61,14 +85,13 @@ export const FeedingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
-                  Feeding your kittygotchi
+                  Creating your kittygotchi
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  Please, sign the transaction in your wallet and wait for
-                  confirmation.
+                  Please, wait for transaction confirmation.
                 </Typography>
               </Grid>
               {transactionHash ? (
@@ -91,27 +114,30 @@ export const FeedingKittygotchiDialog = (props: Props) => {
                   alignItems='center'
                   alignContent='center'
                   justifyContent='center'>
-                  <SuccessIcon />
+                  <img
+                    src={require('assets/images/default-kittygotchi.png')}
+                    className={classes.kittygotchiImage}
+                  />
                 </Box>
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Kittygotchi Fed
+                  Kittygotchi created
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  Keep coming back to feed your kittygotchi every 24h
+                  You can feed your kittygotchi every 24h
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  variant='outlined'
                   color='primary'
-                  onClick={handleViewTransaction}
+                  variant='outlined'
+                  onClick={handleViewKittygotchi}
                   fullWidth>
-                  View transaction
+                  View Kittygotchi #{tokenId}
                 </Button>
               </Grid>
               <Grid item xs={12}>
@@ -164,3 +190,5 @@ export const FeedingKittygotchiDialog = (props: Props) => {
     </Dialog>
   );
 };
+
+export default MintingKittygotchiDialog;

@@ -15,6 +15,7 @@ import {
 import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 import {Kittygotchi} from 'types/kittygotchi';
 import {Skeleton} from '@material-ui/lab';
+import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -67,79 +68,57 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
           <Skeleton variant='rect' className={classes.media} />
         )}
         <CardContent>
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant='h6'>
-                {loading ? <Skeleton /> : <>Kittygotchi #{kittygotchi?.id}</>}
+                <strong>
+                  {loading ? <Skeleton /> : <>Kittygotchi #{kittygotchi?.id}</>}
+                </strong>
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item>
-                  <Box display='flex' alignItems='center' alignContent='center'>
-                    <Box className={classes.iconWrapper} mr={2}>
-                      {loading ? (
-                        <Skeleton
-                          variant='circle'
-                          height={theme.spacing(4)}
-                          width={theme.spacing(4)}
-                        />
-                      ) : (
-                        <FlashOutlinedIcon className={classes.icon} />
-                      )}
-                    </Box>
-                    <Typography variant='body1'>
-                      {loading ? (
-                        <Skeleton width={theme.spacing(6)} />
-                      ) : (
-                        kittygotchi?.attack
-                      )}
+                  {!loading ? (
+                    <Typography color='textSecondary' variant='caption'>
+                      ATK
                     </Typography>
-                  </Box>
+                  ) : null}
+                  <Typography variant='body1'>
+                    {loading ? (
+                      <Skeleton width={theme.spacing(10)} />
+                    ) : (
+                      leftPad(kittygotchi?.attack || 0, 3)
+                    )}
+                  </Typography>
                 </Grid>
                 <Grid item>
-                  <Box display='flex' alignItems='center' alignContent='center'>
-                    <Box className={classes.iconWrapper} mr={2}>
-                      {loading ? (
-                        <Skeleton
-                          variant='circle'
-                          height={theme.spacing(4)}
-                          width={theme.spacing(4)}
-                        />
-                      ) : (
-                        <ShieldOutlinedIcon className={classes.icon} />
-                      )}
-                    </Box>
-                    <Typography variant='body1'>
-                      {loading ? (
-                        <Skeleton width={theme.spacing(6)} />
-                      ) : (
-                        kittygotchi?.defense
-                      )}
+                  {!loading ? (
+                    <Typography color='textSecondary' variant='caption'>
+                      DEF
                     </Typography>
-                  </Box>
+                  ) : null}
+                  <Typography variant='body1'>
+                    {loading ? (
+                      <Skeleton width={theme.spacing(10)} />
+                    ) : (
+                      leftPad(kittygotchi?.defense || 0, 3)
+                    )}
+                  </Typography>
                 </Grid>
                 <Grid item>
-                  <Box display='flex' alignItems='center' alignContent='center'>
-                    <Box className={classes.iconWrapper} mr={2}>
-                      {loading ? (
-                        <Skeleton
-                          variant='circle'
-                          height={theme.spacing(4)}
-                          width={theme.spacing(4)}
-                        />
-                      ) : (
-                        <FlashOutlinedIcon className={classes.icon} />
-                      )}
-                    </Box>
-                    <Typography variant='body1'>
-                      {loading ? (
-                        <Skeleton width={theme.spacing(6)} />
-                      ) : (
-                        kittygotchi?.run
-                      )}
+                  {!loading ? (
+                    <Typography color='textSecondary' variant='caption'>
+                      RUN
                     </Typography>
-                  </Box>
+                  ) : null}
+                  <Typography variant='body1'>
+                    {loading ? (
+                      <Skeleton width={theme.spacing(10)} />
+                    ) : (
+                      leftPad(kittygotchi?.run || 0, 3)
+                    )}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
