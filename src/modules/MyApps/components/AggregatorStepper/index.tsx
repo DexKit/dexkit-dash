@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import GeralStep from './Geral';
 import ThemeStep from './Theme';
 import LinksStep from './Links';
+import StepperHeader from './StepperHeader';
 
 interface IStep {
   title: string;
@@ -96,12 +97,10 @@ const AggregatorStepper: React.FC = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card component={Paper} style={{backgroundColor: '#252836'}}>
-          <Stepper activeStep={activeStep} style={{height: '100%'}}>
-            {steps.map((step, i) => (
-              <Step key={i}>
-                <StepLabel>{step.title}</StepLabel>
-              </Step>
-            ))}
+          <Stepper
+            activeStep={activeStep}
+            style={{height: '100%', backgroundColor: '#2E3243'}}>
+            <StepperHeader steps={steps} activeStep={activeStep} />
           </Stepper>
           <Grid container spacing={2}>
             {(() => {
