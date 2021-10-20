@@ -49,7 +49,10 @@ export function useProfileKittygotchi() {
 
   const getDefault = useCallback(
     (address: string, chainId: number): Kittygotchi | undefined => {
-      return kittygotchiState.kittygotchiByChain[`${address}-${chainId}`];
+      if(kittygotchiState?.kittygotchiByChain ){
+        return kittygotchiState.kittygotchiByChain[`${address}-${chainId}`];
+      }
+     
     },
     [kittygotchiState.kittygotchiByChain],
   );
