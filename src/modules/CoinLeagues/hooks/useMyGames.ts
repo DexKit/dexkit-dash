@@ -1,5 +1,6 @@
 import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { POLL_INTERVAL_GAMES } from '../constants';
 import { FilterPlayerGame} from '../constants/enums';
 import {
   GET_GAMES_WITH_PLAYER,
@@ -46,6 +47,7 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
+    pollInterval: POLL_INTERVAL_GAMES
   });
 
   useEffect(() => {
