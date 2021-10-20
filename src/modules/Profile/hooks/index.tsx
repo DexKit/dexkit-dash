@@ -36,7 +36,7 @@ export function useProfileKittygotchi() {
 
   const isDefault = useCallback(
     (kittygotchi?: Kittygotchi) => {
-      if (account && chainId) {
+      if (account && chainId && kittygotchiState.kittygotchiByChain) {
         return (
           kittygotchiState.kittygotchiByChain[`${account}-${chainId}`]?.id ===
           kittygotchi?.id
@@ -49,7 +49,10 @@ export function useProfileKittygotchi() {
 
   const getDefault = useCallback(
     (address: string, chainId: number): Kittygotchi | undefined => {
-      return kittygotchiState.kittygotchiByChain[`${address}-${chainId}`];
+      if (kittygotchiState.kittygotchiByChain) {
+        return kittygotchiState.kittygotchiByChain[`${address}-${chainId}`];
+      }
+      return undefined;
     },
     [kittygotchiState.kittygotchiByChain],
   );
