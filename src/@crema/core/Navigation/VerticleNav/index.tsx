@@ -32,7 +32,7 @@ const Navigation: React.FC<NavigationProps> = () => {
           )}
         </React.Fragment>
       ))}
-      <Version />
+    {/*  <Version />*/}
     </List>
   );
 };

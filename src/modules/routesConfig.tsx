@@ -37,7 +37,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'money.wallet',
           url: `/wallet`,
         },
-        {
+      /*  {
           id: 'trade',
           title: 'Trade',
           messageId: 'app.trade',
@@ -72,10 +72,10 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           icon: 'magicpen',
           url: '/wizard',
-        },
+        },*/
       ],
     },
-    {
+  /*  {
       id: 'protocols',
       title: 'Protocol Explorer',
       messageId: 'sidebar.protocols',
@@ -91,16 +91,16 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`,
         },
       ],
-    },
+    },*/
     {
       id: 'coins-league',
-      title: 'Coin Leagues',
+      title: 'Coin League',
       messageId: 'sidebar.coin-league',
       type: 'group',
       children: [
         {
           id: 'all',
-          title: 'Coin Leagues',
+          title: 'Coin League',
           messageId: 'sidebar.coin-league',
           type: 'item',
           customIcon: true,
@@ -144,7 +144,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },*/
-    {
+ /*   {
       id: 'affiliate',
       title: 'Affiliates',
       messageId: 'sidebar.affiliate',
@@ -160,7 +160,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: '/affiliate/overview',
         },
       ],
-    },
+    },*/
     {
       id: 'apps',
       title: 'Apps',
@@ -168,14 +168,15 @@ const useRoutesConfig = (): NavItemProps[] => {
       type: 'group',
       children: [
         {
-          id: 'exchange',
-          title: 'Exchange',
-          messageId: 'sidebar.app.exchange',
+          id: 'howtoplay',
+          title: 'How to Play',
+          messageId: 'sidebar.app.how-to-play',
           type: 'external',
-          icon: 'show_chart',
-          url: 'https://exchange.dexkit.com',
+          customIcon: true,
+          icon: 'gameboy',
+          url: 'https://coinleagues.games/',
         },
-        {
+     /*   {
           id: 'swap',
           title: 'Swap',
           messageId: 'sidebar.app.swap',
@@ -198,7 +199,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'external',
           icon: 'fastfood',
           url: 'https://farm.dexkit.com',
-        },
+        },*/
       ],
     },
   ];

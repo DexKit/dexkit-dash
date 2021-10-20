@@ -1,7 +1,8 @@
 import React, {ReactNode} from 'react';
-import {Player} from '@lottiefiles/react-lottie-player';
 import Box from '@material-ui/core/Box';
-
+import {ReactComponent as LeagueLogoImage} from 'assets/images/dashboard/league-logo.svg';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {Typography} from '@material-ui/core';
 interface SuspenseProps {
   children: ReactNode;
 }
@@ -21,13 +22,14 @@ const Suspense: React.FC<SuspenseProps> = ({children}) => {
           left={0}
           right={0}
           bottom={0}>
-          <Player
-            autoplay
-            loop
-            src='https://assets7.lottiefiles.com/packages/lf20_bdqop5la.json'
-            style={{width: '100%', height: '100%'}}
-            background={'#1f1d2b'}
-          />
+       
+              <LeagueLogoImage />
+
+              <CircularProgress color={'primary'} />
+        
+    
+        
+   
         </Box>
       }>
       {children}

@@ -250,7 +250,7 @@ export const CreateWallet = (props: Props) => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='h5'>Login to DexKit Wallet</Typography>
+              <Typography variant='h5'>Login to Coinleague Wallet</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body2'>

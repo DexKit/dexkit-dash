@@ -135,7 +135,7 @@ const WalletTabs: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={10}>
                   <Grid container spacing={4}>
                     <Grid item xs={isMobile ? 12 : undefined}>
                       <CustomTabs
@@ -173,7 +173,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+               {/* <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <Grid
@@ -267,7 +267,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                       )}
                     </Grid>
                   </Grid>
-                </Grid>
+                      </Grid>*/}
               </Grid>
             </Grid>
           </Grid>

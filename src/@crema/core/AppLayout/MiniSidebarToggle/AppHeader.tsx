@@ -36,8 +36,9 @@ import {Link as RouterLink} from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
-import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
+
+import {ReactComponent as LeagueLogoImage} from 'assets/images/dashboard/league-logo.svg';
+import {ReactComponent as LeagueIconLogoImage} from 'assets/images/dashboard/league-icon-logo.svg';
 
 import {TokenSearch} from 'shared/components/TokenSearch';
 import {useHistory} from 'react-router';
@@ -192,7 +193,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                 alignItems='center'
                 alignContent='center'>
                 <Grid item>
-                  {isMobile ? <DexkitLogoIconImage /> : <DexkitLogoImage />}
+                  {isMobile ? <LeagueIconLogoImage /> : <LeagueLogoImage />}
                 </Grid>
                 <Grid item>
                   <Grid
@@ -241,7 +242,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               spacing={2}>
               <Grid item>
                 <Box mr={4}>
-                  <DexkitLogoImage />
+                  <LeagueLogoImage /> 
                 </Box>
               </Grid>
               <Grid item xs>
