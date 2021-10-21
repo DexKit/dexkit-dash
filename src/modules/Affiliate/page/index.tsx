@@ -1,4 +1,6 @@
-import React, {useState, useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -13,11 +15,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
 import {makeStyles} from '@material-ui/core/styles';
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
-import {useIntl} from 'react-intl';
-import {BrowserRouter as Router} from 'react-router-dom';
 import {Link as RouterLink} from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
 import {useWeb3} from '../../../hooks/useWeb3';
@@ -26,10 +25,7 @@ import {useAffiliateTrades} from '../../../hooks/affiliate/useAffiliateTrades';
 import {useTokenBalancesAffiliate} from '../../../hooks/affiliate/useTokenBalances';
 import {Skeleton} from '@material-ui/lab';
 import AffiliateHistory from '../history';
-import {GridContainer} from '@crema';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import FilterList from 'shared/components/Filter/list';
-import FilterMenu from 'shared/components/Filter/menu';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 
 const useStyles = makeStyles((theme) => ({
@@ -107,12 +103,12 @@ const AffiliatePage: React.FC = () => {
 
   return (
     <Container maxWidth='xl' className={classes.container}>
-      <GridContainer spacing={2}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Breadcrumbs>
             <Link to='/wallet' component={RouterLink}>
               <Typography variant='body2' color='textSecondary'>
-                Dashboard
+                {messages['affiliate.page.dashboard']}
               </Typography>
             </Link>
             <Typography variant='body2' style={{color: '#2e3243'}}>
@@ -125,9 +121,10 @@ const AffiliatePage: React.FC = () => {
             {messages['affiliate.page.title']}
           </Typography>
         </Grid>
-      </GridContainer>
+      </Grid>
 
-      <GridContainer
+      <Grid
+        container
         spacing={5}
         style={{marginBottom: 20}}
         justifyContent='space-between'>
@@ -135,10 +132,10 @@ const AffiliatePage: React.FC = () => {
           <AffiliateTotalCard total={valueTotalUSD || 0} />
         </Grid>
         <Grid item md={4} xs={10}>
-          <GridContainer spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography style={{color: '#B3B7C0'}}>
-                Account Receive Rewards:
+                {messages['affiliate.page.account']}:
               </Typography>
             </Grid>
             <Grid item md={11} xs={10}>
@@ -146,26 +143,25 @@ const AffiliatePage: React.FC = () => {
                 {account}
               </Typography>
             </Grid>
-          </GridContainer>
+          </Grid>
         </Grid>
-      </GridContainer>
+      </Grid>
 
-      <GridContainer spacing={4} className={classes.affiliateCard}>
+      <Grid container spacing={4} className={classes.affiliateCard}>
         <Grid item xs={12}>
-          <GridContainer spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant='h5'>Affiliate</Typography>
+              <Typography variant='h5'>{messages['app.affiliate']}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
-                You need to have 200 KIT in your wallet to earn money from
-                referrals.
+                {messages['affiliate.warning.kitBalance']}:
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <LinearProgressWithLabel to={200} from={kitValue} />
             </Grid>
-          </GridContainer>
+          </Grid>
         </Grid>
 
         <Divider
@@ -179,10 +175,12 @@ const AffiliatePage: React.FC = () => {
         />
 
         <Grid item md={12} xs={12}>
-          <GridContainer spacing={2} justifyContent='space-between'>
+          <Grid container spacing={2} justifyContent='space-between'>
             <Grid item md={5} xs={12} style={{marginBottom: 10}}>
               <FormControl fullWidth>
-                <Typography style={{marginBottom: 10}}>Chain</Typography>
+                <Typography style={{marginBottom: 10}}>
+                  {messages['affiliate.page.swap.chain']}
+                </Typography>
                 <Select
                   variant='outlined'
                   value={chain}
@@ -195,7 +193,9 @@ const AffiliatePage: React.FC = () => {
               </FormControl>
             </Grid>
             <Grid item md={7} xs={12}>
-              <Typography style={{marginBottom: 10}}>Affiliate link</Typography>
+              <Typography style={{marginBottom: 10}}>
+                {messages['affiliate.page.swap.link']}
+              </Typography>
               <Box
                 className={classes.field}
                 display='flex'
@@ -204,14 +204,14 @@ const AffiliatePage: React.FC = () => {
                 <Typography noWrap>{affiliateLink}</Typography>
                 <ButtonCopy
                   copyText={affiliateLink}
-                  titleText='Copied to clipbord!'
+                  titleText={messages['shared.copiedClipboard'] as string}
                 />
               </Box>
             </Grid>
-          </GridContainer>
+          </Grid>
         </Grid>
 
-        <GridContainer justifyContent='flex-end'>
+        <Grid container justifyContent='flex-end'>
           <Grid item md={5} xs={12}>
             <Button
               fullWidth
@@ -219,11 +219,11 @@ const AffiliatePage: React.FC = () => {
               target='_blank'
               style={{backgroundColor: '#FFA552', marginBottom: 15}}>
               <LinkIcon />
-              OPEN SWAP
+              {messages['affiliate.page.swap.openBtn']}
             </Button>
           </Grid>
-        </GridContainer>
-      </GridContainer>
+        </Grid>
+      </Grid>
 
       <Divider
         style={{

@@ -1,4 +1,7 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AppCard from '@crema/core/AppCard';
 import {Box, Typography} from '@material-ui/core';
@@ -9,6 +12,7 @@ interface Props {
 
 const AffiliateRevenue = (props: Props) => {
   const {value} = props;
+  const {messages} = useIntl();
 
   return (
     <AppCard style={{backgroundColor: 'primary'}} className='card-hover'>
@@ -21,7 +25,7 @@ const AffiliateRevenue = (props: Props) => {
             {value && value.toFixed(3)} $
           </Typography>
           <Box mt={0.5} component='p'>
-            Total Affiliate Revenue
+            {messages['affiliate.revenue.title"']}
           </Box>
         </Box>
       </Box>

@@ -1,11 +1,14 @@
 import React from 'react';
+
 import {useIntl} from 'react-intl';
+
+import {Box, makeStyles, Toolbar, Typography} from '@material-ui/core';
+
 import TransactionTable from './TransactionTable';
-import {Box, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
+
 interface Props {
   transactionData: GetAffiliateTrades | undefined;
   isLoading: boolean;
@@ -16,7 +19,7 @@ interface Props {
   onChangePerPage: (newPerPage: number) => void;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
     padding: '0 24px',
     display: 'flex',
@@ -50,8 +53,7 @@ const AffiliateHistory: React.FC<Props> = (props: Props) => {
         </Box>
       </Toolbar>
       <TransactionTable {...props} />
-      </>
-    // </AppCard>
+    </>
   );
 };
 

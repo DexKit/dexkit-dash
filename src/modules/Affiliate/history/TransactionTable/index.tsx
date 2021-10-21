@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +9,6 @@ import TableItem from './TableItem';
 
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 
 interface Props {
@@ -30,7 +30,7 @@ const TransactionTable: React.FC<Props> = ({
   onChangePage,
   onChangePerPage,
 }) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
+  const useStyles = makeStyles((theme) => ({
     tableResponsiveMaterial: {
       minHeight: '.01%',
       overflowX: 'auto',
@@ -41,9 +41,10 @@ const TransactionTable: React.FC<Props> = ({
         marginBottom: 15,
         '& > table': {
           marginBottom: 0,
-          '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
-            whiteSpace: 'nowrap',
-          },
+          '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td':
+            {
+              whiteSpace: 'nowrap',
+            },
         },
       },
     },

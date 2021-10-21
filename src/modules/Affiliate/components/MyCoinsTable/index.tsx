@@ -1,6 +1,6 @@
-import React, {useState, useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {GridContainer} from '@crema';
+import {useIntl} from 'react-intl';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -40,6 +40,7 @@ interface Props {
 
 function MyCoinsTable(props: Props) {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const [search, setSearch] = useState('');
 
@@ -48,7 +49,7 @@ function MyCoinsTable(props: Props) {
   }, []);
 
   return (
-    <GridContainer>
+    <Grid container>
       <Grid item xs={12}>
         <Grid container spacing={8}>
           <Grid item md={4} xs={12}>
@@ -61,7 +62,7 @@ function MyCoinsTable(props: Props) {
                   <Search />
                 </InputAdornment>
               }
-              placeholder='Search'
+              placeholder={messages['app.search'] as string}
             />
           </Grid>
           <Grid item md={7} xs={11}>
@@ -99,7 +100,7 @@ function MyCoinsTable(props: Props) {
           </Table>
         </TableContainer>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 }
 

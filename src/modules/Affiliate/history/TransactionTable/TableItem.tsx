@@ -1,14 +1,13 @@
 import React from 'react';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {makeStyles, Chip, Link, Avatar, Tooltip} from '@material-ui/core';
+import {Avatar, Link, makeStyles, Tooltip} from '@material-ui/core';
 
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import {useWeb3} from 'hooks/useWeb3';
-import SearchIcon from '@material-ui/icons/Search';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
 import {useIntl} from 'react-intl';
 import {GetAffiliateTrades_ethereum_transfers} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
@@ -18,7 +17,7 @@ interface Props {
   data: Required<GetAffiliateTrades_ethereum_transfers>;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableCell: {
     fontSize: 16,
     padding: '12px 8px',

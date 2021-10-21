@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -7,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 
 import {makeStyles} from '@material-ui/core/styles';
+
 import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
 import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
 
@@ -29,6 +32,7 @@ interface Props {
 
 function AffiliateTotalCard(props: Props): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
   const {usdFormatter} = useUSDFormatter();
 
   return (
@@ -42,13 +46,13 @@ function AffiliateTotalCard(props: Props): JSX.Element {
           <MoneyIcon color='primary' style={{fontSize: 50}} />
         </Grid>
         <Grid item xs={8}>
-          <Typography variant='subtitle2'>Total</Typography>
+          <Typography variant='subtitle2'>{messages['app.total']}</Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
             {usdFormatter.format(props.total)}
           </Typography>
         </Grid>
-        <Grid item xs={2} >
-          <WalletIcon height={35} width={35}  />
+        <Grid item xs={2}>
+          <WalletIcon height={35} width={35} />
         </Grid>
       </Grid>
     </Container>
