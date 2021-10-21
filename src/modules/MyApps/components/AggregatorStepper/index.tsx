@@ -6,12 +6,10 @@ import React, {useState} from 'react';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import Step from '@material-ui/core/Step';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Divider from '@material-ui/core/Divider';
-import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 
 import GeralStep from './Geral';
@@ -67,6 +65,7 @@ const AggregatorStepper: React.FC = () => {
   const [themeData, setThemeData] = React.useState(initialValues.theme);
   const [linksData, setLinksData] = React.useState(initialValues.links);
 
+  // TODO: Create the submit logic
   const handleSubmit = () => {
     console.log({geralData, themeData, linksData});
   };
