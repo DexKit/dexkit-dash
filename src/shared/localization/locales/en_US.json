@@ -117,6 +117,10 @@
   "app.everybodyIsHere": "Everybody is here",
   "app.notSupportedNetwork": "Not Supported Network",
 
+  "app.tryAgainPlease": "Try again, please",
+  "app.opsErrorFetchingData": "Ops, error fetching data",
+  "app.loading": "Loading",
+
   "app.affiliate": "Affiliate",
   "app.block": "Block",
   "app.chain": "Chain",

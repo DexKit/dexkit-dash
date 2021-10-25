@@ -1,13 +1,19 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import WarningIcon from '@material-ui/icons/Warning';
+
 interface Props {
   message: string;
 }
 
 const ErrorView: React.FC<Props> = ({message}) => {
+  const {messages} = useIntl();
+
   return (
     <Box py={4} display={'flex'} justifyContent={'center'}>
       <Grid
@@ -26,10 +32,10 @@ const ErrorView: React.FC<Props> = ({message}) => {
             gutterBottom
             align='center'
             variant='h5'>
-           Ops, error fetching data 
+            {messages['app.opsErrorFetchingData']}
           </Typography>
           <Typography align='center'>
-            Try again please!
+            {messages['app.tryAgainPlease']}!
           </Typography>
         </Grid>
       </Grid>
