@@ -1,17 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  Breadcrumbs,
-  Button,
-  Grid,
-  Hidden,
-  InputAdornment,
-  Link,
-  Typography,
-} from '@material-ui/core';
+
+import {useIntl} from 'react-intl';
+
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  useCoinLeaguesFactoryRoutes,
-} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
@@ -76,6 +75,8 @@ const GamesListV2 = () => {
   const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
+  const {messages} = useIntl();
+
   useDiscord();
 
   const dispatch = useDispatch();
@@ -137,12 +138,9 @@ const GamesListV2 = () => {
     [enterGameRoute],
   );
 
-  const onClickGoGamesInProgress = useCallback(
-    (_ev: any) => {
-      history.push(activeGamesRoute);
-    },
-    [activeGamesRoute],
-  );
+  const onClickGoGamesInProgress = useCallback(() => {
+    history.push(activeGamesRoute);
+  }, [activeGamesRoute]);
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
@@ -158,10 +156,10 @@ const GamesListV2 = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              {messages['app.dashboard']}
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              {messages['app.games']}
             </Link>
           </Breadcrumbs>
         </Grid>
@@ -169,22 +167,27 @@ const GamesListV2 = () => {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
-        <Typography variant='h5'>Coin Leagues</Typography>
+        <Typography variant='h5'>{messages['app.coinLeagues']}</Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
-        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <Box display='flex' alignItems='end' justifyContent='end'>
           <Box pr={2}>
-            <SwapButton/>
+            <SwapButton />
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Games`} />
+            <ShareButton
+              shareText={messages['app.coinsLeagueGame'] as string}
+            />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={messages['app.buyMatic'] as string}
+              defaultCurrency={'MATIC'}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -200,25 +203,25 @@ const GamesListV2 = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            Connect Wallet{' '}
+            {messages['app.connectWallet']}
           </Button>
         )}
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
 
       <Grid item xs={6}>
         <Typography variant='h6' style={{margin: 5}}>
-          Games in Progress: {gamesInProgress?.length || 0}
+          {messages['app.gamesInProgress']} {gamesInProgress?.length || 0}
         </Typography>
       </Grid>
       <Grid item xs={6}>
         <Box display={'flex'} justifyContent={'flex-end'}>
           <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-            View More
+            {messages['app.viewMore']}
           </Button>
         </Box>
       </Grid>
@@ -240,8 +243,8 @@ const GamesListV2 = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={'No games in progress'}
-                message={'Search created games and enter to start games'}
+                title={messages['app.noGamesInProgress'] as string}
+                message={messages['app.searchCreatedAndEnter'] as string}
               />
             </Grid>
           )}
@@ -252,9 +255,7 @@ const GamesListV2 = () => {
           value={value}
           onChange={handleChange}
           variant='standard'
-          TabIndicatorProps={{
-            style: {display: 'none'},
-          }}
+          TabIndicatorProps={{style: {display: 'none'}}}
           aria-label='wallet tabs'>
           <CustomTab value={Tabs.Games} label={Tabs.Games} />
           <CustomTab value={Tabs.History} label={Tabs.History} />
@@ -264,7 +265,7 @@ const GamesListV2 = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder='Search'
+          placeholder={messages['app.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -281,7 +282,7 @@ const GamesListV2 = () => {
             fullWidth
             variant={'contained'}
             onClick={() => setOpen(true)}>
-            {'CREATE GAME'}
+            {(messages['app.createGame'] as string).toUpperCase()}
           </Button>
         </Grid>
       )}
@@ -291,15 +292,17 @@ const GamesListV2 = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games ? (
-                <Typography variant='h6'>Games</Typography>
+                <Typography variant='h6'>{messages['app.games']}</Typography>
               ) : (
-                <Typography variant='h6'>Last Games</Typography>
+                <Typography variant='h6'>
+                  {messages['app.lastGames']}
+                </Typography>
               )}
             </Grid>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games && (
                 <Typography gutterBottom>
-                  Recently added &nbsp;
+                  {messages['app.recentlyAdded']} &nbsp;
                   {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
@@ -374,7 +377,9 @@ const GamesListV2 = () => {
                 <Chip
                   clickable
                   label={FilterGame.BitBoy}
-                  color={filterGame === FilterGame.BitBoy ? 'primary' : 'default'}
+                  color={
+                    filterGame === FilterGame.BitBoy ? 'primary' : 'default'
+                  }
                   onClick={() => setFilterGame(FilterGame.BitBoy)}
                 />
               </Grid>
@@ -406,8 +411,8 @@ const GamesListV2 = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games to join'}
-                  message={'Create games to join'}
+                  title={messages['app.noGamesJoin'] as string}
+                  message={messages['app.createGamesJoin'] as string}
                 />
               </Grid>
             )}

@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -127,6 +129,7 @@ const USD_POWER_NUMBER = 10 ** 8;
 function OnePlayerTable(props: Props): JSX.Element {
   const {address, account, winner, data} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
   const {chainId} = useWeb3();
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
@@ -176,7 +179,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   }, [isWinner, winner, data]);
 
   const [openViewDialog, setOpenViewDialog] = useState(false);
-  const onCloseViewCoinsDialog = useCallback((ev: any) => {
+  const onCloseViewCoinsDialog = useCallback(() => {
     setOpenViewDialog(false);
   }, []);
 
@@ -184,84 +187,75 @@ function OnePlayerTable(props: Props): JSX.Element {
     setOpenViewDialog(true);
   }, []);
 
-  const onClaimGame = useCallback(
-    (ev: any) => {
-      if (address && account && chainId) {
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          setSubmitState(SubmitState.Submitted);
-          createNotification({
-            title: 'Claim',
-            body: `Claimed for Game ${address}`,
-            timestamp: Date.now(),
-            url: getTransactionScannerUrl(chainId, tx),
-            urlCaption: 'View transaction',
-            type: NotificationType.TRANSACTION,
-            metadata: {
-              chainId: chainId,
-              transactionHash: tx,
-              status: 'pending',
-            } as TxNotificationMetadata,
-          });
-        };
-        const onConfirmTx = () => {
-          setSubmitState(SubmitState.Confirmed);
-          refetch();
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
-
-        onClaimCallback(account, {
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
+  const onClaimGame = useCallback(() => {
+    if (address && account && chainId) {
+      setSubmitState(SubmitState.WaitingWallet);
+      const onSubmitTx = (tx: string) => {
+        setTx(tx);
+        setSubmitState(SubmitState.Submitted);
+        createNotification({
+          title: messages['app.claim'] as string,
+          body: `Claimed for Game ${address}`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, tx),
+          urlCaption: 'View transaction',
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: tx,
+            status: 'pending',
+          } as TxNotificationMetadata,
         });
-      }
-    },
-    [address, account, refetch, onClaimCallback, chainId],
-  );
-  const onWithdrawGame = useCallback(
-    (ev: any) => {
-      if (address && account) {
-        setSubmitWithdrawState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          setSubmitWithdrawState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          setSubmitWithdrawState(SubmitState.Confirmed);
-          refetch();
-        };
-        const onError = () => {
-          setSubmitWithdrawState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitWithdrawState(SubmitState.None);
-          }, 3000);
-        };
+      };
+      const onConfirmTx = () => {
+        setSubmitState(SubmitState.Confirmed);
+        refetch();
+      };
+      const onError = () => {
+        setSubmitState(SubmitState.Error);
+        setTimeout(() => {
+          setSubmitState(SubmitState.None);
+        }, 3000);
+      };
 
-        onWithdrawCallback({
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
-        });
-      }
-    },
-    [address, account, refetch, onWithdrawCallback],
-  );
+      onClaimCallback(account, {
+        onConfirmation: onConfirmTx,
+        onError,
+        onSubmit: onSubmitTx,
+      });
+    }
+  }, [address, account, refetch, onClaimCallback, chainId]);
+  const onWithdrawGame = useCallback(() => {
+    if (address && account) {
+      setSubmitWithdrawState(SubmitState.WaitingWallet);
+      const onSubmitTx = (tx: string) => {
+        setTx(tx);
+        setSubmitWithdrawState(SubmitState.Submitted);
+      };
+      const onConfirmTx = () => {
+        setSubmitWithdrawState(SubmitState.Confirmed);
+        refetch();
+      };
+      const onError = () => {
+        setSubmitWithdrawState(SubmitState.Error);
+        setTimeout(() => {
+          setSubmitWithdrawState(SubmitState.None);
+        }, 3000);
+      };
 
-  const goToExplorer = useCallback(
-    (_ev: any) => {
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
-        window.open(`${ExplorerURL[chainId]}${tx}`);
-      }
-    },
-    [tx, chainId],
-  );
+      onWithdrawCallback({
+        onConfirmation: onConfirmTx,
+        onError,
+        onSubmit: onSubmitTx,
+      });
+    }
+  }, [address, account, refetch, onWithdrawCallback]);
+
+  const goToExplorer = useCallback(() => {
+    if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+      window.open(`${ExplorerURL[chainId]}${tx}`);
+    }
+  }, [tx, chainId]);
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
@@ -376,14 +370,24 @@ function OnePlayerTable(props: Props): JSX.Element {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.header}>Position</TableCell>
-              <TableCell className={classes.header}>Captain</TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.position']}
+              </TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.captain']}
+              </TableCell>
               {playerData?.coins && playerData?.coins.length > 0 && (
-                <TableCell className={classes.header}>Coins</TableCell>
+                <TableCell className={classes.header}>
+                  {messages['app.coins']}
+                </TableCell>
               )}
-              <TableCell className={classes.header}>Score</TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.score']}
+              </TableCell>
               {(canClaim || claimed) && (
-                <TableCell className={classes.header}>Action</TableCell>
+                <TableCell className={classes.header}>
+                  {messages['app.action']}
+                </TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -395,7 +399,9 @@ function OnePlayerTable(props: Props): JSX.Element {
                   colSpan={4}
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
-                  <Typography variant='h5'>No data was found!</Typography>
+                  <Typography variant='h5'>
+                    {messages['app.noDataFound']}!
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -453,7 +459,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                             <Badge color={'primary'} overlap='circular'>
                               <Avatar
                                 className={classes.chip}
-                                style={{height: 35, width: 35}}></Avatar>
+                                style={{height: 35, width: 35}}
+                              />
                             </Badge>
                           )}
                           {playerData?.coins.length === 0 && (
@@ -491,7 +498,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                               <Badge color={'primary'} overlap='circular'>
                                 <Avatar
                                   className={classes.chip}
-                                  style={{height: 35, width: 35}}></Avatar>
+                                  style={{height: 35, width: 35}}
+                                />
                               </Badge>
                             ),
                           )}
@@ -563,8 +571,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitState}
-                              defaultMsg={'CLAIM'}
-                              confirmedMsg={'Claimed'}
+                              defaultMsg={messages['app.claim'] as string}
+                              confirmedMsg={messages['app.claimed'] as string}
                             />
                           </Button>
                         </Grid>
@@ -602,14 +610,16 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitWithdrawState}
-                              defaultMsg={'WITHDRAW'}
-                              confirmedMsg={'Withdrawed'}
+                              defaultMsg={messages['app.withdraw'] as string}
+                              confirmedMsg={
+                                messages['app.withdrawed'] as string
+                              }
                             />
                           </Button>
                         </Grid>
                       </Grid>
                     )}
-                    {claimed && 'Claimed'}
+                    {claimed && (messages['app.claimed'] as string)}
                   </TableCell>
                 )}
               </TableRow>

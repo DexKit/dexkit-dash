@@ -61,12 +61,11 @@ export const useCoinLeaguesFactoryRoutes = () => {
     }
   }, [factoryAddress, room]);
 
-
   return {
     enterGameRoute,
     activeGamesRoute,
-    listGamesRoute
-  }
+    listGamesRoute,
+  };
 };
 
 export const useCoinLeaguesFactory = () => {
@@ -82,7 +81,6 @@ export const useCoinLeaguesFactory = () => {
       ? room
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room]);
-
 
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {

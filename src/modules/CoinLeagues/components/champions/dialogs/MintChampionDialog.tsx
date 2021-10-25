@@ -1,18 +1,18 @@
 import React, {useCallback} from 'react';
 
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogProps,
-  DialogTitle,
-  Button,
-  Divider,
-  Box,
-  Grid,
-  IconButton,
-  Typography,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import {DialogProps} from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
@@ -26,6 +26,7 @@ interface MintChampionDialogProps {
 
 export const MintChampionDialog = (props: MintChampionDialogProps) => {
   const {dialogProps, error, loading, onConfirm} = props;
+  const {messages} = useIntl();
 
   const handleClose = useCallback(() => {
     if (dialogProps.onClose) {
@@ -36,7 +37,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
   const renderError = () => {
     return (
       <Grid container spacing={4}>
-        <Grid item xs={12}></Grid>
+        <Grid item xs={12} />
       </Grid>
     );
   };
@@ -44,7 +45,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
   const renderLoading = () => {
     return (
       <Grid container spacing={4}>
-        <Grid item xs={12}></Grid>
+        <Grid item xs={12} />
       </Grid>
     );
   };
@@ -52,7 +53,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
   const renderDefault = () => {
     return (
       <Grid container spacing={4}>
-        <Grid item xs={12}></Grid>
+        <Grid item xs={12} />
       </Grid>
     );
   };
@@ -67,8 +68,11 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               justifyContent='space-between'
               alignItems='center'
               alignContent='center'
-              mr={2}></Box>
-            <Typography variant='body1'>Creating Champion</Typography>
+              mr={2}
+            />
+            <Typography variant='body1'>
+              {messages['app.createChampion']}
+            </Typography>
           </Box>
           <Box>
             <IconButton size='small' onClick={handleClose}>
@@ -90,10 +94,10 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               onClick={onConfirm}
               variant='contained'
               color='primary'>
-              Confirm
+              {messages['app.confirm']}
             </Button>
             <Button startIcon={<CloseIcon />} onClick={handleClose}>
-              Cancel
+              {messages['app.cancel']}
             </Button>
           </DialogActions>
         </>

@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {Grid} from '@material-ui/core';
 
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
@@ -11,6 +13,7 @@ import CardGameSkeleton from '../CardGameV2/index.skeleton';
 import CardGameV2 from '../CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import {useWeb3} from 'hooks/useWeb3';
+
 interface Props {
   filter?: FilterGame;
   search?: string;
@@ -19,6 +22,7 @@ interface Props {
 export const GamesEnded = (props: Props) => {
   const {filter, search} = props;
   const {account} = useWeb3();
+  const {messages} = useIntl();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
   const gamesEndedQuery = useEndedGames(
@@ -50,7 +54,7 @@ export const GamesEnded = (props: Props) => {
               game={g}
               id={g.id}
               onClick={onClickEnterGame}
-              btnMessage={'VIEW GAME'}
+              btnMessage={messages['app.viewGame'] as string}
             />
           </Grid>
         ))}
@@ -64,8 +68,8 @@ export const GamesEnded = (props: Props) => {
           <Grid item xs={12}>
             <Empty
               image={<EmptyGame />}
-              title={'No history'}
-              message={'Join and play games'}
+              title={messages['app.noHistory'] as string}
+              message={messages['app.joinAndPlayGames'] as string}
             />
           </Grid>
         )}

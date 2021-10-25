@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -11,8 +13,7 @@ import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {GameType} from 'types/coinsleague';
 import {useInterval} from 'hooks/utils/useInterval';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
+import {CardTimer} from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,7 +49,6 @@ interface Props {
   onClick: any;
 }
 
-
 function SmallCardGame(props: Props): JSX.Element {
   const {
     amount_to_play,
@@ -61,6 +61,7 @@ function SmallCardGame(props: Props): JSX.Element {
   } = props;
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const [countdown, setCountdown] = useState<number>();
   /* const value = new Intl.NumberFormat('en-US', {
@@ -113,31 +114,37 @@ function SmallCardGame(props: Props): JSX.Element {
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.prizePool']}:&nbsp;
+            </Typography>
             <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography variant='h6'>
-            {game_type === GameType.Winner ? 'Bull' : 'Bear'}
+              {messages['app.gameType']}&nbsp;
+            </Typography>
+            <Typography variant='h6'>
+              {game_type === GameType.Winner ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>
 
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Countdown:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.countdown']}:&nbsp;
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}
-              {countdown && countdown < 0 && 'ENDED'}
+              {countdown && countdown < 0 && messages['app.ended']}
             </Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Button className={classes.button} fullWidth onClick={onClickEnter}>
-            {props.btnMessage || 'VIEW'}
+            {props.btnMessage || messages['app.view']}
           </Button>
         </Grid>
       </Grid>

@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -14,6 +16,7 @@ import {useInterval} from 'hooks/utils/useInterval';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -22,13 +25,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   button: {
+    color: 'black',
     fontWeight: 600,
     borderRadius: 6,
     fontSize: '1.0rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    color: 'black'
   },
   innerContent: {
     fontSize: '1rem',
@@ -81,15 +84,14 @@ function CardGameProgressV2(props: Props): JSX.Element {
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
 
+  const {messages} = useIntl();
+
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
-  const onClickEnter = useCallback(
-    (ev: any) => {
-      onClick(game.id);
-    },
-    [game.id],
-  );
+  const onClickEnter = useCallback(() => {
+    onClick(game.id);
+  }, [game.id]);
 
   useInterval(
     () => {
@@ -136,7 +138,7 @@ function CardGameProgressV2(props: Props): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Duration:</Typography>
+          <Typography variant='h6'>{messages['app.duration']}:</Typography>
           <Typography variant='h6' style={{fontWeight: 500}}>
             &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
@@ -147,16 +149,18 @@ function CardGameProgressV2(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Countdown</Typography>
+          <Typography variant='subtitle2'>
+            {messages['app.countdown']}
+          </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>Ended </Typography>
+            <Typography variant='subtitle2'>{messages['app.ended']}</Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Entries
+            {messages['app.entries']}
             <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
@@ -164,20 +168,20 @@ function CardGameProgressV2(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Coins
+            {messages['app.coins']}
             <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Prize Pool
+            {messages['app.prizePool']}
             <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
           </Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || 'VIEW'}
+        {props.btnMessage || (messages['app.coins'] as string).toUpperCase()}
       </Button>
     </Container>
   );

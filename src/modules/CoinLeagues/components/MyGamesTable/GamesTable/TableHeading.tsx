@@ -1,21 +1,20 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
-
-
-
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles(() => ({
   tableCellRoot: {
     color: '#8F96A7',
     borderBottom: '0 none',
     fontSize: 16,
     padding: 8,
     fontFamily: Fonts.LIGHT,
-    '&:first-child': {   
+    '&:first-child': {
       paddingLeft: 20,
     },
     '&:last-child': {
@@ -25,27 +24,28 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const TableHeading: React.FC = () => {
-
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
-    <TableRow >
+    <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
         {'Created-Started-Ended'}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Game'}
+        {messages['app.games']}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Status'}
+        {messages['app.status']}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Place'}
+        {messages['app.place']}
       </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };

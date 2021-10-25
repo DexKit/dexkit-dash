@@ -1,8 +1,10 @@
+import React, {useCallback} from 'react';
+
 import Paper from '@material-ui/core/Paper';
-import React, { useCallback } from 'react';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
-import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
+import {Box, Grid, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+
 type Props = {
   handleDelete: (index: number) => void;
   coin: CoinFeed;
@@ -36,16 +38,16 @@ export const CoinItem = (props: Props) => {
   const {handleDelete, coin, index} = props;
   const classes = useStyles();
 
-  const onClickDelete = useCallback((ev: any)=>{
+  const onClickDelete = useCallback(() => {
     handleDelete(index);
-  },[coin])
+  }, [coin]);
 
   return (
     <Paper className={classes.item}>
       <Grid container alignItems='center' spacing={4}>
         <Grid item>
           <Box className={classes.coinContainer}>
-            <img src={coin?.logo} className={classes.coin} />
+            <img alt='' src={coin?.logo} className={classes.coin} />
           </Box>
         </Grid>
 

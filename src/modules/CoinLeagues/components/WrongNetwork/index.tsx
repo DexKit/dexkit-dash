@@ -1,4 +1,7 @@
 import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {Button, Grid} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 
@@ -11,13 +14,14 @@ import {useTheme} from '@material-ui/core/styles';
 import {Empty} from 'shared/components/Empty';
 import {useDispatch} from 'react-redux';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import { GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {switchChain} from 'utils/wallet';
 import {setWeb3State} from 'redux/actions';
 import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
 
 const WrongNetwork = () => {
   const theme = useTheme();
+  const {messages} = useIntl();
   const {onSwitchMagicNetwork} = useMagicProvider();
   const {getProvider} = useWeb3();
 
@@ -40,9 +44,9 @@ const WrongNetwork = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Empty
-          title={'Not Supported Network'}
-          message={'Please connect your wallet to the supported networks below'}
-          image={<EmptyNetwork/>}
+          title={messages['app.notSupportedNetwork'] as string}
+          message={messages['coinLeagues.warning.connectWallet'] as string}
+          image={<EmptyNetwork />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
               <Box m={2}>
@@ -52,6 +56,7 @@ const WrongNetwork = () => {
                   onClick={() => handleSelectChain(ChainId.Matic)}
                   startIcon={
                     <img
+                      alt=''
                       height={theme.spacing(6)}
                       width={theme.spacing(6)}
                       src={require('assets/images/chains/polygon-matic-logo.svg')}
@@ -67,6 +72,7 @@ const WrongNetwork = () => {
                   onClick={() => handleSelectChain(ChainId.Mumbai)}
                   startIcon={
                     <img
+                      alt=''
                       height={theme.spacing(6)}
                       width={theme.spacing(6)}
                       src={require('assets/images/chains/polygon-matic-logo.svg')}

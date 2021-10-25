@@ -1,25 +1,25 @@
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useQuery} from 'react-query';
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {ChainId, Web3State} from 'types/blockchain';
 import {
-  joinGame,
-  withdrawGame,
-  getWinner,
   claim,
-  getGamesData,
   getCoinFeeds,
   getCurrentCoinFeedsPrice,
+  getGamesData,
+  getWinner,
+  joinGame,
+  withdrawGame,
 } from '../services/coinLeagues';
 import {
-  startGame,
-  endGame,
   abortGame,
   COIN_LEAGUES_FACTORY_ADDRESS,
+  endGame,
+  startGame,
 } from '../services/coinLeaguesFactory';
 
 import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
@@ -44,10 +44,12 @@ export const useCoinLeagues = (address?: string) => {
     GET_LEAGUES_CHAIN_ID(chainId),
   );
 
-  const { room } = useParams<{room: string}>();
-  const factoryAddress = useMemo(()=> {
-      return room ? room : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
-  },[ chainId, room])
+  const {room} = useParams<{room: string}>();
+  const factoryAddress = useMemo(() => {
+    return room
+      ? room
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+  }, [chainId, room]);
 
   const winnerQuery = useQuery(['GET_WINNER', address, account], () => {
     if (!address || !account || web3State !== Web3State.Done) {
@@ -74,7 +76,13 @@ export const useCoinLeagues = (address?: string) => {
         return;
       }
       try {
-        const tx = await joinGame(address, feeds, amount, captainCoin, getProvider());
+        const tx = await joinGame(
+          address,
+          feeds,
+          amount,
+          captainCoin,
+          getProvider(),
+        );
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -93,8 +101,8 @@ export const useCoinLeagues = (address?: string) => {
         !address ||
         !createdGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic)
-        || !factoryAddress
+        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !factoryAddress
       ) {
         return;
       }
@@ -102,10 +110,7 @@ export const useCoinLeagues = (address?: string) => {
         const id = createdGames.findIndex(
           (g) => g.address.toLowerCase() === address.toLowerCase(),
         );
-        const tx = await startGame(
-          factoryAddress,
-          String(id),
-        );
+        const tx = await startGame(factoryAddress, String(id));
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -124,8 +129,8 @@ export const useCoinLeagues = (address?: string) => {
         !address ||
         !startedGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) 
-        || !factoryAddress
+        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !factoryAddress
       ) {
         return;
       }
@@ -133,10 +138,7 @@ export const useCoinLeagues = (address?: string) => {
         const id = startedGames.findIndex(
           (g) => g.address.toLowerCase() === address.toLowerCase(),
         );
-        const tx = await endGame(
-          factoryAddress,
-          String(id),
-        );
+        const tx = await endGame(factoryAddress, String(id));
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -190,7 +192,7 @@ export const useCoinLeagues = (address?: string) => {
         !address ||
         !createdGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) || 
+        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
         !factoryAddress
       ) {
         return;
@@ -199,10 +201,7 @@ export const useCoinLeagues = (address?: string) => {
         const id = createdGames.findIndex(
           (g) => g.address.toLowerCase() === address.toLowerCase(),
         );
-        const tx = await abortGame(
-          factoryAddress,
-          String(id),
-        );
+        const tx = await abortGame(factoryAddress, String(id));
         const result = await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();

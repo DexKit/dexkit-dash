@@ -20,7 +20,6 @@ import {
   useHistory,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
-import ChartAccordion from 'modules/CoinLeagues/components/ChartAccordion';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
 import {ethers} from 'ethers';
@@ -67,6 +66,7 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -108,6 +108,8 @@ function GameEnter(props: Props) {
   const {createNotification} = useNotifications();
   const isMobile = useMobile();
 
+  const {messages} = useIntl();
+
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
     useCoinLeagues(address);
@@ -120,11 +122,11 @@ function GameEnter(props: Props) {
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
-  const onOpenSelectDialog = useCallback((ev: any) => {
+  const onOpenSelectDialog = useCallback(() => {
     setOpen(true);
   }, []);
 
-  const onOpenSelectCaptainDialog = useCallback((ev: any) => {
+  const onOpenSelectCaptainDialog = useCallback(() => {
     setIsChaptainCoin(true);
     setOpen(true);
   }, []);
@@ -167,7 +169,7 @@ function GameEnter(props: Props) {
     }
   }, [game?.players, game]);
 
-  const onCloseSelectDialog = useCallback((ev: any) => {
+  const onCloseSelectDialog = useCallback(() => {
     setIsChaptainCoin(false);
     setOpen(false);
   }, []);
@@ -200,65 +202,59 @@ function GameEnter(props: Props) {
     [selectedCoins],
   );
 
-  const handleBack = useCallback(
-    (ev: any) => {
-      if (history.length > 0) {
-        history.goBack();
-      } else {
-        history.push(listGamesRoute);
-      }
-      //history.push(listGamesRoute)
-    },
-    [listGamesRoute],
-  );
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute)
+  }, [listGamesRoute]);
 
-  const onEnterGame = useCallback(
-    (ev: any) => {
-      if (game?.amount_to_play && captainCoin && chainId) {
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          createNotification({
-            title: 'Join Game',
-            body: `Joined Game ${game.address}`,
-            timestamp: Date.now(),
-            url: getTransactionScannerUrl(chainId, tx),
-            urlCaption: 'View transaction',
-            type: NotificationType.TRANSACTION,
-            metadata: {
-              chainId: chainId,
-              transactionHash: tx,
-              status: 'pending',
-            } as TxNotificationMetadata,
-          });
+  const onEnterGame = useCallback(() => {
+    if (game?.amount_to_play && captainCoin && chainId) {
+      setSubmitState(SubmitState.WaitingWallet);
+      const onSubmitTx = (tx: string) => {
+        setTx(tx);
+        createNotification({
+          title: messages['app.joinGame'] as string,
+          body: `${messages['app.joinedGame']} ${game.address}`,
+          timestamp: Date.now(),
+          url: getTransactionScannerUrl(chainId, tx),
+          urlCaption: messages['app.viewTransaction'] as string,
+          type: NotificationType.TRANSACTION,
+          metadata: {
+            chainId: chainId,
+            transactionHash: tx,
+            status: 'pending',
+          } as TxNotificationMetadata,
+        });
 
-          setSubmitState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          setSubmitState(SubmitState.Confirmed);
-          refetch();
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
+        setSubmitState(SubmitState.Submitted);
+      };
+      const onConfirmTx = () => {
+        setSubmitState(SubmitState.Confirmed);
+        refetch();
+      };
+      const onError = () => {
+        setSubmitState(SubmitState.Error);
+        setTimeout(() => {
+          setSubmitState(SubmitState.None);
+        }, 3000);
+      };
 
-        onJoinGameCallback(
-          selectedCoins.map((c) => c.address) || [],
-          game?.amount_to_play.toString(),
-          captainCoin?.address,
-          {
-            onConfirmation: onConfirmTx,
-            onError,
-            onSubmit: onSubmitTx,
-          },
-        );
-      }
-    },
-    [game, selectedCoins, captainCoin, refetch, chainId],
-  );
+      onJoinGameCallback(
+        selectedCoins.map((c) => c.address) || [],
+        game?.amount_to_play.toString(),
+        captainCoin?.address,
+        {
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        },
+      );
+    }
+  }, [game, selectedCoins, captainCoin, refetch, chainId]);
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
 
@@ -297,7 +293,7 @@ function GameEnter(props: Props) {
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
-            To play this game you need to connect your wallet to Polygon network
+            {messages['coinLeagues.warning.connectPolygon']}
           </Alert>
         </Grid>
       )}
@@ -319,10 +315,10 @@ function GameEnter(props: Props) {
       <Grid item xs={12} sm={12} xl={12}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-            Dashboard
+            {messages['app.dashboard']}
           </Link>
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-            Games
+            {messages['app.games']}
           </Link>
           <Link
             color='inherit'
@@ -335,7 +331,7 @@ function GameEnter(props: Props) {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt='' />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>
@@ -344,34 +340,39 @@ function GameEnter(props: Props) {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
-            Game #{truncateAddress(address)}
+            {messages['app.game']} #{truncateAddress(address)}
             <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
 
-          {finished && <Chip label='Ended' color='primary' />}
-          {aborted && <Chip label='Aborted' color='primary' />}
+          {finished && <Chip label={messages['app.ended']} color='primary' />}
+          {aborted && <Chip label={messages['app.aborted']} color='primary' />}
           {started && !finished && !aborted && (
-            <Chip label='Started' color='primary' />
+            <Chip label={messages['app.started'] as string} color='primary' />
           )}
         </Box>
       </Grid>
       <Hidden xsDown={true}>
         <Grid item sm={5} xl={5}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt='' />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-        <Box pr={2}>
-            <SwapButton/>
+          <Box pr={2}>
+            <SwapButton />
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
+            <ShareButton
+              shareText={`${messages['app.coinsLeagueGame']} #Id ${address}`}
+            />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={messages['app.buyMatic'] as string}
+              defaultCurrency={'MATIC'}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -413,13 +414,13 @@ function GameEnter(props: Props) {
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-                Game Type:
+                {messages['app.gameType']}:
               </Typography>
               <Skeleton>
                 <Typography
                   variant='h5'
                   style={{color: '#fff', marginLeft: '20px'}}>
-                  Winner
+                  {messages['app.winner']}
                 </Typography>
               </Skeleton>
             </Box>
@@ -456,7 +457,11 @@ function GameEnter(props: Props) {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Typography variant='h6' style={{margin: 5}}>
-                    Choose Captain Currency{' '}
+                    {
+                      messages[
+                        'coinLeagues.page.gameEnter.captain.chooseCurrency'
+                      ]
+                    }{' '}
                     {captainCoin === undefined ? '0' : '1'}/ 1
                   </Typography>
                 </Grid>
@@ -468,7 +473,7 @@ function GameEnter(props: Props) {
                     startIcon={<CryptocurrencyIcon />}
                     endIcon={<ExpandMoreIcon />}
                     variant='outlined'>
-                    {'Choose your Captain'}
+                    {messages['coinLeagues.page.gameEnter.captain.choose']}
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -492,7 +497,8 @@ function GameEnter(props: Props) {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant='h6' style={{margin: 5}}>
-                      Choose Currencies {selectedCoins?.length}/
+                      {messages['coinLeagues.page.gameEnter.chooseCurrencies']}{' '}
+                      {selectedCoins?.length}/
                       {(game?.num_coins.toNumber() || 0) - 1}
                     </Typography>
                   </Grid>
@@ -504,7 +510,7 @@ function GameEnter(props: Props) {
                       startIcon={<CryptocurrencyIcon />}
                       endIcon={<ExpandMoreIcon />}
                       variant='outlined'>
-                      {'Choose your Coins'}
+                      {messages['coinLeagues.page.gameEnter.chooseCoins']}
                     </Button>
                   </Grid>
                   <Grid item xs={12}>
@@ -569,8 +575,8 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={'ENTER GAME'}
-                          confirmedMsg={'You Entered Game'}
+                          defaultMsg={messages['app.enterGame'] as string}
+                          confirmedMsg={messages['app.enteredGame'] as string}
                         />
                       </Button>
                     </Box>
@@ -585,7 +591,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                Your Coins
+                {messages['app.yourCoins']}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -611,7 +617,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                Players
+                {messages['app.players']}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -645,7 +651,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <Skeleton>
                 <Typography variant='h6' style={{margin: 5}}>
-                  Players
+                  {messages['app.players']}
                 </Typography>
               </Skeleton>
             </Grid>

@@ -1,15 +1,19 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  Breadcrumbs,
-  Button,
-  Grid,
-  Hidden,
-  InputAdornment,
-  Link,
-  Typography,
-} from '@material-ui/core';
+
+import {useIntl} from 'react-intl';
+
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactory, useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {
+  useCoinLeaguesFactory,
+  useCoinLeaguesFactoryRoutes,
+} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
@@ -19,15 +23,11 @@ import CardGame from 'modules/CoinLeagues/components/CardGame';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
 import {makeStyles} from '@material-ui/core/styles';
 
-
 import {Empty} from 'shared/components/Empty';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {
-  HOME_ROUTE,
-  LOGIN_WALLET_ROUTE,
-} from 'shared/constants/routes';
+import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
@@ -76,16 +76,18 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { account} = useWeb3();
+  const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  
+
+  const {messages} = useIntl();
+
   useDiscord();
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
-  const [value, setValue] = React.useState(Tabs.Games);
+  const [value, setValue] = useState(Tabs.Games);
 
   const handleChange = useCallback(
     (_event: React.ChangeEvent<{}>, _newValue: string) => {
@@ -109,12 +111,11 @@ const GamesList = () => {
     endedGames,
     endedGamesAddressQuery,
     endedGamesQuery,
-    totalEndedGames
+    totalEndedGames,
   } = useCoinLeaguesFactory();
 
-  const {listGamesRoute,
-    activeGamesRoute,
-    enterGameRoute}= useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute, activeGamesRoute, enterGameRoute} =
+    useCoinLeaguesFactoryRoutes();
 
   const isLoading = gamesQuery.isLoading || gamesAddressQuery.isLoading;
   const isLoadingStarted =
@@ -289,11 +290,14 @@ const GamesList = () => {
     }
   }, [endedGames, filterGame, search]);
 
-  const onClickEnterGame = useCallback((address: string) => {
-    history.push(enterGameRoute(`${address}`));
-  }, [enterGameRoute]);
+  const onClickEnterGame = useCallback(
+    (address: string) => {
+      history.push(enterGameRoute(`${address}`));
+    },
+    [enterGameRoute],
+  );
 
-  const onClickGoGamesInProgress = useCallback((_ev: any) => {
+  const onClickGoGamesInProgress = useCallback(() => {
     history.push(activeGamesRoute);
   }, [activeGamesRoute]);
 
@@ -307,29 +311,34 @@ const GamesList = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              {messages['app.dashboard']}
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              {messages['app.games']}
             </Link>
           </Breadcrumbs>
         </Grid>
       </Grid>
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
-        <Typography variant='h5'>Coin Leagues</Typography>
+        <Typography variant='h5'>{messages['app.coinLeagues']}</Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
-        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <Box display='flex' alignItems='end' justifyContent='end'>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Games`} />
+            <ShareButton
+              shareText={messages['app.coinsLeagueGame'] as string}
+            />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={messages['app.buyMatic'] as string}
+              defaultCurrency={'MATIC'}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -345,25 +354,25 @@ const GamesList = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            Connect Wallet{' '}
+            {messages['app.connectWallet']}
           </Button>
         )}
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
 
       <Grid item xs={6}>
         <Typography variant='h6' style={{margin: 5}}>
-          Games in Progress: {gamesInProgress?.length || 0}
+          {messages['app.gamesInProgress']}: {gamesInProgress?.length || 0}
         </Typography>
       </Grid>
       <Grid item xs={6}>
         <Box display={'flex'} justifyContent={'flex-end'}>
           <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-            View More
+            {messages['app.viewMore']}
           </Button>
         </Box>
       </Grid>
@@ -385,8 +394,8 @@ const GamesList = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={'No games in progress'}
-                message={'Search created games and enter to start games'}
+                title={messages['app.noGamesInProgress'] as string}
+                message={messages['app.searchCreatedAndEnter'] as string}
               />
             </Grid>
           )}
@@ -397,9 +406,7 @@ const GamesList = () => {
           value={value}
           onChange={handleChange}
           variant='standard'
-          TabIndicatorProps={{
-            style: {display: 'none'},
-          }}
+          TabIndicatorProps={{style: {display: 'none'}}}
           aria-label='wallet tabs'>
           <CustomTab value={Tabs.Games} label={Tabs.Games} />
           <CustomTab value={Tabs.History} label={Tabs.History} />
@@ -409,7 +416,7 @@ const GamesList = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder='Search'
+          placeholder={messages['app.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -425,7 +432,7 @@ const GamesList = () => {
           fullWidth
           variant={'contained'}
           onClick={() => setOpen(true)}>
-          {'CREATE GAME'}
+          {(messages['app.createGame'] as string).toUpperCase()}
         </Button>
       </Grid>
 
@@ -435,18 +442,19 @@ const GamesList = () => {
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games ? (
                 <Typography variant='h6'>
-                  {gamesToJoin?.length || 0} Games
+                  {gamesToJoin?.length || 0} {messages['app.games']}
                 </Typography>
               ) : (
                 <Typography variant='h6'>
-                 Past {gamesEnded?.length || 0} Games of {totalEndedGames?.toString()}
+                  {messages['app.past']} {gamesEnded?.length || 0}{' '}
+                  {messages['app.gamesOf']} {totalEndedGames?.toString()}
                 </Typography>
               )}
             </Grid>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games && (
                 <Typography gutterBottom>
-                  Recently added &nbsp;
+                  {messages['app.recentlyAdded']} &nbsp;
                   {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
@@ -545,8 +553,8 @@ const GamesList = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games to join'}
-                  message={'Create games to join'}
+                  title={messages['app.noGamesJoin'] as string}
+                  message={messages['app.createGamesJoin'] as string}
                 />
               </Grid>
             )}
@@ -562,7 +570,9 @@ const GamesList = () => {
                   game={g}
                   id={g.address}
                   onClick={onClickEnterGame}
-                  btnMessage={'VIEW GAME'}
+                  btnMessage={(
+                    messages['common.viewMore'] as string
+                  ).toUpperCase()}
                 />
               </Grid>
             ))}
@@ -576,8 +586,8 @@ const GamesList = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No history'}
-                  message={'Join and play games'}
+                  title={messages['app.noHistory'] as string}
+                  message={messages['app.joinAndPlayGames'] as string}
                 />
               </Grid>
             )}

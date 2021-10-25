@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
-import { useEffect } from 'react';
-import { BITBOY_TEAM, POLL_INTERVAL_GAMES } from '../constants';
+import {useEffect} from 'react';
+import {BITBOY_TEAM, POLL_INTERVAL_GAMES} from '../constants';
 import {FilterGame} from '../constants/enums';
 import {
   GET_GAMES,
@@ -23,22 +23,21 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine) {
-    variables.accounts = accounts?.map(a=> a.toLowerCase());;
+    variables.accounts = accounts?.map((a) => a.toLowerCase());
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
   if (filter === FilterGame.BitBoy) {
-    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
+    variables.accounts = BITBOY_TEAM.map((a) => a.address.toLowerCase());
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
-
-  const query =  useQuery<{games: GameGraph[]}>(queryName, {
+  const query = useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
-    pollInterval: POLL_INTERVAL_GAMES
+    pollInterval: POLL_INTERVAL_GAMES,
   });
-  
+
   useEffect(() => {
     const refetchQuery = () => query.refetch();
     window.addEventListener('focus', refetchQuery);
@@ -60,19 +59,19 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine) {
-    variables.accounts = accounts?.map(a=> a.toLowerCase());
+    variables.accounts = accounts?.map((a) => a.toLowerCase());
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
   if (filter === FilterGame.BitBoy) {
-    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
+    variables.accounts = BITBOY_TEAM.map((a) => a.address.toLowerCase());
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
-  const query =  useQuery<{games: GameGraph[]}>(queryName, {
+  const query = useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
-    pollInterval: POLL_INTERVAL_GAMES
+    pollInterval: POLL_INTERVAL_GAMES,
   });
 
   useEffect(() => {
@@ -82,8 +81,6 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
   });
 
   return query;
-
-
 };
 
 export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
@@ -98,7 +95,7 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_DURATION;
   }
   if (filter === FilterGame.Mine && accounts) {
-    variables.accounts = accounts.map(a=> a.toLowerCase());;
+    variables.accounts = accounts.map((a) => a.toLowerCase());
     variables.player = accounts[0].toLowerCase();
     queryName = GET_GAMES_WITH_PLAYER;
   }
@@ -108,12 +105,12 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
-  const query =  useQuery<{games: GameGraph[]}>(queryName, {
+  const query = useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
-    pollInterval: POLL_INTERVAL_GAMES
+    pollInterval: POLL_INTERVAL_GAMES,
   });
-  
+
   useEffect(() => {
     const refetchQuery = () => query.refetch();
     window.addEventListener('focus', refetchQuery);

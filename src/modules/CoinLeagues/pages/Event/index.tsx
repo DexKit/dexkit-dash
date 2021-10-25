@@ -1,11 +1,14 @@
 import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {
-  Button,
   Box,
+  Button,
   Grid,
+  makeStyles,
   Paper,
   Typography,
-  makeStyles,
   useTheme,
 } from '@material-ui/core';
 import {useMobile} from 'hooks/useMobile';
@@ -14,7 +17,7 @@ import coinsLeagueBannerPath from 'assets/images/banners/coinsleague.svg';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import ChampionCard from 'modules/CoinLeagues/components/champions/ChmapionCard';
+import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import EarlyAccessCounterCard from 'modules/CoinLeagues/components/champions/EarlyAccessCounterCard';
 import MintChampionDialog from 'modules/CoinLeagues/components/champions/dialogs/MintChampionDialog';
 import {useToggler} from 'hooks/useToggler';
@@ -33,6 +36,8 @@ export function ChampionsEvent() {
   const classes = useStyles();
 
   const theme = useTheme();
+
+  const {messages} = useIntl();
 
   const isMobile = useMobile();
 
@@ -74,7 +79,7 @@ export function ChampionsEvent() {
                     <Paper style={{height: '100%'}}>
                       <Box p={4}>
                         <Typography color='textSecondary' variant='caption'>
-                          Normal Access
+                          {messages['app.normalAccess']}
                         </Typography>
                         <Typography variant='h4'>00:00:00</Typography>
                       </Box>
@@ -85,7 +90,7 @@ export function ChampionsEvent() {
                       <Box p={4}>
                         <Box>
                           <Typography color='textSecondary' variant='caption'>
-                            Your balance
+                            {messages['app.yourBalance']}
                           </Typography>
                           <Typography variant='h4'>20 KIT</Typography>
                         </Box>
@@ -100,11 +105,10 @@ export function ChampionsEvent() {
                     <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <Typography gutterBottom variant='h5'>
-                          Round 1
+                          {messages['app.round']} 1
                         </Typography>
                         <Typography variant='body1'>
-                          In this round users will be able to create 4400
-                          champions.
+                          {messages['coinLeagues.page.event.round.description']}
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -114,7 +118,7 @@ export function ChampionsEvent() {
                           startIcon={<AddIcon />}
                           variant='contained'
                           color='primary'>
-                          Create Champion
+                          {messages['app.createChampion']}
                         </Button>
                       </Grid>
                     </Grid>
@@ -129,8 +133,12 @@ export function ChampionsEvent() {
                       alignItems='center'
                       alignContent='center'
                       justifyContent='space-between'>
-                      <Typography variant='h6'>My Champions</Typography>
-                      <Button color='primary'>View more</Button>
+                      <Typography variant='h6'>
+                        {messages['app.myChampions']}
+                      </Typography>
+                      <Button color='primary'>
+                        {messages['common.viewMore']}
+                      </Button>
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={3}>

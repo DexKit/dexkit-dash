@@ -1,4 +1,7 @@
-import React, {useCallback, useState, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -7,7 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 
 interface Props {
@@ -17,6 +23,7 @@ interface Props {
 export const StartGame = (props: Props) => {
   const {address} = props;
   const {chainId} = useWeb3();
+  const {messages} = useIntl();
   const {onStartGameCallback, game, refetch, onAbortGameCallback} =
     useCoinLeagues(address);
   const [tx, setTx] = useState<string>();
@@ -92,12 +99,11 @@ export const StartGame = (props: Props) => {
 
   const abortTimestamp = useMemo(() => {
     if (game?.abort_timestamp.toNumber()) {
-      console.log("Abort timestamp");
-      console.log(game?.abort_timestamp.toNumber())
+      console.log('Abort timestamp');
+      console.log(game?.abort_timestamp.toNumber());
       return game?.abort_timestamp.toNumber() * 1000;
     }
   }, [game]);
- 
 
   const started = useMemo(() => game?.started, [game]);
   const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
@@ -123,7 +129,7 @@ export const StartGame = (props: Props) => {
           <Grid item xs={12} md={9}>
             {!gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                Waiting For Players
+                {messages['app.waitingPlayers']}
               </Typography>
             )}
             <Typography variant='h6' style={{margin: 5}}>
@@ -131,7 +137,7 @@ export const StartGame = (props: Props) => {
             </Typography>
             {gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                Everybody is here
+                {messages['app.everybodyIsHere']}
               </Typography>
             )}
           </Grid>
@@ -161,7 +167,11 @@ export const StartGame = (props: Props) => {
 
                 <Grid item xs={12} md={12}>
                   <Button
-                    disabled={!gameFull || submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
+                    disabled={
+                      !gameFull ||
+                      submitState !== SubmitState.None ||
+                      !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                    }
                     onClick={onStartGame}
                     fullWidth
                     variant={'contained'}
@@ -170,8 +180,8 @@ export const StartGame = (props: Props) => {
                     }>
                     <ButtonState
                       state={submitState}
-                      defaultMsg={'START GAME'}
-                      confirmedMsg={'Game Started'}
+                      defaultMsg={messages['app.startGame'] as string}
+                      confirmedMsg={messages['app.gameStarted'] as string}
                     />
                   </Button>
                 </Grid>

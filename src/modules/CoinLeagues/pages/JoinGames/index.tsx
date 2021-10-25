@@ -1,21 +1,22 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  Breadcrumbs,
-  Grid,
-  Hidden,
-  InputAdornment,
-  Link,
-  Typography,
-} from '@material-ui/core';
+
+import {useIntl} from 'react-intl';
+
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import {SupportedNetworkType} from 'types/blockchain';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
 
+import {SupportedNetworkType} from 'types/blockchain';
 import {Empty} from 'shared/components/Empty';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {HOME_ROUTE} from 'shared/constants/routes';
@@ -40,7 +41,11 @@ const JoinGames = () => {
   const history = useHistory();
   const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
+
+  const {messages} = useIntl();
+
   useDiscord();
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
@@ -88,45 +93,50 @@ const JoinGames = () => {
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
-       <Grid item xs={12} sm={12} xl={12}>
+      <Grid item xs={12} sm={12} xl={12}>
         <TickerTapeTV />
       </Grid>
       <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              {messages['app.dashboard']}
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              {messages['app.games']}
             </Link>
-            <Typography>Discover Games</Typography>
+            <Typography>{messages['app.discoverGames']}</Typography>
           </Breadcrumbs>
         </Grid>
       </Grid>
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
       <Grid item xs={6} sm={3} xl={3}>
-        <Typography variant='h5'>Discover Games</Typography>
+        <Typography variant='h5'>{messages['app.discoverGames']}</Typography>
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={5} xl={5}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
       <Grid item xs={6} sm={4} xl={4}>
-        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <Box display='flex' alignItems='end' justifyContent='end'>
           <Box pr={2}>
-            <SwapButton/>
+            <SwapButton />
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Games`} />
+            <ShareButton
+              shareText={messages['app.coinsLeagueGames'] as string}
+            />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={messages['app.buyMatic'] as string}
+              defaultCurrency={'MATIC'}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -140,7 +150,7 @@ const JoinGames = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder='Search'
+          placeholder={messages['app.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -149,11 +159,14 @@ const JoinGames = () => {
           fullWidth
         />
       </Grid>
+
       <Grid item xs={12}>
         <Grid container spacing={2}>
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
-              <Typography variant='h6'> Games To Join</Typography>
+              <Typography variant='h6'>
+                {messages['app.gamesToJoin']}
+              </Typography>
             </Grid>
           </Grid>
           <Grid item sm={6} justifyContent='center'>
@@ -222,7 +235,9 @@ const JoinGames = () => {
                 <Chip
                   clickable
                   label={FilterGame.BitBoy}
-                  color={filterGame === FilterGame.BitBoy ? 'primary' : 'default'}
+                  color={
+                    filterGame === FilterGame.BitBoy ? 'primary' : 'default'
+                  }
                   onClick={() => setFilterGame(FilterGame.BitBoy)}
                 />
               </Grid>
@@ -253,8 +268,8 @@ const JoinGames = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={'No games to join'}
-                message={'Ask Admin to create games to join'}
+                title={messages['app.noGamesJoin'] as string}
+                message={messages['app.askAdminCreateGamesJoin'] as string}
               />
             </Grid>
           )}

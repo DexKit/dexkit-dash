@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -28,12 +30,13 @@ interface Props {
 
 function SimpleCardEndGame(props: Props): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Grid container>
         <Button className={classes.button} fullWidth onClick={props.onClick}>
-          ENDGAME
+          {messages['app.endGame']}
         </Button>
       </Grid>
     </Container>

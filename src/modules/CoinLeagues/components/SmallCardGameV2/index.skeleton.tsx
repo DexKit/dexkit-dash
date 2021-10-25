@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -10,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -53,6 +56,7 @@ function CardTimer(props: {time: number}) {
 
 function SmallCardGameSkeleton(): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -83,7 +87,9 @@ function SmallCardGameSkeleton(): JSX.Element {
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.prizePool']}:&nbsp;
+            </Typography>
             <Skeleton>
               <Typography variant='h6'>{1000} Matic</Typography>
             </Skeleton>
@@ -91,10 +97,12 @@ function SmallCardGameSkeleton(): JSX.Element {
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Game Type:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.gameType']}:&nbsp;
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
-                <Typography variant='h6'>Winner</Typography>
+                <Typography variant='h6'>{messages['app.winner']}</Typography>
               </Skeleton>
             </Typography>
           </Box>
@@ -102,7 +110,9 @@ function SmallCardGameSkeleton(): JSX.Element {
 
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Countdown:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.countdown']}:&nbsp;
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
                 <CardTimer time={1000} />
@@ -114,7 +124,7 @@ function SmallCardGameSkeleton(): JSX.Element {
       <Grid item xs={12} style={{color: '#7a8398'}}>
         <Skeleton>
           <Button className={classes.button} fullWidth>
-            {'VIEW'}
+            {messages['app.view']}
           </Button>
         </Skeleton>
       </Grid>

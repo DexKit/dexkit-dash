@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -26,7 +28,8 @@ interface Props {
 
 function CardPrize(props: Props): JSX.Element {
   const classes = useStyles();
-  const { prizePool } = props;
+  const {messages} = useIntl();
+  const {prizePool} = props;
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -37,7 +40,7 @@ function CardPrize(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Prize Pool
+            {messages['app.prizePool']}
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             {prizePool} MATIC

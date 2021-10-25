@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -58,6 +60,7 @@ function CardTimer(props: {time: number}) {
 
 function CardGameSkeleton(): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -75,12 +78,8 @@ function CardGameSkeleton(): JSX.Element {
             </Skeleton>
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={7}
-          style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
-
+        <Grid item xs={7} style={{color: '#7a8398'}}>
+          <Typography variant='h6'>{messages['app.gameTime']}:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
@@ -91,11 +90,11 @@ function CardGameSkeleton(): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Starts</Typography>
+          <Typography variant='subtitle2'>{messages['app.starts']}</Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Entries</Typography>
+          <Typography variant='subtitle2'>{messages['app.entries']}</Typography>
           <Typography variant='subtitle2'>
             <Skeleton>
               {' '}
@@ -104,14 +103,16 @@ function CardGameSkeleton(): JSX.Element {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Coins</Typography>
+          <Typography variant='subtitle2'>{messages['app.coins']}</Typography>
           <Typography variant='subtitle2'>
             {' '}
             <Skeleton>{strPad(1)} </Skeleton>
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Prize Pool</Typography>
+          <Typography variant='subtitle2'>
+            {messages['app.prizePool']}
+          </Typography>
           <Typography variant='subtitle2'>
             {' '}
             <Skeleton>{100} Matic </Skeleton>
@@ -120,7 +121,9 @@ function CardGameSkeleton(): JSX.Element {
       </Grid>
 
       <Button className={classes.button} fullWidth>
-        <Skeleton>{'ENTER THE GAME'}</Skeleton>
+        <Skeleton>
+          {(messages['app.prizePool'] as string).toUpperCase()}
+        </Skeleton>
       </Button>
     </Container>
   );

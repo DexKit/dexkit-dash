@@ -1,22 +1,20 @@
-import React, {useEffect, useCallback, useState, useMemo} from 'react';
-import {useTheme} from '@material-ui/core/styles';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {
-  Dialog,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  IconButton,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import {useTheme} from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import {DialogProps} from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import CloseIcon from '@material-ui/icons/Close';
-
-import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -26,40 +24,50 @@ import {PriceFeeds} from 'modules/CoinLeagues/constants';
 import {useWeb3} from 'hooks/useWeb3';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+
 interface Props extends DialogProps {
   title?: string;
   address: string;
   playerAddress?: string;
   coins: string[];
-  captainCoin?: string
+  captainCoin?: string;
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose,  coins, address, captainCoin, playerAddress} = props;
+  const {onClose, coins, address, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
+  const {messages} = useIntl();
   const {allFeeds, currentPrices, game} = useCoinLeagues(address);
   const {multiplier, tooltipMessage} = useMultipliers(address);
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
-    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any; isCaptain: boolean}[]
+    {
+      coin: CoinFeed;
+      feed: CoinFeedOnChain;
+      currentFeed: any;
+      isCaptain: boolean;
+    }[]
   >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
   const allCoins = useMemo(() => {
     const chain = GET_LEAGUES_CHAIN_ID(chainId);
- 
+
     if (coins && captainCoin && allFeeds && allFeeds.length) {
-  
       const coinsWithFeeds = allFeeds.filter((cf) =>
-        coins.concat(captainCoin).map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
+        coins
+          .concat(captainCoin)
+          .map((c) => c?.toLowerCase())
+          .includes(cf?.address?.toLowerCase()),
       );
       const coinsList = PriceFeeds[chain].filter((c) =>
         coinsWithFeeds
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
       );
-      return [captainCoin].concat(coins)
+      return [captainCoin]
+        .concat(coins)
         .map((c) => {
           return {
             coin: coinsList.find(
@@ -129,7 +137,9 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             <Box display='flex' pr={2}>
               <MoneySendIcon />
             </Box>
-            <Typography variant='body1'>{'Select a Coin'}</Typography>
+            <Typography variant='body1'>
+              {messages['app.selectCoin']}
+            </Typography>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
@@ -142,7 +152,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder='Search tokens'
+            placeholder={messages['app.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -150,22 +160,24 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           />
         </Box>
         {filteredCoins.length == 0 ? (
-          <Typography variant='body1'>No coins found</Typography>
+          <Typography variant='body1'>
+            {messages['app.noCoinsFound']}
+          </Typography>
         ) : (
           <List>
-            {filteredCoins.map((coin, i) => 
-                <ViewCoinListItem
-                  coin={coin.coin}
-                  feedOnchain={coin.feed}
-                  currentPrice={coin.currentFeed}
-                  started={gameStarted}
-                  key={i}
-                  isCaptain={coin.isCaptain}
-                  playerAddress={playerAddress}
-                  multipliers={multiplier}
-                  tooltipMessage={tooltipMessage}
-                />
-              )}
+            {filteredCoins.map((coin, i) => (
+              <ViewCoinListItem
+                coin={coin.coin}
+                feedOnchain={coin.feed}
+                currentPrice={coin.currentFeed}
+                started={gameStarted}
+                key={i}
+                isCaptain={coin.isCaptain}
+                playerAddress={playerAddress}
+                multipliers={multiplier}
+                tooltipMessage={tooltipMessage}
+              />
+            ))}
           </List>
         )}
       </DialogContent>

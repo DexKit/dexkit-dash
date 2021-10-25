@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -11,8 +13,8 @@ import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 
 import {useInterval} from 'hooks/utils/useInterval';
-import { CardTimer } from '../CardTimer';
-import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import {CardTimer} from '../CardTimer';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    color: 'black'
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -45,14 +47,11 @@ interface Props {
   onClick: any;
 }
 
-
 function SmallCardGameV2(props: Props): JSX.Element {
-  const {
-    game,
-    onClick,
-  } = props;
+  const {game, onClick} = props;
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const [countdown, setCountdown] = useState<number>();
   /* const value = new Intl.NumberFormat('en-US', {
@@ -62,12 +61,12 @@ function SmallCardGameV2(props: Props): JSX.Element {
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers))
+    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
   );
   const entryAmount = ethers.utils.formatEther(game.entry);
   useInterval(
     () => {
-      const time =  Number(game.duration);
+      const time = Number(game.duration);
       const startTime =
         Math.round(new Date().getTime() / 1000) - Number(game.startedAt || 0);
       setCountdown(time - startTime);
@@ -116,31 +115,37 @@ function SmallCardGameV2(props: Props): JSX.Element {
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.prizePool']}:&nbsp;
+            </Typography>
             <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography variant='h6'>
-            {game.type === 'Bull' ? 'Bull' : 'Bear'}
+              {messages['app.gameType']}:&nbsp;
+            </Typography>
+            <Typography variant='h6'>
+              {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>
 
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Countdown:&nbsp;</Typography>
+            <Typography variant='h6'>
+              {messages['app.countdown']}:&nbsp;
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}
-              {countdown && countdown < 0 && 'ENDED'}
+              {countdown && countdown < 0 && messages['app.ended']}
             </Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Button className={classes.button} fullWidth onClick={onClickEnter}>
-            {props.btnMessage || 'VIEW'}
+            {props.btnMessage || messages['app.view']}
           </Button>
         </Grid>
       </Grid>

@@ -1,13 +1,13 @@
 import {useQuery} from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { POLL_INTERVAL_GAMES } from '../constants';
-import { FilterPlayerGame} from '../constants/enums';
+import {useEffect, useState} from 'react';
+import {POLL_INTERVAL_GAMES} from '../constants';
+import {FilterPlayerGame} from '../constants/enums';
 import {
+  GET_ALL_GAMES_WITH_PLAYER,
   GET_GAMES_WITH_PLAYER,
-  GET_ALL_GAMES_WITH_PLAYER
 } from '../services/gql/games';
 import {client} from '../services/graphql';
-import { GET_STATUS_FROM_FILTER } from '../utils/time';
+import {GET_STATUS_FROM_FILTER} from '../utils/time';
 
 import {GameGraph} from '../utils/types';
 
@@ -17,15 +17,14 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   const [rowsPerPageOptions, _setRowsPerPageOptions] = useState([30, 50, 100]);
   const [skipRows, setSkipRows] = useState(0);
 
-
-  const status = GET_STATUS_FROM_FILTER(filter)
+  const status = GET_STATUS_FROM_FILTER(filter);
   const variables: any = {
     status: 'Started',
   };
   let queryName = GET_ALL_GAMES_WITH_PLAYER;
 
   if (accounts) {
-    variables.accounts = accounts.map(a=> a.toLowerCase());;
+    variables.accounts = accounts.map((a) => a.toLowerCase());
     variables.player = accounts[0].toLowerCase();
   }
   if (accounts && status) {
@@ -44,10 +43,10 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
     setSkipRows(currentPage * rows);
   };
 
-  const query =  useQuery<{games: GameGraph[]}>(queryName, {
+  const query = useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
-    pollInterval: POLL_INTERVAL_GAMES
+    pollInterval: POLL_INTERVAL_GAMES,
   });
 
   useEffect(() => {
@@ -64,6 +63,5 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  }
+  };
 };
-

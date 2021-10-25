@@ -1,8 +1,9 @@
 import React from 'react';
 
-import Chip from '@material-ui/core/Chip';
-import Box from '@material-ui/core/Box';
+import {useIntl} from 'react-intl';
 
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -22,6 +23,7 @@ import {PriceFeeds} from 'modules/CoinLeagues/constants';
 import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
 import Skeleton from '@material-ui/lab/Skeleton';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -90,16 +92,25 @@ const truncHash = (hash: string): string => {
 
 function PlayersTableSkeleton(props: Props): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
+
   const {players} = props;
+
   return (
     <>
       <TableContainer className={classes.container} component={Paper}>
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.header}>Position</TableCell>
-              <TableCell className={classes.header}>Coins</TableCell>
-              <TableCell className={classes.header}>Score</TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.position']}
+              </TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.coins']}
+              </TableCell>
+              <TableCell className={classes.header}>
+                {messages['app.score']}
+              </TableCell>
             </TableRow>
           </TableHead>
 

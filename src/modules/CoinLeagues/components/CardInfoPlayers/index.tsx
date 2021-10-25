@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -29,6 +31,7 @@ interface Props {
 
 function CardInfoPlayers(props: Props): JSX.Element {
   const classes = useStyles();
+  const {messages} = useIntl();
   const {num_players, current_players} = props;
 
   return (
@@ -45,7 +48,7 @@ function CardInfoPlayers(props: Props): JSX.Element {
               <People />
               <Typography>
                 &nbsp;
-                {`PLAYERS ${current_players} (${num_players})`}{' '}
+                {`${messages['app.players']} ${current_players} (${num_players})`}{' '}
               </Typography>
             </Box>
           </Paper>

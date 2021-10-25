@@ -1,13 +1,14 @@
 import React from 'react';
 
-import {
-  Box,
-  Table,
-  TableBody,
-  TableHead,
-  TablePagination,
-  useMediaQuery,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
@@ -32,7 +33,9 @@ const GamesTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
@@ -50,8 +53,8 @@ const GamesTable: React.FC<Props> = ({
       {!data?.length && (
         <Empty
           image={<EmptyGame />}
-          title={'No games history'}
-          message={'Start join and playing games'}
+          title={messages['app.noGamesHistory'] as string}
+          message={messages['coinLeagues.warning.joinGame'] as string}
         />
       )}
       <Box p={2} mr={7}>

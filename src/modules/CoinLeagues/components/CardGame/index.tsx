@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -13,9 +15,8 @@ import {Game, GameType} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
+import {GET_LABEL_FROM_DURATION, strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,8 +51,6 @@ interface Props {
   btnMessage?: string;
 }
 
-
-
 function CardGame(props: Props): JSX.Element {
   const {game, onClick} = props;
   const classes = useStyles();
@@ -67,15 +66,14 @@ function CardGame(props: Props): JSX.Element {
   const time = game.duration.toNumber();
   const coins = game.num_coins.toNumber();
 
+  const {messages} = useIntl();
+
   // Format number values
   const entriesIn = strPad(game.players.length || 0);
   const entriesOut = strPad(game?.num_players.toNumber() || 0);
-  const onClickEnter = useCallback(
-    (ev: any) => {
-      onClick(game.address);
-    },
-    [game.address],
-  );
+  const onClickEnter = useCallback(() => {
+    onClick(game.address);
+  }, [game.address]);
 
   useInterval(
     () => {
@@ -108,12 +106,12 @@ function CardGame(props: Props): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
+          <Typography variant='h6'>{messages['app.gameTime']}</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
+            &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
 
-          <Typography variant='h6'>&nbsp;Type:</Typography>
+          <Typography variant='h6'>&nbsp;{messages['app.type']}:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             &nbsp;{game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
           </Typography>
@@ -124,31 +122,34 @@ function CardGame(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Starts</Typography>
+          <Typography variant='subtitle2'>{messages['app.starts']}</Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>Ready </Typography>
+            <Typography variant='subtitle2'>{messages['app.ready']}</Typography>
           )}
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Entries</Typography>
+          <Typography variant='subtitle2'>{messages['app.entries']}</Typography>
           <Typography variant='subtitle2'>
             {entriesIn}/{entriesOut}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Coins</Typography>
+          <Typography variant='subtitle2'>{messages['app.coins']}</Typography>
           <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Prize Pool</Typography>
+          <Typography variant='subtitle2'>
+            {messages['app.prizePool']}
+          </Typography>
           <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || 'ENTER THE GAME'}
+        {props.btnMessage ||
+          (messages['app.enterGame'] as string).toUpperCase()}
       </Button>
     </Container>
   );

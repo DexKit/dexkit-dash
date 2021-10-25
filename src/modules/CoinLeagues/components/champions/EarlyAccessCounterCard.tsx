@@ -1,6 +1,9 @@
 import React from 'react';
 
-import {Paper, Box, useTheme, Typography, Button} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import {useTheme} from '@material-ui/core';
+import {Paper, Box, Typography, Button} from '@material-ui/core';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 
 interface EarlyAccessCounterCardProps {
@@ -13,6 +16,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
   const {elegible, onBuyCoins, tokensAmounts} = props;
 
   const theme = useTheme();
+  const {messages} = useIntl();
 
   return (
     <Paper style={{height: '100%'}} elevation={elegible ? undefined : 0}>
@@ -30,7 +34,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
                 : theme.palette.text.disabled,
             }}
             variant='caption'>
-            Early Access
+            {messages['app.earlyAccess']}
           </Typography>
           <Typography
             style={{
@@ -39,7 +43,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
                 : theme.palette.text.disabled,
             }}
             variant={elegible ? 'h4' : 'body1'}>
-            {elegible ? '00:00:00' : 'NOT ELEGIBLE'}
+            {elegible ? '00:00:00' : (messages['app.notEligible'] as string)}
           </Typography>
           {!elegible ? (
             <Typography variant='caption'>
@@ -57,7 +61,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
               color='primary'
               variant='contained'
               size='small'>
-              Buy
+              {messages['app.buy']}
             </Button>
           )}
         </Box>

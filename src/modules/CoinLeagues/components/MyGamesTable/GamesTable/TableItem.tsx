@@ -1,17 +1,17 @@
 import React, {useMemo} from 'react';
-import Box from '@material-ui/core/Box';
-import {
-  TableRow,
-  TableCell,
-  makeStyles,
-  Chip,
-  useMediaQuery,
-  Link,
-} from '@material-ui/core';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Link from '@material-ui/core/Link';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {makeStyles} from '@material-ui/core';
+
+import {Link as RouterLink} from 'react-router-dom';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {CremaTheme} from 'types/AppContextPropsType';
 
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {truncateAddress} from 'utils/text';
@@ -22,7 +22,7 @@ interface TableItemProps {
   row: any;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableCell: {
     fontSize: 16,
     padding: '12px 8px',
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
 
@@ -96,7 +97,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       if (row.earnings[0].claimed === true) {
         return (
           <Box p={2}>
-            {`Claimed ${ethers.utils.formatEther(
+            {`${messages['app.claimed']} ${ethers.utils.formatEther(
               row.earnings[0].amount,
             )} MATIC`}
           </Box>
@@ -108,7 +109,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
               color='inherit'
               component={RouterLink}
               to={enterGameRoute(row.id)}>
-              {'Not Claimed Yet.'}
+              {messages['app.notClaimedYet']}
             </Link>
           </Box>
         );
@@ -120,15 +121,15 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const createdDateFn = useMemo(() => {
     switch (row.status) {
       case 'Ended':
-        return `Ended: ${new Date(
+        return `${messages['app.ended']}: ${new Date(
           Number(row.endedAt) * 1000,
         ).toLocaleDateString()}`;
       case 'Started':
-        return `Started: ${new Date(
+        return `${messages['app.started']}: ${new Date(
           Number(row.startedAt) * 1000,
         ).toLocaleDateString()}`;
       case 'Waiting':
-        return `Created: ${new Date(
+        return `${messages['app.created']}: ${new Date(
           Number(row.createdAt) * 1000,
         ).toLocaleDateString()}`;
     }
@@ -148,7 +149,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   }, [row.status]);
 
   if (isMobile) {
-    const summaryTitle = `Game ${truncateAddress(row.id)}`;
+    const summaryTitle = `${messages['app.game']} ${truncateAddress(row.id)}`;
     const summaryValue = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -162,7 +163,6 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         title: 'Created-Started-Ended',
         value: (
           <>
-            {' '}
             <Box>{createdDateFn}</Box>
             <Box>{createdTimeFn}</Box>
           </>
@@ -170,7 +170,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'game',
-        title: 'Game',
+        title: messages['app.game'],
         value: (
           <Link
             color='inherit'
@@ -182,7 +182,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'status',
-        title: 'Status',
+        title: messages['app.status'],
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -192,7 +192,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'place',
-        title: 'Place',
+        title: messages['app.place'],
         value: (
           <Box display={'flex'} alignItems={'center'}>
             {place}
@@ -242,8 +242,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           {claimed}
         </Box>
       </TableCell>
-      <TableCell align='left' className={classes.tableCell}></TableCell>
-      <TableCell align='left' className={classes.tableCell}></TableCell>
+      <TableCell align='left' className={classes.tableCell} />
+      <TableCell align='left' className={classes.tableCell} />
     </TableRow>
   );
 };

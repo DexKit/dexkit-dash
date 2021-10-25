@@ -6,13 +6,12 @@ export enum FilterGame {
   Day = '24hrs',
   Week = 'Week',
   Mine = 'My Games',
-  BitBoy = 'BitBoy '
+  BitBoy = 'BitBoy ',
 }
 
 export enum FilterPlayerGame {
   ALL = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
-  Ended = 'Ended'
+  Ended = 'Ended',
 }
-

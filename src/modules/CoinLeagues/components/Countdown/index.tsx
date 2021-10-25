@@ -1,12 +1,14 @@
 import React, {useMemo} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import {useCountdown} from 'hooks/utils/useCountdown';
 import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import { strPad } from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,8 +31,8 @@ interface Props {
 function CardTimer(props: {time: number}) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
-  const minutes = Math.floor( (time  - (hours * 3600)) /60);
-  const seconds =  time - (hours * 3600) - (minutes * 60);
+  const minutes = Math.floor((time - hours * 3600) / 60);
+  const seconds = time - hours * 3600 - minutes * 60;
   return (
     <Grid item>
       <Typography variant='h6'>
@@ -40,14 +42,15 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
   const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.address);
+  const {messages} = useIntl();
+
   const endTime = useMemo(() => {
     if (game) {
       const time = game?.duration.toNumber();
-      return new Date(time*1000 + game?.start_timestamp.toNumber()*1000)
+      return new Date(time * 1000 + game?.start_timestamp.toNumber() * 1000);
     }
     return new Date();
   }, [game?.duration, game?.start_timestamp]);
@@ -71,7 +74,7 @@ function Countdown(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+            {messages['app.countdown']}
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <CardTimer time={count} />

@@ -1,11 +1,13 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -21,18 +23,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function CountdownSkeleton(): JSX.Element {
   const classes = useStyles();
-
-
+  const {messages} = useIntl();
 
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+            {messages['app.countdown']}
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <Skeleton>-</Skeleton>

@@ -18,11 +18,7 @@ export const getCoinLeaguesFactoryContract = async (address: string) => {
 
   const provider = new providers.Web3Provider(appProvider).getSigner();
 
-  return  new ethers.Contract(
-    address,
-    coinLeaguesFactoryAbi,
-    provider,
-  );
+  return new ethers.Contract(address, coinLeaguesFactoryAbi, provider);
 };
 const GAS_PRICE_MULTIPLIER = 2;
 export const createGame = async (address: string, params: GameParams) => {
