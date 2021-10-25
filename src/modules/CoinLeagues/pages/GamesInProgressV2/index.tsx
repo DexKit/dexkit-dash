@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {
-  useCoinLeaguesFactory,
   useCoinLeaguesFactoryRoutes,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 

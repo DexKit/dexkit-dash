@@ -67,10 +67,10 @@ const LazyImage = (props: LazyImageProps) => {
 };
 
 const DESCRIPTIONS = [
-  'Welcome to Super App DexKit. A platform oriented to productivity and ease of use: you will be able to manage all your ERC, BEP and POLY assets from any device connected to the internet.',
-  'Buy, trade or swap crypto from the platform and manage them as you prefer. DeFi allow the user to have maximum control in its finances.',
-  'Enjoy all your NFTs: As designer or enthusiast, you will be able to see all your non fungible tokens in just one place, no matter the Blockchain. ',
-  'Affiliate Program: earn passive incomes inviting your friends to use the platform. You will be provided with your unique Affiliate link to share and track your earnings from referrals.',
+  'Welcome to Coinleague, the on-chain crypto price prediction game. Test your knowledge and skills, play levels from Beginner to Grand master.',
+  'Use the buttons to swap, buy or bridge Matic to play, all from within this website.',
+  'Detailed instructions on how to play can be found in the menu on the right, join the Discord for community and help. ',
+  'CoinLeague NFT\'s with instant in game utility coming soon. Mint your Coinleague NFT to enter the NFT games room. - coming real soon! Like we mean weeks not years like those other NFT projects',
 ];
 
 interface WelcomeDialogProps extends DialogProps {}
@@ -126,29 +126,29 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
         onChangeIndex={handleChangeIndex}
         onSelectIndex={handleSelectIndex}
         onNext={handleNext}
-        interval={5000}
+        interval={20000}
         onPrevious={handlePrevious}>
         <Box>
           <LazyImage
-            src={require('assets/images/slides/welcome/trade-slide.svg')}
+            src={require('assets/images/slides/welcome/01_welcome.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
           <LazyImage
-            src={require('assets/images/slides/welcome/wallet-slide.svg')}
+            src={require('assets/images/slides/welcome/02_on_polygon.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
           <LazyImage
-            src={require('assets/images/slides/welcome/nft-slide.svg')}
+            src={require('assets/images/slides/welcome/03_how_to_play.svg')}
             className={classes.slide}
           />
         </Box>
         <Box>
           <LazyImage
-            src={require('assets/images/slides/welcome/others-slide.svg')}
+            src={require('assets/images/slides/welcome/04_NFT.svg')}
             className={classes.slide}
           />
         </Box>

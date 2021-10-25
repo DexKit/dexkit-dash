@@ -173,7 +173,7 @@ const GamesListV2 = () => {
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
-        <Typography variant='h5'>Coin Leagues</Typography>
+        <Typography variant='h5'>Coin League</Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
@@ -181,7 +181,7 @@ const GamesListV2 = () => {
             <SwapButton/>
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Games`} />
+            <ShareButton shareText={`Coin league Games`} />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />

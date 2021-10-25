@@ -10,6 +10,8 @@ import {ReactComponent as CupIcon} from 'assets/images/icons/cup.svg';
 import {ReactComponent as CoinLeagueIcon} from 'assets/images/icons/coinleague.svg';
 import {ReactComponent as GameBoyIcon} from 'assets/images/icons/gameboy.svg';
 import {ReactComponent as UserSearchIcon} from 'assets/images/icons/user-search-menu.svg';
+import {ReactComponent as QuestionIcon} from 'assets/images/icons/question.svg';
+import {ReactComponent as GameIcon} from 'assets/images/icons/game-menu.svg';
 import {MagicpenIcon} from './Icons';
 
 interface Props extends React.SVGProps<SVGSVGElement> {
@@ -43,6 +45,10 @@ export const CustomIcon = (props: Props) => {
     return <UserSearchIcon {...props} />;
   } else if (icon === 'cup') {
     return <CupIcon {...props} />;
+  }else if (icon === 'question') {
+    return <QuestionIcon {...props} />;
+  }else if (icon === 'game') {
+    return <GameIcon {...props} />;
   }
 
   return <></>;
