@@ -8,32 +8,25 @@ import {dashBoardConfigs} from './Dashboard';
 
 import {coinLeaguesConfigs} from './CoinLeagues';
 import {changelogConfigs} from './Changelog';
-import {myAppsConfigs} from './MyApps';
-import {protocolExplorerConfigs} from './ProtocolExplorer';
-import {historyConfigs} from './History';
-import {affiliateConfigs} from './Affiliate';
+
 import {initialUrl} from '../shared/constants/AppConst';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {nftWalletConfig} from './NFTWallet';
-import {wizardConfig} from './Wizard';
+
 import {onboardingConfig} from './Onboarding';
-import {kittygotchiConfig} from './Kittygotchi';
-import {profileConfig} from './Profile';
 
 const routeConfigs = [
   ...errorPagesConfigs,
   ...dashBoardConfigs,
-  ...protocolExplorerConfigs,
-  ...myAppsConfigs,
-  ...historyConfigs,
-  ...affiliateConfigs,
-  ...nftWalletConfig,
-  ...wizardConfig,
+ // ...protocolExplorerConfigs,
+ // ...myAppsConfigs,
+ // ...historyConfigs,
+ // ...affiliateConfigs,
+ // ...nftWalletConfig,
+ // ...wizardConfig,
   ...changelogConfigs,
   ...coinLeaguesConfigs,
   ...onboardingConfig,
-  ...kittygotchiConfig,
-  ...profileConfig,
+ // ...kittygotchiConfig,
+ // ...profileConfig,
 ];
 
 const routes = [

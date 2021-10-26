@@ -55,12 +55,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const classes = useStyles({themeMode});
   const sidebarClasses = classes.sidebarStandard;
-
-  const kittygotchiProfile = useProfileKittygotchi();
-
   const defaultAddress = useDefaultAccount();
 
-  const {account, chainId} = useWeb3();
+  /* const kittygotchiProfile = useProfileKittygotchi();
+
+ 
+
+  const {account, chainId} = useWeb3();*/
 
   return (
     <>
@@ -89,7 +90,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                         alignItems='center'
                         alignContent='center'
                         spacing={4}>
-                        <Grid item>
+                        {/*  <Grid item>
                           <ButtonBase
                             className={classes.avatarButton}
                             to='/profile'
@@ -106,7 +107,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                               }
                             />
                           </ButtonBase>
-                        </Grid>
+                        </Grid> */}
                         <Grid item>
                           <Typography variant='body1'>
                             {defaultAddress ? (
@@ -115,7 +116,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                               <Skeleton />
                             )}
                           </Typography>
-                          <Typography color='textSecondary' variant='body2'>
+                          {/* <Typography color='textSecondary' variant='body2'>
                             {defaultAddress ? (
                               <Link
                                 onClick={handleToggleDrawer}
@@ -126,7 +127,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             ) : (
                               <Skeleton />
                             )}
-                          </Typography>
+                          </Typography> */}
                         </Grid>
                       </Grid>
                     </Box>

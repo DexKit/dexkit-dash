@@ -286,7 +286,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <Grid item>
                     <Notifications />
                   </Grid>
-                  <Grid item>
+                 {/* <Grid item>
                     <ButtonBase
                       className={classes.avatarButton}
                       to='/profile'
@@ -300,8 +300,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                             : undefined
                         }
                       />
-                    </ButtonBase>
-                  </Grid>
+                      </ButtonBase>
+                  </Grid>*/}
                   {/* <Grid item>
                     <AppBarButton>
                       <SettingsIcon />
