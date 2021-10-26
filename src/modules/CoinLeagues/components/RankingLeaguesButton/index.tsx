@@ -24,6 +24,8 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
 import {useMobile} from 'hooks/useMobile';
 import {truncateAddress} from 'utils';
+import CopyButton from 'shared/components/CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -36,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(6),
     height: theme.spacing(6),
   },
+  paragraphMargin: {
+    marginLeft: theme.spacing(4),
+  },
 }));
 
 interface RankingButtonProps {
@@ -43,13 +48,20 @@ interface RankingButtonProps {
   address: string;
   position: number;
   src?: string;
+  count?: number;
+  joinsCount?: number;
+  winsCount?: number;
+  firstCount?: number;
+  secondCount?: number;
+  thirdCount?: number;
+  label: string;
   featured?: boolean;
 }
 
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
 
-  const {address, onClick, src, featured, position} = props;
+  const {address, onClick, src, featured, position, label, count, winsCount} = props;
 
   const toggler = useToggler();
 
@@ -86,17 +98,19 @@ export const RankingButton = (props: RankingButtonProps) => {
               </Typography>
             </Grid>
             <Grid item>
-             <Box
+              <Box
                 display='flex'
                 alignItems='center'
                 alignContent='center'
                 justifyContent='center'>
-                {src ? (
-                  <Avatar src={src} className={classes.avatar} />
+                {!!count ? (
+                  <Typography variant={'body1'}>
+                    {label} {count || 0}
+                  </Typography>
                 ) : (
-                  <Skeleton className={classes.avatar} variant='circle' />
+                  <Skeleton className={classes.avatar} variant='rect' />
                 )}
-                </Box>
+              </Box>
             </Grid>
             <Grid item>
               <Box
@@ -112,7 +126,38 @@ export const RankingButton = (props: RankingButtonProps) => {
       </ButtonBase>
       <Collapse in={toggler.show}>
         <Divider />
-        <Box p={4}></Box>
+        <Box p={4} display={'flex'}>
+         <CopyButton
+                size='small'
+                copyText={address || ''}
+                tooltip='Copied!'>
+                <FileCopy color='inherit' style={{fontSize: 16}} />
+              </CopyButton>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Wins:{' '} {props?.winsCount}
+          </Typography>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            First Place:{' '}  {props?.firstCount}
+          </Typography>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Second Place:{' '} {props?.secondCount}
+          </Typography>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Third Place:{' '} {props?.thirdCount}
+          </Typography>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Joins:{' '}  {props?.joinsCount}
+          </Typography>
+
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Wins/Joins:{' '}  {props?.joinsCount ? `${Number(((props?.winsCount || 0)/props?.joinsCount)*100).toFixed(2)} %` : '0%'}
+          </Typography>
+        </Box>
       </Collapse>
     </Paper>
   );
