@@ -44,7 +44,7 @@ export const BITBOY_TEAM = [
     label: 'Deezy',
   },
   {
-    address: '0xCfc34220DAbd0afA999Db309d9789A463E344380',
+    address: '0xaf5E3194e9E2D076D9dE7d73CaE3EA23d9278B14',
     label: 'Bitboy',
   },
 ];

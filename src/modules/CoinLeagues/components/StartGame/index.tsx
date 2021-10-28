@@ -7,7 +7,10 @@ import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 
 interface Props {
@@ -92,12 +95,9 @@ export const StartGame = (props: Props) => {
 
   const abortTimestamp = useMemo(() => {
     if (game?.abort_timestamp.toNumber()) {
-      console.log("Abort timestamp");
-      console.log(game?.abort_timestamp.toNumber())
       return game?.abort_timestamp.toNumber() * 1000;
     }
   }, [game]);
- 
 
   const started = useMemo(() => game?.started, [game]);
   const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
@@ -160,7 +160,7 @@ export const StartGame = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
-                  <Button
+                  {/*  <Button
                     disabled={!gameFull || submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
                     onClick={onStartGame}
                     fullWidth
@@ -170,10 +170,19 @@ export const StartGame = (props: Props) => {
                     }>
                     <ButtonState
                       state={submitState}
-                      defaultMsg={'START GAME'}
+                      defaultMsg={'Start Game'}
                       confirmedMsg={'Game Started'}
                     />
-                  </Button>
+                  </Button>*/}
+                  {gameFull && (
+                    <Paper>
+                      <Box display={'flex'} justifyContent={'center'} p={2}>
+                        <Typography>
+                          &nbsp; Game will auto start soon
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  )}
                 </Grid>
                 {/*canAbort && (
                   <Grid item xs={12} md={12}>
