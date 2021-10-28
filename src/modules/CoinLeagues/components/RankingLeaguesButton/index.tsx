@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   Box,
@@ -26,6 +26,7 @@ import {useMobile} from 'hooks/useMobile';
 import {truncateAddress} from 'utils';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
+import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -61,7 +62,8 @@ interface RankingButtonProps {
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
 
-  const {address, onClick, src, featured, position, label, count, winsCount} = props;
+  const {address, onClick, src, featured, position, label, count, winsCount} =
+    props;
 
   const toggler = useToggler();
 
@@ -74,6 +76,24 @@ export const RankingButton = (props: RankingButtonProps) => {
   }, []);
 
   const isMobile = useMobile();
+
+  const formattedAddress = useMemo(() => {
+    if (isMobile) {
+      const name = GET_BITBOY_NAME(address);
+      if (name) {
+        return name.label;
+      } else {
+        return truncateAddress(address);
+      }
+    } else {
+      const name = GET_BITBOY_NAME(address);
+      if (name) {
+        return name.label;
+      } else {
+        return address;
+      }
+    }
+  }, [address, isMobile]);
 
   return (
     <Paper variant='outlined'>
@@ -94,7 +114,7 @@ export const RankingButton = (props: RankingButtonProps) => {
             </Grid>
             <Grid item xs>
               <Typography align='left' variant='body1'>
-                {isMobile ? truncateAddress(address) : address}
+                {formattedAddress}
               </Typography>
             </Grid>
             <Grid item>
@@ -127,35 +147,37 @@ export const RankingButton = (props: RankingButtonProps) => {
       <Collapse in={toggler.show}>
         <Divider />
         <Box p={4} display={'flex'}>
-         <CopyButton
-                size='small'
-                copyText={address || ''}
-                tooltip='Copied!'>
-                <FileCopy color='inherit' style={{fontSize: 16}} />
-              </CopyButton>
+          <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
+            <FileCopy color='inherit' style={{fontSize: 16}} />
+          </CopyButton>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Wins:{' '} {props?.winsCount}
+            Wins: {props?.winsCount}
           </Typography>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            First Place:{' '}  {props?.firstCount}
+            First Place: {props?.firstCount}
           </Typography>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Second Place:{' '} {props?.secondCount}
+            Second Place: {props?.secondCount}
           </Typography>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Third Place:{' '} {props?.thirdCount}
+            Third Place: {props?.thirdCount}
           </Typography>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Joins:{' '}  {props?.joinsCount}
+            Joins: {props?.joinsCount}
           </Typography>
 
           <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Wins/Joins:{' '}  {props?.joinsCount ? `${Number(((props?.winsCount || 0)/props?.joinsCount)*100).toFixed(2)} %` : '0%'}
+            Wins/Joins:{' '}
+            {props?.joinsCount
+              ? `${Number(
+                  ((props?.winsCount || 0) / props?.joinsCount) * 100,
+                ).toFixed(2)} %`
+              : '0%'}
           </Typography>
         </Box>
       </Collapse>
