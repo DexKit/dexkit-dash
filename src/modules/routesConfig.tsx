@@ -99,7 +99,7 @@ const useRoutesConfig = (): NavItemProps[] => {
       type: 'group',
       children: [
         {
-          id: 'all',
+          id: 'coinleague.index',
           title: 'Coin Leagues',
           messageId: 'sidebar.coin-league',
           type: 'item',
@@ -108,7 +108,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-leagues`,
         },
         {
-          id: 'all',
+          id: 'coinleague.discover',
           title: 'Discover Games',
           messageId: 'sidebar.discover-games',
           type: 'item',
@@ -117,13 +117,22 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-leagues/discover-games`,
         },
         {
-          id: 'all',
+          id: 'coinleague.mygames',
           title: 'My Games',
           messageId: 'sidebar.my-games',
           type: 'item',
           customIcon: true,
           icon: 'user.search',
           url: `/coin-leagues/my-games`,
+        },
+        {
+          id: 'coinleague.ranking',
+          title: 'Ranking',
+          messageId: 'sidebar.ranking',
+          type: 'item',
+          customIcon: true,
+          icon: 'cup',
+          url: `/coin-leagues/ranking`,
         },
       ],
     },

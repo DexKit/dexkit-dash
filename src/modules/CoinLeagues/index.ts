@@ -45,6 +45,14 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: '/coin-leagues/ranking',
+        component: React.lazy(() => import('./pages/Ranking')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/coin-leagues/discover-games',
         component: React.lazy(() => import('./pages/JoinGames')),
       },
