@@ -1,23 +1,23 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {useWeb3} from 'hooks/useWeb3';
 
 import GridContainer from '@crema/core/GridContainer';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Grid,
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Select,
-  MenuItem,
-  InputAdornment,
-  IconButton,
-  useTheme,
-} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import {useTheme} from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
-import VerticalSwap from './VerticalSwap';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -80,6 +80,7 @@ const LimitForm: React.FC<Props> = (props) => {
   const {web3State} = useWeb3();
   const history = useHistory();
   const network = useNetwork();
+  const {messages} = useIntl();
   const [isInverted, setIsInverted] = useState(false);
 
   const [tokenFromBalance, setTokenFromBalance] =
@@ -239,25 +240,25 @@ const LimitForm: React.FC<Props> = (props) => {
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()
-            ? 'Connecting...'
-            : 'Connecting... Check Wallet'
+            ? `${messages['app.connecting']}...`
+            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
           : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+          ? `${messages['app.connect']}`
+          : `${messages['app.connect']} ${messages['app.wallet']}`}
       </Button>
     </Box>
   );
 
   if (select0.length === 0) {
-    errorMessage = 'No balances found in your wallet';
+    errorMessage = messages['app.noBalanceWallet'] as string;
   } else if (
     !tokenFromBalance ||
     !tokenFromBalance.value ||
     tokenFromBalance.value === 0
   ) {
-    errorMessage = 'No available balance for chosen token';
+    errorMessage = messages['app.noBalanceChosenToken'] as string;
   } else if (amountFrom && tokenFromBalance.value < amountFrom) {
-    errorMessage = 'Insufficient balance for chosen token';
+    errorMessage = messages['app.insufficientBalanceChoseToken'] as string;
   } else if (networkName !== network) {
     errorMessage = `Switch to ${FORMAT_NETWORK_NAME(network)} in your wallet`;
   } else if (networkName !== EthereumNetwork.ethereum) {
@@ -330,7 +331,11 @@ const LimitForm: React.FC<Props> = (props) => {
   return (
     <Box>
       <SelectTokenBalanceDialog
-        title={selectTo === 'from' ? 'You send' : 'You receive'}
+        title={
+          selectTo === 'from'
+            ? (messages['app.youSend'] as string)
+            : (messages['app.youReceive'] as string)
+        }
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
@@ -546,10 +551,10 @@ const LimitForm: React.FC<Props> = (props) => {
                     value={expirySelect}
                     onChange={handleExpirySelectChange}>
                     <MenuItem value={86400} selected={true}>
-                      Days
+                      {messages['app.days']}
                     </MenuItem>
-                    <MenuItem value={60}>Minutes</MenuItem>
-                    <MenuItem value={1}>Seconds</MenuItem>
+                    <MenuItem value={60}>{messages['app.minutes']}</MenuItem>
+                    <MenuItem value={1}>{messages['app.seconds']}</MenuItem>
                   </Select>
                 </Grid>
                 <Grid item xs={7}>
@@ -622,7 +627,8 @@ const LimitForm: React.FC<Props> = (props) => {
                   }>
                   {isNative && (
                     <Box fontSize='large' fontWeight='bold'>
-                      Convert {nativeCoinSymbol} to {wNativeCoinSymbol}
+                      {messages['app.convert']} {nativeCoinSymbol}{' '}
+                      {messages['app.to']} {wNativeCoinSymbol}
                     </Box>
                   )}
                   {!isNative && errorMessage && account ? (
@@ -633,7 +639,7 @@ const LimitForm: React.FC<Props> = (props) => {
                         <TradeIcon />
                       </Box>
                       <Box fontSize='large' fontWeight='bold'>
-                        Trade
+                        {messages['app.trade']}
                       </Box>
                     </>
                   )}

@@ -1,3 +1,7 @@
+import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Box from '@material-ui/core/Box';
 import Dialog, {DialogProps} from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -6,7 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React, {useCallback} from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {Token} from 'types/app';
 import {MyBalances} from 'types/blockchain';
@@ -33,14 +36,13 @@ export const BuySellModal = (props: Props) => {
   const {onClose} = props;
   const theme = useTheme();
   const handleClose = useCallback(() => {
-    if (onClose) {
-      onClose({}, 'escapeKeyDown');
-    }
+    if (onClose) onClose({}, 'escapeKeyDown');
   }, [onClose]);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Dialog
@@ -61,7 +63,7 @@ export const BuySellModal = (props: Props) => {
                 <BitcoinConvertWhiteIcon className={classes.icon} />
               </Box>
 
-              <Typography variant='body1'>Trade</Typography>
+              <Typography variant='body1'>{messages['app.trade']}</Typography>
             </Box>
           </Box>
           <IconButton size='small' onClick={handleClose}>

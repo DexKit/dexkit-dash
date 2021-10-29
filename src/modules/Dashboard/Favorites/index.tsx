@@ -1,13 +1,15 @@
-import {
-  Box,
-  Breadcrumbs,
-  Link,
-  Typography,
-  Grid,
-  IconButton,
-} from '@material-ui/core';
-import {useFavoriteCoinsData} from 'hooks/useFavoriteCoinsData';
 import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
+
+import {useFavoriteCoinsData} from 'hooks/useFavoriteCoinsData';
 import {Link as RouterLink} from 'react-router-dom';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,6 +22,7 @@ import {TokenListItemSkeleton} from 'shared/components/TokenListItemSkeleton';
 
 export const Favorites = () => {
   const dispatch = useDispatch();
+  const {messages} = useIntl();
 
   const {data, loading} = useFavoriteCoinsData();
 
@@ -36,9 +39,9 @@ export const Favorites = () => {
       <Box mb={2}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={'/wallet'}>
-            Wallet
+            {messages['app.wallet']}
           </Link>
-          <Link color='textSecondary'>Favorites</Link>
+          <Link color='textSecondary'>{messages['app.favorites']}</Link>
         </Breadcrumbs>
       </Box>
       <Box mb={2} display='flex' alignItems='center' alignContent='center'>
@@ -47,7 +50,7 @@ export const Favorites = () => {
             <ArrowBackIcon />
           </IconButton>
         </Box>
-        <Typography variant='h5'>Favorites</Typography>
+        <Typography variant='h5'>{messages['app.favorites']}</Typography>
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>

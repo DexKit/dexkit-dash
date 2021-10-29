@@ -5,7 +5,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
-import {Box, makeStyles, TableContainer} from '@material-ui/core';
+import {makeStyles, TableContainer} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {MyBalances} from 'types/blockchain';
 

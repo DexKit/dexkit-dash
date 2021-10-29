@@ -1,19 +1,18 @@
-import React, {useEffect, useCallback, useState} from 'react';
-import {useTheme} from '@material-ui/core/styles';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import {
-  Dialog,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  makeStyles,
-  IconButton,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import {useTheme} from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import {DialogProps, makeStyles} from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -38,6 +37,7 @@ export const SelectCoinsDialog = (props: Props) => {
   const {onSelectCoin, coins, onClose, selectTo} = props;
   const theme = useTheme();
   const classes = useStyles();
+  const {messages} = useIntl();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
@@ -76,9 +76,7 @@ export const SelectCoinsDialog = (props: Props) => {
   );
 
   const handleClose = useCallback(() => {
-    if (onClose) {
-      onClose({}, 'escapeKeyDown');
-    }
+    if (onClose) onClose({}, 'escapeKeyDown');
   }, [onClose]);
 
   return (
@@ -90,7 +88,7 @@ export const SelectCoinsDialog = (props: Props) => {
       fullScreen={fullScreen}>
       <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Select a coin</Typography>
+          <Typography variant='body1'>{messages['app.selectCoin']}</Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -101,7 +99,7 @@ export const SelectCoinsDialog = (props: Props) => {
           <TextField
             autoFocus
             id='name'
-            placeholder='Search coins'
+            placeholder={messages['app.searchCoins'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -109,7 +107,9 @@ export const SelectCoinsDialog = (props: Props) => {
           />
         </Box>
         {filteredCoins.length == 0 ? (
-          <Typography variant='body1'>No coins found</Typography>
+          <Typography variant='body1'>
+            {messages['app.noCoinsFound']}
+          </Typography>
         ) : (
           <List>
             {filteredCoins.map((coin, index: number) => (

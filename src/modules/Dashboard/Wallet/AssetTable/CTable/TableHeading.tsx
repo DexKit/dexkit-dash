@@ -1,17 +1,19 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
-import {CremaTheme} from '../../../../../types/AppContextPropsType';
 
 interface Props {
   props?: any;
 }
 
 const TableHeading: React.FC<Props> = (props) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
+  const useStyles = makeStyles((theme) => ({
     tableRowRoot: {
       color: grey[500],
     },
@@ -41,16 +43,20 @@ const TableHeading: React.FC<Props> = (props) => {
   }));
 
   const classes = useStyles(props);
+  const {messages} = useIntl();
+
   return (
     <TableRow className={classes.tableRowRoot}>
-      <TableCell className={classes.tableCellRoot}>Name</TableCell>
+      <TableCell className={classes.tableCellRoot}>
+        {messages['app.name']}
+      </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        Balance
+        {messages['app.balance']}
       </TableCell>
 
       <TableCell align='center' className={classes.tableCellRoot}>
-        Actions
+        {messages['app.actions']}
       </TableCell>
     </TableRow>
   );

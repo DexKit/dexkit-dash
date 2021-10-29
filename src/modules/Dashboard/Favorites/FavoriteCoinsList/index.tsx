@@ -1,15 +1,16 @@
 import React from 'react';
-import {Typography, Link, Box, Grid} from '@material-ui/core';
+
+import {useIntl} from 'react-intl';
+
+import {Box, Grid, Link, Typography} from '@material-ui/core';
 
 import {FavoriteCoin} from 'redux/_ui/reducers';
 
 import {CoinItemCoinGecko} from 'types/coingecko';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
-
-import {ReactComponent as EmptyGhost} from 'assets/images/state/empty-ghost.svg';
 import {FavoritesEmptyImage} from 'shared/components/Icons';
 
 interface FavoriteCoinsListProps {
@@ -22,6 +23,7 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
   favoriteCoins,
 }) => {
   const favoritesWithMarket = useFavoritesWithMarket();
+  const {messages} = useIntl();
 
   return (
     <Box>
@@ -47,13 +49,13 @@ const FavoriteCoinsList: React.FC<FavoriteCoinsListProps> = ({
               <FavoritesEmptyImage />
             </Box>
             <Typography gutterBottom variant='body1' align='center'>
-              You don't have favorites yet.
+              {messages['app.dontHaveFavorites']}
             </Typography>
             <Typography variant='body2' align='center' color='primary'>
               <Link
                 to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
                 component={RouterLink}>
-                Go to explorer
+                {messages['app.goToExplorer']}
               </Link>
             </Typography>
           </Grid>

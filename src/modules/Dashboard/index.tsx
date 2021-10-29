@@ -37,7 +37,9 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/magic/callback-social',
-        component: React.lazy(() => import('./Wallet/pages/MagicCallbackSocial')),
+        component: React.lazy(
+          () => import('./Wallet/pages/MagicCallbackSocial'),
+        ),
       },
     ],
   },
@@ -45,7 +47,9 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/magic/callback',
-        component: React.lazy(() => import('./Wallet/pages/MagicCallbackEmail')),
+        component: React.lazy(
+          () => import('./Wallet/pages/MagicCallbackEmail'),
+        ),
       },
     ],
   },
@@ -69,7 +73,9 @@ export const dashBoardConfigs = [
     routes: [
       {
         path: '/wallet/overview-collection/:networkName/:address',
-        component: React.lazy(() => import('./Wallet/pages/OverviewCollection')),
+        component: React.lazy(
+          () => import('./Wallet/pages/OverviewCollection'),
+        ),
       },
     ],
   },

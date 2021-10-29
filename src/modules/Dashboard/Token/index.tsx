@@ -1,24 +1,19 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import {
-  Link,
-  Grid,
-  Box,
-  IconButton,
-  Card,
-  Breadcrumbs,
-  Typography,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
 
-import {
-  RouteComponentProps,
-  useHistory,
-  Link as RouterLink,
-} from 'react-router-dom';
-import useFetch from 'use-http';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
+
+import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -26,10 +21,6 @@ import BuySell from './BuySell';
 
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
-import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 import HistoryTables from './HistoryTables';
@@ -59,6 +50,7 @@ type Params = {
 const TokenPage = () => {
   const history = useHistory();
   const network = useNetwork();
+  const {messages} = useIntl();
   const searchParams = new URLSearchParams(history.location.search);
 
   const networkName = useMemo(() => {
@@ -156,7 +148,7 @@ const TokenPage = () => {
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
-        shareText='Sharing token'
+        shareText={messages['app.sharingToken'] as string}
         shareUrl={shareUrl}
         onClose={toggleShare}
       />
@@ -168,10 +160,10 @@ const TokenPage = () => {
                 <Grid item xs={12}>
                   <Breadcrumbs aria-label='breadcrumb'>
                     <Link component={RouterLink} to='/wallet' color='inherit'>
-                      Wallet
+                      {messages['app.wallet']}
                     </Link>
                     <Typography variant='body2' color='inherit'>
-                      Trade
+                      {messages['app.trade']}
                     </Typography>
                   </Breadcrumbs>
                 </Grid>
@@ -183,7 +175,9 @@ const TokenPage = () => {
                       </IconButton>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h5'>Trade</Typography>
+                      <Typography variant='h5'>
+                        {messages['app.trade']}
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <IconButton onClick={handleOpenAboutDialog} size='small'>
@@ -204,7 +198,9 @@ const TokenPage = () => {
                     <RoundedIconButton onClick={toggleShare}>
                       <Share className={classes.icon} />
                     </RoundedIconButton>
-                    <Typography variant='caption'>Share</Typography>
+                    <Typography variant='caption'>
+                      {messages['app.share']}
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -232,7 +228,7 @@ const TokenPage = () => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Charts
+                        <GraphicsIcon /> {messages['app.charts']}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>

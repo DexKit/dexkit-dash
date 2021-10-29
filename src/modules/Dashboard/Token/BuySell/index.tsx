@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, Tab, Tabs} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
@@ -20,10 +20,10 @@ import {
 import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {
-  ETH_SYMBOL_URL,
   BINANCE_SYMBOL_URL,
-  MATIC_SYMBOL_URL,
+  ETH_SYMBOL_URL,
   ETHEREUM_NATIVE_COINS_BY_CHAIN,
+  MATIC_SYMBOL_URL,
 } from 'shared/constants/Coins';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {TOKENS_LIST} from 'shared/constants/tokens';
@@ -207,7 +207,14 @@ const BuySell: React.FC<Props> = ({
         setSelect0(balancesFn);
       }
     }
-  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName, disableReceive]);
+  }, [
+    balances,
+    tokensETH,
+    tokensBSC,
+    tokensMATIC,
+    networkName,
+    disableReceive,
+  ]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {

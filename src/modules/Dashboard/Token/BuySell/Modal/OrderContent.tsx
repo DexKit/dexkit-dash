@@ -1,38 +1,34 @@
 import React, {useCallback, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import styled from 'styled-components';
 import {useNetwork} from 'hooks/useNetwork';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
-import {
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
-  Typography,
-  TextField,
-  Box,
-  CircularProgress,
-  IconButton,
-  Popover,
-  Collapse,
-  Paper,
-  Chip,
-  LinearProgress,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Collapse from '@material-ui/core/Collapse';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Paper from '@material-ui/core/Paper';
+import Popover from '@material-ui/core/Popover';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
-import ErrorStep from './ErrorStep';
 import ConvertStep from './ConvertStep';
 import MarketStep from './MarketStep';
 import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
-import ProgressBar from './ProgressBar';
 import LoadingStep from './LoadingStep';
 import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
@@ -52,7 +48,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
-import { SwapQuoteResponse } from 'types/zerox';
+import {SwapQuoteResponse} from 'types/zerox';
 
 interface Props {
   isMarket: boolean;
@@ -90,7 +86,7 @@ const GasOptionsWrapper = styled.div`
 `;
 
 const GasOption = styled.div<{isSelected: boolean}>`
-  padding: 5px 0px;
+  padding: 5px 0;
   width: 90px;
   background-color: ${(props) =>
     props.isSelected ? '#ff7149' : 'transparent'};
@@ -132,6 +128,7 @@ const OrderContent: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const {messages} = useIntl();
   const networkName = useNetwork();
   const {data} = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<SwapQuoteResponse>();
@@ -357,7 +354,10 @@ const OrderContent: React.FC<Props> = (props) => {
       (validPrice === 0 ? 0 : 1 / Number(validPrice)).toString(),
     ).toFixed(6);
     displayGuaranteedPrice = parseFloat(
-      (validGuarenteedPrice === 0 ? 0 : 1 / Number(validGuarenteedPrice)).toString(),
+      (validGuarenteedPrice === 0
+        ? 0
+        : 1 / Number(validGuarenteedPrice)
+      ).toString(),
     ).toFixed(6);
     firstSymbol = tokenFrom.symbol;
     secondSymbol = tokenTo.symbol;
@@ -404,8 +404,12 @@ const OrderContent: React.FC<Props> = (props) => {
             </Box>
             <Typography variant='body1'>
               {isConvert
-                ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
-                : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
+                ? `${messages['app.convert']} ${tokenFrom.symbol} ${messages['app.to']} ${tokenTo.symbol}`
+                : `${messages['app.review']} ` +
+                  (isMarket
+                    ? `${messages['app.market']}`
+                    : `${messages['app.limit']}`) +
+                  ` ${messages['app.order']}`}
             </Typography>
           </Box>
           <Box>
@@ -435,7 +439,7 @@ const OrderContent: React.FC<Props> = (props) => {
             alignContent='center'
             justifyContent='center'>
             <Typography variant='h6' align='center'>
-              Loading your order...
+              {messages['app.loadingYourOrder']}...
             </Typography>
           </Box>
         ) : (
@@ -451,15 +455,15 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are converting{' '}
+                      {messages['app.youreConverting']}
                       {GET_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      to{' '}
+                      {messages['app.to']}
                       {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      for trading on DexKit
+                      {messages['app.forTradingOnDexKit']}
                     </Typography>
                   </>
                 )}
@@ -473,15 +477,16 @@ const OrderContent: React.FC<Props> = (props) => {
                       <EmptyWalletImage />
                     </Box>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenFrom.symbol} for trading on DexKit
+                      {messages['app.youreApproving']} {tokenFrom.symbol}{' '}
+                      {messages['app.forTradingOnDexKit']}
                     </Typography>
                   </Box>
                 )}
                 {currentStep === Steps.APPROVE_WRAPPER && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenWrapper.symbol} for trading on
-                      DexKit
+                      {messages['app.youreApproving']} {tokenWrapper.symbol}{' '}
+                      {messages['app.forTradingOnDexKit']}
                     </Typography>
                   </>
                 )}
@@ -511,7 +516,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Box>
 
                     <Typography gutterBottom variant='h5' align='center'>
-                      An error has happened
+                      {messages['app.errorHappened']}
                     </Typography>
                     <Typography align='center' variant='body1'>
                       {String(error)}
@@ -526,10 +531,10 @@ const OrderContent: React.FC<Props> = (props) => {
                     alignContent='center'
                     justifyContent='center'>
                     <Typography variant='h6' align='center'>
-                      To proceed with this request,
+                      {messages['app.toProceedWithRequest']},
                     </Typography>
                     <Typography variant='h6' align='center'>
-                      we would like to request for your approval to use{' '}
+                      {messages['app.weWouldLikeToRequestYourApprovalToUse']}{' '}
                       {tokenFrom.symbol}
                     </Typography>
                   </Box>
@@ -548,7 +553,10 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Typography>
 
                     <Typography variant='h6' align='center'>
-                      {isConvert ? 'Conversion ' : 'Order '}completed!
+                      {isConvert
+                        ? `${messages['app.conversion']}`
+                        : `${messages['app.order']} `}
+                      ${messages['app.completed']}!
                     </Typography>
                   </Box>
                 )}
@@ -564,7 +572,9 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'Convert' : 'Send'}
+                            {isConvert
+                              ? messages['app.convert']
+                              : messages['app.send']}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -583,7 +593,9 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'To' : 'Receive'}
+                            {isConvert
+                              ? messages['app.to']
+                              : messages['app.receive']}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -607,7 +619,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 className={classes.label}
                                 variant='body1'>
-                                At Price
+                                {messages['app.atPrice']}
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -636,7 +648,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 variant='body1'
                                 className={classes.label}>
-                                Estimated Fee
+                                {messages['app.estimatedFee']}
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -664,7 +676,9 @@ const OrderContent: React.FC<Props> = (props) => {
                           alignItems='center'
                           justify='space-between'>
                           <Grid item>
-                            <Typography variant='body1'>Expiry</Typography>
+                            <Typography variant='body1'>
+                              {messages['app.expiry']}
+                            </Typography>
                           </Grid>
                           <Grid item>
                             <Typography variant='body1'>
@@ -687,7 +701,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                 justifyContent='space-between'
                                 alignItems='center'>
                                 <Typography variant='body1'>
-                                  Advanced
+                                  {messages['app.advanced']}
                                 </Typography>
                                 <IconButton
                                   size='small'
@@ -708,7 +722,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                     spacing={2}>
                                     <Grid item xs={12}>
                                       <Typography>
-                                        Slippage{' '}
+                                        {messages['app.slippage']}{' '}
                                         <IconButton
                                           size='small'
                                           className={classes.textSecondary}
@@ -733,7 +747,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                         <Box padding={3}>
                                           <Typography
                                             className={classes.textSecondary}>
-                                            Guaranteed Price
+                                            {messages['app.guaranteedPrice']}
                                           </Typography>
                                           <Typography
                                             className={classes.textPrimary}
@@ -825,7 +839,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 />
               )}
 
-              {(currentStep === Steps.MARKET && quote) && (
+              {currentStep === Steps.MARKET && quote && (
                 <MarketStep
                   account={account}
                   quote={quote}

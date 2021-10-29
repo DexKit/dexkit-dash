@@ -1,17 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-} from '@material-ui/core';
+
+import {Typography} from '@material-ui/core';
 import {Steps} from 'types/app';
 import {useStyles} from './index.style';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
+
 interface Props {
   step: Steps | undefined;
   error: Error | string | undefined;

@@ -1,7 +1,9 @@
-import {Grid, Box, Typography, Button, useTheme} from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
+import {Box, Button, Grid, Typography, useTheme} from '@material-ui/core';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 interface Props {
   onReset: () => void;
@@ -10,6 +12,7 @@ interface Props {
 export const OrderFinished = (props: Props) => {
   const {onReset} = props;
   const theme = useTheme();
+  const {messages} = useIntl();
 
   return (
     <Grid container spacing={4}>
@@ -25,15 +28,15 @@ export const OrderFinished = (props: Props) => {
       </Grid>
       <Grid item xs={12}>
         <Typography align='center' variant='h5'>
-          Transaction finished
+          {messages['app.transactionFinished']}
         </Typography>
         <Typography align='center' variant='body2' color='textSecondary'>
-          Coins were successfully sent to the recipient address.
+          {messages['app.coinsSuccessSent']}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button variant='outlined' fullWidth onClick={onReset}>
-          Swap again
+          {messages['app.swapAgain']}
         </Button>
       </Grid>
     </Grid>

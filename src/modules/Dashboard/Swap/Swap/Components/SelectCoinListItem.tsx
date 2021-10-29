@@ -1,11 +1,10 @@
-import {
-  ListItem,
-  ListItemIcon,
-  Avatar,
-  ListItemText,
-  makeStyles,
-} from '@material-ui/core';
 import React, {useCallback} from 'react';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import {makeStyles} from '@material-ui/core';
 import {ChangellyCoin} from 'types/changelly';
 
 export interface Props {

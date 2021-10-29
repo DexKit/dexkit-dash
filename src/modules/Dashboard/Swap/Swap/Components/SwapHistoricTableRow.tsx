@@ -1,14 +1,14 @@
 import React, {useCallback, useState} from 'react';
 
-import {
-  TableCell,
-  TableRow,
-  Link,
-  IconButton,
-  Grid,
-  Typography,
-} from '@material-ui/core';
 import moment from 'moment';
+import {useIntl} from 'react-intl';
+
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import {ChangellyTransaction} from 'types/changelly';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
@@ -23,6 +23,7 @@ interface Props {
 export const SwapHistoricTableRow = (props: Props) => {
   const {transaction, onClick, onRemove} = props;
   const [removing, setRemoving] = useState(false);
+  const {messages} = useIntl();
 
   const handleClick = useCallback(() => {
     if (transaction) {
@@ -70,7 +71,7 @@ export const SwapHistoricTableRow = (props: Props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography align='center' variant='caption'>
-                Please, confirm
+                {messages['app.pleaseConfirm']}
               </Typography>
             </Grid>
             <Grid item>

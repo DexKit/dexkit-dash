@@ -1,7 +1,7 @@
+import React from 'react';
+
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import MyOrdersContainer from 'modules/History/MyOrdersHistory/container';
-
-import React from 'react';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 

@@ -1,19 +1,20 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import {useWeb3} from 'hooks/useWeb3';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {AppContext} from '@crema';
+import {useWeb3} from 'hooks/useWeb3';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Grid,
-  Box,
-  Button,
-  TextField,
-  Typography,
-  IconButton,
-  CircularProgress,
-  useTheme,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import {useTheme} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -81,6 +82,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const theme = useTheme();
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const network = useNetwork();
   const history = useHistory();
@@ -265,9 +267,7 @@ const MarketForm: React.FC<Props> = (props) => {
       if (e.target.value) {
         value = Number(e.target.value);
 
-        if (value < 0) {
-          value = 0;
-        }
+        if (value < 0) value = 0;
       }
       onFetch(value, 'to');
     },
@@ -312,21 +312,21 @@ const MarketForm: React.FC<Props> = (props) => {
         disabled={web3State === Web3State.Connecting}>
         {web3State === Web3State.Connecting
           ? isMobile()
-            ? 'Connecting...'
-            : 'Connecting... Check Wallet'
+            ? `${messages['app.connecting']}...`
+            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
           : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+          ? `${messages['app.connect']}`
+          : `${messages['app.connect']} ${messages['app.wallet']}`}
       </Button>
     </Box>
   );
   // disabled = true;
   if (select0.length === 0) {
-    errorMessage = 'No balances found in your wallet';
+    errorMessage = messages['app.noBalanceWallet'];
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
-    errorMessage = 'No available balance for chosen token';
+    errorMessage = messages['app.noBalanceChosenToken'];
   } else if (amountFrom && tokenBalance.value < amountFrom) {
-    errorMessage = 'Insufficient balance for chosen token';
+    errorMessage = messages['app.insufficientBalanceChoseToken'];
   } else if (networkName !== network) {
     errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
       networkName,
@@ -369,7 +369,11 @@ const MarketForm: React.FC<Props> = (props) => {
   return (
     <Box>
       <SelectTokenBalanceDialog
-        title={selectTo === 'from' ? 'You send' : 'You receive'}
+        title={
+          selectTo === 'from'
+            ? (messages['app.youSend'] as string)
+            : (messages['app.youReceive'] as string)
+        }
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={getTokens(selectTo)}
@@ -408,7 +412,7 @@ const MarketForm: React.FC<Props> = (props) => {
               <Grid item xs={5} sm={5}>
                 <SelectTokenV2
                   id={'marketSel0'}
-                  label={'Your Coins'}
+                  label={messages['app.yourCoins'] as string}
                   selected={tokenFrom}
                   disabled={disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
@@ -509,14 +513,14 @@ const MarketForm: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography style={{textDecoration: 'none'}}>
-                          Additional information
+                          {messages['app.additionalInformation']}
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Box
-                          display={'flex'}
+                          display='flex'
                           width='100%'
-                          justifyContent={'space-evenly'}>
+                          justifyContent='space-evenly'>
                           {priceQuoteTo && (
                             <Box pr={2}>
                               <p>
@@ -593,7 +597,7 @@ const MarketForm: React.FC<Props> = (props) => {
                       <>
                         <TradeIcon />
                         <Box ml={1} fontSize='large' fontWeight='bold'>
-                          Trade
+                          {messages['app.trade']}
                         </Box>
                       </>
                     )}

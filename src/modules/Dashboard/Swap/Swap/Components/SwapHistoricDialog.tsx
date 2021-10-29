@@ -1,16 +1,15 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogProps,
-  Typography,
-  DialogTitle,
-  Box,
-  Grid,
-  IconButton,
-  Button,
-  Divider,
-} from '@material-ui/core';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import {SwapHistoricTable} from './SwapHistoricTable';
 import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyTransaction} from 'types/changelly';
@@ -27,6 +26,7 @@ interface Props {
 export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
   const {clear, remove} = useSwapTransactions();
+  const {messages} = useIntl();
 
   const handleClear = useCallback(() => {
     clear();
@@ -44,7 +44,9 @@ export const SwapHistoricDialog = (props: Props) => {
           justifyContent='space-between'
           alignItems='center'
           alignContent='center'>
-          <Typography variant='inherit'>Transactions</Typography>
+          <Typography variant='inherit'>
+            {messages['app.transactions']}
+          </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -56,7 +58,7 @@ export const SwapHistoricDialog = (props: Props) => {
           <Box mb={4}>
             <Box display='flex' justifyContent='flex-end' py={4}>
               <Button onClick={handleClear} startIcon={<ClearIcon />}>
-                Clear{' '}
+                {messages['app.clear']}
               </Button>
             </Box>
             <SwapHistoricTable
@@ -67,7 +69,9 @@ export const SwapHistoricDialog = (props: Props) => {
           </Box>
         ) : (
           <Box display='flex' justifyContent='center' py={8}>
-            <Typography variant='body1'>No transactions yet</Typography>
+            <Typography variant='body1'>
+              {messages['app.noTransactionsYet']}
+            </Typography>
           </Box>
         )}
       </DialogContent>

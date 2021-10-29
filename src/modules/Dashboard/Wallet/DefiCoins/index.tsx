@@ -1,36 +1,35 @@
 import React, {useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {GridContainer} from '@crema';
-import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Grid,
-  Box,
-  Link,
-  Typography,
-  Paper,
-  makeStyles,
-  Toolbar,
-  Fade,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
+import {makeStyles} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import {blue} from '@material-ui/core/colors';
 import {CoinData} from 'types/models/Crypto';
 import {matchCoinSymbol} from 'utils/constants';
 import CoinStats from './CoinStats';
-import {Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
 
 export interface CoinProps {
   token: string;
   coinsDataProps: CoinData;
 }
+
 export interface Assets {
   address: string;
   coinsData: CoinProps[];
 }
+
 export interface CoinsProps {
   assets: Assets[] | undefined;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles(() => ({
   toolbar: {
     padding: '0 24px',
   },
@@ -54,6 +53,7 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
   }, [assets]);
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Box className='card-hover'>
@@ -67,7 +67,9 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
                 alignItems='center'
                 style={{width: '100%'}}>
                 <Box>
-                  <Typography variant='h5'>Defi Assets</Typography>
+                  <Typography variant='h5'>
+                    {messages['app.defiAssets']}
+                  </Typography>
                 </Box>
               </Box>
             </Toolbar>
@@ -99,7 +101,9 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
                     justifyContent: 'center',
                     padding: '60px 0px',
                   }}>
-                  <Typography>You don't have DEFI Assets</Typography>
+                  <Typography>
+                    {messages['app.youDontHaveDefiAssets']}
+                  </Typography>
                 </Grid>
               )}
             </GridContainer>

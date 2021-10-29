@@ -1,15 +1,16 @@
 import React, {useCallback} from 'react';
-import {Grid, Box, Typography, Button} from '@material-ui/core';
+
+import {useIntl} from 'react-intl';
+
+import {Box, Button, Typography} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
 import AssetTable from '../AssetTable';
-import DefiCoins from '../DefiCoins';
-import {useDefi} from 'hooks/useDefi';
 import {WalletEmptyImage} from 'shared/components/Icons';
 import {useTransak} from 'hooks/useTransak';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 
 type Props = {
   account: string;
@@ -27,8 +28,9 @@ export const AssetTableTab = (props: Props) => {
   //   {/* <DefiCoins {...defiBalance} /> */}
   // </Grid>
 
-  const {isBalanceVisible} = useIsBalanceVisible()
+  const {isBalanceVisible} = useIsBalanceVisible();
   const transak = useTransak({});
+  const {messages} = useIntl();
 
   const handleTransak = useCallback(() => {
     transak.init();
@@ -48,14 +50,14 @@ export const AssetTableTab = (props: Props) => {
         </Box>
         <Box mb={4}>
           <Typography align='center' variant='h5'>
-            No Assets
+            {messages['app.noAssets']}
           </Typography>
         </Box>
         <Button
           variant='outlined'
           startIcon={<MonetizationOnIcon />}
           onClick={handleTransak}>
-          Buy Crypto
+          {messages['app.buyCrypto']}
         </Button>
       </Box>
     );
@@ -64,6 +66,10 @@ export const AssetTableTab = (props: Props) => {
   return error ? (
     <ErrorView message={error.message} />
   ) : (
-    <AssetTable hideBalance={!isBalanceVisible} balances={data} loading={loading} />
+    <AssetTable
+      hideBalance={!isBalanceVisible}
+      balances={data}
+      loading={loading}
+    />
   );
 };

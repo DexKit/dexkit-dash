@@ -1,4 +1,7 @@
 import React, {useEffect} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
@@ -6,14 +9,13 @@ import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {ethers} from 'ethers';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
-import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
+import {BigNumber, fromTokenUnitAmount} from '@0x/utils';
 
 import {getERC20Contract} from 'utils/ethers';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { useNotifications } from 'hooks/useNotifications';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
-
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {useNotifications} from 'hooks/useNotifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
 interface Props {
   step: Steps | undefined;
@@ -40,14 +42,14 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
+  const {messages} = useIntl();
+
   const {getContractWrappers} = useContractWrapper();
-  const {createNotification} = useNotifications()
+  const {createNotification} = useNotifications();
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   const isApprove = async () => {
-    if (
-      tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) 
-    ) {
+    if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
       return true;
     }
 
@@ -79,11 +81,8 @@ const ApproveStep: React.FC<Props> = (props) => {
     if (step === Steps.APPROVE) {
       isApprove()
         .then((value) => {
-          if (value) {
-            onShifting(step);
-          } else {
-            onLoading(false);
-          }
+          if (value) onShifting(step);
+          else onLoading(false);
         })
         .catch((e) => onNext(false, e));
     }
@@ -125,22 +124,20 @@ const ApproveStep: React.FC<Props> = (props) => {
       );
 
       createNotification({
-          title: 'Approve',
-          body: `Approve ${tokenFrom.symbol.toUpperCase()} to Trade`,
-          timestamp: Date.now(),
-          url: getTransactionScannerUrl(
-            chainId,
-            tx.hash,
-          ),
-          urlCaption: 'View transaction',
-          type: NotificationType.TRANSACTION,
-          metadata: {
-            chainId: chainId,
-            transactionHash: tx.hash,
-            status: 'pending',
-          } as TxNotificationMetadata,
-        });
-
+        title: messages['app.approve'] as string,
+        body: `${messages['app.approve']} ${tokenFrom.symbol.toUpperCase()} ${
+          messages['app.to']
+        } ${messages['app.trade']}`,
+        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx.hash),
+        urlCaption: messages['app.viewTransaction'] as string,
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx.hash,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
 
       web3Wrapper
         .awaitTransactionSuccessAsync(tx.hash)

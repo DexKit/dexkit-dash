@@ -1,24 +1,23 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  Paper,
-  InputAdornment,
-  TextField,
-  LinearProgress,
-  Button,
-  Link,
-} from '@material-ui/core';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import useInterval from 'hooks/useInterval';
 import useIsWindowVisible from 'hooks/useIsWindowVisible';
-import {useTokenList} from 'hooks/useTokenList';
 import {useWeb3} from 'hooks/useWeb3';
-import React, {useEffect, useState, useCallback} from 'react';
 import {Changelly} from 'services/rest/changelly';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId} from 'types/blockchain';
-import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
+import {ChangellyTransaction} from 'types/changelly';
 import {useSwapTransactions} from '../../hooks';
 import {
   getChangellyStatusMessage,
@@ -43,6 +42,7 @@ export const ReviewOrder = (props: Props) => {
   const {updateStatus} = useSwapTransactions();
 
   const {chainId} = useWeb3();
+  const {messages} = useIntl();
 
   const isWindowVisible = useIsWindowVisible();
 
@@ -160,18 +160,22 @@ export const ReviewOrder = (props: Props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>You Receive</Typography>
+        <Typography variant='caption'>{messages['app.youReceived']}</Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedTo}{' '}
           {transaction?.currencyTo?.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>Receive Address</Typography>
+        <Typography variant='caption'>
+          {messages['app.receiveAddress']}
+        </Typography>
         <Typography variant='body1'>{transaction?.payoutAddress}</Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>Transaction ID</Typography>
+        <Typography variant='caption'>
+          {messages['app.transaction']} ID
+        </Typography>
         <Typography variant='h5'>
           {transaction?.id}{' '}
           <ButtonCopy
@@ -220,7 +224,7 @@ export const ReviewOrder = (props: Props) => {
             fullWidth
             variant='contained'
             color='primary'>
-            Transfer now
+            {messages['app.transferNow']}
           </Button>
         </Grid>
       ) : null}

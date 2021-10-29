@@ -1,15 +1,9 @@
 import React, {useContext} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {AppContext} from '@crema';
-import {
-  Box,
-  Avatar,
-  Fade,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
+import {Avatar, Grid, Typography} from '@material-ui/core';
 // import Revenue from 'assets/images/dashboard/auther_sales.png';
 // import SalesIcon from 'assets/images/dashboard/all_time_sales.png';
 // import Comission from 'assets/images/dashboard/commission_sale.png';
@@ -30,6 +24,7 @@ interface Props {
 const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(theme);
+  const {messages} = useIntl();
 
   return (
     <Grid
@@ -55,7 +50,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>Market Cap</Typography>
+                <Typography variant='caption'>
+                  {messages['app.marketCap']}
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.market_cap?.usd ?? '-'}
                 </Typography>
@@ -104,7 +101,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>24 Hour High</Typography>
+                <Typography variant='caption'>
+                  24 {messages['app.hourHigh']}
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.high_24h?.usd ?? '-'}
                 </Typography>
@@ -126,7 +125,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>24 Hour Low</Typography>
+                <Typography variant='caption'>
+                  24 {messages['app.hourHigh']}
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.low_24h?.usd ?? '-'}
                 </Typography>

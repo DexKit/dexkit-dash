@@ -1,10 +1,12 @@
+import React from 'react';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import React from 'react';
 import {SwapComponent} from './Swap';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
+
 const SwapLayout = () => {
   return (
     <Box pt={4}>

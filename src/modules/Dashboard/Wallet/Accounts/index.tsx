@@ -1,25 +1,18 @@
 import React, {useCallback, useContext, useState} from 'react';
-import SwipeableViews from 'react-swipeable-views';
 
-import {
-  Box,
-  Typography,
-  useMediaQuery,
-  Theme,
-  Snackbar,
-  Chip,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
+import {Theme, useMediaQuery} from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
-
-
-import {
-  Grid,
-  Tooltip,
-  Button,
-} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,18 +23,16 @@ import {Web3Wrapper} from '@0x/web3-wrapper';
 import {
   addAccounts,
   removeAccount,
-  setDefaultAccount,
   setAccountLabel,
+  setDefaultAccount,
 } from 'redux/_ui/actions';
 
 import {useWeb3} from 'hooks/useWeb3';
-
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
-
 
 import AccountListItem from './components/AccountListItem';
 import {Alert} from '@material-ui/lab';
@@ -51,8 +42,7 @@ import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circl
 import ContainedInput from 'shared/components/ContainedInput';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AppContext from '@crema/utility/AppContext';
-import { useHistory } from 'react-router-dom';
-
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -69,6 +59,7 @@ const Accounts = () => {
   const [error, setError] = useState<string>();
   const history = useHistory();
   const [copyText, setCopyText] = useState('Copy to clipboard');
+  const {messages} = useIntl();
 
   const [anchorEl, setAnchorEl] = useState<Element>();
   const [addNew, setAddNew] = useState(false);
@@ -87,7 +78,7 @@ const Accounts = () => {
     (state) => state.ui.wallet,
   );
 
-  const {web3State,  account} = useWeb3();
+  const {web3State, account} = useWeb3();
 
   const handlePaste = async () => {
     const cpy: any = await navigator.clipboard.readText();
@@ -111,16 +102,16 @@ const Accounts = () => {
   const handleAddAccount = useCallback(() => {
     if (address && Web3Wrapper.isAddress(address)) {
       dispatch(
-        addAccounts({accounts: [
-          {
-            address: address,
-            label: address,
-            networkType: SupportedNetworkType.evm    
-          },
-        ], type: SupportedNetworkType.evm    
-      }
-      
-      ),
+        addAccounts({
+          accounts: [
+            {
+              address: address,
+              label: address,
+              networkType: SupportedNetworkType.evm,
+            },
+          ],
+          type: SupportedNetworkType.evm,
+        }),
       );
 
       setAddNew(false);
@@ -137,11 +128,11 @@ const Accounts = () => {
         endIcon={<AccountBalanceWalletIcon />}>
         {web3State === Web3State.Connecting
           ? isMobile()
-            ? 'Connecting...'
-            : 'Connecting... Check Wallet'
+            ? `${messages['app.connecting']}...`
+            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
           : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+          ? `${messages['app.connect']}`
+          : `${messages['app.connectWallet']}`}
       </Button>
     </Box>
   );
@@ -162,7 +153,7 @@ const Accounts = () => {
   const titleComponent = (
     <Box display='flex' alignItems='center' mt={1}>
       <Typography variant='h5' color='textSecondary'>
-        Manage Accounts
+        {messages['app.manageAccounts']}
       </Typography>
     </Box>
   );
@@ -183,7 +174,12 @@ const Accounts = () => {
 
   const handleMakeDefault = useCallback(() => {
     if (selectedAccount) {
-      dispatch(setDefaultAccount({account: selectedAccount, type: SupportedNetworkType.evm}));
+      dispatch(
+        setDefaultAccount({
+          account: selectedAccount,
+          type: SupportedNetworkType.evm,
+        }),
+      );
     }
 
     setAnchorEl(undefined);
@@ -192,7 +188,12 @@ const Accounts = () => {
 
   const handleRemove = useCallback(() => {
     if (selectedAccount) {
-      dispatch(removeAccount({account: selectedAccount, type: SupportedNetworkType.evm}));
+      dispatch(
+        removeAccount({
+          account: selectedAccount,
+          type: SupportedNetworkType.evm,
+        }),
+      );
     }
 
     setAnchorEl(undefined);
@@ -226,7 +227,7 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          Address copied!
+          {messages['app.addressCopied']}!
         </Alert>
       </Snackbar>
     );
@@ -235,12 +236,15 @@ const Accounts = () => {
   const handleLabelChange = useCallback(
     (account: UIAccount, newLabel: string) => {
       dispatch(
-        setAccountLabel({account: {
-          address: account.address,
-          label: newLabel,
-          networkType: account.networkType
-        }, type: SupportedNetworkType.evm}
-      ));
+        setAccountLabel({
+          account: {
+            address: account.address,
+            label: newLabel,
+            networkType: account.networkType,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
 
       setIsEditing(false);
       setSelectedAccount(null);
@@ -296,7 +300,9 @@ const Accounts = () => {
   // TODO: put a confirm modal before this
   const handleRemoveMultiple = useCallback(() => {
     for (let account of selectedAccounts) {
-      dispatch(removeAccount({account: account, type:SupportedNetworkType.evm}));
+      dispatch(
+        removeAccount({account: account, type: SupportedNetworkType.evm}),
+      );
 
       let newAccounts = [...selectedAccounts];
 
@@ -323,7 +329,9 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='body1'>Add new account</Typography>
+              <Typography variant='body1'>
+                {messages['app.addNewAccount']}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid
@@ -333,11 +341,11 @@ const Accounts = () => {
                 spacing={2}>
                 <Grid item xs>
                   <ContainedInput
-                    placeholder='Address'
+                    placeholder={messages['app.address'] as string}
                     fullWidth
                     endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
-                        <Tooltip title={'Paste valid account'}>
+                        <Tooltip title={messages['app.pasteValidAccount']}>
                           <IconButton aria-label='paste' color='primary'>
                             <CallReceivedIcon />
                           </IconButton>
@@ -348,7 +356,7 @@ const Accounts = () => {
                   />
                 </Grid>
                 <Grid item>
-                  <Tooltip title={'Add valid account'}>
+                  <Tooltip title={messages['app.addValidAccount']}>
                     <SquaredIconButton
                       onClick={handleAddAccount}
                       disabled={address === '' || error !== undefined}>
@@ -369,7 +377,7 @@ const Accounts = () => {
             </Grid>
           </Grid>
         </Grid>
-      {/*  <Grid item xs={12}>
+        {/*  <Grid item xs={12}>
           <SwipeableViews>
             <Box display='flex'>
               <Box mr={2}>
@@ -389,7 +397,10 @@ const Accounts = () => {
             display='flex'
             justifyContent='space-between'
             alignItems='center'>
-            <Typography variant='body1'>{wallet[SupportedNetworkType.evm].length} Accounts</Typography>
+            <Typography variant='body1'>
+              {wallet[SupportedNetworkType.evm].length}{' '}
+              {messages['app.accounts']}
+            </Typography>
 
             {selectActive ? (
               <Box>
@@ -400,7 +411,7 @@ const Accounts = () => {
                     </SquaredIconButton>
                   </Grid>
                   <Grid item>
-                    <Tooltip title='Remove items'>
+                    <Tooltip title={messages['app.removeItems']}>
                       <SquaredIconButton
                         onClick={handleRemoveMultiple}
                         disabled={selectedAccounts.length === 0}>

@@ -1,7 +1,9 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {Token} from 'types/app';
-import {makeStyles, Button, withStyles} from '@material-ui/core';
+import {Button, makeStyles, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Logo from 'shared/components/Logo';
@@ -38,6 +40,7 @@ const SelectTokenV2: React.FC<Props> = ({
   label,
 }) => {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return selected ? (
     <StyledButton
@@ -65,7 +68,7 @@ const SelectTokenV2: React.FC<Props> = ({
       endIcon={<ExpandMoreIcon />}
       variant='outlined'
       onClick={onClick}>
-      Choose
+      {messages['app.choose']}
     </StyledButton>
   );
 };

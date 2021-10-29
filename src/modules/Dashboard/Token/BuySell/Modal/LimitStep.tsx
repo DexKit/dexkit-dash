@@ -1,4 +1,7 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
 import useZrx from 'hooks/useZrx';
@@ -7,7 +10,8 @@ import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+
 // import {useStyles} from './index.style';
 
 interface Props {
@@ -41,6 +45,7 @@ const LimitStep: React.FC<Props> = (props) => {
   const {getWeb3} = useWeb3();
   const {createOrder} = useZrx();
   const dispatch = useDispatch();
+  const {messages} = useIntl();
 
   // const classes = useStyles();
 
@@ -59,18 +64,11 @@ const LimitStep: React.FC<Props> = (props) => {
         throw new Error('Provider cannot be null');
       }
 
-      createOrder(
-        tokenFrom,
-        tokenTo,
-        amountFrom,
-        price,
-        expiry,
-        FEE_RECIPIENT,
-      )
+      createOrder(tokenFrom, tokenTo, amountFrom, price, expiry, FEE_RECIPIENT)
         .then((e) => {
           const notification: Notification = {
-            title: 'Limit Order',
-            body: 'Order Successfully placed',
+            title: messages['app.limitOrder'] as string,
+            body: messages['app.orderSuccessPlaced'] as string,
           };
           dispatch(onAddNotification([notification], NotificationType.SUCCESS));
 
@@ -87,7 +85,7 @@ const LimitStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to confirm your limit order?
+        {messages['app.wouldLikeToConfirmLimitOrder']}?
       </Typography>
       <Button
         style={{margin: 0}}
@@ -96,7 +94,7 @@ const LimitStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Confirm
+        {messages['app.confirm']}
       </Button>
     </>
   );

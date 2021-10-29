@@ -1,17 +1,17 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
-import {
-  Grid,
-  Box,
-  IconButton,
-  Tooltip,
-  Card,
-  Breadcrumbs,
-  Typography,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Chip,
-} from '@material-ui/core';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Card from '@material-ui/core/Card';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import useFetch from 'use-http';
@@ -69,7 +69,8 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
-  
+  const {messages} = useIntl();
+
   const [token, setToken] = useState<Token>();
   const priceUSD = useTokenPriceUSD(
     address,
@@ -209,10 +210,10 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               <Grid item xs={12}>
                 <Breadcrumbs aria-label='breadcrumb'>
                   <Typography variant='body2' color='textSecondary'>
-                    Wallet
+                    {messages['app.wallet']}
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
-                    Overview
+                    {messages['app.overview']}
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
                     {tokenInfo?.symbol}
@@ -234,7 +235,9 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       alignItems='center'
                       alignContent='center'>
                       <Grid item>
-                        <Typography variant='h6'>Overview</Typography>
+                        <Typography variant='h6'>
+                          {messages['app.overview']}
+                        </Typography>
                       </Grid>
                       {data?.platforms?.ethereum ? (
                         <Grid item>
@@ -353,7 +356,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography>
-                          <GraphicsIcon /> Charts
+                          <GraphicsIcon /> {messages['app.charts']}
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>

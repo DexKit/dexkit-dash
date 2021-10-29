@@ -1,6 +1,7 @@
+import React, {useMemo, useState} from 'react';
+
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TransferListContainer from 'modules/History/TransferList/container';
-import React, {useMemo, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';

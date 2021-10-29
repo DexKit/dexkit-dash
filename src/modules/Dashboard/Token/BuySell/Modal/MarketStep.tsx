@@ -1,14 +1,16 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
-import {useDispatch} from 'react-redux';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { SwapQuoteResponse } from 'types/zerox';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {SwapQuoteResponse} from 'types/zerox';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import { Token } from 'types/app';
-import { tokenAmountInUnits } from 'utils';
-import { BigNumber } from '@0x/utils';
+import {Token} from 'types/app';
+import {tokenAmountInUnits} from 'utils';
+import {BigNumber} from '@0x/utils';
 
 interface Props {
   account: string;
@@ -30,12 +32,13 @@ const MarketStep: React.FC<Props> = (props) => {
     onLoading,
     onRequestConfirmed,
     tokenFrom,
-    tokenTo
+    tokenTo,
   } = props;
 
   const {getWeb3, chainId} = useWeb3();
+  const {messages} = useIntl();
 
-  const {createNotification} = useNotifications()
+  const {createNotification} = useNotifications();
 
   const handleAction = () => {
     onLoading(true);
@@ -60,15 +63,23 @@ const MarketStep: React.FC<Props> = (props) => {
         value: quote.value,
       })
       .then((e) => {
-        const tokenFromQuantity = tokenAmountInUnits(new BigNumber(quote.sellAmount), tokenFrom.decimals);
-        const tokenToQuantity = tokenAmountInUnits(new BigNumber(quote.buyAmount), tokenTo.decimals);
+        const tokenFromQuantity = tokenAmountInUnits(
+          new BigNumber(quote.sellAmount),
+          tokenFrom.decimals,
+        );
+        const tokenToQuantity = tokenAmountInUnits(
+          new BigNumber(quote.buyAmount),
+          tokenTo.decimals,
+        );
 
         createNotification({
-          title: `Market Order`,
-          body: `Swap ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
+          title: messages['app.marketOrder'] as string,
+          body: `${
+            messages['app.swap']
+          } ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(chainId, e.transactionHash),
-          urlCaption: 'View transaction',
+          urlCaption: messages['app.viewTransaction'] as string,
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,
@@ -89,7 +100,7 @@ const MarketStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to confirm your market order?
+        {messages['app.confirmMarketOrder']}
       </Typography>
       <Button
         style={{margin: 0}}
@@ -98,7 +109,7 @@ const MarketStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Confirm
+        {messages['app.confirm']}
       </Button>
     </>
   );

@@ -1,24 +1,24 @@
-import React, {useMemo, useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {useTheme} from '@material-ui/core/styles';
 
 import {useNetwork} from 'hooks/useNetwork';
 
-import {
-  Dialog,
-  makeStyles,
-  Chip,
-  Grid,
-  Divider,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  IconButton,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import {DialogProps, makeStyles} from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -29,7 +29,7 @@ import {MyBalances} from 'types/blockchain';
 import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   content: {
     margin: 0,
     padding: 0,
@@ -54,6 +54,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
     props;
 
   const classes = useStyles();
+  const {messages} = useIntl();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
@@ -144,7 +145,9 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             <Box display='flex' pr={2}>
               <MoneySendIcon />
             </Box>
-            <Typography variant='body1'>{title || 'Select a token'}</Typography>
+            <Typography variant='body1'>
+              {title || messages['app.selectToken']}
+            </Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -157,7 +160,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder='Search tokens'
+            placeholder={messages['app.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -173,7 +176,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
                     <Chip
                       clickable
                       size='small'
-                      label='All'
+                      label={messages['app.all'] as string}
                       variant={
                         selectedNetwork === undefined ? 'default' : 'outlined'
                       }
@@ -235,7 +238,9 @@ export const SelectTokenBalanceDialog = (props: Props) => {
         ) : null}
         {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
           <Box p={4}>
-            <Typography variant='body1'>No tokens found</Typography>
+            <Typography variant='body1'>
+              {messages['app.noTokensFound']}
+            </Typography>
           </Box>
         ) : (
           <List disablePadding>

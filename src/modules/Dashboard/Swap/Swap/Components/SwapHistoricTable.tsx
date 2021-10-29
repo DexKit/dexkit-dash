@@ -1,13 +1,12 @@
-import {
-  TableHead,
-  TableContainer,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Paper,
-} from '@material-ui/core';
-import React, {useCallback} from 'react';
+import React from 'react';
+
+import TableHead from '@material-ui/core/TableHead';
+import TableContainer from '@material-ui/core/TableContainer';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 import {ChangellyTransaction} from 'types/changelly';
 import {SwapHistoricTableRow} from './SwapHistoricTableRow';
 
@@ -30,7 +29,7 @@ export const SwapHistoricTable = (props: Props) => {
             <TableCell>Receive</TableCell>
             <TableCell>Created</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

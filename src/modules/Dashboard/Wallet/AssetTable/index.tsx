@@ -1,22 +1,22 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import {
-  Chip,
-  Box,
-  Grid,
-  Typography,
-  Drawer,
-  IconButton,
-  Divider,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Badge,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Chip from '@material-ui/core/Chip';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import {useTheme} from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Badge from '@material-ui/core/Badge';
 
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -53,6 +53,8 @@ const AssetTable: React.FC<AssetTableProps> = ({
   const [filter, setFilter] = useState('all');
 
   const [search, setSearch] = useState('');
+
+  const {messages} = useIntl();
 
   const handleChange = useCallback((e) => {
     setSearch(e.target.value);
@@ -162,7 +164,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                {messages['app.network']}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -170,7 +172,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 <Grid item>
                   <Chip
                     style={{marginRight: 10}}
-                    label='All'
+                    label={messages['app.all'] as string}
                     size='small'
                     clickable
                     variant={filter === 'all' ? 'default' : 'outlined'}
@@ -212,7 +214,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
               <ContainedInput
                 value={search}
                 onChange={handleChange}
-                placeholder='Search'
+                placeholder={messages['app.search'] as string}
                 startAdornment={
                   <InputAdornment position='start'>
                     <Search />
@@ -223,19 +225,23 @@ const AssetTable: React.FC<AssetTableProps> = ({
             </Grid>
             <Grid item xs={12}>
               <FormControl variant='outlined' fullWidth>
-                <InputLabel>Order by</InputLabel>
+                <InputLabel>{messages['app.orderBy']}</InputLabel>
                 <Select
                   style={{backgroundColor: 'transparent'}}
-                  label='Order by'
+                  label={messages['app.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
                   onChange={handleOrderByChange}
                   fullWidth>
-                  <MenuItem value={TokenOrderBy.Name}>Name</MenuItem>
-                  <MenuItem value={TokenOrderBy.TokenAmount}>
-                    Token amount
+                  <MenuItem value={TokenOrderBy.Name}>
+                    {messages['app.name']}
                   </MenuItem>
-                  <MenuItem value={TokenOrderBy.UsdAmount}>USD Amount</MenuItem>
+                  <MenuItem value={TokenOrderBy.TokenAmount}>
+                    {messages['app.tokenAmount']}
+                  </MenuItem>
+                  <MenuItem value={TokenOrderBy.UsdAmount}>
+                    USD {messages['app.amount']}
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -251,7 +257,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances().length} Assets
+                {filteredBalances().length} {messages['app.assets']}
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -266,7 +272,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                         <Search />
                       </InputAdornment>
                     }
-                    placeholder='Search'
+                    placeholder={messages['app.search'] as string}
                   />
                 </Grid>
                 <Grid item>

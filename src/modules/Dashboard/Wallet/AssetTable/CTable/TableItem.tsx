@@ -1,19 +1,19 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import clsx from 'clsx';
 import {useHistory} from 'react-router-dom';
-import {
-  makeStyles,
-  Box,
-  TableCell,
-  TableRow,
-  Button,
-  Avatar,
-  Chip,
-} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 import {green, grey} from '@material-ui/core/colors';
 import PageviewIcon from '@material-ui/icons/Pageview';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
 import TokenLogo from 'shared/components/TokenLogo';
 import {MyBalances} from 'types/blockchain';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -23,7 +23,7 @@ interface TableItemProps {
 }
 
 const TableItem: React.FC<TableItemProps> = ({data}) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
+  const useStyles = makeStyles((theme) => ({
     borderBottomClass: {
       borderBottom: '0 none',
     },
@@ -71,6 +71,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
   const classes = useStyles(data);
 
   const history = useHistory();
+  const {messages} = useIntl();
 
   const account = useDefaultAccount();
 
@@ -139,7 +140,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           onClick={() => {
             history.push(getNetworkLink(data) + data.currency?.address);
           }}>
-          Trade
+          {messages['app.trade']}
         </Button>
         <Button
           variant='outlined'
@@ -151,7 +152,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
               }`,
             );
           }}>
-          History
+          {messages['app.history']}
         </Button>
       </TableCell>
     </TableRow>

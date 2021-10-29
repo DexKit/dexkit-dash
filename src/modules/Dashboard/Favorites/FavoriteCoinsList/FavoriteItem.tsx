@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+
 import {FavoriteCoin} from 'redux/_ui/reducers';
 import {CoinItemCoinGecko} from 'types/coingecko';
 import TokenListItem from 'shared/components/TokenListItem';

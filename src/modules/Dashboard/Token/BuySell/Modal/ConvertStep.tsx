@@ -1,4 +1,7 @@
 import React, {useEffect} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Button from '@material-ui/core/Button';
 import {Typography} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
@@ -13,7 +16,7 @@ import {BigNumber} from '@0x/utils';
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import { tokenAmountInUnits } from 'utils';
+import {tokenAmountInUnits} from 'utils';
 
 // get tokens ta sendo chamado 3x
 
@@ -46,13 +49,11 @@ const ConvertStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-
   const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();
+  const {messages} = useIntl();
 
-  const isConverted = () => {
-    return false;
-  };
+  const isConverted = () => false;
 
   useEffect(() => {
     if (step === Steps.CONVERT) {
@@ -104,15 +105,17 @@ const ConvertStep: React.FC<Props> = (props) => {
 
             if (txHash) {
               createNotification({
-                title: `Convert ${GET_CHAIN_NATIVE_COIN(
+                title: `${messages['app.convert']} ${GET_CHAIN_NATIVE_COIN(
                   chainId,
-                )} to W${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `Converted  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                )} ${messages['app.to']} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `${
+                  messages['app.converted']
+                }  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.to']
+                } ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: 'View transaction',
+                urlCaption: messages['app.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,
@@ -139,15 +142,17 @@ const ConvertStep: React.FC<Props> = (props) => {
             const amountToUnit = tokenAmountInUnits(amountFrom);
             if (txHash) {
               createNotification({
-                title: `Convert W${GET_CHAIN_NATIVE_COIN(
+                title: `${messages['app.convert']} W${GET_CHAIN_NATIVE_COIN(
                   chainId,
-                )} to ${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `Converted ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                )} ${messages['app.to']} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `${
+                  messages['app.converted']
+                } ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.to']
+                } ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: 'View transaction',
+                urlCaption: messages['app.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,
@@ -187,7 +192,8 @@ const ConvertStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to convert {tokenFrom.symbol} to {to}?
+        {messages['app.wouldLikeToConvert']} {tokenFrom.symbol}{' '}
+        {messages['app.to']} {to}?
       </Typography>
       <Button
         style={{margin: 0}}
@@ -196,7 +202,7 @@ const ConvertStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Convert
+        {messages['app.convert']}
       </Button>
     </>
   );

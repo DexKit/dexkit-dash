@@ -1,4 +1,7 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {
   createStyles,
   makeStyles,
@@ -10,13 +13,12 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {Link, Tooltip} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -70,6 +72,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 export const AboutDialog = () => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,7 +83,7 @@ export const AboutDialog = () => {
 
   return (
     <div>
-      <Tooltip title={'Info about this page'}>
+      <Tooltip title={messages['app.infoPage'] as string}>
         <Button
           variant='outlined'
           onClick={handleClickOpen}
@@ -93,7 +96,7 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Wallet
+          {messages['app.wallet']}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
