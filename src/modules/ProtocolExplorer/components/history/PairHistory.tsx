@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {Box, Chip, makeStyles, Typography} from '@material-ui/core';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -9,6 +12,7 @@ import AMMTradeHistory from 'modules/ProtocolExplorer/Common/AMMTradeHistory';
 import AMMPoolHistory from 'modules/ProtocolExplorer/Common/AMMPoolHistory';
 import Grid from '@material-ui/core/Grid';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
+
 type PairHistoryTablesProps = {
   networkName: EthereumNetwork;
   pair: GetTokenPairs_ethereum_dexTrades;
@@ -36,6 +40,8 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
     pair.exchange?.fullName as EXCHANGE,
   )}: ${pair.baseCurrency?.symbol?.toUpperCase()}/${pair.quoteCurrency?.symbol?.toUpperCase()}`;
 
+  const {messages} = useIntl();
+
   return (
     <Box mt={2}>
       {IS_AMM(pair?.exchange?.fullName as EXCHANGE, pair?.protocol) ? (
@@ -54,7 +60,7 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
                   <Grid container spacing={2}>
                     <Grid item>
                       <Chip
-                        label='Trade History'
+                        label={messages['app.tradeHistory'] as string}
                         clickable
                         variant={
                           historyState === HistoryStateEnum.Trade
@@ -66,7 +72,7 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
                     </Grid>
                     <Grid item>
                       <Chip
-                        label='Pool History'
+                        label={messages['app.poolHistory'] as string}
                         clickable
                         variant={
                           historyState === HistoryStateEnum.Pool

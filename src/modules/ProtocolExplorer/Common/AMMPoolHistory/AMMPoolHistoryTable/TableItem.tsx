@@ -1,20 +1,13 @@
 import React, {useMemo} from 'react';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
-import {
-  Box,
-  TableCell,
-  TableRow,
-  Chip,
-  Link,
-  makeStyles,
-  useMediaQuery,
-} from '@material-ui/core';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import {makeStyles} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-
-import {Link as RouterLink} from 'react-router-dom';
 import {MintBurn} from 'types/app';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ViewTx} from 'shared/components/ViewTx';
@@ -25,7 +18,7 @@ interface Props {
   exchange: EXCHANGE;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   borderBottomClass: {
     borderBottom: '0 none',
   },

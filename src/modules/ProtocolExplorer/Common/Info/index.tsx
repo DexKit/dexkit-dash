@@ -1,9 +1,11 @@
 import React from 'react';
-import {useChainId} from 'hooks/useChainId';
+
+import {useIntl} from 'react-intl';
+
 import {BalanceCoins} from 'types/models/Crypto';
 import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
-import {Box, Avatar, Tooltip, Fade, Link, Typography} from '@material-ui/core';
+import {Avatar, Box, Fade, Link, Tooltip, Typography} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
@@ -11,6 +13,7 @@ import LoadingInfo from './LoadingInfo';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {FavoriteButton} from 'shared/components/FavoriteButton';
+
 interface Props {
   data?: any;
   loading: boolean;
@@ -18,27 +21,33 @@ interface Props {
 }
 
 const coinInfoFactory = (propsData: any): BalanceCoins[] => {
+  const {messages} = useIntl();
+
   return [
     {
       id: 1,
-      name: 'Daily Volume',
+      name: messages['app.dailyVolume'] as string,
       // value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
       value: `$${propsData?.tradeAmountInUsd?.toFixed(0)}` ?? `$0`,
     },
     {
       id: 2,
-      name: 'Total Trades (24 hrs)',
+      name: messages['app.totalDailyTrades'] as string,
       // value: `${propsData?.totalTrades.toFixed(0)}` ?? `0`,
       value: `${propsData?.trades?.toFixed(0)}` ?? `0`,
     },
     {
       id: 3,
-      name: `Amount ${propsData?.baseCurrency?.symbol ?? '?'} (24 hrs)`,
+      name: `${messages['app.amount']} ${
+        propsData?.baseCurrency?.symbol ?? '?'
+      } (${messages['app.24Hrs']})`,
       value: propsData?.baseAmount?.toFixed(2) ?? 0,
     },
     {
       id: 4,
-      name: `Amount ${propsData?.quoteCurrency?.symbol ?? '?'} (24 hrs)`,
+      name: `${messages['app.amount']} ${
+        propsData?.quoteCurrency?.symbol ?? '?'
+      } (${messages['app.24Hrs']})`,
       value: propsData?.quoteAmount?.toFixed(2) ?? 0,
     },
   ];
@@ -47,6 +56,7 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 const Info: React.FC<Props> = (props) => {
   const {data, loading, networkName} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
 
   // const color = 'rgb(78, 228, 78)';
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
@@ -60,7 +70,8 @@ const Info: React.FC<Props> = (props) => {
             color='text.primary'
             fontSize={16}
             className={classes.textUppercase}
-            fontWeight={Fonts.BOLD}></Box>
+            fontWeight={Fonts.BOLD}
+          />
 
           <AppCard>
             {loading ? (
@@ -86,7 +97,9 @@ const Info: React.FC<Props> = (props) => {
                   </Box>
                   <Box display='flex'>
                     <Box mr={3}>
-                      <Tooltip title={'View on Explorer'} placement='top'>
+                      <Tooltip
+                        title={messages['app.viewOnExplorer']}
+                        placement='top'>
                         <a
                           href={`${ETHERSCAN_API_URL_FROM_NETWORK(
                             networkName,
@@ -100,7 +113,8 @@ const Info: React.FC<Props> = (props) => {
                               width: 34,
                               height: 34,
                             }}
-                            src='/images/etherescan.png'></Avatar>
+                            src='/images/etherescan.png'
+                          />
                         </a>
                       </Tooltip>
                     </Box>
@@ -108,7 +122,9 @@ const Info: React.FC<Props> = (props) => {
                       <Link
                         to={`/${networkName}/token/${data.baseCurrency?.address}`}
                         component={RouterLink}>
-                        <Tooltip title={'Trade Token'} placement='top'>
+                        <Tooltip
+                          title={messages['app.tradeToken']}
+                          placement='top'>
                           <Avatar
                             style={{
                               color: '#3F51B5',
@@ -157,7 +173,7 @@ const Info: React.FC<Props> = (props) => {
               </Box>
             ) : (
               <Typography component='h1' color={'primary'}>
-                No Data available for this token
+                {messages['app.noDataAvailableForToken']}
               </Typography>
             )}
           </AppCard>

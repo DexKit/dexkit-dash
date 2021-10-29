@@ -1,15 +1,12 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
-import {
-  Box,
-  CircularProgress,
-  Hidden,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Hidden from '@material-ui/core/Hidden';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
 import FilterList from 'shared/components/Filter/list';
 import ErrorView from 'modules/Common/ErrorView';
@@ -64,7 +61,7 @@ const TokenOrders: React.FC<Props> = (props) => {
               <FilterList />
               <FilterMenu />
             </Box>
-            <Tooltip title={`Last update ${seconds} s `}>
+            <Tooltip title={`${messages['app.lastUpdate']} ${seconds}s `}>
               <CircularProgress
                 size={20}
                 variant='determinate'

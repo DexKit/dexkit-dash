@@ -1,16 +1,16 @@
 import React from 'react';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+
+import {useIntl} from 'react-intl';
+
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
-import {
-  Box,
-  Fade,
-  Table,
-  TableBody,
-  TableHead,
-  TablePagination,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
@@ -39,13 +39,15 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead>
-           {!isMobile && <TableHeading type={type} exchange={exchange} />}
+            {!isMobile && <TableHeading type={type} exchange={exchange} />}
           </TableHead>
 
           <TableBody>
@@ -64,7 +66,7 @@ const TokenOrdersTable: React.FC<Props> = ({
       </Box>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          No Data available for this token
+          {messages['app.noDataAvailableForToken']}
         </Typography>
       )}
       <TablePagination

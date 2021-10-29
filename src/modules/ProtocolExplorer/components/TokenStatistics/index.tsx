@@ -1,7 +1,7 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenStatistics} from 'hooks/protocolExplorer/useTokenStatistics';
-import {Avatar, Box, Card, Fade, Grid} from '@material-ui/core';
+import {Avatar, Box, Card, Grid} from '@material-ui/core';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ErrorView from 'modules/Common/ErrorView';
 import Revenue from 'assets/images/metricsIcons/revenue.png';

@@ -1,24 +1,24 @@
 import React from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {CremaTheme} from 'types/AppContextPropsType';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
-import {
-  TableRow,
-  TableCell,
-  makeStyles,
-  Link,
-  Box,
-  Tooltip,
-} from '@material-ui/core';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import {makeStyles} from '@material-ui/core';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
 import {Link as RouterLink} from 'react-router-dom';
 import {isMobile} from 'web3modal';
 import {
-  GET_PROTOCOL_PAIR_URL,
-  GET_PROTOCOL_TOKEN_URL,
   GET_CORRECT_ADDRESS_FROM_NETWORK,
-  IS_AMM,
+  GET_PROTOCOL_PAIR_URL,
   GET_PROTOCOL_POOL_URL,
+  GET_PROTOCOL_TOKEN_URL,
+  IS_AMM,
 } from 'utils';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const {usdFormatter} = useUSDFormatter();
   const closePriceUsd = usdFormatter.format(row?.closePriceUsd || 0);
   const volumeUsd = usdFormatter.format(row?.volume24InUsd || 0);
@@ -82,7 +83,8 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
             <TokenLogo
               token0={row.baseCurrency?.address || ''}
               token1={row.quoteCurrency?.address || ''}
-              networkName={networkName}></TokenLogo>
+              networkName={networkName}
+            />
           )}
           <Link
             to={GET_PROTOCOL_PAIR_URL(
@@ -148,7 +150,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
               row?.smartContract?.address.address,
             )}
             component={RouterLink}>
-            <Tooltip title={'Pool'}>
+            <Tooltip title={messages['app.pool'] as string}>
               <PoolIcon />
             </Tooltip>
           </Link>

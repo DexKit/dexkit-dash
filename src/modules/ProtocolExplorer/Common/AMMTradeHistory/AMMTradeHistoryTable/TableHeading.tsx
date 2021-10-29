@@ -4,15 +4,13 @@ import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
-
 
 interface Props {
   props?: any;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableRowRoot: {
     color: grey[500],
   },
@@ -32,7 +30,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const TableHeading: React.FC<Props> = (props) => {
-  
   const classes = useStyles(props);
 
   return (
@@ -61,7 +58,7 @@ const TableHeading: React.FC<Props> = (props) => {
         <IntlMessages id='app.tradeAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };

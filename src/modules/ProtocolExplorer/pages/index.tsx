@@ -1,14 +1,17 @@
 import React, {
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
 } from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {
+  Link as RouterLink,
   RouteComponentProps,
   useHistory,
-  Link as RouterLink,
 } from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,24 +20,22 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import {
-  Link,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  Grid,
-  Paper,
-  Typography,
-  useTheme,
-  IconButton,
-} from '@material-ui/core';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import {useTheme} from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
-import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, ThemeMode} from 'shared/constants/AppEnums';
 
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import {AppContext} from '@crema';
@@ -83,6 +84,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const theme = useTheme();
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const {
     isFavorite,
@@ -228,10 +230,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Grid item xs={12}>
                     <Breadcrumbs aria-label='breadcrumb'>
                       <Link color='inherit' component={RouterLink} to='/wallet'>
-                        Wallet
+                        {messages['app.wallet']}
                       </Link>
                       <Typography variant='body2' color='inherit'>
-                        Explorer
+                        {messages['app.explorer']}
                       </Typography>
                     </Breadcrumbs>
                   </Grid>
@@ -368,7 +370,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography variant='body1' style={{fontWeight: 600}}>
-                        Favorites
+                        {messages['app.favorites']}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -445,7 +447,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Chart
+                        <GraphicsIcon /> {messages['app.chart']}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>{Chart}</AccordionDetails>

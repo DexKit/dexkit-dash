@@ -1,20 +1,17 @@
 import React, {useMemo} from 'react';
 
-import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
-import {
-  Box,
-  TableCell,
-  TableRow,
-  Chip,
-  Link,
-  makeStyles,
-  useMediaQuery,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import {makeStyles} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ViewTx} from 'shared/components/ViewTx';
 
@@ -24,7 +21,7 @@ interface Props {
   exchange: EXCHANGE;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   borderBottomClass: {
     borderBottom: '0 none',
   },
@@ -52,6 +49,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {usdFormatter} = useUSDFormatter();
   const tradeAmountUsd = usdFormatter.format(row.tradeAmountIsUsd || 0);
@@ -81,10 +79,10 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
 
   const paymentTypeColor = useMemo(() => {
     switch (row.side) {
-      case 'BUY': {
+      case messages['app.buy']: {
         return '#F84E4E';
       }
-      case 'SELL': {
+      case messages['app.sell']: {
         return '#00b400';
       }
       default: {
@@ -98,7 +96,11 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
     const summaryTitle = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
-        label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+        label={
+          row.side === messages['app.sell']
+            ? messages['app.buy']
+            : messages['app.sell']
+        }
       />
     );
     const summaryValue = `${row.baseAmount?.toFixed(2)} ${
@@ -111,7 +113,11 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
-            label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+            label={
+              row.side === messages['app.sell']
+                ? messages['app.buy']
+                : messages['app.sell']
+            }
           />
         ),
       },
@@ -169,7 +175,11 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
       <TableCell align='left' className={classes.tableCell}>
         <Chip
           style={{backgroundColor: paymentTypeColor, color: 'white'}}
-          label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+          label={
+            row.side === messages['app.sell']
+              ? messages['app.buy']
+              : messages['app.sell']
+          }
         />
       </TableCell>
 

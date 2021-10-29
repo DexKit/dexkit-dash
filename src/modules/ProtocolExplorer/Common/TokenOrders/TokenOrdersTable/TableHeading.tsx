@@ -3,24 +3,21 @@ import TableCell from '@material-ui/core/TableCell';
 import IntlMessages from '@crema/utility/IntlMessages';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {Fonts, EXCHANGE} from 'shared/constants/AppEnums';
-import {useIntl} from 'react-intl';
-
+import {EXCHANGE, Fonts} from 'shared/constants/AppEnums';
 
 interface TableHeadingProps {
   type: 'pair' | 'token';
   exchange: EXCHANGE;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableCellRoot: {
     color: '#8F96A7',
     borderBottom: '0 none',
     fontSize: 16,
     padding: 8,
     fontFamily: Fonts.LIGHT,
-    '&:first-child': {   
+    '&:first-child': {
       paddingLeft: 20,
     },
     '&:last-child': {
@@ -30,12 +27,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
-
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
-    <TableRow >
+    <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
         <IntlMessages id='app.timestamp' />
       </TableCell>
@@ -71,7 +66,7 @@ const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
           <IntlMessages id='app.exchange' />
         </TableCell>
       )}
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };

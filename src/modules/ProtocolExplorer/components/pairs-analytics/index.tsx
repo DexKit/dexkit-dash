@@ -1,13 +1,14 @@
+import React, {useMemo} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React, {useMemo} from 'react';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
-import {makeStyles, Box, Avatar} from '@material-ui/core';
+import {Box, makeStyles} from '@material-ui/core';
 import {ReactComponent as PresentationChartIcon} from 'assets/images/icons/presentation-chart.svg';
 import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
-import LowIcon from 'assets/images/metricsIcons/low-price.png';
-import HighIcon from 'assets/images/metricsIcons/high-price.png';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {MoneyReciveIcon, MoneySendIcon} from 'shared/components/Icons';
@@ -60,6 +61,8 @@ export const PairAnalytics = (props: Props) => {
 
   const classes = useStyles();
 
+  const {messages} = useIntl();
+
   const tradeAmountInUSD = useMemo(() => {
     return usdFormatter.format(pair?.tradeAmountInUsd || 0);
   }, [pair?.tradeAmountInUsd]);
@@ -79,7 +82,7 @@ export const PairAnalytics = (props: Props) => {
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='h6'>Pair Analytics</Typography>
+        <Typography variant='h6'> {messages['app.pairAnalytics']}</Typography>
       </Grid>
 
       <Grid item>
@@ -89,15 +92,16 @@ export const PairAnalytics = (props: Props) => {
               icon={<ChartSuccessIcon />}
               isLoading={loading}
               amount={tradeAmountInUSD}
-              caption={'Daily Volume'}
+              caption={messages['app.dailyVolume'] as string}
             />
           </Box>
+          '
           <Box className={classes.item}>
             <AnalyticsAmountCard
               icon={<GraphIcon />}
               isLoading={loading}
               amount={lastPriceInUSD}
-              caption={'Last Price'}
+              caption={messages['app.lastPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -105,7 +109,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<MoneySendIcon className={classes.icon} />}
               isLoading={loading}
               amount={maxPriceInUSD}
-              caption={'Max Price'}
+              caption={messages['app.maxPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -113,7 +117,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<MoneyReciveIcon className={classes.icon} />}
               isLoading={loading}
               amount={minPriceInUSD}
-              caption={'Min Price'}
+              caption={messages['app.minPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -121,7 +125,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<GraphIcon />}
               isLoading={loading}
               amount={loading ? '-' : pair?.trades ? String(pair?.trades) : '-'}
-              caption={'Total Trades (24h)'}
+              caption={messages['app.totalDailyTrades'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -129,7 +133,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<PresentationChartIcon />}
               isLoading={loading}
               amount={pair?.baseAmount?.toFixed(4) || '-'}
-              caption={`Amount ${pair.baseCurrency?.symbol} (24h)`}
+              caption={`${messages['app.amount']} ${pair.baseCurrency?.symbol} (${messages['app.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -137,7 +141,7 @@ export const PairAnalytics = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={pair?.quoteAmount?.toFixed(4) || '-'}
-              caption={`Amount ${pair.quoteCurrency?.symbol} (24h)`}
+              caption={`${messages['app.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.24Hrs']})`}
             />
           </Box>
         </Box>

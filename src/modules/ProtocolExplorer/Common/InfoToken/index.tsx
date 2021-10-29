@@ -1,10 +1,12 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {BalanceCoins} from 'types/models/Crypto';
 import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
-import {Box, Avatar, Tooltip, Fade, Link} from '@material-ui/core';
+import {Avatar, Box, Fade, Link, Tooltip} from '@material-ui/core';
 import AppCard from '@crema/core/AppCard';
-import TokenLogo from 'shared/components/TokenLogo';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
 import LoadingInfo from './LoadingInfo';
@@ -13,6 +15,7 @@ import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {Token} from 'types/app';
 import {FavoriteButton} from 'shared/components/FavoriteButton';
+
 interface Props {
   data?: any;
   token: Token;
@@ -26,23 +29,26 @@ const coinInfoFactory = (
   token: Token,
 ): BalanceCoins[] => {
   const dailyUSD = usdFormatter.format(propsData?.volume24Usd || 0);
+  const {messages} = useIntl();
 
   return [
     {
       id: 1,
-      name: 'Daily Volume',
+      name: messages['app.dailyVolume'] as string,
       // value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
       value: dailyUSD,
     },
     {
       id: 2,
-      name: 'Total Trades (24 hrs)',
+      name: messages['app.totalDailyTrades'] as string,
       // value: `${propsData?.totalTrades.toFixed(0)}` ?? `0`,
       value: `${propsData?.trades?.toFixed(0)}` ?? `0`,
     },
     {
       id: 3,
-      name: `Amount ${token?.symbol.toUpperCase() ?? '?'} (24 hrs)`,
+      name: `${messages['app.amount']} ${token?.symbol.toUpperCase() ?? '?'} (${
+        messages['app.24Hrs']
+      })`,
       value: propsData?.volume24Base?.toFixed(2) ?? 0,
     },
   ];
@@ -52,6 +58,8 @@ const InfoToken: React.FC<Props> = (props) => {
   const {data, loading, networkName, token} = props;
   const {usdFormatter} = useUSDFormatter();
   const classes = useStyles();
+  const {messages} = useIntl();
+
   // const color = 'rgb(78, 228, 78)';
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
 
@@ -64,7 +72,8 @@ const InfoToken: React.FC<Props> = (props) => {
             color='text.primary'
             fontSize={16}
             className={classes.textUppercase}
-            fontWeight={Fonts.BOLD}></Box>
+            fontWeight={Fonts.BOLD}
+          />
 
           <AppCard>
             {loading ? (
@@ -91,7 +100,9 @@ const InfoToken: React.FC<Props> = (props) => {
                     </Box>
                     <Box display='flex'>
                       <Box mr={3}>
-                        <Tooltip title={'View on Explorer'} placement='top'>
+                        <Tooltip
+                          title={messages['app.viewOnExplorer'] as string}
+                          placement='top'>
                           <a
                             href={`${ETHERSCAN_API_URL_FROM_NETWORK(
                               networkName,
@@ -105,7 +116,8 @@ const InfoToken: React.FC<Props> = (props) => {
                                 width: 34,
                                 height: 34,
                               }}
-                              src='/images/etherescan.png'></Avatar>
+                              src='/images/etherescan.png'
+                            />
                           </a>
                         </Tooltip>
                       </Box>
@@ -113,7 +125,9 @@ const InfoToken: React.FC<Props> = (props) => {
                         <Link
                           to={`/${networkName}/token/${token?.address}`}
                           component={RouterLink}>
-                          <Tooltip title={'Trade Token'} placement='top'>
+                          <Tooltip
+                            title={messages['app.tradeToken'] as string}
+                            placement='top'>
                             <Avatar
                               style={{
                                 color: '#3F51B5',
@@ -131,7 +145,7 @@ const InfoToken: React.FC<Props> = (props) => {
 
                   <Box display='flex' alignItems='center'>
                     <Tooltip
-                      title={"Real Time Price from all DEX's"}
+                      title={messages['app.realTimeFromDEX'] as string}
                       placement='top'>
                       <Box
                         component='h3'
