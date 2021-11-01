@@ -202,7 +202,7 @@ function PlayersTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * 100 * p.multiplier,
             );
-          const score = scores.reduce((p, c) => p + c) / scores.length;
+          const score = scores.reduce((p, c) => p + c);
           return {
             ...d,
             account: d.hash,
