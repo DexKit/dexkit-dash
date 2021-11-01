@@ -6,6 +6,8 @@ import {useQuery} from 'react-query';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
+import {Token} from 'types/app';
+
 import {
   GET_KITTY_CHAIN_ID,
   KITTYGOTCHI,
@@ -29,6 +31,8 @@ import {
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
+import {DEXKIT} from 'shared/constants/tokens';
+import {getTokenBalances} from 'services/multicall';
 
 const GET_MY_KITTYGOTCHIES = gql`
   query QueryKittygotchies($owner: String!) {
@@ -438,3 +442,58 @@ export const useKittygotchiOnChain = () => {
 
   return {get, data, error, isLoading};
 };
+
+export const useKitHolding = (account?: string) => {
+  const {chainId} = useWeb3();
+
+  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+
+  const query = useQuery(
+    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
+    async () => {
+      if (account && chainId) {
+        const DexKit = DEXKIT[ChainId.Matic];
+
+        const tokens = [DexKit];
+
+        const [, tb] = await getTokenBalances(
+          (tokens.filter((t) => t !== undefined) as Token[]).map(
+            (t) => t.address,
+          ),
+          account,
+          networkProvider,
+        );
+
+        return (tokens.filter((t) => t !== undefined) as Token[]).map((t) => {
+          return {
+            token: t,
+            balance: tb[t.address],
+          };
+        });
+      }
+    },
+  );
+
+  return query;
+};
+
+export function useKittygotchiStyleEdit() {
+  const [cloth, setCloth] = useState<string>();
+  const [eyes, setEyes] = useState<string>();
+  const [mouth, setMouth] = useState<string>();
+  const [nose, setNose] = useState<string>();
+  const [ears, setEars] = useState<string>();
+
+  return {
+    cloth,
+    eyes,
+    mouth,
+    nose,
+    ears,
+    setCloth,
+    setEyes,
+    setMouth,
+    setNose,
+    setEars,
+  };
+}

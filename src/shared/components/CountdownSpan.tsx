@@ -6,13 +6,21 @@ interface CountdownSpanProps {
   toDate: moment.Moment;
 }
 
+const EMPTY_COUNTER = '00:00:00';
+
 export function CountdownSpan(props: CountdownSpanProps) {
   const {toDate} = props;
 
-  const [text, setText] = useState<string>('00:00:00');
+  const [text, setText] = useState<string>(EMPTY_COUNTER);
 
   useEffect(() => {
     let interval = setInterval(() => {
+      if (moment().utc().isAfter(toDate)) {
+        setText(EMPTY_COUNTER);
+        clearInterval(interval);
+        return;
+      }
+
       setText(countDownText(moment().utc(), toDate));
     }, 1000);
 

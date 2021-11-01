@@ -613,3 +613,15 @@ export const PriceFeeds = {
   [ChainId.Mumbai]: MumbaiPriceFeeds,
   [ChainId.Matic]: MaticPriceFeeds,
 };
+
+export const CHAMPIONS = {
+  [ChainId.Matic]: undefined,
+  [ChainId.Mumbai]: '0x05b93425E4b44c9042Ed97b7A332aB1575EbD25d',
+};
+
+export const FIRST_ROUND_DATE = 1635773630;
+export const SECOND_ROUND_DATE = 1635168059;
+export const THIRD_ROUND_DATE = 1635168059;
+
+export const EARLY_ACCESS_KIT_AMOUNT = 125;
+export const EARLY_ACCESS_BITT_AMOUNT = 1000;
