@@ -615,6 +615,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 account={account}
                 winner={winner}
@@ -641,6 +642,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 finished={finished}
                 hideCoins={!started}
