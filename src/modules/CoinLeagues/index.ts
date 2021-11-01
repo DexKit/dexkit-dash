@@ -4,6 +4,14 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: '/coin-leagues/champions/event',
+        component: React.lazy(() => import('./pages/Event/index')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/coin-leagues/room/:room/game/:address',
         component: React.lazy(() => import('./pages/GameEnter')),
       },
@@ -25,7 +33,7 @@ export const coinLeaguesConfigs = [
       },
     ],
   },
- 
+
   {
     routes: [
       {
@@ -47,6 +55,14 @@ export const coinLeaguesConfigs = [
       {
         path: '/coin-leagues/nft-room',
         component: React.lazy(() => import('./pages/NFTRoom')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/coin-leagues/ranking',
+        component: React.lazy(() => import('./pages/Ranking')),
       },
     ],
   },

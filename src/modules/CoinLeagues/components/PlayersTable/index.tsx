@@ -78,6 +78,7 @@ interface IRow {
 interface Props {
   data?: IRow[];
   address: string;
+  type?: GameType;
   winner?: any;
   account?: string;
   finished?: boolean;
@@ -117,7 +118,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins} = props;
+  const {address, account, finished, hideCoins, type} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
@@ -163,13 +164,32 @@ function PlayersTable(props: Props): JSX.Element {
             const startFeed = allFeeds?.find(
               (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
             );
+            let multiplier  = 1;
+    
+            if(d.captainCoin && d.captainCoin.toLowerCase() === f.feed.toLowerCase()){
+              const end = (f.price.toNumber() / USD_POWER_NUMBER)
+              const start = startFeed
+              ? ((startFeed?.start_price.toNumber() /
+                  USD_POWER_NUMBER) as number)
+              : 0;
+              if(end && start){
+                const scr = (end - start) / end ;
+                if(scr > 0  && type === GameType.Winner){
+                  multiplier = 1.2;
+                }
+                if(scr < 0  && type === GameType.Loser){
+                  multiplier = 1.2;
+                }
+              }
+            }
+
             return {
               endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
               startPrice: startFeed
                 ? ((startFeed?.start_price.toNumber() /
                     USD_POWER_NUMBER) as number)
                 : 0,
-              multiplier: 1,
+              multiplier: multiplier,
             };
           });
 
@@ -179,7 +199,7 @@ function PlayersTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * 100 * p.multiplier,
             );
-          const score = scores.reduce((p, c) => p + c) / scores.length;
+          const score = scores.reduce((p, c) => p + c) ;
           return {
             ...d,
             account: d.hash,

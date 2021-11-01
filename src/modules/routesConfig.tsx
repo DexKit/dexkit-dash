@@ -126,6 +126,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-leagues/my-games`,
         },
         {
+          id: 'coinleague.ranking',
+          title: 'Ranking',
+          messageId: 'sidebar.ranking',
+          type: 'item',
+          customIcon: true,
+          icon: 'cup',
+          url: `/coin-leagues/ranking`,
+        },
+        {
           id: 'nftroom',
           title: 'NFT Room',
           messageId: 'sidebar.app.nft-room',
@@ -142,7 +151,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'question',
           url: `/coin-leagues/how-to-play`,
-        },
+        }    
       ],
     },
     /*{

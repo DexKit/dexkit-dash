@@ -23,4 +23,14 @@ export interface GameGraph{
     
 }
 
+export interface PlayerGraph{
+    id: string,
+    totalWinnedGames: string,
+    totalJoinedGames: string,
+    totalFirstWinnedGames: string,
+    totalThirdWinnedGames: string,
+    totalSecondWinnedGames: string,
+ 
+}
+
 

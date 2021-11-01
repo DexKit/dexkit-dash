@@ -23,7 +23,7 @@ import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import ChartAccordion from 'modules/CoinLeagues/components/ChartAccordion';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
-import {ethers} from 'ethers';
+import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
@@ -67,6 +67,7 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
+import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -105,6 +106,8 @@ function GameEnter(props: Props) {
   } = props;
   const history = useHistory();
   const {account, chainId} = useWeb3();
+  const {balance} = useActiveChainBalance();
+
   const {createNotification} = useNotifications();
   const isMobile = useMobile();
 
@@ -269,6 +272,20 @@ function GameEnter(props: Props) {
     () => game?.num_players.toNumber(),
     [game?.num_players],
   );
+
+  const sufficientFunds = useMemo(
+    () => {
+
+      if(game?.amount_to_play && balance){
+        const amount = BigNumber.from(game?.amount_to_play);
+        const balBN = BigNumber.from(balance);
+        return balBN.gt(amount);
+      }
+      return false 
+    }, [game?.amount_to_play]);
+
+
+
   const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
@@ -556,7 +573,7 @@ function GameEnter(props: Props) {
                       <Button
                         disabled={
                           !isDisabled ||
-                          submitState !== SubmitState.None ||
+                          submitState !== SubmitState.None || !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
                         }
                         size={'large'}
@@ -569,7 +586,7 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={'ENTER GAME'}
+                          defaultMsg={sufficientFunds ? 'ENTER GAME' : 'Insufficient Matic Funds' }
                           confirmedMsg={'You Entered Game'}
                         />
                       </Button>
@@ -598,6 +615,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 account={account}
                 winner={winner}
@@ -624,6 +642,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 finished={finished}
                 hideCoins={!started}

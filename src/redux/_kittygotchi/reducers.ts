@@ -8,7 +8,7 @@ import {
 
 export interface KittygotchiState {
   readonly kitties: Kittygotchi[];
-  readonly kittygotchiByChain: {[key: string]: Kittygotchi};
+  readonly kittygotchiByChain?: {[key: string]: Kittygotchi};
   readonly kittygotchi?: Kittygotchi;
 }
 
@@ -24,6 +24,10 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setDefaultKittyOnChain, (state, action) => {
       let param = action.payload;
+
+      if (!state.kittygotchiByChain) {
+        state.kittygotchiByChain = {};
+      }
 
       state.kittygotchiByChain[`${param.address}-${param.chainId}`] =
         param.kittygotchi;

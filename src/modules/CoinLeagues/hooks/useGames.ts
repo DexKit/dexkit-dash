@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
 import { useEffect } from 'react';
-import { BITBOY_TEAM } from '../constants';
+import { BITBOY_TEAM, POLL_INTERVAL_GAMES } from '../constants';
 import {FilterGame} from '../constants/enums';
 import {
   GET_GAMES,
@@ -36,6 +36,7 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
   const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
+    pollInterval: POLL_INTERVAL_GAMES
   });
   
   useEffect(() => {
@@ -71,6 +72,7 @@ export const useWaitingGames = (filter?: FilterGame, accounts?: string[]) => {
   const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
+    pollInterval: POLL_INTERVAL_GAMES
   });
 
   useEffect(() => {
@@ -102,13 +104,14 @@ export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
   }
 
   if (filter === FilterGame.BitBoy) {
-    variables.accounts = BITBOY_TEAM.map(a => a.address.toLowerCase() );
+    variables.accounts = [BITBOY_TEAM[3]];
     queryName = GET_GAMES_WITH_PLAYER;
   }
 
   const query =  useQuery<{games: GameGraph[]}>(queryName, {
     variables,
     client: client,
+    pollInterval: POLL_INTERVAL_GAMES
   });
   
   useEffect(() => {
