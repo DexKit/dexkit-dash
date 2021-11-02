@@ -9,6 +9,8 @@ export enum FilterGame {
   BitBoy = 'BitBoy '
 }
 
+
+
 export enum FilterPlayerGame {
   ALL = 'All',
   Waiting = 'Waiting',
@@ -16,3 +18,21 @@ export enum FilterPlayerGame {
   Ended = 'Ended'
 }
 
+export enum GameOrderBy{
+  HighLevel = 'HighLevel',
+  LowLevel = 'LowLevel',
+  MostFull = 'MostFull',
+  MostEmpty = 'MostEmpty',
+  HighDuration = 'HighDuration',
+  LowerDuration = 'LowerDuration',
+  MoreCoins = 'MoreCoins',
+  LessCoins = 'LessCoins',
+}
+
+export enum GameOrderByLabels{
+  Level = 'Level',
+  Duration = 'Duration',
+  NumberOfCoins = 'Number of Coins',
+  PlayersNeeded = 'Players Needed'
+
+}

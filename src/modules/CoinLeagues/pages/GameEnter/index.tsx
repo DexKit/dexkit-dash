@@ -362,7 +362,7 @@ function GameEnter(props: Props) {
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
             Game #{truncateAddress(address)}
-            <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
+            <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
