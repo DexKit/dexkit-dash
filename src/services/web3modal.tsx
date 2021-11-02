@@ -20,7 +20,7 @@ const providerOptions = {
 };
 
 const web3Modal = new Web3Modal({
-  network: 'mainnet', // optional
+  // network: 'mainnet', // optional
   theme: 'dark',
   cacheProvider: true, // optional
   providerOptions, // required
