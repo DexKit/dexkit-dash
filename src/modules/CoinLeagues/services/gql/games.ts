@@ -1,8 +1,8 @@
 import { gql } from "graphql-tag";
 
 export const GET_GAMES = gql`
-  query GetGames($status: String!) {
-    games(first: 100, where: {status: $status}) {
+  query GetGames($status: String!, $orderBy: String, $orderDirection: String) {
+    games(first: 100, where: {status: $status}, orderBy: $orderBy, orderDirection: $orderDirection) {
         id
         type
         duration
@@ -18,8 +18,8 @@ export const GET_GAMES = gql`
 `;
 
 export const GET_GAMES_WITH_PLAYER = gql`
-  query GetGamesPlayer($status: String!, $accounts: [String], $player: String) {
-    games(first: 100, where: {status: $status, playerAddresses_contains: $accounts}) {
+  query GetGamesPlayer($status: String!, $accounts: [String], $player: String, $orderBy: String, $orderDirection: String) {
+    games(first: 100, where: {status: $status, playerAddresses_contains: $accounts}, orderBy: $orderBy, orderDirection: $orderDirection) {
         id
         type
         duration
@@ -64,8 +64,8 @@ export const GET_ALL_GAMES_WITH_PLAYER = gql`
 
 
 export const GET_GAMES_WITH_DURATION = gql`
-  query GetGamesWithDuration($status: String!, $duration: Int) {
-    games(first: 100, where: {status: $status, duration: $duration}) {
+  query GetGamesWithDuration($status: String!, $duration: Int, $orderBy: String, $orderDirection: String ) {
+    games(first: 100, where: {status: $status, duration: $duration }, orderBy: $orderBy, orderDirection: $orderDirection) {
         id
         type
         duration

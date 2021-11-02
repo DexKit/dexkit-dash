@@ -362,7 +362,7 @@ function GameEnter(props: Props) {
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
             Game #{truncateAddress(address)}
-            <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
+            <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
@@ -615,6 +615,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 account={account}
                 winner={winner}
@@ -641,6 +642,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 finished={finished}
                 hideCoins={!started}
