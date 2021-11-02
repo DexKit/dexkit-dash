@@ -284,6 +284,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         );
 
         if (currentFeedPrice?.length) {
+          
           const prices = currentFeedPrice.map((f) => {
             const startFeed = allFeeds?.find(
               (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
@@ -316,7 +317,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                 ? ((startFeed?.start_price.toNumber() /
                     USD_POWER_NUMBER) as number)
                 : 0,
-              multiplier: 1,
+              multiplier,
             };
           });
 
@@ -326,7 +327,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores.reduce((p, c) => p + c) ;
+          const score = scores.reduce((p, c) => p + c);
           return {
             ...d,
             account: d.hash,
