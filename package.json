@@ -87,6 +87,7 @@
     "match-sorter": "^4.1.0",
     "material-table": "^1.69.2",
     "material-ui-popup-state": "^1.5.4",
+    "merge-images": "^2.0.0",
     "moment": "^2.27.0",
     "namor": "^2.0.2",
     "notistack": "^0.9.17",

@@ -108,7 +108,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-leagues`,
         },
         {
-          id: 'coinleague.discover',
+          id: 'discover-games',
           title: 'Discover Games',
           messageId: 'sidebar.discover-games',
           type: 'item',
@@ -117,7 +117,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-leagues/discover-games`,
         },
         {
-          id: 'coinleague.mygames',
+          id: 'my-games',
           title: 'My Games',
           messageId: 'sidebar.my-games',
           type: 'item',

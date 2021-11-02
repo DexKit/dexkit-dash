@@ -259,6 +259,17 @@ export const KittygotchiIndex = () => {
               </Alert>
             </Grid>
           )}
+
+          {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+            <Grid item xs={12}>
+              <Alert severity='info'>
+                <Typography variant='body2'>
+                  Connect to <strong>Polygon(MATIC)</strong> network to create a
+                  Kittygotchi
+                </Typography>
+              </Alert>
+            </Grid>
+          ) : null}
           <Grid item xs={12}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
@@ -266,6 +277,12 @@ export const KittygotchiIndex = () => {
                   <Box display='flex' justifyContent='space-between' p={4}>
                     <Box></Box>
                     <Button
+                      disabled={
+                        !(
+                          chainId === ChainId.Matic ||
+                          chainId === ChainId.Mumbai
+                        )
+                      }
                       startIcon={<GavelIcon />}
                       variant='contained'
                       color='primary'
