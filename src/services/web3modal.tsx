@@ -8,7 +8,12 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import {Web3Wrapper} from '@0x/web3-wrapper';
 import {ethers, providers} from 'ethers';
-import { getCachedMagicNetwork, getMagic, isMagicProvider, setIsMagicProvider } from './magic';
+import {
+  getCachedMagicNetwork,
+  getMagic,
+  isMagicProvider,
+  setIsMagicProvider,
+} from './magic';
 
 const providerOptions = {
   walletconnect: {
@@ -16,7 +21,7 @@ const providerOptions = {
     options: {
       infuraId: process.env.REACT_APP_INFURA_ID,
     },
-  }
+  },
 };
 
 const web3Modal = new Web3Modal({
@@ -25,7 +30,6 @@ const web3Modal = new Web3Modal({
   cacheProvider: true, // optional
   providerOptions, // required
 });
-
 
 let web3: null | Web3;
 let provider: any;
@@ -39,9 +43,9 @@ const connectWeb3 = async () => {
 const closeWeb3 = async () => {
   provider = null;
   web3 = null;
-  if(isMagicProvider()){
-    const network =  getCachedMagicNetwork();
-    const magic = getMagic(network)
+  if (isMagicProvider()) {
+    const network = getCachedMagicNetwork();
+    const magic = getMagic(network);
     await magic.user.logout();
     setIsMagicProvider('false');
   }
@@ -58,9 +62,9 @@ const getProvider = (): any | undefined => {
 };
 
 const setProvider = (_provider: any) => {
-    provider = _provider;
-    setWeb3();
-    setEthers();
+  provider = _provider;
+  setWeb3();
+  setEthers();
 };
 
 const getWeb3 = () => {
@@ -80,10 +84,7 @@ const setWeb3 = () => {
     return;
   }
   web3 = new Web3(provider);
-
 };
-
-
 
 let ethersjs: null | ethers.providers.Web3Provider;
 const getEthers = () => {
@@ -101,7 +102,6 @@ const setEthers = () => {
     return;
   }
   ethersjs = new providers.Web3Provider(getProvider());
-
 };
 
 const web3Transaction = (
@@ -133,7 +133,7 @@ const getBalance = (account: string) => {
 };
 
 const getBalanceWithProvider = (account: string, pr: any) => {
- return new Web3(provider).eth.getBalance(account);
+  return new Web3(provider).eth.getBalance(account);
 };
 
 export {

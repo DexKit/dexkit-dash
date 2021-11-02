@@ -3,10 +3,15 @@ import {_TypedDataEncoder} from '@ethersproject/hash';
 import {getMulticallFromProvider} from 'services/multicall';
 import {getEthers} from 'services/web3modal';
 import {ChainId} from 'types/blockchain';
-import {GAS_PRICE_MULTIPLIER, METADATA_KITTY_ENDPOINT} from '../constants';
+import {
+  GAS_PRICE_MULTIPLIER,
+  MUMBAI_METADATA_KITTY_ENDPOINT,
+  POLYGON_METADATA_KITTY_ENDPOINT,
+} from '../constants';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
 import {Interface} from 'ethers/lib/utils';
 import {CallInput} from '@indexed-finance/multicall';
+import {getKittygotchiMetadataEndpoint} from '../utils';
 
 export const getKittyGotchiContractSigner = async (
   address: string,
@@ -135,6 +140,7 @@ export const update = (
   attributes: any,
   id: string,
   account: string,
+  chainId: number,
 ) => {
   const headers = new Headers({
     'content-type': 'application/json',
@@ -149,5 +155,5 @@ export const update = (
       attributes: attributes,
     }),
   };
-  return fetch(`${METADATA_KITTY_ENDPOINT}${id}`, myInit);
+  return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`, myInit);
 };
