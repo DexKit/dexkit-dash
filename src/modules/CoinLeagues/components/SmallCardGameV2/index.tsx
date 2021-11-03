@@ -87,7 +87,7 @@ function SmallCardGameV2(props: Props): JSX.Element {
     <Container className={classes.container} maxWidth='xs'>
       <Grid container className={classes.innerContent} spacing={2}>
         <Grid item xs={12}>
-          <Typography variant='h5'>ID #{truncateAddress(game.id)}</Typography>
+          <Typography variant='h6'>ID #{truncateAddress(game.id)}</Typography>
         </Grid>
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>

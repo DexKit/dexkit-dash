@@ -76,52 +76,6 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
                 </strong>
               </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      ATK
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.attack || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      DEF
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.defense || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      RUN
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.run || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
           </Grid>
         </CardContent>
       </CardActionArea>

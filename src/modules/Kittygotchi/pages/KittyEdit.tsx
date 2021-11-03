@@ -1,5 +1,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 
+import clsx from 'clsx';
+
 import {
   makeStyles,
   Box,
@@ -26,15 +28,21 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link as RouterLink, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useToggler} from 'hooks/useToggler';
-import {useKittygotchi, useKittygotchiUpdate} from '../hooks';
-import {ColorCircle} from '../components/ColorCircle';
-import {ButtonState, SubmitState} from '../components/ButtonState';
+import {
+  useKitHolding,
+  useKittygotchi,
+  useKittygotchiStyleEdit,
+  useKittygotchiUpdate,
+} from '../hooks';
+
+import {SubmitState} from '../components/ButtonState';
+import KittygotchiImage from '../components/images/KittygotchiImage';
+import KittygotchiTraitSelector from '../components/KittygotchiTraitSelector';
+import {KittygotchiTraits, KittygotchiTraitType} from '../constants';
 
 const COLORS: string[] = [];
 
-const useStyles = makeStyles((theme) => ({
-  kittygotchiBackground: {},
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 interface Params {
   id: string;
@@ -77,6 +85,11 @@ export const KittyEdit = () => {
     [onUpdateKittyCallback],
   );
 
+  const kitHolding = useKitHolding();
+  const kittyStyles = useKittygotchiStyleEdit();
+
+  const handleSelectAccessory = useCallback(() => {}, []);
+
   return (
     <>
       <Box>
@@ -111,46 +124,60 @@ export const KittyEdit = () => {
             </Grid>
           </Grid>
         </Box>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <Box className={classes.kittygotchiBackground}></Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper>
-              <Box
-                p={2}
-                display='flex'
-                alignItems='center'
-                alignContent='center'
-                justifyContent='space-between'>
-                <IconButton>
-                  <NavigateBeforeIcon />
-                </IconButton>
-                <Typography variant='body1'>Accessories</Typography>
-                <IconButton>
-                  <NavigateNextIcon />
-                </IconButton>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              {COLORS.map((color: string, index: number) => (
-                <Grid item key={index}>
-                  <ColorCircle color={color} selected />
+        <Grid container justifyContent='center' spacing={4}>
+          <Grid item xs={12} sm={10}>
+            <Grid container spacing={4}>
+              <Grid item xs={12} sm={6}>
+                <Paper>
+                  <Box p={4}>
+                    <KittygotchiImage
+                      images={[
+                        require('assets/images/kittygotchi/body/body.png'),
+                        require('assets/images/kittygotchi/ears/fun.png'),
+                        require('assets/images/kittygotchi/eyes/flash.png'),
+                        require('assets/images/kittygotchi/nose/fan.png'),
+                        require('assets/images/kittygotchi/mouth/angry.png'),
+                        require('assets/images/kittygotchi/clothes/tour.png'),
+                        require('assets/images/kittygotchi/accessories/flower.png'),
+                      ]}
+                    />
+                  </Box>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <KittygotchiTraitSelector
+                      kitHolding={0}
+                      title='Accessories'
+                      items={KittygotchiTraits[KittygotchiTraitType.ACESSOIRES]}
+                      onSelect={handleSelectAccessory}
+                      selecteds={[]}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <KittygotchiTraitSelector
+                      kitHolding={0}
+                      title='Accessories'
+                      items={KittygotchiTraits[KittygotchiTraitType.ACESSOIRES]}
+                      onSelect={handleSelectAccessory}
+                      selecteds={[]}
+                    />
+                  </Grid>
                 </Grid>
-              ))}
+              </Grid>
+              <Grid item xs={12}></Grid>
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  startIcon={<DoneIcon />}
+                  onClick={onUpdateGotchi}
+                  variant='contained'
+                  color='primary'>
+                  Save
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              fullWidth
-              startIcon={<DoneIcon />}
-              onClick={onUpdateGotchi}
-              variant='contained'
-              color='primary'>
-              Save
-            </Button>
           </Grid>
         </Grid>
       </Box>
