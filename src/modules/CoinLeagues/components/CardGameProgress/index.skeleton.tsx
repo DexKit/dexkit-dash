@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -61,7 +61,6 @@ function CardTimer(props: {time: number}) {
 
 function CardGameProgressSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -84,7 +83,9 @@ function CardGameProgressSkeleton(): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>{messages['app.gameTime']}:</Typography>
+          <Typography variant='h6'>
+            <IntlMessages key='app.coinLeagues.gameTime' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
@@ -96,13 +97,13 @@ function CardGameProgressSkeleton(): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.countDown']}
+            <IntlMessages key='app.coinLeagues.countdown' />
           </Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.entries']}
+            <IntlMessages key='app.coinLeagues.entries' />
             <Typography variant='subtitle2'>
               <Skeleton>
                 {' '}
@@ -113,7 +114,7 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.coins']}
+            <IntlMessages key='app.coinLeagues.coins' />
             <Typography variant='subtitle2'>
               {' '}
               <Skeleton>{strPad(1)} </Skeleton>
@@ -122,7 +123,7 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>
               {' '}
               <Skeleton>{100} Matic </Skeleton>
@@ -133,7 +134,7 @@ function CardGameProgressSkeleton(): JSX.Element {
 
       <Button className={classes.button} fullWidth>
         <Skeleton>
-          {(messages['app.enterGame'] as string).toUpperCase()}
+          <IntlMessages key='app.coinLeagues.enterGame' />
         </Skeleton>
       </Button>
     </Container>

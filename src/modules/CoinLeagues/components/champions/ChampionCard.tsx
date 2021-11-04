@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -25,7 +25,6 @@ export const ChampionCard = (props: ChampionCardProps) => {
   const {loading, champion} = props;
 
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Card>
@@ -40,7 +39,7 @@ export const ChampionCard = (props: ChampionCardProps) => {
             <Skeleton />
           ) : (
             <>
-              {messages['app.champion']} #{champion?.id}
+              <IntlMessages key='app.coinLeagues.champion' /> #{champion?.id}
             </>
           )}
         </Typography>

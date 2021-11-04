@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -83,13 +84,15 @@ export const EndGame = (props: Props) => {
                   <Box display={'flex'} justifyContent={'center'}>
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted
-                          ? 'Submitted Tx'
-                          : submitState === SubmitState.Error
-                          ? 'Tx Error'
-                          : submitState === SubmitState.Confirmed
-                          ? 'Confirmed Tx'
-                          : ''}
+                        {submitState === SubmitState.Submitted ? (
+                          <IntlMessages key='app.coinLeagues.submittedTx' />
+                        ) : submitState === SubmitState.Error ? (
+                          <IntlMessages key='app.coinLeagues.txError' />
+                        ) : submitState === SubmitState.Confirmed ? (
+                          <IntlMessages key='app.coinLeagues.confirmedTx' />
+                        ) : (
+                          ''
+                        )}
                       </Button>
                     )}
                   </Box>
@@ -109,8 +112,10 @@ export const EndGame = (props: Props) => {
                     }>
                     <ButtonState
                       state={submitState}
-                      defaultMsg={messages['app.endGame'] as string}
-                      confirmedMsg={messages['app.gameFinished'] as string}
+                      defaultMsg={messages['app.coinLeagues.endGame'] as string}
+                      confirmedMsg={
+                        messages['app.coinLeagues.gameFinished'] as string
+                      }
                     />
                   </Button>
                 </Grid>

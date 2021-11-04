@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -35,7 +35,6 @@ interface Props {
 
 function SimpleCardGame(props: Props): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
   const {duration, address, amount_to_play} = props;
   const id = address;
   const time = duration.toNumber();
@@ -52,7 +51,9 @@ function SimpleCardGame(props: Props): JSX.Element {
         alignItems={'center'}>
         <Grid item xs={12} sm={12}>
           <Box display={'flex'}>
-            <Typography variant='h6'>{messages['app.gameTime']}:</Typography>
+            <Typography variant='h6'>
+              <IntlMessages key='app.coinLeagues.gameTime' />:
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>

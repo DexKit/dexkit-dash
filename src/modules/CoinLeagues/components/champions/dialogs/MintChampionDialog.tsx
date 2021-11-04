@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -26,7 +26,6 @@ interface MintChampionDialogProps {
 
 export const MintChampionDialog = (props: MintChampionDialogProps) => {
   const {dialogProps, error, loading, onConfirm} = props;
-  const {messages} = useIntl();
 
   const handleClose = useCallback(() => {
     if (dialogProps.onClose) {
@@ -71,7 +70,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               mr={2}
             />
             <Typography variant='body1'>
-              {messages['app.createChampion']}
+              <IntlMessages key='app.coinLeagues.createChampion' />
             </Typography>
           </Box>
           <Box>
@@ -94,10 +93,10 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               onClick={onConfirm}
               variant='contained'
               color='primary'>
-              {messages['app.confirm']}
+              <IntlMessages key='app.coinLeagues.confirm' />
             </Button>
             <Button startIcon={<CloseIcon />} onClick={handleClose}>
-              {messages['app.cancel']}
+              <IntlMessages key='app.coinLeagues.cancel' />{' '}
             </Button>
           </DialogActions>
         </>

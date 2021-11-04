@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -30,13 +30,12 @@ interface Props {
 
 function SimpleCardEndGame(props: Props): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Grid container>
         <Button className={classes.button} fullWidth onClick={props.onClick}>
-          {messages['app.endGame']}
+          <IntlMessages key='app.coinLeagues.endGame' />
         </Button>
       </Grid>
     </Container>

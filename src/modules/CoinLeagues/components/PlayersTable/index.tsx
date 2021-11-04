@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -236,18 +237,18 @@ function PlayersTable(props: Props): JSX.Element {
           <TableHead>
             <TableRow>
               <TableCell className={classes.header}>
-                {messages['app.position']}
+                <IntlMessages key='app.coinLeagues.position' />
               </TableCell>
               <TableCell className={classes.header}>
-                {messages['app.captain']}
+                <IntlMessages key='app.coinLeagues.captain' />
               </TableCell>
               {(game?.num_coins.toNumber() || 0) > 1 && (
                 <TableCell className={classes.header}>
-                  {messages['app.coins']}
+                  <IntlMessages key='app.coinLeagues.coins' />
                 </TableCell>
               )}
               <TableCell className={classes.header}>
-                {messages['app.score']}
+                <IntlMessages key='app.coinLeagues.score' />
               </TableCell>
             </TableRow>
           </TableHead>
@@ -260,7 +261,7 @@ function PlayersTable(props: Props): JSX.Element {
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
                   <Typography variant='h5'>
-                    {messages['app.notDataFound']}!
+                    <IntlMessages key='app.coinLeagues.notDataFound' />!
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -296,7 +297,9 @@ function PlayersTable(props: Props): JSX.Element {
                             <Chip
                               color='primary'
                               icon={<CupIcon />}
-                              label={messages['app.winner'] as string}
+                              label={
+                                messages['app.coinLeagues.winner'] as string
+                              }
                               size='small'
                             />{' '}
                           </Box>
@@ -308,7 +311,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={messages['app.winner'] as string}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='medium'
                           />{' '}
                         </Box>
@@ -320,7 +323,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={messages['app.winner'] as string}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>
@@ -332,7 +335,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={messages['app.winner'] as string}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>

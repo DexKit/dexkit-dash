@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -60,7 +60,6 @@ function CardTimer(props: {time: number}) {
 
 function CardGameSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -79,7 +78,9 @@ function CardGameSkeleton(): JSX.Element {
           </Typography>
         </Grid>
         <Grid item xs={7} style={{color: '#7a8398'}}>
-          <Typography variant='h6'>{messages['app.gameTime']}:</Typography>
+          <Typography variant='h6'>
+            <IntlMessages key='app.coinLeagues.gameTime' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
@@ -90,11 +91,15 @@ function CardGameSkeleton(): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.starts']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.starts' />
+          </Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.entries']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.entries' />
+          </Typography>
           <Typography variant='subtitle2'>
             <Skeleton>
               {' '}
@@ -103,7 +108,9 @@ function CardGameSkeleton(): JSX.Element {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.coins']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.coins' />
+          </Typography>
           <Typography variant='subtitle2'>
             {' '}
             <Skeleton>{strPad(1)} </Skeleton>
@@ -111,7 +118,7 @@ function CardGameSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='subtitle2'>
             {' '}
@@ -122,7 +129,7 @@ function CardGameSkeleton(): JSX.Element {
 
       <Button className={classes.button} fullWidth>
         <Skeleton>
-          {(messages['app.prizePool'] as string).toUpperCase()}
+          <IntlMessages key='app.coinLeagues.prizePool' />
         </Skeleton>
       </Button>
     </Container>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -8,8 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import {ReactComponent as Social3} from 'assets/images/icons/social-3.svg';
 
 export const WaitingPlayers = () => {
-  const {messages} = useIntl();
-
   return (
     <Box p={2}>
       <Grid container justifyContent={'center'}>
@@ -23,7 +21,7 @@ export const WaitingPlayers = () => {
             </Box>
             <Box>
               <Typography variant='body2' color='textSecondary'>
-                {(messages['app.waitingPlayers'] as string).toUpperCase()}...
+                <IntlMessages key='app.coinLeagues.waitingPlayers' />
               </Typography>
             </Box>
           </Box>

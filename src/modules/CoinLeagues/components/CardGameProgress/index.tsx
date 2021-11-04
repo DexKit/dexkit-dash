@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -12,7 +14,7 @@ import {Game} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    black: 'black'
+    black: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -122,9 +124,11 @@ function CardGameProgress(props: Props): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
+          <Typography variant='h6'>
+            <IntlMessages key='app.coinLeagues.gameTime' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
+            &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
         </Grid>
       </Grid>
@@ -133,16 +137,20 @@ function CardGameProgress(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Countdown</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.countdown' />
+          </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>Ended </Typography>
+            <Typography variant='subtitle2'>
+              <IntlMessages key='app.coinLeagues.ended' />{' '}
+            </Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Entries
+            <IntlMessages key='app.coinLeagues.entries' />{' '}
             <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
@@ -150,13 +158,13 @@ function CardGameProgress(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Coins
+            <IntlMessages key='app.coinLeagues.coins' />{' '}
             <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Prize Pool
+            <IntlMessages key='app.coinLeagues.prizePool' />{' '}
             <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
           </Typography>
         </Grid>

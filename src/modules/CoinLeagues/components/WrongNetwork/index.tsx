@@ -44,7 +44,7 @@ const WrongNetwork = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Empty
-          title={messages['app.notSupportedNetwork'] as string}
+          title={messages['app.coinLeagues.notSupportedNetwork'] as string}
           message={messages['coinLeagues.warning.connectWallet'] as string}
           image={<EmptyNetwork />}
           callToAction={

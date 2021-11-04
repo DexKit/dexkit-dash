@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -66,8 +66,6 @@ function CardGame(props: Props): JSX.Element {
   const time = game.duration.toNumber();
   const coins = game.num_coins.toNumber();
 
-  const {messages} = useIntl();
-
   // Format number values
   const entriesIn = strPad(game.players.length || 0);
   const entriesOut = strPad(game?.num_players.toNumber() || 0);
@@ -106,12 +104,17 @@ function CardGame(props: Props): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>{messages['app.gameTime']}</Typography>
+          <Typography variant='h6'>
+            <IntlMessages key='app.coinLeagues.gameTime' />
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
 
-          <Typography variant='h6'>&nbsp;{messages['app.type']}:</Typography>
+          <Typography variant='h6'>
+            &nbsp;
+            <IntlMessages key='app.coinLeagues.type' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             &nbsp;{game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
           </Typography>
@@ -122,34 +125,41 @@ function CardGame(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.starts']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.starts' />:
+          </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>{messages['app.ready']}</Typography>
+            <Typography variant='subtitle2'>
+              <IntlMessages key='app.coinLeagues.ready' />:
+            </Typography>
           )}
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.entries']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.entries' />
+          </Typography>
           <Typography variant='subtitle2'>
             {entriesIn}/{entriesOut}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.coins']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.coins' />
+          </Typography>
           <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage ||
-          (messages['app.enterGame'] as string).toUpperCase()}
+        {props.btnMessage || <IntlMessages key='app.coinLeagues.enterGame' />}
       </Button>
     </Container>
   );

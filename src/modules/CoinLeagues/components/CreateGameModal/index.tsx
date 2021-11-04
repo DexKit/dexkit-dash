@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
@@ -171,7 +172,7 @@ const CreateGameModal = (props: Props) => {
               </Grid>
               <Grid item>
                 <Typography variant='h6'>
-                  {messages['app.createGame']}
+                  <IntlMessages key='app.coinLeagues.createGame' />
                 </Typography>
               </Grid>
             </Grid>
@@ -188,12 +189,12 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
             <Typography variant='h6' style={{fontWeight: 600}}>
-              {messages['app.basicInformation']}
+              <IntlMessages key='app.coinLeagues.basicInformation' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant='subtitle2'>
-              {messages['app.coinLeagues.warning.createGame']}
+              <IntlMessages key='app.coinLeagues.warning.createGame' />
             </Typography>
           </Grid>
         </Grid>
@@ -201,11 +202,11 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
             <FormLabel className={classes.label}>
-              {messages['app.selectLevel']}
+              <IntlMessages key='app.coinLeagues.selectLevel' />
             </FormLabel>
             <Select
               variant='outlined'
-              placeholder={messages['app.select'] as string}
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setEntryAmount(Number(event.target.value))}
               style={{
                 color: '#fff',
@@ -215,13 +216,13 @@ const CreateGameModal = (props: Props) => {
               {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
               <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>
-                {messages['app.beginner']} - 1 Matic
+                <IntlMessages key='app.coinLeagues.beginner' /> - 1 Matic
               </MenuItem>
               <MenuItem value={5}>
-                {messages['app.intermediate']} - 5 Matic
+                <IntlMessages key='app.coinLeagues.intermediate' /> - 5 Matic
               </MenuItem>
               <MenuItem value={10}>
-                {messages['app.advanced']} - 10 Matic
+                <IntlMessages key='app.coinLeagues.advanced' /> - 10 Matic
               </MenuItem>
               {/*   <MenuItem value={50}>50 Matic</MenuItem>
               <MenuItem value={100}>100 Matic</MenuItem>
@@ -233,11 +234,11 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
             <FormLabel className={classes.label}>
-              {messages['app.gameDuration']}
+              <IntlMessages key='app.coinLeagues.gameDuration' />
             </FormLabel>
             <Select
               variant='outlined'
-              placeholder={messages['app.select'] as string}
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setGameDuration(Number(event.target.value))}
               style={{
                 color: '#fff',
@@ -261,12 +262,12 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
-                {messages['app.howManyCoins']}?
+                <IntlMessages key='app.coinLeagues.howManyCoins' />?
               </FormLabel>
               <Select
                 value={coins}
                 variant='outlined'
-                placeholder={messages['app.select'] as string}
+                placeholder={messages['app.coinLeagues.select'] as string}
                 onChange={(event) => setCoins(Number(event.target.value))}
                 style={{
                   marginRight: 5,
@@ -287,7 +288,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
-                {messages['app.totalPlayers']}
+                <IntlMessages key='app.coinLeagues.totalPlayers' />
               </FormLabel>
               <Select
                 value={totalPlayers}
@@ -295,7 +296,7 @@ const CreateGameModal = (props: Props) => {
                   setTotalPlayers(Number(event.target.value))
                 }
                 variant='outlined'
-                placeholder={messages['app.select'] as string}
+                placeholder={messages['app.coinLeagues.select'] as string}
                 style={{
                   marginRight: 5,
                   color: '#fff',
@@ -321,7 +322,7 @@ const CreateGameModal = (props: Props) => {
             <FormLabel
               className={classes.label}
               style={{fontSize: '1.25rem', fontWeight: 600}}>
-              {messages['app.gameType']}
+              <IntlMessages key='app.coinLeagues.gameType' />
             </FormLabel>
             <RadioGroup value={gameType}>
               <FormControlLabel
@@ -378,10 +379,12 @@ const CreateGameModal = (props: Props) => {
             state={submitState}
             defaultMsg={
               IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                ? (messages['app.createGame'] as string).toUpperCase()
-                : (messages['app.connectWalletPolygon'] as string)
+                ? (
+                    messages['app.coinLeagues.createGame'] as string
+                  ).toUpperCase()
+                : (messages['app.coinLeagues.connectWalletPolygon'] as string)
             }
-            confirmedMsg={messages['app.gameCreated'] as string}
+            confirmedMsg={messages['app.coinLeagues.gameCreated'] as string}
           />
         </Button>
       </DialogContent>

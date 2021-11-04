@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -25,14 +25,13 @@ const useStyles = makeStyles((theme) => ({
 
 function CardPrizeSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <Skeleton>- MATIC</Skeleton>

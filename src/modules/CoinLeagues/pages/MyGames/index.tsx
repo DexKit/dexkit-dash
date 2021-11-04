@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
@@ -65,12 +66,14 @@ const MyGames = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              {messages['app.dashboard']}
+              <IntlMessages key='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              {messages['app.games']}
+              <IntlMessages key='app.coinLeagues.games' />
             </Link>
-            <Typography>{messages['app.myGames']}</Typography>
+            <Typography>
+              <IntlMessages key='app.coinLeagues.myGames' />
+            </Typography>
           </Breadcrumbs>
         </Grid>
       </Grid>
@@ -80,14 +83,16 @@ const MyGames = () => {
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
-        <Typography variant='h5'>{messages['app.myGames']}</Typography>
+        <Typography variant='h5'>
+          <IntlMessages key='app.coinLeagues.myGames' />
+        </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
         <Box display='flex' alignItems='end' justifyContent='end'>
           <SwapButton />
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={messages['app.buyMatic'] as string}
+              btnMsg={messages['app.coinLeagues.buyMatic'] as string}
               defaultCurrency={'MATIC'}
             />
           </Box>
@@ -105,7 +110,7 @@ const MyGames = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            {messages['app.connectWallet']}
+            <IntlMessages key='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>

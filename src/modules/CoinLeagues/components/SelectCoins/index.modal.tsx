@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import {useTheme} from '@material-ui/core/styles';
@@ -90,8 +91,8 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             </Box>
             <Typography variant='body1'>
               {isCaptainCoin
-                ? messages['app.selectCaptainCoin']
-                : messages['app.selectCoin']}
+                ? messages['app.coinLeagues.selectCaptainCoin']
+                : messages['app.coinLeagues.selectCoin']}
             </Typography>
           </Box>
           <IconButton onClick={handleClose}>
@@ -105,7 +106,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder={messages['app.searchTokens'] as string}
+            placeholder={messages['app.coinLeagues.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -114,7 +115,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
         </Box>
         {filteredCoins.length == 0 ? (
           <Typography variant='body1'>
-            {messages['app.noCoinsFound']}
+            <IntlMessages key='app.coinLeagues.noCoinsFound' />
           </Typography>
         ) : (
           <List>

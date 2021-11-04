@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -12,30 +12,34 @@ interface Props {
 export const ClaimGame = (props: Props) => {
   const {address} = props;
   const {account} = useWeb3();
-  const {messages} = useIntl();
 
   const {onClaimCallback, winner} = useCoinLeagues(address);
   return (
     <>
-      <h1>{messages['app.claimGame']}</h1>
+      <h1>
+        <IntlMessages key='app.coinLeagues.claimGame' />
+      </h1>
       {account && account.toLowerCase() === winner?.address.toLowerCase() ? (
         <>
           {!winner.claimed && (
             <button onClick={() => onClaimCallback}>
-              {messages['app.claim']}
+              <IntlMessages key='app.coinLeagues.claim' />
             </button>
           )}
           <p>
-            {messages['app.place']}: {winner.place}
+            <IntlMessages key='app.coinLeagues.place' />: {winner.place}
           </p>
           <p>
-            {messages['app.score']}: {winner.score.toString()}
+            <IntlMessages key='app.coinLeagues.score' />:{' '}
+            {winner.score.toString()}
           </p>
         </>
       ) : (
         <>
           {' '}
-          <h3>{messages['app.notWinner']}</h3>
+          <h3>
+            <IntlMessages key='app.coinLeagues.notWinner' />
+          </h3>
         </>
       )}
     </>

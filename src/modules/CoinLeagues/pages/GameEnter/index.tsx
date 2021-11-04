@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
@@ -218,7 +220,7 @@ function GameEnter(props: Props) {
         setTx(tx);
         createNotification({
           title: messages['app.joinGame'] as string,
-          body: `${messages['app.joinedGame']} ${game.address}`,
+          body: `${messages['app.coinLeagues.joinedGame']} ${game.address}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(chainId, tx),
           urlCaption: messages['app.viewTransaction'] as string,
@@ -315,10 +317,10 @@ function GameEnter(props: Props) {
       <Grid item xs={12} sm={12} xl={12}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-            {messages['app.dashboard']}
+            <IntlMessages key='app.coinLeagues.dashboard' />
           </Link>
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-            {messages['app.games']}
+            <IntlMessages key='app.coinLeagues.games' />
           </Link>
           <Link
             color='inherit'
@@ -340,16 +342,24 @@ function GameEnter(props: Props) {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
-            {messages['app.game']} #{truncateAddress(address)}
+            <IntlMessages key='app.coinLeagues.game' /> #
+            {truncateAddress(address)}
             <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
 
-          {finished && <Chip label={messages['app.ended']} color='primary' />}
-          {aborted && <Chip label={messages['app.aborted']} color='primary' />}
+          {finished && (
+            <Chip label={messages['app.coinLeagues.ended']} color='primary' />
+          )}
+          {aborted && (
+            <Chip label={messages['app.coinLeagues.aborted']} color='primary' />
+          )}
           {started && !finished && !aborted && (
-            <Chip label={messages['app.started'] as string} color='primary' />
+            <Chip
+              label={messages['app.coinLeagues.started'] as string}
+              color='primary'
+            />
           )}
         </Box>
       </Grid>
@@ -365,12 +375,12 @@ function GameEnter(props: Props) {
           </Box>
           <Box pr={2}>
             <ShareButton
-              shareText={`${messages['app.coinsLeagueGame']} #Id ${address}`}
+              shareText={`${messages['app.coinLeagues.coinsLeagueGame']} #Id ${address}`}
             />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={messages['app.buyMatic'] as string}
+              btnMsg={messages['app.coinLeagues.buyMatic'] as string}
               defaultCurrency={'MATIC'}
             />
           </Box>
@@ -414,13 +424,13 @@ function GameEnter(props: Props) {
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-                {messages['app.gameType']}:
+                <IntlMessages key='app.coinLeagues.gameType' />:
               </Typography>
               <Skeleton>
                 <Typography
                   variant='h5'
                   style={{color: '#fff', marginLeft: '20px'}}>
-                  {messages['app.winner']}
+                  <IntlMessages key='app.coinLeagues.winner' />
                 </Typography>
               </Skeleton>
             </Box>
@@ -575,8 +585,12 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={messages['app.enterGame'] as string}
-                          confirmedMsg={messages['app.enteredGame'] as string}
+                          defaultMsg={
+                            messages['app.coinLeagues.enterGame'] as string
+                          }
+                          confirmedMsg={
+                            messages['app.coinLeagues.enteredGame'] as string
+                          }
                         />
                       </Button>
                     </Box>
@@ -591,7 +605,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                {messages['app.yourCoins']}
+                <IntlMessages key='app.coinLeagues.yourCoins' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -617,7 +631,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                {messages['app.players']}
+                <IntlMessages key='app.coinLeagues.players' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -651,7 +665,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <Skeleton>
                 <Typography variant='h6' style={{margin: 5}}>
-                  {messages['app.players']}
+                  <IntlMessages key='app.coinLeagues.players' />
                 </Typography>
               </Skeleton>
             </Grid>

@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -70,8 +70,6 @@ function CardGameV2(props: Props): JSX.Element {
   const coins = Number(game.numCoins);
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
-  const {messages} = useIntl();
-
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
@@ -126,7 +124,9 @@ function CardGameV2(props: Props): JSX.Element {
             display={'flex'}
             justifyContent='flex-end'
             style={{color: '#7a8398'}}>
-            <Typography variant='h6'>{messages['app.duration']}:</Typography>
+            <Typography variant='h6'>
+              <IntlMessages key='app.coinLeagues.duration' />:
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 500}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
@@ -135,7 +135,10 @@ function CardGameV2(props: Props): JSX.Element {
             display={'flex'}
             justifyContent='flex-end'
             style={{color: '#7a8398'}}>
-            <Typography variant='h6'>&nbsp;{messages['app.type']}:</Typography>
+            <Typography variant='h6'>
+              &nbsp;
+              <IntlMessages key='app.coinLeagues.type' />:
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 500}}>
               &nbsp;{game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
@@ -147,35 +150,41 @@ function CardGameV2(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.starts']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.starts' />
+          </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
             <Typography variant='subtitle2'>
-              {messages['app.ready']}{' '}
+              <IntlMessages key='app.coinLeagues.ready' />{' '}
             </Typography>
           )}
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.entries']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.entries' />
+          </Typography>
           <Typography variant='subtitle2'>
             {entriesIn}/{entriesOut}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>{messages['app.coins']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages key='app.coinLeagues.coins' />
+          </Typography>
           <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || (messages['app.type'] as string).toUpperCase()}
+        {props.btnMessage || <IntlMessages key='app.coinLeagues.type' />}
       </Button>
     </Container>
   );

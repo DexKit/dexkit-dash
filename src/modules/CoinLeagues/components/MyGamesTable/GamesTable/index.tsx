@@ -53,7 +53,7 @@ const GamesTable: React.FC<Props> = ({
       {!data?.length && (
         <Empty
           image={<EmptyGame />}
-          title={messages['app.noGamesHistory'] as string}
+          title={messages['app.coinLeagues.noGamesHistory'] as string}
           message={messages['coinLeagues.warning.joinGame'] as string}
         />
       )}

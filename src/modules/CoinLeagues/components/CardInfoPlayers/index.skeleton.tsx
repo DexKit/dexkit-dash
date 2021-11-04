@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 function CardInfoPlayersSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container}>
@@ -45,7 +44,8 @@ function CardInfoPlayersSkeleton(): JSX.Element {
               <Skeleton>
                 <Typography>
                   &nbsp;
-                  {`${messages['app.players']} ${0} (${10})`}
+                  <IntlMessages key='app.coinLeagues.players' />
+                  {` ${0} (${10})`}
                 </Typography>
               </Skeleton>
             </Box>

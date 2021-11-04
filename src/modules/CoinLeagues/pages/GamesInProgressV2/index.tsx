@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
@@ -81,13 +82,13 @@ const GamesInProgressV2 = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              {messages['app.dashboard']}
+              <IntlMessages key='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              {messages['app.games']}
+              <IntlMessages key='app.coinLeagues.games' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              {messages['app.gamesInProgress']}
+              <IntlMessages key='app.coinLeagues.gamesInProgress' />
             </Link>
           </Breadcrumbs>
         </Grid>
@@ -104,7 +105,7 @@ const GamesInProgressV2 = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h6' style={{margin: 5}}>
-            {messages['app.gamesInProgress']}
+            <IntlMessages key='app.coinLeagues.gamesInProgress' />
           </Typography>
         </Box>
       </Grid>
@@ -116,12 +117,12 @@ const GamesInProgressV2 = () => {
           </Box>
           <Box pr={2}>
             <ShareButton
-              shareText={messages['app.coinsLeagueGame'] as string}
+              shareText={messages['app.coinLeagues.coinsLeagueGame'] as string}
             />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={messages['app.buyMatic'] as string}
+              btnMsg={messages['app.coinLeagues.buyMatic'] as string}
               defaultCurrency={'MATIC'}
             />
           </Box>
@@ -144,7 +145,7 @@ const GamesInProgressV2 = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder={messages['app.search'] as string}
+          placeholder={messages['app.coinLeagues.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -158,7 +159,8 @@ const GamesInProgressV2 = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               <Typography variant='h6'>
-                {gamesInProgress?.length || 0} {messages['app.gamesInProgress']}
+                {gamesInProgress?.length || 0}{' '}
+                <IntlMessages key='app.coinLeagues.gamesInProgress' />
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12}>
@@ -269,8 +271,10 @@ const GamesInProgressV2 = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={messages['app.noGamesInProgress'] as string}
-                message={messages['app.searchCreatedAndEnter'] as string}
+                title={messages['app.coinLeagues.noGamesInProgress'] as string}
+                message={
+                  messages['app.coinLeagues.searchCreatedAndEnter'] as string
+                }
               />
             </Grid>
           )}

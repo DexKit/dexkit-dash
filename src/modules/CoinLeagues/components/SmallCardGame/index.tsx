@@ -115,7 +115,8 @@ function SmallCardGame(props: Props): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.prizePool']}:&nbsp;
+              <IntlMessages key='app.coinLeagues.prizePool' />
+              :&nbsp;
             </Typography>
             <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
           </Box>
@@ -123,7 +124,8 @@ function SmallCardGame(props: Props): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.gameType']}&nbsp;
+              <IntlMessages key='app.coinLeagues.gameType' />
+              &nbsp;
             </Typography>
             <Typography variant='h6'>
               {game_type === GameType.Winner ? 'Bull' : 'Bear'}
@@ -134,7 +136,8 @@ function SmallCardGame(props: Props): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.countdown']}:&nbsp;
+              <IntlMessages key='app.coinLeagues.countdown' />
+              :&nbsp;
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
@@ -92,7 +92,6 @@ const truncHash = (hash: string): string => {
 
 function PlayersTableSkeleton(props: Props): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   const {players} = props;
 
@@ -103,13 +102,13 @@ function PlayersTableSkeleton(props: Props): JSX.Element {
           <TableHead>
             <TableRow>
               <TableCell className={classes.header}>
-                {messages['app.position']}
+                <IntlMessages key='app.coinLeagues.position' />
               </TableCell>
               <TableCell className={classes.header}>
-                {messages['app.coins']}
+                <IntlMessages key='app.coinLeagues.coins' />
               </TableCell>
               <TableCell className={classes.header}>
-                {messages['app.score']}
+                <IntlMessages key='app.coinLeagues.score' />
               </TableCell>
             </TableRow>
           </TableHead>

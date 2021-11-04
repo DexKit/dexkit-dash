@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
@@ -100,12 +101,14 @@ const JoinGames = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              {messages['app.dashboard']}
+              <IntlMessages key='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              {messages['app.games']}
+              <IntlMessages key='app.coinLeagues.games' />
             </Link>
-            <Typography>{messages['app.discoverGames']}</Typography>
+            <Typography>
+              <IntlMessages key='app.coinLeagues.discoverGames' />
+            </Typography>
           </Breadcrumbs>
         </Grid>
       </Grid>
@@ -115,7 +118,9 @@ const JoinGames = () => {
         </Grid>
       </Hidden>
       <Grid item xs={6} sm={3} xl={3}>
-        <Typography variant='h5'>{messages['app.discoverGames']}</Typography>
+        <Typography variant='h5'>
+          <IntlMessages key='app.coinLeagues.discoverGames' />
+        </Typography>
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={5} xl={5}>
@@ -129,12 +134,12 @@ const JoinGames = () => {
           </Box>
           <Box pr={2}>
             <ShareButton
-              shareText={messages['app.coinsLeagueGames'] as string}
+              shareText={messages['app.coinLeagues.coinsLeagueGames'] as string}
             />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={messages['app.buyMatic'] as string}
+              btnMsg={messages['app.coinLeagues.buyMatic'] as string}
               defaultCurrency={'MATIC'}
             />
           </Box>
@@ -150,7 +155,7 @@ const JoinGames = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder={messages['app.search'] as string}
+          placeholder={messages['app.coinLeagues.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -165,7 +170,7 @@ const JoinGames = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               <Typography variant='h6'>
-                {messages['app.gamesToJoin']}
+                <IntlMessages key='app.coinLeagues.gamesToJoin' />
               </Typography>
             </Grid>
           </Grid>
@@ -268,8 +273,10 @@ const JoinGames = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={messages['app.noGamesJoin'] as string}
-                message={messages['app.askAdminCreateGamesJoin'] as string}
+                title={messages['app.coinLeagues.noGamesJoin'] as string}
+                message={
+                  messages['app.coinLeagues.askAdminCreateGamesJoin'] as string
+                }
               />
             </Grid>
           )}

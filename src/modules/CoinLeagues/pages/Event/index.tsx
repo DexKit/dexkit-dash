@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
   Box,
@@ -36,8 +36,6 @@ export function ChampionsEvent() {
   const classes = useStyles();
 
   const theme = useTheme();
-
-  const {messages} = useIntl();
 
   const isMobile = useMobile();
 
@@ -79,7 +77,7 @@ export function ChampionsEvent() {
                     <Paper style={{height: '100%'}}>
                       <Box p={4}>
                         <Typography color='textSecondary' variant='caption'>
-                          {messages['app.normalAccess']}
+                          <IntlMessages key='app.coinLeagues.normalAccess' />
                         </Typography>
                         <Typography variant='h4'>00:00:00</Typography>
                       </Box>
@@ -90,7 +88,7 @@ export function ChampionsEvent() {
                       <Box p={4}>
                         <Box>
                           <Typography color='textSecondary' variant='caption'>
-                            {messages['app.yourBalance']}
+                            <IntlMessages key='app.coinLeagues.yourBalance' />
                           </Typography>
                           <Typography variant='h4'>20 KIT</Typography>
                         </Box>
@@ -105,10 +103,10 @@ export function ChampionsEvent() {
                     <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <Typography gutterBottom variant='h5'>
-                          {messages['app.round']} 1
+                          <IntlMessages key='app.coinLeagues.round' /> 1
                         </Typography>
                         <Typography variant='body1'>
-                          {messages['coinLeagues.page.event.round.description']}
+                          <IntlMessages key='coinLeagues.page.event.round.description' />
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -118,7 +116,7 @@ export function ChampionsEvent() {
                           startIcon={<AddIcon />}
                           variant='contained'
                           color='primary'>
-                          {messages['app.createChampion']}
+                          <IntlMessages key='app.coinLeagues.createChampion' />
                         </Button>
                       </Grid>
                     </Grid>
@@ -134,10 +132,10 @@ export function ChampionsEvent() {
                       alignContent='center'
                       justifyContent='space-between'>
                       <Typography variant='h6'>
-                        {messages['app.myChampions']}
+                        <IntlMessages key='app.coinLeagues.myChampions' />
                       </Typography>
                       <Button color='primary'>
-                        {messages['common.viewMore']}
+                        <IntlMessages key='app.coinLeagues.viewMore' />
                       </Button>
                     </Box>
                   </Grid>

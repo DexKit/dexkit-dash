@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -56,7 +56,6 @@ function CardTimer(props: {time: number}) {
 
 function SmallCardGameSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -88,7 +87,8 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.prizePool']}:&nbsp;
+              <IntlMessages key='app.coinLeagues.prizePool' />
+              :&nbsp;
             </Typography>
             <Skeleton>
               <Typography variant='h6'>{1000} Matic</Typography>
@@ -98,11 +98,14 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.gameType']}:&nbsp;
+              <IntlMessages key='app.coinLeagues.gameType' />
+              :&nbsp;
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
-                <Typography variant='h6'>{messages['app.winner']}</Typography>
+                <Typography variant='h6'>
+                  <IntlMessages key='app.coinLeagues.winner' />
+                </Typography>
               </Skeleton>
             </Typography>
           </Box>
@@ -111,7 +114,8 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              {messages['app.countdown']}:&nbsp;
+              <IntlMessages key='app.coinLeagues.countdown' />
+              :&nbsp;
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
@@ -124,7 +128,7 @@ function SmallCardGameSkeleton(): JSX.Element {
       <Grid item xs={12} style={{color: '#7a8398'}}>
         <Skeleton>
           <Button className={classes.button} fullWidth>
-            {messages['app.view']}
+            <IntlMessages key='app.coinLeagues.view' />
           </Button>
         </Skeleton>
       </Grid>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useTheme} from '@material-ui/core';
 import {Paper, Box, Typography, Button} from '@material-ui/core';
@@ -34,7 +35,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
                 : theme.palette.text.disabled,
             }}
             variant='caption'>
-            {messages['app.earlyAccess']}
+            <IntlMessages key='app.coinLeagues.earlyAccess' />
           </Typography>
           <Typography
             style={{
@@ -61,7 +62,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
               color='primary'
               variant='contained'
               size='small'>
-              {messages['app.buy']}
+              <IntlMessages key='app.coinLeagues.buy' />
             </Button>
           )}
         </Box>

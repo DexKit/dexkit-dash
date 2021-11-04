@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Button from '@material-ui/core/Button';
@@ -156,10 +157,10 @@ const GamesListV2 = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              {messages['app.dashboard']}
+              <IntlMessages key='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              {messages['app.games']}
+              <IntlMessages key='app.coinLeagues.games' />
             </Link>
           </Breadcrumbs>
         </Grid>
@@ -171,7 +172,9 @@ const GamesListV2 = () => {
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
-        <Typography variant='h5'>{messages['app.coinLeagues']}</Typography>
+        <Typography variant='h5'>
+          <IntlMessages key='app.coinLeagues.coinLeagues' />
+        </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
         <Box display='flex' alignItems='end' justifyContent='end'>
@@ -180,12 +183,12 @@ const GamesListV2 = () => {
           </Box>
           <Box pr={2}>
             <ShareButton
-              shareText={messages['app.coinsLeagueGame'] as string}
+              shareText={messages['app.coinLeagues.coinsLeagueGame'] as string}
             />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={messages['app.buyMatic'] as string}
+              btnMsg={messages['app.coinLeagues.buyMatic'] as string}
               defaultCurrency={'MATIC'}
             />
           </Box>
@@ -203,7 +206,7 @@ const GamesListV2 = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            {messages['app.connectWallet']}
+            <IntlMessages key='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>
@@ -215,13 +218,14 @@ const GamesListV2 = () => {
 
       <Grid item xs={6}>
         <Typography variant='h6' style={{margin: 5}}>
-          {messages['app.gamesInProgress']} {gamesInProgress?.length || 0}
+          <IntlMessages key='app.coinLeagues.gamesInProgress' />{' '}
+          {gamesInProgress?.length || 0}
         </Typography>
       </Grid>
       <Grid item xs={6}>
         <Box display={'flex'} justifyContent={'flex-end'}>
           <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-            {messages['app.viewMore']}
+            <IntlMessages key='app.coinLeagues.viewMore' />
           </Button>
         </Box>
       </Grid>
@@ -243,8 +247,10 @@ const GamesListV2 = () => {
             <Grid item xs={12}>
               <Empty
                 image={<EmptyGame />}
-                title={messages['app.noGamesInProgress'] as string}
-                message={messages['app.searchCreatedAndEnter'] as string}
+                title={messages['app.coinLeagues.noGamesInProgress'] as string}
+                message={
+                  messages['app.coinLeagues.searchCreatedAndEnter'] as string
+                }
               />
             </Grid>
           )}
@@ -265,7 +271,7 @@ const GamesListV2 = () => {
         <ContainedInput
           value={search}
           onChange={handleSearch}
-          placeholder={messages['app.search'] as string}
+          placeholder={messages['app.coinLeagues.search'] as string}
           startAdornment={
             <InputAdornment position='start'>
               <Search />
@@ -292,17 +298,19 @@ const GamesListV2 = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games ? (
-                <Typography variant='h6'>{messages['app.games']}</Typography>
+                <Typography variant='h6'>
+                  <IntlMessages key='app.coinLeagues.games' />
+                </Typography>
               ) : (
                 <Typography variant='h6'>
-                  {messages['app.lastGames']}
+                  <IntlMessages key='app.coinLeagues.lastGames' />
                 </Typography>
               )}
             </Grid>
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games && (
                 <Typography gutterBottom>
-                  {messages['app.recentlyAdded']} &nbsp;
+                  <IntlMessages key='app.coinLeagues.recentlyAdded' /> &nbsp;
                   {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}
@@ -411,8 +419,10 @@ const GamesListV2 = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={messages['app.noGamesJoin'] as string}
-                  message={messages['app.createGamesJoin'] as string}
+                  title={messages['app.coinLeagues.noGamesJoin'] as string}
+                  message={
+                    messages['app.coinLeagues.createGamesJoin'] as string
+                  }
                 />
               </Grid>
             )}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -31,7 +31,6 @@ interface Props {
 
 function CardInfoPlayers(props: Props): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
   const {num_players, current_players} = props;
 
   return (
@@ -48,7 +47,8 @@ function CardInfoPlayers(props: Props): JSX.Element {
               <People />
               <Typography>
                 &nbsp;
-                {`${messages['app.players']} ${current_players} (${num_players})`}{' '}
+                <IntlMessages key='app.coinLeagues.players' />
+                {` ${current_players} (${num_players})`}{' '}
               </Typography>
             </Box>
           </Paper>

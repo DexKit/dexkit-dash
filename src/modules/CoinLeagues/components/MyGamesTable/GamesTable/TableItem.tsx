@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
@@ -97,7 +98,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       if (row.earnings[0].claimed === true) {
         return (
           <Box p={2}>
-            {`${messages['app.claimed']} ${ethers.utils.formatEther(
+            {`${messages['app.coinLeagues.claimed']} ${ethers.utils.formatEther(
               row.earnings[0].amount,
             )} MATIC`}
           </Box>
@@ -109,7 +110,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
               color='inherit'
               component={RouterLink}
               to={enterGameRoute(row.id)}>
-              {messages['app.notClaimedYet']}
+              <IntlMessages key='app.coinLeagues.notClaimedYet' />
             </Link>
           </Box>
         );
@@ -121,15 +122,15 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   const createdDateFn = useMemo(() => {
     switch (row.status) {
       case 'Ended':
-        return `${messages['app.ended']}: ${new Date(
+        return `${messages['app.coinLeagues.ended']}: ${new Date(
           Number(row.endedAt) * 1000,
         ).toLocaleDateString()}`;
       case 'Started':
-        return `${messages['app.started']}: ${new Date(
+        return `${messages['app.coinLeagues.started']}: ${new Date(
           Number(row.startedAt) * 1000,
         ).toLocaleDateString()}`;
       case 'Waiting':
-        return `${messages['app.created']}: ${new Date(
+        return `${messages['app.coinLeagues.created']}: ${new Date(
           Number(row.createdAt) * 1000,
         ).toLocaleDateString()}`;
     }
@@ -149,7 +150,9 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
   }, [row.status]);
 
   if (isMobile) {
-    const summaryTitle = `${messages['app.game']} ${truncateAddress(row.id)}`;
+    const summaryTitle = `${messages['app.coinLeagues.game']} ${truncateAddress(
+      row.id,
+    )}`;
     const summaryValue = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -170,7 +173,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'game',
-        title: messages['app.game'],
+        title: messages['app.coinLeagues.game'],
         value: (
           <Link
             color='inherit'
@@ -182,7 +185,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'status',
-        title: messages['app.status'],
+        title: messages['app.coinLeagues.status'],
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -192,7 +195,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       },
       {
         id: 'place',
-        title: messages['app.place'],
+        title: messages['app.coinLeagues.place'],
         value: (
           <Box display={'flex'} alignItems={'center'}>
             {place}

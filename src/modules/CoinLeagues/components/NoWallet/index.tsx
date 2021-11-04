@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {Button, Grid} from '@material-ui/core';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 
@@ -23,8 +24,8 @@ const NoWallet = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Empty
-          title={messages['app.noWallet'] as string}
-          message={messages['app.pleaseConnectWallet'] as string}
+          title={messages['app.coinLeagues.noWallet'] as string}
+          message={messages['app.coinLeagues.pleaseConnectWallet'] as string}
           image={<EmptyWallet />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
@@ -34,7 +35,7 @@ const NoWallet = () => {
                 color='primary'
                 onClick={handleConnectWallet}
                 endIcon={<AccountBalanceWalletIcon />}>
-                {messages['app.connectWallet']}
+                <IntlMessages key='app.coinLeagues.connectWallet' />
               </Button>
             </Box>
           }

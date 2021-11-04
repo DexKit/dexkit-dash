@@ -54,7 +54,7 @@ export const GamesEnded = (props: Props) => {
               game={g}
               id={g.id}
               onClick={onClickEnterGame}
-              btnMessage={messages['app.viewGame'] as string}
+              btnMessage={messages['app.coinLeagues.viewGame'] as string}
             />
           </Grid>
         ))}
@@ -68,8 +68,8 @@ export const GamesEnded = (props: Props) => {
           <Grid item xs={12}>
             <Empty
               image={<EmptyGame />}
-              title={messages['app.noHistory'] as string}
-              message={messages['app.joinAndPlayGames'] as string}
+              title={messages['app.coinLeagues.noHistory'] as string}
+              message={messages['app.coinLeagues.joinAndPlayGames'] as string}
             />
           </Grid>
         )}

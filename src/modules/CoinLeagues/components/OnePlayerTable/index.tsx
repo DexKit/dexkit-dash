@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -194,7 +195,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         setTx(tx);
         setSubmitState(SubmitState.Submitted);
         createNotification({
-          title: messages['app.claim'] as string,
+          title: messages['app.coinLeagues.claim'] as string,
           body: `Claimed for Game ${address}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(chainId, tx),
@@ -371,22 +372,22 @@ function OnePlayerTable(props: Props): JSX.Element {
           <TableHead>
             <TableRow>
               <TableCell className={classes.header}>
-                {messages['app.position']}
+                <IntlMessages key='app.coinLeagues.position' />
               </TableCell>
               <TableCell className={classes.header}>
-                {messages['app.captain']}
+                <IntlMessages key='app.coinLeagues.captain' />
               </TableCell>
               {playerData?.coins && playerData?.coins.length > 0 && (
                 <TableCell className={classes.header}>
-                  {messages['app.coins']}
+                  <IntlMessages key='app.coinLeagues.coins' />
                 </TableCell>
               )}
               <TableCell className={classes.header}>
-                {messages['app.score']}
+                <IntlMessages key='app.coinLeagues.score' />
               </TableCell>
               {(canClaim || claimed) && (
                 <TableCell className={classes.header}>
-                  {messages['app.action']}
+                  <IntlMessages key='app.coinLeagues.action' />
                 </TableCell>
               )}
             </TableRow>
@@ -400,7 +401,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
                   <Typography variant='h5'>
-                    {messages['app.noDataFound']}!
+                    <IntlMessages key='app.coinLeagues.noDataFound' />!
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -548,13 +549,15 @@ function OnePlayerTable(props: Props): JSX.Element {
                         <Grid item xs={12} md={12}>
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
-                              {submitState === SubmitState.Submitted
-                                ? 'Submitted Tx'
-                                : submitState === SubmitState.Error
-                                ? 'Tx Error'
-                                : submitState === SubmitState.Confirmed
-                                ? 'Confirmed Tx'
-                                : ''}
+                              {submitState === SubmitState.Submitted ? (
+                                <IntlMessages key='app.coinLeagues.submittedTx' />
+                              ) : submitState === SubmitState.Error ? (
+                                <IntlMessages key='app.coinLeagues.txError' />
+                              ) : submitState === SubmitState.Confirmed ? (
+                                <IntlMessages key='app.coinLeagues.confirmedTx' />
+                              ) : (
+                                ''
+                              )}
                             </Button>
                           )}
                         </Grid>
@@ -571,8 +574,12 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitState}
-                              defaultMsg={messages['app.claim'] as string}
-                              confirmedMsg={messages['app.claimed'] as string}
+                              defaultMsg={
+                                messages['app.coinLeagues.claim'] as string
+                              }
+                              confirmedMsg={
+                                messages['app.coinLeagues.claimed'] as string
+                              }
                             />
                           </Button>
                         </Grid>
@@ -587,13 +594,16 @@ function OnePlayerTable(props: Props): JSX.Element {
                         <Grid item xs={12} md={12}>
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
-                              {submitWithdrawState === SubmitState.Submitted
-                                ? 'Submitted Tx'
-                                : submitWithdrawState === SubmitState.Error
-                                ? 'Tx Error'
-                                : submitWithdrawState === SubmitState.Confirmed
-                                ? 'Confirmed Tx'
-                                : ''}
+                              {submitWithdrawState === SubmitState.Submitted ? (
+                                <IntlMessages key='app.coinLeagues.submittedTx' />
+                              ) : submitWithdrawState === SubmitState.Error ? (
+                                <IntlMessages key='app.coinLeagues.txError' />
+                              ) : submitWithdrawState ===
+                                SubmitState.Confirmed ? (
+                                <IntlMessages key='app.coinLeagues.confirmedTx' />
+                              ) : (
+                                ''
+                              )}
                             </Button>
                           )}
                         </Grid>
@@ -610,16 +620,18 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitWithdrawState}
-                              defaultMsg={messages['app.withdraw'] as string}
+                              defaultMsg={
+                                messages['app.coinLeagues.withdraw'] as string
+                              }
                               confirmedMsg={
-                                messages['app.withdrawed'] as string
+                                messages['app.coinLeagues.withdrawed'] as string
                               }
                             />
                           </Button>
                         </Grid>
                       </Grid>
                     )}
-                    {claimed && (messages['app.claimed'] as string)}
+                    {claimed && <IntlMessages key='app.coinLeagues.claimed' />}
                   </TableCell>
                 )}
               </TableRow>

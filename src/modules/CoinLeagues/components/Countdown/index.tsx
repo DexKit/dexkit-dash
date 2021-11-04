@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -45,7 +45,6 @@ function CardTimer(props: {time: number}) {
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
   const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.address);
-  const {messages} = useIntl();
 
   const endTime = useMemo(() => {
     if (game) {
@@ -74,7 +73,7 @@ function Countdown(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            {messages['app.countdown']}
+            <IntlMessages key='app.coinLeagues.countdown' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <CardTimer time={count} />

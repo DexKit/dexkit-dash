@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -84,8 +84,6 @@ function CardGameProgressV2(props: Props): JSX.Element {
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
 
-  const {messages} = useIntl();
-
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
@@ -138,7 +136,9 @@ function CardGameProgressV2(props: Props): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>{messages['app.duration']}:</Typography>
+          <Typography variant='h6'>
+            <IntlMessages key='app.coinLeagues.duration' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 500}}>
             &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
@@ -150,17 +150,19 @@ function CardGameProgressV2(props: Props): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.countdown']}
+            <IntlMessages key='app.coinLeagues.countdown' />
           </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>{messages['app.ended']}</Typography>
+            <Typography variant='subtitle2'>
+              <IntlMessages key='app.coinLeagues.ended' />
+            </Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.entries']}
+            <IntlMessages key='app.coinLeagues.entries' />
             <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
@@ -168,20 +170,20 @@ function CardGameProgressV2(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.coins']}
+            <IntlMessages key='app.coinLeagues.coins' />
             <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            {messages['app.prizePool']}
+            <IntlMessages key='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
           </Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || (messages['app.coins'] as string).toUpperCase()}
+        {props.btnMessage || <IntlMessages key='app.coinLeagues.coins' />}
       </Button>
     </Container>
   );

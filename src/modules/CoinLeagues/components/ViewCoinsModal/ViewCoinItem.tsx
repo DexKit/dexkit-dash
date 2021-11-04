@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Box, Grid, makeStyles, Typography, useTheme} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
@@ -147,21 +148,27 @@ export const ViewCoinListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='body1'>{messages['app.start']}</Typography>
+          <Typography variant='body1'>
+            <IntlMessages key='app.coinLeagues.start' />
+          </Typography>
           <Typography variant='body2' color='textSecondary'>
             {priceStart}
           </Typography>
         </Grid>
         {started ? (
           <Grid item xs>
-            <Typography variant='body1'>{messages['app.current']}</Typography>
+            <Typography variant='body1'>
+              <IntlMessages key='app.coinLeagues.current' />
+            </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
             </Typography>
           </Grid>
         ) : (
           <Grid item xs>
-            <Typography variant='body1'>{messages['app.end']}</Typography>
+            <Typography variant='body1'>
+              <IntlMessages key='app.coinLeagues.end' />
+            </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
             </Typography>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -25,7 +25,6 @@ const useStyles = makeStyles(() => ({
 
 const TableHeading: React.FC = () => {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <TableRow>
@@ -34,15 +33,15 @@ const TableHeading: React.FC = () => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {messages['app.games']}
+        <IntlMessages key='app.coinLeagues.games' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {messages['app.status']}
+        <IntlMessages key='app.coinLeagues.status' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {messages['app.place']}
+        <IntlMessages key='app.coinLeagues.place' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot} />

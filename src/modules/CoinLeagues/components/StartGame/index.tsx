@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
@@ -129,7 +130,7 @@ export const StartGame = (props: Props) => {
           <Grid item xs={12} md={9}>
             {!gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                {messages['app.waitingPlayers']}
+                <IntlMessages key='app.coinLeagues.waitingPlayers' />
               </Typography>
             )}
             <Typography variant='h6' style={{margin: 5}}>
@@ -137,7 +138,7 @@ export const StartGame = (props: Props) => {
             </Typography>
             {gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                {messages['app.everybodyIsHere']}
+                <IntlMessages key='app.coinLeagues.everybodyIsHere' />
               </Typography>
             )}
           </Grid>
@@ -153,13 +154,15 @@ export const StartGame = (props: Props) => {
                   <Box display={'flex'} justifyContent={'center'}>
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted
-                          ? 'Submitted Tx'
-                          : submitState === SubmitState.Error
-                          ? 'Tx Error'
-                          : submitState === SubmitState.Confirmed
-                          ? 'Confirmed Tx'
-                          : ''}
+                        {submitState === SubmitState.Submitted ? (
+                          <IntlMessages key='app.coinLeagues.submittedTx' />
+                        ) : submitState === SubmitState.Error ? (
+                          <IntlMessages key='app.coinLeagues.txError' />
+                        ) : submitState === SubmitState.Confirmed ? (
+                          <IntlMessages key='app.coinLeagues.confirmedTx' />
+                        ) : (
+                          ''
+                        )}
                       </Button>
                     )}
                   </Box>
@@ -180,8 +183,12 @@ export const StartGame = (props: Props) => {
                     }>
                     <ButtonState
                       state={submitState}
-                      defaultMsg={messages['app.startGame'] as string}
-                      confirmedMsg={messages['app.gameStarted'] as string}
+                      defaultMsg={
+                        messages['app.coinLeagues.startGame'] as string
+                      }
+                      confirmedMsg={
+                        messages['app.coinLeagues.gameStarted'] as string
+                      }
                     />
                   </Button>
                 </Grid>

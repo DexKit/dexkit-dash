@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
-import {red, green} from '@material-ui/core/colors';
+import {green, red} from '@material-ui/core/colors';
 
 export enum SubmitState {
   None,
@@ -22,28 +22,27 @@ type Props = {
 
 export const ButtonState = (props: Props) => {
   const {state, defaultMsg, confirmedMsg} = props;
-  const {messages} = useIntl();
 
   switch (state) {
     case SubmitState.WaitingWallet:
       return (
         <>
           <CircularProgress color={'secondary'} />
-          {messages['app.waitingWallet']}
+          <IntlMessages key='app.coinLeagues.waitingWallet' />
         </>
       );
     case SubmitState.Error:
       return (
         <>
           <Icon style={{color: red[500]}}>error</Icon>
-          {messages['app.error']}
+          <IntlMessages key='app.coinLeagues.error' />
         </>
       );
     case SubmitState.Submitted:
       return (
         <>
           <CircularProgress color={'secondary'} />
-          {messages['app.waitingNetworkConfirmation']}
+          <IntlMessages key='app.coinLeagues.waitingNetworkConfirmation' />
         </>
       );
     case SubmitState.Confirmed:
