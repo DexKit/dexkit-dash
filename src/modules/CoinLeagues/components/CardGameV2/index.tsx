@@ -125,7 +125,7 @@ function CardGameV2(props: Props): JSX.Element {
             justifyContent='flex-end'
             style={{color: '#7a8398'}}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.duration' />:
+              <IntlMessages id='app.coinLeagues.duration' />:
             </Typography>
             <Typography variant='h6' style={{fontWeight: 500}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
@@ -137,7 +137,7 @@ function CardGameV2(props: Props): JSX.Element {
             style={{color: '#7a8398'}}>
             <Typography variant='h6'>
               &nbsp;
-              <IntlMessages key='app.coinLeagues.type' />:
+              <IntlMessages id='app.coinLeagues.type' />:
             </Typography>
             <Typography variant='h6' style={{fontWeight: 500}}>
               &nbsp;{game.type === 'Bull' ? 'Bull' : 'Bear'}
@@ -151,19 +151,19 @@ function CardGameV2(props: Props): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.starts' />
+            <IntlMessages id='app.coinLeagues.starts' />
           </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
             <Typography variant='subtitle2'>
-              <IntlMessages key='app.coinLeagues.ready' />{' '}
+              <IntlMessages id='app.coinLeagues.ready' />{' '}
             </Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.entries' />
+            <IntlMessages id='app.coinLeagues.entries' />
           </Typography>
           <Typography variant='subtitle2'>
             {entriesIn}/{entriesOut}
@@ -171,20 +171,20 @@ function CardGameV2(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.coins' />
+            <IntlMessages id='app.coinLeagues.coins' />
           </Typography>
           <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.prizePool' />
+            <IntlMessages id='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || <IntlMessages key='app.coinLeagues.type' />}
+        {props.btnMessage || <IntlMessages id='app.coinLeagues.type' />}
       </Button>
     </Container>
   );

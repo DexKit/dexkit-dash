@@ -28,21 +28,21 @@ export const ButtonState = (props: Props) => {
       return (
         <>
           <CircularProgress color={'secondary'} />
-          <IntlMessages key='app.coinLeagues.waitingWallet' />
+          <IntlMessages id='app.coinLeagues.waitingWallet' />
         </>
       );
     case SubmitState.Error:
       return (
         <>
           <Icon style={{color: red[500]}}>error</Icon>
-          <IntlMessages key='app.coinLeagues.error' />
+          <IntlMessages id='app.coinLeagues.error' />
         </>
       );
     case SubmitState.Submitted:
       return (
         <>
           <CircularProgress color={'secondary'} />
-          <IntlMessages key='app.coinLeagues.waitingNetworkConfirmation' />
+          <IntlMessages id='app.coinLeagues.waitingNetworkConfirmation' />
         </>
       );
     case SubmitState.Confirmed:

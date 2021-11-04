@@ -85,11 +85,11 @@ export const EndGame = (props: Props) => {
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
                         {submitState === SubmitState.Submitted ? (
-                          <IntlMessages key='app.coinLeagues.submittedTx' />
+                          <IntlMessages id='app.coinLeagues.submittedTx' />
                         ) : submitState === SubmitState.Error ? (
-                          <IntlMessages key='app.coinLeagues.txError' />
+                          <IntlMessages id='app.coinLeagues.txError' />
                         ) : submitState === SubmitState.Confirmed ? (
-                          <IntlMessages key='app.coinLeagues.confirmedTx' />
+                          <IntlMessages id='app.coinLeagues.confirmedTx' />
                         ) : (
                           ''
                         )}

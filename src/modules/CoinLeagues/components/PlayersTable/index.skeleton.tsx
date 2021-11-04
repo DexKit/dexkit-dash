@@ -102,13 +102,13 @@ function PlayersTableSkeleton(props: Props): JSX.Element {
           <TableHead>
             <TableRow>
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.position' />
+                <IntlMessages id='app.coinLeagues.position' />
               </TableCell>
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.coins' />
+                <IntlMessages id='app.coinLeagues.coins' />
               </TableCell>
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.score' />
+                <IntlMessages id='app.coinLeagues.score' />
               </TableCell>
             </TableRow>
           </TableHead>

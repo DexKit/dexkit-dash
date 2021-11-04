@@ -39,7 +39,7 @@ export const ChampionCard = (props: ChampionCardProps) => {
             <Skeleton />
           ) : (
             <>
-              <IntlMessages key='app.coinLeagues.champion' /> #{champion?.id}
+              <IntlMessages id='app.coinLeagues.champion' /> #{champion?.id}
             </>
           )}
         </Typography>

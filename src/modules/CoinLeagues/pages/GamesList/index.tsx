@@ -312,10 +312,10 @@ const GamesList = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages key='app.coinLeagues.dashboard' />
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages key='app.coinLeagues.games' />
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
           </Breadcrumbs>
         </Grid>
@@ -327,7 +327,7 @@ const GamesList = () => {
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
         <Typography variant='h5'>
-          <IntlMessages key='app.coinLeagues.coinLeagues' />
+          <IntlMessages id='app.coinLeagues.coinLeagues' />
         </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
@@ -357,7 +357,7 @@ const GamesList = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            <IntlMessages key='app.coinLeagues.connectWallet' />
+            <IntlMessages id='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>
@@ -369,14 +369,14 @@ const GamesList = () => {
 
       <Grid item xs={6}>
         <Typography variant='h6' style={{margin: 5}}>
-          <IntlMessages key='app.coinLeagues.gamesInProgress' />:{' '}
+          <IntlMessages id='app.coinLeagues.gamesInProgress' />:{' '}
           {gamesInProgress?.length || 0}
         </Typography>
       </Grid>
       <Grid item xs={6}>
         <Box display={'flex'} justifyContent={'flex-end'}>
           <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-            <IntlMessages key='app.coinLeagues.viewMore' />
+            <IntlMessages id='app.coinLeagues.viewMore' />
           </Button>
         </Box>
       </Grid>
@@ -438,7 +438,7 @@ const GamesList = () => {
           fullWidth
           variant={'contained'}
           onClick={() => setOpen(true)}>
-          <IntlMessages key='app.coinLeagues.createGame' />
+          <IntlMessages id='app.coinLeagues.createGame' />
         </Button>
       </Grid>
 
@@ -449,13 +449,13 @@ const GamesList = () => {
               {value === Tabs.Games ? (
                 <Typography variant='h6'>
                   {gamesToJoin?.length || 0}{' '}
-                  <IntlMessages key='app.coinLeagues.games' />
+                  <IntlMessages id='app.coinLeagues.games' />
                 </Typography>
               ) : (
                 <Typography variant='h6'>
-                  <IntlMessages key='app.coinLeagues.past' />{' '}
+                  <IntlMessages id='app.coinLeagues.past' />{' '}
                   {gamesEnded?.length || 0}{' '}
-                  <IntlMessages key='app.coinLeagues.gamesOf' />{' '}
+                  <IntlMessages id='app.coinLeagues.gamesOf' />{' '}
                   {totalEndedGames?.toString()}
                 </Typography>
               )}
@@ -463,7 +463,7 @@ const GamesList = () => {
             <Grid item xs={12} sm={12}>
               {value === Tabs.Games && (
                 <Typography gutterBottom>
-                  <IntlMessages key='app.coinLeagues.recentlyAdded' /> &nbsp;
+                  <IntlMessages id='app.coinLeagues.recentlyAdded' /> &nbsp;
                   {/* <ExpandMoreIcon
                     fontSize='small'
                     style={{verticalAlign: 'top'}}

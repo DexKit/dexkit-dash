@@ -44,7 +44,7 @@ function CardInfoPlayersSkeleton(): JSX.Element {
               <Skeleton>
                 <Typography>
                   &nbsp;
-                  <IntlMessages key='app.coinLeagues.players' />
+                  <IntlMessages id='app.coinLeagues.players' />
                   {` ${0} (${10})`}
                 </Typography>
               </Skeleton>

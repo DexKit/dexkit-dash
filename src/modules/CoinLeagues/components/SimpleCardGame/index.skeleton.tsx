@@ -35,7 +35,7 @@ function SimpleCardGameSkeleton(): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.gameTime' />:
+              <IntlMessages id='app.coinLeagues.gameTime' />:
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>&nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>

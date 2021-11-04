@@ -82,13 +82,13 @@ const GamesInProgressV2 = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages key='app.coinLeagues.dashboard' />
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages key='app.coinLeagues.games' />
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages key='app.coinLeagues.gamesInProgress' />
+              <IntlMessages id='app.coinLeagues.gamesInProgress' />
             </Link>
           </Breadcrumbs>
         </Grid>
@@ -105,7 +105,7 @@ const GamesInProgressV2 = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h6' style={{margin: 5}}>
-            <IntlMessages key='app.coinLeagues.gamesInProgress' />
+            <IntlMessages id='app.coinLeagues.gamesInProgress' />
           </Typography>
         </Box>
       </Grid>
@@ -160,7 +160,7 @@ const GamesInProgressV2 = () => {
             <Grid item xs={12} sm={12}>
               <Typography variant='h6'>
                 {gamesInProgress?.length || 0}{' '}
-                <IntlMessages key='app.coinLeagues.gamesInProgress' />
+                <IntlMessages id='app.coinLeagues.gamesInProgress' />
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12}>

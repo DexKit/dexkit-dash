@@ -35,7 +35,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
                 : theme.palette.text.disabled,
             }}
             variant='caption'>
-            <IntlMessages key='app.coinLeagues.earlyAccess' />
+            <IntlMessages id='app.coinLeagues.earlyAccess' />
           </Typography>
           <Typography
             style={{
@@ -62,7 +62,7 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
               color='primary'
               variant='contained'
               size='small'>
-              <IntlMessages key='app.coinLeagues.buy' />
+              <IntlMessages id='app.coinLeagues.buy' />
             </Button>
           )}
         </Box>

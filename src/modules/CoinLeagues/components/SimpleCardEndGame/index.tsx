@@ -35,7 +35,7 @@ function SimpleCardEndGame(props: Props): JSX.Element {
     <Container className={classes.container} maxWidth='xs'>
       <Grid container>
         <Button className={classes.button} fullWidth onClick={props.onClick}>
-          <IntlMessages key='app.coinLeagues.endGame' />
+          <IntlMessages id='app.coinLeagues.endGame' />
         </Button>
       </Grid>
     </Container>

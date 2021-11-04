@@ -21,7 +21,7 @@ export const WaitingPlayers = () => {
             </Box>
             <Box>
               <Typography variant='body2' color='textSecondary'>
-                <IntlMessages key='app.coinLeagues.waitingPlayers' />
+                <IntlMessages id='app.coinLeagues.waitingPlayers' />
               </Typography>
             </Box>
           </Box>

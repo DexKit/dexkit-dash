@@ -33,15 +33,15 @@ const TableHeading: React.FC = () => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages key='app.coinLeagues.games' />
+        <IntlMessages id='app.coinLeagues.games' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages key='app.coinLeagues.status' />
+        <IntlMessages id='app.coinLeagues.status' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages key='app.coinLeagues.place' />
+        <IntlMessages id='app.coinLeagues.place' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot} />

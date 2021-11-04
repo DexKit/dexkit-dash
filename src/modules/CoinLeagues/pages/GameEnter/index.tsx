@@ -295,7 +295,7 @@ function GameEnter(props: Props) {
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
-            <IntlMessages key='coinLeagues.warning.connectPolygon' />
+            <IntlMessages id='coinLeagues.warning.connectPolygon' />
           </Alert>
         </Grid>
       )}
@@ -317,10 +317,10 @@ function GameEnter(props: Props) {
       <Grid item xs={12} sm={12} xl={12}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-            <IntlMessages key='app.coinLeagues.dashboard' />
+            <IntlMessages id='app.coinLeagues.dashboard' />
           </Link>
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-            <IntlMessages key='app.coinLeagues.games' />
+            <IntlMessages id='app.coinLeagues.games' />
           </Link>
           <Link
             color='inherit'
@@ -342,7 +342,7 @@ function GameEnter(props: Props) {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
-            <IntlMessages key='app.coinLeagues.game' /> #
+            <IntlMessages id='app.coinLeagues.game' /> #
             {truncateAddress(address)}
             <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
@@ -408,7 +408,7 @@ function GameEnter(props: Props) {
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-                <IntlMessages key='coinLeagues.warning.gameType' />:
+                <IntlMessages id='coinLeagues.warning.gameType' />:
               </Typography>
               <Typography
                 variant='h5'
@@ -424,13 +424,13 @@ function GameEnter(props: Props) {
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-                <IntlMessages key='app.coinLeagues.gameType' />:
+                <IntlMessages id='app.coinLeagues.gameType' />:
               </Typography>
               <Skeleton>
                 <Typography
                   variant='h5'
                   style={{color: '#fff', marginLeft: '20px'}}>
-                  <IntlMessages key='app.coinLeagues.winner' />
+                  <IntlMessages id='app.coinLeagues.winner' />
                 </Typography>
               </Skeleton>
             </Box>
@@ -483,7 +483,7 @@ function GameEnter(props: Props) {
                     startIcon={<CryptocurrencyIcon />}
                     endIcon={<ExpandMoreIcon />}
                     variant='outlined'>
-                    <IntlMessages key='coinLeagues.page.gameEnter.captain.choose' />
+                    <IntlMessages id='coinLeagues.page.gameEnter.captain.choose' />
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -507,7 +507,7 @@ function GameEnter(props: Props) {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant='h6' style={{margin: 5}}>
-                      <IntlMessages key='coinLeagues.page.gameEnter.chooseCurrencies' />{' '}
+                      <IntlMessages id='coinLeagues.page.gameEnter.chooseCurrencies' />{' '}
                       {selectedCoins?.length}/
                       {(game?.num_coins.toNumber() || 0) - 1}
                     </Typography>
@@ -520,7 +520,7 @@ function GameEnter(props: Props) {
                       startIcon={<CryptocurrencyIcon />}
                       endIcon={<ExpandMoreIcon />}
                       variant='outlined'>
-                      <IntlMessages key='coinLeagues.page.gameEnter.chooseCoins' />
+                      <IntlMessages id='coinLeagues.page.gameEnter.chooseCoins' />
                     </Button>
                   </Grid>
                   <Grid item xs={12}>
@@ -605,7 +605,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                <IntlMessages key='app.coinLeagues.yourCoins' />
+                <IntlMessages id='app.coinLeagues.yourCoins' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -631,7 +631,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant='h6' style={{margin: 5}}>
-                <IntlMessages key='app.coinLeagues.players' />
+                <IntlMessages id='app.coinLeagues.players' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -665,7 +665,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <Skeleton>
                 <Typography variant='h6' style={{margin: 5}}>
-                  <IntlMessages key='app.coinLeagues.players' />
+                  <IntlMessages id='app.coinLeagues.players' />
                 </Typography>
               </Skeleton>
             </Grid>

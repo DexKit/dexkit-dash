@@ -372,22 +372,22 @@ function OnePlayerTable(props: Props): JSX.Element {
           <TableHead>
             <TableRow>
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.position' />
+                <IntlMessages id='app.coinLeagues.position' />
               </TableCell>
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.captain' />
+                <IntlMessages id='app.coinLeagues.captain' />
               </TableCell>
               {playerData?.coins && playerData?.coins.length > 0 && (
                 <TableCell className={classes.header}>
-                  <IntlMessages key='app.coinLeagues.coins' />
+                  <IntlMessages id='app.coinLeagues.coins' />
                 </TableCell>
               )}
               <TableCell className={classes.header}>
-                <IntlMessages key='app.coinLeagues.score' />
+                <IntlMessages id='app.coinLeagues.score' />
               </TableCell>
               {(canClaim || claimed) && (
                 <TableCell className={classes.header}>
-                  <IntlMessages key='app.coinLeagues.action' />
+                  <IntlMessages id='app.coinLeagues.action' />
                 </TableCell>
               )}
             </TableRow>
@@ -401,7 +401,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
                   <Typography variant='h5'>
-                    <IntlMessages key='app.coinLeagues.noDataFound' />!
+                    <IntlMessages id='app.coinLeagues.noDataFound' />!
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -550,11 +550,11 @@ function OnePlayerTable(props: Props): JSX.Element {
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
                               {submitState === SubmitState.Submitted ? (
-                                <IntlMessages key='app.coinLeagues.submittedTx' />
+                                <IntlMessages id='app.coinLeagues.submittedTx' />
                               ) : submitState === SubmitState.Error ? (
-                                <IntlMessages key='app.coinLeagues.txError' />
+                                <IntlMessages id='app.coinLeagues.txError' />
                               ) : submitState === SubmitState.Confirmed ? (
-                                <IntlMessages key='app.coinLeagues.confirmedTx' />
+                                <IntlMessages id='app.coinLeagues.confirmedTx' />
                               ) : (
                                 ''
                               )}
@@ -595,12 +595,12 @@ function OnePlayerTable(props: Props): JSX.Element {
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
                               {submitWithdrawState === SubmitState.Submitted ? (
-                                <IntlMessages key='app.coinLeagues.submittedTx' />
+                                <IntlMessages id='app.coinLeagues.submittedTx' />
                               ) : submitWithdrawState === SubmitState.Error ? (
-                                <IntlMessages key='app.coinLeagues.txError' />
+                                <IntlMessages id='app.coinLeagues.txError' />
                               ) : submitWithdrawState ===
                                 SubmitState.Confirmed ? (
-                                <IntlMessages key='app.coinLeagues.confirmedTx' />
+                                <IntlMessages id='app.coinLeagues.confirmedTx' />
                               ) : (
                                 ''
                               )}
@@ -631,7 +631,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                         </Grid>
                       </Grid>
                     )}
-                    {claimed && <IntlMessages key='app.coinLeagues.claimed' />}
+                    {claimed && <IntlMessages id='app.coinLeagues.claimed' />}
                   </TableCell>
                 )}
               </TableRow>

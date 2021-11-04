@@ -87,7 +87,7 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.prizePool' />
+              <IntlMessages id='app.coinLeagues.prizePool' />
               :&nbsp;
             </Typography>
             <Skeleton>
@@ -98,13 +98,13 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.gameType' />
+              <IntlMessages id='app.coinLeagues.gameType' />
               :&nbsp;
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>
                 <Typography variant='h6'>
-                  <IntlMessages key='app.coinLeagues.winner' />
+                  <IntlMessages id='app.coinLeagues.winner' />
                 </Typography>
               </Skeleton>
             </Typography>
@@ -114,7 +114,7 @@ function SmallCardGameSkeleton(): JSX.Element {
         <Grid item xs={12} style={{color: '#7a8398'}}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.countdown' />
+              <IntlMessages id='app.coinLeagues.countdown' />
               :&nbsp;
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
@@ -128,7 +128,7 @@ function SmallCardGameSkeleton(): JSX.Element {
       <Grid item xs={12} style={{color: '#7a8398'}}>
         <Skeleton>
           <Button className={classes.button} fullWidth>
-            <IntlMessages key='app.coinLeagues.view' />
+            <IntlMessages id='app.coinLeagues.view' />
           </Button>
         </Skeleton>
       </Grid>

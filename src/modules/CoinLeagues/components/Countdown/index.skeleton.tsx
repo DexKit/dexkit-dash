@@ -31,7 +31,7 @@ function CountdownSkeleton(): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            <IntlMessages key='app.coinLeagues.countdown' />
+            <IntlMessages id='app.coinLeagues.countdown' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <Skeleton>-</Skeleton>

@@ -47,7 +47,7 @@ function CardInfoPlayers(props: Props): JSX.Element {
               <People />
               <Typography>
                 &nbsp;
-                <IntlMessages key='app.coinLeagues.players' />
+                <IntlMessages id='app.coinLeagues.players' />
                 {` ${current_players} (${num_players})`}{' '}
               </Typography>
             </Box>

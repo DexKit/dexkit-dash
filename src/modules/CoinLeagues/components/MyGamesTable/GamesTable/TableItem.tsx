@@ -110,7 +110,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
               color='inherit'
               component={RouterLink}
               to={enterGameRoute(row.id)}>
-              <IntlMessages key='app.coinLeagues.notClaimedYet' />
+              <IntlMessages id='app.coinLeagues.notClaimedYet' />
             </Link>
           </Box>
         );

@@ -149,7 +149,7 @@ export const ViewCoinListItem = (props: Props) => {
         </Grid>
         <Grid item>
           <Typography variant='body1'>
-            <IntlMessages key='app.coinLeagues.start' />
+            <IntlMessages id='app.coinLeagues.start' />
           </Typography>
           <Typography variant='body2' color='textSecondary'>
             {priceStart}
@@ -158,7 +158,7 @@ export const ViewCoinListItem = (props: Props) => {
         {started ? (
           <Grid item xs>
             <Typography variant='body1'>
-              <IntlMessages key='app.coinLeagues.current' />
+              <IntlMessages id='app.coinLeagues.current' />
             </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
@@ -167,7 +167,7 @@ export const ViewCoinListItem = (props: Props) => {
         ) : (
           <Grid item xs>
             <Typography variant='body1'>
-              <IntlMessages key='app.coinLeagues.end' />
+              <IntlMessages id='app.coinLeagues.end' />
             </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}

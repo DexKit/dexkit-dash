@@ -172,7 +172,7 @@ const CreateGameModal = (props: Props) => {
               </Grid>
               <Grid item>
                 <Typography variant='h6'>
-                  <IntlMessages key='app.coinLeagues.createGame' />
+                  <IntlMessages id='app.coinLeagues.createGame' />
                 </Typography>
               </Grid>
             </Grid>
@@ -189,12 +189,12 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
             <Typography variant='h6' style={{fontWeight: 600}}>
-              <IntlMessages key='app.coinLeagues.basicInformation' />
+              <IntlMessages id='app.coinLeagues.basicInformation' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant='subtitle2'>
-              <IntlMessages key='app.coinLeagues.warning.createGame' />
+              <IntlMessages id='app.coinLeagues.warning.createGame' />
             </Typography>
           </Grid>
         </Grid>
@@ -202,7 +202,7 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
             <FormLabel className={classes.label}>
-              <IntlMessages key='app.coinLeagues.selectLevel' />
+              <IntlMessages id='app.coinLeagues.selectLevel' />
             </FormLabel>
             <Select
               variant='outlined'
@@ -216,13 +216,13 @@ const CreateGameModal = (props: Props) => {
               {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
               <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>
-                <IntlMessages key='app.coinLeagues.beginner' /> - 1 Matic
+                <IntlMessages id='app.coinLeagues.beginner' /> - 1 Matic
               </MenuItem>
               <MenuItem value={5}>
-                <IntlMessages key='app.coinLeagues.intermediate' /> - 5 Matic
+                <IntlMessages id='app.coinLeagues.intermediate' /> - 5 Matic
               </MenuItem>
               <MenuItem value={10}>
-                <IntlMessages key='app.coinLeagues.advanced' /> - 10 Matic
+                <IntlMessages id='app.coinLeagues.advanced' /> - 10 Matic
               </MenuItem>
               {/*   <MenuItem value={50}>50 Matic</MenuItem>
               <MenuItem value={100}>100 Matic</MenuItem>
@@ -234,7 +234,7 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
             <FormLabel className={classes.label}>
-              <IntlMessages key='app.coinLeagues.gameDuration' />
+              <IntlMessages id='app.coinLeagues.gameDuration' />
             </FormLabel>
             <Select
               variant='outlined'
@@ -262,7 +262,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
-                <IntlMessages key='app.coinLeagues.howManyCoins' />?
+                <IntlMessages id='app.coinLeagues.howManyCoins' />?
               </FormLabel>
               <Select
                 value={coins}
@@ -288,7 +288,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
-                <IntlMessages key='app.coinLeagues.totalPlayers' />
+                <IntlMessages id='app.coinLeagues.totalPlayers' />
               </FormLabel>
               <Select
                 value={totalPlayers}
@@ -322,7 +322,7 @@ const CreateGameModal = (props: Props) => {
             <FormLabel
               className={classes.label}
               style={{fontSize: '1.25rem', fontWeight: 600}}>
-              <IntlMessages key='app.coinLeagues.gameType' />
+              <IntlMessages id='app.coinLeagues.gameType' />
             </FormLabel>
             <RadioGroup value={gameType}>
               <FormControlLabel

@@ -35,7 +35,7 @@ const NoWallet = () => {
                 color='primary'
                 onClick={handleConnectWallet}
                 endIcon={<AccountBalanceWalletIcon />}>
-                <IntlMessages key='app.coinLeagues.connectWallet' />
+                <IntlMessages id='app.coinLeagues.connectWallet' />
               </Button>
             </Box>
           }

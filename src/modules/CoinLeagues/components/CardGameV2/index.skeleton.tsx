@@ -80,7 +80,7 @@ function CardGameSkeleton(): JSX.Element {
         </Grid>
         <Grid item xs={7} style={{color: '#7a8398'}}>
           <Typography variant='h6'>
-            <IntlMessages key='app.coinLeagues.gameTime' />:
+            <IntlMessages id='app.coinLeagues.gameTime' />:
           </Typography>
 
           <Typography variant='h6' style={{fontWeight: 600}}>
@@ -94,13 +94,13 @@ function CardGameSkeleton(): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.starts' />
+            <IntlMessages id='app.coinLeagues.starts' />
           </Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.entries' />
+            <IntlMessages id='app.coinLeagues.entries' />
           </Typography>
           <Typography variant='subtitle2'>
             <Skeleton>
@@ -111,7 +111,7 @@ function CardGameSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.coins' />
+            <IntlMessages id='app.coinLeagues.coins' />
           </Typography>
           <Typography variant='subtitle2'>
             {' '}
@@ -120,7 +120,7 @@ function CardGameSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.prizePool' />
+            <IntlMessages id='app.coinLeagues.prizePool' />
           </Typography>
           <Typography variant='subtitle2'>
             {' '}
@@ -131,7 +131,7 @@ function CardGameSkeleton(): JSX.Element {
 
       <Button className={classes.button} fullWidth>
         <Skeleton>
-          <IntlMessages key='app.coinLeagues.enterGame' />
+          <IntlMessages id='app.coinLeagues.enterGame' />
         </Skeleton>
       </Button>
     </Container>

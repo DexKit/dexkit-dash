@@ -137,7 +137,7 @@ function CardGameProgressV2(props: Props): JSX.Element {
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>
-            <IntlMessages key='app.coinLeagues.duration' />:
+            <IntlMessages id='app.coinLeagues.duration' />:
           </Typography>
           <Typography variant='h6' style={{fontWeight: 500}}>
             &nbsp;{GET_LABEL_FROM_DURATION(time)}
@@ -150,19 +150,19 @@ function CardGameProgressV2(props: Props): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.countdown' />
+            <IntlMessages id='app.coinLeagues.countdown' />
           </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
             <Typography variant='subtitle2'>
-              <IntlMessages key='app.coinLeagues.ended' />
+              <IntlMessages id='app.coinLeagues.ended' />
             </Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.entries' />
+            <IntlMessages id='app.coinLeagues.entries' />
             <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
@@ -170,20 +170,20 @@ function CardGameProgressV2(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.coins' />
+            <IntlMessages id='app.coinLeagues.coins' />
             <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.prizePool' />
+            <IntlMessages id='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
           </Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || <IntlMessages key='app.coinLeagues.coins' />}
+        {props.btnMessage || <IntlMessages id='app.coinLeagues.coins' />}
       </Button>
     </Container>
   );

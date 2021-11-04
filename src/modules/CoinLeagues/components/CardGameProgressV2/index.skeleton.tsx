@@ -84,7 +84,7 @@ function CardGameProgressSkeleton(): JSX.Element {
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>
-            <IntlMessages key='app.coinLeagues.gameTime' />:
+            <IntlMessages id='app.coinLeagues.gameTime' />:
           </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
@@ -97,13 +97,13 @@ function CardGameProgressSkeleton(): JSX.Element {
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.countdown' />
+            <IntlMessages id='app.coinLeagues.countdown' />
           </Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.entries' />
+            <IntlMessages id='app.coinLeagues.entries' />
             <Typography variant='subtitle2'>
               <Skeleton>
                 {' '}
@@ -114,7 +114,7 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.coins' />
+            <IntlMessages id='app.coinLeagues.coins' />
             <Typography variant='subtitle2'>
               {' '}
               <Skeleton>{strPad(1)} </Skeleton>
@@ -123,7 +123,7 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            <IntlMessages key='app.coinLeagues.prizePool' />
+            <IntlMessages id='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>
               {' '}
               <Skeleton>{100} Matic </Skeleton>
@@ -134,7 +134,7 @@ function CardGameProgressSkeleton(): JSX.Element {
 
       <Button className={classes.button} fullWidth>
         <Skeleton>
-          <IntlMessages key='app.coinLeagues.enterGame' />
+          <IntlMessages id='app.coinLeagues.enterGame' />
         </Skeleton>
       </Button>
     </Container>

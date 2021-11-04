@@ -70,7 +70,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               mr={2}
             />
             <Typography variant='body1'>
-              <IntlMessages key='app.coinLeagues.createChampion' />
+              <IntlMessages id='app.coinLeagues.createChampion' />
             </Typography>
           </Box>
           <Box>
@@ -93,10 +93,10 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               onClick={onConfirm}
               variant='contained'
               color='primary'>
-              <IntlMessages key='app.coinLeagues.confirm' />
+              <IntlMessages id='app.coinLeagues.confirm' />
             </Button>
             <Button startIcon={<CloseIcon />} onClick={handleClose}>
-              <IntlMessages key='app.coinLeagues.cancel' />{' '}
+              <IntlMessages id='app.coinLeagues.cancel' />{' '}
             </Button>
           </DialogActions>
         </>

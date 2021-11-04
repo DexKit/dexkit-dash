@@ -101,13 +101,13 @@ const JoinGames = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages key='app.coinLeagues.dashboard' />
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages key='app.coinLeagues.games' />
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
             <Typography>
-              <IntlMessages key='app.coinLeagues.discoverGames' />
+              <IntlMessages id='app.coinLeagues.discoverGames' />
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -119,7 +119,7 @@ const JoinGames = () => {
       </Hidden>
       <Grid item xs={6} sm={3} xl={3}>
         <Typography variant='h5'>
-          <IntlMessages key='app.coinLeagues.discoverGames' />
+          <IntlMessages id='app.coinLeagues.discoverGames' />
         </Typography>
       </Grid>
       <Hidden xsDown={true}>
@@ -170,7 +170,7 @@ const JoinGames = () => {
           <Grid item sm={3}>
             <Grid item xs={12} sm={12}>
               <Typography variant='h6'>
-                <IntlMessages key='app.coinLeagues.gamesToJoin' />
+                <IntlMessages id='app.coinLeagues.gamesToJoin' />
               </Typography>
             </Grid>
           </Grid>

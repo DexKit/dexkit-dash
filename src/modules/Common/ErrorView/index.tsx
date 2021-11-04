@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -12,8 +12,6 @@ interface Props {
 }
 
 const ErrorView: React.FC<Props> = ({message}) => {
-  const {messages} = useIntl();
-
   return (
     <Box py={4} display={'flex'} justifyContent={'center'}>
       <Grid
@@ -32,10 +30,10 @@ const ErrorView: React.FC<Props> = ({message}) => {
             gutterBottom
             align='center'
             variant='h5'>
-            {messages['app.opsErrorFetchingData']}
+            <IntlMessages id='app.common.opsErrorFetchingData' />
           </Typography>
           <Typography align='center'>
-            {messages['app.tryAgainPlease']}!
+            <IntlMessages id='app.common.tryAgainPlease' />!
           </Typography>
         </Grid>
       </Grid>

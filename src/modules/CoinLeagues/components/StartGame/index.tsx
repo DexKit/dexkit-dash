@@ -130,7 +130,7 @@ export const StartGame = (props: Props) => {
           <Grid item xs={12} md={9}>
             {!gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                <IntlMessages key='app.coinLeagues.waitingPlayers' />
+                <IntlMessages id='app.coinLeagues.waitingPlayers' />
               </Typography>
             )}
             <Typography variant='h6' style={{margin: 5}}>
@@ -138,7 +138,7 @@ export const StartGame = (props: Props) => {
             </Typography>
             {gameFull && (
               <Typography variant='h6' style={{margin: 5}}>
-                <IntlMessages key='app.coinLeagues.everybodyIsHere' />
+                <IntlMessages id='app.coinLeagues.everybodyIsHere' />
               </Typography>
             )}
           </Grid>
@@ -155,11 +155,11 @@ export const StartGame = (props: Props) => {
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
                         {submitState === SubmitState.Submitted ? (
-                          <IntlMessages key='app.coinLeagues.submittedTx' />
+                          <IntlMessages id='app.coinLeagues.submittedTx' />
                         ) : submitState === SubmitState.Error ? (
-                          <IntlMessages key='app.coinLeagues.txError' />
+                          <IntlMessages id='app.coinLeagues.txError' />
                         ) : submitState === SubmitState.Confirmed ? (
-                          <IntlMessages key='app.coinLeagues.confirmedTx' />
+                          <IntlMessages id='app.coinLeagues.confirmedTx' />
                         ) : (
                           ''
                         )}

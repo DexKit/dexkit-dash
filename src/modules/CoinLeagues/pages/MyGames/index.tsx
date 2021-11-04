@@ -66,13 +66,13 @@ const MyGames = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages key='app.coinLeagues.dashboard' />
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages key='app.coinLeagues.games' />
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
             <Typography>
-              <IntlMessages key='app.coinLeagues.myGames' />
+              <IntlMessages id='app.coinLeagues.myGames' />
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -84,7 +84,7 @@ const MyGames = () => {
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
         <Typography variant='h5'>
-          <IntlMessages key='app.coinLeagues.myGames' />
+          <IntlMessages id='app.coinLeagues.myGames' />
         </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
@@ -110,7 +110,7 @@ const MyGames = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            <IntlMessages key='app.coinLeagues.connectWallet' />
+            <IntlMessages id='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>

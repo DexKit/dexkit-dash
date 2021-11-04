@@ -139,7 +139,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
               <MoneySendIcon />
             </Box>
             <Typography variant='body1'>
-              <IntlMessages key='app.coinLeagues.selectCoin' />
+              <IntlMessages id='app.coinLeagues.selectCoin' />
             </Typography>
           </Box>
           <IconButton onClick={handleClose}>
@@ -162,7 +162,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
         </Box>
         {filteredCoins.length == 0 ? (
           <Typography variant='body1'>
-            <IntlMessages key='app.coinLeagues.noCoinsFound' />
+            <IntlMessages id='app.coinLeagues.noCoinsFound' />
           </Typography>
         ) : (
           <List>

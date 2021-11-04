@@ -52,7 +52,7 @@ function SimpleCardGame(props: Props): JSX.Element {
         <Grid item xs={12} sm={12}>
           <Box display={'flex'}>
             <Typography variant='h6'>
-              <IntlMessages key='app.coinLeagues.gameTime' />:
+              <IntlMessages id='app.coinLeagues.gameTime' />:
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}

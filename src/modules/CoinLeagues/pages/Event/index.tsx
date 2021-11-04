@@ -77,7 +77,7 @@ export function ChampionsEvent() {
                     <Paper style={{height: '100%'}}>
                       <Box p={4}>
                         <Typography color='textSecondary' variant='caption'>
-                          <IntlMessages key='app.coinLeagues.normalAccess' />
+                          <IntlMessages id='app.coinLeagues.normalAccess' />
                         </Typography>
                         <Typography variant='h4'>00:00:00</Typography>
                       </Box>
@@ -88,7 +88,7 @@ export function ChampionsEvent() {
                       <Box p={4}>
                         <Box>
                           <Typography color='textSecondary' variant='caption'>
-                            <IntlMessages key='app.coinLeagues.yourBalance' />
+                            <IntlMessages id='app.coinLeagues.yourBalance' />
                           </Typography>
                           <Typography variant='h4'>20 KIT</Typography>
                         </Box>
@@ -103,10 +103,10 @@ export function ChampionsEvent() {
                     <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <Typography gutterBottom variant='h5'>
-                          <IntlMessages key='app.coinLeagues.round' /> 1
+                          <IntlMessages id='app.coinLeagues.round' /> 1
                         </Typography>
                         <Typography variant='body1'>
-                          <IntlMessages key='coinLeagues.page.event.round.description' />
+                          <IntlMessages id='coinLeagues.page.event.round.description' />
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -116,7 +116,7 @@ export function ChampionsEvent() {
                           startIcon={<AddIcon />}
                           variant='contained'
                           color='primary'>
-                          <IntlMessages key='app.coinLeagues.createChampion' />
+                          <IntlMessages id='app.coinLeagues.createChampion' />
                         </Button>
                       </Grid>
                     </Grid>
@@ -132,10 +132,10 @@ export function ChampionsEvent() {
                       alignContent='center'
                       justifyContent='space-between'>
                       <Typography variant='h6'>
-                        <IntlMessages key='app.coinLeagues.myChampions' />
+                        <IntlMessages id='app.coinLeagues.myChampions' />
                       </Typography>
                       <Button color='primary'>
-                        <IntlMessages key='app.coinLeagues.viewMore' />
+                        <IntlMessages id='app.coinLeagues.viewMore' />
                       </Button>
                     </Box>
                   </Grid>

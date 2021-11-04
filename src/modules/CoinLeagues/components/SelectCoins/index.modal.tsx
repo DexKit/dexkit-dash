@@ -115,7 +115,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
         </Box>
         {filteredCoins.length == 0 ? (
           <Typography variant='body1'>
-            <IntlMessages key='app.coinLeagues.noCoinsFound' />
+            <IntlMessages id='app.coinLeagues.noCoinsFound' />
           </Typography>
         ) : (
           <List>

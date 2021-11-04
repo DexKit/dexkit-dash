@@ -35,7 +35,7 @@ const MyGamesTable: React.FC = () => {
         alignItems='center'
         alignContent='center'>
         <Typography variant='h5' display={'block'} align={'center'}>
-          <IntlMessages key='app.coinLeagues.viewGames' />
+          <IntlMessages id='app.coinLeagues.viewGames' />
         </Typography>
         <Box display='flex' justifyContent='flex-end' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center' mr={2}>
