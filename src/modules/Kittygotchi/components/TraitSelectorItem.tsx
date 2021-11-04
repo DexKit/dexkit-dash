@@ -2,8 +2,10 @@ import React, {useState, useEffect, useCallback} from 'react';
 
 import {makeStyles, ButtonBase, Typography, Box} from '@material-ui/core';
 
-import {KittygotchiTraitItem} from '../constants/index';
+import {KittygotchiTraitItem} from '../types/index';
+import {KittygotchiTraitType} from '../constants/index';
 import {LockIcon} from 'shared/components/Icons';
+import {getImageFromTrait} from '../utils';
 
 const useStyles = makeStyles((theme) => ({
   circle: {
@@ -71,37 +73,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getImageFromValue(value: string) {
-  return '';
-}
-
 interface TraitSelectorItemProps {
+  traitType: KittygotchiTraitType;
   item: KittygotchiTraitItem;
-  selected?: boolean;
+  selected: boolean;
   locked?: boolean;
   onClick: (item: KittygotchiTraitItem) => void;
 }
 
 export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
-  const {item, selected, locked} = props;
+  const {item, selected, locked, traitType, onClick} = props;
   const classes = useStyles();
 
+  const handleClick = useCallback(() => {
+    console.log('entraaa');
+    onClick(item);
+  }, [onClick, item]);
+
   return (
-    <ButtonBase disabled={locked} className={classes.button}>
+    <ButtonBase
+      disabled={locked}
+      className={classes.button}
+      onClick={handleClick}>
       {selected ? (
         <div className={classes.selectedCircle}>
           <div className={classes.selectedCircleInner}>
             <img
-              src={getImageFromValue(item.value)}
+              src={getImageFromTrait(traitType, item.value)}
               className={classes.image}
             />
           </div>
         </div>
-      ) : (
+      ) : locked ? (
         <div className={classes.circleWrapper}>
           <div className={classes.circle}>
             <img
-              src={getImageFromValue(item.value)}
+              src={getImageFromTrait(traitType, item.value)}
               className={classes.image}
             />
           </div>
@@ -110,8 +117,17 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
               <Box className={classes.circleLockIcon}>
                 <LockIcon />
               </Box>
-              <Typography variant='caption'>500 KIT</Typography>
+              <Typography variant='caption'>{item.holding} KIT</Typography>
             </Box>
+          </div>
+        </div>
+      ) : (
+        <div className={classes.circleWrapper}>
+          <div className={classes.circle}>
+            <img
+              src={getImageFromTrait(traitType, item.value)}
+              className={classes.image}
+            />
           </div>
         </div>
       )}

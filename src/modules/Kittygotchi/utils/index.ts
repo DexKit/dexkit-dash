@@ -1,5 +1,13 @@
 import moment from 'moment';
+import {ChainId} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
+import {
+  IMAGE_PATHS,
+  KittygotchiTraitType,
+  KITTY_TRAITS_ITEM_URL,
+  POLYGON_METADATA_KITTY_ENDPOINT,
+  MUMBAI_METADATA_KITTY_ENDPOINT,
+} from '../constants';
 
 export const canFeedKitty = (kittygotchi?: Kittygotchi) => {
   if (kittygotchi) {
@@ -34,3 +42,50 @@ export const isKittyTired = (kittygotchi?: Kittygotchi) => {
 
   return false;
 };
+
+export function getImageFromTrait(
+  traitType: KittygotchiTraitType,
+  value?: string,
+) {
+  let dir = '';
+
+  switch (traitType) {
+    case KittygotchiTraitType.ACESSOIRES:
+      dir = 'accessories';
+      break;
+    case KittygotchiTraitType.BODY:
+      dir = 'body';
+      break;
+    case KittygotchiTraitType.CLOTHES:
+      dir = 'clothes';
+      break;
+    case KittygotchiTraitType.EARS:
+      dir = 'ears';
+      break;
+    case KittygotchiTraitType.EYES:
+      dir = 'eyes';
+      break;
+    case KittygotchiTraitType.MOUTH:
+      dir = 'mouth';
+      break;
+    case KittygotchiTraitType.NOSE:
+      dir = 'nose';
+      break;
+  }
+
+  if (value) {
+    return IMAGE_PATHS[`${dir}/${value?.toLowerCase()}.png`];
+  } else {
+    return '';
+  }
+}
+
+export function getKittygotchiMetadataEndpoint(chainId: number) {
+  if (chainId === ChainId.Matic) {
+    return POLYGON_METADATA_KITTY_ENDPOINT;
+  } else if (chainId === ChainId.Mumbai) {
+    return MUMBAI_METADATA_KITTY_ENDPOINT;
+  }
+
+  return POLYGON_METADATA_KITTY_ENDPOINT;
+}
