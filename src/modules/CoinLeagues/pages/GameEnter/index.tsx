@@ -295,7 +295,7 @@ function GameEnter(props: Props) {
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
-            {messages['coinLeagues.warning.connectPolygon']}
+            <IntlMessages key='coinLeagues.warning.connectPolygon' />
           </Alert>
         </Grid>
       )}
@@ -408,7 +408,7 @@ function GameEnter(props: Props) {
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-                Game Type:
+                <IntlMessages key='coinLeagues.warning.gameType' />:
               </Typography>
               <Typography
                 variant='h5'
@@ -483,7 +483,7 @@ function GameEnter(props: Props) {
                     startIcon={<CryptocurrencyIcon />}
                     endIcon={<ExpandMoreIcon />}
                     variant='outlined'>
-                    {messages['coinLeagues.page.gameEnter.captain.choose']}
+                    <IntlMessages key='coinLeagues.page.gameEnter.captain.choose' />
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -507,7 +507,7 @@ function GameEnter(props: Props) {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant='h6' style={{margin: 5}}>
-                      {messages['coinLeagues.page.gameEnter.chooseCurrencies']}{' '}
+                      <IntlMessages key='coinLeagues.page.gameEnter.chooseCurrencies' />{' '}
                       {selectedCoins?.length}/
                       {(game?.num_coins.toNumber() || 0) - 1}
                     </Typography>
@@ -520,7 +520,7 @@ function GameEnter(props: Props) {
                       startIcon={<CryptocurrencyIcon />}
                       endIcon={<ExpandMoreIcon />}
                       variant='outlined'>
-                      {messages['coinLeagues.page.gameEnter.chooseCoins']}
+                      <IntlMessages key='coinLeagues.page.gameEnter.chooseCoins' />
                     </Button>
                   </Grid>
                   <Grid item xs={12}>

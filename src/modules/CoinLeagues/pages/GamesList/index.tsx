@@ -438,7 +438,7 @@ const GamesList = () => {
           fullWidth
           variant={'contained'}
           onClick={() => setOpen(true)}>
-          {(messages['app.createGame'] as string).toUpperCase()}
+          <IntlMessages key='app.coinLeagues.createGame' />
         </Button>
       </Grid>
 
