@@ -926,7 +926,18 @@
   "nfts.bundle.bundleNameRequired": "Bundle name is required",
   "nfts.bundle.listingBundle": "Listing bundle",
   "nfts.bundle.items": "Items",
-  "coinleagues.charts": "Charts"
-
-
+  "coinleagues.charts": "Charts",
+  "app.kittygotchi.mouths": "Mouths",
+  "app.kittygotchi.ears": "Ears",
+  "app.kittygotchi.body": "Body",
+  "app.kittygotchi.eyes": "Eyes",
+  "app.kittygotchi.accessories": "Accessories",
+  "app.kittygotchi.noses": "Noses",
+  "app.kittygotchi.save": "Save",
+  "app.kittygotchi.updatingYourKittygotchi": "Updating your Kittygotchi",
+  "app.kittygotchi.waitUntilweUpdate": "Wait until we update your Kittygotchi style",
+  "app.kittygotchi.kittygotchiUpdated": "Kittygotchi updated",
+  "app.kittygotchi.kittygotchiUpdatedSuccessfully": "Kittygotchi updated successfully",
+  "app.kittygotchi.dialog.close": "Close",
+  "app.kittygotchi.connectToPolgyonAlert": "Connect to Polygon(MATIC) network to update a Kittygotchi"
 }
