@@ -1,9 +1,7 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
-import SwipeableViews from 'react-swipeable-views';
 import {
   Box,
-  Grid,
   Typography,
   makeStyles,
   useTheme,
@@ -14,8 +12,6 @@ import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButto
 
 import {ReactComponent as BitcoinConvertWhiteIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import {ReactComponent as ConverIcon} from 'assets/images/icons/convert.svg';
-import {ReactComponent as DollarCircleIcon} from 'assets/images/icons/dollar-circle.svg';
 import {ReactComponent as ExportWhiteIcon} from 'assets/images/icons/export-white.svg';
 import {ReactComponent as ImportWhiteIcon} from 'assets/images/icons/import-white.svg';
 import {ReactComponent as AddCircleIcon} from 'assets/images/icons/add-circle.svg';

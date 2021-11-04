@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
 
 import {
-  Paper,
   Box,
   IconButton,
   Button,

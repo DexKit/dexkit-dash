@@ -1,21 +1,11 @@
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {
   Box,
-  Card,
-  CardContent,
-  CardHeader,
   Grid,
   Paper,
   TextField,
   Typography,
   makeStyles,
-  useTheme,
   Button,
   Switch,
   Avatar,
@@ -32,7 +22,7 @@ import {useHistory, useParams} from 'react-router';
 import {useIntl} from 'react-intl';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import _ from 'lodash';
+
 import SaleTypeButton from '../../components/sell/SaleTypeButton';
 import TokenInput, {PaymentToken} from '../../components/sell/TokenInput';
 import {useAsset} from '../../hooks/detail';
@@ -97,7 +87,6 @@ const SALE_HIGHEST_BID = 'h';
 
 export default () => {
   const classes = useStyles();
-  const theme = useTheme();
   const {messages} = useIntl();
   const {getProvider} = useWeb3();
   const history = useHistory();
@@ -139,8 +128,9 @@ export default () => {
     usdPrice: 0,
   });
 
-  const {getAsset, loading, data, error} = useAsset();
+  const {getAsset, loading, data} = useAsset();
 
+  /* eslint-disable */
   useEffect(() => {
     if (!userAccountAddress) {
       history.replace('/connect-wallet');

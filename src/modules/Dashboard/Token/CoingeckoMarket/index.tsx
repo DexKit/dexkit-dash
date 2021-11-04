@@ -1,15 +1,6 @@
 import React, {useContext} from 'react';
 import {AppContext} from '@crema';
-import {
-  Box,
-  Avatar,
-  Fade,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import {Fonts} from 'shared/constants/AppEnums';
+import {Avatar, Grid, Typography} from '@material-ui/core';
 // import Revenue from 'assets/images/dashboard/auther_sales.png';
 // import SalesIcon from 'assets/images/dashboard/all_time_sales.png';
 // import Comission from 'assets/images/dashboard/commission_sale.png';
@@ -29,7 +20,6 @@ interface Props {
 
 const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
-  const classes = useStyles(theme);
 
   return (
     <Grid

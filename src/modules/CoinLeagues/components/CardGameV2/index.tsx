@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    color: 'black'
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -71,6 +71,7 @@ function CardGameV2(props: Props): JSX.Element {
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
+  /* eslint-disable */
   const onClickEnter = useCallback(
     (ev: any) => {
       onClick(game.id);

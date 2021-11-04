@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
-import {Grid, Box, Card, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
 import {COINGECKO_CONTRACT_URL} from 'shared/constants/AppConst';
 import {GridContainer} from '@crema';
 import ErrorView from 'modules/Common/ErrorView';
 import useFetch from 'use-http';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {useChainId} from 'hooks/useChainId';
-import {useNetwork} from 'hooks/useNetwork';
 import {RouteComponentProps, useHistory} from 'react-router';
 import MyOrdersTable from './MyOrdersTable';
 import usePagination from 'hooks/usePagination';
@@ -18,7 +17,6 @@ import {useTokenList} from 'hooks/useTokenList';
 import PageTitle from 'shared/components/PageTitle';
 import {truncateAddress} from 'utils/text';
 import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
-import {useWeb3} from 'hooks/useWeb3';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
@@ -36,7 +34,6 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
 
   const {address, networkName} = params;
 
-  const history = useHistory();
   const account = useDefaultAccount();
 
   const tokenList = useTokenList(networkName);
@@ -54,9 +51,12 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
   const [data, setData] = useState();
   const [totalRows, setTotalRows] = useState(0);
 
-  const {loading, error, data: dataFn, get} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`,
-  );
+  const {
+    loading,
+    error,
+    data: dataFn,
+    get,
+  } = useFetch(`${ZRX_API_URL(currentChainId)}/sra/v4/orders`);
 
   useEffect(() => {
     if (account) {
@@ -72,10 +72,12 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
       const newData = dataFn.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) =>
+            t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) =>
+            t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['makerTokenFn'] = makerToken;

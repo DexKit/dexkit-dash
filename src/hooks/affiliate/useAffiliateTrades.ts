@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client/react/hooks/useQuery';
 import {useChainId} from 'hooks/useChainId';
 import {FilterContext} from 'providers/protocol/filterContext';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useState} from 'react';
 import {
   BITQUERY_AFFILIATE_TRADES,
   BITQUERY_TOTAL_AFFILIATE_TRADES,

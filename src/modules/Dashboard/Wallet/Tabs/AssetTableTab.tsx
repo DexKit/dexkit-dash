@@ -1,15 +1,13 @@
 import React, {useCallback} from 'react';
-import {Grid, Box, Typography, Button} from '@material-ui/core';
+import {Box, Typography, Button} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
 import AssetTable from '../AssetTable';
-import DefiCoins from '../DefiCoins';
-import {useDefi} from 'hooks/useDefi';
 import {WalletEmptyImage} from 'shared/components/Icons';
 import {useTransak} from 'hooks/useTransak';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 
 type Props = {
   account: string;
@@ -27,7 +25,7 @@ export const AssetTableTab = (props: Props) => {
   //   {/* <DefiCoins {...defiBalance} /> */}
   // </Grid>
 
-  const {isBalanceVisible} = useIsBalanceVisible()
+  const {isBalanceVisible} = useIsBalanceVisible();
   const transak = useTransak({});
 
   const handleTransak = useCallback(() => {
@@ -64,6 +62,10 @@ export const AssetTableTab = (props: Props) => {
   return error ? (
     <ErrorView message={error.message} />
   ) : (
-    <AssetTable hideBalance={!isBalanceVisible} balances={data} loading={loading} />
+    <AssetTable
+      hideBalance={!isBalanceVisible}
+      balances={data}
+      loading={loading}
+    />
   );
 };

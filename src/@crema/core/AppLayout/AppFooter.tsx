@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import AppContext from '../../utility/AppContext';
 import Box from '@material-ui/core/Box';
-import {Button, makeStyles} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 import clsx from 'clsx';
 import AppContextPropsType, {
   CremaTheme,
@@ -12,9 +12,8 @@ interface AppFooterProps {
 }
 
 const AppFooter: React.FC<AppFooterProps> = (props) => {
-  const {footer, footerType, navStyle} = useContext<AppContextPropsType>(
-    AppContext,
-  );
+  const {footer, footerType, navStyle} =
+    useContext<AppContextPropsType>(AppContext);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     footer: {

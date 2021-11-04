@@ -54,12 +54,14 @@ export const ViewCoinListItem = (props: Props) => {
     multipliers,
     tooltipMessage,
   } = props;
-  const isMobile = useMobile()
+  const isMobile = useMobile();
 
   //const {multiplier} = useMultipliers(address);
   const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
   const classes = useStyles();
+
+  /* eslint-disable */
   const priceStart = useMemo(() => {
     if (feedOnchain.start_price) {
       return usdFormatter.format(
@@ -92,12 +94,13 @@ export const ViewCoinListItem = (props: Props) => {
         return '0';
       }
       if (!started) {
-        if(isCaptain){
-          return (feedOnchain.score.toNumber() *  multipliers(playerAddress)) / 1000 ;
-        }else{
+        if (isCaptain) {
+          return (
+            (feedOnchain.score.toNumber() * multipliers(playerAddress)) / 1000
+          );
+        } else {
           return feedOnchain.score.toNumber() / 1000;
         }
-       
       }
 
       const endPrice = started
@@ -125,13 +128,15 @@ export const ViewCoinListItem = (props: Props) => {
   ]);
 
   return (
-    <Box style={{ padding: theme.spacing(4)}} className={classes.item}>
+    <Box style={{padding: theme.spacing(4)}} className={classes.item}>
       <Grid alignItems='center' alignContent='center' container spacing={6}>
-      {!isMobile && <Grid item>
-         <Box className={classes.tokenContainer}>
-            <img src={coin.logo} className={classes.token} />
-          </Box>
-        </Grid>}
+        {!isMobile && (
+          <Grid item>
+            <Box className={classes.tokenContainer}>
+              <img src={coin.logo} className={classes.token} />
+            </Box>
+          </Grid>
+        )}
 
         <Grid item xs={3}>
           <Typography variant='body1'>{`${coin.base.toUpperCase()}`}</Typography>

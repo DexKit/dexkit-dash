@@ -86,7 +86,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const {
     isFavorite,
-    onToggleFavorite,
     loading: favoritesWithMarketLoading,
     data: favoritesWithMarket,
   } = useFavoritesWithMarket();

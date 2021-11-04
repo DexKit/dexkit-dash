@@ -1,14 +1,13 @@
 import React from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
-import {useDispatch} from 'react-redux';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { SwapQuoteResponse } from 'types/zerox';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {SwapQuoteResponse} from 'types/zerox';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import { Token } from 'types/app';
-import { tokenAmountInUnits } from 'utils';
-import { BigNumber } from '@0x/utils';
+import {Token} from 'types/app';
+import {tokenAmountInUnits} from 'utils';
+import {BigNumber} from '@0x/utils';
 
 interface Props {
   account: string;
@@ -30,12 +29,12 @@ const MarketStep: React.FC<Props> = (props) => {
     onLoading,
     onRequestConfirmed,
     tokenFrom,
-    tokenTo
+    tokenTo,
   } = props;
 
   const {getWeb3, chainId} = useWeb3();
 
-  const {createNotification} = useNotifications()
+  const {createNotification} = useNotifications();
 
   const handleAction = () => {
     onLoading(true);
@@ -60,8 +59,14 @@ const MarketStep: React.FC<Props> = (props) => {
         value: quote.value,
       })
       .then((e) => {
-        const tokenFromQuantity = tokenAmountInUnits(new BigNumber(quote.sellAmount), tokenFrom.decimals);
-        const tokenToQuantity = tokenAmountInUnits(new BigNumber(quote.buyAmount), tokenTo.decimals);
+        const tokenFromQuantity = tokenAmountInUnits(
+          new BigNumber(quote.sellAmount),
+          tokenFrom.decimals,
+        );
+        const tokenToQuantity = tokenAmountInUnits(
+          new BigNumber(quote.buyAmount),
+          tokenTo.decimals,
+        );
 
         createNotification({
           title: `Market Order`,

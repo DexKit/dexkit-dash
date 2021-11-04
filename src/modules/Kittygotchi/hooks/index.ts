@@ -1,7 +1,7 @@
 import {BigNumber, ethers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useQuery} from 'react-query';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
@@ -17,7 +17,6 @@ import {
   GET_KITTY_CHAIN_ID,
   KITTYGOTCHI,
   KittygotchiTraitType,
-  POLYGON_METADATA_KITTY_ENDPOINT,
   PRICE,
 } from '../constants';
 import {
@@ -28,19 +27,13 @@ import {
   update,
 } from '../services/kittygotchi';
 
-import {
-  ApolloClient,
-  gql,
-  InMemoryCache,
-  useQuery as useGraphqlQuery,
-} from '@apollo/client';
+import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
 import {DEXKIT} from 'shared/constants/tokens';
 import {getTokenBalances} from 'services/multicall';
 import {KittygotchiTraitItem} from '../types';
-import {_TypedDataEncoder} from '@ethersproject/hash';
 
 const GET_MY_KITTYGOTCHIES = gql`
   query QueryKittygotchies($owner: String!) {
@@ -115,7 +108,7 @@ export function useGraphqlClient() {
 }
 
 export function useKittygotchi(id?: string) {
-  const {chainId, getProvider, web3State} = useWeb3();
+  const {chainId, web3State} = useWeb3();
 
   const provider = useNetworkProvider(undefined, GET_KITTY_CHAIN_ID(chainId));
 
@@ -151,6 +144,7 @@ export function useKittygotchiFeed() {
 
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
+  /* eslint-disable */
   const onFeedCallback = useCallback(
     async (id, callbacks?: CallbackProps) => {
       if (

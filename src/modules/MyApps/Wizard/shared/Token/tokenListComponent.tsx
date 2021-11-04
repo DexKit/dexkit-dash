@@ -20,6 +20,7 @@ import {truncateAddress} from 'utils/text';
 import {isAddress} from 'ethers/lib/utils';
 import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
 import {error} from '..';
+
 import {CustomLabel} from 'shared/components/Wizard/Label';
 import {useTokenList} from 'hooks/useTokenList';
 import {useBlockchain} from 'hooks/useBlockchain';
@@ -108,11 +109,13 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
       const _addresses = str.split(';');
       console.log('address', _addresses);
       if (_addresses.some((x) => !isAddress(x))) {
+        /* eslint-disable */
         setError({
           ['0']: 'invalid information or poorly formatted text',
         } as error);
         return;
       }
+      /* eslint-disable */
       setError({['0']: undefined} as error);
       const set = new Set([...addresses, ..._addresses]);
       setAddress([...set.values()]);
@@ -139,6 +142,7 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
   }, [loading, addresses, valid]);
 
   useEffect(() => {
+    /* eslint-disable */
     if (error != null && error['0'] != null) {
       setValid(false);
       return;
@@ -172,6 +176,7 @@ export const TokenListComponent: FC<TokenListComponentProps> = (props) => {
                     addresses != null &&
                     addresses.length > 0
                   ) {
+                    /* eslint-disable */
                     setError({['0']: undefined} as error);
                   }
                 }}

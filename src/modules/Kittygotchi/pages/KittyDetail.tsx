@@ -6,17 +6,10 @@ import {
   Grid,
   Chip,
   Typography,
-  Divider,
-  CardContent,
-  Card,
   Tooltip,
-  LinearProgress,
-  withStyles,
   Paper,
-  CircularProgress,
   useTheme,
   Avatar,
-  ButtonBase,
   Button,
   alpha,
   IconButton,
@@ -24,16 +17,7 @@ import {
   Link,
 } from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
-import {
-  EditIcon,
-  FastFoodOutlineIcon,
-  FlashIcon,
-  FlashOutlinedIcon,
-  GiftIcon,
-  ShareIcon,
-  ShieldOutlinedIcon,
-} from 'shared/components/Icons';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -41,12 +25,7 @@ import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
-import {
-  useKittygotchi,
-  useKittygotchiFeed,
-  useKittygotchiV2,
-  useKittygotchiOnChain,
-} from '../hooks';
+import {useKittygotchiFeed, useKittygotchiOnChain} from '../hooks';
 import {useMobile} from 'hooks/useMobile';
 import FeedKittygotchiButton from '../components/buttons/FeedKittygotchiButton';
 import {useNotifications} from 'hooks/useNotifications';

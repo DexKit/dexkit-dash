@@ -70,16 +70,16 @@ const Sender: React.FC<Props> = (props) => {
   const {token: defaultToken, disableClose, onResult, error} = props;
 
   const classes = useStyles();
-  const networkName = useNetwork();
+  // const networkName = useNetwork();
 
-  const a11yProps = (index: number) => {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  };
+  // const a11yProps = (index: number) => {
+  //   return {
+  //     id: `simple-tab-${index}`,
+  //     'aria-controls': `simple-tabpanel-${index}`,
+  //   };
+  // };
 
-  const {open, onClose} = props;
+  const {onClose} = props;
 
   const handleClose = useCallback(
     (e) => {

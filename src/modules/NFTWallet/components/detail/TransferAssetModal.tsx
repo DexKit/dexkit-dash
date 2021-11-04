@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {
   Dialog,
@@ -50,6 +50,7 @@ export default (props: Props) => {
     [],
   );
 
+  /* eslint-disable */
   const handleTransferNFT = useCallback(
     async (asset) => {
       onTransfer(asset, address);
@@ -85,6 +86,7 @@ export default (props: Props) => {
                       : '#fff',
                   }}>
                   <img
+                    alt=''
                     src={asset?.image_thumbnail_url}
                     className={classes.img}
                   />

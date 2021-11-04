@@ -1,28 +1,20 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import SmsIcon from '@material-ui/icons/Sms';
 // import messages from '../../services/db/messages/messages';
 import {makeStyles} from '@material-ui/core';
-import MessageItem from './MessageItem';
 import Popover from '@material-ui/core/Popover';
-import List from '@material-ui/core/List';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Scrollbar from '../Scrollbar';
 import IntlMessages from '../../utility/IntlMessages';
 import Hidden from '@material-ui/core/Hidden';
 import clsx from 'clsx';
-import {Fonts} from '../../../shared/constants/AppEnums';
 import {CremaTheme} from '../../../types/AppContextPropsType';
 
 interface HeaderMessagesProps {}
 
 const HeaderMessages: React.FC<HeaderMessagesProps> = () => {
-  const [
-    anchorMessages,
-    setAnchorMessages,
-  ] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorMessages, setAnchorMessages] =
+    React.useState<HTMLButtonElement | null>(null);
 
   const onClickMessagesButton = (
     event: React.MouseEvent<HTMLButtonElement>,

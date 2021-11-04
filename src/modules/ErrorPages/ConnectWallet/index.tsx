@@ -4,9 +4,8 @@ import Button from '@material-ui/core/Button';
 import InfoView from '../../../@crema/core/InfoView';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import {Link as RouterLink} from 'react-router-dom';
 
-import {makeStyles, Link} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {useWeb3} from 'hooks/useWeb3';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';

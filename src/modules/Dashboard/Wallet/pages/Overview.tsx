@@ -3,7 +3,6 @@ import {
   Grid,
   Box,
   IconButton,
-  Tooltip,
   Card,
   Breadcrumbs,
   Typography,
@@ -69,7 +68,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
-  
+
   const [token, setToken] = useState<Token>();
   const priceUSD = useTokenPriceUSD(
     address,
@@ -79,7 +78,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     token?.decimals,
   );
   const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
-  const classes = useStyles();
+
   const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {

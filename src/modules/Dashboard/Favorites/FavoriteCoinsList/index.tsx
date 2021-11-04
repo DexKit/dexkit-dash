@@ -5,11 +5,10 @@ import {FavoriteCoin} from 'redux/_ui/reducers';
 
 import {CoinItemCoinGecko} from 'types/coingecko';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
-import {ReactComponent as EmptyGhost} from 'assets/images/state/empty-ghost.svg';
 import {FavoritesEmptyImage} from 'shared/components/Icons';
 
 interface FavoriteCoinsListProps {

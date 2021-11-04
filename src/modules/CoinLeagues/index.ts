@@ -4,6 +4,14 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: '/champions',
+        component: React.lazy(() => import('./pages/champions/index')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/coin-leagues/champions/event',
         component: React.lazy(() => import('./pages/Event/index')),
       },

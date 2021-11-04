@@ -36,8 +36,6 @@ const validationSchema = yup.object({
 });
 
 const ComingSoon: React.FC<ComingSoonProps> = () => {
-  const dispatch = useDispatch();
-
   const useStyles = makeStyles(() => {
     return {
       form: {

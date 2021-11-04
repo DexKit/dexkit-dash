@@ -1,10 +1,6 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
 import {Steps} from 'types/app';
-import {useStyles} from './index.style';
-
-import {useDispatch} from 'react-redux';
-
 
 interface Props {
   step: Steps;
@@ -12,7 +8,7 @@ interface Props {
 }
 
 const DoneStep: React.FC<Props> = (props) => {
-  const {step, onClose} = props;
+  const {onClose} = props;
 
   return (
     <>

@@ -5,14 +5,11 @@ import {
   Dialog,
   DialogContent,
   DialogProps,
-  DialogTitle,
   Grid,
   makeStyles,
-  Paper,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -32,8 +29,6 @@ interface Props extends DialogProps {
 
 export default (props: Props) => {
   const {success, asset} = props;
-  const classes = useStyles();
-
   return (
     <Dialog {...props} disableBackdropClick>
       <DialogContent>

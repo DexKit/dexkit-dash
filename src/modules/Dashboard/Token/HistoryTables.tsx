@@ -46,10 +46,10 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         <CustomTab label={'Orders'} />
         <CustomTab label={'Trade'} />
       </CustomTabs>
-      {tableActive == 0 && (
+      {tableActive === 0 && (
         <MyOrdersTab address={address} networkName={networkName} />
       )}
-      {tableActive == 1 && (
+      {tableActive === 1 && (
         <TradeHistoryContainer
           address={account as string}
           token={address}

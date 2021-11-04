@@ -1,5 +1,5 @@
 import transakSDK from '@transak/transak-sdk';
-import {useEffect, useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useWeb3} from './useWeb3';
 import {useWindowSize} from './useWindowSize';
 
@@ -45,7 +45,7 @@ export function useTransak(props: Props) {
     [transakClient],
   );
 
- /* useEffect(() => {
+  /* useEffect(() => {
     if (!transakClient &&  windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
@@ -80,9 +80,9 @@ export function useTransak(props: Props) {
   }, [account, transakClient,  defaultCurrency]);*/
 
   const init = useCallback(() => {
-    if(transakClient){
+    if (transakClient) {
       transakClient.init();
-    }else{
+    } else {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
@@ -94,21 +94,23 @@ export function useTransak(props: Props) {
         redirectURL: '',
         hostURL: window.location.origin, // Required field
         widgetHeight:
-        (windowSize && windowSize?.height &&  windowSize?.height < 650) ? `${windowSize.height - 120}px` : '650px',
+          windowSize && windowSize?.height && windowSize?.height < 650
+            ? `${windowSize.height - 120}px`
+            : '650px',
         widgetWidth:
-        (windowSize && windowSize?.width && windowSize?.width < 510) ? `${windowSize.width - 10}px` : '500px',
+          windowSize && windowSize?.width && windowSize?.width < 510
+            ? `${windowSize.width - 10}px`
+            : '500px',
       });
 
-      let allAvents = transak.on(transak.ALL_EVENTS, transakAllEvents);
-      let widgetClose = transak.on(
-        transak.TRANSAK_WIDGET_CLOSE,
-        transakCloseEvents,
-      );
-      let orderSuccessful = transak.on(
-        transak.TRANSAK_ORDER_SUCCESSFUL,
-        transakSucessEvents,
-      );
+      transak.on(transak.ALL_EVENTS, transakAllEvents);
+
+      transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
+
+      transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
+
       transak.init();
+
       setTransakInstance(transak);
     }
   }, [transakClient, windowSize, defaultCurrency]);

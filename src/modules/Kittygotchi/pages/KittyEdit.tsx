@@ -1,7 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
 
-import clsx from 'clsx';
-
 import {
   makeStyles,
   Box,
@@ -71,6 +69,7 @@ export const KittyEdit = () => {
   const updateToggler = useToggler();
 
   //TODO: fix this
+  /* eslint-disable */
   const [hasChange, setHasChange] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState<string>();

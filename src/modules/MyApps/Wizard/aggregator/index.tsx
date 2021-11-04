@@ -73,7 +73,7 @@ function getSteps() {
   return ['General', 'Theme', 'Links'];
 }
 
-const defaultTheme = new DefaultTheme();
+// const defaultTheme = new DefaultTheme();
 
 const initConfig: GeneralConfigAggregator = {
   name: '',
@@ -108,12 +108,12 @@ function getStepContent(
   switch (step) {
     case 0:
       const data: ConfigFileAggregator =
-        config != null && 'name' in config
+        config !== null && 'name' in config
           ? ({...config} as GeneralConfigAggregator)
           : initConfig;
       type k = keyof typeof data;
       const _isValid = Object.keys(data).reduce(
-        (acu, cur) => acu && data[cur as k] == true,
+        (acu, cur) => acu && data[cur as k] === true,
         true,
       );
       return (
@@ -170,7 +170,9 @@ export default function VerticalLinearStepper() {
   const [data, setData] = useState<ConfigFileAggregator>({...initConfig});
   const [isValid, setValid] = useState(false);
   const classes = useStyles();
+  /* eslint-disable */
   const [editable, setEditable] = React.useState(true);
+  /* eslint-disable */
   const [preview, setPreview] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();

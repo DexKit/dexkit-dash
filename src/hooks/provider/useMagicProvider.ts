@@ -28,6 +28,7 @@ export const useMagicProvider = () => {
   const dispatch = useDispatch();
   const {setProvider} = useWeb3();
 
+  /* eslint-disable */
   const onConnectMagicSocial = useCallback(
     async (social: SupportSocialConnectors) => {
       try {
@@ -44,6 +45,7 @@ export const useMagicProvider = () => {
     [],
   );
 
+  /* eslint-disable */
   const onConnectMagicEmail = useCallback(async (email: string) => {
     try {
       dispatch(setWeb3State(Web3State.Connecting));
@@ -56,6 +58,8 @@ export const useMagicProvider = () => {
       setIsMagicProvider('false');
     }
   }, []);
+
+  /* eslint-disable */
   const onConnectMagic = useCallback(async () => {
     try {
       dispatch(setWeb3State(Web3State.Connecting));
@@ -73,6 +77,7 @@ export const useMagicProvider = () => {
     }
   }, []);
 
+  /* eslint-disable */
   const onSwitchMagicNetwork = useCallback(async (network: MagicNetworks) => {
     if (isMagicProvider()) {
       dispatch(setWeb3State(Web3State.Connecting));

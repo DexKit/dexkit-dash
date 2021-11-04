@@ -30,7 +30,7 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
       const newTransactions = state.transactions;
 
       const index = newTransactions.findIndex(
-        (tx: ChangellyTransaction) => tx.id == action.transaction.id,
+        (tx: ChangellyTransaction) => tx.id === action.transaction.id,
       );
 
       newTransactions[index] = action.transaction;
@@ -43,7 +43,7 @@ export default (state: SwapState = initialSettings, action: any): SwapState => {
       const transactions = state.transactions;
 
       const removeIndex = transactions.findIndex(
-        (tx: ChangellyTransaction) => tx.id == action.id,
+        (tx: ChangellyTransaction) => tx.id === action.id,
       );
 
       transactions.splice(removeIndex, 1);

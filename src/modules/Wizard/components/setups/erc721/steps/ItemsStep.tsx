@@ -1,19 +1,9 @@
-import {
-  Grid,
-  Card,
-  Button,
-  CardContent,
-  Box,
-  Paper,
-  Typography,
-  useTheme,
-} from '@material-ui/core';
+import {Grid, Button, Box, Paper, useTheme} from '@material-ui/core';
 import {CollectionItemData} from 'modules/Wizard/types';
 import React, {useCallback} from 'react';
 import CollectionItem from '../CollecttionItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import {Scrollbar} from '@crema';
 
 interface ItemsStepProps {
   values: any;

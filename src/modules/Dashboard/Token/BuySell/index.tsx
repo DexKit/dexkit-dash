@@ -88,7 +88,7 @@ const BuySell: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const account = useDefaultAccount();
-  const {chainId, account: web3Account, web3State} = useWeb3();
+  const {chainId, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -207,7 +207,14 @@ const BuySell: React.FC<Props> = ({
         setSelect0(balancesFn);
       }
     }
-  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName, disableReceive]);
+  }, [
+    balances,
+    tokensETH,
+    tokensBSC,
+    tokensMATIC,
+    networkName,
+    disableReceive,
+  ]);
   // We fill the tokenTo field with the selected token on the url
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {

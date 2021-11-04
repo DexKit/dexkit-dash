@@ -34,7 +34,6 @@ const TableHeading: React.FC<TableHeadingProps> = () => {
     },
   }));
 
-  const classes = useStyles();
   return (
     <TableRow>
       <TableCell align='left'>

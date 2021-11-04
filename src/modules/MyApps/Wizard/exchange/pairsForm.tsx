@@ -24,7 +24,7 @@ import {MessageView} from '@crema';
 
 import {AccordionSummary} from '../shared/Accordion';
 import {CustomIconButton} from '../shared/Buttons';
-import {truncateAddress} from 'utils/text';
+
 import {Token} from 'types/app';
 import {
   ConfigFileExchange,
@@ -85,24 +85,24 @@ type ConfigPairLabels = {
   [Property in keyof ConfigPairMetaData]: string;
 };
 
-const baseValidator = (name: string) => {
-  return name != null && name?.replace(' ', '')?.length >= 3;
-};
+// const baseValidator = (name: string) => {
+//   return name != null && name?.replace(' ', '')?.length >= 3;
+// };
 
-const quoteValiation = (quote: string, base: string) => {
-  return (
-    quote != null &&
-    quote?.replace(' ', '')?.length >= 3 &&
-    quote.toLowerCase() !== base.toLowerCase()
-  );
-};
-const decimalsValidator = (decimals?: number): boolean => {
-  if (decimals == null) return false;
-  const _decimals = Number(decimals);
-  return (
-    _decimals > 0 && _decimals < 24 && !isNaN(_decimals) && isFinite(_decimals)
-  );
-};
+// const quoteValiation = (quote: string, base: string) => {
+//   return (
+//     quote != null &&
+//     quote?.replace(' ', '')?.length >= 3 &&
+//     quote.toLowerCase() !== base.toLowerCase()
+//   );
+// };
+// const decimalsValidator = (decimals?: number): boolean => {
+//   if (decimals == null) return false;
+//   const _decimals = Number(decimals);
+//   return (
+//     _decimals > 0 && _decimals < 24 && !isNaN(_decimals) && isFinite(_decimals)
+//   );
+// };
 const numberValidator = (num?: number) => {
   if (num == null) return false;
   const _number = Number(num);
@@ -155,7 +155,9 @@ const PairComponent: React.FC<PairComponentProps> = (props) => {
   } as error);
   const [pair, setPair] = useState(data);
   const [valid, setValid] = useState<boolean>(isValid);
+  /* eslint-disable */
   const [searchfailed, setSearchFailed] = useState<string>();
+  /* eslint-disable */
   const [loading, setLoading] = useState(false);
 
   const maxAmountError = useCallback((): string | undefined => {

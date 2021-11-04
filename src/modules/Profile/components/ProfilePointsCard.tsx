@@ -54,14 +54,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomLinearProgress = withStyles((theme) => ({
-  root: {
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#343A49',
-    height: theme.spacing(3),
-  },
-  bar: {},
-}))(LinearProgress);
+// const CustomLinearProgress = withStyles((theme) => ({
+//   root: {
+//     borderRadius: theme.shape.borderRadius,
+//     backgroundColor: '#343A49',
+//     height: theme.spacing(3),
+//   },
+//   bar: {},
+// }))(LinearProgress);
 
 const CustomCircularProgress = withStyles((theme) => ({
   circle: {

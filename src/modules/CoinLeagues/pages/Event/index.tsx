@@ -79,7 +79,7 @@ export function ChampionsEvent() {
 
   const {chainId} = useWeb3();
 
-  const myChampions = useMyChampions(chainId);
+  const myChampions = useMyChampions(chainId, 4);
 
   const championTokenHolding = useChampionTokenHolding();
 

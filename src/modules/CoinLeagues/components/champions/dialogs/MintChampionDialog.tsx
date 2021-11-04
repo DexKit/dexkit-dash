@@ -28,6 +28,7 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {ErrorIcon} from 'shared/components/Icons';
 import {useChampionMetadata} from 'modules/CoinLeagues/hooks/champions';
 import {getNormalizedUrl} from 'utils/browser';
+import ChampionTrait from '../ChampionTrait';
 
 const useStyles = makeStyles((theme) => ({
   tokenImage: {
@@ -235,9 +236,27 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
 
           {!championMetadata.loading ? (
             <Grid item xs={12}>
-              <Typography align='center' variant='h6'>
-                {championMetadata.data?.name}
-              </Typography>
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <Typography align='center' variant='h6'>
+                    {championMetadata.data?.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={4}>
+                    {championMetadata.data?.attributes.map(
+                      (attr, index: number) => (
+                        <Grid item xs={4} key={index}>
+                          <ChampionTrait
+                            traitType={attr.trait_type}
+                            value={attr.value}
+                          />
+                        </Grid>
+                      ),
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
           ) : !championMetadata.error ? (
             <Grid item xs={12}>

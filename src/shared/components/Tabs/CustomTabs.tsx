@@ -1,5 +1,4 @@
 import {Tabs, Tab, withStyles} from '@material-ui/core';
-import React from 'react';
 
 export const CustomTabs = withStyles((theme) => ({
   root: {

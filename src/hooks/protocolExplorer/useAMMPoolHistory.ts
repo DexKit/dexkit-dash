@@ -1,8 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useChainId} from '../useChainId';
 import usePagination from 'hooks/usePagination';
-import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_EXCHANGE_NAME, GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {
   BITQUERY_CONTRACT_EVENT_BY_HASH,

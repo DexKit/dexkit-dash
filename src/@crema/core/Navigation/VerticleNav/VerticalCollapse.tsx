@@ -79,21 +79,22 @@ const VerticalCollapse: React.FC<VerticalCollapseProps> = ({
   const handleClick = () => {
     setOpen(!open);
   };
-  const getIcon = (icon: string | undefined) => {
-    switch (icon) {
-      case 'uniswap':
-        return <UniswapLogo />;
-      case 'zrxprotocol':
-        return <ZRXprotocolLogo />;
-      case 'sushiswap':
-        return <SushiLogo />;
-      case 'balancer':
-        return <BalancerLogo />;
 
-      default:
-        return icon;
-    }
-  };
+  // const getIcon = (icon: string | undefined) => {
+  //   switch (icon) {
+  //     case 'uniswap':
+  //       return <UniswapLogo />;
+  //     case 'zrxprotocol':
+  //       return <ZRXprotocolLogo />;
+  //     case 'sushiswap':
+  //       return <SushiLogo />;
+  //     case 'balancer':
+  //       return <BalancerLogo />;
+
+  //     default:
+  //       return icon;
+  //   }
+  // };
 
   return (
     <>

@@ -13,23 +13,25 @@ const MagicCallbackSocial = () => {
   const {onConnectMagic} = useMagicProvider();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const history = useHistory();
+
   //TODO: colocar loading nos callbacks
+  /* eslint-disable */
   useEffect(() => {
     // On mount, we try to login with a Magic credential in the URL query.
     const network = getCachedMagicNetwork();
     const magic = getMagic(network);
     magic.oauth.getRedirectResult().finally(() => {
       onConnectMagic().then((acc) => {
-        if(loginBackRoute){
+        if (loginBackRoute) {
           history.push(loginBackRoute);
-          onSetLoginBackRoute(undefined)
-        }else{
-          if(acc && acc.length){
+          onSetLoginBackRoute(undefined);
+        } else {
+          if (acc && acc.length) {
             history.push(`/wallet/${acc[0]}`);
-          }else{
+          } else {
             history.push('/wallet');
           }
-        }  
+        }
       });
     });
   }, []);

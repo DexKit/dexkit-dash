@@ -53,8 +53,6 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
     }
   }, [coin, onClick]);
 
-  const {usdFormatter} = useUSDFormatter();
-
   const getIconNetwork = useCallback(() => {
     if (coin.symbol.toUpperCase() === 'ETH') {
       return EthereumNetwork.ethereum;

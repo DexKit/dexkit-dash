@@ -84,7 +84,7 @@ const MarketForm: React.FC<Props> = (props) => {
 
   const network = useNetwork();
   const history = useHistory();
-  const {web3State, onConnectWeb3} = useWeb3();
+  const {web3State} = useWeb3();
   const [disableSelect, setDisableSelect] = useState(
     disableReceive ? 'to' : '',
   );

@@ -1,14 +1,11 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import {Avatar, Chip, Link, makeStyles, Tooltip} from '@material-ui/core';
-import {Link as RouterLink} from 'react-router-dom';
+import {Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
 
 import TableRow from '@material-ui/core/TableRow';
 
 import {CremaTheme} from 'types/AppContextPropsType';
 
-import SearchIcon from '@material-ui/icons/Search';
-import {useWeb3} from 'hooks/useWeb3';
 import {truncateAddress} from 'utils';
 import {ITransactionList} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';

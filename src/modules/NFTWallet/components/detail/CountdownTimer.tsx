@@ -1,4 +1,3 @@
-import {NULL_BYTES} from '@0x/order-utils';
 import moment, {Moment} from 'moment';
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 
@@ -13,8 +12,8 @@ export default (props: Props) => {
 
   const timerRef = useRef<any>();
 
+  /* eslint-disable */
   const countDown = useCallback(() => {
-    const year = new Date().getFullYear();
     const difference = dateTime.diff(moment());
     let timeLeft: any = {};
 

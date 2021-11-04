@@ -28,19 +28,24 @@ export const useTransferList = ({address, networkName}: Props) => {
 
   const [data, setData] = useState<Transfers[]>();
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetTransferList,
-    GetTransferListVariables
-  >(BITQUERY_TRANSFER_LIST, {
-    variables: {
-      network: networkName,
-      address: address,
-      limit: Math.floor(rowsPerPage),
-      offset: Math.floor(skipRows),
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetTransferList, GetTransferListVariables>(
+    BITQUERY_TRANSFER_LIST,
+    {
+      variables: {
+        network: networkName,
+        address: address,
+        limit: Math.floor(rowsPerPage),
+        offset: Math.floor(skipRows),
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
+  /* eslint-disable */
   useEffect(() => {
     if (
       dataFn &&

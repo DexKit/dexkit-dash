@@ -1,21 +1,14 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
-  Link,
   Typography,
   Box,
   Grid,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   useTheme,
   useMediaQuery,
 } from '@material-ui/core';
 
 import React from 'react';
-import ButtonCopy from 'shared/components/ButtonCopy';
 import {truncateAddress} from 'utils';
-import SubjectIcon from '@material-ui/icons/Subject';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Skeleton} from '@material-ui/lab';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';

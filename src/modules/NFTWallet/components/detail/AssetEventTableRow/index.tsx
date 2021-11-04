@@ -53,7 +53,8 @@ function getEventType(event: any) {
 
   const is_from_null_address = event.from_account?.address === NULL_ADDRESS;
 
-  const is_to_owner = event.to_account?.address === event.asset.owner.address;
+  // const is_to_owner = event.to_account?.address === event.asset.owner.address;
+
   const has_starting_price = event.starting_price != null;
 
   if (is_from_null_address && is_transfer_event) {
@@ -128,9 +129,9 @@ function AssetEventPrice(props: any) {
   const getPriceFromEvent = useCallback((event: any) => {
     let tokenAmount: Numberish = '0';
 
-    if (getEventType(event) == EVENT_OFFER) {
+    if (getEventType(event) === EVENT_OFFER) {
       tokenAmount = event.bid_amount;
-    } else if (getEventType(event) == EVENT_SALE) {
+    } else if (getEventType(event) === EVENT_SALE) {
       tokenAmount = event.total_price;
     } else {
       tokenAmount = event.starting_price;
@@ -144,7 +145,7 @@ function AssetEventPrice(props: any) {
 
   return (
     <>
-      {getEventType(event) == EVENT_CREATED ? null : (
+      {getEventType(event) === EVENT_CREATED ? null : (
         <Grid alignItems='center' alignContent='center' container spacing={2}>
           <Grid item>
             <Grid
@@ -207,7 +208,7 @@ function AssetEventPrice(props: any) {
 function AssetEventFrom(props: any) {
   const {event} = props;
 
-  if (getEventType(event) == EVENT_SALE) {
+  if (getEventType(event) === EVENT_SALE) {
     return (
       <Link
         component={RouterLink}
@@ -231,7 +232,7 @@ function AssetEventFrom(props: any) {
 function AssetEventTo(props: any) {
   const {event} = props;
 
-  if (getEventType(event) == EVENT_SALE) {
+  if (getEventType(event) === EVENT_SALE) {
     return (
       <Link
         component={RouterLink}
@@ -265,7 +266,7 @@ export default (props: Props) => {
           <Grid item>{getEventIcon(event)}</Grid>
           <Grid item>
             <Typography variant='body1'>
-              {getEventIntlID(event) != '' ? (
+              {getEventIntlID(event) !== '' ? (
                 <IntlMessages id={getEventIntlID(event)} />
               ) : null}
             </Typography>
@@ -273,8 +274,8 @@ export default (props: Props) => {
         </Grid>
       </TableCell>
       <TableCell>
-        {getEventType(event) != EVENT_TRANSFER &&
-        getEventType(event) != EVENT_CANCELLED ? (
+        {getEventType(event) !== EVENT_TRANSFER &&
+        getEventType(event) !== EVENT_CANCELLED ? (
           <AssetEventPrice event={event} />
         ) : null}
       </TableCell>

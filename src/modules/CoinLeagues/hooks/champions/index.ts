@@ -132,7 +132,7 @@ export const useChampionMetadata = (tokenId?: string) => {
 
       axios
         .get<ChampionMetadata>(url, {
-          timeout: 10000,
+          timeout: 120000,
           timeoutErrorMessage: 'timeout',
         })
         .then((response) => {
@@ -147,6 +147,11 @@ export const useChampionMetadata = (tokenId?: string) => {
               fetch(tokenId, attempts - 1);
               return;
             }
+          }
+
+          if (err.response.status === 404) {
+            fetch(tokenId);
+            return;
           }
 
           setError(err);
@@ -211,7 +216,7 @@ const GET_MY_CHAMPIONS = gql`
   query QueryChampions($owner: String!) {
     tokens(
       where: {owner_contains: $owner}
-      first: 4
+      first: 100
       orderBy: id
       orderDirection: desc
     ) {
@@ -224,7 +229,7 @@ const GET_MY_CHAMPIONS = gql`
   }
 `;
 
-export function useMyChampions(chainId?: number) {
+export function useMyChampions(chainId?: number, limit: number = 100) {
   const defaultAccount = useDefaultAccount();
 
   const [data, setData] = useState<any[]>();
@@ -260,7 +265,7 @@ export function useMyChampions(chainId?: number) {
             champions.push(champ);
           }
 
-          setData(champions);
+          setData(champions.slice(0, limit));
           setLoading(false);
         })
         .catch((err) => {
@@ -268,7 +273,7 @@ export function useMyChampions(chainId?: number) {
           setLoading(false);
         });
     }
-  }, [defaultAccount, chainId]);
+  }, [defaultAccount, chainId, limit]);
 
   useEffect(() => {
     if (chainId && defaultAccount) {

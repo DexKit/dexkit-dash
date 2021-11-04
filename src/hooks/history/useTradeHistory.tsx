@@ -38,21 +38,26 @@ export const useTradeHistory = ({
     multiplier = 1;
   }
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetTradeHistoryList,
-    GetTradeHistoryListVariables
-  >(BITQUERY_TRADE_HISTORY_LIST, {
-    variables: {
-      network: networkName,
-      baseCurrency: getCurrency(networkName, baseCurrency),
-      // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
-      address: address,
-      limit: Math.floor(rowsPerPage * multiplier),
-      offset: Math.floor(skipRows * multiplier),
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetTradeHistoryList, GetTradeHistoryListVariables>(
+    BITQUERY_TRADE_HISTORY_LIST,
+    {
+      variables: {
+        network: networkName,
+        baseCurrency: getCurrency(networkName, baseCurrency),
+        // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
+        address: address,
+        limit: Math.floor(rowsPerPage * multiplier),
+        offset: Math.floor(skipRows * multiplier),
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
+  /* eslint-disable */
   useEffect(() => {
     if (dataFn && dataFn?.ethereum?.dexTrades) {
       const total =
