@@ -33,7 +33,7 @@ export const SelectCoinv2 = (props: SelectCoinv2Props) => {
       fullWidth
       variant='outlined'
       onClick={onClick}
-      startIcon={<img src={token?.logoURI} className={classes.img} />}
+      startIcon={<img alt='' src={token?.logoURI} className={classes.img} />}
       endIcon={<ExpandMoreIcon fontSize='inherit' />}>
       {token?.symbol}
     </StyledButton>

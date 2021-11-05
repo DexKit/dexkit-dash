@@ -1,7 +1,6 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   Grid,
-  Box,
   Card,
   CardContent,
   CardMedia,
@@ -29,7 +28,7 @@ interface CollectionItemsProps {
 
 export const CollectionItems = (props: CollectionItemsProps) => {
   const {contractAddress, update} = props;
-  const {data, error, loading, get} = useCollectionItems();
+  const {data, loading, get} = useCollectionItems();
 
   const classes = useStyles();
 

@@ -1,9 +1,7 @@
 import React, {useEffect, useCallback, useState} from 'react';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {makeStyles} from '@material-ui/core';
-import { Badge, } from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
+import {Badge} from '@material-ui/core';
 import {ethers} from 'ethers';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
@@ -20,11 +18,9 @@ import {NotificationsDialog} from 'shared/components/NotificationsDialog';
 import {isTransactionMined} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 
-
 interface NotificationsProps {}
 
 const Notifications: React.FC<NotificationsProps> = () => {
-
   const {getProvider} = useWeb3();
 
   const dispatch = useDispatch();
@@ -33,11 +29,9 @@ const Notifications: React.FC<NotificationsProps> = () => {
     dispatch(onNotificationList());
   }, [dispatch]);
 
-  const {notifications} = useSelector<
-    AppState,
-    AppState['notification']
-  >(({notification}) => notification);
-
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
 
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -46,12 +40,13 @@ const Notifications: React.FC<NotificationsProps> = () => {
   }, []);
 
   // trocar pelo useinterval
+  /* eslint-disable */
   useEffect(() => {
     let interval = setInterval(() => {
       let transactionNotifications = notifications.filter((notification) => {
         let isTransaction = notification?.type === NotificationType.TRANSACTION;
         let isPending =
-          (notification?.metadata as TxNotificationMetadata)?.status ==
+          (notification?.metadata as TxNotificationMetadata)?.status ===
           'pending';
         return isTransaction && isPending;
       });
@@ -92,7 +87,7 @@ const Notifications: React.FC<NotificationsProps> = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [notifications]);
+  }, [notifications, dispatch]);
 
   return (
     <>

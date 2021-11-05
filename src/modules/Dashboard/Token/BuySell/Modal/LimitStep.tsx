@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
-import { FEE_RECIPIENT } from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 // import {useStyles} from './index.style';
 
 interface Props {
@@ -32,7 +32,6 @@ const LimitStep: React.FC<Props> = (props) => {
     price,
     expiry,
     account,
-    selectedGasPrice,
     onNext,
     onLoading,
     onRequestConfirmed,
@@ -59,14 +58,7 @@ const LimitStep: React.FC<Props> = (props) => {
         throw new Error('Provider cannot be null');
       }
 
-      createOrder(
-        tokenFrom,
-        tokenTo,
-        amountFrom,
-        price,
-        expiry,
-        FEE_RECIPIENT,
-      )
+      createOrder(tokenFrom, tokenTo, amountFrom, price, expiry, FEE_RECIPIENT)
         .then((e) => {
           const notification: Notification = {
             title: 'Limit Order',

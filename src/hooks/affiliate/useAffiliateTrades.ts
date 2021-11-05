@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client/react/hooks/useQuery';
 import {useChainId} from 'hooks/useChainId';
 import {FilterContext} from 'providers/protocol/filterContext';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useState} from 'react';
 import {
   BITQUERY_AFFILIATE_TRADES,
   BITQUERY_TOTAL_AFFILIATE_TRADES,
@@ -41,7 +41,7 @@ export const useAffiliateTrades = (affiliateAccount: string) => {
   };
   const skip = !affiliateAccount;
 
-  const {data, loading, error, refetch} = useQuery<
+  const {data, loading, error} = useQuery<
     GetAffiliateTrades,
     GetAffiliateTradesVariables
   >(BITQUERY_AFFILIATE_TRADES, {variables, skip});

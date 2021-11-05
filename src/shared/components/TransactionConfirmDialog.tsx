@@ -13,25 +13,15 @@ import {
   Typography,
   TextField,
   Collapse,
-  useTheme,
 } from '@material-ui/core';
 
-import {Skeleton} from '@material-ui/lab';
-
 import {estimateFees} from '@mycrypto/gas-estimation';
-
-import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 
 import React, {useCallback, useState, useEffect, ChangeEvent} from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import {ReceiptTextIcon} from './Icons';
 import {useNetwork} from 'hooks/useNetwork';
-import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
-import {
-  GET_NATIVE_COIN_FROM_NETWORK_NAME,
-  GET_NETWORK_NAME,
-} from 'shared/constants/Bitquery';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GetNativeCoinFromNetworkName, truncateAddress} from 'utils';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {ExpandLess} from '@material-ui/icons';
@@ -62,8 +52,6 @@ export const TransactionConfirmDialog = (
 
   const [values, setValues] = useState<ValuesType>({});
 
-  const theme = useTheme();
-
   const handleCancel = useCallback(() => {
     if (onCancel) {
       onCancel();
@@ -72,19 +60,19 @@ export const TransactionConfirmDialog = (
 
   const {web3State, getProvider, chainId, account} = useWeb3();
 
-  const isEIP1559Transaction = useCallback(() => {
-    if (data) {
-      let params = data.params;
+  // const isEIP1559Transaction = useCallback(() => {
+  //   if (data) {
+  //     let params = data.params;
 
-      if (params.length > 0) {
-        let firstParams = params[0];
+  //     if (params.length > 0) {
+  //       let firstParams = params[0];
 
-        return firstParams.maxFeePerGas;
-      }
-    }
+  //       return firstParams.maxFeePerGas;
+  //     }
+  //   }
 
-    return false;
-  }, [data]);
+  //   return false;
+  // }, [data]);
 
   const handleConfirm = useCallback(() => {
     if (onConfirm) {
@@ -105,9 +93,8 @@ export const TransactionConfirmDialog = (
 
       onConfirm(dataCopy);
     }
-  }, [onConfirm, data, isEIP1559Transaction, values, chainId]);
+  }, [onConfirm, data, values, chainId]);
 
-  const defaultAccount = useDefaultAccount();
   const network = useNetwork();
 
   const {balance} = useActiveChainBalance();

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {Box, Grid, useTheme, Backdrop} from '@material-ui/core';
+import {Box, Grid, Backdrop} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -14,7 +14,6 @@ import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
-import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -92,14 +91,23 @@ interface Props {
 }
 
 const CoinTools = (props: Props) => {
-  const {balances, only, onMakeFavorite, onShare, isFavorite, token, network, disableReceive} = props;
+  const {
+    balances,
+    only,
+    onMakeFavorite,
+    onShare,
+    isFavorite,
+    token,
+    network,
+    disableReceive,
+  } = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
   const net = useNetwork();
   const networkName = network || net;
 
-
+  /* eslint-disable */
   useEffect(() => {
     if (only) {
       const dataFn = balances?.find(
@@ -167,13 +175,14 @@ const CoinTools = (props: Props) => {
 
   const {init} = useTransak({});
 
+  /* eslint-disable */
   const handleBuyCrypto = useCallback(() => {
     init();
   }, [init]);
 
   const handleSwap = useCallback(() => {
     setShowSwap(true);
-  }, [init]);
+  }, []);
 
   const handleTrade = useCallback(() => setShowTrade(true), [init]);
 

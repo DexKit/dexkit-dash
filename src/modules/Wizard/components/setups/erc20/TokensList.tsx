@@ -11,11 +11,11 @@ import {
 import {useTokensList} from 'modules/Wizard/hooks';
 
 export const TokensList = () => {
-  const {list, data, error, loading} = useTokensList();
+  const {list, data} = useTokensList();
 
   useEffect(() => {
     list();
-  }, []);
+  }, [list]);
 
   return (
     <List disablePadding>

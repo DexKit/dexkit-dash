@@ -1,4 +1,4 @@
-import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {OrderSide} from 'types/app';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -84,7 +84,8 @@ export async function fetchQuote(
     params.set('skipValidation', 'true');
   }
 
-  let url = ZRX_API_URL_FROM_NETWORK(network, quoteParams.chainId) + '/swap/v1/quote?';
+  let url =
+    ZRX_API_URL_FROM_NETWORK(network, quoteParams.chainId) + '/swap/v1/quote?';
 
   for (const [key, value] of params) {
     url += `${key}=${value}&`;

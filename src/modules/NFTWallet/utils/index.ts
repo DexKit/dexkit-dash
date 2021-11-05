@@ -38,7 +38,7 @@ export function deriveUserFromAddr(address?: string) {
 }
 
 export function isSameAddress(address: string, other: string) {
-  return address.toLowerCase() == other.toLowerCase();
+  return address.toLowerCase() === other.toLowerCase();
 }
 
 export function isAssetOwner(asset: any, address: string) {
@@ -54,7 +54,7 @@ export function isAssetOwner(asset: any, address: string) {
 }
 
 export function isAssetSingleOwner(asset: any) {
-  return asset.top_ownerships.length == 1;
+  return asset.top_ownerships.length === 1;
 }
 
 export function getAssetOwnerAddress(asset: any) {
@@ -82,7 +82,7 @@ export function getUnixDays(days: number): number {
 }
 
 export const getFirstOrder = (asset: any) => {
-  return asset?.orders.filter((o: any) => o.side == OrderSide.Sell)[0];
+  return asset?.orders.filter((o: any) => o.side === OrderSide.Sell)[0];
 };
 
 export const getFirstOrderTokenImage = (asset: any) => {

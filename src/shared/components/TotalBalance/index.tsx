@@ -121,7 +121,6 @@ const TotalBalance = (props: Props) => {
     loading,
     loadingUsd,
     address,
-    tokenName,
     onMakeFavorite,
     onShare,
     isFavorite,
@@ -141,7 +140,7 @@ const TotalBalance = (props: Props) => {
   }, [account, defaultAccount]);
 
   const networkName = useNetwork();
-
+  /* eslint-disable */
   useEffect(() => {
     if (only) {
       const dataFn = balances?.find(
@@ -218,12 +217,12 @@ const TotalBalance = (props: Props) => {
     return null;
   }, [only, tokens.length]);
 
-  const onlyTokenValue = useMemo(() => {
-    if (only && tokens.length > 0) {
-      return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
-    }
-    return null;
-  }, [only, tokens.length]);
+  // const onlyTokenValue = useMemo(() => {
+  //   if (only && tokens.length > 0) {
+  //     return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
+  //   }
+  //   return null;
+  // }, [only, tokens.length]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -258,7 +257,7 @@ const TotalBalance = (props: Props) => {
   const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleToggleVisibility = useCallback(() => {
-    setBalanceIsVisible()
+    setBalanceIsVisible();
   }, []);
 
   const handleSwapClose = useCallback(() => {

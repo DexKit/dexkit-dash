@@ -1,13 +1,11 @@
 import {useCallback, useState, useRef} from 'react';
 import axios, {AxiosInstance} from 'axios';
 import {AppState} from 'redux/store';
-import {useDispatch, useSelector} from 'react-redux';
-import Web3 from 'web3';
+import {useSelector} from 'react-redux';
 import {Collection} from 'redux/_wizard/reducers';
 import {useWeb3} from 'hooks/useWeb3';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {BigNumber, ethers} from 'ethers';
-import {findTokensInfoByAddress} from 'utils';
 
 function isIpfsUrl(url: string) {
   return url.startsWith('ipfs://');
@@ -72,7 +70,9 @@ export function useWizardApi() {
 }
 
 export function useCollectionList() {
+  /* eslint-disable */
   let [loading, setLoading] = useState(false);
+  /* eslint-disable */
   let [error, setError] = useState<string | null>(null);
 
   const {collections} = useSelector<AppState, AppState['wizard']>(
@@ -83,7 +83,9 @@ export function useCollectionList() {
 }
 
 export function useCollectionDetails() {
+  /* eslint-disable */
   let [loading, setLoading] = useState(false);
+  /* eslint-disable */
   let [error, setError] = useState<string | null>(null);
   let [data, setData] = useState<Collection | null>(null);
 
@@ -94,7 +96,7 @@ export function useCollectionDetails() {
   const get = useCallback(
     (address: string) => {
       let collectionIndex = collections.findIndex(
-        (collection) => collection.address == address,
+        (collection) => collection.address === address,
       );
 
       setData(collections[collectionIndex]);
@@ -249,7 +251,9 @@ export function useCollectionItems() {
 }
 
 export function useTokensList() {
+  /* eslint-disable */
   let [loading, setLoading] = useState(false);
+  /* eslint-disable */
   let [error, setError] = useState<string | null>(null);
 
   const {tokens} = useSelector<AppState, AppState['wizard']>(

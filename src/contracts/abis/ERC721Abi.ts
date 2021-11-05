@@ -1,5 +1,3 @@
-import {AbiItem} from 'web3-utils';
-
 export const ERC721Abi: any[] = [
   {
     inputs: [

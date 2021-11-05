@@ -79,6 +79,7 @@ export default (props: Props) => {
                           alignItems='center'
                           alignContent='center'>
                           <img
+                            alt=''
                             src={order?.payment_token_contract?.image_url}
                             className={classes.tokenImage}
                           />

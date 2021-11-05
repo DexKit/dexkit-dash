@@ -80,6 +80,7 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
     return onGetToken(address?.toLowerCase());
   }, [tokens, address, onGetToken]);
 
+  /* eslint-disable */
   useEffect(() => {
     if (address) {
       const _valid =
@@ -137,7 +138,7 @@ export const TokenComponent: React.FC<TokenComponentProps> = (props) => {
               };
               const e = new Event('input', {bubbles: true});
               onChange(
-                (e as unknown) as ChangeEvent<
+                e as unknown as ChangeEvent<
                   HTMLInputElement | HTMLTextAreaElement
                 >,
                 _token,

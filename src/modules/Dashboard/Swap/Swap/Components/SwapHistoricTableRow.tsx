@@ -30,6 +30,7 @@ export const SwapHistoricTableRow = (props: Props) => {
     }
   }, [onClick, transaction]);
 
+  /* eslint-disable */
   const handleConfirm = useCallback(() => {
     if (transaction) {
       onRemove(transaction);

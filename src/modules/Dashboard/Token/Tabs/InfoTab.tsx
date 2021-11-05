@@ -2,8 +2,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Card,
-  CardContent,
   Grid,
   useTheme,
 } from '@material-ui/core';

@@ -38,6 +38,7 @@ export const useBlockchain = () => {
       type: 'function',
     },
   ];
+  /* eslint-disable */
   const pairAbi: AbiItem[] = [
     {
       constant: true,

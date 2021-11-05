@@ -1,10 +1,8 @@
-import {CollectionItemData} from 'modules/Wizard/types';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   Box,
   Grid,
   TextField,
-  Typography,
   Paper,
   Button,
   InputAdornment,

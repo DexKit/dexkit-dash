@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   DialogProps,
   Dialog,
@@ -12,7 +12,6 @@ import {
   Typography,
   DialogTitle,
   makeStyles,
-  Divider,
   IconButton,
 } from '@material-ui/core';
 
@@ -21,15 +20,11 @@ import {Alert} from '@material-ui/lab';
 import DoneIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import {GiftIcon, RewardDialogIcon} from 'shared/components/Icons';
-
 import CloseIcon from '@material-ui/icons/Close';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
-import {getBalance} from 'services/web3modal';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -66,8 +61,6 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
   );
 
   const theme = useTheme();
-
-  const defaultAccount = useDefaultAccount();
 
   return (
     <Dialog {...dialogProps} maxWidth='xs' fullWidth>

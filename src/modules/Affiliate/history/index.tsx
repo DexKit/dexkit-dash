@@ -1,7 +1,7 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import TransactionTable from './TransactionTable';
-import {Box, makeStyles, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, makeStyles, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import FilterList from 'shared/components/Filter/list';
@@ -50,7 +50,7 @@ const AffiliateHistory: React.FC<Props> = (props: Props) => {
         </Box>
       </Toolbar>
       <TransactionTable {...props} />
-      </>
+    </>
     // </AppCard>
   );
 };

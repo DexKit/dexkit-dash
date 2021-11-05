@@ -3,7 +3,6 @@ import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {
   Box,
-  Fade,
   Table,
   TableBody,
   TableHead,
@@ -45,7 +44,7 @@ const TokenOrdersTable: React.FC<Props> = ({
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead>
-           {!isMobile && <TableHeading type={type} exchange={exchange} />}
+            {!isMobile && <TableHeading type={type} exchange={exchange} />}
           </TableHead>
 
           <TableBody>

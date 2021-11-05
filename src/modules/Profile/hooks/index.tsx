@@ -1,18 +1,21 @@
 import {useWeb3} from 'hooks/useWeb3';
-import React, {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import {
-  setDefaultKitty,
   setDefaultKittyOnChain,
   clearOldState,
 } from 'redux/_kittygotchi/actions';
 import {Kittygotchi} from 'types/kittygotchi';
 
 export function useProfilePoints() {
+  /* eslint-disable */
   const [amount, setAmount] = useState(100);
+  /* eslint-disable */
   const [maxAmount, setMaxAmount] = useState(500);
+  /* eslint-disable */
   const [loading, setLoading] = useState(false);
+  /* eslint-disable */
   const [error, setError] = useState<string>();
 
   return {amount, maxAmount, error, loading};

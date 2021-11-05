@@ -14,23 +14,24 @@ const MagicCallbackEmail = () => {
   const history = useHistory();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   ////TODO: colocar loading nos callbacks
+  /* eslint-disable */
   useEffect(() => {
     // On mount, we try to login with a Magic credential in the URL query.
     const network = getCachedMagicNetwork();
     const magic = getMagic(network);
     magic.auth.loginWithCredential().finally(() => {
-      onConnectMagic().then((acc)=>{
-          if(loginBackRoute){   
-            history.push(loginBackRoute);
-            onSetLoginBackRoute(undefined)
-          }else{
-            if(acc && acc.length){
-              history.push(`/wallet/${acc[0]}`);
-            }else{
-              history.push('/wallet');
-            }
-          }  
-      })
+      onConnectMagic().then((acc) => {
+        if (loginBackRoute) {
+          history.push(loginBackRoute);
+          onSetLoginBackRoute(undefined);
+        } else {
+          if (acc && acc.length) {
+            history.push(`/wallet/${acc[0]}`);
+          } else {
+            history.push('/wallet');
+          }
+        }
+      });
     });
   }, []);
 

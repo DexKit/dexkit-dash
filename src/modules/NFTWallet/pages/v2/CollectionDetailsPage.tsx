@@ -9,10 +9,8 @@ import {
   CardContent,
   CardMedia,
   Grid,
-  Paper,
   makeStyles,
   useTheme,
-  CardActionArea,
   TextField,
   InputAdornment,
 } from '@material-ui/core';
@@ -20,19 +18,14 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SearchIcon from '@material-ui/icons/Search';
 
 import {Link as RouterLink, useParams} from 'react-router-dom';
-import IntlMessages from '@crema/utility/IntlMessages';
-import {ChainId, Web3State} from 'types/blockchain';
-import {useWeb3} from 'hooks/useWeb3';
-
 import {ethers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {slugToChainId} from 'utils/nft';
 import {getTokenMetadata} from 'services/nfts';
-import {NftToken, TokenMetadata} from 'types/nfts';
+import {NftToken} from 'types/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import {Skeleton} from '@material-ui/lab';
 import {deriveUserFromAddr} from 'modules/NFTWallet/utils';
-import {useHistory} from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -163,14 +156,10 @@ export const CollectionDetailsPage = () => {
   const [metadata, setMetadata] = useState<{name: string; symbol: string}>();
   const [tokens, setTokens] = useState<NftToken[]>();
 
-  const [owner, setOwner] = useState<string>();
-
   const classes = useStyles();
   const theme = useTheme();
 
   const provider = useNetworkProvider(undefined, slugToChainId(params.network));
-
-  const history = useHistory();
 
   useEffect(() => {
     if (provider) {

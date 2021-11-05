@@ -13,6 +13,7 @@ export function CountdownSpan(props: CountdownSpanProps) {
 
   const [text, setText] = useState<string>(EMPTY_COUNTER);
 
+  /* eslint-disable */
   useEffect(() => {
     let interval = setInterval(() => {
       if (moment().utc().isAfter(toDate)) {

@@ -1,7 +1,7 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {FormControl, InputLabel, MenuItem, Select} from '@material-ui/core';
 import {getUnixDays} from 'modules/NFTWallet/utils';
-import React, {ChangeEvent, useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useIntl} from 'react-intl';
 
 interface Option {

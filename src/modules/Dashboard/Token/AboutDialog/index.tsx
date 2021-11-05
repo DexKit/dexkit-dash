@@ -1,28 +1,17 @@
 import React, {useCallback} from 'react';
 import {
   createStyles,
-  makeStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
 
-import {
-  Box,
-  Button,
-  IconButton,
-  Typography,
-  Link,
-  Tooltip,
-} from '@material-ui/core';
+import {Box, IconButton, Typography} from '@material-ui/core';
 
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
-import InfoIcon from '@material-ui/icons/Info';
-import {CremaTheme} from 'types/AppContextPropsType';
 
 const styles = (theme: Theme) =>
   createStyles({

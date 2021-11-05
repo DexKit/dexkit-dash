@@ -1,13 +1,11 @@
 import React, {useMemo} from 'react';
 
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {
   Box,
   TableCell,
   TableRow,
   Chip,
-  Link,
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core';
@@ -58,6 +56,8 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const priceUsd = usdFormatter.format(
     (row.baseAmountInUsd || 1) / (row.baseAmount || 1) || 0,
   );
+
+  /* eslint-disable */
   const ViewTxComponent = React.useMemo(
     () => () =>
       <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,

@@ -32,7 +32,12 @@ export const KittygotchiImage = (props: Props) => {
 
   if (imgB64 && images.length > 0) {
     return (
-      <img src={imgB64} className={classes.image} crossOrigin='anonymous' />
+      <img
+        alt=''
+        src={imgB64}
+        className={classes.image}
+        crossOrigin='anonymous'
+      />
     );
   }
 

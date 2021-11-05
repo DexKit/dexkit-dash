@@ -25,8 +25,6 @@ const usdReferecence = {
   [EthereumNetwork.matic]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
 };
 
-const cacheCoin = new Map<string, string>();
-
 export default {
   // This method is used by the Charting Library to get a configuration of your datafeed
   // (e.g. supported resolutions, exchanges and so on)
@@ -94,9 +92,12 @@ export default {
         | EthereumNetwork.matic
         | EthereumNetwork.ethereum;
       const base = symbolInfo.ticker.split(':')[2] || wrappedNative[network];
-   
+
       // Used when coin is native one
-      if (base.toLowerCase() === wrappedNative[network].toLowerCase() || native[network] === base.toLowerCase() ) {
+      if (
+        base.toLowerCase() === wrappedNative[network].toLowerCase() ||
+        native[network] === base.toLowerCase()
+      ) {
         const response2 = await axios.post(Bitquery.endpoint, {
           query: Bitquery.GET_COIN_BARS_NATIVE_USDT,
           variables: {

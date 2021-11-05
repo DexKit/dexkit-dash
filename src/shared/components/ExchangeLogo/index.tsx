@@ -26,6 +26,7 @@ const ExchangeLogo = (props: Props) => {
         <Tooltip title='Trade on Uniswap' placement='top'>
           <Icon color='action' className={clsx('nav-item-icon', {})}>
             <img
+              alt=''
               className={classes.icon}
               src={require(`assets/images/uniswap.png`)}
             />
@@ -41,6 +42,7 @@ const ExchangeLogo = (props: Props) => {
         <Tooltip title='Trade on ZRX Protocol' placement='top'>
           <Icon color='action' className={clsx('nav-item-icon', {})}>
             <img
+              alt=''
               className={classes.icon}
               src={require(`assets/images/0x.svg`)}
             />
@@ -52,6 +54,7 @@ const ExchangeLogo = (props: Props) => {
         <Tooltip title='Trade on Balancer' placement='top'>
           <Icon color='action' className={clsx('nav-item-icon', {})}>
             <img
+              alt=''
               className={classes.icon}
               src={require(`assets/images/balancer.svg`)}
             />
@@ -63,6 +66,7 @@ const ExchangeLogo = (props: Props) => {
         <Tooltip title='Trade on Mooniswap' placement='top'>
           <Icon color='action' className={clsx('nav-item-icon', {})}>
             <img
+              alt=''
               className={classes.icon}
               src={require(`assets/images/mooniswap.svg`)}
             />
@@ -74,6 +78,7 @@ const ExchangeLogo = (props: Props) => {
         <Tooltip title='Trade on SushiSwap' placement='top'>
           <Icon color='action' className={clsx('nav-item-icon', {})}>
             <img
+              alt=''
               className={classes.icon}
               src={require(`assets/images/sushiswap.svg`)}
             />

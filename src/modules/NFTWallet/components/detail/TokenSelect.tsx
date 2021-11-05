@@ -1,7 +1,5 @@
 import {
   Avatar,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
   Select,
   useTheme,
@@ -10,7 +8,7 @@ import {
   FormControl,
 } from '@material-ui/core';
 import {OpenSeaToken} from 'modules/NFTWallet/types';
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 interface Props {
   tokens: OpenSeaToken[];

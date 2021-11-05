@@ -36,7 +36,7 @@ export const FeedingKittygotchiDialog = (props: Props) => {
     if (dialogProps.onClose) {
       dialogProps.onClose({}, 'backdropClick');
     }
-  }, [dialogProps.onClose]);
+  }, [dialogProps]);
 
   const handleViewTransaction = useCallback(() => {
     if (chainId && transactionHash) {

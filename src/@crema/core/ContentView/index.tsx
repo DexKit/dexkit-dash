@@ -54,8 +54,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ContentView: React.FC<ContentViewProps> = () => {
-  const theme = useTheme();
-
   const isMobile = useMobile();
 
   const classes = useStyles();

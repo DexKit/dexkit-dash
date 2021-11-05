@@ -45,7 +45,7 @@ export const WizardList = (props: WizardListProps) => {
           title={item.title}
           description={item.description}
           onClick={handleClick}
-          selected={slug == item.slug}
+          selected={slug === item.slug}
           slug={item.slug}
         />
       ))}

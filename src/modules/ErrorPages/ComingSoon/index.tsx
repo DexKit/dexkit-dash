@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {useDispatch} from 'react-redux';
 import {Form, Formik, useField} from 'formik';
 import * as yup from 'yup';
 // import {showMessage} from '../../../redux/actions';
@@ -36,8 +35,6 @@ const validationSchema = yup.object({
 });
 
 const ComingSoon: React.FC<ComingSoonProps> = () => {
-  const dispatch = useDispatch();
-
   const useStyles = makeStyles(() => {
     return {
       form: {

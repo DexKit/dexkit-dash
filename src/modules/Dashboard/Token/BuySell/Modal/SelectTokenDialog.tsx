@@ -25,7 +25,6 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {useMobile} from 'hooks/useMobile';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
-import {isUndefined} from 'util';
 
 interface Props extends DialogProps {
   title?: string;
@@ -49,7 +48,7 @@ export const SelectTokenDialog = (props: Props) => {
       const value = e.target.value;
       setFilterText(value);
     },
-    [tokens],
+    [],
   );
 
   const filteredTokens = useMemo(() => {
@@ -184,7 +183,7 @@ export const SelectTokenDialog = (props: Props) => {
             </Box>
           ) : null}
         </Box>
-        {filteredTokens.length == 0 ? (
+        {filteredTokens.length === 0 ? (
           <Typography variant='body1'>No tokens found</Typography>
         ) : (
           <List disablePadding>

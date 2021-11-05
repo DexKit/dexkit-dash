@@ -1,13 +1,10 @@
 import React from 'react';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import {GridContainer} from '@crema';
 
-import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import OrderTable from './OrderTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
-import {useIntl} from 'react-intl';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useAllTradeHistory} from 'hooks/history/useAllTradeHistory';
@@ -19,8 +16,6 @@ type Props = {
 
 const TradeAllHistoryContainer: React.FC<Props> = (props) => {
   const {address, networkName} = props;
-  const {messages} = useIntl();
-  const classes = useStyles();
 
   const {
     loading,

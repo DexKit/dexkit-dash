@@ -9,7 +9,7 @@ import {isAddress} from '@ethersproject/address';
 import {getCollectionInfo} from 'services/rest/opensea';
 import {urlValidator} from 'utils/text';
 import {CustomLabel} from 'shared/components/Wizard/Label';
-import {error, getHelpText, fillError} from '../../shared';
+import {error, getHelpText} from '../../shared';
 import {HELP_TEXT_COLLECTIONS} from '../helpText';
 import {InfoComponent} from '../../shared/Buttons/infoComponent';
 
@@ -78,6 +78,7 @@ export const CollectionComponentItem: React.FC<CollectionComponentItemProps> = (
   const addressInput = React.useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
+  /* eslint-disable */
   useEffect(() => {
     // const _error = fillError(errors, undefined);
     // console.log('error', _error);
@@ -92,6 +93,7 @@ export const CollectionComponentItem: React.FC<CollectionComponentItemProps> = (
     validator(_valid);
   }, []);
 
+  /* eslint-disable */
   useEffect(() => {
     setSearchFailed(undefined);
     if (isAddress(address)) {
@@ -144,7 +146,7 @@ export const CollectionComponentItem: React.FC<CollectionComponentItemProps> = (
               };
               const e = new Event('input', {bubbles: true});
               onChange(
-                (e as unknown) as ChangeEvent<
+                e as unknown as ChangeEvent<
                   HTMLInputElement | HTMLTextAreaElement
                 >,
                 _collections,
@@ -160,6 +162,7 @@ export const CollectionComponentItem: React.FC<CollectionComponentItemProps> = (
         .finally(() => setLoading(false));
     }
   }, [address]);
+
   useEffect(() => {
     if (errors != null) {
       const _valid = Object.values(errors).reduce(

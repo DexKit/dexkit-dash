@@ -17,8 +17,6 @@ export interface NavItemProps {
 }
 
 const useRoutesConfig = (): NavItemProps[] => {
-  const networkName = 'ethereum';
-
   let items: NavItemProps[] = [];
 
   items = [

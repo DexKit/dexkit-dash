@@ -1,22 +1,13 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect} from 'react';
 import {RouteComponentProps, useHistory} from 'react-router-dom';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
-import {GridContainer} from '@crema';
+import {Box} from '@material-ui/core';
 
-import {useStyles} from './index.style';
-import ErrorView from 'modules/Common/ErrorView';
-import OrderTable from './OrderTable';
-import LoadingTable from 'modules/Common/LoadingTable';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
-import {useIntl} from 'react-intl';
 import PageTitle from 'shared/components/PageTitle';
 
 import {truncateAddress} from 'utils/text';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import {useTradeHistory} from 'hooks/history/useTradeHistory';
-import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import TradeHistoryContainer from './container';
 
 type Params = {
@@ -32,11 +23,10 @@ const TradeHistoryPage: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, token, networkName} = params;
-  const {messages} = useIntl();
-  const classes = useStyles();
   const account = useDefaultAccount();
   const history = useHistory();
 
+  /* eslint-disable */
   useEffect(() => {
     if (account && account !== address) {
       if (token) {

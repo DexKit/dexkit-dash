@@ -3,11 +3,7 @@ import {_TypedDataEncoder} from '@ethersproject/hash';
 import {getMulticallFromProvider} from 'services/multicall';
 import {getEthers} from 'services/web3modal';
 import {ChainId} from 'types/blockchain';
-import {
-  GAS_PRICE_MULTIPLIER,
-  MUMBAI_METADATA_KITTY_ENDPOINT,
-  POLYGON_METADATA_KITTY_ENDPOINT,
-} from '../constants';
+import {GAS_PRICE_MULTIPLIER} from '../constants';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
 import {Interface} from 'ethers/lib/utils';
 import {CallInput} from '@indexed-finance/multicall';

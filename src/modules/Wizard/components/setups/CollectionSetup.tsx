@@ -13,14 +13,11 @@ import {
 } from '@material-ui/core';
 import Web3 from 'web3';
 
-import React, {useCallback, useState, useEffect} from 'react';
-import MainLayout from 'shared/components/layouts/main';
-import HelpIcon from '@material-ui/icons/Help';
+import React, {useCallback, useState} from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {useHistory} from 'react-router';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import ConfirmDialog from './erc721/ConfirmDialog';
-import {useFormik} from 'formik';
 import {
   CollectionItemData,
   CollectionSetupSteps,
@@ -120,7 +117,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       });
       return promise;
     },
-    [userDefaultAcount, getWeb3, values, items, getProvider],
+    [userDefaultAcount, getWeb3, values, items, getProvider, wizardApi],
   );
 
   const handleBack = useCallback(() => {
@@ -222,7 +219,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     setUploadId('');
 
     return images;
-  }, [items, handleItemChange]);
+  }, [items, handleItemChange, wizardApi]);
 
   const uploadCollectionImage = useCallback(async (): Promise<
     string | null
@@ -234,7 +231,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     }
 
     return null;
-  }, [collectionImage]);
+  }, [collectionImage, wizardApi]);
 
   const sendCollectionMetadata = useCallback(
     async (imageHash: string): Promise<string | null> => {
@@ -253,7 +250,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
       return null;
     },
-    [values, userDefaultAcount],
+    [values, userDefaultAcount, wizardApi],
   );
 
   const sendItemsMetadata = useCallback(
@@ -299,7 +296,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
         await result.wait();
       }
     },
-    [userDefaultAcount, items, getProvider],
+    [userDefaultAcount, getProvider],
   );
 
   const [tempItemsHashes, setTempItemsHashes] = useState<any>();
@@ -307,11 +304,11 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const [tempCollectionImagehash, setCollectionImagehash] = useState<string>();
   const [tempAddress, setTempAddress] = useState<string>();
 
-  const clearCreateTryAgain = useCallback(() => {
-    setTempItemsHashes(undefined);
-    setTempCollectionMetadata(undefined);
-    setCollectionImagehash(undefined);
-  }, []);
+  // const clearCreateTryAgain = useCallback(() => {
+  //   setTempItemsHashes(undefined);
+  //   setTempCollectionMetadata(undefined);
+  //   setCollectionImagehash(undefined);
+  // }, []);
 
   const handleCreateTryAgain = useCallback(() => {
     setCreateError(undefined);

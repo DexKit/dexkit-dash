@@ -10,11 +10,14 @@ import {ProviderWrapper} from 'types/ProviderWrapper';
 import Web3 from 'web3';
 
 import {getProvider as getWeb3Provider} from 'services/web3modal';
-import {getCachedMagicNetwork, getMagicRPCProvider, isMagicProvider} from 'services/magic';
+import {
+  getCachedMagicNetwork,
+  getMagicRPCProvider,
+  isMagicProvider,
+} from 'services/magic';
 import EventEmitter from 'events';
-import {useWeb3} from './useWeb3';
 import {Web3State} from 'types/blockchain';
-import { providers } from 'ethers';
+import {providers} from 'ethers';
 
 export interface GlobalState {
   showTransactionModal: boolean;
@@ -29,11 +32,6 @@ export interface GlobalState {
   getWeb3(): Web3 | null;
 }
 
-type Callback = (
-  resolve: (result: any) => void,
-  reject: (result: any) => void,
-) => void;
-
 export function useGlobalState(): GlobalState {
   const [web3State, setWeb3State] = useState<Web3State>();
 
@@ -43,6 +41,10 @@ export function useGlobalState(): GlobalState {
   const providerRef = useRef<any>(getWeb3Provider());
   const eventEmitterRef = useRef<EventEmitter>(new EventEmitter());
 
+  const handleShowTransactionModal = useCallback(() => {
+    setShowTransactionModal(true);
+  }, []);
+
   const resetEvents = useCallback(() => {
     eventEmitterRef.current?.removeAllListeners();
 
@@ -50,17 +52,13 @@ export function useGlobalState(): GlobalState {
       setData(args);
       handleShowTransactionModal();
     });
-  }, []);
-
-  const handleShowTransactionModal = useCallback(() => {
-    setShowTransactionModal(true);
-  }, []);
+  }, [handleShowTransactionModal]);
 
   const handleCloseTransactionModal = useCallback(() => {
     setShowTransactionModal(false);
     setData(undefined);
     resetEvents();
-  }, []);
+  }, [resetEvents]);
 
   const handleTransactionConfirm = useCallback((data: any) => {
     eventEmitterRef.current?.emit('confirm', data);
@@ -81,13 +79,14 @@ export function useGlobalState(): GlobalState {
   }, []);
 
   const getEthersProvider = useCallback((): any => {
-    return new providers.Web3Provider(providerRef.current)
+    return new providers.Web3Provider(providerRef.current);
   }, []);
 
+  /* eslint-disable */
   useEffect(() => {
     if (web3State === Web3State.Done) {
       if (isMagicProvider()) {
-        const magicNetwork = getCachedMagicNetwork()
+        const magicNetwork = getCachedMagicNetwork();
         providerRef.current = new ProviderWrapper(
           getMagicRPCProvider(magicNetwork),
           eventEmitterRef.current,
@@ -96,9 +95,11 @@ export function useGlobalState(): GlobalState {
         providerRef.current = getWeb3Provider();
       }
 
+      let emmiter = eventEmitterRef.current;
+
       resetEvents();
       return () => {
-        eventEmitterRef.current?.removeAllListeners();
+        emmiter.removeAllListeners();
       };
     }
   }, [web3State]);
@@ -124,7 +125,7 @@ export function useGlobalState(): GlobalState {
 
 export const GlobalStateContext = React.createContext<GlobalState>({
   getProvider: () => {},
-  getEthersProvider: ()=> {},
+  getEthersProvider: () => {},
   handleCloseTransactionModal: () => {},
   handleShowTransactionModal: () => {},
   showTransactionModal: false,

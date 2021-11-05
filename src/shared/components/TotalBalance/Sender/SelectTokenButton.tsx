@@ -53,7 +53,7 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
         <>
           <Box display='flex' alignItems='center' alignContent='center'>
             <Box mr={2}>
-              <img className={classes.icon} src={token?.logoURI} />
+              <img alt='' className={classes.icon} src={token?.logoURI} />
             </Box>
             <Box display='flex' alignItems='flex-start' flexDirection='column'>
               <Typography variant='body2' noWrap>

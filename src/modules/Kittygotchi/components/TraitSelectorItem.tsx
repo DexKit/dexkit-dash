@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {makeStyles, ButtonBase, Typography, Box} from '@material-ui/core';
 
@@ -86,7 +86,6 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
   const classes = useStyles();
 
   const handleClick = useCallback(() => {
-    console.log('entraaa');
     onClick(item);
   }, [onClick, item]);
 
@@ -99,6 +98,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
         <div className={classes.selectedCircle}>
           <div className={classes.selectedCircleInner}>
             <img
+              alt=''
               src={getImageFromTrait(traitType, item.value)}
               className={classes.image}
             />
@@ -108,6 +108,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
         <div className={classes.circleWrapper}>
           <div className={classes.circle}>
             <img
+              alt=''
               src={getImageFromTrait(traitType, item.value)}
               className={classes.image}
             />
@@ -125,6 +126,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
         <div className={classes.circleWrapper}>
           <div className={classes.circle}>
             <img
+              alt=''
               src={getImageFromTrait(traitType, item.value)}
               className={classes.image}
             />

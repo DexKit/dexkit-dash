@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Box,
   CircularProgress,
@@ -95,7 +95,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     }
 
     return images;
-  }, [items]);
+  }, [wizardApi, items]);
 
   const sendItemsMetadata = useCallback(
     async (sendItemsMetadata: any): Promise<string[]> => {
@@ -111,7 +111,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
       return response.data.hashes;
     },
-    [items],
+    [wizardApi, items],
   );
 
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -154,7 +154,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
         }
       });
     },
-    [userDefaultAcount, getProvider, items],
+    [userDefaultAcount, getProvider],
   );
 
   const handleConfirm = useCallback(async () => {
@@ -169,7 +169,15 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     onFinish();
     setShowSuccess(true);
     setLoading(false);
-  }, [contractAddress, getWeb3, items, onFinish]);
+  }, [
+    mintItems,
+    sendItemsMetadata,
+    contractAddress,
+    getWeb3,
+    items,
+    onFinish,
+    uploadImages,
+  ]);
 
   const handleCancel = useCallback(
     (e) => {
@@ -208,7 +216,15 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     onFinish();
     setShowSuccess(true);
     setLoading(false);
-  }, [contractAddress, getWeb3, items, onFinish]);
+  }, [
+    mintItems,
+    sendItemsMetadata,
+    contractAddress,
+    getWeb3,
+    items,
+    onFinish,
+    uploadImages,
+  ]);
 
   return (
     <Dialog {...props} disableBackdropClick>

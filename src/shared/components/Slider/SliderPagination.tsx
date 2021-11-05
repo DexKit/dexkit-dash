@@ -33,7 +33,7 @@ export const SliderPagination = (props: SliderPaginationProps) => {
             onSelectIndex(itemIndex);
           }}
           className={classes.item}>
-          <SliderPaginationDot active={itemIndex == index} />
+          <SliderPaginationDot active={itemIndex === index} />
         </div>
       ))}
     </Box>

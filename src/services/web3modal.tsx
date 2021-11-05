@@ -86,7 +86,9 @@ const setWeb3 = () => {
   web3 = new Web3(provider);
 };
 
+/* eslint-disable */
 let ethersjs: null | ethers.providers.Web3Provider;
+
 const getEthers = () => {
   /*if (!provider) {
     return;

@@ -4,7 +4,6 @@ import {Kittygotchi} from 'types/kittygotchi';
 import {
   IMAGE_PATHS,
   KittygotchiTraitType,
-  KITTY_TRAITS_ITEM_URL,
   POLYGON_METADATA_KITTY_ENDPOINT,
   MUMBAI_METADATA_KITTY_ENDPOINT,
 } from '../constants';

@@ -1,20 +1,17 @@
 import React, {useMemo} from 'react';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import {
   Box,
   TableCell,
   TableRow,
   Chip,
-  Link,
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {Link as RouterLink} from 'react-router-dom';
 import {MintBurn} from 'types/app';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ViewTx} from 'shared/components/ViewTx';

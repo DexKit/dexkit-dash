@@ -3,11 +3,7 @@ import axios from 'axios';
 import championsAbi from '../constants/ABI/coinLeagueChampions.json';
 import {getEventCurrentRound, getEventHoldingAmount} from '../utils/champions';
 
-import {
-  ChampionMetadata,
-  ChampionsEventRound,
-  CoinLeaguesChampion,
-} from '../utils/types';
+import {ChampionMetadata, ChampionsEventRound} from '../utils/types';
 
 const RandomnessRequestAbi =
   'event RandomnessRequest(bytes32 keyHash, uint256 seed, bytes32 indexed jobID, address sender, uint256 fee, bytes32 requestID)';

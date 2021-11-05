@@ -30,7 +30,7 @@ interface Props extends SelectProps {
 }
 
 export default (props: Props) => {
-  const {emptyLabel, helperText, error} = props;
+  const {helperText, error} = props;
 
   return (
     <FormControl error={error}>

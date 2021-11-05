@@ -1,5 +1,5 @@
 import Paper from '@material-ui/core/Paper';
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
 import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
@@ -36,9 +36,12 @@ export const CoinItem = (props: Props) => {
   const {handleDelete, coin, index} = props;
   const classes = useStyles();
 
-  const onClickDelete = useCallback((ev: any)=>{
-    handleDelete(index);
-  },[coin])
+  const onClickDelete = useCallback(
+    (ev: any) => {
+      handleDelete(index);
+    },
+    [handleDelete, index],
+  );
 
   return (
     <Paper className={classes.item}>
