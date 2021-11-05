@@ -3,7 +3,6 @@ import {
   makeStyles,
   ButtonBase,
   ButtonBaseProps,
-  useTheme,
   Paper,
   Box,
   Typography,
@@ -30,7 +29,6 @@ interface Props extends ButtonBaseProps {
 
 export default (props: Props) => {
   const {header, subheader, active} = props;
-  const theme = useTheme();
   const classes = useStyles();
 
   return (

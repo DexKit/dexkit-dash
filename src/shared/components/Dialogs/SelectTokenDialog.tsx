@@ -10,8 +10,6 @@ import {
   Typography,
   DialogContent,
   DialogTitle,
-  DialogActions,
-  Button,
   TextField,
   useMediaQuery,
   List,
@@ -25,7 +23,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import SelectTokenListItem from './SelectTokenListItem';
 
 import {Token} from '../../../types/app';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
@@ -183,7 +180,7 @@ export const SelectTokenDialog = (props: Props) => {
           </Grid>
         </Box>
         <Divider />
-        {getFilteredTokens(filteredTokens, selectedChainId).length == 0 ? (
+        {getFilteredTokens(filteredTokens, selectedChainId).length === 0 ? (
           <Box p={4}>
             <Typography variant='body1'>No tokens found</Typography>
           </Box>

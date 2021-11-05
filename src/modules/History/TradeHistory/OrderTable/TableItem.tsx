@@ -1,6 +1,6 @@
 import React, {useContext, useMemo} from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import { Chip, makeStyles} from '@material-ui/core';
+import {Chip, makeStyles} from '@material-ui/core';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
@@ -11,7 +11,6 @@ import {GetTradeHistoryList_ethereum_dexTrades} from 'services/graphql/bitquery/
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import ExchangeLogo from 'shared/components/ExchangeLogo';
 import {AppContext} from '@crema';
-
 
 import {ViewTx} from 'shared/components/ViewTx';
 
@@ -66,6 +65,8 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
   const priceUSD = row?.baseAmount
     ? formatter.format((row?.tradeAmountIsUsd || 0) / row?.baseAmount)
     : '-';
+
+  /* eslint-disable */
   const ViewTxComponent = React.useMemo(
     () => () =>
       <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,
@@ -86,7 +87,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
       {
         id: 'pair',
         title: <IntlMessages id='app.pair' />,
-        value: `{row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}`
+        value: `{row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}`,
       },
       {
         id: 'exchange',

@@ -10,8 +10,6 @@ import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
 import {Token} from 'types/app';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import Skeleton from '@material-ui/lab/Skeleton';
-
 type TokenMarket = {
   volume24Usd: number;
   volume24Base: number;
@@ -43,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
 export const Analytics = (props: Props) => {
   const {tokenMarket, token, loading, priceUSD} = props;
   const {usdFormatter} = useUSDFormatter();
+
+  /* eslint-disable */
   const volumeUSD = useMemo(() => {
     return loading
       ? '-'

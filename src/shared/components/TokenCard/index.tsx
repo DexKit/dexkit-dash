@@ -9,7 +9,6 @@ import {
   IconButton,
   alpha,
   Tooltip,
-  Link,
   useTheme,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -18,7 +17,6 @@ import {CoinDetailCoinGecko} from 'types/coingecko/coin.interface';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils';
 import FileCopy from '@material-ui/icons/FileCopy';
-import CopyLink from '../CopyLink';
 import {MetamaskFoxIcon} from '../Icons';
 import CopyButton from '../CopyButton';
 
@@ -69,6 +67,8 @@ export const TokenCard = (props: TokenCardProps) => {
     onAddToken,
   } = props;
   const {usdFormatter} = useUSDFormatter();
+
+  /* eslint-disable */
   const amountUSD = useMemo(() => {
     return usdFormatter.format(Number(amount));
   }, [amount]);

@@ -37,10 +37,8 @@ import TabPanel from '@material-ui/lab/TabPanel';
 
 import {AssetTableTab} from './Tabs/AssetTableTab';
 import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
-import {TransferTab} from './Tabs/TransfersTab';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import TokenListItem from 'shared/components/TokenListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
@@ -53,6 +51,7 @@ type Params = {
 type Props = RouteComponentProps<Params>;
 
 const WalletTabs: React.FC<Props> = (props) => {
+  /* eslint-disable */
   const {messages} = useIntl();
   const {
     match: {params},

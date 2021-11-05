@@ -47,7 +47,7 @@ export const TokenPairIcon = (props: TokenPairIconProps) => {
 
   const classes = useStyles();
 
-  return <img className={classes.tokenIcon} src={src} />;
+  return <img alt='' className={classes.tokenIcon} src={src} />;
 };
 
 const TOKEN_ZINDEX = 1;

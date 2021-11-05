@@ -1,4 +1,3 @@
-
 import React, {useCallback, useState, useEffect} from 'react';
 import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
@@ -58,7 +57,6 @@ export const AccountListItem = (props: AccountListItemProps) => {
     onSelect,
     onLabelChange,
     onMakeDefault,
-    onOpenMenu,
     selected,
   } = props;
 
@@ -81,6 +79,7 @@ export const AccountListItem = (props: AccountListItemProps) => {
     [],
   );
 
+  /* eslint-disable */
   const handleDone = useCallback(
     (e: React.MouseEvent) => {
       onLabelChange(account, label);

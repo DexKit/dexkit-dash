@@ -3,7 +3,6 @@ import {
   Grid,
   Box,
   IconButton,
-  Tooltip,
   Card,
   Breadcrumbs,
   Typography,
@@ -32,7 +31,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
 import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
-import {useStyles} from './Overview.style';
+
 import BuySell from 'modules/Dashboard/Token/BuySell';
 import Charts from 'modules/Dashboard/Token/Charts';
 import HistoryTables from 'modules/Dashboard/Token/HistoryTables';
@@ -69,7 +68,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
-  
+
   const [token, setToken] = useState<Token>();
   const priceUSD = useTokenPriceUSD(
     address,
@@ -79,7 +78,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     token?.decimals,
   );
   const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
-  const classes = useStyles();
+
   const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {
@@ -121,6 +120,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
   );
 
+  /* eslint-disable */
   useEffect(() => {
     if (account) {
       infoMyTakerOrders.get(`?trader=${account}&takerToken=${address}`);

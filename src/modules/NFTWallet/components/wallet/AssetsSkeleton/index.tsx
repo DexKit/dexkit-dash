@@ -1,4 +1,4 @@
-import {Grid, Card, CardContent} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
 import AssetCardSkeleton from '../../detail/AssetCardSkeleton';
 

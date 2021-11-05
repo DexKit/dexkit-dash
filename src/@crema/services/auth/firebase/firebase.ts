@@ -29,7 +29,7 @@ const twitterAuthProvider = new firebase.auth.TwitterAuthProvider();
 const getPushNotificationToken = async (
   serviceWorkerRegistration?: ServiceWorkerRegistration,
 ) => {
-  const item = localStorage.getItem('notification-token');
+  // const item = localStorage.getItem('notification-token');
   /*const token = item == null || item?.length == 0 ?
     await messaging.getToken({
       vapidKey: process.env.REACT_APP_FIREBASE_VAPIDKEY,

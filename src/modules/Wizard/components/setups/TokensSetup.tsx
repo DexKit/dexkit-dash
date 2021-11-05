@@ -25,7 +25,7 @@ import {
 } from 'utils/blockchain';
 import {Link as RouterLink} from 'react-router-dom';
 
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useHistory} from 'react-router';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {ConfirmDialog} from './erc20/dialogs/ConfirmDialog';
@@ -90,6 +90,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
     setShowConfirm(true);
   }, []);
 
+  /* eslint-disable */
   const handleConfirm = useCallback(async () => {
     setConfirmPending(true);
 
@@ -295,7 +296,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                     type='number'
                     value={values.supply}
                     onChange={handleChange}
-                    error={values.supply == 0 || values.supply < 0}
+                    error={values.supply === 0 || values.supply < 0}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>

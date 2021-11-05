@@ -17,11 +17,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListIcon from '@material-ui/icons/List';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
-import {OpenSeaPort} from 'opensea-js';
-import {Network, Order, WyvernSchemaName} from 'opensea-js/lib/types';
+import {Order} from 'opensea-js/lib/types';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import MakeOfferDialog from './MakeOfferDialog';
 import AssetOffersTable from './AssetOffersTable';
 import {isAssetOwner} from 'modules/NFTWallet/utils';
@@ -60,6 +59,7 @@ export default (props: Props) => {
   const userAccountAddress = useDefaultAccount();
   const {getProvider} = useWeb3();
 
+  /* eslint-disable */
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [showCancelSuccess, setShowCancelSuccess] = useState(false);
   const [showAcceptSuccess, setShowAcceptSuccess] = useState(false);

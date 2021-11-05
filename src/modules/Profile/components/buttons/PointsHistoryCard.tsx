@@ -1,30 +1,16 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {Moment} from 'moment';
 
 import {
   Box,
-  Avatar,
   Grid,
-  Breadcrumbs,
-  Link,
-  IconButton,
   Typography,
   Paper,
-  ButtonBase,
-  Chip,
   alpha,
-  Collapse,
-  Divider,
   makeStyles,
 } from '@material-ui/core';
 
-import {Skeleton} from '@material-ui/lab';
-
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import {useToggler} from 'hooks/useToggler';
 import {GiftIcon, CrownIcon} from 'shared/components/Icons';
 
 const useStyles = makeStyles((theme) => ({

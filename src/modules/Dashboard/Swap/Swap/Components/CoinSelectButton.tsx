@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  makeStyles,
-  ButtonBase,
-  Grid,
-  Button,
-  withStyles,
-} from '@material-ui/core';
+import {makeStyles, Button, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -39,7 +33,7 @@ export const CoinSelectButton = (props: Props) => {
       fullWidth
       variant='outlined'
       onClick={onClick}
-      startIcon={<img src={iconImage} className={classes.img} />}
+      startIcon={<img alt='' src={iconImage} className={classes.img} />}
       endIcon={<ExpandMoreIcon fontSize='inherit' />}>
       {symbol}
     </StyledButton>

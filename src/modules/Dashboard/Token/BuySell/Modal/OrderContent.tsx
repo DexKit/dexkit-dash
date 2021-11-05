@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import styled from 'styled-components';
 import {useNetwork} from 'hooks/useNetwork';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
@@ -13,7 +12,6 @@ import {
   Typography,
   TextField,
   Box,
-  CircularProgress,
   IconButton,
   Popover,
   Collapse,
@@ -24,15 +22,11 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
-import ErrorStep from './ErrorStep';
 import ConvertStep from './ConvertStep';
 import MarketStep from './MarketStep';
 import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
-import ProgressBar from './ProgressBar';
 import LoadingStep from './LoadingStep';
 import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
@@ -52,7 +46,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
-import { SwapQuoteResponse } from 'types/zerox';
+import {SwapQuoteResponse} from 'types/zerox';
 
 interface Props {
   isMarket: boolean;
@@ -81,35 +75,11 @@ interface Props {
   onShifting: (step: Steps) => void;
 }
 
-const GasOptionsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const GasOption = styled.div<{isSelected: boolean}>`
-  padding: 5px 0px;
-  width: 90px;
-  background-color: ${(props) =>
-    props.isSelected ? '#ff7149' : 'transparent'};
-  border: 1px solid grey;
-  border-radius: 5px;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const OrderContent: React.FC<Props> = (props) => {
   const {
     isMarket,
     isConvert,
     balances,
-    steps,
     currentStep,
     currentStepIndex,
     tokenWrapper,
@@ -142,6 +112,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const [gasAmount, setGasAmount] = useState(new BigNumber(0));
   const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
+  /* eslint-disable */
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
   const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -357,7 +328,10 @@ const OrderContent: React.FC<Props> = (props) => {
       (validPrice === 0 ? 0 : 1 / Number(validPrice)).toString(),
     ).toFixed(6);
     displayGuaranteedPrice = parseFloat(
-      (validGuarenteedPrice === 0 ? 0 : 1 / Number(validGuarenteedPrice)).toString(),
+      (validGuarenteedPrice === 0
+        ? 0
+        : 1 / Number(validGuarenteedPrice)
+      ).toString(),
     ).toFixed(6);
     firstSymbol = tokenFrom.symbol;
     secondSymbol = tokenTo.symbol;
@@ -825,7 +799,7 @@ const OrderContent: React.FC<Props> = (props) => {
                 />
               )}
 
-              {(currentStep === Steps.MARKET && quote) && (
+              {currentStep === Steps.MARKET && quote && (
                 <MarketStep
                   account={account}
                   quote={quote}

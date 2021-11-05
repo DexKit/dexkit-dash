@@ -8,9 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import {Breakpoint} from '@material-ui/core/styles/createBreakpoints';
+import {makeStyles} from '@material-ui/core/styles';
 
 import shuffle from 'utils/shuffleArray';
 
@@ -36,20 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function useWidth() {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
-  return (
-    keys.reduce((output: Breakpoint | null, key: Breakpoint) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return !output && matches ? key : output;
-    }, null) || 'xs'
-  );
-}
-
 const MnemonicConfirm: React.FC<any> = ({mnemonics, setAllowStep}) => {
-  const width = useWidth();
   const classes = useStyles();
 
   const [valid, setValid] = useState(false);

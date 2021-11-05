@@ -1,31 +1,16 @@
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 import {useTokenAnalytics} from 'hooks/token/useTokenAnalytics';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import React from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ErrorView from 'modules/Common/ErrorView';
-import SwipeableViews from 'react-swipeable-views';
 
-import {
-  Box,
-  Accordion,
-  AccordionDetails,
-  makeStyles,
-  Tooltip,
-  AccordionSummary,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import {Box, makeStyles, Grid, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {OrderSide} from 'types/app';
 import {green, red} from '@material-ui/core/colors';
-
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';

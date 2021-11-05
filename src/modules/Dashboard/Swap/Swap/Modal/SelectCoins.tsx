@@ -11,7 +11,6 @@ import {
   useMediaQuery,
   List,
   Box,
-  makeStyles,
   IconButton,
 } from '@material-ui/core';
 
@@ -19,14 +18,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import {ChangellyCoin} from 'types/changelly';
 import SelectCoinListItem from '../Components/SelectCoinListItem';
-
-const useStyles = makeStyles((theme) => ({
-  list: {
-    minHeight: theme.spacing(20),
-    maxHeight: theme.spacing(150),
-    overflowY: 'scroll',
-  },
-}));
 
 interface Props extends DialogProps {
   coins: ChangellyCoin[];
@@ -37,7 +28,6 @@ interface Props extends DialogProps {
 export const SelectCoinsDialog = (props: Props) => {
   const {onSelectCoin, coins, onClose, selectTo} = props;
   const theme = useTheme();
-  const classes = useStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
@@ -108,7 +98,7 @@ export const SelectCoinsDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
+        {filteredCoins.length === 0 ? (
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>

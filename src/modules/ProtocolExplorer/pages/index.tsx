@@ -86,7 +86,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const {
     isFavorite,
-    onToggleFavorite,
     loading: favoritesWithMarketLoading,
     data: favoritesWithMarket,
   } = useFavoritesWithMarket();
@@ -107,6 +106,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
     priceQuote,
   } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
 
+  /* eslint-disable */
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
       setNetworkName(

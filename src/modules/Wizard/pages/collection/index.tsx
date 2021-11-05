@@ -17,10 +17,7 @@ import {
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-  useCollectionDetails,
-  useCollectionMetadata,
-} from 'modules/Wizard/hooks';
+import {useCollectionMetadata} from 'modules/Wizard/hooks';
 import {CollectionItems} from 'modules/Wizard/components/setups/erc721/CollectionItems';
 import {Skeleton} from '@material-ui/lab';
 import DialogPortal from 'shared/components/Common/DialogPortal';
@@ -53,12 +50,12 @@ interface RouteParams {
 }
 
 const CollectionPage = () => {
-  const {contract, network}: RouteParams = useParams();
+  const {contract}: RouteParams = useParams();
   const {web3State} = useWeb3();
 
   const classes = useStyles();
 
-  const {data, get, error, loading} = useCollectionMetadata();
+  const {data, get, loading} = useCollectionMetadata();
 
   useEffect(() => {
     if (web3State === Web3State.Done) {
@@ -83,7 +80,7 @@ const CollectionPage = () => {
   const handleFinish = useCallback(() => {
     get(contract);
     forceUpdate();
-  }, [contract, forceUpdate]);
+  }, [get, contract, forceUpdate]);
 
   return (
     <>
@@ -143,6 +140,7 @@ const CollectionPage = () => {
                         />
                       ) : (
                         <img
+                          alt=''
                           src={data?.image}
                           className={classes.collectionImage}
                         />

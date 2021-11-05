@@ -3,7 +3,6 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {
   TextField,
   InputAdornment,
-  useTheme,
   Menu,
   IconButton,
   Tooltip,
@@ -13,13 +12,11 @@ import {Changelly} from 'services/rest/changelly';
 import {ChangellyCoin} from 'types/changelly';
 import PasteIconButton from 'shared/components/PasteIconButton';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 import {useSelector} from 'react-redux';
 import {UIAccount} from 'redux/_ui/reducers';
-import {truncateAddress} from 'utils';
 import {AppState} from 'redux/store';
 import ReceiveAddressMenuItem from './ReceiveAddressMenuItem';
-import { SupportedNetworkType } from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 
 interface Props {
   coin?: ChangellyCoin;
@@ -30,7 +27,6 @@ interface Props {
 
 export const ReceiveAddressInput = (props: Props) => {
   const {address, coin, onChange, onPaste} = props;
-  const theme = useTheme();
 
   const {wallet} = useSelector<AppState, AppState['ui']>((state) => state.ui);
 
@@ -42,8 +38,6 @@ export const ReceiveAddressInput = (props: Props) => {
     }
 
     onChange(ev.target.value);
-
-    const address = ev.target.value;
   };
 
   const helperText = useCallback(() => {
@@ -82,6 +76,7 @@ export const ReceiveAddressInput = (props: Props) => {
     [setAnchorEl, onPaste],
   );
 
+  /* eslint-disable */
   const renderMenu = useCallback(
     () => (
       <Menu
@@ -90,14 +85,16 @@ export const ReceiveAddressInput = (props: Props) => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleCloseMenu}>
-        {wallet[SupportedNetworkType.evm].map((account: UIAccount, index: number) => (
-          <ReceiveAddressMenuItem
-            key={index}
-            label={account.label}
-            onPaste={handlePaste}
-            address={account.address}
-          />
-        ))}
+        {wallet[SupportedNetworkType.evm].map(
+          (account: UIAccount, index: number) => (
+            <ReceiveAddressMenuItem
+              key={index}
+              label={account.label}
+              onPaste={handlePaste}
+              address={account.address}
+            />
+          ),
+        )}
       </Menu>
     ),
     [anchorEl, handleCloseMenu, wallet[SupportedNetworkType.evm], onPaste],

@@ -1,15 +1,6 @@
 import React from 'react';
 
-import {
-  Paper,
-  Divider,
-  Box,
-  useTheme,
-  Typography,
-  Button,
-  Grid,
-} from '@material-ui/core';
-import CheckCircle from '@material-ui/icons/CheckCircle';
+import {Divider, Box, useTheme, Typography, Grid} from '@material-ui/core';
 import moment from 'moment';
 import {useMobile} from 'hooks/useMobile';
 import CountdownSpan from 'shared/components/CountdownSpan';

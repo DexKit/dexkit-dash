@@ -47,7 +47,7 @@ export const useBalance = (defaultAccount?: string) => {
                   (t) => {
                     //   const addr = (t.currency?.address == '-') ? 'eth' : t?.currency?.address?.toLowerCase();
                     const addr = t.currency?.address;
-                    return <GetMyBalance_ethereum_address_balances>{
+                    return {
                       currency: {
                         ...t.currency,
                         address: addr,
@@ -57,7 +57,7 @@ export const useBalance = (defaultAccount?: string) => {
                       valueInUsd:
                         (t.value || 0) *
                         (coingeckoList[addr || '']?.current_price || 0),
-                    };
+                    } as GetMyBalance_ethereum_address_balances;
                   },
                 );
                 setData(dataFn ?? []);

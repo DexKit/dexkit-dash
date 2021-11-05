@@ -104,7 +104,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
             }`}
             rel='noopener noreferrer'
             target='_blank'>
-            {networkName == EthereumNetwork.ethereum ? (
+            {networkName === EthereumNetwork.ethereum ? (
               <Avatar
                 style={{
                   color: '#3F51B5',

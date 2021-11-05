@@ -11,14 +11,12 @@ import {
 } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
 import useIsWindowVisible from 'hooks/useIsWindowVisible';
-import {useTokenList} from 'hooks/useTokenList';
 import {useWeb3} from 'hooks/useWeb3';
 import React, {useEffect, useState, useCallback} from 'react';
 import {Changelly} from 'services/rest/changelly';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId} from 'types/blockchain';
-import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
+import {ChangellyTransaction} from 'types/changelly';
 import {useSwapTransactions} from '../../hooks';
 import {
   getChangellyStatusMessage,
@@ -55,6 +53,7 @@ export const ReviewOrder = (props: Props) => {
     }
   }, [onTransfer, transaction]);
 
+  /* eslint-disable */
   useEffect(() => {
     if (transaction) {
       if (isWindowVisible) {
@@ -128,7 +127,9 @@ export const ReviewOrder = (props: Props) => {
                 <Grid item xs={3}>
                   <LinearProgress
                     variant={
-                      status == STATUS_WAITING ? 'indeterminate' : 'determinate'
+                      status === STATUS_WAITING
+                        ? 'indeterminate'
+                        : 'determinate'
                     }
                     value={status === STATUS_CONFIRMING ? 100 : 0}
                   />
@@ -211,7 +212,7 @@ export const ReviewOrder = (props: Props) => {
         </Box>
       </Grid>
       {transaction?.currencyFrom.toLowerCase() === 'eth' &&
-      status == STATUS_WAITING &&
+      status === STATUS_WAITING &&
       chainId === ChainId.Mainnet ? (
         <Grid item xs={12}>
           <Button

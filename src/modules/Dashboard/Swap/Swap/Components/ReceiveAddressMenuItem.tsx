@@ -17,7 +17,7 @@ export const ReceiveAddressMenuItem = (props: Props) => {
 
   return (
     <MenuItem onClick={handleClick}>
-      {label == address ? truncateAddress(address) : label}
+      {label === address ? truncateAddress(address) : label}
     </MenuItem>
   );
 };

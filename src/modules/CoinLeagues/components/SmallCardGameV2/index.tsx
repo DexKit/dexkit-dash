@@ -11,8 +11,8 @@ import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 
 import {useInterval} from 'hooks/utils/useInterval';
-import { CardTimer } from '../CardTimer';
-import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import {CardTimer} from '../CardTimer';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    color: 'black'
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -45,12 +45,8 @@ interface Props {
   onClick: any;
 }
 
-
 function SmallCardGameV2(props: Props): JSX.Element {
-  const {
-    game,
-    onClick,
-  } = props;
+  const {game, onClick} = props;
 
   const classes = useStyles();
 
@@ -62,12 +58,12 @@ function SmallCardGameV2(props: Props): JSX.Element {
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers))
+    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
   );
   const entryAmount = ethers.utils.formatEther(game.entry);
   useInterval(
     () => {
-      const time =  Number(game.duration);
+      const time = Number(game.duration);
       const startTime =
         Math.round(new Date().getTime() / 1000) - Number(game.startedAt || 0);
       setCountdown(time - startTime);
@@ -80,7 +76,7 @@ function SmallCardGameV2(props: Props): JSX.Element {
     (ev: any) => {
       onClick(game.id);
     },
-    [game.id],
+    [game.id, onClick],
   );
 
   return (
@@ -124,7 +120,7 @@ function SmallCardGameV2(props: Props): JSX.Element {
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography variant='h6'>
-            {game.type === 'Bull' ? 'Bull' : 'Bear'}
+              {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>

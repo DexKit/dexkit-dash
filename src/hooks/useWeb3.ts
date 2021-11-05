@@ -28,7 +28,6 @@ import {useQuery} from 'react-query';
 
 import {useAppGlobalState} from './useGlobalState';
 
-
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
   const web3State = useSelector<AppState, AppState['blockchain']['web3State']>(
@@ -87,19 +86,19 @@ export const useWeb3 = () => {
         addAccounts({accounts: accounts, type: SupportedNetworkType.evm}),
       );
     }
-  }, [accountsQuery.data]);
+  }, [accountsQuery.data, dispatch]);
 
   useEffect(() => {
     if (chainIdQuery.data) {
       dispatch(setChainId(chainIdQuery.data));
     }
-  }, [chainIdQuery.data]);
+  }, [chainIdQuery.data, dispatch]);
 
   useEffect(() => {
     if (ethBalanceQuery.data) {
       dispatch(setEthBalance(new BigNumber(ethBalanceQuery.data)));
     }
-  }, [ethBalanceQuery.data]);
+  }, [ethBalanceQuery.data, dispatch]);
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
@@ -222,6 +221,7 @@ export const useWeb3 = () => {
 
   const globalState = useAppGlobalState();
 
+  /* eslint-disable */
   useEffect(() => {
     globalState.handleChangeWeb3State(web3State);
   }, [web3State]);

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {
   Card,
@@ -13,11 +13,9 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
 import {WhitelabelTypes} from 'types/myApps';
-import {useSufficientBalance} from 'hooks/balance/useSufficientBalance';
 import Aggregator from 'assets/images/aggregator.png';
 import Marketplace from 'assets/images/marketplace.png';
-import Exchange from 'assets/images/exchange.png';
-import {blue, indigo, teal} from '@material-ui/core/colors';
+import {blue, indigo} from '@material-ui/core/colors';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -93,19 +91,19 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
   const history = useHistory();
   const [amount, setAmount] = useState(0);
 
-  const {data, loading} = useSingleBalance(
+  const {data} = useSingleBalance(
     process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
     EthereumNetwork.ethereum,
   );
 
-  const {data: balance} = useSufficientBalance(amount, {
-    symbol: 'KIT',
-    address: process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
-    decimals: 18,
-    name: 'DexKit',
-    tokenType: 'ERC20',
-    __typename: 'Currency',
-  });
+  // const {data: balance} = useSufficientBalance(amount, {
+  //   symbol: 'KIT',
+  //   address: process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN ?? '',
+  //   decimals: 18,
+  //   name: 'DexKit',
+  //   tokenType: 'ERC20',
+  //   __typename: 'Currency',
+  // });
   const [showDialog, setShowDialog] = useState(false);
   const [urlRedirect, setUrlRedirect] = useState('#');
 
@@ -152,9 +150,10 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     setShowDialog(false);
   }, [setShowDialog, history, urlRedirect]);
 
-  const cancelDialg = useCallback((x: boolean) => setShowDialog(false), [
-    setShowDialog,
-  ]);
+  const cancelDialg = useCallback(
+    (x: boolean) => setShowDialog(false),
+    [setShowDialog],
+  );
 
   return (
     <>

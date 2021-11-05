@@ -1,9 +1,8 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {
   Grid,
   Typography,
-  Paper,
   Dialog,
   DialogTitle,
   DialogActions,

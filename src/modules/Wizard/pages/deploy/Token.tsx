@@ -1,5 +1,5 @@
 import TokenSetup from 'modules/Wizard/components/setups/TokensSetup';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import MainLayout from 'shared/components/layouts/main';
 
 interface Props {}

@@ -3,35 +3,22 @@ import {
   Grid,
   Card,
   CardContent,
-  MobileStepper,
   Typography,
   Divider,
   Paper,
-  IconButton,
   makeStyles,
-  Button,
   ButtonBase,
   useTheme,
   useMediaQuery,
-  TextField,
-  InputAdornment,
 } from '@material-ui/core';
-import clsx from 'clsx';
 
 import React, {useCallback, useState} from 'react';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
   FlashIcon,
   WalletCheckPrimaryIcon,
-  WalletConnectIcon,
-  MetamaskFoxIcon,
-  GoogleIcon,
   ReceiptAddIcon,
 } from 'shared/components/Icons';
-import Slider from 'shared/components/Slider';
-import SquaredIconButton from 'shared/components/SquaredIconButton';
-
-import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
   container: {

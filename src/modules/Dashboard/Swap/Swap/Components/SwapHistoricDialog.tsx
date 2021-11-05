@@ -1,16 +1,14 @@
 import {
   Dialog,
   DialogContent,
-  DialogProps,
   Typography,
   DialogTitle,
   Box,
-  Grid,
   IconButton,
   Button,
   Divider,
 } from '@material-ui/core';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {SwapHistoricTable} from './SwapHistoricTable';
 import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyTransaction} from 'types/changelly';
@@ -28,10 +26,12 @@ export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
   const {clear, remove} = useSwapTransactions();
 
+  /* eslint-disable */
   const handleClear = useCallback(() => {
     clear();
   }, []);
 
+  /* eslint-disable */
   const handleRemove = useCallback((transaction: ChangellyTransaction) => {
     remove(transaction.id);
   }, []);

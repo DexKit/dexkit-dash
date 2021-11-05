@@ -16,8 +16,6 @@ import {ImportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {useNetwork} from 'hooks/useNetwork';
-import {getNetworkName} from 'shared/constants/Bitquery';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 

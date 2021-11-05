@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   IconButton,
-  Box,
-  Button,
   FormControl,
   Grid,
   Select,
@@ -134,7 +132,7 @@ export const AssetList = (props: AssetListProps) => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <IconButton disabled={page == 1} onClick={handleGoPrevious}>
+                <IconButton disabled={page === 1} onClick={handleGoPrevious}>
                   <KeyboardArrowLeftIcon />
                 </IconButton>
               </Grid>

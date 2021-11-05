@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React from 'react';
 import {
   Grid,
   Card,
@@ -7,7 +7,6 @@ import {
   makeStyles,
   CardActionArea,
 } from '@material-ui/core';
-import {useCollectionItems} from 'modules/Wizard/hooks';
 import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({

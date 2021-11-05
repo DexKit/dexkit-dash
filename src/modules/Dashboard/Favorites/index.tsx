@@ -27,9 +27,12 @@ export const Favorites = () => {
     (state) => state.ui.favoriteCoins,
   );
 
-  const handleRemoveCoin = useCallback((coin: FavoriteCoin) => {
-    dispatch(removeFavoriteCoin(coin));
-  }, []);
+  const handleRemoveCoin = useCallback(
+    (coin: FavoriteCoin) => {
+      dispatch(removeFavoriteCoin(coin));
+    },
+    [dispatch],
+  );
 
   return (
     <Box py={{xs: 8}}>

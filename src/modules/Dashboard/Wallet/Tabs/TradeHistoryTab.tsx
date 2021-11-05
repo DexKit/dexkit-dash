@@ -14,8 +14,6 @@ import {
   Typography,
   Chip,
   IconButton,
-  useTheme,
-  useMediaQuery,
 } from '@material-ui/core';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
@@ -34,7 +32,7 @@ export const TradeHistoryTab = (props: Props) => {
   const history = useHistory();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
-  }, []);
+  }, [history.location.search]);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
       props?.networkName ??
@@ -54,10 +52,6 @@ export const TradeHistoryTab = (props: Props) => {
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
   }, []);
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [showTransfers, setShowTransfers] = useState(false);
 

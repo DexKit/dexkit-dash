@@ -6,17 +6,10 @@ import {
   Grid,
   Chip,
   Typography,
-  Divider,
-  CardContent,
-  Card,
   Tooltip,
-  LinearProgress,
-  withStyles,
   Paper,
-  CircularProgress,
   useTheme,
   Avatar,
-  ButtonBase,
   Button,
   alpha,
   IconButton,
@@ -24,29 +17,15 @@ import {
   Link,
 } from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
-import {
-  EditIcon,
-  FastFoodOutlineIcon,
-  FlashIcon,
-  FlashOutlinedIcon,
-  GiftIcon,
-  ShareIcon,
-  ShieldOutlinedIcon,
-} from 'shared/components/Icons';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
+import {Link as RouterLink, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
-import {
-  useKittygotchi,
-  useKittygotchiFeed,
-  useKittygotchiV2,
-  useKittygotchiOnChain,
-} from '../hooks';
+import {useKittygotchiFeed, useKittygotchiOnChain} from '../hooks';
 import {useMobile} from 'hooks/useMobile';
 import FeedKittygotchiButton from '../components/buttons/FeedKittygotchiButton';
 import {useNotifications} from 'hooks/useNotifications';
@@ -143,13 +122,13 @@ export const KittyDetail = () => {
 
   const isMobile = useMobile();
 
-  const history = useHistory();
+  // const history = useHistory();
 
   const {createNotification} = useNotifications();
 
-  const handleClickEdit = useCallback(() => {
-    history.push(`/kittygotchi/${params.id}/edit`);
-  }, [history, params]);
+  // const handleClickEdit = useCallback(() => {
+  //   history.push(`/kittygotchi/${params.id}/edit`);
+  // }, [history, params]);
 
   const {onFeedCallback} = useKittygotchiFeed();
 
@@ -204,6 +183,7 @@ export const KittyDetail = () => {
       setFeedingDone(true);
     };
 
+    /* eslint-disable */
     const onError = (error?: any) => {
       if (error.data) {
         setErrorMessage(error.data.message);
@@ -224,6 +204,7 @@ export const KittyDetail = () => {
     });
   }, [onFeedCallback, params.id, createNotification, chainId]);
 
+  /* eslint-disable */
   useEffect(() => {
     if (
       params.id &&
@@ -253,6 +234,7 @@ export const KittyDetail = () => {
 
   const defaultAccount = useDefaultAccount();
 
+  /* eslint-disable */
   const [forceUpdate, setForceUpdate] = useState(false);
 
   const handleMakeDefault = useCallback(() => {

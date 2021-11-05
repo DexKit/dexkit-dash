@@ -10,13 +10,13 @@ import React, {useCallback} from 'react';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
 import Logo from 'shared/components/Logo';
-import { getLogoSrcs } from 'utils';
+import {getLogoSrcs} from 'utils';
 const noFoundSrc = require('assets/images/logo-not-found.png');
 
 type TokenBalance = Token & {
   value?: number | null;
   valueInUsd?: number | null;
-}
+};
 
 export interface Props {
   token: TokenBalance;
@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export const SelectTokenBalanceListItem = (props: Props) => {
   const {token, onClick, style} = props;
   const theme = useTheme();
@@ -57,9 +56,9 @@ export const SelectTokenBalanceListItem = (props: Props) => {
     onClick(token);
   }, [token, onClick]);
 
-  const addDefaultSrc = useCallback((ev: any) => {
-    ev.target.src = noFoundSrc;
-  },[]);
+  // const addDefaultSrc = useCallback((ev: any) => {
+  //   ev.target.src = noFoundSrc;
+  // },[]);
 
   return (
     <Box
@@ -69,10 +68,17 @@ export const SelectTokenBalanceListItem = (props: Props) => {
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-           <Logo srcs={getLogoSrcs(token.address, token.networkName, token.logoURI)} className={classes.token} />
+            <Logo
+              srcs={getLogoSrcs(
+                token.address,
+                token.networkName,
+                token.logoURI,
+              )}
+              className={classes.token}
+            />
           </Box>
         </Grid>
-     
+
         <Grid item>
           <Typography variant='body1'>{token.symbol?.toUpperCase()}</Typography>
           <Typography variant='body2' color='textSecondary'>
@@ -88,12 +94,8 @@ export const SelectTokenBalanceListItem = (props: Props) => {
             />
           ) : null}
         </Grid>
-     
-        
-        <Grid item>
-            {token?.value || 0}
-        </Grid>
-       
+
+        <Grid item>{token?.value || 0}</Grid>
       </Grid>
     </Box>
   );

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {
   DialogProps,
   Dialog,
@@ -6,12 +6,9 @@ import {
   DialogTitle,
   Typography,
   Grid,
-  BackdropProps,
-  Paper,
   Stepper,
   Step,
   StepLabel,
-  StepIcon,
   StepContent,
   makeStyles,
   useTheme,
@@ -22,8 +19,6 @@ import {
   Box,
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import HelpIcon from '@material-ui/icons/Help';
 import CloseIcon from '@material-ui/icons/Close';

@@ -121,7 +121,7 @@ export default class BinanceAPI {
 
     function pricescale(symbol: any) {
       for (const filter of symbol.filters) {
-        if (filter.filterType == 'PRICE_FILTER') {
+        if (filter.filterType === 'PRICE_FILTER') {
           return Math.round(1 / parseFloat(filter.tickSize));
         }
       }

@@ -1,17 +1,14 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import clsx from 'clsx';
+import React, {useCallback} from 'react';
 
 import {
   makeStyles,
   Box,
   Divider,
   Grid,
-  IconButton,
   AccordionSummary,
   Accordion,
   AccordionDetails,
   Typography,
-  Paper,
 } from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
