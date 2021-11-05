@@ -257,7 +257,6 @@ function AssetEventTo(props: any) {
 
 export default (props: Props) => {
   const {event} = props;
-  const classes = useStyles();
 
   return (
     <TableRow>

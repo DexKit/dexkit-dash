@@ -30,7 +30,6 @@ import GeneralForm from './general';
 import ThemeForm from './theme';
 import LinksForm from './links';
 import {useWeb3} from 'hooks/useWeb3';
-import {DefaultTheme} from '../shared/Theme';
 import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>

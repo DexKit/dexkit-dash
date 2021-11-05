@@ -1,10 +1,10 @@
-import {ZRX_API_URL, ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {OrderSide} from 'types/app';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {QuotePriceParams, SwapQuoteResponse} from './types';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 
 /**
  * Fetch quote right before confirm, with final validation
@@ -26,11 +26,12 @@ export async function fetchPrice(
       ? 'BNB'
       : 'MATIC';
 
-  const wrapper =  network === EthereumNetwork.ethereum
-  ? 'WETH'
-  : network === EthereumNetwork.bsc
-  ? 'WBNB'
-  : 'WMATIC';
+  const wrapper =
+    network === EthereumNetwork.ethereum
+      ? 'WETH'
+      : network === EthereumNetwork.bsc
+      ? 'WBNB'
+      : 'WMATIC';
 
   const baseName = quoteParams.baseToken.toUpperCase();
   const quoteName = quoteParams.quoteToken.toUpperCase();
@@ -67,7 +68,7 @@ export async function fetchPrice(
     params.set('slippagePercentage', quoteParams.allowedSlippage.toString());
   }
   let url = ZRX_API_URL_FROM_NETWORK(network) + '/swap/v1/price?';
-  if(chainId === ChainId.Ropsten){
+  if (chainId === ChainId.Ropsten) {
     url = ZRX_API_URL_FROM_NETWORK(network, chainId) + '/swap/v1/price?';
   }
 

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {Box, Card} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
@@ -57,6 +56,7 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
   const classes = useStyles();
 
   const [kit, setKit] = useState<any[]>([]);
+  /* eslint-disable */
   const [usd, setUsd] = useState<number>(0);
 
   useEffect(() => {

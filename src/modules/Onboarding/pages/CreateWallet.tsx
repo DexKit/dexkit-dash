@@ -105,7 +105,7 @@ export const CreateWallet = (props: Props) => {
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const {onConnectWeb3} = useWeb3();
 
-  const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
+  const handleConnectWeb3 = useCallback(() => onConnectWeb3(), [onConnectWeb3]);
 
   const [email, setEmail] = useState('');
 
@@ -113,19 +113,19 @@ export const CreateWallet = (props: Props) => {
 
   const handleDiscord = useCallback(() => {
     onConnectMagicSocial('discord');
-  }, []);
+  }, [onConnectMagicSocial]);
 
   const handleGoogle = useCallback(() => {
     onConnectMagicSocial('google');
-  }, []);
+  }, [onConnectMagicSocial]);
 
-  const handleApple = useCallback(() => {
-    onConnectMagicSocial('apple');
-  }, []);
+  // const handleApple = useCallback(() => {
+  //   onConnectMagicSocial('apple');
+  // }, [onConnectMagicSocial]);
 
   const handleTwitter = useCallback(() => {
     onConnectMagicSocial('twitter');
-  }, []);
+  }, [onConnectMagicSocial]);
 
   const handleChange = useCallback((e) => {
     setEmail(e.target.value);

@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const {asset, loading, error} = props;
+  const {asset, loading} = props;
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

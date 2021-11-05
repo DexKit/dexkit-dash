@@ -12,7 +12,6 @@ import {
   Chip,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {FavoriteCoin} from 'redux/_ui/reducers';
 import TokenLogo from './TokenLogo';
@@ -124,7 +123,7 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
     if (isNativeCoin(coin)) {
       history.push(getExplorerNativeChainURL(coin));
     }
-  }, [history, coin]);
+  }, [history, coin, getExplorerNativeChainURL]);
 
   return (
     <Paper variant={variant} onClick={handleClick} className={classes.paper}>

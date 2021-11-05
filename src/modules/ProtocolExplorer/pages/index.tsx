@@ -106,6 +106,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
     priceQuote,
   } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
 
+  /* eslint-disable */
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
       setNetworkName(

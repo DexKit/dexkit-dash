@@ -149,7 +149,7 @@ export const useAMMPoolHistory = ({
           reserveEvents[index * 2 + 1].value,
           quoteCurrency.decimals,
         ).toNumber();
-        e.variation = getVariation(e.type == 'Add', e.amount0, e.reserve0);
+        e.variation = getVariation(e.type === 'Add', e.amount0, e.reserve0);
         return e;
       });
 
@@ -207,6 +207,7 @@ export const useAMMPoolHistory = ({
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
     if (exchange && address) {
       fetchData();

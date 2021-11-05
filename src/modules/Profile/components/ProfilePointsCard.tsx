@@ -7,7 +7,6 @@ import {
   Typography,
   withStyles,
   alpha,
-  LinearProgress,
   CircularProgress,
   useTheme,
   ButtonBase,

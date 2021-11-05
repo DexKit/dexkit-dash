@@ -6,12 +6,6 @@ import {
   CoinListItemCoingecko,
 } from 'types/coingecko';
 
-const COINS_ID = ['ethereum', ' binancecoin', 'matic-network'];
-
-const getCoinsIdForAPI = () => {
-  return `${COINS_ID.reduce((p, c) => `${p},${c}`, '')}`;
-};
-
 const coinGecko = axios.create({
   baseURL: COINGECKO_URL,
   headers: {

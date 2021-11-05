@@ -16,10 +16,10 @@ import useStyles from './VerticalCollapase.style';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
-import {ReactComponent as ZRXprotocolLogo} from 'assets/images/0x.svg';
-import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
-import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
+// import {ReactComponent as UniswapLogo} from 'assets/images/uniswap.svg';
+// import {ReactComponent as ZRXprotocolLogo} from 'assets/images/0x.svg';
+// import {ReactComponent as BalancerLogo} from 'assets/images/balancer.svg';
+// import {ReactComponent as SushiLogo} from 'assets/images/sushiswap.svg';
 import IconComponent from '../Icon';
 import CustomIcon from 'shared/components/CustomIcon';
 

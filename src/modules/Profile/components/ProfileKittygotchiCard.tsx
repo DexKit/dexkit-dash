@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import moment from 'moment';
 
 import {
@@ -6,7 +6,6 @@ import {
   makeStyles,
   Box,
   Grid,
-  Link,
   Typography,
   Paper,
   Button,
@@ -18,10 +17,6 @@ import {
 import {ChainId} from 'types/blockchain';
 
 import {Alert} from '@material-ui/lab';
-
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-
-import EditIcon from '@material-ui/icons/Edit';
 
 import {NFTEmptyStateImage, ShareIcon} from 'shared/components/Icons';
 
@@ -60,9 +55,8 @@ interface ProfileKittygotchiCardProps {
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, onEdit, onFeed, kittygotchi, loadingKyttie} = props;
+  const {loading, onMint, onFeed, kittygotchi, loadingKyttie} = props;
 
-  const history = useHistory();
   const theme = useTheme();
 
   const classes = useStyles();

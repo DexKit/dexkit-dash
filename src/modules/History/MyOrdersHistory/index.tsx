@@ -7,7 +7,7 @@ import ErrorView from 'modules/Common/ErrorView';
 import useFetch from 'use-http';
 import {ZRX_API_URL} from 'shared/constants/AppConst';
 import {useChainId} from 'hooks/useChainId';
-import {RouteComponentProps, useHistory} from 'react-router';
+import {RouteComponentProps} from 'react-router';
 import MyOrdersTable from './MyOrdersTable';
 import usePagination from 'hooks/usePagination';
 import {useStyles} from './index.style';
@@ -58,6 +58,7 @@ const MyOrdersHistory: React.FC<Props> = (props) => {
     get,
   } = useFetch(`${ZRX_API_URL(currentChainId)}/sra/v4/orders`);
 
+  /* eslint-disable */
   useEffect(() => {
     if (account) {
       get(

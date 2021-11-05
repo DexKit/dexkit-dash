@@ -161,6 +161,7 @@ export const AssetDetailsPage = () => {
               <Skeleton variant='rect' className={classes.image} />
             ) : tokenMetadata?.image ? (
               <img
+                alt=''
                 src={getNormalizedUrl(tokenMetadata?.image)}
                 className={classes.image}
               />

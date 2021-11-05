@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
@@ -43,7 +43,8 @@ const ApproveStep: React.FC<Props> = (props) => {
   const {createNotification} = useNotifications();
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
-  const isApprove = async () => {
+  /* eslint-disable */
+  const isApprove = useCallback(async () => {
     if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
       return true;
     }
@@ -70,7 +71,7 @@ const ApproveStep: React.FC<Props> = (props) => {
     );
 
     return isApproved;
-  };
+  }, [tokenFrom, chainId, getProvider]);
 
   useEffect(() => {
     if (step === Steps.APPROVE) {

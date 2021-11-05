@@ -1,4 +1,4 @@
-import {Grid, Button, Box, Paper, useTheme} from '@material-ui/core';
+import {Grid, Button, Box, Paper} from '@material-ui/core';
 import {CollectionItemData} from 'modules/Wizard/types';
 import React, {useCallback} from 'react';
 import CollectionItem from '../CollecttionItem';
@@ -16,7 +16,7 @@ interface ItemsStepProps {
 }
 
 export const ItemsStep = (props: ItemsStepProps) => {
-  const {values, items, onChange, onRemove, onAddItem, onBack, onNext} = props;
+  const {items, onChange, onRemove, onAddItem, onBack, onNext} = props;
 
   const hasInvalidItems = useCallback(() => {
     for (let item of items) {
@@ -31,8 +31,6 @@ export const ItemsStep = (props: ItemsStepProps) => {
 
     return false;
   }, [items]);
-
-  const theme = useTheme();
 
   return (
     <Grid container spacing={4} justify='center'>

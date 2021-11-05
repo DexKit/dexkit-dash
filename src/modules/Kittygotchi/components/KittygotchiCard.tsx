@@ -1,21 +1,17 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   makeStyles,
-  Box,
   Grid,
   Typography,
   CardContent,
   Card,
   CardMedia,
   CardActionArea,
-  useTheme,
 } from '@material-ui/core';
 
-import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 import {Kittygotchi} from 'types/kittygotchi';
 import {Skeleton} from '@material-ui/lab';
-import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -48,8 +44,6 @@ interface KittygotchiCardProps {
 export const KittygotchiCard = (props: KittygotchiCardProps) => {
   const {kittygotchi, onClick, loading} = props;
   const classes = useStyles();
-
-  const theme = useTheme();
 
   const handleClick = useCallback(() => {
     if (kittygotchi && onClick) {

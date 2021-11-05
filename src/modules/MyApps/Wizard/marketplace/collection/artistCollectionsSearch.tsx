@@ -14,6 +14,7 @@ import {isAddress} from 'ethers/lib/utils';
 import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
 import {getCollectionByOwner} from 'services/rest/opensea';
 import {CustomLabel} from 'shared/components/Wizard/Label';
+/* eslint-disable */
 import {error, getHelpText} from '../../shared';
 import {InfoComponent} from '../../shared/Buttons/infoComponent';
 import {CollectionInfo} from 'types/opensea/collectionInfo.interface';
@@ -75,16 +76,19 @@ export function ArtistCollectionsSearch(props: Props) {
   const [valid, setValid] = useState(false);
   const [searchfailed, setSearchFailed] = useState<string>();
   const [pageSize] = useState(10);
+
   const [collections, setCollections] = useState<CollectionInfo[]>(
     startCollections ?? [],
   );
+
+  /* eslint-disable */
   const [selecteds, setSelecteds] = useState<CollectionInfo[]>(
     startCollections ?? [],
   );
 
   const findCollections = useCallback(() => {
     return getCollectionByOwner(address ?? '', 0, 100 * pageSize);
-  }, [page, address]);
+  }, [page, address, pageSize]);
 
   const sendSearch = useCallback(() => {
     if (valid && !loading) {

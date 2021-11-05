@@ -19,6 +19,8 @@ import Loader from '@crema/core/Loader';
 import {truncateAddress} from 'utils/text';
 import {isAddress} from 'ethers/lib/utils';
 import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
+
+/* eslint-disable */
 import {error} from '..';
 
 import {CustomLabel} from 'shared/components/Wizard/Label';

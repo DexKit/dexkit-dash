@@ -221,6 +221,7 @@ export const useWeb3 = () => {
 
   const globalState = useAppGlobalState();
 
+  /* eslint-disable */
   useEffect(() => {
     globalState.handleChangeWeb3State(web3State);
   }, [web3State]);

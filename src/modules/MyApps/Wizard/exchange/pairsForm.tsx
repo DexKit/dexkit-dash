@@ -138,8 +138,10 @@ const placeholders = {
 };
 
 const PairComponent: React.FC<PairComponentProps> = (props) => {
-  const {index, data, onChange, validator, isValid, editable} = props;
+  const {index, data, onChange, validator, isValid} = props;
+  /* eslint-disable */
   const [base, setBase] = useState(data?.base);
+  /* eslint-disable */
   const [quote, setQuote] = useState(data?.quote);
   const [config, setConfig] = useState(data?.config);
   const [errors, setErrors] = useState<error>({

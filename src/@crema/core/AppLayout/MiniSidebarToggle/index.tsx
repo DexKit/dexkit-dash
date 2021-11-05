@@ -54,7 +54,7 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
 
   const handleCloseWelcome = useCallback(() => {
     welcomeModal.toggle();
-  }, []);
+  }, [welcomeModal]);
 
   const globalState = useAppGlobalState();
 

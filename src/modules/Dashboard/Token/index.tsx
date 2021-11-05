@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 
 import {
   Link,
@@ -13,12 +13,7 @@ import {
   AccordionSummary,
 } from '@material-ui/core';
 
-import {
-  RouteComponentProps,
-  useHistory,
-  Link as RouterLink,
-} from 'react-router-dom';
-import useFetch from 'use-http';
+import {useHistory, Link as RouterLink} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -26,10 +21,6 @@ import BuySell from './BuySell';
 
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
-import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 import HistoryTables from './HistoryTables';
@@ -76,7 +67,7 @@ const TokenPage = () => {
     return (
       searchParams.get('from') || GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName)
     );
-  }, [searchParams]);
+  }, [searchParams, networkName]);
 
   const {account: web3Account, chainId} = useWeb3();
 
@@ -139,7 +130,7 @@ const TokenPage = () => {
       }
       history.push({search: searchParams.toString()});
     },
-    [history.location.search],
+    [history.location.search, history],
   );
 
   const shareUrl = useMemo(() => {
@@ -149,7 +140,7 @@ const TokenPage = () => {
 
   const handleGoClick = useCallback(() => {
     history.push('/wallet');
-  }, []);
+  }, [history]);
 
   return (
     <>

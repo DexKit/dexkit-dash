@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListItem, ListSubheader, Divider} from '@material-ui/core';
+import {ListSubheader, Divider} from '@material-ui/core';
 import clsx from 'clsx';
 import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
@@ -7,8 +7,6 @@ import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalNavGroup.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
 import VerticalExternal from './VerticaIExternal';
-import {AppState} from 'redux/store';
-import {useSelector} from 'react-redux';
 
 interface VerticalNavGroupProps {
   item: NavItemProps;
@@ -17,10 +15,6 @@ interface VerticalNavGroupProps {
 
 const VerticalNavGroup: React.FC<VerticalNavGroupProps> = ({item, level}) => {
   const classes = useStyles({level});
-
-  const {navCollapsed} = useSelector<AppState, AppState['settings']>(
-    ({settings}) => settings,
-  );
 
   return (
     <>

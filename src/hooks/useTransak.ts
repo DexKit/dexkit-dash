@@ -79,6 +79,7 @@ export function useTransak(props: Props) {
     }
   }, [account, transakClient,  defaultCurrency]);*/
 
+  /* eslint-disable */
   const init = useCallback(() => {
     if (transakClient) {
       transakClient.init();

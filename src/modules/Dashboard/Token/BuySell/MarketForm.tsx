@@ -110,6 +110,7 @@ const MarketForm: React.FC<Props> = (props) => {
     }
   }, [tokenFrom, web3State, networkName, select1, onChangeToken, tokenTo]);
 
+  /* eslint-disable */
   const switchTokens = useCallback(() => {
     if (tokenFrom) {
       onChangeToken(tokenFrom, 'to');
@@ -137,15 +138,15 @@ const MarketForm: React.FC<Props> = (props) => {
     chainId,
   );
 
-  const {priceQuote: priceQuoteToUnit} = useTokenPriceUSD(
-    tokenTo?.address || tokenTo?.symbol,
-    networkName,
-    OrderSide.Buy,
-    1,
-    tokenTo?.decimals,
-    undefined,
-    chainId,
-  );
+  // const {priceQuote: priceQuoteToUnit} = useTokenPriceUSD(
+  //   tokenTo?.address || tokenTo?.symbol,
+  //   networkName,
+  //   OrderSide.Buy,
+  //   1,
+  //   tokenTo?.decimals,
+  //   undefined,
+  //   chainId,
+  // );
 
   const {priceQuote: priceQuoteFrom} = useTokenPriceUSD(
     tokenFrom?.address || tokenFrom?.symbol,

@@ -1,5 +1,4 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
   Box,
@@ -13,7 +12,6 @@ import {
   TextField,
   Typography,
   InputAdornment,
-  Divider,
   CircularProgress,
   useTheme,
 } from '@material-ui/core';
@@ -168,6 +166,7 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
                 direction='column'>
                 <Grid item>
                   <img
+                    alt=''
                     src='/images/ui/success-icon.svg'
                     className={classes.imageIcon}
                   />
@@ -198,6 +197,7 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
                 direction='column'>
                 <Grid item>
                   <img
+                    alt=''
                     src='/images/ui/error-icon.svg'
                     className={classes.imageIcon}
                   />

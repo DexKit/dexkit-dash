@@ -8,8 +8,7 @@ import {
   Snackbar,
 } from '@material-ui/core';
 
-import {makeStyles} from '@material-ui/core/styles';
-import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
+import AppContextPropsType from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
 
 import {Grid, Tooltip, Button} from '@material-ui/core';

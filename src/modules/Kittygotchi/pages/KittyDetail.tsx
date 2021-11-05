@@ -21,7 +21,7 @@ import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
+import {Link as RouterLink, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
@@ -122,13 +122,13 @@ export const KittyDetail = () => {
 
   const isMobile = useMobile();
 
-  const history = useHistory();
+  // const history = useHistory();
 
   const {createNotification} = useNotifications();
 
-  const handleClickEdit = useCallback(() => {
-    history.push(`/kittygotchi/${params.id}/edit`);
-  }, [history, params]);
+  // const handleClickEdit = useCallback(() => {
+  //   history.push(`/kittygotchi/${params.id}/edit`);
+  // }, [history, params]);
 
   const {onFeedCallback} = useKittygotchiFeed();
 
@@ -183,6 +183,7 @@ export const KittyDetail = () => {
       setFeedingDone(true);
     };
 
+    /* eslint-disable */
     const onError = (error?: any) => {
       if (error.data) {
         setErrorMessage(error.data.message);
@@ -203,6 +204,7 @@ export const KittyDetail = () => {
     });
   }, [onFeedCallback, params.id, createNotification, chainId]);
 
+  /* eslint-disable */
   useEffect(() => {
     if (
       params.id &&
@@ -232,6 +234,7 @@ export const KittyDetail = () => {
 
   const defaultAccount = useDefaultAccount();
 
+  /* eslint-disable */
   const [forceUpdate, setForceUpdate] = useState(false);
 
   const handleMakeDefault = useCallback(() => {

@@ -8,24 +8,11 @@ import {
   Grid,
   Typography,
   CircularProgress,
-  makeStyles,
-  Divider,
-  IconButton,
   useTheme,
 } from '@material-ui/core';
-import {GiftIcon, SuccessIcon} from 'shared/components/Icons';
-
-import CloseIcon from '@material-ui/icons/Close';
-import DoneIcon from '@material-ui/icons/Done';
+import {SuccessIcon} from 'shared/components/Icons';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
-  },
-}));
 
 interface Props {
   dialogProps: DialogProps;

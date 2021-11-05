@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
@@ -10,9 +10,8 @@ import {
   getNativeCoinWrappedFromNetworkName,
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {AppContext} from '@crema';
-import AppContextPropsType from 'types/AppContextPropsType';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 
 interface OrderProps {
   open: boolean;
@@ -30,10 +29,6 @@ interface OrderProps {
   onClose: () => void;
 }
 
-
-
-
-
 const OrderDialog: React.FC<OrderProps> = (props) => {
   const {
     open,
@@ -44,7 +39,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     tokenTo,
     networkName,
     amountFrom,
-    amountTo,
     price,
     expiry,
     onClose,
@@ -68,8 +62,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     symbol: '',
   });
 
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-
+  /* eslint-disable */
   useEffect(() => {
     if (open && tokenFrom && tokenTo && networkName && chainId) {
       setLoading(true);
@@ -83,8 +76,12 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       });
 
       if (
-        (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) && tokenTo.symbol.toUpperCase() === `W${GET_CHAIN_NATIVE_COIN(chainId)}` )
-        || (tokenTo.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) && tokenFrom.symbol.toUpperCase() === `W${GET_CHAIN_NATIVE_COIN(chainId)}` )
+        (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
+          tokenTo.symbol.toUpperCase() ===
+            `W${GET_CHAIN_NATIVE_COIN(chainId)}`) ||
+        (tokenTo.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
+          tokenFrom.symbol.toUpperCase() ===
+            `W${GET_CHAIN_NATIVE_COIN(chainId)}`)
       ) {
         setIsConvert(true);
         stepsFn = [Steps.CONVERT];

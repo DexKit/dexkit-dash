@@ -15,7 +15,6 @@ import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import SenderForm from './SenderForm';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {useNetwork} from 'hooks/useNetwork';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';

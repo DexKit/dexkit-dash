@@ -41,7 +41,7 @@ export const useAffiliateTrades = (affiliateAccount: string) => {
   };
   const skip = !affiliateAccount;
 
-  const {data, loading, error, refetch} = useQuery<
+  const {data, loading, error} = useQuery<
     GetAffiliateTrades,
     GetAffiliateTradesVariables
   >(BITQUERY_AFFILIATE_TRADES, {variables, skip});

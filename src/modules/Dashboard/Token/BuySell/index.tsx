@@ -215,7 +215,9 @@ const BuySell: React.FC<Props> = ({
     networkName,
     disableReceive,
   ]);
+
   // We fill the tokenTo field with the selected token on the url
+  /* eslint-disable */
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;

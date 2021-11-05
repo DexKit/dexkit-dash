@@ -1,4 +1,4 @@
-import {Box, Button, Chip, Menu, MenuItem, Typography} from '@material-ui/core';
+import {Box, Chip, Menu, MenuItem, Typography} from '@material-ui/core';
 import React from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';

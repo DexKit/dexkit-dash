@@ -21,7 +21,6 @@ import {Skeleton} from '@material-ui/lab';
 
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
-import AddIcon from '@material-ui/icons/Add';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -69,7 +68,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
       dialogProps.onClose({}, 'backdropClick');
       championMetadata.clear();
     }
-  }, [dialogProps.onClose]);
+  }, [championMetadata, dialogProps]);
 
   const {chainId} = useWeb3();
 
@@ -83,7 +82,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
     if (tokenId) {
       championMetadata.fetch(tokenId);
     }
-  }, [tokenId]);
+  }, [championMetadata, tokenId]);
 
   const renderError = () => {
     return (
@@ -190,6 +189,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
                   <Skeleton variant='rect' className={classes.tokenImage} />
                 ) : (
                   <img
+                    alt=''
                     src={
                       championMetadata.data?.image
                         ? getNormalizedUrl(championMetadata.data?.image)

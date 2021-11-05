@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {account, loading, error, data} = props;
+  const {loading, error, data} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -28,6 +28,7 @@ export const AssetTableTab = (props: Props) => {
   const {isBalanceVisible} = useIsBalanceVisible();
   const transak = useTransak({});
 
+  /* eslint-disable */
   const handleTransak = useCallback(() => {
     transak.init();
   }, [transak.init]);

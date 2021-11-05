@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogProps,
   Grid,
-  makeStyles,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
@@ -14,13 +13,6 @@ import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {ReactComponent as SuccessIcon} from 'assets/images/icons/success-icon.svg';
-
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    fontSize: theme.spacing(15),
-    color: theme.palette.success.main,
-  },
-}));
 
 interface Props extends DialogProps {
   success?: boolean;
