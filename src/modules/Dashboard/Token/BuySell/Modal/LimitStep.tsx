@@ -37,7 +37,6 @@ const LimitStep: React.FC<Props> = (props) => {
     price,
     expiry,
     account,
-    selectedGasPrice,
     onNext,
     onLoading,
     onRequestConfirmed,

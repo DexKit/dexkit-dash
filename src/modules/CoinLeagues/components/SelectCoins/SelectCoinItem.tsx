@@ -1,6 +1,5 @@
+import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
 import React, {useCallback} from 'react';
-
-import {Box, Grid, makeStyles, Typography, useTheme} from '@material-ui/core';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 
 export interface Props {
@@ -59,7 +58,7 @@ export const SelectCoinListItem = (props: Props) => {
             {coin.baseName}
           </Typography>
         </Grid>
-        <Grid item />
+        <Grid item></Grid>
       </Grid>
     </Box>
   );

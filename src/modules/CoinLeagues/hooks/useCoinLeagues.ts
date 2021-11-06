@@ -164,7 +164,7 @@ export const useCoinLeagues = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address],
+    [web3State, address, getProvider()],
   );
 
   const onWithdrawCallback = useCallback(
@@ -182,7 +182,7 @@ export const useCoinLeagues = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address],
+    [web3State, address, getProvider()],
   );
 
   const onAbortGameCallback = useCallback(
@@ -211,7 +211,7 @@ export const useCoinLeagues = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, createdGames, factoryAddress],
+    [web3State, address, createdGames, factoryAddress, chainId],
   );
 
   const gameQuery = useQuery(['GetGameAdddress', address], () => {
@@ -274,3 +274,26 @@ export const useCoinLeagues = (address?: string) => {
     loadingCurrentFeeds: currentFeedPriceQuery.isLoading,
   };
 };
+
+
+const useCoinLeaguesWinner = (address?: string) => {
+  const {web3State, account, chainId, getProvider} = useWeb3();
+  const winnerQuery = useQuery(['GET_WINNER', address, account, web3State], () => {
+    if (!address || !account || web3State !== Web3State.Done) {
+      return;
+    }
+    return getWinner(address, account, getProvider()).then((w) => {
+      return {
+        place: w.place,
+        address: w.winner_address,
+        score: w.score,
+        claimed: w.claimed,
+      };
+    });
+  });
+
+  return {
+    winner: winnerQuery.data && winnerQuery.data,
+    refetchWinner: winnerQuery.refetch
+  }
+}

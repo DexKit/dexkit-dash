@@ -87,9 +87,12 @@ function CardGameProgressV2(props: Props): JSX.Element {
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
-  const onClickEnter = useCallback(() => {
-    onClick(game.id);
-  }, [game.id]);
+  const onClickEnter = useCallback(
+    (ev: any) => {
+      onClick(game.id);
+    },
+    [game.id, onClick],
+  );
 
   useInterval(
     () => {
@@ -183,7 +186,7 @@ function CardGameProgressV2(props: Props): JSX.Element {
       </Grid>
 
       <Button className={classes.button} fullWidth onClick={onClickEnter}>
-        {props.btnMessage || <IntlMessages id='app.coinLeagues.coins' />}
+        {props.btnMessage || <IntlMessages id='app.coinLeagues.view' />}
       </Button>
     </Container>
   );

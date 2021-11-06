@@ -36,7 +36,7 @@ export default (state = initialState, action: any): NotificationState => {
     case NotificationAction.GET_NOTIFICATION: {
       const id = action.payload;
 
-      let getIndex = state.notifications.findIndex((n) => n?.id == id);
+      let getIndex = state.notifications.findIndex((n) => n?.id === id);
 
       return {
         notifications: state.notifications,
@@ -49,7 +49,7 @@ export default (state = initialState, action: any): NotificationState => {
       let updatedNotifications = [...state.notifications];
 
       let updateIndex = updatedNotifications.findIndex(
-        (n) => n?.id == updateNotification?.id,
+        (n) => n?.id === updateNotification?.id,
       );
 
       updatedNotifications[updateIndex] = updateNotification;

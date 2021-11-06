@@ -1,19 +1,21 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 
 import {useIntl} from 'react-intl';
 
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
+import {
+  Link,
+  Grid,
+  Box,
+  IconButton,
+  Card,
+  Breadcrumbs,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+} from '@material-ui/core';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useHistory, Link as RouterLink} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -69,7 +71,7 @@ const TokenPage = () => {
     return (
       searchParams.get('from') || GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName)
     );
-  }, [searchParams]);
+  }, [searchParams, networkName]);
 
   const {account: web3Account, chainId} = useWeb3();
 
@@ -132,7 +134,7 @@ const TokenPage = () => {
       }
       history.push({search: searchParams.toString()});
     },
-    [history.location.search],
+    [history.location.search, history],
   );
 
   const shareUrl = useMemo(() => {
@@ -142,7 +144,7 @@ const TokenPage = () => {
 
   const handleGoClick = useCallback(() => {
     history.push('/wallet');
-  }, []);
+  }, [history]);
 
   return (
     <>

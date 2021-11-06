@@ -22,7 +22,6 @@ import {useIntl} from 'react-intl';
 import {OpenSeaToken} from '../../types';
 import TokenSelect from './TokenSelect';
 import TimedeltaSelect from './TimedeltaSelect';
-import {OpenSeaPort} from 'opensea-js';
 import {useWeb3} from 'hooks/useWeb3';
 import {toTokenUnitAmount} from '@0x/utils';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -135,17 +134,19 @@ export default (props: Props) => {
   const {getProvider} = useWeb3();
 
   const [amount, setAmount] = useState('');
+  /* eslint-disable */
   const [quantity, setQuantity] = useState('');
 
   const [selectedToken, setSelectedToken] = useState<OpenSeaToken>();
   const [expiration, setExpiration] = useState<number>(getUnixDays(7));
+  /* eslint-disable */
   const [customExpiration, setCustomExpiration] = useState(false);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const tokens: OpenSeaToken[] = asset?.collection?.payment_tokens?.filter(
-      (t: any) => t.symbol != 'ETH',
+      (t: any) => t.symbol !== 'ETH',
     );
 
     if (tokens) {
@@ -165,6 +166,7 @@ export default (props: Props) => {
     }
   }, []);
 
+  /* eslint-disable */
   const handleQuantityChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setQuantity(e.target.value);
@@ -192,7 +194,7 @@ export default (props: Props) => {
       tokenAddress: selectedToken?.address || '',
       expiration,
     });
-  }, [amount, selectedToken, expiration]);
+  }, [onResult, amount, selectedToken, expiration]);
 
   const handleMaxBalance = useCallback(async () => {
     if (selectedToken && userAddress) {
@@ -218,7 +220,7 @@ export default (props: Props) => {
   const handleClose = useCallback(() => {
     setAmount('');
     onClose();
-  }, []);
+  }, [onClose]);
 
   return (
     <Dialog fullScreen={isMobile} fullWidth open={open} onClose={handleClose}>

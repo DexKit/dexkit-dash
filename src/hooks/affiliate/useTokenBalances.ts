@@ -17,7 +17,7 @@ export const useTokenBalancesAffiliate = (affiliateAccount: string) => {
   };
   const skip = !affiliateAccount;
 
-  const {data, loading, error} = useQuery<GetMyBalance, GetMyBalanceVariables>(
+  const {data, loading} = useQuery<GetMyBalance, GetMyBalanceVariables>(
     BITQUERY_BALANCE_INFO,
     {variables, skip},
   );

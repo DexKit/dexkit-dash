@@ -1,20 +1,16 @@
-import React, {useCallback, useState} from 'react';
-
+import React, {useState, useCallback} from 'react';
 import {useIntl} from 'react-intl';
-
-import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import {
+  Grid,
+  Box,
+  IconButton,
+  Breadcrumbs,
+  Typography,
+} from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-
-import {Token} from 'types/app';
-
-import {useDispatch} from 'react-redux';
 
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
@@ -35,15 +31,10 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, networkName} = params;
-  const {getProvider} = useWeb3();
-
-  const dispatch = useDispatch();
   const {messages} = useIntl();
 
-  const {account: web3Account, chainId} = useWeb3();
+  const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const account: string | undefined = defaultAccount || web3Account || '';
-
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
   const metadataQuery = useNFTMetadataURI(
@@ -52,15 +43,12 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
     tokenIdsQuery.data,
   );
 
-  const [token, setToken] = useState<Token>();
-
   const history = useHistory();
 
   const handleBack = useCallback(() => history.push(`/wallet/`), []);
 
-  const [showSelectTokens, setShowSelectTokens] = useState(false);
-
   return (
+    <>
     <Box py={4}>
       <Grid container spacing={4}>
         <Grid item xs={12}>
@@ -81,26 +69,27 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
               </Breadcrumbs>
             </Grid>
 
-            <Grid item xs={12}>
-              <Grid container spacing={2} alignItems='center'>
-                <Grid item>
-                  <IconButton onClick={handleBack} size='small'>
-                    <ArrowLeftIcon />
-                  </IconButton>
+              <Grid item xs={12}>
+                <Grid container spacing={2} alignItems='center'>
+                  <Grid item>
+                    <IconButton onClick={handleBack} size='small'>
+                      <ArrowLeftIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            {metadataQuery?.data?.map((d) => (
-              <p>{d.image} </p>
-            ))}
+          <Grid item xs={12}>
+            <Grid container spacing={4}>
+              {metadataQuery?.data?.map((d) => (
+                <p>{d.image} </p>
+              ))}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 };
 

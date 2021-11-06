@@ -54,8 +54,11 @@ const ConvertStep: React.FC<Props> = (props) => {
   const {getContractWrappers} = useContractWrapper();
   const {messages} = useIntl();
 
-  const isConverted = () => false;
+  const isConverted = () => {
+    return false;
+  };
 
+  /* eslint-disable */
   useEffect(() => {
     if (step === Steps.CONVERT) {
       if (isConverted()) {

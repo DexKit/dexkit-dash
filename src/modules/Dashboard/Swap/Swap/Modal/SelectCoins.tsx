@@ -20,14 +20,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyCoin} from 'types/changelly';
 import SelectCoinListItem from '../Components/SelectCoinListItem';
 
-const useStyles = makeStyles((theme) => ({
-  list: {
-    minHeight: theme.spacing(20),
-    maxHeight: theme.spacing(150),
-    overflowY: 'scroll',
-  },
-}));
-
 interface Props extends DialogProps {
   coins: ChangellyCoin[];
   onSelectCoin: (coin: ChangellyCoin) => void;
@@ -77,7 +69,9 @@ export const SelectCoinsDialog = (props: Props) => {
   );
 
   const handleClose = useCallback(() => {
-    if (onClose) onClose({}, 'escapeKeyDown');
+    if (onClose) {
+      onClose({}, 'escapeKeyDown');
+    }
   }, [onClose]);
 
   return (

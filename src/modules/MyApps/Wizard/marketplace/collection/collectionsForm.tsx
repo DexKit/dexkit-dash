@@ -48,6 +48,7 @@ const CollectionsForm: React.FC<Props> = (props) => {
   );
   const classes = useStyle();
 
+  /* eslint-disable */
   useEffect(() => {
     if (collections == null || collections?.length === 0) {
       setCollections([

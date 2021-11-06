@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import {useIntl} from 'react-intl';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import Box from '@material-ui/core/Box';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Card from '@material-ui/core/Card';
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import {
+  Grid,
+  Box,
+  IconButton,
+  Card,
+  Breadcrumbs,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Chip,
+} from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
 import useFetch from 'use-http';
@@ -32,7 +32,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
 import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
 import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
-import {useStyles} from './Overview.style';
+
 import BuySell from 'modules/Dashboard/Token/BuySell';
 import Charts from 'modules/Dashboard/Token/Charts';
 import HistoryTables from 'modules/Dashboard/Token/HistoryTables';
@@ -81,7 +81,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     token?.decimals,
   );
   const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
-  const classes = useStyles();
+
   const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {
@@ -123,6 +123,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     `${ZRX_API_URL_FROM_NETWORK(networkName)}/sra/v4/orders`,
   );
 
+  /* eslint-disable */
   useEffect(() => {
     if (account) {
       infoMyTakerOrders.get(`?trader=${account}&takerToken=${address}`);

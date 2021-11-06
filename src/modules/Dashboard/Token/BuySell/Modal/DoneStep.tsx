@@ -12,11 +12,12 @@ interface Props {
 }
 
 const DoneStep: React.FC<Props> = (props) => {
-  const {step, onClose} = props;
+  const {onClose} = props;
   const {messages} = useIntl();
 
   return (
-    <Button
+    <>
+      <Button
       style={{margin: 0}}
       fullWidth
       variant='outlined'
@@ -25,6 +26,7 @@ const DoneStep: React.FC<Props> = (props) => {
       onClick={onClose}>
       <IntlMessages id='app.dashboard.done' />
     </Button>
+    </>
   );
 };
 

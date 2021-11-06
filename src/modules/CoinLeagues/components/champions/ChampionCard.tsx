@@ -9,15 +9,17 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core';
 
 import {Skeleton} from '@material-ui/lab';
+import {getNormalizedUrl} from 'utils/browser';
+import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
 
 const useStyles = makeStyles((theme) => ({
   media: {
-    height: theme.spacing(32),
+    height: theme.spacing(44),
   },
 }));
 
 interface ChampionCardProps {
-  champion?: any;
+  champion?: CoinLeaguesChampion;
   loading?: boolean;
 }
 
@@ -31,7 +33,12 @@ export const ChampionCard = (props: ChampionCardProps) => {
       {loading ? (
         <Skeleton variant='rect' className={classes.media} />
       ) : (
-        <CardMedia className={classes.media} />
+        <CardMedia
+          image={
+            champion?.image ? getNormalizedUrl(champion?.image) : undefined
+          }
+          className={classes.media}
+        />
       )}
       <CardContent>
         <Typography variant='body1'>
@@ -42,6 +49,7 @@ export const ChampionCard = (props: ChampionCardProps) => {
               <IntlMessages id='app.coinLeagues.champion' /> #{champion?.id}
             </>
           )}
+          {loading ? <Skeleton /> : <>{champion?.name}</>}
         </Typography>
       </CardContent>
     </Card>

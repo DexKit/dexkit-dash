@@ -38,16 +38,19 @@ export const CoinItem = (props: Props) => {
   const {handleDelete, coin, index} = props;
   const classes = useStyles();
 
-  const onClickDelete = useCallback(() => {
-    handleDelete(index);
-  }, [coin]);
+  const onClickDelete = useCallback(
+    (ev: any) => {
+      handleDelete(index);
+    },
+    [handleDelete, index],
+  );
 
   return (
     <Paper className={classes.item}>
       <Grid container alignItems='center' spacing={4}>
         <Grid item>
           <Box className={classes.coinContainer}>
-            <img alt='' src={coin?.logo} className={classes.coin} />
+            <img src={coin?.logo} className={classes.coin} alt={'Coin'} />
           </Box>
         </Grid>
 

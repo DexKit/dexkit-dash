@@ -1,11 +1,13 @@
 import React, {useCallback} from 'react';
 
 import {useIntl} from 'react-intl';
-
-import Box from '@material-ui/core/Box';
-import {makeStyles, useTheme} from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {
+  Box,
+  Typography,
+  makeStyles,
+  useTheme,
+  useMediaQuery,
+} from '@material-ui/core';
 
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 

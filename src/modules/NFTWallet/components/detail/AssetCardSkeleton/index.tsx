@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   Card,
-  CardMedia,
   CardContent,
   Typography,
   makeStyles,

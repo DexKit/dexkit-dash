@@ -1,16 +1,10 @@
 import {
   Box,
   Card,
-  Radio,
   CardContent,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
   Grid,
   Typography,
   Button,
-  ListItemText,
-  TextField,
 } from '@material-ui/core';
 import WizardList from 'modules/Wizard/components/WizardList';
 import React, {useCallback, useState} from 'react';
@@ -58,7 +52,7 @@ export default (props: Props) => {
                 </Button>
                 <Button
                   color='primary'
-                  disabled={selectedSlug == ''}
+                  disabled={selectedSlug === ''}
                   onClick={handleNext}
                   variant='contained'>
                   Next

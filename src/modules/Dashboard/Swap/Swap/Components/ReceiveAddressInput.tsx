@@ -1,14 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
-
+import React, {useEffect, useState, useCallback} from 'react';
 import {useIntl} from 'react-intl';
-import IntlMessages from '@crema/utility/IntlMessages';
 
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import {useTheme} from '@material-ui/core';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
+import {
+  TextField,
+  InputAdornment,
+  Menu,
+  IconButton,
+  Tooltip,
+} from '@material-ui/core';
 
 import {Changelly} from 'services/rest/changelly';
 import {ChangellyCoin} from 'types/changelly';
@@ -29,7 +28,6 @@ interface Props {
 
 export const ReceiveAddressInput = (props: Props) => {
   const {address, coin, onChange, onPaste} = props;
-  const theme = useTheme();
   const {messages} = useIntl();
 
   const {wallet} = useSelector<AppState, AppState['ui']>((state) => state.ui);
@@ -42,8 +40,6 @@ export const ReceiveAddressInput = (props: Props) => {
     }
 
     onChange(ev.target.value);
-
-    const address = ev.target.value;
   };
 
   const helperText = useCallback(() => {
@@ -82,6 +78,7 @@ export const ReceiveAddressInput = (props: Props) => {
     [setAnchorEl, onPaste],
   );
 
+  /* eslint-disable */
   const renderMenu = useCallback(
     () => (
       <Menu

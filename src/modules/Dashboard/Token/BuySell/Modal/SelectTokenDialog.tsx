@@ -51,7 +51,7 @@ export const SelectTokenDialog = (props: Props) => {
       const value = e.target.value;
       setFilterText(value);
     },
-    [tokens],
+    [],
   );
 
   const filteredTokens = useMemo(() => {
@@ -186,7 +186,7 @@ export const SelectTokenDialog = (props: Props) => {
             </Box>
           ) : null}
         </Box>
-        {filteredTokens.length == 0 ? (
+        {filteredTokens.length === 0 ? (
           <Typography variant='body1'>
             <IntlMessages id='app.dashboard.noTokensFound' />
           </Typography>

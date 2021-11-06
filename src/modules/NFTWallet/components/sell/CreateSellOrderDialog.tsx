@@ -5,25 +5,14 @@ import {
   Dialog,
   DialogContent,
   DialogProps,
-  DialogTitle,
   Grid,
-  makeStyles,
-  Paper,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {ReactComponent as SuccessIcon} from 'assets/images/icons/success-icon.svg';
-
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    fontSize: theme.spacing(15),
-    color: theme.palette.success.main,
-  },
-}));
 
 interface Props extends DialogProps {
   success?: boolean;
@@ -32,8 +21,6 @@ interface Props extends DialogProps {
 
 export default (props: Props) => {
   const {success, asset} = props;
-  const classes = useStyles();
-
   return (
     <Dialog {...props} disableBackdropClick>
       <DialogContent>

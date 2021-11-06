@@ -31,7 +31,7 @@ import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';

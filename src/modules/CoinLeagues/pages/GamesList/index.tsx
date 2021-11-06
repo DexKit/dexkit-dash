@@ -37,7 +37,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -298,7 +298,7 @@ const GamesList = () => {
     [enterGameRoute],
   );
 
-  const onClickGoGamesInProgress = useCallback(() => {
+  const onClickGoGamesInProgress = useCallback((_ev: any) => {
     history.push(activeGamesRoute);
   }, [activeGamesRoute]);
 
@@ -327,7 +327,7 @@ const GamesList = () => {
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
         <Typography variant='h5'>
-          <IntlMessages id='app.coinLeagues.coinLeagues' />
+          <IntlMessages id='app.coinLeagues.coinLeague' />
         </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>

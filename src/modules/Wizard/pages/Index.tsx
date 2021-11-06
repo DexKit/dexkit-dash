@@ -38,7 +38,7 @@ export default () => {
 
   const {web3State} = useWeb3();
 
-  const isNotConnected = web3State == Web3State.NotConnected;
+  const isNotConnected = web3State === Web3State.NotConnected;
 
   return (
     <Box py={{xs: 8}}>

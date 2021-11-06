@@ -54,6 +54,7 @@ type Params = {
 type Props = RouteComponentProps<Params>;
 
 const WalletTabs: React.FC<Props> = (props) => {
+  /* eslint-disable */
   const {messages} = useIntl();
   const {
     match: {params},

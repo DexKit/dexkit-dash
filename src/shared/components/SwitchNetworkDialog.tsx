@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   Typography,
   Box,
@@ -12,7 +12,6 @@ import {
   ListItemText,
   ListItemIcon,
   makeStyles,
-  Avatar,
   useTheme,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
@@ -65,14 +64,6 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
     onSelectChain(NetworkCodes.Matic);
   }, [onSelectChain]);
 
-  const handleRopsten = useCallback(() => {
-    onSelectChain(NetworkCodes.Ropsten);
-  }, [onSelectChain]);
-
-  const handleMumbai = useCallback(() => {
-    onSelectChain(NetworkCodes.MaticTestnet);
-  }, [onSelectChain]);
-
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='xs'>
       <DialogTitle>
@@ -105,6 +96,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
+                alt=''
                 height={theme.spacing(6)}
                 width={theme.spacing(6)}
                 src={require('assets/images/eth_logo.png')}
@@ -120,6 +112,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
+                alt=''
                 height={theme.spacing(6)}
                 width={theme.spacing(6)}
                 src={require('assets/images/chains/binance-coin-bnb-logo.svg')}
@@ -135,6 +128,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           <ListItemIcon>
             <Box className={classes.icon}>
               <img
+                alt=''
                 height={theme.spacing(6)}
                 width={theme.spacing(6)}
                 src={require('assets/images/chains/polygon-matic-logo.svg')}

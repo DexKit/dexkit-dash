@@ -1,23 +1,21 @@
-import React, {useCallback, useMemo, useState} from 'react';
-
 import {useIntl} from 'react-intl';
-
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TradeAllHistoryContainer from 'modules/History/TradeAllHistory/container';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
+import React, {useMemo, useState, useCallback} from 'react';
 import {useHistory} from 'react-router-dom';
 import NetworkChips from 'shared/components/NetworkChips';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import {useTheme} from '@material-ui/core';
+import {
+  Box,
+  Divider,
+  Drawer,
+  Grid,
+  Typography,
+  Chip,
+  IconButton,
+} from '@material-ui/core';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import Close from '@material-ui/icons/Close';
@@ -37,7 +35,7 @@ export const TradeHistoryTab = (props: Props) => {
   const {messages} = useIntl();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
-  }, []);
+  }, [history.location.search]);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
       props?.networkName ??
@@ -57,10 +55,6 @@ export const TradeHistoryTab = (props: Props) => {
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
   }, []);
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [showTransfers, setShowTransfers] = useState(false);
 

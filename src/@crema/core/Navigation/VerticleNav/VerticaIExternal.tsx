@@ -1,15 +1,12 @@
 import React, {useCallback} from 'react';
 import {
   Icon,
-  Link,
   ListItemText,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import {Badge} from '../../../index';
-import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
 import useStyles from './VerticalItem.style';
 import {NavItemProps} from '../../../../modules/routesConfig';
@@ -22,6 +19,7 @@ interface VerticalExternalProps {
 const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
   const classes = useStyles({level});
 
+  /* eslint-disable */
   const getUrl = () => {
     if (item.url) return item.url;
     return '/';

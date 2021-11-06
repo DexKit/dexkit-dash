@@ -4,13 +4,15 @@ import {useIntl} from 'react-intl';
 
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableHead,
+  TablePagination,
+  Typography,
+  useMediaQuery,
+} from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';

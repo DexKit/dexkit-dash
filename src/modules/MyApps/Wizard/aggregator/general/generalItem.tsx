@@ -67,6 +67,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
     validator(valid);
   }, [valid, validator]);
 
+  /* eslint-disable */
   useEffect(() => {
     if (
       [

@@ -21,7 +21,7 @@ export const MapBalancesToNetwork = (
     const isNative = t.currency?.address === '-';
     const addr = isNative ? coin : t?.currency?.address?.toLowerCase();
 
-    return (<MyBalances>{
+    return {
       currency: {
         ...t.currency,
         address: addr,
@@ -29,7 +29,7 @@ export const MapBalancesToNetwork = (
       network: network,
       value: isNative ? nativeBalance : t.value,
       // enquanto não vem a solução pela bitquery
-    }) as MyBalances;
+    } as MyBalances;
   });
 };
 
@@ -49,7 +49,7 @@ export const MapNFTBalancesToNetwork = (
           ? coin
           : t?.currency?.address?.toLowerCase();
 
-      return (<MyBalances>{
+      return {
         currency: {
           ...t.currency,
           address: addr,
@@ -57,7 +57,7 @@ export const MapNFTBalancesToNetwork = (
         network: network,
         value: t.value,
         // enquanto não vem a solução pela bitquery
-      }) as MyBalances;
+      } as MyBalances;
     });
 };
 

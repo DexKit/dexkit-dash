@@ -20,10 +20,10 @@ import {
 import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {
-  BINANCE_SYMBOL_URL,
   ETH_SYMBOL_URL,
-  ETHEREUM_NATIVE_COINS_BY_CHAIN,
+  BINANCE_SYMBOL_URL,
   MATIC_SYMBOL_URL,
+  ETHEREUM_NATIVE_COINS_BY_CHAIN,
 } from 'shared/constants/Coins';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {TOKENS_LIST} from 'shared/constants/tokens';
@@ -88,7 +88,7 @@ const BuySell: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const account = useDefaultAccount();
-  const {chainId, account: web3Account, web3State} = useWeb3();
+  const {chainId, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -215,7 +215,9 @@ const BuySell: React.FC<Props> = ({
     networkName,
     disableReceive,
   ]);
+
   // We fill the tokenTo field with the selected token on the url
+  /* eslint-disable */
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;

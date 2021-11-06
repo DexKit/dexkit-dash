@@ -20,17 +20,18 @@ export const TransferTab = (props: Props) => {
     return new URLSearchParams(history.location.search);
   }, [history.location.search]);
 
+  /* eslint-disable */
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
       EthereumNetwork.ethereum,
   );
 
-  const onChangeNetwork = (net: EthereumNetwork | 'all') => {
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.set('network', net);
-    history.push({search: searchParams.toString()});
-    setNetworkName(net as EthereumNetwork);
-  };
+  // const onChangeNetwork = (net: EthereumNetwork | 'all') => {
+  //   const searchParams = new URLSearchParams(history.location.search);
+  //   searchParams.set('network', net);
+  //   history.push({search: searchParams.toString()});
+  //   setNetworkName(net as EthereumNetwork);
+  // };
 
   return address && networkName ? (
     <TransferListContainer address={address} networkName={networkName} />

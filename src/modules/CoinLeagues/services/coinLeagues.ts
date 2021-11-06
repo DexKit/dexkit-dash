@@ -1,5 +1,10 @@
 import {CallInput} from '@indexed-finance/multicall';
-import {BigNumber, ContractTransaction, ethers, providers} from 'ethers';
+import {
+  BigNumber,
+  ContractTransaction,
+  ethers,
+  providers,
+} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {getMulticallFromProvider} from 'services/multicall';
 import {getEthers} from 'services/web3modal';
@@ -10,8 +15,8 @@ import {BITTOKEN, CHAMPIONS, DEXKIT} from 'shared/constants/tokens';
 import {ChainId} from 'types/blockchain';
 import {Token} from 'types/app';
 import {
-  BITTOKEN_MULTIPLIER_HOLDING,
   DEXKIT_MULTIPLIER_HOLDING,
+  BITTOKEN_MULTIPLIER_HOLDING,
 } from '../constants';
 
 export const getCoinLeaguesContract = async (
@@ -148,7 +153,7 @@ export const getPlayerMultipliers = async (
   provider: any,
 ) => {
   const iface = new Interface(erc20Abi);
-  const ifaceChampions = new Interface(erc20Abi);
+ // const ifaceChampions = new Interface(erc20Abi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   if (players.length === 0) {
@@ -156,7 +161,7 @@ export const getPlayerMultipliers = async (
   }
   const DexKit = DEXKIT[ChainId.Matic] as Token;
   const Bittoken = BITTOKEN[ChainId.Matic] as Token;
-  const Champions = CHAMPIONS[ChainId.Matic] as Token;
+ // const Champions = CHAMPIONS[ChainId.Matic] as Token;
 
   for (let index = 0; index < players.length; index++) {
     const addr = players[index];
@@ -229,33 +234,39 @@ export const joinGame = async (
   captainCoin: string,
   provider: any,
 ) => {
+
   const pr = new providers.Web3Provider(provider);
-  const net = await pr.getNetwork();
+  // const net =  await pr.getNetwork();
 
-  const gasPrice = await (await pr?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER);
+  const gasPrice = await (
+    await pr?.getGasPrice()
+  )?.mul(GAS_PRICE_MULTIPLIER);
 
-  return (
-    await getCoinLeaguesContract(gameAddress, provider)
-  ).joinGameWithCaptainCoin(feeds, captainCoin, '500000', {
-    value: amount,
-    gasPrice,
-  }) as Promise<ContractTransaction>;
+  return (await getCoinLeaguesContract(gameAddress, provider)).joinGameWithCaptainCoin(
+    feeds,
+    captainCoin,
+    '500000',
+    {
+      value: amount,
+      gasPrice,
+    },
+  ) as Promise<ContractTransaction>;
 };
 
 export const startGame = async (gameAddress: string, provider: any) => {
-  const pr = new providers.Web3Provider(provider);
-  const gasPrice = await (await pr?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER);
+  const pr = new providers.Web3Provider(provider)
+  const gasPrice = await (
+    await pr?.getGasPrice()
+  )?.mul(GAS_PRICE_MULTIPLIER);
 
   return (await getCoinLeaguesContract(gameAddress, provider)).startGame({
     gasPrice,
   }) as Promise<ContractTransaction>;
 };
 
-export const claim = async (
-  gameAddress: string,
-  provider: any,
-  winner: string,
-) => {
+
+
+export const claim = async (gameAddress: string, provider: any, winner: string) => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
@@ -276,10 +287,6 @@ export const withdrawGame = async (gameAddress: string, provider: any) => {
   }) as Promise<ContractTransaction>;
 };
 
-export const getWinner = async (
-  gameAddress: string,
-  account: string,
-  provider: any,
-) => {
+export const getWinner = async (gameAddress: string, account: string, provider: any) => {
   return (await getCoinLeaguesContract(gameAddress, provider)).winners(account);
 };

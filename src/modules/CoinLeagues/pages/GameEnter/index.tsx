@@ -24,7 +24,7 @@ import {
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
-import {ethers} from 'ethers';
+import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
@@ -56,7 +56,7 @@ import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -69,6 +69,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
+import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -107,8 +108,9 @@ function GameEnter(props: Props) {
   } = props;
   const history = useHistory();
   const {account, chainId} = useWeb3();
+  const {balance} = useActiveChainBalance();
+
   const {createNotification} = useNotifications();
-  const isMobile = useMobile();
 
   const {messages} = useIntl();
 
@@ -124,11 +126,11 @@ function GameEnter(props: Props) {
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
-  const onOpenSelectDialog = useCallback(() => {
+  const onOpenSelectDialog = useCallback((ev: any) => {
     setOpen(true);
   }, []);
 
-  const onOpenSelectCaptainDialog = useCallback(() => {
+  const onOpenSelectCaptainDialog = useCallback((ev: any) => {
     setIsChaptainCoin(true);
     setOpen(true);
   }, []);
@@ -171,7 +173,7 @@ function GameEnter(props: Props) {
     }
   }, [game?.players, game]);
 
-  const onCloseSelectDialog = useCallback(() => {
+  const onCloseSelectDialog = useCallback((ev: any) => {
     setIsChaptainCoin(false);
     setOpen(false);
   }, []);
@@ -204,59 +206,65 @@ function GameEnter(props: Props) {
     [selectedCoins],
   );
 
-  const handleBack = useCallback(() => {
-    if (history.length > 0) {
-      history.goBack();
-    } else {
-      history.push(listGamesRoute);
-    }
-    //history.push(listGamesRoute)
-  }, [listGamesRoute]);
+  const handleBack = useCallback(
+    (ev: any) => {
+      if (history.length > 0) {
+        history.goBack();
+      } else {
+        history.push(listGamesRoute);
+      }
+      //history.push(listGamesRoute)
+    },
+    [listGamesRoute, history],
+  );
 
-  const onEnterGame = useCallback(() => {
-    if (game?.amount_to_play && captainCoin && chainId) {
-      setSubmitState(SubmitState.WaitingWallet);
-      const onSubmitTx = (tx: string) => {
-        setTx(tx);
-        createNotification({
-          title: messages['app.joinGame'] as string,
-          body: `${messages['app.coinLeagues.joinedGame']} ${game.address}`,
-          timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, tx),
-          urlCaption: messages['app.viewTransaction'] as string,
-          type: NotificationType.TRANSACTION,
-          metadata: {
-            chainId: chainId,
-            transactionHash: tx,
-            status: 'pending',
-          } as TxNotificationMetadata,
-        });
+  const onEnterGame = useCallback(
+    (ev: any) => {
+      if (game?.amount_to_play && captainCoin && chainId) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          createNotification({
+            title: messages['app.joinGame'] as string,
+            body: `${messages['app.coinLeagues.joinedGame']} ${game.address}`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, tx),
+            urlCaption: messages['app.viewTransaction'] as string,
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: tx,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
 
-        setSubmitState(SubmitState.Submitted);
-      };
-      const onConfirmTx = () => {
-        setSubmitState(SubmitState.Confirmed);
-        refetch();
-      };
-      const onError = () => {
-        setSubmitState(SubmitState.Error);
-        setTimeout(() => {
-          setSubmitState(SubmitState.None);
-        }, 3000);
-      };
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetch();
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
 
-      onJoinGameCallback(
-        selectedCoins.map((c) => c.address) || [],
-        game?.amount_to_play.toString(),
-        captainCoin?.address,
-        {
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
-        },
-      );
-    }
-  }, [game, selectedCoins, captainCoin, refetch, chainId]);
+        onJoinGameCallback(
+          selectedCoins.map((c) => c.address) || [],
+          game?.amount_to_play.toString(),
+          captainCoin?.address,
+          {
+            onConfirmation: onConfirmTx,
+            onError,
+            onSubmit: onSubmitTx,
+          },
+        );
+      }
+    },
+    [game, selectedCoins, captainCoin, refetch, chainId],
+  );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
 
@@ -267,6 +275,20 @@ function GameEnter(props: Props) {
     () => game?.num_players.toNumber(),
     [game?.num_players],
   );
+
+  const sufficientFunds = useMemo(
+    () => {
+
+      if(game?.amount_to_play && balance){
+        const amount = BigNumber.from(game?.amount_to_play);
+        const balBN = BigNumber.from(balance);
+        return balBN.gt(amount);
+      }
+      return false
+    }, [game?.amount_to_play]);
+
+
+
   const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
@@ -344,7 +366,7 @@ function GameEnter(props: Props) {
           <Typography variant='h5' style={{margin: 5}}>
             <IntlMessages id='app.coinLeagues.game' /> #
             {truncateAddress(address)}
-            <CopyButton size='small' copyText={account || ''} tooltip='Copied!'>
+            <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
@@ -572,7 +594,7 @@ function GameEnter(props: Props) {
                       <Button
                         disabled={
                           !isDisabled ||
-                          submitState !== SubmitState.None ||
+                          submitState !== SubmitState.None || !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
                         }
                         size={'large'}
@@ -585,8 +607,8 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={
-                            messages['app.coinLeagues.enterGame'] as string
+                          defaultMsg={sufficientFunds ?
+                            messages['app.coinLeagues.enterGame'] as string :'Insufficient Matic Funds'
                           }
                           confirmedMsg={
                             messages['app.coinLeagues.enteredGame'] as string
@@ -618,6 +640,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 account={account}
                 winner={winner}
@@ -644,6 +667,7 @@ function GameEnter(props: Props) {
                     coins: (p?.coin_feeds as unknown as string[]) || [],
                   };
                 })}
+                type={game?.game_type}
                 address={address}
                 finished={finished}
                 hideCoins={!started}

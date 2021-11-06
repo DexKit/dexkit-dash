@@ -28,7 +28,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {useWelcomeModal} from 'hooks/useWelcomeModal';
-import AppBottomNavigation from 'shared/components/AppBottomNavigation';
 import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDialog';
 
 import WelcomeDialog from 'shared/components/WelcomeDialog';
@@ -55,7 +54,7 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
 
   const handleCloseWelcome = useCallback(() => {
     welcomeModal.toggle();
-  }, []);
+  }, [welcomeModal]);
 
   const globalState = useAppGlobalState();
 

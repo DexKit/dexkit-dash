@@ -58,6 +58,7 @@ export default class SocketClient {
     this._ws.onmessage = (msg) => {
       const sData = JSON.parse(msg.data);
       if (sData && sData.k) {
+        /* eslint-disable */
         const {s, E} = sData;
         const {o, h, l, v, c, T, t} = sData.k;
         // Update data

@@ -135,6 +135,7 @@ const LimitForm: React.FC<Props> = (props) => {
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
       const getTokenBalance = (token: Token | undefined) =>

@@ -2,17 +2,18 @@ import React, {useCallback, useContext, useState} from 'react';
 
 import {useIntl} from 'react-intl';
 
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Snackbar from '@material-ui/core/Snackbar';
-import {Theme, useMediaQuery} from '@material-ui/core';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import {
+  Box,
+  Typography,
+  useMediaQuery,
+  Theme,
+  Snackbar,
+} from '@material-ui/core';
 
-import {makeStyles} from '@material-ui/core/styles';
-import AppContextPropsType, {CremaTheme} from 'types/AppContextPropsType';
+import AppContextPropsType from 'types/AppContextPropsType';
 import DoneIcon from '@material-ui/icons/Done';
+
+import {Grid, Tooltip, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import IconButton from '@material-ui/core/IconButton';
@@ -23,16 +24,18 @@ import {Web3Wrapper} from '@0x/web3-wrapper';
 import {
   addAccounts,
   removeAccount,
-  setAccountLabel,
   setDefaultAccount,
+  setAccountLabel,
 } from 'redux/_ui/actions';
 
 import {useWeb3} from 'hooks/useWeb3';
+
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
+
 
 import AccountListItem from './components/AccountListItem';
 import {Alert} from '@material-ui/lab';
@@ -45,26 +48,21 @@ import AppContext from '@crema/utility/AppContext';
 import {useHistory} from 'react-router-dom';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  root: {
-    width: '100%',
-  },
-  inputAddress: {
-    display: 'flex',
-  },
-}));
-
 const Accounts = () => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
   const history = useHistory();
+  /* eslint-disable */
   const [copyText, setCopyText] = useState('Copy to clipboard');
   const {messages} = useIntl();
 
+  /* eslint-disable */
   const [anchorEl, setAnchorEl] = useState<Element>();
+  /* eslint-disable */
   const [addNew, setAddNew] = useState(false);
 
+  /* eslint-disable */
   const [isEditing, setIsEditing] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
 
@@ -235,7 +233,7 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          <IntlMessages id='app.dashboard.addressCopied' />!
+          <IntlMessages id='app.dashboard.addressCopied' />
         </Alert>
       </Snackbar>
     );

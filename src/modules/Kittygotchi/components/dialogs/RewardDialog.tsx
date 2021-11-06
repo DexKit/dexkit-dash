@@ -15,8 +15,6 @@ import {GiftIcon, RewardDialogIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import IntlMessages from '@crema/utility/IntlMessages';
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     width: theme.spacing(6),

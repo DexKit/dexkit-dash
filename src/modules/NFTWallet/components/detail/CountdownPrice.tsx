@@ -18,6 +18,7 @@ export default (props: Props) => {
 
   const timer = useRef<any>();
 
+  /* eslint-disable */
   const [count, setCount] = useState(1);
 
   const countDown = useCallback(() => {

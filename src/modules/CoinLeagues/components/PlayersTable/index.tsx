@@ -81,6 +81,7 @@ interface IRow {
 
 interface Props {
   data?: IRow[];
+  type?: GameType;
   address: string;
   winner?: any;
   account?: string;
@@ -121,7 +122,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins} = props;
+  const {address, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
@@ -146,7 +147,7 @@ function PlayersTable(props: Props): JSX.Element {
   // We need to this to calculate the monster of score in real time
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
-      return props?.data?.map((d) => {
+      return data?.map((d) => {
         let label;
         const bitboyMember = GET_BITBOY_NAME(d.hash);
         if (bitboyMember) {
@@ -168,13 +169,35 @@ function PlayersTable(props: Props): JSX.Element {
             const startFeed = allFeeds?.find(
               (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
             );
+            let multiplier = 1;
+
+            if (
+              d.captainCoin &&
+              d.captainCoin.toLowerCase() === f.feed.toLowerCase()
+            ) {
+              const end = f.price.toNumber() / USD_POWER_NUMBER;
+              const start = startFeed
+                ? ((startFeed?.start_price.toNumber() /
+                    USD_POWER_NUMBER) as number)
+                : 0;
+              if (end && start) {
+                const scr = (end - start) / end;
+                if (scr > 0 && type === GameType.Winner) {
+                  multiplier = 1.2;
+                }
+                if (scr < 0 && type === GameType.Loser) {
+                  multiplier = 1.2;
+                }
+              }
+            }
+
             return {
               endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
               startPrice: startFeed
                 ? ((startFeed?.start_price.toNumber() /
                     USD_POWER_NUMBER) as number)
                 : 0,
-              multiplier: 1,
+              multiplier,
             };
           });
 
@@ -184,7 +207,7 @@ function PlayersTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * 100 * p.multiplier,
             );
-          const score = scores.reduce((p, c) => p + c) / scores.length;
+          const score = scores.reduce((p, c) => p + c);
           return {
             ...d,
             account: d.hash,
@@ -201,7 +224,7 @@ function PlayersTable(props: Props): JSX.Element {
         }
       });
     }
-    return props?.data?.map((d) => {
+    return data?.map((d) => {
       let label;
       const bitboyMember = GET_BITBOY_NAME(d.hash);
       if (bitboyMember) {
@@ -218,7 +241,7 @@ function PlayersTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds]);
+  }, [props.data, game, currentPrices, allFeeds, data, type]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 

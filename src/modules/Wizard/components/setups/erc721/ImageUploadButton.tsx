@@ -1,11 +1,5 @@
-import {
-  Button,
-  withStyles,
-  makeStyles,
-  ButtonBase,
-  Theme,
-} from '@material-ui/core';
-import React, {useRef, useEffect, useState, useCallback} from 'react';
+import {withStyles, makeStyles, ButtonBase, Theme} from '@material-ui/core';
+import React, {useRef, useEffect, useCallback} from 'react';
 
 import ImageIcon from '@material-ui/icons/Image';
 
@@ -95,7 +89,11 @@ export function ImageUploadButton(props: ImageUploadButtonProps) {
       <CustomButton
         className={error ? classes.error : undefined}
         onClick={handleClick}>
-        {file ? <img className={classes.img} ref={imgRef} /> : <ImageIcon />}
+        {file ? (
+          <img alt='' className={classes.img} ref={imgRef} />
+        ) : (
+          <ImageIcon />
+        )}
       </CustomButton>
     </>
   );

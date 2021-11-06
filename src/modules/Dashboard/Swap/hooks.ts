@@ -28,7 +28,7 @@ export function useSwapTransactions() {
       const newTx = {...tx, status};
       dispatch(swapUpdateTransaction(newTx));
     },
-    [transactions, dispatch],
+    [dispatch],
   );
 
   const clear = useCallback(() => {

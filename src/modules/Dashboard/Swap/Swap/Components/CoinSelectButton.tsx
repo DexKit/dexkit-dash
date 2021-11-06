@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, makeStyles, withStyles} from '@material-ui/core';
+import {makeStyles, Button, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 

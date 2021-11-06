@@ -22,7 +22,7 @@ type Props = {
 };
 
 const MyOrdersContainer: React.FC<Props> = (props) => {
-  const {address, networkName} = props;
+  const {networkName} = props;
 
   const account = useDefaultAccount();
 
@@ -41,10 +41,14 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
   const [data, setData] = useState();
   const [totalRows, setTotalRows] = useState(0);
 
-  const {loading, error, data: dataFn, get} = useFetch(
-    `${ZRX_API_URL(currentChainId)}/sra/v4/orders`,
-  );
+  const {
+    loading,
+    error,
+    data: dataFn,
+    get,
+  } = useFetch(`${ZRX_API_URL(currentChainId)}/sra/v4/orders`);
 
+  /* eslint-disable */
   useEffect(() => {
     if (account) {
       get(
@@ -59,10 +63,12 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
     if (dataFn && dataFn?.records && tokenList.length > 0) {
       const newData = dataFn.records.map((e: any) => {
         const makerToken = tokenList.find(
-          (t: any) => t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
+          (t: any) =>
+            t.address.toLowerCase() === e.order.makerToken.toLowerCase(),
         );
         const takerToken = tokenList.find(
-          (t: any) => t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
+          (t: any) =>
+            t.address.toLowerCase() === e.order.takerToken.toLowerCase(),
         );
 
         e.order['makerTokenFn'] = makerToken;
@@ -122,9 +128,7 @@ const MyOrdersContainer: React.FC<Props> = (props) => {
                 rowsPerPage={rowsPerPage}
                 rowsPerPageOptions={rowsPerPageOptions}
                 onChangePage={(newPage) => onChangePage(newPage)}
-                onChangeRowsPerPage={(perPage) =>
-                  onChangeRowsPerPage(perPage)
-                }
+                onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
               />
             )
           )}

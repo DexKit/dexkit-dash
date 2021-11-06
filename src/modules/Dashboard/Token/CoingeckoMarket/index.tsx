@@ -1,8 +1,5 @@
-import React, {useContext} from 'react';
-
+import React from 'react';
 import {useIntl} from 'react-intl';
-
-import {AppContext} from '@crema';
 import {Avatar, Grid, Typography} from '@material-ui/core';
 // import Revenue from 'assets/images/dashboard/auther_sales.png';
 // import SalesIcon from 'assets/images/dashboard/all_time_sales.png';
@@ -12,8 +9,6 @@ import MarkitIcon from 'assets/images/metricsIcons/market-cap.png';
 import LowIcon from 'assets/images/metricsIcons/low-price.png';
 import HighIcon from 'assets/images/metricsIcons/high-price.png';
 import {CoinDetailCoinGecko} from 'types/coingecko';
-import {useStyles} from './index.style';
-import AppContextPropsType from 'types/AppContextPropsType';
 import {Skeleton} from '@material-ui/lab';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
@@ -23,10 +18,7 @@ interface Props {
 }
 
 const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-  const classes = useStyles(theme);
   const {messages} = useIntl();
-
   return (
     <Grid
       container

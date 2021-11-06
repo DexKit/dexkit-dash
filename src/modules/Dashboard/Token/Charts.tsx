@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
-
+import React, {useEffect, useState, useContext} from 'react';
 import {useIntl} from 'react-intl';
-
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import {makeStyles} from '@material-ui/core';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Tooltip from '@material-ui/core/Tooltip';
+import {
+  makeStyles,
+  Tabs,
+  Tab,
+  Grid,
+  Card,
+  Tooltip,
+  CardContent,
+} from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import {EthereumNetwork, ThemeMode} from '../../../shared/constants/AppEnums';
 import {Token} from 'types/app';
@@ -43,7 +43,7 @@ interface TabPanelProps {
 }
 
 function TabPanelChart(props: TabPanelProps) {
-  const {children, value, index, ...other} = props;
+  const {children, value, index} = props;
   return <>{value === index ? children || null : null}</>;
 }
 
@@ -93,6 +93,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
     if (tokenInfo) {
       chartSource === ChartSource.DEX

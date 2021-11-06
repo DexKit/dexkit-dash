@@ -1,8 +1,6 @@
 import React, {useCallback} from 'react';
-
 import {useIntl} from 'react-intl';
-
-import {Box, Button, Typography} from '@material-ui/core';
+import {Box, Typography, Button} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
 import AssetTable from '../AssetTable';
@@ -21,7 +19,7 @@ type Props = {
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {account, loading, error, data} = props;
+  const {loading, error, data} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -33,6 +31,7 @@ export const AssetTableTab = (props: Props) => {
   const transak = useTransak({});
   const {messages} = useIntl();
 
+  /* eslint-disable */
   const handleTransak = useCallback(() => {
     transak.init();
   }, [transak.init]);

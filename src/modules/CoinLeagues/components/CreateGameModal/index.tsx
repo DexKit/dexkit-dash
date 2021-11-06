@@ -112,45 +112,52 @@ const CreateGameModal = (props: Props) => {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }
+  const onCreateGame = useCallback(
+    (ev?: any) => {
+      if (totalPlayers && entryAmount && duration && coins) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetchCreated().then(
+            (r) => {
+              if(r.data && r.data[0].length){
+                // Sent user to created game
+                history.push(enterGameRoute(`${r.data[0][r.data[0].length-1]}`))
+              }
 
-  const onCreateGame = useCallback(() => {
-    if (totalPlayers && entryAmount && duration && coins) {
-      setSubmitState(SubmitState.WaitingWallet);
-      const onSubmitTx = (tx: string) => {
-        setTx(tx);
-        setSubmitState(SubmitState.Submitted);
-      };
-      const onConfirmTx = () => {
-        setSubmitState(SubmitState.Confirmed);
-        refetchCreated().then((r) => {
-          if (r.data && r.data[0].length) {
-            // Sent user to created game
-            history.push(enterGameRoute(`${r.data[0][r.data[0].length - 1]}`));
-          }
+            }
+          );
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
+
+        const params: GameParams = {
+          numPlayers: totalPlayers,
+          duration,
+          amountUnit: ethers.utils.parseEther(String(entryAmount)),
+          numCoins: coins,
+          abortTimestamp: Math.round(
+            new Date().getTime() / 1000 + duration * 3,
+          ),
+          type: gameType === 'winner-game' ? 0 : 1
+        };
+        onGameCreateCallback(params, {
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
         });
-      };
-      const onError = () => {
-        setSubmitState(SubmitState.Error);
-        setTimeout(() => {
-          setSubmitState(SubmitState.None);
-        }, 3000);
-      };
-
-      const params: GameParams = {
-        numPlayers: totalPlayers,
-        duration,
-        amountUnit: ethers.utils.parseEther(String(entryAmount)),
-        numCoins: coins,
-        abortTimestamp: Math.round(new Date().getTime() / 1000 + duration * 3),
-        type: gameType === 'winner-game' ? 0 : 1,
-      };
-      onGameCreateCallback(params, {
-        onConfirmation: onConfirmTx,
-        onError,
-        onSubmit: onSubmitTx,
-      });
-    }
-  }, [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute]);
+      }
+    },
+    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute],
+  );
 
   const goToExplorer = useCallback(
     (_ev: any) => {
@@ -213,7 +220,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
+             {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
               <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>
                 <IntlMessages id='app.coinLeagues.beginner' /> - 1 Matic
@@ -224,9 +231,9 @@ const CreateGameModal = (props: Props) => {
               <MenuItem value={10}>
                 <IntlMessages id='app.coinLeagues.advanced' /> - 10 Matic
               </MenuItem>
-              {/*   <MenuItem value={50}>50 Matic</MenuItem>
-              <MenuItem value={100}>100 Matic</MenuItem>
-            <MenuItem value={500}>500 Matic</MenuItem>*/}
+              <MenuItem value={50}>Expert - 50 Matic</MenuItem>
+              <MenuItem value={100}>Master - 100 Matic</MenuItem>
+              <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -245,7 +252,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              {/*   <MenuItem value={60 * 5}>5 minutes</MenuItem>*/}
+        {/*   <MenuItem value={60 * 5}>5 minutes</MenuItem>*/}
               <MenuItem value={60 * 60}>1 hr</MenuItem>
               <MenuItem value={4 * 60 * 60}>4 hrs</MenuItem>
               <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>
@@ -262,7 +269,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
-                <IntlMessages id='app.coinLeagues.howManyCoins' />?
+                <IntlMessages id='app.coinLeagues.howManyCoins' />
               </FormLabel>
               <Select
                 value={coins}
@@ -281,7 +288,6 @@ const CreateGameModal = (props: Props) => {
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
               </Select>
             </FormControl>
           </Grid>

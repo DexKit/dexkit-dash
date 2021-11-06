@@ -81,6 +81,7 @@ const TableItem: React.FC<TableItemProps> = ({
     }
   }, [row.side]);
 
+  /* eslint-disable */
   const ViewTxComponent = React.useMemo(
     () => () =>
       <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,

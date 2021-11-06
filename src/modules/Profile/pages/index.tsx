@@ -1,36 +1,14 @@
 import React, {useState, useCallback, useEffect} from 'react';
 
 import {
-  makeStyles,
   Box,
   Grid,
   Typography,
-  Divider,
-  CardContent,
-  Card,
-  LinearProgress,
-  withStyles,
-  Paper,
-  CircularProgress,
-  useTheme,
-  Avatar,
-  ButtonBase,
   Button,
-  CardMedia,
-  alpha,
   IconButton,
   Breadcrumbs,
   Link,
-  Chip,
-  CardActionArea,
-  TextField,
 } from '@material-ui/core';
-
-import {
-  FlashOutlinedIcon,
-  NFTEmptyStateImage,
-  ShieldOutlinedIcon,
-} from 'shared/components/Icons';
 
 import {useNotifications} from 'hooks/useNotifications';
 
@@ -38,10 +16,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {ProfilePointsCard} from '../components/ProfilePointsCard';
 import {useProfileKittygotchi, useProfilePoints} from '../hooks';
 
-import GavelIcon from '@material-ui/icons/Gavel';
 import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
 import {
   useKittygotchiFeed,
@@ -53,37 +29,34 @@ import {
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {Kittygotchi} from 'types/kittygotchi';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {ChainId, Web3State} from 'types/blockchain';
 import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
 import {useToggler} from 'hooks/useToggler';
 
-const useStyles = makeStyles((theme) => ({
-  iconWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    borderRadius: '50%',
-    height: theme.spacing(8),
-    width: theme.spacing(8),
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: theme.palette.grey[700],
-  },
-  icon: {
-    height: theme.spacing(4),
-    width: theme.spacing(4),
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   iconWrapper: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     alignContent: 'center',
+//     borderRadius: '50%',
+//     height: theme.spacing(8),
+//     width: theme.spacing(8),
+//     borderWidth: 1,
+//     borderStyle: 'solid',
+//     borderColor: theme.palette.grey[700],
+//   },
+//   icon: {
+//     height: theme.spacing(4),
+//     width: theme.spacing(4),
+//   },
+// }));
 
 export const ProfileIndex = () => {
-  const classes = useStyles();
-  const theme = useTheme();
-
+  /* eslint-disable */
   const [loadingKyttie, setLoadingKyttie] = useState(false);
   const [mintLoading, setMintLoading] = useState(false);
+  /* eslint-disable */
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const feedingToggler = useToggler();
@@ -102,12 +75,15 @@ export const ProfileIndex = () => {
 
   const history = useHistory();
 
+  /* eslint-disable */
   const profilePoints = useProfilePoints();
 
+  /* eslint-disable */
   const kittygotchiItem = useKittygotchiV2();
 
   const kittygotchiUpdated = useKittygotchiOnChain();
 
+  /* eslint-disable */
   const kittygotchiList = useKittygotchiList();
 
   const kittygotchiMint = useKittygotchiMint();
@@ -178,6 +154,7 @@ export const ProfileIndex = () => {
 
   const {onFeedCallback} = useKittygotchiFeed();
 
+  /* eslint-disable */
   const handleClearError = useCallback(() => {
     setErrorMessage(undefined);
   }, []);

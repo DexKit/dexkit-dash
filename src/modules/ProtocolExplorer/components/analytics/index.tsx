@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
 export const Analytics = (props: Props) => {
   const {tokenMarket, token, loading, priceUSD} = props;
   const {usdFormatter} = useUSDFormatter();
+
+  /* eslint-disable */
   const volumeUSD = useMemo(() => {
     return loading
       ? '-'

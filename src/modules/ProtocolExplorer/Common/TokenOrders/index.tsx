@@ -1,17 +1,18 @@
 import React from 'react';
 import {useIntl} from 'react-intl';
 import {useTokenTrades} from 'hooks/protocolExplorer/useTokenTrades';
-import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Hidden from '@material-ui/core/Hidden';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+import {
+  Box,
+  CircularProgress,
+  Hidden,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import FilterMenu from 'shared/components/Filter/menu';
 import FilterList from 'shared/components/Filter/list';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenOrdersTable from './TokenOrdersTable';
-import {useStyles} from './index.style';
 import LoadingTable from 'modules/Common/LoadingTable';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
@@ -26,7 +27,6 @@ interface Props {
 const TokenOrders: React.FC<Props> = (props) => {
   const {baseAddress, quoteAddress, exchange, networkName, type} = props;
   const {messages} = useIntl();
-  const classes = useStyles();
 
   const {
     loading,

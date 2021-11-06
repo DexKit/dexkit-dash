@@ -116,6 +116,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
 
   const [selectedNetwork, setSelectedNetwork] = useState<EthereumNetwork>();
 
+  /* eslint-disable */
   const getFilteredTokens = useCallback(
     (tokens: Token[], selectedNetwork?: EthereumNetwork) => {
       if (selectedNetwork) {

@@ -65,6 +65,8 @@ export const ViewCoinListItem = (props: Props) => {
   const theme = useTheme();
   const classes = useStyles();
   const {messages} = useIntl();
+
+  /* eslint-disable */
   const priceStart = useMemo(() => {
     if (feedOnchain.start_price) {
       return usdFormatter.format(
@@ -136,7 +138,7 @@ export const ViewCoinListItem = (props: Props) => {
         {!isMobile && (
           <Grid item>
             <Box className={classes.tokenContainer}>
-              <img alt='' src={coin.logo} className={classes.token} />
+              <img src={coin.logo} className={classes.token} />
             </Box>
           </Grid>
         )}

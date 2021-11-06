@@ -1,20 +1,17 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useIntl} from 'react-intl';
-import IntlMessages from '@crema/utility/IntlMessages';
 
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import {ButtonState, SubmitState} from '../ButtonState';
+import {SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  ExplorerURL,
-  IS_SUPPORTED_LEAGUES_CHAIN_ID,
-} from 'modules/CoinLeagues/utils/constants';
+import {ExplorerURL} from 'modules/CoinLeagues/utils/constants';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {ChainId} from 'types/blockchain';
+import Typography from '@material-ui/core/Typography';
 
 interface Props {
   address?: string;
@@ -23,16 +20,19 @@ interface Props {
 export const EndGame = (props: Props) => {
   const {address} = props;
   const {chainId} = useWeb3();
-  const {messages} = useIntl();
-  const {onEndGameCallback, game, refetch, refetchWinner} =
+  const {game} =
     useCoinLeagues(address);
-  const [tx, setTx] = useState<string>();
-  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-  const goToExplorer = useCallback(() => {
-    if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
-      window.open(`${ExplorerURL[chainId]}${tx}`);
-    }
-  }, [tx, chainId]);
+  const [tx, _setTx] = useState<string>();
+  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const goToExplorer = useCallback(
+    (_ev: any) => {
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+        window.open(`${ExplorerURL[chainId]}${tx}`);
+      }
+    },
+    [tx, chainId],
+  );
+  const {messages} = useIntl();
 
   const canEndGame = useMemo(() => {
     if (game) {
@@ -42,63 +42,66 @@ export const EndGame = (props: Props) => {
     }
   }, [game?.start_timestamp]);
 
-  const onEndGame = useCallback(() => {
-    if (game?.amount_to_play) {
-      setSubmitState(SubmitState.WaitingWallet);
-      const onSubmitTx = (tx: string) => {
-        setTx(tx);
-        setSubmitState(SubmitState.Submitted);
-      };
-      const onConfirmTx = () => {
-        setSubmitState(SubmitState.Confirmed);
-        refetch();
-        refetchWinner();
-      };
-      const onError = () => {
-        setSubmitState(SubmitState.Error);
-        setTimeout(() => {
-          setSubmitState(SubmitState.None);
-        }, 3000);
-      };
+ /* const onEndGame = useCallback(
+    (ev: any) => {
+      if (game?.amount_to_play) {
+        setSubmitState(SubmitState.WaitingWallet);
+        const onSubmitTx = (tx: string) => {
+          setTx(tx);
+          setSubmitState(SubmitState.Submitted);
+        };
+        const onConfirmTx = () => {
+          setSubmitState(SubmitState.Confirmed);
+          refetch();
+          refetchWinner();
+        };
+        const onError = () => {
+          setSubmitState(SubmitState.Error);
+          setTimeout(() => {
+            setSubmitState(SubmitState.None);
+          }, 3000);
+        };
 
-      onEndGameCallback({
-        onConfirmation: onConfirmTx,
-        onError,
-        onSubmit: onSubmitTx,
-      });
-    }
-  }, [game, refetch]);
+        onEndGameCallback({
+          onConfirmation: onConfirmTx,
+          onError,
+          onSubmit: onSubmitTx,
+        });
+      }
+    },
+    [game, refetch],
+  );*/
 
   return (
-    <Paper>
-      <Box m={2}>
-        <Grid container spacing={4} justifyContent={'flex-end'}>
-          <Grid item xs md={3}>
-            <Box m={2}>
-              <Grid
-                container
-                justifyContent='center'
-                alignContent='center'
-                alignItems='center'>
-                <Grid item xs={12} md={12}>
-                  <Box display={'flex'} justifyContent={'center'}>
-                    {tx && (
-                      <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted ? (
-                          <IntlMessages id='app.coinLeagues.submittedTx' />
-                        ) : submitState === SubmitState.Error ? (
-                          <IntlMessages id='app.coinLeagues.txError' />
-                        ) : submitState === SubmitState.Confirmed ? (
-                          <IntlMessages id='app.coinLeagues.confirmedTx' />
-                        ) : (
-                          ''
+    <>
+      {canEndGame && (
+        <Paper>
+          <Box m={2}>
+            <Grid container spacing={4} justifyContent={'flex-end'}>
+              <Grid item xs md={3}>
+                <Box m={2}>
+                  <Grid
+                    container
+                    justifyContent={'center'}
+                    alignContent={'center'}
+                    alignItems={'center'}>
+                    <Grid item xs={12} md={12}>
+                      <Box display={'flex'} justifyContent={'center'}>
+                        {tx && (
+                          <Button variant={'text'} onClick={goToExplorer}>
+                            {submitState === SubmitState.Submitted
+                              ? 'Submitted Tx'
+                              : submitState === SubmitState.Error
+                              ? 'Tx Error'
+                              : submitState === SubmitState.Confirmed
+                              ? 'Confirmed Tx'
+                              : ''}
+                          </Button>
                         )}
-                      </Button>
-                    )}
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <Button
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      {/*<Button
                     onClick={onEndGame}
                     fullWidth
                     disabled={
@@ -117,13 +120,23 @@ export const EndGame = (props: Props) => {
                         messages['app.coinLeagues.gameFinished'] as string
                       }
                     />
-                  </Button>
-                </Grid>
+                  </Button>*/}
+
+                        <Paper>
+                          <Box display={'flex'} justifyContent={'center'} p={2}>
+                            <Typography>
+                              &nbsp; Game will auto end soon
+                            </Typography>
+                          </Box>
+                        </Paper>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-    </Paper>
+            </Grid>
+          </Box>
+        </Paper>
+      )}
+    </>
   );
 };

@@ -1,15 +1,15 @@
-import React, {useCallback} from 'react';
-
+import {
+  Dialog,
+  DialogContent,
+  Typography,
+  DialogTitle,
+  Box,
+  IconButton,
+  Button,
+  Divider,
+} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
-
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import React, {useCallback} from 'react';
 import {SwapHistoricTable} from './SwapHistoricTable';
 import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyTransaction} from 'types/changelly';
@@ -27,10 +27,12 @@ export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
   const {clear, remove} = useSwapTransactions();
 
+  /* eslint-disable */
   const handleClear = useCallback(() => {
     clear();
   }, []);
 
+  /* eslint-disable */
   const handleRemove = useCallback((transaction: ChangellyTransaction) => {
     remove(transaction.id);
   }, []);

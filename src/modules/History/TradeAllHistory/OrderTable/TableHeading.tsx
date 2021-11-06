@@ -10,31 +10,6 @@ import {CremaTheme} from 'types/AppContextPropsType';
 interface TableHeadingProps {}
 
 const TableHeading: React.FC<TableHeadingProps> = () => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
-    tableRowRoot: {
-      color: grey[500],
-    },
-    tableCellRoot: {
-      backgroundColor: theme.palette.background.paper,
-      borderBottom: '0 none',
-      fontSize: 16,
-      padding: 8,
-      fontFamily: Fonts.LIGHT,
-
-      '&:last-child': {
-        // [theme.breakpoints.up('xl')]: {
-        //   paddingRight: 4,
-        // },
-        paddingRight: 20,
-      },
-      // [theme.breakpoints.up('xl')]: {
-      //   fontSize: 18,
-      //   padding: 16,
-      // },
-    },
-  }));
-
-  const classes = useStyles();
   return (
     <TableRow>
       <TableCell align='left'>

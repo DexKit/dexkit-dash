@@ -9,7 +9,6 @@ import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
 import Logo from 'shared/components/Logo';
 import {getLogoSrcs} from 'utils';
-
 const noFoundSrc = require('assets/images/logo-not-found.png');
 
 type TokenBalance = Token & {
@@ -55,9 +54,9 @@ export const SelectTokenBalanceListItem = (props: Props) => {
     onClick(token);
   }, [token, onClick]);
 
-  const addDefaultSrc = useCallback((ev: any) => {
-    ev.target.src = noFoundSrc;
-  }, []);
+  // const addDefaultSrc = useCallback((ev: any) => {
+  //   ev.target.src = noFoundSrc;
+  // },[]);
 
   return (
     <Box

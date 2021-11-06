@@ -3,29 +3,37 @@ import React, {useEffect, useState} from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import {
+  Breadcrumbs,
+  Button,
+  Grid,
+  Hidden,
+  Link,
+  Typography,
+} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-
-import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import {SupportedNetworkType} from 'types/blockchain';
+import Box from '@material-ui/core/Box';
+import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
+
+import {makeStyles} from '@material-ui/core/styles';
+
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
+
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+
 import useDiscord from 'hooks/useDiscord';
+
 import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
@@ -58,10 +66,10 @@ const MyGames = () => {
         }),
       );
     }
-  }, [account]);
+  }, [account, dispatch]);
 
   return (
-    <Grid container spacing={2} alignItems='center'>
+    <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>
@@ -79,7 +87,7 @@ const MyGames = () => {
       </Grid>
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: 12}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
@@ -88,7 +96,7 @@ const MyGames = () => {
         </Typography>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
-        <Box display='flex' alignItems='end' justifyContent='end'>
+        <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
           <SwapButton />
           <Box pr={2}>
             <BuyCryptoButton
@@ -116,7 +124,7 @@ const MyGames = () => {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: 12}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
         </Grid>
       </Hidden>
 

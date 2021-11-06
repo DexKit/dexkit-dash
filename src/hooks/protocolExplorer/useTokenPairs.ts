@@ -28,15 +28,15 @@ export const useTokenPairs = ({baseAddress, exchange, networkName}: Props) => {
     onChangeRowsPerPage,
   } = usePagination();
 
-  const [data, setData] = useState<
-    GetTokenPairs_ethereum_dexTrades[]
-  >();
+  const [data, setData] = useState<GetTokenPairs_ethereum_dexTrades[]>();
+  /* eslint-disable */
   const [yesterday, setYesterday] = useState<Date>(getLast24HoursDate());
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetTokenPairs,
-    GetTokenPairsVariables
-  >(BITQUERY_TOKEN_PAIRS, {
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetTokenPairs, GetTokenPairsVariables>(BITQUERY_TOKEN_PAIRS, {
     variables: {
       network: networkName,
       exchangeName:

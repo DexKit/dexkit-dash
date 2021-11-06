@@ -15,7 +15,6 @@ import {
   deriveUserFromAddr,
   getPriceFromOrder,
   getUSDPriceFromOrder,
-  isAssetOwner,
   isSameAddress,
 } from '../../../utils';
 

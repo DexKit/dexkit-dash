@@ -1,23 +1,17 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
 
 import {
-  makeStyles,
   Box,
   Grid,
   Typography,
   Paper,
-  useTheme,
   Button,
   IconButton,
   Breadcrumbs,
   Link,
-  TextField,
-  InputAdornment,
 } from '@material-ui/core';
 
 import {Alert} from '@material-ui/lab';
-
-import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -27,7 +21,6 @@ import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {MintKittygotchiDialog} from '../components/dialogs/MintKittygotchiDialog';
 
 import GavelIcon from '@material-ui/icons/Gavel';
-import SearchIcon from '@material-ui/icons/Search';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
@@ -35,7 +28,7 @@ import {useToggler} from 'hooks/useToggler';
 import {useKittygotchiList, useKittygotchiMint} from '../hooks/index';
 import {KittygotchiCard} from '../components/KittygotchiCard';
 import {Kittygotchi} from 'types/kittygotchi';
-import {ButtonState, SubmitState} from '../components/ButtonState';
+import {SubmitState} from '../components/ButtonState';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
@@ -44,34 +37,31 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {ChainId, Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
 
-const useStyles = makeStyles((theme) => ({
-  iconWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    borderRadius: '50%',
-    height: theme.spacing(8),
-    width: theme.spacing(8),
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: theme.palette.grey[700],
-  },
-  icon: {
-    height: theme.spacing(4),
-    width: theme.spacing(4),
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   iconWrapper: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     alignContent: 'center',
+//     borderRadius: '50%',
+//     height: theme.spacing(8),
+//     width: theme.spacing(8),
+//     borderWidth: 1,
+//     borderStyle: 'solid',
+//     borderColor: theme.palette.grey[700],
+//   },
+//   icon: {
+//     height: theme.spacing(4),
+//     width: theme.spacing(4),
+//   },
+// }));
 
 export const KittygotchiIndex = () => {
-  const classes = useStyles();
-  const theme = useTheme();
   const history = useHistory();
   const {chainId, web3State} = useWeb3();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
-  const mintSuccessToggler = useToggler(false);
 
   const emtpyArrayRef = useRef(new Array(8).fill(null));
 
@@ -99,7 +89,7 @@ export const KittygotchiIndex = () => {
     setMintingDone(false);
     setMintingLoading(false);
     mintingToggler.set(false);
-  }, []);
+  }, [mintingToggler]);
 
   const onMintGotchi = useCallback(() => {
     clearState();
@@ -162,7 +152,16 @@ export const KittygotchiIndex = () => {
       onError,
       onSubmit: onSubmitTx,
     });
-  }, [onMintCallback, createNotification, chainId, defaultAccount]);
+  }, [
+    clearState,
+    onMintCallback,
+    createNotification,
+    chainId,
+    defaultAccount,
+    mintKittyToggler,
+    kittygotchiList,
+    mintingToggler,
+  ]);
 
   const handleKittygotchiClick = useCallback(
     (kittygotchi: Kittygotchi) => {
@@ -179,8 +178,8 @@ export const KittygotchiIndex = () => {
     setErrorMessage(undefined);
   }, []);
 
+  /* eslint-disable */
   useEffect(() => {
-    console.log('entraaaa');
     if (
       defaultAccount &&
       web3State === Web3State.Done &&
@@ -259,6 +258,17 @@ export const KittygotchiIndex = () => {
               </Alert>
             </Grid>
           )}
+
+          {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+            <Grid item xs={12}>
+              <Alert severity='info'>
+                <Typography variant='body2'>
+                  Connect to <strong>Polygon(MATIC)</strong> network to create a
+                  Kittygotchi
+                </Typography>
+              </Alert>
+            </Grid>
+          ) : null}
           <Grid item xs={12}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
@@ -266,6 +276,12 @@ export const KittygotchiIndex = () => {
                   <Box display='flex' justifyContent='space-between' p={4}>
                     <Box></Box>
                     <Button
+                      disabled={
+                        !(
+                          chainId === ChainId.Matic ||
+                          chainId === ChainId.Mumbai
+                        )
+                      }
                       startIcon={<GavelIcon />}
                       variant='contained'
                       color='primary'

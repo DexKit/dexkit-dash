@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 import {useQuery} from 'react-query';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
@@ -53,13 +53,16 @@ export function useFavoritesWithMarket() {
     [favoriteCoins],
   );
 
-  const onToggleFavorite = useCallback((token?: Token, id?: string) => {
-    if (token && id) {
-      getTokenById(id).then((tokenDetail) => {
-        dispatch(toggleFavoriteCoin({...token, ...tokenDetail}));
-      });
-    }
-  }, []);
+  const onToggleFavorite = useCallback(
+    (token?: Token, id?: string) => {
+      if (token && id) {
+        getTokenById(id).then((tokenDetail) => {
+          dispatch(toggleFavoriteCoin({...token, ...tokenDetail}));
+        });
+      }
+    },
+    [dispatch],
+  );
 
   return {data: data || [], loading: isLoading, onToggleFavorite, isFavorite};
 }

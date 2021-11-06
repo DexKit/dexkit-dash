@@ -20,6 +20,7 @@ const MagicCallbackEmail = () => {
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
 
   ////TODO: colocar loading nos callbacks
+  /* eslint-disable */
   useEffect(() => {
     // On mount, we try to login with a Magic credential in the URL query.
     const network = getCachedMagicNetwork();

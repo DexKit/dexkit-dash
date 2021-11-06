@@ -50,20 +50,21 @@ export const PairAnalyticsAMM = (props: Props) => {
 
   const classes = useStyles();
 
-  const {loading, error, data} = useAMMPairExplorer({
+  const {loading, data} = useAMMPairExplorer({
     exchange,
     address,
     networkName,
   });
 
   const {usdFormatter} = useUSDFormatter();
-
   const {messages} = useIntl();
 
+  /* eslint-disable */
   const volumeUSD = useMemo(() => {
     return loading ? '-' : usdFormatter.format(data?.volume24InUsd || 0);
   }, [data?.volume24InUsd, loading]);
 
+  /* eslint-disable */
   const liquidity = useMemo(() => {
     return loading ? '-' : usdFormatter.format(data?.liquidity || 0);
   }, [data?.liquidity, loading]);

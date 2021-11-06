@@ -36,3 +36,4 @@ export {ReactComponent as FlashSpeedIcon} from 'assets/images/icons/flash-speed.
 export {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 export {ReactComponent as ShareIcon} from 'assets/images/icons/share.svg';
 export {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+export {ReactComponent as LockIcon} from 'assets/images/icons/lock.svg';

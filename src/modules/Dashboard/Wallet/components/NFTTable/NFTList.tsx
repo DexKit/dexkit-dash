@@ -127,7 +127,7 @@ export const NFTList = (props: AssetListProps) => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <IconButton disabled={page == 1} onClick={handleGoPrevious}>
+                <IconButton disabled={page === 1} onClick={handleGoPrevious}>
                   <KeyboardArrowLeftIcon />
                 </IconButton>
               </Grid>

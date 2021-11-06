@@ -1,7 +1,6 @@
 import React from 'react';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import {GridContainer} from '@crema';
-import {useStyles} from './index.style';
 import ErrorView from 'modules/Common/ErrorView';
 import TransferTable from './TransferTable';
 import LoadingTable from 'modules/Common/LoadingTable';
@@ -16,7 +15,6 @@ type Props = {
 
 const TransferListContainer: React.FC<Props> = (props) => {
   const {address, networkName} = props;
-  const classes = useStyles();
   const {
     loading,
     error,

@@ -8,16 +8,11 @@ import {
   Link,
   IconButton,
   Typography,
-  Paper,
-  ButtonBase,
-  Chip,
-  Divider,
 } from '@material-ui/core';
 
 import moment from 'moment';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import RankingButton from '../components/buttons/RankingButton';
 import PointsHistoryCard from '../components/buttons/PointsHistoryCard';
 import ProfilePointsCard from '../components/ProfilePointsCard';
 

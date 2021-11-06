@@ -11,6 +11,7 @@ import {CoinItemCoinGecko} from 'types/coingecko';
 import {Link as RouterLink} from 'react-router-dom';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
+
 import {FavoritesEmptyImage} from 'shared/components/Icons';
 
 interface FavoriteCoinsListProps {

@@ -85,6 +85,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
   const {transactions, saveTransaction} = useSwapTransactions();
   const [showTransactions, setShowTransactions] = useState(false);
 
+  /* eslint-disable */
   useEffect(() => {
     (async () => {
       setLoading(true);

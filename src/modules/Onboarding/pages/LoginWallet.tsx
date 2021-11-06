@@ -139,26 +139,32 @@ export const CreateWallet = (props: Props) => {
   const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const handleConnectWeb3 = useCallback(() => {
     onCloseWeb3();
 
     const onConnectSuccess = (a: string) => {
       setLoading(true);
-      if(loginBackRoute){
+      if (loginBackRoute) {
         history.push(loginBackRoute);
         onSetLoginBackRoute(undefined);
-      }else{
+      } else {
         history.push(`/wallet/${a}`);
       }
-      
     };
     const onFinalConnect = () => {
       setLoading(false);
     };
     onConnectWeb3(onConnectSuccess, onFinalConnect);
-  }, []);
-  const history = useHistory();
+  }, [
+    onConnectWeb3,
+    onCloseWeb3,
+    history,
+    onSetLoginBackRoute,
+    loginBackRoute,
+  ]);
+
   const [email, setEmail] = useState('');
 
   //const handleTelegram = useCallback(() => {}, []);
@@ -173,7 +179,7 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('discord').finally(() => {
       toggleLoading();
     });
-  }, []);
+  }, [onCloseWeb3, onConnectMagicSocial, toggleLoading]);
 
   const handleGoogle = useCallback(() => {
     onCloseWeb3();
@@ -181,13 +187,13 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('google').finally(() => {
       toggleLoading();
     });
-  }, []);
+  }, [onCloseWeb3, onConnectMagicSocial, toggleLoading]);
 
-  const handleApple = useCallback(() => {
-    onConnectMagicSocial('apple').finally(() => {
-      toggleLoading();
-    });
-  }, []);
+  // const handleApple = useCallback(() => {
+  //   onConnectMagicSocial('apple').finally(() => {
+  //     toggleLoading();
+  //   });
+  // }, []);
 
   const handleTwitter = useCallback(() => {
     onCloseWeb3();
@@ -195,7 +201,7 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('twitter').finally(() => {
       toggleLoading();
     });
-  }, [toggleLoading]);
+  }, [toggleLoading, onConnectMagicSocial, onCloseWeb3]);
 
   const handleChange = useCallback((e) => {
     setEmail(e.target.value);
@@ -211,7 +217,7 @@ export const CreateWallet = (props: Props) => {
         });
       }
     },
-    [email],
+    [email, onConnectMagicEmail, onCloseWeb3, toggleLoading],
   );
 
   const handleConnectWalletLater = useCallback(() => {

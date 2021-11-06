@@ -12,7 +12,6 @@ import {
   Tooltip,
   Avatar,
   makeStyles,
-  Paper,
 } from '@material-ui/core';
 import {getPriceFromOrder} from 'modules/NFTWallet/utils';
 

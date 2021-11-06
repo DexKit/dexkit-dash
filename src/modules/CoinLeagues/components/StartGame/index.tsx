@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import {ButtonState, SubmitState} from '../ButtonState';
+import {SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
 import {
@@ -24,14 +24,13 @@ interface Props {
 export const StartGame = (props: Props) => {
   const {address} = props;
   const {chainId} = useWeb3();
-  const {messages} = useIntl();
-  const {onStartGameCallback, game, refetch, onAbortGameCallback} =
+  const { game} =
     useCoinLeagues(address);
-  const [tx, setTx] = useState<string>();
-  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-  const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
+  const [tx, _setTx] = useState<string>();
+  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
+  /*const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
     SubmitState.None,
-  );
+  );*/
   const goToExplorer = useCallback(
     (_ev: any) => {
       if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
@@ -41,7 +40,7 @@ export const StartGame = (props: Props) => {
     [tx, chainId],
   );
 
-  const onStartGame = useCallback(
+ /* const onStartGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);
@@ -96,12 +95,10 @@ export const StartGame = (props: Props) => {
       }
     },
     [game, refetch],
-  );
+  );*/
 
   const abortTimestamp = useMemo(() => {
     if (game?.abort_timestamp.toNumber()) {
-      console.log('Abort timestamp');
-      console.log(game?.abort_timestamp.toNumber());
       return game?.abort_timestamp.toNumber() * 1000;
     }
   }, [game]);
@@ -169,6 +166,8 @@ export const StartGame = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
+                  {/*  <Button
+                    disabled={!gameFull || submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
                   <Button
                     disabled={
                       !gameFull ||
@@ -183,6 +182,8 @@ export const StartGame = (props: Props) => {
                     }>
                     <ButtonState
                       state={submitState}
+                      defaultMsg={'Start Game'}
+                      confirmedMsg={'Game Started'}
                       defaultMsg={
                         messages['app.coinLeagues.startGame'] as string
                       }
@@ -190,7 +191,16 @@ export const StartGame = (props: Props) => {
                         messages['app.coinLeagues.gameStarted'] as string
                       }
                     />
-                  </Button>
+                  </Button>*/}
+                  {gameFull && (
+                    <Paper>
+                      <Box display={'flex'} justifyContent={'center'} p={2}>
+                        <Typography>
+                          &nbsp; Game will auto start soon
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  )}
                 </Grid>
                 {/*canAbort && (
                   <Grid item xs={12} md={12}>

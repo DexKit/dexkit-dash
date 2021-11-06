@@ -19,7 +19,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {AppDispatch} from 'redux/store';
 import generateWallet from 'utils/generateWallet';
 import {addAccounts, setUserEncryptedSeed} from 'redux/_ui/actions';
-import {SupportedNetworkType, Network} from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 
 const useStyles = makeStyles(() => ({
   aligned: {width: '100%', textAlign: 'center'},
@@ -31,16 +31,21 @@ const GeneratedWallet: React.FC<any> = ({mnemonics, passphrase}) => {
   const [address, setAddress] = useState<string | undefined>();
 
   const [toClipboard, setToClipboard] = useState(false);
+
+  /* eslint-disable */
   useEffect(() => {
     generateWallet(mnemonics, passphrase).then((w) => {
       setAddress(w.address);
-      addAccounts({accounts: [
-        {
-          address: w.address,
-          label: w.address,
-          networkType: SupportedNetworkType.evm
-        },
-      ], type: SupportedNetworkType.evm} );
+      addAccounts({
+        accounts: [
+          {
+            address: w.address,
+            label: w.address,
+            networkType: SupportedNetworkType.evm,
+          },
+        ],
+        type: SupportedNetworkType.evm,
+      });
       dispatch(setUserEncryptedSeed(w.encryptedSeed));
     });
   }, []);

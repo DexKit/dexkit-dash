@@ -5,10 +5,11 @@ import {useIntl} from 'react-intl';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
-import {Box, makeStyles} from '@material-ui/core';
+import {makeStyles, Box} from '@material-ui/core';
 import {ReactComponent as PresentationChartIcon} from 'assets/images/icons/presentation-chart.svg';
 import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
+
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {MoneyReciveIcon, MoneySendIcon} from 'shared/components/Icons';
@@ -48,7 +49,7 @@ type Props = {
 };
 
 export const PairAnalytics = (props: Props) => {
-  const {exchange, networkName, pair} = props;
+  const {pair} = props;
   const loading = false;
 
   /*const {loading, error, data} = usePairExplorer({
@@ -61,30 +62,32 @@ export const PairAnalytics = (props: Props) => {
   const {usdFormatter} = useUSDFormatter();
 
   const classes = useStyles();
-
   const {messages} = useIntl();
 
+  /* eslint-disable */
   const tradeAmountInUSD = useMemo(() => {
     return usdFormatter.format(pair?.tradeAmountInUsd || 0);
-  }, [pair?.tradeAmountInUsd]);
+  }, [pair?.tradeAmountInUsd, pair, usdFormatter ]);
 
+  /* eslint-disable */
   const lastPriceInUSD = useMemo(() => {
     return usdFormatter.format(Number(pair?.closePriceUsd || 0));
-  }, [pair?.closePriceUsd]);
+  }, [pair?.closePriceUsd, pair, usdFormatter]);
 
+  /* eslint-disable */
   const maxPriceInUSD = useMemo(() => {
     return usdFormatter.format(pair?.maxPriceUsd || 0);
-  }, [pair?.maximumPrice]);
+  }, [pair?.maximumPrice, pair, usdFormatter]);
 
+  /* eslint-disable */
   const minPriceInUSD = useMemo(() => {
     return usdFormatter.format(pair?.minPriceUsd || 0);
-  }, [pair?.minPriceUsd]);
+  }, [pair?.minPriceUsd, pair, usdFormatter]);
 
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
         <Typography variant='h6'>
-          {' '}
           <IntlMessages id='app.protocolExplorer.pairAnalytics' />
         </Typography>
       </Grid>

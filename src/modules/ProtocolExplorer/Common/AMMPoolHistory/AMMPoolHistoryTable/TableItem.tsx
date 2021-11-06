@@ -1,13 +1,17 @@
 import React, {useMemo} from 'react';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import {makeStyles} from '@material-ui/core';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import {
+  Box,
+  TableCell,
+  TableRow,
+  Chip,
+  makeStyles,
+  useMediaQuery,
+} from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
+
 import {MintBurn} from 'types/app';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ViewTx} from 'shared/components/ViewTx';

@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useHistory} from 'react-router';
-import {getCachedMagicNetwork, getMagic} from 'services/magic';
+import {getMagic, getCachedMagicNetwork} from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
 import {useWelcomeModal} from 'hooks/useWelcomeModal';
@@ -17,9 +17,11 @@ const MagicCallbackSocial = () => {
   const {onConnectMagic} = useMagicProvider();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const history = useHistory();
+
   const {messages} = useIntl();
 
   //TODO: colocar loading nos callbacks
+  /* eslint-disable */
   useEffect(() => {
     // On mount, we try to login with a Magic credential in the URL query.
     const network = getCachedMagicNetwork();

@@ -1,21 +1,17 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   makeStyles,
-  Box,
   Grid,
   Typography,
   CardContent,
   Card,
   CardMedia,
   CardActionArea,
-  useTheme,
 } from '@material-ui/core';
 
-import {FlashOutlinedIcon, ShieldOutlinedIcon} from 'shared/components/Icons';
 import {Kittygotchi} from 'types/kittygotchi';
 import {Skeleton} from '@material-ui/lab';
-import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   iconWrapper: {
@@ -49,8 +45,6 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
   const {kittygotchi, onClick, loading} = props;
   const classes = useStyles();
 
-  const theme = useTheme();
-
   const handleClick = useCallback(() => {
     if (kittygotchi && onClick) {
       onClick(kittygotchi);
@@ -75,52 +69,6 @@ export const KittygotchiCard = (props: KittygotchiCardProps) => {
                   {loading ? <Skeleton /> : <>Kittygotchi #{kittygotchi?.id}</>}
                 </strong>
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      ATK
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.attack || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      DEF
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.defense || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {!loading ? (
-                    <Typography color='textSecondary' variant='caption'>
-                      RUN
-                    </Typography>
-                  ) : null}
-                  <Typography variant='body1'>
-                    {loading ? (
-                      <Skeleton width={theme.spacing(10)} />
-                    ) : (
-                      leftPad(kittygotchi?.run || 0, 3)
-                    )}
-                  </Typography>
-                </Grid>
-              </Grid>
             </Grid>
           </Grid>
         </CardContent>

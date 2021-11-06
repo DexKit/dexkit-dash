@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid, Box, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 
 import {useStyles} from './index.style';
@@ -10,7 +10,6 @@ import {useIntl} from 'react-intl';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useTradeHistory} from 'hooks/history/useTradeHistory';
-import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Props = {

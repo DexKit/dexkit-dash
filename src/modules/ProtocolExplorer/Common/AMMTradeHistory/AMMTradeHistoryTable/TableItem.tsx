@@ -1,13 +1,15 @@
 import React, {useMemo} from 'react';
 
 import {useIntl} from 'react-intl';
-
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import {makeStyles} from '@material-ui/core';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {CremaTheme} from 'types/AppContextPropsType';
+import {
+  Box,
+  TableCell,
+  TableRow,
+  Chip,
+  makeStyles,
+  useMediaQuery,
+} from '@material-ui/core';
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -56,6 +58,8 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const priceUsd = usdFormatter.format(
     (row.baseAmountInUsd || 1) / (row.baseAmount || 1) || 0,
   );
+
+  /* eslint-disable */
   const ViewTxComponent = React.useMemo(
     () => () =>
       <ViewTx networkName={networkName} hash={row.transaction?.hash || ''} />,

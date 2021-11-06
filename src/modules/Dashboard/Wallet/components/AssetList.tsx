@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import {
+  IconButton,
+  FormControl,
+  Grid,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import {MyBalances} from 'types/blockchain';
 import TokenListItem from 'shared/components/TokenListItem';
 import {useHistory} from 'react-router';
@@ -131,7 +132,7 @@ export const AssetList = (props: AssetListProps) => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <IconButton disabled={page == 1} onClick={handleGoPrevious}>
+                <IconButton disabled={page === 1} onClick={handleGoPrevious}>
                   <KeyboardArrowLeftIcon />
                 </IconButton>
               </Grid>

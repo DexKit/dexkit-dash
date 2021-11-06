@@ -18,7 +18,7 @@ export default (props: Props) => {
       .catch((err) => {
         onPaste('');
       });
-  }, []);
+  }, [onPaste]);
 
   return (
     <IconButton size='small' onClick={handlePaste}>

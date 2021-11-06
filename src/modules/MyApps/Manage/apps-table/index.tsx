@@ -97,20 +97,15 @@ const AppsTable = () => {
     dispatch(setInsufficientAmountAlert(kitAmount < kitsCost));
   }, [configs, balances, dispatch]);
 
-  const handleSelectionType = (data: any) => {
-    console.log('data: ', data);
-  };
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-  const handleSort = (property: string) => (
-    event: React.MouseEvent<unknown>,
-  ) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  const handleSort =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      const isAsc = orderBy === property && orderDirection === 'asc';
+      setOrderDirection(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+    };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,

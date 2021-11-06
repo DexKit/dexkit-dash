@@ -56,7 +56,6 @@ export const AccountListItem = (props: AccountListItemProps) => {
     onSelect,
     onLabelChange,
     onMakeDefault,
-    onOpenMenu,
     selected,
   } = props;
 
@@ -81,6 +80,7 @@ export const AccountListItem = (props: AccountListItemProps) => {
     [],
   );
 
+  /* eslint-disable */
   const handleDone = useCallback(
     (e: React.MouseEvent) => {
       onLabelChange(account, label);

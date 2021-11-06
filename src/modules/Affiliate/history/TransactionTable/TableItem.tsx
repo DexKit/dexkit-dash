@@ -1,12 +1,12 @@
 import React from 'react';
-
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import {Avatar, Link, makeStyles, Tooltip} from '@material-ui/core';
+import {makeStyles, Link, Avatar, Tooltip} from '@material-ui/core';
 
 import {ETHERSCAN_API_URL} from 'shared/constants/AppConst';
 import {useWeb3} from 'hooks/useWeb3';
+import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
 import {useIntl} from 'react-intl';
@@ -17,7 +17,7 @@ interface Props {
   data: Required<GetAffiliateTrades_ethereum_transfers>;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: CremaTheme) => ({
   tableCell: {
     fontSize: 16,
     padding: '12px 8px',
@@ -87,8 +87,8 @@ const TableItem: React.FC<Props> = ({data}) => {
                 data.transaction?.hash
               }`}
               target='_blank'
-              rel='noreferrer'>
-              {netName == EthereumNetwork.ethereum ? (
+              rel='noopener noreferrer'>
+              {netName === EthereumNetwork.ethereum ? (
                 <Avatar
                   style={{
                     color: '#3F51B5',

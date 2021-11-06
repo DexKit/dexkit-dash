@@ -1,15 +1,22 @@
 import {BigNumber, ethers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useQuery} from 'react-query';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
+import {Token} from 'types/app';
+
+import {
+  getImageFromTrait,
+  getKittygotchiMetadataEndpoint,
+} from 'modules/Kittygotchi/utils/index';
+
 import {
   GET_KITTY_CHAIN_ID,
   KITTYGOTCHI,
-  METADATA_KITTY_ENDPOINT,
+  KittygotchiTraitType,
   PRICE,
 } from '../constants';
 import {
@@ -20,15 +27,13 @@ import {
   update,
 } from '../services/kittygotchi';
 
-import {
-  ApolloClient,
-  gql,
-  InMemoryCache,
-  useQuery as useGraphqlQuery,
-} from '@apollo/client';
+import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
+import {DEXKIT} from 'shared/constants/tokens';
+import {getTokenBalances} from 'services/multicall';
+import {KittygotchiTraitItem} from '../types';
 
 const GET_MY_KITTYGOTCHIES = gql`
   query QueryKittygotchies($owner: String!) {
@@ -103,7 +108,7 @@ export function useGraphqlClient() {
 }
 
 export function useKittygotchi(id?: string) {
-  const {chainId, getProvider, web3State} = useWeb3();
+  const {chainId, web3State} = useWeb3();
 
   const provider = useNetworkProvider(undefined, GET_KITTY_CHAIN_ID(chainId));
 
@@ -112,8 +117,8 @@ export function useKittygotchi(id?: string) {
   const query = useQuery(
     ['GET_KITTYGOTCHI_META', id, chainId, web3State, kittyAddress],
     () => {
-      if (id && provider && web3State === Web3State.Done) {
-        return fetch(`${METADATA_KITTY_ENDPOINT}${id}`)
+      if (id && provider && web3State === Web3State.Done && chainId) {
+        return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`)
           .then((r) => r.json())
           .then(async (r) => {
             const attr = await getOnchainAttritbutes(
@@ -139,6 +144,7 @@ export function useKittygotchiFeed() {
 
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
+  /* eslint-disable */
   const onFeedCallback = useCallback(
     async (id, callbacks?: CallbackProps) => {
       if (
@@ -225,13 +231,23 @@ export function useKittygotchiMint() {
   return {onMintCallback};
 }
 
+interface UpdaterParams {
+  cloth?: string;
+  eyes?: string;
+  mouth?: string;
+  nose?: string;
+  ears?: string;
+  accessory?: string;
+  body?: string;
+}
+
 export function useKittygotchiUpdate() {
   const {chainId, web3State, getProvider, account} = useWeb3();
 
   const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
 
   const onUpdateKittyCallback = useCallback(
-    async (kitty: Kittygotchi, callbacks?: CallbackProps) => {
+    async (id: string, params: UpdaterParams, callbacks?: CallbackProps) => {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
@@ -246,7 +262,7 @@ export function useKittygotchiUpdate() {
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit();
         }
-        await update(sig, messageSigned, kitty.attributes, kitty.id, account);
+        await update(sig, messageSigned, params, id, account, chainId);
         if (callbacks?.onConfirmation) {
           callbacks?.onConfirmation();
         }
@@ -438,3 +454,141 @@ export const useKittygotchiOnChain = () => {
 
   return {get, data, error, isLoading};
 };
+
+export const useKitHolding = (account?: string) => {
+  const {chainId} = useWeb3();
+
+  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+
+  const query = useQuery(
+    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
+    async () => {
+      if (account && chainId) {
+        const DexKit = DEXKIT[ChainId.Matic];
+
+        const tokens = [DexKit];
+
+        const [, tb] = await getTokenBalances(
+          (tokens.filter((t) => t !== undefined) as Token[]).map(
+            (t) => t.address,
+          ),
+          account,
+          networkProvider,
+        );
+
+        return (tokens.filter((t) => t !== undefined) as Token[]).map((t) => {
+          return {
+            token: t,
+            balance: tb[t.address],
+          };
+        });
+      }
+    },
+  );
+
+  return query;
+};
+
+export function useKittygotchiStyleEdit() {
+  const [cloth, setCloth] = useState<string>();
+  const [eyes, setEyes] = useState<string>();
+  const [mouth, setMouth] = useState<string>();
+  const [nose, setNose] = useState<string>();
+  const [ears, setEars] = useState<string>();
+  const [accessory, setAccessory] = useState<string>();
+  const [body, setBody] = useState<string>();
+
+  const getImageArray = useCallback(() => {
+    let arr = [];
+
+    if (body) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.BODY, body));
+    }
+
+    if (ears) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.EARS, ears));
+    }
+
+    if (eyes) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.EYES, eyes));
+    }
+
+    if (nose) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.NOSE, nose));
+    }
+
+    if (mouth) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.MOUTH, mouth));
+    }
+
+    if (cloth) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.CLOTHES, cloth));
+    }
+
+    if (accessory) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.ACESSOIRES, accessory));
+    }
+
+    return arr;
+  }, [cloth, eyes, mouth, nose, ears, accessory, body]);
+
+  const handleSelectCloth = useCallback((item: KittygotchiTraitItem) => {
+    setCloth(item.value);
+  }, []);
+
+  const handleSelectBody = useCallback((item: KittygotchiTraitItem) => {
+    setBody(item.value);
+  }, []);
+
+  const handleSelectEyes = useCallback((item: KittygotchiTraitItem) => {
+    setEyes(item.value);
+  }, []);
+
+  const handleSelectNose = useCallback((item: KittygotchiTraitItem) => {
+    setNose(item.value);
+  }, []);
+
+  const handleSelectEars = useCallback((item: KittygotchiTraitItem) => {
+    setEars(item.value);
+  }, []);
+
+  const handleSelectAccessory = useCallback((item: KittygotchiTraitItem) => {
+    setAccessory(item.value);
+  }, []);
+
+  const handleSelectMouth = useCallback((item: KittygotchiTraitItem) => {
+    setMouth(item.value);
+  }, []);
+
+  const isEmpty = useCallback(() => {
+    return !cloth && !eyes && !mouth && !nose && !ears && !body && !accessory;
+  }, [cloth, eyes, mouth, nose, ears, body, accessory]);
+
+  return {
+    isEmpty,
+    getImageArray,
+    handleSelectCloth,
+    handleSelectBody,
+    handleSelectEyes,
+    handleSelectAccessory,
+    handleSelectEars,
+    handleSelectNose,
+    handleSelectMouth,
+    cloth,
+    eyes,
+    mouth,
+    nose,
+    ears,
+    body,
+    accessory,
+    params: {
+      cloth,
+      eyes,
+      mouth,
+      nose,
+      ears,
+      body,
+      accessory,
+    },
+  };
+}

@@ -8,19 +8,21 @@ import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
 import {fetchQuote} from 'services/rest/0x-api';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import Collapse from '@material-ui/core/Collapse';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
-import Popover from '@material-ui/core/Popover';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import {
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Grid,
+  Typography,
+  TextField,
+  Box,
+  IconButton,
+  Popover,
+  Collapse,
+  Paper,
+  Chip,
+  LinearProgress,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
@@ -78,35 +80,11 @@ interface Props {
   onShifting: (step: Steps) => void;
 }
 
-const GasOptionsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const GasOption = styled.div<{isSelected: boolean}>`
-  padding: 5px 0;
-  width: 90px;
-  background-color: ${(props) =>
-    props.isSelected ? '#ff7149' : 'transparent'};
-  border: 1px solid grey;
-  border-radius: 5px;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const OrderContent: React.FC<Props> = (props) => {
   const {
     isMarket,
     isConvert,
     balances,
-    steps,
     currentStep,
     currentStepIndex,
     tokenWrapper,
@@ -140,6 +118,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const [gasAmount, setGasAmount] = useState(new BigNumber(0));
   const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
+  /* eslint-disable */
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
   const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [anchorEl, setAnchorEl] = React.useState(null);

@@ -25,7 +25,7 @@ export function useMaticBridge() {
     }
     wasCreated = true
     widget.show();
-  }, [wasCreated]);
+  }, []);
 
   return {
     initBridge,

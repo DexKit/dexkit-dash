@@ -28,7 +28,7 @@ import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CardGameProgressV2 from 'modules/CoinLeagues/components/CardGameProgressV2';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
@@ -64,18 +64,24 @@ const GamesInProgressV2 = () => {
     (address: string) => {
       history.push(enterGameRoute(`${address}`));
     },
-    [enterGameRoute],
+    [enterGameRoute, history],
   );
 
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
   }, []);
 
-  const handleBack = useCallback(() => {
-    if (history.length > 0) history.goBack();
-    else history.push(listGamesRoute);
-  }, [listGamesRoute]);
-
+  const handleBack = useCallback(
+    () => {
+      if(history.length > 0){
+      history.goBack();
+     }else{
+       history.push(listGamesRoute)
+     }
+      //history.push(listGamesRoute);
+    },
+    [listGamesRoute, history],
+  );
   return (
     <Grid container spacing={2} alignItems={'center'}>
       <Grid item xs={12} sm={12} xl={12}>
@@ -109,8 +115,7 @@ const GamesInProgressV2 = () => {
           </Typography>
         </Box>
       </Grid>
-
-      <Grid item xs={6} sm={6} xl={6}>
+      <Grid item xs={12} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
           <Box pr={2}>
             <SwapButton />
@@ -174,76 +179,16 @@ const GamesInProgressV2 = () => {
           </Grid>
           <Grid item sm={6} spacing={1} justifyContent='center'>
             <Grid container justifyContent='center' spacing={2}>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.ALL}
-                  color={filterGame === FilterGame.ALL ? 'primary' : 'default'}
-                  onClick={() => setFilterGame(FilterGame.ALL)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Fast}
-                  color={filterGame === FilterGame.Fast ? 'primary' : 'default'}
-                  onClick={() => setFilterGame(FilterGame.Fast)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Medium}
-                  color={
-                    filterGame === FilterGame.Medium ? 'primary' : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterGame.Medium)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Eight}
-                  color={
-                    filterGame === FilterGame.Eight ? 'primary' : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterGame.Eight)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Day}
-                  color={filterGame === FilterGame.Day ? 'primary' : 'default'}
-                  onClick={() => setFilterGame(FilterGame.Day)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Week}
-                  color={filterGame === FilterGame.Week ? 'primary' : 'default'}
-                  onClick={() => setFilterGame(FilterGame.Week)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.Mine}
-                  color={filterGame === FilterGame.Mine ? 'primary' : 'default'}
-                  onClick={() => setFilterGame(FilterGame.Mine)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterGame.BitBoy}
-                  color={
-                    filterGame === FilterGame.BitBoy ? 'primary' : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterGame.BitBoy)}
-                />
-              </Grid>
+            {Object.entries(FilterGame).map((value, index) => (
+                <Grid item key={index}>
+                  <Chip
+                    clickable
+                    label={value[1]}
+                    color={filterGame === value[1] ? 'primary' : 'default'}
+                    onClick={() => setFilterGame(value[1])}
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Grid>
           <Grid container sm={3} justifyContent='flex-end' />

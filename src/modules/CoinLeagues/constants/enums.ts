@@ -15,3 +15,22 @@ export enum FilterPlayerGame {
   Started = 'Started',
   Ended = 'Ended',
 }
+
+export enum GameOrderBy{
+  HighLevel = 'HighLevel',
+  LowLevel = 'LowLevel',
+  MostFull = 'MostFull',
+  MostEmpty = 'MostEmpty',
+  HighDuration = 'HighDuration',
+  LowerDuration = 'LowerDuration',
+  MoreCoins = 'MoreCoins',
+  LessCoins = 'LessCoins',
+}
+
+export enum GameOrderByLabels{
+  Level = 'Level',
+  Duration = 'Duration',
+  NumberOfCoins = 'Number of Coins',
+  PlayersNeeded = 'Players Needed'
+
+}

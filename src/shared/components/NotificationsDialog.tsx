@@ -17,7 +17,6 @@ import NotificationItem from '@crema/core/Notifications/NotificationItem';
 import {AppState} from 'redux/store';
 import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,10 +36,9 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
 
   const classes = useStyles();
 
-  const {notifications, selected} = useSelector<
-    AppState,
-    AppState['notification']
-  >(({notification}) => notification);
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
+  );
 
   const handleClick = useCallback(() => {}, []);
 

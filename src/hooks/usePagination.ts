@@ -3,6 +3,7 @@ import {useState} from 'react';
 function usePagination() {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  /* eslint-disable */
   const [rowsPerPageOptions, _setRowsPerPageOptions] = useState([10, 20, 30]);
   const [skipRows, setSkipRows] = useState(0);
 

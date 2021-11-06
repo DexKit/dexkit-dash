@@ -1,18 +1,11 @@
 import {
   Box,
   Grid,
-  MobileStepper,
   Typography,
-  Divider,
   Paper,
-  IconButton,
   makeStyles,
-  Button,
   ButtonBase,
-  useTheme,
-  useMediaQuery,
   TextField,
-  InputAdornment,
 } from '@material-ui/core';
 import clsx from 'clsx';
 
@@ -22,15 +15,13 @@ import {
   GoogleIcon,
   TwitterIcon,
   ReceiptAddIcon,
-  AppleIcon,
   DiscordIcon,
 } from 'shared/components/Icons';
-import Slider from 'shared/components/Slider';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -113,8 +104,8 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const {onConnectWeb3} = useWeb3();
- 
-  const handleConnectWeb3 = useCallback(() => onConnectWeb3(), []);
+
+  const handleConnectWeb3 = useCallback(() => onConnectWeb3(), [onConnectWeb3]);
 
   const [email, setEmail] = useState('');
 
@@ -122,26 +113,19 @@ export const CreateWallet = (props: Props) => {
 
   const handleDiscord = useCallback(() => {
     onConnectMagicSocial('discord');
-
-
-  }, []);
+  }, [onConnectMagicSocial]);
 
   const handleGoogle = useCallback(() => {
     onConnectMagicSocial('google');
+  }, [onConnectMagicSocial]);
 
-
-  }, []);
-
-  const handleApple = useCallback(() => {
-    onConnectMagicSocial('apple');
-
-  }, []);
+  // const handleApple = useCallback(() => {
+  //   onConnectMagicSocial('apple');
+  // }, [onConnectMagicSocial]);
 
   const handleTwitter = useCallback(() => {
     onConnectMagicSocial('twitter');
-
-
-  }, []);
+  }, [onConnectMagicSocial]);
 
   const handleChange = useCallback((e) => {
     setEmail(e.target.value);
@@ -153,7 +137,7 @@ export const CreateWallet = (props: Props) => {
         onConnectMagicEmail(email);
       }
     },
-    [email],
+    [email, onConnectMagicEmail],
   );
 
   return (
@@ -355,42 +339,38 @@ export const CreateWallet = (props: Props) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-                  <ButtonBase
-                    onClick={handleConnectWeb3}
-                    className={classes.actionButton}>
-                    <Paper
-                      variant='outlined'
-                      className={classes.actionButtonPaper}>
-                      <Box p={4}>
-                        <Grid
-                          container
-                          spacing={2}
-                          alignItems='center'
-                          alignContent='center'>
-                          <Grid item>
-                            <Box className={classes.boxCircle}>
-                              <ReceiptAddIcon />
-                            </Box>
-                          </Grid>
-                          <Grid item xs>
-                            <Typography
-                              variant='body1'
-                              style={{fontWeight: 500}}>
-                              Connect the external wallet
-                            </Typography>
-                            <Typography variant='body2' color='textSecondary'>
-                              Click here to choose external wallets like Metamask
-                            </Typography>
-                          </Grid>
+              <ButtonBase
+                onClick={handleConnectWeb3}
+                className={classes.actionButton}>
+                <Paper variant='outlined' className={classes.actionButtonPaper}>
+                  <Box p={4}>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'>
+                      <Grid item>
+                        <Box className={classes.boxCircle}>
+                          <ReceiptAddIcon />
+                        </Box>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography variant='body1' style={{fontWeight: 500}}>
+                          Connect the external wallet
+                        </Typography>
+                        <Typography variant='body2' color='textSecondary'>
+                          Click here to choose external wallets like Metamask
+                        </Typography>
+                      </Grid>
 
-                          <Grid item>
-                            <NavigateNextIcon />
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Paper>
-                  </ButtonBase>
-                </Grid>
+                      <Grid item>
+                        <NavigateNextIcon />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </ButtonBase>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
