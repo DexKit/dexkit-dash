@@ -1,5 +1,4 @@
 import React from 'react';
-import {useIntl} from 'react-intl';
 import {useTokenStatistics} from 'hooks/protocolExplorer/useTokenStatistics';
 import {Avatar, Box, Card, Grid} from '@material-ui/core';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
@@ -7,6 +6,7 @@ import ErrorView from 'modules/Common/ErrorView';
 import Revenue from 'assets/images/metricsIcons/revenue.png';
 import {useStyles} from './index.style';
 import LoadingStatistics from './LoadingStatistics';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   address: string;
@@ -15,7 +15,6 @@ interface Props {
 
 const TokenStatistics: React.FC<Props> = (props) => {
   const {address, networkName} = props;
-  const {messages} = useIntl();
   const {loading, error, data} = useTokenStatistics({address, networkName});
   const classes = useStyles();
 
@@ -50,7 +49,7 @@ const TokenStatistics: React.FC<Props> = (props) => {
                           component='p'
                           fontWeight={Fonts.BOLD}
                           fontSize={{xs: 12, sm: 12, xl: 13}}>
-                          {messages['app.transferCount']}
+                          <IntlMessages id='app.protocolExplorer.transferCount' />
                         </Box>
                         <Box
                           component='h4'
@@ -87,7 +86,7 @@ const TokenStatistics: React.FC<Props> = (props) => {
                           component='p'
                           fontWeight={Fonts.BOLD}
                           fontSize={{xs: 12, sm: 12, xl: 13}}>
-                          {messages['app.uniqSenders']}
+                          <IntlMessages id='app.protocolExplorer.uniqSenders' />
                         </Box>
                         <Box
                           component='h4'
@@ -124,7 +123,7 @@ const TokenStatistics: React.FC<Props> = (props) => {
                           component='p'
                           fontWeight={Fonts.BOLD}
                           fontSize={{xs: 12, sm: 12, xl: 13}}>
-                          {messages['app.uniqReceivers']}
+                          <IntlMessages id='app.protocolExplorer.uniqReceivers' />
                         </Box>
                         <Box
                           component='h4'
@@ -161,7 +160,7 @@ const TokenStatistics: React.FC<Props> = (props) => {
                           component='p'
                           fontWeight={Fonts.BOLD}
                           fontSize={{xs: 12, sm: 12, xl: 13}}>
-                          {messages['app.totalAmount']}
+                          <IntlMessages id='app.protocolExplorer.totalAmount' />
                         </Box>
                         <Box
                           component='h4'

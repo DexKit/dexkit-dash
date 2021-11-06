@@ -12,6 +12,7 @@ import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-succ
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {MoneyReciveIcon, MoneySendIcon} from 'shared/components/Icons';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -82,7 +83,10 @@ export const PairAnalytics = (props: Props) => {
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='h6'> {messages['app.pairAnalytics']}</Typography>
+        <Typography variant='h6'>
+          {' '}
+          <IntlMessages id='app.protocolExplorer.pairAnalytics' />
+        </Typography>
       </Grid>
 
       <Grid item>
@@ -92,7 +96,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<ChartSuccessIcon />}
               isLoading={loading}
               amount={tradeAmountInUSD}
-              caption={messages['app.dailyVolume'] as string}
+              caption={messages['app.protocolExplorer.dailyVolume'] as string}
             />
           </Box>
           '
@@ -101,7 +105,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<GraphIcon />}
               isLoading={loading}
               amount={lastPriceInUSD}
-              caption={messages['app.lastPrice'] as string}
+              caption={messages['app.protocolExplorer.lastPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -109,7 +113,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<MoneySendIcon className={classes.icon} />}
               isLoading={loading}
               amount={maxPriceInUSD}
-              caption={messages['app.maxPrice'] as string}
+              caption={messages['app.protocolExplorer.maxPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -117,7 +121,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<MoneyReciveIcon className={classes.icon} />}
               isLoading={loading}
               amount={minPriceInUSD}
-              caption={messages['app.minPrice'] as string}
+              caption={messages['app.protocolExplorer.minPrice'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -125,7 +129,9 @@ export const PairAnalytics = (props: Props) => {
               icon={<GraphIcon />}
               isLoading={loading}
               amount={loading ? '-' : pair?.trades ? String(pair?.trades) : '-'}
-              caption={messages['app.totalDailyTrades'] as string}
+              caption={
+                messages['app.protocolExplorer.totalDailyTrades'] as string
+              }
             />
           </Box>
           <Box className={classes.item}>
@@ -133,7 +139,7 @@ export const PairAnalytics = (props: Props) => {
               icon={<PresentationChartIcon />}
               isLoading={loading}
               amount={pair?.baseAmount?.toFixed(4) || '-'}
-              caption={`${messages['app.amount']} ${pair.baseCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.baseCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -141,7 +147,7 @@ export const PairAnalytics = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={pair?.quoteAmount?.toFixed(4) || '-'}
-              caption={`${messages['app.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
         </Box>

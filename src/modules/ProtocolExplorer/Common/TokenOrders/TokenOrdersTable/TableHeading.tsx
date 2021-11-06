@@ -32,38 +32,38 @@ const TableHeading: React.FC<TableHeadingProps> = ({type, exchange}) => {
   return (
     <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.timestamp' />
+        <IntlMessages id='app.protocolExplorer.timestamp' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.type' />
+        <IntlMessages id='app.protocolExplorer.type' />
       </TableCell>
 
       {type === 'token' && (
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.pair' />
+          <IntlMessages id='app.protocolExplorer.pair' />
         </TableCell>
       )}
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.price' />
+        <IntlMessages id='app.protocolExplorer.price' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount' />
+        <IntlMessages id='app.protocolExplorer.baseAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.quoteAmount' />
+        <IntlMessages id='app.protocolExplorer.quoteAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.total' />
+        <IntlMessages id='app.protocolExplorer.total' />
       </TableCell>
 
       {exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.exchange' />
+          <IntlMessages id='app.protocolExplorer.exchange' />
         </TableCell>
       )}
       <TableCell align='left' className={classes.tableCellRoot} />

@@ -54,8 +54,8 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         value={tableActive}
         onChange={onChangeTab}
         variant='standard'>
-        <CustomTab label={messages['app.history'] as string} />
-        <CustomTab label={messages['app.pairs'] as string} />
+        <CustomTab label={messages['app.protocolExplorer.history'] as string} />
+        <CustomTab label={messages['app.protocolExplorer.pairs'] as string} />
       </CustomTabs>
       {tableActive === 0 && (
         <TokenOrders

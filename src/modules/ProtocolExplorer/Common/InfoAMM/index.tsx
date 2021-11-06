@@ -16,6 +16,7 @@ import LoadingInfoAMM from './LoadingInfoAMM';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 export interface Props {
   data?: any;
@@ -31,24 +32,24 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
   return [
     {
       id: 1,
-      name: messages['app.totalLiquidity'] as string,
+      name: messages['app.protocolExplorer.totalLiquidity'] as string,
       value: `$${propsData?.liquidity.toFixed(0)}` ?? `$0`,
     },
     {
       id: 2,
-      name: messages['app.dailyVolume'] as string,
+      name: messages['app.protocolExplorer.dailyVolume'] as string,
       value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
     },
     {
       id: 3,
-      name: `${messages['app.pooled']} ${
+      name: `${messages['app.protocolExplorer.pooled']} ${
         propsData?.baseCurrency?.symbol ?? '?'
       }`,
       value: propsData?.basePooled.toFixed(2) ?? 0,
     },
     {
       id: 4,
-      name: `${messages['app.pooled']} ${
+      name: `${messages['app.protocolExplorer.pooled']} ${
         propsData?.quoteCurrency?.symbol ?? '?'
       }`,
       value: propsData?.quotePooled.toFixed(2) ?? 0,
@@ -100,7 +101,11 @@ const InfoAMM: React.FC<Props> = (props) => {
                     <Box display='flex'>
                       <Box mr={3}>
                         <Tooltip
-                          title={messages['app.viewPairOnExplorer'] as string}
+                          title={
+                            messages[
+                              'app.protocolExplorer.viewPairOnExplorer'
+                            ] as string
+                          }
                           placement='top'>
                           <a
                             href={`${ETHERSCAN_API_URL_FROM_NETWORK(
@@ -124,7 +129,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                         <Box mr={3}>
                           <Tooltip
                             title={`${
-                              messages['app.viewAnalyticsOn']
+                              messages['app.protocolExplorer.viewAnalyticsOn']
                             } ${GET_EXCHANGE_NAME(exchange)}`}
                             placement='top'>
                             <a
@@ -147,7 +152,11 @@ const InfoAMM: React.FC<Props> = (props) => {
                       {dextoolsURL && (
                         <Box mr={3}>
                           <Tooltip
-                            title={messages['app.viewOnDexTools'] as string}
+                            title={
+                              messages[
+                                'app.protocolExplorer.viewOnDexTools'
+                              ] as string
+                            }
                             placement='top'>
                             <a
                               href={dextoolsURL}
@@ -171,7 +180,11 @@ const InfoAMM: React.FC<Props> = (props) => {
                           to={`/${networkName}/token/${data.baseCurrency?.address}`}
                           component={RouterLink}>
                           <Tooltip
-                            title={messages['app.tradeToken'] as string}
+                            title={
+                              messages[
+                                'app.protocolExplorer.tradeToken'
+                              ] as string
+                            }
                             placement='top'>
                             <Avatar
                               style={{
@@ -221,7 +234,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                 </Box>
               ) : (
                 <Typography component='h1' color={'primary'}>
-                  {messages['app.noDataAvailableForPairOn']}{' '}
+                  <IntlMessages id='app.protocolExplorer.noDataAvailableForPairOn' />{' '}
                   {GET_EXCHANGE_NAME(exchange)}{' '}
                 </Typography>
               )}

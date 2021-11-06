@@ -17,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
 import TokenPairCard from 'shared/components/TokenPairCard';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   baseAddress: string;
@@ -74,7 +75,8 @@ export const Pairs = (props: Props) => {
       <Grid container alignItems='center' spacing={4}>
         <Grid item xs={12}>
           <Typography variant='h6'>
-            {data ? data.length : ''} {messages['app.pairs']}
+            {data ? data.length : ''}{' '}
+            <IntlMessages id='app.protocolExplorer.pairs' />
           </Typography>
         </Grid>
         <Grid item xs={12}>

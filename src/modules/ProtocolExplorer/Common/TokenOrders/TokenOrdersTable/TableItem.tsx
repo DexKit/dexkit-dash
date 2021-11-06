@@ -69,10 +69,10 @@ const TableItem: React.FC<TableItemProps> = ({
 
   const paymentTypeColor = useMemo(() => {
     switch (row.side) {
-      case messages['app.buy']: {
+      case 'BUY': {
         return '#F84E4E';
       }
-      case messages['app.sell']: {
+      case 'SELL': {
         return '#00b400';
       }
       default: {
@@ -109,9 +109,9 @@ const TableItem: React.FC<TableItemProps> = ({
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
         label={
-          row.side === messages['app.sell']
-            ? messages['app.buy']
-            : messages['app.sell']
+          row.side === 'SELL'
+            ? messages['app.protocolExplorer.buy']
+            : messages['app.protocolExplorer.sell']
         }
       />
     );
@@ -121,7 +121,7 @@ const TableItem: React.FC<TableItemProps> = ({
     const data = [
       {
         id: 'exchange',
-        title: <IntlMessages id='app.exchange' />,
+        title: <IntlMessages id='app.protocolExplorer.exchange' />,
         value: row.exchange ? (
           <ExchangeLogo exchange={row.exchange.fullName} />
         ) : (
@@ -130,41 +130,41 @@ const TableItem: React.FC<TableItemProps> = ({
       },
       {
         id: 'side',
-        title: <IntlMessages id='app.side' />,
+        title: <IntlMessages id='app.protocolExplorer.side' />,
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
             label={
-              row.side === messages['app.sell']
-                ? messages['app.buy']
-                : messages['app.sell']
+              row.side === 'SELL'
+                ? messages['app.protocolExplorer.buy']
+                : messages['app.protocolExplorer.sell']
             }
           />
         ),
       },
       {
         id: 'baseAmount',
-        title: <IntlMessages id='app.baseAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.baseAmount' />,
         value: baseAmountRow,
       },
       {
         id: 'quoteAmount',
-        title: <IntlMessages id='app.quoteAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.quoteAmount' />,
         value: quoteAmountRow,
       },
       {
         id: 'price',
-        title: <IntlMessages id='app.price' />,
+        title: <IntlMessages id='app.protocolExplorer.price' />,
         value: priceUsd,
       },
       {
         id: 'tradeAmount',
-        title: <IntlMessages id='app.tradeAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.tradeAmount' />,
         value: usdFormatter.format(row.tradeAmountIsUsd || 0),
       },
       {
         id: 'created',
-        title: <IntlMessages id='app.created' />,
+        title: <IntlMessages id='app.protocolExplorer.created' />,
         value: timestamp,
       },
       {
@@ -197,9 +197,9 @@ const TableItem: React.FC<TableItemProps> = ({
         <Chip
           style={{backgroundColor: paymentTypeColor, color: 'white'}}
           label={
-            row.side === messages['app.sell']
-              ? messages['app.buy']
-              : messages['app.sell']
+            row.side === 'SELL'
+              ? messages['app.protocolExplorer.buy']
+              : messages['app.protocolExplorer.sell']
           }
         />
       </TableCell>

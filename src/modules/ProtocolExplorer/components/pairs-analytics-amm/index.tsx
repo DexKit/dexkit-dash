@@ -15,6 +15,7 @@ import {useAMMPairExplorer} from 'hooks/protocolExplorer/useAMMPairExplorer';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {Box, makeStyles} from '@material-ui/core';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -70,7 +71,9 @@ export const PairAnalyticsAMM = (props: Props) => {
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='h6'>{messages['app.pairAnalytics']}</Typography>
+        <Typography variant='h6'>
+          <IntlMessages id='app.protocolExplorer.pairAnalytics' />
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Box className={classes.container}>
@@ -79,7 +82,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<ChartSuccessIcon />}
               amount={volumeUSD}
-              caption={messages['app.dailyVolume'] as string}
+              caption={messages['app.protocolExplorer.dailyVolume'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -87,7 +90,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<HashtagIcon />}
               amount={liquidity}
-              caption={messages['app.totalLiquidy'] as string}
+              caption={messages['app.protocolExplorer.totalLiquidy'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -95,7 +98,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={data?.baseAmount.toFixed(4) || '-'}
-              caption={`${messages['app.amount']} ${pair.baseCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.baseCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -103,7 +106,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={data?.quoteAmount.toFixed(4) || '-'}
-              caption={`${messages['app.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -111,7 +114,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<StatusUpIcon />}
               amount={data?.basePooled.toFixed(4) || '-'}
-              caption={`${messages['app.pooled']} ${pair.baseCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.pooled']} ${pair.baseCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -119,7 +122,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<StatusUpIcon />}
               amount={data?.quotePooled.toFixed(4) || '-'}
-              caption={`${messages['app.pooled']} ${pair.quoteCurrency?.symbol} (${messages['app.24Hrs']})`}
+              caption={`${messages['app.protocolExplorer.pooled']} ${pair.quoteCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -127,7 +130,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<GraphIcon />}
               amount={loading ? '-' : data?.trades ? String(data?.trades) : '-'}
-              caption={messages['app.dailyTrades'] as string}
+              caption={messages['app.protocolExplorer.dailyTrades'] as string}
             />
           </Box>
         </Box>

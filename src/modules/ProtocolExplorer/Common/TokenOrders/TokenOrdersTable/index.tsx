@@ -66,7 +66,7 @@ const TokenOrdersTable: React.FC<Props> = ({
       </Box>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          {messages['app.noDataAvailableForToken']}
+          <IntlMessages id='app.protocolExplorer.noDataAvailableForToken' />
         </Typography>
       )}
       <TablePagination

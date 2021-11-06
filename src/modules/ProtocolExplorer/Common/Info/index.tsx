@@ -13,6 +13,7 @@ import LoadingInfo from './LoadingInfo';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {FavoriteButton} from 'shared/components/FavoriteButton';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   data?: any;
@@ -26,28 +27,28 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
   return [
     {
       id: 1,
-      name: messages['app.dailyVolume'] as string,
+      name: messages['app.protocolExplorer.dailyVolume'] as string,
       // value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
       value: `$${propsData?.tradeAmountInUsd?.toFixed(0)}` ?? `$0`,
     },
     {
       id: 2,
-      name: messages['app.totalDailyTrades'] as string,
+      name: messages['app.protocolExplorer.totalDailyTrades'] as string,
       // value: `${propsData?.totalTrades.toFixed(0)}` ?? `0`,
       value: `${propsData?.trades?.toFixed(0)}` ?? `0`,
     },
     {
       id: 3,
-      name: `${messages['app.amount']} ${
+      name: `${messages['app.protocolExplorer.amount']} ${
         propsData?.baseCurrency?.symbol ?? '?'
-      } (${messages['app.24Hrs']})`,
+      } (${messages['app.protocolExplorer.24Hrs']})`,
       value: propsData?.baseAmount?.toFixed(2) ?? 0,
     },
     {
       id: 4,
-      name: `${messages['app.amount']} ${
+      name: `${messages['app.protocolExplorer.amount']} ${
         propsData?.quoteCurrency?.symbol ?? '?'
-      } (${messages['app.24Hrs']})`,
+      } (${messages['app.protocolExplorer.24Hrs']})`,
       value: propsData?.quoteAmount?.toFixed(2) ?? 0,
     },
   ];
@@ -98,7 +99,7 @@ const Info: React.FC<Props> = (props) => {
                   <Box display='flex'>
                     <Box mr={3}>
                       <Tooltip
-                        title={messages['app.viewOnExplorer']}
+                        title={messages['app.protocolExplorer.viewOnExplorer']}
                         placement='top'>
                         <a
                           href={`${ETHERSCAN_API_URL_FROM_NETWORK(
@@ -123,7 +124,7 @@ const Info: React.FC<Props> = (props) => {
                         to={`/${networkName}/token/${data.baseCurrency?.address}`}
                         component={RouterLink}>
                         <Tooltip
-                          title={messages['app.tradeToken']}
+                          title={messages['app.protocolExplorer.tradeToken']}
                           placement='top'>
                           <Avatar
                             style={{
@@ -173,7 +174,7 @@ const Info: React.FC<Props> = (props) => {
               </Box>
             ) : (
               <Typography component='h1' color={'primary'}>
-                {messages['app.noDataAvailableForToken']}
+                <IntlMessages id='app.protocolExplorer.noDataAvailableForToken' />
               </Typography>
             )}
           </AppCard>

@@ -9,6 +9,7 @@ import ErrorView from 'modules/Common/ErrorView';
 import TokenPairsTable from './TokenPairsTable';
 import {useStyles} from './index.style';
 import LoadingTable from 'modules/Common/LoadingTable';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   baseAddress: string;
@@ -54,7 +55,7 @@ const TokenPairs: React.FC<Props> = (props) => {
               className={classes.toolbarIcon}
             />
             <Typography variant='h5' display={'block'} align={'center'}>
-              {messages['app.topPairs']}
+              <IntlMessages id='app.protocolExplorer.topPairs' />
             </Typography>
           </Box>
         </Toolbar>

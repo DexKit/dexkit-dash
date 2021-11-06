@@ -59,7 +59,7 @@ export const AbountDialog = (props: Props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} startIcon={<CloseIcon />}>
-          {messages['app.close']}
+          <IntlMessages id='app.protocolExplorer.close' />
         </Button>
       </DialogActions>
     </Dialog>

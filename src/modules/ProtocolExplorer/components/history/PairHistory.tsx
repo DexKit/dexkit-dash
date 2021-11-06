@@ -60,7 +60,11 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
                   <Grid container spacing={2}>
                     <Grid item>
                       <Chip
-                        label={messages['app.tradeHistory'] as string}
+                        label={
+                          messages[
+                            'app.protocolExplorer.tradeHistory'
+                          ] as string
+                        }
                         clickable
                         variant={
                           historyState === HistoryStateEnum.Trade
@@ -72,7 +76,9 @@ const PairHistoryTables: React.FC<PairHistoryTablesProps> = ({
                     </Grid>
                     <Grid item>
                       <Chip
-                        label={messages['app.poolHistory'] as string}
+                        label={
+                          messages['app.protocolExplorer.poolHistory'] as string
+                        }
                         clickable
                         variant={
                           historyState === HistoryStateEnum.Pool

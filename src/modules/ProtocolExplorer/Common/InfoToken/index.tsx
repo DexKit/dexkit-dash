@@ -34,21 +34,21 @@ const coinInfoFactory = (
   return [
     {
       id: 1,
-      name: messages['app.dailyVolume'] as string,
+      name: messages['app.protocolExplorer.dailyVolume'] as string,
       // value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
       value: dailyUSD,
     },
     {
       id: 2,
-      name: messages['app.totalDailyTrades'] as string,
+      name: messages['app.protocolExplorer.totalDailyTrades'] as string,
       // value: `${propsData?.totalTrades.toFixed(0)}` ?? `0`,
       value: `${propsData?.trades?.toFixed(0)}` ?? `0`,
     },
     {
       id: 3,
-      name: `${messages['app.amount']} ${token?.symbol.toUpperCase() ?? '?'} (${
-        messages['app.24Hrs']
-      })`,
+      name: `${messages['app.protocolExplorer.amount']} ${
+        token?.symbol.toUpperCase() ?? '?'
+      } (${messages['app.protocolExplorer.24Hrs']})`,
       value: propsData?.volume24Base?.toFixed(2) ?? 0,
     },
   ];
@@ -101,7 +101,11 @@ const InfoToken: React.FC<Props> = (props) => {
                     <Box display='flex'>
                       <Box mr={3}>
                         <Tooltip
-                          title={messages['app.viewOnExplorer'] as string}
+                          title={
+                            messages[
+                              'app.protocolExplorer.viewOnExplorer'
+                            ] as string
+                          }
                           placement='top'>
                           <a
                             href={`${ETHERSCAN_API_URL_FROM_NETWORK(
@@ -126,7 +130,11 @@ const InfoToken: React.FC<Props> = (props) => {
                           to={`/${networkName}/token/${token?.address}`}
                           component={RouterLink}>
                           <Tooltip
-                            title={messages['app.tradeToken'] as string}
+                            title={
+                              messages[
+                                'app.protocolExplorer.tradeToken'
+                              ] as string
+                            }
                             placement='top'>
                             <Avatar
                               style={{
@@ -145,7 +153,11 @@ const InfoToken: React.FC<Props> = (props) => {
 
                   <Box display='flex' alignItems='center'>
                     <Tooltip
-                      title={messages['app.realTimeFromDEX'] as string}
+                      title={
+                        messages[
+                          'app.protocolExplorer.realTimeFromDEX'
+                        ] as string
+                      }
                       placement='top'>
                       <Box
                         component='h3'

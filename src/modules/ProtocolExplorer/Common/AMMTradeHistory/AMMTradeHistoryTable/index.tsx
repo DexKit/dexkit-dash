@@ -62,7 +62,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
       </Box>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          {messages['app.noDataAvailableForProtocol']}
+          <IntlMessages id='app.protocolExplorer.noDataAvailableForProtocol' />
         </Typography>
       )}
       <TablePagination

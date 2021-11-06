@@ -68,6 +68,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import {watchAsset} from 'utils/wallet';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -230,10 +231,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Grid item xs={12}>
                     <Breadcrumbs aria-label='breadcrumb'>
                       <Link color='inherit' component={RouterLink} to='/wallet'>
-                        {messages['app.wallet']}
+                        <IntlMessages id='app.protocolExplorer.wallet' />
                       </Link>
                       <Typography variant='body2' color='inherit'>
-                        {messages['app.explorer']}
+                        <IntlMessages id='app.protocolExplorer.explorer' />
                       </Typography>
                     </Breadcrumbs>
                   </Grid>
@@ -370,7 +371,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography variant='body1' style={{fontWeight: 600}}>
-                        {messages['app.favorites']}
+                        <IntlMessages id='app.protocolExplorer.favorites' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -447,7 +448,8 @@ const Explorer: React.FC<TokenProps> = (props) => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> {messages['app.chart']}
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.protocolExplorer.chart' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>{Chart}</AccordionDetails>

@@ -13,6 +13,7 @@ import {ReactComponent as GraphIcon} from 'assets/images/icons/graph.svg';
 import {ReactComponent as ChartSuccessIcon} from 'assets/images/icons/chart-success.svg';
 import {Token} from 'types/app';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type TokenMarket = {
   volume24Usd: number;
@@ -68,7 +69,9 @@ export const Analytics = (props: Props) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='h6'>{messages['app.overallAnalytics']}</Typography>
+        <Typography variant='h6'>
+          <IntlMessages id='app.protocolExplorer.overallAnalytics' />
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Box className={classes.container}>
@@ -78,7 +81,7 @@ export const Analytics = (props: Props) => {
                 isLoading={loading}
                 icon={<ChartSuccessIcon />}
                 amount={volumeUSD || '-'}
-                caption={messages['app.dailyVolume'] as string}
+                caption={messages['app.protocolExplorer.dailyVolume'] as string}
               />
             </Grid>
             <Grid item xs={isMobile ? true : undefined} sm={6}>
@@ -86,7 +89,7 @@ export const Analytics = (props: Props) => {
                 isLoading={loading}
                 icon={<GraphIcon />}
                 amount={loading ? '-' : tokenMarket?.trades || '-'}
-                caption={messages['app.dailyTrades'] as string}
+                caption={messages['app.protocolExplorer.dailyTrades'] as string}
                 notUsdValue
               />
             </Grid>
@@ -97,9 +100,9 @@ export const Analytics = (props: Props) => {
                 amount={
                   loading ? '-' : tokenMarket?.volume24Base.toFixed(2) || '-'
                 }
-                caption={`${messages['app.amount']} ${
+                caption={`${messages['app.protocolExplorer.amount']} ${
                   token ? token.symbol?.toUpperCase() : ''
-                } (${messages['app.24Hrs']})`}
+                } (${messages['app.protocolExplorer.24Hrs']})`}
                 notUsdValue
               />
             </Grid>

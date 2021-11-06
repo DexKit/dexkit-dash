@@ -150,7 +150,7 @@ const TableItem: React.FC<TableItemProps> = ({row, exchange, networkName}) => {
               row?.smartContract?.address.address,
             )}
             component={RouterLink}>
-            <Tooltip title={messages['app.pool'] as string}>
+            <Tooltip title={messages['app.protocolExplorer.pool'] as string}>
               <PoolIcon />
             </Tooltip>
           </Link>
