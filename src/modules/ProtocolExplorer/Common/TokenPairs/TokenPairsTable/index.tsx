@@ -11,6 +11,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   networkName: EthereumNetwork;

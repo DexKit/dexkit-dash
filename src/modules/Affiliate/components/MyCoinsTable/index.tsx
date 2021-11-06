@@ -17,6 +17,7 @@ import {makeStyles} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
 import ContainedInput from 'shared/components/ContainedInput';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles(() => ({
   tableCell: {
@@ -62,14 +63,17 @@ function MyCoinsTable(props: Props) {
                   <Search />
                 </InputAdornment>
               }
-              placeholder={messages['app.search'] as string}
+              placeholder={messages['app.coinLeagues.search'] as string}
             />
           </Grid>
           <Grid item md={7} xs={11}>
             <Typography variant='h5'>
               {props.coins?.length || 0} coins
             </Typography>
-            <Typography variant='h6'>Highest Cap &darr;</Typography>
+            <Typography variant='h6'>
+              <IntlMessages id='app.affiliate.highestCap' />
+              &darr;
+            </Typography>
           </Grid>
           <Grid item md={1} xs={1}>
             <IconButton className={classes.filterBtn}>
@@ -83,9 +87,15 @@ function MyCoinsTable(props: Props) {
           <Table>
             <TableHead className={classes.tableHead}>
               <TableRow>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

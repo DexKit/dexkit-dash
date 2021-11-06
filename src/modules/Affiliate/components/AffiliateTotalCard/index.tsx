@@ -12,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import {useUSDFormatter} from '../../../../hooks/utils/useUSDFormatter';
 import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -46,7 +47,9 @@ function AffiliateTotalCard(props: Props): JSX.Element {
           <MoneyIcon color='primary' style={{fontSize: 50}} />
         </Grid>
         <Grid item xs={8}>
-          <Typography variant='subtitle2'>{messages['app.total']}</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages id='app.affiliate.total' />
+          </Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
             {usdFormatter.format(props.total)}
           </Typography>

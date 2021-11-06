@@ -18,6 +18,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {Link, Tooltip} from '@material-ui/core';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -86,7 +87,7 @@ export const AboutDialog = () => {
         variant='outlined'
         onClick={handleClickOpen}
         className={classes.openButton}>
-        <Tooltip title={messages['app.infoPage'] as string}>
+        <Tooltip title={messages['app.coinLeagues.infoPage'] as string}>
           <InfoIcon />
         </Tooltip>
       </Button>
@@ -95,20 +96,20 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          {messages['affiliate.dialog.about.title']}
+          <IntlMessages id='app.affiliate.dialog.about.title' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            {messages['affiliate.dialog.about.p1']}
+            <IntlMessages id='app.affiliate.dialog.about.p1' />
           </Typography>
           <Typography gutterBottom>
-            {messages['affiliate.dialog.about.p2']}
+            <IntlMessages id='app.affiliate.dialog.about.p2' />
           </Typography>
           <Typography gutterBottom>
-            {messages['affiliate.dialog.about.p3']}
+            <IntlMessages id='app.affiliate.dialog.about.p3' />
           </Typography>
           <Typography gutterBottom>
-            {messages['app.example']}:{' '}
+            <IntlMessages id='app.affiliate.example' />:{' '}
             <Link
               href={
                 'https://swap.dexkit.com/#/swap?account=0xyouraccount&inputCurrency=0x9F9913853f749b3fE6D6D4e16a1Cc3C1656B6D51'

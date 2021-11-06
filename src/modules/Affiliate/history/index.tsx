@@ -8,6 +8,7 @@ import TransactionTable from './TransactionTable';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 interface Props {
   transactionData: GetAffiliateTrades | undefined;
@@ -44,7 +45,7 @@ const AffiliateHistory: React.FC<Props> = (props: Props) => {
           justifyContent={'flex-start'}
           alignItems={'center'}>
           <Typography variant='h5' display={'block'} align={'center'}>
-            {messages['app.tradeHistory']}
+            <IntlMessages id='app.affiliate.tradeHistory' />
           </Typography>
         </Box>
         <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>

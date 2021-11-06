@@ -5,6 +5,7 @@ import {useIntl} from 'react-intl';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AppCard from '@crema/core/AppCard';
 import {Box, Typography} from '@material-ui/core';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 interface Props {
   value: number | undefined | null;
@@ -25,7 +26,7 @@ const AffiliateRevenue = (props: Props) => {
             {value && value.toFixed(3)} $
           </Typography>
           <Box mt={0.5} component='p'>
-            {messages['affiliate.revenue.title"']}
+            <IntlMessages id='app.affiliate.revenue.title' />
           </Box>
         </Box>
       </Box>

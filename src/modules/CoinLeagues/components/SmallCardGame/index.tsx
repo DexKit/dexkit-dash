@@ -14,6 +14,7 @@ import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {GameType} from 'types/coinsleague';
 import {useInterval} from 'hooks/utils/useInterval';
 import {CardTimer} from '../CardTimer';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {

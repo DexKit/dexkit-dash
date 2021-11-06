@@ -46,15 +46,15 @@ const TableHeading: React.FC<Props> = (props) => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.time' />
+        <IntlMessages id='app.affiliate.time' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount' />
+        <IntlMessages id='app.affiliate.baseAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.tradeAmount' />
+        <IntlMessages id='app.affiliate.tradeAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot} />

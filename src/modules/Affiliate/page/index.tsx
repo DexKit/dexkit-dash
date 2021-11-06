@@ -27,6 +27,7 @@ import {Skeleton} from '@material-ui/lab';
 import AffiliateHistory from '../history';
 import ButtonCopy from 'shared/components/ButtonCopy';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -108,17 +109,17 @@ const AffiliatePage: React.FC = () => {
           <Breadcrumbs>
             <Link to='/wallet' component={RouterLink}>
               <Typography variant='body2' color='textSecondary'>
-                {messages['affiliate.page.dashboard']}
+                <IntlMessages id='app.affiliate.page.dashboard' />
               </Typography>
             </Link>
             <Typography variant='body2' style={{color: '#2e3243'}}>
-              {messages['affiliate.page.title']}
+              <IntlMessages id='app.affiliate.page.title' />
             </Typography>
           </Breadcrumbs>
         </Grid>
         <Grid item xs={12} sm={10} alignContent='center'>
           <Typography variant='h5' style={{margin: 5, marginBottom: 20}}>
-            {messages['affiliate.page.title']}
+            <IntlMessages id='app.affiliate.page.title' />
           </Typography>
         </Grid>
       </Grid>
@@ -135,7 +136,7 @@ const AffiliatePage: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography style={{color: '#B3B7C0'}}>
-                {messages['affiliate.page.account']}:
+                <IntlMessages id='app.affiliate.page.account' />:
               </Typography>
             </Grid>
             <Grid item md={11} xs={10}>
@@ -151,11 +152,13 @@ const AffiliatePage: React.FC = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant='h5'>{messages['app.affiliate']}</Typography>
+              <Typography variant='h5'>
+                <IntlMessages id='app.affiliate.affiliate' />
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
-                {messages['affiliate.warning.kitBalance']}:
+                <IntlMessages id='app.affiliate.warning.kitBalance' />:
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -179,7 +182,7 @@ const AffiliatePage: React.FC = () => {
             <Grid item md={5} xs={12} style={{marginBottom: 10}}>
               <FormControl fullWidth>
                 <Typography style={{marginBottom: 10}}>
-                  {messages['affiliate.page.swap.chain']}
+                  <IntlMessages id='app.affiliate.page.swap.chain' />
                 </Typography>
                 <Select
                   variant='outlined'
@@ -194,7 +197,7 @@ const AffiliatePage: React.FC = () => {
             </Grid>
             <Grid item md={7} xs={12}>
               <Typography style={{marginBottom: 10}}>
-                {messages['affiliate.page.swap.link']}
+                <IntlMessages id='app.affiliate.page.swap.link' />
               </Typography>
               <Box
                 className={classes.field}
@@ -219,7 +222,7 @@ const AffiliatePage: React.FC = () => {
               target='_blank'
               style={{backgroundColor: '#FFA552', marginBottom: 15}}>
               <LinkIcon />
-              {messages['affiliate.page.swap.openBtn']}
+              <IntlMessages id='app.affiliate.page.swap.openBtn' />
             </Button>
           </Grid>
         </Grid>

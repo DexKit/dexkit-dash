@@ -14,6 +14,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   exchange: EXCHANGE;
