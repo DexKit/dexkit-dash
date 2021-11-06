@@ -1,11 +1,11 @@
 import {useMemo, useCallback} from 'react';
-import {useWeb3} from 'hooks/useWeb3';
+// import {useWeb3} from 'hooks/useWeb3';
 
 import {usePlayerHoldingTokenBalances} from './usePlayerHoldingBalances';
 
 export const useMultipliers = (address?: string) => {
   const holdingBalancesQuery = usePlayerHoldingTokenBalances(address);
-  const {account} = useWeb3();
+ // const {account} = useWeb3();
 
   const multiplierTokens = useMemo(() => {
     if (holdingBalancesQuery.data) {
@@ -51,7 +51,7 @@ export const useMultipliers = (address?: string) => {
       }*/
       return 'Captain coin with multiplier 1.2';
     },
-    [multiplierTokens, account],
+    [/*multiplierTokens, account*/],
   );
 
   return {

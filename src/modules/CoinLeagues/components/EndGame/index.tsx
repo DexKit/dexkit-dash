@@ -3,12 +3,11 @@ import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import {ButtonState, SubmitState} from '../ButtonState';
+import { SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
 import {
-  ExplorerURL,
-  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+  ExplorerURL
 } from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import Typography from '@material-ui/core/Typography';
@@ -20,10 +19,10 @@ interface Props {
 export const EndGame = (props: Props) => {
   const {address} = props;
   const {chainId} = useWeb3();
-  const {onEndGameCallback, game, refetch, refetchWinner} =
+  const {game} =
     useCoinLeagues(address);
-  const [tx, setTx] = useState<string>();
-  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const [tx, _setTx] = useState<string>();
+  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
   const goToExplorer = useCallback(
     (_ev: any) => {
       if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
@@ -41,7 +40,7 @@ export const EndGame = (props: Props) => {
     }
   }, [game?.start_timestamp]);
 
-  const onEndGame = useCallback(
+ /* const onEndGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);
@@ -69,7 +68,7 @@ export const EndGame = (props: Props) => {
       }
     },
     [game, refetch],
-  );
+  );*/
 
   return (
     <>

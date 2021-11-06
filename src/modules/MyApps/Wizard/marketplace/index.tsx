@@ -94,7 +94,6 @@ function getStepContent(
   switch (step) {
     case 0: {
       const fields: GeneralConfig = data as GeneralConfig;
-      console.log(`getStepContent.editable(${step})`, editable);
       return (
         <GeneralForm
           key={'generalForm'}
@@ -396,10 +395,10 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   const updateForm = useCallback(
     (key: keyof ConfigFileMarketplace | 'editable', value: any) => {
       const dataType = Object.values(WizardData).find((e) => e === key);
-      if (dataType !== null && key !== 'editable') {
+      if (dataType  && key !== 'editable') {
         form[key] = value;
         setForm(form);
-      } else if (key == 'editable') {
+      } else if (key === 'editable') {
         setEditable(Boolean(value));
       }
     },
@@ -407,7 +406,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   );
 
   useEffect(() => {
-    if (editable && configs != null) {
+    if (editable && configs) {
       const index = configs.findIndex(
         (c, i) =>
           c.type === 'MARKETPLACE' &&
@@ -423,7 +422,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
     } else if (loading) {
       setForm({...initConfig});
     }
-  }, [slug, configs]);
+  }, [slug, configs, editable, loading]);
 
   useEffect(() => {
     if (preview) {

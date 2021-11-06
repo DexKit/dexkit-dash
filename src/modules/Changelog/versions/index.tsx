@@ -50,7 +50,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
              <Typography className={classes.item}>
-               Add Sorting on Coinleagues join games. Small fix on Copy game.
+               Add Sorting on Coinleague join games. Small fix on Copy game.
             </Typography>
           </Box>
         </AccordionDetails>
@@ -67,7 +67,7 @@ const Changelog = () => {
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
              <Typography className={classes.item}>
-                Fix's on Coinleagues
+                Fix's on Coinleague
             </Typography>
           </Box>
         </AccordionDetails>

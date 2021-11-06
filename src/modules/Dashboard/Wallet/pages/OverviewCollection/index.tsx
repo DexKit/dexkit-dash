@@ -11,10 +11,6 @@ import {RouteComponentProps, useHistory} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {Token} from 'types/app';
-
-import {useDispatch} from 'react-redux';
-
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
@@ -36,8 +32,6 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
 
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const account: string | undefined = defaultAccount || web3Account || '';
-
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
   const metadataQuery = useNFTMetadataURI(
@@ -49,8 +43,6 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const handleBack = useCallback(() => history.push(`/wallet/`), []);
-
-  const [showSelectTokens, setShowSelectTokens] = useState(false);
 
   return (
     <>

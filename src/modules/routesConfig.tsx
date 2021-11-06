@@ -92,18 +92,18 @@ const useRoutesConfig = (): NavItemProps[] => {
     },
     {
       id: 'coins-league',
-      title: 'Coin Leagues',
+      title: 'Coin League',
       messageId: 'sidebar.coin-league',
       type: 'group',
       children: [
         {
           id: 'coinleague.index',
-          title: 'Coin Leagues',
+          title: 'Coin League',
           messageId: 'sidebar.coin-league',
           type: 'item',
           customIcon: true,
           icon: 'coinleague',
-          url: `/coin-leagues`,
+          url: `/coin-league`,
         },
         {
           id: 'discover-games',
@@ -112,7 +112,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'gameboy',
-          url: `/coin-leagues/discover-games`,
+          url: `/coin-league/discover-games`,
         },
         {
           id: 'my-games',
@@ -121,7 +121,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'user.search',
-          url: `/coin-leagues/my-games`,
+          url: `/coin-league/my-games`,
         },
         {
           id: 'coinleague.ranking',
@@ -130,7 +130,16 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'cup',
-          url: `/coin-leagues/ranking`,
+          url: `/coin-league/ranking`,
+        },
+        {
+          id: 'coinleague.how-to-play',
+          title: 'How To Play',
+          messageId: 'sidebar.howToPlay',
+          type: 'item',
+          customIcon: true,
+          icon: 'question',
+          url: `/coin-league/how-to-play`,
         },
       ],
     },

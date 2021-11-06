@@ -163,7 +163,7 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <Typography align='center' variant='h6'>
-              Create a Coin Leagues Champion
+              Create a Coin League Champion
             </Typography>
             <Typography color='textSecondary' align='center' variant='body1'>
               Do you want to create a Champion?

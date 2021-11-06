@@ -20,7 +20,6 @@ import {
   useHistory,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
-import ChartAccordion from 'modules/CoinLeagues/components/ChartAccordion';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
 import {ethers, BigNumber} from 'ethers';
@@ -55,7 +54,7 @@ import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -109,7 +108,6 @@ function GameEnter(props: Props) {
   const {balance} = useActiveChainBalance();
 
   const {createNotification} = useNotifications();
-  const isMobile = useMobile();
 
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
@@ -212,7 +210,7 @@ function GameEnter(props: Props) {
       }
       //history.push(listGamesRoute)
     },
-    [listGamesRoute],
+    [listGamesRoute, history],
   );
 
   const onEnterGame = useCallback(
