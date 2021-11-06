@@ -238,33 +238,44 @@ const LimitForm: React.FC<Props> = (props) => {
         color='primary'
         onClick={handleConnectWallet}
         endIcon={<AccountBalanceWalletIcon />}>
-        {web3State === Web3State.Connecting
-          ? isMobile()
-            ? `${messages['app.connecting']}...`
-            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
-          : isMobile()
-          ? `${messages['app.connect']}`
-          : `${messages['app.connect']} ${messages['app.wallet']}`}
+        {web3State === Web3State.Connecting ? (
+          isMobile() ? (
+            <IntlMessages id='app.dashboard.connecting' />
+          ) : (
+            <>
+              <IntlMessages id='app.dashboard.connecting' />{' '}
+              <IntlMessages id='app.dashboard.checkWallet' />
+            </>
+          )
+        ) : isMobile() ? (
+          <IntlMessages id='app.dashboard.connect' />
+        ) : (
+          <IntlMessages id='app.dashboard.connectWallet' />
+        )}
       </Button>
     </Box>
   );
 
   if (select0.length === 0) {
-    errorMessage = messages['app.noBalanceWallet'] as string;
+    errorMessage = messages['app.dashboard.noBalanceWallet'] as string;
   } else if (
     !tokenFromBalance ||
     !tokenFromBalance.value ||
     tokenFromBalance.value === 0
   ) {
-    errorMessage = messages['app.noBalanceChosenToken'] as string;
+    errorMessage = messages['app.dashboard.noBalanceChosenToken'] as string;
   } else if (amountFrom && tokenFromBalance.value < amountFrom) {
-    errorMessage = messages['app.insufficientBalanceChoseToken'] as string;
+    errorMessage = messages[
+      'app.dashboard.insufficientBalanceChosenToken'
+    ] as string;
   } else if (networkName !== network) {
-    errorMessage = `Switch to ${FORMAT_NETWORK_NAME(network)} in your wallet`;
-  } else if (networkName !== EthereumNetwork.ethereum) {
-    errorMessage = `Limit orders are not support on ${FORMAT_NETWORK_NAME(
+    errorMessage = `${messages['app.dashboard.switchTo']} ${FORMAT_NETWORK_NAME(
       network,
-    )} yet `;
+    )} ${messages['app.dashboard.inYourWallet']}`;
+  } else if (networkName !== EthereumNetwork.ethereum) {
+    errorMessage = `${
+      messages['app.dashboard.LimitOrdersAreNotSupportOn']
+    } ${FORMAT_NETWORK_NAME(network)} ${messages['app.dashboard.yet']} `;
   }
 
   const isNative =
@@ -333,8 +344,8 @@ const LimitForm: React.FC<Props> = (props) => {
       <SelectTokenBalanceDialog
         title={
           selectTo === 'from'
-            ? (messages['app.youSend'] as string)
-            : (messages['app.youReceive'] as string)
+            ? (messages['app.dashboard.youSend'] as string)
+            : (messages['app.dashboard.youReceive'] as string)
         }
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
@@ -349,9 +360,9 @@ const LimitForm: React.FC<Props> = (props) => {
             <GridContainer>
               <Grid item xs={12}>
                 <Alert severity='info'>
-                  Limit orders are only supported on{' '}
-                  {FORMAT_NETWORK_NAME(EthereumNetwork.ethereum)} Network for
-                  now
+                  <IntlMessages id='app.dashboard.LimitOrdersAreOnlySupported' />{' '}
+                  {FORMAT_NETWORK_NAME(EthereumNetwork.ethereum)}{' '}
+                  <IntlMessages id='app.dashboard.networkForNow' />
                 </Alert>
               </Grid>
             </GridContainer>
@@ -384,7 +395,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     justifyContent='space-between'>
                     <Typography variant='body2'>
                       <strong>
-                        <IntlMessages id='app.youSend' />
+                        <IntlMessages id='app.dashboard.youSend' />
                       </strong>
                     </Typography>
 
@@ -455,7 +466,7 @@ const LimitForm: React.FC<Props> = (props) => {
                     alignContent='center'
                     justifyContent='space-between'>
                     <Typography variant='body2'>
-                      <IntlMessages id='app.youReceive' />
+                      <IntlMessages id='app.dashboard.youReceive' />
                     </Typography>
                     <Typography
                       variant='body2'
@@ -510,7 +521,7 @@ const LimitForm: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant='body2'>
-                    <IntlMessages id='app.price' />
+                    <IntlMessages id='app.dashboard.price' />
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -529,8 +540,12 @@ const LimitForm: React.FC<Props> = (props) => {
                           {tokenFrom && tokenTo && (
                             <>
                               {isInverted
-                                ? `${tokenFrom.symbol.toUpperCase()} per ${tokenTo.symbol.toUpperCase()}`
-                                : `${tokenTo.symbol.toUpperCase()} per ${tokenFrom.symbol.toUpperCase()}`}
+                                ? `${tokenFrom.symbol.toUpperCase()} ${
+                                    messages['app.dashboard.per']
+                                  } ${tokenTo.symbol.toUpperCase()}`
+                                : `${tokenTo.symbol.toUpperCase()} ${
+                                    messages['app.dashboard.per']
+                                  } ${tokenFrom.symbol.toUpperCase()}`}
                             </>
                           )}
                         </InputAdornment>
@@ -541,7 +556,7 @@ const LimitForm: React.FC<Props> = (props) => {
 
                 <Grid item xs={12}>
                   <Typography variant='body2'>
-                    <IntlMessages id='app.expiry' />
+                    <IntlMessages id='app.dashboard.expiry' />
                   </Typography>
                 </Grid>
                 <Grid item xs={5}>
@@ -551,10 +566,14 @@ const LimitForm: React.FC<Props> = (props) => {
                     value={expirySelect}
                     onChange={handleExpirySelectChange}>
                     <MenuItem value={86400} selected={true}>
-                      {messages['app.days']}
+                      <IntlMessages id='app.dashboard.days' />
                     </MenuItem>
-                    <MenuItem value={60}>{messages['app.minutes']}</MenuItem>
-                    <MenuItem value={1}>{messages['app.seconds']}</MenuItem>
+                    <MenuItem value={60}>
+                      <IntlMessages id='app.dashboard.minutes' />
+                    </MenuItem>
+                    <MenuItem value={1}>
+                      <IntlMessages id='app.dashboard.seconds' />
+                    </MenuItem>
                   </Select>
                 </Grid>
                 <Grid item xs={7}>
@@ -627,8 +646,9 @@ const LimitForm: React.FC<Props> = (props) => {
                   }>
                   {isNative && (
                     <Box fontSize='large' fontWeight='bold'>
-                      {messages['app.convert']} {nativeCoinSymbol}{' '}
-                      {messages['app.to']} {wNativeCoinSymbol}
+                      <IntlMessages id='app.dashboard.convert' />{' '}
+                      {nativeCoinSymbol} <IntlMessages id='app.dashboard.to' />{' '}
+                      {wNativeCoinSymbol}
                     </Box>
                   )}
                   {!isNative && errorMessage && account ? (
@@ -639,7 +659,7 @@ const LimitForm: React.FC<Props> = (props) => {
                         <TradeIcon />
                       </Box>
                       <Box fontSize='large' fontWeight='bold'>
-                        {messages['app.trade']}
+                        <IntlMessages id='app.dashboard.trade' />
                       </Box>
                     </>
                   )}

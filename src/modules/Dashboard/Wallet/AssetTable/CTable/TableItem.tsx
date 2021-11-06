@@ -17,6 +17,7 @@ import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
 import {MyBalances} from 'types/blockchain';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface TableItemProps {
   data: MyBalances;
@@ -140,7 +141,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           onClick={() => {
             history.push(getNetworkLink(data) + data.currency?.address);
           }}>
-          {messages['app.trade']}
+          <IntlMessages id='app.dashboard.trade' />
         </Button>
         <Button
           variant='outlined'
@@ -152,7 +153,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
               }`,
             );
           }}>
-          {messages['app.history']}
+          <IntlMessages id='app.dashboard.history' />
         </Button>
       </TableCell>
     </TableRow>

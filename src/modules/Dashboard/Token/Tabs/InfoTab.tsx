@@ -13,6 +13,7 @@ import CoingeckoMarket from '../CoingeckoMarket';
 import CoingeckoProfile from '../CoingeckoProfile';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Skeleton} from '@material-ui/lab';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   error: any;
@@ -33,7 +34,8 @@ export const InfoTab = (props: Props) => {
           <Skeleton width={theme.spacing(16)} />
         ) : (
           <>
-            {messages['app.about']} {data?.name} ({data?.symbol?.toUpperCase()})
+            <IntlMessages id='app.dashboard.about' /> {data?.name} (
+            {data?.symbol?.toUpperCase()})
           </>
         )}
       </AccordionSummary>

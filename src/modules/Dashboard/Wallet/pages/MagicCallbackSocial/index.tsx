@@ -11,6 +11,7 @@ import {getCachedMagicNetwork, getMagic} from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
 import {useWelcomeModal} from 'hooks/useWelcomeModal';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const MagicCallbackSocial = () => {
   const {onConnectMagic} = useMagicProvider();
@@ -56,7 +57,7 @@ const MagicCallbackSocial = () => {
         <Grid item>
           <Box display={'flex'} alignItems='center'>
             <Typography variant={'body1'}>
-              {messages['app.redirectingToWallet']}...
+              <IntlMessages id='app.dashboard.redirectingToWallet' />
             </Typography>
             <Box p={4}>
               <CircularProgress color='inherit' />

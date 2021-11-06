@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import TableHead from '@material-ui/core/TableHead';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -25,10 +27,18 @@ export const SwapHistoricTable = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>Send</TableCell>
-            <TableCell>Receive</TableCell>
-            <TableCell>Created</TableCell>
-            <TableCell>Status</TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.send' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.receive' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.created' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.status' />
+            </TableCell>
             <TableCell />
           </TableRow>
         </TableHead>

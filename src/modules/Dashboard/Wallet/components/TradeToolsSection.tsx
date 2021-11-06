@@ -21,6 +21,7 @@ import {ReactComponent as HeartEmptyIcon} from 'assets/images/icons/heart-empty.
 import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface TradeToolsSectionProps {
   onSend: () => void;
@@ -89,7 +90,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     <Box py={4}>
       {isMobile ? (
         <Box mb={2}>
-          <Typography variant='h6'>{messages['app.tradeTools']}</Typography>
+          <Typography variant='h6'>
+            <IntlMessages id='app.dashboard.tradeTools' />
+          </Typography>
         </Box>
       ) : null}
       <Box className={classes.container}>
@@ -106,7 +109,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
                 )}
               </RoundedIconButton>
               <Typography variant='caption'>
-                {messages['app.favorite']}
+                <IntlMessages id='app.dashboard.favorite' />
               </Typography>
             </Box>
           </Box>
@@ -118,7 +121,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <RoundedIconButton onClick={onShare}>
                 <ArrowRedoOutlinedIcon className={classes.icon} />
               </RoundedIconButton>
-              <Typography variant='caption'>{messages['app.share']}</Typography>
+              <Typography variant='caption'>
+                <IntlMessages id='app.dashboard.share' />
+              </Typography>
             </Box>
           </Box>
         ) : null}
@@ -127,7 +132,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             <RoundedIconButton onClick={onTrade}>
               <BitcoinConvertWhiteIcon className={classes.icon} />
             </RoundedIconButton>
-            <Typography variant='caption'>{messages['app.trade']}</Typography>
+            <Typography variant='caption'>
+              <IntlMessages id='app.dashboard.trade' />
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.item}>
@@ -136,7 +143,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <MoneySendIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              {messages['app.swap']}
+              <IntlMessages id='app.dashboard.swap' />
             </Typography>
           </Box>
         </Box>
@@ -146,7 +153,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <WalletSearchIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              {messages['app.accounts']}
+              <IntlMessages id='app.dashboard.accounts' />
             </Typography>
           </Box>
         </Box>
@@ -156,7 +163,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <ExportWhiteIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              {messages['app.send']}
+              <IntlMessages id='app.dashboard.send' />
             </Typography>
           </Box>
         </Box>
@@ -167,7 +174,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </RoundedIconButton>
 
             <Typography variant='caption' className={classes.itemText}>
-              {messages['app.receive']}
+              <IntlMessages id='app.dashboard.receive' />
             </Typography>
           </Box>
         </Box>
@@ -177,7 +184,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <AddCircleIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              {messages['app.buyCrypto']}
+              <IntlMessages id='app.dashboard.buyCrypto' />
             </Typography>
           </Box>
         </Box>

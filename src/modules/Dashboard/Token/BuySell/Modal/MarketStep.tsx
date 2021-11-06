@@ -11,6 +11,7 @@ import {useNotifications} from 'hooks/useNotifications';
 import {Token} from 'types/app';
 import {tokenAmountInUnits} from 'utils';
 import {BigNumber} from '@0x/utils';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   account: string;
@@ -100,7 +101,7 @@ const MarketStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        {messages['app.confirmMarketOrder']}
+        <IntlMessages id='app.dashboard.confirmMarketOrder' />
       </Typography>
       <Button
         style={{margin: 0}}
@@ -109,7 +110,7 @@ const MarketStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        {messages['app.confirm']}
+        <IntlMessages id='app.dashboard.confirm' />
       </Button>
     </>
   );

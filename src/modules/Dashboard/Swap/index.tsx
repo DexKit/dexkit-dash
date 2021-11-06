@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import {SwapComponent} from './Swap';
@@ -13,7 +15,7 @@ const SwapLayout = () => {
       <Box display='flex' alignItems='center'>
         <SwapHorizontalCircleIcon color={'primary'} fontSize={'large'} />
         <Box component='h3' color='text.primary' fontWeight={Fonts.BOLD} ml={2}>
-          Multichain Swap
+          <IntlMessages id='app.dashboard.multichainSwap' />
         </Box>
         <AboutDialog />
       </Box>

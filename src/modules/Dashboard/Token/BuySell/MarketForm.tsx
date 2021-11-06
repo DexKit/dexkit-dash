@@ -267,7 +267,9 @@ const MarketForm: React.FC<Props> = (props) => {
       if (e.target.value) {
         value = Number(e.target.value);
 
-        if (value < 0) value = 0;
+        if (value < 0) {
+          value = 0;
+        }
       }
       onFetch(value, 'to');
     },
@@ -310,27 +312,34 @@ const MarketForm: React.FC<Props> = (props) => {
         onClick={handleConnectWallet}
         endIcon={<AccountBalanceWalletIcon />}
         disabled={web3State === Web3State.Connecting}>
-        {web3State === Web3State.Connecting
-          ? isMobile()
-            ? `${messages['app.connecting']}...`
-            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
-          : isMobile()
-          ? `${messages['app.connect']}`
-          : `${messages['app.connect']} ${messages['app.wallet']}`}
+        {web3State === Web3State.Connecting ? (
+          isMobile() ? (
+            <IntlMessages id='app.dashboard.connecting' />
+          ) : (
+            <>
+              <IntlMessages id='app.dashboard.connecting' />{' '}
+              <IntlMessages id='app.dashboard.checkWallet' />
+            </>
+          )
+        ) : isMobile() ? (
+          <IntlMessages id='app.dashboard.connect' />
+        ) : (
+          <IntlMessages id='app.dashboard.connectWallet' />
+        )}
       </Button>
     </Box>
   );
   // disabled = true;
   if (select0.length === 0) {
-    errorMessage = messages['app.noBalanceWallet'];
+    errorMessage = messages['app.dashboard.noBalanceWallet'];
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
-    errorMessage = messages['app.noBalanceChosenToken'];
+    errorMessage = messages['app.dashboard.noBalanceChosenToken'];
   } else if (amountFrom && tokenBalance.value < amountFrom) {
-    errorMessage = messages['app.insufficientBalanceChoseToken'];
+    errorMessage = messages['app.dashboard.insufficientBalanceChosenToken'];
   } else if (networkName !== network) {
-    errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
+    errorMessage = `${messages['app.dashboard.switchTo']} ${FORMAT_NETWORK_NAME(
       networkName,
-    )} Network in your wallet`;
+    )} ${messages['app.dashboard.networkInYourWallet']}`;
   }
   const {usdFormatter} = useUSDFormatter();
 
@@ -371,8 +380,8 @@ const MarketForm: React.FC<Props> = (props) => {
       <SelectTokenBalanceDialog
         title={
           selectTo === 'from'
-            ? (messages['app.youSend'] as string)
-            : (messages['app.youReceive'] as string)
+            ? (messages['app.dashboard.youSend'] as string)
+            : (messages['app.dashboard.youReceive'] as string)
         }
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
@@ -392,7 +401,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   alignContent='center'
                   justifyContent='space-between'>
                   <Typography variant='body2'>
-                    <IntlMessages id='app.youSend' />
+                    <IntlMessages id='app.dashboard.youSend' />
                   </Typography>
 
                   <Typography
@@ -412,7 +421,7 @@ const MarketForm: React.FC<Props> = (props) => {
               <Grid item xs={5} sm={5}>
                 <SelectTokenV2
                   id={'marketSel0'}
-                  label={messages['app.yourCoins'] as string}
+                  label={messages['app.dashboard.yourCoins'] as string}
                   selected={tokenFrom}
                   disabled={disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
@@ -461,7 +470,7 @@ const MarketForm: React.FC<Props> = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='body1'>
-                  <IntlMessages id='app.youReceive' />
+                  <IntlMessages id='app.dashboard.youReceive' />
                 </Typography>
               </Grid>
               <Grid item xs={5} md={5}>
@@ -513,7 +522,7 @@ const MarketForm: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography style={{textDecoration: 'none'}}>
-                          {messages['app.additionalInformation']}
+                          <IntlMessages id='app.dashboard.additionalInformation' />
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
@@ -597,7 +606,7 @@ const MarketForm: React.FC<Props> = (props) => {
                       <>
                         <TradeIcon />
                         <Box ml={1} fontSize='large' fontWeight='bold'>
-                          {messages['app.trade']}
+                          <IntlMessages id='app.dashboard.trade' />
                         </Box>
                       </>
                     )}

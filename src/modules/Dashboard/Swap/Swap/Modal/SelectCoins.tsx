@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {useTheme} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -88,7 +89,9 @@ export const SelectCoinsDialog = (props: Props) => {
       fullScreen={fullScreen}>
       <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>{messages['app.selectCoin']}</Typography>
+          <Typography variant='body1'>
+            <IntlMessages id='app.dashboard.selectCoin' />
+          </Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -99,7 +102,7 @@ export const SelectCoinsDialog = (props: Props) => {
           <TextField
             autoFocus
             id='name'
-            placeholder={messages['app.searchCoins'] as string}
+            placeholder={messages['app.dashboard.searchCoins'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -108,7 +111,7 @@ export const SelectCoinsDialog = (props: Props) => {
         </Box>
         {filteredCoins.length == 0 ? (
           <Typography variant='body1'>
-            {messages['app.noCoinsFound']}
+            <IntlMessages id='app.dashboard.noCoinsFound' />
           </Typography>
         ) : (
           <List>

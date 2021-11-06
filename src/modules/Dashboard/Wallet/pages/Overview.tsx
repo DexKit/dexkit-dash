@@ -45,6 +45,7 @@ import {useTokenLists} from 'hooks/useTokenLists';
 import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import TokenLogo from 'shared/components/TokenLogo';
 import {watchAsset} from 'utils/wallet';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -210,10 +211,10 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               <Grid item xs={12}>
                 <Breadcrumbs aria-label='breadcrumb'>
                   <Typography variant='body2' color='textSecondary'>
-                    {messages['app.wallet']}
+                    <IntlMessages id='app.dashboard.wallet' />
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
-                    {messages['app.overview']}
+                    <IntlMessages id='app.dashboard.overview' />
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
                     {tokenInfo?.symbol}
@@ -236,7 +237,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       alignContent='center'>
                       <Grid item>
                         <Typography variant='h6'>
-                          {messages['app.overview']}
+                          <IntlMessages id='app.dashboard.overview' />
                         </Typography>
                       </Grid>
                       {data?.platforms?.ethereum ? (
@@ -356,7 +357,8 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography>
-                          <GraphicsIcon /> {messages['app.charts']}
+                          <GraphicsIcon />{' '}
+                          <IntlMessages id='app.dashboard.charts' />
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Dialog, {DialogProps} from '@material-ui/core/Dialog';
@@ -36,13 +36,14 @@ export const BuySellModal = (props: Props) => {
   const {onClose} = props;
   const theme = useTheme();
   const handleClose = useCallback(() => {
-    if (onClose) onClose({}, 'escapeKeyDown');
+    if (onClose) {
+      onClose({}, 'escapeKeyDown');
+    }
   }, [onClose]);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return (
     <Dialog
@@ -63,7 +64,9 @@ export const BuySellModal = (props: Props) => {
                 <BitcoinConvertWhiteIcon className={classes.icon} />
               </Box>
 
-              <Typography variant='body1'>{messages['app.trade']}</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.dashboard.trade' />
+              </Typography>
             </Box>
           </Box>
           <IconButton size='small' onClick={handleClose}>

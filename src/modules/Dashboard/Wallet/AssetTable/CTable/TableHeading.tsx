@@ -7,6 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   props?: any;
@@ -48,15 +49,15 @@ const TableHeading: React.FC<Props> = (props) => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell className={classes.tableCellRoot}>
-        {messages['app.name']}
+        <IntlMessages id='app.dashboard.name' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {messages['app.balance']}
+        <IntlMessages id='app.dashboard.balance' />
       </TableCell>
 
       <TableCell align='center' className={classes.tableCellRoot}>
-        {messages['app.actions']}
+        <IntlMessages id='app.dashboard.actions' />
       </TableCell>
     </TableRow>
   );

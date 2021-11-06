@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
@@ -95,7 +96,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
 
   if (loading) {
     icon = null;
-    message = `${messages['app.cancelingYourOrder']}...`;
+    message = `${messages['app.dashboard.cancelingYourOrder']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -110,7 +111,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
     icon = (
       <ErrorOutlineIcon style={{marginBottom: 20, width: 100, height: 100}} />
     );
-    message = `${messages['app.errorHappened']}: ` + error;
+    message = `${messages['app.dashboard.errorHappened']}: ` + error;
     action = (
       <Button
         style={{margin: 0}}
@@ -119,7 +120,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={onClose}>
-        {messages['app.close']}
+        <IntlMessages id='app.dashboard.close' />
       </Button>
     );
   } else if (done) {
@@ -128,7 +129,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         style={{marginBottom: 20, width: 100, height: 100}}
       />
     );
-    message = `${messages['app.orderCanceled']}`;
+    message = `${messages['app.dashboard.orderCanceled']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -137,12 +138,12 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={onClose}>
-        {messages['app.done']}
+        <IntlMessages id='app.dashboard.done' />
       </Button>
     );
   } else {
     icon = <DeleteIcon style={{marginBottom: 20, width: 100, height: 100}} />;
-    message = `${messages['app.wouldLikeToCancelOrder']}?`;
+    message = `${messages['app.dashboard.wouldLikeToCancelOrder']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -151,7 +152,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        {messages['app.confirm']}
+        <IntlMessages id='app.dashboard.confirm' />
       </Button>
     );
   }
@@ -181,7 +182,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
               className={classes.textPrimary}
               variant='h5'
               align='center'>
-              {messages['app.cancelOrder']}
+              <IntlMessages id='app.dashboard.cancelOrder' />
             </Typography>
             <Typography align='right'>
               <IconButton aria-label='close' onClick={onClose}>

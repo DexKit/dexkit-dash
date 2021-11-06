@@ -43,6 +43,7 @@ import ContainedInput from 'shared/components/ContainedInput';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AppContext from '@crema/utility/AppContext';
 import {useHistory} from 'react-router-dom';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -126,13 +127,20 @@ const Accounts = () => {
         color='primary'
         onClick={() => history.push('/onboarding/login-wallet')}
         endIcon={<AccountBalanceWalletIcon />}>
-        {web3State === Web3State.Connecting
-          ? isMobile()
-            ? `${messages['app.connecting']}...`
-            : `${messages['app.connecting']}... ${messages['app.checkWallet']}`
-          : isMobile()
-          ? `${messages['app.connect']}`
-          : `${messages['app.connectWallet']}`}
+        {web3State === Web3State.Connecting ? (
+          isMobile() ? (
+            <IntlMessages id='app.dashboard.connecting' />
+          ) : (
+            <>
+              <IntlMessages id='app.dashboard.connecting' />{' '}
+              <IntlMessages id='app.dashboard.checkWallet' />
+            </>
+          )
+        ) : isMobile() ? (
+          <IntlMessages id='app.dashboard.connect' />
+        ) : (
+          <IntlMessages id='app.dashboard.connectWallet' />
+        )}
       </Button>
     </Box>
   );
@@ -153,7 +161,7 @@ const Accounts = () => {
   const titleComponent = (
     <Box display='flex' alignItems='center' mt={1}>
       <Typography variant='h5' color='textSecondary'>
-        {messages['app.manageAccounts']}
+        <IntlMessages id='app.dashboard.manageAccounts' />
       </Typography>
     </Box>
   );
@@ -227,7 +235,7 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          {messages['app.addressCopied']}!
+          <IntlMessages id='app.dashboard.addressCopied' />!
         </Alert>
       </Snackbar>
     );
@@ -330,7 +338,7 @@ const Accounts = () => {
           <Grid container spacing={4}>
             <Grid item xs={12}>
               <Typography variant='body1'>
-                {messages['app.addNewAccount']}
+                <IntlMessages id='app.dashboard.addNewAccount' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -345,7 +353,8 @@ const Accounts = () => {
                     fullWidth
                     endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
-                        <Tooltip title={messages['app.pasteValidAccount']}>
+                        <Tooltip
+                          title={messages['app.dashboard.pasteValidAccount']}>
                           <IconButton aria-label='paste' color='primary'>
                             <CallReceivedIcon />
                           </IconButton>
@@ -356,7 +365,7 @@ const Accounts = () => {
                   />
                 </Grid>
                 <Grid item>
-                  <Tooltip title={messages['app.addValidAccount']}>
+                  <Tooltip title={messages['app.dashboard.addValidAccount']}>
                     <SquaredIconButton
                       onClick={handleAddAccount}
                       disabled={address === '' || error !== undefined}>
@@ -399,7 +408,7 @@ const Accounts = () => {
             alignItems='center'>
             <Typography variant='body1'>
               {wallet[SupportedNetworkType.evm].length}{' '}
-              {messages['app.accounts']}
+              <IntlMessages id='app.dashboard.accounts' />
             </Typography>
 
             {selectActive ? (
@@ -411,7 +420,7 @@ const Accounts = () => {
                     </SquaredIconButton>
                   </Grid>
                   <Grid item>
-                    <Tooltip title={messages['app.removeItems']}>
+                    <Tooltip title={messages['app.dashboard.removeItems']}>
                       <SquaredIconButton
                         onClick={handleRemoveMultiple}
                         disabled={selectedAccounts.length === 0}>

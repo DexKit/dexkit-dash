@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -26,7 +26,6 @@ interface Props {
 export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
   const {clear, remove} = useSwapTransactions();
-  const {messages} = useIntl();
 
   const handleClear = useCallback(() => {
     clear();
@@ -45,7 +44,7 @@ export const SwapHistoricDialog = (props: Props) => {
           alignItems='center'
           alignContent='center'>
           <Typography variant='inherit'>
-            {messages['app.transactions']}
+            <IntlMessages id='app.dashboard.transactions' />
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -58,7 +57,7 @@ export const SwapHistoricDialog = (props: Props) => {
           <Box mb={4}>
             <Box display='flex' justifyContent='flex-end' py={4}>
               <Button onClick={handleClear} startIcon={<ClearIcon />}>
-                {messages['app.clear']}
+                <IntlMessages id='app.dashboard.clear' />
               </Button>
             </Box>
             <SwapHistoricTable
@@ -70,7 +69,7 @@ export const SwapHistoricDialog = (props: Props) => {
         ) : (
           <Box display='flex' justifyContent='center' py={8}>
             <Typography variant='body1'>
-              {messages['app.noTransactionsYet']}
+              <IntlMessages id='app.dashboard.noTransactionsYet' />
             </Typography>
           </Box>
         )}

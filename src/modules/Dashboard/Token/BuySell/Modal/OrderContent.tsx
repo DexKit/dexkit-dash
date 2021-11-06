@@ -49,6 +49,7 @@ import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
 import {SwapQuoteResponse} from 'types/zerox';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   isMarket: boolean;
@@ -403,13 +404,22 @@ const OrderContent: React.FC<Props> = (props) => {
               <WalletAddIcon className={classes.iconColor} />
             </Box>
             <Typography variant='body1'>
-              {isConvert
-                ? `${messages['app.convert']} ${tokenFrom.symbol} ${messages['app.to']} ${tokenTo.symbol}`
-                : `${messages['app.review']} ` +
-                  (isMarket
-                    ? `${messages['app.market']}`
-                    : `${messages['app.limit']}`) +
-                  ` ${messages['app.order']}`}
+              {isConvert ? (
+                <>
+                  <IntlMessages id='app.dashboard.convert' /> {tokenFrom.symbol}{' '}
+                  <IntlMessages id='app.dashboard.to' /> {tokenTo.symbol}{' '}
+                </>
+              ) : (
+                <>
+                  <IntlMessages id='app.dashboard.review' />{' '}
+                  {isMarket ? (
+                    <IntlMessages id='app.dashboard.market' />
+                  ) : (
+                    <IntlMessages id='app.dashboard.limit' />
+                  )}
+                </>
+              )}
+              <IntlMessages id='app.dashboard.order' />
             </Typography>
           </Box>
           <Box>
@@ -439,7 +449,7 @@ const OrderContent: React.FC<Props> = (props) => {
             alignContent='center'
             justifyContent='center'>
             <Typography variant='h6' align='center'>
-              {messages['app.loadingYourOrder']}...
+              <IntlMessages id='app.coinLeagues.loadingYourOrder' />{' '}
             </Typography>
           </Box>
         ) : (
@@ -455,15 +465,15 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      {messages['app.youreConverting']}
+                      <IntlMessages id='app.dashboard.youreConverting' />
                       {GET_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      {messages['app.to']}
+                      <IntlMessages id='app.dashboard.to' />
                       {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      {messages['app.forTradingOnDexKit']}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -477,16 +487,18 @@ const OrderContent: React.FC<Props> = (props) => {
                       <EmptyWalletImage />
                     </Box>
                     <Typography variant='h6' align='center'>
-                      {messages['app.youreApproving']} {tokenFrom.symbol}{' '}
-                      {messages['app.forTradingOnDexKit']}
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenFrom.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </Box>
                 )}
                 {currentStep === Steps.APPROVE_WRAPPER && (
                   <>
                     <Typography variant='h6' align='center'>
-                      {messages['app.youreApproving']} {tokenWrapper.symbol}{' '}
-                      {messages['app.forTradingOnDexKit']}
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenWrapper.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -516,7 +528,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Box>
 
                     <Typography gutterBottom variant='h5' align='center'>
-                      {messages['app.errorHappened']}
+                      <IntlMessages id='app.dashboard.errorHappened' />
                     </Typography>
                     <Typography align='center' variant='body1'>
                       {String(error)}
@@ -531,10 +543,10 @@ const OrderContent: React.FC<Props> = (props) => {
                     alignContent='center'
                     justifyContent='center'>
                     <Typography variant='h6' align='center'>
-                      {messages['app.toProceedWithRequest']},
+                      <IntlMessages id='app.dashboard.toProceedWithRequest' />,
                     </Typography>
                     <Typography variant='h6' align='center'>
-                      {messages['app.weWouldLikeToRequestYourApprovalToUse']}{' '}
+                      <IntlMessages id='app.dashboard.weWouldLikeToRequestYourApprovalToUse' />{' '}
                       {tokenFrom.symbol}
                     </Typography>
                   </Box>
@@ -553,10 +565,12 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Typography>
 
                     <Typography variant='h6' align='center'>
-                      {isConvert
-                        ? `${messages['app.conversion']}`
-                        : `${messages['app.order']} `}
-                      ${messages['app.completed']}!
+                      {isConvert ? (
+                        <IntlMessages id='app.dashboard.conversion' />
+                      ) : (
+                        <IntlMessages id='app.dashboard.order' />
+                      )}
+                      $<IntlMessages id='app.dashboard.completed' />!
                     </Typography>
                   </Box>
                 )}
@@ -593,9 +607,11 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert
-                              ? messages['app.to']
-                              : messages['app.receive']}
+                            {isConvert ? (
+                              <IntlMessages id='app.dashboard.to' />
+                            ) : (
+                              <IntlMessages id='app.dashboard.receive' />
+                            )}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -619,7 +635,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 className={classes.label}
                                 variant='body1'>
-                                {messages['app.atPrice']}
+                                <IntlMessages id='app.dashboard.atPrice' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -648,7 +664,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 variant='body1'
                                 className={classes.label}>
-                                {messages['app.estimatedFee']}
+                                <IntlMessages id='app.dashboard.estimatedFee' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -677,7 +693,7 @@ const OrderContent: React.FC<Props> = (props) => {
                           justify='space-between'>
                           <Grid item>
                             <Typography variant='body1'>
-                              {messages['app.expiry']}
+                              <IntlMessages id='app.dashboard.expiry' />
                             </Typography>
                           </Grid>
                           <Grid item>
@@ -701,7 +717,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                 justifyContent='space-between'
                                 alignItems='center'>
                                 <Typography variant='body1'>
-                                  {messages['app.advanced']}
+                                  <IntlMessages id='app.dashboard.advanced' />
                                 </Typography>
                                 <IconButton
                                   size='small'
@@ -722,7 +738,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                     spacing={2}>
                                     <Grid item xs={12}>
                                       <Typography>
-                                        {messages['app.slippage']}{' '}
+                                        <IntlMessages id='app.dashboard.slippage' />{' '}
                                         <IconButton
                                           size='small'
                                           className={classes.textSecondary}
@@ -747,12 +763,15 @@ const OrderContent: React.FC<Props> = (props) => {
                                         <Box padding={3}>
                                           <Typography
                                             className={classes.textSecondary}>
-                                            {messages['app.guaranteedPrice']}
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />
                                           </Typography>
                                           <Typography
                                             className={classes.textPrimary}
                                             align='right'>
-                                            {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
+                                            {displayGuaranteedPrice} $
+                                            {firstSymbol}{' '}
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />{' '}
+                                            ${secondSymbol}
                                           </Typography>
                                         </Box>
                                       </Popover>

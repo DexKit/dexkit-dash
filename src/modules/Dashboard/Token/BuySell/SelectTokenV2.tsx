@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Token} from 'types/app';
 import {Button, makeStyles, withStyles} from '@material-ui/core';
@@ -40,7 +40,6 @@ const SelectTokenV2: React.FC<Props> = ({
   label,
 }) => {
   const classes = useStyles();
-  const {messages} = useIntl();
 
   return selected ? (
     <StyledButton
@@ -68,7 +67,7 @@ const SelectTokenV2: React.FC<Props> = ({
       endIcon={<ExpandMoreIcon />}
       variant='outlined'
       onClick={onClick}>
-      {messages['app.choose']}
+      <IntlMessages id='app.dashboard.choose' />
     </StyledButton>
   );
 };

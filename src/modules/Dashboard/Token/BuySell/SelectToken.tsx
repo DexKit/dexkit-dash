@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Autocomplete, FilterOptionsState} from '@material-ui/lab';
 import {Token} from 'types/app';
@@ -188,7 +189,9 @@ const SelectToken: React.FC<Props> = ({
             <SelectBox>
               <TextField
                 {...params}
-                placeholder={messages['app.chartSearchInfo'] as string}
+                placeholder={
+                  messages['app.dashboard.chartSearchInfo'] as string
+                }
                 variant='outlined'
                 className={classes.textField}
                 // onChange={($e) => search($e.target.value)}
@@ -245,7 +248,7 @@ const SelectToken: React.FC<Props> = ({
                   className={`${classes.bold} ${
                     !label ? classes.selectLabel : ''
                   }`}>
-                  {label || messages['app.searchCoin']}
+                  {label || <IntlMessages id='app.dashboard.searchCoin' />}
                 </Typography>
                 <SelectBox>
                   {selected && (
@@ -261,7 +264,7 @@ const SelectToken: React.FC<Props> = ({
                     placeholder={
                       selected
                         ? selected.symbol
-                        : (messages['app.chartSearchInfo'] as string)
+                        : (messages['app.dashboard.chartSearchInfo'] as string)
                     }
                     variant='outlined'
                     className={classes.textField}

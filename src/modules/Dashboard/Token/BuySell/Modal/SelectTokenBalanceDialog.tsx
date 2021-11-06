@@ -28,6 +28,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {MyBalances} from 'types/blockchain';
 import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -146,7 +147,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
               <MoneySendIcon />
             </Box>
             <Typography variant='body1'>
-              {title || messages['app.selectToken']}
+              {title || <IntlMessages id='app.dashboard.selectToken' />}
             </Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
@@ -160,7 +161,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder={messages['app.searchTokens'] as string}
+            placeholder={messages['app.dashboard.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -176,7 +177,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
                     <Chip
                       clickable
                       size='small'
-                      label={messages['app.all'] as string}
+                      label={messages['app.dashboard.all'] as string}
                       variant={
                         selectedNetwork === undefined ? 'default' : 'outlined'
                       }
@@ -239,7 +240,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
         {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
           <Box p={4}>
             <Typography variant='body1'>
-              {messages['app.noTokensFound']}
+              <IntlMessages id='app.dashboard.noTokensFound' />
             </Typography>
           </Box>
         ) : (

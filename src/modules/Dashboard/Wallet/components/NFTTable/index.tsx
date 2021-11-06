@@ -27,6 +27,7 @@ import {Search} from '@material-ui/icons';
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import NFTList from './NFTList';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface AssetTableProps {
   balances?: MyBalances[];
@@ -146,7 +147,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                       </Grid>
                       <Grid item>
                         <Typography variant='body1'>
-                          {messages['app.filter']}
+                          <IntlMessages id='app.dashboard.filter' />
                         </Typography>
                       </Grid>
                     </Grid>
@@ -163,7 +164,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                {messages['app.network']}
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -171,7 +172,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                 <Grid item>
                   <Chip
                     style={{marginRight: 10}}
-                    label={messages['app.all'] as string}
+                    label={messages['app.dashboard.all'] as string}
                     size='small'
                     clickable
                     variant={filter === 'all' ? 'default' : 'outlined'}
@@ -213,7 +214,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               <ContainedInput
                 value={search}
                 onChange={handleChange}
-                placeholder={messages['app.search'] as string}
+                placeholder={messages['app.coinLeagues.search'] as string}
                 startAdornment={
                   <InputAdornment position='start'>
                     <Search />
@@ -224,22 +225,24 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             </Grid>
             <Grid item xs={12}>
               <FormControl variant='outlined' fullWidth>
-                <InputLabel>{messages['app.orderBy']}</InputLabel>
+                <InputLabel>
+                  <IntlMessages id='app.dashboard.orderBy' />
+                </InputLabel>
                 <Select
                   style={{backgroundColor: 'transparent'}}
-                  label={messages['app.orderBy'] as string}
+                  label={messages['app.dashboard.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
                   onChange={handleOrderByChange}
                   fullWidth>
                   <MenuItem value={TokenOrderBy.Name}>
-                    {messages['app.name']}
+                    <IntlMessages id='app.dashboard.name' />
                   </MenuItem>
                   <MenuItem value={TokenOrderBy.TokenAmount}>
-                    {messages['app.tokenAmount']}
+                    <IntlMessages id='app.dashboard.tokenAmount' />
                   </MenuItem>
                   <MenuItem value={TokenOrderBy.UsdAmount}>
-                    USD {messages['app.amount']}
+                    USD <IntlMessages id='app.dashboard.amount' />
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -256,7 +259,8 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances.length} {messages['app.collections']}
+                {filteredBalances.length}{' '}
+                <IntlMessages id='app.dashboard.collections' />
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -271,7 +275,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                         <Search />
                       </InputAdornment>
                     }
-                    placeholder={messages['app.search'] as string}
+                    placeholder={messages['app.coinLeagues.search'] as string}
                   />
                 </Grid>
                 <Grid item>

@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
@@ -124,13 +125,15 @@ const ApproveStep: React.FC<Props> = (props) => {
       );
 
       createNotification({
-        title: messages['app.approve'] as string,
-        body: `${messages['app.approve']} ${tokenFrom.symbol.toUpperCase()} ${
-          messages['app.to']
-        } ${messages['app.trade']}`,
+        title: messages['app.dashboard.approve'] as string,
+        body: `${
+          messages['app.dashboard.approve']
+        } ${tokenFrom.symbol.toUpperCase()} ${messages['app.dashboard.to']} ${
+          messages['app.dashboard.trade']
+        }`,
         timestamp: Date.now(),
         url: getTransactionScannerUrl(chainId, tx.hash),
-        urlCaption: messages['app.viewTransaction'] as string,
+        urlCaption: messages['app.dashboard.viewTransaction'] as string,
         type: NotificationType.TRANSACTION,
         metadata: {
           chainId: chainId,
@@ -164,7 +167,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Approve
+        <IntlMessages id='app.dashboard.approve' />
       </Button>
     </>
   );

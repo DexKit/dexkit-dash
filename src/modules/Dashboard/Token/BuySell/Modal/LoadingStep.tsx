@@ -3,6 +3,7 @@ import React from 'react';
 import {useIntl} from 'react-intl';
 
 import {Button, CircularProgress, Typography} from '@material-ui/core';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 // import {useStyles} from './index.style';
 
@@ -19,7 +20,7 @@ const LoadingStep: React.FC<Props> = (props) => {
     <>
       {currentStepIndex !== -1 && (
         <Typography align='center' style={{paddingBottom: 10}}>
-          {messages['app.confirmWalletAndWait']}
+          <IntlMessages id='app.dashboard.confirmWalletAndWait' />
         </Typography>
       )}
       <Button

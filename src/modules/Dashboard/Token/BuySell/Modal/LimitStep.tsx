@@ -11,6 +11,7 @@ import {Notification} from 'types/models/Notification';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
 import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 // import {useStyles} from './index.style';
 
@@ -85,7 +86,7 @@ const LimitStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        {messages['app.wouldLikeToConfirmLimitOrder']}?
+        <IntlMessages id='app.dashboard.wouldLikeToConfirmLimitOrder' />
       </Typography>
       <Button
         style={{margin: 0}}
@@ -94,7 +95,7 @@ const LimitStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        {messages['app.confirm']}
+        <IntlMessages id='app.dashboard.confirm' />
       </Button>
     </>
   );

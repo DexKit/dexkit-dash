@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -164,7 +165,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                {messages['app.network']}
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -172,7 +173,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 <Grid item>
                   <Chip
                     style={{marginRight: 10}}
-                    label={messages['app.all'] as string}
+                    label={messages['app.dashboard.all'] as string}
                     size='small'
                     clickable
                     variant={filter === 'all' ? 'default' : 'outlined'}
@@ -214,7 +215,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
               <ContainedInput
                 value={search}
                 onChange={handleChange}
-                placeholder={messages['app.search'] as string}
+                placeholder={messages['app.dashboard.search'] as string}
                 startAdornment={
                   <InputAdornment position='start'>
                     <Search />
@@ -225,22 +226,24 @@ const AssetTable: React.FC<AssetTableProps> = ({
             </Grid>
             <Grid item xs={12}>
               <FormControl variant='outlined' fullWidth>
-                <InputLabel>{messages['app.orderBy']}</InputLabel>
+                <InputLabel>
+                  <IntlMessages id='app.dashboard.orderBy' />
+                </InputLabel>
                 <Select
                   style={{backgroundColor: 'transparent'}}
-                  label={messages['app.orderBy'] as string}
+                  label={messages['app.dashboard.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
                   onChange={handleOrderByChange}
                   fullWidth>
                   <MenuItem value={TokenOrderBy.Name}>
-                    {messages['app.name']}
+                    <IntlMessages id='app.dashboard.name' />
                   </MenuItem>
                   <MenuItem value={TokenOrderBy.TokenAmount}>
-                    {messages['app.tokenAmount']}
+                    <IntlMessages id='app.dashboard.tokenAmount' />
                   </MenuItem>
                   <MenuItem value={TokenOrderBy.UsdAmount}>
-                    USD {messages['app.amount']}
+                    USD <IntlMessages id='app.dashboard.amount' />
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -257,7 +260,8 @@ const AssetTable: React.FC<AssetTableProps> = ({
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances().length} {messages['app.assets']}
+                {filteredBalances().length}{' '}
+                <IntlMessages id='app.dashboard.assets' />
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -272,7 +276,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                         <Search />
                       </InputAdornment>
                     }
-                    placeholder={messages['app.search'] as string}
+                    placeholder={messages['app.dashboard.search'] as string}
                   />
                 </Grid>
                 <Grid item>

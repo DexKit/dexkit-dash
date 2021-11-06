@@ -21,6 +21,7 @@ import GeneratedWallet from './steps/GeneratedWallet';
 import MnemonicConfirm from './steps/MnemonicConfirm';
 import MnemonicGeneration from './steps/MnemonicGeneration';
 import {useHistory} from 'react-router-dom';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const mnemonicsGen = bip39.generateMnemonic().split(' ');
 
@@ -67,11 +68,11 @@ const CreateBTCWallet: React.FC = () => {
 
   const steps: IStep[] = [
     {
-      description: messages['app.procedureInfo'] as string,
+      description: messages['app.dashboard.procedureInfo'] as string,
       component: <InfoPage setHasSeed={setHasSeed} />,
     },
     {
-      description: messages['app.mnemonicInfo'] as string,
+      description: messages['app.dashboard.mnemonicInfo'] as string,
       component: hasSeed ? (
         <MnemonicInsert
           setAllowStep={setAllowStep}
@@ -85,17 +86,17 @@ const CreateBTCWallet: React.FC = () => {
       ),
     },
     {
-      description: messages['app.mnemonicConfirmation'] as string,
+      description: messages['app.dashboard.mnemonicConfirmation'] as string,
       component: (
         <MnemonicConfirm mnemonics={mnemonics} setAllowStep={setAllowStep} />
       ),
     },
     {
-      description: messages['app.passphraseCreation'] as string,
+      description: messages['app.dashboard.passphraseCreation'] as string,
       component: <Passphrase setAllowStep={setAllowStep} setPass={setPass} />,
     },
     {
-      description: messages['app.resultGeneratedWallet'] as string,
+      description: messages['app.dashboard.resultGeneratedWallet'] as string,
       component: (
         <GeneratedWallet mnemonics={mnemonics} passphrase={passphrase} />
       ),
@@ -131,7 +132,9 @@ const CreateBTCWallet: React.FC = () => {
                   paddingTop: '17vh',
                 }}>
                 <Box style={{flex: '1 1 auto'}} />
-                <Button onClick={goToWallet}>{messages['app.finish']}</Button>
+                <Button onClick={goToWallet}>
+                  <IntlMessages id='app.dashboard.finish' />
+                </Button>
               </Box>
             ) : (
               <Box
@@ -144,17 +147,17 @@ const CreateBTCWallet: React.FC = () => {
                   color='inherit'
                   disabled={activeStep === 0}
                   onClick={handleBack}>
-                  {messages['app.back']}
+                  <IntlMessages id='app.dashboard.back' />
                 </Button>
                 <Box style={{flex: '1 1 auto', textAlign: 'center'}}>
                   <Button color='primary' onClick={() => history.goBack()}>
-                    {messages['app.exit']}
+                    <IntlMessages id='app.dashboard.exit' />
                   </Button>
                 </Box>
                 <Button onClick={handleNext} disabled={!allowStep}>
                   {activeStep === steps.length - 1
-                    ? messages['app.finish']
-                    : messages['app.next']}
+                    ? messages['app.dashboard.finish']
+                    : messages['app.dashboard.next']}
                 </Button>
               </Box>
             )}

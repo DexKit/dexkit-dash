@@ -26,6 +26,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {useMobile} from 'hooks/useMobile';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props extends DialogProps {
   title?: string;
@@ -111,7 +112,7 @@ export const SelectTokenDialog = (props: Props) => {
               autoComplete='off'
               autoFocus
               id='name'
-              placeholder={messages['app.searchTokens'] as string}
+              placeholder={messages['app.dashboard.searchTokens'] as string}
               fullWidth
               value={filterText}
               variant='outlined'
@@ -127,7 +128,7 @@ export const SelectTokenDialog = (props: Props) => {
                   <Chip
                     clickable
                     size='small'
-                    label={messages['app.all'] as string}
+                    label={messages['app.dashboard.all'] as string}
                     variant={
                       selectedNetwork === undefined ? 'default' : 'outlined'
                     }
@@ -187,7 +188,7 @@ export const SelectTokenDialog = (props: Props) => {
         </Box>
         {filteredTokens.length == 0 ? (
           <Typography variant='body1'>
-            {messages['app.noTokensFound']}
+            <IntlMessages id='app.dashboard.noTokensFound' />
           </Typography>
         ) : (
           <List disablePadding>

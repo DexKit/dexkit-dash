@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -22,8 +22,6 @@ import {TokenListItemSkeleton} from 'shared/components/TokenListItemSkeleton';
 
 export const Favorites = () => {
   const dispatch = useDispatch();
-  const {messages} = useIntl();
-
   const {data, loading} = useFavoriteCoinsData();
 
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
@@ -39,9 +37,11 @@ export const Favorites = () => {
       <Box mb={2}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={'/wallet'}>
-            {messages['app.wallet']}
+            <IntlMessages id='app.common.wallet' />
           </Link>
-          <Link color='textSecondary'>{messages['app.favorites']}</Link>
+          <Link color='textSecondary'>
+            <IntlMessages id='app.common.favorites' />
+          </Link>
         </Breadcrumbs>
       </Box>
       <Box mb={2} display='flex' alignItems='center' alignContent='center'>
@@ -50,7 +50,9 @@ export const Favorites = () => {
             <ArrowBackIcon />
           </IconButton>
         </Box>
-        <Typography variant='h5'>{messages['app.favorites']}</Typography>
+        <Typography variant='h5'>
+          <IntlMessages id='app.common.favorites' />
+        </Typography>
       </Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>

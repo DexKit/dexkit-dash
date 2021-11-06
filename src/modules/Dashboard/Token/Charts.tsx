@@ -116,7 +116,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
             indicatorColor='primary'>
             <Tab
               label={
-                <Tooltip title={messages['app.chartDexExchange']}>
+                <Tooltip title={messages['app.dashboard.chartDexExchange']}>
                   <span>DEX</span>
                 </Tooltip>
               }
@@ -124,7 +124,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
             />
             <Tab
               label={
-                <Tooltip title={messages['app.chartBinanceExchange']}>
+                <Tooltip title={messages['app.dashboard.chartBinanceExchange']}>
                   <span>Binance</span>
                 </Tooltip>
               }

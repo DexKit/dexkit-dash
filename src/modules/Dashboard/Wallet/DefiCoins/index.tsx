@@ -14,6 +14,7 @@ import {blue} from '@material-ui/core/colors';
 import {CoinData} from 'types/models/Crypto';
 import {matchCoinSymbol} from 'utils/constants';
 import CoinStats from './CoinStats';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 export interface CoinProps {
   token: string;
@@ -68,7 +69,7 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
                 style={{width: '100%'}}>
                 <Box>
                   <Typography variant='h5'>
-                    {messages['app.defiAssets']}
+                    <IntlMessages id='app.dashboard.defiAssets' />
                   </Typography>
                 </Box>
               </Box>
@@ -102,7 +103,7 @@ const DefiCoins: React.FC<CoinsProps> = ({assets}) => {
                     padding: '60px 0px',
                   }}>
                   <Typography>
-                    {messages['app.youDontHaveDefiAssets']}
+                    <IntlMessages id='app.dashboard.youDontHaveDefiAssets' />
                   </Typography>
                 </Grid>
               )}

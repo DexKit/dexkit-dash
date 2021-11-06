@@ -41,6 +41,7 @@ import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -160,10 +161,10 @@ const TokenPage = () => {
                 <Grid item xs={12}>
                   <Breadcrumbs aria-label='breadcrumb'>
                     <Link component={RouterLink} to='/wallet' color='inherit'>
-                      {messages['app.wallet']}
+                      <IntlMessages id='app.dashboard.wallet' />
                     </Link>
                     <Typography variant='body2' color='inherit'>
-                      {messages['app.trade']}
+                      <IntlMessages id='app.dashboard.trade' />
                     </Typography>
                   </Breadcrumbs>
                 </Grid>
@@ -176,7 +177,7 @@ const TokenPage = () => {
                     </Grid>
                     <Grid item>
                       <Typography variant='h5'>
-                        {messages['app.trade']}
+                        <IntlMessages id='app.dashboard.trade' />
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -199,7 +200,7 @@ const TokenPage = () => {
                       <Share className={classes.icon} />
                     </RoundedIconButton>
                     <Typography variant='caption'>
-                      {messages['app.share']}
+                      <IntlMessages id='app.dashboard.share' />
                     </Typography>
                   </Box>
                 </Grid>
@@ -228,7 +229,8 @@ const TokenPage = () => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> {messages['app.charts']}
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.dashboard.charts' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>

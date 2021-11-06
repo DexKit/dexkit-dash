@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Box, Button, Grid, Typography, useTheme} from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -12,7 +12,6 @@ interface Props {
 export const OrderFinished = (props: Props) => {
   const {onReset} = props;
   const theme = useTheme();
-  const {messages} = useIntl();
 
   return (
     <Grid container spacing={4}>
@@ -28,15 +27,15 @@ export const OrderFinished = (props: Props) => {
       </Grid>
       <Grid item xs={12}>
         <Typography align='center' variant='h5'>
-          {messages['app.transactionFinished']}
+          <IntlMessages id='app.dashboard.transactionFinished' />
         </Typography>
         <Typography align='center' variant='body2' color='textSecondary'>
-          {messages['app.coinsSuccessSent']}
+          <IntlMessages id='app.dashboard.coinsSuccessSent' />
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button variant='outlined' fullWidth onClick={onReset}>
-          {messages['app.swapAgain']}
+          <IntlMessages id='app.dashboard.swapAgain' />
         </Button>
       </Grid>
     </Grid>

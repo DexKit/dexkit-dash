@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -91,24 +92,29 @@ export const ReviewOrder = (props: Props) => {
             <Paper variant='outlined'>
               <Box p={4}>
                 <Typography align='center' gutterBottom variant='subtitle2'>
-                  Changelly Verification Required
+                  <IntlMessages id='app.dashboard.swap.changellyVerificationRequired' />
                 </Typography>
                 <Typography gutterBottom variant='body2'>
-                  Changelly is a third party application. The transaction you
-                  requested will be held for you until you are verified.
+                  <IntlMessages id='app.dashboard.swap.changellyIsThirdPartyApp' />
                 </Typography>
                 <Typography align='center' gutterBottom variant='subtitle1'>
-                  To Get Verified
+                  <IntlMessages id='app.dashboard.swap.toGetVerified' />
                 </Typography>
                 <Typography variant='body2'>
-                  1. send an email to{' '}
+                  1.
+                  <IntlMessages id='app.dashboard.swap.sendEmailTo' />{' '}
                   <Link href='mailto:security@changelly.com'>
                     security@changelly.com
                   </Link>
                 </Typography>
                 <Typography variant='body2'>
-                  2. In the subject line, enter the following information:{' '}
-                  <strong>Transaction ID: {transaction?.id}</strong>
+                  2.{' '}
+                  <IntlMessages id='app.dashboard.swap.inTheSubjectLineEnterInformation' />{' '}
+                  ID: :{' '}
+                  <strong>
+                    <IntlMessages id='app.dashboard.transaction' /> ID:{' '}
+                    {transaction?.id}
+                  </strong>
                 </Typography>
               </Box>
             </Paper>
@@ -149,7 +155,9 @@ export const ReviewOrder = (props: Props) => {
         </Grid>
       )}
       <Grid item xs={12}>
-        <Typography variant='caption'>You send</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.youSend' />
+        </Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedFrom}{' '}
           {transaction?.currencyFrom?.toUpperCase()}{' '}
@@ -160,7 +168,9 @@ export const ReviewOrder = (props: Props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>{messages['app.youReceived']}</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.youReceived' />
+        </Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedTo}{' '}
           {transaction?.currencyTo?.toUpperCase()}
@@ -168,13 +178,13 @@ export const ReviewOrder = (props: Props) => {
       </Grid>
       <Grid item xs={12}>
         <Typography variant='caption'>
-          {messages['app.receiveAddress']}
+          <IntlMessages id='app.dashboard.receiveAddress' />
         </Typography>
         <Typography variant='body1'>{transaction?.payoutAddress}</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant='caption'>
-          {messages['app.transaction']} ID
+          <IntlMessages id='app.dashboard.transaction' /> ID
         </Typography>
         <Typography variant='h5'>
           {transaction?.id}{' '}
@@ -191,12 +201,12 @@ export const ReviewOrder = (props: Props) => {
             gutterBottom
             align='center'
             variant='body1'>
-            Please, send{' '}
+            <IntlMessages id='app.dashboard.swap.pleaseSend' />{' '}
             <strong>
               {transaction?.amountExpectedFrom}{' '}
               {transaction?.currencyFrom.toUpperCase()}
             </strong>{' '}
-            to the address below and wait for transaction confirmation
+            <IntlMessages id='app.dashboard.swap.toTheAddressAndWaitTransactionConfirmation' />{' '}
           </Typography>
           <TextField
             fullWidth
@@ -206,7 +216,9 @@ export const ReviewOrder = (props: Props) => {
                 <InputAdornment position='end'>
                   <ButtonCopy
                     copyText={transaction?.payinAddress || ''}
-                    titleText='Address copied!'
+                    titleText={
+                      messages['app.dashboard.addressCopied'] as string
+                    }
                   />
                 </InputAdornment>
               ),
@@ -224,7 +236,7 @@ export const ReviewOrder = (props: Props) => {
             fullWidth
             variant='contained'
             color='primary'>
-            {messages['app.transferNow']}
+            <IntlMessages id='app.dashboard.transferNow' />
           </Button>
         </Grid>
       ) : null}

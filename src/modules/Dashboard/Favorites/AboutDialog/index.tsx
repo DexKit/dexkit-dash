@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
   createStyles,
@@ -86,7 +87,7 @@ export const AboutDialog = () => {
         variant='outlined'
         onClick={handleClickOpen}
         className={classes.openButton}>
-        <Tooltip title={messages['app.infoAboutPage']}>
+        <Tooltip title={messages['app.dashboard.infoAboutPage']}>
           <InfoIcon />
         </Tooltip>
       </Button>
@@ -95,11 +96,11 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          {messages['app.favorites']}
+          <IntlMessages id='app.dashboard.favorites' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            {messages['dashboard.favorites.info']}
+            <IntlMessages id='app.dashboard.favorites.info' />
           </Typography>
         </DialogContent>
       </Dialog>

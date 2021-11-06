@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import moment from 'moment';
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -71,7 +72,7 @@ export const SwapHistoricTableRow = (props: Props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography align='center' variant='caption'>
-                {messages['app.pleaseConfirm']}
+                <IntlMessages id='app.dashboard.pleaseConfirm' />
               </Typography>
             </Grid>
             <Grid item>

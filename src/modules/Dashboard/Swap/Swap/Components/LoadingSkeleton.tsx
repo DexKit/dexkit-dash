@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -10,14 +10,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 
 export const LoadingSkeleton = () => {
-  const {messages} = useIntl();
-
   return (
     <Grid container spacing={2} direction='row'>
       <Grid container xs={12} alignItems='center'>
         <Grid item xs={12}>
           <Skeleton>
-            <Typography component={'h1'}>{messages['app.youSend']}</Typography>{' '}
+            <Typography component={'h1'}>
+              <IntlMessages id='app.dashboard.youSend' />
+            </Typography>{' '}
           </Skeleton>
         </Grid>
         <Grid item xs={4}>
@@ -26,7 +26,7 @@ export const LoadingSkeleton = () => {
               size='large'
               variant='contained'
               endIcon={<ExpandMoreIcon />}>
-              {messages['app.coin']}
+              <IntlMessages id='app.dashboard.coin' />
             </Button>
           </Skeleton>
         </Grid>
@@ -47,7 +47,7 @@ export const LoadingSkeleton = () => {
         <Grid item xs={12}>
           <Skeleton>
             <Typography component={'h1'}>
-              {messages['app.youReceived']}
+              <IntlMessages id='app.dashboard.youReceived' />
             </Typography>
           </Skeleton>
         </Grid>
@@ -57,7 +57,7 @@ export const LoadingSkeleton = () => {
               size='large'
               variant='contained'
               endIcon={<ExpandMoreIcon />}>
-              {messages['app.coin']}
+              <IntlMessages id='app.dashboard.coin' />
             </Button>
           </Skeleton>
         </Grid>

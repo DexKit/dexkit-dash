@@ -17,6 +17,7 @@ import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {tokenAmountInUnits} from 'utils';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 // get tokens ta sendo chamado 3x
 
@@ -105,9 +106,11 @@ const ConvertStep: React.FC<Props> = (props) => {
 
             if (txHash) {
               createNotification({
-                title: `${messages['app.convert']} ${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} ${messages['app.to']} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${
+                  messages['app.dashboard.convert']
+                } ${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } W${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 body: `${
                   messages['app.converted']
                 }  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(chainId)} ${
@@ -142,9 +145,11 @@ const ConvertStep: React.FC<Props> = (props) => {
             const amountToUnit = tokenAmountInUnits(amountFrom);
             if (txHash) {
               createNotification({
-                title: `${messages['app.convert']} W${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} ${messages['app.to']} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${
+                  messages['app.dashboard.convert']
+                } W${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } ${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 body: `${
                   messages['app.converted']
                 } ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(chainId)} ${
@@ -192,8 +197,8 @@ const ConvertStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        {messages['app.wouldLikeToConvert']} {tokenFrom.symbol}{' '}
-        {messages['app.to']} {to}?
+        <IntlMessages id='app.dashboard.wouldLikeToConvert' />{' '}
+        {tokenFrom.symbol} <IntlMessages id='app.dashboard.to' /> {to}?
       </Typography>
       <Button
         style={{margin: 0}}
@@ -202,7 +207,7 @@ const ConvertStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        {messages['app.convert']}
+        <IntlMessages id='app.dashboard.convert' />
       </Button>
     </>
   );

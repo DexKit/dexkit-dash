@@ -15,6 +15,7 @@ import {CoinDetailCoinGecko} from 'types/coingecko';
 import {useStyles} from './index.style';
 import AppContextPropsType from 'types/AppContextPropsType';
 import {Skeleton} from '@material-ui/lab';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   data: CoinDetailCoinGecko | undefined;
@@ -51,7 +52,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
             ) : (
               <>
                 <Typography variant='caption'>
-                  {messages['app.marketCap']}
+                  <IntlMessages id='app.dashboard.marketCap' />
                 </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.market_cap?.usd ?? '-'}
@@ -79,7 +80,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>Volume</Typography>
+                <Typography variant='caption'>
+                  <IntlMessages id='app.dashboard.volume' />
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.total_volume?.usd ?? '-'}
                 </Typography>
@@ -102,7 +105,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
             ) : (
               <>
                 <Typography variant='caption'>
-                  24 {messages['app.hourHigh']}
+                  <IntlMessages id='app.dashboard.24hourHigh' />
                 </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.high_24h?.usd ?? '-'}
@@ -126,7 +129,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
             ) : (
               <>
                 <Typography variant='caption'>
-                  24 {messages['app.hourHigh']}
+                  <IntlMessages id='app.dashboard.24hourHigh' />
                 </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.low_24h?.usd ?? '-'}

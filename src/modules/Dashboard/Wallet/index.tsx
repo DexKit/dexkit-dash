@@ -45,6 +45,7 @@ import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
 import NFTTable from './components/NFTTable';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
   account: string;
@@ -118,7 +119,9 @@ const WalletTabs: React.FC<Props> = (props) => {
       <TabContext value={value}>
         <Box pt={{xl: 4}}>
           <Box mb={4}>
-            <Typography variant='h5'>{messages['app.wallet']}</Typography>
+            <Typography variant='h5'>
+              <IntlMessages id='app.dashboard.wallet' />
+            </Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
@@ -148,12 +151,12 @@ const WalletTabs: React.FC<Props> = (props) => {
                         aria-label='wallet tabs'>
                         <CustomTab
                           value='assets'
-                          label={messages['app.assets'] as string}
+                          label={messages['app.dashboard.assets'] as string}
                         />
                         {/* <CustomTab value='nfts' label={'NFTs'} /> */}
                         <CustomTab
                           value='trade-history'
-                          label={messages['app.history'] as string}
+                          label={messages['app.dashboard.history'] as string}
                         />
                       </CustomTabs>
                     </Grid>
@@ -188,7 +191,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         justify='space-between'>
                         <Grid item>
                           <Typography variant='body1' style={{fontWeight: 600}}>
-                            {messages['app.favorites']}
+                            <IntlMessages id='app.dashboard.favorites' />
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -197,7 +200,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                             component={RouterLink}
                             size='small'
                             endIcon={<KeyboardArrowRightIcon />}>
-                            {messages['app.viewMore']}
+                            <IntlMessages id='app.dashboard.viewMore' />
                           </Button>
                         </Grid>
                       </Grid>
@@ -256,7 +259,8 @@ const WalletTabs: React.FC<Props> = (props) => {
                               gutterBottom
                               variant='body1'
                               align='center'>
-                              {messages['app.youDontHaveFavoritesYet']}.
+                              <IntlMessages id='app.dashboard.youDontHaveFavoritesYet' />
+                              .
                             </Typography>
                             <Typography
                               variant='body2'
@@ -265,7 +269,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                               <Link
                                 to={`/explorer/${process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN}`}
                                 component={RouterLink}>
-                                {messages['app.goToExplorer']}
+                                <IntlMessages id='app.dashboard.goToExplorer' />
                               </Link>
                             </Typography>
                           </Box>

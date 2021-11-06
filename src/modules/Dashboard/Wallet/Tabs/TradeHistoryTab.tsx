@@ -23,6 +23,7 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import Close from '@material-ui/icons/Close';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {TransferTab} from './TransfersTab';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   address?: string;
@@ -82,7 +83,7 @@ export const TradeHistoryTab = (props: Props) => {
                       </Grid>
                       <Grid item>
                         <Typography variant='body1'>
-                          {messages['app.filter']}
+                          <IntlMessages id='app.dashboard.filter' />
                         </Typography>
                       </Grid>
                     </Grid>
@@ -99,7 +100,7 @@ export const TradeHistoryTab = (props: Props) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                {messages['app.network']}
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             {enableNetworkChips ? (
@@ -129,7 +130,7 @@ export const TradeHistoryTab = (props: Props) => {
                     clickable
                     onClick={handleToggleTransfers}
                     variant={!showTransfers ? 'default' : 'outlined'}
-                    label={messages['app.history'] as string}
+                    label={messages['app.dashboard.history'] as string}
                   />
                 </Grid>
                 <Grid item>
@@ -137,7 +138,7 @@ export const TradeHistoryTab = (props: Props) => {
                     clickable
                     onClick={handleToggleTransfers}
                     variant={showTransfers ? 'default' : 'outlined'}
-                    label={messages['app.transfers'] as string}
+                    label={messages['app.dashboard.transfers'] as string}
                   />
                 </Grid>
               </Grid>

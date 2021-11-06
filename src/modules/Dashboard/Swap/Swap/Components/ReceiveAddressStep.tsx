@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -40,13 +40,12 @@ export const ReceiveAddressStep = (props: Props) => {
     transactionError,
   } = props;
   const theme = useTheme();
-  const {messages} = useIntl();
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant='body1'>
-          {messages['app.receiveAddress']}
+          <IntlMessages id='app.dashboard.receiveAddress' />
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -101,7 +100,7 @@ export const ReceiveAddressStep = (props: Props) => {
           {loading ? (
             <CircularProgress size={theme.spacing(6)} color='inherit' />
           ) : (
-            'Swap'
+            <IntlMessages id='app.dashboard.swap' />
           )}
         </Button>
       </Grid>

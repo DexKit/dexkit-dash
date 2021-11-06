@@ -11,6 +11,7 @@ import {getCachedMagicNetwork, getMagic} from 'services/magic';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
 import Grid from '@material-ui/core/Grid';
 import {useWelcomeModal} from 'hooks/useWelcomeModal';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const MagicCallbackEmail = () => {
   const {onConnectMagic} = useMagicProvider();
@@ -56,7 +57,7 @@ const MagicCallbackEmail = () => {
         <Grid item>
           <Box display={'flex'} alignItems='center'>
             <Typography variant={'body1'}>
-              {messages['app.redirectingToWallet']}...
+              <IntlMessages id='app.dashboard.redirectingToWallet' />
             </Typography>
             <Box p={4}>
               <CircularProgress color='inherit' />

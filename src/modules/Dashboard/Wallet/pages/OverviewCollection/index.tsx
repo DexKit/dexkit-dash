@@ -21,6 +21,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
 import {useCollectionIds} from 'hooks/balance/useCollectionIds';
 import {useNFTMetadataURI} from 'hooks/nfts/useNFTMetadataURI';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -71,10 +72,10 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
             <Grid item xs={12}>
               <Breadcrumbs aria-label='breadcrumb'>
                 <Typography variant='body2' color='textSecondary'>
-                  {messages['app.wallet']}
+                  <IntlMessages id='app.dashboard.wallet' />
                 </Typography>
                 <Typography variant='body2' color='textSecondary'>
-                  {messages['app.overview']}
+                  <IntlMessages id='app.dashboard.overview' />
                 </Typography>
                 <Typography variant='body2' color='textSecondary' />
               </Breadcrumbs>

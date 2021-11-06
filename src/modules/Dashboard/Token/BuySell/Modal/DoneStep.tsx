@@ -4,6 +4,7 @@ import {useIntl} from 'react-intl';
 
 import Button from '@material-ui/core/Button';
 import {Steps} from 'types/app';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   step: Steps;
@@ -22,7 +23,7 @@ const DoneStep: React.FC<Props> = (props) => {
       color='primary'
       size='large'
       onClick={onClose}>
-      {messages['app.done']}
+      <IntlMessages id='app.dashboard.done' />
     </Button>
   );
 };

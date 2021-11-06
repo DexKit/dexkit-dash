@@ -115,12 +115,12 @@ export const AccountListItem = (props: AccountListItemProps) => {
       {isEditing ? (
         <TextField
           fullWidth
-          label={messages['app.accountLabel'] as string}
+          label={messages['app.dashboard.accountLabel'] as string}
           defaultValue={account.label || account.address}
           InputProps={{
             endAdornment: (
               <InputAdornment position='end'>
-                <Tooltip title={messages['app.save'] as string}>
+                <Tooltip title={messages['app.dashboard.save'] as string}>
                   <IconButton onClick={handleDone} color='primary' size='small'>
                     <DoneIcon />
                   </IconButton>
@@ -145,7 +145,10 @@ export const AccountListItem = (props: AccountListItemProps) => {
                   onClick={handleSelect}
                 />
               ) : (
-                <Tooltip title={isConnected ? messages['app.connected'] : ''}>
+                <Tooltip
+                  title={
+                    isConnected ? messages['app.dashboard.connected'] : ''
+                  }>
                   <FiberManualRecordIcon
                     style={
                       isConnected

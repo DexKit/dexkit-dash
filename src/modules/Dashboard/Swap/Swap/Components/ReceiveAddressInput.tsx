@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -134,12 +135,12 @@ export const ReceiveAddressInput = (props: Props) => {
             <InputAdornment position='end' variant='outlined'>
               {coin?.ticker?.toLowerCase() == 'eth' ? (
                 <>
-                  <Tooltip title={messages['app.accounts'] as string}>
+                  <Tooltip title={messages['app.dashboard.accounts'] as string}>
                     <IconButton size='small' onClick={handleOpenMenu}>
                       <AccountBalanceWalletIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title={messages['app.paste'] as string}>
+                  <Tooltip title={messages['app.dashboard.paste'] as string}>
                     <PasteIconButton onPaste={onPaste} />
                   </Tooltip>
                 </>
