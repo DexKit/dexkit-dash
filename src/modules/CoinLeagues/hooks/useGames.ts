@@ -1,14 +1,14 @@
 import {useQuery} from '@apollo/client';
 import {useEffect} from 'react';
 import {BITBOY_TEAM, POLL_INTERVAL_GAMES} from '../constants';
-import {FilterGame} from '../constants/enums';
+import {FilterGame, GameOrderBy} from '../constants/enums';
 import {
   GET_GAMES,
   GET_GAMES_WITH_DURATION,
   GET_GAMES_WITH_PLAYER,
 } from '../services/gql/games';
 import {client} from '../services/graphql';
-import { GET_GAME_ORDER_VARIABLES } from '../utils/game';
+import {GET_GAME_ORDER_VARIABLES} from '../utils/game';
 import {GET_DURATION_FROM_FILTER} from '../utils/time';
 import {GameGraph} from '../utils/types';
 
@@ -48,7 +48,11 @@ export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
   return query;
 };
 
-export const useWaitingGames = (filter?: FilterGame, accounts?: string[], orderBy?: GameOrderBy) => {
+export const useWaitingGames = (
+  filter?: FilterGame,
+  accounts?: string[],
+  orderBy?: GameOrderBy,
+) => {
   const duration = GET_DURATION_FROM_FILTER(filter || FilterGame.ALL);
   const variables: any = {
     status: 'Waiting',

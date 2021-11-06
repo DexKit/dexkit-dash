@@ -8,6 +8,7 @@ import {useHistory} from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import {ReactComponent as MetamaskIcon} from 'assets/images/coinleagues/metamask.svg';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const HowToPlay = () => {
   const history = useHistory();
@@ -46,19 +47,17 @@ const HowToPlay = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h6' style={{margin: 5}}>
-            How to Play
+            <IntlMessages id='app.coinLeagues.howToPlay' />
           </Typography>
         </Box>
       </Grid>
       <Grid item xs={12}>
         <Typography variant='h4' component={'h1'}>
-          1. Setup Polygon Wallet
+          1. <IntlMessages id='app.coinLeagues.setupPolygonWallet' />
         </Typography>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            The first thing you need to setup is the Polygon network in your
-            Metamask wallet, if you haven’t setup a MetaMask wallet click the
-            button to add Polygon to your Metamask wallet.
+            <IntlMessages id='app.coinLeagues.theFirstThingYouNeedToSetup' />
           </Typography>
         </Box>
         <Box
@@ -72,13 +71,13 @@ const HowToPlay = () => {
             size='large'
             onClick={addMetamaskPolygon}
             startIcon={<MetamaskIcon />}>
-            Add Polygon Network
+            <IntlMessages id='app.coinLeagues.addPolygonNetwork' />
           </Button>
         </Box>
       </Grid>
       <Grid item xs={12}>
         <Typography variant='h4' component={'h1'}>
-          2. Playing The Game
+          2. <IntlMessages id='app.coinLeagues.playingTheGame' />
         </Typography>
       </Grid>
 
@@ -99,20 +98,13 @@ const HowToPlay = () => {
 
       <Box display={'flex'} alignItems={'center'} p={2}>
         <Typography variant='body1' component={'p'}>
-          Use the “Swap” “Buy Matic” or “Bridge” buttons to add Matic to your
-          polygon wallet. Another easy way to send Matic to your Polygon wallet
-          is to send Matic from an exchange that supports the polygon network.
-          Withdraw Matic to your Polygon wallets address using the “POLYGON”
-          network in the exchanges withdraw section. Once you have everything
-          set up and connected in your Metamask wallet and you have MATIC in
-          your Polygon network,
+          <IntlMessages id='app.coinLeagues.useButtonsToAddMatic' />
         </Typography>
       </Box>
 
       <Box display={'flex'} alignItems={'center'} p={2}>
         <Typography variant='body1' component={'p'}>
-          Click the Coin League section on the main menu to view the current
-          games you can join.
+          <IntlMessages id='app.coinLeagues.clickTheCoinLeagueSection' />
         </Typography>
       </Box>
 
@@ -133,17 +125,13 @@ const HowToPlay = () => {
       <Grid item xs={12}>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            You will see the games that are in progress. You can click and view
-            any game happening.
+            <IntlMessages id='app.coinLeagues.youWillSeeTheGamesInProgress' />
           </Typography>
         </Box>
 
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            Below that you will see games that are available to play and that
-            are waiting on players to start the game. When clicking on a game
-            you will see the type of game it is either Bull or Bear. if it’s
-            1hr, 5 mins, 4hrs or even 24 hours.
+            <IntlMessages id='app.coinLeagues.belowThatYouWillSeeGames' />
           </Typography>
         </Box>
       </Grid>
@@ -164,26 +152,17 @@ const HowToPlay = () => {
       <Grid item xs={12}>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            In the first dropdown select your Captain Coin (the coin you think
-            is going to gain the most for BULL games or lose the most for BEAR
-            games) this captain coin will receive a 1.2x Multiplier on its %
-            gain for bull games or % lost for bear games.
+            <IntlMessages id='app.coinLeagues.inTheFirstDropdown' />
           </Typography>
         </Box>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            In the second dropdown select the remaining coins you want to play
-            with up to 10 coins can be chosen depending on the game type. Once
-            finished an “Enter Game” button will appear Press that and your
-            Metamask wallet will prompt you to complete the transaction to enter
-            the game. The captain coin with a 1.2x multiplier combined with your
-            other coins will make up your team, their percentages will be added
-            together to make up your total score.
+            <IntlMessages id='app.coinLeagues.inTheSecondDropdown' />
           </Typography>
         </Box>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            The game will not start until all players needed have entered.
+            <IntlMessages id='app.coinLeagues.theGameWillNotStart' />
           </Typography>
         </Box>
       </Grid>
@@ -204,9 +183,7 @@ const HowToPlay = () => {
       <Grid item xs={12}>
         <Box display={'flex'} alignItems={'center'} p={2}>
           <Typography variant='body1' component={'p'}>
-            Once the game has started the countdown timer will start and begin
-            calculating your rank based on the percentage gain or loss for the
-            coins you chose.
+            <IntlMessages id='app.coinLeagues.onceTheGameHasStarted' />
           </Typography>
         </Box>
       </Grid>

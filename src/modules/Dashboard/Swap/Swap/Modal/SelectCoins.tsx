@@ -29,7 +29,6 @@ interface Props extends DialogProps {
 export const SelectCoinsDialog = (props: Props) => {
   const {onSelectCoin, coins, onClose, selectTo} = props;
   const theme = useTheme();
-  const classes = useStyles();
   const {messages} = useIntl();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
