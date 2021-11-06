@@ -47,6 +47,10 @@ export const BITBOY_TEAM = [
     address: '0xaf5E3194e9E2D076D9dE7d73CaE3EA23d9278B14',
     label: 'Bitboy',
   },
+  {
+    address: '0xCB8b2c541E18AdBC8B4B8A42a3CA769f4EB72e6C',
+    label: 'J Chains'
+  }
 ];
 
 export const MumbaiPriceFeeds = [
@@ -143,14 +147,14 @@ export const MaticPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:ALGOUSD',
   },
-  {
+ /* {
     address: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
     base: 'AUD',
     baseName: 'Audius',
     logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x18aAA7115705e8be94bfFEBDE57Af9BFc265B998/logo.png',
     quote: 'USD',
     tv: 'BINANCE:AUDUSDT',
-  },
+  },*/
   {
     address: '0xD106B538F2A868c28Ca1Ec7E298C3325E0251d66',
     base: 'BAL',

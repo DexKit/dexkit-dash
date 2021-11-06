@@ -1,10 +1,9 @@
+import {useCallback, useEffect, useState} from 'react';
 import {ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
-import React, {useCallback, useEffect, useState} from 'react';
 
 import axios from 'axios';
 
-import {BigNumber} from '@ethersproject/bignumber';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useQuery} from 'react-query';
 import {getTokenBalances} from 'services/multicall';
@@ -26,7 +25,6 @@ import {
   ApolloClient,
   gql,
   InMemoryCache,
-  useQuery as useGraphqlQuery,
 } from '@apollo/client';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
@@ -99,7 +97,7 @@ export function useChampionMint() {
           return undefined;
         });
     }
-  }, [web3State, chainId]);
+  }, [web3State, chainId, getProvider, clear, createNotification]);
 
   return {mint, loading, error, transactionHash, tokenId, clear};
 }
@@ -157,14 +155,14 @@ export const useChampionMetadata = (tokenId?: string) => {
           setError(err);
         });
     },
-    [chainId],
+    [chainId, clear],
   );
 
   useEffect(() => {
     if (tokenId) {
       fetch(tokenId);
     }
-  }, [tokenId]);
+  }, [tokenId, fetch]);
 
   return {data, loading, error, clear, fetch};
 };
