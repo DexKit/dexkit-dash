@@ -1,11 +1,10 @@
-import React, {useRef, useState, useCallback, useEffect} from 'react';
+import React, {useRef, useState, useCallback} from 'react';
 
 import {
   makeStyles,
   Box,
   Grid,
   Typography,
-  useTheme,
   IconButton,
   Breadcrumbs,
   Link,
@@ -20,33 +19,14 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+
 import {useWeb3} from 'hooks/useWeb3';
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
 
-const useStyles = makeStyles((theme) => ({
-  iconWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    borderRadius: '50%',
-    height: theme.spacing(8),
-    width: theme.spacing(8),
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: theme.palette.grey[700],
-  },
-  icon: {
-    height: theme.spacing(4),
-    width: theme.spacing(4),
-  },
-}));
-
 export const ChampionsIndex = () => {
   const history = useHistory();
-  const {chainId, web3State} = useWeb3();
+  const {chainId} = useWeb3();
 
   const emtpyArrayRef = useRef(new Array(8).fill(null));
 

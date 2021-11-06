@@ -23,7 +23,7 @@ import {
   getEventCurrentRound,
 } from 'modules/CoinLeagues/utils/champions';
 
-import coinsLeagueBannerPath from 'assets/images/banners/coinsleague.svg';
+import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -220,7 +220,7 @@ export function ChampionsEvent() {
                                   <strong>
                                     {EARLY_ACCESS_BITT_AMOUNT} BITT
                                   </strong>{' '}
-                                  tokens to unlock Coin Leagues Champion early
+                                  tokens to unlock Coin League Champion early
                                   access.
                                 </Typography>
                               </Grid>

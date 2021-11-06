@@ -62,22 +62,22 @@ export const PairAnalytics = (props: Props) => {
   /* eslint-disable */
   const tradeAmountInUSD = useMemo(() => {
     return usdFormatter.format(pair?.tradeAmountInUsd || 0);
-  }, [pair?.tradeAmountInUsd]);
+  }, [pair?.tradeAmountInUsd, pair, usdFormatter ]);
 
   /* eslint-disable */
   const lastPriceInUSD = useMemo(() => {
     return usdFormatter.format(Number(pair?.closePriceUsd || 0));
-  }, [pair?.closePriceUsd]);
+  }, [pair?.closePriceUsd, pair, usdFormatter]);
 
   /* eslint-disable */
   const maxPriceInUSD = useMemo(() => {
     return usdFormatter.format(pair?.maxPriceUsd || 0);
-  }, [pair?.maximumPrice]);
+  }, [pair?.maximumPrice, pair, usdFormatter]);
 
   /* eslint-disable */
   const minPriceInUSD = useMemo(() => {
     return usdFormatter.format(pair?.minPriceUsd || 0);
-  }, [pair?.minPriceUsd]);
+  }, [pair?.minPriceUsd, pair, usdFormatter]);
 
   return (
     <Grid container alignItems='center' spacing={2}>

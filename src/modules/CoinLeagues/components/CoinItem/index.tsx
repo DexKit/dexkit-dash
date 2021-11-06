@@ -48,7 +48,7 @@ export const CoinItem = (props: Props) => {
       <Grid container alignItems='center' spacing={4}>
         <Grid item>
           <Box className={classes.coinContainer}>
-            <img src={coin?.logo} className={classes.coin} />
+            <img src={coin?.logo} className={classes.coin} alt={'Coin'} />
           </Box>
         </Grid>
 

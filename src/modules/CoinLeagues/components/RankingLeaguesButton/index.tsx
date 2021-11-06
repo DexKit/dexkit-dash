@@ -57,7 +57,7 @@ interface RankingButtonProps {
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
 
-  const {address, onClick, featured, position, label, count} = props;
+  const {address, featured, position, label, count} = props;
 
   const toggler = useToggler();
 
@@ -67,7 +67,7 @@ export const RankingButton = (props: RankingButtonProps) => {
 
   const handleToggle = useCallback(() => {
     toggler.toggle();
-  }, []);
+  }, [toggler]);
 
   const isMobile = useMobile();
 

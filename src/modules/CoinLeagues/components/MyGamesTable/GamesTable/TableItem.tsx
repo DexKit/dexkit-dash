@@ -115,7 +115,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       }
     }
     return null;
-  }, [row.earnings]);
+  }, [row.earnings, row.id, enterGameRoute]);
 
   const createdDateFn = useMemo(() => {
     switch (row.status) {
@@ -132,7 +132,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           Number(row.createdAt) * 1000,
         ).toLocaleDateString()}`;
     }
-  }, [row.status]);
+  }, [row.status, row.createdAt, row.endedAt]);
 
   const createdTimeFn = useMemo(() => {
     switch (row.status) {

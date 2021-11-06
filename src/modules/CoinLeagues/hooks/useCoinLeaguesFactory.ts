@@ -42,7 +42,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
         return `${COINSLEAGUE_ROUTE}/${address}`;
       }
     },
-    [factoryAddress, room],
+    [room],
   );
 
   const activeGamesRoute = useMemo(() => {
@@ -51,7 +51,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
     } else {
       return `${COINSLEAGUE_ROUTE}/active-games`;
     }
-  }, [factoryAddress, room]);
+  }, [room]);
 
   const listGamesRoute = useMemo(() => {
     if (room) {
@@ -59,7 +59,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
     } else {
       return `${COINSLEAGUE_ROUTE}`;
     }
-  }, [factoryAddress, room]);
+  }, [room]);
 
 
   return {

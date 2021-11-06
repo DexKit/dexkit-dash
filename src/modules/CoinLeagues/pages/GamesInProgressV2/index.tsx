@@ -29,7 +29,7 @@ import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CardGameProgressV2 from 'modules/CoinLeagues/components/CardGameProgressV2';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
@@ -62,7 +62,7 @@ const GamesInProgressV2 = () => {
     (address: string) => {
       history.push(enterGameRoute(`${address}`));
     },
-    [enterGameRoute],
+    [enterGameRoute, history],
   );
 
   const handleSearch = useCallback((e) => {
@@ -70,7 +70,7 @@ const GamesInProgressV2 = () => {
   }, []);
 
   const handleBack = useCallback(
-    (ev: any) => {
+    () => {
       if(history.length > 0){
       history.goBack();
      }else{
@@ -78,7 +78,7 @@ const GamesInProgressV2 = () => {
      }
       //history.push(listGamesRoute);
     },
-    [listGamesRoute],
+    [listGamesRoute, history],
   );
   return (
     <Grid container spacing={2} alignItems={'center'}>
@@ -119,7 +119,7 @@ const GamesInProgressV2 = () => {
             <SwapButton/>
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Games`} />
+            <ShareButton shareText={`Coin league Games`} />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />

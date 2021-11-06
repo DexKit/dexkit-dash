@@ -137,7 +137,7 @@ export const CreateWallet = (props: Props) => {
         onConnectMagicEmail(email);
       }
     },
-    [email],
+    [email, onConnectMagicEmail],
   );
 
   return (

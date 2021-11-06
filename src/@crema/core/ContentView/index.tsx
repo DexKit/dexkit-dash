@@ -10,7 +10,6 @@ import AppFooter from '../AppLayout/AppFooter';
 import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
-import {useTheme} from '@material-ui/core';
 import {useMobile} from 'hooks/useMobile';
 import {makeStyles} from '@material-ui/core';
 
