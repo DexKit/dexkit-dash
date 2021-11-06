@@ -145,6 +145,7 @@
   "app.coinLeagues.onceTheGameHasStarted": "Once the game has started the countdown timer will start and begin calculating your rank based on the percentage gain or loss for the coins you chose.",
   "app.coinLeagues.ranking": "Ranking",
   "app.coinLeagues.wins": "Wins",
+  "app.coinLeagues.notEligible": "Not Eligible",
 
   "app.common.tryAgainPlease": "Try again, please",
   "app.common.opsErrorFetchingData": "Ops, error fetching data",
@@ -291,6 +292,13 @@
   "app.dashboard.accountLabel": "Account Label",
   "app.dashboard.LimitOrdersAreNotSupportOn": "Limit orders are not support on",
   "app.dashboard.youReceive": "You receive",
+  "app.dashboard.coverted": "Converted",
+  "app.dashboard.limitOrder": "Limit order",
+  "app.dashboard.orderSuccessPlaced": "Order Successfully placed",
+  "app.dashboard.marketOrder": "Market Order",
+  "app.dashboard.sharingToken": "Sharing Token",
+  "app.dashboard.converted": "Converted",
+  "app.dashboard.address": "Address",
 
   "app.dashboard.swap.pleaseSend": "Please, send",
   "app.dashboard.swap.toTheAddressAndWaitTransactionConfirmation": "to the address below and wait for transaction confirmation",
@@ -406,6 +414,7 @@
   "app.affiliate.revenue.title": "Total Affiliate Revenue",
 
   "app.history.tradeHistory": "Trade History",
+  "app.history.viewTx": "View TX",
 
   "app.game": "Game",
   "app.coins": "Coins",

@@ -69,7 +69,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -225,11 +225,11 @@ function GameEnter(props: Props) {
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           createNotification({
-            title: messages['app.joinGame'] as string,
+            title: messages['app.coinLeagues.joinGame'] as string,
             body: `${messages['app.coinLeagues.joinedGame']} ${game.address}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
-            urlCaption: messages['app.viewTransaction'] as string,
+            urlCaption: messages['app.coinLeagues.viewTransaction'] as string,
             type: NotificationType.TRANSACTION,
             metadata: {
               chainId: chainId,
@@ -276,18 +276,14 @@ function GameEnter(props: Props) {
     [game?.num_players],
   );
 
-  const sufficientFunds = useMemo(
-    () => {
-
-      if(game?.amount_to_play && balance){
-        const amount = BigNumber.from(game?.amount_to_play);
-        const balBN = BigNumber.from(balance);
-        return balBN.gt(amount);
-      }
-      return false
-    }, [game?.amount_to_play]);
-
-
+  const sufficientFunds = useMemo(() => {
+    if (game?.amount_to_play && balance) {
+      const amount = BigNumber.from(game?.amount_to_play);
+      const balBN = BigNumber.from(balance);
+      return balBN.gt(amount);
+    }
+    return false;
+  }, [game?.amount_to_play]);
 
   const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
   const gameFull = useMemo(() => {
@@ -594,7 +590,8 @@ function GameEnter(props: Props) {
                       <Button
                         disabled={
                           !isDisabled ||
-                          submitState !== SubmitState.None || !sufficientFunds ||
+                          submitState !== SubmitState.None ||
+                          !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
                         }
                         size={'large'}
@@ -607,8 +604,12 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={sufficientFunds ?
-                            messages['app.coinLeagues.enterGame'] as string :'Insufficient Matic Funds'
+                          defaultMsg={
+                            sufficientFunds
+                              ? (messages[
+                                  'app.coinLeagues.enterGame'
+                                ] as string)
+                              : 'Insufficient Matic Funds'
                           }
                           confirmedMsg={
                             messages['app.coinLeagues.enteredGame'] as string

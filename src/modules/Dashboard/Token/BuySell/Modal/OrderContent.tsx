@@ -566,8 +566,8 @@ const OrderContent: React.FC<Props> = (props) => {
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
                             {isConvert
-                              ? messages['app.convert']
-                              : messages['app.send']}
+                              ? messages['app.dashboard.convert']
+                              : messages['app.dashboard.send']}
                           </Typography>
                         </Grid>
                         <Grid item>

@@ -74,13 +74,13 @@ const MarketStep: React.FC<Props> = (props) => {
         );
 
         createNotification({
-          title: messages['app.marketOrder'] as string,
+          title: messages['app.dashboard.marketOrder'] as string,
           body: `${
-            messages['app.swap']
+            messages['app.dashboard.swap']
           } ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(chainId, e.transactionHash),
-          urlCaption: messages['app.viewTransaction'] as string,
+          urlCaption: messages['app.dashboard.viewTransaction'] as string,
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,

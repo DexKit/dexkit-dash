@@ -60,7 +60,7 @@ const ProgressBar: React.FC<Props> = (props) => {
 
     const step =
       steps[i] === Steps.MARKET || steps[i] === Steps.LIMIT
-        ? (messages['app.order'] as string)
+        ? (messages['app.dashboard.order'] as string)
         : steps[i].toString();
 
     dynamicProgressBar.push(

@@ -67,8 +67,8 @@ const LimitStep: React.FC<Props> = (props) => {
       createOrder(tokenFrom, tokenTo, amountFrom, price, expiry, FEE_RECIPIENT)
         .then((e) => {
           const notification: Notification = {
-            title: messages['app.limitOrder'] as string,
-            body: messages['app.orderSuccessPlaced'] as string,
+            title: messages['app.dashboard.limitOrder'] as string,
+            body: messages['app.dashboard.orderSuccessPlaced'] as string,
           };
           dispatch(onAddNotification([notification], NotificationType.SUCCESS));
 

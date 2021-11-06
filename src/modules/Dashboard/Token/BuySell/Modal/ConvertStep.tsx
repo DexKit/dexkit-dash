@@ -115,13 +115,13 @@ const ConvertStep: React.FC<Props> = (props) => {
                   messages['app.dashboard.to']
                 } W${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 body: `${
-                  messages['app.converted']
+                  messages['app.dashboard.converted']
                 }  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.to']
+                  messages['app.dashboard.to']
                 } ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: messages['app.viewTransaction'] as string,
+                urlCaption: messages['app.dashboard.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,
@@ -154,13 +154,13 @@ const ConvertStep: React.FC<Props> = (props) => {
                   messages['app.dashboard.to']
                 } ${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 body: `${
-                  messages['app.converted']
+                  messages['app.dashboard.converted']
                 } ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.to']
+                  messages['app.dashboard.to']
                 } ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: messages['app.viewTransaction'] as string,
+                urlCaption: messages['app.dashboard.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,

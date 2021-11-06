@@ -44,7 +44,11 @@ export const EarlyAccessCounterCard = (props: EarlyAccessCounterCardProps) => {
                 : theme.palette.text.disabled,
             }}
             variant={elegible ? 'h4' : 'body1'}>
-            {elegible ? '00:00:00' : (messages['app.notEligible'] as string)}
+            {elegible ? (
+              '00:00:00'
+            ) : (
+              <IntlMessages id='app.coinLeagues.notEligible' />
+            )}
           </Typography>
           {!elegible ? (
             <Typography variant='caption'>

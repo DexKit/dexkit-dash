@@ -142,13 +142,16 @@ function SmallCardGame(props: Props): JSX.Element {
             </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}
-              {countdown && countdown < 0 && messages['app.ended']}
+              {countdown && countdown < 0 && (
+                <IntlMessages id='app.coinLeagues.ended' />
+              )}
             </Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>
+          '
           <Button className={classes.button} fullWidth onClick={onClickEnter}>
-            {props.btnMessage || messages['app.view']}
+            {props.btnMessage || <IntlMessages id='app.coinLeagues.view' />}
           </Button>
         </Grid>
       </Grid>

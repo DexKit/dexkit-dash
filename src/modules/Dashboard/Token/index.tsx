@@ -151,7 +151,7 @@ const TokenPage = () => {
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
-        shareText={messages['app.sharingToken'] as string}
+        shareText={messages['app.dashboard.sharingToken'] as string}
         shareUrl={shareUrl}
         onClose={toggleShare}
       />

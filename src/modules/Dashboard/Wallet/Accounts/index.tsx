@@ -30,12 +30,10 @@ import {
 
 import {useWeb3} from 'hooks/useWeb3';
 
-
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import {isMobile} from 'web3modal';
 import {SupportedNetworkType, Web3State} from 'types/blockchain';
 import {UIAccount} from 'redux/_ui/reducers';
-
 
 import AccountListItem from './components/AccountListItem';
 import {Alert} from '@material-ui/lab';
@@ -347,7 +345,7 @@ const Accounts = () => {
                 spacing={2}>
                 <Grid item xs>
                   <ContainedInput
-                    placeholder={messages['app.address'] as string}
+                    placeholder={messages['app.dashboard.address'] as string}
                     fullWidth
                     endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
