@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Link} from 'react-router-dom';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -46,7 +47,9 @@ const WizardCard: React.FC<Props> = (props) => {
     <Grid container spacing={2} className={classes.root}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography>Wizard Launch</Typography>
+          <Typography variant='body1'>
+            <IntlMessages id='app.myApps.aggregator' />
+          </Typography>
         </Grid>
       </Grid>
 
@@ -69,7 +72,7 @@ const WizardCard: React.FC<Props> = (props) => {
                   </Avatar>
                 </Grid>
                 <Grid item xs={9} style={{alignSelf: 'center'}}>
-                  Marketplace
+                  <IntlMessages id='app.myApps.marketplace' />
                 </Grid>
               </Grid>
             </Grid>
@@ -100,7 +103,7 @@ const WizardCard: React.FC<Props> = (props) => {
                   </Avatar>
                 </Grid>
                 <Grid item xs={9} style={{alignSelf: 'center'}}>
-                  Aggregator
+                  <IntlMessages id='app.myApps.aggregator' />
                 </Grid>
               </Grid>
             </Grid>

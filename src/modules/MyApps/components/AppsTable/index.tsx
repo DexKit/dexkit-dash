@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, {useState, useEffect} from 'react';
 
 import {useDispatch} from 'react-redux';
@@ -32,6 +31,8 @@ import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
 import {WhitelabelTypes} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
 import useStyles from './style';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 
 type Order = 'asc' | 'desc';
 
@@ -65,6 +66,7 @@ const AppsTable: React.FC = () => {
   const dispatch = useDispatch();
 
   const {account} = useWeb3();
+  const {messages} = useIntl();
   const {error, data: balances} = useBalance();
   const {configs, loading} = useMyAppsConfig(account);
 
@@ -157,9 +159,12 @@ const AppsTable: React.FC = () => {
       const config = configs?.splice(index, 1)[0];
       console.log('removed', config);
 
-      const notification = new Notification(`${slug} app deleted`, {
-        body: `deleted ${slug} app successfully`,
-      });
+      const notification = new Notification(
+        `${slug} ${messages['app.myApps.appDeleted']}`,
+        {
+          body: `${messages['app.myApps.deleted']} ${slug} ${messages['app.myApps.appSuccesfully']}`,
+        },
+      );
       dispatch(onAddNotification([notification]));
     }
   };
@@ -169,7 +174,9 @@ const AppsTable: React.FC = () => {
       {configs && configs.length > 0 ? (
         <Paper className={classes.paper}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant='h5'>My Apps</Typography>
+            <Typography variant='h5'>
+              <IntlMessages id='app.myApps.myApps' />
+            </Typography>
           </Toolbar>
 
           <Box className={classes.tableResponsiveMaterial}>
@@ -251,8 +258,8 @@ const AppsTable: React.FC = () => {
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
-                        title={`Want to confirm the exclusion of the "${config.slug}" app?`}
-                        dialogTitle={'Confirm app exclusion'}
+                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.app?']}`}
+                        dialogTitle={`${messages['app.myApps.confirmAppExclusion']}`}
                         open={showDialog}
                         onConfirm={() => {
                           onDeleteApp(config.slug, config.type);
@@ -288,7 +295,9 @@ const AppsTable: React.FC = () => {
       ) : (
         <Paper className={classes.paper}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant='h5'>My Apps</Typography>
+            <Typography variant='h5'>
+              <IntlMessages id='app.myApps.myApps' />
+            </Typography>
           </Toolbar>
           <Grid
             item
@@ -300,7 +309,9 @@ const AppsTable: React.FC = () => {
               justifyContent: 'center',
               padding: '60px 0px',
             }}>
-            <Typography>You don't have Apps yet </Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.myApps.youDontHaveAppsYet' />
+            </Typography>
           </Grid>
         </Paper>
       )}

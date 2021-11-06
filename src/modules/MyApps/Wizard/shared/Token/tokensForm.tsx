@@ -15,6 +15,7 @@ import {ColpaseTokenComponent} from './colapseTokenComponent';
 import {TokenListComponent} from './tokenListComponent';
 import {WizardProps} from '..';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
+import {useIntl} from 'react-intl';
 
 interface TokensFormProps {
   title: string;
@@ -34,6 +35,8 @@ function TokensForm<T, K>(props: Props<T, K>) {
     chainId,
     editable,
   } = props;
+
+  const {messages} = useIntl();
 
   const [tokens, setTokens] = useState(props.tokens ?? []);
   const [multipleTokens, setMultipleTokens] = useState(false);
@@ -188,7 +191,7 @@ function TokensForm<T, K>(props: Props<T, K>) {
               name='multiple'
             />
           }
-          label='Include by Address List'
+          label={`${messages['app.myApps.includeByAddressList']}`}
         />
       </Grid>
       {multipleTokens ? (

@@ -1,7 +1,7 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react/no-unescaped-entities */
-
 import React, {useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -18,15 +18,10 @@ import LinksStep from './Links';
 import StepperHeader from './StepperHeader';
 
 interface IStep {
+  id: string;
   title: string;
   component: (props: any) => React.ReactElement;
 }
-
-const steps: IStep[] = [
-  {title: 'Geral', component: (props) => <GeralStep {...props} />},
-  {title: 'Theme', component: (props) => <ThemeStep {...props} />},
-  {title: 'Links', component: (props) => <LinksStep {...props} />},
-];
 
 const initialValues = {
   geral: {
@@ -59,11 +54,30 @@ const initialValues = {
 };
 
 const AggregatorStepper: React.FC = () => {
+  const {messages} = useIntl();
   const [activeStep, setActiveStep] = useState(0);
 
   const [geralData, setGeralData] = React.useState(initialValues.geral);
   const [themeData, setThemeData] = React.useState(initialValues.theme);
   const [linksData, setLinksData] = React.useState(initialValues.links);
+
+  const steps: IStep[] = [
+    {
+      id: 'geral',
+      title: messages['app.myApps.geral'] as string,
+      component: (props) => <GeralStep {...props} />,
+    },
+    {
+      id: 'theme',
+      title: messages['app.myApps.theme'] as string,
+      component: (props) => <ThemeStep {...props} />,
+    },
+    {
+      id: 'links',
+      title: messages['app.myApps.links'] as string,
+      component: (props) => <LinksStep {...props} />,
+    },
+  ];
 
   // TODO: Create the submit logic
   const handleSubmit = () => {
@@ -80,12 +94,12 @@ const AggregatorStepper: React.FC = () => {
 
   const getStepData = (stepNum: number) => {
     const step = steps[stepNum];
-    switch (step.title) {
-      case 'Geral':
+    switch (step.id) {
+      case 'geral':
         return [geralData, setGeralData];
-      case 'Theme':
+      case 'theme':
         return [themeData, setThemeData];
-      case 'Links':
+      case 'links':
         return [linksData, setLinksData];
       default:
         return [];
@@ -111,7 +125,9 @@ const AggregatorStepper: React.FC = () => {
           <Grid container>
             {activeStep === steps.length ? (
               <Grid container>
-                <Typography>All steps completed - you're finished!</Typography>
+                <Typography variant='body1'>
+                  <IntlMessages id='app.myApps.allStepsCompleted' />
+                </Typography>
                 <Box
                   style={{
                     display: 'flex',
@@ -119,7 +135,9 @@ const AggregatorStepper: React.FC = () => {
                     paddingTop: '17vh',
                   }}>
                   <Box style={{flex: '1 1 auto'}} />
-                  <Button onClick={handleReset}>RESET</Button>
+                  <Button onClick={handleReset}>
+                    <IntlMessages id='app.myApps.reset' />
+                  </Button>
                 </Box>
               </Grid>
             ) : (
@@ -134,7 +152,7 @@ const AggregatorStepper: React.FC = () => {
                         color='inherit'
                         disabled={activeStep === 0}
                         onClick={handleBack}>
-                        BACK
+                        <IntlMessages id='app.myApps.back' />
                       </Button>
                     </Grid>
                     <Grid item xs={6}>
@@ -143,7 +161,11 @@ const AggregatorStepper: React.FC = () => {
                         variant='contained'
                         onClick={handleNext}
                         color='primary'>
-                        {activeStep === steps.length - 1 ? 'SUBMIT' : 'NEXT'}
+                        {activeStep === steps.length - 1 ? (
+                          <IntlMessages id='app.myApps.submit' />
+                        ) : (
+                          <IntlMessages id='app.myApps.next' />
+                        )}
                       </Button>
                     </Grid>
                   </Grid>

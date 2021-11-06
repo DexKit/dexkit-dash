@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {useFormik} from 'formik';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
@@ -58,6 +60,7 @@ type Props = {data: FormProps; setData: any};
 
 const GeralStep: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const getHelpText = (field: keyof typeof HELP_TEXT) =>
     HELP_TEXT[field]?.at(0) || '';
@@ -83,7 +86,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Name
+                  <IntlMessages id='app.myApps.name' />
                 </FormLabel>
                 <OutlinedInput
                   name='name'
@@ -103,7 +106,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Logo
+                  <IntlMessages id='app.myApps.logo' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
@@ -128,7 +131,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Logo Dark
+                  <IntlMessages id='app.myApps.logoDark' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
@@ -148,7 +151,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Buy Token Percentage
+                  <IntlMessages id='app.myApps.buyTokenPercentage' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
@@ -173,7 +176,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Domain
+                  <IntlMessages id='app.myApps.domain' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='Content'
@@ -212,7 +215,7 @@ const GeralStep: React.FC<Props> = (props) => {
                       className={classes.radioIcon}
                     />
                   }
-                  label='Bsc as Default'
+                  label={`${messages['app.myApps.bscAsDefault']}`}
                 />
                 <FormControlLabel
                   className={classes.radioBtn}
@@ -224,7 +227,7 @@ const GeralStep: React.FC<Props> = (props) => {
                       className={classes.radioIcon}
                     />
                   }
-                  label='Matic As Default'
+                  label={`${messages['app.myApps.maticAsDefault']}`}
                 />
               </RadioGroup>
             </Grid>
@@ -241,7 +244,7 @@ const GeralStep: React.FC<Props> = (props) => {
                       className={classes.radioIcon}
                     />
                   }
-                  label='Hide Powered By Dexkit'
+                  label={`${messages['app.myApps.hidePoweredByDexKit']}`}
                 />
               </FormGroup>
             </Grid>
@@ -253,7 +256,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Affiliate Address
+                  <IntlMessages id='app.myApps.affiliateAddress' />
                 </FormLabel>
                 <OutlinedInput
                   name='affiliateAddr'
@@ -273,7 +276,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Default Token Address
+                  <IntlMessages id='app.myApps.defaultTokenAddress' />
                 </FormLabel>
                 <OutlinedInput
                   name='defaultTokenAddr'
@@ -298,7 +301,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Default Token Address BSC
+                  <IntlMessages id='app.myApps.defaultTokenAddressBSC' />
                 </FormLabel>
                 <OutlinedInput
                   name='defaultTokenAddrBSC'
@@ -318,7 +321,7 @@ const GeralStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Default Token Address matic
+                  <IntlMessages id='app.myApps.defaultTokenAddressMatic' />
                 </FormLabel>
                 <OutlinedInput
                   name='defaultTokenAddrMatic'
@@ -342,7 +345,7 @@ const GeralStep: React.FC<Props> = (props) => {
         <Grid item md={6} xs={12} style={{marginTop: 10}}>
           <FormControl fullWidth required size='small'>
             <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-              Default Slippage
+              <IntlMessages id='app.myApps.defaultSlippage' />
             </FormLabel>
             <OutlinedInput
               name='defaultSlippage'

@@ -10,6 +10,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import {makeStyles} from '@material-ui/core';
 
 import AggregatorStepper from 'modules/MyApps/components/AggregatorStepper';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles(() => ({
   linkBtn: {
@@ -34,17 +35,21 @@ const AggregatorPage: React.FC = () => {
               component={RouterLink}
               to='/wallet'
               className={classes.linkBtn}>
-              <Typography variant='subtitle2'>Dashboard</Typography>
+              <Typography variant='subtitle2'>
+                <IntlMessages id='app.myApps.dashboard' />
+              </Typography>
             </Link>
             <Link
               underline='none'
               component={RouterLink}
               to='/my-apps/manage'
               className={classes.linkBtn}>
-              <Typography variant='subtitle2'>Manage apps</Typography>
+              <Typography variant='subtitle2'>
+                <IntlMessages id='app.myApps.manageApps' />
+              </Typography>
             </Link>
             <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-              Aggregator
+              <IntlMessages id='app.myApps.aggregator' />
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -53,7 +58,7 @@ const AggregatorPage: React.FC = () => {
             <Typography
               variant='h5'
               style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
-              Aggregator
+              <IntlMessages id='app.myApps.aggregator' />
             </Typography>
           </Grid>
         </Grid>

@@ -1,9 +1,9 @@
-/* eslint-disable react/no-unescaped-entities */
 import React from 'react';
 
 import {AppState} from 'redux/store';
 import {useSelector} from 'react-redux';
 import {Link as RouterLink} from 'react-router-dom';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import InfoView from '@crema/core/InfoView';
 
@@ -88,10 +88,12 @@ const MyApps: React.FC<Props> = (props) => {
               component={RouterLink}
               to='/wallet'
               className={classes.linkBtn}>
-              <Typography variant='subtitle2'>Dashboard</Typography>
+              <Typography variant='subtitle2'>
+                <IntlMessages id='app.myApps.dashboard' />
+              </Typography>
             </Link>
             <Typography variant='subtitle2' style={{color: '#2e3243'}}>
-              Manage Apps
+              <IntlMessages id='app.myApps.manageApps' />
             </Typography>
           </Breadcrumbs>
         </Grid>
@@ -100,7 +102,7 @@ const MyApps: React.FC<Props> = (props) => {
             <Typography
               variant='h5'
               style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
-              Manage Apps
+              <IntlMessages id='app.myApps.manageApps' />
             </Typography>
           </Grid>
         </Grid>
@@ -108,14 +110,11 @@ const MyApps: React.FC<Props> = (props) => {
 
       <Box pb={5}>
         <Alert severity='warning'>
-          This feature is still under high development, You will need KIT to use
-          this. Check our live updates to see when this feature will be enable
-          for everyone!
+          <IntlMessages id='app.myApps.featureUnderDevelopment' />
         </Alert>
         {insufficientAmountAlert && (
           <Alert severity='warning'>
-            You don't have the amount of sufficient kit to keep run your apps,
-            which can cause them to be automatically deactivated.
+            <IntlMessages id='app.myApps.youDontHaveTheAmountOfSufficientKit' />
           </Alert>
         )}
       </Box>
@@ -132,7 +131,7 @@ const MyApps: React.FC<Props> = (props) => {
       <Grid container style={{marginTop: 10}} spacing={4}>
         <Grid item xs={12}>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            Current Collected Total rewards
+            <IntlMessages id='app.myApps.currentCollectedTotalRewards' />
           </Typography>
         </Grid>
 
@@ -158,7 +157,7 @@ const MyApps: React.FC<Props> = (props) => {
         style={{marginTop: 10}}>
         <Grid item xs={12}>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            My Apps
+            <IntlMessages id='app.myApps.myApps' />
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>

@@ -13,6 +13,7 @@ import {makeStyles} from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import {HELP_TEXT_LINKS} from '../../../Wizard/aggregator/helpText';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 type FormProps = {
   about: string;
@@ -69,7 +70,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  About
+                  <IntlMessages id='app.myApps.about' />
                 </FormLabel>
                 <OutlinedInput
                   name='about'
@@ -90,7 +91,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Analytics
+                  <IntlMessages id='app.myApps.analytics' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='https://analytics.google.com'
@@ -115,7 +116,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Code
+                  <IntlMessages id='app.myApps.code' />
                 </FormLabel>
                 <OutlinedInput
                   name='code'
@@ -136,7 +137,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Discord
+                  <IntlMessages id='app.myApps.discord' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='https://discord.com/invite/gCRAFhc'
@@ -160,7 +161,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Docs
+                  <IntlMessages id='app.myApps.docs' />
                 </FormLabel>
                 <OutlinedInput
                   name='docs'
@@ -181,7 +182,7 @@ const LinksStep: React.FC<Props> = (props) => {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth size='small'>
                 <FormLabel style={{marginBottom: 5, color: '#fff'}}>
-                  Telegram
+                  <IntlMessages id='app.myApps.telegram' />
                 </FormLabel>
                 <OutlinedInput
                   placeholder='https://t.me/project'

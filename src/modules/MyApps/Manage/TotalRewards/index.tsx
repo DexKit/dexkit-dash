@@ -18,7 +18,7 @@ const Coins: React.FC = () => {
         fontSize={16}
         mb={{xs: 4, sm: 4, xl: 6}}
         fontWeight={Fonts.BOLD}>
-        <IntlMessages id='Current Collected Total Rewards' />
+        <IntlMessages id='app.myApps.currentCollectedTotalRewards' />
       </Box>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4} md={6}>
@@ -30,7 +30,7 @@ const Coins: React.FC = () => {
               price: '0',
               increment: 0,
             }}
-            heading={<IntlMessages id='Aggregator' />}
+            heading={<IntlMessages id='app.myApps.aggregator' />}
           />
         </Grid>
 
@@ -43,7 +43,7 @@ const Coins: React.FC = () => {
               price: '0',
               increment: 0,
             }}
-            heading={<IntlMessages id='Marketplace' />}
+            heading={<IntlMessages id='app.myApps.marketplace' />}
           />
         </Grid>
 
@@ -56,7 +56,7 @@ const Coins: React.FC = () => {
               price: '0',
               increment: 0,
             }}
-            heading={<IntlMessages id='Exchange' />}
+            heading={<IntlMessages id='app.myApps.exchange' />}
           />
         </Grid>
       </Grid>

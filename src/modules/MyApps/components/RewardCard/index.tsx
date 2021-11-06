@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {GridContainer} from '@crema';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {Chip, Grid, Theme, Typography} from '@material-ui/core';
 
 import {makeStyles} from '@material-ui/styles';
@@ -54,7 +55,7 @@ const RewardCard: React.FC<Props> = (props) => {
         <Grid container>
           <Grid item xs={12}>
             <Typography variant='body2'>
-              {props.title || 'Aggregator'}
+              {props.title || <IntlMessages id='app.myApps.aggregator' />}
             </Typography>
           </Grid>
         </Grid>

@@ -32,6 +32,8 @@ import LinksForm from './links';
 import {useWeb3} from 'hooks/useWeb3';
 import {DefaultTheme} from '../shared/Theme';
 import {useHistory} from 'react-router-dom';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -177,6 +179,7 @@ export default function VerticalLinearStepper() {
   const history = useHistory();
 
   const {chainId} = useWeb3();
+  const {messages} = useIntl();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -310,12 +313,14 @@ export default function VerticalLinearStepper() {
             <Link
               color='inherit'
               onClick={() => history.push('/my-apps/manage')}>
-              My Apps
+              <IntlMessages id='app.myApps.myApps' />
             </Link>
-            <Typography color='textPrimary'>Wizard</Typography>
+            <Typography color='textPrimary'>
+              <IntlMessages id='app.myApps.wizard' />
+            </Typography>
           </Breadcrumbs>
           <Typography variant='h4' color='textPrimary'>
-            AGGREGATOR
+            <IntlMessages id='app.myApps.aggregator' />
           </Typography>
         </Grid>
       </GridContainer>
@@ -338,9 +343,11 @@ export default function VerticalLinearStepper() {
                 Number(chainId ?? ChainId.Mainnet),
               )}
               <NavigationButton
-                ButtonBackText='Back'
+                ButtonBackText={`${messages['app.myApps.back']}`}
                 ButtonNextText={
-                  activeStep === steps.length - 1 ? 'Finish' : 'Next'
+                  activeStep === steps.length - 1
+                    ? `${messages['app.myApps.finish']}`
+                    : `${messages['app.myApps.next']}`
                 }
                 handleBack={activeStep === 0 ? undefined : handleBack}
                 handleNext={
@@ -356,13 +363,15 @@ export default function VerticalLinearStepper() {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Typography variant='body1'>
+            <IntlMessages id='app.myApps.allStepsCompleted' />
+          </Typography>
           <Button onClick={handleReset} className={classes.button}>
-            Reset
+            <IntlMessages id='app.myApps.reset' />
           </Button>
           <SubmitComponent
             data={(data ?? {}) as ConfigFileAggregator}
-            text='Submit'
+            text={`${messages['app.myApps.submit']}`}
             valid={isValid}
             type={'AGGREGATOR'}
           />

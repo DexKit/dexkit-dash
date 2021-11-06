@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {useFormik} from 'formik';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -28,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
   root: {margin: theme.spacing(5)},
   inputColor: {
     width: '15%',
+    marginLeft: 'auto',
     height: theme.spacing(8),
     padding: theme.spacing(2),
     borderRadius: theme.spacing(2),
-    marginLeft: 'auto',
   },
 }));
 
@@ -39,6 +41,7 @@ type Props = {data: FormProps; setData: any};
 
 const ThemeStep: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const formik = useFormik({
     initialValues: props.data,
@@ -64,7 +67,7 @@ const ThemeStep: React.FC<Props> = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant='caption'>
-                Customize aggregator theme colors:
+                <IntlMessages id='app.myApps.customizeAggregatorThemeColors' />
               </Typography>
             </Grid>
             <Grid item md={8} xs={6}>
@@ -74,7 +77,7 @@ const ThemeStep: React.FC<Props> = (props) => {
                   value={formik.values.defaultDarkMode}
                   onChange={formik.handleChange}
                   control={<Checkbox />}
-                  label='Dark Mode as Default'
+                  label={`${messages['app.myApps.darkModeAsDefault']}`}
                 />
               </FormGroup>
             </Grid>
@@ -85,7 +88,7 @@ const ThemeStep: React.FC<Props> = (props) => {
                 variant='contained'
                 size='small'
                 onClick={formik.handleReset}>
-                Reset All
+                <IntlMessages id='app.myApps.resetAll' />
               </Button>
             </Grid>
           </Grid>
@@ -99,7 +102,9 @@ const ThemeStep: React.FC<Props> = (props) => {
                   name='brandColor'
                   type='color'
                   startAdornment={
-                    <FormLabel style={{color: '#fff'}}>Brand Color</FormLabel>
+                    <FormLabel style={{color: '#fff'}}>
+                      <IntlMessages id='app.myApps.brandColor' />
+                    </FormLabel>
                   }
                   endAdornment={
                     <InputAdornment position='end'>
@@ -122,7 +127,7 @@ const ThemeStep: React.FC<Props> = (props) => {
                   type='color'
                   startAdornment={
                     <FormLabel style={{color: '#fff'}}>
-                      Brand Color Dark
+                      <IntlMessages id='app.myApps.brandColorDark' />
                     </FormLabel>
                   }
                   endAdornment={

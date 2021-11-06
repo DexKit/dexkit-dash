@@ -32,6 +32,8 @@ import {useWeb3} from 'hooks/useWeb3';
 import {onAddNotification, setInsufficientAmountAlert} from 'redux/actions';
 import {WhitelabelTypes} from 'types/myApps';
 import {useBalance} from 'hooks/balance/useBalance';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 // import { Notification } from 'types/models/Notification';
 
 type Order = 'asc' | 'desc';
@@ -72,6 +74,7 @@ const AppsTable = () => {
   const {error, data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
+  const {messages} = useIntl();
 
   useEffect(() => {
     const apps = configs?.filter((config) => config?.active) ?? [];
@@ -104,13 +107,12 @@ const AppsTable = () => {
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-  const handleSort = (property: string) => (
-    event: React.MouseEvent<unknown>,
-  ) => {
-    const isAsc = orderBy === property && orderDirection === 'asc';
-    setOrderDirection(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  const handleSort =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      const isAsc = orderBy === property && orderDirection === 'asc';
+      setOrderDirection(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+    };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -195,7 +197,9 @@ const AppsTable = () => {
         //   >
         <Paper className={classes.paper}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant='h5'>My Apps</Typography>
+            <Typography variant='h5'>
+              <IntlMessages id='app.myApps.myApps' />
+            </Typography>
           </Toolbar>
 
           <Box className={classes.tableResponsiveMaterial}>
@@ -276,8 +280,8 @@ const AppsTable = () => {
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
-                        title={`Want to confirm the exclusion of the "${config.slug}" app?`}
-                        dialogTitle={'Confirm app exclusion'}
+                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.app?']}`}
+                        dialogTitle={`${messages['app.myApps.confirmAppExclusion']}`}
                         open={showDialog}
                         onConfirm={() => {
                           onDeleteApp(config.slug, config.type);
@@ -313,7 +317,9 @@ const AppsTable = () => {
       ) : (
         <Paper className={classes.paper}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant='h5'>My Apps</Typography>
+            <Typography variant='h5'>
+              <IntlMessages id='app.myApps.myApps' />
+            </Typography>
           </Toolbar>
           <Grid
             item
@@ -325,7 +331,9 @@ const AppsTable = () => {
               justifyContent: 'center',
               padding: '60px 0px',
             }}>
-            <Typography>You don't have Apps yet </Typography>
+            <Typography>
+              <IntlMessages id='app.myApps.youDontHaveAppsYet' />
+            </Typography>
           </Grid>
         </Paper>
       )}

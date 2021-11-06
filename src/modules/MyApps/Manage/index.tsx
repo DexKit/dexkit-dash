@@ -17,7 +17,7 @@ import Alert from '@material-ui/lab/Alert';
 import {useBalance} from 'hooks/balance/useBalance';
 import ErrorView from 'modules/Common/ErrorView';
 import AppsIcon from '@material-ui/icons/Apps';
-import {AboutDialog} from './AboutDialog';
+import AboutDialog from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
 import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
@@ -47,21 +47,18 @@ const MyApps: React.FC = () => {
             color='text.primary'
             fontWeight={Fonts.BOLD}
             ml={2}>
-            Manage APPs
+            <IntlMessages id='app.myApps.manageApps' />
           </Box>
           <AboutDialog />
         </Box>
 
         <Box pb={2} mt={2}>
           <Alert severity='warning'>
-            This feature is still under high development, You will need KIT to
-            use this. Check our live updates to see when this feature will be
-            enable for everyone!
+            <IntlMessages id='app.myApps.featureUnderDevelopment' />
           </Alert>
           {insufficientAmountAlert && (
             <Alert severity='warning'>
-              You don't have the amount of sufficient kit to keep run your apps,
-              which can cause them to be automatically deactivated.
+              <IntlMessages id='app.myApps.youDontHaveTheAmountOfSufficientKit' />
             </Alert>
           )}
         </Box>

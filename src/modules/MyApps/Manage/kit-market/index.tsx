@@ -19,6 +19,7 @@ import Marketplace from 'assets/images/marketplace.png';
 import Exchange from 'assets/images/exchange.png';
 import {blue, indigo, teal} from '@material-ui/core/colors';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   statsCard: {
@@ -88,6 +89,7 @@ interface KitMarketProps {
 
 const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
   const classes = useStyles({bgColor});
+  const {messages} = useIntl();
 
   // const { account } = useWeb3();
   const history = useHistory();
@@ -152,9 +154,10 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     setShowDialog(false);
   }, [setShowDialog, history, urlRedirect]);
 
-  const cancelDialg = useCallback((x: boolean) => setShowDialog(false), [
-    setShowDialog,
-  ]);
+  const cancelDialg = useCallback(
+    (x: boolean) => setShowDialog(false),
+    [setShowDialog],
+  );
 
   return (
     <>
@@ -179,7 +182,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
               bgColor={blue[500]}
               color={bgColor}
               value={allKitValues[0]}
-              name={'Aggregator'}
+              name={`${messages['app.myApps.aggregator']}`}
               button={{
                 color: 'secondary',
                 action: (
@@ -212,7 +215,7 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
               color={bgColor}
               bgColor={indigo[700]}
               value={allKitValues[2]}
-              name={'Marketplace'}
+              name={`${messages['app.myApps.marketplace']}`}
               button={{
                 color: 'secondary',
                 action: (
@@ -228,8 +231,8 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
         </CardContent>
       </Card>
       <ConfirmationDialog
-        title={`You do not have enough kit to perform this functionality. Do you still want to continue?`}
-        dialogTitle={'Kit amount insufficient'}
+        title={`${messages['app.myApps.youDoNotHaveEnoughKit']}`}
+        dialogTitle={`${messages['app.myApps.youDoNotHaveEnoughKit']}`}
         open={showDialog}
         onConfirm={confimDialog}
         onDeny={cancelDialg}

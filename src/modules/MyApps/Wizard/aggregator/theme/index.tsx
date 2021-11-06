@@ -20,6 +20,8 @@ import {ColorResult} from 'react-color';
 import ColorSets from 'shared/constants/ColorSets';
 import {HELP_TEXT_THEME} from '../../shared/Theme';
 import {WizardData} from '..';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 
 interface ThemeFormProps {
   theme: AggregatorTheme;
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const ThemeForm: React.FC<ThemeFormProps> = (props) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const {theme: startTheme, changeIssuerForm, editable} = props;
   const [theme, setTheme] = useState(startTheme);
   const [isDarkTheme, setDarkTheme] = useState(true);
@@ -148,7 +151,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
           className={classes.heading}
           variant='subtitle2'
           component='h2'>
-          Costumize Aggregator Theme colors:
+          <IntlMessages id='app.myApps.costumizeAggregatorThemeColors' />
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -165,12 +168,12 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
                 color='primary'
               />
             }
-            label={'Dark Mode as Default'}
+            label={`${messages['app.myApps.darkModeAsDefault']}`}
             labelPlacement='end'
           />
           <Button color='primary' onClick={resetAll}>
             {' '}
-            Reset All
+            <IntlMessages id='app.myApps.resetAll' />
           </Button>
         </Box>
         <Box component='section' className={classes.section}>

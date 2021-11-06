@@ -2,6 +2,7 @@ import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import {GridContainer} from '@crema';
 import {Chip, makeStyles, Typography} from '@material-ui/core';
@@ -67,7 +68,7 @@ const BalanceCard: React.FC<Props> = (props) => {
           <Button
             className={classes.buyBtn}
             startIcon={<WalletAddIcon className={classes.walletIcon} />}>
-            BUY
+            <IntlMessages id='app.myApps.buy' />
           </Button>
         </Grid>
       </Grid>

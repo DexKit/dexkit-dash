@@ -1,4 +1,5 @@
 import React from 'react';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {
   createStyles,
   makeStyles,
@@ -19,7 +20,7 @@ import {Tooltip} from '@material-ui/core';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: 0,
+      margin: theme.spacing(0),
       padding: theme.spacing(2),
     },
     closeButton: {
@@ -65,7 +66,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const AboutDialog: React.FC = () => {
+const AboutDialog: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -91,19 +92,16 @@ export const AboutDialog: React.FC = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Manage APPs page
+          <IntlMessages id='app.myApps.manageAppsPage' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            The Manage section is where KIT crew members that hold at least 500
-            KIT can deploy their own whitelabel versions of DEXKIT apps! KIT
-            holders can customize their own version of the DEXKIT aggregator,
-            NFT Marketplace, and Exchange and collect fees from the platform.
-            The wizard allows users to customize the features of the apps and
-            host them on any wordpress enabled site!
+            <IntlMessages id='app.myApps.manageAppsPageInfo' />
           </Typography>
         </DialogContent>
       </Dialog>
     </div>
   );
 };
+
+export default AboutDialog;
