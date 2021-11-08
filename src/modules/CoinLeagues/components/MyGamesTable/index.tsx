@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import {Box, Hidden, Typography, Grid, Chip} from '@material-ui/core';
+import {Box, Typography, Grid, Chip} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';

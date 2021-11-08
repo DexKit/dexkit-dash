@@ -8,9 +8,6 @@ import {
   Link,
   IconButton,
   Typography,
-  Paper,
-  ButtonBase,
-  Chip,
   Divider,
 } from '@material-ui/core';
 

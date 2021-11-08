@@ -64,7 +64,6 @@ import Alert from '@material-ui/lab/Alert';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
 import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
 
@@ -284,19 +283,19 @@ function GameEnter(props: Props) {
 
 
 
-  const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
+  const currentPlayers = useMemo(() => game?.players.length, [game?.players, game]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
     }
-  }, [started, totalPlayers, currentPlayers]);
+  }, [totalPlayers, currentPlayers]);
 
   const isDisabled = useMemo(() => {
     return (
       selectedCoins?.length === (game?.num_coins?.toNumber() || 0) - 1 &&
       captainCoin !== undefined
     );
-  }, [selectedCoins, game?.num_coins, captainCoin]);
+  }, [selectedCoins, game?.num_coins, captainCoin, game]);
 
   const goToExplorer = useCallback(
     (_ev: any) => {
