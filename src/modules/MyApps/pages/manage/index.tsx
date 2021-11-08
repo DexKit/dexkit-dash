@@ -14,7 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import {useBalance} from 'hooks/balance/useBalance';
@@ -29,7 +29,7 @@ type Props = {rewards?: any[]};
 
 const useStyles = makeStyles((theme) => ({
   linkBtn: {
-    color: '#fff',
+    color: theme.palette.common.white,
     textDecoration: 'none',
     textTransform: 'capitalize',
   },
@@ -61,6 +61,7 @@ const rewardsMock = [
 ];
 
 const MyApps: React.FC<Props> = (props) => {
+  const theme = useTheme();
   const classes = useStyles();
   const {loading, error, data: balances} = useBalance();
   // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
@@ -81,7 +82,7 @@ const MyApps: React.FC<Props> = (props) => {
       <Grid container spacing={2}>
         <Grid container>
           <Breadcrumbs
-            style={{color: '#fff', fontSize: '0.8rem'}}
+            style={{color: theme.palette.common.white, fontSize: '0.8rem'}}
             separator='/'>
             <Link
               underline='none'

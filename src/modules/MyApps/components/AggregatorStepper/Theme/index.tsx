@@ -4,6 +4,7 @@ import {useFormik} from 'formik';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -15,7 +16,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/core';
 
 import ResetIcon from '@material-ui/icons/RotateLeft';
 import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -27,7 +28,9 @@ type FormProps = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  root: {margin: theme.spacing(5)},
+  root: {
+    margin: theme.spacing(5),
+  },
   inputColor: {
     width: '15%',
     marginLeft: 'auto',
@@ -40,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {data: FormProps; setData: any};
 
 const ThemeStep: React.FC<Props> = (props) => {
+  const theme = useTheme();
   const classes = useStyles();
   const {messages} = useIntl();
 
@@ -54,97 +58,97 @@ const ThemeStep: React.FC<Props> = (props) => {
   }, [formik.values]);
 
   return (
-    <Grid
-      container
-      spacing={4}
-      className={classes.root}
-      justifyContent='space-between'>
-      <form
-        onSubmit={formik.handleSubmit}
-        autoComplete='off'
-        style={{width: '100%'}}>
+    <Box className={classes.root} clone>
+      <Grid container justifyContent='space-between'>
         <Grid item xs={12}>
-          <Grid container spacing={2}>
+          <form
+            onSubmit={formik.handleSubmit}
+            autoComplete='off'
+            style={{width: '100%'}}>
             <Grid item xs={12}>
-              <Typography variant='caption'>
-                <IntlMessages id='app.myApps.customizeAggregatorThemeColors' />
-              </Typography>
-            </Grid>
-            <Grid item md={8} xs={6}>
-              <FormGroup>
-                <FormControlLabel
-                  name='defaultDarkMode'
-                  value={formik.values.defaultDarkMode}
-                  onChange={formik.handleChange}
-                  control={<Checkbox />}
-                  label={`${messages['app.myApps.darkModeAsDefault']}`}
-                />
-              </FormGroup>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant='caption'>
+                    <IntlMessages id='app.myApps.customizeAggregatorThemeColors' />
+                  </Typography>
+                </Grid>
+                <Grid item md={8} xs={6}>
+                  <FormGroup>
+                    <FormControlLabel
+                      name='defaultDarkMode'
+                      value={formik.values.defaultDarkMode}
+                      onChange={formik.handleChange}
+                      control={<Checkbox />}
+                      label={`${messages['app.myApps.darkModeAsDefault']}`}
+                    />
+                  </FormGroup>
+                </Grid>
+
+                <Grid item md={4} xs={6} style={{textAlignLast: 'right'}}>
+                  <Button
+                    startIcon={<ResetIcon />}
+                    variant='contained'
+                    size='small'
+                    onClick={formik.handleReset}>
+                    <IntlMessages id='app.myApps.resetAll' />
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
 
-            <Grid item md={4} xs={6} style={{textAlignLast: 'right'}}>
-              <Button
-                startIcon={<ResetIcon />}
-                variant='contained'
-                size='small'
-                onClick={formik.handleReset}>
-                <IntlMessages id='app.myApps.resetAll' />
-              </Button>
+            <Grid item xs={12}>
+              <Grid container spacing={4}>
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth>
+                    <OutlinedInput
+                      name='brandColor'
+                      type='color'
+                      startAdornment={
+                        <FormLabel style={{color: theme.palette.common.white}}>
+                          <IntlMessages id='app.myApps.brandColor' />
+                        </FormLabel>
+                      }
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <ArrowDownIcon />
+                        </InputAdornment>
+                      }
+                      style={{justifyContent: 'space-between'}}
+                      inputProps={{className: classes.inputColor}}
+                      value={formik.values.brandColor}
+                      onChange={formik.handleChange}
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <FormControl fullWidth>
+                    <OutlinedInput
+                      style={{justifyContent: 'space-between'}}
+                      name='brandColorDark'
+                      type='color'
+                      startAdornment={
+                        <FormLabel style={{color: theme.palette.common.white}}>
+                          <IntlMessages id='app.myApps.brandColorDark' />
+                        </FormLabel>
+                      }
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <ArrowDownIcon />
+                        </InputAdornment>
+                      }
+                      inputProps={{className: classes.inputColor}}
+                      value={formik.values.brandColorDark}
+                      onChange={formik.handleChange}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
             </Grid>
-          </Grid>
+          </form>
         </Grid>
-
-        <Grid item xs={12}>
-          <Grid container spacing={4}>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <OutlinedInput
-                  name='brandColor'
-                  type='color'
-                  startAdornment={
-                    <FormLabel style={{color: '#fff'}}>
-                      <IntlMessages id='app.myApps.brandColor' />
-                    </FormLabel>
-                  }
-                  endAdornment={
-                    <InputAdornment position='end'>
-                      <ArrowDownIcon />
-                    </InputAdornment>
-                  }
-                  style={{justifyContent: 'space-between'}}
-                  inputProps={{className: classes.inputColor}}
-                  value={formik.values.brandColor}
-                  onChange={formik.handleChange}
-                />
-              </FormControl>
-            </Grid>
-
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <OutlinedInput
-                  style={{justifyContent: 'space-between'}}
-                  name='brandColorDark'
-                  type='color'
-                  startAdornment={
-                    <FormLabel style={{color: '#fff'}}>
-                      <IntlMessages id='app.myApps.brandColorDark' />
-                    </FormLabel>
-                  }
-                  endAdornment={
-                    <InputAdornment position='end'>
-                      <ArrowDownIcon />
-                    </InputAdornment>
-                  }
-                  inputProps={{className: classes.inputColor}}
-                  value={formik.values.brandColorDark}
-                  onChange={formik.handleChange}
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-      </form>
-    </Grid>
+      </Grid>
+    </Box>
   );
 };
 

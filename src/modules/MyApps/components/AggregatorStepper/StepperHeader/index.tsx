@@ -14,7 +14,7 @@ type Props = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#2E3243',
+    backgroundColor: 'transparent',
   },
   chip: {
     marginRight: theme.spacing(2),
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   actual: {
     height: theme.spacing(3),
     borderRadius: theme.spacing(1.5),
-    backgroundColor: '#FFA552',
+    backgroundColor: theme.palette.primary.main,
   },
   indicator: {
     height: theme.spacing(3),
@@ -32,9 +32,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StepperHeader: React.FC<Props> = (props) => {
+const StepperHeader: React.FC<Props> = ({steps, activeStep}) => {
   const classes = useStyles();
-  const {steps, activeStep} = props;
   const actualTitle = steps[activeStep].title;
 
   return (

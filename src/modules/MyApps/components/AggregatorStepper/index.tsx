@@ -16,6 +16,7 @@ import GeralStep from './Geral';
 import ThemeStep from './Theme';
 import LinksStep from './Links';
 import StepperHeader from './StepperHeader';
+import {makeStyles, useTheme} from '@material-ui/core';
 
 interface IStep {
   id: string;
@@ -53,8 +54,27 @@ const initialValues = {
   },
 };
 
+const useStyles = makeStyles((theme) => ({
+  btnGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: theme.spacing(3, 0),
+  },
+  divider: {
+    marginLeft: 5,
+    marginRight: 5,
+    color: '#3A3D4A',
+  },
+  stepper: {
+    height: '100%',
+    backgroundColor: '#2E3243',
+  },
+}));
+
 const AggregatorStepper: React.FC = () => {
+  const classes = useStyles();
   const {messages} = useIntl();
+  const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
 
   const [geralData, setGeralData] = React.useState(initialValues.geral);
@@ -110,9 +130,7 @@ const AggregatorStepper: React.FC = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card component={Paper} style={{backgroundColor: '#252836'}}>
-          <Stepper
-            activeStep={activeStep}
-            style={{height: '100%', backgroundColor: '#2E3243'}}>
+          <Stepper activeStep={activeStep} className={classes.stepper}>
             <StepperHeader steps={steps} activeStep={activeStep} />
           </Stepper>
           <Grid container spacing={2}>
@@ -121,57 +139,58 @@ const AggregatorStepper: React.FC = () => {
               return steps[activeStep].component({data, setData});
             })()}
           </Grid>
-          <Divider style={{marginLeft: 5, marginRight: 5, color: '#3A3D4A'}} />
+          <Divider className={classes.divider} />
           <Grid container>
-            {activeStep === steps.length ? (
-              <Grid container>
-                <Typography variant='body1'>
-                  <IntlMessages id='app.myApps.allStepsCompleted' />
-                </Typography>
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    paddingTop: '17vh',
-                  }}>
-                  <Box style={{flex: '1 1 auto'}} />
-                  <Button onClick={handleReset}>
-                    <IntlMessages id='app.myApps.reset' />
-                  </Button>
-                </Box>
-              </Grid>
-            ) : (
-              <Grid container spacing={6} style={{margin: 10, marginLeft: 0}}>
-                <Grid item xs={8} />
-                <Grid item xs={4}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={6} style={{textAlign: 'right'}}>
-                      <Button
-                        size='large'
-                        variant='contained'
-                        color='inherit'
-                        disabled={activeStep === 0}
-                        onClick={handleBack}>
-                        <IntlMessages id='app.myApps.back' />
+            <Grid item xs={12}>
+              {activeStep === steps.length ? (
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography variant='body1'>
+                      <IntlMessages id='app.myApps.allStepsCompleted' />
+                    </Typography>
+                    <Box className={classes.btnGroup}>
+                      <Box style={{flex: '1 1 auto'}} />
+                      <Button onClick={handleReset}>
+                        <IntlMessages id='app.myApps.reset' />
                       </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Button
-                        size='large'
-                        variant='contained'
-                        onClick={handleNext}
-                        color='primary'>
-                        {activeStep === steps.length - 1 ? (
-                          <IntlMessages id='app.myApps.submit' />
-                        ) : (
-                          <IntlMessages id='app.myApps.next' />
-                        )}
-                      </Button>
-                    </Grid>
+                    </Box>
                   </Grid>
                 </Grid>
-              </Grid>
-            )}
+              ) : (
+                <Box className={classes.btnGroup}>
+                  <Grid container spacing={6}>
+                    <Grid item xs={8} />
+                    <Grid item xs={4}>
+                      <Grid container justifyContent='space-between'>
+                        <Grid item xs={6} style={{textAlign: 'right'}}>
+                          <Button
+                            size='large'
+                            variant='contained'
+                            color='inherit'
+                            disabled={activeStep === 0}
+                            onClick={handleBack}>
+                            <IntlMessages id='app.myApps.back' />
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Button
+                            size='large'
+                            variant='contained'
+                            onClick={handleNext}
+                            color='primary'>
+                            {activeStep === steps.length - 1 ? (
+                              <IntlMessages id='app.myApps.submit' />
+                            ) : (
+                              <IntlMessages id='app.myApps.next' />
+                            )}
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Box>
+              )}
+            </Grid>
           </Grid>
         </Card>
       </Grid>

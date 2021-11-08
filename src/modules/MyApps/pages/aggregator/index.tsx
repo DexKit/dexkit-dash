@@ -7,20 +7,21 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/core';
 
 import AggregatorStepper from 'modules/MyApps/components/AggregatorStepper';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   linkBtn: {
-    color: '#fff',
+    color: theme.palette.common.white,
     textDecoration: 'none',
     textTransform: 'capitalize',
   },
 }));
 
 const AggregatorPage: React.FC = () => {
+  const theme = useTheme();
   const classes = useStyles();
 
   return (
@@ -28,7 +29,7 @@ const AggregatorPage: React.FC = () => {
       <Grid container spacing={2}>
         <Grid container>
           <Breadcrumbs
-            style={{color: '#fff', fontSize: '0.8rem'}}
+            style={{color: theme.palette.common.white, fontSize: '0.8rem'}}
             separator='/'>
             <Link
               underline='none'

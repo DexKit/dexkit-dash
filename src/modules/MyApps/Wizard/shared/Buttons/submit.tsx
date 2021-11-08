@@ -16,6 +16,7 @@ import {NotificationType} from 'services/notification';
 import {Notification as CustomNotification} from 'types/models/Notification';
 import {ConfigFile, WhitelabelTypes} from 'types/myApps';
 import {onAddNotification} from 'redux/actions';
+import {useIntl} from 'react-intl';
 
 interface SubmitProps {
   text: string;
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SubmitComponent: React.FC<SubmitProps> = (props) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const {data: config, type, valid, text} = props;
   const {chainId, account, getProvider} = useWeb3();
   const [isLoading, setLoading] = useState(false);
@@ -88,8 +90,10 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
                 verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
               },
               message: {
-                message: `I want to create/edit this ${type.toLowerCase()}`,
-                terms: 'Powered by DexKit',
+                message: `${
+                  messages['app.myApps.iWantToCreateEditThis']
+                } ${type.toLowerCase()}`,
+                terms: `${messages['app.myApps.poweredByDexKit']}`,
               },
             };
 
@@ -118,16 +122,16 @@ export const SubmitComponent: React.FC<SubmitProps> = (props) => {
                 sendConfig(dataToSend)
                   .then((c: any) => {
                     const notification: CustomNotification = {
-                      title: 'Config Accepted',
-                      body: 'Config created',
+                      title: `${messages['app.myApps.configAccepted']}`,
+                      body: `${messages['app.myApps.configCreated']}`,
                     };
                     dispatch(onAddNotification([notification]));
                     history.push(`/my-apps/manage`);
                   })
                   .catch(() => {
                     const notification: CustomNotification = {
-                      title: 'Error',
-                      body: 'Config error! Do you have KIT?',
+                      title: `${messages['app.myApps.error']}`,
+                      body: `${messages['app.myApps.configErrorDoYouHaveHaveKIT']}`,
                     };
                     dispatch(
                       onAddNotification([notification], NotificationType.ERROR),
