@@ -1,7 +1,6 @@
 import React, {useRef, useState, useCallback} from 'react';
 
 import {
-  makeStyles,
   Box,
   Grid,
   Typography,
@@ -40,7 +39,7 @@ export const ChampionsIndex = () => {
 
   const onClickBack = useCallback(() => {
     history.goBack();
-  }, []);
+  }, [history]);
 
   return (
     <>

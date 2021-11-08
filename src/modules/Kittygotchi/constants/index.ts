@@ -3,8 +3,8 @@ import {ChainId} from 'types/blockchain';
 
 export const POLYGON_METADATA_KITTY_ENDPOINT =
   'https://kittygotchi.dexkit.com/api/';
-export const MUMBAI_METADATA_KITTY_ENDPOINT =
-  'https://mumbai-kittygotchi.dexkit.com/api/';
+export const MUMBAI_METADATA_KITTY_ENDPOINT = 'http://localhost:3001/api/';
+  //'https://mumbai-kittygotchi.dexkit.com/api/';
 
 export const GAS_PRICE_MULTIPLIER = 2;
 
