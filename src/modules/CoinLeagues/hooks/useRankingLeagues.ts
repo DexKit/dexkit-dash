@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
 import { POLL_INTERVAL_GAMES } from '../constants';
-import { GET_RANKING_MOST_JOINED, GET_RANKING_MOST_WINNED } from '../services/gql/ranking';
+import { GET_RANKING_MOST_EARNED, GET_RANKING_MOST_JOINED, GET_RANKING_MOST_WINNED } from '../services/gql/ranking';
 import { client } from '../services/graphql';
 import { PlayerGraph } from '../utils/types';
 
@@ -26,7 +26,14 @@ export const useRankingMostJoined = () => {
       });
 
     return query;
+}
 
+export const useRankingMostEarned = () => {
 
-    
+  const query =  useQuery<{players: PlayerGraph[]}>(GET_RANKING_MOST_EARNED, {
+      client: client,
+      pollInterval: POLL_INTERVAL_GAMES
+    });
+
+  return query;
 }
