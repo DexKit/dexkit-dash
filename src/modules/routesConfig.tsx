@@ -133,22 +133,13 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-league/ranking`,
         },
         {
-          id: 'coinleague.how-to-play',
-          title: 'How To Play',
-          messageId: 'sidebar.howToPlay',
-          type: 'item',
-          customIcon: true,
-          icon: 'question',
-          url: `/coin-league/how-to-play`,
-        },
-        {
           id: 'nftroom',
           title: 'NFT Room',
           messageId: 'sidebar.app.nft-room',
           type: 'item',
           customIcon: true,
           icon: 'game',
-          url: `/coin-leagues/nft-room`,
+          url: `/coin-league/nft-room`,
         },
         {
           id: 'howtoplay',
@@ -157,7 +148,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'question',
-          url: `/coin-leagues/how-to-play`,
+          url: `/coin-league/how-to-play`,
         }    
       ],
     },
@@ -210,15 +201,16 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'coinleague',
           url: `https://coinleagues.games`,
         },
-     /*   {
-          id: 'swap',
-          title: 'Swap',
-          messageId: 'sidebar.app.swap',
+      /* {
+          id: 'dashboard',
+          title: 'DexKit Dashboard',
+          messageId: 'sidebar.app.dexkit-dash',
           type: 'external',
-          icon: 'swap_horiz',
-          url: 'https://swap.dexkit.com/#/swap',
-        },
-        {
+          customIcon: true,
+          icon: 'dexkit',
+          url: 'https://app.dexkit.com',
+        },*/
+        /* {
           id: 'marketplace',
           title: 'Marketplace',
           messageId: 'sidebar.app.marketplace',
