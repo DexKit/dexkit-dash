@@ -10,6 +10,7 @@ export const GET_RANKING_MOST_WINNED = gql`
           totalFirstWinnedGames
           totalThirdWinnedGames
           totalSecondWinnedGames
+          totalEarned
       }
     }
   
@@ -23,6 +24,20 @@ export const GET_RANKING_MOST_JOINED = gql`{
       totalFirstWinnedGames
       totalThirdWinnedGames
       totalSecondWinnedGames
+      totalEarned
     }
   }
+`;
+
+export const GET_RANKING_MOST_EARNED = gql`{
+  players(first: 100, orderBy: totalEarned, orderDirection: desc, where: {totalEarned_gt: 0}) {
+    id
+    totalWinnedGames
+    totalJoinedGames
+    totalFirstWinnedGames
+    totalThirdWinnedGames
+    totalSecondWinnedGames
+    totalEarned
+  }
+}
 `;

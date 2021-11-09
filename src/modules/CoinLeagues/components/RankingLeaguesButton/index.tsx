@@ -50,6 +50,7 @@ interface RankingButtonProps {
   firstCount?: number;
   secondCount?: number;
   thirdCount?: number;
+  totalEarned?: number;
   label: string;
   featured?: boolean;
 }
@@ -172,6 +173,9 @@ export const RankingButton = (props: RankingButtonProps) => {
                   ((props?.winsCount || 0) / props?.joinsCount) * 100,
                 ).toFixed(2)} %`
               : '0%'}
+          </Typography>
+          <Typography variant={'body1'} className={classes.paragraphMargin}>
+            Earned Matic: {props?.totalEarned}
           </Typography>
         </Box>
       </Collapse>
