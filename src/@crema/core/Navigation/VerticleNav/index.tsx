@@ -32,8 +32,9 @@ const Navigation: React.FC<NavigationProps> = () => {
           )}
         </React.Fragment>
       ))}
-     < DexKitPowered />
-    {/*  <Version />*/}
+      {/*  
+       < DexKitPowered />
+      <Version />*/}
     </List>
   );
 };
