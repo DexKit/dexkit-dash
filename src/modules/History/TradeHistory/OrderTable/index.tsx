@@ -5,7 +5,6 @@ import {
   TableHead,
   TableBody,
   TablePagination,
-  Typography,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';

@@ -43,6 +43,8 @@ export const CustomIcon = (props: Props) => {
     return <GameBoyIcon {...props} />;
   }else if (icon === 'user.search') {
     return <UserSearchIcon {...props} />;
+  }else if (icon === 'question') {
+    return <QuestionIcon {...props} />;
   } else if (icon === 'cup') {
     return <CupIcon {...props} />;
   }else if (icon === 'question') {

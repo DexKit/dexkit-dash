@@ -17,8 +17,6 @@ export interface NavItemProps {
 }
 
 const useRoutesConfig = (): NavItemProps[] => {
-  const networkName = 'ethereum';
-
   let items: NavItemProps[] = [];
 
   items = [
@@ -105,7 +103,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'coinleague',
-          url: `/coin-leagues`,
+          url: `/coin-league`,
         },
         {
           id: 'coinleague-discover',
@@ -114,7 +112,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'gameboy',
-          url: `/coin-leagues/discover-games`,
+          url: `/coin-league/discover-games`,
         },
         {
           id: 'coinleague-mygame',
@@ -123,7 +121,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'user.search',
-          url: `/coin-leagues/my-games`,
+          url: `/coin-league/my-games`,
         },
         {
           id: 'coinleague.ranking',
@@ -132,7 +130,16 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'cup',
-          url: `/coin-leagues/ranking`,
+          url: `/coin-league/ranking`,
+        },
+        {
+          id: 'coinleague.how-to-play',
+          title: 'How To Play',
+          messageId: 'sidebar.howToPlay',
+          type: 'item',
+          customIcon: true,
+          icon: 'question',
+          url: `/coin-league/how-to-play`,
         },
         {
           id: 'nftroom',

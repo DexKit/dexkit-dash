@@ -71,6 +71,7 @@ const LinksForm: React.FC<Props> = (props) => {
     [fields, errors],
   );
 
+  /* eslint-disable */
   useEffect(() => {
     const _errors: error = Object.keys(fields ?? {}).reduce((pre, cur) => {
       type k = keyof typeof fields;

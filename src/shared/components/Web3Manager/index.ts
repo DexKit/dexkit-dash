@@ -13,6 +13,7 @@ export const Web3Manager = () => {
   const {web3, ethereum} = window;
 
   // Try to connect once at begin, check if provider is available and try to connect
+  /* eslint-disable */
   useEffect(() => {
     if (isMagicProvider()) {
       // We don't try to connect if we are on magic callback path

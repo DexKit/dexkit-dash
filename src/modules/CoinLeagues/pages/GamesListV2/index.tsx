@@ -34,7 +34,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {setDefaultAccount} from 'redux/_ui/actions';
 import {useDispatch} from 'react-redux';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
@@ -131,20 +131,20 @@ const GamesListV2 = () => {
         }),
       );
     }
-  }, [account]);
+  }, [account, defaultAccount, dispatch]);
 
   const onClickEnterGame = useCallback(
     (address: string) => {
       history.push(enterGameRoute(`${address}`));
     },
-    [enterGameRoute],
+    [enterGameRoute, history],
   );
 
   const onClickGoGamesInProgress = useCallback(
     (_ev: any) => {
       history.push(activeGamesRoute);
     },
-    [activeGamesRoute],
+    [activeGamesRoute, history],
   );
 
   const handleSearch = useCallback((e) => {
@@ -172,7 +172,7 @@ const GamesListV2 = () => {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'} />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
@@ -209,7 +209,7 @@ const GamesListV2 = () => {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'} />
         </Grid>
       </Hidden>
 

@@ -1,7 +1,6 @@
 import {
   ListItem,
   ListItemIcon,
-  Avatar,
   ListItemText,
   makeStyles,
   Chip,
@@ -41,7 +40,7 @@ export const SelectTokenListItem = (props: Props) => {
   return (
     <ListItem onClick={handleClick} button>
       <ListItemIcon>
-        <img src={token.icon} className={classes.coinAvatar} />
+        <img alt='' src={token.icon} className={classes.coinAvatar} />
       </ListItemIcon>
       <ListItemText primary={token.symbol} secondary={token.name} />
       {showNetwork ? (

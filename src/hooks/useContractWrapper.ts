@@ -24,7 +24,7 @@ export const useContractWrapper = () => {
     } else {
       setIsContractLoaded(false);
     }
-  }, [chainId, web3State]);
+  }, [chainId, web3State, getProvider]);
 
   return {getContractWrappers, isContractLoaded};
 };

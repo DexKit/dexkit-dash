@@ -31,7 +31,7 @@ const HowToPlay = () => {
 
   const handleBack = useCallback((ev: any) => {
     history.goBack();
-  }, []);
+  }, [history]);
 
   const addMetamaskPolygon = useCallback(() => {
     if (window && window.ethereum) {
@@ -103,6 +103,7 @@ const HowToPlay = () => {
             src={'/images/coinleagues/howtoplay/howtoplay-step6.png'}
             loading={'lazy'}
             style={{width: '20%'}}
+            alt={'Steps'}
           />
         </Box>
       </Grid>
@@ -127,6 +128,7 @@ const HowToPlay = () => {
             src={'/images/coinleagues/howtoplay/howtoplay-step2.png'}
             loading={'lazy'}
             style={{width: '100%'}}
+            alt={'Steps'}
           />
         </Box>
       </Grid>
@@ -153,6 +155,7 @@ const HowToPlay = () => {
             src={'/images/coinleagues/howtoplay/howtoplay-step3.png'}
             loading={'lazy'}
             style={{width: '100%'}}
+            alt={'Steps'}
           />
         </Box>
       </Grid>
@@ -180,6 +183,7 @@ Once finished an “Enter Game” button will appear Press that and your Metamas
             src={'/images/coinleagues/howtoplay/howtoplay-step5.png'}
             loading={'lazy'}
             style={{width: '100%'}}
+            alt={'Steps'}
           />
         </Box>
       </Grid>

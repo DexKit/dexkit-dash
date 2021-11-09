@@ -1,5 +1,5 @@
 import CollectionSetup from 'modules/Wizard/components/setups/CollectionSetup';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import MainLayout from 'shared/components/layouts/main';
 
 interface WizardSetupProps {}

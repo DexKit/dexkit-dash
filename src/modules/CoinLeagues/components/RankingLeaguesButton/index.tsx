@@ -2,11 +2,7 @@ import React, {useCallback, useMemo} from 'react';
 
 import {
   Box,
-  Avatar,
   Grid,
-  Breadcrumbs,
-  Link,
-  IconButton,
   Typography,
   Paper,
   ButtonBase,
@@ -18,7 +14,6 @@ import {
 
 import {Skeleton} from '@material-ui/lab';
 
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {useToggler} from 'hooks/useToggler';
@@ -62,18 +57,17 @@ interface RankingButtonProps {
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
 
-  const {address, onClick, src, featured, position, label, count, winsCount} =
-    props;
+  const {address, featured, position, label, count} = props;
 
   const toggler = useToggler();
 
-  const handleClick = useCallback(() => {
-    onClick(address);
-  }, [address, onClick]);
+  // const handleClick = useCallback(() => {
+  //   onClick(address);
+  // }, [address, onClick]);
 
   const handleToggle = useCallback(() => {
     toggler.toggle();
-  }, []);
+  }, [toggler]);
 
   const isMobile = useMobile();
 

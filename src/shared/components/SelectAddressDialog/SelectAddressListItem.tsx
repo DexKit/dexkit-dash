@@ -1,4 +1,4 @@
-import {List, ListItem, ListItemText} from '@material-ui/core';
+import {ListItem, ListItemText} from '@material-ui/core';
 import React, {useCallback} from 'react';
 
 interface SelectAccountListItemProps {

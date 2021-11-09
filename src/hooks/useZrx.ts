@@ -16,7 +16,7 @@ export const useZrx = () => {
   ) => {
     return new Promise((resolve, reject) => {
       if (chainId && account) {
-        const order = createSignedOrder(
+        createSignedOrder(
           {
             baseToken: token0,
             quoteToken: token1,

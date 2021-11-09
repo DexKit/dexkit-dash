@@ -20,7 +20,6 @@ import {
   useHistory,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
-import ChartAccordion from 'modules/CoinLeagues/components/ChartAccordion';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {truncateAddress} from 'utils/text';
 import {ethers, BigNumber} from 'ethers';
@@ -55,7 +54,7 @@ import {CopyButton} from 'shared/components/CopyButton';
 import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import CoinsLeagueBanner from 'assets/images/banners/coinsleague.svg';
+import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -65,7 +64,6 @@ import Alert from '@material-ui/lab/Alert';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useMobile} from 'hooks/useMobile';
 import SwapButton from 'shared/components/SwapButton';
 import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
 
@@ -109,7 +107,6 @@ function GameEnter(props: Props) {
   const {balance} = useActiveChainBalance();
 
   const {createNotification} = useNotifications();
-  const isMobile = useMobile();
 
   const {address} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
@@ -212,7 +209,7 @@ function GameEnter(props: Props) {
       }
       //history.push(listGamesRoute)
     },
-    [listGamesRoute],
+    [listGamesRoute, history],
   );
 
   const onEnterGame = useCallback(
@@ -286,19 +283,19 @@ function GameEnter(props: Props) {
 
 
 
-  const currentPlayers = useMemo(() => game?.players.length, [game?.players]);
+  const currentPlayers = useMemo(() => game?.players.length, [game?.players, game]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
     }
-  }, [started, totalPlayers, currentPlayers]);
+  }, [totalPlayers, currentPlayers]);
 
   const isDisabled = useMemo(() => {
     return (
       selectedCoins?.length === (game?.num_coins?.toNumber() || 0) - 1 &&
       captainCoin !== undefined
     );
-  }, [selectedCoins, game?.num_coins, captainCoin]);
+  }, [selectedCoins, game?.num_coins, captainCoin, game]);
 
   const goToExplorer = useCallback(
     (_ev: any) => {

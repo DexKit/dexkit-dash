@@ -44,11 +44,11 @@ export default (props: Props) => {
 
   const handleAccept = useCallback(() => {
     onAccept(offer);
-  }, [offer]);
+  }, [offer, onAccept]);
 
   const handleCancel = useCallback(() => {
     onCancel(offer);
-  }, [offer]);
+  }, [offer, onCancel]);
 
   return (
     <TableRow>

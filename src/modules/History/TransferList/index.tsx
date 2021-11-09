@@ -27,7 +27,7 @@ const TransferListPage: React.FC<Props> = (props) => {
     if (account && account !== address) {
       history.push(`/${networkName}/history/transfer/list/${account}`);
     }
-  }, [account, networkName, address]);
+  }, [account, networkName, address, history]);
 
   const onSwitchNetwork = (n: EthereumNetwork) => {
     history.push(`/${n}/history/transfer/list/${account}`);

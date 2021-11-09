@@ -25,7 +25,7 @@ export async function getOpenSeaPort(provider: any) {
 
   const chainId = await getChainId(provider);
 
-  if (chainId == RINKEBY_NETWORK) {
+  if (chainId === RINKEBY_NETWORK) {
     config = RINKEBY_API_CONFIG;
   }
 

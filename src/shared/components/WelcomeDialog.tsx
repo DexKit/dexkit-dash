@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect, useRef} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {
   Box,
@@ -11,7 +11,6 @@ import {
 
 import Slider from './Slider';
 import {makeStyles} from '@material-ui/styles';
-import Close from '@material-ui/icons/Close';
 import {useMobile} from 'hooks/useMobile';
 
 import {useHistory} from 'react-router';
@@ -56,6 +55,7 @@ const LazyImage = (props: LazyImageProps) => {
         <CircularProgress className={className} />
       </div>
       <img
+        alt=''
         style={{display: loading ? 'none' : 'block'}}
         className={className}
         src={src}
@@ -90,7 +90,7 @@ export const WelcomeDialog = (props: WelcomeDialogProps) => {
     }
 
     history.push('/onboarding/login-wallet');
-  }, [onClose]);
+  }, [onClose, history]);
 
   const handleChangeIndex = useCallback((newIndex: number) => {
     setIndex(newIndex);

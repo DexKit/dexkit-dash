@@ -1,7 +1,5 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import {
-  Card,
-  CardContent,
   Typography,
   Link,
   Grid,
@@ -14,9 +12,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
-
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 import {Skeleton} from '@material-ui/lab';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
@@ -42,7 +37,6 @@ import CountdownTimer from './CountdownTimer';
 import CountdownPrice from './CountdownPrice';
 import {getWindowUrl} from 'utils/browser';
 import CopyButton from 'shared/components/CopyButton';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 import {ReactComponent as DocumentCopyIcon} from 'assets/images/icons/document-copy.svg';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
@@ -68,7 +62,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const {asset, loading, error, onBuy, onTransfer} = props;
+  const {asset, loading, onBuy, onTransfer} = props;
   const classes = useStyles();
   const [isTestnet, setIsTestnet] = useState(false);
   const {getProvider, chainId} = useWeb3();
@@ -76,28 +70,29 @@ export default (props: Props) => {
 
   const hasListing = useCallback((asset: any) => {
     return (
-      asset?.orders?.filter((o: any) => o.side == OrderSide.Sell).length > 0
+      asset?.orders?.filter((o: any) => o.side === OrderSide.Sell).length > 0
     );
   }, []);
 
   const getFirstOrder = useCallback((asset: any) => {
     return asset?.orders
-      .filter((o: any) => o.side == OrderSide.Sell)
+      .filter((o: any) => o.side === OrderSide.Sell)
       .sort(sortByMinPrice)[0];
   }, []);
 
+  /* eslint-disable */
   const getFirstOrderTokenImage = useCallback((asset: any) => {
     return getFirstOrder(asset).payment_token_contract?.image_url;
   }, []);
 
-  const getFirstOrderPrice = useCallback((asset: any) => {
-    const order = getFirstOrder(asset);
+  // const getFirstOrderPrice = useCallback((asset: any) => {
+  //   const order = getFirstOrder(asset);
 
-    return toTokenUnitAmount(
-      order.current_price,
-      order.payment_token_contract?.decimals,
-    ).toNumber();
-  }, []);
+  //   return toTokenUnitAmount(
+  //     order.current_price,
+  //     order.payment_token_contract?.decimals,
+  //   ).toNumber();
+  // }, []);
 
   const getEndingPrice = useCallback(
     (asset: any) => {
@@ -118,6 +113,7 @@ export default (props: Props) => {
     [getFirstOrder],
   );
 
+  /* eslint-disable */
   const handleBuy = useCallback(() => {
     onBuy(getFirstOrder(asset));
   }, [asset, onBuy]);
@@ -126,7 +122,7 @@ export default (props: Props) => {
     (async () => {
       const cid = await getChainId(getProvider());
 
-      if (cid == RINKEBY_NETWORK) {
+      if (cid === RINKEBY_NETWORK) {
         setIsTestnet(true);
       } else {
         setIsTestnet(false);

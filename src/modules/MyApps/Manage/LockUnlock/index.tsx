@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
-import {Box, Button, Card} from '@material-ui/core';
-import {indigo} from '@material-ui/core/colors';
+import {Box, Card} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import IntlMessages from '@crema/utility/IntlMessages';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
@@ -56,10 +53,10 @@ const LockUnlock: React.FC<Props> = ({balances}) => {
   // const [senderModal, setSenderModal] = useState(false);
   // const [receiverModal, setReceiverModal] = useState(false);
 
-  const history = useHistory();
   const classes = useStyles();
 
   const [kit, setKit] = useState<any[]>([]);
+  /* eslint-disable */
   const [usd, setUsd] = useState<number>(0);
 
   useEffect(() => {

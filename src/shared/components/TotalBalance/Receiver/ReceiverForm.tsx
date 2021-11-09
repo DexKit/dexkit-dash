@@ -15,10 +15,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
 import QRCode from 'qrcode.react';
-import copy from 'copy-to-clipboard';
 import FileCopy from '@material-ui/icons/FileCopy';
 import CopyButton from 'shared/components/CopyButton';
-import {useHistory} from 'react-router';
 import {useNetwork} from 'hooks/useNetwork';
 import {Token} from 'types/app';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -66,8 +64,6 @@ const ReceiverForm: React.FC<Props> = (props) => {
 
   const networkName = useNetwork();
 
-  const history = useHistory();
-
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [inputAddress, setInputAddress] = useState(account);
   const [amount, setAmount] = useState('0.0');
@@ -76,6 +72,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
   const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
   const [token, setToken] = useState<Token>();
   const [shareUrl, setShareURL] = useState('');
+  /* eslint-disable */
   const {tokens, allTokens} = useSenderTokens();
 
   const [qrCodeText, setQRCodeText] = useState(inputAddress ?? '');

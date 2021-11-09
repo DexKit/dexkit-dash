@@ -1,7 +1,6 @@
 import {CallInput} from '@indexed-finance/multicall';
 import {
   BigNumber,
-  Contract,
   ContractTransaction,
   ethers,
   providers,
@@ -154,7 +153,7 @@ export const getPlayerMultipliers = async (
   provider: any,
 ) => {
   const iface = new Interface(erc20Abi);
-  const ifaceChampions = new Interface(erc20Abi);
+ // const ifaceChampions = new Interface(erc20Abi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   if (players.length === 0) {
@@ -162,7 +161,7 @@ export const getPlayerMultipliers = async (
   }
   const DexKit = DEXKIT[ChainId.Matic] as Token;
   const Bittoken = BITTOKEN[ChainId.Matic] as Token;
-  const Champions = CHAMPIONS[ChainId.Matic] as Token;
+ // const Champions = CHAMPIONS[ChainId.Matic] as Token;
 
   for (let index = 0; index < players.length; index++) {
     const addr = players[index];
@@ -237,7 +236,7 @@ export const joinGame = async (
 ) => {
 
   const pr = new providers.Web3Provider(provider);
-  const net =  await pr.getNetwork();
+  // const net =  await pr.getNetwork();
 
   const gasPrice = await (
     await pr?.getGasPrice()

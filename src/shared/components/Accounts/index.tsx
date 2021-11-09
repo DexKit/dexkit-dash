@@ -4,8 +4,7 @@ import {useAccountsModal} from 'hooks/useAccountsModal';
 
 import {Box, Typography, Snackbar, CircularProgress} from '@material-ui/core';
 
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
+import {useTheme} from '@material-ui/core/styles';
 
 import {Grid, Tooltip, Button} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
@@ -43,6 +42,7 @@ const Accounts = () => {
   const [address, setAddress] = useState<string>();
   const [error, setError] = useState<string>();
 
+  /* eslint-disable */
   const [_anchorEl, setAnchorEl] = useState<Element>();
   const [_addNew, setAddNew] = useState(false);
 

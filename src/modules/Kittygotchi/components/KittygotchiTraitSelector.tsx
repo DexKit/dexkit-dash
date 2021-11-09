@@ -1,20 +1,22 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import clsx from 'clsx';
+import React, {useCallback} from 'react';
 
 import {
   makeStyles,
   Box,
+  Divider,
   Grid,
-  IconButton,
+  AccordionSummary,
+  Accordion,
+  AccordionDetails,
   Typography,
-  Paper,
 } from '@material-ui/core';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import TraitSelectorItem from './TraitSelectorItem';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {KittygotchiTraitItem} from '../constants/index';
+import {KittygotchiTraitType} from '../constants/index';
+
+import {KittygotchiTraitItem} from '../types/index';
+import TraitSelectorItem from './TraitSelectorItem';
 
 const useStyles = makeStyles((theme) => ({
   kittygotchiBackground: {},
@@ -52,19 +54,22 @@ interface Props {
   title: string;
   items: KittygotchiTraitItem[];
   onSelect: (item: KittygotchiTraitItem) => void;
-  selecteds: KittygotchiTraitItem[];
+  value?: string;
   kitHolding: number;
-}
-
-function isItemSelected(
-  items: KittygotchiTraitItem[],
-  item: KittygotchiTraitItem,
-) {
-  return false;
+  traitType: KittygotchiTraitType;
+  defaultExpanded?: boolean;
 }
 
 export const KittygotchiTraitSelector = (props: Props) => {
-  const {title, items, onSelect, selecteds, kitHolding} = props;
+  const {
+    title,
+    items,
+    onSelect,
+    value,
+    kitHolding,
+    traitType,
+    defaultExpanded,
+  } = props;
 
   const classes = useStyles();
 
@@ -76,27 +81,13 @@ export const KittygotchiTraitSelector = (props: Props) => {
   );
 
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12}>
-        <Paper>
-          <Box
-            p={2}
-            display='flex'
-            alignItems='center'
-            alignContent='center'
-            justifyContent='space-between'>
-            <IconButton>
-              <NavigateBeforeIcon />
-            </IconButton>
-            <Typography variant='body1'>{title}</Typography>
-            <IconButton>
-              <NavigateNextIcon />
-            </IconButton>
-          </Box>
-        </Paper>
-      </Grid>
-      <Grid item xs={12}>
-        <Box className={classes.traitSelectorWrapper} px={4}>
+    <Accordion defaultExpanded={defaultExpanded}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant='body1'>{title}</Typography>
+      </AccordionSummary>
+      <Divider />
+      <AccordionDetails>
+        <Box className={classes.traitSelectorWrapper} p={4}>
           <Grid
             container
             spacing={4}
@@ -107,16 +98,46 @@ export const KittygotchiTraitSelector = (props: Props) => {
               <Grid item key={index}>
                 <TraitSelectorItem
                   item={item}
-                  locked={item.holding > kitHolding}
-                  selected={isItemSelected(selecteds, item)}
+                  traitType={traitType}
+                  locked={kitHolding < item.holding}
+                  selected={(value || '') === item.value}
                   onClick={handleSelect}
                 />
               </Grid>
             ))}
           </Grid>
         </Box>
-      </Grid>
-    </Grid>
+      </AccordionDetails>
+      {/* <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant='h6'>{title}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper>
+            <Box className={classes.traitSelectorWrapper} p={4}>
+              <Grid
+                container
+                spacing={4}
+                alignItems='center'
+                alignContent='center'
+                wrap='nowrap'>
+                {items.map((item: KittygotchiTraitItem, index: number) => (
+                  <Grid item key={index}>
+                    <TraitSelectorItem
+                      item={item}
+                      traitType={traitType}
+                      locked={kitHolding < item.holding}
+                      selected={(value || '') === item.value}
+                      onClick={handleSelect}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid> */}
+    </Accordion>
   );
 };
 

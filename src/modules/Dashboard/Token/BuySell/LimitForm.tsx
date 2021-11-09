@@ -17,7 +17,6 @@ import {
   useTheme,
 } from '@material-ui/core';
 import {Alert, Skeleton} from '@material-ui/lab';
-import VerticalSwap from './VerticalSwap';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -134,6 +133,7 @@ const LimitForm: React.FC<Props> = (props) => {
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
     if (tokenFrom && tokenTo && chainId && account) {
       const getTokenBalance = (token: Token | undefined) =>

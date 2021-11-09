@@ -1,15 +1,15 @@
 import {ChainId} from 'types/blockchain';
 import {Token} from 'types/app';
-import { EthereumNetwork } from './AppEnums';
+import {EthereumNetwork} from './AppEnums';
 
-const WETH: Token = {
-  address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  chainId: ChainId.Mainnet,
-  name: 'Wrapped ETH',
-  symbol: 'WETH',
-  decimals: 18,
-  logoURI: '',
-};
+// const WETH: Token = {
+//   address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+//   chainId: ChainId.Mainnet,
+//   name: 'Wrapped ETH',
+//   symbol: 'WETH',
+//   decimals: 18,
+//   logoURI: '',
+// };
 
 const DEXKIT_ETH: Token = {
   address: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
@@ -23,6 +23,16 @@ const DEXKIT_ETH: Token = {
 const DEXKIT_MATIC: Token = {
   address: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
   chainId: ChainId.Matic,
+  name: 'DexKit',
+  symbol: 'KIT',
+  decimals: 18,
+  logoURI: '',
+};
+
+
+const DEXKIT_MUMBAI: Token = {
+  address: '0xdf2e4383363609351637d262f6963D385b387340',
+  chainId: ChainId.Mumbai,
   name: 'DexKit',
   symbol: 'KIT',
   decimals: 18,
@@ -52,8 +62,6 @@ type DexKitTokenList = {
   readonly [chainId in ChainId]: Token;
 };
 
-
-
 /*const WETH_ONLY: ChainTokenList = {
     [ChainId.Mainnet]: [WETH],
 
@@ -62,6 +70,7 @@ type DexKitTokenList = {
 export const DEXKIT: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: DEXKIT_ETH,
   [ChainId.Matic]: DEXKIT_MATIC,
+  [ChainId.Mumbai]: DEXKIT_MUMBAI,
 };
 
 export const BITTOKEN: Partial<DexKitTokenList> = {
@@ -73,8 +82,6 @@ export const CHAMPIONS: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: BITTOKEN_ETH,
   [ChainId.Matic]: BITTOKEN_MATIC,
 };
-
-
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -98,7 +105,8 @@ const ROPSTEN_LIST: Token[] = [
     name: 'Uniswap',
     symbol: 'Uni',
     decimals: 18,
-    logoURI: 'https://cloudflare-ipfs.com/ipfs/QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg/',
+    logoURI:
+      'https://cloudflare-ipfs.com/ipfs/QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg/',
   },
   {
     address: '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
@@ -108,9 +116,8 @@ const ROPSTEN_LIST: Token[] = [
     symbol: 'DAI',
     decimals: 18,
     logoURI: '/images/coins/DAI.png',
-  }
-]
-
+  },
+];
 
 const BSC_TESTNET_LIST: Token[] = [
   {
@@ -129,7 +136,7 @@ const BSC_TESTNET_LIST: Token[] = [
     decimals: 18,
     logoURI: '',
   },
-]
+];
 
 const MUMBAI_TESTNET_LIST: Token[] = [
   /*{
@@ -140,7 +147,7 @@ const MUMBAI_TESTNET_LIST: Token[] = [
     decimals: 18,
     logoURI: '',
   },*/
-]
+];
 
 export const TOKENS_LIST: Partial<ChainTokenList> = {
   [ChainId.Ropsten]: ROPSTEN_LIST,

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import GridContainer from '@crema/core/GridContainer';
 import {
   Accordion,
@@ -25,7 +25,6 @@ import {
 import {ColorResult} from 'react-color';
 
 import ColorSets from 'shared/constants/ColorSets';
-import {string} from 'prop-types';
 
 type ConfigFileWithTheme = ConfigFileExchange | ConfigFileMarketplace;
 interface ThemeFormProps {
@@ -163,6 +162,8 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
       changeIssuerForm(selectedOption.value, theme);
     }
   };
+
+  /* eslint-disable */
   useEffect(() => {
     if (theme == null || Object.keys(theme).length === 0) {
       const _theme = Array.from(componentes.values()).reduce((obj, key, i) => {

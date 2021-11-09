@@ -98,9 +98,9 @@ const CreateGameModal = (props: Props) => {
   const [totalPlayers, setTotalPlayers] = useState<number>();
   const [tx, setTx] = useState<string>('asda');
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+ /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
-  }
+  }*/
   const onCreateGame = useCallback(
     (ev?: any) => {
       if (totalPlayers && entryAmount && duration && coins) {
@@ -145,7 +145,7 @@ const CreateGameModal = (props: Props) => {
         });
       }
     },
-    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute],
+    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute, history, onGameCreateCallback, refetchCreated],
   );
 
   const goToExplorer = useCallback(

@@ -16,10 +16,13 @@ export const isSupportedWalletType = (network: Network) => {
 };
 
 export function switchChain(provider: any, to: number): Promise<any> {
-  return provider.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{chainId: `0x${to.toString(16)}`}],
-  });
+  console.log('troca de network');
+  return provider
+    .request({
+      method: 'wallet_switchEthereumChain',
+      params: [{chainId: `0x${to.toString(16)}`}],
+    })
+    .catch((err: any) => console.log('troca de ', err));
 }
 
 export function switchAddress(provider: any): Promise<any> {

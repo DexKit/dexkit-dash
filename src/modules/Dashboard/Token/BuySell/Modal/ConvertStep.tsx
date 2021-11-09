@@ -13,7 +13,7 @@ import {BigNumber} from '@0x/utils';
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import { tokenAmountInUnits } from 'utils';
+import {tokenAmountInUnits} from 'utils';
 
 // get tokens ta sendo chamado 3x
 
@@ -46,7 +46,6 @@ const ConvertStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-
   const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();
 
@@ -54,6 +53,7 @@ const ConvertStep: React.FC<Props> = (props) => {
     return false;
   };
 
+  /* eslint-disable */
   useEffect(() => {
     if (step === Steps.CONVERT) {
       if (isConverted()) {

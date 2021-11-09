@@ -13,24 +13,24 @@ export const useMyAssets = () => {
       const chainId = await getChainId(provider);
       const params = new Map<string, string>();
 
-      if(query.owner){
+      if (query.owner) {
         params.set('owner', query.owner);
       }
-      if(query.sortBy){
+      if (query.sortBy) {
         params.set('order_by', query.sortBy);
       }
-      if(query.offset){
+      if (query.offset) {
         params.set('offset', String(query.offset));
       }
-      if(query.limit){
+      if (query.limit) {
         params.set('limit', String(query.limit));
       }
-      if(query.collection){
+      if (query.collection) {
         params.set('collection', query.collection);
       }
-     let url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
-      }.opensea.io/api/v1/assets?`
+      let url = `https://${
+        chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+      }.opensea.io/api/v1/assets?`;
 
       for (const [key, value] of params) {
         url += `${key}=${value}&`;

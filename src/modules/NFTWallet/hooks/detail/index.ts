@@ -13,7 +13,7 @@ export function useAssetEvents() {
       const chainId = await getChainId(provider);
 
       const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+        chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
       }.opensea.io/api/v1/events?asset_contract_address=${assetAddress}&token_id=${tokenId}&offset=${
         page * 20
       }&limit=20`;
@@ -42,7 +42,7 @@ export function useAsset() {
       const chainId = await getChainId(provider);
 
       const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+        chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
       }.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/`;
 
       setLoading(true);

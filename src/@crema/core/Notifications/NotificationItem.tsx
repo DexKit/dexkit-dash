@@ -1,4 +1,4 @@
-import React, {useRef, useState, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {CircularProgress} from '@material-ui/core';
 // import PropTypes from 'prop-types';
 import {
@@ -19,7 +19,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Notification} from 'types/models/Notification';
 import {useDispatch} from 'react-redux';
-import {onRemoveNotification, onUncheckedNotification} from 'redux/actions';
+import {onRemoveNotification} from 'redux/actions';
 import Delete from '@material-ui/icons/Delete';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
@@ -53,7 +53,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
   const handleRemove = useCallback(() => {
     dispatch(onRemoveNotification(item?.id ?? id));
-  }, [item]);
+  }, [dispatch, item, id]);
 
   const isTransaction = item?.type === NotificationType.TRANSACTION;
 

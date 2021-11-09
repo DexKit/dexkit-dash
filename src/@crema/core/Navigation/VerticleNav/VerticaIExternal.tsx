@@ -19,6 +19,7 @@ interface VerticalExternalProps {
 const VerticalExternal: React.FC<VerticalExternalProps> = ({item, level}) => {
   const classes = useStyles({level});
 
+  /* eslint-disable */
   const getUrl = () => {
     if (item.url) return item.url;
     return '/';

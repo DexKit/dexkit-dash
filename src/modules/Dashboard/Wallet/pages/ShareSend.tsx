@@ -24,7 +24,7 @@ export const ShareSend = (props: Props) => {
 
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
-  }, []);
+  }, [history.location.search]);
 
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState(0.0);

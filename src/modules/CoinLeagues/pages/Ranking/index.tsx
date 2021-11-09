@@ -8,9 +8,6 @@ import {
   Link,
   IconButton,
   Typography,
-  Paper,
-  ButtonBase,
-  Chip,
   Divider,
 } from '@material-ui/core';
 
@@ -54,7 +51,7 @@ export function Ranking() {
           <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                CoinLeagues
+                Coin League
               </Link>
             </Breadcrumbs>
           </Grid>

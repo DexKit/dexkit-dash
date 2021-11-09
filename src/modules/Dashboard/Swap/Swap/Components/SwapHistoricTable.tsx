@@ -7,7 +7,7 @@ import {
   TableRow,
   Paper,
 } from '@material-ui/core';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {ChangellyTransaction} from 'types/changelly';
 import {SwapHistoricTableRow} from './SwapHistoricTableRow';
 

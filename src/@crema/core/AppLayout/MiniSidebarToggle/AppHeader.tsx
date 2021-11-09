@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,10 +14,7 @@ import Notifications from '../../Notifications';
 import WalletInfo from 'shared/components/WalletInfo';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  GET_CHAIN_ID_NAME,
-  GET_DEFAULT_TOKEN_BY_NETWORK,
-} from 'shared/constants/Blockchain';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
 
@@ -40,9 +37,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ReactComponent as LeagueLogoImage} from 'assets/images/dashboard/league-logo.svg';
 import {ReactComponent as LeagueIconLogoImage} from 'assets/images/dashboard/league-icon-logo.svg';
 
-import {TokenSearch} from 'shared/components/TokenSearch';
 import {useHistory} from 'react-router';
-import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
 import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
@@ -51,12 +46,11 @@ import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
 import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
-import {connectWeb3, setProvider} from 'services/web3modal';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId, getProvider, setProvider, account} = useWeb3();
+  const {chainId, getProvider, account} = useWeb3();
   const {onSwitchMagicNetwork} = useMagicProvider();
 
   const classes = useStyles();
@@ -101,18 +95,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     dispatch(toggleNavCollapsed());
   }, [dispatch]);
 
-  const onClickSearchToken = (token: Token) => {
-    if (token) {
-      if (token.address) {
-        history.push(`/explorer/${token.address}?network=${token.networkName}`);
-      } else {
-        const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
-        if (add) {
-          history.push(`/explorer/${add}?network=${token.networkName}`);
-        }
-      }
-    }
-  };
+  // const onClickSearchToken = (token: Token) => {
+  //   if (token) {
+  //     if (token.address) {
+  //       history.push(`/explorer/${token.address}?network=${token.networkName}`);
+  //     } else {
+  //       const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
+  //       if (add) {
+  //         history.push(`/explorer/${add}?network=${token.networkName}`);
+  //       }
+  //     }
+  //   }
+  // };
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
 
@@ -138,7 +132,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       }
     },
-    [getProvider, isMagicProvider],
+    [dispatch, getProvider, isMagicProvider],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {

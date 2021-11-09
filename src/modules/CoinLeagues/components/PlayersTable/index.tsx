@@ -118,7 +118,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins, type} = props;
+  const {address, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
@@ -142,7 +142,7 @@ function PlayersTable(props: Props): JSX.Element {
   // We need to this to calculate the monster of score in real time
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
-      return props?.data?.map((d) => {
+      return data?.map((d) => {
         let label;
         const bitboyMember = GET_BITBOY_NAME(d.hash);
         if (bitboyMember) {
@@ -216,7 +216,7 @@ function PlayersTable(props: Props): JSX.Element {
         }
       });
     }
-    return props?.data?.map((d) => {
+    return data?.map((d) => {
       let label;
       const bitboyMember = GET_BITBOY_NAME(d.hash);
       if (bitboyMember) {
@@ -233,7 +233,7 @@ function PlayersTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds]);
+  }, [props.data, game, currentPrices, allFeeds, data, type]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 

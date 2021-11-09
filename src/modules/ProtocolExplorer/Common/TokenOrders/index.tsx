@@ -5,7 +5,6 @@ import {
   Box,
   CircularProgress,
   Hidden,
-  Toolbar,
   Tooltip,
   Typography,
 } from '@material-ui/core';
@@ -14,7 +13,6 @@ import FilterMenu from 'shared/components/Filter/menu';
 import FilterList from 'shared/components/Filter/list';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenOrdersTable from './TokenOrdersTable';
-import {useStyles} from './index.style';
 import LoadingTable from 'modules/Common/LoadingTable';
 
 interface Props {
@@ -28,7 +26,6 @@ interface Props {
 const TokenOrders: React.FC<Props> = (props) => {
   const {baseAddress, quoteAddress, exchange, networkName, type} = props;
   const {messages} = useIntl();
-  const classes = useStyles();
 
   const {
     loading,

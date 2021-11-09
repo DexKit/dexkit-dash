@@ -5,8 +5,6 @@ import {
   Link,
   Typography,
   Breadcrumbs,
-  Card,
-  CardMedia,
   Grid,
   Paper,
   makeStyles,
@@ -15,8 +13,6 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link as RouterLink, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {ChainId, Web3State} from 'types/blockchain';
-import {useWeb3} from 'hooks/useWeb3';
 
 import {ethers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
@@ -165,6 +161,7 @@ export const AssetDetailsPage = () => {
               <Skeleton variant='rect' className={classes.image} />
             ) : tokenMetadata?.image ? (
               <img
+                alt=''
                 src={getNormalizedUrl(tokenMetadata?.image)}
                 className={classes.image}
               />

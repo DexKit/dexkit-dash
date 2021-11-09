@@ -17,7 +17,7 @@ export default (props: Props) => {
       {collections.map((collection: any) => (
         <CollectionListItem
           onSelect={onSelect}
-          selected={selected == collection.slug}
+          selected={selected === collection.slug}
           key={collection.slug}
           collection={collection}
         />

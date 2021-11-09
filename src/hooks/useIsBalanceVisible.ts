@@ -1,21 +1,18 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "redux/store";
-import { toggleBalancesIsVisible } from "redux/_ui/actions";
-
-
-
-
+import {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import {toggleBalancesIsVisible} from 'redux/_ui/actions';
 
 export const useIsBalanceVisible = () => {
-    const dispatch = useDispatch();
-    const isBalanceVisible = useSelector<AppState, AppState['ui']['balancesVisible']>(
-        (state) => state.ui.balancesVisible,
-      );
+  const dispatch = useDispatch();
+  const isBalanceVisible = useSelector<
+    AppState,
+    AppState['ui']['balancesVisible']
+  >((state) => state.ui.balancesVisible);
 
-    const setBalanceIsVisible = useCallback(()=> {
-        dispatch(toggleBalancesIsVisible());
-    }, [])
+  const setBalanceIsVisible = useCallback(() => {
+    dispatch(toggleBalancesIsVisible());
+  }, [dispatch]);
 
-    return {isBalanceVisible, setBalanceIsVisible}
-}
+  return {isBalanceVisible, setBalanceIsVisible};
+};

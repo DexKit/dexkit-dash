@@ -17,7 +17,6 @@ import {
   Collection,
   ConfigFileMarketplace,
   GeneralConfig,
-  SocialNetworks,
   TokenMetaData,
 } from 'types/myApps';
 import {ChainId} from 'types/blockchain';
@@ -95,7 +94,6 @@ function getStepContent(
   switch (step) {
     case 0: {
       const fields: GeneralConfig = data as GeneralConfig;
-      console.log(`getStepContent.editable(${step})`, editable);
       return (
         <GeneralForm
           key={'generalForm'}
@@ -162,16 +160,16 @@ type MarketplaceParams = {
 };
 
 type MarketplaceProps = RouteComponentProps<MarketplaceParams>;
-const initSocial = {
-  facebook_url: '',
-  reddit_url: '',
-  twitter_url: '',
-  telegram_url: '',
-  discord_url: '',
-  bitcointalk_url: '',
-  youtube_url: '',
-  medium_url: '',
-} as SocialNetworks;
+// const initSocial = {
+//   facebook_url: '',
+//   reddit_url: '',
+//   twitter_url: '',
+//   telegram_url: '',
+//   discord_url: '',
+//   bitcointalk_url: '',
+//   youtube_url: '',
+//   medium_url: '',
+// } as SocialNetworks;
 
 // const initConfig = {
 //   collections: [],
@@ -191,8 +189,7 @@ const initSocial = {
 const initConfig = {
   general: {
     title: 'KitDex',
-    icon:
-      'https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0',
+    icon: 'https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0',
     feeRecipient: '0x1f9eEf1A12b56452b8CAba1cFD03d697f1cc68F7',
     feePercentage: 0.1,
     domain: '',
@@ -398,10 +395,10 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   const updateForm = useCallback(
     (key: keyof ConfigFileMarketplace | 'editable', value: any) => {
       const dataType = Object.values(WizardData).find((e) => e === key);
-      if (dataType != null && key != 'editable') {
+      if (dataType  && key !== 'editable') {
         form[key] = value;
         setForm(form);
-      } else if (key == 'editable') {
+      } else if (key === 'editable') {
         setEditable(Boolean(value));
       }
     },
@@ -409,7 +406,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   );
 
   useEffect(() => {
-    if (editable && configs != null) {
+    if (editable && configs) {
       const index = configs.findIndex(
         (c, i) =>
           c.type === 'MARKETPLACE' &&
@@ -425,7 +422,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
     } else if (loading) {
       setForm({...initConfig});
     }
-  }, [slug, configs]);
+  }, [slug, configs, editable, loading]);
 
   useEffect(() => {
     if (preview) {

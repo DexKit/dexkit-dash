@@ -1,5 +1,5 @@
 import React from 'react';
-import {makeStyles, styled, Tooltip} from '@material-ui/core';
+import {makeStyles, Tooltip} from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import {CremaTheme} from 'types/AppContextPropsType';
 

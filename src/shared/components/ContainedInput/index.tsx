@@ -1,4 +1,3 @@
-import React from 'react';
 import {withStyles, InputBase} from '@material-ui/core';
 
 export const ContainedInput = withStyles((theme) => ({

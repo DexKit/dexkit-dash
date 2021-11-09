@@ -1,6 +1,5 @@
 import React from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {useNetwork} from 'hooks/useNetwork';
 import {useTransactionInfo} from 'hooks/history/useTransactionInfo';
 import {Box, Paper} from '@material-ui/core';
 import {truncateAddress} from 'utils';
@@ -22,7 +21,6 @@ const TransactionView: React.FC<Props> = (props) => {
   } = props;
   const {hash} = params;
 
-  const networkName = useNetwork();
   const {loading, error, data} = useTransactionInfo({hash});
 
   const classes = useStyles();

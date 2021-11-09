@@ -44,13 +44,17 @@ function CardTimer(props: {time: number}) {
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
   const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.address);
+  const duration = game?.duration.toNumber();
+  const startTimestamp = game?.start_timestamp.toNumber()
+
+
   const endTime = useMemo(() => {
-    if (game) {
-      const time = game?.duration.toNumber();
-      return new Date(time*1000 + game?.start_timestamp.toNumber()*1000)
+    if (game && duration && startTimestamp) {
+      const time = duration;
+      return new Date(time*1000 + startTimestamp*1000)
     }
     return new Date();
-  }, [game?.duration, game?.start_timestamp]);
+  }, [duration, startTimestamp, game]);
 
   const count = useCountdown(endTime, {
     interval: 1000,

@@ -1,4 +1,3 @@
-import React from 'react';
 import {Drawer, withStyles} from '@material-ui/core';
 
 export const BottomDrawer = withStyles((theme) => ({

@@ -1,13 +1,11 @@
 import {
   Box,
   Grid,
-  MobileStepper,
   Typography,
   Divider,
   Paper,
   IconButton,
   makeStyles,
-  Button,
   ButtonBase,
   useTheme,
   useMediaQuery,
@@ -25,8 +23,6 @@ import {
   MetamaskFoxIcon,
   GoogleIcon,
 } from 'shared/components/Icons';
-import Slider from 'shared/components/Slider';
-import SquaredIconButton from 'shared/components/SquaredIconButton';
 
 import AddIcon from '@material-ui/icons/Add';
 

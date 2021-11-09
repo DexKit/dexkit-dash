@@ -6,9 +6,9 @@ import {
   SearchCurrencyByAddressVariables,
 } from 'services/graphql/bitquery/__generated__/SearchCurrencyByAddress';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import { TOKENS_LIST } from 'shared/constants/tokens';
+import {TOKENS_LIST} from 'shared/constants/tokens';
 import {Token} from 'types/app';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 import {
   findTokensInfoByAddress,
   GET_NATIVE_COINS,
@@ -35,19 +35,18 @@ export const useTokenInfo = (address?: string, chainId?: ChainId) => {
   };
 
   useEffect(() => {
-    if(address && chainId === ChainId.Ropsten && !isNativeCoinWithoutChainId(address)){
+    if (
+      address &&
+      chainId === ChainId.Ropsten &&
+      !isNativeCoinWithoutChainId(address)
+    ) {
       setLoading(true);
       const tokens = TOKENS_LIST[chainId] as Token[];
-      const tk = findTokensInfoByAddress(
-        tokens,
-        address,
-      );
+      const tk = findTokensInfoByAddress(tokens, address);
       setTokenInfo(tk);
       setLoading(false);
       return;
-
     }
-
 
     if (
       address &&
@@ -108,7 +107,7 @@ export const useTokenInfo = (address?: string, chainId?: ChainId) => {
         return;
       }
     }
-  }, [address, ethTokens, binanceTokens, maticTokens]);
+  }, [address, chainId, ethTokens, binanceTokens, maticTokens]);
 
   return {tokenInfo, loading};
 };

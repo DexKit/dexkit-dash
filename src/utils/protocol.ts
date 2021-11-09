@@ -1,4 +1,3 @@
-import {Token} from 'types/app';
 import {
   EXCHANGE,
   EthereumNetwork,
@@ -12,7 +11,7 @@ import {
 
 export const IS_AMM = (exchange: EXCHANGE, protocol?: string | null) => {
   //TODO: Remove this when is give support for this on Uniswap V3
-  if(protocol && protocol === 'Uniswap v3'){
+  if (protocol && protocol === 'Uniswap v3') {
     return false;
   }
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   Button,
   Box,
@@ -23,9 +23,8 @@ import {
   getEventCurrentRound,
 } from 'modules/CoinLeagues/utils/champions';
 
-import coinsLeagueBannerPath from 'assets/images/banners/coinsleague.svg';
+import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
 
-import AddIcon from '@material-ui/icons/Add';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
@@ -79,7 +78,7 @@ export function ChampionsEvent() {
 
   const {chainId} = useWeb3();
 
-  const myChampions = useMyChampions(chainId);
+  const myChampions = useMyChampions(chainId, 4);
 
   const championTokenHolding = useChampionTokenHolding();
 
@@ -89,8 +88,9 @@ export function ChampionsEvent() {
 
   const handleMintChampion = useCallback(() => {
     mintDialogToggler.set(true);
-  }, []);
+  }, [mintDialogToggler]);
 
+  /* eslint-disable */
   const handleConfirmMint = useCallback(async () => {
     await championMint.mint();
   }, [championMint.mint]);
@@ -99,7 +99,7 @@ export function ChampionsEvent() {
     mintDialogToggler.set(false);
     championMint.clear();
     myChampions.fetch();
-  }, [championMint.clear]);
+  }, [mintDialogToggler, championMint.clear]);
 
   const hasEnoughKit = useCallback(() => {
     if (championTokenHolding.data?.length === 2) {
@@ -175,7 +175,11 @@ export function ChampionsEvent() {
                   justifyContent='center'
                   className={classes.bannerBox}
                   boxShadow={3}>
-                  <img className={classes.banner} src={coinsLeagueBannerPath} />
+                  <img
+                    alt=''
+                    className={classes.banner}
+                    src={coinsLeagueBannerPath}
+                  />
                 </Box>
               </Grid>
               {!isOnMaticChain() ? (
@@ -216,7 +220,7 @@ export function ChampionsEvent() {
                                   <strong>
                                     {EARLY_ACCESS_BITT_AMOUNT} BITT
                                   </strong>{' '}
-                                  tokens to unlock Coin Leagues Champion early
+                                  tokens to unlock Coin League Champion early
                                   access.
                                 </Typography>
                               </Grid>
@@ -246,6 +250,7 @@ export function ChampionsEvent() {
                                                     classes.coinsLogoWrapper
                                                   }>
                                                   <img
+                                                    alt=''
                                                     className={
                                                       classes.coinsLogo
                                                     }
@@ -304,6 +309,7 @@ export function ChampionsEvent() {
                                                     classes.coinsLogoWrapper
                                                   }>
                                                   <img
+                                                    alt=''
                                                     className={
                                                       classes.coinsLogo
                                                     }

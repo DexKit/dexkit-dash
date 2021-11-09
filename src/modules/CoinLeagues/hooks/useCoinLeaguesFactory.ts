@@ -25,14 +25,7 @@ interface CallbackProps {
 }
 
 export const useCoinLeaguesFactoryRoutes = () => {
-  const {chainId} = useWeb3();
   const {room} = useParams<{room: string}>();
-
-  const factoryAddress = useMemo(() => {
-    return room
-      ? room
-      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
-  }, [chainId, room]);
 
   const enterGameRoute = useCallback(
     (address: string) => {
@@ -42,7 +35,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
         return `${COINSLEAGUE_ROUTE}/${address}`;
       }
     },
-    [factoryAddress, room],
+    [room],
   );
 
   const activeGamesRoute = useMemo(() => {
@@ -51,7 +44,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
     } else {
       return `${COINSLEAGUE_ROUTE}/active-games`;
     }
-  }, [factoryAddress, room]);
+  }, [room]);
 
   const listGamesRoute = useMemo(() => {
     if (room) {
@@ -59,7 +52,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
     } else {
       return `${COINSLEAGUE_ROUTE}`;
     }
-  }, [factoryAddress, room]);
+  }, [room]);
 
 
   return {

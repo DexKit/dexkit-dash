@@ -13,7 +13,6 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import {
   ConfigFileExchange,
   GeneralConfig,
-  SocialNetworks,
   TokenMetaData,
   CurrencyPairMetaData,
 } from 'types/myApps';
@@ -80,8 +79,7 @@ const defaultTheme = new DefaultTheme();
 const initConfig = {
   general: {
     title: 'KitDex',
-    icon:
-      'https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0',
+    icon: 'https://lh3.googleusercontent.com/f4Oh2N2SuMo2dXmh0yLOfiJqQsDBoirgwFU_BSjyDM3zhYGe5wfzuA73zxtC8sl7HvO1x3OenT7ipwiH9AoAU_7qXV4srKhst6AG=s0',
     feeRecipient: '0x1f9eEf1A12b56452b8CAba1cFD03d697f1cc68F7',
     feePercentage: 0.1,
     domain: '',
@@ -261,16 +259,16 @@ type MarketplaceParams = {
 };
 
 type MarketplaceProps = RouteComponentProps<MarketplaceParams>;
-const initSocial = {
-  facebook_url: '',
-  reddit_url: '',
-  twitter_url: '',
-  telegram_url: '',
-  discord_url: '',
-  bitcointalk_url: '',
-  youtube_url: '',
-  medium_url: '',
-} as SocialNetworks;
+// const initSocial = {
+//   facebook_url: '',
+//   reddit_url: '',
+//   twitter_url: '',
+//   telegram_url: '',
+//   discord_url: '',
+//   bitcointalk_url: '',
+//   youtube_url: '',
+//   medium_url: '',
+// } as SocialNetworks;
 
 // const initConfig = {
 //   wallets: undefined,
@@ -317,16 +315,17 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   const updateForm = useCallback(
     (key: keyof ConfigFileExchange | 'editable', value: any) => {
       const dataType = Object.values(WizardData).find((e) => e === key);
-      if (dataType != null && key != 'editable') {
+      if (dataType !== null && key !== 'editable') {
         form[key] = value;
         setForm(form);
-      } else if (key == 'editable') {
+      } else if (key === 'editable') {
         setEditable(Boolean(value));
       }
     },
     [form, setForm, setEditable],
   );
 
+  /* eslint-disable */
   useEffect(() => {
     if (editable && configs != null) {
       const index = configs.findIndex(

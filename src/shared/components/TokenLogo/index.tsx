@@ -121,12 +121,14 @@ const TokenLogo: React.FC<Props> = (props) => {
   return props.token1 ? (
     <Box className={classes.pair}>
       <img
+        alt=''
         className={classes.iconLeft}
         onError={addDefaultSrc}
         loading='lazy'
         src={getIconUrl(token0, props.logoURL0)}
       />
       <img
+        alt=''
         className={classes.iconRight}
         onError={addDefaultSrc}
         loading='lazy'
@@ -135,6 +137,7 @@ const TokenLogo: React.FC<Props> = (props) => {
     </Box>
   ) : (
     <img
+      alt=''
       className={classes.iconLeft}
       onError={addDefaultSrc}
       loading='lazy'

@@ -1,8 +1,6 @@
-import {useChainId} from '../useChainId';
 import {useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {POLL_INTERVAL} from 'shared/constants/AppConst';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {BITQUERY_TRANSACTION_LIST} from 'services/graphql/bitquery/history/gql';
 import {
   GetTransactionList,
@@ -29,18 +27,22 @@ export const useTransactionList = ({address, networkName}: Props) => {
 
   const [data, setData] = useState<ITransactionList[]>();
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetTransactionList,
-    GetTransactionListVariables
-  >(BITQUERY_TRANSACTION_LIST, {
-    variables: {
-      network: networkName,
-      address: address,
-      limit: Math.floor(rowsPerPage / 2),
-      offset: Math.floor(skipRows / 2),
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetTransactionList, GetTransactionListVariables>(
+    BITQUERY_TRANSACTION_LIST,
+    {
+      variables: {
+        network: networkName,
+        address: address,
+        limit: Math.floor(rowsPerPage / 2),
+        offset: Math.floor(skipRows / 2),
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (dataFn && dataFn?.ethereum?.receiver && dataFn?.ethereum?.sender) {

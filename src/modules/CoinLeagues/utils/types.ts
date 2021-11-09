@@ -41,7 +41,7 @@ export interface ChampionMetadata {
   attributes: {
     trait_type: string;
     value: string;
-  };
+  }[];
 }
 
 export interface CoinLeaguesChampion {

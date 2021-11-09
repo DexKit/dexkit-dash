@@ -23,7 +23,7 @@ export default (props: Props) => {
   return (
     <span>
       <Tooltip title={symbol}>
-        <img src={imageUrl} className={classes.img} />
+        <img alt='' src={imageUrl} className={classes.img} />
       </Tooltip>
     </span>
   );

@@ -1,10 +1,7 @@
 import {ethers} from 'ethers';
-import {Interface} from 'ethers/lib/utils';
-import {getMulticall, getMulticallFromProvider} from './multicall';
 import {getEthers} from './web3modal';
-import {CallInput} from '@indexed-finance/multicall';
 import axios from 'axios';
-import {getNormalizedUrl, IPFS_GATEWAY, isIpfsUrl} from 'utils/browser';
+import {getNormalizedUrl} from 'utils/browser';
 import {TokenMetadata} from 'types/nfts';
 
 const abi = [
