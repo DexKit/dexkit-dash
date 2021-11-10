@@ -52,6 +52,11 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 0,
     },
   },
+  title: {
+    margin: theme.spacing(1),
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 const rewardsMock = [
@@ -82,7 +87,7 @@ const MyApps: React.FC<Props> = (props) => {
       <Grid container spacing={2}>
         <Grid container>
           <Breadcrumbs
-            style={{color: theme.palette.common.white, fontSize: '0.8rem'}}
+            style={{color: theme.palette.common.white}}
             separator='/'>
             <Link
               underline='none'
@@ -93,16 +98,14 @@ const MyApps: React.FC<Props> = (props) => {
                 <IntlMessages id='app.myApps.dashboard' />
               </Typography>
             </Link>
-            <Typography variant='subtitle2' style={{color: '#2e3243'}}>
+            <Typography variant='subtitle2' style={{color: '#2F3142'}}>
               <IntlMessages id='app.myApps.manageApps' />
             </Typography>
           </Breadcrumbs>
         </Grid>
         <Grid container alignContent='center'>
           <Grid item xs={12} sm={10}>
-            <Typography
-              variant='h5'
-              style={{margin: 5, fontWeight: 600, marginBottom: 20}}>
+            <Typography variant='h5' className={classes.title}>
               <IntlMessages id='app.myApps.manageApps' />
             </Typography>
           </Grid>
@@ -129,9 +132,11 @@ const MyApps: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
 
-      <Grid container style={{marginTop: 10}} spacing={4}>
+      <Grid container spacing={4}>
         <Grid item xs={12}>
-          <Typography variant='h6' style={{fontWeight: 600}}>
+          <Typography
+            variant='h6'
+            style={{fontWeight: theme.typography.fontWeightBold}}>
             <IntlMessages id='app.myApps.currentCollectedTotalRewards' />
           </Typography>
         </Grid>
@@ -142,7 +147,10 @@ const MyApps: React.FC<Props> = (props) => {
               <Box className={classes.scrollOverflow}>
                 {(props.rewards || rewardsMock).map((reward, i) => (
                   <Box className={classes.overflowItem} key={i}>
-                    <RewardCard {...reward} styles={{width: 300}} />
+                    <RewardCard
+                      {...reward}
+                      styles={{width: theme.spacing(70)}}
+                    />
                   </Box>
                 ))}
               </Box>
@@ -151,13 +159,11 @@ const MyApps: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
 
-      <Grid
-        container
-        spacing={6}
-        justifyContent='center'
-        style={{marginTop: 10}}>
+      <Grid container spacing={6} justifyContent='center'>
         <Grid item xs={12}>
-          <Typography variant='h6' style={{fontWeight: 600}}>
+          <Typography
+            variant='h6'
+            style={{fontWeight: theme.typography.fontWeightBold}}>
             <IntlMessages id='app.myApps.myApps' />
           </Typography>
         </Grid>

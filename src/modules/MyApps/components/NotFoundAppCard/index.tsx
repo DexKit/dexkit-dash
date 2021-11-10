@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {GridContainer} from '@crema';
 import {Grid, Typography} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -8,8 +7,8 @@ import {ReactComponent as SearchNotFoundIcon} from 'assets/images/icons/search-n
 
 const NotFoundAppCard: React.FC = () => {
   return (
-    <GridContainer spacing={4} justifyContent='center' style={{margin: 15}}>
-      <Grid item xs={2} style={{textAlign: 'center'}}>
+    <Grid container spacing={4} justifyContent='center'>
+      <Grid item xs={2}>
         <SearchNotFoundIcon />
       </Grid>
       <Grid item xs={10}>
@@ -26,7 +25,7 @@ const NotFoundAppCard: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 };
 

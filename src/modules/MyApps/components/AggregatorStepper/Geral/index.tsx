@@ -26,6 +26,10 @@ import CheckBoxBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import {HELP_TEXT} from '../../../Wizard/aggregator/helpText';
 
 const useStyles = makeStyles((theme) => ({
+  formLabel: {
+    marginBottom: theme.spacing(2),
+    color: theme.palette.common.white,
+  },
   root: {
     margin: theme.spacing(5),
   },
@@ -89,16 +93,12 @@ const GeralStep: React.FC<Props> = (props) => {
               <Grid container spacing={4}>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.name' />
                     </FormLabel>
                     <OutlinedInput
                       name='name'
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       endAdornment={
@@ -115,15 +115,11 @@ const GeralStep: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.logo' />
                     </FormLabel>
                     <OutlinedInput
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       name='logo'
                       value={formik.values.logo}
                       onChange={formik.handleChange}
@@ -146,15 +142,11 @@ const GeralStep: React.FC<Props> = (props) => {
               <Grid container spacing={4}>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.logoDark' />
                     </FormLabel>
                     <OutlinedInput
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       name='logoDark'
                       value={formik.values.logoDark}
                       onChange={formik.handleChange}
@@ -172,15 +164,11 @@ const GeralStep: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.buyTokenPercentage' />
                     </FormLabel>
                     <OutlinedInput
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       name='buyTokenPerc'
                       value={formik.values.buyTokenPerc}
                       onChange={formik.handleChange}
@@ -203,15 +191,11 @@ const GeralStep: React.FC<Props> = (props) => {
               <Grid container spacing={4}>
                 <Grid item xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.domain' />
                     </FormLabel>
                     <OutlinedInput
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       name='domain'
                       value={formik.values.domain}
                       onChange={formik.handleChange}
@@ -289,18 +273,14 @@ const GeralStep: React.FC<Props> = (props) => {
               <Grid container spacing={4}>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.affiliateAddress' />
                     </FormLabel>
                     <OutlinedInput
                       name='affiliateAddr'
                       value={formik.values.affiliateAddr}
                       onChange={formik.handleChange}
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       endAdornment={
                         <InputAdornment position='end'>
                           <Tooltip title={getHelpText('affiliateAddress')}>
@@ -315,18 +295,14 @@ const GeralStep: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.defaultTokenAddress' />
                     </FormLabel>
                     <OutlinedInput
                       name='defaultTokenAddr'
                       value={formik.values.defaultTokenAddr}
                       onChange={formik.handleChange}
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       endAdornment={
                         <InputAdornment position='end'>
                           <Tooltip title={getHelpText('default_token_address')}>
@@ -346,18 +322,14 @@ const GeralStep: React.FC<Props> = (props) => {
               <Grid container spacing={4}>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.defaultTokenAddressBSC' />
                     </FormLabel>
                     <OutlinedInput
                       name='defaultTokenAddrBSC'
                       value={formik.values.defaultTokenAddrBSC}
                       onChange={formik.handleChange}
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       endAdornment={
                         <InputAdornment position='end'>
                           <Tooltip
@@ -373,18 +345,14 @@ const GeralStep: React.FC<Props> = (props) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <FormControl fullWidth required size='small'>
-                    <FormLabel
-                      style={{
-                        marginBottom: 5,
-                        color: theme.palette.common.white,
-                      }}>
+                    <FormLabel className={classes.formLabel}>
                       <IntlMessages id='app.myApps.defaultTokenAddressMatic' />
                     </FormLabel>
                     <OutlinedInput
                       name='defaultTokenAddrMatic'
                       value={formik.values.defaultTokenAddrMatic}
                       onChange={formik.handleChange}
-                      placeholder='Content'
+                      placeholder={`${messages['app.myApps.content']}`}
                       endAdornment={
                         <InputAdornment position='end'>
                           <Tooltip
@@ -403,15 +371,14 @@ const GeralStep: React.FC<Props> = (props) => {
 
             <Grid item md={6} xs={12} style={{marginTop: 10}}>
               <FormControl fullWidth required size='small'>
-                <FormLabel
-                  style={{marginBottom: 5, color: theme.palette.common.white}}>
+                <FormLabel className={classes.formLabel}>
                   <IntlMessages id='app.myApps.defaultSlippage' />
                 </FormLabel>
                 <OutlinedInput
                   name='defaultSlippage'
                   value={formik.values.defaultSlippage}
                   onChange={formik.handleChange}
-                  placeholder='Content'
+                  placeholder={`${messages['app.myApps.content']}`}
                   endAdornment={
                     <InputAdornment position='end'>
                       <Tooltip title={getHelpText('default_slippage')}>

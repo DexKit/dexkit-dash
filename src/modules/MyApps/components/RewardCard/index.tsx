@@ -5,15 +5,14 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {Chip, Grid, Theme, Typography} from '@material-ui/core';
 
 import {makeStyles} from '@material-ui/styles';
-import {green, red} from '@material-ui/core/colors';
 
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {ReactComponent as RewardIcon} from 'assets/images/icons/reward.svg';
 
 const useStyles = makeStyles<Theme, Props>((theme) => ({
   root: {
-    borderRadius: 8,
-    backgroundColor: '#2E3243',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(3),
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -23,9 +22,11 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     textAlign: 'center',
   },
   percentChip: {
-    color: ({percentage}) => ((percentage || 0) > 10 ? green[500] : red[500]),
-    backgroundColor: ({percentage}) =>
-      (percentage || 0) > 10 ? green[900] : '#3E3749',
+    color: ({percentage}) =>
+      (percentage || 0) > 10
+        ? theme.palette.success.main
+        : theme.palette.error.main,
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 

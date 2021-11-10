@@ -12,17 +12,17 @@ import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.sv
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    borderRadius: 8,
+    borderRadius: theme.shape.borderRadius,
     borderWidth: 'thin',
-    border: '1px solid rgba(255,255,255,.2)',
-    backgroundColor: '#2E3243',
+    border: `.5px solid ${theme.palette.grey['600']}`,
+    backgroundColor: '#2F3142',
   },
   kitChip: {},
   usdValue: {},
   buyBtn: {
-    borderRadius: 8,
+    borderRadius: theme.shape.borderRadius,
     borderWidth: 'thin',
-    border: '1px solid rgba(255,255,255,.2)',
+    border: `.5px solid ${theme.palette.grey['600']}`,
   },
   walletIcon: {
     width: theme.spacing(6),

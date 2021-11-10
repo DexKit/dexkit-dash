@@ -102,6 +102,12 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
       display: 'block',
     },
   },
+  notHaveAppsMsg: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '60px 0px',
+  },
 }));
 
 export default useStyles;

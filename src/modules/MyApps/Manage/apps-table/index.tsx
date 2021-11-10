@@ -280,7 +280,7 @@ const AppsTable = () => {
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
-                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.app?']}`}
+                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.appQuestion']}`}
                         dialogTitle={`${messages['app.myApps.confirmAppExclusion']}`}
                         open={showDialog}
                         onConfirm={() => {

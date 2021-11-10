@@ -258,7 +258,7 @@ const AppsTable: React.FC = () => {
                         </Box>
                       </TableCell>
                       <ConfirmationDialog
-                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.app?']}`}
+                        title={`${messages['app.myApps.wantToConfirmTheExclusionOfThe']} "${config.slug}" ${messages['app.myApps.appQuestion']}`}
                         dialogTitle={`${messages['app.myApps.confirmAppExclusion']}`}
                         open={showDialog}
                         onConfirm={() => {
@@ -299,19 +299,12 @@ const AppsTable: React.FC = () => {
               <IntlMessages id='app.myApps.myApps' />
             </Typography>
           </Toolbar>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '60px 0px',
-            }}>
-            <Typography variant='body1'>
-              <IntlMessages id='app.myApps.youDontHaveAppsYet' />
-            </Typography>
+          <Grid item xs={12} sm={12}>
+            <Box className={classes.notHaveAppsMsg}>
+              <Typography variant='body1'>
+                <IntlMessages id='app.myApps.youDontHaveAppsYet' />
+              </Typography>
+            </Box>
           </Grid>
         </Paper>
       )}

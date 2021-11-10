@@ -61,8 +61,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0),
   },
   divider: {
-    marginLeft: 5,
-    marginRight: 5,
+    margin: theme.spacing(0, 1),
     color: '#3A3D4A',
   },
   stepper: {
@@ -77,9 +76,9 @@ const AggregatorStepper: React.FC = () => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
 
-  const [geralData, setGeralData] = React.useState(initialValues.geral);
-  const [themeData, setThemeData] = React.useState(initialValues.theme);
-  const [linksData, setLinksData] = React.useState(initialValues.links);
+  const [geralData, setGeralData] = useState(initialValues.geral);
+  const [themeData, setThemeData] = useState(initialValues.theme);
+  const [linksData, setLinksData] = useState(initialValues.links);
 
   const steps: IStep[] = [
     {
@@ -129,7 +128,10 @@ const AggregatorStepper: React.FC = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Card component={Paper} style={{backgroundColor: '#252836'}}>
+        <Card
+          component={Paper}
+          // @ts-ignore
+          style={{backgroundColor: theme.palette.background.darker}}>
           <Stepper activeStep={activeStep} className={classes.stepper}>
             <StepperHeader steps={steps} activeStep={activeStep} />
           </Stepper>

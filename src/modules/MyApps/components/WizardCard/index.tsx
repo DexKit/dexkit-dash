@@ -8,27 +8,39 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/core';
+import {Theme} from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 8,
-    backgroundColor: '#252836',
+    borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(3),
     maxHeight: '70%',
   },
   button: {
-    borderRadius: 8,
+    borderRadius: theme.shape.borderRadius,
     height: theme.spacing(12),
     backgroundColor: '#343A49',
   },
   kitBtn: {
-    fontSize: '1rem',
-    margin: 0,
-    borderRadius: 8,
+    borderRadius: theme.shape.borderRadius,
     borderWidth: 'thin',
-    border: '1px solid rgba(255,255,255,.2)',
-    backgroundColor: '#3C4255',
+    border: `.5px solid ${theme.palette.grey['600']}`,
+    backgroundColor: '#2F3142',
+  },
+  avatarMarketplace: {
+    backgroundColor: theme.palette.secondary.main,
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+  },
+  avatarAggregator: {
+    backgroundColor: theme.palette.primary.light,
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+  },
+  avatarGrid: {
+    display: 'flex',
+    justifyContent: 'space-around',
   },
   buttonsCard: {
     margin: theme.spacing(2),
@@ -42,9 +54,17 @@ type Props = {
 
 const WizardCard: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const theme = useTheme();
+
+  console.log({...theme.palette});
 
   return (
-    <Grid container spacing={2} className={classes.root}>
+    <Grid
+      container
+      spacing={2}
+      className={classes.root}
+      // @ts-ignore
+      style={{backgroundColor: theme.palette.background.darker}}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant='body1'>
@@ -62,14 +82,8 @@ const WizardCard: React.FC<Props> = (props) => {
             alignContent='space-around'>
             <Grid item xs={7} style={{alignSelf: 'center'}}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={3}
-                  style={{display: 'flex', justifyContent: 'space-around'}}>
-                  <Avatar
-                    style={{backgroundColor: '#FCC591', width: 25, height: 25}}>
-                    &nbsp;
-                  </Avatar>
+                <Grid item xs={3} className={classes.avatarGrid}>
+                  <Avatar className={classes.avatarMarketplace}>&nbsp;</Avatar>
                 </Grid>
                 <Grid item xs={9} style={{alignSelf: 'center'}}>
                   <IntlMessages id='app.myApps.marketplace' />
@@ -93,14 +107,8 @@ const WizardCard: React.FC<Props> = (props) => {
             alignContent='space-around'>
             <Grid item xs={7} style={{alignSelf: 'center'}}>
               <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={3}
-                  style={{display: 'flex', justifyContent: 'space-around'}}>
-                  <Avatar
-                    style={{backgroundColor: '#BDCBFC', width: 25, height: 25}}>
-                    &nbsp;
-                  </Avatar>
+                <Grid item xs={3} className={classes.avatarGrid}>
+                  <Avatar className={classes.avatarAggregator}>&nbsp;</Avatar>
                 </Grid>
                 <Grid item xs={9} style={{alignSelf: 'center'}}>
                   <IntlMessages id='app.myApps.aggregator' />
