@@ -6,19 +6,26 @@ export enum FilterGame {
   Day = '24hrs',
   Week = 'Week',
   Mine = 'My Games',
-  BitBoy = 'BitBoy '
+  BitBoy = 'BitBoy ',
 }
 
-
+export enum GameDuration {
+  ALL,
+  FAST,
+  MEDIUM,
+  EIGHT,
+  DAY,
+  WEEK,
+}
 
 export enum FilterPlayerGame {
   ALL = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
-  Ended = 'Ended'
+  Ended = 'Ended',
 }
 
-export enum GameOrderBy{
+export enum GameOrderBy {
   HighLevel = 'HighLevel',
   LowLevel = 'LowLevel',
   MostFull = 'MostFull',
@@ -29,10 +36,40 @@ export enum GameOrderBy{
   LessCoins = 'LessCoins',
 }
 
-export enum GameOrderByLabels{
+export enum GameOrderByLabels {
   Level = 'Level',
   Duration = 'Duration',
   NumberOfCoins = 'Number of Coins',
-  PlayersNeeded = 'Players Needed'
+  PlayersNeeded = 'Players Needed',
+}
 
+export enum GameType {
+  ALL,
+  Bull,
+  Bear,
+}
+
+export enum GameLevel {
+  All,
+  Beginner,
+  Intermediate,
+  Advanced,
+  Expert,
+  Master,
+  GrandMaster,
+}
+
+export enum NumberOfPLayers {
+  ALL,
+  TWO = 2,
+  THREE = 3,
+  FIVE = 5,
+  TEN = 10,
+}
+
+export enum GameStakeAmount {
+  ALL,
+  TWO = 2,
+  FIVE = 5,
+  TEN = 10,
 }

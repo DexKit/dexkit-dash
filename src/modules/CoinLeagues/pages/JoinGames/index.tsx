@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
+  Badge,
   Breadcrumbs,
   Grid,
   Hidden,
@@ -9,6 +10,8 @@ import {
 } from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
 import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
@@ -37,6 +40,11 @@ import TickerTapeTV from '../../components/TickerTapeTV';
 import SwapButton from 'shared/components/SwapButton';
 import {GameOrderByDropdown} from 'modules/CoinLeagues/components/GameOrderByDropdown';
 import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
+import {useToggler} from 'hooks/useToggler';
+import {useIntl} from 'react-intl';
 
 const JoinGames = () => {
   const history = useHistory();
@@ -48,7 +56,16 @@ const JoinGames = () => {
   const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
   const [orderByGame, setOrderByGame] = useState(GameOrderBy.HighLevel);
-  const waitingGamesQuery = useWaitingGames(filterGame, undefined, orderByGame);
+
+  const {messages} = useIntl();
+  const filtersState = useGamesFilters();
+
+  const waitingGamesQuery = useWaitingGames({
+    filter: filterGame,
+    accounts: account ? [account] : undefined,
+    orderBy: orderByGame,
+    filters: filtersState,
+  });
 
   const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const gamesToJoin = useMemo(() => {
@@ -87,6 +104,34 @@ const JoinGames = () => {
   const handleSearch = useCallback((e) => {
     setSearch(e.target.value);
   }, []);
+
+  const filterToggler = useToggler(false);
+
+  const handleChangeOrderBy = useCallback(
+    (value: GameOrderBy) => {
+      filtersState.setOrderByGame(value);
+    },
+    [filtersState],
+  );
+
+  const handleSelectAll = useCallback(() => {
+    filtersState.setIsBitboy(false);
+    filtersState.setIsMyGames(false);
+  }, [filtersState]);
+
+  const handleToggleBitBoy = useCallback(() => {
+    filtersState.setIsMyGames(false);
+    filtersState.setIsBitboy(!filtersState.isBitboy);
+  }, [filtersState]);
+
+  const handleToggleMyGames = useCallback(() => {
+    filtersState.setIsBitboy(false);
+    filtersState.setIsMyGames(!filtersState.isMyGames);
+  }, [filtersState]);
+
+  const handleToggleFilters = useCallback(() => {
+    filterToggler.set(true);
+  }, [filterToggler]);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
@@ -152,33 +197,78 @@ const JoinGames = () => {
         />
       </Grid>
       <Grid item xs={12}>
-        <Grid container spacing={2}>
-          <Grid item sm={3}>
-            <Grid item xs={12} sm={12}>
-              <Typography variant='h6'> Games To Join</Typography>
-            </Grid>
+        <Grid
+          container
+          alignItems='center'
+          alignContent='center'
+          justifyContent='space-between'
+          spacing={2}>
+          <Grid item>
+            <Typography variant='h6'>Games To Join</Typography>
           </Grid>
-          <Grid item sm={6} justifyContent='center'>
+          <Grid item>
             <Grid container justifyContent='center' spacing={2}>
-              {Object.entries(FilterGame).map((value, index) => (
-                <Grid item key={index}>
-                  <Chip
-                    clickable
-                    label={value[1]}
-                    color={filterGame === value[1] ? 'primary' : 'default'}
-                    onClick={() => setFilterGame(value[1])}
-                  />
-                </Grid>
-              ))}
+              <Grid item>
+                <Chip
+                  onClick={handleSelectAll}
+                  color={
+                    !filtersState.isBitboy && !filtersState.isMyGames
+                      ? 'primary'
+                      : 'default'
+                  }
+                  size='small'
+                  label={messages['app.coinLeagues.all'] as string}
+                  clickable
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  size='small'
+                  label={messages['app.coinLeagues.myGames'] as string}
+                  clickable
+                  onClick={handleToggleMyGames}
+                  color={filtersState.isMyGames ? 'primary' : 'default'}
+                />
+              </Grid>
+              <Grid item>
+                <Chip
+                  size='small'
+                  label={messages['app.coinLeagues.bitboy'] as string}
+                  clickable
+                  onClick={handleToggleBitBoy}
+                  color={filtersState.isBitboy ? 'primary' : 'default'}
+                />
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item sm={3} justifyContent='flex-end'>
-            <GameOrderByDropdown
+          <Grid item>
+            {/* <GameOrderByDropdown
               onSelectGameOrder={(value) => setOrderByGame(value)}
             />
-            {/* <Button variant='text'>
-                <FilterListIcon style={{color: '#fff'}} />
-                  </Button>*/}
+             */}
+
+            <Grid
+              alignItems='center'
+              alignContent='center'
+              container
+              spacing={2}>
+              <Grid item>
+                <GameOrderBySelect
+                  value={filtersState.orderByGame}
+                  onChange={handleChangeOrderBy}
+                />
+              </Grid>
+              <Grid item>
+                <SquaredIconButton onClick={handleToggleFilters}>
+                  <Badge
+                    color='primary'
+                    variant='dot'
+                    invisible={!filtersState.isModified()}>
+                    <FilterSearchIcon style={{color: '#fff'}} />
+                  </Badge>
+                </SquaredIconButton>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
