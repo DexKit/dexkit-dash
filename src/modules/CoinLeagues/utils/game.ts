@@ -122,14 +122,16 @@ export const GET_GAME_LEVEL = (entry: BigNumber) => {
 export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel) => {
   switch (gameLevel) {
     case GameLevel.Beginner:
-      return ethers.utils.parseEther('5');
+      return ethers.utils.parseEther('1');
     case GameLevel.Intermediate:
-      return ethers.utils.parseEther('10');
+      return ethers.utils.parseEther('5');
     case GameLevel.Advanced:
-      return ethers.utils.parseEther('50');
+      return ethers.utils.parseEther('10');
     case GameLevel.Expert:
-      return ethers.utils.parseEther('100');
+      return ethers.utils.parseEther('50');
     case GameLevel.Master:
+      return ethers.utils.parseEther('100');
+    case GameLevel.GrandMaster:
       return ethers.utils.parseEther('500');
     default:
       return ethers.utils.parseEther('0');
@@ -169,6 +171,11 @@ export function getWaitingGamesQuery(params: any) {
   if (params.orderBy) {
     queryVariableParams.push('$orderBy: String');
     queryParams.push('orderBy: $orderBy');
+  }
+
+  if (params.entry) {
+    queryVariableParams.push('$entry: String');
+    whereParams.push('entry: $entry');
   }
 
   if (params.isBitboyTeam) {

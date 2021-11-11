@@ -25,6 +25,13 @@ export enum FilterPlayerGame {
   Ended = 'Ended',
 }
 
+export enum CoinLeagueGameStatus {
+  All = 'All',
+  Waiting = 'Waiting',
+  Started = 'Started',
+  Ended = 'Ended',
+}
+
 export enum GameOrderBy {
   HighLevel = 'HighLevel',
   LowLevel = 'LowLevel',

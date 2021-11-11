@@ -44,6 +44,7 @@ import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
 import {
   useActiveGames,
+  useCoinLeagueGames,
   useWaitingGames,
 } from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
@@ -111,7 +112,8 @@ const GamesListV2 = () => {
 
   const filtersState = useGamesFilters();
 
-  const waitingGamesQuery = useWaitingGames({
+  const waitingGamesQuery = useCoinLeagueGames({
+    status: 'Waiting',
     filter: filterGame,
     accounts: account ? [account] : undefined,
     orderBy: orderByGame,
@@ -459,7 +461,11 @@ const GamesListV2 = () => {
           </Grid>
         )}
         {value === Tabs.History && (
-          <GamesEnded filter={filterGame} search={search} />
+          <GamesEnded
+            filter={filterGame}
+            search={search}
+            filters={filtersState}
+          />
         )}
       </Grid>
     </>

@@ -40,6 +40,7 @@ interface Props {
   show: boolean;
   onClose: () => void;
   filtersState: GameFiltersState;
+  disablePlayerFilter?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const GameFilterDrawer = (props: Props) => {
-  const {show, onClose, filtersState} = props;
+  const {show, onClose, filtersState, disablePlayerFilter} = props;
 
   const {messages} = useIntl();
 
@@ -165,6 +166,7 @@ export const GameFilterDrawer = (props: Props) => {
                   variant='default'
                   clickable
                   onClick={handleSelectAll}
+                  disabled={disablePlayerFilter}
                   color={
                     !filtersState.isBitboy && !filtersState.isMyGames
                       ? 'primary'
@@ -177,6 +179,7 @@ export const GameFilterDrawer = (props: Props) => {
                   size='small'
                   label='My Games'
                   clickable
+                  disabled={disablePlayerFilter}
                   onClick={handleToggleMyGames}
                   color={filtersState.isMyGames ? 'primary' : 'default'}
                 />
@@ -186,6 +189,7 @@ export const GameFilterDrawer = (props: Props) => {
                   size='small'
                   label='Bitboy'
                   clickable
+                  disabled={disablePlayerFilter}
                   onClick={handleToggleBitBoy}
                   color={filtersState.isBitboy ? 'primary' : 'default'}
                 />
@@ -235,6 +239,18 @@ export const GameFilterDrawer = (props: Props) => {
                 </MenuItem>
                 <MenuItem value={GameLevel.Advanced}>
                   <IntlMessages id='app.coinLeagues.advanced' />
+                </MenuItem>
+
+                <MenuItem value={GameLevel.Expert}>
+                  <IntlMessages id='app.coinLeague.expert' />
+                </MenuItem>
+
+                <MenuItem value={GameLevel.Master}>
+                  <IntlMessages id='app.coinLeague.master' />
+                </MenuItem>
+
+                <MenuItem value={GameLevel.GrandMaster}>
+                  <IntlMessages id='app.coinLeague.grandMaster' />
                 </MenuItem>
               </Select>
             </FormControl>

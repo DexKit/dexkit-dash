@@ -975,7 +975,13 @@
   "app.coinLeagues.higherDuration": "Higher Duration",
   "app.coinLeagues.lowerDuration": "Lower Duration",
   "app.coinLeagues.moreCoins": "More Coins",
-  "app.coinLeagues.lessCoins": "Less Coins"
+  "app.coinLeagues.lessCoins": "Less Coins",
+  "app.coinLeague.started": "Started",
+  "app.coinLeague.waiting": "Waiting",
+  "app.coinLeague.ended": "Ended",
+  "app.coinLeague.expert": "Expert",
+  "app.coinLeague.master": "Master",
+  "app.coinLeague.grandMaster": "Grand Master"
 }
 
 
