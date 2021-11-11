@@ -211,8 +211,8 @@ const CreateGameModal = (props: Props) => {
               <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
               <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
               <MenuItem value={50}>Expert - 50 Matic</MenuItem>
-              <MenuItem value={100}>Master - 100 Matic</MenuItem>
-              <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>
+              <MenuItem value={250}>Master - 250 Matic</MenuItem>
+           {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
             </Select>
           </FormControl>
         </Grid>
