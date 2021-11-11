@@ -36,7 +36,7 @@ interface CallbackProps {
  * @param address
  * @returns
  */
-export const useCoinLeagues = (address?: string) => {
+export const useCoinLeagues = (id?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();
   const {startedGames, createdGames} = useCoinLeaguesFactory();
   const provider = useNetworkProvider(
@@ -44,7 +44,7 @@ export const useCoinLeagues = (address?: string) => {
     GET_LEAGUES_CHAIN_ID(chainId),
   );
 
-  const {room} = useParams<{room: string}>();
+  const { room } = useParams<{room: string}>();
   const factoryAddress = useMemo(() => {
     return room
       ? room

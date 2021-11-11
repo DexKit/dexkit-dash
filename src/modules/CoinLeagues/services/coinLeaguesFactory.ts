@@ -194,6 +194,10 @@ export const getEndedGamesAddressFromFactory = async (
   }
 };
 
+export const getGameAddressFromId = async (factoryAddress: string, id: string) => {
+  return (await getCoinLeaguesFactoryContract(factoryAddress)).allGames(id) as string;
+};
+
 export const startGame = async (factoryAddress: string, id: string) => {
   const ethers = getEthers();
   const gasPrice = await (

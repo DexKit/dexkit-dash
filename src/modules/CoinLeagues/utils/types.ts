@@ -8,6 +8,7 @@ export interface CoinFeed {
 
 export interface GameGraph {
   id: string;
+  intId: string;
   type: string;
   status: string;
   duration: string;
