@@ -17,15 +17,11 @@ import {
 
 import {estimateFees} from '@mycrypto/gas-estimation';
 
-import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
-
 import React, {useCallback, useState, useEffect, ChangeEvent} from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import {ReceiptTextIcon} from './Icons';
 import {useNetwork} from 'hooks/useNetwork';
-import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GetNativeCoinFromNetworkName, truncateAddress} from 'utils';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {ExpandLess} from '@material-ui/icons';
@@ -34,6 +30,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {Web3State} from 'types/blockchain';
 import {hasLondonHardForkSupport} from 'utils/blockchain';
 import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -63,19 +60,19 @@ export const TransactionConfirmDialog = (
 
   const {web3State, getProvider, chainId, account} = useWeb3();
 
-  const isEIP1559Transaction = useCallback(() => {
-    if (data) {
-      let params = data.params;
+  // const isEIP1559Transaction = useCallback(() => {
+  //   if (data) {
+  //     let params = data.params;
 
-      if (params.length > 0) {
-        let firstParams = params[0];
+  //     if (params.length > 0) {
+  //       let firstParams = params[0];
 
-        return firstParams.maxFeePerGas;
-      }
-    }
+  //       return firstParams.maxFeePerGas;
+  //     }
+  //   }
 
-    return false;
-  }, [data]);
+  //   return false;
+  // }, [data]);
 
   const handleConfirm = useCallback(() => {
     if (onConfirm) {
@@ -88,22 +85,19 @@ export const TransactionConfirmDialog = (
         params.maxPriorityFeePerGas =
           values.maxPriorityFeePerGas?.toHexString();
         params.maxFeePerGas = values.maxFeePerGas?.toHexString();
+      } else {
+        params.gasPrice = values.gasPrice?.toHexString();
       }
 
       dataCopy.params[0] = params;
 
       onConfirm(dataCopy);
     }
-  }, [onConfirm, data, isEIP1559Transaction, values, chainId]);
+  }, [onConfirm, data, values, chainId]);
 
-  const defaultAccount = useDefaultAccount();
   const network = useNetwork();
 
-  const {data: balances} = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
-    network,
-    defaultAccount,
-  );
+  const {balance} = useActiveChainBalance();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -136,12 +130,12 @@ export const TransactionConfirmDialog = (
     return values.maxFeePerGas && values.maxPriorityFeePerGas;
   }, [values]);
 
-  const coinPrice = useNativeCoinPriceUSD(network);
+  const coinPrice = useNativeCoinPriceUSD(GET_NETWORK_NAME(chainId));
 
   useEffect(() => {
     const provider = getProvider();
 
-    if (web3State === Web3State.Done && data) {
+    if (web3State === Web3State.Done && data && props.open) {
       if (provider) {
         if (data.params.length > 0) {
           (async () => {
@@ -173,17 +167,33 @@ export const TransactionConfirmDialog = (
         }
       }
     }
-  }, [web3State, getProvider, data, chainId]);
+  }, [web3State, getProvider, data, chainId, props.open]);
 
-  const gasCost = useCallback(() => {
-    let cost = parseFloat(
-      ethers.utils.formatEther(
-        values.gasLimit?.mul(values.maxFeePerGas || ethers.BigNumber.from(0)) ||
-          BigNumber.from(0),
-      ),
-    );
-    return cost;
-  }, [values]);
+  const gasCost = useCallback(
+    (values: any) => {
+      let cost = 0;
+
+      if (isEIP1559()) {
+        cost = parseFloat(
+          ethers.utils.formatEther(
+            values.gasLimit?.mul(
+              values.maxFeePerGas || ethers.BigNumber.from(0),
+            ) || BigNumber.from(0),
+          ),
+        );
+      } else {
+        cost = parseFloat(
+          ethers.utils.formatEther(
+            values.gasLimit?.mul(values.gasPrice || ethers.BigNumber.from(0)) ||
+              BigNumber.from(0),
+          ),
+        );
+      }
+
+      return cost;
+    },
+    [isEIP1559],
+  );
 
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
@@ -228,7 +238,8 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Balance</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {balances?.toFixed(3)} {GetNativeCoinFromNetworkName(network)}
+            {Number(ethers.utils.formatEther(balance || '0')).toFixed(4)}{' '}
+            {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
         <Box mb={4}>
@@ -242,7 +253,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Gas cost</Typography>
           <Typography variant='body1' color='textSecondary'>
-            {gasCost().toFixed(4)} {GetNativeCoinFromNetworkName(network)}
+            {gasCost(values)} {GetNativeCoinFromNetworkName(network)}
           </Typography>
         </Box>
         <Box
@@ -253,7 +264,7 @@ export const TransactionConfirmDialog = (
           justifyContent='space-between'>
           <Typography variant='body1'>Total cost</Typography>
           <Typography variant='body1' color='textSecondary'>
-            ${((coinPrice.data || 0) * gasCost()).toFixed(2)} USD
+            ${(coinPrice.data || 0) * gasCost(values)} USD
           </Typography>
         </Box>
 
@@ -340,7 +351,10 @@ export const TransactionConfirmDialog = (
       </DialogContent>
       <DialogActions>
         <Button
-          disabled={balances === 0 || gasCost() === 0}
+          disabled={
+            Number(ethers.utils.formatEther(balance || '0')) <
+              gasCost(values) || gasCost(values) === 0
+          }
           onClick={handleConfirm}
           color='primary'
           variant='contained'>

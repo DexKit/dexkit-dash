@@ -1,45 +1,59 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
-import Grid from '@material-ui/core/Grid';
+import {useIntl} from 'react-intl';
 
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import FormControl from '@material-ui/core/FormControl';
+import Link from '@material-ui/core/Link';
+import {makeStyles} from '@material-ui/core/styles';
 
-import AffiliateHistory from 'modules/Affiliate/history';
+import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
+import {Link as RouterLink} from 'react-router-dom';
+import AffiliateTotalCard from '../components/AffiliateTotalCard';
+import {useWeb3} from '../../../hooks/useWeb3';
+import {useDefaultAccount} from '../../../hooks/useDefaultAccount';
+import {useAffiliateTrades} from '../../../hooks/affiliate/useAffiliateTrades';
+import {useTokenBalancesAffiliate} from '../../../hooks/affiliate/useTokenBalances';
 import {Skeleton} from '@material-ui/lab';
-import {useAffiliateTrades} from 'hooks/affiliate/useAffiliateTrades';
-import {useWeb3} from 'hooks/useWeb3';
-import GridContainer from '@crema/core/GridContainer';
-import AppCard from '@crema/core/AppCard';
-import {
-  makeStyles,
-  MenuItem,
-  Select,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import AffiliateRevenue from '../revenue';
+import AffiliateHistory from '../history';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import {useTokenBalancesAffiliate} from 'hooks/affiliate/useTokenBalances';
-import GroupIcon from '@material-ui/icons/Group';
-import SettingsIcon from '@material-ui/icons/Settings';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {AboutDialog} from '../aboutDialog';
-import CheckIcon from '@material-ui/icons/Check';
-import {green, red} from '@material-ui/core/colors';
-import {Link} from '@material-ui/core';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import CloseIcon from '@material-ui/icons/Close';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Fonts} from 'shared/constants/AppEnums';
+import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
-  affiliateIcon: {
-    marginRight: '2px',
+const useStyles = makeStyles((theme) => ({
+  container: {
+    color: '#fff',
+    backgroundColor: '#1F1D2B',
+  },
+  affiliateCard: {
+    borderRadius: 8,
+    padding: theme.spacing(1.5),
+    backgroundColor: '#252836',
+  },
+  field: {
+    padding: theme.spacing(1),
+    border: '1px solid #525C75',
+    borderRadius: 5,
+    height: theme.spacing(14),
+  },
+  settingsBtn: {
+    color: '#fff',
   },
 }));
 
-const AffiliatePage = () => {
+const AffiliatePage: React.FC = () => {
+  const classes = useStyles();
+  const {messages} = useIntl();
+
   const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;
@@ -59,8 +73,8 @@ const AffiliatePage = () => {
 
   const [chain, setChain] = useState('ETH');
 
-  const skeleton = (
-    <>
+  const AffiliateSkeleton = (props: any) => (
+    <React.Fragment {...props}>
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
@@ -68,95 +82,167 @@ const AffiliatePage = () => {
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
       <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-    </>
+    </React.Fragment>
   );
-  const selectedChain = chain === 'ETH' ? '' : 'bsc/';
+  const selectedChain = useMemo(() => {
+    if (chain === 'ETH') {
+      return '';
+    }
+    if (chain === 'BSC') {
+      return 'bsc/';
+    }
+
+    if (chain === 'MATIC') {
+      return 'matic/';
+    }
+    return '';
+  }, [chain]);
 
   const affiliateLink = `https://swap.dexkit.com/#/${selectedChain}swap?account=${account}`;
 
-  const kitValue = (kitBalance && kitBalance.value?.toFixed(3)) ?? 0;
+  const kitValue = Number(kitBalance && kitBalance.value?.toFixed(3)) || 0;
 
   return (
-    <>
-      <Box pt={{xl: 4}}>
-        <Box mb={2} display={'flex'} alignItems={'center'}>
-          <GroupIcon color={'primary'} fontSize='large' />
-          <Box
-            component='h3'
-            color='text.primary'
-            fontWeight={Fonts.BOLD}
-            ml={2}>
-            Affiliate Program
-          </Box>
-          <AboutDialog />
-        </Box>
-        <GridContainer>
-          <Grid item xs={12} md={8} xl={8}>
-            <AppCard height={1} action={null}>
-              <Typography variant='h4'>
-                Configure Affiliate <SettingsIcon color={'primary'} />{' '}
+    <Container maxWidth='xl' className={classes.container}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Breadcrumbs>
+            <Link to='/wallet' component={RouterLink}>
+              <Typography variant='body2' color='textSecondary'>
+                <IntlMessages id='app.affiliate.page.dashboard' />
               </Typography>
-              <Box
-                mb={2}
-                display={'flex'}
-                justifyContent={'flex-end'}
-                alignItems={'center'}>
-                {kitValue >= 200 && (
-                  <Tooltip title='Account eligible to receive rewards. Congrats!'>
-                    <CheckIcon
-                      style={{color: green[500], marginRight: '2px'}}
-                    />
-                  </Tooltip>
-                )}
-                {kitValue < 200 && (
-                  <Tooltip title='Account not eligible to receive rewards, BUY KIT till eligible'>
-                    <CloseIcon style={{color: red[500], marginRight: '2px'}} />
-                  </Tooltip>
-                )}
-                <Typography variant='h6'>{kitValue} of 200 KIT</Typography>
-              </Box>
+            </Link>
+            <Typography variant='body2' style={{color: '#2e3243'}}>
+              <IntlMessages id='app.affiliate.page.title' />
+            </Typography>
+          </Breadcrumbs>
+        </Grid>
+        <Grid item xs={12} sm={10} alignContent='center'>
+          <Typography variant='h5' style={{margin: 5, marginBottom: 20}}>
+            <IntlMessages id='app.affiliate.page.title' />
+          </Typography>
+        </Grid>
+      </Grid>
 
-              <Typography>
-                <Tooltip title='Account that will receive rewards'>
-                  <span style={{fontWeight: 'bold'}}>
-                    Account Receive Rewards:
-                  </span>
-                </Tooltip>{' '}
+      <Grid
+        container
+        spacing={5}
+        style={{marginBottom: 20}}
+        justifyContent='space-between'>
+        <Grid item md={6} xs={12}>
+          <AffiliateTotalCard total={valueTotalUSD || 0} />
+        </Grid>
+        <Grid item md={4} xs={10}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography style={{color: '#B3B7C0'}}>
+                <IntlMessages id='app.affiliate.page.account' />:
+              </Typography>
+            </Grid>
+            <Grid item md={11} xs={10}>
+              <Typography variant='body2' noWrap>
                 {account}
               </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
 
-              <Typography>
-                {' '}
-                <span style={{fontWeight: 'bold', marginRight: '10px'}}>
-                  Chain:
-                </span>
+      <Grid container spacing={4} className={classes.affiliateCard}>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h5'>
+                <IntlMessages id='app.affiliate.affiliate' />
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
+                <IntlMessages id='app.affiliate.warning.kitBalance' />:
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <LinearProgressWithLabel to={200} from={kitValue} />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Divider
+          variant='middle'
+          style={{
+            background: '#525C75',
+            width: '100%',
+            padding: 1,
+            margin: '10px auto',
+          }}
+        />
+
+        <Grid item md={12} xs={12}>
+          <Grid container spacing={2} justifyContent='space-between'>
+            <Grid item md={5} xs={12} style={{marginBottom: 10}}>
+              <FormControl fullWidth>
+                <Typography style={{marginBottom: 10}}>
+                  <IntlMessages id='app.affiliate.page.swap.chain' />
+                </Typography>
                 <Select
-                  labelId='chainSelect'
-                  id='chainSelectId'
+                  variant='outlined'
                   value={chain}
                   onChange={(e) => setChain(e.target.value as string)}
                   renderValue={(value) => <> {value}</>}>
-                  <MenuItem value={'BSC'}>BSC</MenuItem>
-                  <MenuItem value={'ETH'}>ETH</MenuItem>
+                  <MenuItem value='BSC'>BSC</MenuItem>
+                  <MenuItem value='ETH'>ETH</MenuItem>
+                  <MenuItem value='MATIC'>MATIC</MenuItem>
                 </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={7} xs={12}>
+              <Typography style={{marginBottom: 10}}>
+                <IntlMessages id='app.affiliate.page.swap.link' />
               </Typography>
-
-              <Typography>
-                <span style={{fontWeight: 'bold'}}>Affiliate Link:</span>{' '}
-                <Link href={affiliateLink} target={'_blank'}>
-                  {affiliateLink} <OpenInNewIcon />
-                </Link>{' '}
+              <Box
+                className={classes.field}
+                display='flex'
+                alignItems='center'
+                justifyContent='space-between'>
+                <Typography noWrap>{affiliateLink}</Typography>
                 <ButtonCopy
                   copyText={affiliateLink}
-                  titleText='Copied to clipbord !'></ButtonCopy>
-              </Typography>
-            </AppCard>
+                  titleText={messages['shared.copiedClipboard'] as string}
+                />
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={4} xl={4}>
-            <AffiliateRevenue value={valueTotalUSD} />
-          </Grid>
+        </Grid>
 
-          <Grid style={{marginTop: 20}} item xs={12} md={12}>
+        <Grid container justifyContent='flex-end'>
+          <Grid item md={5} xs={12}>
+            <Button
+              fullWidth
+              href={affiliateLink}
+              target='_blank'
+              style={{backgroundColor: '#FFA552', marginBottom: 15}}>
+              <LinkIcon />
+              <IntlMessages id='app.affiliate.page.swap.openBtn' />
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Divider
+        style={{
+          backgroundColor: '#525C75',
+          width: '95%',
+          padding: 1,
+          margin: '20px auto',
+        }}
+      />
+
+      <Grid container spacing={2} style={{marginTop: 15}}>
+        {/* FIXME: Change to the pagination component */}
+        <Grid item xs={12}>
+          {loading ? (
+            <AffiliateSkeleton />
+          ) : (
             <AffiliateHistory
               transactionData={data}
               isLoading={loading}
@@ -166,10 +252,10 @@ const AffiliatePage = () => {
               onChangePage={onChangePage}
               onChangePerPage={onChangeRowsPerPage}
             />
-          </Grid>
-        </GridContainer>
-      </Box>
-    </>
+          )}
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

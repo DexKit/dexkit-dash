@@ -1,16 +1,16 @@
-import {CremaTheme} from 'types/AppContextPropsType';
-import { makeStyles } from '@material-ui/core'
+import {makeStyles} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 
-export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
+export const marketFormStyles = makeStyles((theme) => ({
   marketContainer: {
     '& .MuiOutlinedInput-input': {
-      padding: '14px'
-    }
+      padding: '14px',
+    },
   },
-  maxBalance:{
+  maxBalance: {
     '&:hover, &:focus': {
       cursor: 'pointer',
+      textDecoration: 'underline',
     },
   },
   root: {
@@ -60,14 +60,14 @@ export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
   },
   inputLabel: {
     paddingBottom: '0px !important',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   submit: {
-    marginTop: '20px'
-  }
+    marginTop: '20px',
+  },
 }));
 
-export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
+export const limitFormStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.secondary.main,
     fontSize: 18,
@@ -112,12 +112,12 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
   },
   inputLabel: {
     paddingBottom: '4px !important',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   balance: {
     paddingBottom: '4px !important',
     display: 'flex',
-    flexDirection: 'row-reverse'
+    flexDirection: 'row-reverse',
   },
   swap: {
     display: 'flex',
@@ -130,14 +130,14 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
     },
     '& .MuiGrid-container > .MuiGrid-item': {
       padding: '6px 8px',
-    }
+    },
   },
   expiryContainer: {
     display: 'flex',
     marginBottom: '16px',
     '.MuiInputBase-root': {
-      margin: '0 8px'
-    }
+      margin: '0 8px',
+    },
   },
   select: {
     width: '100%',
@@ -151,5 +151,5 @@ export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
       cursor: 'pointer',
       textDecoration: 'underline',
     },
-  }
+  },
 }));

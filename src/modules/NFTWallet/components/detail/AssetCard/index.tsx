@@ -10,9 +10,8 @@ import {
   Typography,
   Box,
   Tooltip,
-  useTheme,
 } from '@material-ui/core';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
+import {toTokenUnitAmount} from '@0x/utils';
 import {truncateText} from 'utils';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import clsx from 'clsx';
@@ -59,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 export default (props: Props) => {
   const {asset, forSelect: elevate, selected, onClick} = props;
   const classes = useStyles();
-  const theme = useTheme();
 
   const handleClick = useCallback(() => {
     onClick(asset);

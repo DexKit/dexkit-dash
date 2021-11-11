@@ -1,19 +1,21 @@
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Typography from '@material-ui/core/Typography';
-import React, {useEffect, useState, useCallback} from 'react';
-import {
-  Box,
-  Grid,
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-  useTheme,
-  Badge,
-} from '@material-ui/core';
+import Badge from '@material-ui/core/Badge';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import {useTheme} from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 
 import {Changelly} from 'services/rest/changelly';
@@ -52,6 +54,7 @@ interface SwapComponentProps {
 export const SwapComponent = (props: SwapComponentProps) => {
   const {onClose} = props;
   const theme = useTheme();
+  const {messages} = useIntl();
 
   const userAccountAddress = useDefaultAccount();
 
@@ -82,6 +85,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
   const {transactions, saveTransaction} = useSwapTransactions();
   const [showTransactions, setShowTransactions] = useState(false);
 
+  /* eslint-disable */
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -555,10 +559,14 @@ export const SwapComponent = (props: SwapComponentProps) => {
         {transaction ? (
           <>
             <CardHeader
-              title={<Typography variant='body1'>Multichain Swap</Typography>}
+              title={
+                <Typography variant='body1'>
+                  <IntlMessages id='app.dashboard.multichainSwap' />
+                </Typography>
+              }
               action={
                 <Button onClick={handleReset} startIcon={<ArrowBackIcon />}>
-                  Back
+                  <IntlMessages id='app.dashboard.back' />
                 </Button>
               }
             />
@@ -574,10 +582,14 @@ export const SwapComponent = (props: SwapComponentProps) => {
         {goToReceiveAddress ? (
           <>
             <CardHeader
-              title={<Typography variant='body1'>Multichain Swap</Typography>}
+              title={
+                <Typography variant='body1'>
+                  <IntlMessages id='app.dashboard.multichainSwap' />
+                </Typography>
+              }
               action={
                 <Button onClick={handleGoBack} startIcon={<ArrowBackIcon />}>
-                  Back
+                  <IntlMessages id='app.dashboard.back' />
                 </Button>
               }
             />
@@ -621,7 +633,9 @@ export const SwapComponent = (props: SwapComponentProps) => {
                       </Badge>
                     </IconButton>
                   </Box>
-                  <Typography variant='body1'>Multichain Swap</Typography>
+                  <Typography variant='body1'>
+                    <IntlMessages id='app.dashboard.multichainSwap' />
+                  </Typography>
                 </Box>
 
                 <IconButton onClick={onClose} size='small'>
@@ -634,7 +648,9 @@ export const SwapComponent = (props: SwapComponentProps) => {
                 <Grid item xs={12}>
                   <Grid container alignItems='center' spacing={2}>
                     <Grid item xs={12}>
-                      <Typography variant='body1'>You Send</Typography>
+                      <Typography variant='body1'>
+                        <IntlMessages id='app.coinLeagues.youSend' />
+                      </Typography>
                     </Grid>
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
@@ -672,7 +688,9 @@ export const SwapComponent = (props: SwapComponentProps) => {
                             error={!isFromAmountValid()}
                             helperText={
                               !isFromAmountValid()
-                                ? `Minimum Amount ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
+                                ? `${
+                                    messages['app.dashboard.minimumAmount']
+                                  } ${minFromAmount} ${fromCoin?.name.toUpperCase()}`
                                 : ''
                             }
                           />
@@ -698,7 +716,9 @@ export const SwapComponent = (props: SwapComponentProps) => {
                 <Grid item xs={12}>
                   <Grid container spacing={2} alignItems='center'>
                     <Grid item xs={12}>
-                      <Typography variant='body1'>You Receive</Typography>
+                      <Typography variant='body1'>
+                        <IntlMessages id='app.dashboard.youReceive' />
+                      </Typography>
                     </Grid>
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
@@ -764,7 +784,7 @@ export const SwapComponent = (props: SwapComponentProps) => {
                       !isFromAmountValid()
                     }
                     onClick={handleGoToReceiveAddress}>
-                    Next
+                    <IntlMessages id='app.dashboard.next' />
                   </Button>
                 </Grid>
               </Grid>

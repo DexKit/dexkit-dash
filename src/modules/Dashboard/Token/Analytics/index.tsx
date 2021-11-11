@@ -1,31 +1,18 @@
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 import {useTokenAnalytics} from 'hooks/token/useTokenAnalytics';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import React from 'react';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ErrorView from 'modules/Common/ErrorView';
-import SwipeableViews from 'react-swipeable-views';
 
-import {
-  Box,
-  Accordion,
-  AccordionDetails,
-  makeStyles,
-  Tooltip,
-  AccordionSummary,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import {Box, makeStyles, Grid, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {OrderSide} from 'types/app';
 import {green, red} from '@material-ui/core/colors';
-
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
@@ -126,6 +113,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 export const TokenAnalytics = (props: Props) => {
   const {account, token, networkName} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const {data, loading, error} = useTokenAnalytics(account, token, networkName);
   const {data: tokenBalance} = useSingleBalance(token, networkName, account);
@@ -150,21 +138,25 @@ export const TokenAnalytics = (props: Props) => {
 
   return error || !data ? null : (
     <Box>
-      {error ? <ErrorView message={'Error fetching analytics'} /> : null}
+      {error ? (
+        <ErrorView
+          message={messages['app.dashboard.errorFetchingAnalytics'] as string}
+        />
+      ) : null}
       {loading ? <Skeleton variant='rect' height={100} /> : null}
       {data ? (
         <Box className={classes.analyticsContainer}>
           <Box className={classes.analyticsItem}>
             <AnalyticsAmountCard
               amount={balanceUSD}
-              caption='Balance (USD)'
+              caption={`${messages['app.dashboard.balance']} (USD)`}
               icon={<></>}
             />
           </Box>
           <Box className={classes.analyticsItem}>
             <AnalyticsAmountCard
               amount={profitLoss}
-              caption='Profit/Loss'
+              caption={`${messages['app.dashboard.profit']}/${messages['app.dashboard.loss']}`}
               icon={<></>}
               colorsEnabled
             />
@@ -205,10 +197,10 @@ export const TokenAnalytics = (props: Props) => {
               gutterBottom
               align='center'
               variant='h5'>
-              Ops, no data
+              <IntlMessages id='app.dashboard.opsNoData' />
             </Typography>
             <Typography align='center'>
-              No trade analytics available for this account, start trading.
+              <IntlMessages id='app.dashboard.noTradeAnalyticsAvailable' />
             </Typography>
           </Grid>
         </Grid>

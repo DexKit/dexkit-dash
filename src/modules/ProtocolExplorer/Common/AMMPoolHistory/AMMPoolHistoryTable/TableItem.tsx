@@ -1,23 +1,21 @@
 import React, {useMemo} from 'react';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GET_PROTOCOL_TOKEN_URL} from 'utils/protocol';
 import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 import {
   Box,
   TableCell,
   TableRow,
   Chip,
-  Link,
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {Link as RouterLink} from 'react-router-dom';
 import {MintBurn} from 'types/app';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ViewTx} from 'shared/components/ViewTx';
+import {useIntl} from 'react-intl';
 
 interface Props {
   row: MintBurn;
@@ -25,7 +23,7 @@ interface Props {
   exchange: EXCHANGE;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   borderBottomClass: {
     borderBottom: '0 none',
   },
@@ -56,6 +54,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const paymentTypeColor = useMemo(() => {
     switch (row.type) {
@@ -141,11 +140,13 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
     );
     const summaryValue = `${row.amount0.toFixed(2)} ${
       row.baseCurrency?.symbol
-    } and ${row.amount1.toFixed(2)} ${row.quoteCurrency?.symbol}`;
+    } ${messages['app.protocolExplorer.and']} ${row.amount1.toFixed(2)} ${
+      row.quoteCurrency?.symbol
+    }`;
     const data = [
       {
         id: 'type',
-        title: <IntlMessages id='app.type' />,
+        title: <IntlMessages id='app.protocolExplorer.type' />,
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -155,32 +156,32 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
       },
       {
         id: 'baseAmount',
-        title: <IntlMessages id='app.baseAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.baseAmount' />,
         value: baseAmountRow,
       },
       {
         id: 'quoteAmount',
-        title: <IntlMessages id='app.quoteAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.quoteAmount' />,
         value: quoteAmountRow,
       },
       {
         id: 'poolVariation',
-        title: <IntlMessages id='app.poolVariation' />,
+        title: <IntlMessages id='app.protocolExplorer.poolVariation' />,
         value: poolVariationRow,
       },
       {
         id: 'baseRemaining',
-        title: <IntlMessages id='app.baseRemaining' />,
+        title: <IntlMessages id='app.protocolExplorer.baseRemaining' />,
         value: baseRemainingRow,
       },
       {
         id: 'quoteRemaining',
-        title: <IntlMessages id='app.quoteRemaining' />,
+        title: <IntlMessages id='app.protocolExplorer.quoteRemaining' />,
         value: quoteRemainingRow,
       },
       {
         id: 'created',
-        title: <IntlMessages id='app.created' />,
+        title: <IntlMessages id='app.protocolExplorer.created' />,
         value: timestamp,
       },
       {

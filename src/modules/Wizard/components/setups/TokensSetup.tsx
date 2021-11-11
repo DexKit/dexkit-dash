@@ -17,13 +17,15 @@ import HelpIcon from '@material-ui/icons/Help';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
+import {Alert} from '@material-ui/lab';
+
 import {
   getTransactionScannerUrl,
   hasLondonHardForkSupport,
 } from 'utils/blockchain';
 import {Link as RouterLink} from 'react-router-dom';
 
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useHistory} from 'react-router';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {ConfirmDialog} from './erc20/dialogs/ConfirmDialog';
@@ -47,6 +49,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
   const history = useHistory();
   const userDefaultAcount = useDefaultAccount();
   const {getWeb3, getProvider, chainId} = useWeb3();
+
+  const [error, setError] = useState<string>();
 
   const dispatch = useDispatch();
 
@@ -86,6 +90,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
     setShowConfirm(true);
   }, []);
 
+  /* eslint-disable */
   const handleConfirm = useCallback(async () => {
     setConfirmPending(true);
 
@@ -131,8 +136,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
         setTransactionHash(contract.deployTransaction.hash);
 
         createNotification({
-          title: 'Create collection',
-          body: `Creating a new NFT collection named ${values.name}`,
+          title: 'Create token',
+          body: `Creating a new token named ${values.name}`,
           timestamp: Date.now(),
           url: getTransactionScannerUrl(
             chainId,
@@ -152,17 +157,18 @@ export const TokenSetup = (props: TokenSetupProps) => {
             name: values.name,
             symbol: values.symbol,
             supply: values.supply,
+            chainId: chainId,
           }),
         );
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
       })
       .finally(() => {
         setShowConfirm(false);
         setConfirmPending(false);
       });
-  }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch]);
+  }, [history, values, getWeb3, userDefaultAcount, chainId, dispatch, chainId]);
 
   const handleCloseConfirm = useCallback(() => {
     setShowConfirm(false);
@@ -192,6 +198,10 @@ export const TokenSetup = (props: TokenSetupProps) => {
   const handleGoWizard = useCallback(() => {
     history.push('/wizard');
   }, [history]);
+
+  const handleClearError = useCallback(() => {
+    setError(undefined);
+  }, []);
 
   return (
     <>
@@ -286,7 +296,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                     type='number'
                     value={values.supply}
                     onChange={handleChange}
-                    error={values.supply == 0 || values.supply < 0}
+                    error={values.supply === 0 || values.supply < 0}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
@@ -302,6 +312,13 @@ export const TokenSetup = (props: TokenSetupProps) => {
             </CardContent>
           </Card>
         </Grid>
+        {error ? (
+          <Grid item xs={12}>
+            <Alert severity='error' onClose={handleClearError}>
+              {error}
+            </Alert>
+          </Grid>
+        ) : null}
         <Grid item xs={12}>
           <Paper>
             <Box p={4}>

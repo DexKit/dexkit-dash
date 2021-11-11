@@ -13,14 +13,11 @@ import {
 } from '@material-ui/core';
 import Web3 from 'web3';
 
-import React, {useCallback, useState, useEffect} from 'react';
-import MainLayout from 'shared/components/layouts/main';
-import HelpIcon from '@material-ui/icons/Help';
+import React, {useCallback, useState} from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {useHistory} from 'react-router';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import ConfirmDialog from './erc721/ConfirmDialog';
-import {useFormik} from 'formik';
 import {
   CollectionItemData,
   CollectionSetupSteps,
@@ -53,11 +50,13 @@ export interface CollectionSetupProps {}
 
 export const CollectionSetup = (props: CollectionSetupProps) => {
   const history = useHistory();
+  const [createError, setCreateError] = useState<string>();
+  const [mintError, setMintError] = useState<string>();
 
   const dispatch = useDispatch();
 
   const userDefaultAcount = useDefaultAccount();
-  const {getWeb3, getProvider} = useWeb3();
+  const {getWeb3, getProvider, chainId} = useWeb3();
 
   const [step, setStep] = useState<CollectionSetupSteps>(
     CollectionSetupSteps.Collection,
@@ -118,7 +117,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       });
       return promise;
     },
-    [userDefaultAcount, getWeb3, values, items, getProvider],
+    [userDefaultAcount, getWeb3, values, items, getProvider, wizardApi],
   );
 
   const handleBack = useCallback(() => {
@@ -220,7 +219,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     setUploadId('');
 
     return images;
-  }, [items, handleItemChange]);
+  }, [items, handleItemChange, wizardApi]);
 
   const uploadCollectionImage = useCallback(async (): Promise<
     string | null
@@ -232,7 +231,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     }
 
     return null;
-  }, [collectionImage]);
+  }, [collectionImage, wizardApi]);
 
   const sendCollectionMetadata = useCallback(
     async (imageHash: string): Promise<string | null> => {
@@ -251,7 +250,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
       return null;
     },
-    [values, userDefaultAcount],
+    [values, userDefaultAcount, wizardApi],
   );
 
   const sendItemsMetadata = useCallback(
@@ -292,11 +291,85 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
         let result = await contract.multiSafeMint(paramItems);
 
+        setMintTransactionHash(result.hash);
+
         await result.wait();
       }
     },
-    [userDefaultAcount, items, getProvider],
+    [userDefaultAcount, getProvider],
   );
+
+  const [tempItemsHashes, setTempItemsHashes] = useState<any>();
+  const [tempCollectionMetaData, setTempCollectionMetadata] = useState<any>();
+  const [tempCollectionImagehash, setCollectionImagehash] = useState<string>();
+  const [tempAddress, setTempAddress] = useState<string>();
+
+  // const clearCreateTryAgain = useCallback(() => {
+  //   setTempItemsHashes(undefined);
+  //   setTempCollectionMetadata(undefined);
+  //   setCollectionImagehash(undefined);
+  // }, []);
+
+  const handleCreateTryAgain = useCallback(() => {
+    setCreateError(undefined);
+
+    createContract(tempCollectionMetaData)
+      .then((address) => {
+        setTempAddress(address);
+
+        dispatch(
+          addCollection({
+            name: values.name,
+            description: values.description,
+            address,
+            abi: ERC721Abi,
+            imageUrl: `https://ipfs.io/ipfs/${tempCollectionImagehash}`,
+            chainId: chainId,
+          }),
+        );
+
+        setContractAddress(address);
+
+        if (items.length > 0) {
+          setContractStatus(ContractStatus.Minting);
+          mintItems(address, tempItemsHashes)
+            .then(() => {
+              setContractStatus(ContractStatus.Finalized);
+            })
+            .catch((err) => {
+              setMintError(err.message);
+            });
+        } else {
+          setContractStatus(ContractStatus.Finalized);
+        }
+      })
+      .catch((err) => {
+        setCreateError(err.message);
+      });
+  }, [
+    chainId,
+    items,
+    tempItemsHashes,
+    tempCollectionImagehash,
+    tempCollectionMetaData,
+  ]);
+
+  const handleMintItemsTryAgain = useCallback(() => {
+    setMintError(undefined);
+
+    if (items.length > 0 && tempAddress) {
+      setContractStatus(ContractStatus.Minting);
+      mintItems(tempAddress, tempItemsHashes)
+        .then(() => {
+          setContractStatus(ContractStatus.Finalized);
+        })
+        .catch((err) => {
+          setMintError(err.message);
+        });
+    } else {
+      setContractStatus(ContractStatus.Finalized);
+    }
+  }, [items, tempAddress, tempItemsHashes]);
 
   const handleConfirmFinalize = useCallback(async () => {
     setShowConfirmDialog(false);
@@ -313,35 +386,54 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
         collectionImagehash,
       );
 
+      setCollectionImagehash(collectionImagehash);
+
+      setTempCollectionMetadata(collectionMetadataHash);
+
       let itemsHashes = await sendItemsMetadata(itemImagesHashes);
+
+      setTempItemsHashes(itemsHashes);
 
       setContractStatus(ContractStatus.CreateCollection);
 
       if (collectionMetadataHash) {
-        let address = await createContract(collectionMetadataHash);
+        await createContract(collectionMetadataHash)
+          .then((address) => {
+            setTempAddress(address);
 
-        dispatch(
-          addCollection({
-            name: values.name,
-            description: values.description,
-            address,
-            abi: ERC721Abi,
-            imageUrl: `https://ipfs.io/ipfs/${collectionImagehash}`,
-          }),
-        );
+            dispatch(
+              addCollection({
+                name: values.name,
+                description: values.description,
+                address,
+                abi: ERC721Abi,
+                imageUrl: `https://ipfs.io/ipfs/${collectionImagehash}`,
+                chainId: chainId,
+              }),
+            );
 
-        setContractAddress(address);
+            setContractAddress(address);
 
-        setContractStatus(ContractStatus.Minting);
-
-        if (items.length > 0) {
-          await mintItems(address, itemsHashes);
-        }
-
-        setContractStatus(ContractStatus.Finalized);
+            if (items.length > 0) {
+              setContractStatus(ContractStatus.Minting);
+              mintItems(address, itemsHashes)
+                .then(() => {
+                  setContractStatus(ContractStatus.Finalized);
+                })
+                .catch((err) => {
+                  setMintError(err.message);
+                });
+            } else {
+              setContractStatus(ContractStatus.Finalized);
+            }
+          })
+          .catch((err) => {
+            setCreateError(err.message);
+          });
       }
     }
   }, [
+    chainId,
     values,
     items,
     dispatch,
@@ -353,6 +445,10 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const handleOpenGithub = useCallback(() => {
     window.open('https://github.com/DexKit/wizard-contracts', '_blank');
   }, []);
+
+  const handleCloseCreateDialog = useCallback(() => {
+    history.push('/wizard');
+  }, [history]);
 
   return (
     <>
@@ -370,7 +466,12 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           mintTransaction={mintTransactionHash}
           maxWidth='sm'
           fullWidth
+          onClose={handleCloseCreateDialog}
           skipMinting={items.length === 0}
+          createError={createError}
+          mintError={mintError}
+          onTryCreateCollectionAgain={handleCreateTryAgain}
+          onTryMintAgain={handleMintItemsTryAgain}
         />
       </DialogPortal>
       <Grid container spacing={4} justify='center'>

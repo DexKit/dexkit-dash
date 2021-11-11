@@ -1,8 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext} from 'react';
+import {useIntl} from 'react-intl';
 import {
-  makeStyles, Tabs, Tab,
-  Grid, Card, Tooltip,
-  CardContent, Fade
+  makeStyles,
+  Tabs,
+  Tab,
+  Grid,
+  Card,
+  Tooltip,
+  CardContent,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import {EthereumNetwork, ThemeMode} from '../../../shared/constants/AppEnums';
@@ -38,14 +43,14 @@ interface TabPanelProps {
 }
 
 function TabPanelChart(props: TabPanelProps) {
-  const {children, value, index, ...other} = props;
+  const {children, value, index} = props;
   return <>{value === index ? children || null : null}</>;
 }
 
 type ChartsProps = {
   tokenInfo?: Token;
   networkName: EthereumNetwork;
-  chainId: any; 
+  chainId: any;
 };
 
 export const useStyles = makeStyles(() => ({
@@ -59,12 +64,13 @@ export const useStyles = makeStyles(() => ({
       minHeight: 450,
     },
   },
-}))
+}));
 
-const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
+const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
   const [chartSource, setChartSource] = useState<ChartSource>(ChartSource.DEX);
   const [chartSymbol, setChartSymbol] = useState<string>();
-  const classes = useStyles()
+  const classes = useStyles();
+  const {messages} = useIntl();
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
 
@@ -87,17 +93,18 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
     }
   };
 
+  /* eslint-disable */
   useEffect(() => {
-    if(tokenInfo){
+    if (tokenInfo) {
       chartSource === ChartSource.DEX
-      ? setChartSymbol(
-          `${networkName}:${tokenInfo?.symbol?.toUpperCase()}:${
-            tokenInfo?.address
-          }`,
-        )
-      : setChartSymbol(`${tokenInfo?.symbol?.toUpperCase()}USDT`);
+        ? setChartSymbol(
+            `${networkName}:${tokenInfo?.symbol?.toUpperCase()}:${
+              tokenInfo?.address
+            }`,
+          )
+        : setChartSymbol(`${tokenInfo?.symbol?.toUpperCase()}USDT`);
     }
-  }, [tokenInfo, networkName])
+  }, [tokenInfo, networkName]);
 
   return (
     <Grid container spacing={4}>
@@ -110,7 +117,7 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
             indicatorColor='primary'>
             <Tab
               label={
-                <Tooltip title='Chart from Decentralized Exchanges'>
+                <Tooltip title={messages['app.dashboard.chartDexExchange']}>
                   <span>DEX</span>
                 </Tooltip>
               }
@@ -118,7 +125,7 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
             />
             <Tab
               label={
-                <Tooltip title='Chart from Binance Exchange'>
+                <Tooltip title={messages['app.dashboard.chartBinanceExchange']}>
                   <span>Binance</span>
                 </Tooltip>
               }
@@ -126,38 +133,36 @@ const Charts: React.FC<ChartsProps> = ({ tokenInfo, networkName, chainId }) => {
             />
           </Tabs>
           <CardContent className={classes.iframeContainer}>
-            <Fade in={true} timeout={1000}>
-              {!chartSymbol ? (
-                <Skeleton variant='rect' height={370} />
-              ) : (
-                <>
-                  <TabPanelChart value={chartSource} index={0}>
-                    {/* <TVChartContainer
+            {!chartSymbol ? (
+              <Skeleton variant='rect' height={370} />
+            ) : (
+              <>
+                <TabPanelChart value={chartSource} index={0}>
+                  {/* <TVChartContainer
                                     symbol={chartSymbol}
                                     chainId={chainId}
                                     darkMode={isDark}
                                  />*/}
 
-                    <BitqueryTVChartContainer
-                      symbol={chartSymbol}
-                      darkMode={isDark}
-                    />
-                  </TabPanelChart>
-                  <TabPanelChart value={chartSource} index={1}>
-                    <BinanceTVChartContainer
-                      symbol={chartSymbol}
-                      chainId={chainId}
-                      darkMode={isDark}
-                    />
-                  </TabPanelChart>
-                </>
-              )}
-            </Fade>
+                  <BitqueryTVChartContainer
+                    symbol={chartSymbol}
+                    darkMode={isDark}
+                  />
+                </TabPanelChart>
+                <TabPanelChart value={chartSource} index={1}>
+                  <BinanceTVChartContainer
+                    symbol={chartSymbol}
+                    chainId={chainId}
+                    darkMode={isDark}
+                  />
+                </TabPanelChart>
+              </>
+            )}
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
 export default Charts;

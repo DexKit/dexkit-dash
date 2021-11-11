@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   makeStyles,
@@ -10,6 +10,7 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  ButtonBase,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -37,17 +38,20 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {
-  FORMAT_NETWORK_NAME,
-  GET_NATIVE_COIN_FROM_NETWORK_NAME,
-} from 'shared/constants/Bitquery';
+import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 
 import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
-import {LOGIN_WALLET_ROUTE, WALLET_ROUTE} from 'shared/constants/routes';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import CopyButton from '../CopyButton';
+import FileCopy from '@material-ui/icons/FileCopy';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -106,6 +110,12 @@ const useStyles = makeStyles((theme: CremaTheme) => {
       backgroundColor: '#252836',
       borderRadius: 8,
     },
+    visibilityButton: {
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+      borderRadius: '50%',
+      fontSize: theme.spacing(4),
+    },
   };
 });
 
@@ -115,6 +125,8 @@ const WalletInfo = (props: any) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
+
   const accountsModal = useAccountsModal();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -123,6 +135,8 @@ const WalletInfo = (props: any) => {
 
   const history = useHistory();
   const location = useLocation();
+
+  /* eslint-disable */
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -190,6 +204,10 @@ const WalletInfo = (props: any) => {
     return history.location.pathname == LOGIN_WALLET_ROUTE;
   }, [history]);
 
+  const handleToggleVisibility = useCallback(() => {
+    setBalanceIsVisible();
+  }, []);
+
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -216,15 +234,40 @@ const WalletInfo = (props: any) => {
             </Grid>
             <Grid item>
               <Typography variant='body1'>
-                {truncateIsAddress(defaultAccountLabel)}
+                {isBalanceVisible
+                  ? truncateIsAddress(defaultAccountLabel)
+                  : '******'}{' '}
               </Typography>
               <Hidden smDown={true}>
-                <Typography variant='caption'>
-                  {ethBalanceValue
-                    ? ethBalanceValue.toFixed(4)
-                    : ethBalance && tokenAmountInUnits(ethBalance)}{' '}
-                  {GetNativeCoinFromNetworkName(networkName)}
-                </Typography>
+                <Box display='flex' alignItems='center' alignContent='center'>
+                  <Box mr={1}>
+                    <Typography variant='caption'>
+                      {ethBalanceValue
+                        ? isBalanceVisible
+                          ? ethBalanceValue.toFixed(4)
+                          : '****.**'
+                        : isBalanceVisible
+                        ? ethBalance && tokenAmountInUnits(ethBalance)
+                        : '****.**'}{' '}
+                      {GetNativeCoinFromNetworkName(networkName)}{' '}
+                    </Typography>
+                  </Box>
+                  <ButtonBase
+                    className={classes.visibilityButton}
+                    onClick={handleToggleVisibility}>
+                    {isBalanceVisible ? (
+                      <VisibilityIcon fontSize='inherit' />
+                    ) : (
+                      <VisibilityOffIcon fontSize='inherit' />
+                    )}
+                  </ButtonBase>
+                  <CopyButton
+                    size='small'
+                    copyText={defaultAccount || ''}
+                    tooltip='Copied!'>
+                    <FileCopy color='inherit' style={{fontSize: 16}} />
+                  </CopyButton>
+                </Box>
               </Hidden>
             </Grid>
           </Grid>

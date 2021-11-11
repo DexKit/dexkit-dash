@@ -2,8 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {
   Box,
-  Card,
-  CardMedia,
   Grid,
   makeStyles,
   Link,
@@ -17,9 +15,7 @@ import {useHistory, useParams} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {Skeleton, Alert} from '@material-ui/lab';
-import {getWindowUrl} from 'utils/browser';
 import {useAsset} from '../../hooks/detail';
 import HistoricAccordion from '../../components/detail/HistoricAccordion';
 import ListingAccordion from '../../components/detail/ListingAccordion';
@@ -27,18 +23,14 @@ import DetailAccordion from '../../components/detail/DetailAccordion';
 import DescriptionCard from '../../components/detail/DescriptionCard';
 import OffersAccordion from '../../components/detail/OffersAccordion';
 import TransferAssetModal from '../../components/detail/TransferAssetModal';
-import CopyAddressButton from '../../components/detail/CopyAddressButton';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useWeb3} from 'hooks/useWeb3';
 import {getWeb3Wrapper} from 'services/web3modal';
 import WaitingConfirmationBackdrop from '../../components/detail/WaitingConfirmationBackdrop';
 import BlockConfirmedBackdrop from '../../components/detail/BlockConfirmedBackdrop';
-import {isAssetOwner} from '../../utils';
 import {getOpenSeaPort} from 'utils/opensea';
-import {AttachMoney, Error as ErrorIcon} from '@material-ui/icons';
 import CancellingListingBackdrop from 'modules/NFTWallet/components/detail/CancellingListingBackdrop';
 import BuyCheckoutDialog from 'modules/NFTWallet/components/detail/BuyCheckoutDialog';
-import BuyingListingBackdrop from 'modules/NFTWallet/components/detail/BuyingListingBackdrop';
 import BuySuccessBackdrop from 'modules/NFTWallet/components/detail/BuySuccessBackdrop';
 import {AxiosResponse} from 'axios';
 import NotFound from 'modules/NFTWallet/components/detail/NotFound';
@@ -87,6 +79,7 @@ export const AssetDetail = () => {
   const [buyOrder, setBuyOrder] = useState<any>();
   const [buyTransaction, setBuyTransaction] = useState('');
 
+  // eslint-disable-next-line
   const [showCancellingSuccess, setShowCancellingSuccess] = useState(false);
   const [showBuyingSuccess, setShowBuyingSuccess] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
@@ -97,12 +90,14 @@ export const AssetDetail = () => {
 
   const history = useHistory();
 
+  /* eslint-disable */
   useEffect(() => {
     if (!userAccountAddress) {
       history.replace('/connect-wallet');
     }
   }, []);
 
+  /* eslint-disable */
   useEffect(() => {
     fetchData();
   }, []);
@@ -144,7 +139,7 @@ export const AssetDetail = () => {
 
         if (transactionHash) {
           setTransaction(transactionHash);
-          const log = await web3Wrapper
+          await web3Wrapper
             ?.awaitTransactionSuccessAsync(transactionHash)
             .catch((reason: any) => {
               setErrorMessage(reason.message);
@@ -234,7 +229,7 @@ export const AssetDetail = () => {
       });
 
       const orderIndex = orders.findIndex(
-        (order) => order.hash == buyOrder.order_hash,
+        (order) => order.hash === buyOrder.order_hash,
       );
 
       if (orderIndex > -1) {
@@ -274,7 +269,7 @@ export const AssetDetail = () => {
 
   const isHttpStatus = useCallback(
     (response: AxiosResponse, status: number) => {
-      return response.status == status;
+      return response.status === status;
     },
     [],
   );
@@ -398,6 +393,7 @@ export const AssetDetail = () => {
                             alignItems='center'
                             alignContent='center'>
                             <img
+                              alt=''
                               src={data?.image_url}
                               className={classes.assetImage}
                               style={{
@@ -437,7 +433,7 @@ export const AssetDetail = () => {
                 <Grid item xs={12} sm={6}>
                   <ListingAccordion
                     listings={data?.orders?.filter(
-                      (order: any) => order.side == ORDER_LISTING,
+                      (order: any) => order.side === ORDER_LISTING,
                     )}
                     loading={loading}
                     error={error}
@@ -449,7 +445,7 @@ export const AssetDetail = () => {
                   <OffersAccordion
                     asset={data}
                     offers={data?.orders?.filter(
-                      (order: any) => order.side == ORDER_OFFER,
+                      (order: any) => order.side === ORDER_OFFER,
                     )}
                     loading={loading}
                     error={error}

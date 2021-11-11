@@ -1,11 +1,10 @@
-import React, {useEffect} from 'react';
-import {Button, Typography} from '@material-ui/core';
+import React from 'react';
+
+import {useIntl} from 'react-intl';
+
+import Button from '@material-ui/core/Button';
 import {Steps} from 'types/app';
-import {useStyles} from './index.style';
-import {NotificationType} from 'services/notification';
-import {useDispatch} from 'react-redux';
-import {Notification} from 'types/models/Notification';
-import {onAddNotification} from 'redux/actions';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   step: Steps;
@@ -13,38 +12,20 @@ interface Props {
 }
 
 const DoneStep: React.FC<Props> = (props) => {
-  const {step, onClose} = props;
-
-  const classes = useStyles();
-
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   if (step === Steps.DONE) {
-  //     console.log('START DONE');
-
-  //     const notification: Notification = {
-  //       title: 'Order',
-  //       body: 'Successfully created',
-  //     };
-  //     dispatch(onAddNotification([notification], NotificationType.SUCCESS));
-  //   }
-  // }, [step]);
+  const {onClose} = props;
+  const {messages} = useIntl();
 
   return (
     <>
-      {/* <Typography align='center' style={{paddingBottom: 10}}>
-        Order completed!
-      </Typography> */}
       <Button
-        style={{margin: 0}}
-        fullWidth
-        variant='outlined'
-        color='primary'
-        size='large'
-        onClick={onClose}>
-        Done
-      </Button>
+      style={{margin: 0}}
+      fullWidth
+      variant='outlined'
+      color='primary'
+      size='large'
+      onClick={onClose}>
+      <IntlMessages id='app.dashboard.done' />
+    </Button>
     </>
   );
 };

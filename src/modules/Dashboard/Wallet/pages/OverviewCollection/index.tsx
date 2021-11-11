@@ -1,35 +1,23 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
+import {useIntl} from 'react-intl';
 import {
   Grid,
   Box,
   IconButton,
-  Tooltip,
-  Card,
   Breadcrumbs,
   Typography,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Chip,
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
-import useFetch from 'use-http';
 import {useWeb3} from 'hooks/useWeb3';
-import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-
-import {Token} from 'types/app';
-
-import {useDispatch, useSelector} from 'react-redux';
 
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
-
 import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
-import { useCollectionIds } from 'hooks/balance/useCollectionIds';
-import { NoMeetingRoom } from '@material-ui/icons';
-import { useNFTMetadataURI } from 'hooks/nfts/useNFTMetadataURI';
+import {useCollectionIds} from 'hooks/balance/useCollectionIds';
+import {useNFTMetadataURI} from 'hooks/nfts/useNFTMetadataURI';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -43,49 +31,43 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
     match: {params},
   } = props;
   const {address, networkName} = params;
-  const {getProvider} = useWeb3();
+  const {messages} = useIntl();
 
-  const dispatch = useDispatch();
-
-  const {account: web3Account, chainId} = useWeb3();
+  const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const account: string | undefined = defaultAccount || web3Account || '';
-
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
-  const metadataQuery = useNFTMetadataURI(address, networkName, tokenIdsQuery.data)
-
-  const [token, setToken] = useState<Token>();
+  const metadataQuery = useNFTMetadataURI(
+    address,
+    networkName,
+    tokenIdsQuery.data,
+  );
 
   const history = useHistory();
 
   const handleBack = useCallback(() => history.push(`/wallet/`), []);
 
-  const [showSelectTokens, setShowSelectTokens] = useState(false);
-
   return (
     <>
-      <Box py={4}>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <Grid
-              container
-              justify='space-between'
-              alignItems='center'
-              spacing={2}>
-              <Grid item xs={12}>
-                <Breadcrumbs aria-label='breadcrumb'>
-                  <Typography variant='body2' color='textSecondary'>
-                    Wallet
-                  </Typography>
-                  <Typography variant='body2' color='textSecondary'>
-                    Overview
-                  </Typography>
-                  <Typography variant='body2' color='textSecondary'>
-                  
-                  </Typography>
-                </Breadcrumbs>
-              </Grid>
+    <Box py={4}>
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Grid
+            container
+            justify='space-between'
+            alignItems='center'
+            spacing={2}>
+            <Grid item xs={12}>
+              <Breadcrumbs aria-label='breadcrumb'>
+                <Typography variant='body2' color='textSecondary'>
+                  <IntlMessages id='app.dashboard.wallet' />
+                </Typography>
+                <Typography variant='body2' color='textSecondary'>
+                  <IntlMessages id='app.dashboard.overview' />
+                </Typography>
+                <Typography variant='body2' color='textSecondary' />
+              </Breadcrumbs>
+            </Grid>
 
               <Grid item xs={12}>
                 <Grid container spacing={2} alignItems='center'>
@@ -100,10 +82,11 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={4}>
-            {metadataQuery?.data?.map((d)=><p>{d.image} </p>    )}
+              {metadataQuery?.data?.map((d) => (
+                <p>{d.image} </p>
+              ))}
             </Grid>
           </Grid>
-
         </Grid>
       </Box>
     </>

@@ -1,27 +1,42 @@
+import React, {useEffect} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import React, {useEffect} from 'react';
 import {useHistory} from 'react-router';
 import {getMagic, getCachedMagicNetwork} from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const MagicCallbackSocial = () => {
   const {onConnectMagic} = useMagicProvider();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const history = useHistory();
+
+  const {messages} = useIntl();
+
   //TODO: colocar loading nos callbacks
+  /* eslint-disable */
   useEffect(() => {
     // On mount, we try to login with a Magic credential in the URL query.
     const network = getCachedMagicNetwork();
     const magic = getMagic(network);
     magic.oauth.getRedirectResult().finally(() => {
       onConnectMagic().then((acc) => {
-        if (acc && acc.length) {
-          history.push(`/wallet/${acc[0]}`);
+        if (loginBackRoute) {
+          history.push(loginBackRoute);
+          onSetLoginBackRoute(undefined);
         } else {
-          history.push('/wallet');
+          if (acc && acc.length) {
+            history.push(`/wallet/${acc[0]}`);
+          } else {
+            history.push('/wallet');
+          }
         }
       });
     });
@@ -43,7 +58,9 @@ const MagicCallbackSocial = () => {
         </Grid>
         <Grid item>
           <Box display={'flex'} alignItems='center'>
-            <Typography variant={'body1'}>Redirecting to Wallet ...</Typography>
+            <Typography variant={'body1'}>
+              <IntlMessages id='app.dashboard.redirectingToWallet' />
+            </Typography>
             <Box p={4}>
               <CircularProgress color='inherit' />
             </Box>

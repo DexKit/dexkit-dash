@@ -48,16 +48,18 @@ export function AccountSelect(props: Props) {
         <Box mr={2}>
           <Avatar className={classes.icon} />
         </Box>
-        <Typography variant='body1'>
-          {account.address !== account.label
-            ? account.label
-            : truncateAddress(account.address)}
-        </Typography>
-        {account.address !== account.label ? (
-          <Typography variant='body2'>
-            {truncateAddress(account.address)}
+        <Box display='flex' flexDirection='column' justifyContent='flex-start'>
+          <Typography variant='body1'>
+            {account.address !== account.label
+              ? account.label
+              : truncateAddress(account.address)}
           </Typography>
-        ) : null}
+          {account.address !== account.label ? (
+            <Typography variant='body2' color='textSecondary'>
+              {truncateAddress(account.address)}
+            </Typography>
+          ) : null}
+        </Box>
       </Box>
     </CustomButtom>
   );

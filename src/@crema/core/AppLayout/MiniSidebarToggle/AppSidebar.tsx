@@ -11,25 +11,28 @@ import Scrollbar from '../../Scrollbar';
 import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
+import {Skeleton} from '@material-ui/lab';
 
 import {
-  Paper,
   Grid,
-  Typography,
-  Button,
   IconButton,
-  useMediaQuery,
-  useTheme,
   Divider,
+  ButtonBase,
+  Avatar,
+  Typography,
+  Link,
 } from '@material-ui/core';
 
-import {ReactComponent as SupportImage} from 'assets/images/state/support.svg';
-import {ReactComponent as TwoFourSupportIcon} from 'assets/images/icons/24-support.svg';
+import {Link as RouterLink} from 'react-router-dom';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
+import {useProfileKittygotchi} from 'modules/Profile/hooks';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {truncateAddress} from 'utils';
+import {useWeb3} from 'hooks/useWeb3';
 
 interface AppSidebarProps {
   variant?: string;
@@ -53,7 +56,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const classes = useStyles({themeMode});
   const sidebarClasses = classes.sidebarStandard;
 
-  const theme = useTheme();
+  const kittygotchiProfile = useProfileKittygotchi();
+
+  const defaultAddress = useDefaultAccount();
+
+  const {account, chainId} = useWeb3();
 
   return (
     <>
@@ -72,12 +79,68 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 <Grid
                   container
                   spacing={2}
+                  justifyContent='space-between'
                   alignItems='center'
                   alignContent='center'>
                   <Grid item>
-                    <IconButton onClick={handleToggleDrawer}>
-                      <CloseIcon />
-                    </IconButton>
+                    <Box p={2}>
+                      <Grid
+                        container
+                        alignItems='center'
+                        alignContent='center'
+                        spacing={4}>
+                        <Grid item>
+                          <ButtonBase
+                            className={classes.avatarButton}
+                            to='/profile'
+                            component={RouterLink}>
+                            <Avatar
+                              className={classes.avatar}
+                              src={
+                                account && chainId
+                                  ? kittygotchiProfile.getDefault(
+                                      account,
+                                      chainId,
+                                    )?.image
+                                  : undefined
+                              }
+                            />
+                          </ButtonBase>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='body1'>
+                            {defaultAddress ? (
+                              truncateAddress(defaultAddress)
+                            ) : (
+                              <Skeleton />
+                            )}
+                          </Typography>
+                          <Typography color='textSecondary' variant='body2'>
+                            {defaultAddress ? (
+                              <Link
+                                onClick={handleToggleDrawer}
+                                component={RouterLink}
+                                to='/profile'>
+                                View profile
+                              </Link>
+                            ) : (
+                              <Skeleton />
+                            )}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      alignContent='center'
+                      justifyContent='center'>
+                      <IconButton onClick={handleToggleDrawer}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
@@ -103,9 +166,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 {navCollapsed ? <MenuIcon /> : <Close />}
               </IconButton>
             </Box>
+            <Divider />
             <Scrollbar className={classes.scrollAppSidebar}>
               <Navigation />
-              <Box p={4} className='visible-hover'>
+              {/* <Box p={4} className='visible-hover'>
                 <Paper>
                   <Box p={4}>
                     <Grid
@@ -142,7 +206,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     </Grid>
                   </Box>
                 </Paper>
-              </Box>
+              </Box> */}
             </Scrollbar>
           </Box>
         </Box>

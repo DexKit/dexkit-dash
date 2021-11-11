@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 import {Dialog} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
@@ -10,8 +10,8 @@ import {
   getNativeCoinWrappedFromNetworkName,
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {AppContext} from '@crema';
-import AppContextPropsType from 'types/AppContextPropsType';
+
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 
 interface OrderProps {
   open: boolean;
@@ -29,10 +29,6 @@ interface OrderProps {
   onClose: () => void;
 }
 
-
-
-
-
 const OrderDialog: React.FC<OrderProps> = (props) => {
   const {
     open,
@@ -43,7 +39,6 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     tokenTo,
     networkName,
     amountFrom,
-    amountTo,
     price,
     expiry,
     onClose,
@@ -67,8 +62,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     symbol: '',
   });
 
-  const {theme} = useContext<AppContextPropsType>(AppContext);
-
+  /* eslint-disable */
   useEffect(() => {
     if (open && tokenFrom && tokenTo && networkName && chainId) {
       setLoading(true);
@@ -80,39 +74,22 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
         name: '',
         symbol: getNativeCoinWrappedFromNetworkName(networkName).toUpperCase(),
       });
-      // Refactor this 
+
       if (
-        (((tokenFrom.symbol.toUpperCase() === 'ETH' &&
-          tokenTo.symbol.toUpperCase() === 'WETH') ||
-          (tokenFrom.symbol.toUpperCase() === 'WETH' &&
-            tokenTo.symbol.toUpperCase() === 'ETH')) &&
-          networkName === EthereumNetwork.ethereum) ||
-        (((tokenFrom.symbol.toUpperCase() === 'BNB' &&
-          tokenTo.symbol.toUpperCase() === 'WBNB') ||
-          (tokenFrom.symbol.toUpperCase() === 'WBNB' &&
-            tokenTo.symbol.toUpperCase() === 'BNB')) &&
-          networkName === EthereumNetwork.bsc)  ||
-          (((tokenFrom.symbol.toUpperCase() === 'MATIC' &&
-            tokenTo.symbol.toUpperCase() === 'WMATIC') ||
-            (tokenFrom.symbol.toUpperCase() === 'WMATIC' &&
-              tokenTo.symbol.toUpperCase() === 'MATIC')) &&
-            networkName === EthereumNetwork.matic)
+        (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
+          tokenTo.symbol.toUpperCase() ===
+            `W${GET_CHAIN_NATIVE_COIN(chainId)}`) ||
+        (tokenTo.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
+          tokenFrom.symbol.toUpperCase() ===
+            `W${GET_CHAIN_NATIVE_COIN(chainId)}`)
       ) {
         setIsConvert(true);
-        stepsFn = [Steps.APPROVE, Steps.CONVERT];
+        stepsFn = [Steps.CONVERT];
       } else if (isMarket) {
         setIsConvert(false);
         stepsFn = [Steps.APPROVE, Steps.MARKET];
       } else {
         setIsConvert(false);
-        // if (
-        //   ((tokenFrom.symbol == 'ETH' || tokenFrom.symbol == 'WETH') && networkName == EthereumNetwork.ethereum) ||
-        //   ((tokenFrom.symbol == 'BNB' || tokenFrom.symbol == 'WBNB') && networkName == EthereumNetwork.bsc)
-        // ) {
-        //   stepsFn = [Steps.APPROVE, Steps.CONVERT, Steps.LIMIT];
-        // } else {
-        //   stepsFn = [Steps.APPROVE, Steps.LIMIT];
-        // }
         stepsFn = [Steps.APPROVE, Steps.LIMIT];
       }
 

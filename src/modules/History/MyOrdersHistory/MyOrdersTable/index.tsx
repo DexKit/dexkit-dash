@@ -13,7 +13,6 @@ import TableHeading from './TableHeading';
 import TableItemContainer from './TableItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
-import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {OrdersEmptyImage} from 'shared/components/Icons';
 
@@ -99,7 +98,7 @@ const MyOrdersTable: React.FC<Props> = ({
                 gutterBottom
                 align='center'
                 variant='h5'>
-                Ops, no data
+                Oops, no data
               </Typography>
               <Typography align='center'>
                 We have not found any orders linked to your wallet.

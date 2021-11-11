@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React from 'react';
 import {
   Card,
   Grid,
@@ -101,6 +101,7 @@ export const DeployStep = (props: DeployStepProps) => {
                     <Grid item>
                       {item.image ? (
                         <img
+                          alt=''
                           className={classes.img}
                           src={URL.createObjectURL(item.image)}
                         />

@@ -1,19 +1,20 @@
 import React, {useEffect} from 'react';
-import {
-  Autocomplete,
-  createFilterOptions,
-  FilterOptionsState,
-} from '@material-ui/lab';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import {Autocomplete, FilterOptionsState} from '@material-ui/lab';
 import {Token} from 'types/app';
-import {Chip, makeStyles, TextField, Box, Typography} from '@material-ui/core';
+import {Box, Chip, makeStyles, TextField, Typography} from '@material-ui/core';
 import TokenLogo from 'shared/components/TokenLogo';
 import styled from 'styled-components';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 
-import {VariableSizeList, ListChildComponentProps} from 'react-window';
+import {ListChildComponentProps, VariableSizeList} from 'react-window';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import {filterTokensInfoByString} from 'utils/tokens';
+
 interface Props {
   id: string;
   selected: Token | undefined;
@@ -105,7 +106,7 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
 const useStyles = makeStyles({
   textField: {
     '& .MuiOutlinedInput-root': {
-      padding: '5px 50px'
+      padding: '5px 50px',
     },
     // '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
     //   border: 'none',
@@ -115,8 +116,8 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
   },
   selectLabel: {
-    marginBottom: '4px'
-  }
+    marginBottom: '4px',
+  },
 });
 
 const SelectBox = styled.div`
@@ -160,6 +161,7 @@ const SelectToken: React.FC<Props> = ({
   label,
 }) => {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const [inputValue, setInputValue] = React.useState(selected?.symbol);
 
@@ -187,7 +189,9 @@ const SelectToken: React.FC<Props> = ({
             <SelectBox>
               <TextField
                 {...params}
-                placeholder={'Search by name, symbol or paste address'}
+                placeholder={
+                  messages['app.dashboard.chartSearchInfo'] as string
+                }
                 variant='outlined'
                 className={classes.textField}
                 // onChange={($e) => search($e.target.value)}
@@ -230,8 +234,8 @@ const SelectToken: React.FC<Props> = ({
                   <Box pl={1}>
                     <Chip
                       label={FORMAT_NETWORK_NAME(option?.networkName)}
-                      color={'default'}
-                      size={'small'}
+                      color='default'
+                      size='small'
                     />
                   </Box>
                 )}
@@ -239,8 +243,12 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <>
-                <Typography variant="body2" className={`${classes.bold} ${!label ? classes.selectLabel : ''}`}>
-                  {label || 'Search a coin'}
+                <Typography
+                  variant='body2'
+                  className={`${classes.bold} ${
+                    !label ? classes.selectLabel : ''
+                  }`}>
+                  {label || <IntlMessages id='app.dashboard.searchCoin' />}
                 </Typography>
                 <SelectBox>
                   {selected && (
@@ -256,7 +264,7 @@ const SelectToken: React.FC<Props> = ({
                     placeholder={
                       selected
                         ? selected.symbol
-                        : 'Search by name, symbol or paste address'
+                        : (messages['app.dashboard.chartSearchInfo'] as string)
                     }
                     variant='outlined'
                     className={classes.textField}
@@ -271,4 +279,4 @@ const SelectToken: React.FC<Props> = ({
   );
 };
 
-export default  SelectToken;
+export default SelectToken;

@@ -1,4 +1,6 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
+
+import {useIntl} from 'react-intl';
 
 import {
   Link,
@@ -13,12 +15,7 @@ import {
   AccordionSummary,
 } from '@material-ui/core';
 
-import {
-  RouteComponentProps,
-  useHistory,
-  Link as RouterLink,
-} from 'react-router-dom';
-import useFetch from 'use-http';
+import {useHistory, Link as RouterLink} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -26,10 +23,6 @@ import BuySell from './BuySell';
 
 import {Token} from 'types/app';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
-import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 import HistoryTables from './HistoryTables';
@@ -50,6 +43,7 @@ import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -59,6 +53,7 @@ type Params = {
 const TokenPage = () => {
   const history = useHistory();
   const network = useNetwork();
+  const {messages} = useIntl();
   const searchParams = new URLSearchParams(history.location.search);
 
   const networkName = useMemo(() => {
@@ -76,7 +71,7 @@ const TokenPage = () => {
     return (
       searchParams.get('from') || GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName)
     );
-  }, [searchParams]);
+  }, [searchParams, networkName]);
 
   const {account: web3Account, chainId} = useWeb3();
 
@@ -139,7 +134,7 @@ const TokenPage = () => {
       }
       history.push({search: searchParams.toString()});
     },
-    [history.location.search],
+    [history.location.search, history],
   );
 
   const shareUrl = useMemo(() => {
@@ -149,14 +144,14 @@ const TokenPage = () => {
 
   const handleGoClick = useCallback(() => {
     history.push('/wallet');
-  }, []);
+  }, [history]);
 
   return (
     <>
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
-        shareText='Sharing token'
+        shareText={messages['app.dashboard.sharingToken'] as string}
         shareUrl={shareUrl}
         onClose={toggleShare}
       />
@@ -168,10 +163,10 @@ const TokenPage = () => {
                 <Grid item xs={12}>
                   <Breadcrumbs aria-label='breadcrumb'>
                     <Link component={RouterLink} to='/wallet' color='inherit'>
-                      Wallet
+                      <IntlMessages id='app.dashboard.wallet' />
                     </Link>
                     <Typography variant='body2' color='inherit'>
-                      Trade
+                      <IntlMessages id='app.dashboard.trade' />
                     </Typography>
                   </Breadcrumbs>
                 </Grid>
@@ -183,7 +178,9 @@ const TokenPage = () => {
                       </IconButton>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h5'>Trade</Typography>
+                      <Typography variant='h5'>
+                        <IntlMessages id='app.dashboard.trade' />
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <IconButton onClick={handleOpenAboutDialog} size='small'>
@@ -204,7 +201,9 @@ const TokenPage = () => {
                     <RoundedIconButton onClick={toggleShare}>
                       <Share className={classes.icon} />
                     </RoundedIconButton>
-                    <Typography variant='caption'>Share</Typography>
+                    <Typography variant='caption'>
+                      <IntlMessages id='app.dashboard.share' />
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -232,7 +231,8 @@ const TokenPage = () => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Charts
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.dashboard.charts' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>

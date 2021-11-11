@@ -47,38 +47,38 @@ const TableHeading: React.FC<TableHeadingProps> = (props) => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.pair' />
+        <IntlMessages id='app.protocolExplorer.pair' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.price' />
+        <IntlMessages id='app.protocolExplorer.price' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount24' />
+        <IntlMessages id='app.protocolExplorer.baseAmount24' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.quoteAmount24' />
+        <IntlMessages id='app.protocolExplorer.quoteAmount24' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.volume24' />
+        <IntlMessages id='app.protocolExplorer.volume24' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.trades24' />
+        <IntlMessages id='app.protocolExplorer.trades24' />
       </TableCell>
 
       {props.exchange === EXCHANGE.ALL && (
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.exchange' />
+          <IntlMessages id='app.protocolExplorer.exchange' />
         </TableCell>
       )}
 
       {IS_AMM(props.exchange) && (
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.pool' />
+          <IntlMessages id='app.protocolExplorer.pool' />
         </TableCell>
       )}
     </TableRow>

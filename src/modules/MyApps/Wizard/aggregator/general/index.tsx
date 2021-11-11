@@ -65,6 +65,7 @@ const GeneralForm: React.FC<Props> = (props) => {
     ) as k[];
   }, [fields]);
 
+  /* eslint-disable */
   useEffect(() => {
     const map = new Map<string, boolean>();
     const _errors: error = keys.reduce((pre, cur) => {

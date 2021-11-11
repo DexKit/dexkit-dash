@@ -1,22 +1,20 @@
+import React, {useCallback, useEffect, useState} from 'react';
 
-import React, {useCallback, useState, useEffect} from 'react';
+import {useIntl} from 'react-intl';
+
 import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
-import {
-  Grid,
-  Paper,
-  TextField,
-  useMediaQuery,
-  Theme,
-  Typography,
-  InputAdornment,
-  IconButton,
-  useTheme,
-  Tooltip,
-  Box,
-  makeStyles,
-  Checkbox,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import {makeStyles, Theme, useTheme} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
@@ -58,7 +56,6 @@ export const AccountListItem = (props: AccountListItemProps) => {
     onSelect,
     onLabelChange,
     onMakeDefault,
-    onOpenMenu,
     selected,
   } = props;
 
@@ -69,6 +66,8 @@ export const AccountListItem = (props: AccountListItemProps) => {
   const theme = useTheme();
 
   const classes = useStyles();
+
+  const {messages} = useIntl();
 
   const isDesktop = useMediaQuery<Theme>((theme) =>
     theme?.breakpoints.up('sm'),
@@ -81,6 +80,7 @@ export const AccountListItem = (props: AccountListItemProps) => {
     [],
   );
 
+  /* eslint-disable */
   const handleDone = useCallback(
     (e: React.MouseEvent) => {
       onLabelChange(account, label);
@@ -115,12 +115,12 @@ export const AccountListItem = (props: AccountListItemProps) => {
       {isEditing ? (
         <TextField
           fullWidth
-          label='Account label'
+          label={messages['app.dashboard.accountLabel'] as string}
           defaultValue={account.label || account.address}
           InputProps={{
             endAdornment: (
               <InputAdornment position='end'>
-                <Tooltip title={'Save'}>
+                <Tooltip title={messages['app.dashboard.save'] as string}>
                   <IconButton onClick={handleDone} color='primary' size='small'>
                     <DoneIcon />
                   </IconButton>
@@ -145,7 +145,10 @@ export const AccountListItem = (props: AccountListItemProps) => {
                   onClick={handleSelect}
                 />
               ) : (
-                <Tooltip title={isConnected ? 'Connected' : ''}>
+                <Tooltip
+                  title={
+                    isConnected ? messages['app.dashboard.connected'] : ''
+                  }>
                   <FiberManualRecordIcon
                     style={
                       isConnected

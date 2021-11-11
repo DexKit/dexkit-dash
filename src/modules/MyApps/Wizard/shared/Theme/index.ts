@@ -1,4 +1,3 @@
-import {createStyles, Theme} from '@material-ui/core/styles';
 import {Styles} from 'jss';
 import {ThemeProperties} from 'types/myApps';
 import {HelpText} from '../';

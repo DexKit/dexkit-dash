@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import TableCell from '@material-ui/core/TableCell';
-import {Avatar, Chip, makeStyles, Tooltip} from '@material-ui/core';
+import {Avatar, makeStyles, Tooltip} from '@material-ui/core';
 import {useIntl} from 'react-intl';
 
 import TableRow from '@material-ui/core/TableRow';
@@ -88,7 +88,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
           component={RouterLink}>
           <SearchIcon />
        </Link>*/}
-        <Tooltip title={messages['app.viewTx']} placement='top'>
+        <Tooltip title={messages['app.history.viewTx']} placement='top'>
           <a
             href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
               row.transaction?.hash

@@ -1,7 +1,6 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   Grid,
-  Box,
   Card,
   CardContent,
   CardMedia,
@@ -9,8 +8,11 @@ import {
   makeStyles,
   CardActionArea,
 } from '@material-ui/core';
+
 import {useCollectionItems} from 'modules/Wizard/hooks';
 import CollectionItemsSkeleton from './CollectionItemsSkeleton';
+import {useWeb3} from 'hooks/useWeb3';
+import {Web3State} from 'types/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -26,13 +28,17 @@ interface CollectionItemsProps {
 
 export const CollectionItems = (props: CollectionItemsProps) => {
   const {contractAddress, update} = props;
-  const {data, error, loading, get} = useCollectionItems();
+  const {data, loading, get} = useCollectionItems();
 
   const classes = useStyles();
 
+  const {web3State} = useWeb3();
+
   useEffect(() => {
-    get(contractAddress);
-  }, [get, contractAddress, update]);
+    if (web3State === Web3State.Done) {
+      get(contractAddress);
+    }
+  }, [get, contractAddress, update, web3State]);
 
   if (loading) {
     return <CollectionItemsSkeleton />;

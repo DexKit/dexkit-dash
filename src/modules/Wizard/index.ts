@@ -4,7 +4,7 @@ export const wizardConfig = [
   {
     routes: [
       {
-        path: '/wizard/collection/:contract',
+        path: '/wizard/collection/:network/:contract',
         component: React.lazy(() => import('./pages/collection/index')),
       },
       {

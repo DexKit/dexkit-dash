@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {ChangellyCoin} from 'types/changelly';
+
 //NOTE: Study if it worth use this at the moment
 export enum Steps {
   Exchange,
@@ -47,9 +48,8 @@ const defaultSwapContext = {
   validAddress: false,
 };
 
-export const SwapContext = React.createContext<SwapContextProps>(
-  defaultSwapContext,
-);
+export const SwapContext =
+  React.createContext<SwapContextProps>(defaultSwapContext);
 
 const SwapContextProvider: React.FC<React.ReactNode> = ({children}) => {
   const [loading, setLoading] = useState(defaultSwapContext.loading);

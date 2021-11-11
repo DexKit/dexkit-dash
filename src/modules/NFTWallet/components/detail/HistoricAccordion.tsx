@@ -1,7 +1,4 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Typography,
   useTheme,
   Box,
@@ -11,15 +8,12 @@ import {
 } from '@material-ui/core';
 import React, {useCallback, useEffect, useState} from 'react';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SubjectIcon from '@material-ui/icons/Subject';
 import AssetEventsTable from './AssetEventsTable';
 import {sortEventArray} from 'modules/NFTWallet/utils';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useAssetEvents} from 'modules/NFTWallet/hooks/detail';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
-import AssetEventsTableSkeleton from './AssetEventsTableSkeleton';
 
 interface Props {
   asset: any;
@@ -31,13 +25,16 @@ export default (props: Props) => {
   const {asset} = props;
   const theme = useTheme();
   const {getEvents} = useAssetEvents();
+  /* eslint-disable */
   const [expanded, setExpanded] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  /* eslint-disable */
   const [error, setError] = useState();
 
+  /* eslint-disable */
   const fetchData = useCallback(() => {
     if (!hasMore) {
       return;

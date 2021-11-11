@@ -1,13 +1,10 @@
 import {
   InputAdornment,
   MenuItem,
-  Paper,
   Typography,
   Select,
   TextField,
   makeStyles,
-  ListItemIcon,
-  ListItemText,
   Avatar,
   useTheme,
   Box,
@@ -59,14 +56,8 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const {
-    tokens,
-    tokenIndex,
-    amount,
-    error,
-    onChangeToken,
-    onChangeAmount,
-  } = props;
+  const {tokens, tokenIndex, amount, error, onChangeToken, onChangeAmount} =
+    props;
   const [amountValue, setAmountValue] = useState('');
 
   const theme = useTheme();
@@ -84,6 +75,7 @@ export default (props: Props) => {
     [onChangeAmount],
   );
 
+  /* eslint-disable */
   const handleChangeToken = useCallback(
     (e: ChangeEvent<any>) => {
       const index = parseInt(e.target.value);

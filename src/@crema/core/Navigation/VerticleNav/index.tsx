@@ -17,8 +17,8 @@ const Navigation: React.FC<NavigationProps> = () => {
   return (
     <List disablePadding>
       {/*<AppLogo justifyContent="center" logo={require('assets/images/logo_white.png')}/>*/}
-      {items.map((item) => (
-        <React.Fragment key={item.id}>
+      {items.map((item, id) => (
+        <React.Fragment key={id}>
           {item.type === 'group' && <VerticalNavGroup item={item} level={0} />}
 
           {item.type === 'collapse' && (

@@ -10,7 +10,6 @@ import AppFooter from '../AppLayout/AppFooter';
 import Box from '@material-ui/core/Box';
 import {RouteTransition} from '../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../types/AppContextPropsType';
-import {useTheme} from '@material-ui/core';
 import {useMobile} from 'hooks/useMobile';
 import {makeStyles} from '@material-ui/core';
 
@@ -54,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ContentView: React.FC<ContentViewProps> = () => {
-  const theme = useTheme();
-
   const isMobile = useMobile();
 
   const classes = useStyles();

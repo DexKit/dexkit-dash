@@ -1,5 +1,4 @@
-import React from 'react';
-import {withStyles, ButtonBase, styled} from '@material-ui/core';
+import {withStyles, ButtonBase} from '@material-ui/core';
 
 export const AppBarButton = withStyles((theme) => ({
   root: {

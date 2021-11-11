@@ -16,10 +16,9 @@ import {
   EmailShareButton,
 } from 'react-share';
 import ShareIcon from '@material-ui/icons/Share';
-import {Box, Tooltip, DialogProps, Typography} from '@material-ui/core';
-import IconButton, {IconButtonProps} from '@material-ui/core/IconButton';
+import {Box, DialogProps, Typography} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
-import {Share} from '@material-ui/icons';
 
 interface ShareDialogProps extends DialogProps {
   shareText?: string;

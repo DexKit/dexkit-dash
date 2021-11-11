@@ -6,7 +6,7 @@ import {errorPagesConfigs} from './ErrorPages';
 
 import {dashBoardConfigs} from './Dashboard';
 
-import {coinsLeagueConfigs} from './CoinsLeague';
+import {coinLeaguesConfigs} from './CoinLeagues';
 import {changelogConfigs} from './Changelog';
 import {myAppsConfigs} from './MyApps';
 import {protocolExplorerConfigs} from './ProtocolExplorer';
@@ -17,6 +17,8 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {nftWalletConfig} from './NFTWallet';
 import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
+import {kittygotchiConfig} from './Kittygotchi';
+import {profileConfig} from './Profile';
 
 const routeConfigs = [
   ...errorPagesConfigs,
@@ -28,8 +30,10 @@ const routeConfigs = [
   ...nftWalletConfig,
   ...wizardConfig,
   ...changelogConfigs,
-  ...coinsLeagueConfigs,
+  ...coinLeaguesConfigs,
   ...onboardingConfig,
+  ...kittygotchiConfig,
+  ...profileConfig,
 ];
 
 const routes = [

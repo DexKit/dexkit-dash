@@ -1,22 +1,23 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import {
-  Chip,
-  Box,
-  Grid,
-  Typography,
-  Drawer,
-  IconButton,
-  Divider,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Badge,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import Chip from '@material-ui/core/Chip';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import {useTheme} from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Badge from '@material-ui/core/Badge';
 
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -32,6 +33,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 interface AssetTableProps {
   balances: MyBalances[];
   loading?: boolean;
+  hideBalance?: boolean;
 }
 
 enum TokenOrderBy {
@@ -40,7 +42,11 @@ enum TokenOrderBy {
   TokenAmount,
 }
 
-const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
+const AssetTable: React.FC<AssetTableProps> = ({
+  balances,
+  loading,
+  hideBalance,
+}) => {
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -48,6 +54,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   const [filter, setFilter] = useState('all');
 
   const [search, setSearch] = useState('');
+
+  const {messages} = useIntl();
 
   const handleChange = useCallback((e) => {
     setSearch(e.target.value);
@@ -157,7 +165,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -165,7 +173,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                 <Grid item>
                   <Chip
                     style={{marginRight: 10}}
-                    label='All'
+                    label={messages['app.dashboard.all'] as string}
                     size='small'
                     clickable
                     variant={filter === 'all' ? 'default' : 'outlined'}
@@ -207,7 +215,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               <ContainedInput
                 value={search}
                 onChange={handleChange}
-                placeholder='Search'
+                placeholder={messages['app.dashboard.search'] as string}
                 startAdornment={
                   <InputAdornment position='start'>
                     <Search />
@@ -218,19 +226,25 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             </Grid>
             <Grid item xs={12}>
               <FormControl variant='outlined' fullWidth>
-                <InputLabel>Order by</InputLabel>
+                <InputLabel>
+                  <IntlMessages id='app.dashboard.orderBy' />
+                </InputLabel>
                 <Select
                   style={{backgroundColor: 'transparent'}}
-                  label='Order by'
+                  label={messages['app.dashboard.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
                   onChange={handleOrderByChange}
                   fullWidth>
-                  <MenuItem value={TokenOrderBy.Name}>Name</MenuItem>
-                  <MenuItem value={TokenOrderBy.TokenAmount}>
-                    Token amount
+                  <MenuItem value={TokenOrderBy.Name}>
+                    <IntlMessages id='app.dashboard.name' />
                   </MenuItem>
-                  <MenuItem value={TokenOrderBy.UsdAmount}>USD Amount</MenuItem>
+                  <MenuItem value={TokenOrderBy.TokenAmount}>
+                    <IntlMessages id='app.dashboard.tokenAmount' />
+                  </MenuItem>
+                  <MenuItem value={TokenOrderBy.UsdAmount}>
+                    USD <IntlMessages id='app.dashboard.amount' />
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -246,7 +260,8 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances().length} Assets
+                {filteredBalances().length}{' '}
+                <IntlMessages id='app.dashboard.assets' />
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -261,7 +276,7 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                         <Search />
                       </InputAdornment>
                     }
-                    placeholder='Search'
+                    placeholder={messages['app.dashboard.search'] as string}
                   />
                 </Grid>
                 <Grid item>
@@ -298,7 +313,10 @@ const AssetTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               </Grid>
             </Grid>
           ) : (
-            <AssetList balances={filteredBalances()} />
+            <AssetList
+              hideBalance={hideBalance}
+              balances={filteredBalances()}
+            />
           )}
         </Grid>
       </Grid>

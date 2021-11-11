@@ -1,7 +1,10 @@
-import {Grid, Box, Typography, Button, useTheme} from '@material-ui/core';
+import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import {Box, Button, Grid, Typography, useTheme} from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 
-import React from 'react';
 import {getChangellyStatusMessage, STATUS_FAILED} from '../../util';
 
 interface Props {
@@ -29,13 +32,12 @@ export const OrderFailed = (props: Props) => {
           {getChangellyStatusMessage(STATUS_FAILED)}
         </Typography>
         <Typography align='center' variant='body2' color='textSecondary'>
-          In most cases, the amount was less than the minimum. Please contact
-          support and provide a transaction id.
+          <IntlMessages id='app.dashboard.swapInfo' />
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button variant='outlined' fullWidth onClick={onReset}>
-          Swap again
+          <IntlMessages id='app.dashboard.swapAgain' />
         </Button>
       </Grid>
     </Grid>

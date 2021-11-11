@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {Box, Fade} from '@material-ui/core';
 import AppCard from '../../../../@crema/core/AppCard';
 import Sales from 'assets/images/dashboard/sales.svg';

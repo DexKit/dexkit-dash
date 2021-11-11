@@ -75,7 +75,12 @@ const ComponentTheme: React.FC<ComponentsThemeProps> = (props) => {
                   flexDirection={'column'}
                   alignItems={'center'}>
                   <Typography>{getHelpText(help, className, 0)}</Typography>
-                  <img loading='lazy' className={classes.image} src={logo} />
+                  <img
+                    alt=''
+                    loading='lazy'
+                    className={classes.image}
+                    src={logo}
+                  />
                 </Box>
               )}
             </Box>

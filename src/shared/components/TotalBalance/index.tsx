@@ -21,7 +21,7 @@ import {MyBalances} from 'types/blockchain';
 import {useNetwork} from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {truncateAddress, truncateIsAddress} from 'utils';
+import {truncateIsAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
 
@@ -32,6 +32,7 @@ import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import CopyButton from '../CopyButton';
@@ -120,16 +121,14 @@ const TotalBalance = (props: Props) => {
     loading,
     loadingUsd,
     address,
-    tokenName,
     onMakeFavorite,
     onShare,
     isFavorite,
   } = props;
 
   const theme = useTheme();
-
+  const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
   const [tokens, setTokens] = useState<MyBalances[]>([]);
-  const [amountsVisible, setAmountsVisible] = useState(true);
 
   const {account} = useWeb3();
 
@@ -141,7 +140,7 @@ const TotalBalance = (props: Props) => {
   }, [account, defaultAccount]);
 
   const networkName = useNetwork();
-
+  /* eslint-disable */
   useEffect(() => {
     if (only) {
       const dataFn = balances?.find(
@@ -218,12 +217,12 @@ const TotalBalance = (props: Props) => {
     return null;
   }, [only, tokens.length]);
 
-  const onlyTokenValue = useMemo(() => {
-    if (only && tokens.length > 0) {
-      return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
-    }
-    return null;
-  }, [only, tokens.length]);
+  // const onlyTokenValue = useMemo(() => {
+  //   if (only && tokens.length > 0) {
+  //     return tokens[0].value?.toFixed(4) + ' ' + tokens[0].currency?.symbol;
+  //   }
+  //   return null;
+  // }, [only, tokens.length]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -258,7 +257,7 @@ const TotalBalance = (props: Props) => {
   const handleTrade = useCallback(() => setShowTrade(true), [init]);
 
   const handleToggleVisibility = useCallback(() => {
-    setAmountsVisible((value) => !value);
+    setBalanceIsVisible();
   }, []);
 
   const handleSwapClose = useCallback(() => {
@@ -273,6 +272,10 @@ const TotalBalance = (props: Props) => {
 
   const accountsModal = useAccountsModal();
 
+  const handleResult = useCallback(() => {
+    setShowSender(false);
+  }, []);
+
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
   }, [accountsModal]);
@@ -283,6 +286,7 @@ const TotalBalance = (props: Props) => {
         open={showSender}
         onClose={handleCloseSender}
         balances={tokens.filter((t) => t.network === networkName)}
+        onResult={handleResult}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <BuySellModal
@@ -323,7 +327,7 @@ const TotalBalance = (props: Props) => {
                         <Box display='flex' alignItems='center'>
                           <Typography variant='body2'>
                             <span>
-                              {amountsVisible
+                              {isBalanceVisible
                                 ? truncateIsAddress(defaultAccountLabel)
                                 : '******'}{' '}
                             </span>
@@ -347,16 +351,14 @@ const TotalBalance = (props: Props) => {
                         <Grid container spacing={2}>
                           <Grid item>
                             <Typography className={classes.usdAmount}>
-                              {loadingUsd ? (
+                              {loadingUsd || loading ? (
                                 <Skeleton />
-                              ) : balances.length === 0 ? (
-                                '$ -'
                               ) : (
                                 <>
-                                  {amountsVisible
+                                  {isBalanceVisible
                                     ? onlyTokenValueInUsd ||
                                       usdFormatter.format(usdTotalAmount)
-                                    : '****,**'}
+                                    : '****.**'}
                                 </>
                               )}
                             </Typography>
@@ -381,7 +383,7 @@ const TotalBalance = (props: Props) => {
                   </Grid>
                   <Grid item>
                     <IconButton onClick={handleToggleVisibility}>
-                      {amountsVisible ? (
+                      {isBalanceVisible ? (
                         <VisibilityIcon />
                       ) : (
                         <VisibilityOffIcon />

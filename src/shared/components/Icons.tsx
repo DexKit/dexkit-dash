@@ -27,3 +27,13 @@ export {ReactComponent as NFTEmptyStateImage} from 'assets/images/state/nft-empy
 export {ReactComponent as FavoritesEmptyImage} from 'assets/images/state/favorites-empty.svg';
 export {ReactComponent as WalletEmptyImage} from 'assets/images/state/wallet-empty.svg';
 export {ReactComponent as OrdersEmptyImage} from 'assets/images/state/orders-empty.svg';
+export {ReactComponent as GiftIcon} from 'assets/images/icons/gift.svg';
+export {ReactComponent as FastFoodOutlineIcon} from 'assets/images/icons/fast-food-outline.svg';
+export {ReactComponent as RewardDialogIcon} from 'assets/images/dialogs/icons/reward-dialog-icon.svg';
+export {ReactComponent as FlashOutlinedIcon} from 'assets/images/icons/flash-outlined.svg';
+export {ReactComponent as ShieldOutlinedIcon} from 'assets/images/icons/shield.svg';
+export {ReactComponent as FlashSpeedIcon} from 'assets/images/icons/flash-speed.svg';
+export {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
+export {ReactComponent as ShareIcon} from 'assets/images/icons/share.svg';
+export {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+export {ReactComponent as LockIcon} from 'assets/images/icons/lock.svg';

@@ -1,4 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import styled from 'styled-components';
 import {useNetwork} from 'hooks/useNetwork';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
@@ -13,7 +16,6 @@ import {
   Typography,
   TextField,
   Box,
-  CircularProgress,
   IconButton,
   Popover,
   Collapse,
@@ -24,15 +26,11 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import {ArrowDownwardOutlined} from '@material-ui/icons';
 import ApproveStep from './ApproveStep';
-import ErrorStep from './ErrorStep';
 import ConvertStep from './ConvertStep';
 import MarketStep from './MarketStep';
 import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
-import ProgressBar from './ProgressBar';
 import LoadingStep from './LoadingStep';
 import {useStyles} from './index.style';
 import {getExpirationTimeFromSeconds} from 'utils/time_utils';
@@ -52,6 +50,8 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
+import {SwapQuoteResponse} from 'types/zerox';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   isMarket: boolean;
@@ -80,35 +80,11 @@ interface Props {
   onShifting: (step: Steps) => void;
 }
 
-const GasOptionsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const GasOption = styled.div<{isSelected: boolean}>`
-  padding: 5px 0px;
-  width: 90px;
-  background-color: ${(props) =>
-    props.isSelected ? '#ff7149' : 'transparent'};
-  border: 1px solid grey;
-  border-radius: 5px;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const OrderContent: React.FC<Props> = (props) => {
   const {
     isMarket,
     isConvert,
     balances,
-    steps,
     currentStep,
     currentStepIndex,
     tokenWrapper,
@@ -131,9 +107,10 @@ const OrderContent: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const {messages} = useIntl();
   const networkName = useNetwork();
   const {data} = useNativeCoinPriceUSD(networkName);
-  const [quote, setQuote] = useState<any>();
+  const [quote, setQuote] = useState<SwapQuoteResponse>();
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
   const [fee, setFee] = useState(0);
@@ -141,6 +118,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const [gasAmount, setGasAmount] = useState(new BigNumber(0));
   const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
+  /* eslint-disable */
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
   const [selectedGasOption, setSelectedGasOption] = useState('default');
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -353,10 +331,13 @@ const OrderContent: React.FC<Props> = (props) => {
 
   if (isPriceInverted) {
     displayPrice = parseFloat(
-      (validPrice === 0 ? 0 : 1 / validPrice).toString(),
+      (validPrice === 0 ? 0 : 1 / Number(validPrice)).toString(),
     ).toFixed(6);
     displayGuaranteedPrice = parseFloat(
-      (validGuarenteedPrice === 0 ? 0 : 1 / validGuarenteedPrice).toString(),
+      (validGuarenteedPrice === 0
+        ? 0
+        : 1 / Number(validGuarenteedPrice)
+      ).toString(),
     ).toFixed(6);
     firstSymbol = tokenFrom.symbol;
     secondSymbol = tokenTo.symbol;
@@ -402,9 +383,22 @@ const OrderContent: React.FC<Props> = (props) => {
               <WalletAddIcon className={classes.iconColor} />
             </Box>
             <Typography variant='body1'>
-              {isConvert
-                ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
-                : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
+              {isConvert ? (
+                <>
+                  <IntlMessages id='app.dashboard.convert' /> {tokenFrom.symbol}{' '}
+                  <IntlMessages id='app.dashboard.to' /> {tokenTo.symbol}{' '}
+                </>
+              ) : (
+                <>
+                  <IntlMessages id='app.dashboard.review' />{' '}
+                  {isMarket ? (
+                    <IntlMessages id='app.dashboard.market' />
+                  ) : (
+                    <IntlMessages id='app.dashboard.limit' />
+                  )}
+                </>
+              )}
+              <IntlMessages id='app.dashboard.order' />
             </Typography>
           </Box>
           <Box>
@@ -434,7 +428,7 @@ const OrderContent: React.FC<Props> = (props) => {
             alignContent='center'
             justifyContent='center'>
             <Typography variant='h6' align='center'>
-              Loading your order...
+              <IntlMessages id='app.coinLeagues.loadingYourOrder' />{' '}
             </Typography>
           </Box>
         ) : (
@@ -450,15 +444,15 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are converting{' '}
+                      <IntlMessages id='app.dashboard.youreConverting' />
                       {GET_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      to{' '}
+                      <IntlMessages id='app.dashboard.to' />
                       {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      for trading on DexKit
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -472,15 +466,18 @@ const OrderContent: React.FC<Props> = (props) => {
                       <EmptyWalletImage />
                     </Box>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenFrom.symbol} for trading on DexKit
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenFrom.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </Box>
                 )}
                 {currentStep === Steps.APPROVE_WRAPPER && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenWrapper.symbol} for trading on
-                      DexKit
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenWrapper.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -510,7 +507,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Box>
 
                     <Typography gutterBottom variant='h5' align='center'>
-                      An error has happened
+                      <IntlMessages id='app.dashboard.errorHappened' />
                     </Typography>
                     <Typography align='center' variant='body1'>
                       {String(error)}
@@ -525,10 +522,10 @@ const OrderContent: React.FC<Props> = (props) => {
                     alignContent='center'
                     justifyContent='center'>
                     <Typography variant='h6' align='center'>
-                      To proceed with this request,
+                      <IntlMessages id='app.dashboard.toProceedWithRequest' />,
                     </Typography>
                     <Typography variant='h6' align='center'>
-                      we would like to request for your approval to use{' '}
+                      <IntlMessages id='app.dashboard.weWouldLikeToRequestYourApprovalToUse' />{' '}
                       {tokenFrom.symbol}
                     </Typography>
                   </Box>
@@ -547,7 +544,12 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Typography>
 
                     <Typography variant='h6' align='center'>
-                      {isConvert ? 'Conversion ' : 'Order '}completed!
+                      {isConvert ? (
+                        <IntlMessages id='app.dashboard.conversion' />
+                      ) : (
+                        <IntlMessages id='app.dashboard.order' />
+                      )}
+                      $<IntlMessages id='app.dashboard.completed' />!
                     </Typography>
                   </Box>
                 )}
@@ -563,7 +565,9 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'Convert' : 'Send'}
+                            {isConvert
+                              ? messages['app.dashboard.convert']
+                              : messages['app.dashboard.send']}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -582,7 +586,11 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'To' : 'Receive'}
+                            {isConvert ? (
+                              <IntlMessages id='app.dashboard.to' />
+                            ) : (
+                              <IntlMessages id='app.dashboard.receive' />
+                            )}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -606,7 +614,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 className={classes.label}
                                 variant='body1'>
-                                At Price
+                                <IntlMessages id='app.dashboard.atPrice' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -635,7 +643,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 variant='body1'
                                 className={classes.label}>
-                                Estimated Fee
+                                <IntlMessages id='app.dashboard.estimatedFee' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -663,7 +671,9 @@ const OrderContent: React.FC<Props> = (props) => {
                           alignItems='center'
                           justify='space-between'>
                           <Grid item>
-                            <Typography variant='body1'>Expiry</Typography>
+                            <Typography variant='body1'>
+                              <IntlMessages id='app.dashboard.expiry' />
+                            </Typography>
                           </Grid>
                           <Grid item>
                             <Typography variant='body1'>
@@ -686,7 +696,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                 justifyContent='space-between'
                                 alignItems='center'>
                                 <Typography variant='body1'>
-                                  Advanced
+                                  <IntlMessages id='app.dashboard.advanced' />
                                 </Typography>
                                 <IconButton
                                   size='small'
@@ -707,7 +717,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                     spacing={2}>
                                     <Grid item xs={12}>
                                       <Typography>
-                                        Slippage{' '}
+                                        <IntlMessages id='app.dashboard.slippage' />{' '}
                                         <IconButton
                                           size='small'
                                           className={classes.textSecondary}
@@ -732,12 +742,15 @@ const OrderContent: React.FC<Props> = (props) => {
                                         <Box padding={3}>
                                           <Typography
                                             className={classes.textSecondary}>
-                                            Guaranteed Price
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />
                                           </Typography>
                                           <Typography
                                             className={classes.textPrimary}
                                             align='right'>
-                                            {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
+                                            {displayGuaranteedPrice} $
+                                            {firstSymbol}{' '}
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />{' '}
+                                            ${secondSymbol}
                                           </Typography>
                                         </Box>
                                       </Popover>
@@ -824,10 +837,12 @@ const OrderContent: React.FC<Props> = (props) => {
                 />
               )}
 
-              {currentStep === Steps.MARKET && (
+              {currentStep === Steps.MARKET && quote && (
                 <MarketStep
                   account={account}
                   quote={quote}
+                  tokenFrom={tokenFrom}
+                  tokenTo={tokenTo}
                   selectedGasPrice={selectedGasPrice}
                   onNext={onNext}
                   onLoading={onLoading}

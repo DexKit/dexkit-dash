@@ -15,11 +15,11 @@ import {
   EmailShareButton,
 } from 'react-share';
 
-import {Box, makeStyles, Tooltip, Typography} from '@material-ui/core';
-import IconButton, {IconButtonProps} from '@material-ui/core/IconButton';
-import { RoundedIconButton } from '../ActionsButtons/RoundedIconButton';
+import {Box, makeStyles, Typography} from '@material-ui/core';
+import {IconButtonProps} from '@material-ui/core/IconButton';
+import {RoundedIconButton} from '../ActionsButtons/RoundedIconButton';
 import Share from '@material-ui/icons/Share';
-import { CremaTheme } from 'types/AppContextPropsType';
+import {CremaTheme} from 'types/AppContextPropsType';
 
 interface Props extends IconButtonProps {
   shareText?: string;
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   icon: {
     height: theme.spacing(6),
     width: theme.spacing(6),
-  }
-}))
+  },
+}));
 
 export const ShareButton = (props: Props) => {
   const {shareText} = props;
@@ -41,8 +41,8 @@ export const ShareButton = (props: Props) => {
 
   const [openShareModal, setOpenShareModal] = useState(false);
   const toggleShareModal = useCallback(() => {
-    setOpenShareModal(!openShareModal);
-  },[]);
+    setOpenShareModal((value) => !value);
+  }, []);
 
   return (
     <>

@@ -41,6 +41,8 @@ function TokensForm<T, K>(props: Props<T, K>) {
   const [tokens, setTokens] = useState(props.tokens ?? []);
   const [multipleTokens, setMultipleTokens] = useState(false);
   const listToken = useTokenList(GET_NETWORK_NAME(chainId));
+
+  /* eslint-disable */
   useEffect(() => {
     if (tokens == null || tokens?.length === 0) {
       addToken();

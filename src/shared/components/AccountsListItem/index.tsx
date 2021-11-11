@@ -1,11 +1,9 @@
-import {green} from '@material-ui/core/colors';
 import React, {useCallback, useState, useEffect} from 'react';
 import {UIAccount} from 'redux/_ui/reducers';
 import {truncateAddress} from 'utils';
 import {
   Grid,
   Paper,
-  Radio,
   TextField,
   useMediaQuery,
   Theme,
@@ -13,7 +11,6 @@ import {
   InputAdornment,
   IconButton,
   useTheme,
-  Chip,
   Tooltip,
   Box,
   makeStyles,
@@ -21,7 +18,6 @@ import {
 } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import DoneIcon from '@material-ui/icons/Done';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {ReactComponent as EditIcon} from 'assets/images/icons/edit.svg';
 import clsx from 'clsx';
 import {Home} from '@material-ui/icons';
@@ -61,7 +57,6 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
     onSelect,
     onLabelChange,
     onMakeDefault,
-    onOpenMenu,
     selected,
   } = props;
 
@@ -84,6 +79,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
     [],
   );
 
+  /* eslint-disable */
   const handleDone = useCallback(
     (e: React.MouseEvent) => {
       onLabelChange(account, label);
@@ -163,7 +159,7 @@ export const AccountsListItem = (props: AccountsListItemProps) => {
           <Grid item xs>
             <Box display='flex' alignItems='center' alignContent='center'>
               <span style={{paddingRight: theme.spacing(2)}}>
-                {!isDesktop && account.label == account.address
+                {!isDesktop && account.label === account.address
                   ? truncateAddress(account.label)
                   : account.label}
               </span>

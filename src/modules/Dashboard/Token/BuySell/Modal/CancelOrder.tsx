@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
 import {useDispatch} from 'react-redux';
 import {Notification} from 'types/models/Notification';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Typography,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
@@ -21,11 +23,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {useStyles} from './index.style';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {useChainId} from 'hooks/useChainId';
-import {ERC20TokenContract} from '@0x/contract-wrappers';
 import {SignedOrder} from '@0x/order-utils';
-import {useWeb3} from 'hooks/useWeb3';
 import {getWeb3Wrapper} from 'services/web3modal';
-import {LimitOrder} from '@0x/protocol-utils';
 
 interface OrderProps {
   open: boolean;
@@ -35,6 +34,7 @@ interface OrderProps {
 
 const CancelOrder: React.FC<OrderProps> = (props) => {
   const {open, order, onClose} = props;
+  const {messages} = useIntl();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
@@ -91,12 +91,12 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
   };
 
   let icon;
-  let message = '';
+  let message: string;
   let action;
 
   if (loading) {
     icon = null;
-    message = 'Canceling your order...';
+    message = `${messages['app.dashboard.cancelingYourOrder']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -111,7 +111,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
     icon = (
       <ErrorOutlineIcon style={{marginBottom: 20, width: 100, height: 100}} />
     );
-    message = 'An error has happened: ' + error;
+    message = `${messages['app.dashboard.errorHappened']}: ` + error;
     action = (
       <Button
         style={{margin: 0}}
@@ -120,7 +120,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={onClose}>
-        Close
+        <IntlMessages id='app.dashboard.close' />
       </Button>
     );
   } else if (done) {
@@ -129,7 +129,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         style={{marginBottom: 20, width: 100, height: 100}}
       />
     );
-    message = 'Order canceled!';
+    message = `${messages['app.dashboard.orderCanceled']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -138,12 +138,12 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={onClose}>
-        Done
+        <IntlMessages id='app.dashboard.done' />
       </Button>
     );
   } else {
     icon = <DeleteIcon style={{marginBottom: 20, width: 100, height: 100}} />;
-    message = 'Would you like to cancel your order?';
+    message = `${messages['app.dashboard.wouldLikeToCancelOrder']}`;
     action = (
       <Button
         style={{margin: 0}}
@@ -152,7 +152,7 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Confirm
+        <IntlMessages id='app.dashboard.confirm' />
       </Button>
     );
   }
@@ -176,16 +176,13 @@ const CancelOrder: React.FC<OrderProps> = (props) => {
               display='flex'
               alignItems='center'
               justifyContent='center'
-              style={{
-                width: 48,
-                height: 48,
-              }}
+              style={{width: 48, height: 48}}
             />
             <Typography
               className={classes.textPrimary}
               variant='h5'
               align='center'>
-              Cancel Order
+              <IntlMessages id='app.dashboard.cancelOrder' />
             </Typography>
             <Typography align='right'>
               <IconButton aria-label='close' onClick={onClose}>

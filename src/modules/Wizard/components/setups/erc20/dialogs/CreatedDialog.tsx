@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
 
 import {
-  Paper,
   Box,
   IconButton,
   Button,
@@ -9,7 +8,6 @@ import {
   DialogProps,
   Dialog,
   DialogContent,
-  DialogActions,
   DialogTitle,
   makeStyles,
   Grid,

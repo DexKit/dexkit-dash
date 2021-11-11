@@ -1,10 +1,6 @@
 import {Notification} from 'types/models/Notification';
-import {checkAllNotification} from 'services/notification';
 
-import {
-  NotificationAction,
-  NotificationActions,
-} from 'types/actions/Notification.actions';
+import {NotificationAction} from 'types/actions/Notification.actions';
 
 export interface NotificationState {
   readonly notifications: Notification[];
@@ -18,16 +14,20 @@ export default (state = initialState, action: any): NotificationState => {
   switch (action.type) {
     case NotificationAction.ADD_NOTIFICATION: {
       const {notifications: newNotifications} = action.payload;
-
       const newAddNotifications = [...state.notifications, ...newNotifications];
 
       return {
         ...state,
-        notifications: newAddNotifications.map((n, index: number) => {
-          if (!n.id) {
-            return {...n, id: index};
-          }
-        }),
+        //Filtering the null notifications, giving blank screen
+        notifications: newAddNotifications
+          .filter((n) => n)
+          .map((n, index: number) => {
+            if (!n.id) {
+              return {...n, id: index};
+            }
+
+            return n;
+          }),
       };
     }
     case NotificationAction.NOTIFICATION_LIST: {
@@ -36,7 +36,7 @@ export default (state = initialState, action: any): NotificationState => {
     case NotificationAction.GET_NOTIFICATION: {
       const id = action.payload;
 
-      let getIndex = state.notifications.findIndex((n) => n.id == id);
+      let getIndex = state.notifications.findIndex((n) => n?.id === id);
 
       return {
         notifications: state.notifications,
@@ -46,12 +46,10 @@ export default (state = initialState, action: any): NotificationState => {
     case NotificationAction.UPDATE_NOTIFICATION: {
       let updateNotification: any = action.payload;
 
-      console.log(updateNotification);
-
       let updatedNotifications = [...state.notifications];
 
       let updateIndex = updatedNotifications.findIndex(
-        (n) => n.id == updateNotification.id,
+        (n) => n?.id === updateNotification?.id,
       );
 
       updatedNotifications[updateIndex] = updateNotification;
@@ -66,7 +64,7 @@ export default (state = initialState, action: any): NotificationState => {
 
       let newNotifications = state.notifications;
 
-      let removeIndex = newNotifications.findIndex((n) => n.id === id);
+      let removeIndex = newNotifications.findIndex((n) => n?.id === id);
 
       newNotifications.splice(removeIndex, 1);
 
@@ -77,7 +75,7 @@ export default (state = initialState, action: any): NotificationState => {
 
       let newCheckedNotifications = [...state.notifications];
 
-      let checkIndex = state.notifications.findIndex((n) => n.id === id);
+      let checkIndex = state.notifications.findIndex((n) => n?.id === id);
 
       if (checkIndex > -1) {
         newCheckedNotifications[checkIndex].check = new Date();
@@ -90,7 +88,7 @@ export default (state = initialState, action: any): NotificationState => {
 
       let newUncheckNotifications = [...state.notifications];
 
-      let uncheckIndex = state.notifications.findIndex((n) => n.id === id);
+      let uncheckIndex = state.notifications.findIndex((n) => n?.id === id);
 
       if (uncheckIndex > -1) {
         newUncheckNotifications[uncheckIndex].check = undefined;

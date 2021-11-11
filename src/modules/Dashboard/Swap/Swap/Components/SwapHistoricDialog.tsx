@@ -1,16 +1,15 @@
 import {
   Dialog,
   DialogContent,
-  DialogProps,
   Typography,
   DialogTitle,
   Box,
-  Grid,
   IconButton,
   Button,
   Divider,
 } from '@material-ui/core';
-import React, {useState, useEffect, useCallback} from 'react';
+import IntlMessages from '@crema/utility/IntlMessages';
+import React, {useCallback} from 'react';
 import {SwapHistoricTable} from './SwapHistoricTable';
 import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyTransaction} from 'types/changelly';
@@ -28,10 +27,12 @@ export const SwapHistoricDialog = (props: Props) => {
   const {open, transactions, onClose, onSelectTransaction} = props;
   const {clear, remove} = useSwapTransactions();
 
+  /* eslint-disable */
   const handleClear = useCallback(() => {
     clear();
   }, []);
 
+  /* eslint-disable */
   const handleRemove = useCallback((transaction: ChangellyTransaction) => {
     remove(transaction.id);
   }, []);
@@ -44,7 +45,9 @@ export const SwapHistoricDialog = (props: Props) => {
           justifyContent='space-between'
           alignItems='center'
           alignContent='center'>
-          <Typography variant='inherit'>Transactions</Typography>
+          <Typography variant='inherit'>
+            <IntlMessages id='app.dashboard.transactions' />
+          </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -56,7 +59,7 @@ export const SwapHistoricDialog = (props: Props) => {
           <Box mb={4}>
             <Box display='flex' justifyContent='flex-end' py={4}>
               <Button onClick={handleClear} startIcon={<ClearIcon />}>
-                Clear{' '}
+                <IntlMessages id='app.dashboard.clear' />
               </Button>
             </Box>
             <SwapHistoricTable
@@ -67,7 +70,9 @@ export const SwapHistoricDialog = (props: Props) => {
           </Box>
         ) : (
           <Box display='flex' justifyContent='center' py={8}>
-            <Typography variant='body1'>No transactions yet</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.dashboard.noTransactionsYet' />
+            </Typography>
           </Box>
         )}
       </DialogContent>

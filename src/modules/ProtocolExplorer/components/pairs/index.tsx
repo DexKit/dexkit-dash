@@ -1,6 +1,9 @@
+import React, {useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React, {useState, useEffect} from 'react';
 
 import {PairAnalytics} from '../pairs-analytics';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
@@ -14,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import {IS_AMM} from 'utils';
 import {PairAnalyticsAMM} from '../pairs-analytics-amm';
 import TokenPairCard from 'shared/components/TokenPairCard';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   baseAddress: string;
@@ -46,27 +50,34 @@ export const Pairs = (props: Props) => {
   const {baseAddress, exchange, networkName} = props;
   const [selectedPair, setSelectedPair] =
     useState<GetTokenPairs_ethereum_dexTrades>();
-  const {
-    data,
-  } = useTokenPairs({exchange, baseAddress, networkName});
+  const {data} = useTokenPairs({exchange, baseAddress, networkName});
   const classes = useStyles();
-  
+  const {messages} = useIntl();
+
   useEffect(() => {
     if (!selectedPair && data && data.length) {
       setSelectedPair(data[0]);
     }
     // when we change the address on route we set again the selected Pair
-    if(selectedPair &&  data && data.length && selectedPair.baseCurrency?.address?.toLowerCase() !== baseAddress.toLowerCase()){
+    if (
+      selectedPair &&
+      data &&
+      data.length &&
+      selectedPair.baseCurrency?.address?.toLowerCase() !==
+        baseAddress.toLowerCase()
+    ) {
       setSelectedPair(data[0]);
     }
   }, [data, selectedPair, baseAddress, networkName]);
-
 
   return (
     <>
       <Grid container alignItems='center' spacing={4}>
         <Grid item xs={12}>
-          <Typography variant='h6'>{data ? data.length : ''} Pairs</Typography>
+          <Typography variant='h6'>
+            {data ? data.length : ''}{' '}
+            <IntlMessages id='app.protocolExplorer.pairs' />
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <Box className={classes.container}>

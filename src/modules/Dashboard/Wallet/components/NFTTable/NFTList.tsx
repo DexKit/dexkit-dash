@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  IconButton,
-  FormControl,
-  Grid,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
+
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import {MyBalances} from 'types/blockchain';
 import NFTListItem from 'shared/components/NFTListItem';
 import {useHistory} from 'react-router';
@@ -128,7 +127,7 @@ export const NFTList = (props: AssetListProps) => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <IconButton disabled={page == 1} onClick={handleGoPrevious}>
+                <IconButton disabled={page === 1} onClick={handleGoPrevious}>
                   <KeyboardArrowLeftIcon />
                 </IconButton>
               </Grid>

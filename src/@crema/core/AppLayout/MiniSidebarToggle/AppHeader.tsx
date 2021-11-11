@@ -14,15 +14,13 @@ import Notifications from '../../Notifications';
 import WalletInfo from 'shared/components/WalletInfo';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  GET_CHAIN_ID_NAME,
-  GET_DEFAULT_TOKEN_BY_NETWORK,
-} from 'shared/constants/Blockchain';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
 
 import {
   Grid,
+  Avatar,
   useTheme,
   useMediaQuery,
   Container,
@@ -31,26 +29,27 @@ import {
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
+import {Link as RouterLink} from 'react-router-dom';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
 import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
 
-import {TokenSearch} from 'shared/components/TokenSearch';
 import {useHistory} from 'react-router';
-import {Token} from 'types/app';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
 import {switchChain} from 'utils/wallet';
 import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
-import {connectWeb3, setProvider} from 'services/web3modal';
+import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
+
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const {chainId, getProvider, setProvider, account} = useWeb3();
+  const {chainId, getProvider, account} = useWeb3();
   const {onSwitchMagicNetwork} = useMagicProvider();
 
   const classes = useStyles();
@@ -95,18 +94,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     dispatch(toggleNavCollapsed());
   }, [dispatch]);
 
-  const onClickSearchToken = (token: Token) => {
-    if (token) {
-      if (token.address) {
-        history.push(`/explorer/${token.address}?network=${token.networkName}`);
-      } else {
-        const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
-        if (add) {
-          history.push(`/explorer/${add}?network=${token.networkName}`);
-        }
-      }
-    }
-  };
+  // const onClickSearchToken = (token: Token) => {
+  //   if (token) {
+  //     if (token.address) {
+  //       history.push(`/explorer/${token.address}?network=${token.networkName}`);
+  //     } else {
+  //       const add = GET_DEFAULT_TOKEN_BY_NETWORK(token.networkName);
+  //       if (add) {
+  //         history.push(`/explorer/${add}?network=${token.networkName}`);
+  //       }
+  //     }
+  //   }
+  // };
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
 
@@ -132,7 +131,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       }
     },
-    [getProvider, isMagicProvider],
+    [dispatch, getProvider, isMagicProvider],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -142,6 +141,18 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const isOnLoginPage = useCallback(() => {
     return history.location.pathname === LOGIN_WALLET_ROUTE;
   }, [history]);
+
+  const isMetamask = useCallback(() => {
+    if (window.ethereum) {
+      if ((window.ethereum as any).isMetaMask) {
+        return true;
+      }
+    }
+
+    return false;
+  }, []);
+
+  const kittygotchiProfile = useProfileKittygotchi();
 
   return (
     <>
@@ -183,27 +194,25 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    <Grid item>
-                      {chainId !== undefined ? (
-                        <Grid item>
-                          <ButtonBase
-                            onClick={handleOpenSwitchNetwork}
-                            className={classes.switchNetworkButton}>
-                            <Box
-                              className={classes.badgeRoot}
-                              style={{
-                                color: 'rgba(226, 167, 46)',
-                                backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                              }}>
-                              {GET_CHAIN_ID_NAME(chainId)}
-                              <IconButton size='small'>
-                                <ExpandMoreIcon />
-                              </IconButton>
-                            </Box>
-                          </ButtonBase>
-                        </Grid>
-                      ) : null}
-                    </Grid>
+                    {!isMetamask() ? (
+                      <Grid item>
+                        {chainId !== undefined ? (
+                          <Grid item>
+                            <ButtonBase
+                              onClick={handleOpenSwitchNetwork}
+                              className={classes.switchNetworkButton}>
+                              <Box className={classes.badgeRoot}>
+                                {GET_CHAIN_ID_NAME(chainId)}
+                                <IconButton size='small'>
+                                  <ExpandMoreIcon />
+                                </IconButton>
+                              </Box>
+                            </ButtonBase>
+                          </Grid>
+                        ) : null}
+                      </Grid>
+                    ) : null}
+
                     {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
@@ -239,7 +248,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   }
                   fullWidth
                 /> */}
-                <TokenSearch onClick={onClickSearchToken} />
+                {/* <TokenSearch onClick={onClickSearchToken} /> */}
               </Grid>
               <Grid item>
                 <Grid
@@ -255,11 +264,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         <Box
                           className={classes.badgeRoot}
                           display={'flex'}
-                          alignItems={'center'}
-                          style={{
-                            color: 'rgba(226, 167, 46)',
-                            backgroundColor: 'rgba(226, 167, 46, 0.267)',
-                          }}>
+                          alignItems={'center'}>
                           {GET_CHAIN_ID_NAME(chainId)}
                           <ExpandMoreIcon />
                         </Box>
@@ -273,6 +278,22 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   ) : null}
                   <Grid item>
                     <Notifications />
+                  </Grid>
+                  <Grid item>
+                    <ButtonBase
+                      className={classes.avatarButton}
+                      to='/profile'
+                      component={RouterLink}>
+                      <Avatar
+                        className={classes.avatar}
+                        src={
+                          account && chainId
+                            ? kittygotchiProfile.getDefault(account, chainId)
+                                ?.image
+                            : undefined
+                        }
+                      />
+                    </ButtonBase>
                   </Grid>
                   {/* <Grid item>
                     <AppBarButton>

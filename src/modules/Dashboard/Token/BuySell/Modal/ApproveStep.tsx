@@ -1,22 +1,22 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
 import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {ethers} from 'ethers';
-import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
-import {NotificationType} from 'services/notification';
-// import {useStyles} from './index.style';
-import {useDispatch} from 'react-redux';
-import {Notification} from 'types/models/Notification';
-import {onAddNotification} from 'redux/actions';
-import {truncateAddress} from 'utils';
-import {getERC20Contract} from 'utils/ethers';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 
+import {getERC20Contract} from 'utils/ethers';
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {useNotifications} from 'hooks/useNotifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 
 interface Props {
   step: Steps | undefined;
@@ -43,16 +43,15 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-  // const classes = useStyles();
-  const dispatch = useDispatch();
-  const {getContractWrappers} = useContractWrapper();
+  const {messages} = useIntl();
 
+  const {getContractWrappers} = useContractWrapper();
+  const {createNotification} = useNotifications();
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
-  const isApprove = async () => {
-    if (
-      tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)
-    ) {
+  /* eslint-disable */
+  const isApprove = useCallback(async () => {
+    if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
       return true;
     }
 
@@ -78,7 +77,7 @@ const ApproveStep: React.FC<Props> = (props) => {
     );
 
     return isApproved;
-  };
+  }, [tokenFrom, chainId, getProvider]);
 
   useEffect(() => {
     if (step === Steps.APPROVE) {
@@ -92,7 +91,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         })
         .catch((e) => onNext(false, e));
     }
-  }, [step]);
+  }, [step, onShifting, isApprove, onNext, onLoading]);
 
   const handleAction = async () => {
     try {
@@ -105,7 +104,6 @@ const ApproveStep: React.FC<Props> = (props) => {
         throw new Error('Account address cannot be null or empty');
       }
 
-      const gasInfo = await getGasEstimationInfoAsync();
       const contractWrappers = getContractWrappers(chainId);
       const web3Wrapper = getWeb3Wrapper();
       const provider = contractWrappers?.getProvider() ?? getProvider();
@@ -130,16 +128,26 @@ const ApproveStep: React.FC<Props> = (props) => {
         maxApproval.toString(),
       );
 
+      createNotification({
+        title: messages['app.dashboard.approve'] as string,
+        body: `${
+          messages['app.dashboard.approve']
+        } ${tokenFrom.symbol.toUpperCase()} ${messages['app.dashboard.to']} ${
+          messages['app.dashboard.trade']
+        }`,        timestamp: Date.now(),
+        url: getTransactionScannerUrl(chainId, tx.hash),
+        urlCaption: messages['app.dashboard.viewTransaction'] as string,
+        type: NotificationType.TRANSACTION,
+        metadata: {
+          chainId: chainId,
+          transactionHash: tx.hash,
+          status: 'pending',
+        } as TxNotificationMetadata,
+      });
+
       web3Wrapper
         .awaitTransactionSuccessAsync(tx.hash)
         .then(() => {
-          const notification: Notification = {
-            title: 'Approve',
-            body: truncateAddress(tx.hash),
-          };
-
-          dispatch(onAddNotification([notification], NotificationType.SUCCESS));
-
           onNext(true);
         })
         .catch((e) => {
@@ -162,7 +170,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Approve
+        <IntlMessages id='app.dashboard.approve' />
       </Button>
     </>
   );

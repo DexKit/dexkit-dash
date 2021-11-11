@@ -1,9 +1,11 @@
 import React from 'react';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+
+import {useIntl} from 'react-intl';
+
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {
   Box,
-  Fade,
   Table,
   TableBody,
   TableHead,
@@ -14,6 +16,7 @@ import {
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   data: GetTokenTrades_ethereum_dexTrades[] | undefined;
@@ -39,13 +42,15 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
           <TableHead>
-           {!isMobile && <TableHeading type={type} exchange={exchange} />}
+            {!isMobile && <TableHeading type={type} exchange={exchange} />}
           </TableHead>
 
           <TableBody>
@@ -64,7 +69,7 @@ const TokenOrdersTable: React.FC<Props> = ({
       </Box>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          No Data available for this token
+          <IntlMessages id='app.protocolExplorer.noDataAvailableForToken' />
         </Typography>
       )}
       <TablePagination

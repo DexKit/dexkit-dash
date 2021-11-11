@@ -5,7 +5,6 @@ import {
   Typography,
   Grid,
   useTheme,
-
   IconButton,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
@@ -24,7 +23,10 @@ import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
-import { useAccountLabel } from 'hooks/useAccountLabel';
+import {useAccountLabel} from 'hooks/useAccountLabel';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -99,6 +101,12 @@ const ActiveChainBalance = () => {
   const label = useAccountLabel(account);
   const accountsModal = useAccountsModal();
 
+  const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
+
+  const handleToggleVisibility = useCallback(() => {
+    setBalanceIsVisible();
+  }, [setBalanceIsVisible]);
+
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
   }, [accountsModal]);
@@ -123,7 +131,11 @@ const ActiveChainBalance = () => {
                       <Grid item>
                         <Box display='flex' alignItems='center'>
                           <Typography variant='body2'>
-                            <span>{truncateIsAddress(label)} </span>
+                            <span>
+                              {isBalanceVisible
+                                ? truncateIsAddress(label)
+                                : '******'}{' '}
+                            </span>
                             <CopyButton
                               size='small'
                               copyText={account || ''}
@@ -147,16 +159,26 @@ const ActiveChainBalance = () => {
                             `- ${FORMAT_NETWORK_NAME(network)}`
                           ) : (
                             <>
-                              {`${formattedBalance} ${FORMAT_NETWORK_NAME(
-                                network,
-                              )}`}
+                              {isBalanceVisible
+                                ? `${formattedBalance} ${FORMAT_NETWORK_NAME(
+                                    network,
+                                  )}`
+                                : '****.**'}
                             </>
                           )}
                         </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item></Grid>
+                  <Grid item>
+                    <IconButton onClick={handleToggleVisibility}>
+                      {isBalanceVisible ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Box>
             </Paper>

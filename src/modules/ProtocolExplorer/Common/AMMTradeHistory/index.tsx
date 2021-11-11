@@ -2,14 +2,13 @@ import React from 'react';
 import {useIntl} from 'react-intl';
 import {useAMMPairTrades} from 'hooks/protocolExplorer/useAMMPairTrades';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import {Box, Fade, Hidden, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Box, Hidden, Typography} from '@material-ui/core';
 import AMMTradeHistoryTable from './AMMTradeHistoryTable';
 import ErrorView from 'modules/Common/ErrorView';
-import {useStyles} from './index.style';
-import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import FilterList from 'shared/components/Filter/list';
 import FilterMenu from 'shared/components/Filter/menu';
 import LoadingTable from 'modules/Common/LoadingTable';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -20,7 +19,6 @@ interface Props {
 const AMMTradeHistory: React.FC<Props> = (props: Props) => {
   const {networkName, exchange, address} = props;
   const {messages} = useIntl();
-  const classes = useStyles();
 
   const {
     loading,
@@ -45,7 +43,7 @@ const AMMTradeHistory: React.FC<Props> = (props: Props) => {
           justifyContent={'flex-start'}
           alignItems={'center'}>
           <Typography variant='h6' display={'block'} align={'center'}>
-            {messages['app.tradeHistory']}
+            <IntlMessages id='app.protocolExplorer.tradeHistory' />
           </Typography>
         </Box>
         <Hidden mdDown>

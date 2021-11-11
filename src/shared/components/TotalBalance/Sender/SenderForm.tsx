@@ -33,7 +33,6 @@ import {Token} from 'types/app';
 import {isNativeCoinFromNetworkName} from 'utils';
 import {useAllBalance} from 'hooks/balance/useAllBalance';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Web3Wrapper} from '@0x/web3-wrapper';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {AppState} from 'redux/store';
 import {Alert} from '@material-ui/lab';
@@ -97,11 +96,6 @@ const SenderForm: React.FC<Props> = (props) => {
 
   const [amount, setAmount] = useState<string>(String(props.amount || ''));
   const [address, setAddress] = useState<string>('');
-
-  const handleCopy = async () => {
-    const cpy: any = await navigator.clipboard.readText();
-    setAddress(cpy);
-  };
 
   const handleConnect = useCallback(() => {
     switchAddress(getProvider()).then(() => {
@@ -270,20 +264,23 @@ const SenderForm: React.FC<Props> = (props) => {
     token?.chainId !== chainId && token?.networkName !== networkName;
 
   const [showSenderSelectAddress, setShowSenderSelectAddress] = useState(false);
-  const handleSelectSenderAddress = useCallback((address: string) => {
-    dispatch(
-      setDefaultAccount({
-        account: {
-          address: address,
-          label: address,
-          networkType: SupportedNetworkType.evm,
-        },
-        type: SupportedNetworkType.evm,
-      }),
-    );
+  const handleSelectSenderAddress = useCallback(
+    (address: string, label?: string) => {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: address,
+            label: label || '',
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
 
-    setShowSenderSelectAddress(false);
-  }, []);
+      setShowSenderSelectAddress(false);
+    },
+    [dispatch],
+  );
 
   const handleShowSenderSelectAddress = useCallback(() => {
     setShowSenderSelectAddress(true);
@@ -304,6 +301,7 @@ const SenderForm: React.FC<Props> = (props) => {
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
         showNetwork
+        chainId={chainId}
       />
       <SelectAddressDialog
         key={'to-address'}
@@ -432,8 +430,8 @@ const SenderForm: React.FC<Props> = (props) => {
                 }
                 disabled={
                   !isAddress(address) ||
-                  parseFloat(amount) == 0 ||
-                  amount == '' ||
+                  parseFloat(amount) === 0 ||
+                  amount === '' ||
                   notConnected ||
                   sending ||
                   amountError() !== undefined

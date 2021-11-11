@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {withStyles, IconButton} from '@material-ui/core';
 
 export const RoundedIconButton = withStyles((theme) => ({

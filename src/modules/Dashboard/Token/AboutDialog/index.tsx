@@ -1,28 +1,20 @@
 import React, {useCallback} from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   createStyles,
-  makeStyles,
   Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
 
-import {
-  Box,
-  Button,
-  IconButton,
-  Typography,
-  Link,
-  Tooltip,
-} from '@material-ui/core';
+import {Box, IconButton, Typography} from '@material-ui/core';
 
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
-import InfoIcon from '@material-ui/icons/Info';
-import {CremaTheme} from 'types/AppContextPropsType';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -78,56 +70,35 @@ export const AboutDialog = (props: AboutDialogProps) => {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle id='about-dialog' onClose={handleClose}>
-        Trading Page
+        <IntlMessages id='app.dashboard.token.tradingPage' />
       </DialogTitle>
       <DialogContent dividers>
         <Typography variant='body1' gutterBottom>
-          Welcome to the Trading Page! This is where you can place market and
-          limit orders for your favorite tokens across all supported Defi
-          Protocols.
+          <IntlMessages id='app.dashboard.token.welcomeToTradingPage' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          Here you can copy the contract address for your selected token, share
-          the URL on social media, and click the heart to add it to your
-          favorites
+          <IntlMessages id='app.dashboard.token.hereYouCanCopyContractAddress' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          Here you can see your token balance, buy with fiat, send and receive
-          tokens.
+          <IntlMessages id='app.dashboard.token.hereYouCanSeeTokenBalance' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          The Trading Section is where you can swap tokens and place limit
-          orders. It also has a full-featured tradingview chart for
-          decentralized protocols as well as a Binance chart.
+          <IntlMessages id='app.dashboard.token.tradingSectionInfo' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          On this tab you can swap tokens in the market section. Simply select
-          your token pair and enter how many tokens you wish to buy or sell.
-          Click trade, select the gas for your transaction, and click confirm!
+          <IntlMessages id='app.dashboard.token.onThisTabYouCanSwap' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          On the limit tab you can place limit orders without paying a gas fee
-          to the Ethereum network. This only works by using Wrapped Ethereum
-          (WETH) for the order. When your order price is reached, a wallet to
-          wallet swap is performed with the taker paying the gas fee. If you
-          don’t have WETH don’t sweat it! DEXKIT will convert your ETH for you.
-          Once you have your WETH, simply enter the information for the trade,
-          choose an expiry date, and click trade.
+          <IntlMessages id='app.dashboard.token.onTheLimitTabYouCanPlaceLimitOrders' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          Once you have confirmed your limit order, it will show up in the “My
-          Orders” tab. Here you will see all of your active limit orders that
-          you have placed.
+          <IntlMessages id='app.dashboard.token.onceYouHaveConfirmedYourLimitedOrder' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          In "Trade History" tab you can see all of your buys and sells for a
-          token and your calculated profit/loss. There are also links to the
-          block explorer for the transaction.
+          <IntlMessages id='app.dashboard.token.tradeHistoryTabInfo' />
         </Typography>
         <Typography variant='body1' gutterBottom>
-          In this tab you can see the analytics for your selected token
-          including the market cap, trading volume, 24 hour high and low, as
-          well as links to social platforms and web pages.
+          <IntlMessages id='app.dashboard.token.inThisTabYouCanSeeAnalytics' />
         </Typography>
       </DialogContent>
     </Dialog>

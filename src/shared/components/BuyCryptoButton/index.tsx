@@ -25,7 +25,7 @@ const BuyCryptoButton = (props: Props) => {
 
   const handleBuyCrypto = useCallback(() => {
     init();
-  }, [init, defaultCurrency]);
+  }, [init]);
 
   return (
     <Box display='flex' flexDirection='column' alignItems='center'>

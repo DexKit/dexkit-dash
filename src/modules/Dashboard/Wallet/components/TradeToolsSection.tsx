@@ -1,9 +1,8 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
-import SwipeableViews from 'react-swipeable-views';
+import {useIntl} from 'react-intl';
 import {
   Box,
-  Grid,
   Typography,
   makeStyles,
   useTheme,
@@ -14,8 +13,6 @@ import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButto
 
 import {ReactComponent as BitcoinConvertWhiteIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import {ReactComponent as ConverIcon} from 'assets/images/icons/convert.svg';
-import {ReactComponent as DollarCircleIcon} from 'assets/images/icons/dollar-circle.svg';
 import {ReactComponent as ExportWhiteIcon} from 'assets/images/icons/export-white.svg';
 import {ReactComponent as ImportWhiteIcon} from 'assets/images/icons/import-white.svg';
 import {ReactComponent as AddCircleIcon} from 'assets/images/icons/add-circle.svg';
@@ -26,6 +23,7 @@ import {ReactComponent as HeartEmptyIcon} from 'assets/images/icons/heart-empty.
 import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
 
 import {useAccountsModal} from 'hooks/useAccountsModal';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface TradeToolsSectionProps {
   onSend: () => void;
@@ -84,6 +82,8 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
 
   const classes = useStyles();
 
+  const {messages} = useIntl();
+
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -92,7 +92,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     <Box py={4}>
       {isMobile ? (
         <Box mb={2}>
-          <Typography variant='h6'>Trade tools</Typography>
+          <Typography variant='h6'>
+            <IntlMessages id='app.dashboard.tradeTools' />
+          </Typography>
         </Box>
       ) : null}
       <Box className={classes.container}>
@@ -108,7 +110,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
                   <HeartEmptyIcon className={classes.icon} />
                 )}
               </RoundedIconButton>
-              <Typography variant='caption'>Favorite</Typography>
+              <Typography variant='caption'>
+                <IntlMessages id='app.dashboard.favorite' />
+              </Typography>
             </Box>
           </Box>
         ) : null}
@@ -119,7 +123,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <RoundedIconButton onClick={onShare}>
                 <ArrowRedoOutlinedIcon className={classes.icon} />
               </RoundedIconButton>
-              <Typography variant='caption'>Share</Typography>
+              <Typography variant='caption'>
+                <IntlMessages id='app.dashboard.share' />
+              </Typography>
             </Box>
           </Box>
         ) : null}
@@ -128,7 +134,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             <RoundedIconButton onClick={onTrade}>
               <BitcoinConvertWhiteIcon className={classes.icon} />
             </RoundedIconButton>
-            <Typography variant='caption'>Trade</Typography>
+            <Typography variant='caption'>
+              <IntlMessages id='app.dashboard.trade' />
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.item}>
@@ -137,7 +145,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <MoneySendIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              Swap
+              <IntlMessages id='app.dashboard.swap' />
             </Typography>
           </Box>
         </Box>
@@ -147,7 +155,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <WalletSearchIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              Accounts
+              <IntlMessages id='app.dashboard.accounts' />
             </Typography>
           </Box>
         </Box>
@@ -157,7 +165,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <ExportWhiteIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              Send
+              <IntlMessages id='app.dashboard.send' />
             </Typography>
           </Box>
         </Box>
@@ -168,7 +176,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </RoundedIconButton>
 
             <Typography variant='caption' className={classes.itemText}>
-              Receive
+              <IntlMessages id='app.dashboard.receive' />
             </Typography>
           </Box>
         </Box>
@@ -178,7 +186,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
               <AddCircleIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
-              Buy Crypto
+              <IntlMessages id='app.dashboard.buyCrypto' />
             </Typography>
           </Box>
         </Box>

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {
   DialogProps,
   Dialog,
@@ -6,12 +6,9 @@ import {
   DialogTitle,
   Typography,
   Grid,
-  BackdropProps,
-  Paper,
   Stepper,
   Step,
   StepLabel,
-  StepIcon,
   StepContent,
   makeStyles,
   useTheme,
@@ -23,10 +20,9 @@ import {
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-
 import HelpIcon from '@material-ui/icons/Help';
 import CloseIcon from '@material-ui/icons/Close';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 import {ContractStatus} from 'modules/Wizard/types';
 
@@ -39,6 +35,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
+import ReplayIcon from '@material-ui/icons/Replay';
 
 interface CreatingCollectionBackdropProps extends DialogProps {
   step: ContractStatus;
@@ -46,6 +43,10 @@ interface CreatingCollectionBackdropProps extends DialogProps {
   contractTransaction?: string;
   mintTransaction?: string;
   skipMinting?: boolean;
+  createError?: string;
+  mintError?: string;
+  onTryCreateCollectionAgain?: () => void;
+  onTryMintAgain?: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -69,6 +70,10 @@ export const CreatingCollectionDialog = (
     mintTransaction,
     skipMinting,
     onClose,
+    createError,
+    mintError,
+    onTryCreateCollectionAgain,
+    onTryMintAgain,
   } = props;
 
   const classes = useStyles();
@@ -105,9 +110,9 @@ export const CreatingCollectionDialog = (
               display='flex'
               alignItems='center'
               alignContent='center'>
-              <CheckCircleOutlineIcon className={clsx(classes.icon)} />
+              <NoteAddIcon className={clsx(classes.icon)} />
             </Box>
-            <Typography variant='body1'>Transaction created</Typography>
+            <Typography variant='body1'>Create Collection</Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -192,21 +197,45 @@ export const CreatingCollectionDialog = (
               Create collection
             </StepLabel>
             <StepContent>
-              <Typography gutterBottom variant='h5'>
-                Creating the Collection
-              </Typography>
-              <Typography gutterBottom variant='body1'>
-                Please, sign the transaction in your wallet and wait for
-                confirmation, this could take longer to complete.
-              </Typography>
-              {contractTransaction && chainId ? (
-                <Button
-                  color='primary'
-                  href={getTransactionScannerUrl(chainId, contractTransaction)}
-                  target='_blank'>
-                  View transaction
-                </Button>
-              ) : null}
+              <Box mb={2}>
+                <Typography gutterBottom variant='h5'>
+                  Creating the Collection
+                </Typography>
+                <Typography gutterBottom variant='body1'>
+                  Please, sign the transaction in your wallet and wait for
+                  confirmation, this could take longer to complete.
+                </Typography>
+                {createError ? (
+                  <Typography gutterBottom variant='body1' color='error'>
+                    {createError}
+                  </Typography>
+                ) : null}
+              </Box>
+              <Grid container spacing={2}>
+                {createError ? (
+                  <Grid item>
+                    <Button
+                      startIcon={<ReplayIcon />}
+                      onClick={onTryCreateCollectionAgain}>
+                      Try again
+                    </Button>
+                  </Grid>
+                ) : null}
+
+                {contractTransaction && chainId ? (
+                  <Grid item>
+                    <Button
+                      color='primary'
+                      href={getTransactionScannerUrl(
+                        chainId,
+                        contractTransaction,
+                      )}
+                      target='_blank'>
+                      View transaction
+                    </Button>
+                  </Grid>
+                ) : null}
+              </Grid>
             </StepContent>
           </Step>
           <Step>
@@ -232,14 +261,29 @@ export const CreatingCollectionDialog = (
                 Please, sign the transaction in your wallet and wait for
                 confirmation, this could take longer to complete.
               </Typography>
-              {mintTransaction && chainId ? (
-                <Button
-                  color='primary'
-                  href={getTransactionScannerUrl(chainId, mintTransaction)}
-                  target='_blank'>
-                  View transaction
-                </Button>
+              {mintError ? (
+                <Typography gutterBottom variant='body1' color='error'>
+                  {mintError}
+                </Typography>
               ) : null}
+              <Grid container spacing={2}>
+                {mintError ? (
+                  <Grid item>
+                    <Button onClick={onTryMintAgain}>Try again</Button>
+                  </Grid>
+                ) : null}
+
+                {mintTransaction && chainId ? (
+                  <Grid item>
+                    <Button
+                      color='primary'
+                      href={getTransactionScannerUrl(chainId, mintTransaction)}
+                      target='_blank'>
+                      View transaction
+                    </Button>
+                  </Grid>
+                ) : null}
+              </Grid>
             </StepContent>
           </Step>
           <Step>

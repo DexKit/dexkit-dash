@@ -1,12 +1,11 @@
 import transakSDK from '@transak/transak-sdk';
-import {useEffect, useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useWeb3} from './useWeb3';
 import {useWindowSize} from './useWindowSize';
 
 type Props = {
   defaultCurrency?: string;
-}
-
+};
 
 export function useTransak(props: Props) {
   const {defaultCurrency} = props;
@@ -46,8 +45,8 @@ export function useTransak(props: Props) {
     [transakClient],
   );
 
-  useEffect(() => {
-    if ( windowSize && windowSize.height && windowSize.width) {
+  /* useEffect(() => {
+    if (!transakClient &&  windowSize && windowSize.height && windowSize.width) {
       const transak: any = new transakSDK({
         apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
         environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
@@ -59,21 +58,63 @@ export function useTransak(props: Props) {
         redirectURL: '',
         hostURL: window.location.origin, // Required field
         widgetHeight:
-          windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
+         windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
         widgetWidth:
           windowSize?.width < 510 ? `${windowSize.width - 10}px` : '500px',
       });
 
+      let allAvents = transak.on(transak.ALL_EVENTS, transakAllEvents);
+      let widgetClose = transak.on(
+        transak.TRANSAK_WIDGET_CLOSE,
+        transakCloseEvents,
+      );
+      let orderSuccessful = transak.on(
+        transak.TRANSAK_ORDER_SUCCESSFUL,
+        transakSucessEvents,
+      );
+
+      setTransakInstance(transak);
+
+      return () => {};
+    }
+  }, [account, transakClient,  defaultCurrency]);*/
+
+  /* eslint-disable */
+  const init = useCallback(() => {
+    if (transakClient) {
+      transakClient.init();
+    } else {
+      const transak: any = new transakSDK({
+        apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
+        environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
+        defaultCryptoCurrency: defaultCurrency || '',
+        walletAddress: account ?? '', // Your customer wallet address
+        themeColor: '000000', // App theme color in hex
+        fiatCurrency: '',
+        email: '', // Your customer email address (Optional)
+        redirectURL: '',
+        hostURL: window.location.origin, // Required field
+        widgetHeight:
+          windowSize && windowSize?.height && windowSize?.height < 650
+            ? `${windowSize.height - 120}px`
+            : '650px',
+        widgetWidth:
+          windowSize && windowSize?.width && windowSize?.width < 510
+            ? `${windowSize.width - 10}px`
+            : '500px',
+      });
+
       transak.on(transak.ALL_EVENTS, transakAllEvents);
+
       transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
+
       transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
+
+      transak.init();
+
       setTransakInstance(transak);
     }
-  }, [account, windowSize, defaultCurrency]);
-
-  const init = useCallback(() => {
-    transakClient.init();
-  }, [transakClient]);
+  }, [transakClient, windowSize, defaultCurrency]);
 
   return {
     init,

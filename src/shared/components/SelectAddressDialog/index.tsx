@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface SelectAddressDialogProps extends DialogProps {
-  onSelectAccount: (address: string) => void;
+  onSelectAccount: (address: string, label?: string) => void;
   accounts: {address: string; label?: string}[];
   onClose: () => void;
 }

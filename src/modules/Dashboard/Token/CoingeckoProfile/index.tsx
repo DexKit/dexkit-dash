@@ -1,22 +1,20 @@
 import React from 'react';
-import {
-  Box,
-  Avatar,
-  Grid,
-  IconButton,
-  useTheme,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import {makeStyles, useTheme} from '@material-ui/core';
 import {Fonts} from '../../../../shared/constants/AppEnums';
-import {
-  PeopleAltRounded,
-  Twitter,
-  Facebook,
-  Telegram,
-  HomeRounded,
-  GitHub,
-} from '@material-ui/icons';
+
+import Facebook from '@material-ui/icons/Facebook';
+import GitHub from '@material-ui/icons/GitHub';
+import HomeRounded from '@material-ui/icons/HomeRounded';
+import PeopleAltRounded from '@material-ui/icons/PeopleAltRounded';
+import Telegram from '@material-ui/icons/Telegram';
+import Twitter from '@material-ui/icons/Twitter';
+
 import {CoinDetailCoinGecko} from 'types/coingecko';
 import {Skeleton} from '@material-ui/lab';
 

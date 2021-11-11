@@ -1,5 +1,6 @@
 import React from 'react';
-import {Grid, Box, makeStyles} from '@material-ui/core';
+
+import {Box, Grid, makeStyles} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {ReactComponent as SwapVertIcon} from '../../../../assets/images/icons/verticalswap.svg';
 

@@ -97,14 +97,14 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
         {/*<Link to={`/${networkName}/history/transaction/view/${row.transaction?.hash}`} component={RouterLink}>
           <SearchIcon />
   </Link>*/}
-        <Tooltip title={messages['app.viewTx']} placement='top'>
+        <Tooltip title={messages['app.history.viewTx']} placement='top'>
           <a
             href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
               row.transaction?.hash
             }`}
             rel='noopener noreferrer'
             target='_blank'>
-            {networkName == EthereumNetwork.ethereum ? (
+            {networkName === EthereumNetwork.ethereum ? (
               <Avatar
                 style={{
                   color: '#3F51B5',

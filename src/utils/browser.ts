@@ -7,6 +7,7 @@ export function getWindowUrl() {
 }
 
 export function isValidURL(url: string): boolean {
+  /* eslint-disable */
   var res = url.match(
     /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
   );
@@ -36,4 +37,21 @@ export function copyToClipboard(textToCopy: string) {
       textArea.remove();
     });
   }
+}
+
+export const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
+
+export function isIpfsUrl(url: string) {
+  return url.startsWith('ipfs://');
+}
+
+export function getNormalizedUrl(url: string) {
+  let fetchUrl = url;
+
+  if (isIpfsUrl(url)) {
+    let path = url.substring(6, url.length);
+    fetchUrl = `${IPFS_GATEWAY}${path}`;
+  }
+
+  return fetchUrl;
 }

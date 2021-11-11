@@ -16,6 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -97,23 +98,20 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Manage Accounts
+          <IntlMessages id='app.dashboard.wallet.accounts.manageAccounts' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Here you can add multiple accounts without the need to connect your
-            Wallet.
+            <IntlMessages id='app.dashboard.wallet.accounts.hereYouCanAddMultipleAccounts' />
           </Typography>
           <Typography gutterBottom>
-            You are able to switch accounts on the top menu right and the
-            application it will auto update with selected account.
+            <IntlMessages id='app.dashboard.wallet.accounts.youreAbleToSwitchAccounts' />
           </Typography>
           <Typography gutterBottom>
-            The first account is the default. You can change clicking at the
-            home button in other accounts.
+            <IntlMessages id='app.dashboard.wallet.accounts.firstAccountIsDefault' />
           </Typography>
           <Typography gutterBottom>
-            Connect Wallet in case you need to interact with the network.
+            <IntlMessages id='app.dashboard.wallet.accounts.connectWallet' />
           </Typography>
         </DialogContent>
       </Dialog>

@@ -1,3 +1,4 @@
+import {useIntl} from 'react-intl';
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TradeAllHistoryContainer from 'modules/History/TradeAllHistory/container';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
@@ -14,14 +15,13 @@ import {
   Typography,
   Chip,
   IconButton,
-  useTheme,
-  useMediaQuery,
 } from '@material-ui/core';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import Close from '@material-ui/icons/Close';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {TransferTab} from './TransfersTab';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   address?: string;
@@ -32,9 +32,10 @@ type Props = {
 
 export const TradeHistoryTab = (props: Props) => {
   const history = useHistory();
+  const {messages} = useIntl();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
-  }, []);
+  }, [history.location.search]);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
       props?.networkName ??
@@ -54,10 +55,6 @@ export const TradeHistoryTab = (props: Props) => {
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
   }, []);
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [showTransfers, setShowTransfers] = useState(false);
 
@@ -79,7 +76,9 @@ export const TradeHistoryTab = (props: Props) => {
                         <FilterSearchIcon />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body1'>Filter</Typography>
+                        <Typography variant='body1'>
+                          <IntlMessages id='app.dashboard.filter' />
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -95,7 +94,7 @@ export const TradeHistoryTab = (props: Props) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             {enableNetworkChips ? (
@@ -117,7 +116,7 @@ export const TradeHistoryTab = (props: Props) => {
             spacing={2}
             justify='space-between'
             alignItems='baseline'>
-            <Grid item></Grid>
+            <Grid item />
             <Grid item>
               <Grid container spacing={4}>
                 <Grid item>
@@ -125,7 +124,7 @@ export const TradeHistoryTab = (props: Props) => {
                     clickable
                     onClick={handleToggleTransfers}
                     variant={!showTransfers ? 'default' : 'outlined'}
-                    label='History'
+                    label={messages['app.dashboard.history'] as string}
                   />
                 </Grid>
                 <Grid item>
@@ -133,7 +132,7 @@ export const TradeHistoryTab = (props: Props) => {
                     clickable
                     onClick={handleToggleTransfers}
                     variant={showTransfers ? 'default' : 'outlined'}
-                    label='Transfers'
+                    label={messages['app.dashboard.transfers'] as string}
                   />
                 </Grid>
               </Grid>

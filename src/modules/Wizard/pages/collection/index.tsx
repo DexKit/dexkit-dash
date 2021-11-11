@@ -17,16 +17,14 @@ import {
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {Link as RouterLink} from 'react-router-dom';
-import {
-  useCollectionDetails,
-  useCollectionMetadata,
-} from 'modules/Wizard/hooks';
+import {useCollectionMetadata} from 'modules/Wizard/hooks';
 import {CollectionItems} from 'modules/Wizard/components/setups/erc721/CollectionItems';
 import {Skeleton} from '@material-ui/lab';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import {MintItemsDialog} from 'modules/Wizard/components/setups/erc721/dialogs/MintItemsDialog';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Web3State} from 'types/blockchain';
 
 function useForceUpdate() {
   const [update, set] = useState(false);
@@ -48,18 +46,22 @@ const useStyles = makeStyles((theme) => ({
 
 interface RouteParams {
   contract: string;
+  network: string;
 }
 
 const CollectionPage = () => {
   const {contract}: RouteParams = useParams();
+  const {web3State} = useWeb3();
 
   const classes = useStyles();
 
-  const {data, get, error, loading} = useCollectionMetadata();
+  const {data, get, loading} = useCollectionMetadata();
 
   useEffect(() => {
-    get(contract);
-  }, [get, contract]);
+    if (web3State === Web3State.Done) {
+      get(contract);
+    }
+  }, [get, contract, web3State]);
 
   const theme = useTheme();
 
@@ -78,7 +80,7 @@ const CollectionPage = () => {
   const handleFinish = useCallback(() => {
     get(contract);
     forceUpdate();
-  }, [contract, forceUpdate]);
+  }, [get, contract, forceUpdate]);
 
   return (
     <>
@@ -138,6 +140,7 @@ const CollectionPage = () => {
                         />
                       ) : (
                         <img
+                          alt=''
                           src={data?.image}
                           className={classes.collectionImage}
                         />

@@ -1,12 +1,9 @@
 import React from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {useNetwork} from 'hooks/useNetwork';
 import {useOrderInfo} from 'hooks/history/useOrderInfo';
 import {Box} from '@material-ui/core';
-import {truncateAddress} from 'utils';
 import {useStyles} from './index.style';
 
-import PageTitle from 'shared/components/PageTitle';
 import LoadingView from 'modules/Common/LoadingView';
 import ErrorView from 'modules/Common/ErrorView';
 
@@ -22,7 +19,7 @@ const OrderView: React.FC<Props> = (props) => {
   } = props;
   const {hash} = params;
 
-  const networkName = useNetwork();
+  // const networkName = useNetwork();
   const {loading, error, data} = useOrderInfo({hash});
 
   const classes = useStyles();

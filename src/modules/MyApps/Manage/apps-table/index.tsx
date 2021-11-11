@@ -100,10 +100,6 @@ const AppsTable = () => {
     dispatch(setInsufficientAmountAlert(kitAmount < kitsCost));
   }, [configs, balances, dispatch]);
 
-  const handleSelectionType = (data: any) => {
-    console.log('data: ', data);
-  };
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };

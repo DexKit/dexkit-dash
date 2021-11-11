@@ -11,7 +11,7 @@ import {
   web3Transaction,
   setProvider,
 } from 'services/web3modal';
-import {useEffect, useCallback} from 'react';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, AppState} from 'redux/store';
 import {
@@ -26,9 +26,7 @@ import {BigNumber} from '@0x/utils';
 import {addAccounts} from 'redux/_ui/actions';
 import {useQuery} from 'react-query';
 
-import {useHistory} from 'react-router-dom';
 import {useAppGlobalState} from './useGlobalState';
-import {isMagicProvider} from 'services/magic';
 
 export const useWeb3 = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -88,19 +86,19 @@ export const useWeb3 = () => {
         addAccounts({accounts: accounts, type: SupportedNetworkType.evm}),
       );
     }
-  }, [accountsQuery.data]);
+  }, [accountsQuery.data, dispatch]);
 
   useEffect(() => {
     if (chainIdQuery.data) {
       dispatch(setChainId(chainIdQuery.data));
     }
-  }, [chainIdQuery.data]);
+  }, [chainIdQuery.data, dispatch]);
 
   useEffect(() => {
     if (ethBalanceQuery.data) {
       dispatch(setEthBalance(new BigNumber(ethBalanceQuery.data)));
     }
-  }, [ethBalanceQuery.data]);
+  }, [ethBalanceQuery.data, dispatch]);
 
   const onCloseWeb3 = () => {
     const provider = getProvider();
@@ -223,6 +221,7 @@ export const useWeb3 = () => {
 
   const globalState = useAppGlobalState();
 
+  /* eslint-disable */
   useEffect(() => {
     globalState.handleChangeWeb3State(web3State);
   }, [web3State]);

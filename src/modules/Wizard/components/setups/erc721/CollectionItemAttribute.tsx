@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Grid, Select, TextField, Box, MenuItem} from '@material-ui/core';
+import {Grid, TextField, MenuItem} from '@material-ui/core';
 import {
   CollectionAttribute,
   DISPLAY_TYPE_BOOST_NUMBER,
@@ -23,19 +23,19 @@ export const CollectionItemAttribute = (props: CollectionItemAttribute) => {
     [onChange, attribute, index],
   );
 
-  const handleSelect = useCallback(
-    (
-      e: React.ChangeEvent<{
-        name?: string | undefined;
-        value: unknown;
-      }>,
-    ) => {
-      if (e.target.name) {
-        onChange({...attribute, [e.target.name]: e.target.value}, index);
-      }
-    },
-    [onChange, attribute, index],
-  );
+  // const handleSelect = useCallback(
+  //   (
+  //     e: React.ChangeEvent<{
+  //       name?: string | undefined;
+  //       value: unknown;
+  //     }>,
+  //   ) => {
+  //     if (e.target.name) {
+  //       onChange({...attribute, [e.target.name]: e.target.value}, index);
+  //     }
+  //   },
+  //   [onChange, attribute, index],
+  // );
 
   return (
     <Grid container spacing={2} alignItems='center' alignContent='center'>

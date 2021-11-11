@@ -19,8 +19,6 @@ import {
   Checkbox,
   FormControlLabel,
   Button,
-  Paper,
-  Container,
   Breadcrumbs,
   Link,
 } from '@material-ui/core';
@@ -28,7 +26,6 @@ import {
 import AssetCard from '../../components/detail/AssetCard';
 import {useHistory, useLocation, useParams} from 'react-router';
 import AssetsSkeleton from '../../components/wallet/AssetsSkeleton';
-import PageTitle from 'shared/components/PageTitle';
 import {useIntl} from 'react-intl';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
@@ -39,7 +36,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import ErrorIcon from '@material-ui/icons/Error';
 
 import _ from 'lodash';
 import CollectionsList from '../../components/wallet/CollectionsList';
@@ -51,16 +47,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import axios from 'axios';
 import {useMyAssets} from 'modules/NFTWallet/hooks/wallet';
-import ActionSelect, {
-  Actions,
-} from 'modules/NFTWallet/components/wallet/ActionSelect';
+import {Actions} from 'modules/NFTWallet/components/wallet/ActionSelect';
 
 import {Link as RouterLink} from 'react-router-dom';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-import {ReactComponent as EmptyWalletImage} from 'assets/images/state/wallet-01.svg';
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-01.svg';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -76,7 +69,7 @@ function useCollections() {
       const chainId = await getChainId(provider);
 
       const url = `https://${
-        chainId == RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
+        chainId === RINKEBY_NETWORK ? 'rinkeby-api' : 'api'
       }.opensea.io/api/v1/collections?offset=0&limit=300?offset=0&limit=300&asset_owner=${owner}`;
 
       return axios.get(url, {
@@ -99,7 +92,7 @@ interface RouteParams {
   address: string;
 }
 
-const isWalletOwner = (address: string, other?: string) => address == other;
+const isWalletOwner = (address: string, other?: string) => address === other;
 
 const useStyles = makeStyles((theme) => ({
   collectionsTitle: {
@@ -171,6 +164,7 @@ export default () => {
   const [queryInputState, setQueryInputState] = useState('');
   const [collectionInputState, setCollectionInputState] = useState('');
 
+  /* eslint-disable */
   const fetchData = useCallback(async () => {
     setPage(1);
     setLoadingAssets(true);
@@ -196,7 +190,7 @@ export default () => {
           assets = assets.filter((value: any) => value.orders);
         }
 
-        if (assets?.length == 20) {
+        if (assets?.length === 20) {
           setHasMore(true);
         } else {
           setHasMore(false);
@@ -535,7 +529,7 @@ export default () => {
                   <Collapse in={isUpXs || showFilters}>
                     <CardContent>
                       <Grid container direction='column' spacing={2}>
-                        <Grid item xs>
+                        <Grid item xs={12}>
                           <FormControlLabel
                             color='primary'
                             control={<Checkbox />}
@@ -546,38 +540,46 @@ export default () => {
                             ].toString()}
                           />
                         </Grid>
-                        <Grid item xs>
-                          <Box py={2}>
-                            <Grid container spacing={2}>
-                              <Grid item>
-                                <ViewComfyIcon />
-                              </Grid>
-                              <Grid item xs>
-                                <Typography
-                                  className={classes.collectionsTitle}
-                                  variant='body1'>
-                                  <IntlMessages id='nfts.walletCollections' />
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                          <TextField
-                            placeholder={messages[
-                              'nfts.walletCollectionFilter'
-                            ].toString()}
-                            variant='outlined'
-                            type='search'
-                            onChange={handleCollectionQueryChange}
-                            value={collectionInputState}
-                            fullWidth
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position='start'>
-                                  <SearchIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
+                        <Grid item xs={12}>
+                          {collection.length > 0 ? (
+                            <>
+                              <Box py={2}>
+                                <Grid
+                                  container
+                                  spacing={2}
+                                  alignItems='center'
+                                  alignContent='center'>
+                                  <Grid item>
+                                    <ViewComfyIcon />
+                                  </Grid>
+                                  <Grid item xs>
+                                    <Typography
+                                      className={classes.collectionsTitle}
+                                      variant='body1'>
+                                      <IntlMessages id='nfts.walletCollections' />
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Box>
+                              <TextField
+                                placeholder={messages[
+                                  'nfts.walletCollectionFilter'
+                                ].toString()}
+                                variant='outlined'
+                                type='search'
+                                onChange={handleCollectionQueryChange}
+                                value={collectionInputState}
+                                fullWidth
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <SearchIcon />
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            </>
+                          ) : null}
                         </Grid>
                         <Grid item xs>
                           {collectionLoading ? (

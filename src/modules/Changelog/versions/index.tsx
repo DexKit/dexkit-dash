@@ -41,6 +41,78 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.5'
+          id='panelv0.0.6.5-header'>
+          <Typography className={classes.heading}>
+            v0.0.6-6 - 01-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+             <Typography className={classes.item}>
+               Add Sorting on Coinleague join games. Small fix on Copy game.
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.5'
+          id='panelv0.0.6.5-header'>
+          <Typography className={classes.heading}>
+            v0.0.6-5 - 01-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+             <Typography className={classes.item}>
+                Fix's on Coinleague
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+
+
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6'
+          id='panelv0.0.6-header'>
+          <Typography className={classes.heading}>
+            v0.0.6 - 15-10-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+             <Typography className={classes.item}>
+                Major Rebrand
+            </Typography>
+            <Typography className={classes.item}>
+              CoinLeagues:
+              <br />
+              1. Added CoinLeagues on Beta
+              <br />
+            </Typography>
+            <Typography className={classes.item}>
+              Added Polygon support
+            </Typography>
+            <Typography className={classes.item}>
+              Added Wizard:
+              <br />
+              1. Create Collections
+              <br />
+              <br />
+              1. Create Tokens
+              <br />
+            </Typography>
+            
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.5'
           id='panelv0.0.5-header'>
           <Typography className={classes.heading}>

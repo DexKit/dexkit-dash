@@ -1,5 +1,4 @@
 import {Web3Wrapper} from '@0x/web3-wrapper';
-import {useState, useEffect} from 'react';
 import {useQuery} from 'react-query';
 import {
   COINGECKO_URL,
@@ -20,7 +19,7 @@ export const useCoingeckoTokenInfo = (
         if (address === 'eth' && network === EthereumNetwork.ethereum) {
           url = `${COINGECKO_URL}/ethereum`;
         }
-        
+
         if (address === 'bnb' && network === EthereumNetwork.bsc) {
           url = `${COINGECKO_URL}/binancecoin`;
         }
@@ -59,12 +58,15 @@ export const useCoingeckoTokenInfo = (
           .then((r) => r.json())
           .then((r) => r as CoinDetailCoinGecko);
       }
-    }, {staleTime: 60*60}
+    },
+    {staleTime: 60 * 60},
   );
 
   return {
     loading: tokenInfoQuery.isLoading,
-    error: tokenInfoQuery.error && {message: 'Error loading details from Coingecko'},
+    error: tokenInfoQuery.error && {
+      message: 'Error loading details from Coingecko',
+    },
     data: tokenInfoQuery.data,
   };
 };

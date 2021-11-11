@@ -1,14 +1,15 @@
 import React, {useCallback} from 'react';
-import {Grid, Box, Typography, Button} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+import {Box, Typography, Button} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
 import AssetTable from '../AssetTable';
-import DefiCoins from '../DefiCoins';
-import {useDefi} from 'hooks/useDefi';
 import {WalletEmptyImage} from 'shared/components/Icons';
 import {useTransak} from 'hooks/useTransak';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   account: string;
@@ -18,7 +19,7 @@ type Props = {
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {account, loading, error, data} = props;
+  const {loading, error, data} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -26,9 +27,14 @@ export const AssetTableTab = (props: Props) => {
   //   {/* <DefiCoins {...defiBalance} /> */}
   // </Grid>
 
-  // const transak = useTransak({});
+  const {isBalanceVisible} = useIsBalanceVisible();
+  const transak = useTransak({});
+  const {messages} = useIntl();
 
-  const handleTransak = useCallback(() => {}, []);
+  /* eslint-disable */
+  const handleTransak = useCallback(() => {
+    transak.init();
+  }, [transak.init]);
 
   if (data.length === 0 && !loading) {
     return (
@@ -44,14 +50,14 @@ export const AssetTableTab = (props: Props) => {
         </Box>
         <Box mb={4}>
           <Typography align='center' variant='h5'>
-            No Assets
+            <IntlMessages id='app.dashboard.noAssets' />
           </Typography>
         </Box>
         <Button
           variant='outlined'
           startIcon={<MonetizationOnIcon />}
           onClick={handleTransak}>
-          Buy Crypto
+          <IntlMessages id='app.dashboard.buyCrypto' />
         </Button>
       </Box>
     );
@@ -60,6 +66,10 @@ export const AssetTableTab = (props: Props) => {
   return error ? (
     <ErrorView message={error.message} />
   ) : (
-    <AssetTable balances={data} loading={loading} />
+    <AssetTable
+      hideBalance={!isBalanceVisible}
+      balances={data}
+      loading={loading}
+    />
   );
 };

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, Tab, Tabs} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';
@@ -88,7 +88,7 @@ const BuySell: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const account = useDefaultAccount();
-  const {chainId, account: web3Account, web3State} = useWeb3();
+  const {chainId, web3State} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -207,8 +207,17 @@ const BuySell: React.FC<Props> = ({
         setSelect0(balancesFn);
       }
     }
-  }, [balances, tokensETH, tokensBSC, tokensMATIC, networkName]);
+  }, [
+    balances,
+    tokensETH,
+    tokensBSC,
+    tokensMATIC,
+    networkName,
+    disableReceive,
+  ]);
+
   // We fill the tokenTo field with the selected token on the url
+  /* eslint-disable */
   useEffect(() => {
     if (tokenTo === undefined && select1.length > 0 && tokenAddress) {
       let _token;
@@ -241,8 +250,7 @@ const BuySell: React.FC<Props> = ({
       if (
         tokenTo &&
         tokenAddress &&
-        tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase() &&
-        !disableReceive
+        tokenTo.address.toLowerCase() !== tokenAddress?.toLowerCase()
       ) {
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {
@@ -409,7 +417,7 @@ const BuySell: React.FC<Props> = ({
   };
 
   return (
-    <Box>
+    <Box p={2}>
       {!disableLimit && (
         <Box display='flex' justifyContent='center'>
           <Tabs
@@ -418,12 +426,18 @@ const BuySell: React.FC<Props> = ({
             indicatorColor='primary'
             onChange={handleChangeTab}
             variant='standard'>
-            <Tab label={<IntlMessages id='Market' />} {...a11yProps(0)} />
-            <Tab label={<IntlMessages id='Limit' />} {...a11yProps(1)} />
+            <Tab
+              label={<IntlMessages id='app.trade.market' />}
+              {...a11yProps(0)}
+            />
+            <Tab
+              label={<IntlMessages id='app.trade.limit' />}
+              {...a11yProps(1)}
+            />
           </Tabs>
         </Box>
       )}
-      <Box py={2} padding={4}>
+      <Box p={4}>
         {currentTab === 0 && (
           <MarketForm
             key='MarketForm'

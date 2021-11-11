@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Box, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Grid, Box, Toolbar, Typography} from '@material-ui/core';
 import {GridContainer} from '@crema';
 
 import {useStyles} from './index.style';
@@ -10,7 +10,7 @@ import {useIntl} from 'react-intl';
 
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useTradeHistory} from 'hooks/history/useTradeHistory';
-import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Props = {
   address: string;
@@ -37,7 +37,6 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
 
   return (
     <GridContainer>
-
       <Grid item xs={12} md={12}>
         <Toolbar className={classes.toolbar}>
           <Box
@@ -51,7 +50,7 @@ const TradeHistoryContainer: React.FC<Props> = (props) => {
                 justifyContent={'flex-start'}
                 alignItems={'center'}>
                 <Typography variant='h5' display={'block'} align={'center'}>
-                  {messages['app.tradeHistory']}
+                  <IntlMessages id='app.history.tradeHistory' />
                 </Typography>
               </Box>
             </Box>

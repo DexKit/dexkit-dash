@@ -1,6 +1,9 @@
 import React, {useCallback} from 'react';
 import {Icon, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 
+import clsx from 'clsx';
+import {Link as RouterLink} from 'react-router-dom';
+
 import {Badge} from '../../../index';
 import Box from '@material-ui/core/Box';
 import IntlMessages from '../../../utility/IntlMessages';
@@ -86,16 +89,15 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
   const dispatch = useDispatch();
 
   const handleClick = useCallback(() => {
-    let url = getUrl();
-
     if (isMobile) {
       dispatch(toggleNavCollapsed());
     }
-    history.push(url);
-  }, [dispatch, history, getUrl, isMobile]);
+  }, [dispatch, isMobile]);
 
   return (
     <ListItem
+      component={RouterLink}
+      to={getUrl()}
       className={classes.item}
       selected={isActive()}
       button
@@ -113,7 +115,7 @@ const VerticalItem: React.FC<VerticalItemProps> = ({
         </ListItemIcon>
       )}
       <ListItemText
-        className={classes.listItemText}
+        className={clsx(classes.listItemText, 'visible-hover')}
         primary={<IntlMessages id={item.messageId} />}
       />
       {item.count && (

@@ -1,20 +1,21 @@
-import React, {useCallback, useState, useMemo, useRef, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {useTheme} from '@material-ui/core/styles';
 
-import {
-  Grid,
-  Dialog,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  IconButton,
-  Chip,
-} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import {DialogProps} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import List from '@material-ui/core/List';
+import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+import Chip from '@material-ui/core/Chip';
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -25,7 +26,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {useMobile} from 'hooks/useMobile';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
-import {isUndefined} from 'util';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props extends DialogProps {
   title?: string;
@@ -39,6 +40,7 @@ export const SelectTokenDialog = (props: Props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
+  const {messages} = useIntl();
 
   const isMobile = useMobile();
   const contentRef = useRef<HTMLElement>();
@@ -49,7 +51,7 @@ export const SelectTokenDialog = (props: Props) => {
       const value = e.target.value;
       setFilterText(value);
     },
-    [tokens],
+    [],
   );
 
   const filteredTokens = useMemo(() => {
@@ -110,7 +112,7 @@ export const SelectTokenDialog = (props: Props) => {
               autoComplete='off'
               autoFocus
               id='name'
-              placeholder='Search tokens'
+              placeholder={messages['app.dashboard.searchTokens'] as string}
               fullWidth
               value={filterText}
               variant='outlined'
@@ -126,7 +128,7 @@ export const SelectTokenDialog = (props: Props) => {
                   <Chip
                     clickable
                     size='small'
-                    label='All'
+                    label={messages['app.dashboard.all'] as string}
                     variant={
                       selectedNetwork === undefined ? 'default' : 'outlined'
                     }
@@ -184,8 +186,10 @@ export const SelectTokenDialog = (props: Props) => {
             </Box>
           ) : null}
         </Box>
-        {filteredTokens.length == 0 ? (
-          <Typography variant='body1'>No tokens found</Typography>
+        {filteredTokens.length === 0 ? (
+          <Typography variant='body1'>
+            <IntlMessages id='app.dashboard.noTokensFound' />
+          </Typography>
         ) : (
           <List disablePadding>
             <VariableSizeList

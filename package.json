@@ -87,6 +87,7 @@
     "match-sorter": "^4.1.0",
     "material-table": "^1.69.2",
     "material-ui-popup-state": "^1.5.4",
+    "merge-images": "^2.0.0",
     "moment": "^2.27.0",
     "namor": "^2.0.2",
     "notistack": "^0.9.17",
@@ -151,6 +152,7 @@
     "react-text-mask": "^5.4.3",
     "react-toastify": "^6.0.6",
     "react-transition-group": "^4.4.1",
+    "react-ts-tradingview-widgets": "^1.0.8",
     "react-virtualized": "^9.21.2",
     "react-window": "^1.8.6",
     "recharts": "^1.8.5",
@@ -163,6 +165,7 @@
     "seamless-immutable": "7.1.3",
     "slick-carousel": "^1.8.1",
     "solc": "^0.8.6",
+    "source-map-explorer": "^2.5.2",
     "styled-components": "^4.1.3",
     "tslint": "^6.1.2",
     "tslint-react": "^5.0.0",
@@ -186,8 +189,9 @@
     "yup": "^0.29.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "react-scripts build --max_old_space_size=4096 CI=false",
+    "build": "react-scripts build --max_old_space_size=8192 CI=false",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
@@ -195,7 +199,9 @@
     "format": "prettier --write \"src/**/*.+(ts|tsx)\"",
     "precommit": "lint-staged",
     "apollo:get-schema": "npx apollo service:download --endpoint=https://graphql.bitquery.io graphql-schema.json",
-    "apollo:generate-types": "npx apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
+    "apollo:leagues-get-schema": "npx apollo service:download --endpoint=https://api.thegraph.com/subgraphs/name/joaocampos89/coinleagues leagues-graphql-schema.json",
+    "apollo:leagues-generate-types": "npx apollo codegen:generate --excludes=['./src/services/graphql/**/*.ts'] --localSchemaFile=leagues-graphql-schema.json --target=typescript --tagName=gql",
+    "apollo:generate-types": "npx apollo codegen:generate  --localSchemaFile=graphql-schema.json,leagues-graphql-schema.json --target=typescript --tagName=gql"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,14 +1,17 @@
 import React, {
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
 } from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {
+  Link as RouterLink,
   RouteComponentProps,
   useHistory,
-  Link as RouterLink,
 } from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,24 +20,22 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import {
-  Link,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  Grid,
-  Paper,
-  Typography,
-  useTheme,
-  IconButton,
-} from '@material-ui/core';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import {useTheme} from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
-import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, ThemeMode} from 'shared/constants/AppEnums';
 
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import {AppContext} from '@crema';
@@ -66,7 +67,8 @@ import FavoriteListItem from 'shared/components/FavoriteListItem';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import {watchAsset} from 'utils/wallet';
 import {useWeb3} from 'hooks/useWeb3';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -83,10 +85,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const theme = useTheme();
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const {
     isFavorite,
-    onToggleFavorite,
     loading: favoritesWithMarketLoading,
     data: favoritesWithMarket,
   } = useFavoritesWithMarket();
@@ -94,7 +96,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const {address} = params;
   const history = useHistory();
   const searchParams = new URLSearchParams(history.location.search);
-  const account  = useDefaultAccount();
+  const account = useDefaultAccount();
   const balances = useAllBalance(account);
   const [networkName, setNetworkName] = useState<EthereumNetwork>(
     (searchParams.get('network') as EthereumNetwork) ??
@@ -107,6 +109,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
     priceQuote,
   } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
 
+  /* eslint-disable */
   useEffect(() => {
     if (searchParams.get('network') !== networkName) {
       setNetworkName(
@@ -216,6 +219,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
           tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
           onSelectToken={handleSelectToken}
           onClose={handleToggleSelectToken}
+          enableFilters
         />
       ) : null}
       <Box py={{xs: 8}}>
@@ -227,10 +231,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Grid item xs={12}>
                     <Breadcrumbs aria-label='breadcrumb'>
                       <Link color='inherit' component={RouterLink} to='/wallet'>
-                        Wallet
+                        <IntlMessages id='app.protocolExplorer.wallet' />
                       </Link>
                       <Typography variant='body2' color='inherit'>
-                        Explorer
+                        <IntlMessages id='app.protocolExplorer.explorer' />
                       </Typography>
                     </Breadcrumbs>
                   </Grid>
@@ -367,7 +371,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography variant='body1' style={{fontWeight: 600}}>
-                        Favorites
+                        <IntlMessages id='app.protocolExplorer.favorites' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -444,7 +448,8 @@ const Explorer: React.FC<TokenProps> = (props) => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Chart
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.protocolExplorer.chart' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>{Chart}</AccordionDetails>

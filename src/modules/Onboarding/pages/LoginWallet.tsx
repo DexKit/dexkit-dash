@@ -22,6 +22,7 @@ import {
 } from 'shared/components/Icons';
 
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {useWelcomeModal} from 'hooks/useWelcomeModal';
 import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
@@ -125,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   overflowItemInner: {
-    width: '60vw',
+    width: '30vw',
   },
 }));
 
@@ -136,21 +137,34 @@ export const CreateWallet = (props: Props) => {
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
   const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
+  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const handleConnectWeb3 = useCallback(() => {
     onCloseWeb3();
 
     const onConnectSuccess = (a: string) => {
       setLoading(true);
-      history.push(`/wallet/${a}`);
+      if (loginBackRoute) {
+        history.push(loginBackRoute);
+        onSetLoginBackRoute(undefined);
+      } else {
+        history.push(`/wallet/${a}`);
+      }
     };
     const onFinalConnect = () => {
       setLoading(false);
     };
     onConnectWeb3(onConnectSuccess, onFinalConnect);
-  }, []);
-  const history = useHistory();
+  }, [
+    onConnectWeb3,
+    onCloseWeb3,
+    history,
+    onSetLoginBackRoute,
+    loginBackRoute,
+  ]);
+
   const [email, setEmail] = useState('');
 
   //const handleTelegram = useCallback(() => {}, []);
@@ -165,7 +179,7 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('discord').finally(() => {
       toggleLoading();
     });
-  }, []);
+  }, [onCloseWeb3, onConnectMagicSocial, toggleLoading]);
 
   const handleGoogle = useCallback(() => {
     onCloseWeb3();
@@ -173,13 +187,13 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('google').finally(() => {
       toggleLoading();
     });
-  }, []);
+  }, [onCloseWeb3, onConnectMagicSocial, toggleLoading]);
 
-  const handleApple = useCallback(() => {
-    onConnectMagicSocial('apple').finally(() => {
-      toggleLoading();
-    });
-  }, []);
+  // const handleApple = useCallback(() => {
+  //   onConnectMagicSocial('apple').finally(() => {
+  //     toggleLoading();
+  //   });
+  // }, []);
 
   const handleTwitter = useCallback(() => {
     onCloseWeb3();
@@ -187,7 +201,7 @@ export const CreateWallet = (props: Props) => {
     onConnectMagicSocial('twitter').finally(() => {
       toggleLoading();
     });
-  }, [toggleLoading]);
+  }, [toggleLoading, onConnectMagicSocial, onCloseWeb3]);
 
   const handleChange = useCallback((e) => {
     setEmail(e.target.value);
@@ -203,7 +217,7 @@ export const CreateWallet = (props: Props) => {
         });
       }
     },
-    [email],
+    [email, onConnectMagicEmail, onCloseWeb3, toggleLoading],
   );
 
   const handleConnectWalletLater = useCallback(() => {
@@ -286,6 +300,39 @@ export const CreateWallet = (props: Props) => {
                   <Box className={classes.overflowItem}>
                     <Box className={classes.overflowItemInner}>
                       <ButtonBase
+                        onClick={handleGoogle}
+                        className={classes.actionButton}>
+                        <Paper
+                          className={clsx(
+                            classes.actionButtonPaper,
+                            classes.actionButtonPaperBorder,
+                          )}>
+                          <Box
+                            display='flex'
+                            justifyContent='center'
+                            flexDirection='column'
+                            py={6}>
+                            <Box display='flex' justifyContent='center' py={4}>
+                              <Box className={classes.iconContainer}>
+                                <GoogleIcon
+                                  className={classes.walletActionButtonIcon}
+                                />
+                              </Box>
+                            </Box>
+                            <Typography
+                              className={classes.walletActionButtonText}
+                              align='center'
+                              variant='body1'>
+                              Google
+                            </Typography>
+                          </Box>
+                        </Paper>
+                      </ButtonBase>
+                    </Box>
+                  </Box>
+                  <Box className={classes.overflowItem}>
+                    <Box className={classes.overflowItemInner}>
+                      <ButtonBase
                         onClick={handleTwitter}
                         className={classes.actionButton}>
                         <Paper
@@ -349,46 +396,44 @@ export const CreateWallet = (props: Props) => {
                       </ButtonBase>
                     </Box>
                   </Box>
-                  <Box className={classes.overflowItem}>
-                    <Box className={classes.overflowItemInner}>
-                      <ButtonBase
-                        onClick={handleGoogle}
-                        className={classes.actionButton}>
-                        <Paper
-                          className={clsx(
-                            classes.actionButtonPaper,
-                            classes.actionButtonPaperBorder,
-                          )}>
-                          <Box
-                            display='flex'
-                            justifyContent='center'
-                            flexDirection='column'
-                            py={6}>
-                            <Box display='flex' justifyContent='center' py={4}>
-                              <Box className={classes.iconContainer}>
-                                <GoogleIcon
-                                  className={classes.walletActionButtonIcon}
-                                />
-                              </Box>
-                            </Box>
-                            <Typography
-                              className={classes.walletActionButtonText}
-                              align='center'
-                              variant='body1'>
-                              Google
-                            </Typography>
-                          </Box>
-                        </Paper>
-                      </ButtonBase>
-                    </Box>
-                  </Box>
                 </Box>
               ) : (
                 <Grid
                   container
                   spacing={4}
                   wrap={isMobile ? 'nowrap' : undefined}>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
+                    <ButtonBase
+                      onClick={handleGoogle}
+                      className={classes.actionButton}>
+                      <Paper
+                        className={clsx(
+                          classes.actionButtonPaper,
+                          classes.actionButtonPaperBorder,
+                        )}>
+                        <Box
+                          display='flex'
+                          justifyContent='center'
+                          flexDirection='column'
+                          py={6}>
+                          <Box display='flex' justifyContent='center' py={4}>
+                            <Box className={classes.iconContainer}>
+                              <GoogleIcon
+                                className={classes.walletActionButtonIcon}
+                              />
+                            </Box>
+                          </Box>
+                          <Typography
+                            className={classes.walletActionButtonText}
+                            align='center'
+                            variant='body1'>
+                            Google
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
                     <ButtonBase
                       onClick={handleTwitter}
                       className={classes.actionButton}>
@@ -419,7 +464,7 @@ export const CreateWallet = (props: Props) => {
                       </Paper>
                     </ButtonBase>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
                     <ButtonBase
                       onClick={handleDiscord}
                       className={classes.actionButton}>
@@ -445,37 +490,6 @@ export const CreateWallet = (props: Props) => {
                             align='center'
                             variant='body1'>
                             Discord
-                          </Typography>
-                        </Box>
-                      </Paper>
-                    </ButtonBase>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <ButtonBase
-                      onClick={handleGoogle}
-                      className={classes.actionButton}>
-                      <Paper
-                        className={clsx(
-                          classes.actionButtonPaper,
-                          classes.actionButtonPaperBorder,
-                        )}>
-                        <Box
-                          display='flex'
-                          justifyContent='center'
-                          flexDirection='column'
-                          py={6}>
-                          <Box display='flex' justifyContent='center' py={4}>
-                            <Box className={classes.iconContainer}>
-                              <GoogleIcon
-                                className={classes.walletActionButtonIcon}
-                              />
-                            </Box>
-                          </Box>
-                          <Typography
-                            className={classes.walletActionButtonText}
-                            align='center'
-                            variant='body1'>
-                            Google
                           </Typography>
                         </Box>
                       </Paper>

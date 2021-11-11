@@ -1,12 +1,14 @@
-import {
-  Button,
-  Grid,
-  Typography,
-  Checkbox,
-  CircularProgress,
-  useTheme,
-} from '@material-ui/core';
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {useTheme} from '@material-ui/core';
+import Link from '@material-ui/core/Link';
 import {ReceiveAddressInput} from './ReceiveAddressInput';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -42,7 +44,9 @@ export const ReceiveAddressStep = (props: Props) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='body1'>Receive Address</Typography>
+        <Typography variant='body1'>
+          <IntlMessages id='app.dashboard.receiveAddress' />
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <ReceiveAddressInput
@@ -63,9 +67,18 @@ export const ReceiveAddressStep = (props: Props) => {
           </Grid>
           <Grid item xs>
             <Typography color='textSecondary' variant='body2'>
-              “Exchange services provided by Changelly. By clicking “Accept”, I
-              acknowledge and understand that my transaction may trigger AML/KYC
-              verification according to Changelly AML/KYC”
+              Service provided by{' '}
+              <Link href={'https://changelly.com/'} target={'_blank'}>
+                Changelly{' '}
+              </Link>
+              By proceeding, you acknowledge and understand that the transaction
+              may trigger{' '}
+              <Link href={'https://changelly.com/aml-kyc'} target={'_blank'}>
+                Changelly KYC verification
+              </Link>
+              . This is usually for transactions of higher value than 0.4 BTC or
+              equivalent. Proceeding here will NOT withdraw funds from your
+              account nor will you be obliged to continue the transaction”
             </Typography>
           </Grid>
         </Grid>
@@ -87,7 +100,7 @@ export const ReceiveAddressStep = (props: Props) => {
           {loading ? (
             <CircularProgress size={theme.spacing(6)} color='inherit' />
           ) : (
-            'Swap'
+            <IntlMessages id='app.dashboard.swap' />
           )}
         </Button>
       </Grid>

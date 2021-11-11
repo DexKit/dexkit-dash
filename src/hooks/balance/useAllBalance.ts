@@ -5,9 +5,9 @@ import {getTokens} from 'services/rest/coingecko';
 import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {useQuery} from 'react-query';
 import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
-import { getAllBitqueryBalances } from 'services/bitquery/balances';
-import { getAllBlockchainBalances } from 'services/blockchain/balances';
-
+import {getAllBitqueryBalances} from 'services/bitquery/balances';
+import {getAllBlockchainBalances} from 'services/blockchain/balances';
+import {providers} from 'ethers';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -17,7 +17,7 @@ export const MapBalancesToUSDValue = (
     return [];
   }
   return balances.map((t: MyBalances) => {
-    return (<MyBalances>{
+    return {
       ...t,
       price24hPercentage:
         usdValues[t.currency?.address || '']?.price_change_percentage_24h || 0,
@@ -27,13 +27,13 @@ export const MapBalancesToUSDValue = (
 
       logoURI: usdValues[t.currency?.address || '']?.image,
       // enquanto não vem a solução pela bitquery
-    }) as MyBalances;
+    } as MyBalances;
   });
 };
 
 // Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
-  const {account: web3Account, chainId, web3State} = useWeb3();
+  const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
   const account = defaultAccount || web3Account;
 
   const myBalancesQuery = useQuery(
@@ -41,14 +41,18 @@ export const useAllBalance = (defaultAccount?: string) => {
     async () => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
-        if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
-         return getAllBlockchainBalances(chainId, account);
+        if (
+          (chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) &&
+          web3State === Web3State.Done
+        ) {
+          const pr = new providers.Web3Provider(getProvider());
+          return getAllBlockchainBalances(chainId, account, pr);
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
-        return getAllBitqueryBalances(account)
+        return getAllBitqueryBalances(account);
       }
     },
-    {staleTime: 1000  * 20},
+    {staleTime: 1000 * 20},
   );
 
   const usdValuesQuery = useQuery(
@@ -65,7 +69,7 @@ export const useAllBalance = (defaultAccount?: string) => {
         return getTokens(tokens);
       }
     },
-    {staleTime: 1000  * 20},
+    {staleTime: 1000 * 20},
   );
   const data = useMemo(() => {
     if (usdValuesQuery.data && myBalancesQuery.data?.balances) {

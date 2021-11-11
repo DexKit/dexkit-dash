@@ -1,4 +1,8 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   createStyles,
   makeStyles,
@@ -14,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Tooltip} from '@material-ui/core';
 
 const styles = (theme: Theme) =>
@@ -60,7 +63,7 @@ const DialogContent = withStyles((theme: Theme) => ({
   },
 }))(MuiDialogContent);
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   openButton: {
     marginLeft: '10px',
   },
@@ -69,6 +72,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 export const AboutDialog = () => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -83,7 +87,7 @@ export const AboutDialog = () => {
         variant='outlined'
         onClick={handleClickOpen}
         className={classes.openButton}>
-        <Tooltip title={'Info about this page'}>
+        <Tooltip title={messages['app.dashboard.infoAboutPage']}>
           <InfoIcon />
         </Tooltip>
       </Button>
@@ -92,13 +96,11 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Favorites
+          <IntlMessages id='app.dashboard.favorites' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            This page is where all of the tokens that you favorite from the
-            trading page show up. By clicking the “BSC” or “ETH” icons you will
-            be directed to the trading page for the token.
+            <IntlMessages id='app.dashboard.favorites.info' />
           </Typography>
         </DialogContent>
       </Dialog>
