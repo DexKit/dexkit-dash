@@ -28,18 +28,18 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 interface Props extends DialogProps {
   title?: string;
-  address: string;
+  id: string;
   playerAddress?: string;
   coins: string[];
   captainCoin?: string
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose,  coins, address, captainCoin, playerAddress} = props;
+  const {onClose,  coins, id, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
-  const {allFeeds, currentPrices, game} = useCoinLeagues(address);
-  const {multiplier, tooltipMessage} = useMultipliers(address);
+  const {allFeeds, currentPrices, game} = useCoinLeagues(id);
+  const {multiplier, tooltipMessage} = useMultipliers(id);
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<

@@ -74,9 +74,9 @@ function CardGameV2(props: Props): JSX.Element {
   /* eslint-disable */
   const onClickEnter = useCallback(
     (ev: any) => {
-      onClick(game.id);
+      onClick(game.intId);
     },
-    [game.id],
+    [game.intId],
   );
 
   useInterval(
@@ -92,7 +92,7 @@ function CardGameV2(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h6'>ID #{truncateAddress(props.id)}</Typography>
+      <Typography variant='h6'>ID {game.intId}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>

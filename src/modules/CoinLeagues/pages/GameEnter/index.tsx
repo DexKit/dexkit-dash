@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 type Params = {
-  address: string;
+  id: string;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -108,9 +108,9 @@ function GameEnter(props: Props) {
 
   const {createNotification} = useNotifications();
 
-  const {address} = params;
+  const {id} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
-    useCoinLeagues(address);
+    useCoinLeagues(id);
   const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
@@ -220,7 +220,7 @@ function GameEnter(props: Props) {
           setTx(tx);
           createNotification({
             title: 'Join Game',
-            body: `Joined Game ${game.address}`,
+            body: `Joined Game ${id}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
@@ -257,7 +257,7 @@ function GameEnter(props: Props) {
         );
       }
     },
-    [game, selectedCoins, captainCoin, refetch, chainId],
+    [game, selectedCoins, captainCoin, refetch, chainId, id],
   );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
@@ -341,8 +341,8 @@ function GameEnter(props: Props) {
           <Link
             color='inherit'
             component={RouterLink}
-            to={enterGameRoute(address)}>
-            {truncateAddress(address)}
+            to={enterGameRoute(id)}>
+            {id}
           </Link>
         </Breadcrumbs>
       </Grid>
@@ -358,8 +358,8 @@ function GameEnter(props: Props) {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
-            Game #{truncateAddress(address)}
-            <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
+            Game #{id}
+            <CopyButton size='small' copyText={id || ''} tooltip='Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
@@ -382,7 +382,7 @@ function GameEnter(props: Props) {
             <SwapButton/>
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
+            <ShareButton shareText={`Coin leagues Game #Id ${id}`} />
           </Box>
           <Box pr={2}>
             <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
@@ -447,9 +447,9 @@ function GameEnter(props: Props) {
             current_players={game.players.length}
           />
         )}
-        {game && started && !aborted && !finished && (
+        {game && started && !aborted && !finished && id && (
           <Box pt={2}>
-            <Countdown address={game.address} />
+            <Countdown id={id} />
           </Box>
         )}
         {isLoading && <CardInfoPlayersSkeleton />}
@@ -613,7 +613,7 @@ function GameEnter(props: Props) {
                   };
                 })}
                 type={game?.game_type}
-                address={address}
+                id={id}
                 account={account}
                 winner={winner}
               />
@@ -640,7 +640,7 @@ function GameEnter(props: Props) {
                   };
                 })}
                 type={game?.game_type}
-                address={address}
+                id={id as string}
                 finished={finished}
                 hideCoins={!started}
                 account={account}
@@ -679,12 +679,12 @@ function GameEnter(props: Props) {
 
       {currentPlayers && currentPlayers > 0 && !started ? (
         <Grid item xs={12}>
-          <StartGame address={address} />
+          <StartGame id={id} />
         </Grid>
       ) : null}
       {started && !finished && !aborted && (
         <Grid item xs={12}>
-          <EndGame address={address} />
+          <EndGame id={id} />
         </Grid>
       )}
     </Grid>

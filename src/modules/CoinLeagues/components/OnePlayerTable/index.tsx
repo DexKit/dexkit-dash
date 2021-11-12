@@ -87,7 +87,7 @@ interface IRow {
 
 interface Props {
   data?: IRow[];
-  address: string;
+  id: string;
   type?: GameType
   winner?: any;
   account?: string;
@@ -126,7 +126,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
-  const {address, account, winner, data, type} = props;
+  const {id, account, winner, data, type} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [tx, setTx] = useState<string>();
@@ -139,7 +139,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     game,
     currentPrices,
     allFeeds,
-  } = useCoinLeagues(address);
+  } = useCoinLeagues(id);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
@@ -149,7 +149,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   );
 
   const {multiplier, loadingMultiplier, tooltipMessage} =
-    useMultipliers(address);
+    useMultipliers(id);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -187,14 +187,14 @@ function OnePlayerTable(props: Props): JSX.Element {
 
   const onClaimGame = useCallback(
     (ev: any) => {
-      if (address && account && chainId) {
+      if (id && account && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           setSubmitState(SubmitState.Submitted);
           createNotification({
             title: 'Claim',
-            body: `Claimed for Game ${address}`,
+            body: `Claimed for Game ${id}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
@@ -224,11 +224,11 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [address, account, refetch, onClaimCallback, chainId],
+    [id, account, refetch, onClaimCallback, chainId],
   );
   const onWithdrawGame = useCallback(
     (ev: any) => {
-      if (address && account) {
+      if (id && account) {
         setSubmitWithdrawState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
@@ -252,7 +252,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [address, account, refetch, onWithdrawCallback],
+    [id, account, refetch, onWithdrawCallback],
   );
 
   const goToExplorer = useCallback(
@@ -392,7 +392,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         onClose={onCloseViewCoinsDialog}
         coins={playerData?.coins || []}
         captainCoin={playerData?.captainCoin}
-        address={address}
+        id={id}
         playerAddress={playerData?.hash}
       />
       <TableContainer className={classes.container} component={Paper}>

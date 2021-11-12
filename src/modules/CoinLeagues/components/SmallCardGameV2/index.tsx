@@ -74,16 +74,16 @@ function SmallCardGameV2(props: Props): JSX.Element {
 
   const onClickEnter = useCallback(
     (ev: any) => {
-      onClick(game.id);
+      onClick(game.intId);
     },
-    [game.id, onClick],
+    [game.intId, onClick],
   );
 
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Grid container className={classes.innerContent} spacing={2}>
         <Grid item xs={12}>
-          <Typography variant='h6'>ID #{truncateAddress(game.id)}</Typography>
+          <Typography variant='h6'>ID #{game.intId}</Typography>
         </Grid>
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>

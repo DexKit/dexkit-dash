@@ -78,7 +78,7 @@ interface IRow {
 interface Props {
   data?: IRow[];
   type?: GameType;
-  address: string;
+  id: string;
   winner?: any;
   account?: string;
   finished?: boolean;
@@ -118,20 +118,20 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins, type, data} = props;
+  const {id, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
   const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
   const [selectedPlayerAddress, setSelectedPlayerAddress] = useState<string>();
   const accountLabels = useLabelAccounts();
-  const {game, currentPrices, allFeeds} = useCoinLeagues(address);
+  const {game, currentPrices, allFeeds} = useCoinLeagues(id);
 
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-  const {multiplier, loadingMultiplier} = useMultipliers(address);
+  const {multiplier, loadingMultiplier} = useMultipliers(id);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -247,7 +247,7 @@ function PlayersTable(props: Props): JSX.Element {
         onClose={onCloseViewCoinsDialog}
         coins={coins}
         captainCoin={selectedCaptainCoin}
-        address={address}
+        id={id}
         playerAddress={selectedPlayerAddress}
       />
       <TableContainer className={classes.container} component={Paper}>

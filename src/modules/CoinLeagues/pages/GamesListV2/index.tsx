@@ -105,7 +105,7 @@ const GamesListV2 = () => {
   const gamesToJoin = useMemo(() => {
     if (waitingGamesQuery.data) {
       return waitingGamesQuery.data.games.filter(
-        (g) => g?.id?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+        (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
       );
     }
   }, [search, waitingGamesQuery.data]);

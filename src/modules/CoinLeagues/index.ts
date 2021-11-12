@@ -28,7 +28,7 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
-        path: '/coin-league/room/:room/game/:address',
+        path: '/coin-league/room/:room/game/:id',
         component: React.lazy(() => import('./pages/GameEnter')),
       },
     ],
@@ -85,7 +85,7 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
-        path: '/coin-league/enter/:address',
+        path: '/coin-league/enter/:id',
         component: React.lazy(() => import('./pages/GameEnter')),
       },
     ],
@@ -93,7 +93,7 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
-        path: '/coin-league/:address',
+        path: '/coin-league/:id',
         component: React.lazy(() => import('./pages/GameEnter')),
       },
     ],

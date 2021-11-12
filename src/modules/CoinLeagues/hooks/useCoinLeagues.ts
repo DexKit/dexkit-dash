@@ -51,7 +51,7 @@ export const useCoinLeagues = (id?: string) => {
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room]);
 
-  const addressQuery = useQuery(['GET_WINNER', id, factoryAddress], () => {
+  const addressQuery = useQuery(['GET_ADDRESS_GAME', id, factoryAddress], () => {
     if (!id || !factoryAddress) {
       return;
     }
@@ -203,7 +203,7 @@ export const useCoinLeagues = (id?: string) => {
   };
 };
 
-const useCoinLeaguesCallbacks = (address?: string) => {
+export const useCoinLeaguesCallbacks = (address?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();
   const {startedGames, createdGames} = useCoinLeaguesFactory();
   
@@ -306,7 +306,7 @@ const useCoinLeaguesCallbacks = (address?: string) => {
 
 
 
-const useCoinLeaguesWinner = (address?: string) => {
+export const useCoinLeaguesWinner = (address?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();
   const winnerQuery = useQuery(
     ['GET_WINNER', address, account, web3State],

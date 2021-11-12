@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  address: string;
+  id: string;
 }
 
 function CardTimer(props: {time: number}) {
@@ -43,7 +43,7 @@ function CardTimer(props: {time: number}) {
 
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
-  const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.address);
+  const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.id);
   const duration = game?.duration.toNumber();
   const startTimestamp = game?.start_timestamp.toNumber()
 

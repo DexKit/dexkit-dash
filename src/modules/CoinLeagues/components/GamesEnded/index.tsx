@@ -27,8 +27,8 @@ export const GamesEnded = (props: Props) => {
   );
 
   const onClickEnterGame = useCallback(
-    (address: string) => {
-      history.push(enterGameRoute(`${address}`));
+    (id: string) => {
+      history.push(enterGameRoute(`${id}`));
     },
     [enterGameRoute],
   );
@@ -36,7 +36,7 @@ export const GamesEnded = (props: Props) => {
   const endedGames = useMemo(() => {
     if (gamesEndedQuery.data) {
       return gamesEndedQuery.data.games.filter(
-        (g) => g?.id?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
+        (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
       );
     }
   }, [search, gamesEndedQuery.data]);

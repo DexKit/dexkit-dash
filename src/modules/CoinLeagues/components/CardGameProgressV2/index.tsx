@@ -105,7 +105,7 @@ function CardGameProgressV2(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h6'>ID #{truncateAddress(game.id)}</Typography>
+      <Typography variant='h6'>ID #{game.intId}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>

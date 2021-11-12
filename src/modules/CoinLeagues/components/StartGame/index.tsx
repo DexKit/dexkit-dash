@@ -13,14 +13,14 @@ import {
 import {ChainId} from 'types/blockchain';
 
 interface Props {
-  address?: string;
+  id?: string;
 }
 
 export const StartGame = (props: Props) => {
-  const {address} = props;
+  const {id} = props;
   const {chainId} = useWeb3();
   const { game} =
-    useCoinLeagues(address);
+    useCoinLeagues(id);
   const [tx, _setTx] = useState<string>();
   const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
   /*const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
