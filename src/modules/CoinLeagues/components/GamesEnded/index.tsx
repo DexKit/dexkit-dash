@@ -5,26 +5,32 @@ import {Grid} from '@material-ui/core';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import {Empty} from 'shared/components/Empty';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {useEndedGames} from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import {useHistory} from 'react-router-dom';
 import CardGameSkeleton from '../CardGameV2/index.skeleton';
 import CardGameV2 from '../CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import {useWeb3} from 'hooks/useWeb3';
+import {GameFiltersState} from 'modules/CoinLeagues/hooks/useGamesFilter';
+
 interface Props {
+  filters: GameFiltersState;
   filter?: FilterGame;
   search?: string;
 }
 
 export const GamesEnded = (props: Props) => {
-  const {filter, search} = props;
+  const {filter, search, filters} = props;
   const {account} = useWeb3();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
-  const gamesEndedQuery = useEndedGames(
+
+  const gamesEndedQuery = useCoinLeagueGames({
+    status: 'Ended',
     filter,
-    account ? [account] : undefined,
-  );
+    accounts: account ? [account] : undefined,
+    filters,
+  });
 
   const onClickEnterGame = useCallback(
     (address: string) => {
