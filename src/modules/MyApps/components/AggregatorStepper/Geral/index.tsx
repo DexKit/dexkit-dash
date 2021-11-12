@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     stroke: '#525C75',
   },
   radioBtn: {
+    borderWidth: 'thin',
     backgroundColor: '#3A3D4A',
     border: `1px solid ${theme.palette.grey.A700}`,
     padding: theme.spacing(0.5),

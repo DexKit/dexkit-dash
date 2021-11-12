@@ -56,8 +56,6 @@ const WizardCard: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  console.log({...theme.palette});
-
   return (
     <Grid
       container

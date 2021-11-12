@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 
 import {useIntl} from 'react-intl';
+import {EIP712TypedData} from '@0x/types';
+import {Web3Wrapper} from '@0x/web3-wrapper';
+import {eip712Utils} from '@0x/order-utils';
+import {MetamaskSubprovider} from '@0x/subproviders';
+import {makeStyles, useTheme} from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import Box from '@material-ui/core/Box';
@@ -15,8 +20,14 @@ import Typography from '@material-ui/core/Typography';
 import GeralStep from './Geral';
 import ThemeStep from './Theme';
 import LinksStep from './Links';
+import {useWeb3} from 'hooks/useWeb3';
+import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router';
 import StepperHeader from './StepperHeader';
-import {makeStyles, useTheme} from '@material-ui/core';
+import {sendConfig} from 'services/my-apps';
+import {NotificationType} from 'services/notification';
+import {onAddNotification} from 'redux/_notification/actions';
+import {Notification as CustomNotification} from 'types/models/Notification';
 
 interface IStep {
   id: string;
@@ -66,14 +77,18 @@ const useStyles = makeStyles((theme) => ({
   },
   stepper: {
     height: '100%',
-    backgroundColor: '#2E3243',
+    backgroundColor: '#2F3142',
   },
 }));
 
 const AggregatorStepper: React.FC = () => {
+  const theme = useTheme();
   const classes = useStyles();
   const {messages} = useIntl();
-  const theme = useTheme();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const {chainId, account, getProvider} = useWeb3();
+  const [isLoading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
   const [geralData, setGeralData] = useState(initialValues.geral);
@@ -98,9 +113,94 @@ const AggregatorStepper: React.FC = () => {
     },
   ];
 
-  // TODO: Create the submit logic
   const handleSubmit = () => {
-    console.log({geralData, themeData, linksData});
+    //send data
+    if (!isLoading) {
+      setLoading(true);
+      setTimeout(function () {
+        try {
+          if (account) {
+            const ethAccount = account;
+            const provider = new MetamaskSubprovider(getProvider() as any);
+
+            const msgParams: EIP712TypedData = {
+              types: {
+                EIP712Domain: [
+                  {name: 'name', type: 'string'},
+                  {name: 'version', type: 'string'},
+                  {name: 'chainId', type: 'uint256'},
+                  {name: 'verifyingContract', type: 'address'},
+                ],
+                Message: [
+                  {name: 'message', type: 'string'},
+                  {name: 'terms', type: 'string'},
+                ],
+              },
+              primaryType: 'Message',
+              domain: {
+                name: 'DexKit',
+                version: '1',
+                chainId: chainId || 1,
+                verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+              },
+              message: {
+                message: `${messages['app.myApps.iWantToCreateEditThis']} ${messages['app.myApps.aggregator']}`,
+                terms: `${messages['app.myApps.poweredByDexKit']}`,
+              },
+            };
+
+            const web3Metamask = new Web3Wrapper(provider);
+
+            const typedData = eip712Utils.createTypedData(
+              msgParams.primaryType,
+              msgParams.types,
+              msgParams.message,
+              // @ts-ignore
+              msgParams.domain,
+            );
+
+            web3Metamask
+              .signTypedDataAsync(ethAccount.toLowerCase(), typedData)
+              .then((signature) => {
+                const dataToSend = {
+                  signature,
+                  type: 'AGGREGATOR',
+                  config: JSON.stringify({
+                    ...geralData,
+                    ...themeData,
+                    ...linksData,
+                  }),
+                  message: JSON.stringify(typedData),
+                  owner: ethAccount,
+                };
+
+                sendConfig(dataToSend)
+                  .then((c: any) => {
+                    const notification: CustomNotification = {
+                      title: `${messages['app.myApps.configAccepted']}`,
+                      body: `${messages['app.myApps.configCreated']}`,
+                    };
+                    dispatch(onAddNotification([notification]));
+                    history.push(`/my-apps/manage`);
+                  })
+                  .catch(() => {
+                    const notification: CustomNotification = {
+                      title: `${messages['app.myApps.error']}`,
+                      body: `${messages['app.myApps.configErrorDoYouHaveHaveKIT']}`,
+                    };
+                    dispatch(
+                      onAddNotification([notification], NotificationType.ERROR),
+                    );
+                  });
+              });
+          }
+        } catch (error) {
+          throw new Error(error.message);
+        }
+
+        setLoading(false);
+      }, 2000);
+    }
   };
 
   const handleReset = () => setActiveStep(0);
