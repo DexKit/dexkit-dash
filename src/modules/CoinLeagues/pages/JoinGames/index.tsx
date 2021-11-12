@@ -116,7 +116,11 @@ const JoinGames = () => {
       </Grid>
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
       <Grid item xs={6} sm={3} xl={3}>
@@ -126,7 +130,11 @@ const JoinGames = () => {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={5} xl={5}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'}/>
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>

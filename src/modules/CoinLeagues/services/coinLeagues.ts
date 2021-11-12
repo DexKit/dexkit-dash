@@ -1,17 +1,12 @@
 import {CallInput} from '@indexed-finance/multicall';
-import {
-  BigNumber,
-  ContractTransaction,
-  ethers,
-  providers,
-} from 'ethers';
+import {BigNumber, ContractTransaction, ethers, providers} from 'ethers';
 import {Interface} from 'ethers/lib/utils';
 import {getMulticallFromProvider} from 'services/multicall';
 import {getEthers} from 'services/web3modal';
 import {CoinFeed, Game} from 'types/coinsleague';
 import coinLeaguesAbi from '../constants/ABI/coinLeagues.json';
 import erc20Abi from 'shared/constants/ABI/erc20.json';
-import {BITTOKEN, CHAMPIONS, DEXKIT} from 'shared/constants/tokens';
+import {BITTOKEN, DEXKIT} from 'shared/constants/tokens';
 import {ChainId} from 'types/blockchain';
 import {Token} from 'types/app';
 import {
@@ -67,36 +62,46 @@ export const getCoinFeeds = async (
   gameAddress: string,
   provider: any,
 ): Promise<CoinFeed[]> => {
-  const iface = new Interface(coinLeaguesAbi);
-  const multicall = await getMulticallFromProvider(provider);
-  const calls: CallInput[] = [];
-  const coins: CoinFeed[] = [];
-  for (let index = 0; index < feeds.length; index++) {
-    const addr = feeds[index];
-    calls.push({
-      interface: iface,
-      target: gameAddress,
-      function: 'coins',
-      args: [addr],
-    });
-  }
-  const response = await multicall.multiCall(calls);
-  const [, results] = response;
-  for (let index = 0; index < feeds.length; index++) {
-    coins.push(results[index]);
-  }
 
-  // TODO: check how the returned value is without object
-  // We need to map manually to properties in order to work properly
-  const mappedFeeds = coins.map((c: any) => {
-    return {
-      address: c[0],
-      start_price: c[1],
-      end_price: c[2],
-      score: c[3],
-    } as CoinFeed;
-  });
-  return mappedFeeds;
+    const iface = new Interface(coinLeaguesAbi);
+    const multicall = await getMulticallFromProvider(provider);
+    let calls: CallInput[] = [];
+    const coins: CoinFeed[] = [];
+    const maxFeeds = 30;
+    const totalPerFeeds = Math.ceil(feeds.length / maxFeeds);
+    const totalFeeds = feeds.length;
+    for (let ind = 0; ind < totalPerFeeds; ind++) {
+      for (let index = ind * maxFeeds; index < (ind + 1) * maxFeeds; index++) {
+        if(index >= totalFeeds){
+          break;
+        }
+        const addr = feeds[index];
+        calls.push({
+          interface: iface,
+          target: gameAddress,
+          function: 'coins',
+          args: [addr],
+        });
+      }
+      const response = await multicall.multiCall(calls);
+      const [, results] = response;
+      for (let index = 0; index < results.length; index++) {
+        coins.push(results[index]);
+      }
+      calls = [];
+    }
+
+    // TODO: check how the returned value is without object
+    // We need to map manually to properties in order to work properly
+    const mappedFeeds = coins.map((c: any) => {
+      return {
+        address: c[0],
+        start_price: c[1],
+        end_price: c[2],
+        score: c[3],
+      } as CoinFeed;
+    });
+    return mappedFeeds;
 };
 
 /**
@@ -153,7 +158,7 @@ export const getPlayerMultipliers = async (
   provider: any,
 ) => {
   const iface = new Interface(erc20Abi);
- // const ifaceChampions = new Interface(erc20Abi);
+  // const ifaceChampions = new Interface(erc20Abi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
   if (players.length === 0) {
@@ -161,7 +166,7 @@ export const getPlayerMultipliers = async (
   }
   const DexKit = DEXKIT[ChainId.Matic] as Token;
   const Bittoken = BITTOKEN[ChainId.Matic] as Token;
- // const Champions = CHAMPIONS[ChainId.Matic] as Token;
+  // const Champions = CHAMPIONS[ChainId.Matic] as Token;
 
   for (let index = 0; index < players.length; index++) {
     const addr = players[index];
@@ -234,39 +239,33 @@ export const joinGame = async (
   captainCoin: string,
   provider: any,
 ) => {
-
   const pr = new providers.Web3Provider(provider);
   // const net =  await pr.getNetwork();
 
-  const gasPrice = await (
-    await pr?.getGasPrice()
-  )?.mul(GAS_PRICE_MULTIPLIER);
+  const gasPrice = await (await pr?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER);
 
-  return (await getCoinLeaguesContract(gameAddress, provider)).joinGameWithCaptainCoin(
-    feeds,
-    captainCoin,
-    '500000',
-    {
-      value: amount,
-      gasPrice,
-    },
-  ) as Promise<ContractTransaction>;
+  return (
+    await getCoinLeaguesContract(gameAddress, provider)
+  ).joinGameWithCaptainCoin(feeds, captainCoin, '500000', {
+    value: amount,
+    gasPrice,
+  }) as Promise<ContractTransaction>;
 };
 
 export const startGame = async (gameAddress: string, provider: any) => {
-  const pr = new providers.Web3Provider(provider)
-  const gasPrice = await (
-    await pr?.getGasPrice()
-  )?.mul(GAS_PRICE_MULTIPLIER);
+  const pr = new providers.Web3Provider(provider);
+  const gasPrice = await (await pr?.getGasPrice())?.mul(GAS_PRICE_MULTIPLIER);
 
   return (await getCoinLeaguesContract(gameAddress, provider)).startGame({
     gasPrice,
   }) as Promise<ContractTransaction>;
 };
 
-
-
-export const claim = async (gameAddress: string, provider: any, winner: string) => {
+export const claim = async (
+  gameAddress: string,
+  provider: any,
+  winner: string,
+) => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
@@ -287,6 +286,10 @@ export const withdrawGame = async (gameAddress: string, provider: any) => {
   }) as Promise<ContractTransaction>;
 };
 
-export const getWinner = async (gameAddress: string, account: string, provider: any) => {
+export const getWinner = async (
+  gameAddress: string,
+  account: string,
+  provider: any,
+) => {
   return (await getCoinLeaguesContract(gameAddress, provider)).winners(account);
 };

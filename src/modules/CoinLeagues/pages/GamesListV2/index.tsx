@@ -48,8 +48,7 @@ import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
 import {FilterGame, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import {isGameCreator} from 'modules/CoinLeagues/utils/game';
-import { GameOrderByDropdown } from 'modules/CoinLeagues/components/GameOrderByDropdown';
-
+import {GameOrderByDropdown} from 'modules/CoinLeagues/components/GameOrderByDropdown';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -133,20 +132,20 @@ const GamesListV2 = () => {
         }),
       );
     }
-  }, [account]);
+  }, [account, defaultAccount, dispatch]);
 
   const onClickEnterGame = useCallback(
     (address: string) => {
       history.push(enterGameRoute(`${address}`));
     },
-    [enterGameRoute],
+    [enterGameRoute, history],
   );
 
   const onClickGoGamesInProgress = useCallback(
     (_ev: any) => {
       history.push(activeGamesRoute);
     },
-    [activeGamesRoute],
+    [activeGamesRoute, history],
   );
 
   const handleSearch = useCallback((e) => {
@@ -174,7 +173,11 @@ const GamesListV2 = () => {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
@@ -218,7 +221,11 @@ const GamesListV2 = () => {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img alt='' src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
 
@@ -313,7 +320,7 @@ const GamesListV2 = () => {
                 </Typography>
               )}
             </Grid>
-           {/*   <Grid item xs={12} sm={12}>
+            {/*   <Grid item xs={12} sm={12}>
               {value === Tabs.Games && (
                 <Typography gutterBottom>
                   <IntlMessages id='app.coinLeagues.recentlyAdded' /> &nbsp;
@@ -327,7 +334,7 @@ const GamesListV2 = () => {
           </Grid>
           <Grid item sm={6} justifyContent='center'>
             <Grid container justifyContent='center' spacing={2}>
-            {Object.entries(FilterGame).map((value, index) => (
+              {Object.entries(FilterGame).map((value, index) => (
                 <Grid item key={index}>
                   <Chip
                     clickable
@@ -340,8 +347,9 @@ const GamesListV2 = () => {
             </Grid>
           </Grid>
           <Grid item sm={3} justifyContent='flex-end'>
-           <GameOrderByDropdown onSelectGameOrder={(value)=> setOrderByGame(value)}/>
-
+            <GameOrderByDropdown
+              onSelectGameOrder={(value) => setOrderByGame(value)}
+            />
 
             {/* <Button variant='text'>
                 <FilterListIcon style={{color: '#fff'}} />

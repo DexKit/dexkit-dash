@@ -8,9 +8,6 @@ import {
   Link,
   IconButton,
   Typography,
-  Paper,
-  ButtonBase,
-  Chip,
   Divider,
 } from '@material-ui/core';
 
@@ -19,20 +16,24 @@ import RankingButton from 'modules/CoinLeagues/components/RankingLeaguesButton';
 import {
   useRankingMostWinned,
   useRankingMostJoined,
+  useRankingMostEarned,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
+import {ethers} from 'ethers';
 
 enum Tabs {
   MostWinner = 'Most Winner',
   MostJoined = 'Most Joined',
+  MostEarned = 'Most Earned',
 }
 
 export function Ranking() {
   const rankingMostWinnedQuery = useRankingMostWinned();
   const rankingMostJoinedQuery = useRankingMostJoined();
+  const rankingMostEarnedQuery = useRankingMostEarned();
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
   const {messages} = useIntl();
@@ -40,12 +41,8 @@ export function Ranking() {
   const [value, setValue] = React.useState(Tabs.MostWinner);
 
   const handleChange = useCallback(
-    (_event: React.ChangeEvent<{}>, _newValue: string) => {
-      if (value === Tabs.MostWinner) {
-        setValue(Tabs.MostJoined);
-      } else {
-        setValue(Tabs.MostWinner);
-      }
+    (_event: React.ChangeEvent<{}>, newValue: Tabs) => {
+      setValue(newValue);
     },
     [value],
   );
@@ -91,6 +88,7 @@ export function Ranking() {
             aria-label='wallet tabs'>
             <CustomTab value={Tabs.MostWinner} label={Tabs.MostWinner} />
             <CustomTab value={Tabs.MostJoined} label={Tabs.MostJoined} />
+            <CustomTab value={Tabs.MostEarned} label={Tabs.MostEarned} />
           </CustomTabs>
         </Grid>
 
@@ -126,6 +124,9 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalWinnedGames)}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
                       onClick={(address) => {}}
                     />
                   </Grid>
@@ -156,6 +157,44 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
+                      onClick={(address) => {}}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>{' '}
+          </>
+        )}
+        {value === Tabs.MostEarned && (
+          <>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography gutterBottom variant='h6'>
+                Ranking
+              </Typography>
+              <Grid container spacing={4}>
+                {rankingMostEarnedQuery.data?.players?.map((player, index) => (
+                  <Grid item xs={12}>
+                    <RankingButton
+                      position={index + 1}
+                      address={player.id}
+                      label={'Earned Matic:'}
+                      joinsCount={Number(player.totalJoinedGames)}
+                      winsCount={Number(player.totalWinnedGames)}
+                      firstCount={Number(player.totalFirstWinnedGames)}
+                      secondCount={Number(player.totalSecondWinnedGames)}
+                      thirdCount={Number(player.totalThirdWinnedGames)}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
+                      count={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
                       onClick={(address) => {}}
                     />
                   </Grid>

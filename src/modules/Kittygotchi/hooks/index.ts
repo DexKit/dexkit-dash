@@ -1,4 +1,4 @@
-import {BigNumber, ethers} from 'ethers';
+import {BigNumber, ethers, providers} from 'ethers';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useState} from 'react';
@@ -262,11 +262,18 @@ export function useKittygotchiUpdate() {
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit();
         }
-        await update(sig, messageSigned, params, id, account, chainId);
-        if (callbacks?.onConfirmation) {
-          callbacks?.onConfirmation();
+        const response = await update(sig, messageSigned, params, id, account, chainId);
+        console.log(response);
+        if(response.ok && response.status === 200){
+          if (callbacks?.onConfirmation) {
+            callbacks?.onConfirmation();
+          }
+        }else{
+          throw new Error(response.statusText);
         }
+
       } catch (e) {
+        console.log(e);
         if (callbacks?.onError) {
           callbacks?.onError(e);
         }
@@ -456,24 +463,31 @@ export const useKittygotchiOnChain = () => {
 };
 
 export const useKitHolding = (account?: string) => {
-  const {chainId} = useWeb3();
+  const {chainId, getProvider} = useWeb3();
 
   const networkProvider = useNetworkProvider(EthereumNetwork.matic);
 
   const query = useQuery(
     ['GET_COIN_LEAGUES_BALANCES', account, chainId],
     async () => {
-      if (account && chainId) {
-        const DexKit = DEXKIT[ChainId.Matic];
+      if (
+        account &&
+        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      ) {
+        const DexKit = DEXKIT[chainId];
 
         const tokens = [DexKit];
+        let pr = networkProvider;
+        if (chainId === ChainId.Mumbai) {
+          pr = new providers.Web3Provider(getProvider());
+        }
 
         const [, tb] = await getTokenBalances(
           (tokens.filter((t) => t !== undefined) as Token[]).map(
             (t) => t.address,
           ),
           account,
-          networkProvider,
+          pr,
         );
 
         return (tokens.filter((t) => t !== undefined) as Token[]).map((t) => {
@@ -582,13 +596,13 @@ export function useKittygotchiStyleEdit() {
     body,
     accessory,
     params: {
-      cloth,
-      eyes,
-      mouth,
-      nose,
-      ears,
       body,
+      ears,
+      eyes,
+      nose, 
+      mouth,
       accessory,
+      cloth,
     },
   };
 }

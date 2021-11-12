@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 
 import {
   makeStyles,
@@ -41,6 +41,7 @@ import {useIntl} from 'react-intl';
 import {useMobile} from 'hooks/useMobile';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
+import { ethers } from 'ethers';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -119,6 +120,13 @@ export const KittyEdit = () => {
   const isMobile = useMobile();
   const kitHolding = useKitHolding(account);
 
+  const kitAmount = useMemo(()=> {
+    if(kitHolding.data && kitHolding.data.length){
+      return Number(ethers.utils.formatEther(kitHolding.data[0].balance))
+    }
+    return 0;
+  }, [kitHolding?.data])
+
   const {messages} = useIntl();
 
   const isSubmitting = useCallback(() => {
@@ -135,6 +143,9 @@ export const KittyEdit = () => {
   useEffect(() => {
     kittygotchi.get(params.id);
   }, [params.id]);
+
+
+
 
   return (
     <>
@@ -259,7 +270,7 @@ export const KittyEdit = () => {
                       defaultExpanded
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       title={messages['app.kittygotchi.body'] as string}
@@ -273,7 +284,7 @@ export const KittyEdit = () => {
                     <KittygotchiTraitSelector
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       title={messages['app.kittygotchi.accessories'] as string}
@@ -287,7 +298,7 @@ export const KittyEdit = () => {
                     <KittygotchiTraitSelector
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       traitType={KittygotchiTraitType.NOSE}
@@ -301,7 +312,7 @@ export const KittyEdit = () => {
                     <KittygotchiTraitSelector
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       traitType={KittygotchiTraitType.EARS}
@@ -315,7 +326,7 @@ export const KittyEdit = () => {
                     <KittygotchiTraitSelector
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       traitType={KittygotchiTraitType.EYES}
@@ -329,7 +340,7 @@ export const KittyEdit = () => {
                     <KittygotchiTraitSelector
                       kitHolding={
                         kitHolding.data && kitHolding.data?.length > 0
-                          ? kitHolding.data[0]?.balance?.toNumber()
+                          ? kitAmount
                           : 0
                       }
                       traitType={KittygotchiTraitType.MOUTH}

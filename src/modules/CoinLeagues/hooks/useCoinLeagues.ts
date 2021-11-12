@@ -207,7 +207,6 @@ export const useCoinLeagues = (address?: string) => {
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
       } catch (e) {
-        console.log(e);
         callbacks?.onError(e);
       }
     },
@@ -252,7 +251,6 @@ export const useCoinLeagues = (address?: string) => {
       }
     },
   );
-
   return {
     onJoinGameCallback,
     onStartGameCallback,
@@ -275,25 +273,27 @@ export const useCoinLeagues = (address?: string) => {
   };
 };
 
-
 const useCoinLeaguesWinner = (address?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();
-  const winnerQuery = useQuery(['GET_WINNER', address, account, web3State], () => {
-    if (!address || !account || web3State !== Web3State.Done) {
-      return;
-    }
-    return getWinner(address, account, getProvider()).then((w) => {
-      return {
-        place: w.place,
-        address: w.winner_address,
-        score: w.score,
-        claimed: w.claimed,
-      };
-    });
-  });
+  const winnerQuery = useQuery(
+    ['GET_WINNER', address, account, web3State],
+    () => {
+      if (!address || !account || web3State !== Web3State.Done) {
+        return;
+      }
+      return getWinner(address, account, getProvider()).then((w) => {
+        return {
+          place: w.place,
+          address: w.winner_address,
+          score: w.score,
+          claimed: w.claimed,
+        };
+      });
+    },
+  );
 
   return {
     winner: winnerQuery.data && winnerQuery.data,
-    refetchWinner: winnerQuery.refetch
-  }
-}
+    refetchWinner: winnerQuery.refetch,
+  };
+};

@@ -109,9 +109,9 @@ const CreateGameModal = (props: Props) => {
   const [totalPlayers, setTotalPlayers] = useState<number>();
   const [tx, setTx] = useState<string>('asda');
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+ /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
-  }
+  }*/
   const onCreateGame = useCallback(
     (ev?: any) => {
       if (totalPlayers && entryAmount && duration && coins) {
@@ -156,7 +156,7 @@ const CreateGameModal = (props: Props) => {
         });
       }
     },
-    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute],
+    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute, history, onGameCreateCallback, refetchCreated],
   );
 
   const goToExplorer = useCallback(
@@ -232,8 +232,8 @@ const CreateGameModal = (props: Props) => {
                 <IntlMessages id='app.coinLeagues.advanced' /> - 10 Matic
               </MenuItem>
               <MenuItem value={50}>Expert - 50 Matic</MenuItem>
-              <MenuItem value={100}>Master - 100 Matic</MenuItem>
-              <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>
+              <MenuItem value={250}>Master - 250 Matic</MenuItem>
+           {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
             </Select>
           </FormControl>
         </Grid>
