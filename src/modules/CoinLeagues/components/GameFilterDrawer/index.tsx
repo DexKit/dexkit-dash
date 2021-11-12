@@ -153,49 +153,48 @@ export const GameFilterDrawer = (props: Props) => {
             </Box>
             <Divider />
           </Grid>
-          <Grid item xs={12}>
-            <Grid
-              container
-              spacing={1}
-              alignItems='center'
-              alignContent='center'>
-              <Grid item>
-                <Chip
-                  size='small'
-                  label='All'
-                  variant='default'
-                  clickable
-                  onClick={handleSelectAll}
-                  disabled={disablePlayerFilter}
-                  color={
-                    !filtersState.isBitboy && !filtersState.isMyGames
-                      ? 'primary'
-                      : 'default'
-                  }
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  size='small'
-                  label='My Games'
-                  clickable
-                  disabled={disablePlayerFilter}
-                  onClick={handleToggleMyGames}
-                  color={filtersState.isMyGames ? 'primary' : 'default'}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  size='small'
-                  label='Bitboy'
-                  clickable
-                  disabled={disablePlayerFilter}
-                  onClick={handleToggleBitBoy}
-                  color={filtersState.isBitboy ? 'primary' : 'default'}
-                />
+          {!disablePlayerFilter ? (
+            <Grid item xs={12}>
+              <Grid
+                container
+                spacing={1}
+                alignItems='center'
+                alignContent='center'>
+                <Grid item>
+                  <Chip
+                    size='small'
+                    label='All'
+                    variant='default'
+                    clickable
+                    onClick={handleSelectAll}
+                    color={
+                      !filtersState.isBitboy && !filtersState.isMyGames
+                        ? 'primary'
+                        : 'default'
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    size='small'
+                    label='My Games'
+                    clickable
+                    onClick={handleToggleMyGames}
+                    color={filtersState.isMyGames ? 'primary' : 'default'}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    size='small'
+                    label='Bitboy'
+                    clickable
+                    onClick={handleToggleBitBoy}
+                    color={filtersState.isBitboy ? 'primary' : 'default'}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           <Grid item xs={12}>
             <FormControl variant='outlined' fullWidth>
               <InputLabel>
@@ -249,9 +248,9 @@ export const GameFilterDrawer = (props: Props) => {
                   <IntlMessages id='app.coinLeague.master' />
                 </MenuItem>
 
-                <MenuItem value={GameLevel.GrandMaster}>
+                {/* <MenuItem value={GameLevel.GrandMaster}>
                   <IntlMessages id='app.coinLeague.grandMaster' />
-                </MenuItem>
+                </MenuItem> */}
               </Select>
             </FormControl>
           </Grid>

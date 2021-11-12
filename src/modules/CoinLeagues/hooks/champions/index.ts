@@ -21,11 +21,7 @@ import {
   CoinLeaguesChampion,
 } from 'modules/CoinLeagues/utils/types';
 
-import {
-  ApolloClient,
-  gql,
-  InMemoryCache,
-} from '@apollo/client';
+import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -61,28 +57,33 @@ export function useChampionMint() {
       if (chainId === ChainId.Mumbai) {
         championsAddress = CHAMPIONS[ChainId.Mumbai];
       } else if (chainId === ChainId.Matic) {
-        championsAddress = '';
+        championsAddress = CHAMPIONS[ChainId.Matic];
       }
 
       setLoading(true);
 
-      return mintCoinLeaguesChampion(pr, championsAddress, (hash: string) => {
-        setTransactionHash(hash);
+      return mintCoinLeaguesChampion(
+        pr,
+        championsAddress,
+        chainId,
+        (hash: string) => {
+          setTransactionHash(hash);
 
-        createNotification({
-          title: 'Create Champion',
-          body: `Creating a Coin Leagues Champion`,
-          timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, hash),
-          urlCaption: 'View transaction',
-          type: NotificationType.TRANSACTION,
-          metadata: {
-            chainId: chainId,
-            transactionHash: hash,
-            status: 'pending',
-          } as TxNotificationMetadata,
-        });
-      })
+          createNotification({
+            title: 'Create Champion',
+            body: `Creating a Coin Leagues Champion`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, hash),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: hash,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
+        },
+      )
         .then((id: string) => {
           setLoading(false);
 
@@ -147,9 +148,11 @@ export const useChampionMetadata = (tokenId?: string) => {
             }
           }
 
-          if (err.response.status === 404) {
-            fetch(tokenId);
-            return;
+          if (err.response) {
+            if (err.response.status === 404) {
+              fetch(tokenId);
+              return;
+            }
           }
 
           setError(err);
@@ -168,33 +171,52 @@ export const useChampionMetadata = (tokenId?: string) => {
 };
 
 export const useChampionTokenHolding = (account?: string) => {
-  const {chainId} = useWeb3();
-
-  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+  const {chainId, getProvider} = useWeb3();
 
   const query = useQuery(
-    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
+    ['GET_COIN_LEAGUES_BALANCES_HOLDING', account, chainId, getProvider],
     async () => {
+      const ABI = [
+        'function balanceOf(address _owner) public view returns (uint256 balance)',
+      ];
+
       if (account && chainId) {
-        const DexKit = DEXKIT[ChainId.Matic];
-        const Bitt = BITTOKEN[ChainId.Matic];
+        const DexKit = DEXKIT[chainId as ChainId];
+        const Bitt = BITTOKEN[chainId as ChainId];
 
-        const tokens = [DexKit, Bitt];
+        if (DexKit?.address && Bitt?.address) {
+          const kitContract = new ethers.Contract(
+            DexKit?.address,
+            ABI,
+            new ethers.providers.Web3Provider(getProvider()).getSigner(),
+          );
 
-        const [, tb] = await getTokenBalances(
-          (tokens.filter((t) => t !== undefined) as Token[]).map(
-            (t) => t.address,
-          ),
-          account,
-          networkProvider,
-        );
+          const bittContract = new ethers.Contract(
+            Bitt?.address,
+            ABI,
+            new ethers.providers.Web3Provider(getProvider()).getSigner(),
+          );
 
-        return (tokens.filter((t) => t !== undefined) as Token[]).map((t) => {
           return {
-            token: t,
-            balance: tb[t.address],
+            kit: parseInt(
+              ethers.utils.formatUnits(
+                await kitContract.balanceOf(account),
+                18,
+              ),
+            ),
+            bitt: parseInt(
+              ethers.utils.formatUnits(
+                await bittContract.balanceOf(account),
+                18,
+              ),
+            ),
           };
-        });
+        }
+
+        return {
+          kit: 0,
+          bitt: 0,
+        };
       }
     },
   );
@@ -205,8 +227,16 @@ export const useChampionTokenHolding = (account?: string) => {
 const COIN_LEAGUES_CHAMPION_URL_NUMBAI =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/championsmumbai';
 
+const COIN_LEAGUES_CHAMPION_URL_MATIC =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/champions';
+
 const mumbaiClient = new ApolloClient({
   uri: COIN_LEAGUES_CHAMPION_URL_NUMBAI,
+  cache: new InMemoryCache(),
+});
+
+const maticClient = new ApolloClient({
+  uri: COIN_LEAGUES_CHAMPION_URL_MATIC,
   cache: new InMemoryCache(),
 });
 
@@ -237,39 +267,50 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
   const fetch = useCallback(() => {
     if (defaultAccount && chainId) {
       setLoading(true);
+      if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+        let client = maticClient;
 
-      mumbaiClient
-        .query({
-          query: GET_MY_CHAMPIONS,
-          variables: {owner: defaultAccount.toLocaleLowerCase()},
-        })
-        .then(async (result) => {
-          let tokens: any[] = result.data.tokens;
+        if (chainId === ChainId.Mumbai) {
+          client = mumbaiClient;
+        }
 
-          let champions: CoinLeaguesChampion[] = [];
+        client
+          .query({
+            query: GET_MY_CHAMPIONS,
+            variables: {owner: defaultAccount.toLocaleLowerCase()},
+          })
 
-          for (let t of tokens) {
-            let metadata: ChampionMetadata = await getChampionMetadata(t.id);
+          .then(async (result) => {
+            let tokens: any[] = result.data.tokens;
 
-            let champ: CoinLeaguesChampion = {
-              id: t.id,
-              name: metadata.name,
-              description: metadata.description,
-              image: metadata.image,
-              attack: parseInt(t.attack),
-              defense: parseInt(t.defense),
-              run: parseInt(t.run),
-            };
-            champions.push(champ);
-          }
+            let champions: CoinLeaguesChampion[] = [];
 
-          setData(champions.slice(0, limit));
-          setLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setLoading(false);
-        });
+            for (let t of tokens) {
+              let metadata: ChampionMetadata = await getChampionMetadata(
+                t.id,
+                chainId,
+              );
+
+              let champ: CoinLeaguesChampion = {
+                id: t.id,
+                name: metadata.name,
+                description: metadata.description,
+                image: metadata.image,
+                attack: parseInt(t.attack),
+                defense: parseInt(t.defense),
+                run: parseInt(t.run),
+              };
+              champions.push(champ);
+            }
+
+            setData(champions.slice(0, limit));
+            setLoading(false);
+          })
+          .catch((err) => {
+            setError(err);
+            setLoading(false);
+          });
+      }
     }
   }, [defaultAccount, chainId, limit]);
 

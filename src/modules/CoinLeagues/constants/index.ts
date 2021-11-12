@@ -1,6 +1,7 @@
 // Mumbai Price Feeds
 
 import {BigNumber} from '@ethersproject/bignumber';
+import {ethers} from 'ethers';
 import {ChainId} from 'types/blockchain';
 
 export const DEXKIT_MULTIPLIER_HOLDING = BigNumber.from(50).mul(
@@ -50,8 +51,8 @@ export const BITBOY_TEAM = [
   },
   {
     address: '0xCB8b2c541E18AdBC8B4B8A42a3CA769f4EB72e6C',
-    label: 'J Chains'
-  }
+    label: 'J Chains',
+  },
 ];
 
 export const MumbaiPriceFeeds = [
@@ -148,7 +149,7 @@ export const MaticPriceFeeds = [
     quote: 'USD',
     tv: 'COINBASE:ALGOUSD',
   },
- /* {
+  /* {
     address: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
     base: 'AUD',
     baseName: 'Audius',
@@ -620,13 +621,51 @@ export const PriceFeeds = {
 };
 
 export const CHAMPIONS = {
-  [ChainId.Matic]: undefined,
-  [ChainId.Mumbai]: '0x05b93425E4b44c9042Ed97b7A332aB1575EbD25d',
+  [ChainId.Matic]: '',
+  [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
 };
 
-export const FIRST_ROUND_DATE = 1635773630;
-export const SECOND_ROUND_DATE = 1635168059;
-export const THIRD_ROUND_DATE = 1635168059;
+export const SALE_EARLY_FIRST_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1637211600,
+};
 
-export const EARLY_ACCESS_KIT_AMOUNT = 125;
-export const EARLY_ACCESS_BITT_AMOUNT = 1000;
+export const FIRST_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1637254800,
+};
+
+export const SALE_EARLY_SECOND_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1638421200,
+};
+
+export const SECOND_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1638422100,
+};
+
+export const SALE_EARLY_THIRD_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1639631700,
+};
+
+export const THIRD_ROUND_DATE: {[key: number]: number} = {
+  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Matic]: 1639674000,
+};
+
+export const EARLY_ACCESS_KIT_AMOUNT: {[key: number]: number} = {
+  [ChainId.Matic]: 50,
+  [ChainId.Mumbai]: 50,
+};
+
+export const EARLY_ACCESS_BITT_AMOUNT: {[key: number]: number} = {
+  [ChainId.Matic]: 200,
+  [ChainId.Mumbai]: 200,
+};
+
+export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
+  [ChainId.Matic]: ethers.utils.parseUnits('250', 'ether'),
+  [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
+};

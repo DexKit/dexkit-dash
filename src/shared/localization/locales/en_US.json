@@ -981,7 +981,11 @@
   "app.coinLeague.ended": "Ended",
   "app.coinLeague.expert": "Expert",
   "app.coinLeague.master": "Master",
-  "app.coinLeague.grandMaster": "Grand Master"
+  "app.coinLeague.grandMaster": "Grand Master",
+  "app.coinLeague.viewMore": "View more",
+  "app.coinLeague.myChampions": "My Champions",
+  "app.coinLeague.notEnoughMaticStart": "You will need at least",
+  "app.coinLeague.notEnoughMaticEnd": "MATIC to mint a champion."
 }
 
 

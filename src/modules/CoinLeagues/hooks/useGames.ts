@@ -177,6 +177,7 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
   status: string;
 }
 
+// TODO: REMOVER unused code.
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
   const {filter, accounts, orderBy, filters, status} = params;
 
@@ -203,8 +204,6 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
     let entryAmount = GET_GAME_LEVEL_AMOUNTS(
       filters?.gameLevel || GameLevel.All,
     ).toString();
-
-    console.log(entryAmount);
 
     variables.entry = entryAmount;
   }

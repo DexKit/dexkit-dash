@@ -130,7 +130,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel) => {
     case GameLevel.Expert:
       return ethers.utils.parseEther('50');
     case GameLevel.Master:
-      return ethers.utils.parseEther('100');
+      return ethers.utils.parseEther('250');
     case GameLevel.GrandMaster:
       return ethers.utils.parseEther('500');
     default:
