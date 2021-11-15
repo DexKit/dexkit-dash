@@ -71,7 +71,7 @@ export function useChampionMint() {
 
           createNotification({
             title: 'Create Champion',
-            body: `Creating a Coin Leagues Champion`,
+            body: `Creating a Coin League Champion`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, hash),
             urlCaption: 'View transaction',
