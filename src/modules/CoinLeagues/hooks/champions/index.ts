@@ -13,6 +13,7 @@ import {Token} from 'types/app';
 import {ChainId, Web3State} from 'types/blockchain';
 import {
   getChampionMetadata,
+  getChampionsTotalSupply,
   mintCoinLeaguesChampion,
 } from 'modules/CoinLeagues/services/champions';
 import {CHAMPIONS} from 'modules/CoinLeagues/constants';
@@ -321,4 +322,22 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
   }, [chainId, defaultAccount]);
 
   return {fetch, data, loading, error};
+}
+
+export function useChampionsTotalSupply(chainId?: number) {
+  const [totalSupply, setTotalSupply] = useState(0);
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      getChampionsTotalSupply(chainId).then((data) => {
+        setTotalSupply(data.totalSupply);
+      });
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [chainId]);
+
+  return {totalSupply};
 }

@@ -667,6 +667,6 @@ export const EARLY_ACCESS_BITT_AMOUNT: {[key: number]: number} = {
 };
 
 export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
-  [ChainId.Matic]: ethers.utils.parseUnits('250', 'ether'),
+  [ChainId.Matic]: ethers.utils.parseUnits('115', 'ether'),
   [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
 };

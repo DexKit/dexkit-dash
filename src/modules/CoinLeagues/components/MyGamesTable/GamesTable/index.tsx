@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Box,
+  IconButton,
   Table,
   TableBody,
   TableHead,
@@ -13,6 +14,10 @@ import TableItem from './TableItem';
 import {useStyles} from './index.style';
 import {Empty} from 'shared/components/Empty';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
+import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
+
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import LastPageIcon from '@material-ui/icons/LastPage';
 
 interface Props {
   data: any;
@@ -22,6 +27,38 @@ interface Props {
   onChangePage: (newPage: number) => void;
   onChangeRowsPerPage: (newPerPage: number) => void;
 }
+
+const TableActions = (props: any) => {
+  const {page, count, rowsPerPage, onPageChange} = props;
+
+  const handleFirstPage = (event: any) => {
+    onPageChange(event, 1);
+  };
+
+  const handleBackButtonClick = (event: any) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event: any) => {
+    onPageChange(event, page + 1);
+  };
+
+  return (
+    <Box ml={2} display='flex' alignItems='center' alignContent='center'>
+      <IconButton disabled={page === 0} onClick={handleFirstPage}>
+        <FirstPageIcon />
+      </IconButton>
+      <IconButton disabled={page === 0} onClick={handleBackButtonClick}>
+        <KeyboardArrowLeft />
+      </IconButton>
+      <IconButton
+        disabled={count < rowsPerPage}
+        onClick={handleNextButtonClick}>
+        <KeyboardArrowRight />
+      </IconButton>
+    </Box>
+  );
+};
 
 const GamesTable: React.FC<Props> = ({
   data,
@@ -58,7 +95,7 @@ const GamesTable: React.FC<Props> = ({
         <TablePagination
           className={classes.paginationDesktop}
           component='div'
-          count={data.length}
+          count={data?.length || 0}
           page={currentPage}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={rowsPerPageOptions}
@@ -68,6 +105,7 @@ const GamesTable: React.FC<Props> = ({
           onChangeRowsPerPage={(event: React.ChangeEvent<HTMLInputElement>) =>
             onChangeRowsPerPage(parseInt(event.target.value, 10))
           }
+          ActionsComponent={TableActions}
         />
       </Box>
     </>
