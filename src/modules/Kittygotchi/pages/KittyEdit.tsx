@@ -41,7 +41,7 @@ import {useIntl} from 'react-intl';
 import {useMobile} from 'hooks/useMobile';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -120,12 +120,12 @@ export const KittyEdit = () => {
   const isMobile = useMobile();
   const kitHolding = useKitHolding(account);
 
-  const kitAmount = useMemo(()=> {
-    if(kitHolding.data && kitHolding.data.length){
-      return Number(ethers.utils.formatEther(kitHolding.data[0].balance))
+  const kitAmount = useMemo(() => {
+    if (kitHolding.data && kitHolding.data.length) {
+      return Number(ethers.utils.formatEther(kitHolding.data[0].balance));
     }
     return 0;
-  }, [kitHolding?.data])
+  }, [kitHolding?.data]);
 
   const {messages} = useIntl();
 
@@ -143,9 +143,6 @@ export const KittyEdit = () => {
   useEffect(() => {
     kittygotchi.get(params.id);
   }, [params.id]);
-
-
-
 
   return (
     <>
@@ -334,6 +331,20 @@ export const KittyEdit = () => {
                       items={KittygotchiTraits[KittygotchiTraitType.EYES]}
                       onSelect={kittyStyles.handleSelectEyes}
                       value={kittyStyles.eyes}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <KittygotchiTraitSelector
+                      kitHolding={
+                        kitHolding.data && kitHolding.data?.length > 0
+                          ? kitAmount
+                          : 0
+                      }
+                      traitType={KittygotchiTraitType.CLOTHES}
+                      title={messages['app.kittygotchi.clothes'] as string}
+                      items={KittygotchiTraits[KittygotchiTraitType.CLOTHES]}
+                      onSelect={kittyStyles.handleSelectCloth}
+                      value={kittyStyles.cloth}
                     />
                   </Grid>
                   <Grid item xs={12}>

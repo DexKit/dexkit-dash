@@ -194,7 +194,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {!isMetamask() ? (
+                    {isMetamask() || isMagicProvider() ? (
                       <Grid item>
                         {chainId !== undefined ? (
                           <Grid item>

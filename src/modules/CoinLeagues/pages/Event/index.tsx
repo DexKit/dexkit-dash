@@ -7,6 +7,7 @@ import {
   Typography,
   makeStyles,
   Divider,
+  Chip,
   useTheme,
 } from '@material-ui/core';
 
@@ -31,6 +32,7 @@ import {
   GET_EARLY_ACCESS_BITT_AMOUNT,
   GET_EARLY_ACCESS_KIT_AMOUNT,
   GET_EVENT_HOLDING_AMOUNT,
+  getMaxSupplyForRound,
 } from 'modules/CoinLeagues/utils/champions';
 
 import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
@@ -44,6 +46,7 @@ import MintChampionDialog from 'modules/CoinLeagues/components/champions/dialogs
 import {useToggler} from 'hooks/useToggler';
 import {
   useChampionMint,
+  useChampionsTotalSupply,
   useChampionTokenHolding,
   useMyChampions,
 } from 'modules/CoinLeagues/hooks/champions';
@@ -93,6 +96,8 @@ export function ChampionsEvent() {
   const championTokenHolding = useChampionTokenHolding(account);
 
   const mintDialogToggler = useToggler(false);
+
+  const {totalSupply} = useChampionsTotalSupply(chainId);
 
   const championMint = useChampionMint();
 
@@ -145,7 +150,7 @@ export function ChampionsEvent() {
   }, [chainId, ethBalance]);
 
   const isElegibleForEarlyAccess = useCallback(() => {
-    return hasEnoughKit() && hasEnoughBitt();
+    return hasEnoughKit() || hasEnoughBitt();
   }, [hasEnoughKit, hasEnoughBitt]);
 
   const canMintChampion = useCallback(() => {
@@ -243,7 +248,7 @@ export function ChampionsEvent() {
                                   <strong>
                                     {GET_EARLY_ACCESS_KIT_AMOUNT(chainId)} KIT
                                   </strong>{' '}
-                                  and{' '}
+                                  or{' '}
                                   <strong>
                                     {GET_EARLY_ACCESS_BITT_AMOUNT(chainId)} BITT
                                   </strong>{' '}
@@ -393,12 +398,23 @@ export function ChampionsEvent() {
                         <Grid container spacing={4}>
                           <Grid item xs={12}>
                             <Typography gutterBottom variant='h5'>
-                              Round 1
+                              Round {getEventCurrentRound() + 1}
                             </Typography>
                             <Typography variant='body1'>
-                              In this round users will be able to create 4400
+                              In this round, users will be able to create{' '}
+                              {getMaxSupplyForRound(getEventCurrentRound())}
                               champions.
                             </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Alert severity='info'>
+                              There are only{' '}
+                              <strong>
+                                {getMaxSupplyForRound(getEventCurrentRound()) -
+                                  totalSupply}
+                              </strong>{' '}
+                              champions left to be created.
+                            </Alert>
                           </Grid>
                           {!hasEnoughMatic() ? (
                             <Grid item xs={12}>
@@ -411,6 +427,10 @@ export function ChampionsEvent() {
                           ) : null}
                           <Grid item xs={12}>
                             <MintChampionButton
+                              soldOut={
+                                totalSupply ===
+                                getMaxSupplyForRound(getEventCurrentRound())
+                              }
                               onMintChampion={handleMintChampion}
                               canMintChampion={handleCanMint}
                             />
