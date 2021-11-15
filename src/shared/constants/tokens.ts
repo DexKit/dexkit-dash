@@ -29,7 +29,6 @@ const DEXKIT_MATIC: Token = {
   logoURI: '',
 };
 
-
 const DEXKIT_MUMBAI: Token = {
   address: '0xdf2e4383363609351637d262f6963D385b387340',
   chainId: ChainId.Mumbai,
@@ -57,6 +56,15 @@ const BITTOKEN_ETH: Token = {
   logoURI: '',
 };
 
+const BITTOKEN_MUMBAI: Token = {
+  address: '0x82941691fbaee671740ed1b6a326b45081e6a011',
+  chainId: ChainId.Mumbai,
+  name: 'BITTOKEN',
+  symbol: 'BITT',
+  decimals: 18,
+  logoURI: '',
+};
+
 // a list of tokens by chain
 type DexKitTokenList = {
   readonly [chainId in ChainId]: Token;
@@ -76,6 +84,7 @@ export const DEXKIT: Partial<DexKitTokenList> = {
 export const BITTOKEN: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: BITTOKEN_ETH,
   [ChainId.Matic]: BITTOKEN_MATIC,
+  [ChainId.Mumbai]: BITTOKEN_MUMBAI,
 };
 
 export const CHAMPIONS: Partial<DexKitTokenList> = {
