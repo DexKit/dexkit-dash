@@ -224,7 +224,6 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
     variables.accounts = accounts?.map((a) => a.toLowerCase());
   } else if (filters?.isBitboy) {
     variables.isBitboyTeam = true;
-    variables.accounts = BITBOY_TEAM.map((a) => a.address.toLowerCase());
   }
 
   let gqlQuery = getWaitingGamesQuery(variables);

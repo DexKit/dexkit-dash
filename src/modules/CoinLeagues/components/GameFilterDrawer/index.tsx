@@ -316,7 +316,7 @@ export const GameFilterDrawer = (props: Props) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormControl variant='outlined' fullWidth>
               <InputLabel>
                 <IntlMessages id='app.coinLeagues.stakeAmount' />
@@ -340,7 +340,7 @@ export const GameFilterDrawer = (props: Props) => {
                 </MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12}>
             <FormControl variant='outlined' fullWidth>

@@ -180,7 +180,7 @@ export function getWaitingGamesQuery(params: any) {
 
   if (params.isBitboyTeam) {
     queryVariableParams.push('$isBitboyTeam: Boolean');
-    queryParams.push('isBitboyTeam: $isBitboyTeam');
+    whereParams.push('isBitboyTeam: $isBitboyTeam');
   }
 
   if (params.accounts) {
