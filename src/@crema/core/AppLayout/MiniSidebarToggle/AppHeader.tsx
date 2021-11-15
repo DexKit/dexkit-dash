@@ -211,8 +211,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           </Grid>
                         ) : null}
                       </Grid>
-                    ) : null}
-
+                    ) : (
+                      <Grid item>
+                        <Box
+                          className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}>
+                          {GET_CHAIN_ID_NAME(chainId)}
+                          <ExpandMoreIcon />
+                        </Box>
+                      </Grid>
+                    )}
                     {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
@@ -271,7 +280,17 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Box>
                       </ButtonBase>
                     </Grid>
-                  ) : null}
+                  ) : (
+                    <Grid item>
+                      <Box
+                        className={classes.badgeRoot}
+                        display={'flex'}
+                        alignItems={'center'}>
+                        {GET_CHAIN_ID_NAME(chainId)}
+                        <ExpandMoreIcon />
+                      </Box>
+                    </Grid>
+                  )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
                       <WalletInfo />
