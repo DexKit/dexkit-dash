@@ -175,11 +175,13 @@ export const usePlayerGames = () => {};
 
 export interface CoinLeagueGamesParams extends GamesFilterParams {
   status: string;
+  first?: number;
+  skip?: number;
 }
 
 // TODO: REMOVER unused code.
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
-  const {filter, accounts, orderBy, filters, status} = params;
+  const {filter, accounts, orderBy, filters, status, first, skip} = params;
 
   const variables: any = {};
 
@@ -187,6 +189,16 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
     if (status !== CoinLeagueGameStatus.All) {
       variables.status = status;
     }
+  }
+
+  if (skip) {
+    variables.skip = skip;
+  }
+
+  if (first) {
+    variables.first = first;
+  } else {
+    variables.first = 100;
   }
 
   const order = GET_GAME_ORDER_VARIABLES(filters?.orderByGame);

@@ -72,3 +72,19 @@ export const getChampionMetadata = (tokenId: string, chainId?: number) => {
 
   return axios.get<ChampionMetadata>(url).then((response) => response.data);
 };
+
+const CHAMPIONS_API_URL_MATIC = 'https://coinleaguechampions.dexkit.com';
+const CHAMPIONS_API_URL_MUMBAI =
+  'https://coinleaguechampions-mumbai.dexkit.com';
+
+export const getChampionsTotalSupply = (chainId?: number) => {
+  let url = `${CHAMPIONS_API_URL_MATIC}/api/total-supply`;
+
+  if (chainId === ChainId.Mumbai) {
+    url = `${CHAMPIONS_API_URL_MUMBAI}/api/total-supply`;
+  }
+
+  return axios
+    .get<{totalSupply: number}>(url)
+    .then((response) => response.data);
+};

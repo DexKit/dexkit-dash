@@ -143,6 +143,16 @@ export function getWaitingGamesQuery(params: any) {
   let queryParams = [];
   let whereParams = [];
 
+  if (params.skip) {
+    queryVariableParams.push('$skip: Int');
+    queryParams.push('skip: $skip');
+  }
+
+  if (params.first) {
+    queryVariableParams.push('$first: Int');
+    queryParams.push('first: $first');
+  }
+
   if (params.status) {
     queryVariableParams.push('$status: String!');
     whereParams.push('status: $status');
@@ -196,7 +206,7 @@ export function getWaitingGamesQuery(params: any) {
 
   let query = gql`
   query GetGames(${paramsString}) {
-    games(first: 100, where: {${whereParamsString}}, ${receiveParamsString}) {
+    games(where: {${whereParamsString}}, ${receiveParamsString}) {
         id
         type
         duration

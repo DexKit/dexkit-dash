@@ -88,7 +88,14 @@ export const useMyGamesV2 = (params: MyGamesParams) => {
     setSkipRows(currentPage * rows);
   };
 
-  const query = useCoinLeagueGames({status, accounts, filter, filters});
+  const query = useCoinLeagueGames({
+    status,
+    accounts,
+    filter,
+    filters,
+    first: rowsPerPage,
+    skip: skipRows,
+  });
 
   useEffect(() => {
     const refetchQuery = () => query.refetch();
