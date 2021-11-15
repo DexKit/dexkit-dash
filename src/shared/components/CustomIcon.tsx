@@ -12,6 +12,7 @@ import {ReactComponent as GameBoyIcon} from 'assets/images/icons/gameboy.svg';
 import {ReactComponent as UserSearchIcon} from 'assets/images/icons/user-search-menu.svg';
 import {ReactComponent as QuestionIcon} from 'assets/images/icons/question.svg';
 import {ReactComponent as GameIcon} from 'assets/images/icons/game-menu.svg';
+import {ReactComponent as JudgeIcon} from 'assets/images/icons/judge-menu.svg';
 import {ReactComponent as DexKitIcon} from 'assets/images/icons/dexkit-menu.svg';
 import {MagicpenIcon} from './Icons';
 
@@ -54,6 +55,8 @@ export const CustomIcon = (props: Props) => {
     return <GameIcon {...props} />;
   }else if (icon === 'dexkit') {
     return <DexKitIcon {...props} />;
+  }else if (icon === 'judge') {
+    return <JudgeIcon {...props} />;
   }
 
   return <></>;

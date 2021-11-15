@@ -142,6 +142,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-league/nft-room`,
         },
         {
+          id: 'mintnft',
+          title: 'Mint NFT',
+          messageId: 'sidebar.app.mint-nft',
+          type: 'item',
+          customIcon: true,
+          icon: 'judge',
+          url: `/coin-league/champions/event`,
+        },
+        {
           id: 'howtoplay',
           title: 'How to Play',
           messageId: 'sidebar.app.how-to-play',
