@@ -256,7 +256,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  {chainId !== undefined ? (
+                  {chainId !== undefined &&
+                  (isMetamask() || isMagicProvider()) ? (
                     <Grid item>
                       <ButtonBase
                         onClick={handleOpenSwitchNetwork}
