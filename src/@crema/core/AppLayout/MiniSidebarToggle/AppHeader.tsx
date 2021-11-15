@@ -218,7 +218,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           display={'flex'}
                           alignItems={'center'}>
                           {GET_CHAIN_ID_NAME(chainId)}
-                          <ExpandMoreIcon />
                         </Box>
                       </Grid>
                     )}
@@ -287,7 +286,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         display={'flex'}
                         alignItems={'center'}>
                         {GET_CHAIN_ID_NAME(chainId)}
-                        <ExpandMoreIcon />
                       </Box>
                     </Grid>
                   )}
