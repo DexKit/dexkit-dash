@@ -237,7 +237,7 @@ interface UpdaterParams {
   mouth?: string;
   nose?: string;
   ears?: string;
-  accessory?: string;
+  accessories?: string;
   body?: string;
 }
 
@@ -262,16 +262,22 @@ export function useKittygotchiUpdate() {
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit();
         }
-        const response = await update(sig, messageSigned, params, id, account, chainId);
+        const response = await update(
+          sig,
+          messageSigned,
+          params,
+          id,
+          account,
+          chainId,
+        );
         console.log(response);
-        if(response.ok && response.status === 200){
+        if (response.ok && response.status === 200) {
           if (callbacks?.onConfirmation) {
             callbacks?.onConfirmation();
           }
-        }else{
+        } else {
           throw new Error(response.statusText);
         }
-
       } catch (e) {
         console.log(e);
         if (callbacks?.onError) {
@@ -599,10 +605,10 @@ export function useKittygotchiStyleEdit() {
       body,
       ears,
       eyes,
-      nose, 
+      nose,
       mouth,
-      accessory,
-      cloth,
+      accessories: accessory,
+      clothes: cloth,
     },
   };
 }
