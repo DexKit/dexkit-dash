@@ -37,7 +37,11 @@ export const Web3Manager = () => {
           .catch(console.log);
       }
     } else {
-      if (web3Modal.cachedProvider || (isMobile() && (web3 || ethereum))) {
+      if (
+        web3Modal.cachedProvider ||
+        (isMobile() && (web3 || ethereum)) ||
+        ethereum.isMetaMask
+      ) {
         onConnectWeb3();
       }
     }
