@@ -45,7 +45,7 @@ export function getEventAccessDate(
 
 export function getMaxSupplyForRound(round: ChampionsEventRound) {
   if (round === ChampionsEventRound.FIRST) {
-    return 3300;
+    return 3300 + 1000;
   } else if (round === ChampionsEventRound.SECOND) {
     return 3300;
   } else if (round === ChampionsEventRound.THIRD) {

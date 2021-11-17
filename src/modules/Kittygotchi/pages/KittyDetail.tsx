@@ -21,7 +21,7 @@ import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink, useParams} from 'react-router-dom';
+import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {RewardDialog} from '../components/dialogs/RewardDialog';
 import {useToggler} from 'hooks/useToggler';
@@ -40,6 +40,7 @@ import CountdownSpan from 'shared/components/CountdownSpan';
 import CheckIcon from '@material-ui/icons/Check';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {Edit} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -122,13 +123,13 @@ export const KittyDetail = () => {
 
   const isMobile = useMobile();
 
-  // const history = useHistory();
+  const history = useHistory();
 
   const {createNotification} = useNotifications();
 
-  // const handleClickEdit = useCallback(() => {
-  //   history.push(`/kittygotchi/${params.id}/edit`);
-  // }, [history, params]);
+  const handleClickEdit = useCallback(() => {
+    history.push(`/kittygotchi/${params.id}/edit`);
+  }, [history, params]);
 
   const {onFeedCallback} = useKittygotchiFeed();
 
@@ -353,15 +354,13 @@ export const KittyDetail = () => {
                               />
                             </Tooltip>
                           </Grid>
-                          {/*<Grid item>
+                          <Grid item>
                             <Tooltip title='Edit (Coming soon)'>
-                              <RoundedIconButton
-                                disabled
-                                onClick={handleClickEdit}>
-                                <EditIcon />
+                              <RoundedIconButton onClick={handleClickEdit}>
+                                <Edit />
                               </RoundedIconButton>
                             </Tooltip>
-                          </Grid>*/}
+                          </Grid>
                           <Grid item>
                             <Tooltip title='Open on OpenSea'>
                               <RoundedIconButton onClick={goToOpenSea}>
