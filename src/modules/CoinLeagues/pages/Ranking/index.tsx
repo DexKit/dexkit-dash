@@ -70,7 +70,7 @@ export function Ranking() {
         </Grid>
       </Box>
       <Grid container spacing={4}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <CustomTabs
             value={value}
             onChange={handleChange}
