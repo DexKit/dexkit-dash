@@ -4,6 +4,7 @@ import championsAbi from '../constants/ABI/coinLeagueChampions.json';
 import {getEventCurrentRound, getEventHoldingAmount} from '../utils/champions';
 
 import {ChampionMetadata, ChampionsEventRound} from '../utils/types';
+import {ChainId} from 'types/blockchain';
 
 const RandomnessRequestAbi =
   'event RandomnessRequest(bytes32 keyHash, uint256 seed, bytes32 indexed jobID, address sender, uint256 fee, bytes32 requestID)';
@@ -11,6 +12,7 @@ const RandomnessRequestAbi =
 export function mintCoinLeaguesChampion(
   provider: ethers.providers.Web3Provider,
   address: string,
+  chainId?: number,
   onTransaction?: (hash: string) => void,
 ) {
   return new Promise<string>((resolve, reject) => {
@@ -22,7 +24,7 @@ export function mintCoinLeaguesChampion(
 
     let round = getEventCurrentRound();
 
-    let transactionParam = {value: getEventHoldingAmount()};
+    let transactionParam = {value: getEventHoldingAmount(chainId)};
 
     let tx = null;
 
@@ -61,10 +63,28 @@ export function mintCoinLeaguesChampion(
   });
 }
 
-export const getChampionMetadata = (tokenId: string) => {
+export const getChampionMetadata = (tokenId: string, chainId?: number) => {
+  let url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
+
+  if (chainId === ChainId.Mumbai) {
+    url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+  }
+
+  return axios.get<ChampionMetadata>(url).then((response) => response.data);
+};
+
+const CHAMPIONS_API_URL_MATIC = 'https://coinleaguechampions.dexkit.com';
+const CHAMPIONS_API_URL_MUMBAI =
+  'https://coinleaguechampions-mumbai.dexkit.com';
+
+export const getChampionsTotalSupply = (chainId?: number) => {
+  let url = `${CHAMPIONS_API_URL_MATIC}/api/total-supply`;
+
+  if (chainId === ChainId.Mumbai) {
+    url = `${CHAMPIONS_API_URL_MUMBAI}/api/total-supply`;
+  }
+
   return axios
-    .get<ChampionMetadata>(
-      `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`,
-    )
+    .get<{totalSupply: number}>(url)
     .then((response) => response.data);
 };

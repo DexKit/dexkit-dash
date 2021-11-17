@@ -194,7 +194,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {!isMetamask() ? (
+                    {isMetamask() || isMagicProvider() ? (
                       <Grid item>
                         {chainId !== undefined ? (
                           <Grid item>
@@ -211,8 +211,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           </Grid>
                         ) : null}
                       </Grid>
-                    ) : null}
-
+                    ) : (
+                      <Grid item>
+                        <Box
+                          className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}>
+                          {GET_CHAIN_ID_NAME(chainId)}
+                        </Box>
+                      </Grid>
+                    )}
                     {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
@@ -256,7 +264,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  {chainId !== undefined ? (
+                  {chainId !== undefined &&
+                  (isMetamask() || isMagicProvider()) ? (
                     <Grid item>
                       <ButtonBase
                         onClick={handleOpenSwitchNetwork}
@@ -270,7 +279,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Box>
                       </ButtonBase>
                     </Grid>
-                  ) : null}
+                  ) : (
+                    <Grid item>
+                      <Box
+                        className={classes.badgeRoot}
+                        display={'flex'}
+                        alignItems={'center'}>
+                        {GET_CHAIN_ID_NAME(chainId)}
+                      </Box>
+                    </Grid>
+                  )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
                       <WalletInfo />

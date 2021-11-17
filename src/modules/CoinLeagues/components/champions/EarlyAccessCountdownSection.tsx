@@ -7,7 +7,9 @@ import CountdownSpan from 'shared/components/CountdownSpan';
 import {
   getEventAccessDate,
   getEventCurrentRound,
+  getEventEarlyAccessDate,
 } from 'modules/CoinLeagues/utils/champions';
+import {useWeb3} from 'hooks/useWeb3';
 
 interface CountdownCardCardProps {
   elegible?: boolean;
@@ -20,6 +22,8 @@ export const EarlyAccessCountdownSection = (props: CountdownCardCardProps) => {
   const theme = useTheme();
 
   const isMobile = useMobile();
+
+  const {chainId} = useWeb3();
 
   return (
     <Grid container spacing={4}>
@@ -45,7 +49,7 @@ export const EarlyAccessCountdownSection = (props: CountdownCardCardProps) => {
               {elegible ? (
                 <CountdownSpan
                   toDate={moment.unix(
-                    getEventAccessDate(getEventCurrentRound()) - 60 * 60 * 12,
+                    getEventEarlyAccessDate(getEventCurrentRound(), 0, chainId),
                   )}
                 />
               ) : (
@@ -71,7 +75,9 @@ export const EarlyAccessCountdownSection = (props: CountdownCardCardProps) => {
         <Typography variant='h4'>
           <strong>
             <CountdownSpan
-              toDate={moment.unix(getEventAccessDate(getEventCurrentRound()))}
+              toDate={moment.unix(
+                getEventAccessDate(getEventCurrentRound(), 0, chainId),
+              )}
             />
           </strong>
         </Typography>
