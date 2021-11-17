@@ -25,9 +25,7 @@ export const KittygotchiImage = (props: Props) => {
       .then((b64: string) => {
         setImgB64(b64);
       })
-      .catch((err: any) => {
-        console.log(err);
-      });
+      .catch((err: any) => {});
   }, [images.length]);
 
   if (imgB64 && images.length > 0) {

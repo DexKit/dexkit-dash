@@ -73,9 +73,7 @@ export function getImageFromTrait(
   }
 
   if (value) {
-    let v = IMAGE_PATHS[`${dir}/${value?.toLowerCase()}.png`];
-    console.log('VALUE', traitType, value);
-    return v;
+    return IMAGE_PATHS[`${dir}/${value?.toLowerCase()}.png`];
   }
 
   return '';
