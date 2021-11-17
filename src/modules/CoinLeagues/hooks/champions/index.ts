@@ -181,7 +181,11 @@ export const useChampionTokenHolding = (account?: string) => {
         'function balanceOf(address _owner) public view returns (uint256 balance)',
       ];
 
-      if (account && chainId) {
+      if (
+        account &&
+        chainId &&
+        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      ) {
         const DexKit = DEXKIT[chainId as ChainId];
         const Bitt = BITTOKEN[chainId as ChainId];
 
