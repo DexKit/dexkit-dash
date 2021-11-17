@@ -330,7 +330,7 @@ export function useChampionsTotalSupply(chainId?: number) {
   useEffect(() => {
     let interval = setInterval(() => {
       getChampionsTotalSupply(chainId).then((data) => {
-        setTotalSupply(data.totalSupply);
+        setTotalSupply(data.totalSupply + 1);
       });
     }, 2000);
 
