@@ -302,7 +302,7 @@ export function ChampionsEvent() {
                                                 </Typography>
                                               </Grid>
                                               <Grid item>
-                                                {hasEnoughBitt() ? (
+                                                {hasEnoughKit() ? (
                                                   <Typography variant='h4'>
                                                     <CheckCircleOutlineIcon
                                                       style={{
@@ -361,7 +361,7 @@ export function ChampionsEvent() {
                                                 </Typography>
                                               </Grid>
                                               <Grid item>
-                                                {hasEnoughKit() ? (
+                                                {hasEnoughBitt() ? (
                                                   <Typography variant='h4'>
                                                     <CheckCircleOutlineIcon
                                                       style={{
@@ -402,21 +402,25 @@ export function ChampionsEvent() {
                             </Typography>
                             <Typography variant='body1'>
                               In this round, users will be able to create{' '}
-                              {getMaxSupplyForRound(getEventCurrentRound())}
+                              {getMaxSupplyForRound(getEventCurrentRound()) -
+                                1000}{' '}
                               champions.
                             </Typography>
                           </Grid>
-                          <Grid item xs={12}>
-                            <Alert severity='info'>
-                              There are only{' '}
-                              <strong>
-                                {getMaxSupplyForRound(getEventCurrentRound()) -
-                                  totalSupply}
-                              </strong>{' '}
-                              champions left to be created.
-                            </Alert>
-                          </Grid>
-                          {!hasEnoughMatic() ? (
+                          {isOnMaticChain() ? (
+                            <Grid item xs={12}>
+                              <Alert severity='info'>
+                                There are only{' '}
+                                <strong>
+                                  {getMaxSupplyForRound(
+                                    getEventCurrentRound(),
+                                  ) - totalSupply}
+                                </strong>{' '}
+                                champions left to be created.
+                              </Alert>
+                            </Grid>
+                          ) : null}
+                          {!hasEnoughMatic() && isOnMaticChain() ? (
                             <Grid item xs={12}>
                               <Alert severity='warning'>
                                 <IntlMessages id='app.coinLeague.notEnoughMaticStart' />{' '}
@@ -469,7 +473,7 @@ export function ChampionsEvent() {
                     ))
                   ) : (
                     <>
-                      {myChampions.data?.length === 0 ? (
+                      {myChampions.data?.length === 0 || !isOnMaticChain() ? (
                         <Grid item xs={12}>
                           <Paper>
                             <Box p={4}>
