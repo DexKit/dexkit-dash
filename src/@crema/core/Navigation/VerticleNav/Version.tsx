@@ -6,19 +6,14 @@ import useStyles from './VerticalItem.style';
 import {useHistory} from 'react-router';
 
 export const Version = () => {
-  const history = useHistory();
-  const onClick = () => {
-    history.push('/changelog');
-  };
+
   const level = 0;
   const classes = useStyles({level});
   return (
     <ListItem
-      button
-      onClick={onClick}
       component={NavLink}
       className={clsx(classes.navItem, 'nav-item')}>
-      <ListItemText primary={'v0.0.6-7'} classes={{primary: 'nav-item-text'}} />
+      <ListItemText primary={'v0.0.3'} classes={{primary: 'nav-item-text'}} />
     </ListItem>
   );
 };

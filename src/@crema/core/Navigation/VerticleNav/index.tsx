@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 // import routesConfig from '../../../../modules/routesConfig';
 import VerticalCollapse from './VerticalCollapse';
 import {DexKitPowered} from './DexKit';
+import {Version} from './Version';
 import VerticalItem from './VerticalItem';
 import VerticalNavGroup from './VerticalNavGroup';
 import VerticalExternal from './VerticaIExternal';
@@ -34,7 +35,7 @@ const Navigation: React.FC<NavigationProps> = () => {
       ))}
      
        < DexKitPowered />
-    {/*     <Version />*/}
+        <Version />
     </List>
   );
 };

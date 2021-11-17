@@ -1,7 +1,6 @@
 react-sortable-hoc# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 /.vscode/*
-/.firebase
 # dependencies
 /node_modules
 /.pnp
@@ -16,6 +15,7 @@ react-sortable-hoc# See https://help.github.com/articles/ignoring-files/ for mor
 /.idea/*
 *.swp
 /.firebase
+/.firebase/*
 # testing
 /coverage
 
