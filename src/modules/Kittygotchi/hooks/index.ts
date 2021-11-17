@@ -359,7 +359,7 @@ export const useKittygotchiV2 = () => {
     async (id?: string) => {
       setIsLoading(true);
 
-      getClient(chainId)
+      return getClient(chainId)
         .query<{token: any}>({
           query: GET_KITTYGOTCHI,
           variables: {id: id?.toLowerCase()},
@@ -387,9 +387,15 @@ export const useKittygotchiV2 = () => {
             data.image = getNormalizedUrl(metadata.image);
           }
 
+          if (metadata.attributes) {
+            data.attributes = metadata.attributes;
+          }
+
           setData(data);
 
           setIsLoading(false);
+
+          return data;
         })
         .catch((err: any) => {
           setError(err);
@@ -584,7 +590,51 @@ export function useKittygotchiStyleEdit() {
     return !cloth && !eyes && !mouth && !nose && !ears && !body && !accessory;
   }, [cloth, eyes, mouth, nose, ears, body, accessory]);
 
+  const fromTraits = useCallback(
+    (traits: {value: string; trait_type: string}[]) => {
+      for (let t of traits) {
+        let traitType = t.trait_type.toLowerCase();
+
+        if (
+          traitType === 'attack' ||
+          traitType === 'defense' ||
+          traitType === 'run'
+        ) {
+          continue;
+        }
+
+        let value = t.value.toLowerCase().replace(new RegExp(' ', 'g'), '-');
+
+        switch (traitType) {
+          case 'eyes':
+            setEyes(value);
+            break;
+          case 'ears':
+            setEars(value);
+            break;
+          case 'clothes':
+            setCloth(value);
+            break;
+          case 'mouth':
+            setMouth(value);
+            break;
+          case 'body':
+            setBody(value);
+            break;
+          case 'nose':
+            setNose(value);
+            break;
+          case 'accessories':
+            setAccessory(value);
+            break;
+        }
+      }
+    },
+    [],
+  );
+
   return {
+    fromTraits,
     isEmpty,
     getImageArray,
     handleSelectCloth,
