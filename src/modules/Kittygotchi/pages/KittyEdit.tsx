@@ -166,8 +166,14 @@ export const KittyEdit = () => {
   }, []);
 
   useEffect(() => {
-    kittygotchi.get(params.id);
-  }, [params.id]);
+    if (chainId && (chainId === ChainId.Matic || chainId === ChainId.Mumbai)) {
+      kittygotchi.get(params.id).then((data: any) => {
+        if (data) {
+          kittyStyles.fromTraits(data.attributes);
+        }
+      });
+    }
+  }, [chainId, params.id]);
 
   return (
     <>
