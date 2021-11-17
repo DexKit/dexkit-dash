@@ -19,9 +19,10 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import {useToggler} from 'hooks/useToggler';
 import GameFilterDrawer from '../GameFilterDrawer';
 import {useMobile} from 'hooks/useMobile';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 const MyGamesTable: React.FC = () => {
-  const {account} = useWeb3();
+  const account = useDefaultAccount();
   const [status, setStatus] = useState<CoinLeagueGameStatus>(
     CoinLeagueGameStatus.All,
   );
@@ -41,6 +42,7 @@ const MyGamesTable: React.FC = () => {
     accounts: account ? [account] : undefined,
     filters: filtersState,
     status,
+    player: account,
   });
 
   const handleClickAll = useCallback(() => {

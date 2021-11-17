@@ -67,11 +67,11 @@ export const KittygotchiTraits = {
   ],
   [KittygotchiTraitType.CLOTHES]: [
     {
-      value: 'Dance',
+      value: 'dance',
       holding: 20,
     },
     {
-      value: 'Job',
+      value: 'job',
       holding: 50,
     },
     {
@@ -196,6 +196,7 @@ export const IMAGE_PATHS: any = {
   'mouth/cute.png': require('assets/images/kittygotchi/mouth/cute.png'),
   'mouth/happy.png': require('assets/images/kittygotchi/mouth/happy.png'),
   'mouth/over-the-moon.png': require('assets/images/kittygotchi/mouth/over-the-moon.png'),
+  'mouth/sad.png': require('assets/images/kittygotchi/mouth/sad.png'),
   'nose/ellipse.png': require('assets/images/kittygotchi/nose/ellipse.png'),
   'nose/fan.png': require('assets/images/kittygotchi/nose/fan.png'),
   'nose/pug-nose.png': require('assets/images/kittygotchi/nose/pug-nose.png'),

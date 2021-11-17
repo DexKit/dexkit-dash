@@ -67,10 +67,12 @@ export const useMyGames = (filter?: FilterPlayerGame, accounts?: string[]) => {
   };
 };
 
-interface MyGamesParams extends CoinLeagueGamesParams {}
+interface MyGamesParams extends CoinLeagueGamesParams {
+  player?: string;
+}
 
 export const useMyGamesV2 = (params: MyGamesParams) => {
-  const {status, filters, filter, accounts} = params;
+  const {status, filters, filter, accounts, player} = params;
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
@@ -89,6 +91,7 @@ export const useMyGamesV2 = (params: MyGamesParams) => {
   };
 
   const query = useCoinLeagueGames({
+    player: player,
     status,
     accounts,
     filter,

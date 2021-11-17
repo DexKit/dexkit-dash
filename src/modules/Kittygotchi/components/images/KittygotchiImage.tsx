@@ -21,7 +21,6 @@ export const KittygotchiImage = (props: Props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(images);
     mergeImages(images, {})
       .then((b64: string) => {
         setImgB64(b64);
@@ -29,7 +28,7 @@ export const KittygotchiImage = (props: Props) => {
       .catch((err: any) => {
         console.log(err);
       });
-  }, [images]);
+  }, [images.length]);
 
   if (imgB64 && images.length > 0) {
     return (
