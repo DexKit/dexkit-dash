@@ -241,7 +241,7 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
   }
 
   if (player) {
-    variables.player = player;
+    variables.player = player.toLowerCase();
   }
 
   let gqlQuery = getWaitingGamesQuery(variables);
