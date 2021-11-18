@@ -38,11 +38,10 @@ export function register(config?: Config) {
 
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-      if(window.ethereum.isTrust){
+      if (window.ethereum && window.ethereum.isTrust) {
         console.log('Disable service workers on Trust');
         return;
       }
-
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
