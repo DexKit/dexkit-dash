@@ -31,6 +31,7 @@ import {Web3State} from 'types/blockchain';
 import {hasLondonHardForkSupport} from 'utils/blockchain';
 import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {Alert} from '@material-ui/lab';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -50,9 +51,12 @@ export const TransactionConfirmDialog = (
 ) => {
   const {data, onCancel, onConfirm} = props;
 
+  const [isInsufficientFunds, setIsInsufficientFunds] = useState(false);
+
   const [values, setValues] = useState<ValuesType>({});
 
   const handleCancel = useCallback(() => {
+    setIsInsufficientFunds(false);
     if (onCancel) {
       onCancel();
     }
@@ -147,7 +151,12 @@ export const TransactionConfirmDialog = (
             if (params.gas) {
               vals.gasLimit = BigNumber.from(parseInt(params.gas, 16));
             } else {
-              vals.gasLimit = await pr.estimateGas(params);
+              try {
+                vals.gasLimit = await pr.estimateGas(params);
+              } catch (err) {
+                vals.gasLimit = BigNumber.from(21000);
+                setIsInsufficientFunds(true);
+              }
             }
 
             if (chainId && hasLondonHardForkSupport(chainId)) {
@@ -219,135 +228,147 @@ export const TransactionConfirmDialog = (
         </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <Box
-          mb={4}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography variant='body1'>Account</Typography>
-          <Typography variant='body1' color='textSecondary'>
-            {account ? truncateAddress(account) : null}
-          </Typography>
-        </Box>
-        <Box
-          mb={4}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography variant='body1'>Balance</Typography>
-          <Typography variant='body1' color='textSecondary'>
-            {Number(ethers.utils.formatEther(balance || '0')).toFixed(4)}{' '}
-            {GetNativeCoinFromNetworkName(network)}
-          </Typography>
-        </Box>
-        <Box mb={4}>
-          <Divider />
-        </Box>
-        <Box
-          mb={4}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography variant='body1'>Gas cost</Typography>
-          <Typography variant='body1' color='textSecondary'>
-            {gasCost(values)} {GetNativeCoinFromNetworkName(network)}
-          </Typography>
-        </Box>
-        <Box
-          mb={4}
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Typography variant='body1'>Total cost</Typography>
-          <Typography variant='body1' color='textSecondary'>
-            ${(coinPrice.data || 0) * gasCost(values)} USD
-          </Typography>
-        </Box>
-
-        <Paper variant='outlined'>
-          <Box p={4}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
             <Box
               display='flex'
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
-              <Typography>Advanced</Typography>
-              <IconButton size='small' onClick={handleToggleAdvanced}>
-                {showAdvanced ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
+              <Typography variant='body1'>Account</Typography>
+              <Typography variant='body1' color='textSecondary'>
+                {account ? truncateAddress(account) : null}
+              </Typography>
             </Box>
-            <Collapse in={showAdvanced}>
-              <Box mt={4}>
-                <Grid container spacing={4}>
-                  <Grid item xs={12}>
-                    <TextField
-                      size='small'
-                      value={values.gasLimit?.toNumber() || 0}
-                      onChange={handleChange}
-                      name='gasLimit'
-                      fullWidth
-                      variant='outlined'
-                      label='Gas Limit'
-                    />
-                  </Grid>
-                  {isEIP1559() ? (
-                    <>
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography variant='body1'>Balance</Typography>
+              <Typography variant='body1' color='textSecondary'>
+                {Number(ethers.utils.formatEther(balance || '0')).toFixed(4)}{' '}
+                {GetNativeCoinFromNetworkName(network)}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography variant='body1'>Gas cost</Typography>
+              <Typography variant='body1' color='textSecondary'>
+                {gasCost(values)} {GetNativeCoinFromNetworkName(network)}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Typography variant='body1'>Total cost</Typography>
+              <Typography variant='body1' color='textSecondary'>
+                ${(coinPrice.data || 0) * gasCost(values)} USD
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper variant='outlined'>
+              <Box p={4}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  alignContent='center'
+                  justifyContent='space-between'>
+                  <Typography>Advanced</Typography>
+                  <IconButton size='small' onClick={handleToggleAdvanced}>
+                    {showAdvanced ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                </Box>
+                <Collapse in={showAdvanced}>
+                  <Box mt={4}>
+                    <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <TextField
                           size='small'
-                          value={ethers.utils.formatUnits(
-                            values.maxPriorityFeePerGas?.toString() || '0',
-                            'gwei',
-                          )}
+                          value={values.gasLimit?.toNumber() || 0}
                           onChange={handleChange}
-                          name='maxPriorityFeePerGas'
+                          name='gasLimit'
                           fullWidth
                           variant='outlined'
-                          label='Max Priority Fee'
+                          label='Gas Limit'
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          size='small'
-                          value={ethers.utils.formatUnits(
-                            values.maxFeePerGas?.toString() || '0',
-                            'gwei',
-                          )}
-                          onChange={handleChange}
-                          name='maxFeePerGas'
-                          fullWidth
-                          variant='outlined'
-                          label='Max fee'
-                        />
-                      </Grid>
-                    </>
-                  ) : (
-                    <>
-                      <Grid item xs={12}>
-                        <TextField
-                          size='small'
-                          value={ethers.utils.formatUnits(
-                            values.gasPrice?.toString() || '0',
-                            'gwei',
-                          )}
-                          onChange={handleChange}
-                          name='gasPrice'
-                          fullWidth
-                          variant='outlined'
-                          label='Gas Price'
-                        />
-                      </Grid>
-                    </>
-                  )}
-                </Grid>
+                      {isEIP1559() ? (
+                        <>
+                          <Grid item xs={12}>
+                            <TextField
+                              size='small'
+                              value={ethers.utils.formatUnits(
+                                values.maxPriorityFeePerGas?.toString() || '0',
+                                'gwei',
+                              )}
+                              onChange={handleChange}
+                              name='maxPriorityFeePerGas'
+                              fullWidth
+                              variant='outlined'
+                              label='Max Priority Fee'
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              size='small'
+                              value={ethers.utils.formatUnits(
+                                values.maxFeePerGas?.toString() || '0',
+                                'gwei',
+                              )}
+                              onChange={handleChange}
+                              name='maxFeePerGas'
+                              fullWidth
+                              variant='outlined'
+                              label='Max fee'
+                            />
+                          </Grid>
+                        </>
+                      ) : (
+                        <>
+                          <Grid item xs={12}>
+                            <TextField
+                              size='small'
+                              value={ethers.utils.formatUnits(
+                                values.gasPrice?.toString() || '0',
+                                'gwei',
+                              )}
+                              onChange={handleChange}
+                              name='gasPrice'
+                              fullWidth
+                              variant='outlined'
+                              label='Gas Price'
+                            />
+                          </Grid>
+                        </>
+                      )}
+                    </Grid>
+                  </Box>
+                </Collapse>
               </Box>
-            </Collapse>
-          </Box>
-        </Paper>
+            </Paper>
+          </Grid>
+          {isInsufficientFunds && (
+            <Grid item xs={12}>
+              <Alert severity='error'>Insufficient funds</Alert>
+            </Grid>
+          )}
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button

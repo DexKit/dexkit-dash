@@ -64,6 +64,10 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
     onSelectChain(NetworkCodes.Matic);
   }, [onSelectChain]);
 
+  // const handleRopsten = useCallback(() => {
+  //   onSelectChain(NetworkCodes.Ropsten);
+  // }, [onSelectChain]);
+
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='xs'>
       <DialogTitle>
