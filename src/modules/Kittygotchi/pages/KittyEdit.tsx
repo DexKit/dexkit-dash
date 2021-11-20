@@ -42,6 +42,7 @@ import {useMobile} from 'hooks/useMobile';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import {ethers} from 'ethers';
+import {Edit} from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -54,6 +55,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       minHeight: theme.spacing(60),
     },
+  },
+  coinsLogo: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
+  coinsLogoWrapper: {
+    background: theme.palette.background.default,
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    borderRadius: '50%',
   },
 }));
 
@@ -72,6 +87,8 @@ export const KittyEdit = () => {
   //TODO: fix this
   /* eslint-disable */
   const [hasChange, setHasChange] = useState(true);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -140,9 +157,23 @@ export const KittyEdit = () => {
     return submitState === SubmitState.Confirmed;
   }, [submitState]);
 
+  const handleEdit = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false);
+  }, []);
+
   useEffect(() => {
-    kittygotchi.get(params.id);
-  }, [params.id]);
+    if (chainId && (chainId === ChainId.Matic || chainId === ChainId.Mumbai)) {
+      kittygotchi.get(params.id).then((data: any) => {
+        if (data) {
+          kittyStyles.fromTraits(data.attributes);
+        }
+      });
+    }
+  }, [chainId, params.id]);
 
   return (
     <>
@@ -236,33 +267,56 @@ export const KittyEdit = () => {
                       </Box>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12}>
-                    {!isMobile ? (
-                      <Button
-                        disabled={isSubmitting() || !hasChange}
-                        onClick={onUpdateGotchi}
-                        fullWidth
-                        startIcon={
-                          isSubmitting() ? (
-                            <CircularProgress
-                              color='inherit'
-                              size={theme.spacing(7)}
-                            />
-                          ) : (
-                            <DoneIcon />
-                          )
-                        }
-                        variant='contained'
-                        color='primary'>
-                        <IntlMessages id='app.kittygotchi.save' />
-                      </Button>
-                    ) : null}
-                  </Grid>
+                  {!isMobile ? (
+                    <Grid item xs={12}>
+                      {isEditing ? (
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <Button
+                              disabled={isSubmitting() || !hasChange}
+                              onClick={onUpdateGotchi}
+                              fullWidth
+                              startIcon={
+                                isSubmitting() ? (
+                                  <CircularProgress
+                                    color='inherit'
+                                    size={theme.spacing(7)}
+                                  />
+                                ) : (
+                                  <DoneIcon />
+                                )
+                              }
+                              variant='contained'
+                              color='primary'>
+                              <IntlMessages id='app.kittygotchi.save' />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button
+                              onClick={handleCancelEdit}
+                              variant='contained'
+                              fullWidth>
+                              <IntlMessages id='app.kittygotchi.cancel' />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        <Button
+                          fullWidth
+                          onClick={handleEdit}
+                          variant='contained'
+                          color='primary'
+                          startIcon={<Edit />}>
+                          <IntlMessages id='app.kittygotchi.edit' />
+                        </Button>
+                      )}
+                    </Grid>
+                  ) : null}
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <KittygotchiTraitSelector
                       defaultExpanded
                       kitHolding={
@@ -276,6 +330,31 @@ export const KittyEdit = () => {
                       onSelect={kittyStyles.handleSelectBody}
                       value={kittyStyles?.body}
                     />
+                  </Grid> */}
+                  <Grid item xs={12}>
+                    <Paper>
+                      <Box>
+                        <Grid
+                          container
+                          spacing={2}
+                          justifyContent='center'
+                          alignItems='center'
+                          alignContent='center'>
+                          <Grid item>
+                            <Box className={classes.coinsLogoWrapper}>
+                              <img
+                                alt=''
+                                className={classes.coinsLogo}
+                                src={require('assets/images/dexkit-logo-icon.svg')}
+                              />
+                            </Box>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant='h4'></Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Paper>
                   </Grid>
                   <Grid item xs={12}>
                     <KittygotchiTraitSelector
@@ -365,24 +444,35 @@ export const KittyEdit = () => {
               </Grid>
               {isMobile ? (
                 <Grid item xs={12}>
-                  <Button
-                    disabled={isSubmitting() || !hasChange}
-                    onClick={onUpdateGotchi}
-                    fullWidth
-                    startIcon={
-                      isSubmitting() ? (
-                        <CircularProgress
-                          color='inherit'
-                          size={theme.spacing(7)}
-                        />
-                      ) : (
-                        <DoneIcon />
-                      )
-                    }
-                    variant='contained'
-                    color='primary'>
-                    <IntlMessages id='app.kittygotchi.save' />
-                  </Button>
+                  {isEditing ? (
+                    <Button
+                      disabled={isSubmitting() || !hasChange}
+                      onClick={onUpdateGotchi}
+                      fullWidth
+                      startIcon={
+                        isSubmitting() ? (
+                          <CircularProgress
+                            color='inherit'
+                            size={theme.spacing(7)}
+                          />
+                        ) : (
+                          <DoneIcon />
+                        )
+                      }
+                      variant='contained'
+                      color='primary'>
+                      <IntlMessages id='app.kittygotchi.save' />
+                    </Button>
+                  ) : (
+                    <Button
+                      fullWidth
+                      onClick={handleEdit}
+                      variant='contained'
+                      color='primary'
+                      startIcon={<Edit />}>
+                      <IntlMessages id='app.kittygotchi.edit' />
+                    </Button>
+                  )}
                 </Grid>
               ) : null}
             </Grid>

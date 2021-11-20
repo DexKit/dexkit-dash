@@ -22,22 +22,22 @@ export function getEventAccessDate(
   offset: number = 0,
   chainId?: number,
 ): number {
-  if (chainId) {
-    if (chainId !== ChainId.Matic && chainId !== ChainId.Mumbai) {
-      return 0;
-    }
+  let currChain = chainId ? chainId : ChainId.Matic;
 
-    if (round === ChampionsEventRound.FIRST) {
-      return FIRST_ROUND_DATE[chainId] - offset;
-    }
+  if (chainId !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
 
-    if (round === ChampionsEventRound.SECOND) {
-      return SECOND_ROUND_DATE[chainId] - offset;
-    }
+  if (round === ChampionsEventRound.FIRST) {
+    return FIRST_ROUND_DATE[currChain] - offset;
+  }
 
-    if (round === ChampionsEventRound.THIRD) {
-      return THIRD_ROUND_DATE[chainId] - offset;
-    }
+  if (round === ChampionsEventRound.SECOND) {
+    return SECOND_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.THIRD) {
+    return THIRD_ROUND_DATE[currChain] - offset;
   }
 
   return 0;
@@ -45,7 +45,7 @@ export function getEventAccessDate(
 
 export function getMaxSupplyForRound(round: ChampionsEventRound) {
   if (round === ChampionsEventRound.FIRST) {
-    return 3300;
+    return 3300 + 1000;
   } else if (round === ChampionsEventRound.SECOND) {
     return 3300;
   } else if (round === ChampionsEventRound.THIRD) {
@@ -60,22 +60,22 @@ export function getEventEarlyAccessDate(
   offset: number = 0,
   chainId?: number,
 ): number {
-  if (chainId) {
-    if (chainId !== ChainId.Matic && chainId !== ChainId.Mumbai) {
-      return 0;
-    }
+  let currChain = chainId ? chainId : ChainId.Matic;
 
-    if (round === ChampionsEventRound.FIRST) {
-      return SALE_EARLY_FIRST_ROUND_DATE[chainId] - offset;
-    }
+  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
 
-    if (round === ChampionsEventRound.SECOND) {
-      return SALE_EARLY_SECOND_ROUND_DATE[chainId] - offset;
-    }
+  if (round === ChampionsEventRound.FIRST) {
+    return SALE_EARLY_FIRST_ROUND_DATE[currChain] - offset;
+  }
 
-    if (round === ChampionsEventRound.THIRD) {
-      return SALE_EARLY_THIRD_ROUND_DATE[chainId] - offset;
-    }
+  if (round === ChampionsEventRound.SECOND) {
+    return SALE_EARLY_SECOND_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.THIRD) {
+    return SALE_EARLY_THIRD_ROUND_DATE[currChain] - offset;
   }
 
   return 0;
@@ -85,11 +85,17 @@ export function getEventEarlyAccessDate(
 export function getEventHoldingAmount(
   chainId?: number,
 ): ethers.BigNumber | undefined {
-  if (chainId) {
+  let currChain = chainId ? chainId : ChainId.Matic;
+
+  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
+
+  if (currChain) {
     return EVENT_HOLDING_AMOUNT[chainId as ChainId];
   }
 
-  return undefined;
+  return EVENT_HOLDING_AMOUNT[ChainId.Matic];
 }
 
 export function GET_EVENT_HOLDING_AMOUNT(chanId?: number) {
@@ -109,7 +115,7 @@ export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number) {
     }
   }
 
-  return 0;
+  return EARLY_ACCESS_KIT_AMOUNT[ChainId.Matic];
 }
 
 export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number) {
@@ -119,5 +125,5 @@ export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number) {
     }
   }
 
-  return 0;
+  return EARLY_ACCESS_BITT_AMOUNT[ChainId.Matic];
 }

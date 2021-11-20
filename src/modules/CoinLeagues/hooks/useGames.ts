@@ -177,11 +177,13 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
   status: string;
   first?: number;
   skip?: number;
+  player?: string;
 }
 
 // TODO: REMOVER unused code.
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
-  const {filter, accounts, orderBy, filters, status, first, skip} = params;
+  const {filter, accounts, orderBy, filters, status, first, skip, player} =
+    params;
 
   const variables: any = {};
 
@@ -236,6 +238,10 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
     variables.accounts = accounts?.map((a) => a.toLowerCase());
   } else if (filters?.isBitboy) {
     variables.isBitboyTeam = true;
+  }
+
+  if (player) {
+    variables.player = player.toLowerCase();
   }
 
   let gqlQuery = getWaitingGamesQuery(variables);

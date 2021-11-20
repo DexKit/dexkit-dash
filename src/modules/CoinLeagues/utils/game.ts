@@ -138,10 +138,19 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel) => {
   }
 };
 
+export function renderEarningsField(params: string) {
+  return `earnings(where: {${params}}){
+    place
+    amount
+    claimed 
+  }`;
+}
+
 export function getWaitingGamesQuery(params: any) {
   let queryVariableParams = [];
   let queryParams = [];
   let whereParams = [];
+  let earningsWhere = [];
 
   if (params.skip) {
     queryVariableParams.push('$skip: Int');
@@ -198,11 +207,18 @@ export function getWaitingGamesQuery(params: any) {
     whereParams.push('playerAddresses_contains: $accounts');
   }
 
+  if (params.player) {
+    queryVariableParams.push('$player: String');
+    earningsWhere.push('player_contains: $player');
+  }
+
   let paramsString = queryVariableParams.join(', ');
 
   let receiveParamsString = queryParams.join(', ');
 
   let whereParamsString = whereParams.join(', ');
+
+  let earningsWhereString = earningsWhere.join(', ');
 
   let query = gql`
   query GetGames(${paramsString}) {
@@ -217,6 +233,7 @@ export function getWaitingGamesQuery(params: any) {
         entry
         startedAt
         endedAt
+        ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
       }
   }
 `;

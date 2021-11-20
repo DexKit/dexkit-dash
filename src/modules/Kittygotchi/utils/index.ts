@@ -48,8 +48,6 @@ export function getImageFromTrait(
 ) {
   let dir = '';
 
-  console.log('entraaa aqui', traitType === KittygotchiTraitType.CLOTHES);
-
   switch (traitType) {
     case KittygotchiTraitType.ACESSOIRES:
       dir = 'accessories';
@@ -59,7 +57,6 @@ export function getImageFromTrait(
       break;
     case KittygotchiTraitType.CLOTHES:
       dir = 'clothes';
-      console.log('entraaa aqui');
       break;
     case KittygotchiTraitType.EARS:
       dir = 'ears';
@@ -77,9 +74,9 @@ export function getImageFromTrait(
 
   if (value) {
     return IMAGE_PATHS[`${dir}/${value?.toLowerCase()}.png`];
-  } else {
-    return '';
   }
+
+  return '';
 }
 
 export function getKittygotchiMetadataEndpoint(chainId: number) {

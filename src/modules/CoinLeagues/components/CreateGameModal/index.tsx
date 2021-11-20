@@ -18,14 +18,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
-import {useCoinLeaguesFactory, useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {
+  useCoinLeaguesFactory,
+  useCoinLeaguesFactoryRoutes,
+} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {ButtonState} from '../ButtonState';
-import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -96,56 +102,81 @@ const CreateGameModal = (props: Props) => {
   const [entryAmount, setEntryAmount] = useState<number>();
   const [duration, setGameDuration] = useState<number>();
   const [totalPlayers, setTotalPlayers] = useState<number>();
+  const [totalGames, setTotalGames] = useState<number>(1);
+  const [submittedGames, setSubmittedGames] = useState<number>(0);
+  const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
 
- /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
   const onCreateGame = useCallback(
     (ev?: any) => {
       if (totalPlayers && entryAmount && duration && coins) {
-        setSubmitState(SubmitState.WaitingWallet);
-        const onSubmitTx = (tx: string) => {
-          setTx(tx);
-          setSubmitState(SubmitState.Submitted);
-        };
-        const onConfirmTx = () => {
-          setSubmitState(SubmitState.Confirmed);
-          refetchCreated().then(
-            (r) => {
-              if(r.data && r.data[0].length){
-                // Sent user to created game
-                history.push(enterGameRoute(`${r.data[0][r.data[0].length-1]}`))
+        setSubmittedGames(0);
+        setConfirmedGames(0);
+        let confirmed = 0;
+        let submitted = 0
+        for (let index = 0; index < totalGames; index++) {
+          setSubmitState(SubmitState.WaitingWallet);
+          const onSubmitTx = (tx: string) => {
+            confirmed ++;
+            setSubmittedGames(confirmed);
+            setTx(tx);
+            setSubmitState(SubmitState.Submitted);
+          };
+          const onConfirmTx = () => {
+            submitted ++;
+            setConfirmedGames(submitted);
+            setSubmitState(SubmitState.Confirmed);
+            refetchCreated().then((r) => {
+              if (totalGames === 1) {
+                if (r.data && r.data[0].length) {
+                  // Sent user to created game
+                  history.push(
+                    enterGameRoute(`${r.data[0][r.data[0].length - 1]}`),
+                  );
+                }
               }
+            });
+          };
+          const onError = () => {
+            setSubmitState(SubmitState.Error);
+            setTimeout(() => {
+              setSubmitState(SubmitState.None);
+            }, 3000);
+          };
 
-            }
-          );
-        };
-        const onError = () => {
-          setSubmitState(SubmitState.Error);
-          setTimeout(() => {
-            setSubmitState(SubmitState.None);
-          }, 3000);
-        };
-
-        const params: GameParams = {
-          numPlayers: totalPlayers,
-          duration,
-          amountUnit: ethers.utils.parseEther(String(entryAmount)),
-          numCoins: coins,
-          abortTimestamp: Math.round(
-            new Date().getTime() / 1000 + duration * 3,
-          ),
-          type: gameType === 'winner-game' ? 0 : 1
-        };
-        onGameCreateCallback(params, {
-          onConfirmation: onConfirmTx,
-          onError,
-          onSubmit: onSubmitTx,
-        });
+          const params: GameParams = {
+            numPlayers: totalPlayers,
+            duration,
+            amountUnit: ethers.utils.parseEther(String(entryAmount)),
+            numCoins: coins,
+            abortTimestamp: Math.round(
+              new Date().getTime() / 1000 + duration * 3,
+            ),
+            type: gameType === 'winner-game' ? 0 : 1,
+          };
+          onGameCreateCallback(params, {
+            onConfirmation: onConfirmTx,
+            onError,
+            onSubmit: onSubmitTx,
+          });
+        }
       }
     },
-    [coins, gameType, entryAmount, duration, totalPlayers, enterGameRoute, history, onGameCreateCallback, refetchCreated],
+    [
+      coins,
+      gameType,
+      entryAmount,
+      duration,
+      totalPlayers,
+      enterGameRoute,
+      history,
+      onGameCreateCallback,
+      refetchCreated,
+      totalGames
+    ],
   );
 
   const goToExplorer = useCallback(
@@ -205,14 +236,14 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-             {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
+              {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
               <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
               <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
               <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
               <MenuItem value={50}>Expert - 50 Matic</MenuItem>
               <MenuItem value={250}>Master - 250 Matic</MenuItem>
-           {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
+              {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
             </Select>
           </FormControl>
         </Grid>
@@ -229,7 +260,7 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-        {/*   <MenuItem value={60 * 5}>5 minutes</MenuItem>*/}
+              {/*   <MenuItem value={60 * 5}>5 minutes</MenuItem>*/}
               <MenuItem value={60 * 60}>1 hr</MenuItem>
               <MenuItem value={4 * 60 * 60}>4 hrs</MenuItem>
               <MenuItem value={8 * 60 * 60}>8 hrs</MenuItem>
@@ -327,6 +358,56 @@ const CreateGameModal = (props: Props) => {
             </RadioGroup>
           </FormControl>
         </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <FormControl fullWidth size='small' className={classes.formControl}>
+              <FormLabel className={classes.label} style={{marginRight: 5}}>
+                How many Games?
+              </FormLabel>
+              <Select
+                value={totalGames}
+                onChange={(event) => setTotalGames(Number(event.target.value))}
+                variant='outlined'
+                placeholder='Select'
+                style={{
+                  marginRight: 5,
+                  color: '#fff',
+                  borderRadius: 6,
+                  backgroundColor: '#3C4255',
+                }}
+                inputProps={{
+                  style: {color: '#fff', backgroundColor: '#3C4255'},
+                }}>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
+          <Grid container justifyContent={'center'}>
+            <Grid item xs>
+              Please confirm all {totalGames} tx's in your wallet.
+            </Grid>
+          </Grid>
+        )}
+
+    {(submitState === SubmitState.Confirmed || submitState === SubmitState.Submitted) && totalGames > 1 && (
+          <Grid container justifyContent={'center'}>
+            <Grid item xs>
+             Submitted tx's {submittedGames}/{totalGames} and Confirmed tx's on chain  {confirmedGames}/{totalGames}
+            </Grid>
+          </Grid>
+        )}
 
         <Grid container justifyContent={'center'}>
           <Grid item xs>
@@ -360,7 +441,11 @@ const CreateGameModal = (props: Props) => {
           }>
           <ButtonState
             state={submitState}
-            defaultMsg={IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ? 'CREATE GAME' : 'Connect Wallet on Polygon'}
+            defaultMsg={
+              IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                ? 'CREATE GAME'
+                : 'Connect Wallet on Polygon'
+            }
             confirmedMsg={'Game Created'}
           />
         </Button>

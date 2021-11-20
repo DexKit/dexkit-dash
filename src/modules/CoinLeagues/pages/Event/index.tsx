@@ -21,7 +21,11 @@ import {Alert, Skeleton} from '@material-ui/lab';
 
 import {useMobile} from 'hooks/useMobile';
 
-import {NFTEmptyStateImage} from 'shared/components/Icons';
+import {
+  NFTEmptyStateImage,
+  WalletConnectIcon,
+  WalletEmptyImage,
+} from 'shared/components/Icons';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -89,7 +93,7 @@ export function ChampionsEvent() {
 
   const isMobile = useMobile();
 
-  const {chainId, account, ethBalance} = useWeb3();
+  const {chainId, account, ethBalance, onConnectWeb3} = useWeb3();
 
   const myChampions = useMyChampions(chainId, 4);
 
@@ -115,6 +119,10 @@ export function ChampionsEvent() {
     championMint.clear();
     myChampions.fetch();
   }, [mintDialogToggler, championMint.clear]);
+
+  const handleConnect = useCallback(() => {
+    onConnectWeb3((account: any) => {});
+  }, [onConnectWeb3]);
 
   const hasEnoughKit = useCallback(() => {
     if (championTokenHolding.data && chainId) {
@@ -256,135 +264,137 @@ export function ChampionsEvent() {
                                   access.
                                 </Typography>
                               </Grid>
-                              <Grid item xs={12}>
-                                <Box py={{xs: 0, sm: 4}}>
-                                  <Grid
-                                    container
-                                    spacing={8}
-                                    justifyContent='center'
-                                    alignItems='center'
-                                    alignContent='center'>
-                                    <Grid item>
-                                      <Box>
-                                        {championTokenHolding.isLoading ? (
-                                          <Skeleton />
-                                        ) : (
-                                          <>
-                                            <Grid
-                                              container
-                                              spacing={2}
-                                              justifyContent='center'
-                                              alignItems='center'
-                                              alignContent='center'>
-                                              <Grid item>
-                                                <Box
-                                                  className={
-                                                    classes.coinsLogoWrapper
-                                                  }>
-                                                  <img
-                                                    alt=''
+                              {isOnMaticChain() ? (
+                                <Grid item xs={12}>
+                                  <Box py={{xs: 0, sm: 4}}>
+                                    <Grid
+                                      container
+                                      spacing={8}
+                                      justifyContent='center'
+                                      alignItems='center'
+                                      alignContent='center'>
+                                      <Grid item>
+                                        <Box>
+                                          {championTokenHolding.isLoading ? (
+                                            <Skeleton />
+                                          ) : (
+                                            <>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                justifyContent='center'
+                                                alignItems='center'
+                                                alignContent='center'>
+                                                <Grid item>
+                                                  <Box
                                                     className={
-                                                      classes.coinsLogo
-                                                    }
-                                                    src={require('assets/images/dexkit-logo-icon.svg')}
-                                                  />
-                                                </Box>
-                                              </Grid>
-                                              <Grid item>
-                                                <Typography variant='h4'>
-                                                  {championTokenHolding.data
-                                                    ? leftPad(
-                                                        championTokenHolding
-                                                          .data?.kit,
-                                                        2,
-                                                      )
-                                                    : leftPad(0, 2)}{' '}
-                                                </Typography>
-                                              </Grid>
-                                              <Grid item>
-                                                {hasEnoughBitt() ? (
-                                                  <Typography variant='h4'>
-                                                    <CheckCircleOutlineIcon
-                                                      style={{
-                                                        color:
-                                                          theme.palette.success
-                                                            .main,
-                                                      }}
+                                                      classes.coinsLogoWrapper
+                                                    }>
+                                                    <img
+                                                      alt=''
+                                                      className={
+                                                        classes.coinsLogo
+                                                      }
+                                                      src={require('assets/images/dexkit-logo-icon.svg')}
                                                     />
-                                                  </Typography>
-                                                ) : (
+                                                  </Box>
+                                                </Grid>
+                                                <Grid item>
                                                   <Typography variant='h4'>
-                                                    <HighlightOffIcon color='error' />
+                                                    {championTokenHolding.data
+                                                      ? leftPad(
+                                                          championTokenHolding
+                                                            .data?.kit,
+                                                          2,
+                                                        )
+                                                      : leftPad(0, 2)}{' '}
                                                   </Typography>
-                                                )}
+                                                </Grid>
+                                                <Grid item>
+                                                  {hasEnoughKit() ? (
+                                                    <Typography variant='h4'>
+                                                      <CheckCircleOutlineIcon
+                                                        style={{
+                                                          color:
+                                                            theme.palette
+                                                              .success.main,
+                                                        }}
+                                                      />
+                                                    </Typography>
+                                                  ) : (
+                                                    <Typography variant='h4'>
+                                                      <HighlightOffIcon color='error' />
+                                                    </Typography>
+                                                  )}
+                                                </Grid>
                                               </Grid>
-                                            </Grid>
-                                          </>
-                                        )}
-                                      </Box>
-                                    </Grid>
-                                    <Grid item>
-                                      <Box>
-                                        {championTokenHolding.isLoading ? (
-                                          <Skeleton />
-                                        ) : (
-                                          <>
-                                            <Grid
-                                              container
-                                              spacing={2}
-                                              justifyContent='center'
-                                              alignItems='center'
-                                              alignContent='center'>
-                                              <Grid item>
-                                                <Box
-                                                  className={
-                                                    classes.coinsLogoWrapper
-                                                  }>
-                                                  <img
-                                                    alt=''
+                                            </>
+                                          )}
+                                        </Box>
+                                      </Grid>
+                                      <Grid item>
+                                        <Box>
+                                          {championTokenHolding.isLoading ? (
+                                            <Skeleton />
+                                          ) : (
+                                            <>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                justifyContent='center'
+                                                alignItems='center'
+                                                alignContent='center'>
+                                                <Grid item>
+                                                  <Box
                                                     className={
-                                                      classes.coinsLogo
-                                                    }
-                                                    src={require('assets/images/logos/bittoken-logo.png')}
-                                                  />
-                                                </Box>
-                                              </Grid>
-                                              <Grid item>
-                                                <Typography variant='h4'>
-                                                  {championTokenHolding.data
-                                                    ? leftPad(
-                                                        championTokenHolding
-                                                          .data?.bitt,
-                                                        2,
-                                                      )
-                                                    : leftPad(0, 2)}{' '}
-                                                </Typography>
-                                              </Grid>
-                                              <Grid item>
-                                                {hasEnoughKit() ? (
-                                                  <Typography variant='h4'>
-                                                    <CheckCircleOutlineIcon
-                                                      style={{
-                                                        color:
-                                                          theme.palette.success
-                                                            .main,
-                                                      }}
+                                                      classes.coinsLogoWrapper
+                                                    }>
+                                                    <img
+                                                      alt=''
+                                                      className={
+                                                        classes.coinsLogo
+                                                      }
+                                                      src={require('assets/images/logos/bittoken-logo.png')}
                                                     />
-                                                  </Typography>
-                                                ) : (
+                                                  </Box>
+                                                </Grid>
+                                                <Grid item>
                                                   <Typography variant='h4'>
-                                                    <HighlightOffIcon color='error' />
+                                                    {championTokenHolding.data
+                                                      ? leftPad(
+                                                          championTokenHolding
+                                                            .data?.bitt,
+                                                          2,
+                                                        )
+                                                      : leftPad(0, 2)}{' '}
                                                   </Typography>
-                                                )}
+                                                </Grid>
+                                                <Grid item>
+                                                  {hasEnoughBitt() ? (
+                                                    <Typography variant='h4'>
+                                                      <CheckCircleOutlineIcon
+                                                        style={{
+                                                          color:
+                                                            theme.palette
+                                                              .success.main,
+                                                        }}
+                                                      />
+                                                    </Typography>
+                                                  ) : (
+                                                    <Typography variant='h4'>
+                                                      <HighlightOffIcon color='error' />
+                                                    </Typography>
+                                                  )}
+                                                </Grid>
                                               </Grid>
-                                            </Grid>
-                                          </>
-                                        )}
-                                      </Box>
+                                            </>
+                                          )}
+                                        </Box>
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
-                                </Box>
-                              </Grid>
+                                  </Box>
+                                </Grid>
+                              ) : null}
                             </Grid>
                           </Grid>
                         </Grid>
@@ -402,21 +412,25 @@ export function ChampionsEvent() {
                             </Typography>
                             <Typography variant='body1'>
                               In this round, users will be able to create{' '}
-                              {getMaxSupplyForRound(getEventCurrentRound())}
+                              {getMaxSupplyForRound(getEventCurrentRound()) -
+                                1000}{' '}
                               champions.
                             </Typography>
                           </Grid>
-                          <Grid item xs={12}>
-                            <Alert severity='info'>
-                              There are only{' '}
-                              <strong>
-                                {getMaxSupplyForRound(getEventCurrentRound()) -
-                                  totalSupply}
-                              </strong>{' '}
-                              champions left to be created.
-                            </Alert>
-                          </Grid>
-                          {!hasEnoughMatic() ? (
+                          {isOnMaticChain() ? (
+                            <Grid item xs={12}>
+                              <Alert severity='info'>
+                                There are only{' '}
+                                <strong>
+                                  {getMaxSupplyForRound(
+                                    getEventCurrentRound(),
+                                  ) - totalSupply}
+                                </strong>{' '}
+                                champions left to be created.
+                              </Alert>
+                            </Grid>
+                          ) : null}
+                          {!hasEnoughMatic() && isOnMaticChain() ? (
                             <Grid item xs={12}>
                               <Alert severity='warning'>
                                 <IntlMessages id='app.coinLeague.notEnoughMaticStart' />{' '}
@@ -461,53 +475,94 @@ export function ChampionsEvent() {
                       </Button>
                     </Box>
                   </Grid>
-                  {myChampions.loading ? (
-                    new Array(8).fill(null).map((item, index) => (
-                      <Grid key={index} item xs={12} sm={3}>
-                        <ChampionCard loading />
-                      </Grid>
-                    ))
-                  ) : (
+                  {account ? (
                     <>
-                      {myChampions.data?.length === 0 ? (
-                        <Grid item xs={12}>
-                          <Paper>
-                            <Box p={4}>
-                              <Grid
-                                direction='column'
-                                alignItems='center'
-                                alignContent='center'
-                                justifyContent='center'
-                                container
-                                spacing={4}>
-                                <Grid item>
-                                  <NFTEmptyStateImage />
-                                </Grid>
-                                <Grid item>
-                                  <Typography align='center' variant='h5'>
-                                    No Champions yet
-                                  </Typography>
-                                  <Typography
-                                    color='textSecondary'
-                                    align='center'
-                                    variant='body1'>
-                                    Create one to see it here
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Box>
-                          </Paper>
-                        </Grid>
+                      {myChampions.loading ? (
+                        new Array(8).fill(null).map((item, index) => (
+                          <Grid key={index} item xs={12} sm={3}>
+                            <ChampionCard loading />
+                          </Grid>
+                        ))
                       ) : (
                         <>
-                          {myChampions.data?.map((champion, index) => (
-                            <Grid key={index} item xs={12} sm={3}>
-                              <ChampionCard champion={champion} />
+                          {myChampions.data?.length === 0 ||
+                          !isOnMaticChain() ? (
+                            <Grid item xs={12}>
+                              <Paper>
+                                <Box p={4}>
+                                  <Grid
+                                    direction='column'
+                                    alignItems='center'
+                                    alignContent='center'
+                                    justifyContent='center'
+                                    container
+                                    spacing={4}>
+                                    <Grid item>
+                                      <NFTEmptyStateImage />
+                                    </Grid>
+                                    <Grid item>
+                                      <Typography align='center' variant='h5'>
+                                        No Champions yet
+                                      </Typography>
+                                      <Typography
+                                        color='textSecondary'
+                                        align='center'
+                                        variant='body1'>
+                                        Create one to see it here
+                                      </Typography>
+                                    </Grid>
+                                  </Grid>
+                                </Box>
+                              </Paper>
                             </Grid>
-                          ))}
+                          ) : (
+                            <>
+                              {myChampions.data?.map((champion, index) => (
+                                <Grid key={index} item xs={12} sm={3}>
+                                  <ChampionCard champion={champion} />
+                                </Grid>
+                              ))}
+                            </>
+                          )}
                         </>
                       )}
                     </>
+                  ) : (
+                    <Grid item xs={12}>
+                      <Paper>
+                        <Box p={4}>
+                          <Grid
+                            container
+                            spacing={4}
+                            alignItems='center'
+                            alignContent='center'
+                            justifyContent='center'
+                            direction='column'>
+                            <Grid item>
+                              <WalletEmptyImage />
+                            </Grid>
+                            <Grid item>
+                              <Typography align='center' variant='h5'>
+                                Connect wallet
+                              </Typography>
+
+                              <Typography align='center' variant='body1'>
+                                Connect your wallet to Polygon(MATIC) network to
+                                see your champions.
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Button
+                                onClick={handleConnect}
+                                variant='contained'
+                                color='primary'>
+                                Connect wallet
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </Paper>
+                    </Grid>
                   )}
                 </Grid>
               </Grid>

@@ -622,17 +622,17 @@ export const PriceFeeds = {
 };
 
 export const CHAMPIONS = {
-  [ChainId.Matic]: '',
+  [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
 };
 
 export const SALE_EARLY_FIRST_ROUND_DATE: {[key: number]: number} = {
-  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Mumbai]: 1637150592,
   [ChainId.Matic]: 1637211600,
 };
 
 export const FIRST_ROUND_DATE: {[key: number]: number} = {
-  [ChainId.Mumbai]: 1636752511,
+  [ChainId.Mumbai]: 1637236211,
   [ChainId.Matic]: 1637254800,
 };
 
