@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -46,6 +46,7 @@ import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useKittygotchiV2} from 'modules/Kittygotchi/hooks';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -153,6 +154,21 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const kittygotchiProfile = useProfileKittygotchi();
+  const kittygotchi = useKittygotchiV2();
+
+  useEffect(() => {
+    if (chainId && account) {
+      let defaultKitty = kittygotchiProfile.getDefault(account, chainId);
+
+      if (defaultKitty) {
+        kittygotchi.get(defaultKitty.id).then((kitty) => {
+          if (account && chainId && kitty) {
+            kittygotchiProfile.setDefaultKittygothchi(account, chainId, kitty);
+          }
+        });
+      }
+    }
+  }, [chainId, account, kittygotchi, kittygotchiProfile.kittygotchi]);
 
   return (
     <>

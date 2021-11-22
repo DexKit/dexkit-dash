@@ -32,6 +32,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ChainId, Web3State} from 'types/blockchain';
 import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
 import {useToggler} from 'hooks/useToggler';
+import ProfilePointsCard from '../components/ProfilePointsCard';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -237,7 +238,7 @@ export const ProfileIndex = () => {
         history.push(`/kittygotchi/${defaultKitty?.id}/edit`);
       }
     }
-  }, [history]);
+  }, [history, chainId, account]);
 
   const onClickBack = useCallback(() => {
     history.push('/');

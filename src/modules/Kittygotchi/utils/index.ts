@@ -6,6 +6,7 @@ import {
   KittygotchiTraitType,
   POLYGON_METADATA_KITTY_ENDPOINT,
   MUMBAI_METADATA_KITTY_ENDPOINT,
+  IMAGE_PATHS_ICONS,
 } from '../constants';
 
 export const canFeedKitty = (kittygotchi?: Kittygotchi) => {
@@ -49,7 +50,7 @@ export function getImageFromTrait(
   let dir = '';
 
   switch (traitType) {
-    case KittygotchiTraitType.ACESSOIRES:
+    case KittygotchiTraitType.ACCESSORIES:
       dir = 'accessories';
       break;
     case KittygotchiTraitType.BODY:
@@ -74,6 +75,43 @@ export function getImageFromTrait(
 
   if (value) {
     return IMAGE_PATHS[`${dir}/${value?.toLowerCase()}.png`];
+  }
+
+  return '';
+}
+
+export function getImageFromTraitIcon(
+  traitType: KittygotchiTraitType,
+  value?: string,
+) {
+  let dir = '';
+
+  switch (traitType) {
+    case KittygotchiTraitType.ACCESSORIES:
+      dir = 'accessories';
+      break;
+    case KittygotchiTraitType.BODY:
+      dir = 'body';
+      break;
+    case KittygotchiTraitType.CLOTHES:
+      dir = 'clothes';
+      break;
+    case KittygotchiTraitType.EARS:
+      dir = 'ears';
+      break;
+    case KittygotchiTraitType.EYES:
+      dir = 'eyes';
+      break;
+    case KittygotchiTraitType.MOUTH:
+      dir = 'mouth';
+      break;
+    case KittygotchiTraitType.NOSE:
+      dir = 'nose';
+      break;
+  }
+
+  if (value) {
+    return IMAGE_PATHS_ICONS[`${dir}/${value?.toLowerCase()}.png`];
   }
 
   return '';
