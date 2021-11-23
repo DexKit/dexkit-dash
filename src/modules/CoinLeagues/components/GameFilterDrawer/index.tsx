@@ -68,7 +68,9 @@ export const GameFilterDrawer = (props: Props) => {
 
   const handleChangeNumberOfPlayers = useCallback((e) => {
     filtersState.setNumberOfPlayers(e.target.value);
-  }, []);
+    },
+    [filtersState],
+  );
 
   const handleChangeStakeAmount = useCallback(
     (e) => {

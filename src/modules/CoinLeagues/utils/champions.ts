@@ -108,7 +108,7 @@ export function GET_EVENT_HOLDING_AMOUNT(chanId?: number): number | string {
   return 0;
 }
 
-export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number) {
+export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number): number {
   if (chainId) {
     if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
       return EARLY_ACCESS_KIT_AMOUNT[chainId];
@@ -118,7 +118,7 @@ export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number) {
   return EARLY_ACCESS_KIT_AMOUNT[ChainId.Matic];
 }
 
-export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number) {
+export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number): number {
   if (chainId) {
     if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
       return EARLY_ACCESS_BITT_AMOUNT[chainId];

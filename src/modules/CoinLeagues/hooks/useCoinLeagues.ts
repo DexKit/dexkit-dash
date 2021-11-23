@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {ChainId, Web3State} from 'types/blockchain';
+import {COIN_LEAGUES_FACTORY_ADDRESS} from '../constants';
 import {
   joinGame,
   withdrawGame,
@@ -19,7 +20,6 @@ import {
   startGame,
   endGame,
   abortGame,
-  COIN_LEAGUES_FACTORY_ADDRESS,
   getGameAddressFromId,
 } from '../services/coinLeaguesFactory';
 

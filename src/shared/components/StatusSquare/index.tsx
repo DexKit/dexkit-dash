@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
 
 import {Box, makeStyles} from '@material-ui/core';
@@ -24,6 +26,8 @@ export const StatusSquare = React.forwardRef((props: Props, ref) => {
       {...props}
       className={classes.square}
       style={{backgroundColor: color}}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       ref={ref}
     />
   );

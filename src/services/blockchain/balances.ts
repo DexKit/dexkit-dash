@@ -56,6 +56,7 @@ export const getAllBlockchainBalances = async (
     network: GET_NETWORK_NAME(chainId),
     price24hPercentage: 0,
   };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   bal.push(ethToken);
 

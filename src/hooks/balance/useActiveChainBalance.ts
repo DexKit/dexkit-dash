@@ -3,7 +3,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useQuery} from 'react-query';
 import {getBalance} from 'services/web3modal';
 
-export const useActiveChainBalance = (address?: string) => {
+export const useActiveChainBalance = () => {
   const network = useNetwork();
 
   const {account} = useWeb3();

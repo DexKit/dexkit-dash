@@ -25,7 +25,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
-import SmallCardGameV2 from 'modules/CoinLeagues/components/SmallCardGameV2';
+import SmallCardGameV2 from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';

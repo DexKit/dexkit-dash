@@ -19,8 +19,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 import {
-  useCoinLeaguesFactory,
+  useCoinLeaguesFactoryCreateGameCallback,
   useCoinLeaguesFactoryRoutes,
+  useCoinLeaguesFactoryTotalGames,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
@@ -33,6 +34,7 @@ import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
+import {RefetchQueryFilters} from 'react-query';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -101,7 +103,8 @@ const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
   const history = useHistory();
-  const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
+  const {onGameCreateCallback} = useCoinLeaguesFactoryCreateGameCallback();
+  const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const {open, setOpen} = props;
@@ -120,7 +123,7 @@ const CreateGameModal = (props: Props) => {
     setGameType((event.target as HTMLInputElement).value);
   }*/
   const onCreateGame = useCallback(
-    (ev?: any) => {
+    (_ev?: any) => {
       if (totalPlayers && entryAmount && duration && coins) {
         setSubmittedGames(0);
         setConfirmedGames(0);
@@ -138,16 +141,18 @@ const CreateGameModal = (props: Props) => {
             submitted++;
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
-            refetchCreated().then((r) => {
+            totalFactoryGames.refetch().then(r=> {
               if (totalGames === 1) {
-                if (r.data && r.data[0].length) {
+                if (r.data) {
                   // Sent user to created game
-                  history.push(
-                    enterGameRoute(`${r.data[0][r.data[0].length - 1]}`),
-                  );
+                  history.push(enterGameRoute(`${r.data - 1}`)
+
                 }
               }
-            });
+
+
+            })
+            
           };
           const onError = () => {
             setSubmitState(SubmitState.Error);
@@ -255,7 +260,7 @@ const CreateGameModal = (props: Props) => {
               <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
               <MenuItem value={50}>Expert - 50 Matic</MenuItem>
               <MenuItem value={250}>Master - 250 Matic</MenuItem>
-              {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
+              <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -336,6 +341,8 @@ const CreateGameModal = (props: Props) => {
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={25}>25</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -436,7 +443,7 @@ const CreateGameModal = (props: Props) => {
         {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
           <Grid container justifyContent={'center'}>
             <Grid item xs>
-              Please confirm all {totalGames} tx's in your wallet.
+              Please confirm all {totalGames} tx&#39;s in your wallet.
             </Grid>
           </Grid>
         )}
@@ -446,8 +453,8 @@ const CreateGameModal = (props: Props) => {
           totalGames > 1 && (
             <Grid container justifyContent={'center'}>
               <Grid item xs>
-                Submitted tx's {submittedGames}/{totalGames} and Confirmed tx's
-                on chain {confirmedGames}/{totalGames}
+                Submitted tx&#39;s {submittedGames}/{totalGames} and Confirmed
+                tx &#39; s on chain {confirmedGames}/{totalGames}
               </Grid>
             </Grid>
           )}

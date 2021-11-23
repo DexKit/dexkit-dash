@@ -1,12 +1,12 @@
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useMemo} from 'react';
 import {
-  COIN_LEAGUES_FACTORY_ADDRESS,
   createGame,
   getCreatedGamesAddressFromFactory,
   getEndedGamesAddressFromFactory,
   getGamesAddressFromFactory,
   getStartedGamesAddressFromFactory,
+  getTotalGamesFromFactory,
 } from 'modules/CoinLeagues/services/coinLeaguesFactory';
 import {Web3State} from 'types/blockchain';
 import {GameParams} from 'types/coinsleague';
@@ -17,6 +17,7 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
 import {useParams} from 'react-router-dom';
 import {COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+import {COIN_LEAGUES_FACTORY_ADDRESS} from '../constants';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -74,24 +75,6 @@ export const useCoinLeaguesFactory = () => {
       ? room
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room]);
-
-  const onGameCreateCallback = useCallback(
-    async (params: GameParams, callbacks?: CallbackProps) => {
-      if (web3State !== Web3State.Done || !factoryAddress) {
-        return;
-      }
-      try {
-        const tx = await createGame(factoryAddress, params);
-        callbacks?.onSubmit(tx.hash);
-        await tx.wait();
-        callbacks?.onConfirmation(tx.hash);
-      } catch (e) {
-        console.log(e);
-        callbacks?.onError(e);
-      }
-    },
-    [web3State, factoryAddress],
-  );
 
   const gamesAddressQuery = useQuery(['GetGamesAddress', chainId], () => {
     if (!provider || !factoryAddress) {
@@ -195,7 +178,6 @@ export const useCoinLeaguesFactory = () => {
   );
 
   return {
-    onGameCreateCallback,
     gamesAddress: gamesAddressQuery?.data ? gamesAddressQuery?.data[0] : [],
     games: gamesQuery?.data,
     totalGames: gamesAddressQuery?.data && gamesAddressQuery?.data[1],
@@ -226,4 +208,60 @@ export const useCoinLeaguesFactory = () => {
   };
 };
 
-export const useCoinLeaguesFactoryCreateGameCallback = () => {};
+export const useCoinLeaguesFactoryCreateGameCallback = () => {
+  const {web3State, chainId} = useWeb3();
+  const {room} = useParams<{room: string}>();
+  const factoryAddress = useMemo(() => {
+    return room
+      ? room
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+  }, [chainId, room]);
+
+  const onGameCreateCallback = useCallback(
+    async (params: GameParams, callbacks?: CallbackProps) => {
+      if (web3State !== Web3State.Done || !factoryAddress) {
+        return;
+      }
+      try {
+        const tx = await createGame(factoryAddress, params);
+        callbacks?.onSubmit(tx.hash);
+        await tx.wait();
+        callbacks?.onConfirmation(tx.hash);
+      } catch (e) {
+        console.log(e);
+        callbacks?.onError(e);
+      }
+    },
+    [web3State, factoryAddress],
+  );
+  return {
+    onGameCreateCallback,
+  };
+};
+
+export const useCoinLeaguesFactoryTotalGames = () => {
+  const {chainId} = useWeb3();
+  const provider = useNetworkProvider(
+    EthereumNetwork.matic,
+    GET_LEAGUES_CHAIN_ID(chainId),
+  );
+
+  const {room} = useParams<{room: string}>();
+  const factoryAddress = useMemo(() => {
+    return room
+      ? room
+      : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
+  }, [chainId, room]);
+
+  const totalGamesQuery = useQuery(['GetTotalGames', factoryAddress], () => {
+    if (factoryAddress || !provider) {
+      return;
+    }
+    return getTotalGamesFromFactory(factoryAddress, provider);
+  });
+  return {
+    totalGamesQuery,
+    refetch: totalGamesQuery.refetch,
+    totalGames: totalGamesQuery.data,
+  };
+};
