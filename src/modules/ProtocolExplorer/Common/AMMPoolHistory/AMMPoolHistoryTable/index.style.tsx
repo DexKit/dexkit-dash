@@ -12,9 +12,10 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
       marginBottom: 15,
       '& > table': {
         marginBottom: 0,
-        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td': {
-          whiteSpace: 'nowrap',
-        },
+        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td':
+          {
+            whiteSpace: 'nowrap',
+          },
       },
     },
   },

@@ -20,7 +20,7 @@ import {
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -38,9 +38,11 @@ export function Ranking() {
   const [value, setValue] = React.useState(Tabs.MostWinner);
 
   const handleChange = useCallback(
-    (_event: React.ChangeEvent<{}>, newValue: Tabs) => { 
-        setValue(newValue);
-    },[value]);
+    (_event: React.ChangeEvent<{}>, newValue: Tabs) => {
+      setValue(newValue);
+    },
+    [value],
+  );
 
   return (
     <Box>
@@ -117,7 +119,9 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalWinnedGames)}
-                      totalEarned={Number(ethers.utils.formatEther(player.totalEarned))}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
                       onClick={(address) => {}}
                     />
                   </Grid>
@@ -148,7 +152,9 @@ export function Ranking() {
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
-                      totalEarned={Number(ethers.utils.formatEther(player.totalEarned))}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
                       onClick={(address) => {}}
                     />
                   </Grid>
@@ -178,8 +184,12 @@ export function Ranking() {
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
-                      totalEarned={Number(ethers.utils.formatEther(player.totalEarned))}
-                      count={Number(ethers.utils.formatEther(player.totalEarned))}
+                      totalEarned={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
+                      count={Number(
+                        ethers.utils.formatEther(player.totalEarned),
+                      )}
                       onClick={(address) => {}}
                     />
                   </Grid>

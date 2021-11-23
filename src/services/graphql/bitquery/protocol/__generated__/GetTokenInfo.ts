@@ -3,14 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork, SmartContractType } from "./../../../../../../__generated__/globalTypes";
+import {
+  EthereumNetwork,
+  SmartContractType,
+} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetTokenInfo
 // ====================================================
 
 export interface GetTokenInfo_ethereum_address_smartContract_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency symbol
    */
@@ -30,7 +33,7 @@ export interface GetTokenInfo_ethereum_address_smartContract_currency {
 }
 
 export interface GetTokenInfo_ethereum_address_smartContract {
-  __typename: "EthereumSmartContractInfoWithAttributes";
+  __typename: 'EthereumSmartContractInfoWithAttributes';
   /**
    * Smart Contract Type
    */
@@ -42,7 +45,7 @@ export interface GetTokenInfo_ethereum_address_smartContract {
 }
 
 export interface GetTokenInfo_ethereum_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * Annotations ( tags ), if exists
    */
@@ -62,7 +65,7 @@ export interface GetTokenInfo_ethereum_address {
 }
 
 export interface GetTokenInfo_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */

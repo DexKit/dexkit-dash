@@ -21,11 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function CountdownSkeleton(): JSX.Element {
   const classes = useStyles();
-
-
 
   return (
     <Container className={classes.container}>

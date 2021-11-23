@@ -49,7 +49,7 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
+            <Typography className={classes.item}>
               Removed Coinleagues and put it as standalone app
             </Typography>
           </Box>
@@ -66,8 +66,8 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-               Add Sorting on Coinleague join games. Small fix on Copy game.
+            <Typography className={classes.item}>
+              Add Sorting on Coinleague join games. Small fix on Copy game.
             </Typography>
           </Box>
         </AccordionDetails>
@@ -83,13 +83,12 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-                Fix's on Coinleague
+            <Typography className={classes.item}>
+              Fix's on Coinleague
             </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
-
 
       <Accordion defaultExpanded={true}>
         <AccordionSummary
@@ -102,9 +101,7 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-                Major Rebrand
-            </Typography>
+            <Typography className={classes.item}>Major Rebrand</Typography>
             <Typography className={classes.item}>
               CoinLeagues:
               <br />
@@ -123,7 +120,6 @@ const Changelog = () => {
               1. Create Tokens
               <br />
             </Typography>
-            
           </Box>
         </AccordionDetails>
       </Accordion>

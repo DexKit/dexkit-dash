@@ -8,7 +8,7 @@ export const useTokenList = (networkName: EthereumNetwork) => {
     return tokens.binanceTokens || [];
   } else if (networkName === EthereumNetwork.matic) {
     return tokens.maticTokens || [];
-  }  else {
+  } else {
     return tokens.ethTokens || [];
   }
 };

@@ -7,9 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  ExplorerURL
-} from 'modules/CoinLeagues/utils/constants';
+import {ExplorerURL} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 
 interface Props {
@@ -19,10 +17,11 @@ interface Props {
 export const StartGame = (props: Props) => {
   const {id} = props;
   const {chainId} = useWeb3();
-  const { game} =
-    useCoinLeagues(id);
+  const {game} = useCoinLeagues(id);
   const [tx, _setTx] = useState<string>();
-  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const [submitState, _setSubmitState] = useState<SubmitState>(
+    SubmitState.None,
+  );
   /*const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
     SubmitState.None,
   );*/
@@ -35,7 +34,7 @@ export const StartGame = (props: Props) => {
     [tx, chainId],
   );
 
- /* const onStartGame = useCallback(
+  /* const onStartGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);

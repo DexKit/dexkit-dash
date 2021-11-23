@@ -12,7 +12,6 @@ import AssetOrdersTable from './AssetListingsTable';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
 import NotesIcon from '@material-ui/icons/Notes';
 import {sortByMinPrice} from 'modules/NFTWallet/utils';
 

@@ -11,8 +11,8 @@ import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {GameType} from 'types/coinsleague';
 import {useInterval} from 'hooks/utils/useInterval';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
+import {strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,7 +47,6 @@ interface Props {
   btnMessage?: string;
   onClick: any;
 }
-
 
 function SmallCardGame(props: Props): JSX.Element {
   const {
@@ -121,7 +120,7 @@ function SmallCardGame(props: Props): JSX.Element {
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography variant='h6'>
-            {game_type === GameType.Winner ? 'Bull' : 'Bear'}
+              {game_type === GameType.Winner ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>

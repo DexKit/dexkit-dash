@@ -16,9 +16,9 @@ export interface CoinFeed {
   score: BigNumber;
 }
 
-export enum GameType{
+export enum GameType {
   Winner,
-  Loser
+  Loser,
 }
 
 export interface Game {

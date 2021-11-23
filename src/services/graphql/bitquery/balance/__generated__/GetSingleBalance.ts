@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetSingleBalance
 // ====================================================
 
 export interface GetSingleBalance_ethereum_address_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -34,7 +34,7 @@ export interface GetSingleBalance_ethereum_address_balances_currency {
 }
 
 export interface GetSingleBalance_ethereum_address_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * Currency of transfer
    */
@@ -43,7 +43,7 @@ export interface GetSingleBalance_ethereum_address_balances {
 }
 
 export interface GetSingleBalance_ethereum_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Balances by currencies for the address
    */
@@ -51,7 +51,7 @@ export interface GetSingleBalance_ethereum_address {
 }
 
 export interface GetSingleBalance_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */

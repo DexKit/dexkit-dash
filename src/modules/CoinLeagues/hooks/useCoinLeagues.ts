@@ -51,12 +51,15 @@ export const useCoinLeagues = (id?: string) => {
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room]);
 
-  const addressQuery = useQuery(['GET_ADDRESS_GAME', id, factoryAddress], () => {
-    if (!id || !factoryAddress) {
-      return;
-    }
-    return getGameAddressFromId(factoryAddress, id);
-  });
+  const addressQuery = useQuery(
+    ['GET_ADDRESS_GAME', id, factoryAddress],
+    () => {
+      if (!id || !factoryAddress) {
+        return;
+      }
+      return getGameAddressFromId(factoryAddress, id);
+    },
+  );
 
   const address = useMemo(() => {
     if (addressQuery.data) {
@@ -107,7 +110,6 @@ export const useCoinLeagues = (id?: string) => {
     [web3State, address, getProvider(), chainId],
   );
 
-
   const onClaimCallback = useCallback(
     async (winner: string, callbacks?: CallbackProps) => {
       if (web3State !== Web3State.Done || !address) {
@@ -143,8 +145,6 @@ export const useCoinLeagues = (id?: string) => {
     },
     [web3State, address, getProvider()],
   );
-
-
 
   const gameQuery = useQuery(['GetGameAdddress', address], () => {
     if (!address || !provider) {
@@ -206,7 +206,7 @@ export const useCoinLeagues = (id?: string) => {
 export const useCoinLeaguesCallbacks = (address?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();
   const {startedGames, createdGames} = useCoinLeaguesFactory();
-  
+
   const {room} = useParams<{room: string}>();
   const factoryAddress = useMemo(() => {
     return room
@@ -303,8 +303,6 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
     onAbortGameCallback,
   };
 };
-
-
 
 export const useCoinLeaguesWinner = (address?: string) => {
   const {web3State, account, chainId, getProvider} = useWeb3();

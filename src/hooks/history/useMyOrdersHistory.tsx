@@ -26,7 +26,11 @@ export const useMyOrdersHistory = ({address}: Props) => {
   const [data, setData] = useState([]);
   const [totalRows, setTotalRows] = useState<number>(0);
 
-  const {loading, error, data: dataFn} = useFetch(
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useFetch(
     `${ZRX_API_URL(currentChainId)}/sra/v4/orders?page=${
       currentPage + 1
     }&perPage=${rowsPerPage}?trader=${address}`,

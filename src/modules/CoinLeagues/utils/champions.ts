@@ -19,7 +19,7 @@ export function getEventCurrentRound(): ChampionsEventRound {
 
 export function getEventAccessDate(
   round: ChampionsEventRound,
-  offset: number = 0,
+  offset = 0,
   chainId?: number,
 ): number {
   let currChain = chainId ? chainId : ChainId.Matic;
@@ -43,7 +43,7 @@ export function getEventAccessDate(
   return 0;
 }
 
-export function getMaxSupplyForRound(round: ChampionsEventRound) {
+export function getMaxSupplyForRound(round: ChampionsEventRound): number {
   if (round === ChampionsEventRound.FIRST) {
     return 3300 + 1000;
   } else if (round === ChampionsEventRound.SECOND) {
@@ -57,7 +57,7 @@ export function getMaxSupplyForRound(round: ChampionsEventRound) {
 
 export function getEventEarlyAccessDate(
   round: ChampionsEventRound,
-  offset: number = 0,
+  offset = 0,
   chainId?: number,
 ): number {
   let currChain = chainId ? chainId : ChainId.Matic;
@@ -98,8 +98,8 @@ export function getEventHoldingAmount(
   return EVENT_HOLDING_AMOUNT[ChainId.Matic];
 }
 
-export function GET_EVENT_HOLDING_AMOUNT(chanId?: number) {
-  let amount = getEventHoldingAmount(chanId);
+export function GET_EVENT_HOLDING_AMOUNT(chanId?: number): number | string {
+  const amount = getEventHoldingAmount(chanId);
 
   if (amount) {
     return ethers.utils.formatUnits(amount, 18);

@@ -45,7 +45,7 @@ interface RankingButtonProps {
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
 
-  const {address,  src, featured, position} = props;
+  const {address, src, featured, position} = props;
 
   const toggler = useToggler();
 

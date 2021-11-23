@@ -26,7 +26,7 @@ interface Props {
 
 function CardPrize(props: Props): JSX.Element {
   const classes = useStyles();
-  const { prizePool } = props;
+  const {prizePool} = props;
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

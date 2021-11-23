@@ -187,7 +187,7 @@ const CreateGameModal = (props: Props) => {
       onGameCreateCallback,
       refetchCreated,
       totalGames,
-      startDate
+      startDate,
     ],
   );
 
@@ -376,17 +376,19 @@ const CreateGameModal = (props: Props) => {
           className={`${classes.innerContent} ${classes.formControl}`}>
           <Grid item xs={12}>
             <FormControl fullWidth component='fieldset'>
-            <FormLabel
-              className={classes.label}
-              style={{fontSize: '1.25rem', fontWeight: 600}}>
-             Start Date
-            </FormLabel>
+              <FormLabel
+                className={classes.label}
+                style={{fontSize: '1.25rem', fontWeight: 600}}>
+                Start Date
+              </FormLabel>
               <TextField
                 id='datetime-local'
                 label='Start Date'
                 type='datetime-local'
                 defaultValue={new Date(startDate)}
-                onChange={(event) => setStartDate(Number(new Date(event.target.value).getTime()))}
+                onChange={(event) =>
+                  setStartDate(Number(new Date(event.target.value).getTime()))
+                }
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,

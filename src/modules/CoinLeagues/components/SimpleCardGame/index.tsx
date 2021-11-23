@@ -10,7 +10,7 @@ import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import Box from '@material-ui/core/Box';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,11 +48,11 @@ function SimpleCardGame(props: Props): JSX.Element {
         alignItems={'center'}>
         <Grid item xs={12} sm={12}>
           <Box display={'flex'}>
-              <Typography variant='h6'>Game Time:</Typography>
-              <Typography variant='h6' style={{fontWeight: 600}}>
-                &nbsp;{ GET_LABEL_FROM_DURATION(time)}
-              </Typography>
-            </Box>
+            <Typography variant='h6'>Game Time:</Typography>
+            <Typography variant='h6' style={{fontWeight: 600}}>
+              &nbsp;{GET_LABEL_FROM_DURATION(time)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h5'>ID #{truncateAddress(id)}</Typography>

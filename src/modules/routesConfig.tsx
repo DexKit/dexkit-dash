@@ -90,7 +90,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-  /*  {
+    /*  {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',

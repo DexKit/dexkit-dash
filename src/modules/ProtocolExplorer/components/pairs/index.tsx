@@ -46,21 +46,24 @@ export const Pairs = (props: Props) => {
   const {baseAddress, exchange, networkName} = props;
   const [selectedPair, setSelectedPair] =
     useState<GetTokenPairs_ethereum_dexTrades>();
-  const {
-    data,
-  } = useTokenPairs({exchange, baseAddress, networkName});
+  const {data} = useTokenPairs({exchange, baseAddress, networkName});
   const classes = useStyles();
-  
+
   useEffect(() => {
     if (!selectedPair && data && data.length) {
       setSelectedPair(data[0]);
     }
     // when we change the address on route we set again the selected Pair
-    if(selectedPair &&  data && data.length && selectedPair.baseCurrency?.address?.toLowerCase() !== baseAddress.toLowerCase()){
+    if (
+      selectedPair &&
+      data &&
+      data.length &&
+      selectedPair.baseCurrency?.address?.toLowerCase() !==
+        baseAddress.toLowerCase()
+    ) {
       setSelectedPair(data[0]);
     }
   }, [data, selectedPair, baseAddress, networkName]);
-
 
   return (
     <>

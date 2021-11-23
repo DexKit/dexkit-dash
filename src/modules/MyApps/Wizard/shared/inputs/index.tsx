@@ -60,10 +60,10 @@ export const WizardTextInput: FC<WizardTextInputProps> = (props) => {
         console.log('limpou');
         clearTimeout(interval.current);
       }
-      interval.current = (setTimeout(() => {
+      interval.current = setTimeout(() => {
         onChange(value, property);
         updateError({...validator(property, error ?? {})});
-      }, 1200) as unknown) as number;
+      }, 1200) as unknown as number;
     }
   }, [value]);
 

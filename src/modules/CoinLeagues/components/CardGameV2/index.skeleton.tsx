@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
-    color: 'black'
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -76,10 +76,7 @@ function CardGameSkeleton(): JSX.Element {
             </Skeleton>
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={7}
-          style={{color: '#7a8398'}}>
+        <Grid item xs={7} style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
 
           <Typography variant='h6' style={{fontWeight: 600}}>

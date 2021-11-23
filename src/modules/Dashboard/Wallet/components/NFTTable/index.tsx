@@ -26,12 +26,12 @@ import {Search} from '@material-ui/icons';
 
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import NFTList from './NFTList'
+import NFTList from './NFTList';
 
 interface AssetTableProps {
   balances?: MyBalances[];
   loading?: boolean;
-  error?: boolean | { message: string };
+  error?: boolean | {message: string};
 }
 
 enum TokenOrderBy {
@@ -55,7 +55,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
   const filteredBalances = useMemo(() => {
     let results = balances;
-    if(!results){
+    if (!results) {
       return [];
     }
 

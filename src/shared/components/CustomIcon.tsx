@@ -38,11 +38,11 @@ export const CustomIcon = (props: Props) => {
     return <MagicpenIcon {...props} />;
   } else if (icon === 'coinleague') {
     return <CoinLeagueIcon {...props} />;
-  }else if (icon === 'gameboy') {
+  } else if (icon === 'gameboy') {
     return <GameBoyIcon {...props} />;
-  }else if (icon === 'user.search') {
+  } else if (icon === 'user.search') {
     return <UserSearchIcon {...props} />;
-  }else if (icon === 'question') {
+  } else if (icon === 'question') {
     return <QuestionIcon {...props} />;
   } else if (icon === 'cup') {
     return <CupIcon {...props} />;

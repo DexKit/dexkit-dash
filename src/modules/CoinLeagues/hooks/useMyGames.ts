@@ -2,14 +2,12 @@ import {useEffect, useState} from 'react';
 
 import {useCoinLeagueGames, CoinLeagueGamesParams} from './useGames';
 
-
-
 interface MyGamesParams extends CoinLeagueGamesParams {
   player?: string;
 }
 
 export const useMyGames = (params: MyGamesParams) => {
-  const {status, filters,  accounts, player} = params;
+  const {status, filters, accounts, player} = params;
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);

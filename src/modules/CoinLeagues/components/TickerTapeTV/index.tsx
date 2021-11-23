@@ -3,15 +3,19 @@ import React from 'react';
 import {TickerTape} from 'react-ts-tradingview-widgets';
 
 const TickerTapeTV = () => {
-  const symbols = MaticPriceFeeds.filter(s=> s.tv).map((s) => {
+  const symbols = MaticPriceFeeds.filter((s) => s.tv).map((s) => {
     return {
       proName: s.tv as string,
-      title: (s.tv as string).split(":")[1],
+      title: (s.tv as string).split(':')[1],
     };
   });
   return (
     <>
-      <TickerTape colorTheme='dark' symbols={symbols} isTransparent={true} displayMode={'compact'}></TickerTape>
+      <TickerTape
+        colorTheme='dark'
+        symbols={symbols}
+        isTransparent={true}
+        displayMode={'compact'}></TickerTape>
     </>
   );
 };

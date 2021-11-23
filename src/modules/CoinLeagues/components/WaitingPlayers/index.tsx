@@ -8,8 +8,11 @@ export const WaitingPlayers = () => {
   return (
     <Box p={2}>
       <Grid container justifyContent={'center'}>
-        <Grid item >
-          <Box display={'flex'} justifyContent={'center'} flexDirection={'column'}>
+        <Grid item>
+          <Box
+            display={'flex'}
+            justifyContent={'center'}
+            flexDirection={'column'}>
             <Box display={'flex'} justifyContent={'center'}>
               <Social3 />
             </Box>

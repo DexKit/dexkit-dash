@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
 import {useEffect} from 'react';
-import { POLL_INTERVAL_GAMES} from '../constants';
+import {POLL_INTERVAL_GAMES} from '../constants';
 import {
   CoinLeagueGameStatus,
   GameDuration,
@@ -15,12 +15,9 @@ import {
   GET_GAME_LEVEL_AMOUNTS,
   GET_GAME_ORDER_VARIABLES,
 } from '../utils/game';
-import {
-  GET_DURATION_FROM_FILTER_V2,
-} from '../utils/time';
+import {GET_DURATION_FROM_FILTER_V2} from '../utils/time';
 import {GameGraph} from '../utils/types';
 import {GameFiltersState} from './useGamesFilter';
-
 
 interface GamesFilterParams {
   accounts?: string[];
@@ -37,8 +34,7 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
 }
 
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
-  const {accounts,  filters, status, first, skip, player} =
-    params;
+  const {accounts, filters, status, first, skip, player} = params;
 
   const variables: any = {};
 

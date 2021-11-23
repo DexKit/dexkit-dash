@@ -5,9 +5,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
-
-
-
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableCellRoot: {
     color: '#8F96A7',
@@ -15,7 +12,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     fontSize: 16,
     padding: 8,
     fontFamily: Fonts.LIGHT,
-    '&:first-child': {   
+    '&:first-child': {
       paddingLeft: 20,
     },
     '&:last-child': {
@@ -25,11 +22,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const TableHeading: React.FC = () => {
-
   const classes = useStyles();
 
   return (
-    <TableRow >
+    <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
         {'Created-Started-Ended'}
       </TableCell>

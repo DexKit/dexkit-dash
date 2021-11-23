@@ -5,9 +5,7 @@ import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectiv
 import React from 'react';
 import Transak from '../Transak';
 
-
 export const EmptyWallet = () => {
-
   return (
     <Box py={4}>
       <Grid
@@ -24,13 +22,12 @@ export const EmptyWallet = () => {
           <Typography
             style={{textTransform: 'uppercase'}}
             gutterBottom
-            align='center'
-            >
-              Your wallet is empty, buy with Fiat: 
+            align='center'>
+            Your wallet is empty, buy with Fiat:
           </Typography>
         </Grid>
         <Grid item xs={4}>
-          <Transak/>
+          <Transak />
         </Grid>
       </Grid>
     </Box>

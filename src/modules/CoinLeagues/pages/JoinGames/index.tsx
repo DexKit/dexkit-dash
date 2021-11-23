@@ -35,9 +35,7 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
-import {
-  useCoinLeagueGames
-} from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';

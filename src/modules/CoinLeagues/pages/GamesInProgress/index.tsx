@@ -34,9 +34,7 @@ import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
-import {
-  useCoinLeagueGames,
-} from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';

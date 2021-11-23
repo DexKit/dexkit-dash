@@ -21,12 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 function CardPrizeSkeleton(): JSX.Element {
   const classes = useStyles();
-
-
 
   return (
     <Container className={classes.container}>

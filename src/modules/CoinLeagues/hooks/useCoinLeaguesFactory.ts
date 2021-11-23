@@ -226,9 +226,4 @@ export const useCoinLeaguesFactory = () => {
   };
 };
 
-export const useCoinLeaguesFactoryCreateGameCallback = () => {
-
-
-
-
-}
+export const useCoinLeaguesFactoryCreateGameCallback = () => {};

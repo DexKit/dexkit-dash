@@ -395,7 +395,7 @@ export default function VerticalLinearStepper(props: MarketplaceProps) {
   const updateForm = useCallback(
     (key: keyof ConfigFileMarketplace | 'editable', value: any) => {
       const dataType = Object.values(WizardData).find((e) => e === key);
-      if (dataType  && key !== 'editable') {
+      if (dataType && key !== 'editable') {
         form[key] = value;
         setForm(form);
       } else if (key === 'editable') {

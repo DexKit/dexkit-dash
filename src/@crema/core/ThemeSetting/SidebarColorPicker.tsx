@@ -12,9 +12,8 @@ interface SidebarColorPickerProps {
 
 const SidebarColorPicker: React.FC<SidebarColorPickerProps> = (props) => {
   const [visible, setVisibility] = useState(false);
-  const {theme, sidebarColor, updateTheme, updateSidebarColor} = useContext(
-    AppContext,
-  );
+  const {theme, sidebarColor, updateTheme, updateSidebarColor} =
+    useContext(AppContext);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     cpSwatch: {

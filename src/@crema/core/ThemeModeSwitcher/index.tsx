@@ -15,9 +15,8 @@ import {AppContext} from '@crema';
 import {ThemeMode} from 'shared/constants/AppEnums';
 
 const ThemeModeSwitcher = () => {
-  const {themeMode, theme, updateThemeMode} = useContext<AppContextPropsType>(
-    AppContext,
-  );
+  const {themeMode, theme, updateThemeMode} =
+    useContext<AppContextPropsType>(AppContext);
 
   const onClickThemeButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     const changedTheme =

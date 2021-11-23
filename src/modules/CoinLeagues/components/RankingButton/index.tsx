@@ -86,7 +86,7 @@ export const RankingButton = (props: RankingButtonProps) => {
               </Typography>
             </Grid>
             <Grid item>
-             <Box
+              <Box
                 display='flex'
                 alignItems='center'
                 alignContent='center'
@@ -96,7 +96,7 @@ export const RankingButton = (props: RankingButtonProps) => {
                 ) : (
                   <Skeleton className={classes.avatar} variant='circle' />
                 )}
-                </Box>
+              </Box>
             </Grid>
             <Grid item>
               <Box

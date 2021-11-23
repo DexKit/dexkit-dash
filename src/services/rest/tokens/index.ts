@@ -24,7 +24,6 @@ const maticTokens = axios.create({
   },
 });
 
-
 let cacheEthTokens: Token[];
 export async function getEthereumTokens(): Promise<Token[]> {
   if (cacheEthTokens) {

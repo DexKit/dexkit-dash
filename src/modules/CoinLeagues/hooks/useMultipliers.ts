@@ -39,15 +39,21 @@ export const useMultipliers = (address?: string, enable?: boolean) => {
 
   const tooltipMessage = useCallback(
     (addr?: string) => {
-      if (multiplierTokens && addr && multiplierTokens.find(a=> a.playerAddress.toLowerCase() === addr.toLowerCase()) && enable  ) {
-        if(account && account.toLowerCase() === addr.toLowerCase()){
-          return "Congrats you are holding 50 KIT or 200 BITT to boost your multiplier to 1.3"
-        }else{
-          return "Player holding 50 KIT or 200 BITT"
+      if (
+        multiplierTokens &&
+        addr &&
+        multiplierTokens.find(
+          (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
+        ) &&
+        enable
+      ) {
+        if (account && account.toLowerCase() === addr.toLowerCase()) {
+          return 'Congrats you are holding 50 KIT or 200 BITT to boost your multiplier to 1.3';
+        } else {
+          return 'Player holding 50 KIT or 200 BITT';
         }
-       
       } else {
-        return "Hold 50 KIT or 200 BITT to boost multiplier to 1.3"
+        return 'Hold 50 KIT or 200 BITT to boost multiplier to 1.3';
       }
       return 'Captain coin with multiplier 1.2';
     },

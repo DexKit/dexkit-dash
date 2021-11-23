@@ -8,14 +8,19 @@ type GenWallet = (
   passphrase: string,
   coin?: 'BTC' | 'DOGE',
 ) => Promise<{
-  address: string, 
-  encryptedSeed: string,
+  address: string;
+  encryptedSeed: string;
 }>;
 
-const generateWallet: GenWallet = async (mnemonics, passphrase, coin = 'BTC') => {
+const generateWallet: GenWallet = async (
+  mnemonics,
+  passphrase,
+  coin = 'BTC',
+) => {
   const seed = bip39.mnemonicToSeedSync(mnemonics.join(' '), '');
-  const encryptedSeed = await browserpassworder.encrypt(passphrase, {seed: seed});
- 
+  const encryptedSeed = await browserpassworder.encrypt(passphrase, {
+    seed: seed,
+  });
 
   let path: string = '';
   let network;

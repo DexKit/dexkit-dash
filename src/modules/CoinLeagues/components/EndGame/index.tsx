@@ -3,12 +3,10 @@ import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import { SubmitState} from '../ButtonState';
+import {SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
-import {
-  ExplorerURL
-} from 'modules/CoinLeagues/utils/constants';
+import {ExplorerURL} from 'modules/CoinLeagues/utils/constants';
 import {ChainId} from 'types/blockchain';
 import Typography from '@material-ui/core/Typography';
 
@@ -19,10 +17,11 @@ interface Props {
 export const EndGame = (props: Props) => {
   const {id} = props;
   const {chainId} = useWeb3();
-  const {game} =
-    useCoinLeagues(id);
+  const {game} = useCoinLeagues(id);
   const [tx, _setTx] = useState<string>();
-  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const [submitState, _setSubmitState] = useState<SubmitState>(
+    SubmitState.None,
+  );
   const goToExplorer = useCallback(
     (_ev: any) => {
       if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
@@ -40,7 +39,7 @@ export const EndGame = (props: Props) => {
     }
   }, [game?.start_timestamp]);
 
- /* const onEndGame = useCallback(
+  /* const onEndGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play) {
         setSubmitState(SubmitState.WaitingWallet);
@@ -113,14 +112,14 @@ export const EndGame = (props: Props) => {
                       confirmedMsg={'Game Finished'}
                     />
                   </Button>*/}
-                     
-                        <Paper>
-                          <Box display={'flex'} justifyContent={'center'} p={2}>
-                            <Typography>
-                              &nbsp; Game will auto end soon
-                            </Typography>
-                          </Box>
-                        </Paper>
+
+                      <Paper>
+                        <Box display={'flex'} justifyContent={'center'} p={2}>
+                          <Typography>
+                            &nbsp; Game will auto end soon
+                          </Typography>
+                        </Box>
+                      </Paper>
                     </Grid>
                   </Grid>
                 </Box>

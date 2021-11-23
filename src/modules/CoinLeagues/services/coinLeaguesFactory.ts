@@ -18,17 +18,12 @@ export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
   [ChainId.Matic]: '0x8fFA73bB9404c6fa01A16e0F996787bD3F4CeF66',
 };
 
-
 export const getCoinLeaguesFactoryContract = async (address: string) => {
   const appProvider = getProvider();
 
   const provider = new providers.Web3Provider(appProvider).getSigner();
 
-  return  new ethers.Contract(
-    address,
-    coinLeaguesFactoryAbi,
-    provider,
-  );
+  return new ethers.Contract(address, coinLeaguesFactoryAbi, provider);
 };
 const GAS_PRICE_MULTIPLIER = 2;
 export const createGame = async (address: string, params: GameParams) => {
@@ -200,8 +195,13 @@ export const getEndedGamesAddressFromFactory = async (
   }
 };
 
-export const getGameAddressFromId = async (factoryAddress: string, id: string) => {
-  return (await getCoinLeaguesFactoryContract(factoryAddress)).allGames(id) as string;
+export const getGameAddressFromId = async (
+  factoryAddress: string,
+  id: string,
+) => {
+  return (await getCoinLeaguesFactoryContract(factoryAddress)).allGames(
+    id,
+  ) as string;
 };
 
 export const startGame = async (factoryAddress: string, id: string) => {

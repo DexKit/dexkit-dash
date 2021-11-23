@@ -47,9 +47,8 @@ const defaultSwapContext = {
   validAddress: false,
 };
 
-export const SwapContext = React.createContext<SwapContextProps>(
-  defaultSwapContext,
-);
+export const SwapContext =
+  React.createContext<SwapContextProps>(defaultSwapContext);
 
 const SwapContextProvider: React.FC<React.ReactNode> = ({children}) => {
   const [loading, setLoading] = useState(defaultSwapContext.loading);

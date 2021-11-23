@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const GamesEnded = (props: Props) => {
-  const { search, filters} = props;
+  const {search, filters} = props;
   const {account} = useWeb3();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
@@ -40,7 +40,8 @@ export const GamesEnded = (props: Props) => {
   const endedGames = useMemo(() => {
     if (gamesEndedQuery.data) {
       return gamesEndedQuery.data.games.filter(
-        (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
+        (g) =>
+          g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
       );
     }
   }, [search, gamesEndedQuery.data]);

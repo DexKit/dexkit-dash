@@ -88,7 +88,7 @@ interface IRow {
 interface Props {
   data?: IRow[];
   id: string;
-  type?: GameType
+  type?: GameType;
   winner?: any;
   account?: string;
 }
@@ -148,8 +148,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     SubmitState.None,
   );
 
-  const {multiplier, loadingMultiplier, tooltipMessage} =
-    useMultipliers(id);
+  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -283,31 +282,31 @@ function OnePlayerTable(props: Props): JSX.Element {
         );
 
         if (currentFeedPrice?.length) {
-          
           const prices = currentFeedPrice.map((f) => {
             const startFeed = allFeeds?.find(
               (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
             );
-            let multiplier  = 1;
+            let multiplier = 1;
 
-
-            if(d.captainCoin && d.captainCoin.toLowerCase() === f.feed.toLowerCase()){
-              const end = (f.price.toNumber() / USD_POWER_NUMBER)
+            if (
+              d.captainCoin &&
+              d.captainCoin.toLowerCase() === f.feed.toLowerCase()
+            ) {
+              const end = f.price.toNumber() / USD_POWER_NUMBER;
               const start = startFeed
-              ? ((startFeed?.start_price.toNumber() /
-                  USD_POWER_NUMBER) as number)
-              : 0;
-              if(end && start){
-                const scr = (end - start) / end ;
-                if(scr > 0  && type === GameType.Winner){
+                ? ((startFeed?.start_price.toNumber() /
+                    USD_POWER_NUMBER) as number)
+                : 0;
+              if (end && start) {
+                const scr = (end - start) / end;
+                if (scr > 0 && type === GameType.Winner) {
                   multiplier = 1.2;
                 }
-                if(scr < 0  && type === GameType.Loser){
+                if (scr < 0 && type === GameType.Loser) {
                   multiplier = 1.2;
                 }
               }
             }
-
 
             return {
               endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,

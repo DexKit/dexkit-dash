@@ -43,9 +43,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
     <>
       <Box className={classes.tableResponsiveMaterial}>
         <Table stickyHeader>
-          <TableHead>
-          {!isMobile &&  <TableHeading />}
-          </TableHead>
+          <TableHead>{!isMobile && <TableHeading />}</TableHead>
           <TableBody>
             {data &&
               data.map((row, index) => (

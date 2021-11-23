@@ -31,11 +31,11 @@ interface Props extends DialogProps {
   id: string;
   playerAddress?: string;
   coins: string[];
-  captainCoin?: string
+  captainCoin?: string;
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose,  coins, id, captainCoin, playerAddress} = props;
+  const {onClose, coins, id, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(id);
@@ -43,23 +43,31 @@ export const ViewCoinLeagueDialog = (props: Props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
-    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any; isCaptain: boolean}[]
+    {
+      coin: CoinFeed;
+      feed: CoinFeedOnChain;
+      currentFeed: any;
+      isCaptain: boolean;
+    }[]
   >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
   const allCoins = useMemo(() => {
     const chain = GET_LEAGUES_CHAIN_ID(chainId);
- 
+
     if (coins && captainCoin && allFeeds && allFeeds.length) {
-  
       const coinsWithFeeds = allFeeds.filter((cf) =>
-        coins.concat(captainCoin).map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
+        coins
+          .concat(captainCoin)
+          .map((c) => c?.toLowerCase())
+          .includes(cf?.address?.toLowerCase()),
       );
       const coinsList = PriceFeeds[chain].filter((c) =>
         coinsWithFeeds
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
       );
-      return [captainCoin].concat(coins)
+      return [captainCoin]
+        .concat(coins)
         .map((c) => {
           return {
             coin: coinsList.find(
@@ -153,19 +161,19 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>
-            {filteredCoins.map((coin, i) => 
-                <ViewCoinListItem
-                  coin={coin.coin}
-                  feedOnchain={coin.feed}
-                  currentPrice={coin.currentFeed}
-                  started={gameStarted}
-                  key={i}
-                  isCaptain={coin.isCaptain}
-                  playerAddress={playerAddress}
-                  multipliers={multiplier}
-                  tooltipMessage={tooltipMessage}
-                />
-              )}
+            {filteredCoins.map((coin, i) => (
+              <ViewCoinListItem
+                coin={coin.coin}
+                feedOnchain={coin.feed}
+                currentPrice={coin.currentFeed}
+                started={gameStarted}
+                key={i}
+                isCaptain={coin.isCaptain}
+                playerAddress={playerAddress}
+                multipliers={multiplier}
+                tooltipMessage={tooltipMessage}
+              />
+            ))}
           </List>
         )}
       </DialogContent>

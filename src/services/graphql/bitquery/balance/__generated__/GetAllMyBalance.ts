@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface GetAllMyBalance_ethereum_address_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -32,7 +32,7 @@ export interface GetAllMyBalance_ethereum_address_balances_currency {
 }
 
 export interface GetAllMyBalance_ethereum_address_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * Currency of transfer
    */
@@ -42,7 +42,7 @@ export interface GetAllMyBalance_ethereum_address_balances {
 }
 
 export interface GetAllMyBalance_ethereum_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Current address balance
    */
@@ -54,7 +54,7 @@ export interface GetAllMyBalance_ethereum_address {
 }
 
 export interface GetAllMyBalance_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */
@@ -62,7 +62,7 @@ export interface GetAllMyBalance_ethereum {
 }
 
 export interface GetAllMyBalance_bsc_address_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -86,7 +86,7 @@ export interface GetAllMyBalance_bsc_address_balances_currency {
 }
 
 export interface GetAllMyBalance_bsc_address_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * Currency of transfer
    */
@@ -96,7 +96,7 @@ export interface GetAllMyBalance_bsc_address_balances {
 }
 
 export interface GetAllMyBalance_bsc_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Current address balance
    */
@@ -108,7 +108,7 @@ export interface GetAllMyBalance_bsc_address {
 }
 
 export interface GetAllMyBalance_bsc {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */
@@ -116,7 +116,7 @@ export interface GetAllMyBalance_bsc {
 }
 
 export interface GetAllMyBalance_matic_address_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -140,7 +140,7 @@ export interface GetAllMyBalance_matic_address_balances_currency {
 }
 
 export interface GetAllMyBalance_matic_address_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * Currency of transfer
    */
@@ -150,7 +150,7 @@ export interface GetAllMyBalance_matic_address_balances {
 }
 
 export interface GetAllMyBalance_matic_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Current address balance
    */
@@ -162,7 +162,7 @@ export interface GetAllMyBalance_matic_address {
 }
 
 export interface GetAllMyBalance_matic {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */

@@ -19,16 +19,10 @@ interface LanguageSwitcherProps {
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   iconOnly = false,
 }) => {
-  const {
-    changeLocale,
-    rtlLocale,
-    locale,
-    setRTL,
-  } = useContext<AppContextPropsType>(AppContext);
-  const [
-    anchorElLng,
-    setAnchorElLng,
-  ] = React.useState<HTMLButtonElement | null>(null);
+  const {changeLocale, rtlLocale, locale, setRTL} =
+    useContext<AppContextPropsType>(AppContext);
+  const [anchorElLng, setAnchorElLng] =
+    React.useState<HTMLButtonElement | null>(null);
 
   const onClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElLng(event.currentTarget);

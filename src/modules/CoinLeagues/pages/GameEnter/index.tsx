@@ -64,7 +64,7 @@ import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeag
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -151,7 +151,7 @@ function GameEnter(props: Props) {
           }
         });
     }
-  }, [account, gamePlayers ]);
+  }, [account, gamePlayers]);
 
   const players = useMemo(() => {
     if (gamePlayers && gamePlayers.length) {
@@ -271,20 +271,19 @@ function GameEnter(props: Props) {
     [game?.num_players],
   );
 
-  const sufficientFunds = useMemo(
-    () => {
+  const sufficientFunds = useMemo(() => {
+    if (game?.amount_to_play && balance) {
+      const amount = BigNumber.from(game?.amount_to_play);
+      const balBN = BigNumber.from(balance);
+      return balBN.gt(amount);
+    }
+    return false;
+  }, [game?.amount_to_play]);
 
-      if(game?.amount_to_play && balance){
-        const amount = BigNumber.from(game?.amount_to_play);
-        const balBN = BigNumber.from(balance);
-        return balBN.gt(amount);
-      }
-      return false 
-    }, [game?.amount_to_play]);
-
-
-
-  const currentPlayers = useMemo(() => game?.players.length, [game?.players, game]);
+  const currentPlayers = useMemo(
+    () => game?.players.length,
+    [game?.players, game],
+  );
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
@@ -339,10 +338,7 @@ function GameEnter(props: Props) {
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
             Games
           </Link>
-          <Link
-            color='inherit'
-            component={RouterLink}
-            to={enterGameRoute(id)}>
+          <Link color='inherit' component={RouterLink} to={enterGameRoute(id)}>
             {id}
           </Link>
         </Breadcrumbs>
@@ -379,8 +375,8 @@ function GameEnter(props: Props) {
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-        <Box pr={2}>
-            <SwapButton/>
+          <Box pr={2}>
+            <SwapButton />
           </Box>
           <Box pr={2}>
             <ShareButton shareText={`Coin leagues Game #Id ${id}`} />
@@ -571,7 +567,8 @@ function GameEnter(props: Props) {
                       <Button
                         disabled={
                           !isDisabled ||
-                          submitState !== SubmitState.None || !sufficientFunds ||
+                          submitState !== SubmitState.None ||
+                          !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
                         }
                         size={'large'}
@@ -584,7 +581,11 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={sufficientFunds ? 'ENTER GAME' : 'Insufficient Matic Funds' }
+                          defaultMsg={
+                            sufficientFunds
+                              ? 'ENTER GAME'
+                              : 'Insufficient Matic Funds'
+                          }
                           confirmedMsg={'You Entered Game'}
                         />
                       </Button>

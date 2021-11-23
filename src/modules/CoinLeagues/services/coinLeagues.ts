@@ -62,46 +62,45 @@ export const getCoinFeeds = async (
   gameAddress: string,
   provider: any,
 ): Promise<CoinFeed[]> => {
-
-    const iface = new Interface(coinLeaguesAbi);
-    const multicall = await getMulticallFromProvider(provider);
-    let calls: CallInput[] = [];
-    const coins: CoinFeed[] = [];
-    const maxFeeds = 30;
-    const totalPerFeeds = Math.ceil(feeds.length / maxFeeds);
-    const totalFeeds = feeds.length;
-    for (let ind = 0; ind < totalPerFeeds; ind++) {
-      for (let index = ind * maxFeeds; index < (ind + 1) * maxFeeds; index++) {
-        if(index >= totalFeeds){
-          break;
-        }
-        const addr = feeds[index];
-        calls.push({
-          interface: iface,
-          target: gameAddress,
-          function: 'coins',
-          args: [addr],
-        });
+  const iface = new Interface(coinLeaguesAbi);
+  const multicall = await getMulticallFromProvider(provider);
+  let calls: CallInput[] = [];
+  const coins: CoinFeed[] = [];
+  const maxFeeds = 30;
+  const totalPerFeeds = Math.ceil(feeds.length / maxFeeds);
+  const totalFeeds = feeds.length;
+  for (let ind = 0; ind < totalPerFeeds; ind++) {
+    for (let index = ind * maxFeeds; index < (ind + 1) * maxFeeds; index++) {
+      if (index >= totalFeeds) {
+        break;
       }
-      const response = await multicall.multiCall(calls);
-      const [, results] = response;
-      for (let index = 0; index < results.length; index++) {
-        coins.push(results[index]);
-      }
-      calls = [];
+      const addr = feeds[index];
+      calls.push({
+        interface: iface,
+        target: gameAddress,
+        function: 'coins',
+        args: [addr],
+      });
     }
+    const response = await multicall.multiCall(calls);
+    const [, results] = response;
+    for (let index = 0; index < results.length; index++) {
+      coins.push(results[index]);
+    }
+    calls = [];
+  }
 
-    // TODO: check how the returned value is without object
-    // We need to map manually to properties in order to work properly
-    const mappedFeeds = coins.map((c: any) => {
-      return {
-        address: c[0],
-        start_price: c[1],
-        end_price: c[2],
-        score: c[3],
-      } as CoinFeed;
-    });
-    return mappedFeeds;
+  // TODO: check how the returned value is without object
+  // We need to map manually to properties in order to work properly
+  const mappedFeeds = coins.map((c: any) => {
+    return {
+      address: c[0],
+      start_price: c[1],
+      end_price: c[2],
+      score: c[3],
+    } as CoinFeed;
+  });
+  return mappedFeeds;
 };
 
 /**

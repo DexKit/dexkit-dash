@@ -78,9 +78,7 @@ export const NFTListItem = (props: NFTListItemProps) => {
           <Grid item>
             <Grid container alignItems='center' spacing={2}>
               <Grid item>
-               <Typography variant='body1'>
-                    {name}
-                 </Typography>
+                <Typography variant='body1'>{name}</Typography>
               </Grid>
               <Grid item>
                 <Tooltip title={name}>
@@ -99,8 +97,8 @@ export const NFTListItem = (props: NFTListItemProps) => {
                       : network === 'bsc'
                       ? 'BSC'
                       : network === 'matic'
-                      ? 'MATIC' :
-                      ''
+                      ? 'MATIC'
+                      : ''
                   }
                 />
               </Grid>

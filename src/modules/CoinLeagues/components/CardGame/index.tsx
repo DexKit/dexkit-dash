@@ -13,9 +13,9 @@ import {Game, GameType} from 'types/coinsleague';
 import {ethers} from 'ethers';
 import {truncateAddress} from 'utils/text';
 import {useInterval} from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,8 +49,6 @@ interface Props {
   onClick: (address: string) => void;
   btnMessage?: string;
 }
-
-
 
 function CardGame(props: Props): JSX.Element {
   const {game, onClick} = props;
@@ -110,7 +108,7 @@ function CardGame(props: Props): JSX.Element {
           style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
+            &nbsp;{GET_LABEL_FROM_DURATION(time)}
           </Typography>
 
           <Typography variant='h6'>&nbsp;Type:</Typography>

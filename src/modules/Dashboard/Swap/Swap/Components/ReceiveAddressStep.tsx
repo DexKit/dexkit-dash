@@ -64,9 +64,18 @@ export const ReceiveAddressStep = (props: Props) => {
           </Grid>
           <Grid item xs>
             <Typography color='textSecondary' variant='body2'>
-            Service provided by <Link href={"https://changelly.com/"} target={'_blank'}>Changelly </Link>
-            By proceeding, you acknowledge and understand that the transaction may trigger <Link href={"https://changelly.com/aml-kyc"} target={'_blank'}>Changelly KYC verification</Link>. 
-            This is usually for transactions of higher value than 0.4 BTC or equivalent. Proceeding here will NOT withdraw funds from your account nor will you be obliged to continue the transaction”
+              Service provided by{' '}
+              <Link href={'https://changelly.com/'} target={'_blank'}>
+                Changelly{' '}
+              </Link>
+              By proceeding, you acknowledge and understand that the transaction
+              may trigger{' '}
+              <Link href={'https://changelly.com/aml-kyc'} target={'_blank'}>
+                Changelly KYC verification
+              </Link>
+              . This is usually for transactions of higher value than 0.4 BTC or
+              equivalent. Proceeding here will NOT withdraw funds from your
+              account nor will you be obliged to continue the transaction”
             </Typography>
           </Grid>
         </Grid>

@@ -13,9 +13,8 @@ export const GET_LEAGUES_CHAIN_ID = (chainId?: ChainId) => {
 };
 
 export const IS_SUPPORTED_LEAGUES_CHAIN_ID = (chainId?: ChainId) => {
-    if(chainId === ChainId.Mumbai || chainId === ChainId.Matic){
-        return true;
-    }
-    return false;
-  };
-  
+  if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+    return true;
+  }
+  return false;
+};

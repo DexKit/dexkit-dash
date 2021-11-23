@@ -42,9 +42,7 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
-import {
-  useCoinLeagueGames,
-} from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
 import {FilterGame, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
@@ -105,10 +103,8 @@ const GamesList = () => {
   const filtersState = useGamesFilters();
 
   const activeGamesQuery = useCoinLeagueGames({
-    status: 'Started'
+    status: 'Started',
   });
-
-  
 
   const waitingGamesQuery = useCoinLeagueGames({
     status: 'Waiting',
@@ -457,10 +453,7 @@ const GamesList = () => {
           </Grid>
         )}
         {value === Tabs.History && (
-          <GamesEnded
-            search={search}
-            filters={filtersState}
-          />
+          <GamesEnded search={search} filters={filtersState} />
         )}
       </Grid>
     </>
