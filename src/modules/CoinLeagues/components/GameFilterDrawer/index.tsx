@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   Chip,
@@ -9,14 +9,10 @@ import {
   Drawer,
   IconButton,
   Divider,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
   MenuItem,
   Select,
   FormControl,
   InputLabel,
-  Badge,
   makeStyles,
 } from '@material-ui/core';
 
@@ -26,8 +22,6 @@ import Close from '@material-ui/icons/Close';
 import {
   GameDuration,
   GameLevel,
-  GameOrderBy,
-  GameStakeAmount,
   GameType,
   NumberOfPLayers,
 } from 'modules/CoinLeagues/constants/enums';
@@ -72,9 +66,12 @@ export const GameFilterDrawer = (props: Props) => {
     [filtersState],
   );
 
-  const handleChangeNumberOfPlayers = useCallback((e) => {
-    filtersState.setNumberOfPlayers(e.target.value);
-  }, []);
+  const handleChangeNumberOfPlayers = useCallback(
+    (e) => {
+      filtersState.setNumberOfPlayers(e.target.value);
+    },
+    [filtersState],
+  );
 
   const handleChangeStakeAmount = useCallback(
     (e) => {
