@@ -146,7 +146,7 @@ export function renderEarningsField(params: string) {
   }`;
 }
 
-export function getWaitingGamesQuery(params: any) {
+export function getGamesQuery(params: any) {
   let queryVariableParams = [];
   let queryParams = [];
   let whereParams = [];
@@ -224,6 +224,7 @@ export function getWaitingGamesQuery(params: any) {
   query GetGames(${paramsString}) {
     games(where: {${whereParamsString}}, ${receiveParamsString}) {
         id
+        intId
         type
         duration
         status

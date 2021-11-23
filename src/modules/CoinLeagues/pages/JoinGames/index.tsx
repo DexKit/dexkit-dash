@@ -36,8 +36,7 @@ import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
 import {
-  useCoinLeagueGames,
-  useWaitingGames,
+  useCoinLeagueGames
 } from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {FilterGame} from 'modules/CoinLeagues/constants/enums';
@@ -58,18 +57,13 @@ const JoinGames = () => {
   useDiscord();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [filterGame, setFilterGame] = useState(FilterGame.ALL);
   const [search, setSearch] = useState('');
-  const [orderByGame, setOrderByGame] = useState(GameOrderBy.HighLevel);
-
   const {messages} = useIntl();
   const filtersState = useGamesFilters();
 
   const waitingGamesQuery = useCoinLeagueGames({
     status: 'Waiting',
-    filter: filterGame,
     accounts: account ? [account] : undefined,
-    orderBy: orderByGame,
     filters: filtersState,
   });
 

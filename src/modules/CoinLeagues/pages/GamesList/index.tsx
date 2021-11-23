@@ -43,16 +43,13 @@ import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
 import {
-  useActiveGames,
   useCoinLeagueGames,
-  useWaitingGames,
 } from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
 import {FilterGame, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import {isGameCreator} from 'modules/CoinLeagues/utils/game';
-import {GameOrderByDropdown} from 'modules/CoinLeagues/components/GameOrderByDropdown';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
@@ -80,7 +77,7 @@ enum Tabs {
   Games = 'Games',
 }
 
-const GamesListV2 = () => {
+const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
   const {account} = useWeb3();
@@ -90,8 +87,6 @@ const GamesListV2 = () => {
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [filterGame, setFilterGame] = useState(FilterGame.ALL);
-  const [orderByGame, setOrderByGame] = useState(GameOrderBy.HighLevel);
   const [search, setSearch] = useState('');
   const [value, setValue] = React.useState(Tabs.Games);
 
@@ -107,16 +102,17 @@ const GamesListV2 = () => {
     },
     [value],
   );
-
-  const activeGamesQuery = useActiveGames();
-
   const filtersState = useGamesFilters();
+
+  const activeGamesQuery = useCoinLeagueGames({
+    status: 'Started'
+  });
+
+  
 
   const waitingGamesQuery = useCoinLeagueGames({
     status: 'Waiting',
-    filter: filterGame,
     accounts: account ? [account] : undefined,
-    orderBy: orderByGame,
     filters: filtersState,
   });
 
@@ -462,7 +458,6 @@ const GamesListV2 = () => {
         )}
         {value === Tabs.History && (
           <GamesEnded
-            filter={filterGame}
             search={search}
             filters={filtersState}
           />
@@ -472,4 +467,4 @@ const GamesListV2 = () => {
   );
 };
 
-export default GamesListV2;
+export default GamesList;

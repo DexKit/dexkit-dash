@@ -4,12 +4,10 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import axios from 'axios';
 
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useQuery} from 'react-query';
-import {getTokenBalances} from 'services/multicall';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+
 import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
-import {Token} from 'types/app';
+
 import {ChainId, Web3State} from 'types/blockchain';
 import {
   getChampionMetadata,

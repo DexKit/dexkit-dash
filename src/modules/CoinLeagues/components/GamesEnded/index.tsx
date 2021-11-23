@@ -15,19 +15,17 @@ import {GameFiltersState} from 'modules/CoinLeagues/hooks/useGamesFilter';
 
 interface Props {
   filters: GameFiltersState;
-  filter?: FilterGame;
   search?: string;
 }
 
 export const GamesEnded = (props: Props) => {
-  const {filter, search, filters} = props;
+  const { search, filters} = props;
   const {account} = useWeb3();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
 
   const gamesEndedQuery = useCoinLeagueGames({
     status: 'Ended',
-    filter,
     accounts: account ? [account] : undefined,
     filters,
   });

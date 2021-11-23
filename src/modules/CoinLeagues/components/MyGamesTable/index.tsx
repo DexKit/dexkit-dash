@@ -5,8 +5,8 @@ import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import {useMyGames, useMyGamesV2} from 'modules/CoinLeagues/hooks/useMyGames';
-import {useWeb3} from 'hooks/useWeb3';
+import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
+
 import {
   CoinLeagueGameStatus,
   FilterPlayerGame,
@@ -38,7 +38,7 @@ const MyGamesTable: React.FC = () => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useMyGamesV2({
+  } = useMyGames({
     accounts: account ? [account] : undefined,
     filters: filtersState,
     status,
@@ -69,7 +69,7 @@ const MyGamesTable: React.FC = () => {
 
   useEffect(() => {
     filtersState.setIsMyGames(true);
-  }, []);
+  }, [filtersState]);
 
   const isMobile = useMobile();
 

@@ -37,7 +37,7 @@ export const coinLeaguesConfigs = [
     routes: [
       {
         path: '/coin-league/room/:room/active-games',
-        component: React.lazy(() => import('./pages/GamesInProgressV2')),
+        component: React.lazy(() => import('./pages/GamesInProgress')),
       },
     ],
   },
@@ -45,7 +45,7 @@ export const coinLeaguesConfigs = [
     routes: [
       {
         path: '/coin-league/room/:room',
-        component: React.lazy(() => import('./pages/GamesListV2')),
+        component: React.lazy(() => import('./pages/GamesList')),
       },
     ],
   },
@@ -54,7 +54,7 @@ export const coinLeaguesConfigs = [
     routes: [
       {
         path: '/coin-league/active-games',
-        component: React.lazy(() => import('./pages/GamesInProgressV2')),
+        component: React.lazy(() => import('./pages/GamesInProgress')),
       },
     ],
   },
@@ -102,7 +102,7 @@ export const coinLeaguesConfigs = [
     routes: [
       {
         path: '/coin-league',
-        component: React.lazy(() => import('./pages/GamesListV2')),
+        component: React.lazy(() => import('./pages/GamesList')),
       },
     ],
   },

@@ -32,6 +32,7 @@ import {
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -48,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 6,
     border: '1px solid #525C75',
     margin: theme.spacing(0.5),
+    backgroundColor: '#3C4255',
+  },
+  textField: {
+    marginRight: '5px',
+    color: '#fff',
+    borderRadius: 6,
+    padding: '5px',
     backgroundColor: '#3C4255',
   },
   label: {
@@ -101,6 +109,7 @@ const CreateGameModal = (props: Props) => {
   const [gameType, setGameType] = useState('winner-game');
   const [entryAmount, setEntryAmount] = useState<number>();
   const [duration, setGameDuration] = useState<number>();
+  const [startDate, setStartDate] = useState<number>(new Date().getTime());
   const [totalPlayers, setTotalPlayers] = useState<number>();
   const [totalGames, setTotalGames] = useState<number>(1);
   const [submittedGames, setSubmittedGames] = useState<number>(0);
@@ -116,17 +125,17 @@ const CreateGameModal = (props: Props) => {
         setSubmittedGames(0);
         setConfirmedGames(0);
         let confirmed = 0;
-        let submitted = 0
+        let submitted = 0;
         for (let index = 0; index < totalGames; index++) {
           setSubmitState(SubmitState.WaitingWallet);
           const onSubmitTx = (tx: string) => {
-            confirmed ++;
+            confirmed++;
             setSubmittedGames(confirmed);
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
           };
           const onConfirmTx = () => {
-            submitted ++;
+            submitted++;
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
             refetchCreated().then((r) => {
@@ -155,7 +164,9 @@ const CreateGameModal = (props: Props) => {
             abortTimestamp: Math.round(
               new Date().getTime() / 1000 + duration * 3,
             ),
+            startTimestamp: startDate,
             type: gameType === 'winner-game' ? 0 : 1,
+            isNFT: false,
           };
           onGameCreateCallback(params, {
             onConfirmation: onConfirmTx,
@@ -175,7 +186,8 @@ const CreateGameModal = (props: Props) => {
       history,
       onGameCreateCallback,
       refetchCreated,
-      totalGames
+      totalGames,
+      startDate
     ],
   );
 
@@ -358,8 +370,34 @@ const CreateGameModal = (props: Props) => {
             </RadioGroup>
           </FormControl>
         </Grid>
+
+        <Grid
+          container
+          className={`${classes.innerContent} ${classes.formControl}`}>
+          <Grid item xs={12}>
+            <FormControl fullWidth component='fieldset'>
+            <FormLabel
+              className={classes.label}
+              style={{fontSize: '1.25rem', fontWeight: 600}}>
+             Start Date
+            </FormLabel>
+              <TextField
+                id='datetime-local'
+                label='Start Date'
+                type='datetime-local'
+                defaultValue={new Date(startDate)}
+                onChange={(event) => setStartDate(Number(new Date(event.target.value).getTime()))}
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
                 How many Games?
@@ -401,13 +439,16 @@ const CreateGameModal = (props: Props) => {
           </Grid>
         )}
 
-    {(submitState === SubmitState.Confirmed || submitState === SubmitState.Submitted) && totalGames > 1 && (
-          <Grid container justifyContent={'center'}>
-            <Grid item xs>
-             Submitted tx's {submittedGames}/{totalGames} and Confirmed tx's on chain  {confirmedGames}/{totalGames}
+        {(submitState === SubmitState.Confirmed ||
+          submitState === SubmitState.Submitted) &&
+          totalGames > 1 && (
+            <Grid container justifyContent={'center'}>
+              <Grid item xs>
+                Submitted tx's {submittedGames}/{totalGames} and Confirmed tx's
+                on chain {confirmedGames}/{totalGames}
+              </Grid>
             </Grid>
-          </Grid>
-        )}
+          )}
 
         <Grid container justifyContent={'center'}>
           <Grid item xs>

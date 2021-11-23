@@ -5,6 +5,7 @@ export interface Player {
   player_address: string;
   captain_coin: string;
   champion_id: string;
+  affiliate?: string;
   coin_feeds?: CoinFeed[];
 }
 
@@ -44,5 +45,7 @@ export interface GameParams {
   amountUnit: BigNumber;
   numCoins: number;
   abortTimestamp: number;
+  startTimestamp: number;
   type: number;
+  isNFT: boolean;
 }

@@ -21,7 +21,6 @@ import {
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import {truncateAddress} from 'utils/text';
 import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
@@ -129,10 +128,12 @@ function GameEnter(props: Props) {
     setOpen(true);
   }, []);
 
+  const gamePlayers = game?.players;
+
   const player = useMemo(() => {
-    if (account && game?.players && game?.players.length) {
+    if (account && gamePlayers && gamePlayers.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
-      return game.players
+      return gamePlayers
         .map((p: any) => {
           return {
             coin_feeds: p[0],
@@ -150,12 +151,12 @@ function GameEnter(props: Props) {
           }
         });
     }
-  }, [account, game?.players, game]);
+  }, [account, gamePlayers ]);
 
   const players = useMemo(() => {
-    if (game?.players && game?.players.length) {
+    if (gamePlayers && gamePlayers.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
-      return game.players.map((p: any) => {
+      return gamePlayers.map((p: any) => {
         return {
           coin_feeds: p[0],
           player_address: p[1],
@@ -165,7 +166,7 @@ function GameEnter(props: Props) {
         } as Player;
       });
     }
-  }, [game?.players, game]);
+  }, [gamePlayers]);
 
   const onCloseSelectDialog = useCallback((ev: any) => {
     setIsChaptainCoin(false);

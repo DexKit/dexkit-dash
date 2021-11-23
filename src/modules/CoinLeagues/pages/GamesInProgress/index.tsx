@@ -35,10 +35,9 @@ import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import {
-  useActiveGames,
   useCoinLeagueGames,
 } from 'modules/CoinLeagues/hooks/useGames';
-import {FilterGame, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
 import {useIntl} from 'react-intl';
@@ -46,7 +45,7 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 
-const GamesInProgressV2 = () => {
+const GamesInProgress = () => {
   const history = useHistory();
   const {account} = useWeb3();
   const {messages} = useIntl();
@@ -305,4 +304,4 @@ const GamesInProgressV2 = () => {
   );
 };
 
-export default GamesInProgressV2;
+export default GamesInProgress;

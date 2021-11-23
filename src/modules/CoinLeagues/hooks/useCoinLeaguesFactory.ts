@@ -90,7 +90,7 @@ export const useCoinLeaguesFactory = () => {
         callbacks?.onError(e);
       }
     },
-    [web3State, chainId, factoryAddress],
+    [web3State, factoryAddress],
   );
 
   const gamesAddressQuery = useQuery(['GetGamesAddress', chainId], () => {

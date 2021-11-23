@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {
   Backdrop,
   makeStyles,
-  useTheme,
   Grid,
   Typography,
   Card,
