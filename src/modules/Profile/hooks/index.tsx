@@ -5,6 +5,7 @@ import {AppState} from 'redux/store';
 import {
   setDefaultKittyOnChain,
   clearOldState,
+  updateImage,
 } from 'redux/_kittygotchi/actions';
 import {Kittygotchi} from 'types/kittygotchi';
 
@@ -59,6 +60,15 @@ export function useProfileKittygotchi() {
     [kittygotchiState.kittygotchiByChain],
   );
 
+  const updateKittygotchiImage = useCallback(
+    (url: string, address: string, chainId: number) => {
+      if (kittygotchiState?.kittygotchiByChain) {
+        dispatch(updateImage({url, chainId, address}));
+      }
+    },
+    [],
+  );
+
   /**
    * migrate from to onchain based default
    */
@@ -74,6 +84,7 @@ export function useProfileKittygotchi() {
   return {
     getDefault,
     setDefaultKittygothchi,
+    updateKittygotchiImage,
     kittygotchi: kittygotchiState.kittygotchi,
     isDefault,
   };

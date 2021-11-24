@@ -10,10 +10,11 @@ import {useNetwork} from 'hooks/useNetwork';
 
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
-import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
+
+const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {

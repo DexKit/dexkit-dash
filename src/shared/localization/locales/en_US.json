@@ -6,7 +6,7 @@
   "app.hash": "Hash",
   "app.protocol": "Protocol",
   "app.amount": "Amount",
-  "app.trade.limit": "Limit", 
+  "app.trade.limit": "Limit",
   "app.trade.market": "Market",
   "app.sellAmount": "Sell Amount",
   "app.buyAmount": "Buy Amount",
@@ -990,7 +990,7 @@
   "app.coinLeague.myChampions": "My Champions",
   "app.coinLeague.notEnoughMaticStart": "You will need at least",
   "app.coinLeague.notEnoughMaticEnd": "MATIC to mint a champion.",
-  "app.kittygotchi.clothes": "Clothes"
+  "app.kittygotchi.clothes": "Clothes",
+  "app.kittygotchi.edit": "Edit",
+  "app.kittygotchi.cancel": "Cancel"
 }
-
-

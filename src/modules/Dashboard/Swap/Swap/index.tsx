@@ -14,7 +14,7 @@ import {
   useTheme,
   Badge,
 } from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
+import {Skeleton, Alert} from '@material-ui/lab';
 
 import {Changelly} from 'services/rest/changelly';
 import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
@@ -632,6 +632,13 @@ export const SwapComponent = (props: SwapComponentProps) => {
             </CardContent>
             <CardContent>
               <Grid container spacing={2}>
+                {fromCoin?.notifications?.payin ? (
+                  <Grid item xs={12}>
+                    <Alert severity='info'>
+                      NOTE: {fromCoin.notifications?.payin}
+                    </Alert>
+                  </Grid>
+                ) : null}
                 <Grid item xs={12}>
                   <Grid container alignItems='center' spacing={2}>
                     <Grid item xs={12}>
@@ -776,3 +783,5 @@ export const SwapComponent = (props: SwapComponentProps) => {
     </>
   );
 };
+
+export default SwapComponent;

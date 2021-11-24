@@ -27,7 +27,6 @@ import {useTransak} from 'hooks/useTransak';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 
 import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
@@ -40,6 +39,8 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+
+const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {

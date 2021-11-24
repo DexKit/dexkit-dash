@@ -15,4 +15,10 @@ export const setDefaultKittyOnChain = createAction<{
   kittygotchi: Kittygotchi;
 }>('kittygotchi/setDefaultKittyOnChain');
 
+export const updateImage = createAction<{
+  url: string;
+  chainId: number;
+  address: string;
+}>('kittygotchi/updateImage');
+
 export const clearOldState = createAction('kittygotchi/clearOldState');

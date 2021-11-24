@@ -6,7 +6,8 @@ import {CremaTheme} from 'types/AppContextPropsType';
 
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
-import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
+
+const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   backdrop: {

@@ -3,7 +3,7 @@ import {ListItem, ListItemText} from '@material-ui/core';
 import clsx from 'clsx';
 import {NavLink} from '../../../index';
 import useStyles from './VerticalItem.style';
-import {useHistory} from 'react-router';
+import packageJson from '../../../../../package.json';
 
 export const Version = () => {
 
@@ -13,7 +13,7 @@ export const Version = () => {
     <ListItem
       component={NavLink}
       className={clsx(classes.navItem, 'nav-item')}>
-      <ListItemText primary={'v0.0.3-4'} classes={{primary: 'nav-item-text'}} />
+      <ListItemText primary={`v${packageJson.version}`} classes={{primary: 'nav-item-text'}} />
     </ListItem>
   );
 };
