@@ -783,3 +783,5 @@ export const SwapComponent = (props: SwapComponentProps) => {
     </>
   );
 };
+
+export default SwapComponent;
