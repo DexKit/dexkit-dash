@@ -32,6 +32,8 @@ import {canFeedKitty, isKittyTired} from 'modules/Kittygotchi/utils';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import {leftPad} from 'utils';
 
+import EditIcon from '@material-ui/icons/Edit';
+
 const useStyles = makeStyles((theme) => ({
   avatar: {
     border: ' 1px solid #525C75',
@@ -55,7 +57,7 @@ interface ProfileKittygotchiCardProps {
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, onFeed, kittygotchi, loadingKyttie} = props;
+  const {loading, onMint, onFeed, kittygotchi, loadingKyttie, onEdit} = props;
 
   const theme = useTheme();
 
@@ -169,21 +171,21 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     </Tooltip>
                   )}
                 </Grid>
-                {/*<Grid item>
+                <Grid item>
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
-                      width={theme.spacing(5)}
-                      height={theme.spacing(5)}
+                      width={theme.spacing(8)}
+                      height={theme.spacing(8)}
                     />
                   ) : (
-                    <Tooltip title='Edit (Coming soon)'>
-                      <RoundedIconButton disabled onClick={onEdit}>
+                    <Tooltip title='Edit'>
+                      <RoundedIconButton onClick={onEdit}>
                         <EditIcon />
                       </RoundedIconButton>
                     </Tooltip>
                   )}
-                </Grid>*/}
+                </Grid>
                 <Grid item>
                   {loadingKyttie ? (
                     <Skeleton
