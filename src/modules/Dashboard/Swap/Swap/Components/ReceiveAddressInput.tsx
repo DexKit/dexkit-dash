@@ -42,7 +42,11 @@ export const ReceiveAddressInput = (props: Props) => {
 
   const helperText = useCallback(() => {
     if (address === '') {
-      return `Insert a valid ${coin?.fullName} address`;
+      if (coin?.blockchain) {
+        return `Insert a valid ${coin?.blockchain?.toUpperCase()} address`;
+      } else {
+        return `Insert a valid ${coin?.fullName} address`;
+      }
     }
 
     if (!isAddressValid) {
