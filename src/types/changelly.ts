@@ -12,7 +12,13 @@ export interface ChangellyCoin {
   payinConfirmations: number;
   ticker: string;
   transactionUrl: string;
+  protocol?: string;
+  blockchain?: string;
+  notifications: {
+    payin?: string | null;
+  };
 }
+
 export interface ChangellyTransaction {
   amountExpectedFrom: string;
   amountExpectedTo: string;
