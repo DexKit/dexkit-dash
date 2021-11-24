@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   innerContent: {
-    fontSize: '1rem',
+    fontSize: '0.75rem',
   },
 }));
 

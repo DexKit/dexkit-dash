@@ -233,6 +233,7 @@ export function getGamesQuery(params: any) {
         currentPlayers
         entry
         startedAt
+        startsAt
         endedAt
         ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
       }

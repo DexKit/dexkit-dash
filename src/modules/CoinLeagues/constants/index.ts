@@ -673,7 +673,7 @@ export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
 
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xA67B9dBfb1371DEBB7f60B681A74798f014cb007',
-  [ChainId.Matic]: '0x8fFA73bB9404c6fa01A16e0F996787bD3F4CeF66',
+  [ChainId.Matic]: '0xA67B9dBfb1371DEBB7f60B681A74798f014cb007',
 };
 
 export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {

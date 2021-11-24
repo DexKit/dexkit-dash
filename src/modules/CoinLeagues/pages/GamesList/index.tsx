@@ -25,7 +25,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
-import SmallCardGameV2 from 'modules/CoinLeagues/components/SmallCardGame';
+import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
@@ -43,9 +43,9 @@ import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
-import CardGameV2 from 'modules/CoinLeagues/components/CardGameV2';
+import CardGame from 'modules/CoinLeagues/components/CardGame';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
-import {FilterGame, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import {isGameCreator} from 'modules/CoinLeagues/utils/game';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
@@ -276,7 +276,7 @@ const GamesList = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.slice(0, 4).map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
-                <SmallCardGameV2 game={g} key={id} onClick={onClickEnterGame} />
+                <SmallCardGame game={g} key={id} onClick={onClickEnterGame} />
               </Grid>
             ))}
             {isLoadingStarted &&
@@ -431,7 +431,7 @@ const GamesList = () => {
             <Grid container spacing={4}>
               {gamesToJoin?.map((g, id) => (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                  <CardGameV2 game={g} id={g.id} onClick={onClickEnterGame} />
+                  <CardGame game={g} id={g.id} onClick={onClickEnterGame} />
                 </Grid>
               ))}
               {isLoadingCreated &&

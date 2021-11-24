@@ -63,7 +63,7 @@ export const useCoinLeaguesFactoryRoutes = () => {
 };
 
 export const useCoinLeaguesFactory = () => {
-  const {web3State, chainId} = useWeb3();
+  const {chainId} = useWeb3();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
@@ -223,6 +223,8 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
         return;
       }
       try {
+        console.log(factoryAddress);
+        console.log(params);
         const tx = await createGame(factoryAddress, params);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();

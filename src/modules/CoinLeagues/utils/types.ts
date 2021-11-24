@@ -13,6 +13,7 @@ export interface GameGraph {
   status: string;
   duration: string;
   numCoins: string;
+  startsAt: string;
   numPlayers: string;
   currentPlayers: string;
   entry: string;

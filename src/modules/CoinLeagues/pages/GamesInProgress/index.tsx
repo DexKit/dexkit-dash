@@ -27,7 +27,7 @@ import SwapButton from 'shared/components/SwapButton';
 import ContainedInput from 'shared/components/ContainedInput';
 import {Search} from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import CardGameProgressV2 from 'modules/CoinLeagues/components/CardGameProgressV2';
+import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
@@ -273,7 +273,7 @@ const GamesInProgress = () => {
           <Grid container spacing={4}>
             {gamesInProgress?.map((g, id) => (
               <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={id}>
-                <CardGameProgressV2
+                <CardGameProgress
                   game={g}
                   key={id}
                   onClick={onClickEnterGame}

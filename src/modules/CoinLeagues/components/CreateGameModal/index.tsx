@@ -34,7 +34,7 @@ import {ChainId} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-import {RefetchQueryFilters} from 'react-query';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -145,12 +145,9 @@ const CreateGameModal = (props: Props) => {
               if (totalGames === 1) {
                 if (r.data) {
                   // Sent user to created game
-                  history.push(enterGameRoute(`${r.data - 1}`)
-
+                  history.push(enterGameRoute(`${r.data - 1}`));
                 }
               }
-
-
             })
             
           };
@@ -160,7 +157,7 @@ const CreateGameModal = (props: Props) => {
               setSubmitState(SubmitState.None);
             }, 3000);
           };
-
+ 
           const params: GameParams = {
             numPlayers: totalPlayers,
             duration,
@@ -169,7 +166,7 @@ const CreateGameModal = (props: Props) => {
             abortTimestamp: Math.round(
               new Date().getTime() / 1000 + duration * 3,
             ),
-            startTimestamp: startDate,
+            startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
             isNFT: false,
           };
@@ -190,7 +187,7 @@ const CreateGameModal = (props: Props) => {
       enterGameRoute,
       history,
       onGameCreateCallback,
-      refetchCreated,
+      totalFactoryGames.refetch,
       totalGames,
       startDate,
     ],
