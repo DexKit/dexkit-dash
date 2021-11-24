@@ -158,7 +158,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   useEffect(() => {
     if (chainId && account) {
-      let defaultKitty = kittygotchiProfile.getDefault(account, chainId);
+      const defaultKitty = kittygotchiProfile.getDefault(account, chainId);
 
       if (defaultKitty) {
         kittygotchi.get(defaultKitty.id).then((kitty) => {
@@ -168,7 +168,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         });
       }
     }
-  }, [chainId, account, kittygotchi, kittygotchiProfile.kittygotchi]);
+  }, [chainId, account]);
 
   return (
     <>
