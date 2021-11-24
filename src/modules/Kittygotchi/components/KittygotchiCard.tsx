@@ -27,7 +27,10 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.palette.grey[700],
   },
   media: {
-    height: theme.spacing(40),
+    height: theme.spacing(50),
+    [theme.breakpoints.down('sm')]: {
+      height: theme.spacing(60),
+    },
   },
   icon: {
     height: theme.spacing(4),

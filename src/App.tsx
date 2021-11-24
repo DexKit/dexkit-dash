@@ -16,6 +16,7 @@ import {Web3Manager} from 'shared/components/Web3Manager';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import CacheBuster from 'shared/components/CacheBuster';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
                     <CssBaseline />
                     <Web3Manager />
                     <ReactNotification />
+                     <CacheBuster />
                     {/*  <ThemeSetting props={{}}/>*/}
                     <InfoView />
                     <AppLayout />

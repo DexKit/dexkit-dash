@@ -144,7 +144,7 @@ export const KittygotchiTraits: any = {
   ],
   [KittygotchiTraitType.MOUTH]: [
     {
-      value: 'Cute',
+      value: 'cute',
       path: 'cute',
       holding: 20,
     },
