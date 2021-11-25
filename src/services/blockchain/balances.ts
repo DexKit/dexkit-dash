@@ -57,7 +57,7 @@ export const getAllBlockchainBalances = async (
     price24hPercentage: 0,
   };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
+  // @ts-ignore
   bal.push(ethToken);
 
   return {balances: bal as MyBalances[], nftBalances: [] as MyBalances[]};

@@ -41,7 +41,7 @@ export function Ranking() {
     (_event: React.ChangeEvent<{}>, newValue: Tabs) => {
       setValue(newValue);
     },
-    [value],
+    [],
   );
 
   return (
