@@ -46,7 +46,7 @@ import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
-import {useKittygotchiV2} from 'modules/Kittygotchi/hooks';
+import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -155,6 +155,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
 
   const kittygotchiProfile = useProfileKittygotchi();
   const kittygotchi = useKittygotchiV2();
+  const kittyGotchiList = useKittygotchiList();
 
   useEffect(() => {
     if (chainId && account) {
@@ -164,6 +165,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         kittygotchi.get(defaultKitty.id).then((kitty) => {
           if (account && chainId && kitty) {
             kittygotchiProfile.setDefaultKittygothchi(account, chainId, kitty);
+          }
+        });
+      } else {
+        kittyGotchiList.get(account.toLowerCase()).then((kitties) => {
+          if (kitties && kitties.length && account && chainId) {
+            kittygotchiProfile.setDefaultKittygothchi(
+              account,
+              chainId,
+              kitties[0],
+            );
           }
         });
       }

@@ -84,45 +84,52 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               <Grid item xs={12}>
                 <Alert severity='info'>
                   <Typography variant='body2'>
-                    Connect to <strong>Polygon(MATIC)</strong> network to create
-                    a Kittygotchi
+                    Connect your wallet to <strong>Polygon(MATIC)</strong> network to create
+                    a Kittygotchi Or see your default minted Kitty
                   </Typography>
                 </Alert>
               </Grid>
             ) : null}
-            <Grid item xs={12}>
-              <Box
-                display='flex'
-                alignItems='center'
-                alignContent='center'
-                justifyContent='center'>
-                <NFTEmptyStateImage />
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography gutterBottom align='center' variant='h6'>
-                You don't have a Kittygotchi NFT yet
-              </Typography>
+            {chainId === ChainId.Matic || chainId === ChainId.Mumbai ? (
+              <>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <NFTEmptyStateImage />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography gutterBottom align='center' variant='h6'>
+                    You don't have a Kittygotchi NFT yet
+                  </Typography>
 
-              <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens in your wallet to
-                create one.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box display='flex' justifyContent='center'>
-                <Button
-                  onClick={onMint}
-                  disabled={
-                    chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
-                  }
-                  startIcon={<GavelIcon />}
-                  variant='outlined'
-                  color='primary'>
-                  Create Kittygotchi
-                </Button>
-              </Box>
-            </Grid>
+                  <Typography
+                    color='textSecondary'
+                    align='center'
+                    variant='body2'>
+                    You will need <strong>10 MATIC</strong> tokens in your
+                    wallet to create one.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box display='flex' justifyContent='center'>
+                    <Button
+                      onClick={onMint}
+                      disabled={
+                        chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
+                      }
+                      startIcon={<GavelIcon />}
+                      variant='outlined'
+                      color='primary'>
+                      Create Kittygotchi
+                    </Button>
+                  </Box>
+                </Grid>{' '}
+              </>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>
