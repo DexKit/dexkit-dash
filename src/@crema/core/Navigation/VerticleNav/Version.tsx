@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {NavLink} from '../../../index';
 import useStyles from './VerticalItem.style';
 import {useHistory} from 'react-router';
+import packageJson from '../../../../../package.json';
 
 export const Version = () => {
   const history = useHistory();
@@ -18,7 +19,7 @@ export const Version = () => {
       onClick={onClick}
       component={NavLink}
       className={clsx(classes.navItem, 'nav-item')}>
-      <ListItemText primary={'v0.0.6-7'} classes={{primary: 'nav-item-text'}} />
+      <ListItemText primary={`v${packageJson.version}`} classes={{primary: 'nav-item-text'}} />
     </ListItem>
   );
 };

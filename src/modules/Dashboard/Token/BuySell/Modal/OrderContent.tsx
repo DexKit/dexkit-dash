@@ -95,6 +95,7 @@ const OrderContent: React.FC<Props> = (props) => {
     error,
     isRequestConfirmed,
     onClose,
+    networkName,
     onNext,
     onLoading,
     onRequestConfirmed,
@@ -102,7 +103,6 @@ const OrderContent: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const networkName = useNetwork();
   const {data} = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<SwapQuoteResponse>();
   const [buyAmount, setBuyAmount] = useState(0);
@@ -282,20 +282,6 @@ const OrderContent: React.FC<Props> = (props) => {
     setDisplayGasPrice(newDisplayGasPrice);
   };
 
-  const handleChangeDisplayGasPrice = (newDisplayGasPrice: string) => {
-    setSelectedGasOption('manual');
-
-    setDisplayGasPrice(newDisplayGasPrice);
-
-    const newSelectedGasPrice = (
-      parseFloat(newDisplayGasPrice) * Math.pow(10, 9)
-    ).toString();
-
-    setSelectedGasPrice(newSelectedGasPrice);
-
-    updateFee(new BigNumber(newSelectedGasPrice));
-  };
-
   const handleClickGuaranteedPrice = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -343,16 +329,6 @@ const OrderContent: React.FC<Props> = (props) => {
     firstSymbol = tokenTo.symbol;
     secondSymbol = tokenFrom.symbol;
   }
-
-  const lowGasPrice = (parseInt(defaultGasPrice) * 0.8).toString();
-  const displayLowGas = (parseInt(lowGasPrice) / Math.pow(10, 9)).toFixed(2);
-
-  const displayDefaultGas = (
-    parseInt(defaultGasPrice) / Math.pow(10, 9)
-  ).toFixed(2);
-
-  const fastGasPrice = (parseInt(defaultGasPrice) * 1.6).toString();
-  const displayFastGas = (parseInt(fastGasPrice) / Math.pow(10, 9)).toFixed(2);
   const {usdFormatter} = useUSDFormatter();
 
   const estimatedFeeUSD = data ? usdFormatter.format(fee * data) : null;

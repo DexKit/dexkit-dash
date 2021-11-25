@@ -39,7 +39,7 @@ export function copyToClipboard(textToCopy: string) {
   }
 }
 
-export const IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
+export const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs/';
 
 export function isIpfsUrl(url: string) {
   return url.startsWith('ipfs://');

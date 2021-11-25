@@ -1,7 +1,9 @@
 import {
   ListItem,
   ListItemIcon,
+  ListItemSecondaryAction,
   Avatar,
+  Chip,
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
@@ -39,6 +41,12 @@ export const SelectCoinListItem = (props: Props) => {
         primary={coin.ticker?.toUpperCase()}
         secondary={coin.fullName}
       />
+
+      {coin.protocol ? (
+        <ListItemSecondaryAction>
+          <Chip label={coin.protocol?.toUpperCase()} />
+        </ListItemSecondaryAction>
+      ) : null}
     </ListItem>
   );
 };

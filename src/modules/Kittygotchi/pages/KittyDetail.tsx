@@ -354,13 +354,13 @@ export const KittyDetail = () => {
                               />
                             </Tooltip>
                           </Grid>
-                          {/* <Grid item>
-                            <Tooltip title='Edit (Coming soon)'>
+                          <Grid item>
+                            <Tooltip title='Edit'>
                               <RoundedIconButton onClick={handleClickEdit}>
                                 <Edit />
                               </RoundedIconButton>
                             </Tooltip>
-                          </Grid> */}
+                          </Grid>
                           <Grid item>
                             <Tooltip title='Open on OpenSea'>
                               <RoundedIconButton onClick={goToOpenSea}>

@@ -16,11 +16,13 @@ import {Web3Manager} from 'shared/components/Web3Manager';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import CacheBuster from 'shared/components/CacheBuster';
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <ContextProvider>
+    <CacheBuster />
     <Provider store={store}>
       <ApolloProvider client={client}>
         <QueryClientProvider client={queryClient}>
@@ -32,6 +34,7 @@ const App = () => (
                     <CssBaseline />
                     <Web3Manager />
                     <ReactNotification />
+
                     {/*  <ThemeSetting props={{}}/>*/}
                     <InfoView />
                     <AppLayout />

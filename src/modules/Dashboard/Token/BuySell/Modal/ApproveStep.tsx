@@ -85,7 +85,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         })
         .catch((e) => onNext(false, e));
     }
-  }, [step, onShifting, isApprove, onNext, onLoading]);
+  }, [step]);
 
   const handleAction = async () => {
     try {

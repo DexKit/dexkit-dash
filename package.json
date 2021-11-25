@@ -1,6 +1,6 @@
 {
   "name": "dexkit-dash",
-  "version": "0.6.0",
+  "version": "0.0.6.9",
   "private": true,
   "jest": {
     "testEnvironment": "node"
@@ -190,6 +190,8 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "generate-build-version": "node generate-build-version.js",
+    "prebuild": "yarn generate-build-version",
     "start": "react-scripts start",
     "build": "react-scripts build --max_old_space_size=8192 CI=false",
     "test": "react-scripts test",
