@@ -38,7 +38,24 @@ const Changelog = () => {
         mb={2}>
         Changelog
       </Box>
-      <Accordion defaultExpanded={true}>
+         <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.10'
+          id='panelv0.0.6.10-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.10 - 25-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+             Improve Kittygotchi logic
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.9'

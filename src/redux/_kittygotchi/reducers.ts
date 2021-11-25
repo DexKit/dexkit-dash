@@ -30,15 +30,15 @@ export default createReducer(initialState, (builder) =>
         state.kittygotchiByChain = {};
       }
 
-      state.kittygotchiByChain[`${param.address}-${param.chainId}`] =
+      state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`] =
         param.kittygotchi;
     })
     .addCase(updateImage, (state, action) => {
       let param = action.payload;
 
       if (state.kittygotchiByChain) {
-        if (state.kittygotchiByChain[`${param.address}-${param.chainId}`]) {
-          state.kittygotchiByChain[`${param.address}-${param.chainId}`].image =
+        if (state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`]) {
+          state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`].image =
             param.url;
         }
       }
