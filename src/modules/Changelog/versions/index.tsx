@@ -41,10 +41,27 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.9'
+          id='panelv0.0.6.9-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.9 - 24-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Fixed bug on swap function
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.8'
           id='panelv0.0.6.8-header'>
           <Typography className={classes.heading}>
-            v0.0.6-8 - 24-11-2021{' '}
+            v0.0.6.8 - 24-11-2021{' '}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -52,15 +69,13 @@ const Changelog = () => {
             <Typography className={classes.item}>
               Added Kittygotchi edit function
             </Typography>
-          </Box>
-          <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
               Several bug fix's accross the app
             </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
@@ -77,7 +92,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
@@ -94,7 +109,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
@@ -112,7 +127,7 @@ const Changelog = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6'
@@ -145,7 +160,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.5'

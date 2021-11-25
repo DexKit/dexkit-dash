@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 interface Props {
   balances: MyBalances[];
+  enableTrade?: boolean;
   network?: EthereumNetwork;
   disableReceive?: boolean;
   only?: Token;
@@ -101,6 +102,7 @@ const CoinTools = (props: Props) => {
     token,
     network,
     disableReceive,
+    enableTrade = true,
   } = props;
 
   const [tokens, setTokens] = useState<MyBalances[]>([]);
@@ -203,7 +205,7 @@ const CoinTools = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
         token={token}
       />
-      <BuySellModal
+   {enableTrade && <BuySellModal
         networkName={networkName}
         balances={tokens}
         tokenInfo={token}
@@ -211,7 +213,7 @@ const CoinTools = (props: Props) => {
         tokenAddress={token?.address}
         open={showTrade}
         onClose={handleTradeClose}
-      />
+      />}
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop className={classes.backdrop} open={showSwap}>
         <Grid container alignItems='center' justify='center'>
@@ -230,6 +232,7 @@ const CoinTools = (props: Props) => {
           onShare={onShare}
           onMakeFavorite={onMakeFavorite}
           isFavorite={isFavorite}
+          isTrade={enableTrade}
         />
       </Box>
     </>

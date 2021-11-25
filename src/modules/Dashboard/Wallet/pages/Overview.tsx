@@ -315,6 +315,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       isFavorite={isFavorite}
                       balances={balances}
                       token={tokenInfo}
+                      enableTrade={false}
                     />
                   </Grid>
                 </Grid>
