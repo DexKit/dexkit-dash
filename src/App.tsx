@@ -22,6 +22,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <ContextProvider>
+    <CacheBuster />
     <Provider store={store}>
       <ApolloProvider client={client}>
         <QueryClientProvider client={queryClient}>
@@ -33,7 +34,7 @@ const App = () => (
                     <CssBaseline />
                     <Web3Manager />
                     <ReactNotification />
-                     <CacheBuster />
+
                     {/*  <ThemeSetting props={{}}/>*/}
                     <InfoView />
                     <AppLayout />

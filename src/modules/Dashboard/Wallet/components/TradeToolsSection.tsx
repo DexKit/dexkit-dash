@@ -32,6 +32,7 @@ interface TradeToolsSectionProps {
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  isTrade?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +71,7 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     onShare,
     onMakeFavorite,
     isFavorite,
+    isTrade = true,
   } = props;
 
   const accountsModal = useAccountsModal();
@@ -119,14 +121,16 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </Box>
           </Box>
         ) : null}
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onTrade}>
-              <BitcoinConvertWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>Trade</Typography>
+        {isTrade ? (
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onTrade}>
+                <BitcoinConvertWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption'>Trade</Typography>
+            </Box>
           </Box>
-        </Box>
+        ) : null}
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
             <RoundedIconButton onClick={onSwap}>

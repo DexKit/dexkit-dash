@@ -121,11 +121,11 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
     setLoading(false);
   };
 
-  const handleNext = (hasNext: boolean, errorMesage?: Error | string) => {
+  const handleNext = (hasNext: boolean, errorMessage?: Error | string) => {
     if (hasNext) {
       handleNextWithDelay();
     } else {
-      setError(errorMesage);
+      setError(errorMessage);
       setCurrentStep(Steps.ERROR);
       setLoading(false);
     }
