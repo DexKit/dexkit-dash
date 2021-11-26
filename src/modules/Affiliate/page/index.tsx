@@ -13,11 +13,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
 import {makeStyles} from '@material-ui/core/styles';
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
 import {useIntl} from 'react-intl';
-import {BrowserRouter as Router} from 'react-router-dom';
+
 import {Link as RouterLink} from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
 import {useWeb3} from '../../../hooks/useWeb3';
@@ -28,9 +27,10 @@ import {Skeleton} from '@material-ui/lab';
 import AffiliateHistory from '../history';
 import {GridContainer} from '@crema';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import FilterList from 'shared/components/Filter/list';
-import FilterMenu from 'shared/components/Filter/menu';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
+import { ChainId } from 'types/blockchain';
+import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,9 +57,25 @@ const AffiliatePage: React.FC = () => {
   const classes = useStyles();
   const {messages} = useIntl();
 
-  const {account: web3Account} = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;
+
+  const [chain, setChain] = useState(GET_CHAIN_ID_NAME(chainId));
+
+  const selectedChainId = useMemo(() => {
+    if (chain === 'ETH') {
+      return ChainId.Mainnet;
+    }
+    if (chain === 'BSC') {
+      return ChainId.Binance;
+    }
+
+    if (chain === 'MATIC') {
+      return ChainId.Matic;
+    }
+    return ChainId.Mainnet;
+  }, [chain]);
 
   const {
     loading,
@@ -70,11 +86,15 @@ const AffiliatePage: React.FC = () => {
     onChangePage,
     onChangeRowsPerPage,
     valueTotalUSD,
-  } = useAffiliateTrades(account ?? '');
+  } = useAffiliateTrades(account ?? '', selectedChainId);
 
-  const {kitBalance} = useTokenBalancesAffiliate(account ?? '');
+ 
 
-  const [chain, setChain] = useState('ETH');
+  
+
+  const {kitBalance} = useTokenBalancesAffiliate(account ?? '', selectedChainId);
+
+  
 
   const AffiliateSkeleton = (props: any) => (
     <React.Fragment {...props}>
@@ -158,8 +178,8 @@ const AffiliatePage: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
-                You need to have 200 KIT in your wallet to earn money from
-                referrals.
+                You need to have 200 KIT in your wallet on {chain} network to earn money from
+                referrals on {chain} network
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -257,3 +277,5 @@ const AffiliatePage: React.FC = () => {
 };
 
 export default AffiliatePage;
+
+

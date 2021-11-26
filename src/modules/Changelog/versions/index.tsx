@@ -38,7 +38,24 @@ const Changelog = () => {
         mb={2}>
         Changelog
       </Box>
-         <Accordion defaultExpanded={true}>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.11'
+          id='panelv0.0.6.11-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.11 - 26-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+            Affiliate Page - Fix Affiliate balances for BSC, and make it more clear for user.
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+         <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.10'
