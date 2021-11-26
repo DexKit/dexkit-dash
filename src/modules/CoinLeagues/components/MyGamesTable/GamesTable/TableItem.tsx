@@ -9,7 +9,7 @@ import {
   Link,
 } from '@material-ui/core';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {CremaTheme} from 'types/AppContextPropsType';
 
@@ -18,6 +18,9 @@ import {truncateAddress} from 'utils/text';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {useWeb3} from 'hooks/useWeb3';
 interface TableItemProps {
   row: any;
 }
@@ -50,6 +53,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 
 const TableItem: React.FC<TableItemProps> = ({row}) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
 
@@ -61,6 +65,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         return '#008148';
       case 'Waiting':
         return '#C46D5E';
+      case 'Aborted':
+          return '#C46D5E';
       default:
         return '#E2A72E';
     }
@@ -98,7 +104,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           <Box p={2}>
             {`Claimed ${ethers.utils.formatEther(
               row.earnings[0].amount,
-            )} MATIC`}
+            )} ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`}
           </Box>
         );
       } else {
@@ -107,7 +113,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
             <Link
               color='inherit'
               component={RouterLink}
-              to={enterGameRoute(row.id)}>
+              to={enterGameRoute(row.intId)}>
               {'Not Claimed Yet.'}
             </Link>
           </Box>
@@ -131,8 +137,12 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         return `Created: ${new Date(
           Number(row.createdAt) * 1000,
         ).toLocaleDateString()}`;
+      case 'Aborted':
+        return `Aborted: ${new Date(
+          Number(row.abortedAt) * 1000,
+        ).toLocaleDateString()}`
     }
-  }, [row.status, row.createdAt, row.endedAt]);
+  }, [row.status, row.createdAt, row.endedAt, row.abortedAt]);
 
   const createdTimeFn = useMemo(() => {
     switch (row.status) {
@@ -144,11 +154,13 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         ).toLocaleTimeString()}`;
       case 'Waiting':
         return `${new Date(Number(row.createdAt) * 1000).toLocaleTimeString()}`;
+      case 'Aborted':
+          return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
     }
   }, [row.status]);
 
   if (isMobile) {
-    const summaryTitle = `Game ${truncateAddress(row.id)}`;
+    const summaryTitle = `Game ${row.intId}`;
     const summaryValue = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -159,7 +171,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     const data = [
       {
         id: 'timestamp',
-        title: 'Created-Started-Ended',
+        title: 'Created-Started-Ended-Aborted',
         value: (
           <>
             {' '}
@@ -175,8 +187,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           <Link
             color='inherit'
             component={RouterLink}
-            to={enterGameRoute(row.id)}>
-            {truncateAddress(row.id)}
+            to={enterGameRoute(row.intId)}>
+            {truncateAddress(row.intId)}
           </Link>
         ),
       },
@@ -225,8 +237,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         <Link
           color='inherit'
           component={RouterLink}
-          to={enterGameRoute(row.id)}>
-          {truncateAddress(row.id)}
+          to={enterGameRoute(row.intId)}>
+          {row.intId}
         </Link>
       </TableCell>
 

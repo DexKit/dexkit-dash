@@ -3,10 +3,12 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useMemo} from 'react';
 import {useQuery} from 'react-query';
 import {useParams} from 'react-router-dom';
+import { AccountSelect } from 'shared/components/AccountSelect';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
 
-import {ChainId, Web3State} from 'types/blockchain';
-import {COIN_LEAGUES_FACTORY_ADDRESS} from '../constants';
+import { Web3State} from 'types/blockchain';
+import {COIN_LEAGUES_FACTORY_ADDRESS, DISABLE_CHAMPIONS_ID} from '../constants';
 import {
   joinGame,
   withdrawGame,
@@ -15,6 +17,7 @@ import {
   getGamesData,
   getCoinFeeds,
   getCurrentCoinFeedsPrice,
+  getAmountOnContract,
 } from '../services/coinLeagues';
 import {
   startGame,
@@ -23,7 +26,7 @@ import {
   getGameAddressFromId,
 } from '../services/coinLeaguesFactory';
 
-import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
+import {GET_LEAGUES_CHAIN_ID, IS_SUPPORTED_LEAGUES_CHAIN_ID} from '../utils/constants';
 import {useCoinLeaguesFactory} from './useCoinLeaguesFactory';
 
 interface CallbackProps {
@@ -87,6 +90,8 @@ export const useCoinLeagues = (id?: string) => {
       amount: string,
       captainCoin: string,
       callbacks?: CallbackProps,
+      affiliate = ZERO_ADDRESS,
+      championId = DISABLE_CHAMPIONS_ID,
     ) => {
       if (web3State !== Web3State.Done || !address) {
         return;
@@ -98,6 +103,8 @@ export const useCoinLeagues = (id?: string) => {
           amount,
           captainCoin,
           getProvider(),
+          affiliate || ZERO_ADDRESS,
+          championId,
         );
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -107,7 +114,7 @@ export const useCoinLeagues = (id?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, getProvider(), chainId],
+    [web3State, address, getProvider, getProvider(), chainId],
   );
 
   const onClaimCallback = useCallback(
@@ -125,16 +132,16 @@ export const useCoinLeagues = (id?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, getProvider()],
+    [web3State, address, getProvider, getProvider()],
   );
 
   const onWithdrawCallback = useCallback(
     async (callbacks?: CallbackProps) => {
-      if (web3State !== Web3State.Done || !address) {
+      if (web3State !== Web3State.Done || !address || !account) {
         return;
       }
       try {
-        const tx = await withdrawGame(address, getProvider());
+        const tx = await withdrawGame(address, getProvider(), account);
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -184,10 +191,26 @@ export const useCoinLeagues = (id?: string) => {
       }
     },
   );
+
+  const amountOnContractQuery = useQuery(
+    ['AmountOnContractQuery', address, gameQuery.data, account], 
+    () => {
+
+      if (!address || !account || !gameQuery.data || !gameQuery.data[0]?.aborted) {
+    
+        return;
+      }
+      return getAmountOnContract(address, account, provider);
+    },
+  );
+
+
+
   return {
     onJoinGameCallback,
     onClaimCallback,
     onWithdrawCallback,
+    amountOnContract: amountOnContractQuery.data && amountOnContractQuery.data,
     winner: winnerQuery.data && winnerQuery.data,
     refetchWinner: winnerQuery.refetch,
     game: gameQuery.data && gameQuery.data[0],
@@ -204,8 +227,7 @@ export const useCoinLeagues = (id?: string) => {
 };
 
 export const useCoinLeaguesCallbacks = (address?: string) => {
-  const {web3State, account, chainId, getProvider} = useWeb3();
-  const {startedGames, createdGames} = useCoinLeaguesFactory();
+  const {web3State, chainId} = useWeb3();
 
   const {room} = useParams<{room: string}>();
   const factoryAddress = useMemo(() => {
@@ -219,18 +241,14 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
       if (
         web3State !== Web3State.Done ||
         !address ||
-        !createdGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ||
         !factoryAddress
       ) {
         return;
       }
       try {
-        const id = createdGames.findIndex(
-          (g) => g.address.toLowerCase() === address.toLowerCase(),
-        );
-        const tx = await startGame(factoryAddress, String(id));
+        const tx = await startGame(factoryAddress, address);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -239,7 +257,7 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, createdGames, chainId, factoryAddress],
+    [web3State, address, chainId, factoryAddress],
   );
 
   const onEndGameCallback = useCallback(
@@ -247,18 +265,14 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
       if (
         web3State !== Web3State.Done ||
         !address ||
-        !startedGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ||
         !factoryAddress
       ) {
         return;
       }
       try {
-        const id = startedGames.findIndex(
-          (g) => g.address.toLowerCase() === address.toLowerCase(),
-        );
-        const tx = await endGame(factoryAddress, String(id));
+        const tx = await endGame(factoryAddress, address);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -274,19 +288,15 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
       if (
         web3State !== Web3State.Done ||
         !address ||
-        !createdGames ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ||
         !factoryAddress
       ) {
         return;
       }
       try {
-        const id = createdGames.findIndex(
-          (g) => g.address.toLowerCase() === address.toLowerCase(),
-        );
-        const tx = await abortGame(factoryAddress, String(id));
-        const result = await tx.wait();
+        const tx = await abortGame(factoryAddress, address);
+        await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -294,7 +304,7 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, createdGames, factoryAddress, chainId],
+    [web3State, address, factoryAddress, chainId],
   );
 
   return {

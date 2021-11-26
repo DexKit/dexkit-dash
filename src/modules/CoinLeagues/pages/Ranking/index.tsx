@@ -21,6 +21,9 @@ import {
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {ethers} from 'ethers';
+import {useWeb3} from 'hooks/useWeb3';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -33,6 +36,7 @@ export function Ranking() {
   const rankingMostJoinedQuery = useRankingMostJoined();
   const rankingMostEarnedQuery = useRankingMostEarned();
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
+  const {chainId} = useWeb3();
   const history = useHistory();
 
   const [value, setValue] = React.useState(Tabs.MostWinner);
@@ -178,7 +182,7 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={'Earned Matic:'}
+                      label={`Earned ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}

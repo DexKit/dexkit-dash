@@ -45,14 +45,18 @@ import useDiscord from 'hooks/useDiscord';
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGame from 'modules/CoinLeagues/components/CardGame';
 import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
-import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
+import {GameLevel, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
-import {isGameCreator} from 'modules/CoinLeagues/utils/game';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
+
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -78,7 +82,7 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
-  const {account} = useWeb3();
+  const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
   useDiscord();
@@ -104,6 +108,12 @@ const GamesList = () => {
 
   const activeGamesQuery = useCoinLeagueGames({
     status: 'Started',
+    //@ts-ignore
+    filters: {
+      gameLevel: GameLevel.All, 
+    },
+    first: 5
+    
   });
 
   const waitingGamesQuery = useCoinLeagueGames({
@@ -200,7 +210,7 @@ const GamesList = () => {
       />
 
       <CreateGameModal open={open} setOpen={setOpen} />
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <TickerTapeTV />
         </Grid>
@@ -235,7 +245,7 @@ const GamesList = () => {
               <ShareButton shareText={`Coin league Games`} />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />
@@ -323,8 +333,8 @@ const GamesList = () => {
           />
         </Grid>
 
-        {isGameCreator(account) && (
-          <Grid item xs={12}>
+  
+        <Grid item xs={12}>
             <Button
               className={classes.createGame}
               fullWidth
@@ -332,8 +342,8 @@ const GamesList = () => {
               onClick={() => setOpen(true)}>
               {'CREATE GAME'}
             </Button>
-          </Grid>
-        )}
+        </Grid>
+  
 
         <Grid item xs={12}>
           <Grid

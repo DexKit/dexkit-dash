@@ -8,10 +8,14 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {ethers} from 'ethers';
-import {truncateAddress} from 'utils/text';
 import Box from '@material-ui/core/Box';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,13 +32,15 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   address: string;
   duration: ethers.BigNumber;
+  id: ethers.BigNumber;
   amount_to_play: ethers.BigNumber;
 }
 
 function SimpleCardGame(props: Props): JSX.Element {
   const classes = useStyles();
-  const {duration, address, amount_to_play} = props;
-  const id = address;
+  const {chainId} = useWeb3();
+  const {duration, amount_to_play, id} = props;
+  const intId = id.toNumber();
   const time = duration.toNumber();
   const gameLevel = GET_GAME_LEVEL(amount_to_play);
   const entryAmount = ethers.utils.formatEther(amount_to_play);
@@ -55,7 +61,7 @@ function SimpleCardGame(props: Props): JSX.Element {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant='h5'>ID #{truncateAddress(id)}</Typography>
+          <Typography variant='h6'>ID #{intId}</Typography>
         </Grid>
 
         <Grid item xs={12}>
@@ -75,7 +81,7 @@ function SimpleCardGame(props: Props): JSX.Element {
                   </Typography>
                   <Typography
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {'MATIC'}
+                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
               </Grid>

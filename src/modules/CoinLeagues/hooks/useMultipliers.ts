@@ -3,7 +3,7 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import {usePlayerHoldingTokenBalances} from './usePlayerHoldingBalances';
 
-export const useMultipliers = (address?: string, enable?: boolean) => {
+export const useMultipliers = (address?: string, enable: boolean = false) => {
   const holdingBalancesQuery = usePlayerHoldingTokenBalances(address);
   const {account} = useWeb3();
 
@@ -28,13 +28,15 @@ export const useMultipliers = (address?: string, enable?: boolean) => {
         multiplierTokens.find(
           (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
         )
+        &&
+        enable
       ) {
-        return 1.2;
+        return 1.3;
       } else {
         return 1.2;
       }
     },
-    [multiplierTokens],
+    [multiplierTokens, enable],
   );
 
   const tooltipMessage = useCallback(
@@ -53,9 +55,10 @@ export const useMultipliers = (address?: string, enable?: boolean) => {
           return 'Player holding 50 KIT or 200 BITT';
         }
       } else {
-        return 'Hold 50 KIT or 200 BITT to boost multiplier to 1.3';
+        return 'Captain coin with multiplier 1.2';
+       // return 'Hold 50 KIT or 200 BITT to boost multiplier to 1.3';
       }
-      return 'Captain coin with multiplier 1.2';
+     
     },
     [multiplierTokens, account, enable],
   );

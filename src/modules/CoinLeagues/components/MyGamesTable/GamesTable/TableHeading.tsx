@@ -27,7 +27,7 @@ const TableHeading: React.FC = () => {
   return (
     <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Created-Started-Ended'}
+        {'Created-Started-Ended-Aborted'}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>

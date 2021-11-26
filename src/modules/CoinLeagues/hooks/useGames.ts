@@ -80,7 +80,7 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
   if (filters?.gameType !== GameType.ALL) {
     if (filters?.gameType === GameType.Bull) {
       variables.type = 'Bull';
-    } else {
+    } else if(filters?.gameType === GameType.Bear) {
       variables.type = 'Bear';
     }
   }

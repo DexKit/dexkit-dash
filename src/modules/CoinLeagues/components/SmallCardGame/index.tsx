@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 500,
     borderRadius: 6,
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
     color: 'black',
   },
   innerContent: {
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     justifyContent: 'space-between',
@@ -121,7 +121,7 @@ function SmallCardGame(props: Props): JSX.Element {
             <Typography variant='h6'>Game Type:&nbsp;</Typography>
             <Typography
               variant='h6'
-              style={{color: game.type === 'Bull' ? 'green' : 'red'}}>
+              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
               {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>

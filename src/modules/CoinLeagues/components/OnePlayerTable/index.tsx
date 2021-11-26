@@ -139,6 +139,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     game,
     currentPrices,
     allFeeds,
+    amountOnContract,
   } = useCoinLeagues(id);
 
   const {isBalanceVisible} = useIsBalanceVisible();
@@ -168,6 +169,12 @@ function OnePlayerTable(props: Props): JSX.Element {
       return game.aborted;
     }
   }, [game]);
+
+  const alreadyWithdrawed = useMemo(() => {
+    if (game && amountOnContract) { 
+      return game.aborted && amountOnContract.isZero();
+    }
+  }, [game, amountOnContract]);
 
   const claimed = useMemo(() => {
     if (isWinner && winner && data) {
@@ -592,7 +599,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                         </Grid>
                       </Grid>
                     )}
-                    {canWithdraw && (
+                    {(canWithdraw && !alreadyWithdrawed) && (
                       <Grid
                         container
                         justifyContent={'center'}
@@ -632,6 +639,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                       </Grid>
                     )}
                     {claimed && 'Claimed'}
+                    {alreadyWithdrawed && 'Withdrawed'}
                   </TableCell>
                 )}
               </TableRow>

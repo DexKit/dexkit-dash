@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState, useMemo} from 'react';
+import React, {useCallback, useState, useMemo} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -32,7 +32,7 @@ interface Props extends DialogProps {
 }
 
 export const SelectCoinLeagueDialog = (props: Props) => {
-  const {onSelectCoin, onClose, chainId, title, selectedCoins, isCaptainCoin} =
+  const {onSelectCoin, onClose, chainId, selectedCoins, isCaptainCoin} =
     props;
   // TODO: Change to Mainnet
   const coins = PriceFeeds[chainId];
@@ -109,7 +109,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
+        {filteredCoins.length === 0 ? (
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>

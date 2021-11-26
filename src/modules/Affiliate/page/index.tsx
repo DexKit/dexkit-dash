@@ -13,11 +13,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
 import {makeStyles} from '@material-ui/core/styles';
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
 import {useIntl} from 'react-intl';
-import {BrowserRouter as Router} from 'react-router-dom';
+
 import {Link as RouterLink} from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
 import {useWeb3} from '../../../hooks/useWeb3';
@@ -28,8 +28,6 @@ import {Skeleton} from '@material-ui/lab';
 import AffiliateHistory from '../history';
 import {GridContainer} from '@crema';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import FilterList from 'shared/components/Filter/list';
-import FilterMenu from 'shared/components/Filter/menu';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 
 const useStyles = makeStyles((theme) => ({

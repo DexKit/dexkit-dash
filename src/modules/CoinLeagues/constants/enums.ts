@@ -22,6 +22,7 @@ export enum FilterPlayerGame {
   ALL = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
+  Aborted = 'Aborted',
   Ended = 'Ended',
 }
 
@@ -29,6 +30,7 @@ export enum CoinLeagueGameStatus {
   All = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
+  Aborted = 'Aborted',
   Ended = 'Ended',
 }
 

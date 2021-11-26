@@ -5,9 +5,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-import { useWeb3 } from 'hooks/useWeb3';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,28 +21,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  prizePool: number;
-}
-
-function CardPrize(props: Props): JSX.Element {
+function CountdownSkeleton(): JSX.Element {
   const classes = useStyles();
-  const {chainId} = useWeb3();
-  const {prizePool} = props;
-  /*const value = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(props.prizePool);*/
 
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Prize Pool
+            Countdown
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
-            {prizePool} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+            <Skeleton>-</Skeleton>
           </Typography>
         </Grid>
       </Grid>
@@ -52,4 +40,4 @@ function CardPrize(props: Props): JSX.Element {
   );
 }
 
-export default CardPrize;
+export default CountdownSkeleton;

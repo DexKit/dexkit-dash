@@ -977,6 +977,7 @@
   "app.coinLeagues.moreCoins": "More Coins",
   "app.coinLeagues.lessCoins": "Less Coins",
   "app.coinLeague.started": "Started",
+  "app.coinLeague.aborted": "Aborted",
   "app.coinLeague.waiting": "Waiting",
   "app.coinLeague.ended": "Ended",
   "app.coinLeague.expert": "Expert",

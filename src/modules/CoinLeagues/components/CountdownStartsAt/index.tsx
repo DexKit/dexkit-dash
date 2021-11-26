@@ -40,30 +40,24 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-function Countdown(props: Props): JSX.Element {
+function CountdownStartsAt(props: Props): JSX.Element {
   const classes = useStyles();
-  const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.id);
-  const duration = game?.duration.toNumber();
+  const {game, refetch } = useCoinLeagues(props.id);
   const startTimestamp = game?.start_timestamp.toNumber();
 
   const endTime = useMemo(() => {
-    if (game && duration && startTimestamp) {
-      const time = duration;
-      return new Date(time * 1000 + startTimestamp * 1000);
+    if (game  && startTimestamp) {
+      return new Date(startTimestamp * 1000);
     }
     return new Date();
-  }, [duration, startTimestamp, game]);
+  }, [ startTimestamp, game]);
 
   const count = useCountdown(endTime, {
     interval: 1000,
     onEnd: () => refetch(),
   });
-  //TODO: Check if this is the best place to refresh data
-  useCountdown(endTime, {
-    interval: 10000,
-    onDown: () => refetchCurrentFeeds(),
-  });
-  
+ 
+
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -74,7 +68,7 @@ function Countdown(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+           Countdown to Start
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <CardTimer time={count} />
@@ -85,4 +79,4 @@ function Countdown(props: Props): JSX.Element {
   );
 }
 
-export default Countdown;
+export default CountdownStartsAt;

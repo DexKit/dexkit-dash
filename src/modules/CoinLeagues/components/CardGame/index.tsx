@@ -16,6 +16,9 @@ import {strPad} from 'modules/CoinLeagues/utils/time';
 import {CardTimer} from '../CardTimer';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import { useWeb3 } from 'hooks/useWeb3';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,14 +30,14 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 500,
     borderRadius: 6,
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
     color: 'black',
   },
   innerContent: {
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     padding: theme.spacing(1),
     justifyContent: 'space-between',
   },
@@ -53,6 +56,7 @@ interface Props {
 
 function CardGame(props: Props): JSX.Element {
   const {game, onClick} = props;
+  const {chainId} = useWeb3();
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -87,10 +91,10 @@ function CardGame(props: Props): JSX.Element {
     1000,
     true,
   );
-  console.log(Math.floor(Number(game.startsAt || 0) - Math.round(new Date().getTime() / 1000)));
+ 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h6'>ID {game.intId}</Typography>
+      <Typography variant='subtitle2'>ID# {game.intId}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>
@@ -103,13 +107,13 @@ function CardGame(props: Props): JSX.Element {
                 spacing={1}>
                 <Grid xs={12} item>
                   <Typography
-                    variant='h6'
+                    variant='subtitle2'
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
                     {gameLevel}
                   </Typography>
                   <Typography
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {'MATIC'}
+                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -131,8 +135,8 @@ function CardGame(props: Props): JSX.Element {
             justifyContent='flex-end'
             style={{color: '#7a8398'}}>
             <Typography variant='h6'>&nbsp;Type:</Typography>
-            <Typography variant='h6' style={{fontWeight: 500}}>
-              &nbsp;{game.type === 'Bull' ? 'Bull' : 'Bear'}
+            <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
+              {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>
@@ -161,7 +165,7 @@ function CardGame(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>Max Prize Pool</Typography>
-          <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
+          <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
         </Grid>
       </Grid>
 

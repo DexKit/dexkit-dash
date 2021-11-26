@@ -37,20 +37,20 @@ import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
 import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGame';
-import {FilterGame} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import SwapButton from 'shared/components/SwapButton';
-import {GameOrderByDropdown} from 'modules/CoinLeagues/components/GameOrderByDropdown';
 import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {useToggler} from 'hooks/useToggler';
 import {useIntl} from 'react-intl';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 
 const JoinGames = () => {
   const history = useHistory();
-  const {account} = useWeb3();
+  const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
   useDiscord();
   const dispatch = useDispatch();
@@ -185,7 +185,7 @@ const JoinGames = () => {
               <ShareButton shareText={`Coin leagues Games`} />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />

@@ -33,7 +33,7 @@ export const GamesEnded = (props: Props) => {
     (id: string) => {
       history.push(enterGameRoute(`${id}`));
     },
-    [enterGameRoute],
+    [enterGameRoute, history],
   );
 
   const endedGames = useMemo(() => {

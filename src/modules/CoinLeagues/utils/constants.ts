@@ -18,3 +18,4 @@ export const IS_SUPPORTED_LEAGUES_CHAIN_ID = (chainId?: ChainId) => {
   }
   return false;
 };
+

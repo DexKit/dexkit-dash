@@ -14,8 +14,6 @@ import {SupportedNetworkType} from 'types/blockchain';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 
-import {makeStyles} from '@material-ui/core/styles';
-
 import {Link as RouterLink, useHistory} from 'react-router-dom';
 import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
@@ -34,9 +32,12 @@ import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
 
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
 const MyGames = () => {
   const history = useHistory();
-  const {account} = useWeb3();
+  const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
   useDiscord();
@@ -79,7 +80,7 @@ const MyGames = () => {
       </Grid>
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'} />
         </Grid>
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
@@ -89,7 +90,7 @@ const MyGames = () => {
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
           <SwapButton />
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -111,7 +112,7 @@ const MyGames = () => {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item xs={12} sm={8}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'}/>
         </Grid>
       </Hidden>
 

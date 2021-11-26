@@ -13,6 +13,9 @@ import {useInterval} from 'hooks/utils/useInterval';
 import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import { useWeb3 } from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -24,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
   button: {
     fontWeight: 500,
     borderRadius: 6,
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
     color: 'black',
   },
   innerContent: {
-    fontSize: '0.75rem',
+    fontSize: '1rem',
     padding: theme.spacing(1),
     justifyContent: 'space-between',
   },
@@ -68,6 +71,8 @@ function CardTimer(props: {time: number}) {
 
 function CardGameProgress(props: Props): JSX.Element {
   const {game, onClick} = props;
+  const {chainId} = useWeb3();
+
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -127,7 +132,7 @@ function CardGameProgress(props: Props): JSX.Element {
                   </Typography>
                   <Typography
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {'MATIC'}
+                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -174,7 +179,7 @@ function CardGameProgress(props: Props): JSX.Element {
         <Grid item>
           <Typography variant='subtitle2'>
             Max Prize Pool
-            <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
+            <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
           </Typography>
         </Grid>
       </Grid>

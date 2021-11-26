@@ -63,7 +63,7 @@ function CardGameSkeleton(): JSX.Element {
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h5'>
-        <Skeleton>ID #{truncateAddress('0x000000000000000000')}</Skeleton>
+        <Skeleton>ID #{truncateAddress('1')}</Skeleton>
       </Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={5} item>

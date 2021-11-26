@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -18,6 +18,7 @@ import {
   Link as RouterLink,
   RouteComponentProps,
   useHistory,
+  useLocation,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -42,11 +43,12 @@ import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import {ChainId} from 'types/blockchain';
+import {ChainId, SupportedNetworkType} from 'types/blockchain';
 import {EndGame} from 'modules/CoinLeagues/components/EndGame';
 import {StartGame} from 'modules/CoinLeagues/components/StartGame';
 import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
+import CountdownStartsAt from 'modules/CoinLeagues/components/CountdownStartsAt';
 import {useNotifications} from 'hooks/useNotifications';
 
 import {CopyButton} from 'shared/components/CopyButton';
@@ -65,6 +67,12 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {useDispatch} from 'react-redux';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -102,8 +110,13 @@ function GameEnter(props: Props) {
     match: {params},
   } = props;
   const history = useHistory();
+  const dispatch = useDispatch();
   const {account, chainId} = useWeb3();
+  const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
+
+  const {search} = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
 
   const {createNotification} = useNotifications();
 
@@ -127,6 +140,22 @@ function GameEnter(props: Props) {
     setIsChaptainCoin(true);
     setOpen(true);
   }, []);
+
+  // TODO: We are doing this to user see connected account
+  useEffect(() => {
+    if (account && account !== defaultAccount) {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: account,
+            label: account,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
+    }
+  }, [account, defaultAccount, dispatch]);
 
   const gamePlayers = game?.players;
 
@@ -255,20 +284,31 @@ function GameEnter(props: Props) {
             onError,
             onSubmit: onSubmitTx,
           },
+          query.get('leagueAffiliate'),
         );
       }
     },
-    [game, selectedCoins, captainCoin, refetch, chainId, id],
+    [
+      game,
+      selectedCoins,
+      captainCoin,
+      refetch,
+      chainId,
+      id,
+      query.get('leagueAffiliate'),
+      onJoinGameCallback,
+      createNotification,
+    ],
   );
 
   const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
 
-  const started = useMemo(() => game?.started, [game?.started]);
-  const finished = useMemo(() => game?.finished, [game?.finished]);
-  const aborted = useMemo(() => game?.aborted, [game?.aborted]);
+  const started = useMemo(() => game?.started, [game, game?.started]);
+  const finished = useMemo(() => game?.finished, [game, game?.finished]);
+  const aborted = useMemo(() => game?.aborted, [game, game?.aborted]);
   const totalPlayers = useMemo(
     () => game?.num_players.toNumber(),
-    [game?.num_players],
+    [game, game?.num_players],
   );
 
   const sufficientFunds = useMemo(() => {
@@ -278,7 +318,7 @@ function GameEnter(props: Props) {
       return balBN.gt(amount);
     }
     return false;
-  }, [game?.amount_to_play]);
+  }, [game, game?.amount_to_play, balance]);
 
   const currentPlayers = useMemo(
     () => game?.players.length,
@@ -346,7 +386,11 @@ function GameEnter(props: Props) {
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>
@@ -356,7 +400,10 @@ function GameEnter(props: Props) {
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
             Game #{id}
-            <CopyButton size='small' copyText={id || ''} tooltip='Copied!'>
+            <CopyButton
+              size='small'
+              copyText={window.location.href}
+              tooltip='URL Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
@@ -382,7 +429,14 @@ function GameEnter(props: Props) {
             <ShareButton shareText={`Coin leagues Game #Id ${id}`} />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
+                GET_LEAGUES_CHAIN_ID(chainId),
+              )}`}
+              defaultCurrency={GET_CHAIN_NATIVE_COIN(
+                GET_LEAGUES_CHAIN_ID(chainId),
+              )}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -411,10 +465,10 @@ function GameEnter(props: Props) {
                 Game Type:
               </Typography>
               <Typography
-                variant='h5'
-                style={{color: '#fff', marginLeft: '20px'}}>
-                {game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
-              </Typography>
+              variant='h6'
+              style={{color: game?.game_type === GameType.Winner ? '#60A561' : '#F76F8E', marginLeft:'20px'}}>
+              {game?.game_type === GameType.Winner ? 'Bull' : 'Bear'}
+            </Typography>
             </Box>
           </Paper>
         )}
@@ -447,6 +501,11 @@ function GameEnter(props: Props) {
         {game && started && !aborted && !finished && id && (
           <Box pt={2}>
             <Countdown id={id} />
+          </Box>
+        )}
+        {game && !started && !aborted && !finished && id && (
+          <Box pt={2}>
+            <CountdownStartsAt id={id} />
           </Box>
         )}
         {isLoading && <CardInfoPlayersSkeleton />}
@@ -584,7 +643,9 @@ function GameEnter(props: Props) {
                           defaultMsg={
                             sufficientFunds
                               ? 'ENTER GAME'
-                              : 'Insufficient Matic Funds'
+                              : `Insufficient ${GET_CHAIN_NATIVE_COIN(
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )} Funds`
                           }
                           confirmedMsg={'You Entered Game'}
                         />

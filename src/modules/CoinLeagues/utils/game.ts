@@ -234,6 +234,7 @@ export function getGamesQuery(params: any) {
         entry
         startedAt
         startsAt
+        abortedAt
         endedAt
         ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
       }

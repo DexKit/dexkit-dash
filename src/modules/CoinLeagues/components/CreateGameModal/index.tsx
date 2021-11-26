@@ -35,6 +35,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useNotifications} from 'hooks/useNotifications';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -103,6 +110,7 @@ const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
   const history = useHistory();
+  const {createNotification} = useNotifications();
   const {onGameCreateCallback} = useCoinLeaguesFactoryCreateGameCallback();
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
@@ -124,7 +132,7 @@ const CreateGameModal = (props: Props) => {
   }*/
   const onCreateGame = useCallback(
     (_ev?: any) => {
-      if (totalPlayers && entryAmount && duration && coins) {
+      if (totalPlayers && entryAmount && duration && coins && chainId) {
         setSubmittedGames(0);
         setConfirmedGames(0);
         let confirmed = 0;
@@ -136,20 +144,32 @@ const CreateGameModal = (props: Props) => {
             setSubmittedGames(confirmed);
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
+            createNotification({
+              title: 'Created Game',
+              body: `Created Game at ${new Date().toLocaleTimeString()}`,
+              timestamp: Date.now(),
+              url: getTransactionScannerUrl(chainId, tx),
+              urlCaption: 'View transaction',
+              type: NotificationType.TRANSACTION,
+              metadata: {
+                chainId: chainId,
+                transactionHash: tx,
+                status: 'pending',
+              } as TxNotificationMetadata,
+            });
           };
           const onConfirmTx = () => {
             submitted++;
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
-            totalFactoryGames.refetch().then(r=> {
+            totalFactoryGames.refetch().then((r) => {
               if (totalGames === 1) {
                 if (r.data) {
                   // Sent user to created game
                   history.push(enterGameRoute(`${r.data - 1}`));
                 }
               }
-            })
-            
+            });
           };
           const onError = () => {
             setSubmitState(SubmitState.Error);
@@ -157,7 +177,7 @@ const CreateGameModal = (props: Props) => {
               setSubmitState(SubmitState.None);
             }, 3000);
           };
- 
+
           const params: GameParams = {
             numPlayers: totalPlayers,
             duration,
@@ -190,6 +210,7 @@ const CreateGameModal = (props: Props) => {
       totalFactoryGames.refetch,
       totalGames,
       startDate,
+      chainId
     ],
   );
 
@@ -250,14 +271,35 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
-              <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
-              <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
-              <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
-              <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
-              <MenuItem value={50}>Expert - 50 Matic</MenuItem>
-              <MenuItem value={250}>Master - 250 Matic</MenuItem>
-              <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>
+              <MenuItem value={0.01}>
+                Beta Testing - 0.01{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
+              <MenuItem value={1}>
+                Beginner - 1{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={5}>
+                Intermediate - 5{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={10}>
+                Advanced - 10{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={50}>
+                Expert - 50{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={250}>
+                Master - 250{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={500}>
+                Grand Master - 500{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
             </Select>
           </FormControl>
         </Grid>

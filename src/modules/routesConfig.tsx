@@ -90,7 +90,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },
-    /*  {
+    {
       id: 'coins-league',
       title: 'Coin League',
       messageId: 'sidebar.coin-league',
@@ -142,7 +142,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `/coin-league/how-to-play`,
         },
       ],
-    },*/
+    },
     /*{
       id: 'myapps',
       title: 'My Apps',

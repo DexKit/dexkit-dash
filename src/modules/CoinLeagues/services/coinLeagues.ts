@@ -37,17 +37,20 @@ export const getGamesData = async (
   for (let index = 0; index < gamesAddress.length; index++) {
     const addr = gamesAddress[index];
     calls.push({interface: iface, target: addr, function: 'game'});
+    calls.push({interface: iface, target: addr, function: 'id'});
     calls.push({interface: iface, target: addr, function: 'getPlayers'});
   }
   const response = await multicall.multiCall(calls);
   const [, results] = response;
-  for (let index = 0; index < results.length; index += 2) {
+  for (let index = 0; index < results.length; index += 3) {
     const g = results[index];
-    const players = results[index + 1];
+    const id = results[index + 1];
+    const players = results[index + 2];
     games.push({
-      address: gamesAddress[index / 2],
+      address: gamesAddress[index / 3],
       players: players,
       ...g,
+      id,
     });
   }
   return games;
@@ -237,6 +240,8 @@ export const joinGame = async (
   amount: string,
   captainCoin: string,
   provider: any,
+  affiliate: string, 
+  championId: string,
 ) => {
   const pr = new providers.Web3Provider(provider);
   // const net =  await pr.getNetwork();
@@ -245,7 +250,7 @@ export const joinGame = async (
 
   return (
     await getCoinLeaguesContract(gameAddress, provider)
-  ).joinGameWithCaptainCoin(feeds, captainCoin, '500000', {
+  ).joinGameWithCaptainCoin(feeds, captainCoin, affiliate, championId,  {
     value: amount,
     gasPrice,
   }) as Promise<ContractTransaction>;
@@ -275,12 +280,12 @@ export const claim = async (
   }) as Promise<ContractTransaction>;
 };
 
-export const withdrawGame = async (gameAddress: string, provider: any) => {
+export const withdrawGame = async (gameAddress: string, provider: any, account: string,) => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
-  return (await getCoinLeaguesContract(gameAddress, provider)).withdraw({
+  return (await getCoinLeaguesContract(gameAddress, provider)).withdraw(account,{
     gasPrice,
   }) as Promise<ContractTransaction>;
 };
@@ -292,3 +297,12 @@ export const getWinner = async (
 ) => {
   return (await getCoinLeaguesContract(gameAddress, provider)).winners(account);
 };
+
+export const getAmountOnContract = async (
+  gameAddress: string,
+  account: string,
+  provider: any,
+) => {
+  return (await getCoinLeaguesContract(gameAddress, provider)).amounts(account) as BigNumber;
+};
+

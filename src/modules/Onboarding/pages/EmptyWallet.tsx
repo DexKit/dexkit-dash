@@ -12,7 +12,7 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
   FlashIcon,
@@ -102,8 +102,6 @@ interface Props {}
 export const EmptyWallet = (props: Props) => {
   const classes = useStyles();
   const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleCreatePortifolio = useCallback(() => {}, []);
 

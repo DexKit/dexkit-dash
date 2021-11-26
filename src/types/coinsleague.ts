@@ -30,6 +30,7 @@ export interface Game {
   aborted: boolean;
   scores_done: boolean;
   duration: BigNumber;
+  id:  BigNumber;
   num_players: BigNumber;
   amount_to_play: BigNumber;
   total_amount_collected: BigNumber;

@@ -57,6 +57,10 @@ const MyGamesTable: React.FC = () => {
     setStatus(CoinLeagueGameStatus.Ended);
   }, []);
 
+  const handleClickAborted = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Aborted);
+  }, []);
+
   const handleClickStarted = useCallback(() => {
     setStatus(CoinLeagueGameStatus.Started);
   }, []);
@@ -153,6 +157,19 @@ const MyGamesTable: React.FC = () => {
                           : 'default'
                       }
                       onClick={handleClickEnded}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={messages['app.coinLeague.aborted'] as string}
+                      color={
+                        status === CoinLeagueGameStatus.Aborted
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickAborted}
                     />
                   </Grid>
                 </Grid>

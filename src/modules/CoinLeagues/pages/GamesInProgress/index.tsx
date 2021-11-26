@@ -43,9 +43,12 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
 const GamesInProgress = () => {
   const history = useHistory();
-  const {account} = useWeb3();
+  const {account, chainId} = useWeb3();
   const {messages} = useIntl();
 
   const [search, setSearch] = useState('');
@@ -165,7 +168,7 @@ const GamesInProgress = () => {
               <ShareButton shareText={`Coin league Games`} />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />
