@@ -146,11 +146,21 @@ export function renderEarningsField(params: string) {
   }`;
 }
 
+export function renderWithdrawsField(params: string) {
+  return `withdraws(where: {${params}}){
+    player{
+      id
+    }
+    at
+  }`;
+}
+
 export function getGamesQuery(params: any) {
   let queryVariableParams = [];
   let queryParams = [];
   let whereParams = [];
   let earningsWhere = [];
+  let withdrawsWhere = [];
 
   if (params.skip) {
     queryVariableParams.push('$skip: Int');
@@ -210,6 +220,7 @@ export function getGamesQuery(params: any) {
   if (params.player) {
     queryVariableParams.push('$player: String');
     earningsWhere.push('player_contains: $player');
+    withdrawsWhere.push('player_contains: $player');
   }
 
   let paramsString = queryVariableParams.join(', ');
@@ -219,6 +230,8 @@ export function getGamesQuery(params: any) {
   let whereParamsString = whereParams.join(', ');
 
   let earningsWhereString = earningsWhere.join(', ');
+
+  let withdrawWhereString = withdrawsWhere.join(', ');
 
   let query = gql`
   query GetGames(${paramsString}) {
@@ -232,11 +245,13 @@ export function getGamesQuery(params: any) {
         numPlayers
         currentPlayers
         entry
+        createdAt
         startedAt
         startsAt
         abortedAt
         endedAt
         ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
+        ${withdrawWhereString ? renderWithdrawsField(withdrawWhereString) : ''}
       }
   }
 `;

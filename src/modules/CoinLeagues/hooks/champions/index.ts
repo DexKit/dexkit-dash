@@ -125,7 +125,7 @@ export const useChampionMetadata = (tokenId?: string) => {
         url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
       } else if (chainId === ChainId.Matic) {
         // TODO: put production url;
-        url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+        url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
       }
 
       axios
@@ -167,6 +167,29 @@ export const useChampionMetadata = (tokenId?: string) => {
   }, [tokenId, fetch]);
 
   return {data, loading, error, clear, fetch};
+};
+
+export const useChampionMetadataQuery = (tokenId?: string) => {
+  const {chainId} = useWeb3();
+  return useQuery(['GET_CHAMPION_METADATA', tokenId, chainId], () => {
+    if (!tokenId || !chainId) {
+      return;
+    }
+
+    let url = '';
+
+    if (chainId === ChainId.Mumbai) {
+      url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+    } else if (chainId === ChainId.Matic) {
+      // TODO: put production url;
+      url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
+    }
+
+    return axios.get<ChampionMetadata>(url, {
+      timeout: 120000,
+      timeoutErrorMessage: 'timeout',
+    }).then(r => r.data);
+  });
 };
 
 export const useChampionTokenHolding = (account?: string) => {
@@ -276,7 +299,6 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
         if (chainId === ChainId.Mumbai) {
           client = mumbaiClient;
         }
-
         client
           .query({
             query: GET_MY_CHAMPIONS,

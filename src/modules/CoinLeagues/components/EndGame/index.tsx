@@ -25,7 +25,7 @@ export const EndGame = (props: Props) => {
   const [submitState, setSubmitState] = useState<SubmitState>(
     SubmitState.None,
   );
-  const {onEndGameCallback } = useCoinLeaguesCallbacks();
+  const {onEndGameCallback } = useCoinLeaguesCallbacks(game?.address);
 
   const goToExplorer = useCallback(
     (_ev: any) => {
@@ -135,7 +135,7 @@ export const EndGame = (props: Props) => {
                       <Paper>
                         <Box display={'flex'} justifyContent={'center'} p={2}>
                           <Typography>
-                            &nbsp; Game will auto end soon or you can manually end
+                            &nbsp; Game will auto end soon or you can manually end it
                           </Typography>
                         </Box>
                       </Paper>

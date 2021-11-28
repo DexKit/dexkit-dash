@@ -20,6 +20,22 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: '/coin-league/nft-room/:id',
+        component: React.lazy(() => import('./pages/GameEnter')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/coin-league/nft-room',
+        component: React.lazy(() => import('./pages/GamesList')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: '/coin-league/champions/event',
         component: React.lazy(() => import('./pages/Event/index')),
       },

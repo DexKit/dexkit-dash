@@ -7,13 +7,17 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import {BigNumber, ethers} from 'ethers';
 import {makeStyles} from '@material-ui/core/styles';
-import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
 
 import {useInterval} from 'hooks/utils/useInterval';
 import {CardTimer} from '../CardTimer';
 import {GameGraph} from 'modules/CoinLeagues/utils/types';
 import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,7 +51,7 @@ interface Props {
 
 function SmallCardGame(props: Props): JSX.Element {
   const {game, onClick} = props;
-
+  const {chainId} = useWeb3();
   const classes = useStyles();
 
   const [countdown, setCountdown] = useState<number>();
@@ -58,7 +62,7 @@ function SmallCardGame(props: Props): JSX.Element {
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
+    BigNumber.from(game.entry).mul(BigNumber.from(game.currentPlayers)),
   );
   const entryAmount = ethers.utils.formatEther(game.entry);
   useInterval(
@@ -102,7 +106,7 @@ function SmallCardGame(props: Props): JSX.Element {
                   </Typography>
                   <Typography
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {'MATIC'}
+                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -113,7 +117,7 @@ function SmallCardGame(props: Props): JSX.Element {
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>Max Prize Pool:&nbsp;</Typography>
-            <Typography variant='h6'>{prizeTotalValue} Matic</Typography>
+            <Typography variant='h6'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
           </Box>
         </Grid>
         <Grid item xs={12} style={{color: '#7a8398'}}>

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  prizePool: number;
+  prizePool?: number;
 }
 
 function CardPrize(props: Props): JSX.Element {
@@ -41,10 +41,10 @@ function CardPrize(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Prize Pool
+           Max Prize Pool
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
-            {prizePool} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+            {prizePool || '-'} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
           </Typography>
         </Grid>
       </Grid>

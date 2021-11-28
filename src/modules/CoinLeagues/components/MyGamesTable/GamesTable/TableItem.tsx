@@ -66,7 +66,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       case 'Waiting':
         return '#C46D5E';
       case 'Aborted':
-          return '#C46D5E';
+        return '#C46D5E';
       default:
         return '#E2A72E';
     }
@@ -123,6 +123,33 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     return null;
   }, [row.earnings, row.id, enterGameRoute]);
 
+  const withdrawed = useMemo(() => {
+    if (row.status === 'Aborted') {
+      if (row.withdraws && row.withdraws[0]) {
+        return (
+          <Box p={2}>
+            {`Withdrawed at ${new Date(
+              Number(row.withdraws[0].at) * 1000,
+            ).toLocaleDateString()} `}
+          </Box>
+        );
+      } else {
+        return (
+          <Box p={2}>
+            <Link
+              color='inherit'
+              component={RouterLink}
+              to={enterGameRoute(row.intId)}>
+              {'Not Withdrawed Yet.'}
+            </Link>
+          </Box>
+        );
+      }
+    } else {
+      return null;
+    }
+  }, [row.withdraws, row.intId, enterGameRoute, row.status]);
+
   const createdDateFn = useMemo(() => {
     switch (row.status) {
       case 'Ended':
@@ -140,7 +167,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       case 'Aborted':
         return `Aborted: ${new Date(
           Number(row.abortedAt) * 1000,
-        ).toLocaleDateString()}`
+        ).toLocaleDateString()}`;
     }
   }, [row.status, row.createdAt, row.endedAt, row.abortedAt]);
 
@@ -155,7 +182,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       case 'Waiting':
         return `${new Date(Number(row.createdAt) * 1000).toLocaleTimeString()}`;
       case 'Aborted':
-          return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
+        return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
     }
   }, [row.status]);
 
@@ -252,6 +279,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         <Box display={'flex'} alignItems={'center'}>
           {place}
           {claimed}
+          {withdrawed}
         </Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}></TableCell>

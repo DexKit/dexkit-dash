@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client';
-import {useChainId} from 'hooks/useChainId';
 import {BITQUERY_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
 import {
   GetMyBalance,
@@ -7,13 +6,13 @@ import {
 } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {DEXKIT} from 'shared/constants/tokens';
+import { ChainId } from 'types/blockchain';
 
-export const useTokenBalancesAffiliate = (affiliateAccount: string) => {
-  const {currentChainId} = useChainId();
+export const useTokenBalancesAffiliate = (affiliateAccount: string, chainId: ChainId) => {
 
   const variables: GetMyBalanceVariables = {
     address: affiliateAccount,
-    network: GET_NETWORK_NAME(currentChainId),
+    network: GET_NETWORK_NAME(chainId),
   };
   const skip = !affiliateAccount;
 
@@ -24,7 +23,7 @@ export const useTokenBalancesAffiliate = (affiliateAccount: string) => {
   const balances = data?.ethereum?.address.length
     ? data?.ethereum?.address[0].balances
     : undefined;
-  const kitToken = DEXKIT[currentChainId];
+  const kitToken = DEXKIT[chainId];
   const kitBalance = balances
     ? balances.find(
         (b) =>

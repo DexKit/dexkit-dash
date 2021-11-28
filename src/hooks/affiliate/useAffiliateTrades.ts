@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client/react/hooks/useQuery';
-import {useChainId} from 'hooks/useChainId';
 import {FilterContext} from 'providers/protocol/filterContext';
 import {useContext, useState} from 'react';
 import {
@@ -17,11 +16,10 @@ import {
 import {GET_ZRX_FLASH_WALLET} from 'shared/constants/AppConst';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {getFilterValueById} from 'utils/filters';
+import { ChainId } from 'types/blockchain';
 
-export const useAffiliateTrades = (affiliateAccount: string) => {
-  const {currentChainId} = useChainId();
+export const useAffiliateTrades = (affiliateAccount: string, currentChainId: ChainId) => {
   const {filters} = useContext(FilterContext);
-
   const from = getFilterValueById('from', filters);
   const to = getFilterValueById('to', filters);
   const tradeAmount = getFilterValueById('tradeAmount', filters);

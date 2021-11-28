@@ -28,8 +28,8 @@ import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.sk
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import SimpleCardGameSkeleton from 'modules/CoinLeagues/components/SimpleCardGame/index.skeleton';
-import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
+import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
@@ -73,6 +73,8 @@ import {setDefaultAccount} from 'redux/_ui/actions';
 
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
+import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -115,8 +117,16 @@ function GameEnter(props: Props) {
   const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
 
-  const {search} = useLocation();
+  const {search, pathname} = useLocation();
   const query = useMemo(() => new URLSearchParams(search), [search]);
+
+  const isNFTGame = useMemo(() => {
+    if (pathname.startsWith('/coin-league/nft-room')) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [pathname]);
 
   const {createNotification} = useNotifications();
 
@@ -128,7 +138,9 @@ function GameEnter(props: Props) {
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
+  const [champion, setChampion] = useState<string>();
   const [open, setOpen] = useState(false);
+  const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
@@ -139,6 +151,10 @@ function GameEnter(props: Props) {
   const onOpenSelectCaptainDialog = useCallback((ev: any) => {
     setIsChaptainCoin(true);
     setOpen(true);
+  }, []);
+
+  const onOpenSelectChampionDialog = useCallback((ev: any) => {
+    setOpenChampionDialog(true);
   }, []);
 
   // TODO: We are doing this to user see connected account
@@ -196,10 +212,19 @@ function GameEnter(props: Props) {
       });
     }
   }, [gamePlayers]);
+  const onCloseSelectChampionDialog = useCallback(() => {
+    setChampion(undefined);
+    setOpenChampionDialog(false);
+  }, []);
 
-  const onCloseSelectDialog = useCallback((ev: any) => {
+  const onCloseSelectDialog = useCallback(() => {
     setIsChaptainCoin(false);
     setOpen(false);
+  }, []);
+
+  const onSelectChampion = useCallback((champ: string) => {
+    setChampion(champ);
+    setOpenChampionDialog(false);
   }, []);
 
   const onSelectCoin = useCallback(
@@ -346,6 +371,28 @@ function GameEnter(props: Props) {
     [tx, chainId],
   );
 
+  const prizePool = useMemo(() => {
+    if (game) {
+      if (game?.started) {
+        return Number(
+          ethers.utils.formatEther(
+            game?.amount_to_play.mul(game?.players.length),
+          ),
+        );
+      } else {
+        return Number(
+          ethers.utils.formatEther(game?.amount_to_play.mul(game?.num_players)),
+        );
+      }
+    }
+  }, [
+    game,
+    game?.amount_to_play,
+    game?.num_players,
+    game?.players,
+    game?.started,
+  ]);
+
   return (
     <Grid container spacing={2}>
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
@@ -364,6 +411,16 @@ function GameEnter(props: Props) {
           onSelectCoin={onSelectCoin}
           onClose={onCloseSelectDialog}
           isCaptainCoin={isCaptainCoin}
+        />
+      )}
+
+      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && isNFTGame && (
+        <SelectChampionDialog
+          chainId={chainId}
+          open={openChampionDialog}
+          selectedChampion={champion}
+          onSelectChampion={onSelectChampion}
+          onClose={onCloseSelectChampionDialog}
         />
       )}
       <Grid item xs={12} sm={12} xl={12}>
@@ -449,15 +506,7 @@ function GameEnter(props: Props) {
         {isLoading && <SimpleCardGameSkeleton />}
       </Grid>
       <Grid item xs={6} sm={4}>
-        {game && (
-          <CardPrize
-            prizePool={Number(
-              ethers.utils.formatEther(
-                game.amount_to_play.mul(game.num_players),
-              ),
-            )}
-          />
-        )}
+        {game && <CardPrize prizePool={prizePool} />}
         {game && (
           <Paper className={classes.gameTypePaper}>
             <Box display={'flex'}>
@@ -465,10 +514,14 @@ function GameEnter(props: Props) {
                 Game Type:
               </Typography>
               <Typography
-              variant='h6'
-              style={{color: game?.game_type === GameType.Winner ? '#60A561' : '#F76F8E', marginLeft:'20px'}}>
-              {game?.game_type === GameType.Winner ? 'Bull' : 'Bear'}
-            </Typography>
+                variant='h6'
+                style={{
+                  color:
+                    game?.game_type === GameType.Winner ? '#60A561' : '#F76F8E',
+                  marginLeft: '20px',
+                }}>
+                {game?.game_type === GameType.Winner ? 'Bull' : 'Bear'}
+              </Typography>
             </Box>
           </Paper>
         )}
@@ -555,6 +608,38 @@ function GameEnter(props: Props) {
                   </Grid>
                 </Grid>
               </Grid>
+              {isNFTGame && (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant='h6' style={{margin: 5}}>
+                      Choose Champion {champion === undefined ? '0' : '1'}/ 1
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      disabled={isDisabled}
+                      onClick={onOpenSelectChampionDialog}
+                      startIcon={<CryptocurrencyIcon />}
+                      endIcon={<ExpandMoreIcon />}
+                      variant='outlined'>
+                      {'Choose your Champion'}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container spacing={4}>
+                      {champion && (
+                        <Grid item xs={12}>
+                          <ChampionItem
+                            championId={champion}
+                            handleDelete={() => setChampion(undefined)}
+                          />
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
 
             {game?.num_coins.toNumber() !== 1 && (
@@ -713,7 +798,7 @@ function GameEnter(props: Props) {
           </Grid>
         </Grid>
       )}
-      {!gameFull && (
+      {!gameFull && !started && (
         <Grid item xs={12}>
           <WaitingPlayers />
         </Grid>
@@ -731,7 +816,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <PlayersTableSkeleton players={5} />
             </Grid>
-            {!gameFull && (
+            {!gameFull && !started && (
               <Grid item xs={12}>
                 <WaitingPlayers />
               </Grid>

@@ -163,6 +163,9 @@ const CreateGameModal = (props: Props) => {
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
             totalFactoryGames.refetch().then((r) => {
+              console.log(r);
+              console.log(totalGames);
+
               if (totalGames === 1) {
                 if (r.data) {
                   // Sent user to created game
@@ -378,6 +381,7 @@ const CreateGameModal = (props: Props) => {
                 }}>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={25}>25</MenuItem>

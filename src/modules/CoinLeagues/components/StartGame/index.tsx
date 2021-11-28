@@ -157,7 +157,7 @@ export const StartGame = (props: Props) => {
 
   useInterval(() => {
     setActualTimestamp(new Date().getTime());
-  }, 1000);
+  }, 1000, true);
 
   const gameCanStart = useMemo(() => {
     if (currentPlayers && startTimestamp) {
