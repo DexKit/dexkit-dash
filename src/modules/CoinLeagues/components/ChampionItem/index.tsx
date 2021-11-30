@@ -2,11 +2,12 @@ import Paper from '@material-ui/core/Paper';
 import React, {useCallback} from 'react';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
 import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
-import { useChampionMetadata } from 'modules/CoinLeagues/hooks/champions';
+import { getNormalizedUrl } from 'utils/browser';
+import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
 
 type Props = {
   handleDelete: () => void;
-  championId: string;
+  champion: ChampionMetaItem;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +34,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChampionItem = (props: Props) => {
-  const {handleDelete, championId} = props;
+  const {handleDelete, champion} = props;
   const classes = useStyles();
-
-  const championQuery = useChampionMetadata(championId);
-  const championMetadata = championQuery.data;
 
   const onClickDelete = useCallback(
     (ev: any) => {
@@ -51,13 +49,13 @@ export const ChampionItem = (props: Props) => {
       <Grid container alignItems='center' spacing={4}>
         <Grid item>
           <Box className={classes.coinContainer}>
-            <img src={championMetadata?.image} className={classes.coin} alt={'Champion'} />
+            <img src={champion?.image ? getNormalizedUrl(champion?.image) : ''} className={classes.coin} alt={'Champion'} />
           </Box>
         </Grid>
 
         <Grid item xs>
           <Typography variant='body2' color='textSecondary'>
-            {championMetadata?.name}
+            {champion?.name}
           </Typography>
         </Grid>
         <Grid item>

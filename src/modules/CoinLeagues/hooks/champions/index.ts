@@ -185,10 +185,47 @@ export const useChampionMetadataQuery = (tokenId?: string) => {
       url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
     }
 
-    return axios.get<ChampionMetadata>(url, {
-      timeout: 120000,
-      timeoutErrorMessage: 'timeout',
-    }).then(r => r.data);
+    return axios
+      .get<ChampionMetadata>(url, {
+        timeout: 120000,
+        timeoutErrorMessage: 'timeout',
+      })
+      .then((r) => r.data);
+  });
+};
+// TODO: create query on backend to return all these id's at once
+export const useChampionsMetadataQuery = (tokenIds?: string[]) => {
+  const {chainId} = useWeb3();
+  return useQuery(['GET_CHAMPION_METADATA', tokenIds, chainId], async () => {
+    if (!tokenIds || !tokenIds.length || !chainId) {
+      return;
+    }
+    let champions = [];
+    for (let index = 0; index < tokenIds.length; index++) {
+      let url = '';
+
+      if (chainId === ChainId.Mumbai) {
+        url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenIds[index]}`;
+      } else if (chainId === ChainId.Matic) {
+        // TODO: put production url;
+        url = `https://coinleaguechampions.dexkit.com/api/${tokenIds[index]}`;
+      }
+
+      const item = await axios
+        .get<ChampionMetadata>(url, {
+          timeout: 120000,
+          timeoutErrorMessage: 'timeout',
+        })
+        .then((r) => r.data)
+        .then((d) => {
+          return {
+            id: tokenIds[index],
+            ...d,
+          };
+        });
+      champions.push(item);
+    }
+    return champions;
   });
 };
 

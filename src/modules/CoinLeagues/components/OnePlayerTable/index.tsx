@@ -331,7 +331,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores.reduce((p, c) => p + c);
+          const score = scores && scores.reduce((p, c) => p + c) ;
           return {
             ...d,
             account: d.hash,

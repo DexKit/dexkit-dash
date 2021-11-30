@@ -47,6 +47,13 @@ export interface ChampionMetadata {
   }[];
 }
 
+export interface ChampionMetaItem {
+  id: string;
+  image: string;
+  name: string;
+}
+
+
 export interface CoinLeaguesChampion {
   id: string;
   name: string;

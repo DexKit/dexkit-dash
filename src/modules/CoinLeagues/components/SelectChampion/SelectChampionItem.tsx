@@ -1,10 +1,12 @@
 import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
 import React, {useCallback} from 'react';
-import { useChampionMetadataQuery } from 'modules/CoinLeagues/hooks/champions';
-
+import { getNormalizedUrl } from 'utils/browser';
+import {
+  ChampionMetaItem
+} from 'modules/CoinLeagues/utils/types';
 export interface Props {
-  championId: string;
-  onClick: (championId: string) => void;
+  champion: ChampionMetaItem;
+  onClick: (championId: ChampionMetaItem) => void;
   style: React.CSSProperties;
 }
 
@@ -12,18 +14,20 @@ const useStyles = makeStyles((theme) => ({
   tokenContainer: {
     borderRadius: '50%',
     backgroundColor: '#fff',
-    height: theme.spacing(9),
-    width: theme.spacing(9),
+    height: theme.spacing(10),
+    width: theme.spacing(10),
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
     display: 'flex',
   },
   token: {
-    height: theme.spacing(6),
-    width: theme.spacing(6),
+    borderRadius: '50%',
+    height: theme.spacing(12),
+    width: theme.spacing(12),
   },
   item: {
+    marginTop: theme.spacing(4),
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.02)',
@@ -32,16 +36,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectChampionListItem = (props: Props) => {
-  const {championId, onClick, style} = props;
+  const {champion, onClick, style} = props;
   const theme = useTheme();
   const classes = useStyles();
-
-  const championQuery =  useChampionMetadataQuery(championId);
-  const championMetadata = championQuery.data;
-  console.log(championMetadata);
   const handleClick = useCallback(() => {
-    onClick(championId);
-  }, [championId, onClick]);
+    onClick(champion);
+  }, [champion, onClick]);
 
   return (
     <Box
@@ -51,13 +51,13 @@ export const SelectChampionListItem = (props: Props) => {
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
           <Box className={classes.tokenContainer}>
-          {/*  <img alt='' src={championMetadata?.image} className={classes.token} />*/}
+            <img alt={champion?.name} src={champion?.image ? getNormalizedUrl(champion?.image) : ''} className={classes.token} />
           </Box>
         </Grid>
 
         <Grid item xs>
           <Typography variant='body2' color='textSecondary'>
-            {championMetadata?.name}
+            {champion?.name}
           </Typography>
         </Grid>
         <Grid item></Grid>

@@ -26,7 +26,7 @@ import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
 import SimpleCardGameSkeleton from 'modules/CoinLeagues/components/SimpleCardGame/index.skeleton';
 import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
 import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
@@ -75,6 +75,8 @@ import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
+import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -138,9 +140,9 @@ function GameEnter(props: Props) {
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
-  const [champion, setChampion] = useState<string>();
+  const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
-  const [openChampionDialog, setOpenChampionDialog] = useState(false);
+  const [openChampionDialog, setOpenChampionDialog] = useState(true);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
@@ -222,7 +224,7 @@ function GameEnter(props: Props) {
     setOpen(false);
   }, []);
 
-  const onSelectChampion = useCallback((champ: string) => {
+  const onSelectChampion = useCallback((champ: ChampionMetaItem) => {
     setChampion(champ);
     setOpenChampionDialog(false);
   }, []);
@@ -274,8 +276,8 @@ function GameEnter(props: Props) {
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           createNotification({
-            title: 'Join Game',
-            body: `Joined Game ${id}`,
+            title: `Join Game ${isNFTGame && 'on NFT Room'}`,
+            body: `Joined Game ${id} ${isNFTGame && 'on NFT Room'}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
@@ -310,6 +312,7 @@ function GameEnter(props: Props) {
             onSubmit: onSubmitTx,
           },
           query.get('leagueAffiliate'),
+          champion?.id  || DISABLE_CHAMPIONS_ID
         );
       }
     },
@@ -631,7 +634,7 @@ function GameEnter(props: Props) {
                       {champion && (
                         <Grid item xs={12}>
                           <ChampionItem
-                            championId={champion}
+                            champion={champion}
                             handleDelete={() => setChampion(undefined)}
                           />
                         </Grid>

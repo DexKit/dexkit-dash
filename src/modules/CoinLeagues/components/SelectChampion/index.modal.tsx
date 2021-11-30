@@ -20,13 +20,14 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {SelectChampionListItem } from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
-import { useMyChampions } from 'modules/CoinLeagues/hooks/champions';
+import { useMyChampions, useChampionsMetadataQuery } from 'modules/CoinLeagues/hooks/champions';
+import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
 
 interface Props extends DialogProps {
   title?: string;
   chainId: ChainId.Matic | ChainId.Mumbai;
-  selectedChampion?: string;
-  onSelectChampion: (champion: string) => void;
+  selectedChampion?: ChampionMetaItem;
+  onSelectChampion: (champion: ChampionMetaItem) => void;
 }
 
 export const SelectChampionDialog = (props: Props) => {
@@ -35,6 +36,8 @@ export const SelectChampionDialog = (props: Props) => {
   // TODO: Change to Mainnet
   const championsQuery = useMyChampions(chainId);
   const championsData = championsQuery.data;
+  const championsMetadataQuery = useChampionsMetadataQuery(championsData?.map(c=> c.id));
+  const championsMetadata = championsMetadataQuery.data;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
@@ -49,7 +52,7 @@ export const SelectChampionDialog = (props: Props) => {
   );
 
   const handleSelectChampion = useCallback(
-    (champ: string) => {
+    (champ: ChampionMetaItem) => {
       setFilterText('');
       onSelectChampion(champ);
     },
@@ -99,21 +102,21 @@ export const SelectChampionDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {!championsData || championsData.length === 0 ? (
+        {!championsMetadata || championsMetadata.length === 0 ? (
           <Typography variant='body1'>No champions found</Typography>
         ) : (
           <List>
             <VariableSizeList
-              itemData={championsData}
+              itemData={championsMetadata}
               itemSize={() => 56}
-              itemCount={championsData.length}
+              itemCount={championsMetadata.length}
               width='100%'
               height={250}>
               {({index, data, style}) => (
                 <SelectChampionListItem
                   style={style}
                   onClick={handleSelectChampion}
-                  championId={data[index].id}
+                  champion={data[index]}
                   key={index}
                 />
               )}
