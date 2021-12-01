@@ -462,7 +462,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
-                                  !loadingMultiplier && multiplier(account)
+                                  !loadingMultiplier && multiplier(account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}

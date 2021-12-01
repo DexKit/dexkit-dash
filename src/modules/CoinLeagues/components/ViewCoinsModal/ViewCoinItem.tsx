@@ -173,7 +173,7 @@ export const ViewCoinListItem = (props: Props) => {
                 <Tooltip title={tooltipMessage(playerAddress)}>
                   <Chip
                     color={'primary'}
-                    label={`x ${multipliers(playerAddress)}`}
+                    label={`x ${multipliers(playerAddress).toFixed(3)}`}
                   />
                 </Tooltip>
               )}

@@ -7,7 +7,7 @@ import {useCoinLeagues} from './useCoinLeagues';
 export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean) => {
   const networkProvider = useNetworkProvider(EthereumNetwork.matic);
   const {game} = useCoinLeagues(address);
-
+  console.log(game);
   const tokenBalancesQuery = useQuery(
     ['GET_LEAGUES_PLAYER_TOKEN_BALANCES', game?.players],
     async () => {
@@ -16,7 +16,7 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
       }
       return await getPlayerMultipliers(
         // @ts-ignore
-        game.players.map((p) => p[1]),
+        game.players,
         networkProvider,
       );
     },

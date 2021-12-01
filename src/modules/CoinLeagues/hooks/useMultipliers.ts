@@ -66,13 +66,13 @@ export const useMultipliers = (address?: string) => {
               return `Congrats you are holding 50 KIT or 200 BITT and a ${getChampionsCoinSymbol(
                 multi.rarity,
               )} to boost your multiplier to ${
-                multi.championsMultiplier * 1.3
+                Number(multi.championsMultiplier * 1.3).toFixed(3)
               }`;
             } else {
               return `Congrats you ar holding a ${getChampionsCoinSymbol(
                 multi.rarity
               )} to boost your multiplier to ${
-                multi.championsMultiplier * 1.2
+                Number(multi.championsMultiplier * 1.2).toFixed(3)
               }`;
             }
           } else {
@@ -88,13 +88,13 @@ export const useMultipliers = (address?: string) => {
               return `Player holding 50 KIT or 200 BITT and a ${getChampionsCoinSymbol(
                 multi.rarity
               )} to boost your multiplier to ${
-                multi.championsMultiplier * 1.3
+                Number(multi.championsMultiplier * 1.3).toFixed(3)
               }`;
             } else {
              return `Player holding a ${getChampionsCoinSymbol(
                 multi.rarity,
               )} to boost your multiplier to ${
-                multi.championsMultiplier * 1.2
+                Number(multi.championsMultiplier * 1.2).toFixed(3)
               }`;
             }
           } else {

@@ -356,6 +356,7 @@ function GameEnter(props: Props) {
     );
   }, [selectedCoins, game?.num_coins, captainCoin, game]);
 
+  
   const goToExplorer = useCallback(
     (_ev: any) => {
       if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
@@ -631,7 +632,7 @@ function GameEnter(props: Props) {
                   <Grid item xs={12}>
                     <Button
                       fullWidth
-                      disabled={isDisabled}
+                      disabled={champion !== undefined}
                       onClick={onOpenSelectChampionDialog}
                       startIcon={<CryptocurrencyIcon />}
                       endIcon={<ExpandMoreIcon />}
@@ -727,6 +728,7 @@ function GameEnter(props: Props) {
                           submitState !== SubmitState.None ||
                           !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                          || (isNFTGame && champion === undefined)
                         }
                         size={'large'}
                         onClick={onEnterGame}

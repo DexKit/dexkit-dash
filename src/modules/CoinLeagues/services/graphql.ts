@@ -11,7 +11,7 @@ export const client = new ApolloClient({
 
 
 export const nftClient = new ApolloClient({
-  uri: 'https://thegraph.com/hosted-service/subgraph/joaocampos89/coinleagues-nftroom',
+  uri: 'https://api.thegraph.com/subgraphs/name/joaocampos89/coinleagues-nftroom',
   cache: new InMemoryCache(),
   headers: {
     'User-Agent':

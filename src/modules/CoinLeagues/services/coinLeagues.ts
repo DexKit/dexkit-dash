@@ -159,7 +159,7 @@ export const getCurrentCoinFeedsPrice = async (
  * @param games
  */
 export const getPlayerMultipliers = async (
-  players: string[],
+  players: any[],
   provider: any,
 ) => {
   const iface = new Interface(erc20Abi);
@@ -174,7 +174,7 @@ export const getPlayerMultipliers = async (
   const Champions = CHAMPIONS[ChainId.Matic];
 
   for (let index = 0; index < players.length; index++) {
-    const addr = players[index];
+    const addr = players[index][1];
     calls.push({
       interface: iface,
       target: DexKit?.address,
@@ -183,7 +183,7 @@ export const getPlayerMultipliers = async (
     });
   }
   for (let index = 0; index < players.length; index++) {
-    const addr = players[index];
+    const addr = players[index][1];
     calls.push({
       interface: iface,
       target: Bittoken?.address,
@@ -195,6 +195,8 @@ export const getPlayerMultipliers = async (
   for (let index = 0; index < players.length; index++) {
     //@ts-ignore
     const id = players[index][3];
+     //@ts-ignore
+    console.log(players[index][3]);
     calls.push({
       interface: ifaceChampions,
       target: Champions,
@@ -204,6 +206,7 @@ export const getPlayerMultipliers = async (
   }
 
   const response = await multicall.multiCall(calls);
+  console.log(response);
   const [, results] = response;
   const kitBalances: BigNumber[] = [];
   const bittBalances: BigNumber[] = [];
@@ -213,7 +216,7 @@ export const getPlayerMultipliers = async (
   }
 
   for (let index = players.length; index < players.length *2; index++) {
-    kitBalances.push(results[index]);
+    bittBalances.push(results[index]);
   }
 
   for (let index = players.length*2; index < players.length * 3; index++) {
@@ -221,9 +224,9 @@ export const getPlayerMultipliers = async (
   }
   // TODO: check how the returned value is without object
   // We need to map manually to properties in order to work properly
-  const mappedMultipliers = players.map((c: string, i) => {
+  const mappedMultipliers = players.map((p: any, i) => {
     return {
-      playerAddress: c as string,
+      playerAddress: p[1] as string,
       kitBalance: kitBalances[i],
       bittBalance: bittBalances[i],
       isHoldingMultiplier:
@@ -233,6 +236,7 @@ export const getPlayerMultipliers = async (
       isHoldingBittMultiplier: bittBalances[i].gte(BITTOKEN_MULTIPLIER_HOLDING),
       championsMultiplier: getChampionsMultiplier(rarity[i]),
       rarity: rarity[i],
+      championId: p[3] as BigNumber,
       isChampionsMultiplier:  isChampionsFromRarity(rarity[i])
     };
   });

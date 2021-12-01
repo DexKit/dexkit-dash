@@ -357,7 +357,7 @@ function PlayersTable(props: Props): JSX.Element {
                               color={'primary'}
                               overlap='circular'
                               badgeContent={
-                                !loadingMultiplier && multiplier(row.hash)
+                                !loadingMultiplier && multiplier(row.hash).toFixed(3)
                               }>
                               <Avatar
                                 className={classes.chip}
