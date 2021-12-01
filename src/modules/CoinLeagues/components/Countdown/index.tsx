@@ -76,7 +76,7 @@ function Countdown(props: Props): JSX.Element {
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
             Countdown
           </Typography>
-          <Typography variant='h4' style={{color: '#fff'}}>
+          <Typography variant='h5' style={{color: '#fff'}}>
             <CardTimer time={count} />
           </Typography>
         </Grid>

@@ -15,9 +15,12 @@ import {useQuery} from 'react-query';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {GET_LEAGUES_CHAIN_ID} from '../utils/constants';
-import {useParams} from 'react-router-dom';
-import {COINSLEAGUE_ROUTE} from 'shared/constants/routes';
-import {COIN_LEAGUES_FACTORY_ADDRESS} from '../constants';
+import {useLocation, useParams} from 'react-router-dom';
+import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
+import {
+  COIN_LEAGUES_FACTORY_ADDRESS,
+  COIN_LEAGUES_NFT_FACTORY_ADDRESS,
+} from '../constants';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -27,33 +30,46 @@ interface CallbackProps {
 
 export const useCoinLeaguesFactoryRoutes = () => {
   const {room} = useParams<{room: string}>();
+  const isNFTGame = useIsNFTGame();
 
   const enterGameRoute = useCallback(
     (address: string) => {
       if (room) {
         return `${COINSLEAGUE_ROUTE}/room/${room}/game/${address}`;
       } else {
-        return `${COINSLEAGUE_ROUTE}/${address}`;
+        if (isNFTGame) {
+          return `${COINLEAGUENFT_ROUTE}/${address}`;
+        } else {
+          return `${COINSLEAGUE_ROUTE}/${address}`;
+        }
       }
     },
-    [room],
+    [room, isNFTGame],
   );
 
   const activeGamesRoute = useMemo(() => {
     if (room) {
       return `${COINSLEAGUE_ROUTE}/room/${room}/active-games`;
     } else {
-      return `${COINSLEAGUE_ROUTE}/active-games`;
+      if (isNFTGame) {
+        return `${COINLEAGUENFT_ROUTE}/active-games`;
+      } else {
+        return `${COINSLEAGUE_ROUTE}/active-games`;
+      }
     }
-  }, [room]);
+  }, [room, isNFTGame]);
 
   const listGamesRoute = useMemo(() => {
     if (room) {
       return `${COINSLEAGUE_ROUTE}/room/${room}`;
     } else {
-      return `${COINSLEAGUE_ROUTE}`;
+      if (isNFTGame) {
+        return `${COINLEAGUENFT_ROUTE}`;
+      } else {
+        return `${COINSLEAGUE_ROUTE}`;
+      }
     }
-  }, [room]);
+  }, [room, isNFTGame]);
 
   return {
     enterGameRoute,
@@ -211,9 +227,12 @@ export const useCoinLeaguesFactory = () => {
 export const useCoinLeaguesFactoryCreateGameCallback = () => {
   const {web3State, chainId} = useWeb3();
   const {room} = useParams<{room: string}>();
+  const isNFTGame = useIsNFTGame();
   const factoryAddress = useMemo(() => {
     return room
       ? room
+      : isNFTGame
+      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
   }, [chainId, room]);
 
@@ -223,8 +242,6 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
         return;
       }
       try {
-        console.log(factoryAddress);
-        console.log(params);
         const tx = await createGame(factoryAddress, params);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -266,4 +283,15 @@ export const useCoinLeaguesFactoryTotalGames = () => {
     refetch: totalGamesQuery.refetch,
     totalGames: totalGamesQuery.data,
   };
+};
+
+export const useIsNFTGame = () => {
+  const {pathname} = useLocation();
+  return useMemo(() => {
+    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [pathname]);
 };

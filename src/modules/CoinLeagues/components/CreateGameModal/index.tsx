@@ -22,6 +22,7 @@ import {
   useCoinLeaguesFactoryCreateGameCallback,
   useCoinLeaguesFactoryRoutes,
   useCoinLeaguesFactoryTotalGames,
+  useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {GameParams} from 'types/coinsleague';
 import {ethers} from 'ethers';
@@ -107,6 +108,8 @@ enum SubmitState {
 }
 
 const CreateGameModal = (props: Props) => {
+  const {open, setOpen} = props;
+  const isNFTGame = useIsNFTGame();
   const classes = useStyles();
   const {chainId} = useWeb3();
   const history = useHistory();
@@ -115,7 +118,6 @@ const CreateGameModal = (props: Props) => {
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-  const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
   const [gameType, setGameType] = useState('winner-game');
   const [entryAmount, setEntryAmount] = useState<number>();
@@ -145,8 +147,8 @@ const CreateGameModal = (props: Props) => {
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
             createNotification({
-              title: 'Created Game',
-              body: `Created Game at ${new Date().toLocaleTimeString()}`,
+              title: `Created Game ${isNFTGame && 'on NFT room'}`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame && 'on NFT room'}`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId, tx),
               urlCaption: 'View transaction',
@@ -163,9 +165,6 @@ const CreateGameModal = (props: Props) => {
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
             totalFactoryGames.refetch().then((r) => {
-              console.log(r);
-              console.log(totalGames);
-
               if (totalGames === 1) {
                 if (r.data) {
                   // Sent user to created game
@@ -191,7 +190,7 @@ const CreateGameModal = (props: Props) => {
             ),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
-            isNFT: false,
+            isNFT: isNFTGame,
           };
           onGameCreateCallback(params, {
             onConfirmation: onConfirmTx,
@@ -381,7 +380,6 @@ const CreateGameModal = (props: Props) => {
                 }}>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={25}>25</MenuItem>
@@ -433,7 +431,6 @@ const CreateGameModal = (props: Props) => {
               </FormLabel>
               <TextField
                 id='datetime-local'
-                label='Start Date'
                 type='datetime-local'
                 defaultValue={new Date(startDate)}
                 onChange={(event) =>

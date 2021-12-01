@@ -39,6 +39,11 @@ export const GET_GAME_ORDER_OPTIONS = () => {
       messageId: 'app.coinLeagues.lowerLevel',
     },
     {
+      value: GameOrderBy.AboutStart,
+      label: 'About to Start',
+      messageId: 'app.coinLeagues.aboutstart',
+    },
+    {
       value: GameOrderBy.MostFull,
       label: 'Most Full',
       messageId: 'app.coinLeagues.mostFull',
@@ -86,6 +91,8 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
       return {orderBy: 'entry', orderDirection: 'desc'};
     case GameOrderBy.LowLevel:
       return {orderBy: 'entry', orderDirection: 'asc'};
+    case GameOrderBy.AboutStart:
+      return {orderBy: 'startsAt', orderDirection: 'desc'};
     case GameOrderBy.MostFull:
       return {orderBy: 'currentPlayers', orderDirection: 'desc'};
     case GameOrderBy.MostEmpty:

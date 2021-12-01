@@ -27,8 +27,12 @@ import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
+import {
+  COINLEAGUENFT_ROUTE,
+  HOME_ROUTE,
+  LOGIN_WALLET_ROUTE,
+} from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
@@ -53,10 +57,8 @@ import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-
-
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -72,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
   createGame: {
     padding: theme.spacing(3),
   },
+  tabs: {
+    maxWidth: '450px',
+  },
 }));
 
 enum Tabs {
@@ -82,10 +87,19 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
+  const {pathname} = useLocation();
   const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
   useDiscord();
+
+  const isNFTGame = useMemo(() => {
+    if (pathname.startsWith(COINLEAGUENFT_ROUTE)) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [pathname]);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -110,10 +124,9 @@ const GamesList = () => {
     status: 'Started',
     //@ts-ignore
     filters: {
-      gameLevel: GameLevel.All, 
+      gameLevel: GameLevel.All,
     },
-    first: 5
-    
+    first: 5,
   });
 
   const waitingGamesQuery = useCoinLeagueGames({
@@ -210,13 +223,12 @@ const GamesList = () => {
       />
 
       <CreateGameModal open={open} setOpen={setOpen} />
-      <Grid container spacing={3}>
+      <Grid container spacing={6} alignItems={'center'}>
         <Grid item xs={12}>
           <TickerTapeTV />
         </Grid>
 
-        <Grid item xs={12}>
-          <Grid container>
+        <Grid item xs={12}>     
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
                 Dashboard
@@ -225,16 +237,17 @@ const GamesList = () => {
                 Games
               </Link>
             </Breadcrumbs>
-          </Grid>
         </Grid>
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'banner'} />
           </Grid>
         </Hidden>
         <Grid item xs={6} xl={6} sm={6}>
-          <Typography variant='h5'>Coin League</Typography>
+          <Typography variant='h5'>
+            Coin League {isNFTGame && '- NFT Room'}
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={6} xl={6}>
           <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
@@ -245,7 +258,14 @@ const GamesList = () => {
               <ShareButton shareText={`Coin league Games`} />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
+              <BuyCryptoButton
+                btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
+                  GET_LEAGUES_CHAIN_ID(chainId),
+                )}`}
+                defaultCurrency={GET_CHAIN_NATIVE_COIN(
+                  GET_LEAGUES_CHAIN_ID(chainId),
+                )}
+              />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />
@@ -265,7 +285,11 @@ const GamesList = () => {
         </Grid>
         <Hidden xsDown={true}>
           <Grid item xs={12} sm={8}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+            <img
+              src={CoinsLeagueBanner}
+              style={{borderRadius: '12px'}}
+              alt={'Coinleague Banner'}
+            />
           </Grid>
         </Hidden>
 
@@ -277,7 +301,7 @@ const GamesList = () => {
         <Grid item xs={6}>
           <Box display={'flex'} justifyContent={'flex-end'}>
             <Button variant={'text'} onClick={onClickGoGamesInProgress}>
-              View More
+              View More 
             </Button>
           </Box>
         </Grid>
@@ -306,44 +330,48 @@ const GamesList = () => {
             )}
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomTabs
-            value={value}
-            onChange={handleChange}
-            variant='standard'
-            TabIndicatorProps={{
-              style: {display: 'none'},
-            }}
-            aria-label='wallet tabs'>
-            <CustomTab value={Tabs.Games} label={Tabs.Games} />
-            <CustomTab value={Tabs.History} label={Tabs.History} />
-          </CustomTabs>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <ContainedInput
-            value={search}
-            onChange={handleSearch}
-            placeholder='Search'
-            startAdornment={
-              <InputAdornment position='start'>
-                <Search />
-              </InputAdornment>
-            }
-            fullWidth
-          />
+        <Grid item xs={12}>
+          <Grid container alignItems={'center'} spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <CustomTabs
+                value={value}
+                className={classes.tabs}
+                onChange={handleChange}
+                variant='standard'
+                TabIndicatorProps={{
+                  style: {display: 'none'},
+                }}
+                aria-label='wallet tabs'>
+                <CustomTab value={Tabs.Games} label={Tabs.Games} />
+                <CustomTab value={Tabs.History} label={Tabs.History} />
+              </CustomTabs>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <ContainedInput
+                value={search}
+                onChange={handleSearch}
+                placeholder='Search'
+                startAdornment={
+                  <InputAdornment position='start'>
+                    <Search />
+                  </InputAdornment>
+                }
+                fullWidth
+              />
+            </Grid>
+          </Grid>
         </Grid>
 
-  
         <Grid item xs={12}>
-            <Button
-              className={classes.createGame}
-              fullWidth
-              variant={'contained'}
-              onClick={() => setOpen(true)}>
-              {'CREATE GAME'}
-            </Button>
+          <Button
+            className={classes.createGame}
+            fullWidth
+            variant={'contained'}
+            onClick={() => setOpen(true)}>
+            {'CREATE GAME'}
+          </Button>
         </Grid>
-  
 
         <Grid item xs={12}>
           <Grid
@@ -413,6 +441,7 @@ const GamesList = () => {
               <Grid
                 alignItems='center'
                 alignContent='center'
+                justifyContent='center'
                 container
                 spacing={2}>
                 <Grid item>

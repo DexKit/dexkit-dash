@@ -52,7 +52,11 @@ function SimpleCardGame(props: Props): JSX.Element {
         spacing={2}
         alignContent={'center'}
         alignItems={'center'}>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={6} sm={12}>
+          <Typography variant='h6'>ID #{intId}</Typography>
+        </Grid>
+
+        <Grid item xs={6} sm={12}>
           <Box display={'flex'}>
             <Typography variant='h6'>Game Time:</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
@@ -60,9 +64,7 @@ function SimpleCardGame(props: Props): JSX.Element {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h6'>ID #{intId}</Typography>
-        </Grid>
+     
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>

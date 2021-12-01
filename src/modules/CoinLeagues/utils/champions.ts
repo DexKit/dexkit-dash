@@ -127,3 +127,80 @@ export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number): number {
 
   return EARLY_ACCESS_BITT_AMOUNT[ChainId.Matic];
 }
+
+
+export const getChampionsMultiplier = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return 1.7
+    case 1:
+      return 1.65
+    case 2:
+      return 1.6
+    case 3:
+      return 1.6
+    case 4:
+      return 1.55
+    case 5:
+      return 1.5
+    case 6:
+      return 1.4
+    case 7:
+      return 1.35
+
+    default:
+     return 1;
+  }
+}
+
+export const isChampionsFromRarity = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return true
+    case 1:
+      return true
+    case 2:
+      return true
+    case 3:
+      return true
+    case 4:
+      return true
+    case 5:
+      return true
+    case 6:
+      return true
+    case 7:
+      return true
+    default:
+     return false;
+  }
+}
+
+
+
+export const getChampionsCoinSymbol = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return 'BITT'
+    case 1:
+      return 'BTC'
+    case 2:
+      return 'ETH'
+    case 3:
+      return 'LINK'
+    case 4:
+      return 'DOT'
+    case 5:
+      return 'UNI'
+    case 6:
+      return 'ADA'
+    case 7:
+      return 'DOGE'
+
+    default:
+     return 'DOGE'
+  }
+}

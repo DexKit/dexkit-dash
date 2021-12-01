@@ -1,4 +1,5 @@
 import React from 'react';
+import { COINLEAGUENFT_ROUTE } from 'shared/constants/routes';
 
 export const coinLeaguesConfigs = [
   {
@@ -20,7 +21,7 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
-        path: '/coin-league/nft-room/:id',
+        path: `${COINLEAGUENFT_ROUTE}/:id`,
         component: React.lazy(() => import('./pages/GameEnter')),
       },
     ],
@@ -28,7 +29,7 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
-        path: '/coin-league/nft-room',
+        path: COINLEAGUENFT_ROUTE,
         component: React.lazy(() => import('./pages/GamesList')),
       },
     ],

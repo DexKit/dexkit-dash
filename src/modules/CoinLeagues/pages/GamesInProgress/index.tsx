@@ -127,7 +127,7 @@ const GamesInProgress = () => {
         onClose={filterToggler.toggle}
         filtersState={filtersState}
       />
-      <Grid container spacing={2} alignItems='center'>
+      <Grid container spacing={6} alignItems='center'>
         <Grid item xs={12}>
           <Grid container>
             <Breadcrumbs>

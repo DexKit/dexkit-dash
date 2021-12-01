@@ -36,14 +36,16 @@ export const EndGame = (props: Props) => {
     },
     [tx, chainId],
   );
+  const startTimestamp = game?.start_timestamp;
+  const durationBN = game?.duration;
 
   const canEndGame = useMemo(() => {
-    if (game) {
-      const start = game?.start_timestamp.toNumber() * 1000;
-      const duration = game.duration.toNumber() * 1000;
+    if (startTimestamp && durationBN) {
+      const start = startTimestamp.toNumber() * 1000;
+      const duration = durationBN.toNumber() * 1000;
       return new Date().getTime() > start + duration;
     }
-  }, [game?.start_timestamp]);
+  }, [startTimestamp, durationBN]);
 
    const onEndGame = useCallback(
     (ev: any) => {

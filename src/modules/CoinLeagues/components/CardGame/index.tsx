@@ -37,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
     color: 'black',
   },
   innerContent: {
-    fontSize: '1rem',
+    fontSize: '0.8rem',
     padding: theme.spacing(1),
     justifyContent: 'space-between',
   },
   smallContent: {
-    fontSize: '0.6rem',
+    fontSize: '14px',
     paddingBottom: theme.spacing(3),
   },
 }));
@@ -136,7 +136,7 @@ function CardGame(props: Props): JSX.Element {
             style={{color: '#7a8398'}}>
             <Typography variant='h6'>&nbsp;Type:</Typography>
             <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
-              {game.type === 'Bull' ? 'Bull' : 'Bear'}
+             &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>

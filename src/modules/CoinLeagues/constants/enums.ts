@@ -43,6 +43,7 @@ export enum GameOrderBy {
   LowerDuration = 'LowerDuration',
   MoreCoins = 'MoreCoins',
   LessCoins = 'LessCoins',
+  AboutStart = 'AboutStart',
 }
 
 export enum GameOrderByLabels {

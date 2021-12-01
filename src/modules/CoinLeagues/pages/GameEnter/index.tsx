@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -62,7 +63,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes, useIsNFTGame} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
@@ -75,7 +76,7 @@ import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
-import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+import { AFFILIATE_FIELD, DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -90,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #2e3243',
   },
   gameTypePaper: {
+    borderRadius: 6,
     backgroundColor: '#2e3243',
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
@@ -119,16 +121,10 @@ function GameEnter(props: Props) {
   const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
 
-  const {search, pathname} = useLocation();
+  const {search} = useLocation();
   const query = useMemo(() => new URLSearchParams(search), [search]);
 
-  const isNFTGame = useMemo(() => {
-    if (pathname.startsWith('/coin-league/nft-room')) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [pathname]);
+  const isNFTGame = useIsNFTGame();
 
   const {createNotification} = useNotifications();
 
@@ -142,7 +138,7 @@ function GameEnter(props: Props) {
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
   const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
-  const [openChampionDialog, setOpenChampionDialog] = useState(true);
+  const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
@@ -311,7 +307,7 @@ function GameEnter(props: Props) {
             onError,
             onSubmit: onSubmitTx,
           },
-          query.get('leagueAffiliate'),
+          query.get(AFFILIATE_FIELD),
           champion?.id  || DISABLE_CHAMPIONS_ID
         );
       }
@@ -323,35 +319,30 @@ function GameEnter(props: Props) {
       refetch,
       chainId,
       id,
-      query.get('leagueAffiliate'),
+      query.get(AFFILIATE_FIELD),
       onJoinGameCallback,
       createNotification,
     ],
   );
 
-  const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
-
-  const started = useMemo(() => game?.started, [game, game?.started]);
-  const finished = useMemo(() => game?.finished, [game, game?.finished]);
-  const aborted = useMemo(() => game?.aborted, [game, game?.aborted]);
-  const totalPlayers = useMemo(
-    () => game?.num_players.toNumber(),
-    [game, game?.num_players],
-  );
+  const isLoading = gameQuery.isLoading;
+  const started = game?.started;
+  const finished =  game?.finished;
+  const aborted = game?.aborted;
+  const totalPlayers =  game?.num_players.toNumber();
+  const amountToPlay = game?.amount_to_play;
 
   const sufficientFunds = useMemo(() => {
-    if (game?.amount_to_play && balance) {
-      const amount = BigNumber.from(game?.amount_to_play);
+    if (amountToPlay && balance) {
+      const amount = BigNumber.from(amountToPlay);
       const balBN = BigNumber.from(balance);
       return balBN.gt(amount);
     }
     return false;
   }, [game, game?.amount_to_play, balance]);
 
-  const currentPlayers = useMemo(
-    () => game?.players.length,
-    [game?.players, game],
-  );
+  const currentPlayers = game?.players.length;
+   
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
@@ -375,29 +366,47 @@ function GameEnter(props: Props) {
   );
 
   const prizePool = useMemo(() => {
-    if (game) {
-      if (game?.started) {
+    if (amountToPlay && currentPlayers) {
+      if (started) {
         return Number(
           ethers.utils.formatEther(
-            game?.amount_to_play.mul(game?.players.length),
+            amountToPlay.mul(currentPlayers),
           ),
         );
       } else {
-        return Number(
-          ethers.utils.formatEther(game?.amount_to_play.mul(game?.num_players)),
-        );
+        if(totalPlayers){
+          return Number(
+            ethers.utils.formatEther(amountToPlay.mul(totalPlayers)),
+          );
+        }
       }
     }
+    if(amountToPlay && totalPlayers){
+      return Number(
+        ethers.utils.formatEther(amountToPlay.mul(totalPlayers)),
+      );
+    }
   }, [
-    game,
-    game?.amount_to_play,
-    game?.num_players,
-    game?.players,
-    game?.started,
+    amountToPlay,
+    currentPlayers,
+    started,
+    totalPlayers
   ]);
+  const url = new URL(window.location.href);
+
+  const urlShare = useMemo(()=>{
+    if(account){
+      url.searchParams.set(AFFILIATE_FIELD, account);
+      return url.href;
+    }else{
+      return url.href;
+    }
+
+  },[url, account]);
+
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4} alignItems={'center'}>
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
@@ -462,7 +471,7 @@ function GameEnter(props: Props) {
             Game #{id}
             <CopyButton
               size='small'
-              copyText={window.location.href}
+              copyText={urlShare}
               tooltip='URL Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
@@ -511,8 +520,8 @@ function GameEnter(props: Props) {
       <Grid item xs={6} sm={4}>
         {game && <CardPrize prizePool={prizePool} />}
         {game && (
-          <Paper className={classes.gameTypePaper}>
-            <Box display={'flex'}>
+          <Container className={classes.gameTypePaper}>
+            <Box display={'flex'} justifyContent={'start'} alignItems={'center'} alignContent={'center'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 Game Type:
               </Typography>
@@ -521,17 +530,18 @@ function GameEnter(props: Props) {
                 style={{
                   color:
                     game?.game_type === GameType.Winner ? '#60A561' : '#F76F8E',
-                  marginLeft: '20px',
+                  marginLeft: '10px',
+                  fontWeight: 500
                 }}>
                 {game?.game_type === GameType.Winner ? 'Bull' : 'Bear'}
               </Typography>
             </Box>
-          </Paper>
+          </Container>
         )}
 
         {isLoading && <CardPrizeSkeleton />}
         {isLoading && (
-          <Paper className={classes.gameTypePaper}>
+          <Container className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 Game Type:
@@ -544,7 +554,7 @@ function GameEnter(props: Props) {
                 </Typography>
               </Skeleton>
             </Box>
-          </Paper>
+          </Container>
         )}
       </Grid>
       <Grid item xs={6} sm={4}>

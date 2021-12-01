@@ -9,7 +9,7 @@ import {
   NumberOfPLayers,
 } from '../constants/enums';
 
-import {client} from '../services/graphql';
+import {client, nftClient} from '../services/graphql';
 import {
   getGamesQuery,
   GET_GAME_LEVEL_AMOUNTS,
@@ -17,6 +17,7 @@ import {
 } from '../utils/game';
 import {GET_DURATION_FROM_FILTER_V2} from '../utils/time';
 import {GameGraph} from '../utils/types';
+import { useIsNFTGame } from './useCoinLeaguesFactory';
 import {GameFiltersState} from './useGamesFilter';
 
 interface GamesFilterParams {
@@ -35,6 +36,7 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
 
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
   const {accounts, filters, status, first, skip, player} = params;
+  const isNFTGame = useIsNFTGame();
 
   const variables: any = {};
 
@@ -99,7 +101,7 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
 
   const query = useQuery<{games: GameGraph[]}>(gqlQuery, {
     variables,
-    client: client,
+    client: isNFTGame ? nftClient: client,
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
