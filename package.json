@@ -34,6 +34,7 @@
     "@maticnetwork/wallet-widget": "^1.1.0",
     "@mycrypto/gas-estimation": "^1.1.0",
     "@popperjs/core": "^2.4.2",
+    "@ramp-network/ramp-instant-sdk": "^3.0.0",
     "@react-native-community/netinfo": "5.5.0",
     "@reduxjs/toolkit": "^1.6.0",
     "@storybook/theming": "^5.3.19",

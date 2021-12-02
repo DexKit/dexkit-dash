@@ -24,6 +24,7 @@ import {useNetwork} from 'hooks/useNetwork';
 import {truncateIsAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
+import {useRamp} from 'hooks/useRamp';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -247,9 +248,15 @@ const TotalBalance = (props: Props) => {
 
   const {init} = useTransak({});
 
-  const handleBuyCrypto = useCallback(() => {
+  const {initRamp} = useRamp({});
+
+  const handleBuyCryptoTransak = useCallback(() => {
     init();
   }, [init]);
+
+  const handleBuyCryptoRamp = useCallback(() => {
+    initRamp();
+  }, [initRamp]);
 
   const handleSwap = useCallback(() => {
     setShowSwap(true);
@@ -399,7 +406,8 @@ const TotalBalance = (props: Props) => {
             <TradeToolsSection
               onSend={handleShowSender}
               onReceive={handleShowReceiver}
-              onBuyCrypto={handleBuyCrypto}
+              onBuyCryptoTransak={handleBuyCryptoTransak}
+              onBuyCryptoRamp={handleBuyCryptoRamp}
               onSwap={handleSwap}
               onTrade={handleTrade}
               onShare={onShare}
