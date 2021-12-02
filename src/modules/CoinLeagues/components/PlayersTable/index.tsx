@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import TableContainer from '@material-ui/core/TableContainer';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -131,7 +132,7 @@ function PlayersTable(props: Props): JSX.Element {
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-  const {multiplier, loadingMultiplier} = useMultipliers(id);
+  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -353,6 +354,7 @@ function PlayersTable(props: Props): JSX.Element {
                       {!hideCoins ? (
                         row?.captainCoin && (
                           <>
+                          <Tooltip title={tooltipMessage(row.hash)}>
                             <Badge
                               color={'primary'}
                               overlap='circular'
@@ -372,6 +374,7 @@ function PlayersTable(props: Props): JSX.Element {
                                 )}
                               </Avatar>
                             </Badge>
+                            </Tooltip>
                             {row?.coins.length === 0 && (
                               <IconButton
                                 onClick={() =>

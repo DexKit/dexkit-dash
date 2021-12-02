@@ -22,6 +22,7 @@ import {SelectChampionListItem } from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
 import { useMyChampions, useChampionsMetadataQuery } from 'modules/CoinLeagues/hooks/champions';
 import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
+import { useHistory } from 'react-router-dom';
 
 interface Props extends DialogProps {
   title?: string;
@@ -35,6 +36,7 @@ export const SelectChampionDialog = (props: Props) => {
     props;
   // TODO: Change to Mainnet
   const championsQuery = useMyChampions(chainId);
+  const history = useHistory();
   const championsData = championsQuery.data;
   const championsMetadataQuery = useChampionsMetadataQuery(championsData?.map(c=> c.id));
   const championsMetadata = championsMetadataQuery.data;
@@ -66,6 +68,11 @@ export const SelectChampionDialog = (props: Props) => {
       onClose({}, 'escapeKeyDown');
     }
   }, [onClose]);
+
+  const onGoToMint = useCallback((ev) => {
+   ev.preventDefault();
+   history.push('/coin-league/champions/event');
+  }, [history]);
 
   return (
     <Dialog
@@ -103,7 +110,7 @@ export const SelectChampionDialog = (props: Props) => {
           />
         </Box>
         {!championsMetadata || championsMetadata.length === 0 ? (
-          <Typography variant='body1'>No champions found</Typography>
+          <Typography variant='body1'>No champions found, you must hold an NFT champion to play in the NFT games - <a href={'/coin-league/champions/event'} onClick={onGoToMint}> Mint here now.</a></Typography>
         ) : (
           <List>
             <VariableSizeList

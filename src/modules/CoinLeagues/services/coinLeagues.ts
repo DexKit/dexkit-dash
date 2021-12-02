@@ -195,8 +195,6 @@ export const getPlayerMultipliers = async (
   for (let index = 0; index < players.length; index++) {
     //@ts-ignore
     const id = players[index][3];
-     //@ts-ignore
-    console.log(players[index][3]);
     calls.push({
       interface: ifaceChampions,
       target: Champions,
@@ -206,7 +204,7 @@ export const getPlayerMultipliers = async (
   }
 
   const response = await multicall.multiCall(calls);
-  console.log(response);
+ 
   const [, results] = response;
   const kitBalances: BigNumber[] = [];
   const bittBalances: BigNumber[] = [];
@@ -220,6 +218,7 @@ export const getPlayerMultipliers = async (
   }
 
   for (let index = players.length*2; index < players.length * 3; index++) {
+    console.log(results[index])
     rarity.push(results[index]);
   }
   // TODO: check how the returned value is without object
@@ -240,6 +239,7 @@ export const getPlayerMultipliers = async (
       isChampionsMultiplier:  isChampionsFromRarity(rarity[i])
     };
   });
+ 
 
   return mappedMultipliers;
 };

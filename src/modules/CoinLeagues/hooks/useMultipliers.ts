@@ -15,9 +15,7 @@ export const useMultipliers = (address?: string) => {
 
   const multiplierTokens = useMemo(() => {
     if (holdingBalancesQuery.data) {
-      const multipliers = holdingBalancesQuery.data.filter(
-        (t) => t.isHoldingMultiplier,
-      );
+      const multipliers = holdingBalancesQuery.data;
       if (multipliers.length) {
         return multipliers;
       }
@@ -28,12 +26,15 @@ export const useMultipliers = (address?: string) => {
 
   const multiplier = useCallback(
     (addr?: string) => {
+
       const multi =
         multiplierTokens &&
         addr &&
         multiplierTokens.find(
           (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
         );
+        console.log(multi);
+        console.log(multiplierTokens);
       if (multi && isNFTGame) {
         if (multi) {
           if (multi.isHoldingKitMultiplier || multi.isHoldingBittMultiplier) {
@@ -64,12 +65,12 @@ export const useMultipliers = (address?: string) => {
           if (multi.isChampionsMultiplier) {
             if (multi.isHoldingBittMultiplier || multi.isHoldingKitMultiplier) {
               return `Congrats you are holding 50 KIT or 200 BITT and a ${getChampionsCoinSymbol(
-                multi.rarity,
+                multi.rarity
               )} to boost your multiplier to ${
                 Number(multi.championsMultiplier * 1.3).toFixed(3)
               }`;
             } else {
-              return `Congrats you ar holding a ${getChampionsCoinSymbol(
+              return `Congrats you are holding a ${getChampionsCoinSymbol(
                 multi.rarity
               )} to boost your multiplier to ${
                 Number(multi.championsMultiplier * 1.2).toFixed(3)
@@ -87,13 +88,13 @@ export const useMultipliers = (address?: string) => {
             if (multi.isHoldingBittMultiplier || multi.isHoldingKitMultiplier) {
               return `Player holding 50 KIT or 200 BITT and a ${getChampionsCoinSymbol(
                 multi.rarity
-              )} to boost your multiplier to ${
+              )} to boosting multiplier to ${
                 Number(multi.championsMultiplier * 1.3).toFixed(3)
               }`;
             } else {
              return `Player holding a ${getChampionsCoinSymbol(
                 multi.rarity,
-              )} to boost your multiplier to ${
+              )} to boosting multiplier to ${
                 Number(multi.championsMultiplier * 1.2).toFixed(3)
               }`;
             }

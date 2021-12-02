@@ -16,7 +16,6 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -126,7 +125,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth='md'
       fullWidth
       {...props}
       aria-labelledby='form-dialog-title'
