@@ -67,6 +67,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import {watchAsset} from 'utils/wallet';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import SelectTokenBalanceDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
 
 type Params = {
   address: string;
@@ -172,9 +173,9 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const handleSelectToken = useCallback((token: Token) => {
     setShowSelectTokens(false);
 
-    let isEthereum = token.symbol.toUpperCase() === 'ETH';
-    let isPolygon = token.symbol.toUpperCase() === 'MATIC';
-    let isBsc = token.symbol.toUpperCase() === 'BNB';
+    let isEthereum = token.symbol.toUpperCase() === 'ETH' && token.networkName === EthereumNetwork.ethereum;
+    let isPolygon = token.symbol.toUpperCase() === 'MATIC' && token.networkName === EthereumNetwork.matic;
+    let isBsc = token.symbol.toUpperCase() === 'BNB' && token.networkName === EthereumNetwork.bsc;
 
     if (isEthereum) {
       history.push(`/explorer/eth?network=${token?.networkName}`);
@@ -210,9 +211,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
-        <SelectTokenDialog
+        <SelectTokenBalanceDialog
           title='Select a token'
           open={showSelectTokens}
+          balances={balances.data}
           tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
           onSelectToken={handleSelectToken}
           onClose={handleToggleSelectToken}
@@ -354,7 +356,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
                     balances={balances.data}
                     network={networkName}
                     token={tokenInfo}
-                    disableReceive={true}
                     address={tokenInfo?.address}
                   />
                 )}
