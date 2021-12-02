@@ -42,11 +42,6 @@ import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-type Params = {
-  address: string;
-  networkName: EthereumNetwork;
-};
-
 const TokenPage = () => {
   const history = useHistory();
   const network = useNetwork();
@@ -103,6 +98,7 @@ const TokenPage = () => {
         searchParams.set('network', from.networkName);
         searchParams.set('from', from.address);
       }
+      
       if (to) {
         if (from && from.networkName && from?.networkName !== to?.networkName) {
           if (from?.networkName) {

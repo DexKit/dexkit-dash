@@ -208,9 +208,10 @@ const CoinTools = (props: Props) => {
    {enableTrade && <BuySellModal
         networkName={networkName}
         balances={tokens}
-        tokenInfo={token}
+        // Commentend this because of buggy situation on click switch tokens, revisit this later
+       // tokenInfo={token}
         disableReceive={disableReceive}
-        tokenAddress={token?.address}
+       // tokenAddress={token?.address}
         open={showTrade}
         onClose={handleTradeClose}
       />}
