@@ -48,6 +48,7 @@ export const useCoinLeagues = (id?: string) => {
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
   );
+  const chainProvider = getProvider();
 
   const {room} = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame();
@@ -81,7 +82,7 @@ export const useCoinLeagues = (id?: string) => {
     if (!address || !account || web3State !== Web3State.Done) {
       return;
     }
-    return getWinner(address, account, getProvider()).then((w) => {
+    return getWinner(address, account, chainProvider).then((w) => {
       return {
         place: w.place,
         address: w.winner_address,
@@ -109,7 +110,7 @@ export const useCoinLeagues = (id?: string) => {
           feeds,
           amount,
           captainCoin,
-          getProvider(),
+          chainProvider,
           affiliate || ZERO_ADDRESS,
           championId,
         );
@@ -121,7 +122,7 @@ export const useCoinLeagues = (id?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, getProvider, getProvider()],
+    [web3State, address, chainProvider],
   );
 
   const onClaimCallback = useCallback(
@@ -130,7 +131,7 @@ export const useCoinLeagues = (id?: string) => {
         return;
       }
       try {
-        const tx = await claim(address, getProvider(), winner);
+        const tx = await claim(address, chainProvider, winner);
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -139,7 +140,7 @@ export const useCoinLeagues = (id?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, getProvider, getProvider()],
+    [web3State, address, chainProvider],
   );
 
   const onWithdrawCallback = useCallback(
@@ -148,7 +149,7 @@ export const useCoinLeagues = (id?: string) => {
         return;
       }
       try {
-        const tx = await withdrawGame(address, getProvider(), account);
+        const tx = await withdrawGame(address, chainProvider, account);
         await tx.wait();
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
@@ -157,7 +158,7 @@ export const useCoinLeagues = (id?: string) => {
         callbacks?.onError(e);
       }
     },
-    [web3State, address, getProvider()],
+    [web3State, address, chainProvider, account],
   );
 
   const gameQuery = useQuery(['GetGameAdddress', address], () => {
@@ -326,7 +327,7 @@ export const useCoinLeaguesCallbacks = (address?: string) => {
 };
 
 export const useCoinLeaguesWinner = (address?: string) => {
-  const {web3State, account, chainId, getProvider} = useWeb3();
+  const {web3State, account, getProvider} = useWeb3();
   const winnerQuery = useQuery(
     ['GET_WINNER', address, account, web3State],
     () => {

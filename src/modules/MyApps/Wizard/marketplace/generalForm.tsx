@@ -194,6 +194,7 @@ const GeneralForm: React.FC<Props> = (props) => {
     }, true);
     console.log('_valid', _valid);
     setValid(_valid);
+    /* eslint-disable */
   }, []);
 
   useEffect(() => {

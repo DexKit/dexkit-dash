@@ -11,7 +11,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
-import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
+import {ErrorIcon} from 'shared/components/Icons';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -54,7 +54,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
     if (dialogProps.onClose) {
       dialogProps.onClose({}, 'backdropClick');
     }
-  }, [dialogProps.onClose]);
+  }, [dialogProps]);
 
   const handleViewTransaction = useCallback(() => {
     if (chainId && transactionHash) {
@@ -117,6 +117,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
                   <img
                     src={require('assets/images/default-kittygotchi.png')}
                     className={classes.kittygotchiImage}
+                    alt={'Kittygotchi default'}
                   />
                 </Box>
               </Grid>

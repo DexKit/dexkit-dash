@@ -11,7 +11,7 @@ export const useMyGames = (params: MyGamesParams, isNFT = false) => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
-  const [rowsPerPageOptions, _setRowsPerPageOptions] = useState([30, 50, 100]);
+  const [rowsPerPageOptions] = useState([30, 50, 100]);
   const [skipRows, setSkipRows] = useState(0);
 
   const onChangePage = (page: number) => {

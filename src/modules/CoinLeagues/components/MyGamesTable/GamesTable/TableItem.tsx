@@ -122,7 +122,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
       }
     }
     return null;
-  }, [row.earnings, row.id, enterGameRoute, row.intId, chainId]);
+  }, [row.earnings,  enterGameRoute, row.intId, chainId]);
 
   const withdrawed = useMemo(() => {
     if (row.status === 'Aborted') {
@@ -170,7 +170,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
           Number(row.abortedAt) * 1000,
         ).toLocaleDateString()}`;
     }
-  }, [row.status, row.createdAt, row.endedAt, row.abortedAt]);
+  }, [row.status, row.createdAt, row.endedAt, row.abortedAt, row.startedAt]);
 
   const createdTimeFn = useMemo(() => {
     switch (row.status) {

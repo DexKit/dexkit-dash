@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useMemo} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
@@ -23,7 +23,7 @@ import {SelectChampionListItem } from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
 import { useMyChampions, useChampionsMetadataQuery } from 'modules/CoinLeagues/hooks/champions';
 import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
-import { useHistory, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface Props extends DialogProps {
   title?: string;
@@ -33,7 +33,7 @@ interface Props extends DialogProps {
 }
 
 export const SelectChampionDialog = (props: Props) => {
-  const {onSelectChampion, onClose, chainId, selectedChampion} =
+  const {onSelectChampion, onClose, chainId} =
     props;
   // TODO: Change to Mainnet
   const championsQuery = useMyChampions(chainId);

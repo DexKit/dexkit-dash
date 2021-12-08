@@ -112,7 +112,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
       );
       setFilteredCoins(filtered);
     },
-    [coins, allCoins],
+    [allCoins],
   );
 
   const handleClose = useCallback(() => {

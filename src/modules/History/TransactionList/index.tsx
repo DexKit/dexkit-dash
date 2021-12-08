@@ -11,7 +11,7 @@ import PageTitle from 'shared/components/PageTitle';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {truncateAddress} from 'utils/text';
-import NetworkSwitcher from 'shared/components/NetworkSwitcher';
+
 
 type Params = {
   address: string;
@@ -31,7 +31,7 @@ const TransactionList: React.FC<Props> = (props) => {
     if (account && account !== address) {
       history.push(`/${networkName}/history/transaction/list/${account}`);
     }
-  }, [account]);
+  }, [account, networkName, address, history]);
 
   const onSwitchNetwork = (n: EthereumNetwork) => {
     history.push(`/${n}/history/transaction/list/${account}`);

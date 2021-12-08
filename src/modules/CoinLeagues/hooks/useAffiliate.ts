@@ -1,41 +1,37 @@
-import {useQuery} from '@apollo/client';
-import {useEffect} from 'react';
-import {POLL_INTERVAL_GAMES} from '../constants';
+import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
+import { POLL_INTERVAL_GAMES } from '../constants';
 import { GET_AFFILIATES_ENTRIES, GET_PLAYER_AFFILIATE } from '../services/gql/affiliate';
 
-import {client, nftClient} from '../services/graphql';
+import { client, nftClient } from '../services/graphql';
 
-
-import {GameGraph} from '../utils/types';
 import { useIsNFTGame } from './useCoinLeaguesFactory';
 
+export const usePlayerGames = () => { };
 
-
-export const usePlayerGames = () => {};
-
-export interface AffiliateParams{
+export interface AffiliateParams {
   address: string,
   first?: number,
   skip?: number;
 }
 
 export const useAffiliateEntries = (params: AffiliateParams, isNFT = false) => {
-  const {address, first, skip} = params;
+  const { address, first, skip } = params;
   const isNFTGame = useIsNFTGame() || isNFT;
   const variables: any = {
     affiliate: address
   };
-  if(first){
+  if (first) {
     variables.first = first;
   }
-  if(skip){
+  if (skip) {
     variables.skip = skip;
   }
-  
 
-  const query = useQuery<{affiliates: any}>(GET_AFFILIATES_ENTRIES, {
+
+  const query = useQuery<{ affiliates: any }>(GET_AFFILIATES_ENTRIES, {
     variables,
-    client: isNFTGame ? nftClient: client,
+    client: isNFTGame ? nftClient : client,
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
@@ -54,10 +50,10 @@ export const useAffiliatePlayer = (address: string, isNFT = false) => {
   const variables = {
     affiliate: address
   }
- 
-  const query = useQuery<{player: any}>(GET_PLAYER_AFFILIATE, {
+
+  const query = useQuery<{ player: any }>(GET_PLAYER_AFFILIATE, {
     variables,
-    client: isNFTGame ? nftClient: client,
+    client: isNFTGame ? nftClient : client,
     pollInterval: POLL_INTERVAL_GAMES,
   });
 

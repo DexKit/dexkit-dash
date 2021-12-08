@@ -8,8 +8,6 @@ import {
   Paper,
   makeStyles,
   ButtonBase,
-  useTheme,
-  useMediaQuery,
 } from '@material-ui/core';
 
 import React, {useCallback} from 'react';
@@ -101,8 +99,6 @@ interface Props {}
 
 export const EmptyWallet = (props: Props) => {
   const classes = useStyles();
-  const theme = useTheme();
-
   const handleCreatePortifolio = useCallback(() => {}, []);
 
   const handleConnectWalletLater = useCallback(() => {}, []);

@@ -350,13 +350,13 @@ function GameEnter(props: Props) {
       return totalPlayers === currentPlayers;
     }
   }, [totalPlayers, currentPlayers]);
-
+  const numCoins = game?.num_coins;
   const isDisabled = useMemo(() => {
     return (
-      selectedCoins?.length === (game?.num_coins?.toNumber() || 0) - 1 &&
+      selectedCoins?.length === (numCoins?.toNumber() || 0) - 1 &&
       captainCoin !== undefined
     );
-  }, [selectedCoins, game?.num_coins, captainCoin, game]);
+  }, [selectedCoins, numCoins, captainCoin]);
 
   
   const goToExplorer = useCallback(

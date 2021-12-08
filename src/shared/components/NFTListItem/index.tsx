@@ -11,7 +11,6 @@ import {
   useTheme,
   Chip,
 } from '@material-ui/core';
-import TokenLogo from '../TokenLogo';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {EthereumNetwork} from 'shared/constants/AppEnums';

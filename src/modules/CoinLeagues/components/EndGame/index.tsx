@@ -87,7 +87,7 @@ export const EndGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onEndGameCallback, chainId],
+    [game, refetch, onEndGameCallback, chainId, createNotification, id, refetchWinner],
   );
 
   return (

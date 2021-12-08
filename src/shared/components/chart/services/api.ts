@@ -129,7 +129,7 @@ export default class BinanceAPI {
     }
 
     for (const symbol of this.symbols) {
-      if (symbol.symbol == symbolName) {
+      if (symbol.symbol === symbolName) {
         setTimeout(() => {
           onSymbolResolvedCallback({
             name: symbol.symbol,

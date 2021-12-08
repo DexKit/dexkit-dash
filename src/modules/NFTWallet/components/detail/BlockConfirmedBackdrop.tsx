@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {
   Backdrop,
   makeStyles,
-  useTheme,
   Grid,
   Typography,
   Card,
@@ -11,7 +10,6 @@ import {
   Button,
   Link,
 } from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {getChainId, RINKEBY_NETWORK} from 'utils/opensea';
 import {useWeb3} from 'hooks/useWeb3';
@@ -45,7 +43,7 @@ function useEtherscanUrl() {
     (async () => {
       const provider = getProvider();
 
-      if ((await getChainId(provider)) == RINKEBY_NETWORK) {
+      if ((await getChainId(provider)) === RINKEBY_NETWORK) {
         setUrl('https://rinkeby.etherscan.io/tx');
       }
     })();
@@ -57,7 +55,6 @@ function useEtherscanUrl() {
 export default (props: Props) => {
   const {open, transaction, onClose} = props;
   const classes = useStyles();
-  const theme = useTheme();
 
   const {url} = useEtherscanUrl();
 

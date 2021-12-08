@@ -145,7 +145,7 @@ const GamesInProgress = () => {
         </Grid>
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleagues Banner'} />
           </Grid>
         </Hidden>
 
@@ -181,7 +181,7 @@ const GamesInProgress = () => {
         </Grid>
         <Hidden smDown={true}>
           <Grid item xs={12} sm={8}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleagues Banner'} />
           </Grid>
         </Hidden>
 

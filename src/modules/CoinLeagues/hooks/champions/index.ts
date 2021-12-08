@@ -380,7 +380,7 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
     if (chainId && defaultAccount) {
       fetch();
     }
-  }, [chainId, defaultAccount]);
+  }, [chainId, defaultAccount, fetch]);
 
   return {fetch, data, loading, error};
 }

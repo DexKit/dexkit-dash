@@ -141,7 +141,9 @@ const CreateGameModal = (props: Props) => {
         let submitted = 0;
         for (let index = 0; index < totalGames; index++) {
           setSubmitState(SubmitState.WaitingWallet);
+            /* eslint-disable */
           const onSubmitTx = (tx: string) => {
+            /* eslint-disable */
             confirmed++;
             setSubmittedGames(confirmed);
             setTx(tx);
@@ -161,6 +163,7 @@ const CreateGameModal = (props: Props) => {
             });
           };
           const onConfirmTx = () => {
+              /* eslint-disable */
             submitted++;
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
@@ -210,6 +213,9 @@ const CreateGameModal = (props: Props) => {
       history,
       onGameCreateCallback,
       totalFactoryGames.refetch,
+      createNotification,
+      isNFTGame,
+      totalFactoryGames,
       totalGames,
       startDate,
       chainId

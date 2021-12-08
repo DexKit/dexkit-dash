@@ -132,18 +132,21 @@ export const StartGame = (props: Props) => {
     },
     [game, refetch, onAbortGameCallback, chainId, createNotification, id],
   );
+  const abortTime = game?.abort_timestamp;
+  const startTime = game?.start_timestamp
+
 
   const abortTimestamp = useMemo(() => {
-    if (game?.abort_timestamp.toNumber()) {
-      return game?.abort_timestamp.toNumber() * 1000;
+    if (abortTime) {
+      return abortTime.toNumber() * 1000;
     }
-  }, [game, game?.abort_timestamp]);
+  }, [abortTime]);
 
   const startTimestamp = useMemo(() => {
-    if (game?.start_timestamp.toNumber()) {
-      return game?.start_timestamp.toNumber() * 1000;
+    if (startTime) {
+      return startTime.toNumber() * 1000;
     }
-  }, [game, game?.start_timestamp]);
+  }, [startTime]);
 
   const started = useMemo(() => game?.started, [game]);
   const aborted = useMemo(() => game?.aborted, [game]);

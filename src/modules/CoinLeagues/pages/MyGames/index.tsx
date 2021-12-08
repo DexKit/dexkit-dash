@@ -65,6 +65,7 @@ const MyGames = () => {
         }),
       );
     }
+    /* eslint-disable */
   }, [account, dispatch]);
 
   return (

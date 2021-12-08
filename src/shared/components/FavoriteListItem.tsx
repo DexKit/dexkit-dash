@@ -123,7 +123,7 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
     if (isNativeCoin(coin)) {
       history.push(getExplorerNativeChainURL(coin));
     }
-  }, [history, coin, getExplorerNativeChainURL]);
+  }, [history, coin, getExplorerNativeChainURL, isNativeCoin]);
 
   return (
     <Paper variant={variant} onClick={handleClick} className={classes.paper}>

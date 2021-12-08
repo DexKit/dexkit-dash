@@ -230,7 +230,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [id, account, refetch, onClaimCallback, chainId],
+    [id, account, refetch, onClaimCallback, chainId, createNotification],
   );
   const onWithdrawGame = useCallback(
     (ev: any) => {
@@ -365,14 +365,14 @@ function OnePlayerTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds]);
+  }, [props, game, currentPrices, allFeeds, type, accountLabels]);
 
   // We need to this to calculate the monster of score in real time
   const playerData = useMemo(() => {
     if (account && playerRowData) {
       const place = playerRowData
         .sort((a, b) => {
-          if (game?.game_type === GameType.Winner) {
+          if (type === GameType.Winner) {
             return b.score - a.score;
           } else {
             return a.score - b.score;
@@ -389,7 +389,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         };
       }
     }
-  }, [playerRowData, account]);
+  }, [playerRowData, account, type]);
 
   return (
     <>
