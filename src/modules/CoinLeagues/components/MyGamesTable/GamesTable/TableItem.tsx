@@ -23,6 +23,7 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useWeb3} from 'hooks/useWeb3';
 interface TableItemProps {
   row: any;
+  isNFT: boolean;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -51,11 +52,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const TableItem: React.FC<TableItemProps> = ({row}) => {
+const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
 
   const paymentTypeColor = useMemo(() => {
     switch (row.status) {
@@ -121,7 +122,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       }
     }
     return null;
-  }, [row.earnings, row.id, enterGameRoute]);
+  }, [row.earnings, row.id, enterGameRoute, row.intId, chainId]);
 
   const withdrawed = useMemo(() => {
     if (row.status === 'Aborted') {
@@ -184,7 +185,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       case 'Aborted':
         return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
     }
-  }, [row.status]);
+  }, [row.status, row.startedAt, row.endedAt, row.createdAt, row.abortedAt ]);
 
   if (isMobile) {
     const summaryTitle = `Game ${row.intId}`;

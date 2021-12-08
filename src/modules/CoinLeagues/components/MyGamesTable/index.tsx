@@ -21,7 +21,7 @@ import GameFilterDrawer from '../GameFilterDrawer';
 import {useMobile} from 'hooks/useMobile';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
-const MyGamesTable: React.FC = () => {
+const MyGamesTable = ({isNFT = false}) => {
   const account = useDefaultAccount();
   const [status, setStatus] = useState<CoinLeagueGameStatus>(
     CoinLeagueGameStatus.All,
@@ -43,7 +43,7 @@ const MyGamesTable: React.FC = () => {
     filters: filtersState,
     status,
     player: account,
-  });
+  }, isNFT);
 
   const handleClickAll = useCallback(() => {
     setStatus(CoinLeagueGameStatus.All);
@@ -196,6 +196,7 @@ const MyGamesTable: React.FC = () => {
             ) : (
               <GamesTable
                 data={query.data?.games}
+                isNFT={isNFT}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 rowsPerPageOptions={rowsPerPageOptions}

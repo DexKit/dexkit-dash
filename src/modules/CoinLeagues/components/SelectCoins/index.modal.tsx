@@ -48,14 +48,14 @@ export const SelectCoinLeagueDialog = (props: Props) => {
           coin.base.toLowerCase().startsWith(filterText?.toLowerCase()),
       )
       .filter((c) => !selectedCoins?.includes(c));
-  }, [filterText, selectedCoins]);
+  }, [filterText, selectedCoins, coins]);
 
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setFilterText(value);
     },
-    [coins],
+    [],
   );
 
   const handleSelectCoin = useCallback(

@@ -38,7 +38,7 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
 
   const history = useHistory();
 
-  const handleBack = useCallback(() => history.push(`/wallet/`), []);
+  const handleBack = useCallback(() => history.push(`/wallet/`), [history]);
 
   return (
     <>

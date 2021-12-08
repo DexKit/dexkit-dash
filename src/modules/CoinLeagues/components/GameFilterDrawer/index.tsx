@@ -72,13 +72,6 @@ export const GameFilterDrawer = (props: Props) => {
     [filtersState],
   );
 
-  const handleChangeStakeAmount = useCallback(
-    (e) => {
-      filtersState.setStakeAmount(e.target.value);
-    },
-    [filtersState],
-  );
-
   const handleChangeDuration = useCallback(
     (e) => {
       filtersState.setDuration(e.target.value);

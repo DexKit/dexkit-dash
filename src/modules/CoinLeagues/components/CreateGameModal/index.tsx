@@ -273,8 +273,8 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={0.01}>
-                Beta Testing - 0.01{' '}
+              <MenuItem value={0.001}>
+                Beta Testing - 0.001{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}

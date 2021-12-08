@@ -60,7 +60,6 @@ import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
-import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
 import {useCoinLeaguesFactoryRoutes, useIsNFTGame} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
@@ -264,10 +263,11 @@ function GameEnter(props: Props) {
     },
     [listGamesRoute, history],
   );
-
+  const affiliateField = query.get(AFFILIATE_FIELD);
+  const amountToPlay = game?.amount_to_play;
   const onEnterGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play && captainCoin && chainId) {
+      if (amountToPlay && captainCoin && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
@@ -300,26 +300,28 @@ function GameEnter(props: Props) {
 
         onJoinGameCallback(
           selectedCoins.map((c) => c.address) || [],
-          game?.amount_to_play.toString(),
+          amountToPlay.toString(),
           captainCoin?.address,
           {
             onConfirmation: onConfirmTx,
             onError,
             onSubmit: onSubmitTx,
           },
-          query.get(AFFILIATE_FIELD),
+          affiliateField,
           champion?.id  || DISABLE_CHAMPIONS_ID
         );
       }
     },
     [
-      game,
+      amountToPlay,
+      champion,
+      isNFTGame,
       selectedCoins,
       captainCoin,
       refetch,
       chainId,
       id,
-      query.get(AFFILIATE_FIELD),
+      affiliateField,
       onJoinGameCallback,
       createNotification,
     ],
@@ -330,7 +332,7 @@ function GameEnter(props: Props) {
   const finished =  game?.finished;
   const aborted = game?.aborted;
   const totalPlayers =  game?.num_players.toNumber();
-  const amountToPlay = game?.amount_to_play;
+ 
 
   const sufficientFunds = useMemo(() => {
     if (amountToPlay && balance) {
@@ -339,7 +341,7 @@ function GameEnter(props: Props) {
       return balBN.gt(amount);
     }
     return false;
-  }, [game, game?.amount_to_play, balance]);
+  }, [amountToPlay, balance]);
 
   const currentPlayers = game?.players.length;
    
@@ -487,7 +489,7 @@ function GameEnter(props: Props) {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item sm={5} xl={5}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'} />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>

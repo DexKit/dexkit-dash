@@ -237,7 +237,7 @@ function PlayersTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds, data, type]);
+  }, [props.data, game, currentPrices, allFeeds, data, type,  accountLabels]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 

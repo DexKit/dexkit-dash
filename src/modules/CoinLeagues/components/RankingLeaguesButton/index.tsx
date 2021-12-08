@@ -51,6 +51,7 @@ interface RankingButtonProps {
   secondCount?: number;
   thirdCount?: number;
   totalEarned?: number;
+  EarnedMinusSpent?: number;
   label: string;
   featured?: boolean;
 }
@@ -92,7 +93,7 @@ export const RankingButton = (props: RankingButtonProps) => {
 
   return (
     <Paper variant='outlined'>
-      <ButtonBase onClick={handleToggle} className={classes.button}>
+      <ButtonBase onClick={handleToggle} className={classes.button} >
         <Box p={4}>
           <Grid
             container
@@ -189,6 +190,11 @@ export const RankingButton = (props: RankingButtonProps) => {
             <Grid item>
               <Typography variant={'body1'} className={classes.paragraphMargin}>
                 Earned Matic: {props?.totalEarned}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                 Matic Profit: {props?.EarnedMinusSpent}
               </Typography>
             </Grid>
           </Grid>

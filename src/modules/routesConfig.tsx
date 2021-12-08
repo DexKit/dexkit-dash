@@ -1,3 +1,5 @@
+import { COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE } from "shared/constants/routes";
+
 export interface IconProps {
   src: string;
   type: 'svg' | 'png' | 'jpg';
@@ -103,7 +105,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'coinleague',
-          url: `/coin-league`,
+          url: `${COINSLEAGUE_ROUTE}`,
         },
         {
           id: 'discover-games',
@@ -112,7 +114,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'gameboy',
-          url: `/coin-league/discover-games`,
+          url: `${COINSLEAGUE_ROUTE}/discover-games`,
         },
         {
           id: 'my-games',
@@ -121,7 +123,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'user.search',
-          url: `/coin-league/my-games`,
+          url: `${COINSLEAGUE_ROUTE}/my-games`,
         },
         {
           id: 'coinleague.ranking',
@@ -130,7 +132,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'cup',
-          url: `/coin-league/ranking`,
+          url: `${COINSLEAGUE_ROUTE}/ranking`,
         },
         {
           id: 'coinleague.nftroom',
@@ -139,7 +141,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'game',
-          url: `/coin-league/nft-room`,
+          url: `${COINLEAGUENFT_ROUTE}`,
         },
         {
           id: 'coinleague.mintnft',
@@ -148,7 +150,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'judge',
-          url: `/coin-league/champions/event`,
+          url: `${COINSLEAGUE_ROUTE}/champions/event`,
         },
         {
           id: 'coinleague.how-to-play',
@@ -157,7 +159,25 @@ const useRoutesConfig = (): NavItemProps[] => {
           type: 'item',
           customIcon: true,
           icon: 'question',
-          url: `/coin-league/how-to-play`,
+          url: `${COINSLEAGUE_ROUTE}/how-to-play`,
+        },
+        {
+          id: 'coinleague.affiliate',
+          title: 'Coinleague Affiliate',
+          messageId: 'sidebar.coinleague.affiliate',
+          type: 'item',
+          customIcon: true,
+          icon: 'user.octagon',
+          url: `${COINSLEAGUE_ROUTE}/affiliates`,
+        },
+        {
+          id: 'coinleague.trading-analysis',
+          title: 'Trading Analysis',
+          messageId: 'sidebar.coinleague.trading-analysis',
+          type: 'item',
+          customIcon: true,
+          icon: 'diagram',
+          url: `${COINSLEAGUE_ROUTE}/trading-analysis`,
         },
       ],
     },

@@ -9,7 +9,7 @@ import TableItem from './TableItem';
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import {Empty} from 'shared/components/Empty';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableResponsiveMaterial: {
@@ -42,10 +42,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-
 interface Props {
-  transactionData: GetAffiliateTrades | undefined;
+  data: any;
   isLoading: boolean;
+  isNFT: boolean;
   total: number;
   page: number;
   perPage: number;
@@ -54,17 +54,15 @@ interface Props {
 }
 
 const TransactionTable: React.FC<Props> = ({
-  transactionData,
+  data,
   isLoading,
   total,
   page,
   perPage,
+  isNFT,
   onChangePage,
   onChangePerPage,
 }) => {
-  const data = transactionData?.ethereum?.transfers
-    ? transactionData?.ethereum?.transfers
-    : [];
   const classes = useStyles();
 
   return (
@@ -75,11 +73,22 @@ const TransactionTable: React.FC<Props> = ({
             <TableHeading />
           </TableHead>
           <TableBody>
-            {data.length > 1 &&
-              data.map((item, i) => <TableItem key={i} data={item} />)}
+            {data &&
+              data.length > 1 &&
+              data.map((item: any, i: any) => {
+                return <TableItem key={i} data={item} isNFT={isNFT} />;
+              })}
           </TableBody>
         </Table>
         {isLoading && <Loader />}
+      </Box>
+      <Box display={'flex'} justifyContent={'center'}>
+        {!data && (
+          <Empty
+            title={'No affiliates entries'}
+            message={'Start create games or share link for users to join'}
+          />
+        )}
       </Box>
       <TablePagination
         component='div'

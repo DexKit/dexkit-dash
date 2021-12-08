@@ -6,7 +6,7 @@ interface MyGamesParams extends CoinLeagueGamesParams {
   player?: string;
 }
 
-export const useMyGames = (params: MyGamesParams) => {
+export const useMyGames = (params: MyGamesParams, isNFT = false) => {
   const {status, filters, accounts, player} = params;
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -32,7 +32,7 @@ export const useMyGames = (params: MyGamesParams) => {
     filters,
     first: rowsPerPage,
     skip: skipRows,
-  });
+  }, isNFT);
 
   useEffect(() => {
     const refetchQuery = () => query.refetch();

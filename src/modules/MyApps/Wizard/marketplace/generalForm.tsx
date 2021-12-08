@@ -154,7 +154,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    const {social, title, domain} = fields;
+    const {social} = fields;
     // const _editable = Boolean(title) && Boolean(domain);
     // if(!editable){
     //   setEditable(!_editable);

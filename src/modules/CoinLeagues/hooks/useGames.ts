@@ -34,9 +34,9 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
   player?: string;
 }
 
-export const useCoinLeagueGames = (params: CoinLeagueGamesParams) => {
+export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false) => {
   const {accounts, filters, status, first, skip, player} = params;
-  const isNFTGame = useIsNFTGame();
+  const isNFTGame = useIsNFTGame() || isNFT;
 
   const variables: any = {};
 

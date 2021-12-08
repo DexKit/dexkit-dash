@@ -28,9 +28,9 @@ interface CallbackProps {
   onError?: any;
 }
 
-export const useCoinLeaguesFactoryRoutes = () => {
+export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
   const {room} = useParams<{room: string}>();
-  const isNFTGame = useIsNFTGame();
+  const isNFTGame = useIsNFTGame() || isNFT;
 
   const enterGameRoute = useCallback(
     (address: string) => {
@@ -234,7 +234,7 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
       : isNFTGame
       ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
-  }, [chainId, room]);
+  }, [chainId, room, isNFTGame]);
 
   const onGameCreateCallback = useCallback(
     async (params: GameParams, callbacks?: CallbackProps) => {

@@ -35,6 +35,7 @@ export interface PlayerGraph {
   totalThirdWinnedGames: string;
   totalSecondWinnedGames: string;
   totalEarned: string;
+  EarnedMinusSpent: string;
 }
 
 export interface ChampionMetadata {

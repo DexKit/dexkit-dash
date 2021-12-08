@@ -15,6 +15,7 @@ export const GET_RANKING_MOST_WINNED = gql`
       totalThirdWinnedGames
       totalSecondWinnedGames
       totalEarned
+      EarnedMinusSpent
     }
   }
 `;
@@ -34,6 +35,7 @@ export const GET_RANKING_MOST_JOINED = gql`
       totalThirdWinnedGames
       totalSecondWinnedGames
       totalEarned
+      EarnedMinusSpent
     }
   }
 `;
@@ -53,6 +55,27 @@ export const GET_RANKING_MOST_EARNED = gql`
       totalThirdWinnedGames
       totalSecondWinnedGames
       totalEarned
+      EarnedMinusSpent
+    }
+  }
+`;
+
+export const GET_RANKING_MOST_PROFIT = gql`
+  {
+    players(
+      first: 100
+      orderBy: EarnedMinusSpent
+      orderDirection: desc
+      where: {EarnedMinusSpent_gt: 0}
+    ) {
+      id
+      totalWinnedGames
+      totalJoinedGames
+      totalFirstWinnedGames
+      totalThirdWinnedGames
+      totalSecondWinnedGames
+      totalEarned
+      EarnedMinusSpent
     }
   }
 `;

@@ -112,7 +112,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
       );
       setFilteredCoins(filtered);
     },
-    [coins],
+    [coins, allCoins],
   );
 
   const handleClose = useCallback(() => {
@@ -156,7 +156,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
+        {filteredCoins.length === 0 ? (
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>

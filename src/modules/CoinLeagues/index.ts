@@ -21,6 +21,22 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: '/coin-league/trading-analysis',
+        component: React.lazy(() => import('./pages/TradingAnalysis')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
+        path: '/coin-league/affiliates',
+        component: React.lazy(() => import('./pages/Affiliate')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: `${COINLEAGUENFT_ROUTE}/:id`,
         component: React.lazy(() => import('./pages/GameEnter')),
       },
