@@ -1,0 +1,66 @@
+[debug] [2021-12-09T04:51:39.781Z] ----------------------------------------------------------------------
+[debug] [2021-12-09T04:51:39.783Z] Command:       /home/joaocampos/.nvm/versions/node/v16.13.1/bin/node /home/joaocampos/.nvm/versions/node/v16.13.1/bin/firebase deploy
+[debug] [2021-12-09T04:51:39.783Z] CLI Version:   9.23.1
+[debug] [2021-12-09T04:51:39.784Z] Platform:      linux
+[debug] [2021-12-09T04:51:39.784Z] Node Version:  v16.13.1
+[debug] [2021-12-09T04:51:39.784Z] Time:          Thu Dec 09 2021 01:51:39 GMT-0300 (Brasilia Standard Time)
+[debug] [2021-12-09T04:51:39.784Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-12-09T04:51:39.851Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-12-09T04:51:39.852Z] > authorizing via signed-in user (j.campos893@gmail.com)
+[debug] [2021-12-09T04:51:39.852Z] [iam] checking project coinleague-v1 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-12-09T04:51:39.853Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/coinleague-v1:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-12-09T04:53:49.131Z] [iam] error while checking permissions, command may fail: FirebaseError: Server Error. connect ETIMEDOUT 216.239.34.10:443
+[debug] [2021-12-09T04:53:49.133Z] > refreshing access token with scopes: []
+[debug] [2021-12-09T04:53:49.133Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-12-09T04:56:05.186Z] ----------------------------------------------------------------------
+[debug] [2021-12-09T04:56:05.188Z] Command:       /home/joaocampos/.nvm/versions/node/v16.13.1/bin/node /home/joaocampos/.nvm/versions/node/v16.13.1/bin/firebase deploy
+[debug] [2021-12-09T04:56:05.188Z] CLI Version:   9.23.1
+[debug] [2021-12-09T04:56:05.188Z] Platform:      linux
+[debug] [2021-12-09T04:56:05.188Z] Node Version:  v16.13.1
+[debug] [2021-12-09T04:56:05.189Z] Time:          Thu Dec 09 2021 01:56:05 GMT-0300 (Brasilia Standard Time)
+[debug] [2021-12-09T04:56:05.189Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-12-09T04:56:05.256Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-12-09T04:56:05.257Z] > authorizing via signed-in user (j.campos893@gmail.com)
+[debug] [2021-12-09T04:56:05.257Z] [iam] checking project coinleague-v1 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-12-09T04:56:05.258Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/coinleague-v1:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-12-09T04:56:06.303Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 09 Dec 2021 04:55:57 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=728","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-12-09T04:56:06.305Z] > refreshing access token with scopes: []
+[debug] [2021-12-09T04:56:06.306Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-12-09T04:58:20.489Z] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2021-12-09T04:58:20.490Z] FirebaseError: Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+    at invalidCredentialError (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/auth.js:141:12)
+    at refreshTokens (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/auth.js:448:15)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async Client.getAccessToken (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/apiv2.js:146:23)
+    at async Client.addAuthHeader (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/apiv2.js:137:21)
+    at async Client.request (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/apiv2.js:93:34)
+    at async Object.getFirebaseProject (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/management/projects.js:290:21)
+    at async Object.getDefaultHostingSite (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/getDefaultHostingSite.js:8:21)
+    at async requireHostingSite (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/requireHostingSite.js:9:18)
+    at async Object.fn (/home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/commands/deploy.js:73:9)
+    at async /home/joaocampos/.nvm/versions/node/v16.13.1/lib/node_modules/firebase-tools/lib/command.js:188:17
+[error] 
+[error] Error: Failed to get Firebase project coinleague-v1. Please make sure the project exists and your account has permission to access it.
+[debug] [2021-12-09T05:01:34.190Z] ----------------------------------------------------------------------
+[debug] [2021-12-09T05:01:34.191Z] Command:       /home/joaocampos/.nvm/versions/node/v16.13.1/bin/node /home/joaocampos/.nvm/versions/node/v16.13.1/bin/firebase deploy
+[debug] [2021-12-09T05:01:34.192Z] CLI Version:   9.23.1
+[debug] [2021-12-09T05:01:34.192Z] Platform:      linux
+[debug] [2021-12-09T05:01:34.192Z] Node Version:  v16.13.1
+[debug] [2021-12-09T05:01:34.193Z] Time:          Thu Dec 09 2021 02:01:34 GMT-0300 (Brasilia Standard Time)
+[debug] [2021-12-09T05:01:34.193Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-12-09T05:01:34.259Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-12-09T05:01:34.260Z] > authorizing via signed-in user (j.campos893@gmail.com)
+[debug] [2021-12-09T05:01:34.260Z] [iam] checking project coinleague-v1 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-12-09T05:01:34.262Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/coinleague-v1:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
