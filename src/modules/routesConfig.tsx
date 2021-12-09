@@ -108,6 +108,15 @@ const useRoutesConfig = (): NavItemProps[] => {
           url: `${COINSLEAGUE_ROUTE}`,
         },
         {
+          id: 'coinleague.nftroom',
+          title: 'NFT Room',
+          messageId: 'sidebar.app.nft-room',
+          type: 'item',
+          customIcon: true,
+          icon: 'game',
+          url: `${COINLEAGUENFT_ROUTE}`,
+        },
+        {
           id: 'discover-games',
           title: 'Discover Games',
           messageId: 'sidebar.discover-games',
@@ -133,15 +142,6 @@ const useRoutesConfig = (): NavItemProps[] => {
           customIcon: true,
           icon: 'cup',
           url: `${COINSLEAGUE_ROUTE}/ranking`,
-        },
-        {
-          id: 'coinleague.nftroom',
-          title: 'NFT Room',
-          messageId: 'sidebar.app.nft-room',
-          type: 'item',
-          customIcon: true,
-          icon: 'game',
-          url: `${COINLEAGUENFT_ROUTE}`,
         },
         {
           id: 'coinleague.mintnft',

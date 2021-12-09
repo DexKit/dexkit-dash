@@ -116,7 +116,7 @@ function SmallCardGame(props: Props): JSX.Element {
 
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Max Prize Pool:&nbsp;</Typography>
+            <Typography variant='h6'>Prize Pool:&nbsp;</Typography>
             <Typography variant='h6'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
           </Box>
         </Grid>

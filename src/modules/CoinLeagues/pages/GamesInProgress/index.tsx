@@ -220,14 +220,12 @@ const GamesInProgress = () => {
                         ? 'primary'
                         : 'default'
                     }
-                    size='small'
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
                   />
                 </Grid>
                 <Grid item>
                   <Chip
-                    size='small'
                     label={messages['app.coinLeagues.myGames'] as string}
                     clickable
                     onClick={handleToggleMyGames}
@@ -236,7 +234,6 @@ const GamesInProgress = () => {
                 </Grid>
                 <Grid item>
                   <Chip
-                    size='small'
                     label={messages['app.coinLeagues.bitboy'] as string}
                     clickable
                     onClick={handleToggleBitBoy}

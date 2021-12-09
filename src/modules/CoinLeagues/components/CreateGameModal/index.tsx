@@ -128,7 +128,6 @@ const CreateGameModal = (props: Props) => {
   const [submittedGames, setSubmittedGames] = useState<number>(0);
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
-
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/

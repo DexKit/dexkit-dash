@@ -225,9 +225,10 @@ export const useCoinLeaguesFactory = () => {
 };
 
 export const useCoinLeaguesFactoryCreateGameCallback = () => {
-  const {web3State, chainId} = useWeb3();
+  const {web3State, chainId, getProvider} = useWeb3();
   const {room} = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame();
+  const chainProvider = getProvider();
   const factoryAddress = useMemo(() => {
     return room
       ? room
@@ -242,7 +243,7 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
         return;
       }
       try {
-        const tx = await createGame(factoryAddress, params);
+        const tx = await createGame(factoryAddress, params, chainProvider);
         callbacks?.onSubmit(tx.hash);
         await tx.wait();
         callbacks?.onConfirmation(tx.hash);
@@ -251,7 +252,7 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
         callbacks?.onError(e);
       }
     },
-    [web3State, factoryAddress],
+    [web3State, factoryAddress, chainProvider],
   );
   return {
     onGameCreateCallback,
@@ -266,16 +267,21 @@ export const useCoinLeaguesFactoryTotalGames = () => {
   );
 
   const {room} = useParams<{room: string}>();
+  const isNFTGame = useIsNFTGame();
   const factoryAddress = useMemo(() => {
     return room
       ? room
+      : isNFTGame
+      ? COIN_LEAGUES_NFT_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)]
       : COIN_LEAGUES_FACTORY_ADDRESS[GET_LEAGUES_CHAIN_ID(chainId)];
-  }, [chainId, room]);
+  }, [chainId, room, isNFTGame]);
 
   const totalGamesQuery = useQuery(['GetTotalGames', factoryAddress], () => {
-    if (factoryAddress || !provider) {
+
+    if (!factoryAddress || !provider) {
       return;
     }
+    
     return getTotalGamesFromFactory(factoryAddress, provider);
   });
   return {

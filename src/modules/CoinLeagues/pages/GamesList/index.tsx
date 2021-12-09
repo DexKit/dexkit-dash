@@ -56,6 +56,7 @@ import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
@@ -300,7 +301,7 @@ const GamesList = () => {
         </Grid>
         <Grid item xs={6}>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant={'text'} onClick={onClickGoGamesInProgress}>
+            <Button variant={'text'} onClick={onClickGoGamesInProgress} endIcon={<ArrowForwardIosIcon/>}>
               View More 
             </Button>
           </Box>
@@ -308,14 +309,14 @@ const GamesList = () => {
 
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            {gamesInProgress?.slice(0, 4).map((g, id) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={id}>
+            {gamesInProgress?.slice(0, 6).map((g, id) => (
+              <Grid item xs={12} sm={4} md={4} lg={3} xl={2} key={id}>
                 <SmallCardGame game={g} key={id} onClick={onClickEnterGame} />
               </Grid>
             ))}
             {isLoadingStarted &&
               [1, 2, 3].map((v, i) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={i}>
+                <Grid item xs={12} sm={6} md={4} lg={2} xl={2} key={i}>
                   <SmallCardGameSkeleton />
                 </Grid>
               ))}
@@ -408,14 +409,12 @@ const GamesList = () => {
                         ? 'primary'
                         : 'default'
                     }
-                    size='small'
                     label={messages['app.coinLeagues.all'] as string}
                     clickable
                   />
                 </Grid>
                 <Grid item>
-                  <Chip
-                    size='small'
+                  <Chip                
                     label={messages['app.coinLeagues.myGames'] as string}
                     clickable
                     onClick={handleToggleMyGames}
@@ -424,7 +423,6 @@ const GamesList = () => {
                 </Grid>
                 <Grid item>
                   <Chip
-                    size='small'
                     label={messages['app.coinLeagues.bitboy'] as string}
                     clickable
                     onClick={handleToggleBitBoy}

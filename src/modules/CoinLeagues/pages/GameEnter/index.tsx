@@ -272,8 +272,8 @@ function GameEnter(props: Props) {
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           createNotification({
-            title: `Join Game ${isNFTGame && 'on NFT Room'}`,
-            body: `Joined Game ${id} ${isNFTGame && 'on NFT Room'}`,
+            title: `Join Game ${isNFTGame ? 'on NFT Room' : 'on Main Room'}`,
+            body: `Joined Game ${id} ${isNFTGame ? 'on NFT Room' : 'Main Room'}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',

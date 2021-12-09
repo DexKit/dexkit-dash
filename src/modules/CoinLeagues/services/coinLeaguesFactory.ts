@@ -16,16 +16,25 @@ export const getCoinLeaguesFactoryContract = async (address: string) => {
 
   return new ethers.Contract(address, coinLeaguesFactoryAbi, provider);
 };
+
+export const getCoinLeaguesFactoryContractWithProvider = async (address: string, provider: any) => {
+  const pr = new providers.Web3Provider(provider).getSigner();
+  return new ethers.Contract(address, coinLeaguesFactoryAbi, pr);
+};
+
+
+
 const GAS_PRICE_MULTIPLIER = 2;
 export const createGame = async (
   address: string,
   params: GameParams,
+  provider: any
 ): Promise<ContractTransaction> => {
   const ethers = getEthers();
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
-  return (await getCoinLeaguesFactoryContract(address)).createGame(
+  return (await getCoinLeaguesFactoryContractWithProvider(address, provider)).createGame(
     params.numPlayers,
     params.duration,
     params.amountUnit,
@@ -78,6 +87,7 @@ export const getTotalGamesFromFactory = async (
   const iface = new Interface(coinLeaguesFactoryAbi);
   const multicall = await getMulticallFromProvider(provider);
   const calls: CallInput[] = [];
+
   calls.push({
     interface: iface,
     target: factoryAddress,

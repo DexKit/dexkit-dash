@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
     color: 'black',
   },
   innerContent: {
-    fontSize: '1rem',
+    fontSize: '0.8rem',
     padding: theme.spacing(1),
     justifyContent: 'space-between',
   },
   smallContent: {
-    fontSize: '0.875rem',
+    fontSize: '14px',
     paddingBottom: theme.spacing(3),
   },
 }));
@@ -89,7 +89,7 @@ function CardGameProgress(props: Props): JSX.Element {
   const entriesOut = strPad(Number(game.numPlayers) || 0);
 
   const prizeTotalValue = ethers.utils.formatEther(
-    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
+    BigNumber.from(game.entry).mul(BigNumber.from(game.currentPlayers)),
   );
 
   const onClickEnter = useCallback(
@@ -113,7 +113,7 @@ function CardGameProgress(props: Props): JSX.Element {
 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h6'>ID #{game.intId}</Typography>
+      <Typography variant='subtitle2'>ID #{game.intId}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>
@@ -126,7 +126,7 @@ function CardGameProgress(props: Props): JSX.Element {
                 spacing={1}>
                 <Grid xs={12} item>
                   <Typography
-                    variant='h6'
+                    variant='subtitle2'
                     style={{color: '#fcc591', alignItems: 'baseline'}}>
                     {gameLevel}
                   </Typography>
@@ -139,15 +139,25 @@ function CardGameProgress(props: Props): JSX.Element {
             </Box>
           </Box>
         </Grid>
-        <Grid
-          xs={6}
-          container
-          justifyContent='flex-end'
-          style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Duration:</Typography>
-          <Typography variant='h6' style={{fontWeight: 500}}>
-            &nbsp;{GET_LABEL_FROM_DURATION(time)}
-          </Typography>
+        <Grid xs={6} item>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>Duration:</Typography>
+            <Typography variant='h6' style={{fontWeight: 500}}>
+              &nbsp;{GET_LABEL_FROM_DURATION(time)}
+            </Typography>
+          </Box>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>&nbsp;Type:</Typography>
+            <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
+             &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
 
@@ -178,7 +188,7 @@ function CardGameProgress(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Max Prize Pool
+            Prize Pool
             <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
           </Typography>
         </Grid>
