@@ -48,5 +48,6 @@ export interface GameParams {
   abortTimestamp: number;
   startTimestamp: number;
   type: number;
+  championRoom?: number;
   isNFT: boolean;
 }

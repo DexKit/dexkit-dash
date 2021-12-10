@@ -42,6 +42,7 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
+import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -128,6 +129,7 @@ const CreateGameModal = (props: Props) => {
   const [submittedGames, setSubmittedGames] = useState<number>(0);
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
+  const [championRoom, setChampionRoom] = useState<number>(Number(DISABLE_CHAMPIONS_ID));
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
@@ -193,6 +195,7 @@ const CreateGameModal = (props: Props) => {
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
             isNFT: isNFTGame,
+            championRoom: championRoom,
           };
           onGameCreateCallback(params, {
             onConfirmation: onConfirmTx,
@@ -214,6 +217,7 @@ const CreateGameModal = (props: Props) => {
       totalFactoryGames.refetch,
       createNotification,
       isNFTGame,
+      championRoom,
       totalFactoryGames,
       totalGames,
       startDate,
@@ -450,7 +454,7 @@ const CreateGameModal = (props: Props) => {
           </Grid>
         </Grid>
 
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{marginRight: 5}}>
@@ -483,6 +487,38 @@ const CreateGameModal = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
+
+         isNFTGame && <Grid item xs={12}>
+            <FormControl fullWidth size='small' className={classes.formControl}>
+              <FormLabel className={classes.label} style={{marginRight: 5}}>
+                 Select Champion Room
+              </FormLabel>
+              <Select
+                value={championRoom}
+                onChange={(event) => setChampionRoom(Number(event.target.value))}
+                variant='outlined'
+                placeholder='Select'
+                style={{
+                  marginRight: 5,
+                  color: '#fff',
+                  borderRadius: 6,
+                  backgroundColor: '#3C4255',
+                }}
+                inputProps={{
+                  style: {color: '#fff', backgroundColor: '#3C4255'},
+                }}>
+                <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
+               {/* <MenuItem value={0}>BITTOKEN</MenuItem>
+                <MenuItem value={1}>BITCOIN</MenuItem>
+                <MenuItem value={2}>ETHEREUM</MenuItem>
+                <MenuItem value={3}>CHAINLINK</MenuItem>
+                <MenuItem value={4}>POLKADOT</MenuItem>
+                <MenuItem value={5}>UNISWAP</MenuItem>
+                <MenuItem value={6}>CARDANO</MenuItem>
+              <MenuItem value={7}>DOGE</MenuItem>*/}     
+              </Select>
+            </FormControl>
+              </Grid>
         </Grid>
 
         {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
