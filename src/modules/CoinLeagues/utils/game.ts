@@ -92,7 +92,7 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
     case GameOrderBy.LowLevel:
       return {orderBy: 'entry', orderDirection: 'asc'};
     case GameOrderBy.AboutStart:
-      return {orderBy: 'startsAt', orderDirection: 'desc'};
+      return {orderBy: 'startsAt', orderDirection: 'asc'};
     case GameOrderBy.MostFull:
       return {orderBy: 'currentPlayers', orderDirection: 'desc'};
     case GameOrderBy.MostEmpty:

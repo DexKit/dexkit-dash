@@ -14,7 +14,6 @@ import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeag
 import {CremaTheme} from 'types/AppContextPropsType';
 
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
-import {truncateAddress} from 'utils/text';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 
@@ -216,7 +215,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
             color='inherit'
             component={RouterLink}
             to={enterGameRoute(row.intId)}>
-            {truncateAddress(row.intId)}
+            {row.intId}
           </Link>
         ),
       },
