@@ -5,6 +5,7 @@ import {getMulticallFromProvider} from 'services/multicall';
 import {getEthers} from 'services/web3modal';
 import {CoinFeed, Game} from 'types/coinsleague';
 import coinLeaguesAbi from '../constants/ABI/coinLeagues.json';
+import championRoomAbi from '../constants/ABI/championRoom.json';
 import championsAbi from '../constants/ABI/coinLeagueChampions.json';
 import erc20Abi from 'shared/constants/ABI/erc20.json';
 import {BITTOKEN, DEXKIT} from 'shared/constants/tokens';
@@ -243,6 +244,27 @@ export const getPlayerMultipliers = async (
 
   return mappedMultipliers;
 };
+
+/**
+ * return all games data at once
+ * @param games
+ */
+ export const getChampionRoom = async (
+  gameAddress: string,
+  provider: any,
+): Promise<BigNumber> => {
+  const iface = new Interface(championRoomAbi);
+  const multicall = await getMulticallFromProvider(provider);
+  const calls: CallInput[] = [];
+
+  calls.push({interface: iface, target: gameAddress, function: 'championRoom'});
+  const response = await multicall.multiCall(calls);
+  const [, results] = response;
+  return results[0] as BigNumber
+  
+};
+
+
 
 const GAS_PRICE_MULTIPLIER = 2;
 export const joinGame = async (
