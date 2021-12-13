@@ -132,7 +132,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       }
     },
-    [dispatch, getProvider, isMagicProvider],
+    [dispatch, getProvider, onSwitchMagicNetwork],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -179,6 +179,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         });
       }
     }
+    /* eslint-disable */
   }, [chainId, account]);
 
   return (

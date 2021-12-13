@@ -87,8 +87,8 @@ interface IRow {
 
 interface Props {
   data?: IRow[];
-  address: string;
-  type?: GameType
+  id: string;
+  type?: GameType;
   winner?: any;
   account?: string;
 }
@@ -126,7 +126,7 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function OnePlayerTable(props: Props): JSX.Element {
-  const {address, account, winner, data, type} = props;
+  const {id, account, winner, data, type} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [tx, setTx] = useState<string>();
@@ -139,7 +139,8 @@ function OnePlayerTable(props: Props): JSX.Element {
     game,
     currentPrices,
     allFeeds,
-  } = useCoinLeagues(address);
+    amountOnContract,
+  } = useCoinLeagues(id);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
@@ -148,8 +149,7 @@ function OnePlayerTable(props: Props): JSX.Element {
     SubmitState.None,
   );
 
-  const {multiplier, loadingMultiplier, tooltipMessage} =
-    useMultipliers(address);
+  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
 
   const isWinner = useMemo(() => {
     if (account && winner) {
@@ -170,6 +170,12 @@ function OnePlayerTable(props: Props): JSX.Element {
     }
   }, [game]);
 
+  const alreadyWithdrawed = useMemo(() => {
+    if (game && amountOnContract) { 
+      return game.aborted && amountOnContract.isZero();
+    }
+  }, [game, amountOnContract]);
+
   const claimed = useMemo(() => {
     if (isWinner && winner && data) {
       return winner.claimed;
@@ -187,14 +193,14 @@ function OnePlayerTable(props: Props): JSX.Element {
 
   const onClaimGame = useCallback(
     (ev: any) => {
-      if (address && account && chainId) {
+      if (id && account && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           setSubmitState(SubmitState.Submitted);
           createNotification({
             title: 'Claim',
-            body: `Claimed for Game ${address}`,
+            body: `Claimed for Game ${id}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
@@ -224,11 +230,11 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [address, account, refetch, onClaimCallback, chainId],
+    [id, account, refetch, onClaimCallback, chainId, createNotification],
   );
   const onWithdrawGame = useCallback(
     (ev: any) => {
-      if (address && account) {
+      if (id && account) {
         setSubmitWithdrawState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
@@ -252,7 +258,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [address, account, refetch, onWithdrawCallback],
+    [id, account, refetch, onWithdrawCallback],
   );
 
   const goToExplorer = useCallback(
@@ -283,31 +289,31 @@ function OnePlayerTable(props: Props): JSX.Element {
         );
 
         if (currentFeedPrice?.length) {
-          
           const prices = currentFeedPrice.map((f) => {
             const startFeed = allFeeds?.find(
               (al) => al.address.toLowerCase() === f.feed.toLowerCase(),
             );
-            let multiplier  = 1;
+            let multiplier = 1;
 
-
-            if(d.captainCoin && d.captainCoin.toLowerCase() === f.feed.toLowerCase()){
-              const end = (f.price.toNumber() / USD_POWER_NUMBER)
+            if (
+              d.captainCoin &&
+              d.captainCoin.toLowerCase() === f.feed.toLowerCase()
+            ) {
+              const end = f.price.toNumber() / USD_POWER_NUMBER;
               const start = startFeed
-              ? ((startFeed?.start_price.toNumber() /
-                  USD_POWER_NUMBER) as number)
-              : 0;
-              if(end && start){
-                const scr = (end - start) / end ;
-                if(scr > 0  && type === GameType.Winner){
+                ? ((startFeed?.start_price.toNumber() /
+                    USD_POWER_NUMBER) as number)
+                : 0;
+              if (end && start) {
+                const scr = (end - start) / end;
+                if (scr > 0 && type === GameType.Winner) {
                   multiplier = 1.2;
                 }
-                if(scr < 0  && type === GameType.Loser){
+                if (scr < 0 && type === GameType.Loser) {
                   multiplier = 1.2;
                 }
               }
             }
-
 
             return {
               endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
@@ -325,7 +331,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores.reduce((p, c) => p + c);
+          const score = scores && scores.reduce((p, c) => p + c) ;
           return {
             ...d,
             account: d.hash,
@@ -359,14 +365,14 @@ function OnePlayerTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds]);
+  }, [props, game, currentPrices, allFeeds, type, accountLabels]);
 
   // We need to this to calculate the monster of score in real time
   const playerData = useMemo(() => {
     if (account && playerRowData) {
       const place = playerRowData
         .sort((a, b) => {
-          if (game?.game_type === GameType.Winner) {
+          if (type === GameType.Winner) {
             return b.score - a.score;
           } else {
             return a.score - b.score;
@@ -383,7 +389,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         };
       }
     }
-  }, [playerRowData, account]);
+  }, [playerRowData, account, type]);
 
   return (
     <>
@@ -392,7 +398,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         onClose={onCloseViewCoinsDialog}
         coins={playerData?.coins || []}
         captainCoin={playerData?.captainCoin}
-        address={address}
+        id={id}
         playerAddress={playerData?.hash}
       />
       <TableContainer className={classes.container} component={Paper}>
@@ -456,7 +462,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
-                                  !loadingMultiplier && multiplier(account)
+                                  !loadingMultiplier && multiplier(account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}
@@ -593,7 +599,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                         </Grid>
                       </Grid>
                     )}
-                    {canWithdraw && (
+                    {(canWithdraw && !alreadyWithdrawed) && (
                       <Grid
                         container
                         justifyContent={'center'}
@@ -633,6 +639,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                       </Grid>
                     )}
                     {claimed && 'Claimed'}
+                    {alreadyWithdrawed && 'Withdrawed'}
                   </TableCell>
                 )}
               </TableRow>

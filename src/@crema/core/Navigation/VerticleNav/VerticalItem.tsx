@@ -22,8 +22,6 @@ interface VerticalItemProps extends RouteComponentProps<any> {
 
 const VerticalItem: React.FC<VerticalItemProps> = ({
   item,
-  match,
-  history,
   level,
 }) => {
   const classes = useStyles({level});

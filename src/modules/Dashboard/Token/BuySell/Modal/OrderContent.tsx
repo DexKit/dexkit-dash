@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useNetwork} from 'hooks/useNetwork';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
@@ -110,7 +109,6 @@ const OrderContent: React.FC<Props> = (props) => {
   const [fee, setFee] = useState(0);
   const [slippage, setSlippage] = useState(0.03);
   const [gasAmount, setGasAmount] = useState(new BigNumber(0));
-  const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
   /* eslint-disable */
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
@@ -163,8 +161,7 @@ const OrderContent: React.FC<Props> = (props) => {
     if (isConvert) {
       getGasInfo()
         .then((e) => {
-          setDefaultGasPrice(e.gasPriceInWei.toString());
-
+      
           updateSelectedGasPrice(e.gasPriceInWei);
 
           setSellAmount(amountFrom);
@@ -210,7 +207,6 @@ const OrderContent: React.FC<Props> = (props) => {
           const gasPrice = new BigNumber(e.gasPrice);
 
           setGasAmount(gas);
-          setDefaultGasPrice(gasPrice.toNumber().toString());
 
           updateSelectedGasPrice(gasPrice, gas);
 

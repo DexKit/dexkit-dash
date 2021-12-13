@@ -22,6 +22,7 @@ export enum FilterPlayerGame {
   ALL = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
+  Aborted = 'Aborted',
   Ended = 'Ended',
 }
 
@@ -29,6 +30,7 @@ export enum CoinLeagueGameStatus {
   All = 'All',
   Waiting = 'Waiting',
   Started = 'Started',
+  Aborted = 'Aborted',
   Ended = 'Ended',
 }
 
@@ -41,6 +43,7 @@ export enum GameOrderBy {
   LowerDuration = 'LowerDuration',
   MoreCoins = 'MoreCoins',
   LessCoins = 'LessCoins',
+  AboutStart = 'AboutStart',
 }
 
 export enum GameOrderByLabels {
@@ -79,4 +82,9 @@ export enum GameStakeAmount {
   TWO = 2,
   FIVE = 5,
   TEN = 10,
+}
+
+export enum RoomType {
+  Main = 'Main Room',
+  NFT = 'NFT Room',
 }

@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   usdAmount: {
-    fontSize: 32,
-    fontWeight: 600,
+    fontSize: 20,
+    fontWeight: 500,
   },
   usdAmountSign: {
     fontSize: 16,

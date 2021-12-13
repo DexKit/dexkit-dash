@@ -7,7 +7,6 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
-
 interface Props {
   props?: any;
 }
@@ -32,7 +31,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const TableHeading: React.FC<Props> = (props) => {
-  
   const classes = useStyles(props);
 
   return (

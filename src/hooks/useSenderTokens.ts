@@ -75,9 +75,7 @@ export function useSenderTokens() {
     });
   }, [balances, tokensBSC, tokensMATIC, tokensETH]);
   const allTokens = useMemo(() => {
-    return (tokensETH || [])
-      .concat(tokensBSC || [])
-      .concat(tokensMATIC || []);
+    return (tokensETH || []).concat(tokensBSC || []).concat(tokensMATIC || []);
   }, [tokensETH, tokensBSC, tokensMATIC]);
 
   return {tokens, allTokens};

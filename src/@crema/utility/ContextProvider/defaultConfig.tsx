@@ -11,7 +11,6 @@ import {
 
 const breakpoints = createBreakpoints({});
 const cardRadius = 12;
-const inputBorderRadius = 8;
 const buttonBorderRadius = 8;
 
 const defaultConfig: any = {

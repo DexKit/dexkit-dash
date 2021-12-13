@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetContractEventByHash
 // ====================================================
 
 export interface GetContractEventByHash_ethereum_smartContractEvents_arguments {
-  __typename: "ArgumentNameValue";
+  __typename: 'ArgumentNameValue';
   /**
    * Argument name
    */
@@ -26,7 +26,7 @@ export interface GetContractEventByHash_ethereum_smartContractEvents_arguments {
 }
 
 export interface GetContractEventByHash_ethereum_smartContractEvents_smartContractEvent {
-  __typename: "Event";
+  __typename: 'Event';
   /**
    * Name
    */
@@ -34,11 +34,13 @@ export interface GetContractEventByHash_ethereum_smartContractEvents_smartContra
 }
 
 export interface GetContractEventByHash_ethereum_smartContractEvents {
-  __typename: "EthereumSmartContractEvent";
+  __typename: 'EthereumSmartContractEvent';
   /**
    * Event arguments
    */
-  arguments: GetContractEventByHash_ethereum_smartContractEvents_arguments[] | null;
+  arguments:
+    | GetContractEventByHash_ethereum_smartContractEvents_arguments[]
+    | null;
   /**
    * Contract event logged
    */
@@ -46,11 +48,13 @@ export interface GetContractEventByHash_ethereum_smartContractEvents {
 }
 
 export interface GetContractEventByHash_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Smart Contract Events
    */
-  smartContractEvents: GetContractEventByHash_ethereum_smartContractEvents[] | null;
+  smartContractEvents:
+    | GetContractEventByHash_ethereum_smartContractEvents[]
+    | null;
 }
 
 export interface GetContractEventByHash {

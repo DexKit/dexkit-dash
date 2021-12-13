@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {useCountdown} from 'hooks/utils/useCountdown';
 import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import { strPad } from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,14 +23,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  address: string;
+  id: string;
 }
 
 function CardTimer(props: {time: number}) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
-  const minutes = Math.floor( (time  - (hours * 3600)) /60);
-  const seconds =  time - (hours * 3600) - (minutes * 60);
+  const minutes = Math.floor((time - hours * 3600) / 60);
+  const seconds = time - hours * 3600 - minutes * 60;
   return (
     <Grid item>
       <Typography variant='h6'>
@@ -40,18 +40,16 @@ function CardTimer(props: {time: number}) {
   );
 }
 
-
 function Countdown(props: Props): JSX.Element {
   const classes = useStyles();
-  const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.address);
+  const {game, refetch, refetchCurrentFeeds} = useCoinLeagues(props.id);
   const duration = game?.duration.toNumber();
-  const startTimestamp = game?.start_timestamp.toNumber()
-
+  const startTimestamp = game?.start_timestamp.toNumber();
 
   const endTime = useMemo(() => {
     if (game && duration && startTimestamp) {
       const time = duration;
-      return new Date(time*1000 + startTimestamp*1000)
+      return new Date(time * 1000 + startTimestamp * 1000);
     }
     return new Date();
   }, [duration, startTimestamp, game]);
@@ -65,6 +63,7 @@ function Countdown(props: Props): JSX.Element {
     interval: 10000,
     onDown: () => refetchCurrentFeeds(),
   });
+  
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -77,7 +76,7 @@ function Countdown(props: Props): JSX.Element {
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
             Countdown
           </Typography>
-          <Typography variant='h4' style={{color: '#fff'}}>
+          <Typography variant='h5' style={{color: '#fff'}}>
             <CardTimer time={count} />
           </Typography>
         </Grid>

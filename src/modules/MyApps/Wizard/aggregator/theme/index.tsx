@@ -129,6 +129,7 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
         ..._theme,
       });
     }
+    /* eslint-disable */
   }, []);
 
   useEffect(() => {

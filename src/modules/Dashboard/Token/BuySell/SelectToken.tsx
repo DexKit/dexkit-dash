@@ -105,7 +105,7 @@ const ListboxComponent = React.forwardRef<HTMLDivElement>(
 const useStyles = makeStyles({
   textField: {
     '& .MuiOutlinedInput-root': {
-      padding: '5px 50px'
+      padding: '5px 50px',
     },
     // '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
     //   border: 'none',
@@ -115,8 +115,8 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
   },
   selectLabel: {
-    marginBottom: '4px'
-  }
+    marginBottom: '4px',
+  },
 });
 
 const SelectBox = styled.div`
@@ -239,7 +239,11 @@ const SelectToken: React.FC<Props> = ({
             )}
             renderInput={(params) => (
               <>
-                <Typography variant="body2" className={`${classes.bold} ${!label ? classes.selectLabel : ''}`}>
+                <Typography
+                  variant='body2'
+                  className={`${classes.bold} ${
+                    !label ? classes.selectLabel : ''
+                  }`}>
                   {label || 'Search a coin'}
                 </Typography>
                 <SelectBox>
@@ -271,4 +275,4 @@ const SelectToken: React.FC<Props> = ({
   );
 };
 
-export default  SelectToken;
+export default SelectToken;

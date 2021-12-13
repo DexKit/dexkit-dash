@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client/react/hooks/useQuery';
-import {useChainId} from 'hooks/useChainId';
 import {FilterContext} from 'providers/protocol/filterContext';
 import {useContext, useState} from 'react';
 import {

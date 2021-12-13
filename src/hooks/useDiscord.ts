@@ -19,7 +19,6 @@ const useDiscord = () => {
 
       document.body.appendChild(script);
       called = true;
-      console.log('called');
     }
 
     return () => {};

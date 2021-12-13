@@ -30,9 +30,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-
 const TableHeading: React.FC<Props> = (props) => {
-
   const classes = useStyles(props);
   const {messages} = useIntl();
 

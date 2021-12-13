@@ -28,9 +28,8 @@ import AffiliateHistory from '../history';
 import {GridContainer} from '@crema';
 import ButtonCopy from 'shared/components/ButtonCopy';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
-
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -88,13 +87,10 @@ const AffiliatePage: React.FC = () => {
     valueTotalUSD,
   } = useAffiliateTrades(account ?? '', selectedChainId);
 
- 
-
-  
-
-  const {kitBalance} = useTokenBalancesAffiliate(account ?? '', selectedChainId);
-
-  
+  const {kitBalance} = useTokenBalancesAffiliate(
+    account ?? '',
+    selectedChainId,
+  );
 
   const AffiliateSkeleton = (props: any) => (
     <React.Fragment {...props}>
@@ -178,8 +174,8 @@ const AffiliatePage: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
-                You need to have 200 KIT in your wallet on {chain} network to earn money from
-                referrals on {chain} network
+                You need to have 200 KIT in your wallet on {chain} network to
+                earn money from referrals on {chain} network
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -277,5 +273,3 @@ const AffiliatePage: React.FC = () => {
 };
 
 export default AffiliatePage;
-
-

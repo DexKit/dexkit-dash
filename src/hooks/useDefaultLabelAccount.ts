@@ -6,7 +6,7 @@ import {isSupportedWalletType} from 'utils/wallet';
 export const useDefaultLabelAccount = (network?: Network) => {
   let type: SupportedNetworkType = SupportedNetworkType.evm;
   if (network && isSupportedWalletType(network)) {
-    type = (network as any) as SupportedNetworkType;
+    type = network as any as SupportedNetworkType;
   }
 
   const wallet = useSelector<AppState, AppState['ui']['wallet']>(

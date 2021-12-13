@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',
@@ -62,7 +63,7 @@ function CardGameSkeleton(): JSX.Element {
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h5'>
-        <Skeleton>ID #{truncateAddress('0x000000000000000000')}</Skeleton>
+        <Skeleton>ID #{truncateAddress('1')}</Skeleton>
       </Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={5} item>
@@ -75,10 +76,7 @@ function CardGameSkeleton(): JSX.Element {
             </Skeleton>
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={7}
-          style={{color: '#7a8398'}}>
+        <Grid item xs={7} style={{color: '#7a8398'}}>
           <Typography variant='h6'>Game Time:</Typography>
 
           <Typography variant='h6' style={{fontWeight: 600}}>

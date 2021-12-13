@@ -32,7 +32,7 @@ const MaticBridgeButton = (props: Props) => {
         <ProgrammingArrowsIcon className={classes.icon} />
       </RoundedIconButton>
       <Typography variant='caption' className={classes.itemText}>
-         Bridge
+        Bridge
       </Typography>
     </Box>
   );

@@ -3,19 +3,19 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetAMMPairExplorer
 // ====================================================
 
 export interface GetAMMPairExplorer_ethereum_dexTrades_timeInterval {
-  __typename: "TimeInterval";
+  __typename: 'TimeInterval';
   day: string;
 }
 
 export interface GetAMMPairExplorer_ethereum_dexTrades_baseCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -35,7 +35,7 @@ export interface GetAMMPairExplorer_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -55,7 +55,7 @@ export interface GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetAMMPairExplorer_ethereum_dexTrades {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   /**
    * Time interval
    */
@@ -83,7 +83,7 @@ export interface GetAMMPairExplorer_ethereum_dexTrades {
 }
 
 export interface GetAMMPairExplorer_ethereum_pooled_balances_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency symbol
    */
@@ -91,7 +91,7 @@ export interface GetAMMPairExplorer_ethereum_pooled_balances_currency {
 }
 
 export interface GetAMMPairExplorer_ethereum_pooled_balances {
-  __typename: "EthereumBalance";
+  __typename: 'EthereumBalance';
   /**
    * Currency of transfer
    */
@@ -100,7 +100,7 @@ export interface GetAMMPairExplorer_ethereum_pooled_balances {
 }
 
 export interface GetAMMPairExplorer_ethereum_pooled {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Balances by currencies for the address
    */
@@ -108,7 +108,7 @@ export interface GetAMMPairExplorer_ethereum_pooled {
 }
 
 export interface GetAMMPairExplorer_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

@@ -1,12 +1,12 @@
-import { fromTokenUnitAmount} from '@0x/utils';
+import {fromTokenUnitAmount} from '@0x/utils';
 
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query';
 import {fetchPrice} from 'services/rest/0x-api/fetchPrice';
 import {QuotePriceParams} from 'services/rest/0x-api/types';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {OrderSide} from 'types/app';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 
 /**
  * Fetch price in real time
@@ -27,8 +27,19 @@ export const useTokenPriceUSD = (
   refresh?: boolean,
   chainId?: ChainId,
 ) => {
-  const swapQuoteResponse = useQuery(['GetUSDPriceZRXApi', address, amount, network, decimals, refresh, side, chainId], ()=>{
-      if(address && amount && network && decimals) {
+  const swapQuoteResponse = useQuery(
+    [
+      'GetUSDPriceZRXApi',
+      address,
+      amount,
+      network,
+      decimals,
+      refresh,
+      side,
+      chainId,
+    ],
+    () => {
+      if (address && amount && network && decimals) {
         const amountAPI = fromTokenUnitAmount(amount, decimals);
         const quote: QuotePriceParams = {
           baseToken: address.toLowerCase(),
@@ -36,9 +47,14 @@ export const useTokenPriceUSD = (
           orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
           baseAmount: amountAPI,
         };
-        return  fetchPrice(quote, network, chainId);
-    }
-  })
+        return fetchPrice(quote, network, chainId);
+      }
+    },
+  );
 
-  return {priceQuote: swapQuoteResponse.data, loading: swapQuoteResponse.isLoading, error: swapQuoteResponse.error };
+  return {
+    priceQuote: swapQuoteResponse.data,
+    loading: swapQuoteResponse.isLoading,
+    error: swapQuoteResponse.error,
+  };
 };

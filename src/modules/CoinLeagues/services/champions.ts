@@ -36,7 +36,7 @@ export function mintCoinLeaguesChampion(
       tx = contract.mintThirdRound(transactionParam);
     }
 
-    let id = tx
+     tx
       .then(async (tx: any) => {
         if (tx.hash && onTransaction) {
           onTransaction(tx.hash);

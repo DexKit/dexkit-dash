@@ -47,8 +47,8 @@ function AffiliateTotalCard(props: Props): JSX.Element {
             {usdFormatter.format(props.total)}
           </Typography>
         </Grid>
-        <Grid item xs={2} >
-          <WalletIcon height={35} width={35}  />
+        <Grid item xs={2}>
+          <WalletIcon height={35} width={35} />
         </Grid>
       </Grid>
     </Container>

@@ -105,8 +105,7 @@ const CremaThemeProvider: React.FC<React.ReactNode> = (props) => {
   }, [params.theme_style, theme, isBelowMd, updateTheme, updateThemeStyle]);
 
   return (
-    <ThemeProvider
-      theme={responsiveFontSizes(createTheme(theme, muiLocale))}>
+    <ThemeProvider theme={responsiveFontSizes(createTheme(theme, muiLocale))}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         {props.children}
       </MuiPickersUtilsProvider>

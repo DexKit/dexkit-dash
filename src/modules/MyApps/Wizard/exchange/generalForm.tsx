@@ -153,7 +153,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    const {social, title, domain} = fields;
+    const {social} = fields;
     // const _editable = Boolean(title) && Boolean(domain);
     // if(!editable){
     //   setEditable(!_editable);
@@ -180,6 +180,7 @@ const GeneralForm: React.FC<Props> = (props) => {
     keys.forEach((k, i) => {
       validatorToOtherFields(k as keyof GeneralConfig, _errors ?? {});
     });
+    /* eslint-disable  */
   }, []);
 
   useEffect(() => {

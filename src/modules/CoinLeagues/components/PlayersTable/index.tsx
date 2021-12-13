@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import TableContainer from '@material-ui/core/TableContainer';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -78,7 +79,7 @@ interface IRow {
 interface Props {
   data?: IRow[];
   type?: GameType;
-  address: string;
+  id: string;
   winner?: any;
   account?: string;
   finished?: boolean;
@@ -118,20 +119,20 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const {address, account, finished, hideCoins, type, data} = props;
+  const {id, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
   const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
   const [selectedPlayerAddress, setSelectedPlayerAddress] = useState<string>();
   const accountLabels = useLabelAccounts();
-  const {game, currentPrices, allFeeds} = useCoinLeagues(address);
+  const {game, currentPrices, allFeeds} = useCoinLeagues(id);
 
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-  const {multiplier, loadingMultiplier} = useMultipliers(address);
+  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -236,7 +237,7 @@ function PlayersTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [props.data, game, currentPrices, allFeeds, data, type]);
+  }, [game, currentPrices, allFeeds, data, type,  accountLabels]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
@@ -247,7 +248,7 @@ function PlayersTable(props: Props): JSX.Element {
         onClose={onCloseViewCoinsDialog}
         coins={coins}
         captainCoin={selectedCaptainCoin}
-        address={address}
+        id={id}
         playerAddress={selectedPlayerAddress}
       />
       <TableContainer className={classes.container} component={Paper}>
@@ -353,11 +354,12 @@ function PlayersTable(props: Props): JSX.Element {
                       {!hideCoins ? (
                         row?.captainCoin && (
                           <>
+                          <Tooltip title={tooltipMessage(row.hash)}>
                             <Badge
                               color={'primary'}
                               overlap='circular'
                               badgeContent={
-                                !loadingMultiplier && multiplier(row.hash)
+                                !loadingMultiplier && multiplier(row.hash).toFixed(3)
                               }>
                               <Avatar
                                 className={classes.chip}
@@ -372,6 +374,7 @@ function PlayersTable(props: Props): JSX.Element {
                                 )}
                               </Avatar>
                             </Badge>
+                            </Tooltip>
                             {row?.coins.length === 0 && (
                               <IconButton
                                 onClick={() =>

@@ -55,7 +55,8 @@ type PickArrayedObjectFields<T> = Pick<
   }[keyof T]
 >;
 
-type ExchangeDataResponseArrayedSymbolData = PickArrayedObjectFields<ExchangeDataResponseSymbolData>;
+type ExchangeDataResponseArrayedSymbolData =
+  PickArrayedObjectFields<ExchangeDataResponseSymbolData>;
 type ExchangeDataResponseNonArrayedSymbolData = Pick<
   ExchangeDataResponseSymbolData,
   Exclude<
@@ -73,14 +74,14 @@ type ExchangeDataResponse = {
 };
 
 function extractField<
-  Field extends keyof ExchangeDataResponseNonArrayedSymbolData
+  Field extends keyof ExchangeDataResponseNonArrayedSymbolData,
 >(
   data: ExchangeDataResponse,
   field: Field,
   arrayIndex: number,
 ): ExchangeDataResponseNonArrayedSymbolData[Field];
 function extractField<
-  Field extends keyof ExchangeDataResponseArrayedSymbolData
+  Field extends keyof ExchangeDataResponseArrayedSymbolData,
 >(
   data: ExchangeDataResponse,
   field: Field,

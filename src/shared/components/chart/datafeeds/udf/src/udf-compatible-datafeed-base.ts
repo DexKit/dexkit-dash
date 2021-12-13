@@ -88,7 +88,8 @@ function extractField<Field extends keyof (TimescaleMark | Mark)>(
  * See UDF protocol reference at https://github.com/tradingview/charting_library/wiki/UDF
  */
 export class UDFCompatibleDatafeedBase
-  implements IExternalDatafeed, IDatafeedQuotesApi, IDatafeedChartApi {
+  implements IExternalDatafeed, IDatafeedQuotesApi, IDatafeedChartApi
+{
   protected _configuration: UdfCompatibleConfiguration = defaultConfiguration();
   private readonly _datafeedURL: string;
   private readonly _configurationReadyPromise: Promise<void>;

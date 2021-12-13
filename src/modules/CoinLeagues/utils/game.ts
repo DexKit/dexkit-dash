@@ -39,6 +39,11 @@ export const GET_GAME_ORDER_OPTIONS = () => {
       messageId: 'app.coinLeagues.lowerLevel',
     },
     {
+      value: GameOrderBy.AboutStart,
+      label: 'About to Start',
+      messageId: 'app.coinLeagues.aboutstart',
+    },
+    {
       value: GameOrderBy.MostFull,
       label: 'Most Full',
       messageId: 'app.coinLeagues.mostFull',
@@ -86,6 +91,8 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
       return {orderBy: 'entry', orderDirection: 'desc'};
     case GameOrderBy.LowLevel:
       return {orderBy: 'entry', orderDirection: 'asc'};
+    case GameOrderBy.AboutStart:
+      return {orderBy: 'startsAt', orderDirection: 'asc'};
     case GameOrderBy.MostFull:
       return {orderBy: 'currentPlayers', orderDirection: 'desc'};
     case GameOrderBy.MostEmpty:
@@ -146,11 +153,21 @@ export function renderEarningsField(params: string) {
   }`;
 }
 
-export function getWaitingGamesQuery(params: any) {
+export function renderWithdrawsField(params: string) {
+  return `withdraws(where: {${params}}){
+    player{
+      id
+    }
+    at
+  }`;
+}
+
+export function getGamesQuery(params: any) {
   let queryVariableParams = [];
   let queryParams = [];
   let whereParams = [];
   let earningsWhere = [];
+  let withdrawsWhere = [];
 
   if (params.skip) {
     queryVariableParams.push('$skip: Int');
@@ -210,6 +227,7 @@ export function getWaitingGamesQuery(params: any) {
   if (params.player) {
     queryVariableParams.push('$player: String');
     earningsWhere.push('player_contains: $player');
+    withdrawsWhere.push('player_contains: $player');
   }
 
   let paramsString = queryVariableParams.join(', ');
@@ -220,10 +238,13 @@ export function getWaitingGamesQuery(params: any) {
 
   let earningsWhereString = earningsWhere.join(', ');
 
+  let withdrawWhereString = withdrawsWhere.join(', ');
+
   let query = gql`
   query GetGames(${paramsString}) {
     games(where: {${whereParamsString}}, ${receiveParamsString}) {
         id
+        intId
         type
         duration
         status
@@ -231,9 +252,13 @@ export function getWaitingGamesQuery(params: any) {
         numPlayers
         currentPlayers
         entry
+        createdAt
         startedAt
+        startsAt
+        abortedAt
         endedAt
         ${earningsWhereString ? renderEarningsField(earningsWhereString) : ''}
+        ${withdrawWhereString ? renderWithdrawsField(withdrawWhereString) : ''}
       }
   }
 `;

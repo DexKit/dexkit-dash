@@ -9,10 +9,7 @@ import useNews from 'hooks/useNews';
 import ErrorView from 'modules/Common/ErrorView';
 import LoadingView from 'modules/Common/LoadingView';
 
-
-
 const News = () => {
-  
   const {loading, error, data} = useNews({limit: 3});
 
   const [shouldRender, setShouldRender] = useState(false);
@@ -23,7 +20,6 @@ const News = () => {
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
-
 
   return (
     <>

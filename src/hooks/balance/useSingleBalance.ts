@@ -21,22 +21,24 @@ export const useSingleBalance = (
   const {account: web3Account} = useWeb3();
   const account = defaultAccount || web3Account;
 
-  const [
-    data,
-    setData,
-  ] = useState<GetSingleBalance_ethereum_address_balances>();
+  const [data, setData] =
+    useState<GetSingleBalance_ethereum_address_balances>();
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetSingleBalance,
-    GetSingleBalanceVariables
-  >(BITQUERY_SINGLE_BALANCE_INFO, {
-    variables: {
-      network,
-      currency: getCurrency(network, address) as string,
-      address: account as string,
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetSingleBalance, GetSingleBalanceVariables>(
+    BITQUERY_SINGLE_BALANCE_INFO,
+    {
+      variables: {
+        network,
+        currency: getCurrency(network, address) as string,
+        address: account as string,
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (

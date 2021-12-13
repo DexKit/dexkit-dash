@@ -18,7 +18,6 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-
 import {useWeb3} from 'hooks/useWeb3';
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';

@@ -62,7 +62,7 @@ export const PairAnalytics = (props: Props) => {
   /* eslint-disable */
   const tradeAmountInUSD = useMemo(() => {
     return usdFormatter.format(pair?.tradeAmountInUsd || 0);
-  }, [pair?.tradeAmountInUsd, pair, usdFormatter ]);
+  }, [pair?.tradeAmountInUsd, pair, usdFormatter]);
 
   /* eslint-disable */
   const lastPriceInUSD = useMemo(() => {

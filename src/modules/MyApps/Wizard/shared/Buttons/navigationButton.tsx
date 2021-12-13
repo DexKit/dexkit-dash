@@ -15,13 +15,8 @@ interface NavigationButtonProps {
 }
 
 export const NavigationButton: React.FC<NavigationButtonProps> = (props) => {
-  const {
-    handleBack,
-    handleNext,
-    ButtonBackText,
-    ButtonNextText,
-    classes,
-  } = props;
+  const {handleBack, handleNext, ButtonBackText, ButtonNextText, classes} =
+    props;
   return (
     <div className={classes?.actionsContainer}>
       <div>

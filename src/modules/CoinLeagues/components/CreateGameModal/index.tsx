@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
@@ -15,23 +15,35 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import {makeStyles} from '@material-ui/core/styles';
-import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
+import { makeStyles } from '@material-ui/core/styles';
+import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 import {
-  useCoinLeaguesFactory,
+  useCoinLeaguesFactoryCreateGameCallback,
   useCoinLeaguesFactoryRoutes,
+  useCoinLeaguesFactoryTotalGames,
+  useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {GameParams} from 'types/coinsleague';
-import {ethers} from 'ethers';
-import {ButtonState} from '../ButtonState';
+import { GameParams } from 'types/coinsleague';
+import { ethers } from 'ethers';
+import { ButtonState } from '../ButtonState';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import {ChainId} from 'types/blockchain';
-import {useWeb3} from 'hooks/useWeb3';
-import {useHistory} from 'react-router-dom';
+import { ChainId } from 'types/blockchain';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useHistory } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import { useNotifications } from 'hooks/useNotifications';
+import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     color: '#fff',
@@ -48,6 +60,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 6,
     border: '1px solid #525C75',
     margin: theme.spacing(0.5),
+    backgroundColor: '#3C4255',
+  },
+  textField: {
+    marginRight: '5px',
+    color: '#fff',
+    borderRadius: 6,
+    padding: '5px',
     backgroundColor: '#3C4255',
   },
   label: {
@@ -90,52 +109,70 @@ enum SubmitState {
 }
 
 const CreateGameModal = (props: Props) => {
+  const { open, setOpen } = props;
+  const isNFTGame = useIsNFTGame();
   const classes = useStyles();
-  const {chainId} = useWeb3();
+  const { chainId } = useWeb3();
   const history = useHistory();
-  const {onGameCreateCallback, refetchCreated} = useCoinLeaguesFactory();
-  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  const { createNotification } = useNotifications();
+  const { onGameCreateCallback } = useCoinLeaguesFactoryCreateGameCallback();
+  const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
+  const { enterGameRoute } = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-  const {open, setOpen} = props;
   const [coins, setCoins] = useState<number>();
   const [gameType, setGameType] = useState('winner-game');
   const [entryAmount, setEntryAmount] = useState<number>();
   const [duration, setGameDuration] = useState<number>();
+  const [startDate, setStartDate] = useState<number>(new Date().getTime());
   const [totalPlayers, setTotalPlayers] = useState<number>();
   const [totalGames, setTotalGames] = useState<number>(1);
   const [submittedGames, setSubmittedGames] = useState<number>(0);
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
-
+  const [championRoom, setChampionRoom] = useState<number>(Number(DISABLE_CHAMPIONS_ID));
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
   const onCreateGame = useCallback(
-    (ev?: any) => {
-      if (totalPlayers && entryAmount && duration && coins) {
+    (_ev?: any) => {
+      if (totalPlayers && entryAmount && duration && coins && chainId) {
         setSubmittedGames(0);
         setConfirmedGames(0);
         let confirmed = 0;
-        let submitted = 0
+        let submitted = 0;
         for (let index = 0; index < totalGames; index++) {
           setSubmitState(SubmitState.WaitingWallet);
+          /* eslint-disable */
           const onSubmitTx = (tx: string) => {
-            confirmed ++;
+            /* eslint-disable */
+            confirmed++;
             setSubmittedGames(confirmed);
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
+            createNotification({
+              title: `Created Game ${isNFTGame && 'on NFT room'}`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame && 'on NFT room'}`,
+              timestamp: Date.now(),
+              url: getTransactionScannerUrl(chainId, tx),
+              urlCaption: 'View transaction',
+              type: NotificationType.TRANSACTION,
+              metadata: {
+                chainId: chainId,
+                transactionHash: tx,
+                status: 'pending',
+              } as TxNotificationMetadata,
+            });
           };
           const onConfirmTx = () => {
-            submitted ++;
+            /* eslint-disable */
+            submitted++;
             setConfirmedGames(submitted);
             setSubmitState(SubmitState.Confirmed);
-            refetchCreated().then((r) => {
+            totalFactoryGames.refetch().then((r) => {
               if (totalGames === 1) {
-                if (r.data && r.data[0].length) {
+                if (r.data) {
                   // Sent user to created game
-                  history.push(
-                    enterGameRoute(`${r.data[0][r.data[0].length - 1]}`),
-                  );
+                  history.push(enterGameRoute(`${r.data - 1}`));
                 }
               }
             });
@@ -155,7 +192,10 @@ const CreateGameModal = (props: Props) => {
             abortTimestamp: Math.round(
               new Date().getTime() / 1000 + duration * 3,
             ),
+            startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
+            isNFT: isNFTGame,
+            championRoom: championRoom,
           };
           onGameCreateCallback(params, {
             onConfirmation: onConfirmTx,
@@ -174,8 +214,14 @@ const CreateGameModal = (props: Props) => {
       enterGameRoute,
       history,
       onGameCreateCallback,
-      refetchCreated,
-      totalGames
+      totalFactoryGames.refetch,
+      createNotification,
+      isNFTGame,
+      championRoom,
+      totalFactoryGames,
+      totalGames,
+      startDate,
+      chainId
     ],
   );
 
@@ -204,7 +250,7 @@ const CreateGameModal = (props: Props) => {
           </Grid>
           <Grid item xs={1}>
             <IconButton onClick={() => setOpen(false)} size='small'>
-              <CloseIcon style={{color: '#fff'}} />
+              <CloseIcon style={{ color: '#fff' }} />
             </IconButton>
           </Grid>
         </Grid>
@@ -213,7 +259,7 @@ const CreateGameModal = (props: Props) => {
       <DialogContent dividers>
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
-            <Typography variant='h6' style={{fontWeight: 600}}>
+            <Typography variant='h6' style={{ fontWeight: 600 }}>
               Basic information
             </Typography>
           </Grid>
@@ -236,14 +282,35 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              {/*   <MenuItem value={0.01}>Beginner - 0.01 Matic</MenuItem>
-              <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
-              <MenuItem value={1}>Beginner - 1 Matic</MenuItem>
-              <MenuItem value={5}>Intermediate - 5 Matic</MenuItem>
-              <MenuItem value={10}>Advanced - 10 Matic</MenuItem>
-              <MenuItem value={50}>Expert - 50 Matic</MenuItem>
-              <MenuItem value={250}>Master - 250 Matic</MenuItem>
-              {/*   <MenuItem value={500}>Grand Master - 500 Matic</MenuItem>*/}
+              <MenuItem value={0.001}>
+                Beta Testing - 0.001{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
+              <MenuItem value={1}>
+                Beginner - 1{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={5}>
+                Intermediate - 5{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={10}>
+                Advanced - 10{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={50}>
+                Expert - 50{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={250}>
+                Master - 250{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
+              <MenuItem value={500}>
+                Grand Master - 500{' '}
+                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              </MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -273,10 +340,10 @@ const CreateGameModal = (props: Props) => {
         <Grid
           container
           className={classes.innerContent}
-          style={{marginRight: 10}}>
+          style={{ marginRight: 10 }}>
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{marginRight: 5}}>
+              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
                 How many coins?
               </FormLabel>
               <Select
@@ -291,7 +358,7 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: {color: '#fff', backgroundColor: '#3C4255'},
+                  style: { color: '#fff', backgroundColor: '#3C4255' },
                 }}>
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
@@ -301,7 +368,7 @@ const CreateGameModal = (props: Props) => {
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{marginRight: 5}}>
+              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
                 Total players
               </FormLabel>
               <Select
@@ -318,12 +385,14 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: {color: '#fff', backgroundColor: '#3C4255'},
+                  style: { color: '#fff', backgroundColor: '#3C4255' },
                 }}>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={25}>25</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -335,7 +404,7 @@ const CreateGameModal = (props: Props) => {
           <FormControl fullWidth component='fieldset'>
             <FormLabel
               className={classes.label}
-              style={{fontSize: '1.25rem', fontWeight: 600}}>
+              style={{ fontSize: '1.25rem', fontWeight: 600 }}>
               Game type
             </FormLabel>
             <RadioGroup value={gameType}>
@@ -345,7 +414,7 @@ const CreateGameModal = (props: Props) => {
                 onClick={() => setGameType('winner-game')}
                 labelPlacement='start'
                 className={classes.radio}
-                control={<Radio style={{color: '#ffa552'}} />}
+                control={<Radio style={{ color: '#ffa552' }} />}
               />
               <FormControlLabel
                 value='loser-game'
@@ -353,15 +422,42 @@ const CreateGameModal = (props: Props) => {
                 label='Bear'
                 labelPlacement='start'
                 className={classes.radio}
-                control={<Radio style={{color: '#ffa552'}} />}
+                control={<Radio style={{ color: '#ffa552' }} />}
               />
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid container>
-          <Grid item xs={6}>
+
+        <Grid
+          container
+          className={`${classes.innerContent} ${classes.formControl}`}>
+          <Grid item xs={12}>
+            <FormControl fullWidth component='fieldset'>
+              <FormLabel
+                className={classes.label}
+                style={{ fontSize: '1.25rem', fontWeight: 600 }}>
+                Start Date
+              </FormLabel>
+              <TextField
+                id='datetime-local'
+                type='datetime-local'
+                defaultValue={new Date(startDate)}
+                onChange={(event) =>
+                  setStartDate(Number(new Date(event.target.value).getTime()))
+                }
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{marginRight: 5}}>
+              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
                 How many Games?
               </FormLabel>
               <Select
@@ -376,7 +472,7 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: {color: '#fff', backgroundColor: '#3C4255'},
+                  style: { color: '#fff', backgroundColor: '#3C4255' },
                 }}>
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
@@ -391,23 +487,58 @@ const CreateGameModal = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
+
+          {isNFTGame && <Grid item xs={12}>
+            <FormControl fullWidth size='small' className={classes.formControl}>
+              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
+                Select Champion Room
+              </FormLabel>
+              <Select
+                value={championRoom}
+                onChange={(event) => setChampionRoom(Number(event.target.value))}
+                variant='outlined'
+                placeholder='Select'
+                style={{
+                  marginRight: 5,
+                  color: '#fff',
+                  borderRadius: 6,
+                  backgroundColor: '#3C4255',
+                }}
+                inputProps={{
+                  style: { color: '#fff', backgroundColor: '#3C4255' },
+                }}>
+                <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
+                {/* <MenuItem value={0}>BITTOKEN</MenuItem>
+                <MenuItem value={1}>BITCOIN</MenuItem>
+                <MenuItem value={2}>ETHEREUM</MenuItem>
+                <MenuItem value={3}>CHAINLINK</MenuItem>
+                <MenuItem value={4}>POLKADOT</MenuItem>
+                <MenuItem value={5}>UNISWAP</MenuItem>
+                <MenuItem value={6}>CARDANO</MenuItem>
+              <MenuItem value={7}>DOGE</MenuItem>*/}
+              </Select>
+            </FormControl>
+          </Grid>}
         </Grid>
 
         {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
           <Grid container justifyContent={'center'}>
             <Grid item xs>
-              Please confirm all {totalGames} tx's in your wallet.
+              Please confirm all {totalGames} tx&#39;s in your wallet.
             </Grid>
           </Grid>
         )}
 
-    {(submitState === SubmitState.Confirmed || submitState === SubmitState.Submitted) && totalGames > 1 && (
-          <Grid container justifyContent={'center'}>
-            <Grid item xs>
-             Submitted tx's {submittedGames}/{totalGames} and Confirmed tx's on chain  {confirmedGames}/{totalGames}
+        {(submitState === SubmitState.Confirmed ||
+          submitState === SubmitState.Submitted) &&
+          totalGames > 1 && (
+            <Grid container justifyContent={'center'}>
+              <Grid item xs>
+                Submitted tx&#39;s {submittedGames}/{totalGames} and Confirmed
+                tx &#39; s on chain {confirmedGames}/{totalGames}
+              </Grid>
             </Grid>
-          </Grid>
-        )}
+          )}
 
         <Grid container justifyContent={'center'}>
           <Grid item xs>
@@ -416,10 +547,10 @@ const CreateGameModal = (props: Props) => {
                 {submitState === SubmitState.Submitted
                   ? 'Submitted Tx'
                   : submitState === SubmitState.Error
-                  ? 'Tx Error'
-                  : submitState === SubmitState.Confirmed
-                  ? 'Confirmed Tx'
-                  : ''}
+                    ? 'Tx Error'
+                    : submitState === SubmitState.Confirmed
+                      ? 'Confirmed Tx'
+                      : ''}
               </Button>
             )}
           </Grid>

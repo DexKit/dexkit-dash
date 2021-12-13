@@ -11,7 +11,7 @@ import {useTheme} from '@material-ui/core/styles';
 import {Empty} from 'shared/components/Empty';
 import {useDispatch} from 'react-redux';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import { GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {switchChain} from 'utils/wallet';
 import {setWeb3State} from 'redux/actions';
 import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
@@ -42,7 +42,7 @@ const WrongNetwork = () => {
         <Empty
           title={'Not Supported Network'}
           message={'Please connect your wallet to the supported networks below'}
-          image={<EmptyNetwork/>}
+          image={<EmptyNetwork />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
               <Box m={2}>

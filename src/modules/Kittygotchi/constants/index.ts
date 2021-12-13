@@ -1,4 +1,4 @@
-import {BigNumber, ethers} from 'ethers';
+import {BigNumber} from 'ethers';
 import {ChainId} from 'types/blockchain';
 
 export const POLYGON_METADATA_KITTY_ENDPOINT =

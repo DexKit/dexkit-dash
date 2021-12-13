@@ -126,6 +126,7 @@ const TokenPage = () => {
       }
       history.push({search: searchParams.toString()});
     },
+    /* eslint-disable */
     [history.location.search, history],
   );
 
