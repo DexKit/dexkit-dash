@@ -20,6 +20,8 @@ import {onboardingConfig} from './Onboarding';
 import {kittygotchiConfig} from './Kittygotchi';
 import {profileConfig} from './Profile';
 
+import {settingsConfig} from './Settings';
+
 const routeConfigs = [
   ...errorPagesConfigs,
   ...dashBoardConfigs,
@@ -34,6 +36,7 @@ const routeConfigs = [
   ...onboardingConfig,
   ...kittygotchiConfig,
   ...profileConfig,
+  ...settingsConfig,
 ];
 
 const routes = [

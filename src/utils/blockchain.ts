@@ -95,3 +95,7 @@ export function hasLondonHardForkSupport(chainId: number) {
       return false;
   }
 }
+
+export function isAddressEqual(address: string, another: string) {
+  return address.toLowerCase() === another.toLowerCase();
+}
