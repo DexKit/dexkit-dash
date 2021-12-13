@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetNFTIDs
 // ====================================================
 
 export interface GetNFTIDs_ethereum_transfers_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -22,7 +22,7 @@ export interface GetNFTIDs_ethereum_transfers_currency {
 }
 
 export interface GetNFTIDs_ethereum_transfers_transaction {
-  __typename: "EthereumTransactionInfo";
+  __typename: 'EthereumTransactionInfo';
   /**
    * Hash hex representation
    */
@@ -30,7 +30,7 @@ export interface GetNFTIDs_ethereum_transfers_transaction {
 }
 
 export interface GetNFTIDs_ethereum_transfers {
-  __typename: "EthereumTransfers";
+  __typename: 'EthereumTransfers';
   amount: number | null;
   /**
    * Currency of transfer
@@ -47,7 +47,7 @@ export interface GetNFTIDs_ethereum_transfers {
 }
 
 export interface GetNFTIDs_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Currency Transfers
    */

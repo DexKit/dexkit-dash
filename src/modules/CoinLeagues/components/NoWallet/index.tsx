@@ -20,7 +20,7 @@ const NoWallet = () => {
         <Empty
           title={'No Wallet'}
           message={'Please connect your wallet'}
-          image={<EmptyWallet/>}
+          image={<EmptyWallet />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
               <Button
@@ -38,6 +38,5 @@ const NoWallet = () => {
     </Grid>
   );
 };
-
 
 export default NoWallet;

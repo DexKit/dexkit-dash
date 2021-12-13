@@ -28,7 +28,11 @@ export const useTokenMarket = (
   const [seconds, setSeconds] = useState(0);
   const [data, setData] = useState<TokenMarket>();
 
-  const {priceQuote, loading: loadingPrice, error: errorPrice} = useTokenPriceUSD(
+  const {
+    priceQuote,
+    loading: loadingPrice,
+    error: errorPrice,
+  } = useTokenPriceUSD(
     token?.address,
     networkName,
     OrderSide.Sell,
@@ -46,20 +50,25 @@ export const useTokenMarket = (
     setYesterday(getLast24HoursDate());
   }, POLL_INTERVAL);
 
-  const {loading, error, data: dataFn, networkStatus} = useQuery<
-    GetTokenSingleExplorer,
-    GetTokenSingleExplorerVariables
-  >(BITQUERY_TOKEN_SINGLE_EXPLORER, {
-    variables: {
-      network: networkName,
-      exchangeName:
-        exchange === EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
-      baseAddress: token?.address ?? ' ',
-      from: yesterday,
+  const {
+    loading,
+    error,
+    data: dataFn,
+    networkStatus,
+  } = useQuery<GetTokenSingleExplorer, GetTokenSingleExplorerVariables>(
+    BITQUERY_TOKEN_SINGLE_EXPLORER,
+    {
+      variables: {
+        network: networkName,
+        exchangeName:
+          exchange === EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
+        baseAddress: token?.address ?? ' ',
+        from: yesterday,
+      },
+      skip: !token,
+      pollInterval: POLL_INTERVAL,
     },
-    skip: !token,
-    pollInterval: POLL_INTERVAL,
-  });
+  );
   useEffect(() => {
     if (networkStatus === NetworkStatus.ready) {
       setSeconds(0);
@@ -70,7 +79,7 @@ export const useTokenMarket = (
     if (
       dataFn &&
       dataFn.ethereum?.dexTrades &&
-      dataFn.ethereum.dexTrades.length 
+      dataFn.ethereum.dexTrades.length
     ) {
       const tokenMarket = dataFn.ethereum.dexTrades[0];
       setData({

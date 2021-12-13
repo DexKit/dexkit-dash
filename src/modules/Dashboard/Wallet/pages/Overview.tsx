@@ -41,7 +41,6 @@ import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
 import {useTokenLists} from 'hooks/useTokenLists';
-import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import TokenLogo from 'shared/components/TokenLogo';
 import {watchAsset} from 'utils/wallet';
 import { SelectTokenBalanceDialog } from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
@@ -69,7 +68,6 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const account: string | undefined = defaultAccount || web3Account || '';
   const {data: balances} = useAllBalance(account);
   const {tokenInfo} = useTokenInfo(address);
-
 
   const [token, setToken] = useState<Token>();
 

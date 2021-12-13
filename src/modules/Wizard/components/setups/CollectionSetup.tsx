@@ -13,9 +13,9 @@ import {
 } from '@material-ui/core';
 import Web3 from 'web3';
 
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {useHistory} from 'react-router';
+import { useHistory } from 'react-router';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import ConfirmDialog from './erc721/ConfirmDialog';
 import {
@@ -23,20 +23,20 @@ import {
   CollectionSetupSteps,
   ContractStatus,
 } from 'modules/Wizard/types';
-import {useWeb3} from 'hooks/useWeb3';
+import { useWeb3 } from 'hooks/useWeb3';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Contract} from 'web3-eth-contract';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { Contract } from 'web3-eth-contract';
 import ItemsStep from './erc721/steps/ItemsStep';
 import CollectionStep from './erc721/steps/CollectionStep';
 import DeployStep from './erc721/steps/DeployStep';
-import {useWizardApi} from 'modules/Wizard/hooks';
+import { useWizardApi } from 'modules/Wizard/hooks';
 import CreatingCollectionDialog from './erc721/dialogs/CreatingCollectionDialog';
-import {ERC721Abi} from 'contracts/abis/ERC721Abi';
-import {useDispatch} from 'react-redux';
-import {addCollection} from 'redux/_wizard/actions';
-import {ethers} from 'ethers';
-import {Link as RouterLink} from 'react-router-dom';
+import { ERC721Abi } from 'contracts/abis/ERC721Abi';
+import { useDispatch } from 'react-redux';
+import { addCollection } from 'redux/_wizard/actions';
+import { ethers } from 'ethers';
+import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -46,7 +46,7 @@ import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButto
 const ERC721_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC721_BASE.sol/COLLECTION.json';
 
-export interface CollectionSetupProps {}
+export interface CollectionSetupProps { }
 
 export const CollectionSetup = (props: CollectionSetupProps) => {
   const history = useHistory();
@@ -56,7 +56,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const dispatch = useDispatch();
 
   const userDefaultAcount = useDefaultAccount();
-  const {getWeb3, getProvider, chainId} = useWeb3();
+  const {  getProvider, chainId } = useWeb3();
 
   const [step, setStep] = useState<CollectionSetupSteps>(
     CollectionSetupSteps.Collection,
@@ -105,7 +105,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
               .on('transactionHash', (transactionHash: string) => {
                 setTransactionHash(transactionHash);
               })
-              .on('confirmation', () => {})
+              .on('confirmation', () => { })
               .on('error', (reason) => {
                 reject(reason);
               })
@@ -117,7 +117,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       });
       return promise;
     },
-    [userDefaultAcount, getWeb3, values, items, getProvider, wizardApi],
+    [userDefaultAcount, values, getProvider],
   );
 
   const handleBack = useCallback(() => {
@@ -171,7 +171,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({...values, [e.target.name]: e.target.value});
+      setValues({ ...values, [e.target.name]: e.target.value });
     },
     [values],
   );
@@ -219,7 +219,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     setUploadId('');
 
     return images;
-  }, [items, handleItemChange, wizardApi]);
+  }, [items, wizardApi]);
 
   const uploadCollectionImage = useCallback(async (): Promise<
     string | null
@@ -267,7 +267,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
       return response.data.hashes;
     },
-    [items],
+    [items, wizardApi],
   );
 
   // TODO: remove duplace
@@ -348,6 +348,11 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
       });
   }, [
     chainId,
+    createContract,
+    dispatch,
+    mintItems,
+    values.description,
+    values.name,
     items,
     tempItemsHashes,
     tempCollectionImagehash,
@@ -369,7 +374,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     } else {
       setContractStatus(ContractStatus.Finalized);
     }
-  }, [items, tempAddress, tempItemsHashes]);
+  }, [items, tempAddress, tempItemsHashes, mintItems]);
 
   const handleConfirmFinalize = useCallback(async () => {
     setShowConfirmDialog(false);
@@ -435,10 +440,13 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   }, [
     chainId,
     values,
+    mintItems,
     items,
     dispatch,
     createContract,
     uploadCollectionImage,
+    sendCollectionMetadata,
+    sendItemsMetadata,
     uploadImages,
   ]);
 
@@ -553,7 +561,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
               onNext={handleGoDeploy}
             />
           ) : null}
-          {step == CollectionSetupSteps.Deploy ? (
+          {step === CollectionSetupSteps.Deploy ? (
             <DeployStep
               values={values}
               onBack={handleGoItems}

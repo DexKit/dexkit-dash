@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetMintBurn
 // ====================================================
 
 export interface GetMintBurn_ethereum_mint_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -18,7 +18,7 @@ export interface GetMintBurn_ethereum_mint_block_timestamp {
 }
 
 export interface GetMintBurn_ethereum_mint_block {
-  __typename: "Block";
+  __typename: 'Block';
   /**
    * Block number (height) in blockchain
    */
@@ -30,7 +30,7 @@ export interface GetMintBurn_ethereum_mint_block {
 }
 
 export interface GetMintBurn_ethereum_mint_transaction {
-  __typename: "EthereumTransactionInfo";
+  __typename: 'EthereumTransactionInfo';
   /**
    * Hash hex representation
    */
@@ -38,7 +38,7 @@ export interface GetMintBurn_ethereum_mint_transaction {
 }
 
 export interface GetMintBurn_ethereum_mint_arguments {
-  __typename: "ArgumentNameValue";
+  __typename: 'ArgumentNameValue';
   /**
    * Argument name
    */
@@ -54,7 +54,7 @@ export interface GetMintBurn_ethereum_mint_arguments {
 }
 
 export interface GetMintBurn_ethereum_mint {
-  __typename: "EthereumSmartContractEvent";
+  __typename: 'EthereumSmartContractEvent';
   /**
    * Block in the blockchain
    */
@@ -70,7 +70,7 @@ export interface GetMintBurn_ethereum_mint {
 }
 
 export interface GetMintBurn_ethereum_burn_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -78,7 +78,7 @@ export interface GetMintBurn_ethereum_burn_block_timestamp {
 }
 
 export interface GetMintBurn_ethereum_burn_block {
-  __typename: "Block";
+  __typename: 'Block';
   /**
    * Block number (height) in blockchain
    */
@@ -90,7 +90,7 @@ export interface GetMintBurn_ethereum_burn_block {
 }
 
 export interface GetMintBurn_ethereum_burn_transaction {
-  __typename: "EthereumTransactionInfo";
+  __typename: 'EthereumTransactionInfo';
   /**
    * Hash hex representation
    */
@@ -98,7 +98,7 @@ export interface GetMintBurn_ethereum_burn_transaction {
 }
 
 export interface GetMintBurn_ethereum_burn_arguments {
-  __typename: "ArgumentNameValue";
+  __typename: 'ArgumentNameValue';
   /**
    * Argument name
    */
@@ -114,7 +114,7 @@ export interface GetMintBurn_ethereum_burn_arguments {
 }
 
 export interface GetMintBurn_ethereum_burn {
-  __typename: "EthereumSmartContractEvent";
+  __typename: 'EthereumSmartContractEvent';
   /**
    * Block in the blockchain
    */
@@ -130,7 +130,7 @@ export interface GetMintBurn_ethereum_burn {
 }
 
 export interface GetMintBurn_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Smart Contract Events
    */

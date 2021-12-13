@@ -16,7 +16,6 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
@@ -28,38 +27,46 @@ import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 interface Props extends DialogProps {
   title?: string;
-  address: string;
+  id: string;
   playerAddress?: string;
   coins: string[];
-  captainCoin?: string
+  captainCoin?: string;
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose,  coins, address, captainCoin, playerAddress} = props;
+  const {onClose, coins, id, captainCoin, playerAddress} = props;
   const {chainId} = useWeb3();
   const theme = useTheme();
-  const {allFeeds, currentPrices, game} = useCoinLeagues(address);
-  const {multiplier, tooltipMessage} = useMultipliers(address);
+  const {allFeeds, currentPrices, game} = useCoinLeagues(id);
+  const {multiplier, tooltipMessage} = useMultipliers(id);
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
-    {coin: CoinFeed; feed: CoinFeedOnChain; currentFeed: any; isCaptain: boolean}[]
+    {
+      coin: CoinFeed;
+      feed: CoinFeedOnChain;
+      currentFeed: any;
+      isCaptain: boolean;
+    }[]
   >([]);
   // We join here the Coin List with Onchain Data, we filter for the coins the player have
   const allCoins = useMemo(() => {
     const chain = GET_LEAGUES_CHAIN_ID(chainId);
- 
+
     if (coins && captainCoin && allFeeds && allFeeds.length) {
-  
       const coinsWithFeeds = allFeeds.filter((cf) =>
-        coins.concat(captainCoin).map((c) => c?.toLowerCase()).includes(cf?.address?.toLowerCase()),
+        coins
+          .concat(captainCoin)
+          .map((c) => c?.toLowerCase())
+          .includes(cf?.address?.toLowerCase()),
       );
       const coinsList = PriceFeeds[chain].filter((c) =>
         coinsWithFeeds
           .map((cf) => cf?.address?.toLowerCase())
           .includes(c?.address?.toLowerCase()),
       );
-      return [captainCoin].concat(coins)
+      return [captainCoin]
+        .concat(coins)
         .map((c) => {
           return {
             coin: coinsList.find(
@@ -105,7 +112,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
       );
       setFilteredCoins(filtered);
     },
-    [coins],
+    [allCoins],
   );
 
   const handleClose = useCallback(() => {
@@ -118,7 +125,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth='md'
       fullWidth
       {...props}
       aria-labelledby='form-dialog-title'
@@ -149,23 +156,23 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
+        {filteredCoins.length === 0 ? (
           <Typography variant='body1'>No coins found</Typography>
         ) : (
           <List>
-            {filteredCoins.map((coin, i) => 
-                <ViewCoinListItem
-                  coin={coin.coin}
-                  feedOnchain={coin.feed}
-                  currentPrice={coin.currentFeed}
-                  started={gameStarted}
-                  key={i}
-                  isCaptain={coin.isCaptain}
-                  playerAddress={playerAddress}
-                  multipliers={multiplier}
-                  tooltipMessage={tooltipMessage}
-                />
-              )}
+            {filteredCoins.map((coin, i) => (
+              <ViewCoinListItem
+                coin={coin.coin}
+                feedOnchain={coin.feed}
+                currentPrice={coin.currentFeed}
+                started={gameStarted}
+                key={i}
+                isCaptain={coin.isCaptain}
+                playerAddress={playerAddress}
+                multipliers={multiplier}
+                tooltipMessage={tooltipMessage}
+              />
+            ))}
           </List>
         )}
       </DialogContent>

@@ -7,7 +7,6 @@ import {
   Typography,
   makeStyles,
   Divider,
-  Chip,
   useTheme,
 } from '@material-ui/core';
 
@@ -23,7 +22,6 @@ import {useMobile} from 'hooks/useMobile';
 
 import {
   NFTEmptyStateImage,
-  WalletConnectIcon,
   WalletEmptyImage,
 } from 'shared/components/Icons';
 

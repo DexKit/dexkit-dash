@@ -5,7 +5,7 @@ import {makeStyles, ButtonBase, Typography, Box} from '@material-ui/core';
 import {KittygotchiTraitItem} from '../types/index';
 import {KittygotchiTraitType} from '../constants/index';
 import {LockIcon} from 'shared/components/Icons';
-import {getImageFromTrait, getImageFromTraitIcon} from '../utils';
+import {getImageFromTraitIcon} from '../utils';
 
 const useStyles = makeStyles((theme) => ({
   circle: {

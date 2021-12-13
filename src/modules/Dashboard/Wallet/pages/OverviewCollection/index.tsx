@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {
   Grid,
   Box,
@@ -8,10 +8,8 @@ import {
 } from '@material-ui/core';
 
 import {RouteComponentProps, useHistory} from 'react-router-dom';
-import {useWeb3} from 'hooks/useWeb3';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
 import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
 import {useCollectionIds} from 'hooks/balance/useCollectionIds';
@@ -30,8 +28,6 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
   } = props;
   const {address, networkName} = params;
 
-  const {account: web3Account} = useWeb3();
-  const defaultAccount = useDefaultAccount();
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
   const metadataQuery = useNFTMetadataURI(
@@ -42,7 +38,7 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
 
   const history = useHistory();
 
-  const handleBack = useCallback(() => history.push(`/wallet/`), []);
+  const handleBack = useCallback(() => history.push(`/wallet/`), [history]);
 
   return (
     <>

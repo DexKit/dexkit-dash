@@ -19,7 +19,7 @@ import MnemonicInsert from './steps/MnemonicInsert';
 import GeneratedWallet from './steps/GeneratedWallet';
 import MnemonicConfirm from './steps/MnemonicConfirm';
 import MnemonicGeneration from './steps/MnemonicGeneration';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 const mnemonicsGen = bip39.generateMnemonic().split(' ');
 interface IStep {
@@ -46,9 +46,9 @@ const CreateBTCWallet: React.FC = () => {
   const [hasSeed, setHasSeed] = useState(false);
   const [mnemonics, setMnemonics] = useState(mnemonicsGen);
 
-  const goToWallet = useCallback(()=>{
-    history.push('/dashboard/wallet')
-  },[history])
+  const goToWallet = useCallback(() => {
+    history.push('/dashboard/wallet');
+  }, [history]);
 
   useEffect(() => {
     if (activeStep === 0) {

@@ -173,7 +173,7 @@ export const ViewCoinListItem = (props: Props) => {
                 <Tooltip title={tooltipMessage(playerAddress)}>
                   <Chip
                     color={'primary'}
-                    label={`x ${multipliers(playerAddress)}`}
+                    label={`x ${multipliers(playerAddress).toFixed(3)}`}
                   />
                 </Tooltip>
               )}
@@ -183,7 +183,7 @@ export const ViewCoinListItem = (props: Props) => {
                   background: '#343A49',
                   color: Number(priceScore) > 0 ? '#0e0' : '#e00',
                 }}
-                label={`${Number(priceScore) > 0 ? '+' : ''}${priceScore}%`}
+                label={`${Number(priceScore) > 0 ? '+' : ''}${Number(priceScore).toFixed(5)}%`}
               />
             </>
           ) : (

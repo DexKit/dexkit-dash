@@ -28,6 +28,7 @@ export const KittygotchiImage = (props: Props) => {
       .catch((err: any) => {
         console.log('ERROR bs65', err);
       });
+      /* eslint-disable */
   }, [JSON.stringify(images)]);
 
   if (imgB64 !== undefined) {

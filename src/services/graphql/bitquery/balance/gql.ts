@@ -44,10 +44,7 @@ export const BITQUERY_SINGLE_BALANCE_INFO = gql`
 `;
 
 export const BITQUERY_NATIVE_BALANCE_INFO = gql`
-  query GetNativeSingleBalance(
-    $network: EthereumNetwork!
-    $address: String!
-  ) {
+  query GetNativeSingleBalance($network: EthereumNetwork!, $address: String!) {
     ethereum(network: $network) {
       address(address: {is: $address}) {
         balance
@@ -89,11 +86,11 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
           valueInUsd: value
         }
       }
-    },
+    }
     matic: ethereum(network: matic) {
       address(address: {is: $address}) {
         balance
-        balances{
+        balances {
           currency {
             name
             symbol
@@ -105,7 +102,7 @@ export const BITQUERY_ALL_BALANCE_INFO = gql`
           valueInUsd: value
         }
       }
-    },
+    }
   }
 `;
 

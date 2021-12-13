@@ -1,12 +1,1 @@
-
-
-
-export const useChainLinkPriceFeed = () => {
-
-
-
-    
-}
-
-
-
+export const useChainLinkPriceFeed = () => {};

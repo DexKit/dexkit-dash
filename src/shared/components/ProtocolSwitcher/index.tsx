@@ -1,9 +1,7 @@
 import {Box, Chip, Menu, MenuItem, Typography} from '@material-ui/core';
 import React from 'react';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import {
-  GET_EXCHANGE_NAME,
-} from 'shared/constants/Bitquery';
+import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExchangeLogo from 'shared/components/ExchangeLogo';

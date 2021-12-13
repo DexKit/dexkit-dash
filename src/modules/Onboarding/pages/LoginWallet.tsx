@@ -222,7 +222,7 @@ export const CreateWallet = (props: Props) => {
 
   const handleConnectWalletLater = useCallback(() => {
     history.push(`/wallet/${FEE_RECIPIENT}`);
-  }, []);
+  }, [history]);
 
   const accountsModal = useAccountsModal();
 

@@ -5,6 +5,7 @@ export interface Player {
   player_address: string;
   captain_coin: string;
   champion_id: string;
+  affiliate?: string;
   coin_feeds?: CoinFeed[];
 }
 
@@ -15,9 +16,9 @@ export interface CoinFeed {
   score: BigNumber;
 }
 
-export enum GameType{
+export enum GameType {
   Winner,
-  Loser
+  Loser,
 }
 
 export interface Game {
@@ -29,6 +30,7 @@ export interface Game {
   aborted: boolean;
   scores_done: boolean;
   duration: BigNumber;
+  id:  BigNumber;
   num_players: BigNumber;
   amount_to_play: BigNumber;
   total_amount_collected: BigNumber;
@@ -44,5 +46,8 @@ export interface GameParams {
   amountUnit: BigNumber;
   numCoins: number;
   abortTimestamp: number;
+  startTimestamp: number;
   type: number;
+  championRoom?: number;
+  isNFT: boolean;
 }

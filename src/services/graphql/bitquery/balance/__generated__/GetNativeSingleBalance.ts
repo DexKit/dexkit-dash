@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetNativeSingleBalance
 // ====================================================
 
 export interface GetNativeSingleBalance_ethereum_address {
-  __typename: "EthereumAddressInfoWithBalance";
+  __typename: 'EthereumAddressInfoWithBalance';
   /**
    * DEPRECATED Current address balance
    */
@@ -18,7 +18,7 @@ export interface GetNativeSingleBalance_ethereum_address {
 }
 
 export interface GetNativeSingleBalance_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Basic information about address ( or smart contract )
    */

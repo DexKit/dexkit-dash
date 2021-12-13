@@ -16,14 +16,13 @@ const widget = new Widget({
   },
 });
 // useState was not working due to how plugin works, widget.destroy() was not working, needed to create this additional variable
-let wasCreated = false
+let wasCreated = false;
 export function useMaticBridge() {
-
   const initBridge = useCallback(async () => {
-    if(!wasCreated){
+    if (!wasCreated) {
       await widget.create();
     }
-    wasCreated = true
+    wasCreated = true;
     widget.show();
   }, []);
 

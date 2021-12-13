@@ -41,6 +41,27 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.13'
+          id='panelv0.0.6.13-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.13 - 13-12-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Bug fix's on Trade and Overview page
+            </Typography>
+            <Typography className={classes.item}>
+              Added Ramp
+            </Typography>
+      
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.11'
           id='panelv0.0.6.11-header'>
           <Typography className={classes.heading}>

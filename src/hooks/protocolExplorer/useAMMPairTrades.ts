@@ -12,12 +12,11 @@ import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_DEFAULT_QUOTE,
-  GET_DEFAULT_USD_TOKEN_BY_NETWORK
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK,
 } from 'shared/constants/Blockchain';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {BITQUERY_CONTRACT_ORDERS} from 'services/graphql/bitquery/protocol/amm.gql';
 import {FilterContext} from 'providers/protocol/filterContext';
-
 
 interface Props {
   networkName: EthereumNetwork;
@@ -44,23 +43,32 @@ export const useAMMPairTrades = ({networkName, exchange, address}: Props) => {
 
   const [data, setData] = useState<GetContractOrders_ethereum_dexTrades[]>();
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetContractOrders,
-    GetContractOrdersVariables
-  >(BITQUERY_CONTRACT_ORDERS, {
-    variables: {
-      network: networkName,
-      exchangeName: GET_EXCHANGE_NAME(exchange),
-      address: address,
-      quoteAddress: quoteAddress ||  address?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
-      limit: rowsPerPage,
-      offset: skipRows,
-      from: from,
-      till: to,
-      tradeAmount: tradeAmount ? Number(tradeAmount) : null,
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetContractOrders, GetContractOrdersVariables>(
+    BITQUERY_CONTRACT_ORDERS,
+    {
+      variables: {
+        network: networkName,
+        exchangeName: GET_EXCHANGE_NAME(exchange),
+        address: address,
+        quoteAddress:
+          quoteAddress ||
+          address?.toLowerCase() ===
+            (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase()
+            ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string)
+            : (GET_DEFAULT_QUOTE(chainId) as string),
+        limit: rowsPerPage,
+        offset: skipRows,
+        from: from,
+        till: to,
+        tradeAmount: tradeAmount ? Number(tradeAmount) : null,
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (dataFn && dataFn.ethereum?.dexTrades) {

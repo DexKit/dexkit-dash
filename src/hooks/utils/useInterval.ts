@@ -1,6 +1,6 @@
 // See also: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect, useRef} from 'react';
 
 type IntervalHandlerAsObject = {
   /**
@@ -42,7 +42,7 @@ type IntervalHandler = IntervalHandlerAsArray & {};
 function useInterval(
   callback: () => any,
   intervalDuration: number | null,
-  startImmediate: boolean = false
+  startImmediate: boolean = false,
 ): IntervalHandler {
   const internalIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isRunning, setIsRunning] = useState(startImmediate);
@@ -90,4 +90,4 @@ function useInterval(
   return handler as IntervalHandlerAsArray & IntervalHandlerAsObject;
 }
 
-export { useInterval };
+export {useInterval};

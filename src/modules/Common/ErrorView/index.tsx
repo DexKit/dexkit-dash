@@ -26,11 +26,9 @@ const ErrorView: React.FC<Props> = ({message}) => {
             gutterBottom
             align='center'
             variant='h5'>
-           Ops, error fetching data 
+            Ops, error fetching data
           </Typography>
-          <Typography align='center'>
-            Try again please!
-          </Typography>
+          <Typography align='center'>Try again please!</Typography>
         </Grid>
       </Grid>
     </Box>

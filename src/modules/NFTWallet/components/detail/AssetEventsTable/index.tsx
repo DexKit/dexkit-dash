@@ -11,9 +11,6 @@ import {
 } from '@material-ui/core';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import useFetch from 'use-http';
-import moment from 'moment';
-import {AssetEventType} from 'opensea-js/lib/types';
 import AssetEventTableRow from '../AssetEventTableRow';
 import {Scrollbar} from '@crema';
 

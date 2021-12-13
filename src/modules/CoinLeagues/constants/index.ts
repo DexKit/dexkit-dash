@@ -672,3 +672,18 @@ export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
   [ChainId.Matic]: ethers.utils.parseUnits('115', 'ether'),
   [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
 };
+
+export const COIN_LEAGUES_FACTORY_ADDRESS = {
+  [ChainId.Mumbai]: '0xA67B9dBfb1371DEBB7f60B681A74798f014cb007',
+  [ChainId.Matic]: '0xc93f920483Db1122D6Fc7f2f832C3610c73C0C8E',
+};
+
+export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
+  [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
+  [ChainId.Matic]: '0xeb1eb51AB02C824f0c6F43cEcb91C474E6a0Ef32',
+};
+
+
+export const DISABLE_CHAMPIONS_ID = '500000'
+
+export const AFFILIATE_FIELD = 'league-affiliate';

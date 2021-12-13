@@ -5,8 +5,8 @@ import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import {useMyGames, useMyGamesV2} from 'modules/CoinLeagues/hooks/useMyGames';
-import {useWeb3} from 'hooks/useWeb3';
+import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
+
 import {
   CoinLeagueGameStatus,
   FilterPlayerGame,
@@ -21,7 +21,7 @@ import GameFilterDrawer from '../GameFilterDrawer';
 import {useMobile} from 'hooks/useMobile';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
-const MyGamesTable: React.FC = () => {
+const MyGamesTable = ({isNFT = false}) => {
   const account = useDefaultAccount();
   const [status, setStatus] = useState<CoinLeagueGameStatus>(
     CoinLeagueGameStatus.All,
@@ -38,12 +38,12 @@ const MyGamesTable: React.FC = () => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useMyGamesV2({
+  } = useMyGames({
     accounts: account ? [account] : undefined,
     filters: filtersState,
     status,
     player: account,
-  });
+  }, isNFT);
 
   const handleClickAll = useCallback(() => {
     setStatus(CoinLeagueGameStatus.All);
@@ -55,6 +55,10 @@ const MyGamesTable: React.FC = () => {
 
   const handleClickEnded = useCallback(() => {
     setStatus(CoinLeagueGameStatus.Ended);
+  }, []);
+
+  const handleClickAborted = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Aborted);
   }, []);
 
   const handleClickStarted = useCallback(() => {
@@ -69,7 +73,7 @@ const MyGamesTable: React.FC = () => {
 
   useEffect(() => {
     filtersState.setIsMyGames(true);
-  }, []);
+  }, [filtersState]);
 
   const isMobile = useMobile();
 
@@ -155,6 +159,19 @@ const MyGamesTable: React.FC = () => {
                       onClick={handleClickEnded}
                     />
                   </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={messages['app.coinLeague.aborted'] as string}
+                      color={
+                        status === CoinLeagueGameStatus.Aborted
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickAborted}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               {!isMobile ? (
@@ -179,6 +196,7 @@ const MyGamesTable: React.FC = () => {
             ) : (
               <GamesTable
                 data={query.data?.games}
+                isNFT={isNFT}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 rowsPerPageOptions={rowsPerPageOptions}

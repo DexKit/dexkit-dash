@@ -1,47 +1,75 @@
 import React, {useCallback, useState, useMemo} from 'react';
-import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {
+  useCoinLeagues,
+  useCoinLeaguesCallbacks,
+} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import {SubmitState} from '../ButtonState';
+import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
 import {useWeb3} from 'hooks/useWeb3';
 import {
-  ExplorerURL
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import {ChainId} from 'types/blockchain';
-
+import {useInterval} from 'hooks/utils/useInterval';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import { useNotifications } from 'hooks/useNotifications';
 interface Props {
-  address?: string;
+  id?: string;
 }
 
 export const StartGame = (props: Props) => {
-  const {address} = props;
+  const {id} = props;
   const {chainId} = useWeb3();
-  const { game} =
-    useCoinLeagues(address);
-  const [tx, _setTx] = useState<string>();
-  const [submitState, _setSubmitState] = useState<SubmitState>(SubmitState.None);
-  /*const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
+  const {game, refetch} = useCoinLeagues(id);
+  const {createNotification} = useNotifications();
+  const [tx, setTx] = useState<string>();
+  const [actualTimestamp, setActualTimestamp] = useState<number>(
+    new Date().getTime(),
+  );
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const [submitAbortState, setSubmitAbortState] = useState<SubmitState>(
     SubmitState.None,
-  );*/
+  );
+
+  const {onStartGameCallback, onAbortGameCallback} = useCoinLeaguesCallbacks(
+    game?.address,
+  );
+
   const goToExplorer = useCallback(
     (_ev: any) => {
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+      if (chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)) {
+        //@ts-ignore
         window.open(`${ExplorerURL[chainId]}${tx}`);
       }
     },
     [tx, chainId],
   );
 
- /* const onStartGame = useCallback(
+  const onStartGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play) {
+      if (game?.amount_to_play && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           setSubmitState(SubmitState.Submitted);
+          createNotification({
+            title: 'Started Game',
+            body: `Started Game ${id}`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, tx),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: tx,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
         };
         const onConfirmTx = () => {
           setSubmitState(SubmitState.Confirmed);
@@ -61,15 +89,28 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch],
+    [game, refetch, onStartGameCallback, chainId, createNotification, id],
   );
   const onAbortGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play) {
+      if (game?.amount_to_play && chainId) {
         setSubmitAbortState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           setSubmitAbortState(SubmitState.Submitted);
+          createNotification({
+            title: 'Aborted Game',
+            body: `Aborted Game ${id}`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, tx),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: tx,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
         };
         const onConfirmTx = () => {
           setSubmitAbortState(SubmitState.Confirmed);
@@ -89,30 +130,51 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch],
-  );*/
+    [game, refetch, onAbortGameCallback, chainId, createNotification, id],
+  );
+  const abortTime = game?.abort_timestamp;
+  const startTime = game?.start_timestamp
+
 
   const abortTimestamp = useMemo(() => {
-    if (game?.abort_timestamp.toNumber()) {
-      return game?.abort_timestamp.toNumber() * 1000;
+    if (abortTime) {
+      return abortTime.toNumber() * 1000;
     }
-  }, [game]);
+  }, [abortTime]);
+
+  const startTimestamp = useMemo(() => {
+    if (startTime) {
+      return startTime.toNumber() * 1000;
+    }
+  }, [startTime]);
 
   const started = useMemo(() => game?.started, [game]);
+  const aborted = useMemo(() => game?.aborted, [game]);
   const totalPlayers = useMemo(() => game?.num_players.toNumber(), [game]);
   const currentPlayers = useMemo(() => game?.players.length, [game]);
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
     }
-  }, [started, totalPlayers, currentPlayers]);
+  }, [totalPlayers, currentPlayers]);
+
+  useInterval(() => {
+    setActualTimestamp(new Date().getTime());
+  }, 1000, true);
+
+  const gameCanStart = useMemo(() => {
+    if (currentPlayers && startTimestamp) {
+      return currentPlayers > 1 && actualTimestamp > startTimestamp && !started;
+    }
+  }, [startTimestamp, currentPlayers, actualTimestamp, started]);
+
   const canAbort = useMemo(
     () =>
-      !game?.started &&
+      !started &&
       !gameFull &&
       abortTimestamp &&
       new Date().getTime() > abortTimestamp,
-    [game, abortTimestamp, gameFull],
+    [started, abortTimestamp, gameFull],
   );
 
   return (
@@ -158,36 +220,48 @@ export const StartGame = (props: Props) => {
                   </Box>
                 </Grid>
 
-                <Grid item xs={12} md={12}>
-                  {/*  <Button
-                    disabled={!gameFull || submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
-                    onClick={onStartGame}
-                    fullWidth
-                    variant={'contained'}
-                    color={
-                      submitState === SubmitState.Error ? 'default' : 'primary'
-                    }>
-                    <ButtonState
-                      state={submitState}
-                      defaultMsg={'Start Game'}
-                      confirmedMsg={'Game Started'}
-                    />
-                  </Button>*/}
-                  {gameFull && (
-                    <Paper>
-                      <Box display={'flex'} justifyContent={'center'} p={2}>
-                        <Typography>
-                          &nbsp; Game will auto start soon
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  )}
-                </Grid>
-                {/*canAbort && (
+                {!aborted && (
                   <Grid item xs={12} md={12}>
                     <Button
                       disabled={
-                        !canAbort || submitAbortState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                        !gameCanStart ||
+                        submitState !== SubmitState.None ||
+                        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                      }
+                      onClick={onStartGame}
+                      fullWidth
+                      variant={'contained'}
+                      color={
+                        submitState === SubmitState.Error
+                          ? 'default'
+                          : 'primary'
+                      }>
+                      <ButtonState
+                        state={submitState}
+                        defaultMsg={'Start Game'}
+                        confirmedMsg={'Game Started'}
+                      />
+                    </Button>
+                    {gameCanStart && (
+                      <Paper>
+                        <Box display={'flex'} justifyContent={'center'} p={2}>
+                          <Typography>
+                            &nbsp; Game will auto start soon, if not you can
+                            manually start it
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    )}
+                  </Grid>
+                )}
+                {canAbort && (
+                  <Grid item xs={12} md={12}>
+                    <Button
+                      disabled={
+                        !canAbort ||
+                        submitAbortState !== SubmitState.None ||
+                        !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) ||
+                        aborted
                       }
                       onClick={onAbortGame}
                       variant={'contained'}
@@ -204,7 +278,7 @@ export const StartGame = (props: Props) => {
                       />
                     </Button>
                   </Grid>
-                    )*/}
+                )}
               </Grid>
             </Box>
           </Grid>

@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetTokenPairs
 // ====================================================
 
 export interface GetTokenPairs_ethereum_dexTrades_baseCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -30,7 +30,7 @@ export interface GetTokenPairs_ethereum_dexTrades_baseCurrency {
 }
 
 export interface GetTokenPairs_ethereum_dexTrades_quoteCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -50,7 +50,7 @@ export interface GetTokenPairs_ethereum_dexTrades_quoteCurrency {
 }
 
 export interface GetTokenPairs_ethereum_dexTrades_exchange {
-  __typename: "EthereumDex";
+  __typename: 'EthereumDex';
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -58,7 +58,7 @@ export interface GetTokenPairs_ethereum_dexTrades_exchange {
 }
 
 export interface GetTokenPairs_ethereum_dexTrades_smartContract_address {
-  __typename: "Address";
+  __typename: 'Address';
   /**
    * String address representation
    */
@@ -66,7 +66,7 @@ export interface GetTokenPairs_ethereum_dexTrades_smartContract_address {
 }
 
 export interface GetTokenPairs_ethereum_dexTrades_smartContract {
-  __typename: "EthereumSmartContract";
+  __typename: 'EthereumSmartContract';
   /**
    * Smart Contract Address
    */
@@ -74,7 +74,7 @@ export interface GetTokenPairs_ethereum_dexTrades_smartContract {
 }
 
 export interface GetTokenPairs_ethereum_dexTrades {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   trades: number | null;
   baseAmount: number | null;
   baseAmountInUsd: number | null;
@@ -110,7 +110,7 @@ export interface GetTokenPairs_ethereum_dexTrades {
 }
 
 export interface GetTokenPairs_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

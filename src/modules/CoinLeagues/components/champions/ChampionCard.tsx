@@ -18,7 +18,6 @@ import {getNormalizedUrl} from 'utils/browser';
 import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
 import {OpenSeaIcon} from 'shared/components/Icons';
 
-import {Link as RouterLink} from 'react-router-dom';
 import {useWeb3} from 'hooks/useWeb3';
 import {CHAMPIONS} from 'modules/CoinLeagues/constants';
 

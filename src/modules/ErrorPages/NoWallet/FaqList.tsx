@@ -37,14 +37,12 @@ const faqList = [
   {
     id: 1,
     ques: 'What is a Wallet?',
-    ans:
-      'To interact with blockchain to do swaps or transfers you need a wallet that can connect to the blockchain network. Examples of blockchain networks are Ethereum and Binance Smart Chain. As wallet users normally use Metamask or Wallet Connect',
+    ans: 'To interact with blockchain to do swaps or transfers you need a wallet that can connect to the blockchain network. Examples of blockchain networks are Ethereum and Binance Smart Chain. As wallet users normally use Metamask or Wallet Connect',
   },
   {
     id: 2,
     ques: 'I only want to check my portfolio, can I do it?',
-    ans:
-      'Yes, you can add accounts manually in the manage accounts page, and you can check your portfolio without need to connect a Wallet',
+    ans: 'Yes, you can add accounts manually in the manage accounts page, and you can check your portfolio without need to connect a Wallet',
   },
 ];
 

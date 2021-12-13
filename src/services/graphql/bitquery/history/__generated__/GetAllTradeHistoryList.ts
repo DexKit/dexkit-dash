@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetAllTradeHistoryList
 // ====================================================
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -18,7 +18,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_block_timestamp {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_block {
-  __typename: "BlockExtended";
+  __typename: 'BlockExtended';
   /**
    * Block timestamp
    */
@@ -30,7 +30,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_block {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_transaction_txFrom {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -38,7 +38,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_transaction_txFrom {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_transaction {
-  __typename: "EthereumTransactionInfoExtended";
+  __typename: 'EthereumTransactionInfoExtended';
   /**
    * Hash hex representation
    */
@@ -58,7 +58,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_transaction {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_exchange {
-  __typename: "EthereumDex";
+  __typename: 'EthereumDex';
   /**
    * Full name ( name for known, Protocol for unknown )
    */
@@ -66,7 +66,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_exchange {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_smartContract_address {
-  __typename: "Address";
+  __typename: 'Address';
   /**
    * String address representation
    */
@@ -78,7 +78,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_smartContract_address
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_smartContract {
-  __typename: "EthereumSmartContract";
+  __typename: 'EthereumSmartContract';
   /**
    * Smart Contract Address
    */
@@ -86,7 +86,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_smartContract {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_sellCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -106,7 +106,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_sellCurrency {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades_buyCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency name
    */
@@ -126,7 +126,7 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades_buyCurrency {
 }
 
 export interface GetAllTradeHistoryList_ethereum_dexTrades {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   /**
    * Block in the blockchain
    */
@@ -162,12 +162,12 @@ export interface GetAllTradeHistoryList_ethereum_dexTrades {
 }
 
 export interface GetAllTradeHistoryList_ethereum_total {
-  __typename: "EthereumDexTrades";
+  __typename: 'EthereumDexTrades';
   count: number | null;
 }
 
 export interface GetAllTradeHistoryList_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Trades on Ethereum DEX Smart Contracts
    */

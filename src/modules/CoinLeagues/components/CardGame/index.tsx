@@ -8,14 +8,17 @@ import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
-import {Game, GameType} from 'types/coinsleague';
-import {ethers} from 'ethers';
-import {truncateAddress} from 'utils/text';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
+import {BigNumber, ethers} from 'ethers';
 import {useInterval} from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import { useWeb3 } from 'hooks/useWeb3';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,35 +28,35 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   button: {
-    fontWeight: 600,
+    fontWeight: 500,
     borderRadius: 6,
-    fontSize: '1.125rem',
+    fontSize: '1rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black',
   },
   innerContent: {
-    fontSize: '1rem',
+    fontSize: '0.8rem',
     padding: theme.spacing(1),
     justifyContent: 'space-between',
   },
   smallContent: {
-    fontSize: '0.875rem',
+    fontSize: '14px',
     paddingBottom: theme.spacing(3),
   },
 }));
 
 interface Props {
   id: string;
-  game: Game;
+  game: GameGraph;
   onClick: (address: string) => void;
   btnMessage?: string;
 }
 
-
-
 function CardGame(props: Props): JSX.Element {
   const {game, onClick} = props;
+  const {chainId} = useWeb3();
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -61,62 +64,81 @@ function CardGame(props: Props): JSX.Element {
   }).format(game.amount_to_play.toNumber()  );*/
   const [countdown, setCountdown] = useState<number>();
   const prizeTotalValue = ethers.utils.formatEther(
-    game.amount_to_play.mul(game.num_players),
+    BigNumber.from(game.entry).mul(BigNumber.from(game.numPlayers)),
   );
-  const entryAmount = ethers.utils.formatEther(game.amount_to_play);
-  const time = game.duration.toNumber();
-  const coins = game.num_coins.toNumber();
+  const entryAmount = ethers.utils.formatEther(game.entry);
+  const time = Number(game.duration);
+  const coins = Number(game.numCoins);
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
 
   // Format number values
-  const entriesIn = strPad(game.players.length || 0);
-  const entriesOut = strPad(game?.num_players.toNumber() || 0);
+  const entriesIn = strPad(Number(game.currentPlayers) || 0);
+  const entriesOut = strPad(Number(game.numPlayers) || 0);
+  /* eslint-disable */
   const onClickEnter = useCallback(
     (ev: any) => {
-      onClick(game.address);
+      onClick(game.intId);
     },
-    [game.address],
+    [game.intId],
   );
 
   useInterval(
     () => {
-      const time = game.duration.toNumber();
-      const startTime =
-        Math.round(new Date().getTime() / 1000) -
-        game.start_timestamp.toNumber();
-      setCountdown(time - startTime);
+
+      const startTime = Math.floor(Number(game.startsAt || 0) - Math.round(new Date().getTime() / 1000));
+      setCountdown(startTime);
     },
     1000,
     true,
   );
-
+ 
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='h5'>ID #{truncateAddress(props.id)}</Typography>
+      <Typography variant='subtitle2'>ID# {game.intId}</Typography>
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>
             <SendIcon />
-            <Typography
-              variant='h6'
-              style={{color: '#fcc591', alignItems: 'baseline'}}>
-              &nbsp;{entryAmount} {'MATIC'}
-            </Typography>
+            <Box display={'flex'} alignItems={'center'} pl={1}>
+              <Grid
+                container
+                justifyContent={'center'}
+                alignItems={'center'}
+                spacing={1}>
+                <Grid xs={12} item>
+                  <Typography
+                    variant='subtitle2'
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    {gameLevel}
+                  </Typography>
+                  <Typography
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Grid>
-        <Grid
-          xs={6}
-          container
-          justifyContent='flex-end'
-          style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
-          <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{ GET_LABEL_FROM_DURATION(time)}
-          </Typography>
-
-          <Typography variant='h6'>&nbsp;Type:</Typography>
-          <Typography variant='h6' style={{fontWeight: 600}}>
-            &nbsp;{game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
-          </Typography>
+        <Grid xs={6} item>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>Duration:</Typography>
+            <Typography variant='h6' style={{fontWeight: 500}}>
+              &nbsp;{GET_LABEL_FROM_DURATION(time)}
+            </Typography>
+          </Box>
+          <Box
+            display={'flex'}
+            justifyContent='flex-end'
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>&nbsp;Type:</Typography>
+            <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
+             &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
 
@@ -142,8 +164,8 @@ function CardGame(props: Props): JSX.Element {
           <Typography variant='subtitle2'>{strPad(coins)}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant='subtitle2'>Prize Pool</Typography>
-          <Typography variant='subtitle2'>{prizeTotalValue} MATIC</Typography>
+          <Typography variant='subtitle2'>Max Prize Pool</Typography>
+          <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
         </Grid>
       </Grid>
 

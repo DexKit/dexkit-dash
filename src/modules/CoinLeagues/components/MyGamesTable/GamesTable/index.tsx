@@ -17,11 +17,12 @@ import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import {KeyboardArrowLeft, KeyboardArrowRight} from '@material-ui/icons';
 
 import FirstPageIcon from '@material-ui/icons/FirstPage';
-import LastPageIcon from '@material-ui/icons/LastPage';
+
 
 interface Props {
   data: any;
   currentPage: number;
+  isNFT: boolean;
   rowsPerPage: number;
   rowsPerPageOptions: number[];
   onChangePage: (newPage: number) => void;
@@ -62,6 +63,7 @@ const TableActions = (props: any) => {
 
 const GamesTable: React.FC<Props> = ({
   data,
+  isNFT,
   currentPage,
   rowsPerPage,
   rowsPerPageOptions,
@@ -79,7 +81,7 @@ const GamesTable: React.FC<Props> = ({
           <TableBody>
             {data &&
               data.map((row: any, index: any) => (
-                <TableItem key={index} row={row} />
+                <TableItem key={index} row={row} isNFT={isNFT}/>
               ))}
           </TableBody>
         </Table>

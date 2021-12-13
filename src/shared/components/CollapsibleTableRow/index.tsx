@@ -49,7 +49,7 @@ const CollapsibleTableRow: React.FC<CollapsibleTableRowProps> = ({
         <Box ml={'8px'} className={tableTitle}>
           {summaryTitle}
         </Box>
-        <Box >{summaryValue}</Box>
+        <Box>{summaryValue}</Box>
       </AccordionSummary>
       <AccordionDetails className={accordionDetails}>
         <Table size='small'>

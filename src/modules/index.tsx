@@ -10,7 +10,8 @@ import {coinLeaguesConfigs} from './CoinLeagues';
 import {changelogConfigs} from './Changelog';
 
 import {initialUrl} from '../shared/constants/AppConst';
-
+//import {nftWalletConfig} from './NFTWallet';
+//import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
 
 const routeConfigs = [
