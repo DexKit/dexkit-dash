@@ -117,9 +117,9 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  },[setAnchorEl]);
 
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);

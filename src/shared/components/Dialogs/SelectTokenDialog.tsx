@@ -101,7 +101,7 @@ export const SelectTokenDialog = (props: Props) => {
   }, []);
 
   const handleMatic = useCallback(() => {
-    setSelectedChainId(ChainId.Mumbai);
+    setSelectedChainId(ChainId.Matic);
   }, []);
 
   const getFilteredTokens = useCallback(

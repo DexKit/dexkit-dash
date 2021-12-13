@@ -59,7 +59,6 @@ import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import {useDispatch} from 'react-redux';
 import {toggleFavoriteCoin} from 'redux/_ui/actions';
 import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import {Token} from 'types/app';
 import {useTokenLists} from 'hooks/useTokenLists';
 import FavoriteListItem from 'shared/components/FavoriteListItem';

@@ -219,7 +219,7 @@ const BuySell: React.FC<Props> = ({
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
-          (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+          (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
         );
       } else {
         _token = select1.find(
@@ -251,7 +251,7 @@ const BuySell: React.FC<Props> = ({
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {
           _token = select1.find(
-            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
           );
         } else {
           _token = select1.find(
@@ -264,7 +264,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress]);
+  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress, networkName]);
   useEffect(() => {
     if (tokenFromInfo) {
       if (

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import * as Bitquery from './bitquery';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 

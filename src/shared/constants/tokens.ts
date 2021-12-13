@@ -91,6 +91,12 @@ export const DEXKIT: Partial<DexKitTokenList> = {
   [ChainId.Mumbai]: DEXKIT_MUMBAI,
 };
 
+export const USDC_ADDRESSES = {
+  [ChainId.Mainnet]: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  [ChainId.Binance]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+  [ChainId.Matic]: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+};
+
 export const BITTOKEN: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: BITTOKEN_ETH,
   [ChainId.Matic]: BITTOKEN_MATIC,

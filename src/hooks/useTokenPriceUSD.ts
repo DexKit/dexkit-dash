@@ -4,6 +4,7 @@ import {useQuery} from 'react-query';
 import {fetchPrice} from 'services/rest/0x-api/fetchPrice';
 import {QuotePriceParams} from 'services/rest/0x-api/types';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { USDC_ADDRESSES } from 'shared/constants/tokens';
 
 import {OrderSide} from 'types/app';
 import {ChainId} from 'types/blockchain';
@@ -43,7 +44,8 @@ export const useTokenPriceUSD = (
         const amountAPI = fromTokenUnitAmount(amount, decimals);
         const quote: QuotePriceParams = {
           baseToken: address.toLowerCase(),
-          quoteToken: 'USDC',
+          //@ts-ignore
+          quoteToken: USDC_ADDRESSES[chainId as ChainId]?.toLowerCase() === address.toLowerCase() ? 'USDT' : 'USDC',
           orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
           baseAmount: amountAPI,
         };
