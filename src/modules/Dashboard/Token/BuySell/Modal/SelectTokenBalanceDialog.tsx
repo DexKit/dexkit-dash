@@ -235,7 +235,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
           </>
         ) : null}
         {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
-          <Box p={4}>
+          <Box p={4} justifyContent={'center'}>
             <Typography variant='body1'>No tokens found</Typography>
           </Box>
         ) : (

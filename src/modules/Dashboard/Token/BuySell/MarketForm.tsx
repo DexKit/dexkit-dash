@@ -59,6 +59,8 @@ interface Props {
   tokenTo: Token | undefined;
   disableReceive?: boolean;
   onChangeToken: (token: Token | undefined, type: 'from' | 'to') => void;
+  onSwitchTokensCallback?: (from?: Token, to?: Token) => void;
+  onChangeDisableReceiveCallback?: (type: 'from' | 'to') => void;
   onTrade: (data: ModalOrderData) => void;
 }
 
@@ -75,6 +77,8 @@ const MarketForm: React.FC<Props> = (props) => {
     disableReceive,
     onChangeToken,
     onTrade,
+    onSwitchTokensCallback,
+    onChangeDisableReceiveCallback,
   } = props;
 
   const {theme: creamaTheme} = useContext<AppContextPropsType>(AppContext);
@@ -101,10 +105,12 @@ const MarketForm: React.FC<Props> = (props) => {
       const tokenETH = select1.find(
         (e) =>
           (e.symbol.toLowerCase() ===
-            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) ||
-            e.symbol.toLowerCase() ===
-              GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName)) &&
-          e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase(),
+            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
+            e.networkName === networkName) ||
+          (e.symbol.toLowerCase() ===
+            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(networkName) &&
+            e.symbol.toLowerCase() !== tokenTo?.symbol.toLowerCase() &&
+            e.networkName === networkName),
       );
       onChangeToken(tokenETH, 'from');
     }
@@ -112,21 +118,32 @@ const MarketForm: React.FC<Props> = (props) => {
 
   /* eslint-disable */
   const switchTokens = useCallback(() => {
-    if (tokenFrom) {
-      onChangeToken(tokenFrom, 'to');
+    if (onSwitchTokensCallback) {
+      onSwitchTokensCallback(tokenTo, tokenFrom);
+    } else {
+      if (tokenTo) {
+        onChangeToken(tokenTo, 'from');
+      }
+
+      if (tokenFrom) {
+        onChangeToken(tokenFrom, 'to');
+      }
     }
 
-    if (tokenTo) {
-      onChangeToken(tokenTo, 'from');
-    }
     if (disableSelect) {
       if (disableSelect === 'to') {
         setDisableSelect('from');
+        if(onChangeDisableReceiveCallback){
+          onChangeDisableReceiveCallback('from')
+        }
       } else {
         setDisableSelect('to');
+        if(onChangeDisableReceiveCallback){
+          onChangeDisableReceiveCallback('to')
+        }
       }
     }
-  }, [tokenFrom, tokenTo]);
+  }, [tokenFrom, tokenTo, onChangeToken, onSwitchTokensCallback, onChangeDisableReceiveCallback]);
 
   const {priceQuote: priceQuoteTo} = useTokenPriceUSD(
     tokenTo?.address || tokenTo?.symbol,
@@ -227,7 +244,8 @@ const MarketForm: React.FC<Props> = (props) => {
       balances.find((e) => {
         if (
           tokenFrom?.symbol &&
-          isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName)
+          isNativeCoinFromNetworkName(tokenFrom?.symbol, networkName) &&
+          tokenFrom?.networkName === networkName
         ) {
           return (
             e.currency?.symbol?.toLowerCase() ===
@@ -356,13 +374,6 @@ const MarketForm: React.FC<Props> = (props) => {
     [selectTo, onChangeToken],
   );
 
-  const getTokens = useCallback(
-    (target: string) => {
-      return target === 'from' && select0.length > 0 ? select0 : select1;
-    },
-    [select0, select1],
-  );
-
   const handleSelectTokenDialogClose = useCallback(() => {
     setShowSelectTokenDialog(false);
   }, []);
@@ -373,7 +384,7 @@ const MarketForm: React.FC<Props> = (props) => {
         title={selectTo === 'from' ? 'You send' : 'You receive'}
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
-        tokens={getTokens(selectTo)}
+        tokens={select1}
         onSelectToken={handleSelectToken}
         onClose={handleSelectTokenDialogClose}
         enableFilters
@@ -395,6 +406,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   <Typography
                     onClick={setMax}
                     variant='body2'
+                    className={classes.maxBalance}
                     color='textSecondary'>
                     {account ? (
                       `${tokenBalance?.value?.toFixed(4) || 0} ${

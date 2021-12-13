@@ -75,6 +75,8 @@ export const isNativeCoinFromNetworkName = (
     case EthereumNetwork.bsc:
       const isBNB = symbol.toLowerCase() === 'bnb';
       return isBNB;
+    case EthereumNetwork.matic:
+        return symbol.toLowerCase() === 'matic';
     default:
       return symbol.toLowerCase() === 'eth';
   }
