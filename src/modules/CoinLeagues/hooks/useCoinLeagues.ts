@@ -226,6 +226,7 @@ export const useCoinLeagues = (id?: string) => {
     refetch: gameQuery.refetch,
     refetchCurrentFeeds: currentFeedPriceQuery.refetch,
     gameQuery,
+    addressQuery,
     coinFeedQuery,
     allFeeds: coinFeedQuery.data && coinFeedQuery.data,
     currentPrices: currentFeedPriceQuery.data && currentFeedPriceQuery.data,
