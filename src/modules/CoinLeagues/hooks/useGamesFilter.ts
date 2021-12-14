@@ -76,7 +76,6 @@ export function useGamesFilters(): GameFiltersState {
     stakeAmount,
     gameLevel,
     gameType,
-    reset,
   ]);
 
   return {

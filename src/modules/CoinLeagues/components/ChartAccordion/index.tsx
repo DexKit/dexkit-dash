@@ -18,7 +18,7 @@ export default () => {
   const isMobile = useMobile();
 
   return (
-    <Accordion style={{ background: '#2e3243'}} >
+    <Accordion style={{background: '#2e3243'}}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Box display='flex' alignItems='center'>
           <Grid container spacing={2}>
@@ -35,9 +35,7 @@ export default () => {
           </Grid>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>
-      {!isMobile && <ChartTV />}
-      </AccordionDetails>
+      <AccordionDetails>{!isMobile && <ChartTV />}</AccordionDetails>
     </Accordion>
   );
 };

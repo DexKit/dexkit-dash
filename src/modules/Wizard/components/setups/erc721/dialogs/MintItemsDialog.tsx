@@ -36,7 +36,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
 
   const wizardApi = useWizardApi();
 
-  const {getWeb3, getProvider, chainId} = useWeb3();
+  const {getProvider, chainId} = useWeb3();
 
   const [mintTransactionHash, setMintTransactionHash] = useState('');
   const [items, setItems] = useState<CollectionItemData[]>([]);
@@ -173,8 +173,6 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     mintItems,
     sendItemsMetadata,
     contractAddress,
-    getWeb3,
-    items,
     onFinish,
     uploadImages,
   ]);
@@ -220,8 +218,6 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     mintItems,
     sendItemsMetadata,
     contractAddress,
-    getWeb3,
-    items,
     onFinish,
     uploadImages,
   ]);

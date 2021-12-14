@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Select, MenuItem, FormControl, InputLabel} from '@material-ui/core';
+import {Select, MenuItem, FormControl} from '@material-ui/core';
 
 import {GET_GAME_ORDER_OPTIONS} from 'modules/CoinLeagues/utils/game';
 import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';

@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetTotalAffiliateTrades
 // ====================================================
 
 export interface GetTotalAffiliateTrades_ethereum_transfers_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -30,7 +30,7 @@ export interface GetTotalAffiliateTrades_ethereum_transfers_currency {
 }
 
 export interface GetTotalAffiliateTrades_ethereum_transfers {
-  __typename: "EthereumTransfers";
+  __typename: 'EthereumTransfers';
   amountUSD: number | null;
   amount: number | null;
   /**
@@ -41,7 +41,7 @@ export interface GetTotalAffiliateTrades_ethereum_transfers {
 }
 
 export interface GetTotalAffiliateTrades_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Currency Transfers
    */

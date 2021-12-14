@@ -17,7 +17,7 @@ import {
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
-import {ChainId, MyBalances, Web3State} from 'types/blockchain';
+import {ChainId, MyBalances} from 'types/blockchain';
 import {isNativeCoinWithoutChainId} from 'utils';
 import {
   ETH_SYMBOL_URL,
@@ -37,6 +37,7 @@ interface Props {
   balances: MyBalances[];
   tokenInfo?: Token;
   onChangeTokens?: (from?: Token, to?: Token) => void;
+  onChangeDisableReceiveCallback?: (type: 'from' | 'to') => void;
   // actionButton: ($event?: React.SyntheticEvent<HTMLElement, Event>) => void;
 }
 
@@ -84,11 +85,12 @@ const BuySell: React.FC<Props> = ({
   tokenInfo,
   disableReceive,
   onChangeTokens,
+  onChangeDisableReceiveCallback,
   disableLimit,
 }) => {
   const classes = useStyles();
   const account = useDefaultAccount();
-  const {chainId, web3State} = useWeb3();
+  const {chainId} = useWeb3();
 
   const [select0, setSelect0] = useState<Token[]>([]);
   const [select1, setSelect1] = useState<Token[]>([]);
@@ -123,13 +125,7 @@ const BuySell: React.FC<Props> = ({
       return;
     }
 
-    if (networkName === EthereumNetwork.bsc) {
-      setSelect1(tokensBSC);
-    } else if (networkName === EthereumNetwork.matic) {
-      setSelect1(tokensMATIC);
-    } else {
-      setSelect1(tokensETH);
-    }
+    setSelect1([...tokensETH, ...tokensBSC, ...tokensMATIC]);
   }, [networkName, tokensETH, tokensBSC, tokensMATIC, chainId]);
 
   // Here, we map the balances with logos from the token lists
@@ -223,7 +219,7 @@ const BuySell: React.FC<Props> = ({
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
-          (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+          (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
         );
       } else {
         _token = select1.find(
@@ -255,7 +251,7 @@ const BuySell: React.FC<Props> = ({
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {
           _token = select1.find(
-            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase(),
+            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
           );
         } else {
           _token = select1.find(
@@ -268,7 +264,7 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress]);
+  }, [select1, tokenInfo, tokenTo, tokenInfo, tokenAddress, networkName]);
   useEffect(() => {
     if (tokenFromInfo) {
       if (
@@ -277,16 +273,17 @@ const BuySell: React.FC<Props> = ({
         setTokenFrom(tokenFromInfo);
       }
     }
-  }, [tokenFromInfo, select0, currentTab, tokenFrom]);
+  }, [tokenFromInfo, currentTab, tokenFrom]);
 
   // We here auto fill the from select with a default value if not set. We start with native coin,
   // then wrapped and then the first one on the list
   useEffect(() => {
-    if (tokenFrom === undefined && select0.length > 0 && currentTab === 0) {
-      const _token = select0.find(
+    if (tokenFrom === undefined && select1.length > 0 && currentTab === 0) {
+      const _token = select1.find(
         (t) =>
           t.symbol.toUpperCase() ===
-          GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase(),
+            GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() &&
+          t.networkName === networkName
       );
       // If token not equal to tokenInfo
       if (
@@ -295,12 +292,13 @@ const BuySell: React.FC<Props> = ({
       ) {
         setTokenFrom(_token);
       } else {
-        const _token = select0.find(
+        const _token = select1.find(
           (t) =>
             t.symbol.toUpperCase() ===
             GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
               networkName,
-            ).toUpperCase(),
+            ).toUpperCase() &&
+            t.networkName === networkName
         );
         if (
           _token &&
@@ -309,7 +307,7 @@ const BuySell: React.FC<Props> = ({
           setTokenFrom(_token);
         } else {
           // If not founded wrapped and native just use the first one of the list that matches current network
-          const _token = select0.find(
+          const _token = select1.find(
             (t) =>
               t.networkName === networkName &&
               t.symbol.toLowerCase() !== tokenInfo?.symbol.toLowerCase(),
@@ -320,80 +318,25 @@ const BuySell: React.FC<Props> = ({
         }
       }
     }
-  }, [select0, networkName, tokenInfo]);
+  }, [select1, networkName, tokenInfo]);
 
   const handleChangeToken = useCallback(
     (token: Token | undefined, type: 'from' | 'to') => {
       if (token) {
-        const isNative = isNativeCoinWithoutChainId(token.symbol);
         if (type === 'from') {
-          if (
-            tokenTo &&
-            (token.address.toLowerCase() === tokenTo.address.toLowerCase() ||
-              (isNative &&
-                token.symbol.toLowerCase() === tokenTo.symbol.toLowerCase()))
-          ) {
-            setTokenFrom(tokenTo);
-            setTokenTo(tokenFrom);
-            if (onChangeTokens) {
-              onChangeTokens(tokenTo, tokenFrom);
-            }
-          } else {
-            setTokenFrom(token);
-            if (onChangeTokens) {
-              onChangeTokens(token, tokenTo);
-            }
+          setTokenFrom(token);
+          if (onChangeTokens) {
+            onChangeTokens(token, tokenTo);
           }
         } else {
-          if (
-            tokenFrom &&
-            (token.address.toLowerCase() === tokenFrom.address.toLowerCase() ||
-              (isNative &&
-                token.symbol.toLowerCase() === tokenFrom.symbol.toLowerCase()))
-          ) {
-            if (web3State === Web3State.Done) {
-              const availableTokenFrom = select0.find((e) =>
-                isNative
-                  ? e.symbol.toLowerCase() === tokenTo?.symbol.toLowerCase()
-                  : e.address.toLowerCase() === tokenTo?.address.toLowerCase(),
-              );
-
-              if (availableTokenFrom) {
-                setTokenTo(tokenFrom);
-                setTokenFrom(tokenTo);
-                if (onChangeTokens) {
-                  onChangeTokens(tokenTo, tokenFrom);
-                }
-              } else {
-                const newTokenFrom = select0.find((e) =>
-                  isNative
-                    ? e.symbol.toLowerCase() === token?.symbol.toLowerCase()
-                    : e.address.toLowerCase() === token?.address.toLowerCase(),
-                );
-
-                setTokenTo(tokenFrom);
-                setTokenFrom(newTokenFrom);
-                if (onChangeTokens) {
-                  onChangeTokens(newTokenFrom, tokenFrom);
-                }
-              }
-            } else {
-              setTokenTo(tokenFrom);
-              setTokenFrom(tokenTo);
-              if (onChangeTokens) {
-                onChangeTokens(tokenTo, tokenFrom);
-              }
-            }
-          } else {
-            setTokenTo(token);
-            if (onChangeTokens) {
-              onChangeTokens(tokenFrom, token);
-            }
+          setTokenTo(token);
+          if (onChangeTokens) {
+            onChangeTokens(tokenFrom, token);
           }
         }
       }
     },
-    [onChangeTokens, web3State, tokenFrom, tokenTo],
+    [onChangeTokens, tokenFrom, tokenTo],
   );
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -451,6 +394,8 @@ const BuySell: React.FC<Props> = ({
             tokenFrom={tokenFrom}
             tokenTo={tokenTo}
             onChangeToken={handleChangeToken}
+            onSwitchTokensCallback={onChangeTokens}
+            onChangeDisableReceiveCallback={onChangeDisableReceiveCallback}
             onTrade={handleTradeOpen}
           />
         )}

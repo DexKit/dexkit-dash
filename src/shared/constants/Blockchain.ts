@@ -162,6 +162,8 @@ export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
       return 'ETH';
     case ChainId.Matic:
       return 'MATIC';
+    case ChainId.Mumbai:
+        return 'MATIC';
     case ChainId.Kovan:
       return 'ETH';
     case ChainId.Ropsten:

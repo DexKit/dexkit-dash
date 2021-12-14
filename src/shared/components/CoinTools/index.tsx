@@ -10,6 +10,7 @@ import {useNetwork} from 'hooks/useNetwork';
 
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
+import {useRamp} from 'hooks/useRamp';
 import Sender from '../TotalBalance/Sender';
 import Receiver from '../TotalBalance/Receiver';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
@@ -177,11 +178,17 @@ const CoinTools = (props: Props) => {
   }, []);
 
   const {init} = useTransak({});
+  const {initRamp} = useRamp({});
 
   /* eslint-disable */
-  const handleBuyCrypto = useCallback(() => {
+  const handleBuyCryptoTransak = useCallback(() => {
     init();
   }, [init]);
+
+  /* eslint-disable */
+  const handleBuyCryptoRamp = useCallback(() => {
+    initRamp();
+  }, [initRamp]);
 
   const handleSwap = useCallback(() => {
     setShowSwap(true);
@@ -205,15 +212,18 @@ const CoinTools = (props: Props) => {
         balances={tokens.filter((t) => t.network === networkName)}
         token={token}
       />
-   {enableTrade && <BuySellModal
-        networkName={networkName}
-        balances={tokens}
-        tokenInfo={token}
-        disableReceive={disableReceive}
-        tokenAddress={token?.address}
-        open={showTrade}
-        onClose={handleTradeClose}
-      />}
+      {enableTrade && (
+        <BuySellModal
+          networkName={networkName}
+          balances={tokens}
+          // Commentend this because of buggy situation on click switch tokens, revisit this later
+          // tokenInfo={token}
+          disableReceive={disableReceive}
+          // tokenAddress={token?.address}
+          open={showTrade}
+          onClose={handleTradeClose}
+        />
+      )}
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
       <Backdrop className={classes.backdrop} open={showSwap}>
         <Grid container alignItems='center' justify='center'>
@@ -226,7 +236,8 @@ const CoinTools = (props: Props) => {
         <TradeToolsSection
           onSend={handleShowSender}
           onReceive={handleShowReceiver}
-          onBuyCrypto={handleBuyCrypto}
+          onBuyCryptoTransak={handleBuyCryptoTransak}
+          onBuyCryptoRamp={handleBuyCryptoRamp}
           onSwap={handleSwap}
           onTrade={handleTrade}
           onShare={onShare}

@@ -20,6 +20,15 @@ const DEXKIT_ETH: Token = {
   logoURI: '',
 };
 
+const DEXKIT_BINANCE: Token = {
+  address: '0x314593fa9a2fa16432913dbccc96104541d32d11',
+  chainId: ChainId.Binance,
+  name: 'DexKit',
+  symbol: 'KIT',
+  decimals: 18,
+  logoURI: '',
+};
+
 const DEXKIT_MATIC: Token = {
   address: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
   chainId: ChainId.Matic,
@@ -77,8 +86,15 @@ type DexKitTokenList = {
 
 export const DEXKIT: Partial<DexKitTokenList> = {
   [ChainId.Mainnet]: DEXKIT_ETH,
+  [ChainId.Binance]: DEXKIT_BINANCE,
   [ChainId.Matic]: DEXKIT_MATIC,
   [ChainId.Mumbai]: DEXKIT_MUMBAI,
+};
+
+export const USDC_ADDRESSES = {
+  [ChainId.Mainnet]: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  [ChainId.Binance]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+  [ChainId.Matic]: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
 };
 
 export const BITTOKEN: Partial<DexKitTokenList> = {

@@ -12,9 +12,8 @@ interface SecondaryColorPickerProps {
 
 const SecondaryColorPicker: React.FC<SecondaryColorPickerProps> = (props) => {
   const [visible, setVisibility] = useState(false);
-  const {theme, updateTheme, secondary, updateSecondaryColor} = useContext(
-    AppContext,
-  );
+  const {theme, updateTheme, secondary, updateSecondaryColor} =
+    useContext(AppContext);
 
   const useStyles = makeStyles((theme: CremaTheme) => ({
     cpSwatch: {

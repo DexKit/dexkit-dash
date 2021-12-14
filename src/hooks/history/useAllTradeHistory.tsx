@@ -26,26 +26,29 @@ export const useAllTradeHistory = ({address, networkName}: Props) => {
     onChangeRowsPerPage,
   } = usePagination();
 
-  const [data, setData] = useState<
-    GetAllTradeHistoryList_ethereum_dexTrades[]
-  >();
+  const [data, setData] =
+    useState<GetAllTradeHistoryList_ethereum_dexTrades[]>();
   const [totalRows, setTotalRows] = useState<number>();
   // If there is no baseCurrency the API returns duplicated values, so we just multiply and then filter
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetAllTradeHistoryList,
-    GetAllTradeHistoryListVariables
-  >(BITQUERY_ALL_TRADE_HISTORY_LIST, {
-    variables: {
-      network: networkName,
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetAllTradeHistoryList, GetAllTradeHistoryListVariables>(
+    BITQUERY_ALL_TRADE_HISTORY_LIST,
+    {
+      variables: {
+        network: networkName,
 
-      // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
-      address: address,
-      limit: Math.floor(rowsPerPage),
-      offset: Math.floor(skipRows),
+        // exchangeName: EXCHANGE.ALL, //GET_EXCHANGE_NAME(exchange),
+        address: address,
+        limit: Math.floor(rowsPerPage),
+        offset: Math.floor(skipRows),
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (dataFn && dataFn?.ethereum?.dexTrades) {

@@ -1,4 +1,3 @@
-
 import {NavStyle} from '../../../shared/constants/AppEnums';
 import MiniSidebarToggle from './MiniSidebarToggle';
 

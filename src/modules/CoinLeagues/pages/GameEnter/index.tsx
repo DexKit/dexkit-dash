@@ -1,6 +1,7 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -18,18 +19,18 @@ import {
   Link as RouterLink,
   RouteComponentProps,
   useHistory,
+  useLocation,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import {truncateAddress} from 'utils/text';
 import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
 import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
 import SimpleCardGameSkeleton from 'modules/CoinLeagues/components/SimpleCardGame/index.skeleton';
-import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
+import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
@@ -43,11 +44,12 @@ import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import {ChainId} from 'types/blockchain';
+import {ChainId, SupportedNetworkType} from 'types/blockchain';
 import {EndGame} from 'modules/CoinLeagues/components/EndGame';
 import {StartGame} from 'modules/CoinLeagues/components/StartGame';
 import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
+import CountdownStartsAt from 'modules/CoinLeagues/components/CountdownStartsAt';
 import {useNotifications} from 'hooks/useNotifications';
 
 import {CopyButton} from 'shared/components/CopyButton';
@@ -58,14 +60,23 @@ import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
-import Paper from '@material-ui/core/Paper';
 import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useCoinLeaguesFactoryRoutes, useIsNFTGame} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {useDispatch} from 'react-redux';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
+import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
+import { AFFILIATE_FIELD, DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,13 +90,14 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #2e3243',
   },
   gameTypePaper: {
+    borderRadius: 6,
     backgroundColor: '#2e3243',
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
   },
 }));
 type Params = {
-  address: string;
+  id: string;
 };
 
 type Props = RouteComponentProps<Params>;
@@ -103,20 +115,29 @@ function GameEnter(props: Props) {
     match: {params},
   } = props;
   const history = useHistory();
+  const dispatch = useDispatch();
   const {account, chainId} = useWeb3();
+  const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
+
+  const {search} = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
+
+  const isNFTGame = useIsNFTGame();
 
   const {createNotification} = useNotifications();
 
-  const {address} = params;
+  const {id} = params;
   const {game, gameQuery, refetch, onJoinGameCallback, winner} =
-    useCoinLeagues(address);
+    useCoinLeagues(id);
   const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
 
   const [selectedCoins, setSelectedCoins] = useState<CoinFeed[]>([]);
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
+  const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
+  const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
 
@@ -129,10 +150,32 @@ function GameEnter(props: Props) {
     setOpen(true);
   }, []);
 
+  const onOpenSelectChampionDialog = useCallback((ev: any) => {
+    setOpenChampionDialog(true);
+  }, []);
+
+  // TODO: We are doing this to user see connected account
+  useEffect(() => {
+    if (account && account !== defaultAccount) {
+      dispatch(
+        setDefaultAccount({
+          account: {
+            address: account,
+            label: account,
+            networkType: SupportedNetworkType.evm,
+          },
+          type: SupportedNetworkType.evm,
+        }),
+      );
+    }
+  }, [account, defaultAccount, dispatch]);
+
+  const gamePlayers = game?.players;
+
   const player = useMemo(() => {
-    if (account && game?.players && game?.players.length) {
+    if (account && gamePlayers && gamePlayers.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
-      return game.players
+      return gamePlayers
         .map((p: any) => {
           return {
             coin_feeds: p[0],
@@ -150,12 +193,12 @@ function GameEnter(props: Props) {
           }
         });
     }
-  }, [account, game?.players, game]);
+  }, [account, gamePlayers]);
 
   const players = useMemo(() => {
-    if (game?.players && game?.players.length) {
+    if (gamePlayers && gamePlayers.length) {
       //TODO: We did this because sometimes it is not returning the player_address and as objects
-      return game.players.map((p: any) => {
+      return gamePlayers.map((p: any) => {
         return {
           coin_feeds: p[0],
           player_address: p[1],
@@ -165,11 +208,20 @@ function GameEnter(props: Props) {
         } as Player;
       });
     }
-  }, [game?.players, game]);
+  }, [gamePlayers]);
+  const onCloseSelectChampionDialog = useCallback(() => {
+    setChampion(undefined);
+    setOpenChampionDialog(false);
+  }, []);
 
-  const onCloseSelectDialog = useCallback((ev: any) => {
+  const onCloseSelectDialog = useCallback(() => {
     setIsChaptainCoin(false);
     setOpen(false);
+  }, []);
+
+  const onSelectChampion = useCallback((champ: ChampionMetaItem) => {
+    setChampion(champ);
+    setOpenChampionDialog(false);
   }, []);
 
   const onSelectCoin = useCallback(
@@ -211,16 +263,17 @@ function GameEnter(props: Props) {
     },
     [listGamesRoute, history],
   );
-
+  const affiliateField = query.get(AFFILIATE_FIELD);
+  const amountToPlay = game?.amount_to_play;
   const onEnterGame = useCallback(
     (ev: any) => {
-      if (game?.amount_to_play && captainCoin && chainId) {
+      if (amountToPlay && captainCoin && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
         const onSubmitTx = (tx: string) => {
           setTx(tx);
           createNotification({
-            title: 'Join Game',
-            body: `Joined Game ${game.address}`,
+            title: `Join Game ${isNFTGame ? 'on NFT Room' : 'on Main Room'}`,
+            body: `Joined Game ${id} ${isNFTGame ? 'on NFT Room' : 'Main Room'}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: 'View transaction',
@@ -247,56 +300,65 @@ function GameEnter(props: Props) {
 
         onJoinGameCallback(
           selectedCoins.map((c) => c.address) || [],
-          game?.amount_to_play.toString(),
+          amountToPlay.toString(),
           captainCoin?.address,
           {
             onConfirmation: onConfirmTx,
             onError,
             onSubmit: onSubmitTx,
           },
+          affiliateField,
+          champion?.id  || DISABLE_CHAMPIONS_ID
         );
       }
     },
-    [game, selectedCoins, captainCoin, refetch, chainId],
+    [
+      amountToPlay,
+      champion,
+      isNFTGame,
+      selectedCoins,
+      captainCoin,
+      refetch,
+      chainId,
+      id,
+      affiliateField,
+      onJoinGameCallback,
+      createNotification,
+    ],
   );
 
-  const isLoading = useMemo(() => gameQuery.isLoading, [gameQuery.isLoading]);
+  const isLoading = gameQuery.isLoading;
+  const started = game?.started;
+  const finished =  game?.finished;
+  const aborted = game?.aborted;
+  const totalPlayers =  game?.num_players.toNumber();
+ 
 
-  const started = useMemo(() => game?.started, [game?.started]);
-  const finished = useMemo(() => game?.finished, [game?.finished]);
-  const aborted = useMemo(() => game?.aborted, [game?.aborted]);
-  const totalPlayers = useMemo(
-    () => game?.num_players.toNumber(),
-    [game?.num_players],
-  );
+  const sufficientFunds = useMemo(() => {
+    if (amountToPlay && balance) {
+      const amount = BigNumber.from(amountToPlay);
+      const balBN = BigNumber.from(balance);
+      return balBN.gt(amount);
+    }
+    return false;
+  }, [amountToPlay, balance]);
 
-  const sufficientFunds = useMemo(
-    () => {
-
-      if(game?.amount_to_play && balance){
-        const amount = BigNumber.from(game?.amount_to_play);
-        const balBN = BigNumber.from(balance);
-        return balBN.gt(amount);
-      }
-      return false 
-    }, [game?.amount_to_play]);
-
-
-
-  const currentPlayers = useMemo(() => game?.players.length, [game?.players, game]);
+  const currentPlayers = game?.players.length;
+   
   const gameFull = useMemo(() => {
     if (totalPlayers && currentPlayers) {
       return totalPlayers === currentPlayers;
     }
   }, [totalPlayers, currentPlayers]);
-
+  const numCoins = game?.num_coins;
   const isDisabled = useMemo(() => {
     return (
-      selectedCoins?.length === (game?.num_coins?.toNumber() || 0) - 1 &&
+      selectedCoins?.length === (numCoins?.toNumber() || 0) - 1 &&
       captainCoin !== undefined
     );
-  }, [selectedCoins, game?.num_coins, captainCoin, game]);
+  }, [selectedCoins, numCoins, captainCoin]);
 
+  
   const goToExplorer = useCallback(
     (_ev: any) => {
       if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
@@ -306,8 +368,48 @@ function GameEnter(props: Props) {
     [tx, chainId],
   );
 
+  const prizePool = useMemo(() => {
+    if (amountToPlay && currentPlayers) {
+      if (started) {
+        return Number(
+          ethers.utils.formatEther(
+            amountToPlay.mul(currentPlayers),
+          ),
+        );
+      } else {
+        if(totalPlayers){
+          return Number(
+            ethers.utils.formatEther(amountToPlay.mul(totalPlayers)),
+          );
+        }
+      }
+    }
+    if(amountToPlay && totalPlayers){
+      return Number(
+        ethers.utils.formatEther(amountToPlay.mul(totalPlayers)),
+      );
+    }
+  }, [
+    amountToPlay,
+    currentPlayers,
+    started,
+    totalPlayers
+  ]);
+  const url = new URL(window.location.href);
+
+  const urlShare = useMemo(()=>{
+    if(account){
+      url.searchParams.set(AFFILIATE_FIELD, account);
+      return url.href;
+    }else{
+      return url.href;
+    }
+
+  },[url, account]);
+
+
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4} alignItems={'center'}>
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
@@ -326,6 +428,16 @@ function GameEnter(props: Props) {
           isCaptainCoin={isCaptainCoin}
         />
       )}
+
+      {chainId && IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && isNFTGame && (
+        <SelectChampionDialog
+          chainId={chainId}
+          open={openChampionDialog}
+          selectedChampion={champion}
+          onSelectChampion={onSelectChampion}
+          onClose={onCloseSelectChampionDialog}
+        />
+      )}
       <Grid item xs={12} sm={12} xl={12}>
         <TickerTapeTV />
       </Grid>
@@ -338,18 +450,19 @@ function GameEnter(props: Props) {
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
             Games
           </Link>
-          <Link
-            color='inherit'
-            component={RouterLink}
-            to={enterGameRoute(address)}>
-            {truncateAddress(address)}
+          <Link color='inherit' component={RouterLink} to={enterGameRoute(id)}>
+            {id}
           </Link>
         </Breadcrumbs>
       </Grid>
 
       <Hidden smUp={true}>
         <Grid item xs={12}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img
+            src={CoinsLeagueBanner}
+            style={{borderRadius: '12px'}}
+            alt={'Coinleague Banner'}
+          />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={4} xl={4}>
@@ -358,8 +471,11 @@ function GameEnter(props: Props) {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant='h5' style={{margin: 5}}>
-            Game #{truncateAddress(address)}
-            <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
+            Game #{id}
+            <CopyButton
+              size='small'
+              copyText={urlShare}
+              tooltip='URL Copied!'>
               <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
@@ -373,19 +489,26 @@ function GameEnter(props: Props) {
       </Grid>
       <Hidden xsDown={true}>
         <Grid item sm={5} xl={5}>
-          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} />
+          <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleague Banner'} />
         </Grid>
       </Hidden>
       <Grid item xs={12} sm={3} xl={3}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
-        <Box pr={2}>
-            <SwapButton/>
+          <Box pr={2}>
+            <SwapButton />
           </Box>
           <Box pr={2}>
-            <ShareButton shareText={`Coin leagues Game #Id ${address}`} />
+            <ShareButton shareText={`Coin leagues Game #Id ${id}`} />
           </Box>
           <Box pr={2}>
-            <BuyCryptoButton btnMsg={'Buy Matic'} defaultCurrency={'MATIC'} />
+            <BuyCryptoButton
+              btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
+                GET_LEAGUES_CHAIN_ID(chainId),
+              )}`}
+              defaultCurrency={GET_CHAIN_NATIVE_COIN(
+                GET_LEAGUES_CHAIN_ID(chainId),
+              )}
+            />
           </Box>
           <Box pr={2}>
             <MaticBridgeButton />
@@ -398,33 +521,30 @@ function GameEnter(props: Props) {
         {isLoading && <SimpleCardGameSkeleton />}
       </Grid>
       <Grid item xs={6} sm={4}>
+        {game && <CardPrize prizePool={prizePool} />}
         {game && (
-          <CardPrize
-            prizePool={Number(
-              ethers.utils.formatEther(
-                game.amount_to_play.mul(game.num_players),
-              ),
-            )}
-          />
-        )}
-        {game && (
-          <Paper className={classes.gameTypePaper}>
-            <Box display={'flex'}>
+          <Container className={classes.gameTypePaper}>
+            <Box display={'flex'} justifyContent={'start'} alignItems={'center'} alignContent={'center'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 Game Type:
               </Typography>
               <Typography
-                variant='h5'
-                style={{color: '#fff', marginLeft: '20px'}}>
-                {game.game_type === GameType.Winner ? 'Bull' : 'Bear'}
+                variant='h6'
+                style={{
+                  color:
+                    game?.game_type === GameType.Winner ? '#60A561' : '#F76F8E',
+                  marginLeft: '10px',
+                  fontWeight: 500
+                }}>
+                {game?.game_type === GameType.Winner ? 'Bull' : 'Bear'}
               </Typography>
             </Box>
-          </Paper>
+          </Container>
         )}
 
         {isLoading && <CardPrizeSkeleton />}
         {isLoading && (
-          <Paper className={classes.gameTypePaper}>
+          <Container className={classes.gameTypePaper}>
             <Box display={'flex'}>
               <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 Game Type:
@@ -437,7 +557,7 @@ function GameEnter(props: Props) {
                 </Typography>
               </Skeleton>
             </Box>
-          </Paper>
+          </Container>
         )}
       </Grid>
       <Grid item xs={6} sm={4}>
@@ -447,9 +567,14 @@ function GameEnter(props: Props) {
             current_players={game.players.length}
           />
         )}
-        {game && started && !aborted && !finished && (
+        {game && started && !aborted && !finished && id && (
           <Box pt={2}>
-            <Countdown address={game.address} />
+            <Countdown id={id} />
+          </Box>
+        )}
+        {game && !started && !aborted && !finished && id && (
+          <Box pt={2}>
+            <CountdownStartsAt id={id} />
           </Box>
         )}
         {isLoading && <CardInfoPlayersSkeleton />}
@@ -499,6 +624,38 @@ function GameEnter(props: Props) {
                   </Grid>
                 </Grid>
               </Grid>
+              {isNFTGame && (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant='h6' style={{margin: 5}}>
+                      Choose Champion {champion === undefined ? '0' : '1'}/ 1
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      disabled={champion !== undefined}
+                      onClick={onOpenSelectChampionDialog}
+                      startIcon={<CryptocurrencyIcon />}
+                      endIcon={<ExpandMoreIcon />}
+                      variant='outlined'>
+                      {'Choose your Champion'}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container spacing={4}>
+                      {champion && (
+                        <Grid item xs={12}>
+                          <ChampionItem
+                            champion={champion}
+                            handleDelete={() => setChampion(undefined)}
+                          />
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
 
             {game?.num_coins.toNumber() !== 1 && (
@@ -570,8 +727,10 @@ function GameEnter(props: Props) {
                       <Button
                         disabled={
                           !isDisabled ||
-                          submitState !== SubmitState.None || !sufficientFunds ||
+                          submitState !== SubmitState.None ||
+                          !sufficientFunds ||
                           !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                          || (isNFTGame && champion === undefined)
                         }
                         size={'large'}
                         onClick={onEnterGame}
@@ -583,7 +742,13 @@ function GameEnter(props: Props) {
                         }>
                         <ButtonState
                           state={submitState}
-                          defaultMsg={sufficientFunds ? 'ENTER GAME' : 'Insufficient Matic Funds' }
+                          defaultMsg={
+                            sufficientFunds
+                              ? 'ENTER GAME'
+                              : `Insufficient ${GET_CHAIN_NATIVE_COIN(
+                                  GET_LEAGUES_CHAIN_ID(chainId),
+                                )} Funds`
+                          }
                           confirmedMsg={'You Entered Game'}
                         />
                       </Button>
@@ -613,7 +778,7 @@ function GameEnter(props: Props) {
                   };
                 })}
                 type={game?.game_type}
-                address={address}
+                id={id}
                 account={account}
                 winner={winner}
               />
@@ -640,7 +805,7 @@ function GameEnter(props: Props) {
                   };
                 })}
                 type={game?.game_type}
-                address={address}
+                id={id as string}
                 finished={finished}
                 hideCoins={!started}
                 account={account}
@@ -650,7 +815,7 @@ function GameEnter(props: Props) {
           </Grid>
         </Grid>
       )}
-      {!gameFull && (
+      {!gameFull && !started && (
         <Grid item xs={12}>
           <WaitingPlayers />
         </Grid>
@@ -668,7 +833,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <PlayersTableSkeleton players={5} />
             </Grid>
-            {!gameFull && (
+            {!gameFull && !started && (
               <Grid item xs={12}>
                 <WaitingPlayers />
               </Grid>
@@ -679,12 +844,12 @@ function GameEnter(props: Props) {
 
       {currentPlayers && currentPlayers > 0 && !started ? (
         <Grid item xs={12}>
-          <StartGame address={address} />
+          <StartGame id={id} />
         </Grid>
       ) : null}
       {started && !finished && !aborted && (
         <Grid item xs={12}>
-          <EndGame address={address} />
+          <EndGame id={id} />
         </Grid>
       )}
     </Grid>

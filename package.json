@@ -1,6 +1,6 @@
 {
   "name": "dexkit-dash",
-  "version": "0.0.6.10",
+  "version": "0.0.6.13",
   "private": true,
   "jest": {
     "testEnvironment": "node"
@@ -34,6 +34,7 @@
     "@maticnetwork/wallet-widget": "^1.1.0",
     "@mycrypto/gas-estimation": "^1.1.0",
     "@popperjs/core": "^2.4.2",
+    "@ramp-network/ramp-instant-sdk": "^3.0.0",
     "@react-native-community/netinfo": "5.5.0",
     "@reduxjs/toolkit": "^1.6.0",
     "@storybook/theming": "^5.3.19",
@@ -193,7 +194,7 @@
     "generate-build-version": "node generate-build-version.js",
     "prebuild": "yarn generate-build-version",
     "start": "react-scripts start",
-    "build": "react-scripts build --max_old_space_size=8192 CI=false",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",

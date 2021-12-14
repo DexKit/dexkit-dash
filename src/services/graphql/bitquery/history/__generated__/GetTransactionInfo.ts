@@ -3,14 +3,14 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { EthereumNetwork } from "./../../../../../../__generated__/globalTypes";
+import {EthereumNetwork} from './../../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: GetTransactionInfo
 // ====================================================
 
 export interface GetTransactionInfo_ethereum_transactions_block_timestamp {
-  __typename: "DateTime";
+  __typename: 'DateTime';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -22,7 +22,7 @@ export interface GetTransactionInfo_ethereum_transactions_block_timestamp {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_block {
-  __typename: "Block";
+  __typename: 'Block';
   /**
    * Block number (height) in blockchain
    */
@@ -34,7 +34,7 @@ export interface GetTransactionInfo_ethereum_transactions_block {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_creates {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -42,7 +42,7 @@ export interface GetTransactionInfo_ethereum_transactions_creates {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -66,7 +66,7 @@ export interface GetTransactionInfo_ethereum_transactions_currency {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_sender {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -74,7 +74,7 @@ export interface GetTransactionInfo_ethereum_transactions_sender {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_to {
-  __typename: "EthereumAddressInfo";
+  __typename: 'EthereumAddressInfo';
   /**
    * String address representation
    */
@@ -82,7 +82,7 @@ export interface GetTransactionInfo_ethereum_transactions_to {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_date {
-  __typename: "Date";
+  __typename: 'Date';
   /**
    * String date representation with default format as YYYY-MM-DD
    */
@@ -90,7 +90,7 @@ export interface GetTransactionInfo_ethereum_transactions_date {
 }
 
 export interface GetTransactionInfo_ethereum_transactions_gasCurrency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Token Smart Contract Address
    */
@@ -110,7 +110,7 @@ export interface GetTransactionInfo_ethereum_transactions_gasCurrency {
 }
 
 export interface GetTransactionInfo_ethereum_transactions {
-  __typename: "EthereumTransactions";
+  __typename: 'EthereumTransactions';
   amount: number | null;
   /**
    * Block where transfer transaction is included
@@ -170,7 +170,7 @@ export interface GetTransactionInfo_ethereum_transactions {
 }
 
 export interface GetTransactionInfo_ethereum {
-  __typename: "Ethereum";
+  __typename: 'Ethereum';
   /**
    * Blockchain Transactions
    */

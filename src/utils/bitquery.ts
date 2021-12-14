@@ -11,7 +11,7 @@ export const getCurrency = (network: EthereumNetwork, address?: string) => {
     case EthereumNetwork.bsc:
       return address.toLowerCase() === 'bnb' ? 'BNB' : address;
     case EthereumNetwork.matic:
-        return address.toLowerCase() === 'matic' ? 'MATIC' : address;
+      return address.toLowerCase() === 'matic' ? 'MATIC' : address;
     default:
       return address;
   }

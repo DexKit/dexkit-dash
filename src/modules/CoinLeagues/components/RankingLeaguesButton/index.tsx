@@ -51,6 +51,7 @@ interface RankingButtonProps {
   secondCount?: number;
   thirdCount?: number;
   totalEarned?: number;
+  EarnedMinusSpent?: number;
   label: string;
   featured?: boolean;
 }
@@ -92,7 +93,7 @@ export const RankingButton = (props: RankingButtonProps) => {
 
   return (
     <Paper variant='outlined'>
-      <ButtonBase onClick={handleToggle} className={classes.button}>
+      <ButtonBase onClick={handleToggle} className={classes.button} >
         <Box p={4}>
           <Grid
             container
@@ -142,41 +143,61 @@ export const RankingButton = (props: RankingButtonProps) => {
       <Collapse in={toggler.show}>
         <Divider />
         <Box p={4} display={'flex'}>
-          <CopyButton size='small' copyText={address || ''} tooltip='Copied!'>
-            <FileCopy color='inherit' style={{fontSize: 16}} />
-          </CopyButton>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Wins: {props?.winsCount}
-          </Typography>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            First Place: {props?.firstCount}
-          </Typography>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Second Place: {props?.secondCount}
-          </Typography>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Third Place: {props?.thirdCount}
-          </Typography>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Joins: {props?.joinsCount}
-          </Typography>
-
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Wins/Joins:{' '}
-            {props?.joinsCount
-              ? `${Number(
-                  ((props?.winsCount || 0) / props?.joinsCount) * 100,
-                ).toFixed(2)} %`
-              : '0%'}
-          </Typography>
-          <Typography variant={'body1'} className={classes.paragraphMargin}>
-            Earned Matic: {props?.totalEarned}
-          </Typography>
+          <Grid container>
+            <Grid item>
+              <CopyButton
+                size='small'
+                copyText={address || ''}
+                tooltip='Copied!'>
+                <FileCopy color='inherit' style={{fontSize: 16}} />
+              </CopyButton>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Wins: {props?.winsCount}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                First Place: {props?.firstCount}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Second Place: {props?.secondCount}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Third Place: {props?.thirdCount}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Joins: {props?.joinsCount}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Wins/Joins:{' '}
+                {props?.joinsCount
+                  ? `${Number(
+                      ((props?.winsCount || 0) / props?.joinsCount) * 100,
+                    ).toFixed(2)} %`
+                  : '0%'}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                Earned Matic: {props?.totalEarned}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant={'body1'} className={classes.paragraphMargin}>
+                 Matic Profit: {props?.EarnedMinusSpent}
+              </Typography>
+            </Grid>
+          </Grid>
         </Box>
       </Collapse>
     </Paper>

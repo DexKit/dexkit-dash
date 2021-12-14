@@ -12,9 +12,8 @@ interface PrimaryColorPickerProps {
 
 const PrimaryColorPicker: React.FC<PrimaryColorPickerProps> = (props) => {
   const [visible, setVisibility] = useState(false);
-  const {primary, updatePrimaryColor, theme, updateTheme} = useContext(
-    AppContext,
-  );
+  const {primary, updatePrimaryColor, theme, updateTheme} =
+    useContext(AppContext);
 
   const useStyles = makeStyles((theme: CremaTheme) => {
     return {

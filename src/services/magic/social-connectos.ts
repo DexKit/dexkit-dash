@@ -1,7 +1,10 @@
-
 import {getCachedMagicNetwork, getMagic, magicStorage} from '.';
 
-export type SupportSocialConnectors = 'google' | 'twitter' | 'discord' | 'apple';
+export type SupportSocialConnectors =
+  | 'google'
+  | 'twitter'
+  | 'discord'
+  | 'apple';
 
 export const getSocialConnector = async (provider: SupportSocialConnectors) => {
   const network = getCachedMagicNetwork();

@@ -24,7 +24,6 @@ const maticTokens = axios.create({
   },
 });
 
-
 let cacheEthTokens: Token[];
 export async function getEthereumTokens(): Promise<Token[]> {
   if (cacheEthTokens) {
@@ -36,7 +35,7 @@ export async function getEthereumTokens(): Promise<Token[]> {
       return {...t, networkName: EthereumNetwork.ethereum};
     });
     tokens.unshift({
-      address: '',
+      address: 'eth',
       decimals: 18,
       name: 'Ethereum',
       symbol: 'ETH',
@@ -64,7 +63,7 @@ export async function getBinanceTokens(): Promise<Token[]> {
       return {...t, networkName: EthereumNetwork.bsc};
     });
     tokens.unshift({
-      address: '',
+      address: 'bnb',
       decimals: 18,
       name: 'Binance',
       symbol: 'BNB',
@@ -100,7 +99,7 @@ export async function getMaticTokens(): Promise<Token[]> {
       return {...t, networkName: EthereumNetwork.matic};
     });
     tokens.unshift({
-      address: '',
+      address: 'matic',
       decimals: 18,
       name: 'Polygon',
       symbol: 'MATIC',

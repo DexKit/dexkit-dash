@@ -18,7 +18,11 @@ export const useMulticallTokenBalances = (
       if (!account || !token_addresses) {
         return;
       }
-      const [, tb] = await getTokenBalances(token_addresses, account, getProvider());
+      const [, tb] = await getTokenBalances(
+        token_addresses,
+        account,
+        getProvider(),
+      );
       return token_addresses.map((a) => {
         return {
           address: a,

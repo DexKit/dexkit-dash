@@ -8,10 +8,12 @@ export interface CoinFeed {
 
 export interface GameGraph {
   id: string;
+  intId: string;
   type: string;
   status: string;
   duration: string;
   numCoins: string;
+  startsAt: string;
   numPlayers: string;
   currentPlayers: string;
   entry: string;
@@ -33,6 +35,7 @@ export interface PlayerGraph {
   totalThirdWinnedGames: string;
   totalSecondWinnedGames: string;
   totalEarned: string;
+  EarnedMinusSpent: string;
 }
 
 export interface ChampionMetadata {
@@ -44,6 +47,13 @@ export interface ChampionMetadata {
     value: string;
   }[];
 }
+
+export interface ChampionMetaItem {
+  id: string;
+  image: string;
+  name: string;
+}
+
 
 export interface CoinLeaguesChampion {
   id: string;

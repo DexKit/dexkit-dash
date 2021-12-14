@@ -9,17 +9,20 @@ import {
   Link,
 } from '@material-ui/core';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import {CremaTheme} from 'types/AppContextPropsType';
 
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
-import {truncateAddress} from 'utils/text';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {useWeb3} from 'hooks/useWeb3';
 interface TableItemProps {
   row: any;
+  isNFT: boolean;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -48,10 +51,11 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-const TableItem: React.FC<TableItemProps> = ({row}) => {
+const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
 
   const paymentTypeColor = useMemo(() => {
     switch (row.status) {
@@ -60,6 +64,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       case 'Started':
         return '#008148';
       case 'Waiting':
+        return '#C46D5E';
+      case 'Aborted':
         return '#C46D5E';
       default:
         return '#E2A72E';
@@ -98,7 +104,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           <Box p={2}>
             {`Claimed ${ethers.utils.formatEther(
               row.earnings[0].amount,
-            )} MATIC`}
+            )} ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`}
           </Box>
         );
       } else {
@@ -107,7 +113,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
             <Link
               color='inherit'
               component={RouterLink}
-              to={enterGameRoute(row.id)}>
+              to={enterGameRoute(row.intId)}>
               {'Not Claimed Yet.'}
             </Link>
           </Box>
@@ -115,7 +121,34 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
       }
     }
     return null;
-  }, [row.earnings, row.id, enterGameRoute]);
+  }, [row.earnings,  enterGameRoute, row.intId, chainId]);
+
+  const withdrawed = useMemo(() => {
+    if (row.status === 'Aborted') {
+      if (row.withdraws && row.withdraws[0]) {
+        return (
+          <Box p={2}>
+            {`Withdrawed at ${new Date(
+              Number(row.withdraws[0].at) * 1000,
+            ).toLocaleDateString()} `}
+          </Box>
+        );
+      } else {
+        return (
+          <Box p={2}>
+            <Link
+              color='inherit'
+              component={RouterLink}
+              to={enterGameRoute(row.intId)}>
+              {'Not Withdrawed Yet.'}
+            </Link>
+          </Box>
+        );
+      }
+    } else {
+      return null;
+    }
+  }, [row.withdraws, row.intId, enterGameRoute, row.status]);
 
   const createdDateFn = useMemo(() => {
     switch (row.status) {
@@ -131,8 +164,12 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         return `Created: ${new Date(
           Number(row.createdAt) * 1000,
         ).toLocaleDateString()}`;
+      case 'Aborted':
+        return `Aborted: ${new Date(
+          Number(row.abortedAt) * 1000,
+        ).toLocaleDateString()}`;
     }
-  }, [row.status, row.createdAt, row.endedAt]);
+  }, [row.status, row.createdAt, row.endedAt, row.abortedAt, row.startedAt]);
 
   const createdTimeFn = useMemo(() => {
     switch (row.status) {
@@ -144,11 +181,13 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         ).toLocaleTimeString()}`;
       case 'Waiting':
         return `${new Date(Number(row.createdAt) * 1000).toLocaleTimeString()}`;
+      case 'Aborted':
+        return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
     }
-  }, [row.status]);
+  }, [row.status, row.startedAt, row.endedAt, row.createdAt, row.abortedAt ]);
 
   if (isMobile) {
-    const summaryTitle = `Game ${truncateAddress(row.id)}`;
+    const summaryTitle = `Game ${row.intId}`;
     const summaryValue = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
@@ -159,7 +198,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
     const data = [
       {
         id: 'timestamp',
-        title: 'Created-Started-Ended',
+        title: 'Created-Started-Ended-Aborted',
         value: (
           <>
             {' '}
@@ -175,8 +214,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
           <Link
             color='inherit'
             component={RouterLink}
-            to={enterGameRoute(row.id)}>
-            {truncateAddress(row.id)}
+            to={enterGameRoute(row.intId)}>
+            {row.intId}
           </Link>
         ),
       },
@@ -225,8 +264,8 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         <Link
           color='inherit'
           component={RouterLink}
-          to={enterGameRoute(row.id)}>
-          {truncateAddress(row.id)}
+          to={enterGameRoute(row.intId)}>
+          {row.intId}
         </Link>
       </TableCell>
 
@@ -240,6 +279,7 @@ const TableItem: React.FC<TableItemProps> = ({row}) => {
         <Box display={'flex'} alignItems={'center'}>
           {place}
           {claimed}
+          {withdrawed}
         </Box>
       </TableCell>
       <TableCell align='left' className={classes.tableCell}></TableCell>

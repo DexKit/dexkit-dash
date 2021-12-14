@@ -154,7 +154,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    const {social, title, domain} = fields;
+    const {social} = fields;
     // const _editable = Boolean(title) && Boolean(domain);
     // if(!editable){
     //   setEditable(!_editable);
@@ -194,6 +194,7 @@ const GeneralForm: React.FC<Props> = (props) => {
     }, true);
     console.log('_valid', _valid);
     setValid(_valid);
+    /* eslint-disable */
   }, []);
 
   useEffect(() => {
