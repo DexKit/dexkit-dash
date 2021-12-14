@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Theme, makeStyles} from '@material-ui/core/styles';
+
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -16,7 +16,7 @@ const NFTRoom = () => {
 
   const handleBack = useCallback((ev: any) => {
     history.goBack();
-  }, []);
+  }, [history]);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
@@ -32,7 +32,7 @@ const NFTRoom = () => {
       </Grid>
       <Grid item xs={12}>
         <Box display={'flex'} alignItems={'center'} p={4}>
-          <img src={'/images/coinleagues/NFT_games_room.png'} style={{width:'100%'}} loading={'lazy'} />
+          <img src={'/images/coinleagues/NFT_games_room.png'} style={{width:'100%'}} loading={'lazy'} alt={"Waiting room"} />
         </Box>
       </Grid>
     </Grid>

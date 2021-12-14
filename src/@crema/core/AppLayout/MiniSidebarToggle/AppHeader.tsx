@@ -20,7 +20,6 @@ import clsx from 'clsx';
 
 import {
   Grid,
-  Avatar,
   useTheme,
   useMediaQuery,
   Container,
@@ -28,8 +27,6 @@ import {
   IconButton,
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
-
-import {Link as RouterLink} from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 

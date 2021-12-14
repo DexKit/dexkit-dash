@@ -89,7 +89,6 @@ interface IRow {
 interface Props {
   data?: IRow[];
   id: string;
-  type?: GameType;
   winner?: any;
   account?: string;
   type?: GameType;

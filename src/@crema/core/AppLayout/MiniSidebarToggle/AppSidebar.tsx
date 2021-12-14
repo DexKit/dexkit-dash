@@ -17,22 +17,17 @@ import {
   Grid,
   IconButton,
   Divider,
-  ButtonBase,
-  Avatar,
   Typography,
-  Link,
 } from '@material-ui/core';
-
-import {Link as RouterLink} from 'react-router-dom';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
-import {useProfileKittygotchi} from 'modules/Profile/hooks';
+
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {truncateAddress} from 'utils';
-import {useWeb3} from 'hooks/useWeb3';
+
 
 interface AppSidebarProps {
   variant?: string;

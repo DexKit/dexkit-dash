@@ -3,29 +3,13 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import {ReactComponent as MetamaskIcon} from 'assets/images/coinleagues/metamask.svg';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    item: {
-      marginBottom: '4px',
-      marginLeft: '2px',
-    },
-  }),
-);
 
 const HowToPlay = () => {
-  const classes = useStyles();
   const history = useHistory();
 
   const handleBack = useCallback((ev: any) => {

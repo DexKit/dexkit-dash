@@ -1,47 +1,43 @@
-import React, {useContext, useEffect, useState, useCallback} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+
 import {
-  Paper,
+
   Grid,
   Box,
   Typography,
-  Button,
+
   useTheme,
   useMediaQuery,
-  Link,
+
 } from '@material-ui/core';
 
-import {FavoritesEmptyImage} from 'shared/components/Icons';
 
-import {RouteComponentProps, useHistory} from 'react-router-dom';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import {useIntl} from 'react-intl';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
-import {useWeb3} from 'hooks/useWeb3';
+import { useIntl } from 'react-intl';
+
+import { useWeb3 } from 'hooks/useWeb3';
 import TotalBalance from 'shared/components/TotalBalance';
 import ErrorView from 'modules/Common/ErrorView';
 
-import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {Web3Wrapper} from '@0x/web3-wrapper';
-import {setDefaultAccount} from 'redux/_ui/actions';
-import {useDispatch} from 'react-redux';
-import {SupportedNetworkType} from 'types/blockchain';
+import { useAllBalance } from 'hooks/balance/useAllBalance';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { useDispatch } from 'react-redux';
+import { SupportedNetworkType } from 'types/blockchain';
 import AppContextPropsType from 'types/AppContextPropsType';
 import AppContext from '@crema/utility/AppContext';
-import {useStyles} from './index.style';
+import { useStyles } from './index.style';
 
 import TabContext from '@material-ui/lab/TabContext';
 import TabPanel from '@material-ui/lab/TabPanel';
 
-import {AssetTableTab} from './Tabs/AssetTableTab';
-import {TradeHistoryTab} from './Tabs/TradeHistoryTab';
-import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
-import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
-import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
-import FavoriteListItem from 'shared/components/FavoriteListItem';
+import { AssetTableTab } from './Tabs/AssetTableTab';
+import { TradeHistoryTab } from './Tabs/TradeHistoryTab';
+import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
+import { useFavoritesWithMarket } from 'hooks/useFavoritesWithMarket';
 import NFTTable from './components/NFTTable';
 
 type Params = {
@@ -52,32 +48,32 @@ type Props = RouteComponentProps<Params>;
 
 const WalletTabs: React.FC<Props> = (props) => {
   /* eslint-disable */
-  const {messages} = useIntl();
+  const { messages } = useIntl();
   const {
-    match: {params},
+    match: { params },
   } = props;
-  const {account: urlAccount} = params;
+  const { account: urlAccount } = params;
 
   const history = useHistory();
-  const {theme: cremaTheme} = useContext<AppContextPropsType>(AppContext);
+  const { theme: cremaTheme } = useContext<AppContextPropsType>(AppContext);
   const classes = useStyles(cremaTheme);
   const defaultAccount = useDefaultAccount();
-  const defaultLabel = useDefaultLabelAccount();
+
 
   const [hideBalance, setHideBalance] = useState(false);
 
   const dispatch = useDispatch();
-  const {account: web3Account} = useWeb3();
+  const { account: web3Account } = useWeb3();
   const account = defaultAccount || web3Account;
   const searchParams = new URLSearchParams(history.location.search);
   const [value, setValue] = React.useState(searchParams.get('tab') ?? 'assets');
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('tab', newValue);
-    history.push({search: searchParams.toString()});
+    history.push({ search: searchParams.toString() });
     setValue(newValue);
   };
-  const {loading, error, data, nftBalances, loadingUsd} =
+  const { loading, error, data, nftBalances, loadingUsd } =
     useAllBalance(defaultAccount);
 
   useEffect(() => {
@@ -115,7 +111,7 @@ const WalletTabs: React.FC<Props> = (props) => {
   return (
     <>
       <TabContext value={value}>
-        <Box pt={{xl: 4}}>
+        <Box pt={{ xl: 4 }}>
           <Box mb={4}>
             <Typography variant='h5'>Wallet</Typography>
           </Box>
@@ -142,7 +138,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         onChange={handleChange}
                         variant='standard'
                         TabIndicatorProps={{
-                          style: {display: 'none'},
+                          style: { display: 'none' },
                         }}
                         aria-label='wallet tabs'>
                         <CustomTab value='assets' label={'Assets'} />
@@ -172,7 +168,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-               {/* <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <Grid
