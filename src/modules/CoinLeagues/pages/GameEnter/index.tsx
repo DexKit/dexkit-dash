@@ -128,7 +128,7 @@ function GameEnter(props: Props) {
   const {createNotification} = useNotifications();
 
   const {id} = params;
-  const {game, gameQuery, refetch, onJoinGameCallback, winner} =
+  const {game, gameQuery, refetch, onJoinGameCallback, winner, addressQuery} =
     useCoinLeagues(id);
   const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -327,7 +327,7 @@ function GameEnter(props: Props) {
     ],
   );
 
-  const isLoading = gameQuery.isLoading;
+  const isLoading = gameQuery.isLoading || addressQuery.isLoading;
   const started = game?.started;
   const finished =  game?.finished;
   const aborted = game?.aborted;
@@ -585,10 +585,11 @@ function GameEnter(props: Props) {
         </Grid>
       */}
 
-      {!player &&
+      {game && !player &&
         !isLoading &&
         !gameFull &&
         !aborted &&
+        !started &&
         IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
           <>
             <Grid item xs={12} md={6} alignContent='space-around'>
@@ -698,7 +699,7 @@ function GameEnter(props: Props) {
           </>
         )}
 
-      {!player &&
+      { game && !player &&
         !isLoading &&
         !gameFull &&
         !aborted &&
@@ -833,7 +834,7 @@ function GameEnter(props: Props) {
             <Grid item xs={12}>
               <PlayersTableSkeleton players={5} />
             </Grid>
-            {!gameFull && !started && (
+            {game && !gameFull && !started && (
               <Grid item xs={12}>
                 <WaitingPlayers />
               </Grid>
