@@ -34,9 +34,9 @@ import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {Alert} from '@material-ui/lab';
 
 interface TransactionConfirmDialogProps extends DialogProps {
-  data?: any;
-  onCancel?: () => void;
-  onConfirm?: (data: any) => void;
+  data?: any[];
+  onCancel?: (txIndex: number) => void;
+  onConfirm?: (data: any, txIndex: number) => void;
 }
 
 interface ValuesType {
@@ -54,13 +54,19 @@ export const TransactionConfirmDialog = (
   const [isInsufficientFunds, setIsInsufficientFunds] = useState(false);
 
   const [values, setValues] = useState<ValuesType>({});
+  const [txIndex, setTxIndex] = useState<number>(0);
+ 
 
   const handleCancel = useCallback(() => {
     setIsInsufficientFunds(false);
     if (onCancel) {
-      onCancel();
+      onCancel(txIndex);
+      setTxIndex(txIndex+1);
     }
-  }, [onCancel]);
+    if(data && txIndex + 1 >= data?.length){
+      setTxIndex(0);
+    }
+  }, [onCancel, txIndex, data]);
 
   const {web3State, getProvider, chainId, account} = useWeb3();
 
@@ -79,9 +85,10 @@ export const TransactionConfirmDialog = (
   // }, [data]);
 
   const handleConfirm = useCallback(() => {
-    if (onConfirm) {
-      let dataCopy = {...data};
-      let params = {...data.params[0]};
+    if (onConfirm && data && data.length) {
+      let txData = data[txIndex];
+      let dataCopy = {...txData};
+      let params = {...txData.params[0]};
 
       params.gas = values.gasLimit?.toHexString();
 
@@ -95,9 +102,13 @@ export const TransactionConfirmDialog = (
 
       dataCopy.params[0] = params;
 
-      onConfirm(dataCopy);
+      onConfirm(dataCopy, txIndex);
+      setTxIndex(txIndex+1);
+      if(txIndex + 1 >= data.length){
+        setTxIndex(0);
+      }
     }
-  }, [onConfirm, data, values, chainId]);
+  }, [onConfirm, data, values, chainId, txIndex]);
 
   const network = useNetwork();
 
@@ -139,11 +150,12 @@ export const TransactionConfirmDialog = (
   useEffect(() => {
     const provider = getProvider();
 
-    if (web3State === Web3State.Done && data && props.open) {
+    if (web3State === Web3State.Done && data && data.length && props.open) {
       if (provider) {
-        if (data.params.length > 0) {
+        let txData = data[txIndex];
+        if (txData && txData.params.length > 0) {
           (async () => {
-            let params = data.params[0];
+            let params = txData.params[0];
 
             let pr = new ethers.providers.Web3Provider(provider);
             let vals: ValuesType = {};
@@ -176,7 +188,7 @@ export const TransactionConfirmDialog = (
         }
       }
     }
-  }, [web3State, getProvider, data, chainId, props.open]);
+  }, [web3State, getProvider, data, chainId, props.open, txIndex]);
 
   const gasCost = useCallback(
     (values: any) => {
@@ -219,7 +231,7 @@ export const TransactionConfirmDialog = (
               </Typography>
             </Box>
             <Typography variant='body1' style={{fontWeight: 500}}>
-              Confirm transaction
+              Confirm transaction { (data && data?.length > 1) ?  `${txIndex+1}/${data?.length}`  : ''}
             </Typography>
           </Box>
           <IconButton onClick={handleCancel} size='small'>

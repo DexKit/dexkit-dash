@@ -1,7 +1,7 @@
-import React, {useCallback, useContext} from 'react';
+import React, { useCallback, useContext } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
-import {ContentView} from '../../../index';
+import { ContentView } from '../../../index';
 import {
   Grid,
   Box,
@@ -19,28 +19,28 @@ import useStyles from './index.style';
 import AppFixedFooter from './AppFixedFooter';
 import AppContext from '../../../utility/AppContext';
 import clsx from 'clsx';
-import {LayoutType} from '../../../../shared/constants/AppEnums';
+import { LayoutType } from '../../../../shared/constants/AppEnums';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
-import {BottomDrawer} from 'shared/components/BottomDrawer';
+import { BottomDrawer } from 'shared/components/BottomDrawer';
 import Accounts from 'shared/components/Accounts';
 import CloseIcon from '@material-ui/icons/Close';
 
-import {ReactComponent as WalletSearchIcon} from 'assets/images/icons/wallet-search.svg';
-import {useAccountsModal} from 'hooks/useAccountsModal';
-import {useWelcomeModal} from 'hooks/useWelcomeModal';
-import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDialog';
+import { ReactComponent as WalletSearchIcon } from 'assets/images/icons/wallet-search.svg';
+import { useAccountsModal } from 'hooks/useAccountsModal';
+import { useWelcomeModal } from 'hooks/useWelcomeModal';
+import { TransactionConfirmDialog } from 'shared/components/TransactionConfirmDialog';
 
 import WelcomeDialog from 'shared/components/WelcomeDialog';
-import {useAppGlobalState} from 'hooks/useGlobalState';
+import { useAppGlobalState } from 'hooks/useGlobalState';
 
 interface MiniSidebarToggleProps {
   props?: any;
 }
 
 const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
-  const {footer, themeStyle, layoutType, footerType} =
+  const { footer, themeStyle, layoutType, footerType } =
     useContext<AppContextPropsType>(AppContext);
-  const classes = useStyles({footer, themeStyle});
+  const classes = useStyles({ footer, themeStyle });
 
   const accountsModal = useAccountsModal();
   const welcomeModal = useWelcomeModal();

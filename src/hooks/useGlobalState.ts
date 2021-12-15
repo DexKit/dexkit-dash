@@ -5,26 +5,26 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import {ProviderWrapper} from 'types/ProviderWrapper';
+import { ProviderWrapper } from 'types/ProviderWrapper';
 
 import Web3 from 'web3';
 
-import {getProvider as getWeb3Provider} from 'services/web3modal';
+import { getProvider as getWeb3Provider } from 'services/web3modal';
 import {
   getCachedMagicNetwork,
   getMagicRPCProvider,
   isMagicProvider,
 } from 'services/magic';
 import EventEmitter from 'events';
-import {Web3State} from 'types/blockchain';
-import {providers} from 'ethers';
+import { Web3State } from 'types/blockchain';
+import { providers } from 'ethers';
 
 export interface GlobalState {
   showTransactionModal: boolean;
   handleShowTransactionModal: () => void;
   handleCloseTransactionModal: () => void;
-  handleTransactionConfirm?: (data: any) => void;
-  handleTransactionCancel?: () => void;
+  handleTransactionConfirm?: (data: any, txIndex: number) => void;
+  handleTransactionCancel?: (txIndex: number) => void;
   handleChangeWeb3State: (web3State: Web3State) => void;
   data?: any;
   getProvider(): any;
@@ -36,7 +36,7 @@ export function useGlobalState(): GlobalState {
   const [web3State, setWeb3State] = useState<Web3State>();
 
   const [showTransactionModal, setShowTransactionModal] = useState(false);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>([]);
 
   const providerRef = useRef<any>(getWeb3Provider());
   const eventEmitterRef = useRef<EventEmitter>(new EventEmitter());
@@ -49,26 +49,34 @@ export function useGlobalState(): GlobalState {
     eventEmitterRef.current?.removeAllListeners();
 
     eventEmitterRef.current?.on('request', (args: any) => {
-      setData(args);
+      const newData = [...data];
+      newData.push(args);
+      setData(newData);
       handleShowTransactionModal();
     });
-  }, [handleShowTransactionModal]);
+  }, [handleShowTransactionModal, data]);
 
   const handleCloseTransactionModal = useCallback(() => {
     setShowTransactionModal(false);
-    setData(undefined);
+    setData([]);
     resetEvents();
   }, [resetEvents]);
 
-  const handleTransactionConfirm = useCallback((data: any) => {
-    eventEmitterRef.current?.emit('confirm', data);
-    setShowTransactionModal(false);
-  }, []);
+  const handleTransactionConfirm = useCallback((txData: any, txIndex: number) => {
+    eventEmitterRef.current?.emit('confirm', txData);
+    if (txIndex + 1 >= data.length) {
+      setShowTransactionModal(false);
+      setData([]);
+    }
+  }, [data]);
 
-  const handleTransactionCancel = useCallback(() => {
+  const handleTransactionCancel = useCallback((txIndex: number) => {
     eventEmitterRef.current?.emit('cancel');
-    setShowTransactionModal(false);
-  }, []);
+    if (txIndex + 1 >= data.length) {
+      setShowTransactionModal(false);
+      setData([]);
+    }
+  }, [data]);
 
   const getProvider = useCallback((): any => {
     return providerRef.current;
@@ -84,7 +92,7 @@ export function useGlobalState(): GlobalState {
 
   /* eslint-disable */
   useEffect(() => {
-    if (web3State === Web3State.Done) {
+    if (web3State === Web3State.Done && data) {
       if (isMagicProvider()) {
         const magicNetwork = getCachedMagicNetwork();
         providerRef.current = new ProviderWrapper(
@@ -102,7 +110,7 @@ export function useGlobalState(): GlobalState {
         emmiter.removeAllListeners();
       };
     }
-  }, [web3State]);
+  }, [web3State, data]);
 
   // hack to watch the state without hook
   const handleChangeWeb3State = useCallback((state: Web3State) => {
@@ -124,12 +132,12 @@ export function useGlobalState(): GlobalState {
 }
 
 export const GlobalStateContext = React.createContext<GlobalState>({
-  getProvider: () => {},
-  getEthersProvider: () => {},
-  handleCloseTransactionModal: () => {},
-  handleShowTransactionModal: () => {},
+  getProvider: () => { },
+  getEthersProvider: () => { },
+  handleCloseTransactionModal: () => { },
+  handleShowTransactionModal: () => { },
   showTransactionModal: false,
-  handleChangeWeb3State: (web3State: Web3State) => {},
+  handleChangeWeb3State: (web3State: Web3State) => { },
   getWeb3: () => {
     return null;
   },
