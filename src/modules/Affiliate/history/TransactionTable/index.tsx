@@ -10,6 +10,7 @@ import TableItem from './TableItem';
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import { CremaTheme } from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableResponsiveMaterial: {

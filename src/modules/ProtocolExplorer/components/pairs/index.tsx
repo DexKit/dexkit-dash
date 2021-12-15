@@ -1,21 +1,19 @@
-import React, {useEffect, useState} from 'react';
-
-import {useIntl} from 'react-intl';
+import React, { useEffect, useState } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import {PairAnalytics} from '../pairs-analytics';
-import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import {useTokenPairs} from 'hooks/protocolExplorer/useTokenPairs';
-import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
+import { PairAnalytics } from '../pairs-analytics';
+import { EthereumNetwork, EXCHANGE } from 'shared/constants/AppEnums';
+import { useTokenPairs } from 'hooks/protocolExplorer/useTokenPairs';
+import { GetTokenPairs_ethereum_dexTrades } from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Paper from '@material-ui/core/Paper';
-import {useStyles} from './index.style';
+import { useStyles } from './index.style';
 import HistoryTables from '../history';
 import Box from '@material-ui/core/Box';
-import {IS_AMM} from 'utils';
-import {PairAnalyticsAMM} from '../pairs-analytics-amm';
+import { IS_AMM } from 'utils';
+import { PairAnalyticsAMM } from '../pairs-analytics-amm';
 import TokenPairCard from 'shared/components/TokenPairCard';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
@@ -32,7 +30,7 @@ type PairItem = {
 };
 
 const PairItem = (props: PairItem) => {
-  const {loading, item, onClick} = props;
+  const { loading, item, onClick } = props;
   return loading ? (
     <Skeleton variant='rect' height={370} />
   ) : (
@@ -47,12 +45,11 @@ const PairItem = (props: PairItem) => {
 };
 
 export const Pairs = (props: Props) => {
-  const {baseAddress, exchange, networkName} = props;
+  const { baseAddress, exchange, networkName } = props;
   const [selectedPair, setSelectedPair] =
     useState<GetTokenPairs_ethereum_dexTrades>();
-  const {data} = useTokenPairs({exchange, baseAddress, networkName});
+  const { data } = useTokenPairs({ exchange, baseAddress, networkName });
   const classes = useStyles();
-  const {messages} = useIntl();
 
   useEffect(() => {
     if (!selectedPair && data && data.length) {
@@ -64,7 +61,7 @@ export const Pairs = (props: Props) => {
       data &&
       data.length &&
       selectedPair.baseCurrency?.address?.toLowerCase() !==
-        baseAddress.toLowerCase()
+      baseAddress.toLowerCase()
     ) {
       setSelectedPair(data[0]);
     }
@@ -99,10 +96,10 @@ export const Pairs = (props: Props) => {
         </Grid>
         <Grid item xs={12}>
           {selectedPair &&
-          IS_AMM(
-            selectedPair?.exchange?.fullName as EXCHANGE,
-            selectedPair?.protocol,
-          ) ? (
+            IS_AMM(
+              selectedPair?.exchange?.fullName as EXCHANGE,
+              selectedPair?.protocol,
+            ) ? (
             <>
               <PairAnalyticsAMM
                 exchange={selectedPair?.exchange?.fullName as EXCHANGE}

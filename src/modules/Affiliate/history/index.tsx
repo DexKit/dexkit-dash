@@ -1,5 +1,4 @@
 import React from 'react';
-import {useIntl} from 'react-intl';
 import TransactionTable from './TransactionTable';
 import {Box, makeStyles, Toolbar, Typography} from '@material-ui/core';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -31,7 +30,6 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const AffiliateHistory: React.FC<Props> = (props: Props) => {
-  const {messages} = useIntl();
 
   const classes = useStyles();
 

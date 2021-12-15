@@ -1,6 +1,5 @@
 import React, {useCallback, useState, useMemo} from 'react';
 
-import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   useCoinLeagues,

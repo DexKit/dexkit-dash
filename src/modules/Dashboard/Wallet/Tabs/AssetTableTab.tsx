@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {useIntl} from 'react-intl';
+
 import {Box, Typography, Button} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
@@ -29,7 +29,6 @@ export const AssetTableTab = (props: Props) => {
 
   const {isBalanceVisible} = useIsBalanceVisible();
   const transak = useTransak({});
-  const {messages} = useIntl();
 
   /* eslint-disable */
   const handleTransak = useCallback(() => {

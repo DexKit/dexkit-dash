@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 
-import {useIntl} from 'react-intl';
 import {
   Box,
   Typography,
@@ -129,7 +128,6 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
 
   const classes = useStyles();
 
-  const {messages} = useIntl();
 
   const theme = useTheme();
 

@@ -1,11 +1,11 @@
-import {BigNumber} from '@ethersproject/bignumber';
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
-import {useQuery} from 'react-query';
-import {getTokenBalances} from 'services/multicall';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
-import {Token} from 'types/app';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from '@ethersproject/bignumber';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { useQuery } from 'react-query';
+import { getTokenBalances } from 'services/multicall';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { DEXKIT, BITTOKEN } from 'shared/constants/tokens';
+import { Token } from 'types/app';
+import { ChainId } from 'types/blockchain';
 import {
   BITTOKEN_MULTIPLIER_HOLDING,
   DEXKIT_MULTIPLIER_HOLDING,
@@ -45,17 +45,5 @@ export const useHoldingTokenBalances = (account?: string) => {
     },
   );
 
-    const [, tb] = await getTokenBalances(
-      tokens.map((t) => t.address),
-      account,
-      networkProvider,
-    );
-    return tokens.map((t) => {
-      return {
-        token: t,
-        balance: tb[t.address],
-        isHoldingMultiplier: tb[t.address].gte(t.multiplierHolding),
-      };
-    });
-  });
+  return tokenBalancesQuery;
 };

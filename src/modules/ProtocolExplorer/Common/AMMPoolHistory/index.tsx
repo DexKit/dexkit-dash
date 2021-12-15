@@ -1,5 +1,4 @@
 import React from 'react';
-import {useIntl} from 'react-intl';
 // import {MintBurn} from 'types/app';
 import {useAMMPoolHistory} from 'hooks/protocolExplorer/useAMMPoolHistory';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
@@ -24,7 +23,6 @@ interface Props {
 
 const AMMPoolHistory: React.FC<Props> = (props: Props) => {
   const {networkName, exchange, address, baseCurrency, quoteCurrency} = props;
-  const {messages} = useIntl();
   const classes = useStyles();
 
   const {

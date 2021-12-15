@@ -1,11 +1,9 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
-
 import {Button, CircularProgress, Typography} from '@material-ui/core';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
-// import {useStyles} from './index.style';
+
 
 interface Props {
   currentStepIndex: number;
@@ -13,8 +11,7 @@ interface Props {
 
 const LoadingStep: React.FC<Props> = (props) => {
   const {currentStepIndex} = props;
-  const {messages} = useIntl();
-  // const classes = useStyles();
+
 
   return (
     <>

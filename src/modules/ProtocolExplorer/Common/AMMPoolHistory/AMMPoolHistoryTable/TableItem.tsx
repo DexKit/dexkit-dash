@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react';
-import {CremaTheme} from 'types/AppContextPropsType';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import React, { useMemo } from 'react';
+
+import { EXCHANGE, EthereumNetwork } from 'shared/constants/AppEnums';
 import {
   Box,
   TableCell,
@@ -12,10 +12,10 @@ import {
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
-import {MintBurn} from 'types/app';
+import { MintBurn } from 'types/app';
 import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
-import {ViewTx} from 'shared/components/ViewTx';
-import {useIntl} from 'react-intl';
+import { ViewTx } from 'shared/components/ViewTx';
+import { useIntl } from 'react-intl';
 
 interface Props {
   row: MintBurn;
@@ -52,9 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
+const TableItem: React.FC<Props> = ({ row, networkName, exchange }) => {
   const classes = useStyles();
-  const {messages} = useIntl();
+  const { messages } = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const paymentTypeColor = useMemo(() => {
     switch (row.type) {
@@ -134,22 +134,20 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
   if (isMobile) {
     const summaryTitle = (
       <Chip
-        style={{backgroundColor: paymentTypeColor, color: 'white'}}
+        style={{ backgroundColor: paymentTypeColor, color: 'white' }}
         label={row.type}
       />
     );
-    const summaryValue = `${row.amount0.toFixed(2)} ${
-      row.baseCurrency?.symbol
-    } ${messages['app.protocolExplorer.and']} ${row.amount1.toFixed(2)} ${
-      row.quoteCurrency?.symbol
-    }`;
+    const summaryValue = `${row.amount0.toFixed(2)} ${row.baseCurrency?.symbol
+      } ${messages['app.protocolExplorer.and']} ${row.amount1.toFixed(2)} ${row.quoteCurrency?.symbol
+      }`;
     const data = [
       {
         id: 'type',
         title: <IntlMessages id='app.protocolExplorer.type' />,
         value: (
           <Chip
-            style={{backgroundColor: paymentTypeColor, color: 'white'}}
+            style={{ backgroundColor: paymentTypeColor, color: 'white' }}
             label={row.type}
           />
         ),
@@ -211,7 +209,7 @@ const TableItem: React.FC<Props> = ({row, networkName, exchange}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Chip
-          style={{backgroundColor: paymentTypeColor, color: 'white'}}
+          style={{ backgroundColor: paymentTypeColor, color: 'white' }}
           label={row.type}
         />
       </TableCell>

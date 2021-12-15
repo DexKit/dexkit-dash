@@ -1,7 +1,6 @@
 import React, {useMemo} from 'react';
 
 import {useIntl} from 'react-intl';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {
   Box,
   TableCell,

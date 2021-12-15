@@ -15,8 +15,6 @@ import {
 
 import {ethers} from 'ethers';
 
-import IntlMessages from '@crema/utility/IntlMessages';
-
 import moment from 'moment';
 
 import {Alert, Skeleton} from '@material-ui/lab';

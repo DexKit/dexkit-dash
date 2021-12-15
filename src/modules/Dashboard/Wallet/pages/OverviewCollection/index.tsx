@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useIntl } from 'react-intl';
+
 import {
   Grid,
   Box,
@@ -29,7 +29,7 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
     match: { params },
   } = props;
   const { address, networkName } = params;
-  const { messages } = useIntl();
+
 
   const tokenIdsQuery = useCollectionIds(address, networkName);
 

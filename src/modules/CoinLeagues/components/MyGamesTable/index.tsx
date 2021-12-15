@@ -1,28 +1,26 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {useIntl} from 'react-intl';
-import IntlMessages from '@crema/utility/IntlMessages';
-import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useIntl } from 'react-intl';
+import { Box, Typography, Grid, Chip, Badge } from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
-import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
+import { useMyGames } from 'modules/CoinLeagues/hooks/useMyGames';
 
 import {
   CoinLeagueGameStatus,
   FilterPlayerGame,
 } from 'modules/CoinLeagues/constants/enums';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
-import {useIntl} from 'react-intl';
+import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 
-import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
-import {useToggler} from 'hooks/useToggler';
+import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import { useToggler } from 'hooks/useToggler';
 import GameFilterDrawer from '../GameFilterDrawer';
-import {useMobile} from 'hooks/useMobile';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import { useMobile } from 'hooks/useMobile';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 
-const MyGamesTable = ({isNFT = false}) => {
+const MyGamesTable = ({ isNFT = false }) => {
   const account = useDefaultAccount();
   const [status, setStatus] = useState<CoinLeagueGameStatus>(
     CoinLeagueGameStatus.All,
@@ -31,7 +29,7 @@ const MyGamesTable = ({isNFT = false}) => {
 
 
   const filtersState = useGamesFilters();
- const {messages} = useIntl();
+  const { messages } = useIntl();
   const {
     query,
     currentPage,
@@ -105,7 +103,7 @@ const MyGamesTable = ({isNFT = false}) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon style={{ color: '#fff' }} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -182,7 +180,7 @@ const MyGamesTable = ({isNFT = false}) => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon style={{ color: '#fff' }} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>

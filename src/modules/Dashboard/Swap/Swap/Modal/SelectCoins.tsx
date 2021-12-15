@@ -7,7 +7,7 @@ import {useTheme} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import {DialogProps, makeStyles} from '@material-ui/core';
+import {DialogProps} from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
@@ -102,7 +102,7 @@ export const SelectCoinsDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
+        {filteredCoins.length === 0 ? (
           <Typography variant='body1'>
             <IntlMessages id='app.dashboard.noCoinsFound' />
           </Typography>

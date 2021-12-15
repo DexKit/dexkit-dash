@@ -1,6 +1,4 @@
 import React, {useMemo} from 'react';
-
-import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {Box, Grid, makeStyles, Typography, useTheme} from '@material-ui/core';
@@ -64,7 +62,6 @@ export const ViewCoinListItem = (props: Props) => {
   const {usdFormatter} = useUSDFormatter();
   const theme = useTheme();
   const classes = useStyles();
-  const {messages} = useIntl();
 
   /* eslint-disable */
   const priceStart = useMemo(() => {

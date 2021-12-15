@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 
-import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
@@ -46,7 +45,6 @@ const MyGames = () => {
   const history = useHistory();
   const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const {messages} = useIntl();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
   useDiscord();

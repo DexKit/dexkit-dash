@@ -1,24 +1,21 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {useIntl} from 'react-intl';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import {useHistory} from 'react-router';
-import {getMagic, getCachedMagicNetwork} from 'services/magic';
+import { useMagicProvider } from 'hooks/provider/useMagicProvider';
+import { useHistory } from 'react-router';
+import { getMagic, getCachedMagicNetwork } from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
-import {useWelcomeModal} from 'hooks/useWelcomeModal';
+import { useWelcomeModal } from 'hooks/useWelcomeModal';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const MagicCallbackSocial = () => {
-  const {onConnectMagic} = useMagicProvider();
-  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
+  const { onConnectMagic } = useMagicProvider();
+  const { loginBackRoute, onSetLoginBackRoute } = useWelcomeModal();
   const history = useHistory();
-
-  const {messages} = useIntl();
 
   //TODO: colocar loading nos callbacks
   /* eslint-disable */
@@ -52,7 +49,7 @@ const MagicCallbackSocial = () => {
         <Grid item>
           <img
             src={MoneyWalletIcon}
-            style={{height: 150, width: 150}}
+            style={{ height: 150, width: 150 }}
             alt='Wallet'
           />
         </Grid>

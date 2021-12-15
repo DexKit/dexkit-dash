@@ -6,8 +6,6 @@ import React, {
   useState,
 } from 'react';
 
-import {useIntl} from 'react-intl';
-
 import {
   Link as RouterLink,
   RouteComponentProps,
@@ -85,7 +83,6 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const theme = useTheme();
   const classes = useStyles();
-  const {messages} = useIntl();
 
   const {
     isFavorite,

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
-
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import Box from '@material-ui/core/Box';
@@ -41,7 +39,6 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
-  const {messages} = useIntl();
 
   return (
     <>

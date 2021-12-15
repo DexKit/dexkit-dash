@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
-
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import {
@@ -42,7 +40,6 @@ const TokenOrdersTable: React.FC<Props> = ({
   onChangeRowsPerPage,
 }) => {
   const classes = useStyles();
-  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   return (

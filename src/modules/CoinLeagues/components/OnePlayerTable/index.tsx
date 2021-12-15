@@ -235,7 +235,7 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [id, account, refetch, onClaimCallback, chainId, createNotification],
+    [id, account, refetch, onClaimCallback, chainId, createNotification, messages],
   );
 
   const onWithdrawGame = useCallback(

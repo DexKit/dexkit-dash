@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {useIntl} from 'react-intl';
-
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -33,7 +31,6 @@ interface Props {
 
 function AffiliateTotalCard(props: Props): JSX.Element {
   const classes = useStyles();
-  const {messages} = useIntl();
   const {usdFormatter} = useUSDFormatter();
 
   return (

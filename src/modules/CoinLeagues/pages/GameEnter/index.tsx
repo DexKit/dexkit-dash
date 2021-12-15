@@ -328,6 +328,7 @@ function GameEnter(props: Props) {
       affiliateField,
       onJoinGameCallback,
       createNotification,
+      messages
     ],
   );
 
