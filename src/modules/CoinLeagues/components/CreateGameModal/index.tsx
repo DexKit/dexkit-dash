@@ -150,8 +150,8 @@ const CreateGameModal = (props: Props) => {
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
             createNotification({
-              title: `Created Game ${isNFTGame && 'on NFT room'}`,
-              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame && 'on NFT room'}`,
+              title: `Created Game ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId, tx),
               urlCaption: 'View transaction',
