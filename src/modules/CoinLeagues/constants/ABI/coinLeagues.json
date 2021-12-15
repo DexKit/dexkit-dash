@@ -27,7 +27,7 @@
         "type": "uint256"
       },
       {
-        "internalType": "enum CoinLeagues.GameType",
+        "internalType": "enum CoinLeaguesV2.GameType",
         "name": "_game_type",
         "type": "uint8"
       },
@@ -39,6 +39,11 @@
       {
         "internalType": "uint256",
         "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_start_timestamp",
         "type": "uint256"
       }
     ],
@@ -109,6 +114,12 @@
         "indexed": false,
         "internalType": "address",
         "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "affiliate",
         "type": "address"
       }
     ],
@@ -183,6 +194,25 @@
       }
     ],
     "name": "WinnedMultiple",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "Withdrawed",
     "type": "event"
   },
   {
@@ -271,7 +301,7 @@
     "name": "game",
     "outputs": [
       {
-        "internalType": "enum CoinLeagues.GameType",
+        "internalType": "enum CoinLeaguesV2.GameType",
         "name": "game_type",
         "type": "uint8"
       },
@@ -369,9 +399,14 @@
             "internalType": "int256",
             "name": "score",
             "type": "int256"
+          },
+          {
+            "internalType": "address",
+            "name": "affiliate",
+            "type": "address"
           }
         ],
-        "internalType": "struct CoinLeagues.Player[]",
+        "internalType": "struct CoinLeaguesV2.Player[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -428,6 +463,11 @@
       {
         "internalType": "address",
         "name": "captain_coin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "affiliate",
         "type": "address"
       },
       {
@@ -502,6 +542,11 @@
         "internalType": "int256",
         "name": "score",
         "type": "int256"
+      },
+      {
+        "internalType": "address",
+        "name": "affiliate",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -582,7 +627,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",

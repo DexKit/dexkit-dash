@@ -27,7 +27,7 @@ export const KITTYGOTCHI = {
 };
 
 export enum KittygotchiTraitType {
-  ACESSOIRES,
+  ACCESSORIES,
   BODY,
   CLOTHES,
   EARS,
@@ -36,134 +36,163 @@ export enum KittygotchiTraitType {
   NOSE,
 }
 
-export const KittygotchiTraits = {
-  [KittygotchiTraitType.ACESSOIRES]: [
+export const KittygotchiTraits: any = {
+  [KittygotchiTraitType.ACCESSORIES]: [
     {
-      value: 'flower',
+      value: 'piercing',
+      path: 'piercing',
       holding: 20,
     },
     {
       value: 'hat',
+      path: 'hat',
       holding: 50,
     },
     {
       value: 'headphones',
+      path: 'headphones',
       holding: 100,
     },
     {
-      value: 'piercing',
+      value: 'flower',
+      path: 'flower',
       holding: 500,
     },
     {
       value: 'punk-hair',
+      path: 'punk-hair',
       holding: 5000,
     },
   ],
   [KittygotchiTraitType.BODY]: [
     {
       value: 'body',
+      path: 'body',
       holding: 0,
     },
   ],
   [KittygotchiTraitType.CLOTHES]: [
     {
-      value: 'Dance',
+      value: 'dance',
+      path: 'dance',
       holding: 20,
     },
     {
-      value: 'Job',
+      value: 'job',
+      path: 'job',
       holding: 50,
     },
     {
       value: 'love-date',
+      path: 'love-date',
       holding: 100,
     },
     {
       value: 'school',
+      path: 'school',
       holding: 500,
     },
     {
       value: 'tour',
+      path: 'tour',
       holding: 5000,
     },
   ],
   [KittygotchiTraitType.EARS]: [
     {
-      value: 'fun',
+      value: 'pointed',
+      path: 'pointed',
       holding: 20,
     },
     {
-      value: 'pointed',
+      value: 'fun',
+      path: 'fun',
       holding: 50,
     },
     {
       value: 'rounded',
+      path: 'rounded',
       holding: 500,
     },
   ],
   [KittygotchiTraitType.EYES]: [
     {
-      value: 'canoe',
+      value: 'star',
+      path: 'star',
       holding: 20,
     },
     {
       value: 'circle',
+      path: 'circle',
       holding: 50,
     },
     {
       value: 'eyeliner',
+      path: 'eyeliner',
       holding: 100,
     },
     {
       value: 'flash',
+      path: 'flash',
       holding: 500,
     },
     {
-      value: 'star',
+      value: 'canoe',
+      path: 'canoe',
       holding: 5000,
     },
   ],
   [KittygotchiTraitType.MOUTH]: [
     {
-      value: 'angry',
+      value: 'cute',
+      path: 'cute',
       holding: 20,
     },
     {
-      value: 'cute',
+      value: 'angry',
+      path: 'angry',
       holding: 50,
     },
     {
       value: 'happy',
+      path: 'happy',
       holding: 100,
     },
     {
       value: 'over-the-moon',
+      path: 'over-the-moon',
       holding: 500,
     },
     {
       value: 'sad',
+      path: 'sad',
       holding: 5000,
     },
   ],
   [KittygotchiTraitType.NOSE]: [
     {
-      value: 'ellipse',
+      value: 'fan',
+      path: 'fan',
       holding: 20,
     },
     {
-      value: 'fan',
+      value: 'ellipse',
+      path: 'ellipse',
       holding: 50,
     },
     {
       value: 'pug-nose',
+      path: 'pug-nose',
       holding: 100,
     },
     {
       value: 'rhombus',
+      path: 'rhombus',
       holding: 500,
     },
     {
       value: 'small',
+      path: 'small',
       holding: 5000,
     },
   ],
@@ -179,8 +208,8 @@ export const IMAGE_PATHS: any = {
   'accessories/headphones.png': require('assets/images/kittygotchi/accessories/headphones.png'),
   'accessories/punk-hair.png': require('assets/images/kittygotchi/accessories/punk-hair.png'),
   'accessories/piercing.png': require('assets/images/kittygotchi/accessories/piercing.png'),
-  'clothes/clothes.png': require('assets/images/kittygotchi/clothes/dance.png'),
   'clothes/job.png': require('assets/images/kittygotchi/clothes/job.png'),
+  'clothes/dance.png': require('assets/images/kittygotchi/clothes/dance.png'),
   'clothes/love-date.png': require('assets/images/kittygotchi/clothes/love-date.png'),
   'clothes/school.png': require('assets/images/kittygotchi/clothes/school.png'),
   'clothes/tour.png': require('assets/images/kittygotchi/clothes/tour.png'),
@@ -188,16 +217,51 @@ export const IMAGE_PATHS: any = {
   'ears/pointed.png': require('assets/images/kittygotchi/ears/pointed.png'),
   'ears/rounded.png': require('assets/images/kittygotchi/ears/rounded.png'),
   'eyes/circle.png': require('assets/images/kittygotchi/eyes/circle.png'),
-  'eyes/canoe.png': require('assets/images/kittygotchi/eyes/circle.png'),
+  'eyes/canoe.png': require('assets/images/kittygotchi/eyes/canoe.png'),
+  'eyes/eyeliner.png': require('assets/images/kittygotchi/eyes/eyeliner.png'),
   'eyes/flash.png': require('assets/images/kittygotchi/eyes/flash.png'),
   'eyes/star.png': require('assets/images/kittygotchi/eyes/star.png'),
   'mouth/angry.png': require('assets/images/kittygotchi/mouth/angry.png'),
   'mouth/cute.png': require('assets/images/kittygotchi/mouth/cute.png'),
   'mouth/happy.png': require('assets/images/kittygotchi/mouth/happy.png'),
   'mouth/over-the-moon.png': require('assets/images/kittygotchi/mouth/over-the-moon.png'),
+  'mouth/sad.png': require('assets/images/kittygotchi/mouth/sad.png'),
   'nose/ellipse.png': require('assets/images/kittygotchi/nose/ellipse.png'),
   'nose/fan.png': require('assets/images/kittygotchi/nose/fan.png'),
   'nose/pug-nose.png': require('assets/images/kittygotchi/nose/pug-nose.png'),
   'nose/rhombus.png': require('assets/images/kittygotchi/nose/rhombus.png'),
   'nose/small.png': require('assets/images/kittygotchi/nose/small.png'),
 };
+
+export const IMAGE_PATHS_ICONS: any = {
+  'accessories/flower.png': require('assets/images/kittygotchi/icons/accessories/flower.png'),
+  'accessories/hat.png': require('assets/images/kittygotchi/icons/accessories/hat.png'),
+  'accessories/headphones.png': require('assets/images/kittygotchi/icons/accessories/headphones.png'),
+  'accessories/punk-hair.png': require('assets/images/kittygotchi/icons/accessories/punk-hair.png'),
+  'accessories/piercing.png': require('assets/images/kittygotchi/icons/accessories/piercing.png'),
+  'clothes/job.png': require('assets/images/kittygotchi/icons/clothes/job.png'),
+  'clothes/dance.png': require('assets/images/kittygotchi/icons/clothes/dance.png'),
+  'clothes/love-date.png': require('assets/images/kittygotchi/icons/clothes/love-date.png'),
+  'clothes/school.png': require('assets/images/kittygotchi/icons/clothes/school.png'),
+  'clothes/tour.png': require('assets/images/kittygotchi/icons/clothes/tour.png'),
+  'ears/fun.png': require('assets/images/kittygotchi/icons/ears/fun.png'),
+  'ears/pointed.png': require('assets/images/kittygotchi/icons/ears/pointed.png'),
+  'ears/rounded.png': require('assets/images/kittygotchi/icons/ears/rounded.png'),
+  'eyes/circle.png': require('assets/images/kittygotchi/icons/eyes/circle.png'),
+  'eyes/canoe.png': require('assets/images/kittygotchi/icons/eyes/canoe.png'),
+  'eyes/eyeliner.png': require('assets/images/kittygotchi/icons/eyes/eyeliner.png'),
+  'eyes/flash.png': require('assets/images/kittygotchi/icons/eyes/flash.png'),
+  'eyes/star.png': require('assets/images/kittygotchi/icons/eyes/star.png'),
+  'mouth/angry.png': require('assets/images/kittygotchi/icons/mouth/angry.png'),
+  'mouth/cute.png': require('assets/images/kittygotchi/icons/mouth/cute.png'),
+  'mouth/happy.png': require('assets/images/kittygotchi/icons/mouth/happy.png'),
+  'mouth/over-the-moon.png': require('assets/images/kittygotchi/icons/mouth/over-the-moon.png'),
+  'mouth/sad.png': require('assets/images/kittygotchi/icons/mouth/sad.png'),
+  'nose/ellipse.png': require('assets/images/kittygotchi/icons/nose/ellipse.png'),
+  'nose/fan.png': require('assets/images/kittygotchi/icons/nose/fan.png'),
+  'nose/pug-nose.png': require('assets/images/kittygotchi/icons/nose/pug-nose.png'),
+  'nose/rhombus.png': require('assets/images/kittygotchi/icons/nose/rhombus.png'),
+  'nose/small.png': require('assets/images/kittygotchi/icons/nose/small.png'),
+};
+
+export const KITTYGOTCHI_EDIT_MIN_AMOUNT = 20;

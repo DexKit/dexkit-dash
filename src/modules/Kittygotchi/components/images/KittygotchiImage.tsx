@@ -21,16 +21,17 @@ export const KittygotchiImage = (props: Props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    mergeImages(images, {})
+    mergeImages(images.map((i) => ({src: i})))
       .then((b64: string) => {
         setImgB64(b64);
       })
       .catch((err: any) => {
-        console.log(err);
+        console.log('ERROR bs65', err);
       });
-  }, [images]);
+      /* eslint-disable */
+  }, [JSON.stringify(images)]);
 
-  if (imgB64 && images.length > 0) {
+  if (imgB64 !== undefined) {
     return (
       <img
         alt=''

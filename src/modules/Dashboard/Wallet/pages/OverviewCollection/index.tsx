@@ -1,5 +1,5 @@
-import React, {useState, useCallback} from 'react';
-import {useIntl} from 'react-intl';
+import React, { useCallback } from 'react';
+import { useIntl } from 'react-intl';
 import {
   Grid,
   Box,
@@ -8,15 +8,13 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import {RouteComponentProps, useHistory} from 'react-router-dom';
-import {useWeb3} from 'hooks/useWeb3';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
-import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
-import {useCollectionIds} from 'hooks/balance/useCollectionIds';
-import {useNFTMetadataURI} from 'hooks/nfts/useNFTMetadataURI';
+import { ReactComponent as ArrowLeftIcon } from '../../../../../assets/images/icons/arrow-left.svg';
+import { useCollectionIds } from 'hooks/balance/useCollectionIds';
+import { useNFTMetadataURI } from 'hooks/nfts/useNFTMetadataURI';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 type Params = {
@@ -28,13 +26,11 @@ type Props = RouteComponentProps<Params>;
 
 const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
   const {
-    match: {params},
+    match: { params },
   } = props;
-  const {address, networkName} = params;
-  const {messages} = useIntl();
+  const { address, networkName } = params;
+  const { messages } = useIntl();
 
-  const {account: web3Account} = useWeb3();
-  const defaultAccount = useDefaultAccount();
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
   const metadataQuery = useNFTMetadataURI(
@@ -45,29 +41,29 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
 
   const history = useHistory();
 
-  const handleBack = useCallback(() => history.push(`/wallet/`), []);
+  const handleBack = useCallback(() => history.push(`/wallet/`), [history]);
 
   return (
     <>
-    <Box py={4}>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <Grid
-            container
-            justify='space-between'
-            alignItems='center'
-            spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs aria-label='breadcrumb'>
-                <Typography variant='body2' color='textSecondary'>
-                  <IntlMessages id='app.dashboard.wallet' />
-                </Typography>
-                <Typography variant='body2' color='textSecondary'>
-                  <IntlMessages id='app.dashboard.overview' />
-                </Typography>
-                <Typography variant='body2' color='textSecondary' />
-              </Breadcrumbs>
-            </Grid>
+      <Box py={4}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Grid
+              container
+              justify='space-between'
+              alignItems='center'
+              spacing={2}>
+              <Grid item xs={12}>
+                <Breadcrumbs aria-label='breadcrumb'>
+                  <Typography variant='body2' color='textSecondary'>
+                    <IntlMessages id='app.dashboard.wallet' />
+                  </Typography>
+                  <Typography variant='body2' color='textSecondary'>
+                    <IntlMessages id='app.dashboard.overview' />
+                  </Typography>
+                  <Typography variant='body2' color='textSecondary' />
+                </Breadcrumbs>
+              </Grid>
 
               <Grid item xs={12}>
                 <Grid container spacing={2} alignItems='center'>

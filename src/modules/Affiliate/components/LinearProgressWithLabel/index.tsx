@@ -21,7 +21,7 @@ const LinearProgressWithLabel: React.FC<Props> = (props) => {
         <LinearProgress
           style={{borderRadius: 10}}
           variant='determinate'
-          value={(from / to) * 100}
+          value={((from > 200 ? 200: from) / to)  * 100}
         />
       </Grid>
 

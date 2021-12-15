@@ -14,7 +14,6 @@ export async function fetchQuote(
   network: EthereumNetwork,
 ): Promise<SwapQuoteResponse> {
   const params = new Map<string, string>();
-
   const isSell = quoteParams.orderSide === OrderSide.Sell ? true : false;
 
   const currency =

@@ -28,7 +28,7 @@ export function CountdownSpan(props: CountdownSpanProps) {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [toDate]);
 
   return <>{text}</>;
 }

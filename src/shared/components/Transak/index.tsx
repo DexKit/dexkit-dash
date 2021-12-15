@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Button, ButtonProps} from '@material-ui/core';
-import transakSDK from '@transak/transak-sdk';
 import {useWeb3} from 'hooks/useWeb3';
 import {useWindowSize} from 'hooks/useWindowSize';
 import {ReactComponent as CoinIcon} from 'assets/images/icons/coin.svg';
@@ -52,27 +51,32 @@ const Transak: React.FC<Props> = (props) => {
   /* eslint-disable */
   useEffect(() => {
     if (!transakClient && windowSize && windowSize.height && windowSize.width) {
-      console.log('transak init');
-      const transak: any = new transakSDK({
-        apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
-        environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
-        defaultCryptoCurrency: 'ETH',
-        walletAddress: account ?? '', // Your customer wallet address
-        themeColor: '000000', // App theme color in hex
-        fiatCurrency: '',
-        email: '', // Your customer email address (Optional)
-        redirectURL: '',
-        hostURL: window.location.origin, // Required field
-        widgetHeight:
-          windowSize?.height < 650 ? `${windowSize.height - 120}px` : '650px',
-        widgetWidth:
-          windowSize?.width < 510 ? `${windowSize.width - 10}px` : '500px',
-      });
+      import('@transak/transak-sdk').then((SDK) => {
+        if (windowSize  && windowSize.height && windowSize.width) {
+          const transak: any = new SDK.default({
+            apiKey: process.env.REACT_APP_TRANSAK_API_KEY as string, // Your API Key (Required)
+            environment: 'PRODUCTION', // STAGING/PRODUCTION (Required)
+            defaultCryptoCurrency: 'ETH',
+            walletAddress: account ?? '', // Your customer wallet address
+            themeColor: '000000', // App theme color in hex
+            fiatCurrency: '',
+            email: '', // Your customer email address (Optional)
+            redirectURL: '',
+            hostURL: window.location.origin, // Required field
+            widgetHeight:
+              windowSize?.height < 650
+                ? `${windowSize.height - 120}px`
+                : '650px',
+            widgetWidth:
+              windowSize?.width < 510 ? `${windowSize.width - 10}px` : '500px',
+          });
 
-      transak.on(transak.ALL_EVENTS, transakAllEvents);
-      transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
-      transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
-      setTransakInstance(transak);
+          transak.on(transak.ALL_EVENTS, transakAllEvents);
+          transak.on(transak.TRANSAK_WIDGET_CLOSE, transakCloseEvents);
+          transak.on(transak.TRANSAK_ORDER_SUCCESSFUL, transakSucessEvents);
+          setTransakInstance(transak);
+        }
+      });
     }
   }, [account, transakClient, windowSize]);
 

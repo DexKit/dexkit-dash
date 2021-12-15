@@ -60,7 +60,6 @@ export interface Token {
   logoURI?: string;
 }
 
-
 export interface Coin {
   name: string;
   symbol: string;

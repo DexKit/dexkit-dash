@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {Fonts} from 'shared/constants/AppEnums';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: CremaTheme) => ({
   tableCellRoot: {
     color: '#8F96A7',
     borderBottom: '0 none',
@@ -29,7 +29,7 @@ const TableHeading: React.FC = () => {
   return (
     <TableRow>
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Created-Started-Ended'}
+        {'Created-Started-Ended-Aborted'}
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>

@@ -4,19 +4,22 @@ import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
-import {useTheme} from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
+
+import {
+  Box,
+  Grid,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  useTheme,
+  Badge,
+} from '@material-ui/core';
+import {Skeleton, Alert} from '@material-ui/lab';
 
 import {Changelly} from 'services/rest/changelly';
 import {ChangellyCoin, ChangellyTransaction} from 'types/changelly';
@@ -645,6 +648,13 @@ export const SwapComponent = (props: SwapComponentProps) => {
             </CardContent>
             <CardContent>
               <Grid container spacing={2}>
+                {fromCoin?.notifications?.payin ? (
+                  <Grid item xs={12}>
+                    <Alert severity='info'>
+                      NOTE: {fromCoin.notifications?.payin}
+                    </Alert>
+                  </Grid>
+                ) : null}
                 <Grid item xs={12}>
                   <Grid container alignItems='center' spacing={2}>
                     <Grid item xs={12}>
@@ -795,3 +805,5 @@ export const SwapComponent = (props: SwapComponentProps) => {
     </>
   );
 };
+
+export default SwapComponent;

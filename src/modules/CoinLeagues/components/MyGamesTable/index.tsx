@@ -1,22 +1,37 @@
-import React, {useState} from 'react';
-
+import React, {useState, useCallback, useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
-
-import {Box, Chip, Grid, Typography} from '@material-ui/core';
+import {Box, Typography, Grid, Chip, Badge} from '@material-ui/core';
 
 import ErrorView from 'modules/Common/ErrorView';
 import GamesTable from './GamesTable';
 import LoadingTable from 'modules/Common/LoadingTable';
 import {useMyGames} from 'modules/CoinLeagues/hooks/useMyGames';
-import {useWeb3} from 'hooks/useWeb3';
-import {FilterPlayerGame} from 'modules/CoinLeagues/constants/enums';
 
-const MyGamesTable: React.FC = () => {
-  const {account} = useWeb3();
-  const {messages} = useIntl();
-  const [filterGame, setFilterGame] = useState(FilterPlayerGame.ALL);
+import {
+  CoinLeagueGameStatus,
+  FilterPlayerGame,
+} from 'modules/CoinLeagues/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useIntl} from 'react-intl';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
 
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+import {useToggler} from 'hooks/useToggler';
+import GameFilterDrawer from '../GameFilterDrawer';
+import {useMobile} from 'hooks/useMobile';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+
+const MyGamesTable = ({isNFT = false}) => {
+  const account = useDefaultAccount();
+  const [status, setStatus] = useState<CoinLeagueGameStatus>(
+    CoinLeagueGameStatus.All,
+  );
+
+
+
+  const filtersState = useGamesFilters();
+ const {messages} = useIntl();
   const {
     query,
     currentPage,
@@ -24,90 +39,176 @@ const MyGamesTable: React.FC = () => {
     rowsPerPageOptions,
     onChangePage,
     onChangeRowsPerPage,
-  } = useMyGames(filterGame, account ? [account] : undefined);
+  } = useMyGames({
+    accounts: account ? [account] : undefined,
+    filters: filtersState,
+    status,
+    player: account,
+  }, isNFT);
+
+  const handleClickAll = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.All);
+  }, []);
+
+  const handleClickWaiting = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Waiting);
+  }, []);
+
+  const handleClickEnded = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Ended);
+  }, []);
+
+  const handleClickAborted = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Aborted);
+  }, []);
+
+  const handleClickStarted = useCallback(() => {
+    setStatus(CoinLeagueGameStatus.Started);
+  }, []);
+
+  const filterToggler = useToggler();
+
+  const handleToggleFilters = useCallback(() => {
+    filterToggler.set(true);
+  }, [filterToggler]);
+
+  useEffect(() => {
+    filtersState.setIsMyGames(true);
+  }, [filtersState]);
+
+  const isMobile = useMobile();
 
   return (
-    <Box>
-      <Box
-        py={4}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='center'
-        alignContent='center'>
-        <Typography variant='h5' display={'block'} align={'center'}>
-          <IntlMessages id='app.coinLeagues.viewGames' />
-        </Typography>
-        <Box display='flex' justifyContent='flex-end' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center' mr={2}>
-            <Grid container justifyContent='center' spacing={2}>
+    <>
+      <GameFilterDrawer
+        show={filterToggler.show}
+        onClose={filterToggler.toggle}
+        filtersState={filtersState}
+        disablePlayerFilter
+      />
+      <Box>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Grid
+              container
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'
+              spacing={4}>
               <Grid item>
-                <Chip
-                  clickable
-                  label={FilterPlayerGame.ALL}
-                  color={
-                    filterGame === FilterPlayerGame.ALL ? 'primary' : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterPlayerGame.ALL)}
-                />
+                <Typography variant='h5'>My Games</Typography>
               </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterPlayerGame.Waiting}
-                  color={
-                    filterGame === FilterPlayerGame.Waiting
-                      ? 'primary'
-                      : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterPlayerGame.Waiting)}
-                />
+              {isMobile ? (
+                <Grid item>
+                  <SquaredIconButton size='small' onClick={handleToggleFilters}>
+                    <Badge
+                      color='primary'
+                      variant='dot'
+                      invisible={!filtersState.isModified()}>
+                      <FilterSearchIcon style={{color: '#fff'}} />
+                    </Badge>
+                  </SquaredIconButton>
+                </Grid>
+              ) : null}
+              <Grid item xs={isMobile ? 12 : undefined}>
+                <Grid container justifyContent='center' spacing={2}>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={FilterPlayerGame.ALL}
+                      color={status === 'All' ? 'primary' : 'default'}
+                      onClick={handleClickAll}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={messages['app.coinLeague.waiting']}
+                      color={
+                        status === CoinLeagueGameStatus.Waiting
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickWaiting}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      size='small'
+                      clickable
+                      label={messages['app.coinLeague.started'] as string}
+                      color={
+                        status === CoinLeagueGameStatus.Started
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickStarted}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={messages['app.coinLeague.ended'] as string}
+                      color={
+                        status === CoinLeagueGameStatus.Ended
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickEnded}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      clickable
+                      size='small'
+                      label={messages['app.coinLeague.aborted'] as string}
+                      color={
+                        status === CoinLeagueGameStatus.Aborted
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={handleClickAborted}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterPlayerGame.Started}
-                  color={
-                    filterGame === FilterPlayerGame.Started
-                      ? 'primary'
-                      : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterPlayerGame.Started)}
-                />
-              </Grid>
-              <Grid item>
-                <Chip
-                  clickable
-                  label={FilterPlayerGame.Ended}
-                  color={
-                    filterGame === FilterPlayerGame.Ended
-                      ? 'primary'
-                      : 'default'
-                  }
-                  onClick={() => setFilterGame(FilterPlayerGame.Ended)}
-                />
-              </Grid>
+              {!isMobile ? (
+                <Grid item>
+                  <SquaredIconButton onClick={handleToggleFilters}>
+                    <Badge
+                      color='primary'
+                      variant='dot'
+                      invisible={!filtersState.isModified()}>
+                      <FilterSearchIcon style={{color: '#fff'}} />
+                    </Badge>
+                  </SquaredIconButton>
+                </Grid>
+              ) : null}
             </Grid>
-          </Box>
-        </Box>
+          </Grid>
+          <Grid item xs={12}>
+            {query.loading ? (
+              <LoadingTable columns={8} rows={10} />
+            ) : query.error ? (
+              <ErrorView message={query.error.message} />
+            ) : (
+              <GamesTable
+                data={query.data?.games}
+                isNFT={isNFT}
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangePage={(newPage) => onChangePage(newPage)}
+                onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
+              />
+            )}
+          </Grid>
+        </Grid>
       </Box>
-
-      {query.loading ? (
-        <LoadingTable columns={8} rows={10} />
-      ) : query.error ? (
-        <ErrorView message={query.error.message} />
-      ) : (
-        <GamesTable
-          data={query.data?.games}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onChangePage={(newPage) => onChangePage(newPage)}
-          onChangeRowsPerPage={(perPage) => onChangeRowsPerPage(perPage)}
-        />
-      )}
-    </Box>
-    // </AppCard>
-    //
+    </>
   );
 };
 

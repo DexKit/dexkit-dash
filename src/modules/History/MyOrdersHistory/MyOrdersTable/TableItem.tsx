@@ -4,7 +4,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelOrder from 'modules/Dashboard/Token/BuySell/Modal/CancelOrder';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import IntlMessages from '@crema/utility/IntlMessages';
-import CollapsibleTableRow from 'shared/components/CollapsibleTableRow'
+import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 
 type TableItemContainerProps = {
   row: any;

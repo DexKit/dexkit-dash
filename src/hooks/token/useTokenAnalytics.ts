@@ -30,17 +30,21 @@ export const useTokenAnalytics = (
 ) => {
   const [data, setData] = useState<TokenAnalytics>();
 
-  const {loading, error, data: dataFn} = useQuery<
-    GetTokenAnalytics,
-    GetTokenAnalyticsVariables
-  >(BITQUERY_TOKEN_ANALYTICS, {
-    variables: {
-      network,
-      baseCurrency: getCurrency(network, token) as string,
-      address: account,
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetTokenAnalytics, GetTokenAnalyticsVariables>(
+    BITQUERY_TOKEN_ANALYTICS,
+    {
+      variables: {
+        network,
+        baseCurrency: getCurrency(network, token) as string,
+        address: account,
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (dataFn && dataFn?.ethereum?.dexTrades) {

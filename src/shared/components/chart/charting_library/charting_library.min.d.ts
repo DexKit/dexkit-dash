@@ -952,7 +952,7 @@ export interface IChartWidgetApi {
   setEntityVisibility(entityId: EntityId, isVisible: boolean): void;
   createStudy<
     TStudyInputValue extends StudyInputValue,
-    TOverrides extends StudyOverrides
+    TOverrides extends StudyOverrides,
   >(
     name: string,
     forceOverlay: boolean,

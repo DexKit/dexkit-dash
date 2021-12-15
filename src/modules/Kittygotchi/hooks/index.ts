@@ -237,7 +237,7 @@ interface UpdaterParams {
   mouth?: string;
   nose?: string;
   ears?: string;
-  accessory?: string;
+  accessories?: string;
   body?: string;
 }
 
@@ -262,16 +262,24 @@ export function useKittygotchiUpdate() {
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit();
         }
-        const response = await update(sig, messageSigned, params, id, account, chainId);
-        console.log(response);
-        if(response.ok && response.status === 200){
+        const response = await update(
+          sig,
+          messageSigned,
+          params,
+          id,
+          account,
+          chainId,
+        );
+
+        if (response.ok && response.status === 200) {
           if (callbacks?.onConfirmation) {
             callbacks?.onConfirmation();
           }
-        }else{
+        } else if (response.status === 403) {
+          throw new Error('Invalid params');
+        } else {
           throw new Error(response.statusText);
         }
-
       } catch (e) {
         console.log(e);
         if (callbacks?.onError) {
@@ -353,7 +361,7 @@ export const useKittygotchiV2 = () => {
     async (id?: string) => {
       setIsLoading(true);
 
-      getClient(chainId)
+      return getClient(chainId)
         .query<{token: any}>({
           query: GET_KITTYGOTCHI,
           variables: {id: id?.toLowerCase()},
@@ -381,9 +389,23 @@ export const useKittygotchiV2 = () => {
             data.image = getNormalizedUrl(metadata.image);
           }
 
+          if (metadata.attributes) {
+            data.attributes = metadata.attributes;
+          }
+
+          if (metadata.name) {
+            data.name = metadata.name;
+          }
+
+          if (metadata.description) {
+            data.description = metadata.description;
+          }
+
           setData(data);
 
           setIsLoading(false);
+
+          return data;
         })
         .catch((err: any) => {
           setError(err);
@@ -503,82 +525,192 @@ export const useKitHolding = (account?: string) => {
   return query;
 };
 
+interface KittyValues {
+  cloth?: string;
+  eyes?: string;
+  mouth?: string;
+  nose?: string;
+  ears?: string;
+  accessory?: string;
+  body?: string;
+}
+
 export function useKittygotchiStyleEdit() {
-  const [cloth, setCloth] = useState<string>();
-  const [eyes, setEyes] = useState<string>();
-  const [mouth, setMouth] = useState<string>();
-  const [nose, setNose] = useState<string>();
-  const [ears, setEars] = useState<string>();
-  const [accessory, setAccessory] = useState<string>();
-  const [body, setBody] = useState<string>();
+  const [values, setValues] = useState<KittyValues>({});
 
   const getImageArray = useCallback(() => {
     let arr = [];
 
-    if (body) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.BODY, body));
+    if (values?.body) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.BODY, values?.body));
     }
 
-    if (ears) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.EARS, ears));
+    if (values?.ears) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.EARS, values?.ears));
     }
 
-    if (eyes) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.EYES, eyes));
+    if (values?.eyes) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.EYES, values?.eyes));
     }
 
-    if (nose) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.NOSE, nose));
+    if (values?.nose) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.NOSE, values?.nose));
     }
 
-    if (mouth) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.MOUTH, mouth));
+    if (values?.mouth) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.MOUTH, values?.mouth));
     }
 
-    if (cloth) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.CLOTHES, cloth));
+    if (values?.cloth) {
+      arr.push(getImageFromTrait(KittygotchiTraitType.CLOTHES, values?.cloth));
     }
 
-    if (accessory) {
-      arr.push(getImageFromTrait(KittygotchiTraitType.ACESSOIRES, accessory));
+    if (values?.accessory) {
+      arr.push(
+        getImageFromTrait(KittygotchiTraitType.ACCESSORIES, values?.accessory),
+      );
     }
 
     return arr;
-  }, [cloth, eyes, mouth, nose, ears, accessory, body]);
+  }, [values]);
 
-  const handleSelectCloth = useCallback((item: KittygotchiTraitItem) => {
-    setCloth(item.value);
-  }, []);
+  const handleSelectCloth = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, cloth: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectBody = useCallback((item: KittygotchiTraitItem) => {
-    setBody(item.value);
-  }, []);
+  const handleSelectBody = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, body: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectEyes = useCallback((item: KittygotchiTraitItem) => {
-    setEyes(item.value);
-  }, []);
+  const handleSelectEyes = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, eyes: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectNose = useCallback((item: KittygotchiTraitItem) => {
-    setNose(item.value);
-  }, []);
+  const handleSelectNose = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, nose: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectEars = useCallback((item: KittygotchiTraitItem) => {
-    setEars(item.value);
-  }, []);
+  const handleSelectEars = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, ears: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectAccessory = useCallback((item: KittygotchiTraitItem) => {
-    setAccessory(item.value);
-  }, []);
+  const handleSelectAccessory = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, accessory: item.value});
+    },
+    [values],
+  );
 
-  const handleSelectMouth = useCallback((item: KittygotchiTraitItem) => {
-    setMouth(item.value);
-  }, []);
+  const handleSelectMouth = useCallback(
+    (item: KittygotchiTraitItem) => {
+      setValues({...values, mouth: item.value});
+    },
+    [values],
+  );
 
   const isEmpty = useCallback(() => {
-    return !cloth && !eyes && !mouth && !nose && !ears && !body && !accessory;
-  }, [cloth, eyes, mouth, nose, ears, body, accessory]);
+    return (
+      !values?.cloth &&
+      !values?.eyes &&
+      !values?.mouth &&
+      !values?.nose &&
+      !values?.ears &&
+      !values?.body &&
+      !values?.accessory
+    );
+  }, [values]);
+
+  const fromTraits = useCallback(
+    (traits: {value: string; trait_type: string}[]) => {
+      let newValues: KittyValues = {};
+
+      for (let t of traits) {
+        let traitType = t.trait_type.toLowerCase();
+
+        if (
+          traitType === 'attack' ||
+          traitType === 'defense' ||
+          traitType === 'run'
+        ) {
+          continue;
+        }
+
+        let value = t.value.toLowerCase().replace(new RegExp(' ', 'g'), '-');
+
+        switch (traitType) {
+          case 'eyes':
+            newValues.eyes = value;
+
+            break;
+          case 'ears':
+            newValues.ears = value;
+
+            break;
+          case 'clothes':
+            newValues.cloth = value;
+            break;
+          case 'mouth':
+            newValues.mouth = value;
+            break;
+          case 'body':
+            newValues.body = value;
+            break;
+          case 'nose':
+            newValues.nose = value;
+            break;
+          case 'accessories':
+            newValues.accessory = value;
+
+            break;
+        }
+      }
+
+      if (!newValues.body) {
+        newValues.body = 'body';
+      }
+
+      if (!newValues.ears) {
+        newValues.ears = 'pointed';
+      }
+
+      if (!newValues.eyes) {
+        newValues.eyes = 'star';
+      }
+
+      if (!newValues.mouth) {
+        newValues.mouth = 'cute';
+      }
+
+      if (!newValues.nose) {
+        newValues.nose = 'fan';
+      }
+
+      if (!newValues.accessory) {
+        newValues.accessory = 'piercing';
+      }
+
+      setValues(newValues);
+    },
+    [],
+  );
 
   return {
+    fromTraits,
     isEmpty,
     getImageArray,
     handleSelectCloth,
@@ -588,21 +720,21 @@ export function useKittygotchiStyleEdit() {
     handleSelectEars,
     handleSelectNose,
     handleSelectMouth,
-    cloth,
-    eyes,
-    mouth,
-    nose,
-    ears,
-    body,
-    accessory,
+    cloth: values?.cloth,
+    eyes: values?.eyes,
+    mouth: values?.mouth,
+    nose: values?.nose,
+    ears: values?.ears,
+    body: values?.body,
+    accessory: values?.accessory,
     params: {
-      body,
-      ears,
-      eyes,
-      nose, 
-      mouth,
-      accessory,
-      cloth,
+      clothes: values?.cloth,
+      eyes: values?.eyes,
+      mouth: values?.mouth,
+      nose: values?.nose,
+      ears: values?.ears,
+      body: values?.body,
+      accessories: values?.accessory,
     },
   };
 }

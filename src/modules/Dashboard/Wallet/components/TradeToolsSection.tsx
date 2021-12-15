@@ -9,6 +9,9 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 
+import {withStyles} from '@material-ui/core/styles';
+import Menu, {MenuProps} from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 
 import {ReactComponent as BitcoinConvertWhiteIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
@@ -30,11 +33,43 @@ interface TradeToolsSectionProps {
   onReceive: () => void;
   onSwap: () => void;
   onTrade: () => void;
-  onBuyCrypto: () => void;
+  onBuyCryptoTransak: () => void;
+  onBuyCryptoRamp: () => void;
   onShare?: () => void;
   onMakeFavorite?: () => void;
   isFavorite?: boolean;
+  isTrade?: boolean;
 }
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -68,13 +103,25 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
     onReceive,
     onSwap,
     onTrade,
-    onBuyCrypto,
+    onBuyCryptoTransak,
+    onBuyCryptoRamp,
     onShare,
     onMakeFavorite,
     isFavorite,
+    isTrade = true,
   } = props;
 
   const accountsModal = useAccountsModal();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  },[setAnchorEl]);
 
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
@@ -87,6 +134,16 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const buyWithRamp = useCallback(() => {
+    handleClose();
+    onBuyCryptoRamp();
+  }, [handleClose, onBuyCryptoRamp]);
+
+  const buyWithTransak = useCallback(() => {
+    handleClose();
+    onBuyCryptoTransak();
+  }, [handleClose, onBuyCryptoTransak]);
 
   return (
     <Box py={4}>
@@ -129,16 +186,16 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
             </Box>
           </Box>
         ) : null}
-        <Box className={classes.item}>
-          <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onTrade}>
-              <BitcoinConvertWhiteIcon className={classes.icon} />
-            </RoundedIconButton>
-            <Typography variant='caption'>
-              <IntlMessages id='app.dashboard.trade' />
-            </Typography>
+        {isTrade ? (
+          <Box className={classes.item}>
+            <Box display='flex' flexDirection='column' alignItems='center'>
+              <RoundedIconButton onClick={onTrade}>
+                <BitcoinConvertWhiteIcon className={classes.icon} />
+              </RoundedIconButton>
+              <Typography variant='caption'> <IntlMessages id='app.dashboard.trade' /></Typography>
+            </Box>
           </Box>
-        </Box>
+        ) : null}
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
             <RoundedIconButton onClick={onSwap}>
@@ -182,13 +239,22 @@ export const TradeToolsSection = (props: TradeToolsSectionProps) => {
         </Box>
         <Box className={classes.item}>
           <Box display='flex' flexDirection='column' alignItems='center'>
-            <RoundedIconButton onClick={onBuyCrypto}>
+            <RoundedIconButton onClick={handleClick}>
               <AddCircleIcon className={classes.icon} />
             </RoundedIconButton>
             <Typography variant='caption' className={classes.itemText}>
               <IntlMessages id='app.dashboard.buyCrypto' />
             </Typography>
           </Box>
+          <StyledMenu
+            id='customized-menu'
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}>
+            <StyledMenuItem onClick={buyWithRamp}>Ramp</StyledMenuItem>
+            <StyledMenuItem onClick={buyWithTransak}>Transak</StyledMenuItem>
+          </StyledMenu>
         </Box>
       </Box>
     </Box>

@@ -348,9 +348,8 @@ export default (props: Props) => {
       }
 
       if (end > start) {
-        error = messages[
-          'nfts.sell.expire.greaterThanStartingPrice'
-        ].toString();
+        error =
+          messages['nfts.sell.expire.greaterThanStartingPrice'].toString();
       }
 
       return error;

@@ -21,13 +21,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   button: {
-    color: 'black',
     fontWeight: 600,
     borderRadius: 6,
     fontSize: '1.125rem',
     background: '#ffa552',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    color: 'black',
   },
   innerContent: {
     fontSize: '1rem',

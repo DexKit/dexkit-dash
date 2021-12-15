@@ -41,6 +41,115 @@ const Changelog = () => {
       <Accordion defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.13'
+          id='panelv0.0.6.13-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.13 - 13-12-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Bug fix's on Trade and Overview page
+            </Typography>
+            <Typography className={classes.item}>
+              Added Ramp
+            </Typography>
+      
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.11'
+          id='panelv0.0.6.11-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.12 - 2-12-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+            Bug fix's on Trade and Overview page
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.11'
+          id='panelv0.0.6.11-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.11 - 26-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+            Affiliate Page - Fix Affiliate balances for BSC, and make it more clear for user.
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+         <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.10'
+          id='panelv0.0.6.10-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.10 - 25-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+             Improve Kittygotchi logic
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.9'
+          id='panelv0.0.6.9-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.9 - 24-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Fixed bug on swap function
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.8'
+          id='panelv0.0.6.8-header'>
+          <Typography className={classes.heading}>
+            v0.0.6.8 - 24-11-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Kittygotchi edit function
+            </Typography>
+            <Typography className={classes.item}>
+              Several bug fix's accross the app
+            </Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
           id='panelv0.0.6.5-header'>
           <Typography className={classes.heading}>
@@ -49,13 +158,13 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
+            <Typography className={classes.item}>
               Removed Coinleagues and put it as standalone app
             </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
@@ -66,13 +175,13 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-               Add Sorting on Coinleague join games. Small fix on Copy game.
+            <Typography className={classes.item}>
+              Add Sorting on Coinleague join games. Small fix on Copy game.
             </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.5'
@@ -83,15 +192,14 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-                Fix's on Coinleague
+            <Typography className={classes.item}>
+              Fix's on Coinleague
             </Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
 
-
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6'
@@ -102,9 +210,7 @@ const Changelog = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
-             <Typography className={classes.item}>
-                Major Rebrand
-            </Typography>
+            <Typography className={classes.item}>Major Rebrand</Typography>
             <Typography className={classes.item}>
               CoinLeagues:
               <br />
@@ -123,11 +229,10 @@ const Changelog = () => {
               1. Create Tokens
               <br />
             </Typography>
-            
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.5'

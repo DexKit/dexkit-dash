@@ -12,6 +12,7 @@ import {
   Link,
   Paper,
   CircularProgress,
+  Fade,
 } from '@material-ui/core';
 import {getNormalizedUrl} from 'utils/browser';
 
@@ -36,12 +37,18 @@ import {UpdateKittygotchiDialog} from '../components/dialogs/UpdateKittygotchiDi
 import {SubmitState} from '../components/ButtonState';
 import KittygotchiImage from '../components/images/KittygotchiImage';
 import KittygotchiTraitSelector from '../components/KittygotchiTraitSelector';
-import {KittygotchiTraits, KittygotchiTraitType} from '../constants';
+import {
+  KittygotchiTraits,
+  KittygotchiTraitType,
+  KITTYGOTCHI_EDIT_MIN_AMOUNT,
+} from '../constants';
 import {useIntl} from 'react-intl';
 import {useMobile} from 'hooks/useMobile';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
+import {Edit} from '@material-ui/icons';
+import KittygotchiTrait from '../components/KittygotchiTrait';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -54,6 +61,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       minHeight: theme.spacing(60),
     },
+  },
+  coinsLogo: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
+  coinsLogoWrapper: {
+    background: theme.palette.background.default,
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    borderRadius: '50%',
   },
 }));
 
@@ -72,6 +93,8 @@ export const KittyEdit = () => {
   //TODO: fix this
   /* eslint-disable */
   const [hasChange, setHasChange] = useState(true);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -97,6 +120,8 @@ export const KittyEdit = () => {
       const onConfirmTx = (hash?: string) => {
         // Save here the current id minted
         setSubmitState(SubmitState.Confirmed);
+
+        setIsEditing(false);
       };
       const onError = (error?: any) => {
         updateToggler.set(false);
@@ -120,12 +145,12 @@ export const KittyEdit = () => {
   const isMobile = useMobile();
   const kitHolding = useKitHolding(account);
 
-  const kitAmount = useMemo(()=> {
-    if(kitHolding.data && kitHolding.data.length){
-      return Number(ethers.utils.formatEther(kitHolding.data[0].balance))
+  const kitAmount = useMemo(() => {
+    if (kitHolding.data && kitHolding.data.length) {
+      return Number(ethers.utils.formatEther(kitHolding.data[0].balance));
     }
     return 0;
-  }, [kitHolding?.data])
+  }, [kitHolding?.data]);
 
   const {messages} = useIntl();
 
@@ -140,12 +165,23 @@ export const KittyEdit = () => {
     return submitState === SubmitState.Confirmed;
   }, [submitState]);
 
+  const handleEdit = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false);
+  }, []);
+
   useEffect(() => {
-    kittygotchi.get(params.id);
-  }, [params.id]);
-
-
-
+    if (chainId && (chainId === ChainId.Matic || chainId === ChainId.Mumbai)) {
+      kittygotchi.get(params.id).then((data: any) => {
+        if (data) {
+          kittyStyles.fromTraits(data.attributes);
+        }
+      });
+    }
+  }, [chainId, params.id]);
 
   return (
     <>
@@ -212,6 +248,16 @@ export const KittyEdit = () => {
               </Alert>
             </Grid>
           ) : null}
+          {kitAmount < KITTYGOTCHI_EDIT_MIN_AMOUNT &&
+          (chainId === ChainId.Matic || chainId === ChainId.Mumbai) ? (
+            <Grid item xs={12} sm={10}>
+              <Alert severity='info'>
+                You need at least{' '}
+                <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong> to edit your
+                kittygotchi
+              </Alert>
+            </Grid>
+          ) : null}
           <Grid item xs={12} sm={10}>
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
@@ -226,6 +272,7 @@ export const KittyEdit = () => {
                           />
                         ) : kittyStyles.isEmpty() ? (
                           <img
+                            alt='EMPTY'
                             className={classes.image}
                             src={getNormalizedUrl(
                               kittygotchi.data?.image || '',
@@ -239,33 +286,57 @@ export const KittyEdit = () => {
                       </Box>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12}>
-                    {!isMobile ? (
-                      <Button
-                        disabled={isSubmitting() || !hasChange}
-                        onClick={onUpdateGotchi}
-                        fullWidth
-                        startIcon={
-                          isSubmitting() ? (
-                            <CircularProgress
-                              color='inherit'
-                              size={theme.spacing(7)}
-                            />
-                          ) : (
-                            <DoneIcon />
-                          )
-                        }
-                        variant='contained'
-                        color='primary'>
-                        <IntlMessages id='app.kittygotchi.save' />
-                      </Button>
-                    ) : null}
-                  </Grid>
+                  {!isMobile ? (
+                    <Grid item xs={12}>
+                      {isEditing ? (
+                        <Grid container spacing={4}>
+                          <Grid item xs={12}>
+                            <Button
+                              disabled={isSubmitting() || !hasChange}
+                              onClick={onUpdateGotchi}
+                              fullWidth
+                              startIcon={
+                                isSubmitting() ? (
+                                  <CircularProgress
+                                    color='inherit'
+                                    size={theme.spacing(7)}
+                                  />
+                                ) : (
+                                  <DoneIcon />
+                                )
+                              }
+                              variant='contained'
+                              color='primary'>
+                              <IntlMessages id='app.kittygotchi.save' />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button
+                              onClick={handleCancelEdit}
+                              variant='contained'
+                              fullWidth>
+                              <IntlMessages id='app.kittygotchi.cancel' />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      ) : (
+                        <Button
+                          disabled={kittygotchi.isLoading}
+                          fullWidth
+                          onClick={handleEdit}
+                          variant='contained'
+                          color='primary'
+                          startIcon={<Edit />}>
+                          <IntlMessages id='app.kittygotchi.edit' />
+                        </Button>
+                      )}
+                    </Grid>
+                  ) : null}
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <KittygotchiTraitSelector
                       defaultExpanded
                       kitHolding={
@@ -279,99 +350,267 @@ export const KittyEdit = () => {
                       onSelect={kittyStyles.handleSelectBody}
                       value={kittyStyles?.body}
                     />
-                  </Grid>
+                  </Grid> */}
+                  {chainId == ChainId.Matic || chainId === ChainId.Mumbai ? (
+                    <Grid item xs={12}>
+                      <Paper>
+                        <Box p={4}>
+                          <Grid container spacing={4}>
+                            <Grid item xs={12}>
+                              <Typography
+                                color='textSecondary'
+                                variant='overline'>
+                                KIT Balance
+                              </Typography>
+
+                              <Grid
+                                container
+                                spacing={2}
+                                alignItems='center'
+                                alignContent='center'>
+                                <Grid item>
+                                  <Box className={classes.coinsLogoWrapper}>
+                                    <img
+                                      alt=''
+                                      className={classes.coinsLogo}
+                                      src={require('assets/images/dexkit-logo-icon.svg')}
+                                    />
+                                  </Box>
+                                </Grid>
+                                <Grid item>
+                                  <Typography variant='h4'>
+                                    {kitHolding.isLoading ? (
+                                      <Skeleton />
+                                    ) : (
+                                      kitAmount
+                                    )}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </Paper>
+                    </Grid>
+                  ) : null}
+
                   <Grid item xs={12}>
-                    <KittygotchiTraitSelector
-                      kitHolding={
-                        kitHolding.data && kitHolding.data?.length > 0
-                          ? kitAmount
-                          : 0
-                      }
-                      title={messages['app.kittygotchi.accessories'] as string}
-                      traitType={KittygotchiTraitType.ACESSOIRES}
-                      items={KittygotchiTraits[KittygotchiTraitType.ACESSOIRES]}
-                      onSelect={kittyStyles.handleSelectAccessory}
-                      value={kittyStyles?.accessory}
-                    />
+                    <Paper>
+                      <Box p={4}>
+                        {kittygotchi.isLoading ? (
+                          <>
+                            <Typography gutterBottom variant='h6'>
+                              <Skeleton />
+                            </Typography>
+                            <Typography variant='body1'>
+                              <Skeleton />
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <Typography gutterBottom variant='h6'>
+                              {kittygotchi.data?.name}
+                            </Typography>
+                            <Typography variant='body1'>
+                              {kittygotchi.data?.description}
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                    </Paper>
                   </Grid>
-                  <Grid item xs={12}>
-                    <KittygotchiTraitSelector
-                      kitHolding={
-                        kitHolding.data && kitHolding.data?.length > 0
-                          ? kitAmount
-                          : 0
-                      }
-                      traitType={KittygotchiTraitType.NOSE}
-                      title={messages['app.kittygotchi.noses'] as string}
-                      items={KittygotchiTraits[KittygotchiTraitType.NOSE]}
-                      onSelect={kittyStyles.handleSelectNose}
-                      value={kittyStyles?.nose}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <KittygotchiTraitSelector
-                      kitHolding={
-                        kitHolding.data && kitHolding.data?.length > 0
-                          ? kitAmount
-                          : 0
-                      }
-                      traitType={KittygotchiTraitType.EARS}
-                      title={messages['app.kittygotchi.ears'] as string}
-                      items={KittygotchiTraits[KittygotchiTraitType.EARS]}
-                      onSelect={kittyStyles.handleSelectEars}
-                      value={kittyStyles.ears}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <KittygotchiTraitSelector
-                      kitHolding={
-                        kitHolding.data && kitHolding.data?.length > 0
-                          ? kitAmount
-                          : 0
-                      }
-                      traitType={KittygotchiTraitType.EYES}
-                      title={messages['app.kittygotchi.eyes'] as string}
-                      items={KittygotchiTraits[KittygotchiTraitType.EYES]}
-                      onSelect={kittyStyles.handleSelectEyes}
-                      value={kittyStyles.eyes}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <KittygotchiTraitSelector
-                      kitHolding={
-                        kitHolding.data && kitHolding.data?.length > 0
-                          ? kitAmount
-                          : 0
-                      }
-                      traitType={KittygotchiTraitType.MOUTH}
-                      title={messages['app.kittygotchi.mouths'] as string}
-                      items={KittygotchiTraits[KittygotchiTraitType.MOUTH]}
-                      onSelect={kittyStyles.handleSelectMouth}
-                      value={kittyStyles.mouth}
-                    />
-                  </Grid>
+
+                  {isEditing ? (
+                    <Grid item xs={12}>
+                      <Fade in>
+                        <Grid container spacing={4}>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              title={
+                                messages[
+                                  'app.kittygotchi.accessories'
+                                ] as string
+                              }
+                              traitType={KittygotchiTraitType.ACCESSORIES}
+                              items={
+                                KittygotchiTraits[
+                                  KittygotchiTraitType.ACCESSORIES
+                                ]
+                              }
+                              onSelect={kittyStyles.handleSelectAccessory}
+                              value={kittyStyles?.accessory}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              traitType={KittygotchiTraitType.NOSE}
+                              title={
+                                messages['app.kittygotchi.noses'] as string
+                              }
+                              items={
+                                KittygotchiTraits[KittygotchiTraitType.NOSE]
+                              }
+                              onSelect={kittyStyles.handleSelectNose}
+                              value={kittyStyles?.nose}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              traitType={KittygotchiTraitType.EARS}
+                              title={messages['app.kittygotchi.ears'] as string}
+                              items={
+                                KittygotchiTraits[KittygotchiTraitType.EARS]
+                              }
+                              onSelect={kittyStyles.handleSelectEars}
+                              value={kittyStyles.ears}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              traitType={KittygotchiTraitType.EYES}
+                              title={messages['app.kittygotchi.eyes'] as string}
+                              items={
+                                KittygotchiTraits[KittygotchiTraitType.EYES]
+                              }
+                              onSelect={kittyStyles.handleSelectEyes}
+                              value={kittyStyles.eyes}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              traitType={KittygotchiTraitType.CLOTHES}
+                              title={
+                                messages['app.kittygotchi.clothes'] as string
+                              }
+                              items={
+                                KittygotchiTraits[KittygotchiTraitType.CLOTHES]
+                              }
+                              onSelect={kittyStyles.handleSelectCloth}
+                              value={kittyStyles.cloth}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <KittygotchiTraitSelector
+                              kitHolding={
+                                kitHolding.data && kitHolding.data?.length > 0
+                                  ? kitAmount
+                                  : 0
+                              }
+                              traitType={KittygotchiTraitType.MOUTH}
+                              title={
+                                messages['app.kittygotchi.mouths'] as string
+                              }
+                              items={
+                                KittygotchiTraits[KittygotchiTraitType.MOUTH]
+                              }
+                              onSelect={kittyStyles.handleSelectMouth}
+                              value={kittyStyles.mouth}
+                              disabled={!isEditing}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Fade>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12}>
+                      <Grid container alignItems='stretch' spacing={4}>
+                        {kittygotchi.isLoading
+                          ? new Array(6)
+                              .fill(null)
+                              .map((i: any, index: number) => (
+                                <Grid xs={4} key={index} item>
+                                  <KittygotchiTrait loading />
+                                </Grid>
+                              ))
+                          : kittygotchi.data?.attributes.map(
+                              (attr: any, index: number) => (
+                                <Grid key={index} item xs={4}>
+                                  <KittygotchiTrait
+                                    traitType={attr.trait_type}
+                                    value={attr.value}
+                                  />
+                                </Grid>
+                              ),
+                            )}
+                      </Grid>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               {isMobile ? (
                 <Grid item xs={12}>
-                  <Button
-                    disabled={isSubmitting() || !hasChange}
-                    onClick={onUpdateGotchi}
-                    fullWidth
-                    startIcon={
-                      isSubmitting() ? (
-                        <CircularProgress
-                          color='inherit'
-                          size={theme.spacing(7)}
-                        />
-                      ) : (
-                        <DoneIcon />
-                      )
-                    }
-                    variant='contained'
-                    color='primary'>
-                    <IntlMessages id='app.kittygotchi.save' />
-                  </Button>
+                  {isEditing ? (
+                    <Grid container spacing={4}>
+                      <Grid item xs={12}>
+                        <Button
+                          disabled={isSubmitting() || !hasChange}
+                          onClick={onUpdateGotchi}
+                          fullWidth
+                          startIcon={
+                            isSubmitting() ? (
+                              <CircularProgress
+                                color='inherit'
+                                size={theme.spacing(7)}
+                              />
+                            ) : (
+                              <DoneIcon />
+                            )
+                          }
+                          variant='contained'
+                          color='primary'>
+                          <IntlMessages id='app.kittygotchi.save' />
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          onClick={handleCancelEdit}
+                          variant='contained'
+                          fullWidth>
+                          <IntlMessages id='app.kittygotchi.cancel' />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <Button
+                      fullWidth
+                      disabled={kittygotchi.isLoading}
+                      onClick={handleEdit}
+                      variant='contained'
+                      color='primary'
+                      startIcon={<Edit />}>
+                      <IntlMessages id='app.kittygotchi.edit' />
+                    </Button>
+                  )}
                 </Grid>
               ) : null}
             </Grid>

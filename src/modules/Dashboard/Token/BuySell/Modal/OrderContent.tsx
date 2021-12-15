@@ -1,13 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
-
-import {useIntl} from 'react-intl';
-
-import styled from 'styled-components';
-import {useNetwork} from 'hooks/useNetwork';
-import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import {ChainId} from 'types/blockchain';
-import {GasInfo, OrderSide, Steps, Token} from 'types/app';
-import {fetchQuote} from 'services/rest/0x-api';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { BigNumber, fromTokenUnitAmount, toTokenUnitAmount } from '@0x/utils';
+import { ChainId } from 'types/blockchain';
+import { GasInfo, OrderSide, Steps, Token } from 'types/app';
+import { fetchQuote } from 'services/rest/0x-api';
 import {
   DialogTitle,
   DialogContent,
@@ -32,25 +28,25 @@ import MarketStep from './MarketStep';
 import LimitStep from './LimitStep';
 import DoneStep from './DoneStep';
 import LoadingStep from './LoadingStep';
-import {useStyles} from './index.style';
-import {getExpirationTimeFromSeconds} from 'utils/time_utils';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {getGasEstimationInfoAsync} from 'services/gasPriceEstimation';
-import {EthereumNetwork} from '../../../../../../__generated__/globalTypes';
-import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
+import { useStyles } from './index.style';
+import { getExpirationTimeFromSeconds } from 'utils/time_utils';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import { getGasEstimationInfoAsync } from 'services/gasPriceEstimation';
+import { EthereumNetwork } from '../../../../../../__generated__/globalTypes';
+import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
 import {
   GET_NATIVE_COIN_FROM_NETWORK_NAME,
   GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME,
 } from 'shared/constants/Bitquery';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
+import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import {FEE_PERCENTAGE, FEE_RECIPIENT} from 'shared/constants/Blockchain';
+import { FEE_PERCENTAGE, FEE_RECIPIENT } from 'shared/constants/Blockchain';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
+import { ErrorIcon, WalletAddIcon } from 'shared/components/Icons';
 
-import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
-import {SwapQuoteResponse} from 'types/zerox';
+import { ReactComponent as EmptyWalletImage } from 'assets/images/empty-wallet.svg';
+import { SwapQuoteResponse } from 'types/zerox';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
@@ -100,6 +96,7 @@ const OrderContent: React.FC<Props> = (props) => {
     error,
     isRequestConfirmed,
     onClose,
+    networkName,
     onNext,
     onLoading,
     onRequestConfirmed,
@@ -107,16 +104,14 @@ const OrderContent: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const {messages} = useIntl();
-  const networkName = useNetwork();
-  const {data} = useNativeCoinPriceUSD(networkName);
+  const { messages } = useIntl();
+  const { data } = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<SwapQuoteResponse>();
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
   const [fee, setFee] = useState(0);
   const [slippage, setSlippage] = useState(0.03);
   const [gasAmount, setGasAmount] = useState(new BigNumber(0));
-  const [defaultGasPrice, setDefaultGasPrice] = useState('0');
   const [selectedGasPrice, setSelectedGasPrice] = useState<string>('');
   /* eslint-disable */
   const [displayGasPrice, setDisplayGasPrice] = useState<string>('0');
@@ -169,7 +164,6 @@ const OrderContent: React.FC<Props> = (props) => {
     if (isConvert) {
       getGasInfo()
         .then((e) => {
-          setDefaultGasPrice(e.gasPriceInWei.toString());
 
           updateSelectedGasPrice(e.gasPriceInWei);
 
@@ -216,7 +210,6 @@ const OrderContent: React.FC<Props> = (props) => {
           const gasPrice = new BigNumber(e.gasPrice);
 
           setGasAmount(gas);
-          setDefaultGasPrice(gasPrice.toNumber().toString());
 
           updateSelectedGasPrice(gasPrice, gas);
 
@@ -288,20 +281,6 @@ const OrderContent: React.FC<Props> = (props) => {
     setDisplayGasPrice(newDisplayGasPrice);
   };
 
-  const handleChangeDisplayGasPrice = (newDisplayGasPrice: string) => {
-    setSelectedGasOption('manual');
-
-    setDisplayGasPrice(newDisplayGasPrice);
-
-    const newSelectedGasPrice = (
-      parseFloat(newDisplayGasPrice) * Math.pow(10, 9)
-    ).toString();
-
-    setSelectedGasPrice(newSelectedGasPrice);
-
-    updateFee(new BigNumber(newSelectedGasPrice));
-  };
-
   const handleClickGuaranteedPrice = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -349,17 +328,7 @@ const OrderContent: React.FC<Props> = (props) => {
     firstSymbol = tokenTo.symbol;
     secondSymbol = tokenFrom.symbol;
   }
-
-  const lowGasPrice = (parseInt(defaultGasPrice) * 0.8).toString();
-  const displayLowGas = (parseInt(lowGasPrice) / Math.pow(10, 9)).toFixed(2);
-
-  const displayDefaultGas = (
-    parseInt(defaultGasPrice) / Math.pow(10, 9)
-  ).toFixed(2);
-
-  const fastGasPrice = (parseInt(defaultGasPrice) * 1.6).toString();
-  const displayFastGas = (parseInt(fastGasPrice) / Math.pow(10, 9)).toFixed(2);
-  const {usdFormatter} = useUSDFormatter();
+  const { usdFormatter } = useUSDFormatter();
 
   const estimatedFeeUSD = data ? usdFormatter.format(fee * data) : null;
 
@@ -413,11 +382,11 @@ const OrderContent: React.FC<Props> = (props) => {
           {(currentStep === Steps.CONVERT ||
             currentStep === Steps.MARKET ||
             currentStep === Steps.LIMIT) && (
-            <LinearProgress
-              variant='determinate'
-              value={(seconds / REFRESH_RATE_SECONDS) * 100}
-            />
-          )}
+              <LinearProgress
+                variant='determinate'
+                value={(seconds / REFRESH_RATE_SECONDS) * 100}
+              />
+            )}
         </Box>
       ) : null}
       <DialogContent dividers>
@@ -434,8 +403,8 @@ const OrderContent: React.FC<Props> = (props) => {
         ) : (
           <>
             {loading &&
-            currentStep !== Steps.MARKET &&
-            currentStep !== Steps.LIMIT ? (
+              currentStep !== Steps.MARKET &&
+              currentStep !== Steps.LIMIT ? (
               <Box
                 display='flex'
                 flexDirection='column'
@@ -539,7 +508,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     justifyContent='center'>
                     <Typography align='center'>
                       <CheckCircleOutlineIcon
-                        style={{marginBottom: 20, width: 100, height: 100}}
+                        style={{ marginBottom: 20, width: 100, height: 100 }}
                       />
                     </Typography>
 
@@ -557,238 +526,238 @@ const OrderContent: React.FC<Props> = (props) => {
                 {(currentStep === Steps.CONVERT ||
                   currentStep === Steps.MARKET ||
                   currentStep === Steps.LIMIT) && (
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <Grid
-                        container
-                        justify='space-between'
-                        alignItems='center'>
-                        <Grid item>
-                          <Typography className={classes.label} variant='body1'>
-                            {isConvert
-                              ? messages['app.dashboard.convert']
-                              : messages['app.dashboard.send']}
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography className={classes.value} variant='body1'>
-                            {sellAmount}{' '}
-                            <Chip size='small' label={tokenFrom.symbol} />
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Grid
-                        container
-                        justify='space-between'
-                        alignItems='center'>
-                        <Grid item>
-                          <Typography className={classes.label} variant='body1'>
-                            {isConvert ? (
-                              <IntlMessages id='app.dashboard.to' />
-                            ) : (
-                              <IntlMessages id='app.dashboard.receive' />
-                            )}
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography className={classes.value} variant='body1'>
-                            {isMarket || isConvert
-                              ? buyAmount.toFixed(6)
-                              : limitReceive}{' '}
-                            <Chip size='small' label={tokenTo.symbol} />
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    {!isConvert && (
-                      <>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            justify='space-between'
-                            alignItems='center'>
-                            <Grid item>
-                              <Typography
-                                className={classes.label}
-                                variant='body1'>
-                                <IntlMessages id='app.dashboard.atPrice' />
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography
-                                className={classes.value}
-                                variant='body1'>
-                                ${displayPrice}{' '}
-                                <Chip label={firstSymbol} size='small' /> per{' '}
-                                <Chip size='small' label={secondSymbol} />
-                                <IconButton
-                                  style={{marginLeft: 5}}
-                                  size='small'
-                                  onClick={invertPrice}>
-                                  <SyncAltIcon fontSize='small' />
-                                </IconButton>
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Grid
-                            container
-                            justify='space-between'
-                            alignItems='center'>
-                            <Grid item>
-                              <Typography
-                                variant='body1'
-                                className={classes.label}>
-                                <IntlMessages id='app.dashboard.estimatedFee' />
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography
-                                className={classes.value}
-                                variant='body1'>
-                                {fee.toFixed(6)}{' '}
-                                <Chip
-                                  size='small'
-                                  label={GET_NATIVE_COIN_FROM_NETWORK_NAME(
-                                    networkName,
-                                  ).toUpperCase()}
-                                />{' '}
-                                ({estimatedFeeUSD})
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </>
-                    )}
-                    {!isMarket && !isConvert && (
+                    <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <Grid
                           container
-                          alignItems='center'
-                          justify='space-between'>
+                          justify='space-between'
+                          alignItems='center'>
                           <Grid item>
-                            <Typography variant='body1'>
-                              <IntlMessages id='app.dashboard.expiry' />
+                            <Typography className={classes.label} variant='body1'>
+                              {isConvert
+                                ? messages['app.dashboard.convert']
+                                : messages['app.dashboard.send']}
                             </Typography>
                           </Grid>
                           <Grid item>
-                            <Typography variant='body1'>
-                              {expiryFn.toLocaleDateString() +
-                                ' - ' +
-                                expiryFn.toLocaleTimeString()}
+                            <Typography className={classes.value} variant='body1'>
+                              {sellAmount}{' '}
+                              <Chip size='small' label={tokenFrom.symbol} />
                             </Typography>
                           </Grid>
                         </Grid>
                       </Grid>
-                    )}
 
-                    {isMarket && !isConvert && (
                       <Grid item xs={12}>
-                        <Box py={2}>
-                          <Paper variant='outlined'>
-                            <Box p={4}>
-                              <Box
-                                display='flex'
-                                justifyContent='space-between'
-                                alignItems='center'>
-                                <Typography variant='body1'>
-                                  <IntlMessages id='app.dashboard.advanced' />
-                                </Typography>
-                                <IconButton
-                                  size='small'
-                                  onClick={handleToggleAdvanced}>
-                                  {showAdvanced ? (
-                                    <ExpandLessIcon />
-                                  ) : (
-                                    <ExpandMoreIcon />
-                                  )}
-                                </IconButton>
-                              </Box>
-                              <Collapse in={showAdvanced}>
-                                <Box pt={2}>
-                                  <Grid
-                                    container
-                                    justify='space-between'
-                                    alignItems='center'
-                                    spacing={2}>
-                                    <Grid item xs={12}>
-                                      <Typography>
-                                        <IntlMessages id='app.dashboard.slippage' />{' '}
-                                        <IconButton
-                                          size='small'
-                                          className={classes.textSecondary}
-                                          onClick={handleClickGuaranteedPrice}>
-                                          <HelpOutlineIcon fontSize='small' />
-                                        </IconButton>
-                                      </Typography>
-
-                                      <Popover
-                                        id={popoverId}
-                                        open={open}
-                                        anchorEl={anchorEl}
-                                        onClose={handleCloseGuaranteedPrice}
-                                        anchorOrigin={{
-                                          vertical: 'bottom',
-                                          horizontal: 'center',
-                                        }}
-                                        transformOrigin={{
-                                          vertical: 'top',
-                                          horizontal: 'center',
-                                        }}>
-                                        <Box padding={3}>
-                                          <Typography
-                                            className={classes.textSecondary}>
-                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />
-                                          </Typography>
-                                          <Typography
-                                            className={classes.textPrimary}
-                                            align='right'>
-                                            {displayGuaranteedPrice} $
-                                            {firstSymbol}{' '}
-                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />{' '}
-                                            ${secondSymbol}
-                                          </Typography>
-                                        </Box>
-                                      </Popover>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                      <TextField
-                                        fullWidth
-                                        id='slippage_inp'
-                                        variant='outlined'
-                                        type='number'
-                                        inputProps={{
-                                          min: 0,
-                                          max: 1,
-                                          step: 0.01,
-                                        }}
-                                        value={slippage}
-                                        onChange={(e) => {
-                                          setSlippage(Number(e.target.value));
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Box>
-                              </Collapse>
-                            </Box>
-                          </Paper>
-                        </Box>
+                        <Grid
+                          container
+                          justify='space-between'
+                          alignItems='center'>
+                          <Grid item>
+                            <Typography className={classes.label} variant='body1'>
+                              {isConvert ? (
+                                <IntlMessages id='app.dashboard.to' />
+                              ) : (
+                                <IntlMessages id='app.dashboard.receive' />
+                              )}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography className={classes.value} variant='body1'>
+                              {isMarket || isConvert
+                                ? buyAmount.toFixed(6)
+                                : limitReceive}{' '}
+                              <Chip size='small' label={tokenTo.symbol} />
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                    )}
-                  </Grid>
-                )}
+                      {!isConvert && (
+                        <>
+                          <Grid item xs={12}>
+                            <Grid
+                              container
+                              justify='space-between'
+                              alignItems='center'>
+                              <Grid item>
+                                <Typography
+                                  className={classes.label}
+                                  variant='body1'>
+                                  <IntlMessages id='app.dashboard.atPrice' />
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography
+                                  className={classes.value}
+                                  variant='body1'>
+                                  ${displayPrice}{' '}
+                                  <Chip label={firstSymbol} size='small' /> per{' '}
+                                  <Chip size='small' label={secondSymbol} />
+                                  <IconButton
+                                    style={{ marginLeft: 5 }}
+                                    size='small'
+                                    onClick={invertPrice}>
+                                    <SyncAltIcon fontSize='small' />
+                                  </IconButton>
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Grid
+                              container
+                              justify='space-between'
+                              alignItems='center'>
+                              <Grid item>
+                                <Typography
+                                  variant='body1'
+                                  className={classes.label}>
+                                  <IntlMessages id='app.dashboard.estimatedFee' />
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography
+                                  className={classes.value}
+                                  variant='body1'>
+                                  {fee.toFixed(6)}{' '}
+                                  <Chip
+                                    size='small'
+                                    label={GET_NATIVE_COIN_FROM_NETWORK_NAME(
+                                      networkName,
+                                    ).toUpperCase()}
+                                  />{' '}
+                                  ({estimatedFeeUSD})
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </>
+                      )}
+                      {!isMarket && !isConvert && (
+                        <Grid item xs={12}>
+                          <Grid
+                            container
+                            alignItems='center'
+                            justify='space-between'>
+                            <Grid item>
+                              <Typography variant='body1'>
+                                <IntlMessages id='app.dashboard.expiry' />
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant='body1'>
+                                {expiryFn.toLocaleDateString() +
+                                  ' - ' +
+                                  expiryFn.toLocaleTimeString()}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      )}
+
+                      {isMarket && !isConvert && (
+                        <Grid item xs={12}>
+                          <Box py={2}>
+                            <Paper variant='outlined'>
+                              <Box p={4}>
+                                <Box
+                                  display='flex'
+                                  justifyContent='space-between'
+                                  alignItems='center'>
+                                  <Typography variant='body1'>
+                                    <IntlMessages id='app.dashboard.advanced' />
+                                  </Typography>
+                                  <IconButton
+                                    size='small'
+                                    onClick={handleToggleAdvanced}>
+                                    {showAdvanced ? (
+                                      <ExpandLessIcon />
+                                    ) : (
+                                      <ExpandMoreIcon />
+                                    )}
+                                  </IconButton>
+                                </Box>
+                                <Collapse in={showAdvanced}>
+                                  <Box pt={2}>
+                                    <Grid
+                                      container
+                                      justify='space-between'
+                                      alignItems='center'
+                                      spacing={2}>
+                                      <Grid item xs={12}>
+                                        <Typography>
+                                          <IntlMessages id='app.dashboard.slippage' />{' '}
+                                          <IconButton
+                                            size='small'
+                                            className={classes.textSecondary}
+                                            onClick={handleClickGuaranteedPrice}>
+                                            <HelpOutlineIcon fontSize='small' />
+                                          </IconButton>
+                                        </Typography>
+
+                                        <Popover
+                                          id={popoverId}
+                                          open={open}
+                                          anchorEl={anchorEl}
+                                          onClose={handleCloseGuaranteedPrice}
+                                          anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'center',
+                                          }}
+                                          transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'center',
+                                          }}>
+                                          <Box padding={3}>
+                                            <Typography
+                                              className={classes.textSecondary}>
+                                              <IntlMessages id='app.coinLeagues.guaranteedPrice' />
+                                            </Typography>
+                                            <Typography
+                                              className={classes.textPrimary}
+                                              align='right'>
+                                              {displayGuaranteedPrice} $
+                                              {firstSymbol}{' '}
+                                              <IntlMessages id='app.coinLeagues.guaranteedPrice' />{' '}
+                                              ${secondSymbol}
+                                            </Typography>
+                                          </Box>
+                                        </Popover>
+                                      </Grid>
+                                      <Grid item xs={12}>
+                                        <TextField
+                                          fullWidth
+                                          id='slippage_inp'
+                                          variant='outlined'
+                                          type='number'
+                                          inputProps={{
+                                            min: 0,
+                                            max: 1,
+                                            step: 0.01,
+                                          }}
+                                          value={slippage}
+                                          onChange={(e) => {
+                                            setSlippage(Number(e.target.value));
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                </Collapse>
+                              </Box>
+                            </Paper>
+                          </Box>
+                        </Grid>
+                      )}
+                    </Grid>
+                  )}
               </>
             )}
           </>
         )}
       </DialogContent>
 
-      <DialogActions style={{display: 'block'}}>
+      <DialogActions style={{ display: 'block' }}>
         <Box p={4}>
           {loading ? (
             <LoadingStep currentStepIndex={currentStepIndex} />

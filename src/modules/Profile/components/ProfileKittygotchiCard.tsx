@@ -32,6 +32,8 @@ import {canFeedKitty, isKittyTired} from 'modules/Kittygotchi/utils';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import {leftPad} from 'utils';
 
+import EditIcon from '@material-ui/icons/Edit';
+
 const useStyles = makeStyles((theme) => ({
   avatar: {
     border: ' 1px solid #525C75',
@@ -55,7 +57,7 @@ interface ProfileKittygotchiCardProps {
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, onFeed, kittygotchi, loadingKyttie} = props;
+  const {loading, onMint, onFeed, kittygotchi, loadingKyttie, onEdit} = props;
 
   const theme = useTheme();
 
@@ -82,45 +84,52 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               <Grid item xs={12}>
                 <Alert severity='info'>
                   <Typography variant='body2'>
-                    Connect to <strong>Polygon(MATIC)</strong> network to create
-                    a Kittygotchi
+                    Connect your wallet to <strong>Polygon(MATIC)</strong> network to create
+                    a Kittygotchi Or see your default minted Kitty
                   </Typography>
                 </Alert>
               </Grid>
             ) : null}
-            <Grid item xs={12}>
-              <Box
-                display='flex'
-                alignItems='center'
-                alignContent='center'
-                justifyContent='center'>
-                <NFTEmptyStateImage />
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography gutterBottom align='center' variant='h6'>
-                You don't have a Kittygotchi NFT yet
-              </Typography>
+            {chainId === ChainId.Matic || chainId === ChainId.Mumbai ? (
+              <>
+                <Grid item xs={12}>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    alignContent='center'
+                    justifyContent='center'>
+                    <NFTEmptyStateImage />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography gutterBottom align='center' variant='h6'>
+                    You don't have a Kittygotchi NFT yet
+                  </Typography>
 
-              <Typography color='textSecondary' align='center' variant='body2'>
-                You will need <strong>10 MATIC</strong> tokens in your wallet to
-                create one.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box display='flex' justifyContent='center'>
-                <Button
-                  onClick={onMint}
-                  disabled={
-                    chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
-                  }
-                  startIcon={<GavelIcon />}
-                  variant='outlined'
-                  color='primary'>
-                  Create Kittygotchi
-                </Button>
-              </Box>
-            </Grid>
+                  <Typography
+                    color='textSecondary'
+                    align='center'
+                    variant='body2'>
+                    You will need <strong>10 MATIC</strong> tokens in your
+                    wallet to create one.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box display='flex' justifyContent='center'>
+                    <Button
+                      onClick={onMint}
+                      disabled={
+                        chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
+                      }
+                      startIcon={<GavelIcon />}
+                      variant='outlined'
+                      color='primary'>
+                      Create Kittygotchi
+                    </Button>
+                  </Box>
+                </Grid>{' '}
+              </>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>
@@ -169,21 +178,21 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     </Tooltip>
                   )}
                 </Grid>
-                {/*<Grid item>
+                <Grid item>
                   {loadingKyttie ? (
                     <Skeleton
                       variant='circle'
-                      width={theme.spacing(5)}
-                      height={theme.spacing(5)}
+                      width={theme.spacing(8)}
+                      height={theme.spacing(8)}
                     />
                   ) : (
-                    <Tooltip title='Edit (Coming soon)'>
-                      <RoundedIconButton disabled onClick={onEdit}>
+                    <Tooltip title='Edit'>
+                      <RoundedIconButton onClick={onEdit}>
                         <EditIcon />
                       </RoundedIconButton>
                     </Tooltip>
                   )}
-                </Grid>*/}
+                </Grid>
                 <Grid item>
                   {loadingKyttie ? (
                     <Skeleton

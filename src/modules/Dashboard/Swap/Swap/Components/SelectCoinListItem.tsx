@@ -2,6 +2,8 @@ import React, {useCallback} from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import {makeStyles} from '@material-ui/core';
@@ -38,6 +40,12 @@ export const SelectCoinListItem = (props: Props) => {
         primary={coin.ticker?.toUpperCase()}
         secondary={coin.fullName}
       />
+
+      {coin.protocol ? (
+        <ListItemSecondaryAction>
+          <Chip label={coin.protocol?.toUpperCase()} />
+        </ListItemSecondaryAction>
+      ) : null}
     </ListItem>
   );
 };

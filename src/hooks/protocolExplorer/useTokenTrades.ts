@@ -13,7 +13,7 @@ import {EXCHANGE} from 'shared/constants/AppEnums';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_DEFAULT_QUOTE,
-  GET_DEFAULT_USD_TOKEN_BY_NETWORK
+  GET_DEFAULT_USD_TOKEN_BY_NETWORK,
 } from 'shared/constants/Blockchain';
 
 import {EthereumNetwork} from '../../../__generated__/globalTypes';
@@ -39,8 +39,6 @@ export const useTokenTrades = ({
   const [toDate, setTo] = useState(getAfer24HoursDate());
   const [seconds, setSeconds] = useState(0);
   const {filters} = useContext(FilterContext);
-
-
 
   const from = getFilterValueById('from', filters);
   const toFilter = getFilterValueById('to', filters);
@@ -72,18 +70,25 @@ export const useTokenTrades = ({
 
   const [data, setData] = useState<GetTokenTrades_ethereum_dexTrades[]>();
 
-  const {loading, error, data: dataFn, networkStatus} = useQuery<
-    GetTokenTrades,
-    GetTokenTradesVariables
-  >(BITQUERY_TOKEN_TRADES, {
+  const {
+    loading,
+    error,
+    data: dataFn,
+    networkStatus,
+  } = useQuery<GetTokenTrades, GetTokenTradesVariables>(BITQUERY_TOKEN_TRADES, {
     variables: {
       network: networkName,
       exchangeName:
         GET_EXCHANGE_NAME(exchange) === ''
           ? undefined
           : GET_EXCHANGE_NAME(exchange),
-      baseAddress:  baseAddress,
-      quoteAddress: quoteAddress ||  baseAddress?.toLowerCase() === (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase() ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string) : (GET_DEFAULT_QUOTE(chainId) as string), 
+      baseAddress: baseAddress,
+      quoteAddress:
+        quoteAddress ||
+        baseAddress?.toLowerCase() ===
+          (GET_DEFAULT_QUOTE(chainId) as string)?.toLowerCase()
+          ? (GET_DEFAULT_USD_TOKEN_BY_NETWORK(networkName) as string)
+          : (GET_DEFAULT_QUOTE(chainId) as string),
       limit: rowsPerPage,
       offset: skipRows,
       from,
@@ -130,4 +135,3 @@ export const useTokenTrades = ({
     seconds,
   };
 };
-

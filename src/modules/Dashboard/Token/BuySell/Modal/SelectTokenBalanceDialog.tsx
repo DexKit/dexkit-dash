@@ -239,10 +239,8 @@ export const SelectTokenBalanceDialog = (props: Props) => {
           </>
         ) : null}
         {getFilteredTokens(filteredTokens, selectedNetwork).length == 0 ? (
-          <Box p={4}>
-            <Typography variant='body1'>
-              <IntlMessages id='app.dashboard.noTokensFound' />
-            </Typography>
+          <Box p={4} justifyContent={'center'}>
+            <Typography variant='body1'> <IntlMessages id='app.dashboard.noTokensFound' /></Typography>
           </Box>
         ) : (
           <List disablePadding>

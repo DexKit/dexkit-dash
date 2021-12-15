@@ -28,19 +28,19 @@ import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 
 interface Props extends DialogProps {
   title?: string;
-  address: string;
+  id: string;
   playerAddress?: string;
   coins: string[];
   captainCoin?: string;
 }
 
 export const ViewCoinLeagueDialog = (props: Props) => {
-  const {onClose, coins, address, captainCoin, playerAddress} = props;
+  const {onClose, coins, id, captainCoin, playerAddress} = props;
+  const {messages} = useIntl();
   const {chainId} = useWeb3();
   const theme = useTheme();
-  const {messages} = useIntl();
-  const {allFeeds, currentPrices, game} = useCoinLeagues(address);
-  const {multiplier, tooltipMessage} = useMultipliers(address);
+  const {allFeeds, currentPrices, game} = useCoinLeagues(id);
+  const {multiplier, tooltipMessage} = useMultipliers(id);
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
   const [filteredCoins, setFilteredCoins] = useState<
@@ -114,7 +114,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
       );
       setFilteredCoins(filtered);
     },
-    [coins],
+    [allCoins],
   );
 
   const handleClose = useCallback(() => {
@@ -127,7 +127,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth='md'
       fullWidth
       {...props}
       aria-labelledby='form-dialog-title'
@@ -160,10 +160,8 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {filteredCoins.length == 0 ? (
-          <Typography variant='body1'>
-            <IntlMessages id='app.coinLeagues.noCoinsFound' />
-          </Typography>
+        {filteredCoins.length === 0 ? (
+          <Typography variant='body1'> <IntlMessages id='app.coinLeagues.noCoinsFound' /></Typography>
         ) : (
           <List>
             {filteredCoins.map((coin, i) => (

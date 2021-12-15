@@ -7,10 +7,11 @@ import AddIcon from '@material-ui/icons/Add';
 interface Props {
   canMintChampion: () => boolean;
   onMintChampion: () => void;
+  soldOut?: boolean;
 }
 
 export function MintChampionButton(props: Props) {
-  const {canMintChampion, onMintChampion} = props;
+  const {canMintChampion, onMintChampion, soldOut} = props;
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
@@ -29,13 +30,13 @@ export function MintChampionButton(props: Props) {
 
   return (
     <Button
-      disabled={disabled}
+      disabled={disabled || soldOut}
       onClick={onMintChampion}
       fullWidth
       startIcon={<AddIcon />}
       variant='contained'
       color='primary'>
-      Create Champion
+      {soldOut ? 'Sold Out' : 'Create Champion'}
     </Button>
   );
 }

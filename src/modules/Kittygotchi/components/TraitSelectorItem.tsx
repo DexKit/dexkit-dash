@@ -5,7 +5,7 @@ import {makeStyles, ButtonBase, Typography, Box} from '@material-ui/core';
 import {KittygotchiTraitItem} from '../types/index';
 import {KittygotchiTraitType} from '../constants/index';
 import {LockIcon} from 'shared/components/Icons';
-import {getImageFromTrait} from '../utils';
+import {getImageFromTraitIcon} from '../utils';
 
 const useStyles = makeStyles((theme) => ({
   circle: {
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
     width: theme.spacing(16),
     height: theme.spacing(16),
+    '&:disabled': {
+      backgrdound: theme.palette.grey[700],
+    },
   },
   selectedCircle: {
     backgroundColor: theme.palette.grey[600],
@@ -79,10 +82,11 @@ interface TraitSelectorItemProps {
   selected: boolean;
   locked?: boolean;
   onClick: (item: KittygotchiTraitItem) => void;
+  disabled?: boolean;
 }
 
 export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
-  const {item, selected, locked, traitType, onClick} = props;
+  const {item, selected, locked, traitType, onClick, disabled} = props;
   const classes = useStyles();
 
   const handleClick = useCallback(() => {
@@ -91,7 +95,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
 
   return (
     <ButtonBase
-      disabled={locked}
+      disabled={locked || disabled}
       className={classes.button}
       onClick={handleClick}>
       {selected ? (
@@ -99,7 +103,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
           <div className={classes.selectedCircleInner}>
             <img
               alt=''
-              src={getImageFromTrait(traitType, item.value)}
+              src={getImageFromTraitIcon(traitType, item.value)}
               className={classes.image}
             />
           </div>
@@ -109,7 +113,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
           <div className={classes.circle}>
             <img
               alt=''
-              src={getImageFromTrait(traitType, item.value)}
+              src={getImageFromTraitIcon(traitType, item.value)}
               className={classes.image}
             />
           </div>
@@ -127,7 +131,7 @@ export const TraitSelectorItem = (props: TraitSelectorItemProps) => {
           <div className={classes.circle}>
             <img
               alt=''
-              src={getImageFromTrait(traitType, item.value)}
+              src={getImageFromTraitIcon(traitType, item.value)}
               className={classes.image}
             />
           </div>

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import * as Bitquery from './bitquery';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
@@ -98,23 +96,30 @@ export default {
         base.toLowerCase() === wrappedNative[network].toLowerCase() ||
         native[network] === base.toLowerCase()
       ) {
-        const response2 = await axios.post(Bitquery.endpoint, {
-          query: Bitquery.GET_COIN_BARS_NATIVE_USDT,
-          variables: {
+        const query =  Bitquery.GET_COIN_BARS_NATIVE_USDT;
+        const variables =  {
             network: network,
             from: new Date(from * 1000).toISOString(),
             to: new Date(to * 1000).toISOString(),
             interval: Number(resolution),
             wrappedNative: wrappedNative[network],
             usdReference: usdReferecence[network],
-          },
-          mode: 'cors',
+        };
+
+        const queryString = JSON.stringify({ query, variables });
+
+        const requestHeaders = {
+          method: 'post',
           headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string,
+              'Content-Type': 'application/json',
+              'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string,
           },
-        });
-        const bars = response2.data.data.ethereum.dexTrades.map((data: any) => {
+          body: queryString
+      }
+
+        const response = await fetch(Bitquery.endpoint, requestHeaders).then(r => r.json());
+
+        const bars = response.data.ethereum.dexTrades.map((data: any) => {
           // We find the principal pair and multiply by quotePrice in USD
 
           return {
@@ -133,7 +138,31 @@ export default {
           onHistoryCallback(bars, {noData: true});
         }
       } else {
-        const response2 = await axios.post(Bitquery.endpoint, {
+        const query =  Bitquery.GET_COIN_BARS_USDT;
+        const variables =   {
+          network: network,
+          from: new Date(from * 1000).toISOString(),
+          to: new Date(to * 1000).toISOString(),
+          interval: Number(resolution),
+          base: base,
+          wrappedNative: wrappedNative[network],
+          usdReference: usdReferecence[network],
+        };
+
+        const queryString = JSON.stringify({ query, variables });
+
+        const requestHeaders = {
+          method: 'post',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string,
+          },
+          body: queryString
+      }
+
+        const response = await fetch(Bitquery.endpoint, requestHeaders).then(r => r.json());
+     
+        /*const response2 = await axios.post(Bitquery.endpoint, {
           query: Bitquery.GET_COIN_BARS_USDT,
           variables: {
             network: network,
@@ -149,9 +178,9 @@ export default {
             'Content-Type': 'application/json',
             'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string,
           },
-        });
+        });*/
 
-        const groups = response2.data.data.ethereum.dexTrades.reduce(
+        const groups = response.data.ethereum.dexTrades.reduce(
           (group: any, el: any) => {
             const date = Math.floor(
               new Date(el.timeInterval.minute).getTime() / 1000,

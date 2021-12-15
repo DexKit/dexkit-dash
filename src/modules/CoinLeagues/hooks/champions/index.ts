@@ -4,15 +4,14 @@ import {useWeb3} from 'hooks/useWeb3';
 
 import axios from 'axios';
 
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useQuery} from 'react-query';
-import {getTokenBalances} from 'services/multicall';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+
 import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
-import {Token} from 'types/app';
+
 import {ChainId, Web3State} from 'types/blockchain';
 import {
   getChampionMetadata,
+  getChampionsTotalSupply,
   mintCoinLeaguesChampion,
 } from 'modules/CoinLeagues/services/champions';
 import {CHAMPIONS} from 'modules/CoinLeagues/constants';
@@ -21,11 +20,7 @@ import {
   CoinLeaguesChampion,
 } from 'modules/CoinLeagues/utils/types';
 
-import {
-  ApolloClient,
-  gql,
-  InMemoryCache,
-} from '@apollo/client';
+import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
@@ -61,28 +56,33 @@ export function useChampionMint() {
       if (chainId === ChainId.Mumbai) {
         championsAddress = CHAMPIONS[ChainId.Mumbai];
       } else if (chainId === ChainId.Matic) {
-        championsAddress = '';
+        championsAddress = CHAMPIONS[ChainId.Matic];
       }
 
       setLoading(true);
 
-      return mintCoinLeaguesChampion(pr, championsAddress, (hash: string) => {
-        setTransactionHash(hash);
+      return mintCoinLeaguesChampion(
+        pr,
+        championsAddress,
+        chainId,
+        (hash: string) => {
+          setTransactionHash(hash);
 
-        createNotification({
-          title: 'Create Champion',
-          body: `Creating a Coin Leagues Champion`,
-          timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, hash),
-          urlCaption: 'View transaction',
-          type: NotificationType.TRANSACTION,
-          metadata: {
-            chainId: chainId,
-            transactionHash: hash,
-            status: 'pending',
-          } as TxNotificationMetadata,
-        });
-      })
+          createNotification({
+            title: 'Create Champion',
+            body: `Creating a Coin League Champion`,
+            timestamp: Date.now(),
+            url: getTransactionScannerUrl(chainId, hash),
+            urlCaption: 'View transaction',
+            type: NotificationType.TRANSACTION,
+            metadata: {
+              chainId: chainId,
+              transactionHash: hash,
+              status: 'pending',
+            } as TxNotificationMetadata,
+          });
+        },
+      )
         .then((id: string) => {
           setLoading(false);
 
@@ -125,7 +125,7 @@ export const useChampionMetadata = (tokenId?: string) => {
         url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
       } else if (chainId === ChainId.Matic) {
         // TODO: put production url;
-        url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+        url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
       }
 
       axios
@@ -147,9 +147,11 @@ export const useChampionMetadata = (tokenId?: string) => {
             }
           }
 
-          if (err.response.status === 404) {
-            fetch(tokenId);
-            return;
+          if (err.response) {
+            if (err.response.status === 404) {
+              fetch(tokenId);
+              return;
+            }
           }
 
           setError(err);
@@ -167,34 +169,117 @@ export const useChampionMetadata = (tokenId?: string) => {
   return {data, loading, error, clear, fetch};
 };
 
-export const useChampionTokenHolding = (account?: string) => {
+export const useChampionMetadataQuery = (tokenId?: string) => {
   const {chainId} = useWeb3();
+  return useQuery(['GET_CHAMPION_METADATA', tokenId, chainId], () => {
+    if (!tokenId || !chainId) {
+      return;
+    }
 
-  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+    let url = '';
 
-  const query = useQuery(
-    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
-    async () => {
-      if (account && chainId) {
-        const DexKit = DEXKIT[ChainId.Matic];
-        const Bitt = BITTOKEN[ChainId.Matic];
+    if (chainId === ChainId.Mumbai) {
+      url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+    } else if (chainId === ChainId.Matic) {
+      // TODO: put production url;
+      url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
+    }
 
-        const tokens = [DexKit, Bitt];
+    return axios
+      .get<ChampionMetadata>(url, {
+        timeout: 120000,
+        timeoutErrorMessage: 'timeout',
+      })
+      .then((r) => r.data);
+  });
+};
+// TODO: create query on backend to return all these id's at once
+export const useChampionsMetadataQuery = (tokenIds?: string[]) => {
+  const {chainId} = useWeb3();
+  return useQuery(['GET_CHAMPION_METADATA', tokenIds, chainId], async () => {
+    if (!tokenIds || !tokenIds.length || !chainId) {
+      return;
+    }
+    let champions = [];
+    for (let index = 0; index < tokenIds.length; index++) {
+      let url = '';
 
-        const [, tb] = await getTokenBalances(
-          (tokens.filter((t) => t !== undefined) as Token[]).map(
-            (t) => t.address,
-          ),
-          account,
-          networkProvider,
-        );
+      if (chainId === ChainId.Mumbai) {
+        url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenIds[index]}`;
+      } else if (chainId === ChainId.Matic) {
+        // TODO: put production url;
+        url = `https://coinleaguechampions.dexkit.com/api/${tokenIds[index]}`;
+      }
 
-        return (tokens.filter((t) => t !== undefined) as Token[]).map((t) => {
+      const item = await axios
+        .get<ChampionMetadata>(url, {
+          timeout: 120000,
+          timeoutErrorMessage: 'timeout',
+        })
+        .then((r) => r.data)
+        .then((d) => {
           return {
-            token: t,
-            balance: tb[t.address],
+            id: tokenIds[index],
+            ...d,
           };
         });
+      champions.push(item);
+    }
+    return champions;
+  });
+};
+
+export const useChampionTokenHolding = (account?: string) => {
+  const {chainId, getProvider} = useWeb3();
+
+  const query = useQuery(
+    ['GET_COIN_LEAGUES_BALANCES_HOLDING', account, chainId, getProvider],
+    async () => {
+      const ABI = [
+        'function balanceOf(address _owner) public view returns (uint256 balance)',
+      ];
+
+      if (
+        account &&
+        chainId &&
+        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      ) {
+        const DexKit = DEXKIT[chainId as ChainId];
+        const Bitt = BITTOKEN[chainId as ChainId];
+
+        if (DexKit?.address && Bitt?.address) {
+          const kitContract = new ethers.Contract(
+            DexKit?.address,
+            ABI,
+            new ethers.providers.Web3Provider(getProvider()).getSigner(),
+          );
+
+          const bittContract = new ethers.Contract(
+            Bitt?.address,
+            ABI,
+            new ethers.providers.Web3Provider(getProvider()).getSigner(),
+          );
+
+          return {
+            kit: parseInt(
+              ethers.utils.formatUnits(
+                await kitContract.balanceOf(account),
+                18,
+              ),
+            ),
+            bitt: parseInt(
+              ethers.utils.formatUnits(
+                await bittContract.balanceOf(account),
+                18,
+              ),
+            ),
+          };
+        }
+
+        return {
+          kit: 0,
+          bitt: 0,
+        };
       }
     },
   );
@@ -205,8 +290,16 @@ export const useChampionTokenHolding = (account?: string) => {
 const COIN_LEAGUES_CHAMPION_URL_NUMBAI =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/championsmumbai';
 
+const COIN_LEAGUES_CHAMPION_URL_MATIC =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/champions';
+
 const mumbaiClient = new ApolloClient({
   uri: COIN_LEAGUES_CHAMPION_URL_NUMBAI,
+  cache: new InMemoryCache(),
+});
+
+const maticClient = new ApolloClient({
+  uri: COIN_LEAGUES_CHAMPION_URL_MATIC,
   cache: new InMemoryCache(),
 });
 
@@ -237,39 +330,49 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
   const fetch = useCallback(() => {
     if (defaultAccount && chainId) {
       setLoading(true);
+      if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+        let client = maticClient;
 
-      mumbaiClient
-        .query({
-          query: GET_MY_CHAMPIONS,
-          variables: {owner: defaultAccount.toLocaleLowerCase()},
-        })
-        .then(async (result) => {
-          let tokens: any[] = result.data.tokens;
+        if (chainId === ChainId.Mumbai) {
+          client = mumbaiClient;
+        }
+        client
+          .query({
+            query: GET_MY_CHAMPIONS,
+            variables: {owner: defaultAccount.toLocaleLowerCase()},
+          })
 
-          let champions: CoinLeaguesChampion[] = [];
+          .then(async (result) => {
+            let tokens: any[] = result.data.tokens;
 
-          for (let t of tokens) {
-            let metadata: ChampionMetadata = await getChampionMetadata(t.id);
+            let champions: CoinLeaguesChampion[] = [];
 
-            let champ: CoinLeaguesChampion = {
-              id: t.id,
-              name: metadata.name,
-              description: metadata.description,
-              image: metadata.image,
-              attack: parseInt(t.attack),
-              defense: parseInt(t.defense),
-              run: parseInt(t.run),
-            };
-            champions.push(champ);
-          }
+            for (let t of tokens) {
+              let metadata: ChampionMetadata = await getChampionMetadata(
+                t.id,
+                chainId,
+              );
 
-          setData(champions.slice(0, limit));
-          setLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setLoading(false);
-        });
+              let champ: CoinLeaguesChampion = {
+                id: t.id,
+                name: metadata.name,
+                description: metadata.description,
+                image: metadata.image,
+                attack: parseInt(t.attack),
+                defense: parseInt(t.defense),
+                run: parseInt(t.run),
+              };
+              champions.push(champ);
+            }
+
+            setData(champions.slice(0, limit));
+            setLoading(false);
+          })
+          .catch((err) => {
+            setError(err);
+            setLoading(false);
+          });
+      }
     }
   }, [defaultAccount, chainId, limit]);
 
@@ -277,7 +380,25 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
     if (chainId && defaultAccount) {
       fetch();
     }
-  }, [chainId, defaultAccount]);
+  }, [chainId, defaultAccount, fetch]);
 
   return {fetch, data, loading, error};
+}
+
+export function useChampionsTotalSupply(chainId?: number) {
+  const [totalSupply, setTotalSupply] = useState(0);
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      getChampionsTotalSupply(chainId).then((data) => {
+        setTotalSupply(data.totalSupply + 1);
+      });
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [chainId]);
+
+  return {totalSupply};
 }

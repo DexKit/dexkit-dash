@@ -3,18 +3,18 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { Network } from "./../../../../../__generated__/globalTypes";
+import {Network} from './../../../../../__generated__/globalTypes';
 
 // ====================================================
 // GraphQL query operation: SearchCurrencyByAddress
 // ====================================================
 
 export interface SearchCurrencyByAddress_search_subject_Address {
-  __typename: "Address" | "HederaAccount" | "SmartContract" | "TransactionHash";
+  __typename: 'Address' | 'HederaAccount' | 'SmartContract' | 'TransactionHash';
 }
 
 export interface SearchCurrencyByAddress_search_subject_Currency {
-  __typename: "Currency";
+  __typename: 'Currency';
   /**
    * Currency symbol
    */
@@ -41,10 +41,12 @@ export interface SearchCurrencyByAddress_search_subject_Currency {
   decimals: number;
 }
 
-export type SearchCurrencyByAddress_search_subject = SearchCurrencyByAddress_search_subject_Address | SearchCurrencyByAddress_search_subject_Currency;
+export type SearchCurrencyByAddress_search_subject =
+  | SearchCurrencyByAddress_search_subject_Address
+  | SearchCurrencyByAddress_search_subject_Currency;
 
 export interface SearchCurrencyByAddress_search_network {
-  __typename: "BlockchainNetwork";
+  __typename: 'BlockchainNetwork';
   /**
    * Network name
    */
@@ -52,7 +54,7 @@ export interface SearchCurrencyByAddress_search_network {
 }
 
 export interface SearchCurrencyByAddress_search {
-  __typename: "Result";
+  __typename: 'Result';
   /**
    * Subject in blockchain
    */

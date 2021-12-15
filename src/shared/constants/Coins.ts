@@ -1,5 +1,5 @@
 import {Coin, Token} from 'types/app';
-import { ChainId } from 'types/blockchain';
+import {ChainId} from 'types/blockchain';
 import {Network} from './Bitquery';
 
 export const ETH_SYMBOL_URL =
@@ -40,7 +40,6 @@ const ETH: Token = {
   symbol: 'ETH',
   decimals: 18,
   address: 'eth',
-
 };
 
 const BNB: Token = {
@@ -48,7 +47,6 @@ const BNB: Token = {
   symbol: 'BNB',
   decimals: 18,
   address: 'bnb',
-
 };
 
 const MATIC: Token = {
@@ -56,7 +54,7 @@ const MATIC: Token = {
   symbol: 'MATIC',
   decimals: 18,
   address: 'matic',
-}
+};
 
 export const ETHEREUM_NATIVE_COINS_BY_CHAIN = {
   [ChainId.Mainnet]: ETH,
@@ -69,6 +67,4 @@ export const ETHEREUM_NATIVE_COINS_BY_CHAIN = {
   [ChainId.BinanceTest]: BNB,
   [ChainId.Mumbai]: MATIC,
   [ChainId.Matic]: MATIC,
-  
-  
-}
+};

@@ -104,8 +104,7 @@ export const ProfileIndex = () => {
 
       if (defaultKitty) {
         kittygotchiUpdated.get(defaultKitty.id);
-      } else {
-      }
+      } 
     }
   }, [account, web3State, chainId]);
 
@@ -237,7 +236,7 @@ export const ProfileIndex = () => {
         history.push(`/kittygotchi/${defaultKitty?.id}/edit`);
       }
     }
-  }, [history]);
+  }, [history, chainId, account]);
 
   const onClickBack = useCallback(() => {
     history.push('/');

@@ -1,6 +1,5 @@
 import {useQuery} from '@apollo/client';
 
-
 import {BITQUERY_AMM_PAIR_EXPLORER} from 'services/graphql/bitquery/protocol/amm.gql';
 import {
   GetAMMPairExplorer,
@@ -26,19 +25,23 @@ interface Props {
 export const useAMMPairExplorer = ({exchange, address, networkName}: Props) => {
   const chainId = GET_CHAIN_FROM_NETWORK(networkName);
   const [data, setData] = useState<any>();
-  const {loading, error, data: dataFn} = useQuery<
-    GetAMMPairExplorer,
-    GetAMMPairExplorerVariables
-  >(BITQUERY_AMM_PAIR_EXPLORER, {
-    variables: {
-      network: networkName,
-      exchangeName:
-        exchange === EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
-      pairAddress: address,
-      quoteAddress: GET_DEFAULT_QUOTE(chainId) as string,
+  const {
+    loading,
+    error,
+    data: dataFn,
+  } = useQuery<GetAMMPairExplorer, GetAMMPairExplorerVariables>(
+    BITQUERY_AMM_PAIR_EXPLORER,
+    {
+      variables: {
+        network: networkName,
+        exchangeName:
+          exchange === EXCHANGE.ALL ? undefined : GET_EXCHANGE_NAME(exchange),
+        pairAddress: address,
+        quoteAddress: GET_DEFAULT_QUOTE(chainId) as string,
+      },
+      pollInterval: POLL_INTERVAL,
     },
-    pollInterval: POLL_INTERVAL,
-  });
+  );
 
   useEffect(() => {
     if (

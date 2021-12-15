@@ -14,7 +14,7 @@ export function ChampionTrait(props: Props) {
   return (
     <Paper variant='outlined'>
       <Box p={4}>
-        <Typography align='center' variant='overline'>
+        <Typography component='p' align='center' variant='overline'>
           {traitType}
         </Typography>
         <Typography align='center' variant='body1'>

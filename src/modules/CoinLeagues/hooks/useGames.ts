@@ -1,84 +1,107 @@
 import {useQuery} from '@apollo/client';
 import {useEffect} from 'react';
-import {BITBOY_TEAM, POLL_INTERVAL_GAMES} from '../constants';
-import {FilterGame, GameOrderBy} from '../constants/enums';
+import {POLL_INTERVAL_GAMES} from '../constants';
 import {
-  GET_GAMES,
-  GET_GAMES_WITH_DURATION,
-  GET_GAMES_WITH_PLAYER,
-} from '../services/gql/games';
-import {client} from '../services/graphql';
-import {GET_GAME_ORDER_VARIABLES} from '../utils/game';
-import {GET_DURATION_FROM_FILTER} from '../utils/time';
+  CoinLeagueGameStatus,
+  GameDuration,
+  GameLevel,
+  GameType,
+  NumberOfPLayers,
+} from '../constants/enums';
+
+import {client, nftClient} from '../services/graphql';
+import {
+  getGamesQuery,
+  GET_GAME_LEVEL_AMOUNTS,
+  GET_GAME_ORDER_VARIABLES,
+} from '../utils/game';
+import {GET_DURATION_FROM_FILTER_V2} from '../utils/time';
 import {GameGraph} from '../utils/types';
+import { useIsNFTGame } from './useCoinLeaguesFactory';
+import {GameFiltersState} from './useGamesFilter';
 
-export const useActiveGames = (filter?: FilterGame, accounts?: string[]) => {
-  const duration = GET_DURATION_FROM_FILTER(filter || FilterGame.ALL);
-  const variables: any = {
-    status: 'Started',
-  };
-  let queryName = GET_GAMES;
+interface GamesFilterParams {
+  accounts?: string[];
+  filters?: GameFiltersState;
+}
 
-  if (duration) {
-    variables.duration = duration;
-    queryName = GET_GAMES_WITH_DURATION;
+export const usePlayerGames = () => {};
+
+export interface CoinLeagueGamesParams extends GamesFilterParams {
+  status: string;
+  first?: number;
+  skip?: number;
+  player?: string;
+}
+
+export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false) => {
+  const {accounts, filters, status, first, skip, player} = params;
+  const isNFTGame = useIsNFTGame() || isNFT;
+
+  const variables: any = {};
+
+  if (status) {
+    if (status !== CoinLeagueGameStatus.All) {
+      variables.status = status;
+    }
   }
-  if (filter === FilterGame.Mine) {
-    variables.accounts = accounts?.map((a) => a.toLowerCase());
-    queryName = GET_GAMES_WITH_PLAYER;
+
+  if (skip) {
+    variables.skip = skip;
   }
 
-  if (filter === FilterGame.BitBoy) {
-    variables.accounts = BITBOY_TEAM.map((a) => a.address.toLowerCase());
-    queryName = GET_GAMES_WITH_PLAYER;
+  if (first) {
+    variables.first = first;
+  } else {
+    variables.first = 100;
   }
 
-  const query = useQuery<{games: GameGraph[]}>(queryName, {
-    variables,
-    client: client,
-    pollInterval: POLL_INTERVAL_GAMES,
-  });
+  const order = GET_GAME_ORDER_VARIABLES(filters?.orderByGame);
 
-  useEffect(() => {
-    const refetchQuery = () => query.refetch();
-    window.addEventListener('focus', refetchQuery);
-    return () => window.removeEventListener('focus', refetchQuery);
-  });
-
-  return query;
-};
-
-export const useWaitingGames = (
-  filter?: FilterGame,
-  accounts?: string[],
-  orderBy?: GameOrderBy,
-) => {
-  const duration = GET_DURATION_FROM_FILTER(filter || FilterGame.ALL);
-  const variables: any = {
-    status: 'Waiting',
-  };
-  let queryName = GET_GAMES;
-  const order = GET_GAME_ORDER_VARIABLES(orderBy);
   variables.orderBy = order.orderBy;
   variables.orderDirection = order.orderDirection;
 
-  if (duration) {
-    variables.duration = duration;
-    queryName = GET_GAMES_WITH_DURATION;
+  if (filters?.duration !== GameDuration.ALL) {
+    variables.duration = GET_DURATION_FROM_FILTER_V2(
+      filters?.duration || GameDuration.ALL,
+    );
   }
-  if (filter === FilterGame.Mine) {
+
+  if (filters?.gameLevel !== GameLevel.All) {
+    let entryAmount = GET_GAME_LEVEL_AMOUNTS(
+      filters?.gameLevel || GameLevel.All,
+    ).toString();
+
+    variables.entry = entryAmount;
+  }
+
+  if (filters?.numberOfPlayers !== NumberOfPLayers.ALL) {
+    variables.numPlayers = filters?.numberOfPlayers;
+  }
+
+  if (filters?.gameType !== GameType.ALL) {
+    if (filters?.gameType === GameType.Bull) {
+      variables.type = 'Bull';
+    } else if(filters?.gameType === GameType.Bear) {
+      variables.type = 'Bear';
+    }
+  }
+
+  if (filters?.isMyGames) {
     variables.accounts = accounts?.map((a) => a.toLowerCase());
-    queryName = GET_GAMES_WITH_PLAYER;
+  } else if (filters?.isBitboy) {
+    variables.isBitboyTeam = true;
   }
 
-  if (filter === FilterGame.BitBoy) {
-    variables.accounts = BITBOY_TEAM.map((a) => a.address.toLowerCase());
-    queryName = GET_GAMES_WITH_PLAYER;
+  if (player) {
+    variables.player = player.toLowerCase();
   }
 
-  const query = useQuery<{games: GameGraph[]}>(queryName, {
+  let gqlQuery = getGamesQuery(variables);
+
+  const query = useQuery<{games: GameGraph[]}>(gqlQuery, {
     variables,
-    client: client,
+    client: isNFTGame ? nftClient: client,
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
@@ -90,42 +113,3 @@ export const useWaitingGames = (
 
   return query;
 };
-
-export const useEndedGames = (filter?: FilterGame, accounts?: string[]) => {
-  const duration = GET_DURATION_FROM_FILTER(filter || FilterGame.ALL);
-  const variables: any = {
-    status: 'Ended',
-  };
-  let queryName = GET_GAMES;
-
-  if (duration) {
-    variables.duration = duration;
-    queryName = GET_GAMES_WITH_DURATION;
-  }
-  if (filter === FilterGame.Mine && accounts) {
-    variables.accounts = accounts.map((a) => a.toLowerCase());
-    variables.player = accounts[0].toLowerCase();
-    queryName = GET_GAMES_WITH_PLAYER;
-  }
-
-  if (filter === FilterGame.BitBoy) {
-    variables.accounts = [BITBOY_TEAM[3]];
-    queryName = GET_GAMES_WITH_PLAYER;
-  }
-
-  const query = useQuery<{games: GameGraph[]}>(queryName, {
-    variables,
-    client: client,
-    pollInterval: POLL_INTERVAL_GAMES,
-  });
-
-  useEffect(() => {
-    const refetchQuery = () => query.refetch();
-    window.addEventListener('focus', refetchQuery);
-    return () => window.removeEventListener('focus', refetchQuery);
-  });
-
-  return query;
-};
-
-export const usePlayerGames = () => {};

@@ -13,9 +13,23 @@ import {ReceiveAddressInput} from './ReceiveAddressInput';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
 import {Alert} from '@material-ui/lab';
+import {ChangellyCoin} from 'types/changelly';
+
+function getChangellyBlockChainName(blockchain?: string, defaultName?: string) {
+  if (blockchain) {
+    if (blockchain === 'ethereum') {
+      return 'Ethereum';
+    } else if (blockchain === 'bitcoin') {
+      return 'Bitcoin';
+    } else if (blockchain === 'binance_smart_chain') {
+      return 'Binance Smart Chain';
+    }
+  }
+  return defaultName;
+}
 
 interface Props {
-  toCoin: any;
+  toCoin?: ChangellyCoin;
   addressToSend: string;
   onChange: (value: string) => void;
   onPaste: (value: string) => void;
@@ -44,9 +58,16 @@ export const ReceiveAddressStep = (props: Props) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='body1'>
-          <IntlMessages id='app.dashboard.receiveAddress' />
-        </Typography>
+        <Alert severity='info'>
+          NOTE: Changelly will send your tokens to{' '}
+          <strong>
+            {getChangellyBlockChainName(toCoin?.blockchain, toCoin?.fullName)}
+          </strong>{' '}
+          network
+        </Alert>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant='body1'> <IntlMessages id='app.dashboard.receiveAddress' /></Typography>
       </Grid>
       <Grid item xs={12}>
         <ReceiveAddressInput

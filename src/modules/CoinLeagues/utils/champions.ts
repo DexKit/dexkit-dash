@@ -1,6 +1,17 @@
 import {ethers} from 'ethers';
-import {FIRST_ROUND_DATE} from '../constants';
+import {
+  EARLY_ACCESS_BITT_AMOUNT,
+  EARLY_ACCESS_KIT_AMOUNT,
+  EVENT_HOLDING_AMOUNT,
+  SALE_EARLY_FIRST_ROUND_DATE,
+  SALE_EARLY_SECOND_ROUND_DATE,
+  SALE_EARLY_THIRD_ROUND_DATE,
+  FIRST_ROUND_DATE,
+  SECOND_ROUND_DATE,
+  THIRD_ROUND_DATE,
+} from '../constants';
 import {ChampionsEventRound} from './types';
+import {ChainId} from 'types/blockchain';
 
 export function getEventCurrentRound(): ChampionsEventRound {
   return ChampionsEventRound.FIRST;
@@ -8,12 +19,188 @@ export function getEventCurrentRound(): ChampionsEventRound {
 
 export function getEventAccessDate(
   round: ChampionsEventRound,
-  offset: number = 0,
+  offset = 0,
+  chainId?: number,
 ): number {
-  return FIRST_ROUND_DATE - offset;
+  let currChain = chainId ? chainId : ChainId.Matic;
+
+  if (chainId !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
+
+  if (round === ChampionsEventRound.FIRST) {
+    return FIRST_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.SECOND) {
+    return SECOND_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.THIRD) {
+    return THIRD_ROUND_DATE[currChain] - offset;
+  }
+
+  return 0;
+}
+
+export function getMaxSupplyForRound(round: ChampionsEventRound): number {
+  if (round === ChampionsEventRound.FIRST) {
+    return 3300 + 1000;
+  } else if (round === ChampionsEventRound.SECOND) {
+    return 3300;
+  } else if (round === ChampionsEventRound.THIRD) {
+    return 3400;
+  }
+
+  return 0;
+}
+
+export function getEventEarlyAccessDate(
+  round: ChampionsEventRound,
+  offset = 0,
+  chainId?: number,
+): number {
+  let currChain = chainId ? chainId : ChainId.Matic;
+
+  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
+
+  if (round === ChampionsEventRound.FIRST) {
+    return SALE_EARLY_FIRST_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.SECOND) {
+    return SALE_EARLY_SECOND_ROUND_DATE[currChain] - offset;
+  }
+
+  if (round === ChampionsEventRound.THIRD) {
+    return SALE_EARLY_THIRD_ROUND_DATE[currChain] - offset;
+  }
+
+  return 0;
 }
 
 // mudar para uma variavel.
-export function getEventHoldingAmount(): ethers.BigNumber {
-  return ethers.BigNumber.from(ethers.utils.formatUnits(100, 'wei'));
+export function getEventHoldingAmount(
+  chainId?: number,
+): ethers.BigNumber | undefined {
+  let currChain = chainId ? chainId : ChainId.Matic;
+
+  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
+    currChain = ChainId.Matic;
+  }
+
+  if (currChain) {
+    return EVENT_HOLDING_AMOUNT[chainId as ChainId];
+  }
+
+  return EVENT_HOLDING_AMOUNT[ChainId.Matic];
+}
+
+export function GET_EVENT_HOLDING_AMOUNT(chanId?: number): number | string {
+  const amount = getEventHoldingAmount(chanId);
+
+  if (amount) {
+    return ethers.utils.formatUnits(amount, 18);
+  }
+
+  return 0;
+}
+
+export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number): number {
+  if (chainId) {
+    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+      return EARLY_ACCESS_KIT_AMOUNT[chainId];
+    }
+  }
+
+  return EARLY_ACCESS_KIT_AMOUNT[ChainId.Matic];
+}
+
+export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number): number {
+  if (chainId) {
+    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+      return EARLY_ACCESS_BITT_AMOUNT[chainId];
+    }
+  }
+
+  return EARLY_ACCESS_BITT_AMOUNT[ChainId.Matic];
+}
+
+
+export const getChampionsMultiplier = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return 1.7
+    case 1:
+      return 1.65
+    case 2:
+      return 1.6
+    case 3:
+      return 1.6
+    case 4:
+      return 1.55
+    case 5:
+      return 1.5
+    case 6:
+      return 1.4
+    case 7:
+      return 1.35
+
+    default:
+     return 1;
+  }
+}
+
+export const isChampionsFromRarity = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return true
+    case 1:
+      return true
+    case 2:
+      return true
+    case 3:
+      return true
+    case 4:
+      return true
+    case 5:
+      return true
+    case 6:
+      return true
+    case 7:
+      return true
+    default:
+     return false;
+  }
+}
+
+
+
+export const getChampionsCoinSymbol = (rarityBN: ethers.BigNumber) => {
+  const rarity  = rarityBN.toNumber();
+  switch (rarity) {
+    case 0:
+      return 'BITT'
+    case 1:
+      return 'BTC'
+    case 2:
+      return 'ETH'
+    case 3:
+      return 'LINK'
+    case 4:
+      return 'DOT'
+    case 5:
+      return 'UNI'
+    case 6:
+      return 'ADA'
+    case 7:
+      return 'DOGE'
+
+    default:
+     return 'DOGE'
+  }
 }

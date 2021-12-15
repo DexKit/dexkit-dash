@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "settings",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -77,9 +82,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        "internalType": "contract CoinLeaguesV2",
+        "name": "gameAddress",
+        "type": "address"
       }
     ],
     "name": "abortGame",
@@ -98,7 +103,7 @@
     "name": "allGames",
     "outputs": [
       {
-        "internalType": "contract CoinLeagues",
+        "internalType": "contract CoinLeaguesV2",
         "name": "",
         "type": "address"
       }
@@ -147,7 +152,12 @@
         "type": "uint256"
       },
       {
-        "internalType": "enum CoinLeagues.GameType",
+        "internalType": "uint256",
+        "name": "_start_timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum CoinLeaguesV2.GameType",
         "name": "_game_type",
         "type": "uint8"
       }
@@ -155,7 +165,7 @@
     "name": "createGame",
     "outputs": [
       {
-        "internalType": "contract CoinLeagues",
+        "internalType": "contract CoinLeaguesV2",
         "name": "gameAddress",
         "type": "address"
       }
@@ -166,52 +176,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "createdGames",
-    "outputs": [
-      {
-        "internalType": "contract CoinLeagues",
-        "name": "",
+        "internalType": "contract CoinLeaguesV2",
+        "name": "gameAddress",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
       }
     ],
     "name": "endGame",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "endedGames",
-    "outputs": [
-      {
-        "internalType": "contract CoinLeagues",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -263,9 +235,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
+        "internalType": "contract CoinLeaguesV2",
+        "name": "gameAddress",
+        "type": "address"
       }
     ],
     "name": "startGame",
@@ -274,66 +246,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "startedGames",
-    "outputs": [
-      {
-        "internalType": "contract CoinLeagues",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalCreatedGames",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalEndedGames",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "totalGames",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalStartedGames",
     "outputs": [
       {
         "internalType": "uint256",

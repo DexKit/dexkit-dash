@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -46,6 +46,7 @@ import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -131,7 +132,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       }
     },
-    [dispatch, getProvider, isMagicProvider],
+    [dispatch, getProvider, onSwitchMagicNetwork],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -153,6 +154,33 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   }, []);
 
   const kittygotchiProfile = useProfileKittygotchi();
+  const kittygotchi = useKittygotchiV2();
+  const kittyGotchiList = useKittygotchiList();
+
+  useEffect(() => {
+    if (chainId && account) {
+      const defaultKitty = kittygotchiProfile.getDefault(account, chainId);
+
+      if (defaultKitty) {
+        kittygotchi.get(defaultKitty.id).then((kitty) => {
+          if (account && chainId && kitty) {
+            kittygotchiProfile.setDefaultKittygothchi(account, chainId, kitty);
+          }
+        });
+      } else {
+        kittyGotchiList.get(account.toLowerCase()).then((kitties) => {
+          if (kitties && kitties.length && account && chainId) {
+            kittygotchiProfile.setDefaultKittygothchi(
+              account,
+              chainId,
+              kitties[0],
+            );
+          }
+        });
+      }
+    }
+    /* eslint-disable */
+  }, [chainId, account]);
 
   return (
     <>
@@ -194,7 +222,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                     alignItems='center'
                     alignContent='center'
                     spacing={2}>
-                    {!isMetamask() ? (
+                    {isMetamask() || isMagicProvider() ? (
                       <Grid item>
                         {chainId !== undefined ? (
                           <Grid item>
@@ -211,8 +239,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           </Grid>
                         ) : null}
                       </Grid>
-                    ) : null}
-
+                    ) : (
+                      <Grid item>
+                        <Box
+                          className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}>
+                          {GET_CHAIN_ID_NAME(chainId)}
+                        </Box>
+                      </Grid>
+                    )}
                     {!isOnLoginPage() || account ? (
                       <Grid item>
                         <WalletInfo />
@@ -256,7 +292,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   spacing={2}
                   alignItems='center'
                   alignContent='center'>
-                  {chainId !== undefined ? (
+                  {chainId !== undefined &&
+                  (isMetamask() || isMagicProvider()) ? (
                     <Grid item>
                       <ButtonBase
                         onClick={handleOpenSwitchNetwork}
@@ -270,7 +307,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Box>
                       </ButtonBase>
                     </Grid>
-                  ) : null}
+                  ) : (
+                    <Grid item>
+                      <Box
+                        className={classes.badgeRoot}
+                        display={'flex'}
+                        alignItems={'center'}>
+                        {GET_CHAIN_ID_NAME(chainId)}
+                      </Box>
+                    </Grid>
+                  )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
                       <WalletInfo />

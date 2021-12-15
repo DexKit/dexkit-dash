@@ -58,6 +58,7 @@ interface Props {
   kitHolding: number;
   traitType: KittygotchiTraitType;
   defaultExpanded?: boolean;
+  disabled?: boolean;
 }
 
 export const KittygotchiTraitSelector = (props: Props) => {
@@ -69,6 +70,7 @@ export const KittygotchiTraitSelector = (props: Props) => {
     kitHolding,
     traitType,
     defaultExpanded,
+    disabled,
   } = props;
 
   const classes = useStyles();
@@ -102,6 +104,7 @@ export const KittygotchiTraitSelector = (props: Props) => {
                   locked={kitHolding < item.holding}
                   selected={(value || '') === item.value}
                   onClick={handleSelect}
+                  disabled={disabled}
                 />
               </Grid>
             ))}

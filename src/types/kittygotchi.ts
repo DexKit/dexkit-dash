@@ -6,6 +6,8 @@ export interface Kittygotchi {
   defense: number;
   run: number;
   image?: string;
+  description?: string;
+  name?: string;
   attributes?: any;
   lastUpdated?: number;
 }

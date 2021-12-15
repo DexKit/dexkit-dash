@@ -35,7 +35,7 @@ export enum WalletType {
   evm = 'evm',
 }
 
-export enum SupportedNetworkType{
+export enum SupportedNetworkType {
   bitcoin = 'bitcoin',
   evm = 'evm',
   dogecoin = 'dogecoin',

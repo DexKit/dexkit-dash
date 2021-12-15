@@ -11,6 +11,38 @@ import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
 
+const useStyles = makeStyles((theme: CremaTheme) => ({
+  tableResponsiveMaterial: {
+    minHeight: '.01%',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    '@media (max-width: 767px)': {
+      borderTop: `1px solid ${grey[300]}`,
+      width: '100%',
+      marginBottom: 15,
+      '& > table': {
+        marginBottom: 0,
+        '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td':
+          {
+            whiteSpace: 'nowrap',
+          },
+      },
+    },
+  },
+  paginationDesktop: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
+  },
+  paginationMobile: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
+    },
+  },
+}));
+
+
 interface Props {
   transactionData: GetAffiliateTrades | undefined;
   isLoading: boolean;
@@ -30,36 +62,6 @@ const TransactionTable: React.FC<Props> = ({
   onChangePage,
   onChangePerPage,
 }) => {
-  const useStyles = makeStyles((theme) => ({
-    tableResponsiveMaterial: {
-      minHeight: '.01%',
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      '@media (max-width: 767px)': {
-        borderTop: `1px solid ${grey[300]}`,
-        width: '100%',
-        marginBottom: 15,
-        '& > table': {
-          marginBottom: 0,
-          '& > thead > tr > th, > tbody > tr > th, > tfoot > tr > th, thead > tr > td, tbody > tr > td, tfoot > tr > td':
-            {
-              whiteSpace: 'nowrap',
-            },
-        },
-      },
-    },
-    paginationDesktop: {
-      [theme.breakpoints.down('xs')]: {
-        display: 'none',
-      },
-    },
-    paginationMobile: {
-      display: 'none',
-      [theme.breakpoints.down('xs')]: {
-        display: 'block',
-      },
-    },
-  }));
   const data = transactionData?.ethereum?.transfers
     ? transactionData?.ethereum?.transfers
     : [];

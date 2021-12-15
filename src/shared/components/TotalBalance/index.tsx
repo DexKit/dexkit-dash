@@ -24,10 +24,10 @@ import {useNetwork} from 'hooks/useNetwork';
 import {truncateIsAddress} from 'utils';
 import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
 import {useTransak} from 'hooks/useTransak';
+import {useRamp} from 'hooks/useRamp';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import {SwapComponent} from 'modules/Dashboard/Swap/Swap';
 
 import {StatusSquare} from '../StatusSquare';
 import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
@@ -40,6 +40,8 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+
+const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -246,9 +248,15 @@ const TotalBalance = (props: Props) => {
 
   const {init} = useTransak({});
 
-  const handleBuyCrypto = useCallback(() => {
+  const {initRamp} = useRamp({});
+
+  const handleBuyCryptoTransak = useCallback(() => {
     init();
   }, [init]);
+
+  const handleBuyCryptoRamp = useCallback(() => {
+    initRamp();
+  }, [initRamp]);
 
   const handleSwap = useCallback(() => {
     setShowSwap(true);
@@ -398,7 +406,8 @@ const TotalBalance = (props: Props) => {
             <TradeToolsSection
               onSend={handleShowSender}
               onReceive={handleShowReceiver}
-              onBuyCrypto={handleBuyCrypto}
+              onBuyCryptoTransak={handleBuyCryptoTransak}
+              onBuyCryptoRamp={handleBuyCryptoRamp}
               onSwap={handleSwap}
               onTrade={handleTrade}
               onShare={onShare}

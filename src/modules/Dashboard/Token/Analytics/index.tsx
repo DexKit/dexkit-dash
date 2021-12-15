@@ -1,6 +1,5 @@
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 import {useTokenAnalytics} from 'hooks/token/useTokenAnalytics';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import React from 'react';
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -12,7 +11,7 @@ import {CremaTheme} from 'types/AppContextPropsType';
 import {useSingleBalance} from 'hooks/balance/useSingleBalance';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {OrderSide} from 'types/app';
-import {green, red} from '@material-ui/core/colors';
+
 
 import {ReactComponent as ConnectivityImage} from 'assets/images/state/connectivity-04.svg';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
@@ -130,8 +129,6 @@ export const TokenAnalytics = (props: Props) => {
     (tokenBalance?.value || 0) * Number(priceUSD || 0) -
     ((data?.amountBuySpentUSD || 0) - (data?.amountSellSpentUSD || 0));
   const balanceUSD = (tokenBalance?.value || 0) * Number(priceUSD || 0);
-  const {usdFormatter} = useUSDFormatter();
-  const colorProfitLoss = Number(profitLoss || 0) < 0 ? red[500] : green[500];
 
   // loading
   // error

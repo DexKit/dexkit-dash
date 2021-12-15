@@ -42,10 +42,10 @@ import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
 import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
 import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
 import {useTokenLists} from 'hooks/useTokenLists';
-import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import TokenLogo from 'shared/components/TokenLogo';
 import {watchAsset} from 'utils/wallet';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import { SelectTokenBalanceDialog } from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
 
 type Params = {
   address: string;
@@ -73,6 +73,14 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
   const {messages} = useIntl();
 
   const [token, setToken] = useState<Token>();
+
+  const [tokenToAddress, setTokenToAddress] = useState<string>(address);
+  const [tokenToInfo, setTokenToInfo] = useState<Token>();
+  const [tokenFromInfo, setTokenFromInfo] = useState<Token>();
+
+  const [disableSide, setDisableSide] = useState<'from' | 'to'>();
+
+
   const priceUSD = useTokenPriceUSD(
     address,
     networkName,
@@ -152,12 +160,29 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     }
   }, [getProvider, tokenInfo]);
 
+  const onChangeTokens = useCallback(
+    (from?: Token, to?: Token) => {
+      if(to){
+        setTokenToAddress(to?.address);
+        setTokenToInfo(to);
+      }
+      if(from){
+        setTokenFromInfo(from);
+      }
+    }, [setTokenToInfo, setTokenFromInfo, setTokenToAddress]);
+  
+  const  onChangeDisableReceiveCallback = useCallback((side: 'from' | 'to')=> {
+
+    setDisableSide(side);
+  },[])
+
+
   const handleSelectToken = useCallback((token: Token) => {
     setShowSelectTokens(false);
 
-    let isEthereum = token.symbol.toUpperCase() === 'ETH';
-    let isPolygon = token.symbol.toUpperCase() === 'MATIC';
-    let isBsc = token.symbol.toUpperCase() === 'BNB';
+    let isEthereum = token.symbol.toUpperCase() === 'ETH' && token.networkName === EthereumNetwork.ethereum;
+    let isPolygon = token.symbol.toUpperCase() === 'MATIC' && token.networkName === EthereumNetwork.matic;
+    let isBsc = token.symbol.toUpperCase() === 'BNB' && token.networkName === EthereumNetwork.bsc;
 
     if (isEthereum) {
       history.push(`/wallet/overview/${token.networkName}/eth`);
@@ -168,7 +193,15 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     } else {
       history.push(`/wallet/overview/${token.networkName}/${token.address}`);
     }
-  }, []);
+    if(disableSide == 'from'){
+      setTokenFromInfo(token);
+    }else{
+      setTokenToInfo(token);
+      setTokenToAddress(token.address);
+    }
+
+
+  }, [history, disableSide]);
 
   const handleEthereum = useCallback(() => {
     history.push(
@@ -187,13 +220,14 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
       `/wallet/overview/${EthereumNetwork.matic}/${data?.platforms?.['polygon-pos']}`,
     );
   }, [history, data]);
-
+  
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
-        <SelectTokenDialog
+        <SelectTokenBalanceDialog
           title='Select a token'
           open={showSelectTokens}
+          balances={balances}
           tokens={[...ethTokens, ...maticTokens, ...binanceTokens]}
           onSelectToken={handleSelectToken}
           onClose={handleToggleSelectToken}
@@ -320,6 +354,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       isFavorite={isFavorite}
                       balances={balances}
                       token={tokenInfo}
+                      enableTrade={false}
                     />
                   </Grid>
                 </Grid>
@@ -343,10 +378,12 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                   <Grid item xs={12}>
                     <Card>
                       <BuySell
-                        tokenAddress={address}
+                        tokenAddress={tokenToAddress}
                         balances={balances}
                         networkName={networkName}
-                        tokenInfo={tokenInfo}
+                        tokenInfo={tokenToInfo || tokenInfo}
+                        tokenFromInfo={tokenFromInfo}
+                        onChangeTokens={onChangeTokens}
                         disableReceive
                       />
                     </Card>
@@ -394,13 +431,15 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <Card>
-                      <BuySell
-                        tokenAddress={address}
+                    <BuySell
+                        tokenAddress={tokenToAddress}
                         balances={balances}
                         networkName={networkName}
-                        tokenInfo={tokenInfo}
-                        // Flag to disable receive
-                        disableReceive={true}
+                        tokenInfo={tokenToInfo || tokenInfo}
+                        tokenFromInfo={tokenFromInfo}
+                        onChangeTokens={onChangeTokens}
+                        onChangeDisableReceiveCallback={onChangeDisableReceiveCallback}
+                        disableReceive
                       />
                     </Card>
                   </Grid>

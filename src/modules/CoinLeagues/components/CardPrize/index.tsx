@@ -7,6 +7,9 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import { useWeb3 } from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,11 +26,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  prizePool: number;
+  prizePool?: number;
 }
 
 function CardPrize(props: Props): JSX.Element {
   const classes = useStyles();
+  const {chainId} = useWeb3();
   const {prizePool} = props;
   /*const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -39,10 +43,10 @@ function CardPrize(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            <IntlMessages id='app.coinLeagues.prizePool' />
+            <IntlMessages id='app.coinLeagues.maxPrizePool' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
-            {prizePool} MATIC
+            {prizePool || '-'} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
           </Typography>
         </Grid>
       </Grid>

@@ -3,6 +3,7 @@ import {Kittygotchi} from 'types/kittygotchi';
 import {
   setDefaultKitty,
   setDefaultKittyOnChain,
+  updateImage,
   clearOldState,
 } from './actions';
 
@@ -29,8 +30,18 @@ export default createReducer(initialState, (builder) =>
         state.kittygotchiByChain = {};
       }
 
-      state.kittygotchiByChain[`${param.address}-${param.chainId}`] =
+      state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`] =
         param.kittygotchi;
+    })
+    .addCase(updateImage, (state, action) => {
+      let param = action.payload;
+
+      if (state.kittygotchiByChain) {
+        if (state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`]) {
+          state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`].image =
+            param.url;
+        }
+      }
     })
     .addCase(clearOldState, (state, action) => {
       state.kittygotchi = undefined;
