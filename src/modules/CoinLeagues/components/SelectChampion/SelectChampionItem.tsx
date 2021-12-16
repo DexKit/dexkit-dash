@@ -4,6 +4,8 @@ import { getNormalizedUrl } from 'utils/browser';
 import {
   ChampionMetaItem
 } from 'modules/CoinLeagues/utils/types';
+import { getChampionsMultiplier } from 'modules/CoinLeagues/utils/champions';
+import { BigNumber } from 'ethers';
 export interface Props {
   champion: ChampionMetaItem;
   onClick: (championId: ChampionMetaItem) => void;
@@ -60,7 +62,13 @@ export const SelectChampionListItem = (props: Props) => {
             {champion?.name}
           </Typography>
         </Grid>
-        <Grid item></Grid>
+        <Grid item>
+        <Typography variant='body2' color='textSecondary'>
+            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))} Multiplier
+          </Typography>
+
+
+        </Grid>
       </Grid>
     </Box>
   );

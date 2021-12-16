@@ -25,6 +25,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import { getRarityFromBodyType } from 'modules/CoinLeagues/utils/champions';
 
 export function useChampionMint() {
   const {getProvider, web3State, chainId} = useWeb3();
@@ -323,7 +324,7 @@ const GET_MY_CHAMPIONS = gql`
 export function useMyChampions(chainId?: number, limit: number = 100) {
   const defaultAccount = useDefaultAccount();
 
-  const [data, setData] = useState<any[]>();
+  const [data, setData] = useState<CoinLeaguesChampion[]>();
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
 
@@ -361,6 +362,7 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
                 attack: parseInt(t.attack),
                 defense: parseInt(t.defense),
                 run: parseInt(t.run),
+                rarity: getRarityFromBodyType(metadata.attributes.find(att => att.trait_type === 'body')?.value)
               };
               champions.push(champ);
             }
