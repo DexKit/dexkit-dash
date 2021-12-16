@@ -10,6 +10,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import CardPrize from '../../components/CardPrize';
@@ -77,6 +78,7 @@ import { SelectCoinLeagueDialog } from 'modules/CoinLeagues/components/SelectCoi
 import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
 import { AFFILIATE_FIELD, DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
 import { useTokensMultipliers } from 'modules/CoinLeagues/hooks/useMultipliers';
+import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMetadataModal';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -139,6 +141,7 @@ function GameEnter(props: Props) {
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
   const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
+  const [openUpdateGameMetadataModal, setOpenUpdateGameMetadataModal] = useState(false);
   const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
@@ -412,6 +415,7 @@ function GameEnter(props: Props) {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
+       <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} />
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
@@ -481,6 +485,9 @@ function GameEnter(props: Props) {
               <FileCopy color='inherit' style={{ fontSize: 16 }} />
             </CopyButton>
           </Typography>
+          <IconButton onClick={()=> setOpenUpdateGameMetadataModal(true)}>
+            <EditIcon />
+          </IconButton>
 
           {finished && <Chip label='Ended' color='primary' />}
           {aborted && <Chip label='Aborted' color='primary' />}
