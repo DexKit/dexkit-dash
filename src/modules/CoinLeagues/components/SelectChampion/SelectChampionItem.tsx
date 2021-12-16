@@ -1,5 +1,5 @@
-import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
-import React, {useCallback} from 'react';
+import { Box, makeStyles, useTheme, Grid, Typography } from '@material-ui/core';
+import React, { useCallback } from 'react';
 import { getNormalizedUrl } from 'utils/browser';
 import {
   ChampionMetaItem
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectChampionListItem = (props: Props) => {
-  const {champion, onClick, style} = props;
+  const { champion, onClick, style } = props;
   const theme = useTheme();
   const classes = useStyles();
   const handleClick = useCallback(() => {
@@ -48,7 +48,7 @@ export const SelectChampionListItem = (props: Props) => {
   return (
     <Box
       onClick={handleClick}
-      style={{...style, padding: theme.spacing(2)}}
+      style={{ ...style, padding: theme.spacing(2) }}
       className={classes.item}>
       <Grid alignItems='center' alignContent='center' container spacing={2}>
         <Grid item>
@@ -63,9 +63,10 @@ export const SelectChampionListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item>
-        <Typography variant='body2' color='textSecondary'>
-            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))} Multiplier
-          </Typography>
+          {champion?.rarity &&
+            <Typography variant='body2' color='textSecondary'>
+              {getChampionsMultiplier(BigNumber.from(champion?.rarity))} Multiplier
+            </Typography>}
 
 
         </Grid>
