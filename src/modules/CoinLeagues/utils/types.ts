@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export interface CoinFeed {
   base: string;
   baseName: string;
@@ -59,10 +61,23 @@ export interface ChampionMetaItem {
 export interface CoinLeaguesChampion {
   id: string;
   name: string;
-  rarity: number;
+  rarity?: number;
   description: string;
   image?: string;
   attack: number;
   defense: number;
   run: number;
+}
+
+export interface MultiplierInterface{
+  playerAddress: string;
+  kitBalance: BigNumber;
+  bittBalance: BigNumber;
+  isHoldingMultiplier: boolean;
+  isHoldingKitMultiplier: boolean;
+  isHoldingBittMultiplier: boolean;
+  championsMultiplier: number;
+  rarity: BigNumber;
+  championId: BigNumber;
+  isChampionsMultiplier: boolean;
 }

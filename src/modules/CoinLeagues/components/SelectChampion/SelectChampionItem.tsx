@@ -63,9 +63,12 @@ export const SelectChampionListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='body2' color='textSecondary'>
-            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))} Multiplier
-          </Typography>
+          {champion?.rarity &&
+            <Typography variant='body2' color='textSecondary'>
+              {getChampionsMultiplier(BigNumber.from(champion?.rarity))} Multiplier
+            </Typography>}
+
+
         </Grid>
       </Grid>
     </Box>

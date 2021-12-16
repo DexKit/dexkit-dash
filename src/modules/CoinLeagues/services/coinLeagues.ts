@@ -6,8 +6,9 @@ import { getEthers } from 'services/web3modal';
 import { CoinFeed, Game } from 'types/coinsleague';
 import coinLeaguesAbi from '../constants/ABI/coinLeagues.json';
 import championRoomAbi from '../constants/ABI/championRoom.json';
-import championsAbi from '../constants/ABI/coinLeagueChampions.json';
 import erc20Abi from 'shared/constants/ABI/erc20.json';
+import balanceOfAbi from 'shared/constants/ABI/balanceOf.json';
+import getRarityOfAbi from '../constants/ABI/getRarityOf.json';
 import { BITTOKEN, DEXKIT } from 'shared/constants/tokens';
 import { ChainId } from 'types/blockchain';
 import { Token } from 'types/app';
@@ -17,6 +18,7 @@ import {
   CHAMPIONS,
 } from '../constants';
 import { getChampionsMultiplier, isChampionsFromRarity } from '../utils/champions';
+import { MultiplierInterface } from '../utils/types';
 
 export const getCoinLeaguesContract = async (
   address: string,
@@ -163,83 +165,94 @@ export const getPlayerMultipliers = async (
   players: any[],
   provider: any,
 ) => {
-  const iface = new Interface(erc20Abi);
-  const ifaceChampions = new Interface(championsAbi);
+  const iface = new Interface(balanceOfAbi);
+  const ifaceChampions = new Interface(getRarityOfAbi);
   const multicall = await getMulticallFromProvider(provider);
-  const calls: CallInput[] = [];
+
   if (players.length === 0) {
     return [];
   }
   const DexKit = DEXKIT[ChainId.Matic] as Token;
   const Bittoken = BITTOKEN[ChainId.Matic] as Token;
   const Champions = CHAMPIONS[ChainId.Matic];
+  let mappedMultipliers: MultiplierInterface[] = [];
 
-  for (let index = 0; index < players.length; index++) {
-    const addr = players[index][1];
-    calls.push({
-      interface: iface,
-      target: DexKit?.address,
-      function: 'balanceOf',
-      args: [addr],
-    });
-  }
-  for (let index = 0; index < players.length; index++) {
-    const addr = players[index][1];
-    calls.push({
-      interface: iface,
-      target: Bittoken?.address,
-      function: 'balanceOf',
-      args: [addr],
-    });
-  }
-  // Use this when champions enable
-  for (let index = 0; index < players.length; index++) {
-    //@ts-ignore
-    const id = players[index][3];
-    calls.push({
-      interface: ifaceChampions,
-      target: Champions,
-      function: 'getRarityOf',
-      args: [id],
-    });
+  const playersBatch = 11;
+
+  for (let ind = 0; ind < players.length / playersBatch; ind++) {
+    const playersSplit = players.slice(ind * playersBatch, (ind + 1) * playersBatch >= players.length ? players.length : (ind + 1) * playersBatch);
+    const calls: CallInput[] = [];
+    try {
+      for (let index = 0; index < playersSplit.length; index++) {
+        const addr = playersSplit[index][1];
+        calls.push({
+          interface: iface,
+          target: DexKit?.address,
+          function: 'balanceOf',
+          args: [addr],
+        });
+      }
+      for (let index = 0; index < playersSplit.length; index++) {
+        const addr = playersSplit[index][1];
+        calls.push({
+          interface: iface,
+          target: Bittoken?.address,
+          function: 'balanceOf',
+          args: [addr],
+        });
+      }
+      // Use this when champions enable
+      for (let index = 0; index < playersSplit.length; index++) {
+        //@ts-ignore
+        const id = playersSplit[index][3];
+        calls.push({
+          interface: ifaceChampions,
+          target: Champions,
+          function: 'getRarityOf',
+          args: [id],
+        });
+      }
+
+      const response = await multicall.multiCall(calls);
+
+      const [, results] = response;
+      const kitBalances: BigNumber[] = [];
+      const bittBalances: BigNumber[] = [];
+      const rarity: BigNumber[] = [];
+      for (let index = 0; index < playersSplit.length; index++) {
+        kitBalances.push(results[index]);
+      }
+
+      for (let index = playersSplit.length; index < playersSplit.length * 2; index++) {
+        bittBalances.push(results[index]);
+      }
+
+      for (let index = playersSplit.length * 2; index < playersSplit.length * 3; index++) {
+        rarity.push(results[index]);
+      }
+      // TODO: check how the returned value is without object
+      // We need to map manually to properties in order to work properly
+      mappedMultipliers = mappedMultipliers.concat(playersSplit.map((p: any, i) => {
+        return {
+          playerAddress: p[1] as string,
+          kitBalance: kitBalances[i],
+          bittBalance: bittBalances[i],
+          isHoldingMultiplier:
+            kitBalances[i].gte(DEXKIT_MULTIPLIER_HOLDING) ||
+            bittBalances[i].gte(BITTOKEN_MULTIPLIER_HOLDING),
+          isHoldingKitMultiplier: kitBalances[i].gte(DEXKIT_MULTIPLIER_HOLDING),
+          isHoldingBittMultiplier: bittBalances[i].gte(BITTOKEN_MULTIPLIER_HOLDING),
+          championsMultiplier: getChampionsMultiplier(rarity[i]),
+          rarity: rarity[i],
+          championId: p[3] as BigNumber,
+          isChampionsMultiplier: isChampionsFromRarity(rarity[i])
+        } as MultiplierInterface;
+      }));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  const response = await multicall.multiCall(calls);
-
-  const [, results] = response;
-  const kitBalances: BigNumber[] = [];
-  const bittBalances: BigNumber[] = [];
-  const rarity: BigNumber[] = [];
-  for (let index = 0; index < players.length; index++) {
-    kitBalances.push(results[index]);
-  }
-
-  for (let index = players.length; index < players.length * 2; index++) {
-    bittBalances.push(results[index]);
-  }
-
-  for (let index = players.length * 2; index < players.length * 3; index++) {
-    console.log(results[index])
-    rarity.push(results[index]);
-  }
-  // TODO: check how the returned value is without object
-  // We need to map manually to properties in order to work properly
-  const mappedMultipliers = players.map((p: any, i) => {
-    return {
-      playerAddress: p[1] as string,
-      kitBalance: kitBalances[i],
-      bittBalance: bittBalances[i],
-      isHoldingMultiplier:
-        kitBalances[i].gte(DEXKIT_MULTIPLIER_HOLDING) ||
-        bittBalances[i].gte(BITTOKEN_MULTIPLIER_HOLDING),
-      isHoldingKitMultiplier: kitBalances[i].gte(DEXKIT_MULTIPLIER_HOLDING),
-      isHoldingBittMultiplier: bittBalances[i].gte(BITTOKEN_MULTIPLIER_HOLDING),
-      championsMultiplier: getChampionsMultiplier(rarity[i]),
-      rarity: rarity[i],
-      championId: p[3] as BigNumber,
-      isChampionsMultiplier: isChampionsFromRarity(rarity[i])
-    };
-  });
 
 
   return mappedMultipliers;
