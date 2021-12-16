@@ -4,6 +4,10 @@ import {useWeb3} from 'hooks/useWeb3';
 import {usePlayerHoldingTokenBalances} from './usePlayerHoldingBalances';
 import {useIsNFTGame} from './useCoinLeaguesFactory';
 import {getChampionsCoinSymbol} from '../utils/champions';
+import { useQuery } from 'react-query';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { getTokenMultipliers } from '../services/coinLeagues';
 
 export const useMultipliers = (address?: string) => {
   const {account} = useWeb3();
@@ -33,8 +37,6 @@ export const useMultipliers = (address?: string) => {
         multiplierTokens.find(
           (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
         );
-        console.log(multi);
-        console.log(multiplierTokens);
       if (multi && isNFTGame) {
         if (multi) {
           if (multi.isHoldingKitMultiplier || multi.isHoldingBittMultiplier) {
@@ -121,3 +123,25 @@ export const useMultipliers = (address?: string) => {
     holdingBalancesQuery,
   };
 };
+
+
+export const useTokensMultipliers = () => {
+  const {account} = useWeb3();
+  const isNFTGame = useIsNFTGame();
+  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+  
+  return useQuery(
+    ['GET_LEAGUES_ACCOUNT_TOKEN_BALANCES', account],
+    async () => {
+      if (!account || !isNFTGame) {
+        return;
+      }
+      return await  getTokenMultipliers(
+        account,
+        networkProvider,
+      );
+    },
+  );
+ 
+
+}

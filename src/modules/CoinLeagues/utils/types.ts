@@ -52,12 +52,14 @@ export interface ChampionMetaItem {
   id: string;
   image: string;
   name: string;
+  rarity: number;
 }
 
 
 export interface CoinLeaguesChampion {
   id: string;
   name: string;
+  rarity: number;
   description: string;
   image?: string;
   attack: number;
