@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -7,19 +7,24 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
-
+import DoneIcon from '@material-ui/icons/Done';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import * as yup from 'yup';
 
 import { useFormik } from 'formik';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 
 import TextField from '@material-ui/core/TextField';
+import { useGameMetadataUpdater } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import { SubmitState } from '../ButtonState';
+import IntlMessages from '@crema/utility/IntlMessages';
+import { useWeb3 } from 'hooks/useWeb3';
 
 
 
@@ -78,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
     open: boolean;
     setOpen: (open: boolean) => void;
+    id: string;
 }
 
 
@@ -95,20 +101,61 @@ const validationSchema = yup.object({
 
 
 const UpdateGameMetadataModal = (props: Props) => {
-    const { open, setOpen } = props;
+    const { open, setOpen, id } = props;
+    const {account} = useWeb3();
     const classes = useStyles();
-
+    const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
+    const [isEditing, setIsEditing] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string>();
+    const theme = useTheme();
+    const handleClearError = useCallback(() => {
+        setErrorMessage(undefined);
+    }, []);
+    const { onPostMetadata } = useGameMetadataUpdater();
     const formik = useFormik({
         initialValues: {
-            title: '',
-            smallDescription: '',
-            description: '',
+            title: 'test',
+            smallDescription: 'test2',
+            description: 'test3',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+            setSubmitState(SubmitState.WaitingWallet);
+            const onSubmitTx = (hash?: string) => {
+                setSubmitState(SubmitState.Submitted);
+            };
+            const onConfirmTx = (hash?: string) => {
+                // Save here the current id minted
+                setSubmitState(SubmitState.Confirmed);
+                setTimeout(() => {
+                    setOpen(false);
+                }, 2000);
+                
+                setIsEditing(false);
+            };
+            const onError = (error?: any) => {
+                setSubmitState(SubmitState.Error);
+                setErrorMessage(error.message);
+                setTimeout(() => {
+                    setSubmitState(SubmitState.None);
+                }, 3000);
+            };
+
+
+            onPostMetadata(values, id, {
+                onConfirmation: onConfirmTx,
+                onError,
+                onSubmit: onSubmitTx
+            })
         },
     });
+
+    const isSubmitting = useCallback(() => {
+        return (
+            submitState === SubmitState.WaitingWallet ||
+            submitState === SubmitState.Submitted
+        );
+    }, [submitState]);
 
 
     return (
@@ -163,7 +210,7 @@ const UpdateGameMetadataModal = (props: Props) => {
                                             style={{
                                                 color: '#fff',
                                                 borderRadius: 6,
-                                              }}
+                                            }}
                                         />
                                     </FormControl>
                                 </Grid>
@@ -183,7 +230,7 @@ const UpdateGameMetadataModal = (props: Props) => {
                                             style={{
                                                 color: '#fff',
                                                 borderRadius: 6,
-                                              }}
+                                            }}
                                         />
                                     </FormControl>
                                 </Grid>
@@ -203,13 +250,30 @@ const UpdateGameMetadataModal = (props: Props) => {
                                             style={{
                                                 color: '#fff',
                                                 borderRadius: 6,
-                                              }}
+                                            }}
                                         />
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Button color="primary" variant="contained" fullWidth type="submit">
-                                        Submit
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmitting() || !account}
+                                        fullWidth
+                                        startIcon={
+                                            isSubmitting() ? (
+                                                <CircularProgress
+                                                    color='inherit'
+                                                    size={theme.spacing(7)}
+                                                />
+                                            ) : (
+                                                submitState !== SubmitState.None &&  <DoneIcon />
+                                            )
+                                        }
+                                        variant='contained'
+                                        color='primary'>
+                                        {submitState === SubmitState.Confirmed ? 
+                                            <IntlMessages id='app.coinleague.saved' /> :
+                                            <IntlMessages id='app.coinleague.submit' />}
                                     </Button>
                                 </Grid>
                             </Grid >

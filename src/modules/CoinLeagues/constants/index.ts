@@ -687,3 +687,6 @@ export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
 export const DISABLE_CHAMPIONS_ID = '500000'
 
 export const AFFILIATE_FIELD = 'league-affiliate';
+
+
+export const GAME_METADATA_API = 'http://localhost:3001'

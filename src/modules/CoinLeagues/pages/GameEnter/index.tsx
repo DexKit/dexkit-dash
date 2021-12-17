@@ -141,7 +141,7 @@ function GameEnter(props: Props) {
   const [captainCoin, setCaptainCoin] = useState<CoinFeed>();
   const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
-  const [openUpdateGameMetadataModal, setOpenUpdateGameMetadataModal] = useState(false);
+  const [openUpdateGameMetadataModal, setOpenUpdateGameMetadataModal] = useState(true);
   const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
   const [tx, setTx] = useState<string>();
@@ -415,7 +415,7 @@ function GameEnter(props: Props) {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
-       <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} />
+       <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} id={id} />
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
