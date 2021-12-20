@@ -226,6 +226,6 @@ export const getRarityFromBodyType = (body?: string) => {
       return 7
 
     default:
-      return 7
+      return undefined
   }
 }
