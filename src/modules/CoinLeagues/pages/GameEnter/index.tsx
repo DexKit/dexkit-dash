@@ -76,7 +76,7 @@ import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 import { SelectCoinLeagueDialog } from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
-import { AFFILIATE_FIELD, DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+import { AFFILIATE_FIELD, CREATOR_PRIZES_ADDRESSES, DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
 import { useTokensMultipliers } from 'modules/CoinLeagues/hooks/useMultipliers';
 import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMetadataModal';
 import { useGameMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
@@ -494,9 +494,9 @@ function GameEnter(props: Props) {
           </IconButton>}
 
 
-          <IconButton onClick={() => setOpenUpdateGameMetadataModal(true)}>
+          {CREATOR_PRIZES_ADDRESSES.includes(account?.toLowerCase() || '' ) && <IconButton onClick={() => setOpenUpdateGameMetadataModal(true)}>
             <EditIcon />
-          </IconButton>
+          </IconButton>}
 
           {finished && <Chip label='Ended' color='primary' />}
           {aborted && <Chip label='Aborted' color='primary' />}
