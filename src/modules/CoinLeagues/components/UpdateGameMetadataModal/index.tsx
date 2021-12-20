@@ -27,8 +27,6 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import { useWeb3 } from 'hooks/useWeb3';
 
 
-
-
 const useStyles = makeStyles((theme) => ({
     container: {
         color: '#fff',
@@ -102,15 +100,11 @@ const validationSchema = yup.object({
 
 const UpdateGameMetadataModal = (props: Props) => {
     const { open, setOpen, id } = props;
-    const {account} = useWeb3();
+    const { account } = useWeb3();
     const classes = useStyles();
     const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
-    const [isEditing, setIsEditing] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string>();
     const theme = useTheme();
-    const handleClearError = useCallback(() => {
-        setErrorMessage(undefined);
-    }, []);
+
     const { onPostMetadata } = useGameMetadataUpdater();
     const formik = useFormik({
         initialValues: {
@@ -130,12 +124,9 @@ const UpdateGameMetadataModal = (props: Props) => {
                 setTimeout(() => {
                     setOpen(false);
                 }, 2000);
-                
-                setIsEditing(false);
             };
             const onError = (error?: any) => {
                 setSubmitState(SubmitState.Error);
-                setErrorMessage(error.message);
                 setTimeout(() => {
                     setSubmitState(SubmitState.None);
                 }, 3000);
@@ -184,7 +175,7 @@ const UpdateGameMetadataModal = (props: Props) => {
                 <Grid container className={classes.innerContent} spacing={2}>
                     <Grid item xs={12}>
                         <Typography variant='h6' style={{ fontWeight: 600 }}>
-                            Prize Information
+                            Prize Information for Game #{id}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
@@ -266,14 +257,14 @@ const UpdateGameMetadataModal = (props: Props) => {
                                                     size={theme.spacing(7)}
                                                 />
                                             ) : (
-                                                submitState !== SubmitState.None &&  <DoneIcon />
+                                                submitState !== SubmitState.None && <DoneIcon />
                                             )
                                         }
                                         variant='contained'
                                         color='primary'>
-                                        {submitState === SubmitState.Confirmed ? 
-                                            <IntlMessages id='app.coinleague.saved' /> :
-                                            <IntlMessages id='app.coinleague.submit' />}
+                                        {submitState === SubmitState.Confirmed ?
+                                            <IntlMessages id='app.coinLeague.saved' /> :
+                                            <IntlMessages id='app.coinLeague.submit' />}
                                     </Button>
                                 </Grid>
                             </Grid >

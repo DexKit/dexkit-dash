@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -6,19 +6,22 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
-import {BigNumber, ethers} from 'ethers';
-import {useInterval} from 'hooks/utils/useInterval';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {strPad} from 'modules/CoinLeagues/utils/time';
-import {CardTimer} from '../CardTimer';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
+import { BigNumber, ethers } from 'ethers';
+import { useInterval } from 'hooks/utils/useInterval';
+import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import { strPad } from 'modules/CoinLeagues/utils/time';
+import { CardTimer } from '../CardTimer';
+import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
 import { useWeb3 } from 'hooks/useWeb3';
 import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import ViewGameMetadataModal from '../ViewGameMetadataModal';
+import IconButton from '@material-ui/core/IconButton';
+import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -55,8 +58,8 @@ interface Props {
 }
 
 function CardGame(props: Props): JSX.Element {
-  const {game, onClick} = props;
-  const {chainId} = useWeb3();
+  const { game, onClick } = props;
+  const { chainId } = useWeb3();
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -70,7 +73,7 @@ function CardGame(props: Props): JSX.Element {
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
-
+  const [openShowGameMetadataModal, setOpenShowGameMetadataModal] = useState(false);
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
@@ -91,10 +94,21 @@ function CardGame(props: Props): JSX.Element {
     1000,
     true,
   );
- 
+
   return (
     <Container className={classes.container} maxWidth='xs'>
-      <Typography variant='subtitle2'>ID# {game.intId}</Typography>
+      {game.title ?
+        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}  >
+          <Typography variant='subtitle2'>ID# {game.intId} {game.title ? `- ${game.title} ` : null}</Typography>
+          <IconButton onClick={() => setOpenShowGameMetadataModal(true)} size={'small'}>
+            <CrownIcon />
+          </IconButton>
+          <ViewGameMetadataModal open={openShowGameMetadataModal} setOpen={setOpenShowGameMetadataModal} gameMetadata={game} />
+        </Box>
+        :
+        <Typography variant='subtitle2'>ID# {game.intId}</Typography>
+      }
+
       <Grid container className={classes.innerContent}>
         <Grid xs={6} item>
           <Box display={'flex'} alignItems={'center'}>
@@ -108,11 +122,11 @@ function CardGame(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='subtitle2'
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
@@ -124,19 +138,19 @@ function CardGame(props: Props): JSX.Element {
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
+            style={{ color: '#7a8398' }}>
             <Typography variant='h6'>Duration:</Typography>
-            <Typography variant='h6' style={{fontWeight: 500}}>
+            <Typography variant='h6' style={{ fontWeight: 500 }}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
+            style={{ color: '#7a8398' }}>
             <Typography variant='h6'>&nbsp;Type:</Typography>
-            <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
-             &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
+            <Typography variant='h6' style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
+              &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>

@@ -58,9 +58,12 @@ export const useGameMetadata = (id: string) => {
     })
 }
 
-export const useGamesMetadata = (ids: string) => {
+export const useGamesMetadata = (ids?: string) => {
     const isNFT = useIsNFTGame();
     return useQuery(['GET_GAMES_METADATA', ids], () => {
+        if (!ids) {
+            return;
+        }
         return getGamesMetadata(ids, isNFT ? RoomType.NFT : RoomType.Main)
     })
 }

@@ -19,6 +19,9 @@ export interface GameGraph {
   entry: string;
   startedAt?: string;
   endedAt?: string;
+  title?: string;
+  description?: string;
+  smallDescription?: string;
 }
 
 export enum ChampionsEventRound {
@@ -65,4 +68,13 @@ export interface CoinLeaguesChampion {
   attack: number;
   defense: number;
   run: number;
+}
+
+
+export interface GameMetadata {
+  gameId: string;
+  title: string;
+  smallDescription: string;
+  description: string;
+  creator: string;
 }

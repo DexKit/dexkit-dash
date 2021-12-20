@@ -2,6 +2,7 @@ import { providers } from "ethers";
 import { _TypedDataEncoder } from "ethers/lib/utils";
 import { ChainId } from "types/blockchain";
 import { GAME_METADATA_API } from "../constants";
+import { GameMetadata } from "../utils/types";
 
 
 
@@ -69,14 +70,14 @@ export const update = (
 };
 
 export const getGameMetadata = (id: string, room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/${id}`).then(r => r.json());
+  return fetch(`${GAME_METADATA_API}/api/${room}/${id}`).then(r => r.json()).then(r => r as GameMetadata);
 }
 
 
 export const getGamesMetadata = (ids: string, room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/all-games/${ids}`).then(r => r.json());
+  return fetch(`${GAME_METADATA_API}/api/${room}/all-games/${ids}`).then(r => r.json()).then(r => r as GameMetadata[]);
 }
 
 export const getAllGamesMetadata = (room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/all-games`).then(r => r.json());
+  return fetch(`${GAME_METADATA_API}/api/${room}/all-games`).then(r => r.json()).then(r => r as GameMetadata[]);
 }
