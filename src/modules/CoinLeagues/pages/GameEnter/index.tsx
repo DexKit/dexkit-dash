@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import CardPrize from '../../components/CardPrize';
@@ -82,6 +83,8 @@ import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMe
 import { useGameMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
 import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 import ViewGameMetadataModal from 'modules/CoinLeagues/components/ViewGameMetadataModal';
+import { yellow } from '@material-ui/core/colors';
+import RemoveGameMetadataModal from 'modules/CoinLeagues/components/RemoveGameMetadataModal';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -100,6 +103,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
   },
+  crownIconContainer: {
+    color: 'yellow'
+  }
 }));
 type Params = {
   id: string;
@@ -144,6 +150,7 @@ function GameEnter(props: Props) {
   const [champion, setChampion] = useState<ChampionMetaItem>();
   const [open, setOpen] = useState(false);
   const [openUpdateGameMetadataModal, setOpenUpdateGameMetadataModal] = useState(false);
+  const [openRemoveGameMetadataModal, setOpenRemoveGameMetadataModal] = useState(false);
   const [openShowGameMetadataModal, setOpenShowGameMetadataModal] = useState(false);
   const [openChampionDialog, setOpenChampionDialog] = useState(false);
   const [isCaptainCoin, setIsChaptainCoin] = useState(false);
@@ -416,10 +423,18 @@ function GameEnter(props: Props) {
   }, [url, account]);
 
 
+  const isGameMetadataEditor = useMemo(() => {
+    return CREATOR_PRIZES_ADDRESSES.map(a => a.toLowerCase()).includes(account?.toLowerCase() || '')
+
+  }, [account])
+
+
   return (
     <Grid container spacing={4} alignItems={'center'}>
-      <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} id={id} />
+      <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} id={id} gameMetadata={gameMetaQuery.data}/>
       {gameMetaQuery.data && <ViewGameMetadataModal open={openShowGameMetadataModal} setOpen={setOpenShowGameMetadataModal} gameMetadata={gameMetaQuery.data} />}
+
+      {gameMetaQuery.data && <RemoveGameMetadataModal open={openRemoveGameMetadataModal} setOpen={setOpenRemoveGameMetadataModal} game={gameMetaQuery.data} id={id} onDelete={gameMetaQuery.refetch} />}
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
@@ -489,14 +504,18 @@ function GameEnter(props: Props) {
               <FileCopy color='inherit' style={{ fontSize: 16 }} />
             </CopyButton>
           </Typography>
-          {gameMetaQuery.data && <IconButton onClick={() => setOpenShowGameMetadataModal(true)}>
-            <CrownIcon />
+          {gameMetaQuery.data && <IconButton onClick={() => setOpenShowGameMetadataModal(true)} className={classes.crownIconContainer}>
+            <CrownIcon style={{ color: yellow[200] }} />
           </IconButton>}
 
 
-          {CREATOR_PRIZES_ADDRESSES.includes(account?.toLowerCase() || '' ) && <IconButton onClick={() => setOpenUpdateGameMetadataModal(true)}>
+          {isGameMetadataEditor && <IconButton onClick={() => setOpenUpdateGameMetadataModal(true)}>
             <EditIcon />
           </IconButton>}
+          {(gameMetaQuery.data && isGameMetadataEditor) && <IconButton onClick={() => setOpenRemoveGameMetadataModal(true)}>
+            <DeleteIcon />
+          </IconButton>}
+
 
           {finished && <Chip label='Ended' color='primary' />}
           {aborted && <Chip label='Aborted' color='primary' />}

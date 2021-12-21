@@ -30,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     background: '#2e3243',
     padding: theme.spacing(2),
   },
+  containerPrize: {
+    color: '#fff',
+    borderRadius: 6,
+    background: '#1c2650',
+    padding: theme.spacing(2),
+  },
   button: {
     fontWeight: 500,
     borderRadius: 6,
@@ -96,7 +102,7 @@ function CardGame(props: Props): JSX.Element {
   );
 
   return (
-    <Container className={classes.container} maxWidth='xs'>
+    <Container className={game.title ? classes.containerPrize : classes.container} maxWidth='xs'>
       {game.title ?
         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}  >
           <Typography variant='subtitle2'>ID# {game.intId} {game.title ? `- ${game.title} ` : null}</Typography>

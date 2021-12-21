@@ -69,6 +69,34 @@ export const update = (
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
 };
 
+export const remove = (
+  sig: string,
+  message: string,
+  data: any,
+  room: string,
+  id: string,
+  account: string,
+) => {
+  const headers = new Headers({
+    'content-type': 'application/json',
+  });
+  const myInit: RequestInit = {
+    method: 'DELETE',
+    headers: headers,
+    body: JSON.stringify({
+      owner: account,
+      message: message,
+      creator: account,
+      signature: sig,
+      room: room,
+      title: data.title,
+      description: data.description,
+      smallDescription: data.smallDescription,
+    }),
+  };
+  return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
+};
+
 export const getGameMetadata = (id: string, room: string) => {
   return fetch(`${GAME_METADATA_API}/api/${room}/${id}`).then(r => r.json()).then(r => r as GameMetadata);
 }

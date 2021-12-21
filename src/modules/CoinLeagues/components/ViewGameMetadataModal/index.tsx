@@ -11,6 +11,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
+import { truncateAddress } from 'utils';
+import { GET_BITBOY_NAME } from 'modules/CoinLeagues/utils/game';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -119,6 +121,13 @@ const ViewGameMetadataModal = (props: Props) => {
                     <Grid item xs={12}>
                         <Typography variant='body1'>
                             {gameMetadata?.description}
+                        </Typography>
+
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Typography variant='body1'>
+                           Created By:  {GET_BITBOY_NAME(gameMetadata?.creator) ? GET_BITBOY_NAME(gameMetadata?.creator) : truncateAddress(gameMetadata?.creator)}
                         </Typography>
 
                     </Grid>

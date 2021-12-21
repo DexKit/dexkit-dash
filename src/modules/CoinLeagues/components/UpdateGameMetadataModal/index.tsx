@@ -82,6 +82,13 @@ interface Props {
     open: boolean;
     setOpen: (open: boolean) => void;
     id: string;
+    gameMetadata?: {
+        title?: string,
+        description?: string;
+        smallDescription?: string;
+        creator?: string;
+    }
+
 }
 
 
@@ -99,7 +106,7 @@ const validationSchema = yup.object({
 
 
 const UpdateGameMetadataModal = (props: Props) => {
-    const { open, setOpen, id } = props;
+    const { open, setOpen, id, gameMetadata } = props;
     const { account } = useWeb3();
     const classes = useStyles();
     const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -107,10 +114,11 @@ const UpdateGameMetadataModal = (props: Props) => {
 
     const { onPostMetadata } = useGameMetadataUpdater();
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
-            title: 'test',
-            smallDescription: 'test2',
-            description: 'test3',
+            title: gameMetadata?.title,
+            smallDescription: gameMetadata?.smallDescription,
+            description: gameMetadata?.description,
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {

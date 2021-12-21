@@ -2,7 +2,7 @@ import { useWeb3 } from "hooks/useWeb3"
 import { useCallback } from "react"
 import { useQuery } from "react-query";
 import { RoomType } from "../constants/enums";
-import { getGameMetadata, getGamesMetadata, signUpdate, update } from "../services/gameMetadataApi";
+import { getGameMetadata, getGamesMetadata, remove, signUpdate, update } from "../services/gameMetadataApi";
 import { useIsNFTGame } from "./useCoinLeaguesFactory";
 
 interface CallbackProps {
@@ -36,7 +36,42 @@ export const useGameMetadataUpdater = () => {
                 throw new Error(response.statusText);
             }
         } catch (e) {
-            console.log(e);
+            if (callbacks?.onError) {
+                callbacks?.onError(e);
+            }
+        }
+
+    }, [chainProvider, chainId, isNFT, account])
+
+    return { onPostMetadata }
+}
+
+
+export const useGameMetadataDeleteCallback = () => {
+    const { getProvider, chainId, account } = useWeb3();
+    const isNFT = useIsNFTGame();
+    const chainProvider = getProvider();
+    const onDeleteGameMetadata = useCallback(async (data: any, id: string, callbacks?: CallbackProps) => {
+        if (!chainId || !account) {
+            return;
+        }
+        try {
+            const signedData = await signUpdate(chainProvider, chainId);
+            if (callbacks?.onSubmit) {
+                callbacks?.onSubmit();
+            }
+            const response = await remove(signedData.sig, signedData.messageSigned, data, isNFT ? RoomType.NFT : RoomType.Main, id, account)
+
+            if (response.ok && response.status === 200) {
+                if (callbacks?.onConfirmation) {
+                    callbacks?.onConfirmation();
+                }
+            } else if (response.status === 403) {
+                throw new Error('Invalid params');
+            } else {
+                throw new Error(response.statusText);
+            }
+        } catch (e) {
             if (callbacks?.onError) {
                 callbacks?.onError(e);
             }
@@ -48,8 +83,9 @@ export const useGameMetadataUpdater = () => {
 
     }, [chainProvider, chainId, isNFT, account])
 
-    return { onPostMetadata }
+    return { onDeleteGameMetadata }
 }
+
 
 export const useGameMetadata = (id: string) => {
     const isNFT = useIsNFTGame();
