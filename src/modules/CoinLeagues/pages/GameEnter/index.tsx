@@ -83,7 +83,6 @@ import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMe
 import { useGameMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
 import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 import ViewGameMetadataModal from 'modules/CoinLeagues/components/ViewGameMetadataModal';
-import { yellow } from '@material-ui/core/colors';
 import RemoveGameMetadataModal from 'modules/CoinLeagues/components/RemoveGameMetadataModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -428,13 +427,12 @@ function GameEnter(props: Props) {
 
   }, [account])
 
-
   return (
     <Grid container spacing={4} alignItems={'center'}>
       <UpdateGameMetadataModal open={openUpdateGameMetadataModal} setOpen={setOpenUpdateGameMetadataModal} id={id} gameMetadata={gameMetaQuery.data}/>
       {gameMetaQuery.data && <ViewGameMetadataModal open={openShowGameMetadataModal} setOpen={setOpenShowGameMetadataModal} gameMetadata={gameMetaQuery.data} />}
 
-      {gameMetaQuery.data && <RemoveGameMetadataModal open={openRemoveGameMetadataModal} setOpen={setOpenRemoveGameMetadataModal} game={gameMetaQuery.data} id={id} onDelete={gameMetaQuery.refetch} />}
+      {gameMetaQuery.data && <RemoveGameMetadataModal open={openRemoveGameMetadataModal} setOpen={setOpenRemoveGameMetadataModal} game={gameMetaQuery.data} id={id} />}
       {!IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId) && (
         <Grid item xs={12} sm={12} xl={12}>
           <Alert severity='info'>
@@ -505,7 +503,7 @@ function GameEnter(props: Props) {
             </CopyButton>
           </Typography>
           {gameMetaQuery.data && <IconButton onClick={() => setOpenShowGameMetadataModal(true)} className={classes.crownIconContainer}>
-            <CrownIcon style={{ color: yellow[200] }} />
+            <CrownIcon />
           </IconButton>}
 
 

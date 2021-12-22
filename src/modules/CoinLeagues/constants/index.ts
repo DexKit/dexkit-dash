@@ -72,6 +72,18 @@ export const BITBOY_TEAM = [
   },
 ];
 
+export const CREATOR_LABELS = [
+  ...BITBOY_TEAM,
+  {
+    address: '0xA27e256CDD086eF88953b941582bB651582c1454',
+    label: 'Albert Hoffman'
+  },
+  {
+    address: '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
+    label: 'Albert Hoffman'
+  }
+];
+
 export const MumbaiPriceFeeds = [
   {
     address: '0x007A22900a3B98143368Bd5906f8E17e9867581b',

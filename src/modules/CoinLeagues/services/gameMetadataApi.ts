@@ -97,8 +97,15 @@ export const remove = (
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
 };
 
-export const getGameMetadata = (id: string, room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/${id}`).then(r => r.json()).then(r => r as GameMetadata);
+export const getGameMetadata = async (id: string, room: string) => {
+  try{
+    const response = await fetch(`${GAME_METADATA_API}/api/${room}/${id}`);
+    if(response.ok && response.status === 200){
+      return await response.json() as GameMetadata
+    }
+  }catch{
+    return
+  }
 }
 
 

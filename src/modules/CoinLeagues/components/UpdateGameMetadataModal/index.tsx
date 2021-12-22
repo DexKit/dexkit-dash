@@ -17,14 +17,14 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 
 import TextField from '@material-ui/core/TextField';
-import { useGameMetadataUpdater } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import { useGameMetadata, useGameMetadataUpdater } from 'modules/CoinLeagues/hooks/useGameMetadata';
 import { SubmitState } from '../ButtonState';
 import IntlMessages from '@crema/utility/IntlMessages';
 import { useWeb3 } from 'hooks/useWeb3';
+import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -107,6 +107,7 @@ const validationSchema = yup.object({
 
 const UpdateGameMetadataModal = (props: Props) => {
     const { open, setOpen, id, gameMetadata } = props;
+    const {refetch} = useGameMetadata(id);
     const { account } = useWeb3();
     const classes = useStyles();
     const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -129,6 +130,7 @@ const UpdateGameMetadataModal = (props: Props) => {
             const onConfirmTx = (hash?: string) => {
                 // Save here the current id minted
                 setSubmitState(SubmitState.Confirmed);
+                refetch();
                 setTimeout(() => {
                     setOpen(false);
                 }, 2000);
@@ -164,7 +166,7 @@ const UpdateGameMetadataModal = (props: Props) => {
                     <Grid item xs={11}>
                         <Grid container spacing={2} justifyContent={'flex-start'}>
                             <Grid item>
-                                <TransferIcon />
+                                <CrownIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='h6'>Add Prize description</Typography>

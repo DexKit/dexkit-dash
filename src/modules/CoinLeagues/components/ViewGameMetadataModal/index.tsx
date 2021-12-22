@@ -9,10 +9,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 import { truncateAddress } from 'utils';
-import { GET_BITBOY_NAME } from 'modules/CoinLeagues/utils/game';
+import { GET_CREATOR_LABELS } from 'modules/CoinLeagues/utils/game';
+import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -89,7 +89,7 @@ const ViewGameMetadataModal = (props: Props) => {
                     <Grid item xs={11}>
                         <Grid container spacing={2} justifyContent={'flex-start'}>
                             <Grid item>
-                                <TransferIcon />
+                                <CrownIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='h6'>Game - {gameMetadata?.title}</Typography>
@@ -127,7 +127,7 @@ const ViewGameMetadataModal = (props: Props) => {
 
                     <Grid item xs={12}>
                         <Typography variant='body1'>
-                           Created By:  {GET_BITBOY_NAME(gameMetadata?.creator) ? GET_BITBOY_NAME(gameMetadata?.creator) : truncateAddress(gameMetadata?.creator)}
+                            Created By:  {GET_CREATOR_LABELS(gameMetadata?.creator) ? GET_CREATOR_LABELS(gameMetadata?.creator) : truncateAddress(gameMetadata?.creator)}
                         </Typography>
 
                     </Grid>

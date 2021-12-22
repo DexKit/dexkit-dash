@@ -176,7 +176,7 @@ const GamesList = () => {
           }
           return true;
         }).filter(
-          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1
+          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1 
         )
       } else {
         return waitingGamesQuery.data.games.filter(

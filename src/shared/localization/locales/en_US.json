@@ -950,6 +950,7 @@
   "coinleague.affiliate.game": "Game",
   "coinleague.affiliate.type": "Type",
   "coinleague.affiliate.player": "Player",
+  "app.coinLeague.errorRemovingMetadata": "Error removing this prize, are you the creator? If error persists contact team",
   "app.coinLeague.remove": "Remove",
   "app.coinLeague.removed": "Removed",
   "app.coinLeague.jackpot": "Jackpot",

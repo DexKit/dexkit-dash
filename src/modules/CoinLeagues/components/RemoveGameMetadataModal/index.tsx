@@ -12,14 +12,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { useGameMetadataDeleteCallback } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import { useGameMetadataDeleteCallback, useGameMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
 import { SubmitState } from '../ButtonState';
 import IntlMessages from '@crema/utility/IntlMessages';
 import { useWeb3 } from 'hooks/useWeb3';
-
+import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -77,7 +76,6 @@ interface Props {
     game: any;
     setOpen: (open: boolean) => void;
     id: string;
-    onDelete: any;
 }
 
 
@@ -85,7 +83,8 @@ interface Props {
 
 
 const RemoveGameMetadataModal = (props: Props) => {
-    const { open, setOpen, id, game, onDelete } = props;
+    const { open, setOpen, id, game } = props;
+    const { refetch } = useGameMetadata(id);
     const { account } = useWeb3();
     const classes = useStyles();
     const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -102,7 +101,7 @@ const RemoveGameMetadataModal = (props: Props) => {
         const onConfirmTx = (hash?: string) => {
             // Save here the current id minted
             setSubmitState(SubmitState.Confirmed);
-            onDelete();
+            refetch();
             setTimeout(() => {
                 setOpen(false);
             }, 2000);
@@ -120,7 +119,7 @@ const RemoveGameMetadataModal = (props: Props) => {
             onError,
             onSubmit: onSubmitTx
         })
-    }, [onDeleteGameMetadata, game, setOpen, onDelete])
+    }, [onDeleteGameMetadata, game, setOpen, refetch])
 
 
     const isSubmitting = useCallback(() => {
@@ -138,7 +137,7 @@ const RemoveGameMetadataModal = (props: Props) => {
                     <Grid item xs={11}>
                         <Grid container spacing={2} justifyContent={'flex-start'}>
                             <Grid item>
-                                <TransferIcon />
+                                <CrownIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='h6' color='error'>Are you sure you want to remove prize for game  #{id} </Typography>
@@ -196,8 +195,8 @@ const RemoveGameMetadataModal = (props: Props) => {
                             variant='contained'
                             color='secondary'>
                             {submitState === SubmitState.Confirmed ?
-                                <IntlMessages id='app.coinLeague.removed' /> :
-                                <IntlMessages id='app.coinLeague.remove' />}
+                                <IntlMessages id='app.coinLeague.removed' /> : submitState === SubmitState.Error ? <IntlMessages id='app.coinLeague.errorRemovingMetadata' /> :
+                                    <IntlMessages id='app.coinLeague.remove' />}
                         </Button>
                     </Grid>
                 </Grid>
