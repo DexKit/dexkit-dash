@@ -11,6 +11,7 @@ import CardGameSkeleton from '../CardGame/index.skeleton';
 import CardGameV2 from '../CardGame';
 import {useWeb3} from 'hooks/useWeb3';
 import {GameFiltersState} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
 
 interface Props {
   filters: GameFiltersState;
@@ -28,6 +29,21 @@ export const GamesEnded = (props: Props) => {
     accounts: account ? [account] : undefined,
     filters,
   });
+  const endedGamesData = gamesEndedQuery?.data?.games;
+
+  const endedGamesIds = useMemo(() => {
+    if (endedGamesData) {
+      if (endedGamesData.length) {
+        return endedGamesData?.map(g => g.intId).reduce((p, c) => `${p},${c}`);
+      }
+    }
+  }, [endedGamesData])
+
+
+
+  const gamesMetadata = useGamesMetadata(endedGamesIds);
+
+
 
   const onClickEnterGame = useCallback(
     (id: string) => {
@@ -36,14 +52,39 @@ export const GamesEnded = (props: Props) => {
     [enterGameRoute, history],
   );
 
+ 
+
   const endedGames = useMemo(() => {
     if (gamesEndedQuery.data) {
-      return gamesEndedQuery.data.games.filter(
-        (g) =>
-          g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
-      );
+      if (gamesMetadata.data) {
+        const metadata = gamesMetadata.data;
+        // We merge the metadata with the game
+        return gamesEndedQuery.data.games.map(g => {
+          const withMetadata = metadata.find(m => Number(m.gameId) === Number(g.intId));
+          if (withMetadata) {
+            return {
+              ...withMetadata,
+              ...g,
+            }
+          } else {
+            return g;
+          }
+        }).filter(g => {
+          if (filters.isJackpot) {
+            return !!g.title;
+          }
+          return true;
+        }).filter(
+          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '' ) !== -1
+        )
+      } else {
+        return gamesEndedQuery.data.games.filter(
+          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase() || '') !== -1,
+        );
+      }
     }
-  }, [search, gamesEndedQuery.data]);
+  }, [search, gamesEndedQuery.data, gamesMetadata.data, filters.isJackpot]);
+
 
   return (
     <Grid item xs={12}>
