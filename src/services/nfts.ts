@@ -3,6 +3,7 @@ import {getEthers} from './web3modal';
 import axios from 'axios';
 import {getNormalizedUrl} from 'utils/browser';
 import {TokenMetadata} from 'types/nfts';
+import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 
 const abi = [
   {
@@ -73,4 +74,36 @@ export const getTokenMetadata = async (url: string) => {
   return axios
     .get<TokenMetadata>(getNormalizedUrl(url))
     .then((response) => response.data);
+};
+
+export const transferFrom = async (
+  contractAddress: string,
+  fromAddress: string,
+  toAddress: string,
+  tokenId: string,
+  provider: any,
+) => {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider).getSigner(),
+  );
+
+  const result = await contract.transferFrom(fromAddress, toAddress, tokenId);
+
+  return result;
+};
+
+export const ownerOf = async (
+  contractAddress: string,
+  tokenId: string,
+  provider: any,
+) => {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  return await contract.ownerOf(tokenId);
 };

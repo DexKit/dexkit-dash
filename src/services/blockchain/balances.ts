@@ -1,5 +1,4 @@
 import {ethers} from 'ethers';
-import {useCustomTokenList} from 'hooks/tokens';
 import {getTokenBalances} from 'services/multicall';
 import {getBalance} from 'services/web3modal';
 import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
@@ -20,7 +19,10 @@ export const getAllBlockchainBalances = async (
   );
 
   const [, tb] = await getTokenBalances(
-    [...(tokens?.map((t) => t.address) as string[]), ...otherTokens],
+    [
+      ...(tokens?.map((t) => t.address) as string[]),
+      ...otherTokens.map((t) => t.address),
+    ],
     account,
     provider,
   );

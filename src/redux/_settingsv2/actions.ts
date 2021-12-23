@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {CustomAsset} from './types';
 
 export interface TokenParams {
   name: string;
@@ -26,4 +27,16 @@ export const addCustomNetwork = createAction<NetworkParams>(
 
 export const updateCustomNetwork = createAction<NetworkParams>(
   'settingsv2/updateCustomNetwork',
+);
+
+export const removeCustomNetwork = createAction<NetworkParams>(
+  'settingsv2/removeCustomNetwork',
+);
+
+export const addCustomAsset = createAction<CustomAsset>(
+  'settingsv2/addCustomAsset',
+);
+
+export const removeCustomAsset = createAction<CustomAsset>(
+  'settingsv2/removeCustomAsset',
 );

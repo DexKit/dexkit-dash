@@ -1,11 +1,14 @@
-import {ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import {useQuery} from 'react-query';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 
-import {addCustomToken} from 'redux/_settingsv2/actions';
+import {
+  addCustomAsset,
+  addCustomToken,
+  removeCustomAsset,
+} from 'redux/_settingsv2/actions';
 import {getTokenBalanceOf} from 'services/blockchain/balances';
 
 // por chain ID
@@ -60,10 +63,37 @@ export function useAddCustomToken() {
   return {addToken};
 }
 
-export function useAddNftToken() {
-  const addNftToken = useCallback(
-    (params: {contractAddress: string; tokenId: string}) => {},
-    [],
+export function useAddCustomAsset() {
+  const dispatch = useDispatch();
+
+  const addAsset = useCallback(
+    (params: {contractAddress: string; tokenId: string; chainId: number}) => {
+      dispatch(addCustomAsset(params));
+    },
+    [dispatch],
   );
-  return {addNftToken};
+  return {addAsset};
+}
+
+export function useRemoveCustomAsset() {
+  const dispatch = useDispatch();
+
+  const removeAsset = useCallback(
+    (params: {contractAddress: string; tokenId: string; chainId: number}) => {
+      dispatch(removeCustomAsset(params));
+    },
+    [dispatch],
+  );
+  return {removeAsset};
+}
+
+export function useAssetList() {
+  const {chainId} = useWeb3();
+  const {assets} = useSelector<AppState, AppState['settingsv2']>(
+    ({settingsv2}) => settingsv2,
+  );
+
+  return {
+    assets: assets?.filter((asset: any) => asset.chainId === chainId) || [],
+  };
 }

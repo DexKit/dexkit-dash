@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {
   Dialog,
@@ -19,10 +19,10 @@ import Close from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {ErrorIcon} from 'shared/components/Icons';
+import {Web3Wrapper} from '@0x/web3-wrapper';
 
 export interface ImportNftTokenValues {
   address: string;
-  symbol: string;
   tokenId: string;
 }
 
@@ -46,12 +46,17 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
   const {onClose} = dialogProps;
 
   const theme = useTheme();
+  const {messages} = useIntl();
+
+  const isAddressValid = useCallback((address: string) => {
+    return Web3Wrapper.isAddress(address);
+  }, []);
 
   const handleChange = useCallback(
     (e) => {
-      onChange(e.target.value, e.target.value);
+      onChange(e.target.name, e.target.value.trim());
     },
-    [values, onChange],
+    [onChange],
   );
 
   const handleClickClose = useCallback(() => {
@@ -59,8 +64,6 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
       onClose({}, 'backdropClick');
     }
   }, [onClose]);
-
-  const {messages} = useIntl();
 
   const handleSubmit = useCallback(() => {
     onSubmit();
@@ -77,21 +80,15 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
               onChange={handleChange}
               label={messages['app.settings.contractAddress'] as string}
               variant='outlined'
+              error={values.address !== '' && !isAddressValid(values.address)}
+              helperText={
+                values.address !== '' && !isAddressValid(values.address)
+                  ? messages['app.wallet.invalidAddress']
+                  : null
+              }
               fullWidth
             />
           </Grid>
-
-          <Grid item xs={12}>
-            <TextField
-              name='symbol'
-              value={values.symbol}
-              onChange={handleChange}
-              label={messages['app.settings.symbol'] as string}
-              variant='outlined'
-              fullWidth
-            />
-          </Grid>
-
           <Grid item xs={12}>
             <TextField
               name='tokenId'
