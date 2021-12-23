@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useMemo} from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import {
   useCoinLeagues,
   useCoinLeaguesCallbacks,
@@ -7,26 +7,26 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import {ButtonState, SubmitState} from '../ButtonState';
+import { ButtonState, SubmitState } from '../ButtonState';
 import Button from '@material-ui/core/Button';
-import {useWeb3} from 'hooks/useWeb3';
+import { useWeb3 } from 'hooks/useWeb3';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import {useInterval} from 'hooks/utils/useInterval';
-import {getTransactionScannerUrl} from 'utils/blockchain';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import { useInterval } from 'hooks/utils/useInterval';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 import { useNotifications } from 'hooks/useNotifications';
 interface Props {
   id?: string;
 }
 
 export const StartGame = (props: Props) => {
-  const {id} = props;
-  const {chainId} = useWeb3();
-  const {game, refetch} = useCoinLeagues(id);
-  const {createNotification} = useNotifications();
+  const { id } = props;
+  const { chainId } = useWeb3();
+  const { game, refetch } = useCoinLeagues(id);
+  const { createNotification } = useNotifications();
   const [tx, setTx] = useState<string>();
   const [actualTimestamp, setActualTimestamp] = useState<number>(
     new Date().getTime(),
@@ -36,7 +36,7 @@ export const StartGame = (props: Props) => {
     SubmitState.None,
   );
 
-  const {onStartGameCallback, onAbortGameCallback} = useCoinLeaguesCallbacks(
+  const { onStartGameCallback, onAbortGameCallback } = useCoinLeaguesCallbacks(
     game?.address,
   );
 
@@ -168,7 +168,7 @@ export const StartGame = (props: Props) => {
     }
   }, [startTimestamp, currentPlayers, actualTimestamp, started]);
 
-  const canAbort = useMemo(
+  let canAbort = useMemo(
     () =>
       !started &&
       !gameFull &&
@@ -176,6 +176,7 @@ export const StartGame = (props: Props) => {
       new Date().getTime() > abortTimestamp,
     [started, abortTimestamp, gameFull],
   );
+  canAbort = false;
 
   return (
     <Paper>
@@ -183,15 +184,15 @@ export const StartGame = (props: Props) => {
         <Grid container spacing={4}>
           <Grid item xs={12} md={9}>
             {!gameFull && (
-              <Typography variant='h6' style={{margin: 5}}>
+              <Typography variant='h6' style={{ margin: 5 }}>
                 Waiting For Players
               </Typography>
             )}
-            <Typography variant='h6' style={{margin: 5}}>
+            <Typography variant='h6' style={{ margin: 5 }}>
               {currentPlayers} / {totalPlayers}
             </Typography>
             {gameFull && (
-              <Typography variant='h6' style={{margin: 5}}>
+              <Typography variant='h6' style={{ margin: 5 }}>
                 Everybody is here
               </Typography>
             )}
@@ -211,10 +212,10 @@ export const StartGame = (props: Props) => {
                         {submitState === SubmitState.Submitted
                           ? 'Submitted Tx'
                           : submitState === SubmitState.Error
-                          ? 'Tx Error'
-                          : submitState === SubmitState.Confirmed
-                          ? 'Confirmed Tx'
-                          : ''}
+                            ? 'Tx Error'
+                            : submitState === SubmitState.Confirmed
+                              ? 'Confirmed Tx'
+                              : ''}
                       </Button>
                     )}
                   </Box>

@@ -46,7 +46,6 @@ export const mint = async (
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
-  console.log(price.toString());
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).safeMint({
     gasPrice,
     value: price,

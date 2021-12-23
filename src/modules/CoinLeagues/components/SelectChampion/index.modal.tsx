@@ -21,8 +21,8 @@ import {VariableSizeList} from 'react-window';
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {SelectChampionListItem } from './SelectChampionItem';
 import {ChainId} from 'types/blockchain';
-import { useMyChampions, useChampionsMetadataQuery } from 'modules/CoinLeagues/hooks/champions';
-import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
+import { useMyChampions } from 'modules/CoinLeagues/hooks/champions';
+import { ChampionMetaItem, CoinLeaguesChampion } from 'modules/CoinLeagues/utils/types';
 import { Link as RouterLink } from 'react-router-dom';
 
 interface Props extends DialogProps {
@@ -37,9 +37,7 @@ export const SelectChampionDialog = (props: Props) => {
     props;
   // TODO: Change to Mainnet
   const championsQuery = useMyChampions(chainId);
-  const championsData = championsQuery.data;
-  const championsMetadataQuery = useChampionsMetadataQuery(championsData?.map(c=> c.id));
-  const championsMetadata = championsMetadataQuery.data;
+  const championsData = championsQuery.data as Array<Required<CoinLeaguesChampion>>;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
@@ -106,14 +104,14 @@ export const SelectChampionDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        {!championsMetadata || championsMetadata.length === 0 ? (
+        {!championsData || championsData.length === 0 ? (
           <Typography variant='body1'>No champions found, you must hold an NFT champion to play in the NFT games - <Link  component={RouterLink} to={'/coin-league/champions/event'}> Mint here now.</Link></Typography>
         ) : (
           <List>
             <VariableSizeList
-              itemData={championsMetadata}
+              itemData={championsData}
               itemSize={() => 56}
-              itemCount={championsMetadata.length}
+              itemCount={championsData.length}
               width='100%'
               height={250}>
               {({index, data, style}) => (

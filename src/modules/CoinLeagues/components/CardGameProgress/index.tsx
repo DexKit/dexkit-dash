@@ -94,9 +94,9 @@ function CardGameProgress(props: Props): JSX.Element {
 
   const onClickEnter = useCallback(
     (ev: any) => {
-      onClick(game.id);
+      onClick(game.intId);
     },
-    [game.id, onClick],
+    [game.intId, onClick],
   );
 
   useInterval(

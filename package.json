@@ -1,6 +1,6 @@
 {
   "name": "dexkit-dash",
-  "version": "0.0.6.13",
+  "version": "0.0.6.14",
   "private": true,
   "jest": {
     "testEnvironment": "node"
@@ -187,7 +187,7 @@
     "workbox-routing": "^6.1.0",
     "workbox-strategies": "^6.1.0",
     "worker-loader": "^3.0.8",
-    "yup": "^0.29.1"
+    "yup": "^0.32.11"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

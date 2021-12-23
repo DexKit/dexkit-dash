@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 import {
   EARLY_ACCESS_BITT_AMOUNT,
   EARLY_ACCESS_KIT_AMOUNT,
@@ -10,8 +10,8 @@ import {
   SECOND_ROUND_DATE,
   THIRD_ROUND_DATE,
 } from '../constants';
-import {ChampionsEventRound} from './types';
-import {ChainId} from 'types/blockchain';
+import { ChampionsEventRound } from './types';
+import { ChainId } from 'types/blockchain';
 
 export function getEventCurrentRound(): ChampionsEventRound {
   return ChampionsEventRound.FIRST;
@@ -130,32 +130,32 @@ export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number): number {
 
 
 export const getChampionsMultiplier = (rarityBN: ethers.BigNumber) => {
-  const rarity  = rarityBN.toNumber();
+  const rarity = rarityBN.toNumber();
   switch (rarity) {
     case 0:
-      return 1.7
+      return 1.7;
     case 1:
-      return 1.65
+      return 1.65;
     case 2:
-      return 1.6
+      return 1.6;
     case 3:
-      return 1.6
+      return 1.55;
     case 4:
-      return 1.55
+      return 1.5;
     case 5:
-      return 1.5
+      return 1.45;
     case 6:
-      return 1.4
+      return 1.4;
     case 7:
-      return 1.35
+      return 1.35;
 
     default:
-     return 1;
+      return 1;
   }
 }
 
 export const isChampionsFromRarity = (rarityBN: ethers.BigNumber) => {
-  const rarity  = rarityBN.toNumber();
+  const rarity = rarityBN.toNumber();
   switch (rarity) {
     case 0:
       return true
@@ -174,14 +174,14 @@ export const isChampionsFromRarity = (rarityBN: ethers.BigNumber) => {
     case 7:
       return true
     default:
-     return false;
+      return false;
   }
 }
 
 
 
 export const getChampionsCoinSymbol = (rarityBN: ethers.BigNumber) => {
-  const rarity  = rarityBN.toNumber();
+  const rarity = rarityBN.toNumber();
   switch (rarity) {
     case 0:
       return 'BITT'
@@ -201,6 +201,31 @@ export const getChampionsCoinSymbol = (rarityBN: ethers.BigNumber) => {
       return 'DOGE'
 
     default:
-     return 'DOGE'
+      return 'DOGE'
+  }
+}
+
+export const getRarityFromBodyType = (body?: string) => {
+  
+  switch (body) {
+    case 'Bittoken':
+      return 0
+    case 'Bitcoin':
+      return 1
+    case 'Ethereum':
+      return 2
+    case 'ChainLink':
+      return 3
+    case 'Polkadot':
+      return 4
+    case 'Uniswap':
+      return 5
+    case 'Cardano':
+      return 6
+    case 'Doge':
+      return 7
+
+    default:
+      return undefined
   }
 }

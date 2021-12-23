@@ -37,6 +37,14 @@ export const coinLeaguesConfigs = [
   {
     routes: [
       {
+        path: `${COINLEAGUENFT_ROUTE}/active-games`,
+        component: React.lazy(() => import('./pages/GamesInProgress')),
+      },
+    ],
+  },
+  {
+    routes: [
+      {
         path: `${COINLEAGUENFT_ROUTE}/:id`,
         component: React.lazy(() => import('./pages/GameEnter')),
       },
@@ -82,7 +90,6 @@ export const coinLeaguesConfigs = [
       },
     ],
   },
-
   {
     routes: [
       {

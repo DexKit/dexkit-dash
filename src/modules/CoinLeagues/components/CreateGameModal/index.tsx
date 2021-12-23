@@ -150,8 +150,8 @@ const CreateGameModal = (props: Props) => {
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
             createNotification({
-              title: `Created Game ${isNFTGame && 'on NFT room'}`,
-              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame && 'on NFT room'}`,
+              title: `Created Game ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId, tx),
               urlCaption: 'View transaction',
@@ -190,7 +190,7 @@ const CreateGameModal = (props: Props) => {
             amountUnit: ethers.utils.parseEther(String(entryAmount)),
             numCoins: coins,
             abortTimestamp: Math.round(
-              new Date().getTime() / 1000 + duration * 3,
+              startDate / 1000 + duration * 3,
             ),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
