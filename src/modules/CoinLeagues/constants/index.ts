@@ -1,8 +1,8 @@
 // Mumbai Price Feeds
 
-import {BigNumber} from '@ethersproject/bignumber';
-import {ethers} from 'ethers';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
+import { ChainId } from 'types/blockchain';
 
 export const DEXKIT_MULTIPLIER_HOLDING = BigNumber.from(50).mul(
   BigNumber.from(10).pow(18),
@@ -35,6 +35,20 @@ export const CREATOR_ADDRESSES = [
   '0x1E88a0aD2c8273473883cbf561E4661BAAee9D19',
 ];
 
+export const CREATOR_PRIZES_ADDRESSES = [
+  '0xF2b48EE89E6A31DA8F664B87581d876d527C62F5',
+  '0x3DaC4cbbA58dE26d34f4CB6409D47C676D255841',
+  '0x67B40b0cA9620cDec3397E9E2D212b7C317da6dd',
+  '0x6E566e755D009E4C2507D470D65Bba43B348cC66',
+  '0x33966674b0b5dE370630194e29D9679955A2E043',
+  '0x37885951E437d9cD4349d252358d27d921f4f1F0',
+  '0x367D8F9DBafc73560633b58b38db67CE48443B27',
+  //
+  '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
+  '0xA27e256CDD086eF88953b941582bB651582c1454',
+  '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f'
+];
+
 export const BITBOY_TEAM = [
   {
     address: '0x186035678f02f19d311ad24EA73a08EA4cD7f01e',
@@ -56,6 +70,18 @@ export const BITBOY_TEAM = [
     address: '0xCB8b2c541E18AdBC8B4B8A42a3CA769f4EB72e6C',
     label: 'J Chains',
   },
+];
+
+export const CREATOR_LABELS = [
+  ...BITBOY_TEAM,
+  {
+    address: '0xA27e256CDD086eF88953b941582bB651582c1454',
+    label: 'Albert Hoffman'
+  },
+  {
+    address: '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
+    label: 'Albert Hoffman'
+  }
 ];
 
 export const MumbaiPriceFeeds = [
@@ -628,47 +654,47 @@ export const CHAMPIONS = {
   [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
 };
 
-export const SALE_EARLY_FIRST_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_FIRST_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1637150592,
   [ChainId.Matic]: 1637211600,
 };
 
-export const FIRST_ROUND_DATE: {[key: number]: number} = {
+export const FIRST_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1637236211,
   [ChainId.Matic]: 1637254800,
 };
 
-export const SALE_EARLY_SECOND_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_SECOND_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638421200,
 };
 
-export const SECOND_ROUND_DATE: {[key: number]: number} = {
+export const SECOND_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638422100,
 };
 
-export const SALE_EARLY_THIRD_ROUND_DATE: {[key: number]: number} = {
+export const SALE_EARLY_THIRD_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639631700,
 };
 
-export const THIRD_ROUND_DATE: {[key: number]: number} = {
+export const THIRD_ROUND_DATE: { [key: number]: number } = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639674000,
 };
 
-export const EARLY_ACCESS_KIT_AMOUNT: {[key: number]: number} = {
+export const EARLY_ACCESS_KIT_AMOUNT: { [key: number]: number } = {
   [ChainId.Matic]: 50,
   [ChainId.Mumbai]: 50,
 };
 
-export const EARLY_ACCESS_BITT_AMOUNT: {[key: number]: number} = {
+export const EARLY_ACCESS_BITT_AMOUNT: { [key: number]: number } = {
   [ChainId.Matic]: 200,
   [ChainId.Mumbai]: 200,
 };
 
-export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
+export const EVENT_HOLDING_AMOUNT: { [key: number]: BigNumber } = {
   [ChainId.Matic]: ethers.utils.parseUnits('115', 'ether'),
   [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
 };
@@ -687,3 +713,7 @@ export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
 export const DISABLE_CHAMPIONS_ID = '500000'
 
 export const AFFILIATE_FIELD = 'league-affiliate';
+
+
+export const GAME_METADATA_API = 'https://coinleague-app-api-yxwk6.ondigitalocean.app'
+//export const GAME_METADATA_API = 'http://localhost:4001'
