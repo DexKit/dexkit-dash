@@ -423,7 +423,7 @@ export const KittyDetail = () => {
                                               startIcon={<CheckIcon />}
                                               variant='outlined'
                                               color='primary'>
-                                              Set default
+                                              <IntlMessages id='app.kittygotchi.setDefault' />
                                             </Button>
                                           )}
                                         </>
@@ -495,8 +495,7 @@ export const KittyDetail = () => {
                               <Typography
                                 align={isMobile ? 'center' : 'left'}
                                 variant='body1'>
-                                Your kittygotchi is hungry! Last time you fed
-                                him:{' '}
+                                <IntlMessages id='app.kittygotchi.kittyHungry' />{' '}
                                 <strong>
                                   {moment
                                     .unix(kittygotchi?.data?.lastUpdated || 0)
@@ -508,7 +507,7 @@ export const KittyDetail = () => {
                               {!canFeedKitty(kittygotchi?.data) ? (
                                 kittygotchi?.data?.lastUpdated ? (
                                   <>
-                                    You can feed your kittygotchi in{' '}
+                                    <IntlMessages id='app.kittygotchi.canFeed' />{' '}
                                     <strong>
                                       <CountdownSpan
                                         toDate={moment
@@ -516,6 +515,13 @@ export const KittyDetail = () => {
                                           .add(24, 'hours')}
                                       />
                                     </strong>
+                                    {/* <strong>
+                                      <CountdownSpan
+                                        toDate={moment
+                                          .unix(kittygotchi?.data?.lastUpdated)
+                                          .add(24, <IntlMessages id="app.kittygotchi.hours" />)}
+                                      />
+                                    </strong> */}
                                   </>
                                 ) : (
                                   <Skeleton />

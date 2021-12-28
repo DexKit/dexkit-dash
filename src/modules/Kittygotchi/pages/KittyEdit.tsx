@@ -252,8 +252,9 @@ export const KittyEdit = () => {
           (chainId === ChainId.Matic || chainId === ChainId.Mumbai) ? (
             <Grid item xs={12} sm={10}>
               <Alert severity='info'>
-                You need at least{' '}
-                <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong> to edit your
+                <IntlMessages id='app.kittygotchi.atLeast' />{' '}
+                <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong>{' '}
+                <IntlMessages id='app.kittygotchi.toEdit' />
                 kittygotchi
               </Alert>
             </Grid>
