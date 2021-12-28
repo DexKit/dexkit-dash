@@ -82,7 +82,7 @@ export const RewardDialog = (props: RewardDialogProps) => {
             </Grid>
             <Grid item xs={12}>
               <Typography align='center' variant='h5'>
-                <IntlMessages id='app.kittygotchi.youWon' /> 300 KIT
+                <IntlMessages id='app.kittygotchi.youWon' />
               </Typography>
               <Typography align='center' variant='body1'>
                 <IntlMessages id='app.kittygotchi.reviewThisText' />

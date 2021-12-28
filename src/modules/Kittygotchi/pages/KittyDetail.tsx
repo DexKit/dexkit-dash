@@ -278,7 +278,7 @@ export const KittyDetail = () => {
                   <IntlMessages id='nfts.walletBreadcrumbDashboard' />
                 </Link>
                 <Link color='inherit' component={RouterLink} to='/kittygotchi'>
-                  Kittygotchi
+                  <IntlMessages id='app.kittygotchi.kittygotchi' />
                 </Link>
               </Breadcrumbs>
             </Grid>
@@ -300,7 +300,10 @@ export const KittyDetail = () => {
                   {kittygotchi.isLoading ? (
                     <Skeleton width={theme.spacing(24)} />
                   ) : (
-                    <>Kittygotchi #{kittygotchi.data?.id}</>
+                    <>
+                      <IntlMessages id='app.kittygotchi.kittygotchi' /> #
+                      {kittygotchi.data?.id}
+                    </>
                   )}
                 </Typography>
               </Box>
@@ -390,7 +393,10 @@ export const KittyDetail = () => {
                                     {kittygotchi.isLoading ? (
                                       <Skeleton width={theme.spacing(12)} />
                                     ) : (
-                                      <>Kittygotchi #{kittygotchi.data?.id}</>
+                                      <>
+                                        <IntlMessages id='app.kittygotchi.kittygotchi' />{' '}
+                                        #{kittygotchi.data?.id}
+                                      </>
                                     )}
                                   </Typography>
                                 </Grid>
@@ -445,7 +451,7 @@ export const KittyDetail = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    ATK
+                                    <IntlMessages id='app.kittygotchi.atk' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -461,7 +467,7 @@ export const KittyDetail = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    DEF
+                                    <IntlMessages id='app.kittygotchi.def' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -477,7 +483,7 @@ export const KittyDetail = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    RUN
+                                    <IntlMessages id='app.kittygotchi.run' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -515,13 +521,6 @@ export const KittyDetail = () => {
                                           .add(24, 'hours')}
                                       />
                                     </strong>
-                                    {/* <strong>
-                                      <CountdownSpan
-                                        toDate={moment
-                                          .unix(kittygotchi?.data?.lastUpdated)
-                                          .add(24, <IntlMessages id="app.kittygotchi.hours" />)}
-                                      />
-                                    </strong> */}
                                   </>
                                 ) : (
                                   <Skeleton />

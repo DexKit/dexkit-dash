@@ -289,7 +289,7 @@ export const KittygotchiIndex = () => {
                       variant='contained'
                       color='primary'
                       onClick={mintKittyToggler.toggle}>
-                      <IntlMessages id='app.kittygotchi.create' /> Kitty
+                      <IntlMessages id='app.kittygotchi.create' />
                     </Button>
                   </Box>
                 </Paper>

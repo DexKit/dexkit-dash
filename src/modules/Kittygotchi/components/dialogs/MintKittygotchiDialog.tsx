@@ -77,7 +77,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
               <GavelIcon className={classes.icon} />
             </Box>
             <Typography variant='body1'>
-              <IntlMessages id='app.kittygotchi.minting' /> Kittygotchi
+              <IntlMessages id='app.kittygotchi.minting' />
             </Typography>
           </Box>
           <Box>
@@ -104,7 +104,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages id='app.kittygotchi.minting' /> Kittygotchi
+                  <IntlMessages id='app.kittygotchi.minting' />
                 </Typography>
                 <Typography
                   color='textSecondary'
@@ -118,7 +118,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages id='app.kittygotchi.creatingYour' /> Kittygotchi
+                  <IntlMessages id='app.kittygotchi.creatingYour' />
                 </Typography>
                 <Typography
                   color='textSecondary'

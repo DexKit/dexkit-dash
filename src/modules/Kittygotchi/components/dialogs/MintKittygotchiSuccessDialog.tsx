@@ -59,15 +59,15 @@ export const MintKittygotchiSuccessDialog = (props: RewardDialogProps) => {
             </Grid>
             <Grid item xs={12}>
               <Typography align='center' variant='h5'>
-                Kittygotchi  <IntlMessages id='app.kittygotchi.created' />
+                <IntlMessages id='app.kittygotchi.created' />
               </Typography>
               <Typography color='textSecondary' align='center' variant='body1'>
-                Kittygotchi <IntlMessages id='app.kittygotchi.createdSuccessfully' />
+                <IntlMessages id='app.kittygotchi.createdSuccessfully' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Button onClick={handleClose} fullWidth color='primary'>
-              <IntlMessages id='app.kittygotchi.close' />
+                <IntlMessages id='app.kittygotchi.close' />
               </Button>
             </Grid>
           </Grid>

@@ -86,7 +86,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
-                <IntlMessages id="app.kittygotchi.creatingYour" /> kittygotchi
+                <IntlMessages id="app.kittygotchi.creatingYour" />
                 </Typography>
                 <Typography
                   align='center'
@@ -139,7 +139,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
                   variant='outlined'
                   onClick={handleViewKittygotchi}
                   fullWidth>
-                  <IntlMessages id="app.kittygotchi.view"/>  Kittygotchi #{tokenId}
+                  <IntlMessages id="app.kittygotchi.view"/>  #{tokenId}
                 </Button>
               </Grid>
               <Grid item xs={12}>
