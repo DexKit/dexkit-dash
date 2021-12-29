@@ -226,6 +226,12 @@ export const TransferAssetDialog: React.FC<Props> = ({
                   item
                   spacing={2}>
                   <Grid item>
+                    <Typography variant='caption'>
+                      {isLoading ? <Skeleton /> : data?.collectionName} (
+                      {data?.symbol})
+                    </Typography>
+                  </Grid>
+                  <Grid item>
                     <Typography variant='h5'>
                       {isLoading ? <Skeleton /> : data?.title}
                     </Typography>

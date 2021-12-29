@@ -28,7 +28,12 @@ export function useAsset(contractAddress?: string, tokenId?: string) {
 
         const owner = await contract.ownerOf(tokenId);
 
+        const collectionName = await contract.name();
+        const symbol = await contract.symbol();
+
         const data: AssetData = {
+          collectionName,
+          symbol,
           imageUrl: getNormalizedUrl(metadata?.image || ''),
           contractAddress,
           tokenId,

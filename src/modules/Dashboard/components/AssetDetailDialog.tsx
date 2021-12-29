@@ -111,6 +111,24 @@ export const AssetDetailDialog: React.FC<Props> = ({
           )}
         </Grid>
         <Grid item>
+          <Typography variant='caption'>
+            {isLoading ? (
+              <Skeleton />
+            ) : (
+              <>
+                <Link
+                  href={
+                    chainId && contractAddress
+                      ? `${getScannerUrl(chainId)}/address/${contractAddress}`
+                      : ''
+                  }
+                  target='_blank'
+                  rel='noopener noreferrer'>
+                  {data?.collectionName} ({data?.symbol})
+                </Link>
+              </>
+            )}
+          </Typography>
           <Typography variant='h5'>
             {isLoading ? <Skeleton /> : data?.title}
           </Typography>

@@ -6,6 +6,8 @@ import {useHistory} from 'react-router-dom';
 import NetworkChips from 'shared/components/NetworkChips';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 
+import {useIntl} from 'react-intl';
+
 import {
   Box,
   Divider,
@@ -20,6 +22,11 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import Close from '@material-ui/icons/Close';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {TransferTab} from './TransfersTab';
+import TransactionsTab from './TransactionsTab';
+
+const TAB_TRANSACTIONS = 'TAB_TRANSACTIONS';
+const TAB_HISTORY = 'TAB_HISTORY';
+const TAB_TRANSFERS = 'TAB_TRANSFERS';
 
 type Props = {
   address?: string;
@@ -39,7 +46,7 @@ export const TradeHistoryTab = (props: Props) => {
       EthereumNetwork.ethereum,
   );
   const {address, token, enableNetworkChips = true} = props;
-
+  const {messages} = useIntl();
   const onChangeNetwork = (net: EthereumNetwork | 'all') => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('network', net);
@@ -53,10 +60,18 @@ export const TradeHistoryTab = (props: Props) => {
     setShowFilters((value) => !value);
   }, []);
 
-  const [showTransfers, setShowTransfers] = useState(false);
+  const [tab, setTab] = useState(TAB_HISTORY);
+
+  const handleToggleHistory = useCallback(() => {
+    setTab(TAB_HISTORY);
+  }, []);
 
   const handleToggleTransfers = useCallback(() => {
-    setShowTransfers((value) => !value);
+    setTab(TAB_TRANSFERS);
+  }, []);
+
+  const handleToggleTransactions = useCallback(() => {
+    setTab(TAB_TRANSACTIONS);
   }, []);
 
   return address ? (
@@ -117,17 +132,25 @@ export const TradeHistoryTab = (props: Props) => {
                 <Grid item>
                   <Chip
                     clickable
-                    onClick={handleToggleTransfers}
-                    variant={!showTransfers ? 'default' : 'outlined'}
-                    label='History'
+                    onClick={handleToggleHistory}
+                    variant={tab === TAB_HISTORY ? 'default' : 'outlined'}
+                    label={messages['app.wallet.history'] as string}
                   />
                 </Grid>
                 <Grid item>
                   <Chip
                     clickable
                     onClick={handleToggleTransfers}
-                    variant={showTransfers ? 'default' : 'outlined'}
-                    label='Transfers'
+                    variant={tab === TAB_TRANSFERS ? 'default' : 'outlined'}
+                    label={messages['app.wallet.transfers'] as string}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    onClick={handleToggleTransactions}
+                    variant={tab === TAB_TRANSACTIONS ? 'default' : 'outlined'}
+                    label={messages['app.wallet.transactions'] as string}
                   />
                 </Grid>
               </Grid>
@@ -139,8 +162,12 @@ export const TradeHistoryTab = (props: Props) => {
             </Grid>
           </Grid>
         </Grid>
-        {showTransfers ? (
+        {tab === TAB_TRANSFERS ? (
           <TransferTab address={address} networkName={networkName} />
+        ) : tab === TAB_TRANSACTIONS ? (
+          <Grid item xs={12}>
+            <TransactionsTab />
+          </Grid>
         ) : (
           <>
             {token ? (

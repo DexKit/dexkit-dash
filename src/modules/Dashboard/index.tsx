@@ -4,14 +4,6 @@ export const dashBoardConfigs = [
   {
     routes: [
       {
-        path: '/wallet/nfts',
-        component: React.lazy(() => import('./Wallet/pages/Nfts')),
-      },
-    ],
-  },
-  {
-    routes: [
-      {
         path: '/wallet/send',
         component: React.lazy(() => import('./Wallet/pages/ShareSend')),
       },

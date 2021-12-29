@@ -5,4 +5,6 @@ export interface AssetData {
   contractAddress: string;
   owner: string;
   description: string;
+  collectionName: string;
+  symbol: string;
 }

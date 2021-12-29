@@ -2,8 +2,10 @@ import React, {useCallback} from 'react';
 
 import * as types from '../types';
 
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import FlagIcon from 'shared/components/FlagIcon';
 
 interface Props {
   language: types.Language;
@@ -22,6 +24,9 @@ export const LanguageListItem: React.FC<Props> = ({
 
   return (
     <ListItem selected={selected} onClick={handleClick} button>
+      <ListItemIcon>
+        <FlagIcon id={language.icon} />
+      </ListItemIcon>
       <ListItemText primary={language.name} />
     </ListItem>
   );

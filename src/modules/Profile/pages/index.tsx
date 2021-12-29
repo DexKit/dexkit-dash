@@ -32,6 +32,11 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ChainId, Web3State} from 'types/blockchain';
 import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
 import {useToggler} from 'hooks/useToggler';
+import SelectAddressDialog from 'shared/components/SelectAddressDialog';
+import {useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
+import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from 'modules/Kittygotchi/constants';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -104,7 +109,7 @@ export const ProfileIndex = () => {
 
       if (defaultKitty) {
         kittygotchiUpdated.get(defaultKitty.id);
-      } 
+      }
     }
   }, [account, web3State, chainId]);
 
@@ -247,8 +252,62 @@ export const ProfileIndex = () => {
     feedingToggler.toggle();
   }, []);
 
+  const accounts = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
+  );
+
+  const transferAssetDialogToggler = useToggler();
+  const selectAddressDialogToggler = useToggler();
+  const [selectedAddress, setSelectedAddress] = useState<string>();
+
+  const handleOpenTransfer = useCallback(() => {
+    transferAssetDialogToggler.set(true);
+  }, [transferAssetDialogToggler]);
+
+  const handleOpenSelectAddress = useCallback(() => {
+    selectAddressDialogToggler.set(true);
+  }, [selectAddressDialogToggler]);
+
+  const handleSelectAddress = useCallback(
+    (address: string) => {
+      setSelectedAddress(address);
+      selectAddressDialogToggler.set(false);
+    },
+    [selectAddressDialogToggler],
+  );
+
+  const handleCloseSelectAddress = useCallback(() => {
+    selectAddressDialogToggler.set(false);
+  }, [selectAddressDialogToggler]);
+
+  const handleCloseTransferDialog = useCallback(() => {
+    transferAssetDialogToggler.set(false);
+  }, [transferAssetDialogToggler]);
+
   return (
     <>
+      <SelectAddressDialog
+        open={selectAddressDialogToggler.show}
+        accounts={accounts.evm}
+        onSelectAccount={handleSelectAddress}
+        onClose={handleCloseSelectAddress}
+      />
+      <TransferAssetDialog
+        defaultAddress={selectedAddress}
+        onSelectAddress={handleOpenSelectAddress}
+        dialogProps={{
+          open: transferAssetDialogToggler.show,
+          maxWidth: 'xs',
+          fullWidth: true,
+          onClose: handleCloseTransferDialog,
+        }}
+        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        tokenId={
+          account && chainId
+            ? kittyProfile?.getDefault(account, chainId)?.id
+            : undefined
+        }
+      />
       <FeedingKittygotchiDialog
         done={feedingDone}
         loading={feedLoading}
@@ -310,6 +369,7 @@ export const ProfileIndex = () => {
                   onMint={handleMint}
                   onFeed={handleFeed}
                   onEdit={handleClickEdit}
+                  onTransfer={handleOpenTransfer}
                   loading={mintLoading}
                   loadingKyttie={kittygotchiUpdated.isLoading || loadingKyttie}
                   kittygotchi={kittygotchiUpdated.data}

@@ -69,6 +69,18 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
     onSubmit();
   }, [onSubmit]);
 
+  const canSubmit = useCallback(() => {
+    if (!isAddressValid(values.address)) {
+      return false;
+    }
+
+    if (values.tokenId === '') {
+      return false;
+    }
+
+    return true;
+  }, [isAddressValid, values]);
+
   const renderForm = () => {
     return (
       <Box py={4}>
@@ -101,6 +113,7 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
           </Grid>
           <Grid item xs={12}>
             <Button
+              disabled={!canSubmit()}
               onClick={handleSubmit}
               size='large'
               fullWidth

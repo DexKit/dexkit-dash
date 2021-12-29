@@ -15,6 +15,7 @@ import {
   Divider,
 } from '@material-ui/core';
 import {ChainId} from 'types/blockchain';
+import {useIntl} from 'react-intl';
 
 import {Alert} from '@material-ui/lab';
 
@@ -25,6 +26,7 @@ import {Kittygotchi} from 'types/kittygotchi';
 import FeedKittygotchiButton from 'modules/Kittygotchi/components/buttons/FeedKittygotchiButton';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import {useWeb3} from 'hooks/useWeb3';
+import SendIcon from '@material-ui/icons/Send';
 
 import {Skeleton} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
@@ -54,10 +56,19 @@ interface ProfileKittygotchiCardProps {
   onEdit?: () => void;
   kittygotchi?: Kittygotchi;
   loadingKyttie?: boolean;
+  onTransfer: () => void;
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
-  const {loading, onMint, onFeed, kittygotchi, loadingKyttie, onEdit} = props;
+  const {
+    loading,
+    onMint,
+    onFeed,
+    kittygotchi,
+    loadingKyttie,
+    onEdit,
+    onTransfer,
+  } = props;
 
   const theme = useTheme();
 
@@ -66,6 +77,8 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {chainId} = useWeb3();
 
   const isMobile = useMobile();
+
+  const {messages} = useIntl();
 
   const goToOpenSea = useCallback(() => {
     if (kittygotchi) {
@@ -84,8 +97,9 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
               <Grid item xs={12}>
                 <Alert severity='info'>
                   <Typography variant='body2'>
-                    Connect your wallet to <strong>Polygon(MATIC)</strong> network to create
-                    a Kittygotchi Or see your default minted Kitty
+                    Connect your wallet to <strong>Polygon(MATIC)</strong>{' '}
+                    network to create a Kittygotchi Or see your default minted
+                    Kitty
                   </Typography>
                 </Alert>
               </Grid>
@@ -189,6 +203,22 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                     <Tooltip title='Edit'>
                       <RoundedIconButton onClick={onEdit}>
                         <EditIcon />
+                      </RoundedIconButton>
+                    </Tooltip>
+                  )}
+                </Grid>
+                <Grid item>
+                  {loadingKyttie ? (
+                    <Skeleton
+                      variant='circle'
+                      width={theme.spacing(8)}
+                      height={theme.spacing(8)}
+                    />
+                  ) : (
+                    <Tooltip
+                      title={messages['app.kittygotchi.transfer'] as string}>
+                      <RoundedIconButton onClick={onTransfer}>
+                        <SendIcon />
                       </RoundedIconButton>
                     </Tooltip>
                   )}

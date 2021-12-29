@@ -6,6 +6,8 @@ import * as types from '../types';
 
 import languageData from '@crema/core/LanguageSwitcher/data';
 import TranslateIcon from '@material-ui/icons/Translate';
+import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
+import {ReactComponent as EmptyWallet} from 'assets/images/icons/empty-wallet.svg';
 
 import {
   Box,
@@ -300,13 +302,33 @@ export const Settings: React.FC = () => {
               }
             />
             <Divider />
-            <TokenList
-              tokens={tokens.map((t) => ({
-                contractAddress: t.address,
-                symbol: t.symbol,
-              }))}
-              account={account}
-            />
+            {tokens.length > 0 ? (
+              <TokenList
+                tokens={tokens.map((t) => ({
+                  contractAddress: t.address,
+                  symbol: t.symbol,
+                }))}
+                account={account}
+              />
+            ) : (
+              <Box py={4}>
+                <Grid
+                  container
+                  alignItems='center'
+                  alignContent='center'
+                  direction='column'
+                  spacing={4}>
+                  <Grid item>
+                    <EmptyWallet />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant='h5'>
+                      <IntlMessages id='app.settings.noTokensYet' />
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
           </Card>
         </Fade>
       );
@@ -329,11 +351,31 @@ export const Settings: React.FC = () => {
               }
             />
             <Divider />
-            <NetworkList
-              onEdit={handleEditNetwork}
-              onRemove={handleRemoveNetwork}
-              networks={networks}
-            />
+            {networks.length > 0 ? (
+              <NetworkList
+                onEdit={handleEditNetwork}
+                onRemove={handleRemoveNetwork}
+                networks={networks}
+              />
+            ) : (
+              <Box py={4}>
+                <Grid
+                  container
+                  alignItems='center'
+                  alignContent='center'
+                  direction='column'
+                  spacing={4}>
+                  <Grid item>
+                    <EmptyNetwork />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant='h5'>
+                      <IntlMessages id='app.settings.noNetworksYet' />
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
           </Card>
         </Fade>
       );

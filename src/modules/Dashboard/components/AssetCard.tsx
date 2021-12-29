@@ -12,6 +12,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useWeb3} from 'hooks/useWeb3';
+import {getScannerUrl} from 'utils/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -54,9 +56,12 @@ const useStyles = makeStyles((theme) => ({
 export interface AssetCardProps {
   imageUrl?: string;
   caption?: string;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   onMenu: (target: any) => void;
   loading?: boolean;
+  contractAddress?: string;
+  tokenId?: string;
+  collectionName?: string;
   error?: any;
 }
 
@@ -65,10 +70,13 @@ export const AssetCard: React.FC<AssetCardProps> = ({
   imageUrl,
   onClick,
   loading,
+  contractAddress,
+  collectionName,
   error,
   onMenu,
 }) => {
   const classes = useStyles();
+  const {chainId} = useWeb3();
 
   const handleMenu = useCallback(
     (e) => {
@@ -79,29 +87,49 @@ export const AssetCard: React.FC<AssetCardProps> = ({
 
   return (
     <Card className={classes.card}>
-      <CardActionArea disabled={loading} onClick={onClick}>
-        {error ? (
-          <>
-            <Box className={classes.error}>
-              <Box>
-                <Typography variant='body1'>
-                  <IntlMessages id='app.wallet.errorWhileLoadingData' />
-                </Typography>
-              </Box>
+      {error ? (
+        <>
+          <Box className={classes.error}>
+            <Box>
+              <Typography variant='body1'>
+                <IntlMessages id='app.wallet.errorWhileLoadingData' />
+              </Typography>
             </Box>
-            <Divider />
-          </>
-        ) : loading ? (
-          <Skeleton variant='rect' className={classes.media} />
-        ) : (
+          </Box>
+          <Divider />
+        </>
+      ) : loading ? (
+        <Skeleton variant='rect' className={classes.media} />
+      ) : (
+        <CardActionArea onClick={onClick}>
           <CardMedia image={imageUrl} className={classes.media} />
-        )}
-        <CardContent>
-          <Typography style={{fontWeight: 600}} variant='body1'>
-            <Link>{loading ? <Skeleton /> : caption}</Link>
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+        </CardActionArea>
+      )}
+      <CardContent>
+        <Typography gutterBottom variant='caption'>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <>
+              <Link
+                href={
+                  chainId && contractAddress
+                    ? `${getScannerUrl(chainId)}/address/${contractAddress}`
+                    : ''
+                }
+                target='_blank'
+                rel='noopener noreferrer'>
+                {collectionName}
+              </Link>
+            </>
+          )}
+        </Typography>
+        <Typography style={{fontWeight: 600}} variant='body1'>
+          <Link color='inherit' href='#' onClick={onClick}>
+            {loading ? <Skeleton /> : caption}
+          </Link>
+        </Typography>
+      </CardContent>
       <Box className={classes.action}>
         {loading && !error ? null : (
           <IconButton
