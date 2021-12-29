@@ -102,30 +102,7 @@ const Sender: React.FC<Props> = (props) => {
         icon={<ExportWhiteIcon className={classes.icon} />}
         onClose={disableClose ? undefined : handleClose}
       />
-      {/* <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <ExportWhiteIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Send' />
-            </Typography>
-          </Box>
-          <Box>
-            {disableClose ? null : (
-              <IconButton size='small' onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
-            )}
-          </Box>
-        </Box>
-      </DialogTitle> */}
+
       <DialogContent dividers>
         <SenderForm
           balances={props.balances}
