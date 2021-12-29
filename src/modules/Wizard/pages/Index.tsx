@@ -80,13 +80,13 @@ export default () => {
           <Card>
             <CardHeader
               title={messages['app.wizard.myCollections']}
-              subheader='Create and manage your collections'
+              subheader={messages['app.wizard.createAndManageYourCollections']}
               subheaderTypographyProps={{
                 variant: 'body2',
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'
@@ -104,13 +104,13 @@ export default () => {
           <Card>
             <CardHeader
               title={messages['app.wizard.myTokens']}
-              subheader='Create and manage your tokens'
+              subheader={messages['app.wizard.createAndManageYourTokens']}
               subheaderTypographyProps={{
                 variant: 'body2',
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'
