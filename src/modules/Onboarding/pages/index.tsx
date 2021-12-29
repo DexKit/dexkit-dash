@@ -25,6 +25,8 @@ import {
 } from 'shared/components/Icons';
 
 import AddIcon from '@material-ui/icons/Add';
+import IntlMessages from '@crema/utility/IntlMessages';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -129,11 +131,13 @@ export const Index = (props: Props) => {
 
   const handleAddAddress = useCallback(() => {}, []);
 
+  const { messages } = useIntl();
+
   return (
     <Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <Typography variant='h5'>Welcome</Typography>
+          <Typography variant='h5'><IntlMessages id="app.onBoarding.welcome" /></Typography>
         </Grid>
         <Grid item xs={12}>
           {/* <Slider slideCount={2} onNext={() => {}} onPrevious={() => {}}>
@@ -146,8 +150,8 @@ export const Index = (props: Props) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant='body1'>
-            Welcome to Super App Dexkit, here you can make your transactions and
-            maintenance in the wallet, in addition to several other tools.
+          <IntlMessages id="app.onBoarding.welcomeToSuperAppDexkit" />
+           
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -171,12 +175,14 @@ export const Index = (props: Props) => {
                       gutterBottom
                       variant='body1'
                       className={classes.primaryCardTitle}>
-                      Create your portfolio
+                        <IntlMessages id="app.onBoarding.createYourPortfolio" />
+                      
                     </Typography>
                     <Typography
                       variant='body2'
                       className={classes.primaryCardSubtitle}>
-                      Click here to create your portfolio, quick and easy.
+                        <IntlMessages id="app.onBoarding.clickHereToCreateYour" />
+                      
                     </Typography>
                   </Grid>
 
@@ -198,7 +204,8 @@ export const Index = (props: Props) => {
                 gutterBottom
                 variant='body1'
                 className={classes.addressText}>
-                Add a wallet address or enter the extensions below.
+                  <IntlMessages id="app.onBoarding.addAWalletAddress" />
+                
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -216,7 +223,7 @@ export const Index = (props: Props) => {
                         </InputAdornment>
                       ),
                     }}
-                    label='Address'
+                    label={messages['app.onBoarding.emailExample']}
                     variant='outlined'
                     fullWidth
                   />
@@ -227,7 +234,8 @@ export const Index = (props: Props) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant='body1'>
-            Or continue with one of the social networks below.
+          <IntlMessages id="app.onBoarding.orContinueWithOneOfTheSocial" />
+            
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -260,7 +268,8 @@ export const Index = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='h5'>
-                          Metamask
+                            <IntlMessages id="app.onBoarding.metamask" />
+                          
                         </Typography>
                       </Box>
                     </Paper>
@@ -289,7 +298,8 @@ export const Index = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='h5'>
-                          WalletConnect
+                            <IntlMessages id="app.onBoarding.walletConnect" />
+                          
                         </Typography>
                       </Box>
                     </Paper>
@@ -318,7 +328,8 @@ export const Index = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='h5'>
-                          Google
+                            <IntlMessages id="app.onBoarding.google" />
+                          
                         </Typography>
                       </Box>
                     </Paper>
@@ -349,10 +360,13 @@ export const Index = (props: Props) => {
                   </Grid>
                   <Grid item xs>
                     <Typography variant='body1' style={{fontWeight: 500}}>
-                      Connect the wallet later
+                    <IntlMessages id="app.onBoarding.connectTheWalletLater" />
+                      
                     </Typography>
                     <Typography variant='body2' color='textSecondary'>
-                      Click here to open the app demo.
+
+                    <IntlMessages id="app.onBoarding.clickHereToOpenADemo" />
+                      
                     </Typography>
                   </Grid>
 

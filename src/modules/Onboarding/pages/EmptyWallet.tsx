@@ -17,6 +17,7 @@ import {
   WalletCheckPrimaryIcon,
   ReceiptAddIcon,
 } from 'shared/components/Icons';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -114,7 +115,7 @@ export const EmptyWallet = (props: Props) => {
               <Grid container spacing={4}>
                 <Grid item xs={12}>
                   <Typography variant='body1' className={classes.title}>
-                    How do you want to proceed?
+                    <IntlMessages id='app.onBoarding.howDoYouWantToProceed' />
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -138,13 +139,12 @@ export const EmptyWallet = (props: Props) => {
                               gutterBottom
                               variant='body1'
                               className={classes.primaryCardTitle}>
-                              Create your portfolio
+                              <IntlMessages id='app.onBoarding.createYourPortfolio' />
                             </Typography>
                             <Typography
                               variant='body2'
                               className={classes.primaryCardSubtitle}>
-                              Click here to create your portfolio, quick and
-                              easy.
+                              <IntlMessages id='app.onBoarding.clickHereToCreateYour' />
                             </Typography>
                           </Grid>
 
@@ -181,10 +181,10 @@ export const EmptyWallet = (props: Props) => {
                             <Typography
                               variant='body1'
                               style={{fontWeight: 500}}>
-                              Connect the wallet later
+                              <IntlMessages id='app.onBoarding.connectTheWalletLater' />
                             </Typography>
                             <Typography variant='body2' color='textSecondary'>
-                              Click here to add your wallet to the app.
+                              <IntlMessages id='app.onBoarding.clickHereToAddYourWallet' />
                             </Typography>
                           </Grid>
 
@@ -218,10 +218,10 @@ export const EmptyWallet = (props: Props) => {
                             <Typography
                               variant='body1'
                               style={{fontWeight: 500}}>
-                              Use the app in demo mode.
+                              <IntlMessages id='app.onBoarding.useTheAppInDemoMode' />
                             </Typography>
                             <Typography variant='body2' color='textSecondary'>
-                              Click here to open a demo of the app.
+                              <IntlMessages id='app.onBoarding.clickHereToOpenADemo' />
                             </Typography>
                           </Grid>
 
