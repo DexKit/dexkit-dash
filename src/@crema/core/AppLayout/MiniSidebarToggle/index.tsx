@@ -32,6 +32,7 @@ import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDial
 
 import WelcomeDialog from 'shared/components/WelcomeDialog';
 import {useAppGlobalState} from 'hooks/useGlobalState';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 interface MiniSidebarToggleProps {
   props?: any;
@@ -115,7 +116,8 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
           </BottomDrawer>
         ) : (
           <Dialog open={accountsModal.showAccounts}>
-            <DialogTitle>
+            <CustomDialogTitle title={"Accounts"} icon={<WalletSearchIcon />} onClose={handleCloseAccounts}/>
+            {/* <DialogTitle>
               <Box
                 display='flex'
                 alignItems='center'
@@ -134,7 +136,7 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
                   <CloseIcon />
                 </IconButton>
               </Box>
-            </DialogTitle>
+            </DialogTitle> */}
             <Divider />
             <DialogContent className={classes.accountsDialgContent}>
               <Accounts />

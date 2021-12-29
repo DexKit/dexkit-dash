@@ -14,6 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyTransaction} from 'types/changelly';
 import ClearIcon from '@material-ui/icons/Clear';
 import {useSwapTransactions} from '../../hooks';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 interface Props {
   transactions: ChangellyTransaction[];
@@ -38,7 +39,8 @@ export const SwapHistoricDialog = (props: Props) => {
 
   return (
     <Dialog fullWidth open={open} maxWidth='md' onClose={onClose}>
-      <DialogTitle>
+      <CustomDialogTitle title={"Transactions"} onClose={onClose}/>
+      {/* <DialogTitle>
         <Box
           display='flex'
           justifyContent='space-between'
@@ -49,7 +51,7 @@ export const SwapHistoricDialog = (props: Props) => {
             <CloseIcon />
           </IconButton>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <Divider />
       <DialogContent dividers>
         {transactions.length > 0 ? (

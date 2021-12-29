@@ -28,6 +28,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {MyBalances} from 'types/blockchain';
 import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -139,7 +140,8 @@ export const SelectTokenBalanceDialog = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-      <DialogTitle id='form-dialog-title'>
+      <CustomDialogTitle title={title || 'Select a token'} icon={<MoneySendIcon />} onClose={handleClose}/>
+      {/* <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Box display='flex' alignItems='center'>
             <Box display='flex' pr={2}>
@@ -151,7 +153,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
             <CloseIcon />
           </IconButton>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers className={classes.content}>
         <Box px={4} py={4} pb={2}>
           <TextField

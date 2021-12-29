@@ -13,6 +13,7 @@ import {MyBalances} from 'types/blockchain';
 import BuySell from '.';
 import CloseIcon from '@material-ui/icons/Close';
 import {BitcoinConvertWhiteIcon} from 'shared/components/Icons';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -49,7 +50,8 @@ export const BuySellModal = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-      <DialogTitle id='form-dialog-title'>
+        <CustomDialogTitle title={"Trade"} icon={<BitcoinConvertWhiteIcon className={classes.icon} />} onClose={handleClose}/>
+      {/* <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Box>
             <Box display='flex' alignItems='center'>
@@ -68,7 +70,7 @@ export const BuySellModal = (props: Props) => {
             <CloseIcon />
           </IconButton>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers>
         <BuySell {...props} disableLimit />
       </DialogContent>

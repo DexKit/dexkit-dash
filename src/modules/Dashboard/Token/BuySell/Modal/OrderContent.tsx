@@ -46,6 +46,7 @@ import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
 import {SwapQuoteResponse} from 'types/zerox';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 interface Props {
   isMarket: boolean;
@@ -161,7 +162,6 @@ const OrderContent: React.FC<Props> = (props) => {
     if (isConvert) {
       getGasInfo()
         .then((e) => {
-      
           updateSelectedGasPrice(e.gasPriceInWei);
 
           setSellAmount(amountFrom);
@@ -337,7 +337,16 @@ const OrderContent: React.FC<Props> = (props) => {
 
   return (
     <>
-      <DialogTitle id='form-dialog-title'>
+      <CustomDialogTitle
+        title={
+          isConvert
+            ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
+            : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'
+        }
+        icon={<WalletAddIcon className={classes.iconColor} />}
+        onClose={onClose}
+      />
+      {/* <DialogTitle id='form-dialog-title'>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Box display='flex' alignItems='center'>
             <Box
@@ -360,7 +369,7 @@ const OrderContent: React.FC<Props> = (props) => {
             </IconButton>
           </Box>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       {!loading ? (
         <Box>
           {(currentStep === Steps.CONVERT ||
