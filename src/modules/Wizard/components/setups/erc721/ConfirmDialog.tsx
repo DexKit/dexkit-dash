@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 
 import InfoIcon from '@material-ui/icons/Info';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 export interface ConfirmDialogProps extends DialogProps {
   onConfirm: () => void;
@@ -28,7 +29,9 @@ export default (props: ConfirmDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogTitle>
-        <Typography variant='body1'>Creating collection</Typography>
+        <Typography variant='body1'>
+          <IntlMessages id='app.wizard.creatingCollection' />
+        </Typography>
       </DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={4}>
@@ -39,20 +42,20 @@ export default (props: ConfirmDialogProps) => {
           </Grid>
           <Grid xs={12} item>
             <Typography variant='h5' align='center'>
-              Creating collection
+              <IntlMessages id='app.wizard.creatingCollection' />
             </Typography>
             <Typography color='textSecondary' variant='body1' align='center'>
-              Do you really want to create a collection?
+              <IntlMessages id='app.wizard.reallyWantToCreateCollection' />
             </Typography>
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button variant='contained' color='primary' onClick={onConfirm}>
-          Confirm
+          <IntlMessages id='app.wizard.confirm' />
         </Button>
         <Button variant='contained' onClick={onCancel}>
-          Cancel
+          <IntlMessages id='app.wizard.cancel' />
         </Button>
       </DialogActions>
     </Dialog>

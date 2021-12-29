@@ -13,9 +13,9 @@ import {
 } from '@material-ui/core';
 import Web3 from 'web3';
 
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import DialogPortal from 'shared/components/Common/DialogPortal';
 import ConfirmDialog from './erc721/ConfirmDialog';
 import {
@@ -23,30 +23,32 @@ import {
   CollectionSetupSteps,
   ContractStatus,
 } from 'modules/Wizard/types';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { Contract } from 'web3-eth-contract';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {Contract} from 'web3-eth-contract';
 import ItemsStep from './erc721/steps/ItemsStep';
 import CollectionStep from './erc721/steps/CollectionStep';
 import DeployStep from './erc721/steps/DeployStep';
-import { useWizardApi } from 'modules/Wizard/hooks';
+import {useWizardApi} from 'modules/Wizard/hooks';
 import CreatingCollectionDialog from './erc721/dialogs/CreatingCollectionDialog';
-import { ERC721Abi } from 'contracts/abis/ERC721Abi';
-import { useDispatch } from 'react-redux';
-import { addCollection } from 'redux/_wizard/actions';
-import { ethers } from 'ethers';
-import { Link as RouterLink } from 'react-router-dom';
+import {ERC721Abi} from 'contracts/abis/ERC721Abi';
+import {useDispatch} from 'react-redux';
+import {addCollection} from 'redux/_wizard/actions';
+import {ethers} from 'ethers';
+import {Link as RouterLink} from 'react-router-dom';
 import axios from 'axios';
 
 import GitHubIcon from '@material-ui/icons/GitHub';
 
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
+import IntlMessages from '@crema/utility/IntlMessages';
+import { useIntl } from 'react-intl';
 
 const ERC721_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC721_BASE.sol/COLLECTION.json';
 
-export interface CollectionSetupProps { }
+export interface CollectionSetupProps {}
 
 export const CollectionSetup = (props: CollectionSetupProps) => {
   const history = useHistory();
@@ -56,7 +58,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
   const dispatch = useDispatch();
 
   const userDefaultAcount = useDefaultAccount();
-  const {  getProvider, chainId } = useWeb3();
+  const {getProvider, chainId} = useWeb3();
 
   const [step, setStep] = useState<CollectionSetupSteps>(
     CollectionSetupSteps.Collection,
@@ -105,7 +107,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
               .on('transactionHash', (transactionHash: string) => {
                 setTransactionHash(transactionHash);
               })
-              .on('confirmation', () => { })
+              .on('confirmation', () => {})
               .on('error', (reason) => {
                 reject(reason);
               })
@@ -171,7 +173,7 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [e.target.name]: e.target.value });
+      setValues({...values, [e.target.name]: e.target.value});
     },
     [values],
   );
@@ -458,6 +460,8 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
     history.push('/wizard');
   }, [history]);
 
+  const { messages } = useIntl();
+
   return (
     <>
       <DialogPortal>
@@ -493,10 +497,14 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
               <Box mb={2}>
                 <Breadcrumbs>
                   <Link color='inherit' to='/' component={RouterLink}>
-                    <Typography variant='body1'>Dashboard</Typography>
+                    <Typography variant='body1'>
+                      <IntlMessages id='app.wizard.dashboard' />
+                    </Typography>
                   </Link>
                   <Link color='inherit' to='/wizard' component={RouterLink}>
-                    <Typography variant='body1'>Wizard</Typography>
+                    <Typography variant='body1'>
+                      <IntlMessages id='app.wizard.wizard' />
+                    </Typography>
                   </Link>
                 </Breadcrumbs>
               </Box>
@@ -511,12 +519,12 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
                   </IconButton>
                 </Box>
                 <Typography color='inherit' variant='h5'>
-                  Create collection
+                  <IntlMessages id='app.wizard.createCollection' />
                 </Typography>
               </Box>
             </Grid>
             <Grid item>
-              <Tooltip title='View source on GitHub'>
+              <Tooltip title={messages["app.wizard.viewSourceOnGithub"]}>
                 <RoundedIconButton onClick={handleOpenGithub}>
                   <GitHubIcon />
                 </RoundedIconButton>
@@ -528,13 +536,19 @@ export const CollectionSetup = (props: CollectionSetupProps) => {
           <Paper>
             <Stepper activeStep={step} alternativeLabel>
               <Step>
-                <StepLabel>Collection description</StepLabel>
+                <StepLabel>
+                  <IntlMessages id='app.wizard.collectionDescription' />
+                </StepLabel>
               </Step>
               <Step>
-                <StepLabel>Add items</StepLabel>
+                <StepLabel>
+                  <IntlMessages id='app.wizard.addItems' />
+                </StepLabel>
               </Step>
               <Step>
-                <StepLabel>Create collection</StepLabel>
+                <StepLabel>
+                  <IntlMessages id='app.wizard.createCollection' />
+                </StepLabel>
               </Step>
             </Stepper>
           </Paper>

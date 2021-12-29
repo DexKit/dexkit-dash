@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {Box, Typography, Card, CardContent, Button} from '@material-ui/core';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 export interface SmartContractCardProps {
   title: string;
@@ -27,7 +28,7 @@ export const SmartContractCard = (props: SmartContractCardProps) => {
         <Typography variant='body2'>{description}</Typography>
         <Box pt={4}>
           <Button onClick={handleClick} color='primary' variant='contained'>
-            Deploy
+            <IntlMessages id='app.wizard.deploy' />
           </Button>
         </Box>
       </CardContent>

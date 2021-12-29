@@ -36,6 +36,7 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import ReplayIcon from '@material-ui/icons/Replay';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface CreatingCollectionBackdropProps extends DialogProps {
   step: ContractStatus;
@@ -112,7 +113,9 @@ export const CreatingCollectionDialog = (
               alignContent='center'>
               <NoteAddIcon className={clsx(classes.icon)} />
             </Box>
-            <Typography variant='body1'>Create Collection</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.wizard.createCollection' />
+            </Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -134,17 +137,17 @@ export const CreatingCollectionDialog = (
                   />
                 )
               }>
-              Upload images
+              <IntlMessages id='app.wizard.uploadImages' />
             </StepLabel>
             <StepContent>
               <Typography gutterBottom variant='h5'>
-                Uploading images
+                <IntlMessages id='app.wizard.uploadingImages' />
               </Typography>
               <Typography variant='body1'>
-                We are storing your collection images in a decentralized
-                storage.
+                <IntlMessages id='app.wizard.weAreStoringYourCollectionImages' />
                 <Link href='https://ipfs.io/' target='_blank'>
-                  <HelpIcon color='inherit' /> Learn more
+                  <HelpIcon color='inherit' />{' '}
+                  <IntlMessages id='app.wizard.learnMore' />
                 </Link>
               </Typography>
             </StepContent>
@@ -164,17 +167,17 @@ export const CreatingCollectionDialog = (
                   />
                 )
               }>
-              Send metadata
+              <IntlMessages id='app.wizard.sendMetadata' />
             </StepLabel>
             <StepContent>
               <Typography gutterBottom variant='h5'>
-                Sending collection metadata
+                <IntlMessages id='app.wizard.sendingCollectionMetadata' />
               </Typography>
               <Typography gutterBottom variant='body1'>
-                We are storing your collection information in a decentralized
-                storage.
+                <IntlMessages id='app.wizard.weAreStoringYourCollectionInfo' />
                 <Link href='https://ipfs.io/' target='_blank'>
-                  <HelpIcon color='inherit' /> Learn more
+                  <HelpIcon color='inherit' />{' '}
+                  <IntlMessages id='app.wizard.learnMore' />
                 </Link>
               </Typography>
             </StepContent>
@@ -194,16 +197,15 @@ export const CreatingCollectionDialog = (
                   />
                 )
               }>
-              Create collection
+              <IntlMessages id='app.wizard.createCollection' />
             </StepLabel>
             <StepContent>
               <Box mb={2}>
                 <Typography gutterBottom variant='h5'>
-                  Creating the Collection
+                  <IntlMessages id='app.wizard.creatingCollection' />
                 </Typography>
                 <Typography gutterBottom variant='body1'>
-                  Please, sign the transaction in your wallet and wait for
-                  confirmation, this could take longer to complete.
+                  <IntlMessages id='app.wizard.pleaseSignTheTransactionInYourWalletAndWait' />
                 </Typography>
                 {createError ? (
                   <Typography gutterBottom variant='body1' color='error'>
@@ -217,7 +219,7 @@ export const CreatingCollectionDialog = (
                     <Button
                       startIcon={<ReplayIcon />}
                       onClick={onTryCreateCollectionAgain}>
-                      Try again
+                      <IntlMessages id='app.wizard.tryAgain' />
                     </Button>
                   </Grid>
                 ) : null}
@@ -231,7 +233,7 @@ export const CreatingCollectionDialog = (
                         contractTransaction,
                       )}
                       target='_blank'>
-                      View transaction
+                      <IntlMessages id='app.wizard.viewTransaction' />
                     </Button>
                   </Grid>
                 ) : null}
@@ -251,15 +253,15 @@ export const CreatingCollectionDialog = (
                   />
                 )
               }>
-              Mint items {skipMinting ? '(Skiped)' : null}
+              <IntlMessages id='app.wizard.mintItems' />{' '}
+              {skipMinting ? '(Skiped)' : null}
             </StepLabel>
             <StepContent>
               <Typography gutterBottom variant='h5'>
-                Minting items
+                <IntlMessages id='app.wizard.mintingItems' />
               </Typography>
               <Typography gutterBottom variant='body1'>
-                Please, sign the transaction in your wallet and wait for
-                confirmation, this could take longer to complete.
+                <IntlMessages id='app.wizard.pleaseSignTheTransactionInYourWalletAndWait' />
               </Typography>
               {mintError ? (
                 <Typography gutterBottom variant='body1' color='error'>
@@ -269,7 +271,9 @@ export const CreatingCollectionDialog = (
               <Grid container spacing={2}>
                 {mintError ? (
                   <Grid item>
-                    <Button onClick={onTryMintAgain}>Try again</Button>
+                    <Button onClick={onTryMintAgain}>
+                      <IntlMessages id='app.wizard.tryAgain' />
+                    </Button>
                   </Grid>
                 ) : null}
 
@@ -279,7 +283,7 @@ export const CreatingCollectionDialog = (
                       color='primary'
                       href={getTransactionScannerUrl(chainId, mintTransaction)}
                       target='_blank'>
-                      View transaction
+                      <IntlMessages id='app.wizard.viewTransaction' />
                     </Button>
                   </Grid>
                 ) : null}
@@ -287,17 +291,18 @@ export const CreatingCollectionDialog = (
             </StepContent>
           </Step>
           <Step>
-            <StepLabel icon={<CheckCircleIcon />}>Finalize</StepLabel>
+            <StepLabel icon={<CheckCircleIcon />}>
+              <IntlMessages id='app.wizard.finalize' />
+            </StepLabel>
             <StepContent>
               <Typography gutterBottom variant='h5'>
-                Collection created
+                <IntlMessages id='app.wizard.collectionCreated' />
               </Typography>
               <Typography gutterBottom variant='body1'>
-                Collection created successfully. Access your collection to edit
-                and add new items.
+                <IntlMessages id='app.wizard.collectionCreatedSuccessfully' />
               </Typography>
               <Button onClick={handleGoCollection} color='primary'>
-                View Collection
+                <IntlMessages id='app.wizard.viewCollection' />
               </Button>
             </StepContent>
           </Step>

@@ -39,6 +39,7 @@ import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import CreatedDialog from './erc20/dialogs/CreatedDialog';
 import {useDispatch} from 'react-redux';
 import {addToken} from 'redux/_wizard/actions';
+import {useIntl} from 'react-intl';
 
 const ERC20_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC20_BASE.sol/Token.json';
@@ -203,6 +204,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
     setError(undefined);
   }, []);
 
+  const {messages} = useIntl();
+
   return (
     <>
       <ConfirmDialog
@@ -223,9 +226,11 @@ export const TokenSetup = (props: TokenSetupProps) => {
             <IntlMessages id='nfts.walletBreadcrumbDashboard' />
           </Link>
           <Link color='inherit' component={RouterLink} to='/wizard'>
-            Wizard
+            <IntlMessages id='app.wizard.wizard' />
           </Link>
-          <Link color='inherit'>Tokens</Link>
+          <Link color='inherit'>
+            <IntlMessages id='app.wizard.tokens' />
+          </Link>
         </Breadcrumbs>
       </Box>
       <Box mb={2} display='flex' alignItems='center' alignContent='center'>
@@ -235,7 +240,9 @@ export const TokenSetup = (props: TokenSetupProps) => {
           </IconButton>
         </Box>
         <Box>
-          <Typography variant='h5'>Create token</Typography>
+          <Typography variant='h5'>
+            <IntlMessages id='app.wizard.createToken' />
+          </Typography>
         </Box>
       </Box>
       <Grid container spacing={4}>
@@ -247,7 +254,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                   <TextField
                     required
                     fullWidth
-                    label='Name'
+                    label={messages['app.wizard.name']}
                     variant='outlined'
                     name='name'
                     value={values.name}
@@ -257,7 +264,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='The name of your token'>
+                          <Tooltip
+                            title={messages['app.wizard.nameOfYourToken']}>
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -269,7 +277,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                   <TextField
                     required
                     fullWidth
-                    label='Symbol'
+                    label={messages['app.wizard.symbol']}
                     variant='outlined'
                     name='symbol'
                     value={values.symbol}
@@ -278,7 +286,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='Symbol used to identify the token in the blockchain'>
+                          <Tooltip
+                            title={messages['app.wizard.symbolUsedToIdentify']}>
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -290,7 +299,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                   <TextField
                     required
                     fullWidth
-                    label='Supply'
+                    label={messages['app.wizard.supply']}
                     variant='outlined'
                     name='supply'
                     type='number'
@@ -300,7 +309,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='The amount of token supply'>
+                          <Tooltip
+                            title={messages['app.wizard.amountOfTokenSupply']}>
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -327,7 +337,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                   onClick={handleBack}
                   startIcon={<ArrowBackIcon />}
                   variant='outlined'>
-                  Cancel
+                  <IntlMessages id='app.wizard.cancel' />
                 </Button>
                 <Button
                   disabled={!isFormValid()}
@@ -335,7 +345,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
                   startIcon={<ArrowForwardIcon />}
                   variant='contained'
                   color='primary'>
-                  Create
+                  <IntlMessages id='app.wizard.create' />
                 </Button>
               </Box>
             </Box>
