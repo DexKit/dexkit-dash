@@ -102,7 +102,7 @@ const CollectionPage = () => {
                 <IntlMessages id='nfts.walletBreadcrumbDashboard' />
               </Link>
               <Link color='inherit' component={RouterLink} to='/wizard'>
-                Collections
+                <IntlMessages id='app.wizard.collections' />
               </Link>
             </Breadcrumbs>
           </Box>
@@ -176,7 +176,7 @@ const CollectionPage = () => {
                           onClick={handleAddItem}
                           variant='contained'
                           color='primary'>
-                          Add item
+                          <IntlMessages id='app.wizard.addItem' />
                         </Button>
                       </Grid>
                     </Grid>

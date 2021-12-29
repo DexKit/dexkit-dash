@@ -17,6 +17,8 @@ import ImageUploadButton from './ImageUploadButton';
 import CollectionItemAttribute from './CollectionItemAttribute';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import IntlMessages from '@crema/utility/IntlMessages';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   invalid: {
@@ -94,6 +96,8 @@ export const CollectionItem = (props: CollectionItemProps) => {
     return false;
   }, [item]);
 
+  const { messages } = useIntl();
+
   return (
     <Card
       variant={variant ? variant : 'elevation'}
@@ -125,7 +129,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   value={item.name}
                   name='name'
                   onChange={handleChange}
-                  label='Name'
+                  label={messages["app.wizard.name"]}
                   error={item.name === ''}
                   variant='outlined'
                   fullWidth
@@ -136,7 +140,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                   required
                   name='description'
                   value={item.description}
-                  label='Description'
+                  label={messages["app.wizard.description"]}
                   rows={3}
                   multiline
                   error={item.description === ''}
@@ -153,7 +157,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
                 <Divider />
               </Grid>
               <Grid item xs={12}>
-                <Typography variant='subtitle1'>Traits</Typography>
+                <Typography variant='subtitle1'><IntlMessages id='app.wizard.traits' /></Typography>
               </Grid>
               <Grid item xs={12}>
                 {item.attributes.map(
@@ -175,7 +179,7 @@ export const CollectionItem = (props: CollectionItemProps) => {
               onClick={handleAddAttribute}
               startIcon={<AddIcon />}
               color='primary'>
-              New trait
+              <IntlMessages id='app.wizard.newTrait' />
             </Button>
           </Grid>
         </Grid>
