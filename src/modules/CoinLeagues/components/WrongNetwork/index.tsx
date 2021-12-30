@@ -1,4 +1,7 @@
 import React, {useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {Button, Grid} from '@material-ui/core';
 import {useWeb3} from 'hooks/useWeb3';
 
@@ -18,6 +21,7 @@ import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.
 
 const WrongNetwork = () => {
   const theme = useTheme();
+  const {messages} = useIntl();
   const {onSwitchMagicNetwork} = useMagicProvider();
   const {getProvider} = useWeb3();
 
@@ -40,8 +44,8 @@ const WrongNetwork = () => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Empty
-          title={'Not Supported Network'}
-          message={'Please connect your wallet to the supported networks below'}
+          title={messages['app.coinLeagues.notSupportedNetwork'] as string}
+          message={messages['coinLeagues.warning.connectWallet'] as string}
           image={<EmptyNetwork />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
@@ -52,6 +56,7 @@ const WrongNetwork = () => {
                   onClick={() => handleSelectChain(ChainId.Matic)}
                   startIcon={
                     <img
+                      alt=''
                       height={theme.spacing(6)}
                       width={theme.spacing(6)}
                       src={require('assets/images/chains/polygon-matic-logo.svg')}
@@ -67,6 +72,7 @@ const WrongNetwork = () => {
                   onClick={() => handleSelectChain(ChainId.Mumbai)}
                   startIcon={
                     <img
+                      alt=''
                       height={theme.spacing(6)}
                       width={theme.spacing(6)}
                       src={require('assets/images/chains/polygon-matic-logo.svg')}

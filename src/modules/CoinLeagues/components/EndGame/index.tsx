@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
+import {useIntl} from 'react-intl';
 import {useCoinLeagues, useCoinLeaguesCallbacks} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -36,6 +37,7 @@ export const EndGame = (props: Props) => {
     },
     [tx, chainId],
   );
+  const {messages} = useIntl();
   const startTimestamp = game?.start_timestamp;
   const durationBN = game?.duration;
 
@@ -122,15 +124,21 @@ export const EndGame = (props: Props) => {
                     <Button
                     onClick={onEndGame}
                     fullWidth
-                    disabled={!canEndGame ||  submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
-                    variant={'contained'}
+                    disabled={
+                      !canEndGame ||
+                      submitState !== SubmitState.None ||
+                      !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                    }
+                    variant='contained'
                     color={
                       submitState === SubmitState.Error ? 'default' : 'primary'
                     }>
                     <ButtonState
                       state={submitState}
-                      defaultMsg={'END GAME'}
-                      confirmedMsg={'Game Finished'}
+                      defaultMsg={messages['app.coinLeagues.endGame'] as string}
+                      confirmedMsg={
+                        messages['app.coinLeagues.gameFinished'] as string
+                      }
                     />
                   </Button>
 

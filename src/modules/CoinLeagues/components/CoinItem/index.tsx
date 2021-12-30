@@ -1,8 +1,10 @@
-import Paper from '@material-ui/core/Paper';
 import React, {useCallback} from 'react';
+
+import Paper from '@material-ui/core/Paper';
 import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.svg';
-import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
+import {Box, Grid, IconButton, makeStyles, Typography} from '@material-ui/core';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
+
 type Props = {
   handleDelete: (index: number) => void;
   coin: CoinFeed;

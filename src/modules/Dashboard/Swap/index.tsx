@@ -1,17 +1,21 @@
+import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import React from 'react';
 import {SwapComponent} from './Swap';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
+
 const SwapLayout = () => {
   return (
     <Box pt={4}>
       <Box display='flex' alignItems='center'>
         <SwapHorizontalCircleIcon color={'primary'} fontSize={'large'} />
         <Box component='h3' color='text.primary' fontWeight={Fonts.BOLD} ml={2}>
-          Multichain Swap
+          <IntlMessages id='app.dashboard.multichainSwap' />
         </Box>
         <AboutDialog />
       </Box>

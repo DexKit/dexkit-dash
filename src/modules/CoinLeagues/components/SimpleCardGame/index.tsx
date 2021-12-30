@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -44,6 +46,7 @@ function SimpleCardGame(props: Props): JSX.Element {
   const time = duration.toNumber();
   const gameLevel = GET_GAME_LEVEL(amount_to_play);
   const entryAmount = ethers.utils.formatEther(amount_to_play);
+
   return (
     <Container className={classes.container}>
       <Grid
@@ -58,7 +61,7 @@ function SimpleCardGame(props: Props): JSX.Element {
 
         <Grid item xs={6} sm={12}>
           <Box display={'flex'}>
-            <Typography variant='h6'>Game Time:</Typography>
+            <Typography variant='h6'> <IntlMessages id='app.coinLeagues.gameTime' />:</Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
@@ -67,13 +70,13 @@ function SimpleCardGame(props: Props): JSX.Element {
      
 
         <Grid item xs={12}>
-          <Box display={'flex'} alignItems={'center'}>
+          <Box display='flex' alignItems='center'>
             <SendIcon />
-            <Box display={'flex'} alignItems={'center'} pl={3}>
+            <Box display='flex' alignItems='center' pl={3}>
               <Grid
                 container
-                justifyContent={'center'}
-                alignItems={'center'}
+                justifyContent='center'
+                alignItems='center'
                 spacing={1}>
                 <Grid xs={12} item>
                   <Typography

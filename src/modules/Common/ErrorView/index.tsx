@@ -1,13 +1,17 @@
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import WarningIcon from '@material-ui/icons/Warning';
+
 interface Props {
   message: string;
 }
 
-const ErrorView: React.FC<Props> = ({message}) => {
+const ErrorView: React.FC<Props> = ({ message }) => {
   return (
     <Box py={4} display={'flex'} justifyContent={'center'}>
       <Grid
@@ -22,13 +26,13 @@ const ErrorView: React.FC<Props> = ({message}) => {
         </Grid>
         <Grid item xs={12}>
           <Typography
-            style={{textTransform: 'uppercase'}}
+            style={{ textTransform: 'uppercase' }}
             gutterBottom
             align='center'
             variant='h5'>
-            Ops, error fetching data
+            <IntlMessages id='app.common.opsErrorFetchingData' />
           </Typography>
-          <Typography align='center'>Try again please!</Typography>
+          <Typography align='center'><IntlMessages id='app.common.tryAgainPlease' />!</Typography>
         </Grid>
       </Grid>
     </Box>

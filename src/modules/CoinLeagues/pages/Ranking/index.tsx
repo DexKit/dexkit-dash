@@ -23,6 +23,8 @@ import {
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 import {ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
 import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
@@ -48,6 +50,7 @@ export function Ranking() {
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const {chainId, account} = useWeb3();
   const history = useHistory();
+  const {messages} = useIntl();
 
   const [value, setValue] = React.useState(Tabs.MostWinner);
 
@@ -65,7 +68,7 @@ export function Ranking() {
           <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                Coin League
+                <IntlMessages id='app.coinLeagues.coinLeague' />
               </Link>
             </Breadcrumbs>
           </Grid>
@@ -80,7 +83,7 @@ export function Ranking() {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h5'>Ranking</Typography>
+              <Typography variant='h5'><IntlMessages id='app.coinLeagues.ranking' /></Typography>
               <Box p={2}>
                 <FormControl>
                   <Select
@@ -131,7 +134,7 @@ export function Ranking() {
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom variant='h6'>
-                Ranking
+                <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
                 {rankingMostWinnedQuery.data?.players?.map((player, index) => (
@@ -139,7 +142,7 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={'Wins'}
+                      label={messages['app.coinLeagues.wins'] as string}
                       featured={player.id.toLowerCase() === account?.toLowerCase()}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
@@ -166,7 +169,7 @@ export function Ranking() {
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom variant='h6'>
-                Ranking
+                <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
                 {rankingMostJoinedQuery.data?.players?.map((player, index) => (

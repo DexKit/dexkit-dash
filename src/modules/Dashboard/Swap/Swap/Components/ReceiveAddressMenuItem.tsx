@@ -1,5 +1,6 @@
-import {MenuItem} from '@material-ui/core';
 import React, {useCallback} from 'react';
+
+import {MenuItem} from '@material-ui/core';
 import {truncateAddress} from 'utils';
 
 interface Props {

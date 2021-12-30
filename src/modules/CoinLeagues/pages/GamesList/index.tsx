@@ -1,66 +1,65 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Badge,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Hidden,
-  InputAdornment,
-  Link,
-  Typography,
-} from '@material-ui/core';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Badge from '@material-ui/core/Badge';
+import Hidden from '@material-ui/core/Hidden';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
-import { useIntl } from 'react-intl';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useIntl} from 'react-intl';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import { SupportedNetworkType } from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
-import { Empty } from 'shared/components/Empty';
+import {Empty} from 'shared/components/Empty';
 import SwapButton from 'shared/components/SwapButton';
 import SmallCardGame from 'modules/CoinLeagues/components/SmallCardGame';
 import SmallCardGameSkeleton from 'modules/CoinLeagues/components/SmallCardGame/index.skeleton';
-import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
+import {Link as RouterLink, useHistory, useLocation} from 'react-router-dom';
 import {
   COINLEAGUENFT_ROUTE,
   HOME_ROUTE,
   LOGIN_WALLET_ROUTE,
 } from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
-import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
+import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import ContainedInput from 'shared/components/ContainedInput';
-import { Search } from '@material-ui/icons';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
-import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
+import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import { ShareButton } from 'shared/components/ShareButton';
+import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
-import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGame from 'modules/CoinLeagues/components/CardGame';
-import { GamesEnded } from 'modules/CoinLeagues/components/GamesEnded';
-import { GameLevel, GameOrderBy } from 'modules/CoinLeagues/constants/enums';
+import {GamesEnded} from 'modules/CoinLeagues/components/GamesEnded';
+import {GameLevel, GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
-import { useToggler } from 'hooks/useToggler';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {useToggler} from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,8 +88,9 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { pathname } = useLocation();
-  const { account, chainId } = useWeb3();
+  const {messages} = useIntl();
+  const {pathname} = useLocation();
+  const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
 
   useDiscord();
@@ -106,9 +106,7 @@ const GamesList = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [value, setValue] = React.useState(Tabs.Games);
-
-  const { messages } = useIntl();
+  const [value, setValue] = useState(Tabs.Games);
 
   const handleChange = useCallback(
     (_event: React.ChangeEvent<{}>, _newValue: string) => {
@@ -137,7 +135,7 @@ const GamesList = () => {
     filters: filtersState,
   });
 
-  const { listGamesRoute, activeGamesRoute, enterGameRoute } =
+  const {listGamesRoute, activeGamesRoute, enterGameRoute} =
     useCoinLeaguesFactoryRoutes();
 
   const waitingGamesData = waitingGamesQuery?.data?.games;
@@ -145,47 +143,56 @@ const GamesList = () => {
   const waitingGamesIds = useMemo(() => {
     if (waitingGamesData) {
       if (waitingGamesData.length) {
-        return waitingGamesData?.map(g => g.intId).reduce((p, c) => `${p},${c}`);
+        return waitingGamesData
+          ?.map((g) => g.intId)
+          .reduce((p, c) => `${p},${c}`);
       }
     }
-  }, [waitingGamesData])
-
-
+  }, [waitingGamesData]);
 
   const gamesMetadata = useGamesMetadata(waitingGamesIds);
-
 
   const gamesToJoin = useMemo(() => {
     if (waitingGamesQuery.data) {
       if (gamesMetadata.data) {
         const metadata = gamesMetadata.data;
         // We merge the metadata with the game
-        return waitingGamesQuery.data.games.map(g => {
-          const withMetadata = metadata.find(m => Number(m.gameId) === Number(g.intId));
-          if (withMetadata) {
-            return {
-              ...withMetadata,
-              ...g,
+        return waitingGamesQuery.data.games
+          .map((g) => {
+            const withMetadata = metadata.find(
+              (m) => Number(m.gameId) === Number(g.intId),
+            );
+            if (withMetadata) {
+              return {
+                ...withMetadata,
+                ...g,
+              };
+            } else {
+              return g;
             }
-          } else {
-            return g;
-          }
-        }).filter(g => {
-          if (filtersState.isJackpot) {
-            return !!g.title;
-          }
-          return true;
-        }).filter(
-          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1 
-        )
+          })
+          .filter((g) => {
+            if (filtersState.isJackpot) {
+              return !!g.title;
+            }
+            return true;
+          })
+          .filter(
+            (g) =>
+              g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+          );
       } else {
         return waitingGamesQuery.data.games.filter(
           (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
         );
       }
     }
-  }, [search, waitingGamesQuery.data, gamesMetadata.data, filtersState.isJackpot]);
-
+  }, [
+    search,
+    waitingGamesQuery.data,
+    gamesMetadata.data,
+    filtersState.isJackpot,
+  ]);
 
   const isLoadingStarted = activeGamesQuery.loading;
   const isLoadingCreated = waitingGamesQuery.loading;
@@ -282,17 +289,21 @@ const GamesList = () => {
         <Grid item xs={12}>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
           </Breadcrumbs>
         </Grid>
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{ borderRadius: '12px' }} alt={'banner'} />
+            <img
+              src={CoinsLeagueBanner}
+              style={{borderRadius: '12px'}}
+              alt={'banner'}
+            />
           </Grid>
         </Hidden>
         <Grid item xs={6} xl={6} sm={6}>
@@ -338,21 +349,25 @@ const GamesList = () => {
           <Grid item xs={12} sm={8}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
             />
           </Grid>
         </Hidden>
 
         <Grid item xs={6}>
-          <Typography variant='h6' style={{ margin: 5 }}>
-            Games in Progress: {gamesInProgress?.length || 0}
+          <Typography variant='h6' style={{margin: 5}}>
+            <IntlMessages id='app.coinLeagues.gamesInProgress' />:{' '}
+            {gamesInProgress?.length || 0}
           </Typography>
         </Grid>
         <Grid item xs={6}>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant={'text'} onClick={onClickGoGamesInProgress} endIcon={<ArrowForwardIosIcon />}>
-              View More
+            <Button
+              variant={'text'}
+              onClick={onClickGoGamesInProgress}
+              endIcon={<ArrowForwardIosIcon />}>
+              <IntlMessages id='app.coinLeagues.viewMore' />
             </Button>
           </Box>
         </Grid>
@@ -374,8 +389,12 @@ const GamesList = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games in progress'}
-                  message={'Search created games and enter to start games'}
+                  title={
+                    messages['app.coinLeagues.noGamesInProgress'] as string
+                  }
+                  message={
+                    messages['app.coinLeagues.searchCreatedAndEnter'] as string
+                  }
                 />
               </Grid>
             )}
@@ -390,7 +409,7 @@ const GamesList = () => {
                 onChange={handleChange}
                 variant='standard'
                 TabIndicatorProps={{
-                  style: { display: 'none' },
+                  style: {display: 'none'},
                 }}
                 aria-label='wallet tabs'>
                 <CustomTab value={Tabs.Games} label={Tabs.Games} />
@@ -433,7 +452,10 @@ const GamesList = () => {
             spacing={2}>
             <Grid item>
               {value === Tabs.Games ? (
-                <Typography variant='h6'>Games</Typography>
+                <Typography variant='h6'>
+                  {' '}
+                  <IntlMessages id='app.coinLeagues.games' />
+                </Typography>
               ) : (
                 <Typography variant='h6'>Last Games</Typography>
               )}
@@ -455,7 +477,9 @@ const GamesList = () => {
                   <Chip
                     onClick={handleSelectAll}
                     color={
-                      !filtersState.isBitboy && !filtersState.isMyGames && !filtersState.isJackpot
+                      !filtersState.isBitboy &&
+                      !filtersState.isMyGames &&
+                      !filtersState.isJackpot
                         ? 'primary'
                         : 'default'
                     }
@@ -512,7 +536,7 @@ const GamesList = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon style={{color: '#fff'}} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -539,8 +563,10 @@ const GamesList = () => {
                 <Grid item xs={12}>
                   <Empty
                     image={<EmptyGame />}
-                    title={'No games to join'}
-                    message={'Create games to join'}
+                    title={messages['app.coinLeagues.noHistory'] as string}
+                    message={
+                      messages['app.coinLeagues.joinAndPlayGames'] as string
+                    }
                   />
                 </Grid>
               )}

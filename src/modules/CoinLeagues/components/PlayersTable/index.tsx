@@ -1,4 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
@@ -14,25 +17,25 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import TableContainer from '@material-ui/core/TableContainer';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import RemoveRedEye from '@material-ui/icons/RemoveRedEyeOutlined';
 
-import { PriceFeeds } from 'modules/CoinLeagues/constants';
+import {PriceFeeds} from 'modules/CoinLeagues/constants';
 import ViewCoinLeagueDialog from '../ViewCoinsModal/index.modal';
-import { useCoinLeagues } from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import { useWeb3 } from 'hooks/useWeb3';
-import { ChainId } from 'types/blockchain';
+import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {useWeb3} from 'hooks/useWeb3';
+import {ChainId} from 'types/blockchain';
 import IconButton from '@material-ui/core/IconButton';
-import { useLabelAccounts } from 'hooks/useLabelAccounts';
-import { ethers } from 'ethers';
-import { ReactComponent as CupIcon } from 'assets/images/icons/cup-white.svg';
-import { GameType } from 'types/coinsleague';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import {useLabelAccounts} from 'hooks/useLabelAccounts';
+import {ethers} from 'ethers';
+import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
+import {GameType} from 'types/coinsleague';
+import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import Badge from '@material-ui/core/Badge';
-import { useMultipliers } from 'modules/CoinLeagues/hooks/useMultipliers';
-import { GET_BITBOY_NAME } from 'modules/CoinLeagues/utils/game';
-import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
+import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import CopyButton from 'shared/components/CopyButton';
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -120,20 +123,21 @@ const truncHash = (hash: string): string => {
 const USD_POWER_NUMBER = 10 ** 8;
 
 function PlayersTable(props: Props): JSX.Element {
-  const { id, account, finished, hideCoins, type, data } = props;
+  const {id, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
-  const { chainId } = useWeb3();
+  const {messages} = useIntl();
+  const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
   const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
   const [selectedPlayerAddress, setSelectedPlayerAddress] = useState<string>();
   const accountLabels = useLabelAccounts();
-  const { game, currentPrices, allFeeds } = useCoinLeagues(id);
+  const {game, currentPrices, allFeeds} = useCoinLeagues(id);
 
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const onCloseViewCoinsDialog = useCallback((ev: any) => {
     setOpenViewDialog(false);
   }, []);
-  const { multiplier, loadingMultiplier, tooltipMessage } = useMultipliers(id);
+  const {multiplier, loadingMultiplier, tooltipMessage} = useMultipliers(id);
   const onViewCoins = useCallback((c: any, cap: any, addr: string) => {
     setCoins(c);
     setSelectedCaptainCoin(cap);
@@ -175,7 +179,7 @@ function PlayersTable(props: Props): JSX.Element {
               const end = f.price.toNumber() / USD_POWER_NUMBER;
               const start = startFeed
                 ? ((startFeed?.start_price.toNumber() /
-                  USD_POWER_NUMBER) as number)
+                    USD_POWER_NUMBER) as number)
                 : 0;
               if (end && start) {
                 const scr = (end - start) / end;
@@ -192,7 +196,7 @@ function PlayersTable(props: Props): JSX.Element {
               endPrice: (f.price.toNumber() / USD_POWER_NUMBER) as number,
               startPrice: startFeed
                 ? ((startFeed?.start_price.toNumber() /
-                  USD_POWER_NUMBER) as number)
+                    USD_POWER_NUMBER) as number)
                 : 0,
               multiplier,
             };
@@ -240,7 +244,7 @@ function PlayersTable(props: Props): JSX.Element {
     });
   }, [game, currentPrices, allFeeds, data, type, accountLabels]);
 
-  const { isBalanceVisible } = useIsBalanceVisible();
+  const {isBalanceVisible} = useIsBalanceVisible();
 
   return (
     <>
@@ -256,12 +260,20 @@ function PlayersTable(props: Props): JSX.Element {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.header}>Position</TableCell>
-              <TableCell className={classes.header}>Captain</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.position' />
+              </TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.captain' />
+              </TableCell>
               {(game?.num_coins.toNumber() || 0) > 1 && (
-                <TableCell className={classes.header}>Coins</TableCell>
+                <TableCell className={classes.header}>
+                  <IntlMessages id='app.coinLeagues.coins' />
+                </TableCell>
               )}
-              <TableCell className={classes.header}>Score</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.score' />
+              </TableCell>
             </TableRow>
           </TableHead>
 
@@ -271,8 +283,10 @@ function PlayersTable(props: Props): JSX.Element {
                 <TableCell
                   colSpan={4}
                   className={classes.noBorder}
-                  style={{ textAlign: 'center', color: '#ffa552' }}>
-                  <Typography variant='h5'>No data was found!</Typography>
+                  style={{textAlign: 'center', color: '#ffa552'}}>
+                  <Typography variant='h5'>
+                    <IntlMessages id='app.coinLeagues.notDataFound' />!
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -298,7 +312,7 @@ function PlayersTable(props: Props): JSX.Element {
                         size='small'
                         copyText={row.hash}
                         tooltip='Copied!'>
-                        <Typography style={{ color: '#fff' }}>
+                        <Typography style={{color: '#fff'}}>
                           &nbsp; {truncHash(row.hash)}
                         </Typography>
                       </CopyButton>
@@ -312,7 +326,9 @@ function PlayersTable(props: Props): JSX.Element {
                             <Chip
                               color='primary'
                               icon={<CupIcon />}
-                              label={`Winner`}
+                              label={
+                                messages['app.coinLeagues.winner'] as string
+                              }
                               size='small'
                             />{' '}
                           </Box>
@@ -324,7 +340,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='medium'
                           />{' '}
                         </Box>
@@ -336,7 +352,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>
@@ -348,7 +364,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>
@@ -365,7 +381,8 @@ function PlayersTable(props: Props): JSX.Element {
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
-                                  !loadingMultiplier && multiplier(row.hash).toFixed(3)
+                                  !loadingMultiplier &&
+                                  multiplier(row.hash).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}
@@ -373,7 +390,7 @@ function PlayersTable(props: Props): JSX.Element {
                                     row.captainCoin,
                                     GET_LEAGUES_CHAIN_ID(chainId),
                                   )}
-                                  style={{ height: 35, width: 35 }}>
+                                  style={{height: 35, width: 35}}>
                                   {getIconSymbol(
                                     row.captainCoin,
                                     GET_LEAGUES_CHAIN_ID(chainId),
@@ -405,7 +422,8 @@ function PlayersTable(props: Props): JSX.Element {
                         <Badge color={'primary'} overlap='circular'>
                           <Avatar
                             className={classes.chip}
-                            style={{ height: 35, width: 35 }}></Avatar>
+                            style={{height: 35, width: 35}}
+                          />
                         </Badge>
                       )}
                     </Box>
@@ -423,7 +441,7 @@ function PlayersTable(props: Props): JSX.Element {
                                   coin,
                                   GET_LEAGUES_CHAIN_ID(chainId),
                                 )}
-                                style={{ height: 35, width: 35 }}>
+                                style={{height: 35, width: 35}}>
                                 {getIconSymbol(
                                   coin,
                                   GET_LEAGUES_CHAIN_ID(chainId),
@@ -432,7 +450,8 @@ function PlayersTable(props: Props): JSX.Element {
                             ) : (
                               <Avatar
                                 className={classes.chip}
-                                style={{ height: 35, width: 35 }}></Avatar>
+                                style={{height: 35, width: 35}}
+                              />
                             ),
                           )}
                         </AvatarGroup>

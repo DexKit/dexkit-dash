@@ -1,19 +1,20 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
-import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
-import {useWeb3} from 'hooks/useWeb3';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {AppContext} from '@crema';
+import {useWeb3} from 'hooks/useWeb3';
+import {fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 
 import IntlMessages from '@crema/utility/IntlMessages';
-import {
-  Grid,
-  Box,
-  Button,
-  TextField,
-  Typography,
-  IconButton,
-  CircularProgress,
-  useTheme,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import {useTheme} from '@material-ui/core';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AppContextPropsType from 'types/AppContextPropsType';
@@ -85,6 +86,7 @@ const MarketForm: React.FC<Props> = (props) => {
   const theme = useTheme();
 
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const network = useNetwork();
   const history = useHistory();
@@ -329,27 +331,34 @@ const MarketForm: React.FC<Props> = (props) => {
         onClick={handleConnectWallet}
         endIcon={<AccountBalanceWalletIcon />}
         disabled={web3State === Web3State.Connecting}>
-        {web3State === Web3State.Connecting
-          ? isMobile()
-            ? 'Connecting...'
-            : 'Connecting... Check Wallet'
-          : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+        {web3State === Web3State.Connecting ? (
+          isMobile() ? (
+            <IntlMessages id='app.dashboard.connecting' />
+          ) : (
+            <>
+              <IntlMessages id='app.dashboard.connecting' />{' '}
+              <IntlMessages id='app.dashboard.checkWallet' />
+            </>
+          )
+        ) : isMobile() ? (
+          <IntlMessages id='app.dashboard.connect' />
+        ) : (
+          <IntlMessages id='app.dashboard.connectWallet' />
+        )}
       </Button>
     </Box>
   );
   // disabled = true;
   if (select0.length === 0) {
-    errorMessage = 'No balances found in your wallet';
+    errorMessage = messages['app.dashboard.noBalanceWallet'];
   } else if (!tokenBalance || !tokenBalance.value || tokenBalance.value === 0) {
-    errorMessage = 'No available balance for chosen token';
+    errorMessage = messages['app.dashboard.noBalanceChosenToken'];
   } else if (amountFrom && tokenBalance.value < amountFrom) {
-    errorMessage = 'Insufficient balance for chosen token';
+    errorMessage = messages['app.dashboard.insufficientBalanceChosenToken'];
   } else if (networkName !== network) {
-    errorMessage = `Switch to ${FORMAT_NETWORK_NAME(
+    errorMessage = `${messages['app.dashboard.switchTo']} ${FORMAT_NETWORK_NAME(
       networkName,
-    )} Network in your wallet`;
+    )} ${messages['app.dashboard.networkInYourWallet']}`;
   }
   const {usdFormatter} = useUSDFormatter();
 
@@ -381,7 +390,11 @@ const MarketForm: React.FC<Props> = (props) => {
   return (
     <Box>
       <SelectTokenBalanceDialog
-        title={selectTo === 'from' ? 'You send' : 'You receive'}
+        title={
+          selectTo === 'from'
+            ? (messages['app.dashboard.youSend'] as string)
+            : (messages['app.dashboard.youReceive'] as string)
+        }
         balances={balances as MyBalances[]}
         open={showSelectTokenDialog}
         tokens={select1}
@@ -400,7 +413,7 @@ const MarketForm: React.FC<Props> = (props) => {
                   alignContent='center'
                   justifyContent='space-between'>
                   <Typography variant='body2'>
-                    <IntlMessages id='app.youSend' />
+                    <IntlMessages id='app.dashboard.youSend' />
                   </Typography>
 
                   <Typography
@@ -421,7 +434,7 @@ const MarketForm: React.FC<Props> = (props) => {
               <Grid item xs={5} sm={5}>
                 <SelectTokenV2
                   id={'marketSel0'}
-                  label={'Your Coins'}
+                  label={messages['app.dashboard.yourCoins'] as string}
                   selected={tokenFrom}
                   disabled={disableSelect === 'from'}
                   onClick={handleSelectTokenFrom}
@@ -470,7 +483,7 @@ const MarketForm: React.FC<Props> = (props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='body1'>
-                  <IntlMessages id='app.youReceive' />
+                  <IntlMessages id='app.dashboard.youReceive' />
                 </Typography>
               </Grid>
               <Grid item xs={5} md={5}>
@@ -522,14 +535,14 @@ const MarketForm: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography style={{textDecoration: 'none'}}>
-                          Additional information
+                          <IntlMessages id='app.dashboard.additionalInformation' />
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Box
-                          display={'flex'}
+                          display='flex'
                           width='100%'
-                          justifyContent={'space-evenly'}>
+                          justifyContent='space-evenly'>
                           {priceQuoteTo && (
                             <Box pr={2}>
                               <p>
@@ -606,7 +619,7 @@ const MarketForm: React.FC<Props> = (props) => {
                       <>
                         <TradeIcon />
                         <Box ml={1} fontSize='large' fontWeight='bold'>
-                          Trade
+                          <IntlMessages id='app.dashboard.trade' />
                         </Box>
                       </>
                     )}

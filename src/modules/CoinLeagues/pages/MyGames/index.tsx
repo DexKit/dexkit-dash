@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   Breadcrumbs,
   Button,
@@ -74,12 +77,14 @@ const MyGames = () => {
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
-            <Typography>My Games</Typography>
+            <Typography>
+              <IntlMessages id='app.coinLeagues.myGames' />
+            </Typography>
           </Breadcrumbs>
         </Grid>
       </Grid>
@@ -94,7 +99,7 @@ const MyGames = () => {
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
         <Box display={'flex'} alignItems={'center'}>
-          <Typography variant='h5'>My Games</Typography>
+          <Typography variant='h5'> <IntlMessages id='app.coinLeagues.myGames' /></Typography>
           <Box p={2}>
             <FormControl>
               <Select
@@ -136,7 +141,7 @@ const MyGames = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            Connect Wallet{' '}
+            <IntlMessages id='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>

@@ -1,7 +1,6 @@
 import {makeStyles} from '@material-ui/core';
-import {CremaTheme} from 'types/AppContextPropsType';
 
-export const useStyles = makeStyles((theme: CremaTheme) => ({
+export const useStyles = makeStyles((theme) => ({
   label: {
     fontWeight: 400,
     color: '#8F96A7',

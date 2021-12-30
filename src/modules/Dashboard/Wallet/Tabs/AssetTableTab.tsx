@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+
 import {Box, Typography, Button} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
@@ -8,6 +9,7 @@ import {useTransak} from 'hooks/useTransak';
 
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 type Props = {
   account: string;
@@ -47,14 +49,14 @@ export const AssetTableTab = (props: Props) => {
         </Box>
         <Box mb={4}>
           <Typography align='center' variant='h5'>
-            No Assets
+            <IntlMessages id='app.dashboard.noAssets' />
           </Typography>
         </Box>
         <Button
           variant='outlined'
           startIcon={<MonetizationOnIcon />}
           onClick={handleTransak}>
-          Buy Crypto
+          <IntlMessages id='app.dashboard.buyCrypto' />
         </Button>
       </Box>
     );

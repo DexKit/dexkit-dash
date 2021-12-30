@@ -1,6 +1,8 @@
 import React from 'react';
-import {Button} from '@material-ui/core';
+
+import Button from '@material-ui/core/Button';
 import {Steps} from 'types/app';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   step: Steps;
@@ -13,14 +15,14 @@ const DoneStep: React.FC<Props> = (props) => {
   return (
     <>
       <Button
-        style={{margin: 0}}
-        fullWidth
-        variant='outlined'
-        color='primary'
-        size='large'
-        onClick={onClose}>
-        Done
-      </Button>
+      style={{margin: 0}}
+      fullWidth
+      variant='outlined'
+      color='primary'
+      size='large'
+      onClick={onClose}>
+      <IntlMessages id='app.dashboard.done' />
+    </Button>
     </>
   );
 };

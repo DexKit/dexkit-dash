@@ -1,4 +1,7 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {
   createStyles,
   makeStyles,
@@ -10,13 +13,13 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
-import {Link, Tooltip} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -70,6 +73,7 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 export const AboutDialog = () => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,7 +84,7 @@ export const AboutDialog = () => {
 
   return (
     <div>
-      <Tooltip title={'Info about this page'}>
+      <Tooltip title={messages['app.dashboard.infoPage'] as string}>
         <Button
           variant='outlined'
           onClick={handleClickOpen}
@@ -93,27 +97,23 @@ export const AboutDialog = () => {
         aria-labelledby='customized-dialog-title'
         open={open}>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Wallet
+          <IntlMessages id='app.dashboard.wallet' />
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            The wallet page is where you can look at your total balances for
-            your connected wallets across the Ethereum and Binance Smart Chain
-            networks.
+            <IntlMessages id='app.dashboard.wallet.walletPageInfo' />
           </Typography>
           <Typography gutterBottom>
-            You can also see any Defi assets that you are holding as well.
+            <IntlMessages id='app.dashboard.wallet.youCanAlsoSeeDefi' />
           </Typography>
           <Typography gutterBottom>
-            The “Asset Chart” shows you your holdings over a period of time,
+            <IntlMessages id='app.dashboard.wallet.assetChartInfo' />
           </Typography>
           <Typography gutterBottom>
-            “Transfers” shows you all transfers of tokens in and out of your
-            wallet.
+            <IntlMessages id='app.dashboard.wallet.transfersInfo' />
           </Typography>
           <Typography gutterBottom>
-            “Trade History” shows buys and sells of tokens from your wallet. All
-            assets can be filtered by network.
+            <IntlMessages id='app.dashboard.wallet.tradeHistoryInfo' />
           </Typography>
         </DialogContent>
       </Dialog>

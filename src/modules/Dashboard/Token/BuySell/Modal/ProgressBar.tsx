@@ -1,4 +1,7 @@
 import React, {useContext} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import styled from 'styled-components';
 import {Box} from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
@@ -31,6 +34,7 @@ const Rect = styled.div<{isDone: boolean; backgroundColor: string}>`
 
 const ProgressBar: React.FC<Props> = (props) => {
   const {steps, currentStepIndex} = props;
+  const {messages} = useIntl();
 
   const classes = useStyles();
 
@@ -56,7 +60,7 @@ const ProgressBar: React.FC<Props> = (props) => {
 
     const step =
       steps[i] === Steps.MARKET || steps[i] === Steps.LIMIT
-        ? 'Order'
+        ? (messages['app.dashboard.order'] as string)
         : steps[i].toString();
 
     dynamicProgressBar.push(

@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import Dialog from '@material-ui/core/Dialog';
@@ -114,6 +117,7 @@ const CreateGameModal = (props: Props) => {
   const classes = useStyles();
   const { chainId } = useWeb3();
   const history = useHistory();
+  const {messages} = useIntl();
   const { createNotification } = useNotifications();
   const { onGameCreateCallback } = useCoinLeaguesFactoryCreateGameCallback();
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
@@ -244,7 +248,9 @@ const CreateGameModal = (props: Props) => {
                 <TransferIcon />
               </Grid>
               <Grid item>
-                <Typography variant='h6'>Create a game</Typography>
+                <Typography variant='h6'>
+                  <IntlMessages id='app.coinLeagues.createGame' />
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -260,55 +266,54 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
             <Typography variant='h6' style={{ fontWeight: 600 }}>
-              Basic information
+            <IntlMessages id='app.coinLeagues.basicInformation' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant='subtitle2'>
-              Answer all of the options below to continue
+              <IntlMessages id='app.coinLeagues.warning.createGame' />
             </Typography>
           </Grid>
         </Grid>
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Select Level</FormLabel>
+            <FormLabel className={classes.label}>
+              <IntlMessages id='app.coinLeagues.selectLevel' />
+            </FormLabel>
             <Select
               variant='outlined'
-              placeholder='Select'
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setEntryAmount(Number(event.target.value))}
               style={{
                 color: '#fff',
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-              <MenuItem value={0.001}>
-                Beta Testing - 0.001{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
-              </MenuItem>
+            
               {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={1}>
-                Beginner - 1{' '}
+              <IntlMessages id='app.coinLeagues.beginner' /> - 1{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               <MenuItem value={5}>
-                Intermediate - 5{' '}
+              <IntlMessages id='app.coinLeagues.intermediate' />- 5{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               <MenuItem value={10}>
-                Advanced - 10{' '}
+              <IntlMessages id='app.coinLeagues.advanced' /> - 10{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               <MenuItem value={50}>
-                Expert - 50{' '}
+              <IntlMessages id='app.coinLeagues.expert' /> - 50{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               <MenuItem value={250}>
-                Master - 250{' '}
+              <IntlMessages id='app.coinLeagues.master' /> - 250{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
               <MenuItem value={500}>
-                Grand Master - 500{' '}
+              <IntlMessages id='app.coinLeagues.grandMaster' /> - 500{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
             </Select>
@@ -317,10 +322,12 @@ const CreateGameModal = (props: Props) => {
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Game duration</FormLabel>
+            <FormLabel className={classes.label}>
+              <IntlMessages id='app.coinLeagues.gameDuration' />
+            </FormLabel>
             <Select
               variant='outlined'
-              placeholder='Select'
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setGameDuration(Number(event.target.value))}
               style={{
                 color: '#fff',
@@ -344,12 +351,12 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                How many coins?
+              <IntlMessages id='app.coinLeagues.howManyCoins' />
               </FormLabel>
               <Select
                 value={coins}
                 variant='outlined'
-                placeholder='Select'
+                placeholder={messages['app.coinLeagues.select'] as string}
                 onChange={(event) => setCoins(Number(event.target.value))}
                 style={{
                   marginRight: 5,
@@ -369,7 +376,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                Total players
+              <IntlMessages id='app.coinLeagues.totalPlayers' />
               </FormLabel>
               <Select
                 value={totalPlayers}
@@ -377,7 +384,7 @@ const CreateGameModal = (props: Props) => {
                   setTotalPlayers(Number(event.target.value))
                 }
                 variant='outlined'
-                placeholder='Select'
+                placeholder={messages['app.coinLeagues.select'] as string}
                 style={{
                   marginRight: 5,
                   color: '#fff',
@@ -405,7 +412,7 @@ const CreateGameModal = (props: Props) => {
             <FormLabel
               className={classes.label}
               style={{ fontSize: '1.25rem', fontWeight: 600 }}>
-              Game type
+              <IntlMessages id='app.coinLeagues.gameType' />
             </FormLabel>
             <RadioGroup value={gameType}>
               <FormControlLabel
@@ -574,10 +581,12 @@ const CreateGameModal = (props: Props) => {
             state={submitState}
             defaultMsg={
               IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                ? 'CREATE GAME'
-                : 'Connect Wallet on Polygon'
+                ? (
+                    messages['app.coinLeagues.createGame'] as string
+                  ).toUpperCase()
+                : (messages['app.coinLeagues.connectWalletPolygon'] as string)
             }
-            confirmedMsg={'Game Created'}
+            confirmedMsg={messages['app.coinLeagues.gameCreated'] as string}
           />
         </Button>
       </DialogContent>

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {Box} from '@material-ui/core';
 import AppCard from '../../../../@crema/core/AppCard';
 import Etherium from 'assets/images/dashboard/sales.svg';

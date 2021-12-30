@@ -1,14 +1,15 @@
 import React, {
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
 } from 'react';
+
 import {
+  Link as RouterLink,
   RouteComponentProps,
   useHistory,
-  Link as RouterLink,
 } from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,24 +18,22 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import {
-  Link,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  Grid,
-  Paper,
-  Typography,
-  useTheme,
-  IconButton,
-} from '@material-ui/core';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import {useTheme} from '@material-ui/core';
 
 import BitqueryTVChartContainer from 'shared/components/chart/BitqueryTVChart/tv_chart';
-import {EXCHANGE, EthereumNetwork, ThemeMode} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE, ThemeMode} from 'shared/constants/AppEnums';
 
 import {useTokenInfo} from 'hooks/useTokenInfo';
 import {AppContext} from '@crema';
@@ -66,6 +65,7 @@ import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import {watchAsset} from 'utils/wallet';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 import SelectTokenBalanceDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
 
 type Params = {
@@ -229,10 +229,10 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Grid item xs={12}>
                     <Breadcrumbs aria-label='breadcrumb'>
                       <Link color='inherit' component={RouterLink} to='/wallet'>
-                        Wallet
+                        <IntlMessages id='app.protocolExplorer.wallet' />
                       </Link>
                       <Typography variant='body2' color='inherit'>
-                        Explorer
+                        <IntlMessages id='app.protocolExplorer.explorer' />
                       </Typography>
                     </Breadcrumbs>
                   </Grid>
@@ -368,7 +368,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
                   <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography variant='body1' style={{fontWeight: 600}}>
-                        Favorites
+                        <IntlMessages id='app.protocolExplorer.favorites' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -445,7 +445,8 @@ const Explorer: React.FC<TokenProps> = (props) => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Chart
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.protocolExplorer.chart' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>{Chart}</AccordionDetails>

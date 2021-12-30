@@ -1,6 +1,9 @@
 import React, {useCallback} from 'react';
 import {Button, Grid} from '@material-ui/core';
 
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 
 import {Empty} from 'shared/components/Empty';
@@ -11,15 +14,18 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 const NoWallet = () => {
   const history = useHistory();
+  const {messages} = useIntl();
+
   const handleConnectWallet = useCallback(() => {
     history.push('/onboarding/login-wallet');
   }, []);
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Empty
-          title={'No Wallet'}
-          message={'Please connect your wallet'}
+          title={messages['app.coinLeagues.noWallet'] as string}
+          message={messages['app.coinLeagues.pleaseConnectWallet'] as string}
           image={<EmptyWallet />}
           callToAction={
             <Box display='flex' alignItems='center' justifyContent='center'>
@@ -29,7 +35,7 @@ const NoWallet = () => {
                 color='primary'
                 onClick={handleConnectWallet}
                 endIcon={<AccountBalanceWalletIcon />}>
-                Connect Wallet
+                <IntlMessages id='app.coinLeagues.connectWallet' />
               </Button>
             </Box>
           }

@@ -1,7 +1,10 @@
+import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
 import {ReactComponent as Social3} from 'assets/images/icons/social-3.svg';
 
 export const WaitingPlayers = () => {
@@ -18,7 +21,7 @@ export const WaitingPlayers = () => {
             </Box>
             <Box>
               <Typography variant='body2' color='textSecondary'>
-                WAITING FOR PLAYERS...
+                <IntlMessages id='app.coinLeagues.waitingPlayers' />
               </Typography>
             </Box>
           </Box>

@@ -1,16 +1,15 @@
-import {
-  Box,
-  makeStyles,
-  Chip,
-  useTheme,
-  Grid,
-  Typography,
-} from '@material-ui/core';
 import React, {useCallback} from 'react';
+
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import {makeStyles, useTheme} from '@material-ui/core';
 import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {Token} from 'types/app';
 import Logo from 'shared/components/Logo';
 import {getLogoSrcs} from 'utils';
+
 export interface Props {
   token: Token;
   onClick: (token: Token) => void;

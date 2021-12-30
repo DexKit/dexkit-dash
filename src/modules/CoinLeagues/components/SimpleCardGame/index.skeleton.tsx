@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -32,7 +34,9 @@ function SimpleCardGameSkeleton(): JSX.Element {
       <Grid container style={{color: '#7a8398'}}>
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Game Time:</Typography>
+            <Typography variant='h6'>
+              <IntlMessages id='app.coinLeagues.gameTime' />:
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>&nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
             </Typography>
