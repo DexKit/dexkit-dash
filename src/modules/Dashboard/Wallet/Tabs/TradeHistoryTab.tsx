@@ -136,6 +136,14 @@ export const TradeHistoryTab = (props: Props) => {
                 <Grid item>
                   <Chip
                     clickable
+                    onClick={handleToggleTransactions}
+                    variant={tab === TAB_TRANSACTIONS ? 'default' : 'outlined'}
+                    label={messages['app.wallet.transactions'] as string}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
                     onClick={handleToggleHistory}
                     variant={tab === TAB_HISTORY ? 'default' : 'outlined'}
                     label={messages['app.wallet.history'] as string}
@@ -147,14 +155,6 @@ export const TradeHistoryTab = (props: Props) => {
                     onClick={handleToggleTransfers}
                     variant={tab === TAB_TRANSFERS ? 'default' : 'outlined'}
                     label={messages['app.wallet.transfers'] as string}
-                  />
-                </Grid>
-                <Grid item>
-                  <Chip
-                    clickable
-                    onClick={handleToggleTransactions}
-                    variant={tab === TAB_TRANSACTIONS ? 'default' : 'outlined'}
-                    label={messages['app.wallet.transactions'] as string}
                   />
                 </Grid>
               </Grid>
