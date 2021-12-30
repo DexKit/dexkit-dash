@@ -26,19 +26,8 @@ export function SuccessDialog(props: SuccessDialogProps) {
 
   return (
     <Dialog {...props} fullWidth maxWidth='sm'>
-      <CustomDialogTitle title={title} icon={icon}/>
-      {/* <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex'>
-            <Typography style={{fontWeight: 500}} variant='body1'>
-              {icon} {title}
-            </Typography>
-          </Box>
-          <IconButton size='small'>
-            <Close />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle title={title} icon={icon} />
+
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={12}>

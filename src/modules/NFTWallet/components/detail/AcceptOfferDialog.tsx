@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import {getPriceFromOrder} from 'modules/NFTWallet/utils';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   tokenImageSmall: {
@@ -40,15 +41,12 @@ interface Props {
 export default (props: Props) => {
   const {open, onClose, onAccept, offer, asset} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <CustomDialogTitle title={"Accept this offer"} />
-      {/* <DialogTitle>
-        <Box display='flex' justifyContent='center' py={4}>
-          <Typography variant='inherit'>Accept this offer</Typography>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle title={messages['app.nftWallet.acceptThisOffer']} />
+
       <DialogContent>
         <Box py={2}>
           <Box mb={4}>

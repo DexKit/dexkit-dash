@@ -71,7 +71,7 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
         }
         onClose={handleClose}
       />
-      
+
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>

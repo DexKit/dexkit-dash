@@ -22,7 +22,7 @@ import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import IntlMessages from '@crema/utility/IntlMessages';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -63,11 +63,15 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
   }, [chainId, transactionHash]);
-  const { messages } = useIntl();
+  const {messages} = useIntl();
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <CustomDialogTitle title={messages['app.wizard.transactionCreated']} icon={<CheckCircleOutlineIcon className={clsx(classes.icon)} />} onClose={handleClose}/>
-      
+      <CustomDialogTitle
+        title={messages['app.wizard.transactionCreated']}
+        icon={<CheckCircleOutlineIcon className={clsx(classes.icon)} />}
+        onClose={handleClose}
+      />
+
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>
@@ -84,10 +88,10 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
             </Box>
             <Box mb={2}>
               <Typography align='center' variant='h5'>
-              <IntlMessages id='app.wizard.transactionCreated' />
+                <IntlMessages id='app.wizard.transactionCreated' />
               </Typography>
               <Typography align='center' variant='body1'>
-              <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
+                <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
               </Typography>
             </Box>
             <Button onClick={handleViewTransaction} color='primary' fullWidth>

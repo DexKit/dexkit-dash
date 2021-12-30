@@ -27,7 +27,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import IntlMessages from '@crema/utility/IntlMessages';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -65,7 +65,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
 
   const theme = useTheme();
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
   return (
     <Dialog {...dialogProps} maxWidth='xs' fullWidth>
@@ -74,28 +74,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
         icon={<GavelIcon className={classes.icon} />}
         onClose={handleClose}
       />
-      {/* <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <GavelIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='app.kittygotchi.minting' />
-            </Typography>
-          </Box>
-          <Box>
-            <IconButton disabled={loading} size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle> */}
+
       <DialogContent dividers className={classes.content}>
         {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
           <Box p={4}>

@@ -19,6 +19,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {ChangellyCoin} from 'types/changelly';
 import SelectCoinListItem from '../Components/SelectCoinListItem';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface Props extends DialogProps {
   coins: ChangellyCoin[];
@@ -71,7 +72,7 @@ export const SelectCoinsDialog = (props: Props) => {
       onClose({}, 'escapeKeyDown');
     }
   }, [onClose]);
-
+  const {messages} = useIntl();
   return (
     <Dialog
       maxWidth='sm'
@@ -79,15 +80,11 @@ export const SelectCoinsDialog = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-        <CustomDialogTitle title={"Select a coin"} onClose={handleClose}/>
-      {/* <DialogTitle id='form-dialog-title'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography variant='body1'>Select a coin</Typography>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle
+        title={messages['app.dashboard.selectACoin']}
+        onClose={handleClose}
+      />
+
       <DialogContent dividers>
         <Box mb={4}>
           <TextField

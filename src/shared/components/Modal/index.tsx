@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CustomDialogTitle from '../CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface TotalBalanceProps {
   open: boolean;
@@ -19,11 +20,13 @@ const FormDialog: React.FC<TotalBalanceProps> = (props) => {
   const {open, onClose, onConfirm} = props;
   const [address, setAddress] = useState<string>(props?.address ?? '');
   const [value, setValue] = useState<string>(props?.value ?? '');
+  const {messages} = useIntl();
+
   return (
     <div>
       <Dialog open={open} onClose={onClose} aria-labelledby='form-dialog-title'>
-      <CustomDialogTitle title={"Transfer"} />
-        
+        <CustomDialogTitle title={messages['app.shared.transfer']} />
+
         <DialogContent dividers>
           <TextField
             autoFocus

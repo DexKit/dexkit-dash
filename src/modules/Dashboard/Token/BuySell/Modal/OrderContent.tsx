@@ -47,6 +47,7 @@ import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
 import {SwapQuoteResponse} from 'types/zerox';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface Props {
   isMarket: boolean;
@@ -334,6 +335,7 @@ const OrderContent: React.FC<Props> = (props) => {
   const handleToggleAdvanced = useCallback(() => {
     setShowAdvanced((value) => !value);
   }, []);
+  const {messages} = useIntl();
 
   return (
     <>
@@ -346,30 +348,7 @@ const OrderContent: React.FC<Props> = (props) => {
         icon={<WalletAddIcon className={classes.iconColor} />}
         onClose={onClose}
       />
-      {/* <DialogTitle id='form-dialog-title'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box display='flex' alignItems='center'>
-            <Box
-              mr={2}
-              display='flex'
-              justifyContent='center '
-              alignItems='center '
-              alignContent='center'>
-              <WalletAddIcon className={classes.iconColor} />
-            </Box>
-            <Typography variant='body1'>
-              {isConvert
-                ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
-                : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
-            </Typography>
-          </Box>
-          <Box>
-            <IconButton size='small' onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle> */}
+
       {!loading ? (
         <Box>
           {(currentStep === Steps.CONVERT ||

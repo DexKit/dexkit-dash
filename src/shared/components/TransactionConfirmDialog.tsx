@@ -33,6 +33,7 @@ import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {Alert} from '@material-ui/lab';
 import CustomDialogTitle from './CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -204,11 +205,15 @@ export const TransactionConfirmDialog = (
     },
     [isEIP1559],
   );
-
+  const {messages} = useIntl();
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <CustomDialogTitle title={"Confirm transaction"} icon={<ReceiptTextIcon />} onClose={handleCancel}/>
-      
+      <CustomDialogTitle
+        title={messages['app.shared.confirmTransaction']}
+        icon={<ReceiptTextIcon />}
+        onClose={handleCancel}
+      />
+
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>

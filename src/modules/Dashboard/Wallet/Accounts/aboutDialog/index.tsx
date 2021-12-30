@@ -16,6 +16,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -83,7 +85,7 @@ export const AboutDialog = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const {messages} = useIntl();
   return (
     <div>
       <Button
@@ -96,9 +98,11 @@ export const AboutDialog = () => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}>
-        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Manage Accounts
-        </DialogTitle>
+        <CustomDialogTitle
+          title={messages['app.dashboard.manageAccounts']}
+          onClose={handleClose}
+        />
+
         <DialogContent dividers>
           <Typography gutterBottom>
             Here you can add multiple accounts without the need to connect your

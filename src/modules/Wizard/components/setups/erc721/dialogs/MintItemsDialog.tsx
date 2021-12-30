@@ -23,7 +23,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {ethers} from 'ethers';
 import IntlMessages from '@crema/utility/IntlMessages';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 interface MintItemsDialogProps extends DialogProps {
   contractAddress: string;
@@ -212,12 +212,11 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     setShowSuccess(true);
     setLoading(false);
   }, [mintItems, sendItemsMetadata, contractAddress, onFinish, uploadImages]);
-  const { messages } = useIntl();
+  const {messages} = useIntl();
   return (
     <Dialog {...props} disableBackdropClick>
       {!loading && !showSuccess ? (
         <CustomDialogTitle title={messages['app.wizard.mintItems']} />
-        
       ) : null}
       {showSuccess ? (
         <DialogContent>

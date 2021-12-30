@@ -1158,5 +1158,26 @@
   "app.onBoarding.addAccountForReadOnly": "Add account for read-only mode.",
   "app.onBoarding.emailExample": "email@example.com",
   "app.onBoarding.address": "Address",
-  "app.onBoarding.eMail": "E-mail"
+  "app.onBoarding.eMail": "E-mail",
+
+  "app.dashboard.transactions": "Transactions",
+  "app.dashboard.selectACoin": "Select a coin",
+  "app.dashboard.tradingPage": "Trading Page",
+  "app.dashboard.trade": "Trade",
+  "app.dashboard.manageAccounts": "Manage Accounts",
+  "app.myApps": "Manage APPs page",
+  "app.nftWallet.acceptThisOffer": "Accept this offer",
+  "app.nfTWallet.nftWallet": "NFT Wallet",
+  "app.protocolExplorer.receive": "Receive",
+  "app.shared.switchNetwork": "Switch network",
+  "app.appLayout.accounts": "Accounts",
+  "app.dashboard.selectAToken": "Select a token",
+  "app.dashboard.wallet": "Wallet",
+  "app.shared.notifications": "Notifications",
+  "app.shared.confirmTransaction": "Confirm transaction",
+  "app.shared.send": "Send",
+  "app.dashboard.order": "Order",
+  "app.shared.transfer": "Transfer",
+  "app.shared.selectAnAddress": "Select an address",
+  "app.totalBalance.creatingChampion": "Creating Champion"
 }

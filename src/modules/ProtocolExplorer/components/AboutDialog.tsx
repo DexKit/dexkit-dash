@@ -16,7 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import Info from '@material-ui/icons/Info';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 interface Props extends DialogProps {
   textInfo: string;
@@ -31,33 +31,16 @@ export const AbountDialog = (props: Props) => {
     }
   }, [onClose]);
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
   return (
     <Dialog open={open}>
-      <CustomDialogTitle title={messages['Receive']} icon={<Info/>} onClose={handleClose}/>
-      {/* <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <Info />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Receive' />
-            </Typography>
-          </Box>
-          <Box>
-            <IconButton size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle
+        title={messages['app.protocolExplorer.receive']}
+        icon={<Info />}
+        onClose={handleClose}
+      />
+
       <DialogContent>
         <Typography variant='body1'>{textInfo}</Typography>
       </DialogContent>

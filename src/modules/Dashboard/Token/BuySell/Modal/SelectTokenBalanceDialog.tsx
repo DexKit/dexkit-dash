@@ -29,6 +29,7 @@ import {MyBalances} from 'types/blockchain';
 import SelectTokenBalanceListItem from '../../components/SelectTokenBalanceListItem';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -132,6 +133,7 @@ export const SelectTokenBalanceDialog = (props: Props) => {
   useEffect(() => {
     setSelectedNetwork(network);
   }, [network]);
+  const {messages} = useIntl();
 
   return (
     <Dialog
@@ -140,20 +142,12 @@ export const SelectTokenBalanceDialog = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-      <CustomDialogTitle title={title || 'Select a token'} icon={<MoneySendIcon />} onClose={handleClose}/>
-      {/* <DialogTitle id='form-dialog-title'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box display='flex' alignItems='center'>
-            <Box display='flex' pr={2}>
-              <MoneySendIcon />
-            </Box>
-            <Typography variant='body1'>{title || 'Select a token'}</Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle
+        title={title || messages['app.dashboard.selectAToken']}
+        icon={<MoneySendIcon />}
+        onClose={handleClose}
+      />
+
       <DialogContent dividers className={classes.content}>
         <Box px={4} py={4} pb={2}>
           <TextField

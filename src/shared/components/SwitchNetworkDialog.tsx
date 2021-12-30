@@ -19,6 +19,7 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {useMobile} from 'hooks/useMobile';
 import {NetworkCodes} from 'utils/blockchain';
 import CustomDialogTitle from './CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -68,31 +69,15 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
   // const handleRopsten = useCallback(() => {
   //   onSelectChain(NetworkCodes.Ropsten);
   // }, [onSelectChain]);
-
+  const {messages} = useIntl();
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='xs'>
-      <CustomDialogTitle title={"Switch network"} icon={<SwapHorizIcon fontSize='inherit' />} onClose={handleClose}/>
-      {/* <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box alignContent='center' alignItems='center' display='flex'>
-            <Box mr={2}>
-              <Typography variant='body1'>
-                <SwapHorizIcon fontSize='inherit' />
-              </Typography>
-            </Box>
-            <Typography variant='body1' style={{fontWeight: 500}}>
-              Switch network
-            </Typography>
-          </Box>
-          <IconButton onClick={handleClose} size='small'>
-            <Close />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle
+        title={messages['app.shared.switchNetwork']}
+        icon={<SwapHorizIcon fontSize='inherit' />}
+        onClose={handleClose}
+      />
+
       <Divider />
       <List disablePadding>
         <ListItem

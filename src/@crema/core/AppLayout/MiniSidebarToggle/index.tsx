@@ -33,6 +33,7 @@ import {TransactionConfirmDialog} from 'shared/components/TransactionConfirmDial
 import WelcomeDialog from 'shared/components/WelcomeDialog';
 import {useAppGlobalState} from 'hooks/useGlobalState';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface MiniSidebarToggleProps {
   props?: any;
@@ -58,7 +59,7 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
   }, [welcomeModal]);
 
   const globalState = useAppGlobalState();
-
+  const {messages} = useIntl();
   return (
     <>
       <TransactionConfirmDialog
@@ -116,8 +117,12 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
           </BottomDrawer>
         ) : (
           <Dialog open={accountsModal.showAccounts}>
-            <CustomDialogTitle title={"Accounts"} icon={<WalletSearchIcon />} onClose={handleCloseAccounts}/>
-            
+            <CustomDialogTitle
+              title={messages['app.appLayout.accounts']}
+              icon={<WalletSearchIcon />}
+              onClose={handleCloseAccounts}
+            />
+
             <Divider />
             <DialogContent className={classes.accountsDialgContent}>
               <Accounts />

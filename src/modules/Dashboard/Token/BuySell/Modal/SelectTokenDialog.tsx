@@ -26,6 +26,7 @@ import {useMobile} from 'hooks/useMobile';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface Props extends DialogProps {
   title?: string;
@@ -82,7 +83,7 @@ export const SelectTokenDialog = (props: Props) => {
   useEffect(() => {
     setSelectedNetwork(network);
   }, [network]);
-
+  const {messages} = useIntl();
   return (
     <Dialog
       maxWidth='sm'
@@ -90,8 +91,12 @@ export const SelectTokenDialog = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-        <CustomDialogTitle title={title || 'Select a token'} icon={<MoneySendIcon />} onClose={handleClose}/>
-    
+      <CustomDialogTitle
+        title={title || messages['app.dashboard.selectAToken']}
+        icon={<MoneySendIcon />}
+        onClose={handleClose}
+      />
+
       <DialogContent style={{padding: 0}} ref={contentRef}>
         <div ref={searchBoxRef}>
           <Box mb={2} p={4}>

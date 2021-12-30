@@ -16,7 +16,7 @@ import {
 import IntlMessages from '@crema/utility/IntlMessages';
 import {toTokenUnitAmount} from '@0x/utils';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -44,14 +44,12 @@ export default (props: Props) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
   return (
     <Dialog {...props} disableBackdropClick>
       <CustomDialogTitle title={messages['nfts.sell.checkoutTitle']} />
-      {/* <DialogTitle>
-        <IntlMessages id='nfts.sell.checkoutTitle' />
-      </DialogTitle> */}
+
       <DialogContent dividers>
         <Box py={4}>
           <Grid container spacing={2}>

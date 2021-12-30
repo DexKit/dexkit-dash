@@ -15,6 +15,7 @@ import {ChangellyTransaction} from 'types/changelly';
 import ClearIcon from '@material-ui/icons/Clear';
 import {useSwapTransactions} from '../../hooks';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface Props {
   transactions: ChangellyTransaction[];
@@ -36,22 +37,14 @@ export const SwapHistoricDialog = (props: Props) => {
   const handleRemove = useCallback((transaction: ChangellyTransaction) => {
     remove(transaction.id);
   }, []);
-
+  const {messages} = useIntl();
   return (
     <Dialog fullWidth open={open} maxWidth='md' onClose={onClose}>
-      <CustomDialogTitle title={"Transactions"} onClose={onClose}/>
-      {/* <DialogTitle>
-        <Box
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
-          alignContent='center'>
-          <Typography variant='inherit'>Transactions</Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
+      <CustomDialogTitle
+        title={messages['app.dashboard.transactions']}
+        onClose={onClose}
+      />
+
       <Divider />
       <DialogContent dividers>
         {transactions.length > 0 ? (

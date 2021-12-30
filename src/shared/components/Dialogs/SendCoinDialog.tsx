@@ -24,6 +24,7 @@ import PasteIconButton from '../PasteIconButton';
 import {Token} from 'types/app';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import CustomDialogTitle from '../CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   imageIcon: {
@@ -112,12 +113,15 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
   }, [toToken, toAddress, toAmount]);
 
   const defaultUserAccount = useDefaultAccount();
-
+  const {messages} = useIntl();
   return (
     <>
       <Dialog {...props} onClose={onClose} fullWidth maxWidth='xs'>
-      <CustomDialogTitle title={"Send"} onClose={onClose}/>
-        
+        <CustomDialogTitle
+          title={messages['app.shared.send']}
+          onClose={onClose}
+        />
+
         <DialogContent dividers>
           {loading ? (
             <Box py={8}>

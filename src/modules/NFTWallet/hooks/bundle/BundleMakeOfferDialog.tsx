@@ -231,7 +231,6 @@ export default (props: Props) => {
 
   return (
     <Dialog fullScreen={isMobile} fullWidth open={open} onClose={handleClose}>
-      <CustomDialogTitle title={messages['nfts.wallet.makeOfferDialog']} />
       <DialogTitle>
         <Grid container alignItems='center' justify='space-between'>
           <Grid item>

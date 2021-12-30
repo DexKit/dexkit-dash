@@ -18,6 +18,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Tooltip} from '@material-ui/core';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -78,7 +79,7 @@ export const AboutDialog = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const {messages} = useIntl();
   return (
     <div>
       <Tooltip title={'Info about this page'}>
@@ -93,11 +94,11 @@ export const AboutDialog = () => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}>
+        <CustomDialogTitle
+          title={messages['app.nfTWallet.nftWallet']}
+          onClose={handleClose}
+        />
 
-          <CustomDialogTitle title={"NFT Wallet"} onClose={handleClose}/>
-        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          NFT Wallet
-        </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
             The NFT wallet page is home to all of the NFTs in your wallets. You

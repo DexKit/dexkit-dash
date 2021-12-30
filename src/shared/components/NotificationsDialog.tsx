@@ -19,6 +19,7 @@ import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
 import CustomDialogTitle from './CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -48,11 +49,15 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
       onClose({}, 'backdropClick');
     }
   }, [onClose]);
-
+  const {messages} = useIntl();
   return (
     <Dialog {...props} fullWidth maxWidth='sm'>
-      <CustomDialogTitle title={"Notifications"} icon={<NotificationOutlinedIcon className={classes.icon} />} onClose={handleClose}/>
-      
+      <CustomDialogTitle
+        title={messages['app.shared.notifications']}
+        icon={<NotificationOutlinedIcon className={classes.icon} />}
+        onClose={handleClose}
+      />
+
       <Divider />
       <DialogContent className={classes.noPadding}>
         {notifications.length > 0 ? (

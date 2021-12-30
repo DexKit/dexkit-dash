@@ -15,6 +15,8 @@ import {GiftIcon, RewardDialogIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -41,32 +43,15 @@ export const RewardDialog = (props: RewardDialogProps) => {
     },
     [onClose],
   );
-
+  const {messages} = useIntl();
   return (
     <Dialog {...dialogProps}>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <GiftIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              {' '}
-              <IntlMessages id='app.kittygotchi.collectReward' />
-            </Typography>
-          </Box>
-          <Box>
-            <IconButton size='small' onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        title={messages['app.kittygotchi.collectReward']}
+        icon={<GiftIcon className={classes.icon} />}
+        onClose={handleClose}
+      />
+
       <Divider />
       <DialogContent>
         <Box p={4}>

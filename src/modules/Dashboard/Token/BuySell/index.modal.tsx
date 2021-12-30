@@ -14,6 +14,7 @@ import BuySell from '.';
 import CloseIcon from '@material-ui/icons/Close';
 import {BitcoinConvertWhiteIcon} from 'shared/components/Icons';
 import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -42,7 +43,7 @@ export const BuySellModal = (props: Props) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const classes = useStyles();
-
+  const {messages} = useIntl();
   return (
     <Dialog
       maxWidth='sm'
@@ -50,27 +51,12 @@ export const BuySellModal = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-        <CustomDialogTitle title={"Trade"} icon={<BitcoinConvertWhiteIcon className={classes.icon} />} onClose={handleClose}/>
-      {/* <DialogTitle id='form-dialog-title'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box>
-            <Box display='flex' alignItems='center'>
-              <Box
-                mr={2}
-                display='flex'
-                alignItems='center'
-                justifyContent='center'>
-                <BitcoinConvertWhiteIcon className={classes.icon} />
-              </Box>
+      <CustomDialogTitle
+        title={messages['app.dashboard.trade']}
+        icon={<BitcoinConvertWhiteIcon className={classes.icon} />}
+        onClose={handleClose}
+      />
 
-              <Typography variant='body1'>Trade</Typography>
-            </Box>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle> */}
       <DialogContent dividers>
         <BuySell {...props} disableLimit />
       </DialogContent>

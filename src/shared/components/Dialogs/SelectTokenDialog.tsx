@@ -25,6 +25,7 @@ import SelectTokenListItem from './SelectTokenListItem';
 import {Token} from '../../../types/app';
 import {ChainId} from 'types/blockchain';
 import CustomDialogTitle from '../CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -115,11 +116,14 @@ export const SelectTokenDialog = (props: Props) => {
     },
     [],
   );
-
+  const {messages} = useIntl();
   return (
     <Dialog maxWidth='sm' fullWidth {...props} fullScreen={fullScreen}>
-      <CustomDialogTitle title={"Select a token"} onClose={handleClose}/>
-      
+      <CustomDialogTitle
+        title={messages['app.dashboard.selectAToken']}
+        onClose={handleClose}
+      />
+
       <DialogContent dividers className={classes.content}>
         <Box px={4} pt={4} pb={2}>
           <TextField
