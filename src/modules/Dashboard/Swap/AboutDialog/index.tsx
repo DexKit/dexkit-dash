@@ -16,6 +16,8 @@ import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Tooltip} from '@material-ui/core';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -76,7 +78,7 @@ export const AboutDialog = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const { messages } = useIntl();
   return (
     <div>
       <Button
@@ -91,9 +93,8 @@ export const AboutDialog = () => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}>
-        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-          Multichain Swap
-        </DialogTitle>
+          <CustomDialogTitle title={messages["dashboard.multiChainSwap"]} onClose={handleClose}/>
+       
         <DialogContent dividers>
           <Typography gutterBottom>
             Welcome to the Multichain Swap Page! Swap easily your BTC, ADA, ETH

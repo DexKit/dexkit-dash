@@ -18,6 +18,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 import {useWeb3} from 'hooks/useWeb3';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -49,7 +51,7 @@ const Receiver: React.FC<Props> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const {chainId} = useWeb3();
-
+  const { messages } = useIntl();
   return (
     <Dialog
       fullWidth
@@ -57,7 +59,8 @@ const Receiver: React.FC<Props> = (props) => {
       open={open}
       onClose={onClose}
       fullScreen={isMobile}>
-      <DialogTitle>
+        <CustomDialogTitle title={messages['app.receive']} icon={<ImportWhiteIcon className={classes.icon} />} onClose={handleClose}/>
+      {/* <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center'>
             <Box
@@ -85,7 +88,7 @@ const Receiver: React.FC<Props> = (props) => {
             </IconButton>
           </Box>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers>
         <ReceiverForm />
       </DialogContent>

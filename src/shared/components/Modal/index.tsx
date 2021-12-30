@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CustomDialogTitle from '../CustomDialogTitle';
 
 interface TotalBalanceProps {
   open: boolean;
@@ -21,7 +22,8 @@ const FormDialog: React.FC<TotalBalanceProps> = (props) => {
   return (
     <div>
       <Dialog open={open} onClose={onClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Transfer</DialogTitle>
+      <CustomDialogTitle title={"Transfer"} />
+        
         <DialogContent dividers>
           <TextField
             autoFocus

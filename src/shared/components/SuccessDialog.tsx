@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import {SuccessIcon} from './Icons';
+import CustomDialogTitle from './CustomDialogTitle';
 
 interface SuccessDialogProps extends DialogProps {
   icon: React.ReactNode | React.ReactNode[];
@@ -25,7 +26,8 @@ export function SuccessDialog(props: SuccessDialogProps) {
 
   return (
     <Dialog {...props} fullWidth maxWidth='sm'>
-      <DialogTitle>
+      <CustomDialogTitle title={title} icon={icon}/>
+      {/* <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex'>
             <Typography style={{fontWeight: 500}} variant='body1'>
@@ -36,7 +38,7 @@ export function SuccessDialog(props: SuccessDialogProps) {
             <Close />
           </IconButton>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={12}>

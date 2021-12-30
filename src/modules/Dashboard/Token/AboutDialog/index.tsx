@@ -12,6 +12,7 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import CloseIcon from '@material-ui/icons/Close';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -66,9 +67,10 @@ export const AboutDialog = (props: AboutDialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle id='about-dialog' onClose={handleClose}>
+      <CustomDialogTitle title={"Trading Page"} onClose={handleClose}/>
+      {/* <DialogTitle id='about-dialog' onClose={handleClose}>
         Trading Page
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers>
         <Typography variant='body1' gutterBottom>
           Welcome to the Trading Page! This is where you can place market and

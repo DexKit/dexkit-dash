@@ -18,6 +18,7 @@ import Close from '@material-ui/icons/Close';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {useMobile} from 'hooks/useMobile';
 import {NetworkCodes} from 'utils/blockchain';
+import CustomDialogTitle from './CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -70,7 +71,8 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
 
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='xs'>
-      <DialogTitle>
+      <CustomDialogTitle title={"Switch network"} icon={<SwapHorizIcon fontSize='inherit' />} onClose={handleClose}/>
+      {/* <DialogTitle>
         <Box
           display='flex'
           alignItems='center'
@@ -90,7 +92,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
             <Close />
           </IconButton>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <Divider />
       <List disablePadding>
         <ListItem

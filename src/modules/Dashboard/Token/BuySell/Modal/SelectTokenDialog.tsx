@@ -25,6 +25,7 @@ import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.sv
 import {useMobile} from 'hooks/useMobile';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useNetwork} from 'hooks/useNetwork';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 interface Props extends DialogProps {
   title?: string;
@@ -89,19 +90,8 @@ export const SelectTokenDialog = (props: Props) => {
       {...props}
       aria-labelledby='form-dialog-title'
       fullScreen={fullScreen}>
-      <DialogTitle id='form-dialog-title'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box display='flex' alignItems='center'>
-            <Box display='flex' pr={2}>
-              <MoneySendIcon />
-            </Box>
-            <Typography variant='body1'>{title || 'Select a token'}</Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+        <CustomDialogTitle title={title || 'Select a token'} icon={<MoneySendIcon />} onClose={handleClose}/>
+    
       <DialogContent style={{padding: 0}} ref={contentRef}>
         <div ref={searchBoxRef}>
           <Box mb={2} p={4}>

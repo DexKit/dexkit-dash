@@ -25,6 +25,7 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {getUnixDays} from 'modules/NFTWallet/utils';
 import {getOpenSeaPort} from 'utils/opensea';
 import {useTokens} from 'hooks/opensea';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   nftImage: {
@@ -230,6 +231,7 @@ export default (props: Props) => {
 
   return (
     <Dialog fullScreen={isMobile} fullWidth open={open} onClose={handleClose}>
+      <CustomDialogTitle title={messages['nfts.wallet.makeOfferDialog']} />
       <DialogTitle>
         <Grid container alignItems='center' justify='space-between'>
           <Grid item>

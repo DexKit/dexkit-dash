@@ -117,26 +117,7 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
         ) : (
           <Dialog open={accountsModal.showAccounts}>
             <CustomDialogTitle title={"Accounts"} icon={<WalletSearchIcon />} onClose={handleCloseAccounts}/>
-            {/* <DialogTitle>
-              <Box
-                display='flex'
-                alignItems='center'
-                justifyContent='space-between'>
-                <Box>
-                  <Grid container alignItems='center' spacing={2}>
-                    <Grid item>
-                      <WalletSearchIcon />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='body1'>Accounts</Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <IconButton onClick={handleCloseAccounts} size='small'>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </DialogTitle> */}
+            
             <Divider />
             <DialogContent className={classes.accountsDialgContent}>
               <Accounts />

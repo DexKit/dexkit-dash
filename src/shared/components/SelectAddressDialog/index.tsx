@@ -13,6 +13,7 @@ import React from 'react';
 import {WalletAddIcon} from '../Icons';
 import {SelectAccountListItem} from './SelectAddressListItem';
 import CloseIcon from '@material-ui/icons/Close';
+import CustomDialogTitle from '../CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -36,26 +37,9 @@ export const SelectAddressDialog = (props: SelectAddressDialogProps) => {
 
   return (
     <Dialog {...props} maxWidth='xs' fullWidth>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <WalletAddIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>Select an address</Typography>
-          </Box>
-          <Box>
-            <IconButton size='small' onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </DialogTitle>
+
+  <CustomDialogTitle title={"Select an address"} icon={<WalletAddIcon className={classes.icon} />} onClose={onClose}/>
+      
       <Divider />
       <List disablePadding>
         {accounts.map(

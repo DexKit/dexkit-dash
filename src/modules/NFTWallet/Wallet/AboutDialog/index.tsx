@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Tooltip} from '@material-ui/core';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -92,6 +93,8 @@ export const AboutDialog = () => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}>
+
+          <CustomDialogTitle title={"NFT Wallet"} onClose={handleClose}/>
         <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           NFT Wallet
         </DialogTitle>

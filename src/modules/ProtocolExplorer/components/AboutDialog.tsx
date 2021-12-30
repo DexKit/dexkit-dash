@@ -15,6 +15,8 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import Info from '@material-ui/icons/Info';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 interface Props extends DialogProps {
   textInfo: string;
@@ -29,9 +31,12 @@ export const AbountDialog = (props: Props) => {
     }
   }, [onClose]);
 
+  const { messages } = useIntl();
+
   return (
     <Dialog open={open}>
-      <DialogTitle>
+      <CustomDialogTitle title={messages['Receive']} icon={<Info/>} onClose={handleClose}/>
+      {/* <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center'>
             <Box
@@ -52,7 +57,7 @@ export const AbountDialog = (props: Props) => {
             </IconButton>
           </Box>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent>
         <Typography variant='body1'>{textInfo}</Typography>
       </DialogContent>

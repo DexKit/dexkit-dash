@@ -1,8 +1,9 @@
 import {DialogTitle, Box, Typography, IconButton} from '@material-ui/core';
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
+import { MessageFormatElement } from 'react-intl';
 interface Props {
-  title: string;
+  title: string | MessageFormatElement[];
   icon?: React.ReactNode | React.ReactNode[];
   onClose?: (e: any) => void;
 }

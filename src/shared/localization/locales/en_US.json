@@ -101,6 +101,7 @@
 
   "button.click_me": "Click Me",
   "dashboard.quickStats": "Quick Statistics",
+  "dashboard.multiChainSwap": "Multichain Swap",
   "dashboard.totalClients": "Total Clients",
   "dashboard.paidInvoices": "Paid Invoices",
   "dashboard.totalProjects": "Total Projects",
@@ -759,6 +760,7 @@
   "customizer.layoutTypes": "Layout Types",
   "sidebar.app.dashboard.analytics": "Analytics",
   "dashboard.favoriteCoins": "Favorite Coins",
+  "dashboard.favorites": "Favorites",
   "dashboard.analytics.welcome": "Welcome",
   "dashboard.analytics.eddieMassy": "Eddie Massy",
   "dashboard.analytics.salesState": "Sales State",

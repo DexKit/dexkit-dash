@@ -26,6 +26,8 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -63,9 +65,16 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
 
   const theme = useTheme();
 
+  const { messages } = useIntl();
+
   return (
     <Dialog {...dialogProps} maxWidth='xs' fullWidth>
-      <DialogTitle>
+      <CustomDialogTitle
+        title={messages['app.kittygotchi.minting']}
+        icon={<GavelIcon className={classes.icon} />}
+        onClose={handleClose}
+      />
+      {/* <DialogTitle>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Box display='flex' alignItems='center' alignContent='center'>
             <Box
@@ -86,7 +95,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             </IconButton>
           </Box>
         </Box>
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent dividers className={classes.content}>
         {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
           <Box p={4}>

@@ -15,6 +15,8 @@ import {
 
 import InfoIcon from '@material-ui/icons/Info';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 export interface ConfirmDialogProps extends DialogProps {
   onConfirm: () => void;
@@ -25,14 +27,11 @@ export default (props: ConfirmDialogProps) => {
   const {onConfirm, onCancel} = props;
 
   const theme = useTheme();
-
+  const { messages } = useIntl();
   return (
     <Dialog {...props}>
-      <DialogTitle>
-        <Typography variant='body1'>
-          <IntlMessages id='app.wizard.creatingCollection' />
-        </Typography>
-      </DialogTitle>
+      <CustomDialogTitle title={messages['app.wizard.creatingCollection']} />
+      
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid xs={12} item>

@@ -18,6 +18,7 @@ import {AppState} from 'redux/store';
 import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
+import CustomDialogTitle from './CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -50,27 +51,8 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
 
   return (
     <Dialog {...props} fullWidth maxWidth='sm'>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <NotificationOutlinedIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>Notifications</Typography>
-          </Box>
-          <IconButton onClick={handleClose} size='small'>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle title={"Notifications"} icon={<NotificationOutlinedIcon className={classes.icon} />} onClose={handleClose}/>
+      
       <Divider />
       <DialogContent className={classes.noPadding}>
         {notifications.length > 0 ? (

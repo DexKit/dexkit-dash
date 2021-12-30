@@ -23,6 +23,7 @@ import {Skeleton} from '@material-ui/lab';
 import PasteIconButton from '../PasteIconButton';
 import {Token} from 'types/app';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import CustomDialogTitle from '../CustomDialogTitle';
 
 const useStyles = makeStyles((theme) => ({
   imageIcon: {
@@ -115,18 +116,8 @@ export const SendCoinDialog = (props: SendCoinDialogProps) => {
   return (
     <>
       <Dialog {...props} onClose={onClose} fullWidth maxWidth='xs'>
-        <DialogTitle>
-          <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            alignContent='center'>
-            <Typography variant='inherit'>Send</Typography>
-            <IconButton size='small' onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </DialogTitle>
+      <CustomDialogTitle title={"Send"} onClose={onClose}/>
+        
         <DialogContent dividers>
           {loading ? (
             <Box py={8}>

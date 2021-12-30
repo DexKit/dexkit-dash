@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {Tooltip} from '@material-ui/core';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -91,9 +92,10 @@ export const AboutDialog = () => {
         onClose={handleClose}
         aria-labelledby='customized-dialog-title'
         open={open}>
-        <DialogTitle id='customized-dialog-title' onClose={handleClose}>
+          <CustomDialogTitle title={"Manage APPs page"} onClose={handleClose}/>
+        {/* <DialogTitle id='customized-dialog-title' onClose={handleClose}>
           Manage APPs page
-        </DialogTitle>
+        </DialogTitle> */}
         <DialogContent dividers>
           <Typography gutterBottom>
             The Manage section is where KITcrew members that hold at least 500

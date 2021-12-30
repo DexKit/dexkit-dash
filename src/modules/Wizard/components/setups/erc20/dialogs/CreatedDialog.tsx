@@ -21,6 +21,8 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -61,30 +63,11 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
   }, [chainId, transactionHash]);
-
+  const { messages } = useIntl();
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <CheckCircleOutlineIcon className={clsx(classes.icon)} />
-            </Box>
-            <Typography variant='body1'><IntlMessages id='app.wizard.transactionCreated' /></Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle title={messages['app.wizard.transactionCreated']} icon={<CheckCircleOutlineIcon className={clsx(classes.icon)} />} onClose={handleClose}/>
+      
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>

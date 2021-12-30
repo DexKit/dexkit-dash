@@ -23,6 +23,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import {useWeb3} from 'hooks/useWeb3';
 import {getNetworkName} from 'shared/constants/Bitquery';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -59,34 +61,17 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
       onClose({}, 'backdropClick');
     }
   }, [onClose]);
-
+  const {messages} = useIntl();
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <DollarSquareIcon
-                className={clsx(classes.icon, classes.iconSmall)}
-              />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='app.wizard.creatingToken' />
-            </Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        title={messages['app.wizard.creatingToken']}
+        icon={
+          <DollarSquareIcon className={clsx(classes.icon, classes.iconSmall)} />
+        }
+        onClose={handleClose}
+      />
+      
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>

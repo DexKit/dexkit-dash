@@ -37,6 +37,8 @@ import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import ReplayIcon from '@material-ui/icons/Replay';
 import IntlMessages from '@crema/utility/IntlMessages';
+import CustomDialogTitle from 'shared/components/CustomDialogTitle';
+import { useIntl } from 'react-intl';
 
 interface CreatingCollectionBackdropProps extends DialogProps {
   step: ContractStatus;
@@ -96,32 +98,11 @@ export const CreatingCollectionDialog = (
       onClose({}, 'backdropClick');
     }
   }, [onClose]);
-
+  const { messages } = useIntl();
   return (
     <Dialog {...props}>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              mr={2}
-              display='flex'
-              alignItems='center'
-              alignContent='center'>
-              <NoteAddIcon className={clsx(classes.icon)} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='app.wizard.createCollection' />
-            </Typography>
-          </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle title={messages['app.wizard.createCollection']} icon={<NoteAddIcon className={clsx(classes.icon)} />} onClose={handleClose}/>
+      
       <DialogContent>
         <Stepper activeStep={step} orientation='vertical'>
           <Step>

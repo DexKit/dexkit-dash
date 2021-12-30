@@ -32,6 +32,7 @@ import {hasLondonHardForkSupport} from 'utils/blockchain';
 import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {Alert} from '@material-ui/lab';
+import CustomDialogTitle from './CustomDialogTitle';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -206,27 +207,8 @@ export const TransactionConfirmDialog = (
 
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
-      <DialogTitle>
-        <Box
-          display='flex'
-          alignItems='center'
-          alignContent='center'
-          justifyContent='space-between'>
-          <Box alignContent='center' alignItems='center' display='flex'>
-            <Box mr={2}>
-              <Typography variant='body1'>
-                <ReceiptTextIcon />
-              </Typography>
-            </Box>
-            <Typography variant='body1' style={{fontWeight: 500}}>
-              Confirm transaction
-            </Typography>
-          </Box>
-          <IconButton onClick={handleCancel} size='small'>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle title={"Confirm transaction"} icon={<ReceiptTextIcon />} onClose={handleCancel}/>
+      
       <DialogContent dividers>
         <Grid container spacing={4}>
           <Grid item xs={12}>
