@@ -1,3 +1,4 @@
+import {useIntl} from 'react-intl';
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TradeAllHistoryContainer from 'modules/History/TradeAllHistory/container';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
@@ -5,8 +6,6 @@ import React, {useMemo, useState, useCallback} from 'react';
 import {useHistory} from 'react-router-dom';
 import NetworkChips from 'shared/components/NetworkChips';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
-
-import {useIntl} from 'react-intl';
 
 import {
   Box,
@@ -22,6 +21,8 @@ import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-sea
 import Close from '@material-ui/icons/Close';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {TransferTab} from './TransfersTab';
+
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import TransactionsTab from './TransactionsTab';
 
 const TAB_TRANSACTIONS = 'TAB_TRANSACTIONS';
@@ -37,6 +38,7 @@ type Props = {
 
 export const TradeHistoryTab = (props: Props) => {
   const history = useHistory();
+  const {messages} = useIntl();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
   }, [history.location.search]);
@@ -46,7 +48,7 @@ export const TradeHistoryTab = (props: Props) => {
       EthereumNetwork.ethereum,
   );
   const {address, token, enableNetworkChips = true} = props;
-  const {messages} = useIntl();
+
   const onChangeNetwork = (net: EthereumNetwork | 'all') => {
     const searchParams = new URLSearchParams(history.location.search);
     searchParams.set('network', net);
@@ -88,7 +90,9 @@ export const TradeHistoryTab = (props: Props) => {
                         <FilterSearchIcon />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body1'>Filter</Typography>
+                        <Typography variant='body1'>
+                          <IntlMessages id='app.dashboard.filter' />
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -104,7 +108,7 @@ export const TradeHistoryTab = (props: Props) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             {enableNetworkChips ? (
@@ -126,7 +130,7 @@ export const TradeHistoryTab = (props: Props) => {
             spacing={2}
             justify='space-between'
             alignItems='baseline'>
-            <Grid item></Grid>
+            <Grid item />
             <Grid item>
               <Grid container spacing={4}>
                 <Grid item>

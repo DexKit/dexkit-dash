@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
@@ -32,9 +34,9 @@ function CardInfoPlayersSkeleton(): JSX.Element {
       <Grid
         container
         className={classes.innerContent}
-        justifyContent={'center'}
-        alignItems={'center'}
-        alignContent={'center'}>
+        justifyContent='center'
+        alignItems='center'
+        alignContent='center'>
         <Grid item xs={12}>
           <Paper>
             <Box display={'flex'} justifyContent={'center'} p={2}>
@@ -42,7 +44,8 @@ function CardInfoPlayersSkeleton(): JSX.Element {
               <Skeleton>
                 <Typography>
                   &nbsp;
-                  {`PLAYERS ${0} (${10})`}
+                  <IntlMessages id='app.coinLeagues.players' />
+                  {` ${0} (${10})`}
                 </Typography>
               </Skeleton>
             </Box>

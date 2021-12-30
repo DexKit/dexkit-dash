@@ -1,6 +1,7 @@
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants';
 import React from 'react';
-import {TickerTape} from 'react-ts-tradingview-widgets';
+
+import { MaticPriceFeeds } from 'modules/CoinLeagues/constants';
+import { TickerTape } from 'react-ts-tradingview-widgets';
 
 const TickerTapeTV = () => {
   const symbols = MaticPriceFeeds.filter((s) => s.tv).map((s) => {
@@ -9,6 +10,7 @@ const TickerTapeTV = () => {
       title: (s.tv as string).split(':')[1],
     };
   });
+
   return (
     <>
       <TickerTape

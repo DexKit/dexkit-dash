@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
 import {useWeb3} from 'hooks/useWeb3';
 import {getNetworkName} from 'shared/constants/Bitquery';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -77,7 +78,9 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
                 className={clsx(classes.icon, classes.iconSmall)}
               />
             </Box>
-            <Typography variant='body1'>Creating token</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.wizard.creatingToken' />
+            </Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -98,10 +101,10 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               />
             </Box>
             <Typography align='center' variant='h5'>
-              Creating Token
+              <IntlMessages id='app.wizard.creatingToken' />
             </Typography>
             <Typography align='center' variant='body1'>
-              Please, check your token settings
+              <IntlMessages id='app.wizard.pleaseCheckYourToken' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -114,7 +117,9 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
-              <Typography variant='body1'>Network</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.wizard.network' />
+              </Typography>
               <Typography variant='body1'>{getNetworkName(chainId)}</Typography>
             </Box>
             <Box
@@ -123,7 +128,9 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
-              <Typography variant='body1'>Token name</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.wizard.tokenName' />
+              </Typography>
               <Typography variant='body1'>{data.name}</Typography>
             </Box>
             <Box
@@ -132,7 +139,9 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
-              <Typography variant='body1'>Symbol</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.wizard.symbol' />
+              </Typography>
               <Typography variant='body1'>{data.symbol}</Typography>
             </Box>
             <Box
@@ -140,7 +149,9 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
               alignItems='center'
               alignContent='center'
               justifyContent='space-between'>
-              <Typography variant='body1'>Total supply</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.wizard.totalSupply' />
+              </Typography>
               <Typography variant='body1'>{data.supply}</Typography>
             </Box>
           </Grid>
@@ -157,10 +168,10 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
           onClick={onConfirm}
           variant='contained'
           color='primary'>
-          Create
+          <IntlMessages id='app.wizard.create' />
         </Button>
         <Button disabled={pending} onClick={handleClose} variant='contained'>
-          Cancel
+          <IntlMessages id='app.wizard.cancel' />
         </Button>
       </DialogActions>
     </Dialog>

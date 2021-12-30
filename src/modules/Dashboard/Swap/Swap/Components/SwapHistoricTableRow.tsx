@@ -1,18 +1,18 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
-import {
-  TableCell,
-  TableRow,
-  Link,
-  IconButton,
-  Grid,
-  Typography,
-} from '@material-ui/core';
 import moment from 'moment';
-import {ChangellyTransaction} from 'types/changelly';
+
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import { ChangellyTransaction } from 'types/changelly';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   transaction: ChangellyTransaction | null;
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const SwapHistoricTableRow = (props: Props) => {
-  const {transaction, onClick, onRemove} = props;
+  const { transaction, onClick, onRemove } = props;
   const [removing, setRemoving] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -49,7 +49,7 @@ export const SwapHistoricTableRow = (props: Props) => {
   return (
     <TableRow hover>
       <TableCell>
-        <Link style={{cursor: 'pointer'}} onClick={handleClick}>
+        <Link style={{ cursor: 'pointer' }} onClick={handleClick}>
           {transaction?.id}
         </Link>
       </TableCell>
@@ -71,7 +71,7 @@ export const SwapHistoricTableRow = (props: Props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography align='center' variant='caption'>
-                Please, confirm
+                <IntlMessages id='app.dashboard.pleaseConfirm' />
               </Typography>
             </Grid>
             <Grid item>

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -45,7 +47,8 @@ function CardInfoPlayers(props: Props): JSX.Element {
               <People />
               <Typography>
                 &nbsp;
-                {`PLAYERS ${current_players} (${num_players})`}{' '}
+                <IntlMessages id='app.coinLeagues.players' />
+                {` ${current_players} (${num_players})`}{' '}
               </Typography>
             </Box>
           </Paper>

@@ -1,3 +1,4 @@
+import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Box,
   Card,
@@ -39,7 +40,7 @@ export default (props: Props) => {
               <Grid container spacing={8}>
                 <Grid item xs={12}>
                   <Typography align='center' variant='h5'>
-                    What type of smart contract do you need?
+                  <IntlMessages id="app.wizard.typeOfSmartContract" />
                   </Typography>
                 </Grid>
               </Grid>
@@ -48,14 +49,14 @@ export default (props: Props) => {
             <CardContent>
               <Box display='flex' justifyContent='space-between'>
                 <Button onClick={handleCancel} variant='outlined'>
-                  Cancel
+                <IntlMessages id="app.wizard.cancel" />
                 </Button>
                 <Button
                   color='primary'
                   disabled={selectedSlug === ''}
                   onClick={handleNext}
                   variant='contained'>
-                  Next
+                  <IntlMessages id="app.wizard.next" />
                 </Button>
               </Box>
             </CardContent>

@@ -1,11 +1,11 @@
-import {BigNumber} from '@ethersproject/bignumber';
-import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
-import {useQuery} from 'react-query';
-import {getTokenBalances} from 'services/multicall';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
-import {Token} from 'types/app';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from '@ethersproject/bignumber';
+import { useNetworkProvider } from 'hooks/provider/useNetworkProvider';
+import { useQuery } from 'react-query';
+import { getTokenBalances } from 'services/multicall';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { DEXKIT, BITTOKEN } from 'shared/constants/tokens';
+import { Token } from 'types/app';
+import { ChainId } from 'types/blockchain';
 import {
   BITTOKEN_MULTIPLIER_HOLDING,
   DEXKIT_MULTIPLIER_HOLDING,

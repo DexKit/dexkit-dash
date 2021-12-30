@@ -14,6 +14,7 @@ import {
 import {GiftIcon, RewardDialogIcon} from 'shared/components/Icons';
 
 import CloseIcon from '@material-ui/icons/Close';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -54,7 +55,10 @@ export const RewardDialog = (props: RewardDialogProps) => {
               mr={2}>
               <GiftIcon className={classes.icon} />
             </Box>
-            <Typography variant='body1'>Collect reward</Typography>
+            <Typography variant='body1'>
+              {' '}
+              <IntlMessages id='app.kittygotchi.collectReward' />
+            </Typography>
           </Box>
           <Box>
             <IconButton size='small' onClick={handleClose}>
@@ -78,10 +82,10 @@ export const RewardDialog = (props: RewardDialogProps) => {
             </Grid>
             <Grid item xs={12}>
               <Typography align='center' variant='h5'>
-                You won 300 KIT
+                <IntlMessages id='app.kittygotchi.youWon' />
               </Typography>
               <Typography align='center' variant='body1'>
-                Review this text
+                <IntlMessages id='app.kittygotchi.reviewThisText' />
               </Typography>
             </Grid>
           </Grid>

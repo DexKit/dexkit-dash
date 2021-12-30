@@ -17,6 +17,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {Alert} from '@material-ui/lab';
 import {isValidURL} from 'utils/browser';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 
 interface CollectionStepProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -48,6 +50,8 @@ export const CollectionStep = (props: CollectionStepProps) => {
     return true;
   }, [values, collectionImage]);
 
+  const {messages} = useIntl();
+
   return (
     <Grid container spacing={4} justify='center'>
       <Grid item xs={12} sm={10}>
@@ -72,7 +76,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                 {!collectionImage ? (
                   <Grid item xs={12}>
                     <Alert severity='warning'>
-                      Select an image for your collection
+                      <IntlMessages id='app.wizard.selectAnImageForYourCollection' />
                     </Alert>
                   </Grid>
                 ) : null}
@@ -90,7 +94,8 @@ export const CollectionStep = (props: CollectionStepProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='The name of your collection'>
+                          <Tooltip
+                            title={messages['app.wizard.nameOfYourCollection']}>
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -111,7 +116,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='Symbol used to identify the collection in the blockchain'>
+                          <Tooltip title={messages['app.wizard.symbolUsedToIdentifyTheCollection']}>
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -147,7 +152,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>
-                          <Tooltip title='URL used by the users to learn more information about the collection.'>
+                          <Tooltip title={messages["app.wizard.URLUsedByTheUsersToLearnMoreInfo"]} >
                             <HelpIcon />
                           </Tooltip>
                         </InputAdornment>
@@ -171,7 +176,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                 startIcon={<ArrowBackIcon />}
                 onClick={onBack}
                 variant='outlined'>
-                Back
+                <IntlMessages id='app.wizard.back' />
               </Button>
               <Button
                 disabled={!isFormValid()}
@@ -179,7 +184,7 @@ export const CollectionStep = (props: CollectionStepProps) => {
                 onClick={onNext}
                 variant='contained'
                 color='primary'>
-                Next
+                <IntlMessages id='app.wizard.next' />
               </Button>
             </Box>
           </Box>

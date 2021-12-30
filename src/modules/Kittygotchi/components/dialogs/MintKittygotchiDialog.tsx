@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId} from 'types/blockchain';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -75,7 +76,9 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
               mr={2}>
               <GavelIcon className={classes.icon} />
             </Box>
-            <Typography variant='body1'>Minting your Kittygotchi</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.kittygotchi.minting' />
+            </Typography>
           </Box>
           <Box>
             <IconButton disabled={loading} size='small' onClick={handleClose}>
@@ -89,8 +92,9 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
           <Box p={4}>
             <Alert severity='info'>
               <Typography variant='body2'>
-                Connect to <strong>Polygon(MATIC)</strong> network to create a
-                Kittygotchi
+                <IntlMessages id='app.kittygotchi.connectTo' />{' '}
+                <strong>Polygon(MATIC)</strong>{' '}
+                <IntlMessages id='app.kittygotchi.netToCreateKitty' />
               </Typography>
             </Alert>
           </Box>
@@ -100,14 +104,13 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Minting your Kittygotchi
+                  <IntlMessages id='app.kittygotchi.minting' />
                 </Typography>
                 <Typography
                   color='textSecondary'
                   align='center'
                   variant='body1'>
-                  Please, sign the transaction in your wallet and wait for
-                  confirmation.
+                  <IntlMessages id='app.kittygotchi.pleaseSign' />
                 </Typography>
               </Grid>
             </Grid>
@@ -115,14 +118,15 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Creating your Kittygotchi
+                  <IntlMessages id='app.kittygotchi.creatingYour' />
                 </Typography>
                 <Typography
                   color='textSecondary'
                   align='center'
                   variant='body1'>
-                  You will need <strong>10 MATIC</strong> tokens in your wallet
-                  to create one Kittygotchi.
+                  <IntlMessages id='app.kittygotchi.willNeed' />{' '}
+                  <strong>10 MATIC</strong>{' '}
+                  <IntlMessages id='app.kittygotchi.tokensInYourWallet' />
                 </Typography>
               </Grid>
             </Grid>
@@ -142,13 +146,13 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
           color='primary'
           variant='contained'
           disabled={loading}>
-          Confirm
+          <IntlMessages id='app.kittygotchi.confirm' />
         </Button>
         <Button
           disabled={loading}
           onClick={handleClose}
           startIcon={<CancelIcon />}>
-          Cancel
+          <IntlMessages id='app.kittygotchi.cancel' />
         </Button>
       </DialogActions>
     </Dialog>

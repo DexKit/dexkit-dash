@@ -1,3 +1,7 @@
+import React, {useCallback} from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Box from '@material-ui/core/Box';
 import Dialog, {DialogProps} from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -6,7 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React, {useCallback} from 'react';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {Token} from 'types/app';
 import {MyBalances} from 'types/blockchain';
@@ -61,7 +64,9 @@ export const BuySellModal = (props: Props) => {
                 <BitcoinConvertWhiteIcon className={classes.icon} />
               </Box>
 
-              <Typography variant='body1'>Trade</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.dashboard.trade' />
+              </Typography>
             </Box>
           </Box>
           <IconButton size='small' onClick={handleClose}>

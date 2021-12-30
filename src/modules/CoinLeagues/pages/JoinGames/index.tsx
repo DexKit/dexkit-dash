@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Badge,
   Breadcrumbs,
@@ -45,7 +47,6 @@ import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import { useToggler } from 'hooks/useToggler';
-import { useIntl } from 'react-intl';
 import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 
@@ -56,13 +57,15 @@ const JoinGames = () => {
   const history = useHistory();
   const { account, chainId } = useWeb3();
   const defaultAccount = useDefaultAccount();
+
+  const { messages } = useIntl();
+
   useDiscord();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const { messages } = useIntl();
   const filtersState = useGamesFilters();
 
   const waitingGamesQuery = useCoinLeagueGames({
@@ -152,12 +155,12 @@ const JoinGames = () => {
           <Grid container>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                Dashboard
+                <IntlMessages id='app.coinLeagues.dashboard' />
               </Link>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                Games
+                <IntlMessages id='app.coinLeagues.games' />
               </Link>
-              <Typography>Discover Games</Typography>
+              <Typography>  <IntlMessages id='app.coinLeagues.discoverGames' /></Typography>
             </Breadcrumbs>
           </Grid>
         </Grid>
@@ -172,7 +175,7 @@ const JoinGames = () => {
         </Hidden>
         <Grid item xs={6} sm={3} xl={3}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5'>Discover Games</Typography>
+            <Typography variant='h5'>  <IntlMessages id='app.coinLeagues.discoverGames' /></Typography>
             <Box p={2}>
               <FormControl>
                 <Select
@@ -219,7 +222,7 @@ const JoinGames = () => {
           <ContainedInput
             value={search}
             onChange={handleSearch}
-            placeholder='Search'
+            placeholder={messages['app.coinLeagues.search'] as string}
             startAdornment={
               <InputAdornment position='start'>
                 <Search />
@@ -236,7 +239,7 @@ const JoinGames = () => {
             justifyContent='space-between'
             spacing={2}>
             <Grid item>
-              <Typography variant='h6'>Games To Join</Typography>
+              <Typography variant='h6'><IntlMessages id='app.coinLeagues.gamesToJoin' /></Typography>
             </Grid>
             <Grid item>
               <Grid container justifyContent='center' spacing={2}>
@@ -322,8 +325,10 @@ const JoinGames = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games to join'}
-                  message={'Ask Admin to create games to join'}
+                  title={messages['app.coinLeagues.noGamesJoin'] as string}
+                  message={
+                    messages['app.coinLeagues.askAdminCreateGamesJoin'] as string
+                  }
                 />
               </Grid>
             )}

@@ -1,22 +1,22 @@
-import React, {useState, useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {
-  Chip,
-  Box,
-  Grid,
-  Typography,
-  Drawer,
-  IconButton,
-  Divider,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Badge,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import Badge from '@material-ui/core/Badge';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {useTheme} from '@material-ui/core';
 
 import {MyBalances} from 'types/blockchain';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -27,6 +27,7 @@ import {Search} from '@material-ui/icons';
 import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import NFTList from './NFTList';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface AssetTableProps {
   balances?: MyBalances[];
@@ -117,6 +118,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
   }, []);
 
   const theme = useTheme();
+  const {messages} = useIntl();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -144,7 +146,9 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                         <FilterSearchIcon style={{}} />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body1'>Filter</Typography>
+                        <Typography variant='body1'>
+                          <IntlMessages id='app.dashboard.filter' />
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -160,7 +164,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -168,7 +172,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                 <Grid item>
                   <Chip
                     style={{marginRight: 10}}
-                    label='All'
+                    label={messages['app.dashboard.all'] as string}
                     size='small'
                     clickable
                     variant={filter === 'all' ? 'default' : 'outlined'}
@@ -210,7 +214,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
               <ContainedInput
                 value={search}
                 onChange={handleChange}
-                placeholder='Search'
+                placeholder={messages['app.coinLeagues.search'] as string}
                 startAdornment={
                   <InputAdornment position='start'>
                     <Search />
@@ -221,19 +225,25 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             </Grid>
             <Grid item xs={12}>
               <FormControl variant='outlined' fullWidth>
-                <InputLabel>Order by</InputLabel>
+                <InputLabel>
+                  <IntlMessages id='app.dashboard.orderBy' />
+                </InputLabel>
                 <Select
                   style={{backgroundColor: 'transparent'}}
-                  label='Order by'
+                  label={messages['app.dashboard.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
                   onChange={handleOrderByChange}
                   fullWidth>
-                  <MenuItem value={TokenOrderBy.Name}>Name</MenuItem>
-                  <MenuItem value={TokenOrderBy.TokenAmount}>
-                    Token amount
+                  <MenuItem value={TokenOrderBy.Name}>
+                    <IntlMessages id='app.dashboard.name' />
                   </MenuItem>
-                  <MenuItem value={TokenOrderBy.UsdAmount}>USD Amount</MenuItem>
+                  <MenuItem value={TokenOrderBy.TokenAmount}>
+                    <IntlMessages id='app.dashboard.tokenAmount' />
+                  </MenuItem>
+                  <MenuItem value={TokenOrderBy.UsdAmount}>
+                    USD <IntlMessages id='app.dashboard.amount' />
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -249,7 +259,8 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
             alignItems='baseline'>
             <Grid item xs={isMobile ? 12 : undefined}>
               <Typography variant='body1' style={{fontWeight: 600}}>
-                {filteredBalances.length} Collections
+                {filteredBalances.length}{' '}
+                <IntlMessages id='app.dashboard.collections' />
               </Typography>
             </Grid>
             <Grid item xs={isMobile ? 12 : undefined}>
@@ -264,7 +275,7 @@ const NFTTable: React.FC<AssetTableProps> = ({balances, loading}) => {
                         <Search />
                       </InputAdornment>
                     }
-                    placeholder='Search'
+                    placeholder={messages['app.coinLeagues.search'] as string}
                   />
                 </Grid>
                 <Grid item>

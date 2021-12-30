@@ -1,27 +1,27 @@
-import React, {useCallback, useState, useMemo} from 'react';
-import {useTheme} from '@material-ui/core/styles';
+import React, { useCallback, useState, useMemo } from 'react';
+import { useTheme } from '@material-ui/core/styles';
+import { useIntl } from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
 
-import {
-  Dialog,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  IconButton,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import { DialogProps } from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import {VariableSizeList} from 'react-window';
-import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
-import {CoinFeed} from 'modules/CoinLeagues/utils/types';
-import {SelectCoinListItem} from './SelectCoinItem';
-import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {ChainId} from 'types/blockchain';
+import { VariableSizeList } from 'react-window';
+import { ReactComponent as MoneySendIcon } from 'assets/images/icons/money-send.svg';
+import { CoinFeed } from 'modules/CoinLeagues/utils/types';
+import { SelectCoinListItem } from './SelectCoinItem';
+import { PriceFeeds } from 'modules/CoinLeagues/constants';
+import { ChainId } from 'types/blockchain';
 
 interface Props extends DialogProps {
   title?: string;
@@ -32,11 +32,12 @@ interface Props extends DialogProps {
 }
 
 export const SelectCoinLeagueDialog = (props: Props) => {
-  const {onSelectCoin, onClose, chainId, selectedCoins, isCaptainCoin} =
+  const { onSelectCoin, onClose, chainId, selectedCoins, isCaptainCoin } =
     props;
   // TODO: Change to Mainnet
   const coins = PriceFeeds[chainId];
   const theme = useTheme();
+  const { messages } = useIntl();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [filterText, setFilterText] = useState('');
 
@@ -88,7 +89,9 @@ export const SelectCoinLeagueDialog = (props: Props) => {
               <MoneySendIcon />
             </Box>
             <Typography variant='body1'>
-              {isCaptainCoin ? 'Select Captain Coin' : 'Select a Coin'}
+              {isCaptainCoin
+                ? messages['app.coinLeagues.selectCaptainCoin']
+                : messages['app.coinLeagues.selectCoin']}
             </Typography>
           </Box>
           <IconButton onClick={handleClose}>
@@ -102,7 +105,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder='Search tokens'
+            placeholder={messages['app.coinLeagues.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -110,7 +113,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
           />
         </Box>
         {filteredCoins.length === 0 ? (
-          <Typography variant='body1'>No coins found</Typography>
+          <Typography variant='body1'> <IntlMessages id='app.coinLeagues.noCoinsFound' /></Typography>
         ) : (
           <List>
             <VariableSizeList
@@ -119,7 +122,7 @@ export const SelectCoinLeagueDialog = (props: Props) => {
               itemCount={filteredCoins.length}
               width='100%'
               height={250}>
-              {({index, data, style}) => (
+              {({ index, data, style }) => (
                 <SelectCoinListItem
                   style={style}
                   onClick={handleSelectCoin}

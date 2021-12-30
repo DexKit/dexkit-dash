@@ -81,7 +81,7 @@ const TableItem: React.FC<Props> = ({data}) => {
 
       <TableCell align='left' className={classes.tableCell}>
         <Box display='flex' alignItems='center'>
-          <Tooltip title={messages['app.viewTx']} placement='top'>
+          <Tooltip title={messages['app.affiliate.viewTx']} placement='top'>
             <a
               href={`${ETHERSCAN_API_URL(chainId)}/tx/${
                 data.transaction?.hash
@@ -98,7 +98,8 @@ const TableItem: React.FC<Props> = ({data}) => {
                     marginRight: '5px',
                     marginBottom: '5px',
                   }}
-                  src='/images/etherescan.png'></Avatar>
+                  src='/images/etherescan.png'
+                />
               ) : (
                 <Avatar
                   style={{
@@ -109,7 +110,8 @@ const TableItem: React.FC<Props> = ({data}) => {
                     marginRight: '5px',
                     marginBottom: '5px',
                   }}
-                  src='/images/bscscan-logo-circle.png'></Avatar>
+                  src='/images/bscscan-logo-circle.png'
+                />
               )}
             </a>
           </Tooltip>

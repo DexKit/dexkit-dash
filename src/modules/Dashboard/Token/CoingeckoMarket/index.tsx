@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Grid, Typography} from '@material-ui/core';
+import { Avatar, Grid, Typography } from '@material-ui/core';
 // import Revenue from 'assets/images/dashboard/auther_sales.png';
 // import SalesIcon from 'assets/images/dashboard/all_time_sales.png';
 // import Comission from 'assets/images/dashboard/commission_sale.png';
@@ -7,15 +7,17 @@ import VolumeIcon from 'assets/images/metricsIcons/volume.png';
 import MarkitIcon from 'assets/images/metricsIcons/market-cap.png';
 import LowIcon from 'assets/images/metricsIcons/low-price.png';
 import HighIcon from 'assets/images/metricsIcons/high-price.png';
-import {CoinDetailCoinGecko} from 'types/coingecko';
-import {Skeleton} from '@material-ui/lab';
+import { CoinDetailCoinGecko } from 'types/coingecko';
+import { Skeleton } from '@material-ui/lab';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   data: CoinDetailCoinGecko | undefined;
   loading?: boolean;
 }
 
-const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
+const CoingeckoMarket: React.FC<Props> = ({ data, loading }) => {
+
   return (
     <Grid
       container
@@ -29,7 +31,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
             <Avatar
               src={MarkitIcon}
               alt='icon'
-              style={{height: 38, width: 38}}
+              style={{ height: 38, width: 38 }}
             />
           </Grid>
           <Grid item>
@@ -40,7 +42,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>Market Cap</Typography>
+                <Typography variant='caption'>
+                  <IntlMessages id='app.dashboard.marketCap' />
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.market_cap?.usd ?? '-'}
                 </Typography>
@@ -56,7 +60,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
             <Avatar
               src={VolumeIcon}
               alt='icon'
-              style={{height: 38, width: 38}}
+              style={{ height: 38, width: 38 }}
             />
           </Grid>
           <Grid item>
@@ -67,7 +71,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>Volume</Typography>
+                <Typography variant='caption'>
+                  <IntlMessages id='app.dashboard.volume' />
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.total_volume?.usd ?? '-'}
                 </Typography>
@@ -79,7 +85,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
       <Grid item>
         <Grid container spacing={2} alignItems='center' alignContent='center'>
           <Grid item>
-            <Avatar src={HighIcon} alt='icon' style={{height: 38, width: 38}} />
+            <Avatar src={HighIcon} alt='icon' style={{ height: 38, width: 38 }} />
           </Grid>
           <Grid item>
             {loading ? (
@@ -89,7 +95,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>24 Hour High</Typography>
+                <Typography variant='caption'>
+                  <IntlMessages id='app.dashboard.24hourHigh' />
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.high_24h?.usd ?? '-'}
                 </Typography>
@@ -101,7 +109,7 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
       <Grid item>
         <Grid container spacing={2} alignItems='center' alignContent='center'>
           <Grid item>
-            <Avatar src={LowIcon} alt='icon' style={{height: 38, width: 38}} />
+            <Avatar src={LowIcon} alt='icon' style={{ height: 38, width: 38 }} />
           </Grid>
           <Grid item>
             {loading ? (
@@ -111,7 +119,9 @@ const CoingeckoMarket: React.FC<Props> = ({data, loading}) => {
               </>
             ) : (
               <>
-                <Typography variant='caption'>24 Hour Low</Typography>
+                <Typography variant='caption'>
+                  <IntlMessages id='app.dashboard.24hourHigh' />
+                </Typography>
                 <Typography variant='h5'>
                   ${data?.market_data?.low_24h?.usd ?? '-'}
                 </Typography>

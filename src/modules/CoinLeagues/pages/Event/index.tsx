@@ -1,7 +1,10 @@
 import React, {useCallback} from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
-  Button,
   Box,
+  Button,
   Grid,
   Paper,
   Typography,
@@ -11,8 +14,6 @@ import {
 } from '@material-ui/core';
 
 import {ethers} from 'ethers';
-
-import IntlMessages from '@crema/utility/IntlMessages';
 
 import moment from 'moment';
 

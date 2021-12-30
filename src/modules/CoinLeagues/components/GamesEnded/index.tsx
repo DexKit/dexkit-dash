@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {Grid} from '@material-ui/core';
 
 import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
@@ -21,6 +23,7 @@ interface Props {
 export const GamesEnded = (props: Props) => {
   const {search, filters} = props;
   const {account} = useWeb3();
+  const {messages} = useIntl();
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
 
@@ -95,7 +98,7 @@ export const GamesEnded = (props: Props) => {
               game={g}
               id={g.id}
               onClick={onClickEnterGame}
-              btnMessage={'VIEW GAME'}
+              btnMessage={messages['app.coinLeagues.viewGame'] as string}
             />
           </Grid>
         ))}
@@ -109,8 +112,8 @@ export const GamesEnded = (props: Props) => {
           <Grid item xs={12}>
             <Empty
               image={<EmptyGame />}
-              title={'No history'}
-              message={'Join and play games'}
+              title={messages['app.coinLeagues.noHistory'] as string}
+              message={messages['app.coinLeagues.joinAndPlayGames'] as string}
             />
           </Grid>
         )}

@@ -1,6 +1,6 @@
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants';
+import { MaticPriceFeeds } from 'modules/CoinLeagues/constants';
 import React from 'react';
-import {AdvancedRealTimeChart} from 'react-ts-tradingview-widgets';
+import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
 
 interface Props{
   symbol?: string;

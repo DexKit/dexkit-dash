@@ -1,5 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
@@ -33,6 +36,7 @@ import Badge from '@material-ui/core/Badge';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import CopyButton from 'shared/components/CopyButton';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -121,6 +125,7 @@ const USD_POWER_NUMBER = 10 ** 8;
 function PlayersTable(props: Props): JSX.Element {
   const {id, account, finished, hideCoins, type, data} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
   const {chainId} = useWeb3();
   const [coins, setCoins] = useState([]);
   const [selectedCaptainCoin, setSelectedCaptainCoin] = useState();
@@ -237,7 +242,7 @@ function PlayersTable(props: Props): JSX.Element {
         score: d.score / 1000,
       };
     });
-  }, [game, currentPrices, allFeeds, data, type,  accountLabels]);
+  }, [game, currentPrices, allFeeds, data, type, accountLabels]);
 
   const {isBalanceVisible} = useIsBalanceVisible();
 
@@ -255,12 +260,20 @@ function PlayersTable(props: Props): JSX.Element {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.header}>Position</TableCell>
-              <TableCell className={classes.header}>Captain</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.position' />
+              </TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.captain' />
+              </TableCell>
               {(game?.num_coins.toNumber() || 0) > 1 && (
-                <TableCell className={classes.header}>Coins</TableCell>
+                <TableCell className={classes.header}>
+                  <IntlMessages id='app.coinLeagues.coins' />
+                </TableCell>
               )}
-              <TableCell className={classes.header}>Score</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.score' />
+              </TableCell>
             </TableRow>
           </TableHead>
 
@@ -271,7 +284,9 @@ function PlayersTable(props: Props): JSX.Element {
                   colSpan={4}
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
-                  <Typography variant='h5'>No data was found!</Typography>
+                  <Typography variant='h5'>
+                    <IntlMessages id='app.coinLeagues.notDataFound' />!
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -293,9 +308,14 @@ function PlayersTable(props: Props): JSX.Element {
                   <TableCell className={classes.noBorder}>
                     <Box display={'flex'} alignItems={'center'}>
                       <Chip className={classes.chip} label={`${i + 1}º`} />
-                      <Typography style={{color: '#fff'}}>
-                        &nbsp; {truncHash(row.hash)}
-                      </Typography>
+                      <CopyButton
+                        size='small'
+                        copyText={row.hash}
+                        tooltip='Copied!'>
+                        <Typography style={{color: '#fff'}}>
+                          &nbsp; {truncHash(row.hash)}
+                        </Typography>
+                      </CopyButton>
 
                       {finished &&
                         (playerRowData.length === 2 ||
@@ -306,7 +326,9 @@ function PlayersTable(props: Props): JSX.Element {
                             <Chip
                               color='primary'
                               icon={<CupIcon />}
-                              label={`Winner`}
+                              label={
+                                messages['app.coinLeagues.winner'] as string
+                              }
                               size='small'
                             />{' '}
                           </Box>
@@ -318,7 +340,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='medium'
                           />{' '}
                         </Box>
@@ -330,7 +352,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>
@@ -342,7 +364,7 @@ function PlayersTable(props: Props): JSX.Element {
                           <Chip
                             color='primary'
                             icon={<CupIcon />}
-                            label={`Winner`}
+                            label={messages['app.coinLeagues.winner'] as string}
                             size='small'
                           />{' '}
                         </Box>
@@ -354,26 +376,27 @@ function PlayersTable(props: Props): JSX.Element {
                       {!hideCoins ? (
                         row?.captainCoin && (
                           <>
-                          <Tooltip title={tooltipMessage(row.hash)}>
-                            <Badge
-                              color={'primary'}
-                              overlap='circular'
-                              badgeContent={
-                                !loadingMultiplier && multiplier(row.hash).toFixed(3)
-                              }>
-                              <Avatar
-                                className={classes.chip}
-                                src={getIconByCoin(
-                                  row.captainCoin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                                style={{height: 35, width: 35}}>
-                                {getIconSymbol(
-                                  row.captainCoin,
-                                  GET_LEAGUES_CHAIN_ID(chainId),
-                                )}
-                              </Avatar>
-                            </Badge>
+                            <Tooltip title={tooltipMessage(row.hash)}>
+                              <Badge
+                                color={'primary'}
+                                overlap='circular'
+                                badgeContent={
+                                  !loadingMultiplier &&
+                                  multiplier(row.hash).toFixed(3)
+                                }>
+                                <Avatar
+                                  className={classes.chip}
+                                  src={getIconByCoin(
+                                    row.captainCoin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
+                                  style={{height: 35, width: 35}}>
+                                  {getIconSymbol(
+                                    row.captainCoin,
+                                    GET_LEAGUES_CHAIN_ID(chainId),
+                                  )}
+                                </Avatar>
+                              </Badge>
                             </Tooltip>
                             {row?.coins.length === 0 && (
                               <IconButton
@@ -399,7 +422,8 @@ function PlayersTable(props: Props): JSX.Element {
                         <Badge color={'primary'} overlap='circular'>
                           <Avatar
                             className={classes.chip}
-                            style={{height: 35, width: 35}}></Avatar>
+                            style={{height: 35, width: 35}}
+                          />
                         </Badge>
                       )}
                     </Box>
@@ -426,7 +450,8 @@ function PlayersTable(props: Props): JSX.Element {
                             ) : (
                               <Avatar
                                 className={classes.chip}
-                                style={{height: 35, width: 35}}></Avatar>
+                                style={{height: 35, width: 35}}
+                              />
                             ),
                           )}
                         </AvatarGroup>

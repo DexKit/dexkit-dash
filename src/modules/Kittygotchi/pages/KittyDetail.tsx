@@ -337,7 +337,7 @@ export const KittyDetail: React.FC = () => {
                   <IntlMessages id='nfts.walletBreadcrumbDashboard' />
                 </Link>
                 <Link color='inherit' component={RouterLink} to='/kittygotchi'>
-                  Kittygotchi
+                  <IntlMessages id='app.kittygotchi.kittygotchi' />
                 </Link>
               </Breadcrumbs>
             </Grid>
@@ -359,7 +359,10 @@ export const KittyDetail: React.FC = () => {
                   {kittygotchi.isLoading ? (
                     <Skeleton width={theme.spacing(24)} />
                   ) : (
-                    <>Kittygotchi #{kittygotchi.data?.id}</>
+                    <>
+                      <IntlMessages id='app.kittygotchi.kittygotchi' /> #
+                      {kittygotchi.data?.id}
+                    </>
                   )}
                 </Typography>
               </Box>
@@ -459,7 +462,10 @@ export const KittyDetail: React.FC = () => {
                                     {kittygotchi.isLoading ? (
                                       <Skeleton width={theme.spacing(12)} />
                                     ) : (
-                                      <>Kittygotchi #{kittygotchi.data?.id}</>
+                                      <>
+                                        <IntlMessages id='app.kittygotchi.kittygotchi' />{' '}
+                                        #{kittygotchi.data?.id}
+                                      </>
                                     )}
                                   </Typography>
                                 </Grid>
@@ -492,7 +498,7 @@ export const KittyDetail: React.FC = () => {
                                               startIcon={<CheckIcon />}
                                               variant='outlined'
                                               color='primary'>
-                                              Set default
+                                              <IntlMessages id='app.kittygotchi.setDefault' />
                                             </Button>
                                           )}
                                         </>
@@ -514,7 +520,7 @@ export const KittyDetail: React.FC = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    ATK
+                                    <IntlMessages id='app.kittygotchi.atk' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -530,7 +536,7 @@ export const KittyDetail: React.FC = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    DEF
+                                    <IntlMessages id='app.kittygotchi.def' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -546,7 +552,7 @@ export const KittyDetail: React.FC = () => {
                                   <Typography
                                     color='textSecondary'
                                     variant='caption'>
-                                    RUN
+                                    <IntlMessages id='app.kittygotchi.run' />
                                   </Typography>
                                 ) : null}
                                 <Typography variant='h5'>
@@ -564,8 +570,7 @@ export const KittyDetail: React.FC = () => {
                               <Typography
                                 align={isMobile ? 'center' : 'left'}
                                 variant='body1'>
-                                Your kittygotchi is hungry! Last time you fed
-                                him:{' '}
+                                <IntlMessages id='app.kittygotchi.kittyHungry' />{' '}
                                 <strong>
                                   {moment
                                     .unix(kittygotchi?.data?.lastUpdated || 0)
@@ -577,7 +582,7 @@ export const KittyDetail: React.FC = () => {
                               {!canFeedKitty(kittygotchi?.data) ? (
                                 kittygotchi?.data?.lastUpdated ? (
                                   <>
-                                    You can feed your kittygotchi in{' '}
+                                    <IntlMessages id='app.kittygotchi.canFeed' />{' '}
                                     <strong>
                                       <CountdownSpan
                                         toDate={moment

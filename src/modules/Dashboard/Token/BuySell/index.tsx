@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {Tab, Tabs, Box, makeStyles} from '@material-ui/core';
+import {Box, makeStyles, Tab, Tabs} from '@material-ui/core';
 
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {EthereumNetwork, Fonts} from '../../../../shared/constants/AppEnums';

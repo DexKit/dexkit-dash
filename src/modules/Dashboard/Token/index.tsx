@@ -1,5 +1,7 @@
 import React, {useState, useCallback, useMemo} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {
   Link,
   Grid,
@@ -41,10 +43,12 @@ import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {GET_DEFAULT_USD_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 const TokenPage = () => {
   const history = useHistory();
   const network = useNetwork();
+  const {messages} = useIntl();
   const searchParams = new URLSearchParams(history.location.search);
 
   const networkName = useMemo(() => {
@@ -144,7 +148,7 @@ const TokenPage = () => {
       <AboutDialog open={showAboutDialog} onClose={handleCloseAboutDialog} />
       <ShareDialog
         open={showShareDialog}
-        shareText='Sharing token'
+        shareText={messages['app.dashboard.sharingToken'] as string}
         shareUrl={shareUrl}
         onClose={toggleShare}
       />
@@ -156,10 +160,10 @@ const TokenPage = () => {
                 <Grid item xs={12}>
                   <Breadcrumbs aria-label='breadcrumb'>
                     <Link component={RouterLink} to='/wallet' color='inherit'>
-                      Wallet
+                      <IntlMessages id='app.dashboard.wallet' />
                     </Link>
                     <Typography variant='body2' color='inherit'>
-                      Trade
+                      <IntlMessages id='app.dashboard.trade' />
                     </Typography>
                   </Breadcrumbs>
                 </Grid>
@@ -171,7 +175,9 @@ const TokenPage = () => {
                       </IconButton>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h5'>Trade</Typography>
+                      <Typography variant='h5'>
+                        <IntlMessages id='app.dashboard.trade' />
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <IconButton onClick={handleOpenAboutDialog} size='small'>
@@ -192,7 +198,9 @@ const TokenPage = () => {
                     <RoundedIconButton onClick={toggleShare}>
                       <Share className={classes.icon} />
                     </RoundedIconButton>
-                    <Typography variant='caption'>Share</Typography>
+                    <Typography variant='caption'>
+                      <IntlMessages id='app.dashboard.share' />
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -220,7 +228,8 @@ const TokenPage = () => {
                       aria-controls='panel1a-content'
                       id='panel1a-header'>
                       <Typography>
-                        <GraphicsIcon /> Charts
+                        <GraphicsIcon />{' '}
+                        <IntlMessages id='app.dashboard.charts' />
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -33,7 +35,7 @@ function SimpleCardEndGame(props: Props): JSX.Element {
     <Container className={classes.container} maxWidth='xs'>
       <Grid container>
         <Button className={classes.button} fullWidth onClick={props.onClick}>
-          ENDGAME
+          <IntlMessages id='app.coinLeagues.endGame' />
         </Button>
       </Grid>
     </Container>

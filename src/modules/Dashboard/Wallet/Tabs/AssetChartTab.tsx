@@ -1,5 +1,6 @@
 import React from 'react';
-import {Grid, Box, Divider, Fade} from '@material-ui/core';
+
+import {Box, Divider, Fade, Grid} from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import AppCard from '@crema/core/AppCard';
 import AppSelect from '@crema/core/AppSelect';

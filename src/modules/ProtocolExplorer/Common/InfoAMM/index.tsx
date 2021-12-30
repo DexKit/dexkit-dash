@@ -1,19 +1,22 @@
 import React from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {BalanceCoins} from 'types/models/Crypto';
 import {EthereumNetwork, EXCHANGE, Fonts} from 'shared/constants/AppEnums';
 import {ETHERSCAN_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import AppCard from '@crema/core/AppCard';
-import {GET_DEXTOOLS_URL, GET_AMM_ANALYTICS} from 'utils/protocol';
-import TokenLogo from 'shared/components/TokenLogo';
+import {GET_AMM_ANALYTICS, GET_DEXTOOLS_URL} from 'utils/protocol';
 import {useStyles} from './index.style';
 import CoinsInfo from './CoinsInfo';
-import {Fade, Tooltip, Link, Typography} from '@material-ui/core';
+import {Fade, Link, Tooltip, Typography} from '@material-ui/core';
 import LoadingInfoAMM from './LoadingInfoAMM';
 import {Link as RouterLink} from 'react-router-dom';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import {GET_EXCHANGE_NAME} from 'shared/constants/Bitquery';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 export interface Props {
   data?: any;
@@ -24,25 +27,31 @@ export interface Props {
 }
 
 const coinInfoFactory = (propsData: any): BalanceCoins[] => {
+  const {messages} = useIntl();
+
   return [
     {
       id: 1,
-      name: 'Total Liquidy',
+      name: messages['app.protocolExplorer.totalLiquidity'] as string,
       value: `$${propsData?.liquidity.toFixed(0)}` ?? `$0`,
     },
     {
       id: 2,
-      name: 'Daily Volume',
+      name: messages['app.protocolExplorer.dailyVolume'] as string,
       value: `$${propsData?.volume24InUsd.toFixed(0)}` ?? `$0`,
     },
     {
       id: 3,
-      name: `Pooled ${propsData?.baseCurrency?.symbol ?? '?'}`,
+      name: `${messages['app.protocolExplorer.pooled']} ${
+        propsData?.baseCurrency?.symbol ?? '?'
+      }`,
       value: propsData?.basePooled.toFixed(2) ?? 0,
     },
     {
       id: 4,
-      name: `Pooled ${propsData?.quoteCurrency?.symbol ?? '?'}`,
+      name: `${messages['app.protocolExplorer.pooled']} ${
+        propsData?.quoteCurrency?.symbol ?? '?'
+      }`,
       value: propsData?.quotePooled.toFixed(2) ?? 0,
     },
   ];
@@ -51,6 +60,7 @@ const coinInfoFactory = (propsData: any): BalanceCoins[] => {
 const InfoAMM: React.FC<Props> = (props) => {
   const {data, exchange, address, loading, networkName} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const color = data?.priceChange > 0 ? 'rgb(78, 228, 78)' : 'rgb(248, 78, 78)';
   const dextoolsURL = GET_DEXTOOLS_URL(exchange, address);
@@ -65,7 +75,8 @@ const InfoAMM: React.FC<Props> = (props) => {
             color='text.primary'
             fontSize={16}
             className={classes.textUppercase}
-            fontWeight={Fonts.BOLD}></Box>
+            fontWeight={Fonts.BOLD}
+          />
 
           <AppCard>
             <Box display='flex' flexDirection='column'>
@@ -90,7 +101,11 @@ const InfoAMM: React.FC<Props> = (props) => {
                     <Box display='flex'>
                       <Box mr={3}>
                         <Tooltip
-                          title={'View Pair on Explorer'}
+                          title={
+                            messages[
+                              'app.protocolExplorer.viewPairOnExplorer'
+                            ] as string
+                          }
                           placement='top'>
                           <a
                             href={`${ETHERSCAN_API_URL_FROM_NETWORK(
@@ -105,16 +120,17 @@ const InfoAMM: React.FC<Props> = (props) => {
                                 width: 34,
                                 height: 34,
                               }}
-                              src='/images/etherescan.png'></Avatar>
+                              src='/images/etherescan.png'
+                            />
                           </a>
                         </Tooltip>
                       </Box>
                       {analytics && (
                         <Box mr={3}>
                           <Tooltip
-                            title={`View Analytics on ${GET_EXCHANGE_NAME(
-                              exchange,
-                            )}`}
+                            title={`${
+                              messages['app.protocolExplorer.viewAnalyticsOn']
+                            } ${GET_EXCHANGE_NAME(exchange)}`}
                             placement='top'>
                             <a
                               href={analytics.url}
@@ -127,14 +143,21 @@ const InfoAMM: React.FC<Props> = (props) => {
                                   width: 34,
                                   height: 34,
                                 }}
-                                src={analytics.icon}></Avatar>
+                                src={analytics.icon}
+                              />
                             </a>
                           </Tooltip>
                         </Box>
                       )}
                       {dextoolsURL && (
                         <Box mr={3}>
-                          <Tooltip title={'View On DexTools'} placement='top'>
+                          <Tooltip
+                            title={
+                              messages[
+                                'app.protocolExplorer.viewOnDexTools'
+                              ] as string
+                            }
+                            placement='top'>
                             <a
                               href={dextoolsURL}
                               target='_blank'
@@ -146,7 +169,8 @@ const InfoAMM: React.FC<Props> = (props) => {
                                   width: 34,
                                   height: 34,
                                 }}
-                                src='/images/dextools.png'></Avatar>
+                                src='/images/dextools.png'
+                              />
                             </a>
                           </Tooltip>
                         </Box>
@@ -155,7 +179,13 @@ const InfoAMM: React.FC<Props> = (props) => {
                         <Link
                           to={`/${networkName}/token/${data.baseCurrency?.address}`}
                           component={RouterLink}>
-                          <Tooltip title={'Trade Token'} placement='top'>
+                          <Tooltip
+                            title={
+                              messages[
+                                'app.protocolExplorer.tradeToken'
+                              ] as string
+                            }
+                            placement='top'>
                             <Avatar
                               style={{
                                 color: '#3F51B5',
@@ -204,7 +234,7 @@ const InfoAMM: React.FC<Props> = (props) => {
                 </Box>
               ) : (
                 <Typography component='h1' color={'primary'}>
-                  No data available for this pair on{' '}
+                  <IntlMessages id='app.protocolExplorer.noDataAvailableForPairOn' />{' '}
                   {GET_EXCHANGE_NAME(exchange)}{' '}
                 </Typography>
               )}

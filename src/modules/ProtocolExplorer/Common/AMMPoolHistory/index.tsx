@@ -1,8 +1,7 @@
 import React from 'react';
-import {useIntl} from 'react-intl';
 // import {MintBurn} from 'types/app';
 import {useAMMPoolHistory} from 'hooks/protocolExplorer/useAMMPoolHistory';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {Box, Toolbar, Typography} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import AMMPoolHistoryTable from './AMMPoolHistoryTable';
@@ -12,6 +11,7 @@ import {
   GetAMMPairExplorer_ethereum_dexTrades_quoteCurrency,
 } from 'services/graphql/bitquery/protocol/__generated__/GetAMMPairExplorer';
 import LoadingTable from 'modules/Common/LoadingTable';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -23,7 +23,6 @@ interface Props {
 
 const AMMPoolHistory: React.FC<Props> = (props: Props) => {
   const {networkName, exchange, address, baseCurrency, quoteCurrency} = props;
-  const {messages} = useIntl();
   const classes = useStyles();
 
   const {
@@ -56,7 +55,7 @@ const AMMPoolHistory: React.FC<Props> = (props: Props) => {
             justifyContent={'flex-start'}
             alignItems={'center'}>
             <Typography variant='h6' display={'block'} align={'center'}>
-              {messages['app.pool']}
+              <IntlMessages id='app.protocolExplorer.pool' />
             </Typography>
           </Box>
         </Box>

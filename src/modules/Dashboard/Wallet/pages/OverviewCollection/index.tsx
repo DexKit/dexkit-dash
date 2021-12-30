@@ -1,4 +1,5 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
+
 import {
   Grid,
   Box,
@@ -7,13 +8,14 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import {RouteComponentProps, useHistory} from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
-import {ReactComponent as ArrowLeftIcon} from '../../../../../assets/images/icons/arrow-left.svg';
-import {useCollectionIds} from 'hooks/balance/useCollectionIds';
-import {useNFTMetadataURI} from 'hooks/nfts/useNFTMetadataURI';
+import { ReactComponent as ArrowLeftIcon } from '../../../../../assets/images/icons/arrow-left.svg';
+import { useCollectionIds } from 'hooks/balance/useCollectionIds';
+import { useNFTMetadataURI } from 'hooks/nfts/useNFTMetadataURI';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 type Params = {
   address: string;
@@ -24,9 +26,10 @@ type Props = RouteComponentProps<Params>;
 
 const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
   const {
-    match: {params},
+    match: { params },
   } = props;
-  const {address, networkName} = params;
+  const { address, networkName } = params;
+
 
   const tokenIdsQuery = useCollectionIds(address, networkName);
 
@@ -53,14 +56,12 @@ const WalletOverviewCollectionPage: React.FC<Props> = (props) => {
               <Grid item xs={12}>
                 <Breadcrumbs aria-label='breadcrumb'>
                   <Typography variant='body2' color='textSecondary'>
-                    Wallet
+                    <IntlMessages id='app.dashboard.wallet' />
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
-                    Overview
+                    <IntlMessages id='app.dashboard.overview' />
                   </Typography>
-                  <Typography
-                    variant='body2'
-                    color='textSecondary'></Typography>
+                  <Typography variant='body2' color='textSecondary' />
                 </Breadcrumbs>
               </Grid>
 

@@ -1,5 +1,7 @@
 import React, {useCallback, useContext, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+
 import {
   Box,
   Typography,
@@ -42,6 +44,7 @@ import ContainedInput from 'shared/components/ContainedInput';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AppContext from '@crema/utility/AppContext';
 import {useHistory} from 'react-router-dom';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const Accounts = () => {
   const {theme} = useContext<AppContextPropsType>(AppContext);
@@ -50,6 +53,7 @@ const Accounts = () => {
   const history = useHistory();
   /* eslint-disable */
   const [copyText, setCopyText] = useState('Copy to clipboard');
+  const {messages} = useIntl();
 
   /* eslint-disable */
   const [anchorEl, setAnchorEl] = useState<Element>();
@@ -119,13 +123,20 @@ const Accounts = () => {
         color='primary'
         onClick={() => history.push('/onboarding/login-wallet')}
         endIcon={<AccountBalanceWalletIcon />}>
-        {web3State === Web3State.Connecting
-          ? isMobile()
-            ? 'Connecting...'
-            : 'Connecting... Check Wallet'
-          : isMobile()
-          ? 'Connect'
-          : 'Connect Wallet'}
+        {web3State === Web3State.Connecting ? (
+          isMobile() ? (
+            <IntlMessages id='app.dashboard.connecting' />
+          ) : (
+            <>
+              <IntlMessages id='app.dashboard.connecting' />{' '}
+              <IntlMessages id='app.dashboard.checkWallet' />
+            </>
+          )
+        ) : isMobile() ? (
+          <IntlMessages id='app.dashboard.connect' />
+        ) : (
+          <IntlMessages id='app.dashboard.connectWallet' />
+        )}
       </Button>
     </Box>
   );
@@ -146,7 +157,7 @@ const Accounts = () => {
   const titleComponent = (
     <Box display='flex' alignItems='center' mt={1}>
       <Typography variant='h5' color='textSecondary'>
-        Manage Accounts
+        <IntlMessages id='app.dashboard.manageAccounts' />
       </Typography>
     </Box>
   );
@@ -220,7 +231,7 @@ const Accounts = () => {
         autoHideDuration={3000}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
         <Alert onClose={handleCloseSnackbar} severity='success'>
-          Address copied!
+          <IntlMessages id='app.dashboard.addressCopied' />
         </Alert>
       </Snackbar>
     );
@@ -322,7 +333,9 @@ const Accounts = () => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='body1'>Add new account</Typography>
+              <Typography variant='body1'>
+                <IntlMessages id='app.dashboard.addNewAccount' />
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Grid
@@ -332,11 +345,12 @@ const Accounts = () => {
                 spacing={2}>
                 <Grid item xs>
                   <ContainedInput
-                    placeholder='Address'
+                    placeholder={messages['app.dashboard.address'] as string}
                     fullWidth
                     endAdornment={
                       <InputAdornment position='end' onClick={handlePaste}>
-                        <Tooltip title={'Paste valid account'}>
+                        <Tooltip
+                          title={messages['app.dashboard.pasteValidAccount']}>
                           <IconButton aria-label='paste' color='primary'>
                             <CallReceivedIcon />
                           </IconButton>
@@ -347,7 +361,7 @@ const Accounts = () => {
                   />
                 </Grid>
                 <Grid item>
-                  <Tooltip title={'Add valid account'}>
+                  <Tooltip title={messages['app.dashboard.addValidAccount']}>
                     <SquaredIconButton
                       onClick={handleAddAccount}
                       disabled={address === '' || error !== undefined}>
@@ -389,7 +403,8 @@ const Accounts = () => {
             justifyContent='space-between'
             alignItems='center'>
             <Typography variant='body1'>
-              {wallet[SupportedNetworkType.evm].length} Accounts
+              {wallet[SupportedNetworkType.evm].length}{' '}
+              <IntlMessages id='app.dashboard.accounts' />
             </Typography>
 
             {selectActive ? (
@@ -401,7 +416,7 @@ const Accounts = () => {
                     </SquaredIconButton>
                   </Grid>
                   <Grid item>
-                    <Tooltip title='Remove items'>
+                    <Tooltip title={messages['app.dashboard.removeItems']}>
                       <SquaredIconButton
                         onClick={handleRemoveMultiple}
                         disabled={selectedAccounts.length === 0}>

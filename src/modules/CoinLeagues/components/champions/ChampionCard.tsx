@@ -1,15 +1,12 @@
 import React from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  makeStyles,
-  Box,
-  Tooltip,
-  IconButton,
-} from '@material-ui/core';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+
 
 import {ChainId} from 'types/blockchain';
 
@@ -20,6 +17,10 @@ import {OpenSeaIcon} from 'shared/components/Icons';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {CHAMPIONS} from 'modules/CoinLeagues/constants';
+import Tooltip from '@material-ui/core/Tooltip';
+import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -90,6 +91,13 @@ export const ChampionCard = (props: ChampionCardProps) => {
       )}
       <CardContent>
         <Typography variant='body1'>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <>
+              <IntlMessages id='app.coinLeagues.champion' /> #{champion?.id}
+            </>
+          )}
           {loading ? <Skeleton /> : <>{champion?.name}</>}
         </Typography>
       </CardContent>

@@ -9,10 +9,7 @@ const AfilliatePageWrapper = () => {
 
   const filters = [fromFilter, toFilter];
   return (
-    <FilterContext.Provider
-      value={{
-        filters,
-      }}>
+    <FilterContext.Provider value={{filters}}>
       <AffiliatePage />
     </FilterContext.Provider>
   );

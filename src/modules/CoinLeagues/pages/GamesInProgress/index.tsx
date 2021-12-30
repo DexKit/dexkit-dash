@@ -1,10 +1,14 @@
 import React, {useCallback, useMemo, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   Breadcrumbs,
   Grid,
+  Hidden,
   InputAdornment,
   Link,
-  Hidden,
   Typography,
   Badge,
 } from '@material-ui/core';
@@ -38,7 +42,6 @@ import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
 import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import {useToggler} from 'hooks/useToggler';
-import {useIntl} from 'react-intl';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
@@ -132,13 +135,13 @@ const GamesInProgress = () => {
           <Grid container>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-                Dashboard
+              <IntlMessages id='app.coinLeagues.dashboard' />
               </Link>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                Games
+              <IntlMessages id='app.coinLeagues.games' />
               </Link>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                Games In Progress
+              <IntlMessages id='app.coinLeagues.gamesInProgress' />
               </Link>
             </Breadcrumbs>
           </Grid>
@@ -155,7 +158,7 @@ const GamesInProgress = () => {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant='h6' style={{margin: 5}}>
-              Games in Progress
+            <IntlMessages id='app.coinLeagues.gamesInProgress' />
             </Typography>
           </Box>
         </Grid>
@@ -165,7 +168,7 @@ const GamesInProgress = () => {
               <SwapButton />
             </Box>
             <Box pr={2}>
-              <ShareButton shareText={`Coin league Games`} />
+              <ShareButton shareText={messages['app.coinLeagues.gamesInProgress'] as string} />
             </Box>
             <Box pr={2}>
               <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
@@ -189,7 +192,7 @@ const GamesInProgress = () => {
           <ContainedInput
             value={search}
             onChange={handleSearch}
-            placeholder='Search'
+            placeholder={messages['app.coinLeagues.search'] as string}
             startAdornment={
               <InputAdornment position='start'>
                 <Search />
@@ -207,7 +210,8 @@ const GamesInProgress = () => {
             alignContent='center'>
             <Grid item>
               <Typography variant='h6'>
-                {gamesInProgress?.length || 0} Games in Progress
+                {gamesInProgress?.length || 0}{' '}
+                <IntlMessages id='app.coinLeagues.gamesInProgress' />
               </Typography>
             </Grid>
             <Grid item>
@@ -290,8 +294,10 @@ const GamesInProgress = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games in progress'}
-                  message={'Search created games and enter to start games'}
+                  title={messages['app.coinLeagues.noGamesInProgress'] as string}
+                  message={
+                    messages['app.coinLeagues.searchCreatedAndEnter'] as string
+                  }
                 />
               </Grid>
             )}

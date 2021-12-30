@@ -8,7 +8,7 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
   const networkProvider = useNetworkProvider(EthereumNetwork.matic);
   const {game} = useCoinLeagues(address);
 
-  const tokenBalancesQuery = useQuery(
+  return useQuery(
     ['GET_LEAGUES_PLAYER_TOKEN_BALANCES', game?.players],
     async () => {
       if (!game?.players || !enable) {
@@ -21,6 +21,4 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
       );
     },
   );
-
-  return tokenBalancesQuery;
 };

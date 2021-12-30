@@ -1,7 +1,10 @@
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
-import {red, green} from '@material-ui/core/colors';
+import {green, red} from '@material-ui/core/colors';
 
 export enum SubmitState {
   None,
@@ -25,21 +28,21 @@ export const ButtonState = (props: Props) => {
       return (
         <>
           <CircularProgress color={'secondary'} />
-          Waiting Wallet
+          <IntlMessages id='app.coinLeagues.waitingWallet' />
         </>
       );
     case SubmitState.Error:
       return (
         <>
           <Icon style={{color: red[500]}}>error</Icon>
-          Error
+          <IntlMessages id='app.coinLeagues.error' />
         </>
       );
     case SubmitState.Submitted:
       return (
         <>
           <CircularProgress color={'secondary'} />
-          Waiting for Network Confirmation
+          <IntlMessages id='app.coinLeagues.waitingNetworkConfirmation' />
         </>
       );
     case SubmitState.Confirmed:

@@ -245,7 +245,9 @@ export const KittygotchiIndex = () => {
                     <ArrowBackIcon />
                   </IconButton>
                 </Box>
-                <Typography variant='h5'>My Kitties</Typography>
+                <Typography variant='h5'>
+                  <IntlMessages id='app.kittygotchi.myKitties' />{' '}
+                </Typography>
               </Box>
             </Grid>
           </Grid>
@@ -263,8 +265,9 @@ export const KittygotchiIndex = () => {
             <Grid item xs={12}>
               <Alert severity='info'>
                 <Typography variant='body2'>
-                  Connect to <strong>Polygon(MATIC)</strong> network to create a
-                  Kittygotchi
+                  <IntlMessages id='app.kittygotchi.connectTo' />{' '}
+                  <strong>Polygon(MATIC)</strong>{' '}
+                  <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>
             </Grid>
@@ -286,7 +289,7 @@ export const KittygotchiIndex = () => {
                       variant='contained'
                       color='primary'
                       onClick={mintKittyToggler.toggle}>
-                      Create Kitty
+                      <IntlMessages id='app.kittygotchi.create' />
                     </Button>
                   </Box>
                 </Paper>

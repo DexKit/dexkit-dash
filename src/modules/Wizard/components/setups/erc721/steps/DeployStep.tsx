@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -42,7 +43,7 @@ export const DeployStep = (props: DeployStepProps) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography gutterBottom variant='h5'>
-                  Summary
+                  <IntlMessages id='app.wizard.summary' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -50,7 +51,9 @@ export const DeployStep = (props: DeployStepProps) => {
                   display='flex'
                   alignItems='center'
                   justifyContent='space-between'>
-                  <Typography variant='body1'>Name</Typography>
+                  <Typography variant='body1'>
+                    <IntlMessages id='app.wizard.name' />
+                  </Typography>
                   <Typography variant='body1'>{values.name}</Typography>
                 </Box>
               </Grid>
@@ -59,7 +62,9 @@ export const DeployStep = (props: DeployStepProps) => {
                   display='flex'
                   alignItems='center'
                   justifyContent='space-between'>
-                  <Typography variant='body1'>Symbol</Typography>
+                  <Typography variant='body1'>
+                    <IntlMessages id='app.wizard.symbol' />
+                  </Typography>
                   <Typography variant='body1'>{values.symbol}</Typography>
                 </Box>
               </Grid>
@@ -69,7 +74,9 @@ export const DeployStep = (props: DeployStepProps) => {
                     display='flex'
                     alignItems='center'
                     justifyContent='space-between'>
-                    <Typography variant='body1'>External URL</Typography>
+                    <Typography variant='body1'>
+                      <IntlMessages id='app.wizard.externalURL' />
+                    </Typography>
                     <Typography variant='body1'>{values.url}</Typography>
                   </Box>
                 </Grid>
@@ -79,7 +86,9 @@ export const DeployStep = (props: DeployStepProps) => {
                   display='flex'
                   alignItems='center'
                   justifyContent='space-between'>
-                  <Typography variant='body1'>Description</Typography>
+                  <Typography variant='body1'>
+                    <IntlMessages id='app.wizard.description' />
+                  </Typography>
                   <Typography variant='body1'>{values.description}</Typography>
                 </Box>
               </Grid>
@@ -136,14 +145,14 @@ export const DeployStep = (props: DeployStepProps) => {
                 startIcon={<ArrowBackIcon />}
                 onClick={onBack}
                 variant='outlined'>
-                Back
+                <IntlMessages id='app.wizard.back' />
               </Button>
               <Button
                 startIcon={<DoneIcon />}
                 onClick={onFinalize}
                 variant='contained'
                 color='primary'>
-                Finalize
+                <IntlMessages id='app.wizard.finalize' />
               </Button>
             </Box>
           </Box>

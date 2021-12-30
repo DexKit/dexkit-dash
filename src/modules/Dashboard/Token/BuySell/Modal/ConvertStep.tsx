@@ -1,4 +1,7 @@
 import React, {useEffect} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Button from '@material-ui/core/Button';
 import {Typography} from '@material-ui/core';
 import {Steps, Token} from 'types/app';
@@ -14,6 +17,7 @@ import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {tokenAmountInUnits} from 'utils';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 // get tokens ta sendo chamado 3x
 
@@ -48,6 +52,7 @@ const ConvertStep: React.FC<Props> = (props) => {
 
   const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();
+  const {messages} = useIntl();
 
   const isConverted = () => {
     return false;
@@ -104,15 +109,19 @@ const ConvertStep: React.FC<Props> = (props) => {
 
             if (txHash) {
               createNotification({
-                title: `Convert ${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to W${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `Converted  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${
+                  messages['app.dashboard.convert']
+                } ${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `${
+                  messages['app.dashboard.converted']
+                }  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: 'View transaction',
+                urlCaption: messages['app.dashboard.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,
@@ -139,15 +148,19 @@ const ConvertStep: React.FC<Props> = (props) => {
             const amountToUnit = tokenAmountInUnits(amountFrom);
             if (txHash) {
               createNotification({
-                title: `Convert W${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to ${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `Converted ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(
-                  chainId,
-                )} to ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${
+                  messages['app.dashboard.convert']
+                } W${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                body: `${
+                  messages['app.dashboard.converted']
+                } ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(chainId)} ${
+                  messages['app.dashboard.to']
+                } ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
-                urlCaption: 'View transaction',
+                urlCaption: messages['app.dashboard.viewTransaction'] as string,
                 type: NotificationType.TRANSACTION,
                 metadata: {
                   chainId: chainId,
@@ -187,7 +200,8 @@ const ConvertStep: React.FC<Props> = (props) => {
   return (
     <>
       <Typography align='center' style={{paddingBottom: 10}}>
-        Would you like to convert {tokenFrom.symbol} to {to}?
+        <IntlMessages id='app.dashboard.wouldLikeToConvert' />{' '}
+        {tokenFrom.symbol} <IntlMessages id='app.dashboard.to' /> {to}?
       </Typography>
       <Button
         style={{margin: 0}}
@@ -196,7 +210,7 @@ const ConvertStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Convert
+        <IntlMessages id='app.dashboard.convert' />
       </Button>
     </>
   );

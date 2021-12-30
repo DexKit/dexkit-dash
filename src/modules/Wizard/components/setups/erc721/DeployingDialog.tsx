@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@material-ui/core';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface DeployingDialogProps extends DialogProps {}
 
@@ -31,10 +32,10 @@ export const DeployingDialog = (props: DeployingDialogProps) => {
           </Grid>
           <Grid item>
             <Typography gutterBottom align='center' variant='h5'>
-              Deploying your contract
+              <IntlMessages id='app.wizard.deployingYourContract' />
             </Typography>
             <Typography align='center' variant='body1'>
-              Please, sign the transaction in your wallet to continue
+              <IntlMessages id='app.wizard.pleaseSignTheTrasaction' />
             </Typography>
           </Grid>
           <Grid item>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Grid,
   Box,
@@ -12,37 +12,38 @@ import {
   Chip,
 } from '@material-ui/core';
 
-import {RouteComponentProps, useHistory} from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import useFetch from 'use-http';
-import {useWeb3} from 'hooks/useWeb3';
-import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ZRX_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
-import {Token} from 'types/app';
-import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
-import {toggleFavoriteCoin} from 'redux/_ui/actions';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {useTokenInfo} from 'hooks/useTokenInfo';
+import { Token } from 'types/app';
+import { useAllBalance } from 'hooks/balance/useAllBalance';
+import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
+import { toggleFavoriteCoin } from 'redux/_ui/actions';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { useTokenInfo } from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
-import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
-import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
+import { ReactComponent as GraphicsIcon } from '../../../../assets/images/icons/stats-chart.svg';
+import { ReactComponent as ArrowDownIcon } from '../../../../assets/images/icons/arrow-down.svg';
+import { ReactComponent as ArrowLeftIcon } from '../../../../assets/images/icons/arrow-left.svg';
 
 import BuySell from 'modules/Dashboard/Token/BuySell';
 import Charts from 'modules/Dashboard/Token/Charts';
 import HistoryTables from 'modules/Dashboard/Token/HistoryTables';
 import TokenCard from 'shared/components/TokenCard';
 import CoinTools from 'shared/components/CoinTools';
-import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
-import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
-import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
-import {useTokenLists} from 'hooks/useTokenLists';
+import { TokenAnalytics } from 'modules/Dashboard/Token/Analytics';
+import { useTokenPriceUSD } from 'hooks/useTokenPriceUSD';
+import { InfoTab } from 'modules/Dashboard/Token/Tabs/InfoTab';
+import { useTokenLists } from 'hooks/useTokenLists';
 import TokenLogo from 'shared/components/TokenLogo';
-import {watchAsset} from 'utils/wallet';
+import { watchAsset } from 'utils/wallet';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import { SelectTokenBalanceDialog } from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
 
 type Params = {
@@ -54,21 +55,20 @@ type Props = RouteComponentProps<Params>;
 
 const WalletOverviewPage: React.FC<Props> = (props) => {
   const {
-    match: {params},
+    match: { params },
   } = props;
-  const {address, networkName} = params;
-  const {getProvider} = useWeb3();
+  const { address, networkName } = params;
+  const { getProvider } = useWeb3();
 
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
   );
-  const {account: web3Account, chainId} = useWeb3();
+  const { account: web3Account, chainId } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
-  const {data: balances} = useAllBalance(account);
-  const {tokenInfo} = useTokenInfo(address);
-
+  const { data: balances } = useAllBalance(account);
+  const { tokenInfo } = useTokenInfo(address);
   const [token, setToken] = useState<Token>();
 
   const [tokenToAddress, setTokenToAddress] = useState<string>(address);
@@ -85,12 +85,12 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     1,
     token?.decimals,
   );
-  const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
+  const { data, loading, error } = useCoingeckoTokenInfo(address, networkName);
 
   const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {
-      dispatch(toggleFavoriteCoin({...token, ...data}));
+      dispatch(toggleFavoriteCoin({ ...token, ...data }));
     }
   };
 
@@ -140,7 +140,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
 
   const [showSelectTokens, setShowSelectTokens] = useState(false);
 
-  const {binanceTokens, ethTokens, maticTokens} = useTokenLists();
+  const { binanceTokens, ethTokens, maticTokens } = useTokenLists();
 
   const handleToggleSelectToken = useCallback(() => {
     setShowSelectTokens((value) => !value);
@@ -159,19 +159,19 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
 
   const onChangeTokens = useCallback(
     (from?: Token, to?: Token) => {
-      if(to){
+      if (to) {
         setTokenToAddress(to?.address);
         setTokenToInfo(to);
       }
-      if(from){
+      if (from) {
         setTokenFromInfo(from);
       }
     }, [setTokenToInfo, setTokenFromInfo, setTokenToAddress]);
-  
-  const  onChangeDisableReceiveCallback = useCallback((side: 'from' | 'to')=> {
+
+  const onChangeDisableReceiveCallback = useCallback((side: 'from' | 'to') => {
 
     setDisableSide(side);
-  },[])
+  }, [])
 
 
   const handleSelectToken = useCallback((token: Token) => {
@@ -190,9 +190,9 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     } else {
       history.push(`/wallet/overview/${token.networkName}/${token.address}`);
     }
-    if(disableSide == 'from'){
+    if (disableSide == 'from') {
       setTokenFromInfo(token);
-    }else{
+    } else {
       setTokenToInfo(token);
       setTokenToAddress(token.address);
     }
@@ -217,7 +217,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
       `/wallet/overview/${EthereumNetwork.matic}/${data?.platforms?.['polygon-pos']}`,
     );
   }, [history, data]);
-  
+
   return (
     <>
       {ethTokens && maticTokens && binanceTokens ? (
@@ -243,10 +243,10 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               <Grid item xs={12}>
                 <Breadcrumbs aria-label='breadcrumb'>
                   <Typography variant='body2' color='textSecondary'>
-                    Wallet
+                    <IntlMessages id='app.dashboard.wallet' />
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
-                    Overview
+                    <IntlMessages id='app.dashboard.overview' />
                   </Typography>
                   <Typography variant='body2' color='textSecondary'>
                     {tokenInfo?.symbol}
@@ -268,7 +268,9 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                       alignItems='center'
                       alignContent='center'>
                       <Grid item>
-                        <Typography variant='h6'>Overview</Typography>
+                        <Typography variant='h6'>
+                          <IntlMessages id='app.dashboard.overview' />
+                        </Typography>
                       </Grid>
                       {data?.platforms?.ethereum ? (
                         <Grid item>
@@ -390,7 +392,8 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                         aria-controls='panel1a-content'
                         id='panel1a-header'>
                         <Typography>
-                          <GraphicsIcon /> Charts
+                          <GraphicsIcon />{' '}
+                          <IntlMessages id='app.dashboard.charts' />
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
@@ -425,7 +428,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <Card>
-                    <BuySell
+                      <BuySell
                         tokenAddress={tokenToAddress}
                         balances={balances}
                         networkName={networkName}

@@ -1,7 +1,9 @@
-import {Grid, Box, Typography, Button, useTheme} from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import {Box, Button, Grid, Typography, useTheme} from '@material-ui/core';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 interface Props {
   onReset: () => void;
@@ -25,15 +27,15 @@ export const OrderFinished = (props: Props) => {
       </Grid>
       <Grid item xs={12}>
         <Typography align='center' variant='h5'>
-          Transaction finished
+          <IntlMessages id='app.dashboard.transactionFinished' />
         </Typography>
         <Typography align='center' variant='body2' color='textSecondary'>
-          Coins were successfully sent to the recipient address.
+          <IntlMessages id='app.dashboard.coinsSuccessSent' />
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button variant='outlined' fullWidth onClick={onReset}>
-          Swap again
+          <IntlMessages id='app.dashboard.swapAgain' />
         </Button>
       </Grid>
     </Grid>

@@ -4,14 +4,13 @@ import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
 interface Props {
   props?: any;
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableRowRoot: {
     color: grey[500],
   },
@@ -36,30 +35,30 @@ const TableHeading: React.FC<Props> = (props) => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.time' />
+        <IntlMessages id='app.protocolExplorer.time' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.type' />
+        <IntlMessages id='app.protocolExplorer.type' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.price' />
+        <IntlMessages id='app.protocolExplorer.price' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount' />
+        <IntlMessages id='app.protocolExplorer.baseAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.quoteAmount' />
+        <IntlMessages id='app.protocolExplorer.quoteAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.tradeAmount' />
+        <IntlMessages id='app.protocolExplorer.tradeAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };
