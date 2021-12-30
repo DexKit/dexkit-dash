@@ -1,7 +1,7 @@
 import {DialogTitle, Box, Typography, IconButton} from '@material-ui/core';
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import { MessageFormatElement } from 'react-intl';
+import {MessageFormatElement} from 'react-intl';
 interface Props {
   title: string | MessageFormatElement[];
   icon?: React.ReactNode | React.ReactNode[];
@@ -19,7 +19,7 @@ export const CustomDialogTitle: React.FC<Props> = ({title, icon, onClose}) => {
             alignItems='center'
             alignContent='center'
             mr={2}>
-                {icon}
+            {icon}
           </Box>
           <Typography variant='body1'>{title}</Typography>
         </Box>
