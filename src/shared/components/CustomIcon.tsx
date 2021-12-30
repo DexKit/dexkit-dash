@@ -14,7 +14,7 @@ import {ReactComponent as QuestionIcon} from 'assets/images/icons/question-menu.
 import {ReactComponent as JudgeIcon} from 'assets/images/icons/judge-menu.svg';
 import {ReactComponent as GameIcon} from 'assets/images/icons/game-menu.svg';
 import {ReactComponent as DiagramIcon} from 'assets/images/icons/diagram-menu.svg';
-import {MagicpenIcon} from './Icons';
+import {MagicpenIcon, SettingsIcon} from './Icons';
 
 interface Props extends React.SVGProps<SVGSVGElement> {
   icon: string;
@@ -49,12 +49,14 @@ export const CustomIcon = (props: Props) => {
     return <QuestionIcon {...props} />;
   } else if (icon === 'cup') {
     return <CupIcon {...props} />;
-  }else if (icon === 'game') {
+  } else if (icon === 'game') {
     return <GameIcon {...props} />;
-  }else if (icon === 'judge') {
+  } else if (icon === 'judge') {
     return <JudgeIcon {...props} />;
-  }else if (icon === 'diagram') {
+  } else if (icon === 'diagram') {
     return <DiagramIcon {...props} />;
+  } else if (icon === 'settings') {
+    return <SettingsIcon {...props} />;
   }
 
   return <></>;

@@ -31,9 +31,6 @@ export const CopyButton = (props: Props) => {
 
   return (
     <Tooltip
-      PopperProps={{
-        disablePortal: true,
-      }}
       onClose={handleTooltipClose}
       open={open}
       disableFocusListener

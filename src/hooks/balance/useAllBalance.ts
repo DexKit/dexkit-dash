@@ -8,6 +8,7 @@ import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
 import {getAllBitqueryBalances} from 'services/bitquery/balances';
 import {getAllBlockchainBalances} from 'services/blockchain/balances';
 import {providers} from 'ethers';
+import {useCustomTokenList} from 'hooks/tokens';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -33,6 +34,7 @@ export const MapBalancesToUSDValue = (
 
 // Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
+  const {tokens} = useCustomTokenList();
   const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
   const account = defaultAccount || web3Account;
 
@@ -46,7 +48,15 @@ export const useAllBalance = (defaultAccount?: string) => {
           web3State === Web3State.Done
         ) {
           const pr = new providers.Web3Provider(getProvider());
-          return getAllBlockchainBalances(chainId, account, pr);
+
+          const result = await getAllBlockchainBalances(
+            chainId,
+            account,
+            tokens,
+            pr,
+          );
+
+          return result;
         }
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
         return getAllBitqueryBalances(account);

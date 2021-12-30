@@ -26,6 +26,7 @@ import {NftToken} from 'types/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import {Skeleton} from '@material-ui/lab';
 import {deriveUserFromAddr} from 'modules/NFTWallet/utils';
+import {ERC721Abi} from 'types/abis';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -38,111 +39,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
 }));
-
-const abi = [
-  {
-    inputs: [],
-    name: 'baseURI',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-    ],
-    name: 'tokenURI',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-    ],
-    name: 'ownerOf',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'symbol',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'name',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'value',
-        type: 'uint256',
-      },
-    ],
-    name: 'Transfer',
-    type: 'event',
-  },
-];
 
 interface PageParams {
   address: string;
@@ -166,7 +62,7 @@ export const CollectionDetailsPage = () => {
       console.log(provider);
       (async () => {
         setLoading(true);
-        let contract = new ethers.Contract(params.address, abi, provider);
+        let contract = new ethers.Contract(params.address, ERC721Abi, provider);
 
         let name = await contract.name();
         let symbol = await contract.symbol();

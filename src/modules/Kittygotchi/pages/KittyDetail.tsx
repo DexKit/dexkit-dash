@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import {useIntl} from 'react-intl';
 
 import {
   makeStyles,
@@ -20,6 +21,7 @@ import {Alert, Skeleton} from '@material-ui/lab';
 import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SendIcon from '@material-ui/icons/Send';
 
 import {Link as RouterLink, useHistory, useParams} from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -41,6 +43,11 @@ import CheckIcon from '@material-ui/icons/Check';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {Edit} from '@material-ui/icons';
+import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
+import {useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import SelectAddressDialog from 'shared/components/SelectAddressDialog';
+import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from '../constants';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -107,9 +114,11 @@ interface Params {
   id: string;
 }
 
-export const KittyDetail = () => {
+export const KittyDetail: React.FC = () => {
   const classes = useStyles();
   const theme = useTheme();
+
+  const {messages} = useIntl();
   const [errorMessage, setErrorMessage] = useState<string>();
   const params = useParams<Params>();
 
@@ -250,6 +259,38 @@ export const KittyDetail = () => {
     }
   }, [kittygotchi.data, chainId, defaultAccount]);
 
+  const accounts = useSelector<AppState, AppState['ui']['wallet']>(
+    (state) => state.ui.wallet,
+  );
+
+  const transferAssetDialogToggler = useToggler();
+  const selectAddressDialogToggler = useToggler();
+  const [selectedAddress, setSelectedAddress] = useState<string>();
+
+  const handleOpenTransfer = useCallback(() => {
+    transferAssetDialogToggler.set(true);
+  }, [transferAssetDialogToggler]);
+
+  const handleOpenSelectAddress = useCallback(() => {
+    selectAddressDialogToggler.set(true);
+  }, [selectAddressDialogToggler]);
+
+  const handleSelectAddress = useCallback(
+    (address: string) => {
+      setSelectedAddress(address);
+      selectAddressDialogToggler.set(false);
+    },
+    [selectAddressDialogToggler],
+  );
+
+  const handleCloseSelectAddress = useCallback(() => {
+    selectAddressDialogToggler.set(false);
+  }, [selectAddressDialogToggler]);
+
+  const handleCloseTransferDialog = useCallback(() => {
+    transferAssetDialogToggler.set(false);
+  }, [transferAssetDialogToggler]);
+
   return (
     <>
       <RewardDialog
@@ -268,6 +309,24 @@ export const KittyDetail = () => {
           open: feedingToggler.show,
           onClose: handleCloseFeedingDialog,
         }}
+      />
+      <SelectAddressDialog
+        open={selectAddressDialogToggler.show}
+        accounts={accounts.evm}
+        onSelectAccount={handleSelectAddress}
+        onClose={handleCloseSelectAddress}
+      />
+      <TransferAssetDialog
+        defaultAddress={selectedAddress}
+        onSelectAddress={handleOpenSelectAddress}
+        dialogProps={{
+          open: transferAssetDialogToggler.show,
+          maxWidth: 'xs',
+          fullWidth: true,
+          onClose: handleCloseTransferDialog,
+        }}
+        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        tokenId={kittygotchi.data?.id}
       />
       <Box>
         <Box mb={4}>
@@ -361,6 +420,16 @@ export const KittyDetail = () => {
                             <Tooltip title='Edit'>
                               <RoundedIconButton onClick={handleClickEdit}>
                                 <Edit />
+                              </RoundedIconButton>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip
+                              title={
+                                messages['app.kittygotchi.transfer'] as string
+                              }>
+                              <RoundedIconButton onClick={handleOpenTransfer}>
+                                <SendIcon />
                               </RoundedIconButton>
                             </Tooltip>
                           </Grid>

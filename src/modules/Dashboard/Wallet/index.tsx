@@ -44,7 +44,9 @@ import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {useFavoritesWithMarket} from 'hooks/useFavoritesWithMarket';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
 import FavoriteListItem from 'shared/components/FavoriteListItem';
-import NFTTable from './components/NFTTable';
+
+import NftsTable from '../components/tabs/NftsTab';
+
 import IntlMessages from '../../../@crema/utility/IntlMessages';
 
 type Params = {
@@ -154,7 +156,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                           value='assets'
                           label={messages['app.dashboard.assets'] as string}
                         />
-                        {/* <CustomTab value='nfts' label={'NFTs'} /> */}
+                        <CustomTab value='nfts' label={'NFTs'} />
                         <CustomTab
                           value='trade-history'
                           label={messages['app.dashboard.history'] as string}
@@ -171,11 +173,12 @@ const WalletTabs: React.FC<Props> = (props) => {
                         />
                       </TabPanel>
                       <TabPanel className={classes.zeroPadding} value='nfts'>
-                        <NFTTable
+                        {/* <NFTTable
                           loading={loading}
                           error={error}
                           balances={nftBalances}
-                        />
+                        /> */}
+                        <NftsTable />
                       </TabPanel>
                       <TabPanel value='trade-history'>
                         <TradeHistoryTab address={defaultAccount} />

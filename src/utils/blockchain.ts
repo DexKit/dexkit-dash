@@ -51,6 +51,39 @@ export function getTransactionScannerUrl(
   }
 }
 
+export function getScannerUrl(chainId: number) {
+  switch (chainId) {
+    case NetworkCodes.Ethereum:
+      return `https://etherscan.io`;
+
+    case NetworkCodes.Goerli:
+      return `https://goerli.etherscan.io`;
+
+    case NetworkCodes.Kovan:
+      return `https://kovan.etherscan.io`;
+
+    case NetworkCodes.Ropsten:
+      return `https://ropsten.etherscan.io`;
+
+    case NetworkCodes.SmartChain:
+      return `https://bscscan.com/`;
+
+    case NetworkCodes.SmartChainTestnet:
+      return `https://testnet.bscscan.com`;
+
+    case NetworkCodes.Matic:
+      return `https://polygonscan.com`;
+
+    case NetworkCodes.MaticTestnet:
+      return `https://mumbai.polygonscan.com`;
+
+    case NetworkCodes.Rinkeby:
+      return `https://rinkeby.etherscan.io`;
+    default:
+      return '';
+  }
+}
+
 export function getNetworkChainId(networkName: EthereumNetwork) {
   switch (networkName) {
     case EthereumNetwork.bsc:
@@ -94,4 +127,8 @@ export function hasLondonHardForkSupport(chainId: number) {
     default:
       return false;
   }
+}
+
+export function isAddressEqual(address: string, another: string) {
+  return address.toLowerCase() === another.toLowerCase();
 }

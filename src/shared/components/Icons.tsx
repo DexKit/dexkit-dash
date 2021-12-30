@@ -38,3 +38,4 @@ export {ReactComponent as ShareIcon} from 'assets/images/icons/share.svg';
 export {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 export {ReactComponent as LockIcon} from 'assets/images/icons/lock.svg';
 export {ReactComponent as OpenSeaIcon} from 'assets/images/icons/opensea.svg';
+export {ReactComponent as SettingsIcon} from 'assets/images/icons/settings-icon.svg';
