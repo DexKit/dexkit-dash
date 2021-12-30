@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react';
+import { useState, useCallback } from 'react';
 
 import {
   GameDuration,
@@ -24,6 +24,8 @@ export interface GameFiltersState {
   isBitboy: boolean;
   setIsMyGames: (value: boolean) => void;
   isMyGames: boolean;
+  setIsJackpot: (value: boolean) => void;
+  isJackpot: boolean;
   setOrderByGame: (value: GameOrderBy) => void;
   orderByGame: GameOrderBy;
   reset(): void;
@@ -43,6 +45,7 @@ export function useGamesFilters(): GameFiltersState {
   const [duration, setDuration] = useState<GameDuration>(GameDuration.ALL);
 
   const [isBitboy, setIsBitboy] = useState(false);
+  const [isJackpot, setIsJackpot] = useState(false);
   const [isMyGames, setIsMyGames] = useState(false);
 
   const reset = useCallback(() => {
@@ -53,6 +56,7 @@ export function useGamesFilters(): GameFiltersState {
     setGameType(GameType.ALL);
     setDuration(GameDuration.ALL);
     setIsBitboy(false);
+    setIsJackpot(false);
     setIsMyGames(false);
   }, []);
 
@@ -61,6 +65,7 @@ export function useGamesFilters(): GameFiltersState {
       orderByGame !== GameOrderBy.HighLevel ||
       isMyGames ||
       isBitboy ||
+      isJackpot ||
       duration !== GameDuration.ALL ||
       numberOfPlayers !== NumberOfPLayers.ALL ||
       stakeAmount !== GameStakeAmount.ALL ||
@@ -71,6 +76,7 @@ export function useGamesFilters(): GameFiltersState {
     orderByGame,
     isMyGames,
     isBitboy,
+    isJackpot,
     duration,
     numberOfPlayers,
     stakeAmount,
@@ -86,6 +92,8 @@ export function useGamesFilters(): GameFiltersState {
     setIsMyGames,
     isBitboy,
     setIsBitboy,
+    isJackpot,
+    setIsJackpot,
     duration,
     setDuration,
     numberOfPlayers,

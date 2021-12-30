@@ -20,6 +20,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -77,7 +78,7 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
               alignContent='center'>
               <CheckCircleOutlineIcon className={clsx(classes.icon)} />
             </Box>
-            <Typography variant='body1'>Transaction created</Typography>
+            <Typography variant='body1'><IntlMessages id='app.wizard.transactionCreated' /></Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -100,14 +101,14 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
             </Box>
             <Box mb={2}>
               <Typography align='center' variant='h5'>
-                Transaction created
+              <IntlMessages id='app.wizard.transactionCreated' />
               </Typography>
               <Typography align='center' variant='body1'>
-                Please, view the transaction for more information
+              <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
               </Typography>
             </Box>
             <Button onClick={handleViewTransaction} color='primary' fullWidth>
-              View transaction
+              <IntlMessages id='app.wizard.viewTransaction' />
             </Button>
           </Grid>
         </Grid>

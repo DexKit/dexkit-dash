@@ -6,6 +6,7 @@ import {
   DISPLAY_TYPE_BOOST_PERCENTAGE,
   DISPLAY_TYPE_NUMBER,
 } from 'modules/Wizard/types';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 export interface CollectionItemAttribute {
   onChange: (attr: CollectionAttribute, index: number) => void;
@@ -50,11 +51,17 @@ export const CollectionItemAttribute = (props: CollectionItemAttribute) => {
           fullWidth
           value={attribute.display_type || ''}
           onChange={handleChange}>
-          <MenuItem value=''>None</MenuItem>
-          <MenuItem value={DISPLAY_TYPE_NUMBER}>Number</MenuItem>
-          <MenuItem value={DISPLAY_TYPE_BOOST_NUMBER}>Boost number</MenuItem>
+          <MenuItem value=''>
+            <IntlMessages id='app.wizard.none' />
+          </MenuItem>
+          <MenuItem value={DISPLAY_TYPE_NUMBER}>
+            <IntlMessages id='app.wizard.number' />
+          </MenuItem>
+          <MenuItem value={DISPLAY_TYPE_BOOST_NUMBER}>
+            <IntlMessages id='app.wizard.boostNumber' />
+          </MenuItem>
           <MenuItem value={DISPLAY_TYPE_BOOST_PERCENTAGE}>
-            Boost Percentage
+            <IntlMessages id='app.wizard.boostPercentage' />
           </MenuItem>
         </TextField>
       </Grid>

@@ -22,6 +22,8 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AddIcon from '@material-ui/icons/Add';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 import {useWeb3} from 'hooks/useWeb3';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -140,17 +142,21 @@ export const CreateWallet = (props: Props) => {
     [email, onConnectMagicEmail],
   );
 
+  const {messages} = useIntl();
+
   return (
     <Box>
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='h5'>Login to DexKit Wallet</Typography>
+              <Typography variant='h5'>
+                <IntlMessages id='app.onBoarding.loginToDexkitWallet' />
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body2'>
-                Enter your email below to login your wallet.
+                <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -158,7 +164,7 @@ export const CreateWallet = (props: Props) => {
                 <TextField
                   value={email}
                   onChange={handleChange}
-                  label='email@example.com'
+                  label={messages['app.onBoarding.emailExample']}
                   variant='outlined'
                   fullWidth
                 />
@@ -171,7 +177,7 @@ export const CreateWallet = (props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>
-                Or continue with one of the social networks below:
+                <IntlMessages id='app.onBoarding.orContinueWithOneOfTheSocial' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -201,7 +207,7 @@ export const CreateWallet = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='body1'>
-                          Twitter
+                          <IntlMessages id='app.onBoarding.twitter' />
                         </Typography>
                       </Box>
                     </Paper>
@@ -294,7 +300,7 @@ export const CreateWallet = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='body1'>
-                          Discord
+                          <IntlMessages id='app.onBoarding.discord' />
                         </Typography>
                       </Box>
                     </Paper>
@@ -325,7 +331,7 @@ export const CreateWallet = (props: Props) => {
                           className={classes.walletActionButtonText}
                           align='center'
                           variant='body1'>
-                          Google
+                          <IntlMessages id='app.onBoarding.google' />
                         </Typography>
                       </Box>
                     </Paper>
@@ -335,7 +341,7 @@ export const CreateWallet = (props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>
-                Or connect an external wallet like Metamask
+                <IntlMessages id='app.onBoarding.orConnectAnExternalWallet' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -356,10 +362,10 @@ export const CreateWallet = (props: Props) => {
                       </Grid>
                       <Grid item xs>
                         <Typography variant='body1' style={{fontWeight: 500}}>
-                          Connect the external wallet
+                          <IntlMessages id='app.onBoarding.connectTheExternalWallet' />
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                          Click here to choose external wallets like Metamask
+                          <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
                         </Typography>
                       </Grid>
 

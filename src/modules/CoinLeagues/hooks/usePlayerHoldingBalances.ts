@@ -11,7 +11,7 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
   return useQuery(
     ['GET_LEAGUES_PLAYER_TOKEN_BALANCES', game?.players],
     async () => {
-      if (!game?.players && !enable) {
+      if (!game?.players || !enable) {
         return;
       }
       return await getPlayerMultipliers(

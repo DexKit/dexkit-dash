@@ -4,6 +4,7 @@ import React, {useCallback} from 'react';
 import CollectionItem from '../CollecttionItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface ItemsStepProps {
   values: any;
@@ -51,7 +52,7 @@ export const ItemsStep = (props: ItemsStepProps) => {
               onClick={onAddItem}
               variant='outlined'
               color='primary'>
-              Add item
+              <IntlMessages id='app.wizard.addItem' />
             </Button>
           </Grid>
         </Grid>
@@ -67,7 +68,7 @@ export const ItemsStep = (props: ItemsStepProps) => {
                 startIcon={<ArrowBackIcon />}
                 onClick={onBack}
                 variant='outlined'>
-                Back
+                <IntlMessages id='app.wizard.back' />
               </Button>
 
               <Button
@@ -76,7 +77,7 @@ export const ItemsStep = (props: ItemsStepProps) => {
                 onClick={onNext}
                 variant='contained'
                 color='primary'>
-                {items.length > 0 ? 'Next' : 'Skip'}
+                {items.length > 0 ? <IntlMessages id='app.wizard.next' /> : <IntlMessages id='app.wizard.skip' />}
               </Button>
             </Box>
           </Box>

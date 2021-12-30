@@ -4,6 +4,8 @@ import {ReactComponent as CloseCircle} from 'assets/images/icons/close-circle.sv
 import {Box, makeStyles, Grid, Typography, IconButton} from '@material-ui/core';
 import { getNormalizedUrl } from 'utils/browser';
 import { ChampionMetaItem } from 'modules/CoinLeagues/utils/types';
+import { getChampionsMultiplier } from 'modules/CoinLeagues/utils/champions';
+import { BigNumber } from 'ethers';
 
 type Props = {
   handleDelete: () => void;
@@ -56,6 +58,11 @@ export const ChampionItem = (props: Props) => {
         <Grid item xs>
           <Typography variant='body2' color='textSecondary'>
             {champion?.name}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='body2' color='textSecondary'>
+            {getChampionsMultiplier(BigNumber.from(champion?.rarity || '7'))} Multiplier
           </Typography>
         </Grid>
         <Grid item>

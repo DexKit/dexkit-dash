@@ -1,6 +1,6 @@
 import {BigNumber} from '@ethersproject/bignumber';
 import {ethers} from 'ethers';
-import {BITBOY_TEAM, CREATOR_ADDRESSES} from '../constants';
+import {BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS} from '../constants';
 import {
   GameLevel,
   GameOrderBy,
@@ -25,6 +25,20 @@ export const GET_BITBOY_NAME = (address?: string) => {
     (a) => a.address.toLowerCase() === address.toLowerCase(),
   );
 };
+
+export const GET_CREATOR_LABELS = (address?: string) => {
+  if (!address) {
+    return false;
+  }
+  const creator = CREATOR_LABELS.find(
+    (a) => a.address.toLowerCase() === address.toLowerCase(),
+  );
+  if(creator){
+    return creator.label;
+  }
+};
+
+
 
 export const GET_GAME_ORDER_OPTIONS = () => {
   return [

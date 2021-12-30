@@ -194,7 +194,7 @@ const CreateGameModal = (props: Props) => {
             amountUnit: ethers.utils.parseEther(String(entryAmount)),
             numCoins: coins,
             abortTimestamp: Math.round(
-              new Date().getTime() / 1000 + duration * 3,
+              startDate / 1000 + duration * 3,
             ),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,

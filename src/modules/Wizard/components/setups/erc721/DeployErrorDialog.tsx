@@ -10,6 +10,7 @@ import {
   Button,
 } from '@material-ui/core';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface DeployErrorDialogProps extends DialogProps {
   error: string;
@@ -41,7 +42,7 @@ export const DeployErrorDialog = (props: DeployErrorDialogProps) => {
           </Grid>
           <Grid item>
             <Typography gutterBottom align='center' variant='h5'>
-              Smart contract deploy failed
+              <IntlMessages id='app.wizard.smartContractDeployFailed' />
             </Typography>
             <Typography
               style={{color: theme.palette.error.main}}
@@ -57,11 +58,13 @@ export const DeployErrorDialog = (props: DeployErrorDialogProps) => {
                   onClick={onTryAgain}
                   color='primary'
                   variant='contained'>
-                  Try again
+                  <IntlMessages id='app.wizard.tryAgain' />
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                <Button onClick={onCancel}>Close</Button>
+                <Button onClick={onCancel}>
+                  <IntlMessages id='app.wizard.close' />
+                </Button>
               </Grid>
             </Grid>
           </Grid>

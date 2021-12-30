@@ -1,13 +1,9 @@
 import React, {useCallback} from 'react';
-import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
-  Box,
   Dialog,
   makeStyles,
-  Typography,
-  DialogTitle,
   DialogContent,
-  IconButton,
   useMediaQuery,
   useTheme,
 } from '@material-ui/core';
@@ -17,8 +13,8 @@ import SenderForm from './SenderForm';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
-import CloseIcon from '@material-ui/icons/Close';
 import {Token} from 'types/app';
+import {CustomDialogTitle} from 'shared/components/CustomDialogTitle';
 
 interface Props {
   open: boolean;
@@ -101,30 +97,12 @@ const Sender: React.FC<Props> = (props) => {
       open={props.open}
       onClose={props.onClose}
       aria-labelledby='form-dialog-title'>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <ExportWhiteIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Send' />
-            </Typography>
-          </Box>
-          <Box>
-            {disableClose ? null : (
-              <IconButton size='small' onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
-            )}
-          </Box>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        title={'Creating Champion'}
+        icon={<ExportWhiteIcon className={classes.icon} />}
+        onClose={disableClose ? undefined : handleClose}
+      />
+
       <DialogContent dividers>
         <SenderForm
           balances={props.balances}

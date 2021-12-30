@@ -202,7 +202,7 @@ export const KittyEdit = () => {
                   <IntlMessages id='nfts.walletBreadcrumbDashboard' />
                 </Link>
                 <Link color='inherit' component={RouterLink} to='/profile'>
-                  Kittygotchi
+                <IntlMessages id="app.kittygotchi.kittygotchi" />
                 </Link>
               </Breadcrumbs>
             </Grid>
@@ -252,9 +252,10 @@ export const KittyEdit = () => {
           (chainId === ChainId.Matic || chainId === ChainId.Mumbai) ? (
             <Grid item xs={12} sm={10}>
               <Alert severity='info'>
-                You need at least{' '}
-                <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong> to edit your
-                kittygotchi
+                <IntlMessages id='app.kittygotchi.atLeast' />{' '}
+                <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong>{' '}
+                <IntlMessages id='app.kittygotchi.toEdit' />
+                
               </Alert>
             </Grid>
           ) : null}
@@ -360,7 +361,7 @@ export const KittyEdit = () => {
                               <Typography
                                 color='textSecondary'
                                 variant='overline'>
-                                KIT Balance
+                                KIT <IntlMessages id='app.kittygotchi.kitBalance' />
                               </Typography>
 
                               <Grid

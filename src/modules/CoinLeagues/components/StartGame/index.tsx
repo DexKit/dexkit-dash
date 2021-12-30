@@ -19,7 +19,7 @@ import {
 import {useInterval} from 'hooks/utils/useInterval';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import { useNotifications } from 'hooks/useNotifications';
+import {useNotifications} from 'hooks/useNotifications';
 interface Props {
   id?: string;
 }
@@ -135,8 +135,7 @@ export const StartGame = (props: Props) => {
     [game, refetch, onAbortGameCallback, chainId, createNotification, id],
   );
   const abortTime = game?.abort_timestamp;
-  const startTime = game?.start_timestamp
-
+  const startTime = game?.start_timestamp;
 
   const abortTimestamp = useMemo(() => {
     if (abortTime) {
@@ -160,9 +159,13 @@ export const StartGame = (props: Props) => {
     }
   }, [totalPlayers, currentPlayers]);
 
-  useInterval(() => {
-    setActualTimestamp(new Date().getTime());
-  }, 1000, true);
+  useInterval(
+    () => {
+      setActualTimestamp(new Date().getTime());
+    },
+    1000,
+    true,
+  );
 
   const gameCanStart = useMemo(() => {
     if (currentPlayers && startTimestamp) {
@@ -170,7 +173,7 @@ export const StartGame = (props: Props) => {
     }
   }, [startTimestamp, currentPlayers, actualTimestamp, started]);
 
-  const canAbort = useMemo(
+  let canAbort = useMemo(
     () =>
       !started &&
       !gameFull &&
@@ -178,6 +181,7 @@ export const StartGame = (props: Props) => {
       new Date().getTime() > abortTimestamp,
     [started, abortTimestamp, gameFull],
   );
+  canAbort = false;
 
   return (
     <Paper>
