@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useCallback} from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import clsx from 'clsx';
@@ -11,17 +11,8 @@ import Scrollbar from '../../Scrollbar';
 import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
-import {Skeleton} from '@material-ui/lab';
 
-import {
-  Grid,
-  IconButton,
-  Divider,
-  ButtonBase,
-  Avatar,
-  Typography,
-  Link,
-} from '@material-ui/core';
+import {Grid, IconButton, Divider, ButtonBase, Avatar} from '@material-ui/core';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -30,9 +21,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
 import {useProfileKittygotchi} from 'modules/Profile/hooks';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {truncateAddress} from 'utils';
+
 import {useWeb3} from 'hooks/useWeb3';
+import WalletInfo from 'shared/components/WalletInfo';
+
+import {useHistory} from 'react-router';
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
 
 interface AppSidebarProps {
   variant?: string;
@@ -58,9 +52,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const kittygotchiProfile = useProfileKittygotchi();
 
-  const defaultAddress = useDefaultAccount();
-
   const {account, chainId} = useWeb3();
+
+  const history = useHistory();
+
+  const isOnLoginPage = useCallback(() => {
+    return history.location.pathname === LOGIN_WALLET_ROUTE;
+  }, [history]);
 
   return (
     <>
@@ -107,14 +105,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             />
                           </ButtonBase>
                         </Grid>
-                        <Grid item>
-                          <Typography variant='body1'>
+                        {/* <Grid item>
+                          <Typography variant='caption'>
                             {defaultAddress ? (
                               truncateAddress(defaultAddress)
                             ) : (
                               <Skeleton />
                             )}
                           </Typography>
+                          <Typography variant='body2'>3.3 ETH</Typography>
                           <Typography color='textSecondary' variant='body2'>
                             {defaultAddress ? (
                               <Link
@@ -127,7 +126,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                               <Skeleton />
                             )}
                           </Typography>
-                        </Grid>
+                        </Grid> */}
+
+                        {!isOnLoginPage() || account ? (
+                          <Grid item xs>
+                            <WalletInfo />
+                          </Grid>
+                        ) : null}
                       </Grid>
                     </Box>
                   </Grid>

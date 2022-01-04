@@ -6,7 +6,6 @@ import {
   IconButton,
   Tooltip,
   Grid,
-  Hidden,
   Typography,
   useTheme,
   useMediaQuery,
@@ -238,37 +237,35 @@ const WalletInfo = (props: any) => {
                   ? truncateIsAddress(defaultAccountLabel)
                   : '******'}{' '}
               </Typography>
-              <Hidden smDown={true}>
-                <Box display='flex' alignItems='center' alignContent='center'>
-                  <Box mr={1}>
-                    <Typography variant='caption'>
-                      {ethBalanceValue
-                        ? isBalanceVisible
-                          ? ethBalanceValue.toFixed(4)
-                          : '****.**'
-                        : isBalanceVisible
-                        ? ethBalance && tokenAmountInUnits(ethBalance)
-                        : '****.**'}{' '}
-                      {GetNativeCoinFromNetworkName(networkName)}{' '}
-                    </Typography>
-                  </Box>
-                  <ButtonBase
-                    className={classes.visibilityButton}
-                    onClick={handleToggleVisibility}>
-                    {isBalanceVisible ? (
-                      <VisibilityIcon fontSize='inherit' />
-                    ) : (
-                      <VisibilityOffIcon fontSize='inherit' />
-                    )}
-                  </ButtonBase>
-                  <CopyButton
-                    size='small'
-                    copyText={defaultAccount || ''}
-                    tooltip='Copied!'>
-                    <FileCopy color='inherit' style={{fontSize: 16}} />
-                  </CopyButton>
+              <Box display='flex' alignItems='center' alignContent='center'>
+                <Box mr={1}>
+                  <Typography variant='caption'>
+                    {ethBalanceValue
+                      ? isBalanceVisible
+                        ? ethBalanceValue.toFixed(4)
+                        : '****.**'
+                      : isBalanceVisible
+                      ? ethBalance && tokenAmountInUnits(ethBalance)
+                      : '****.**'}{' '}
+                    {GetNativeCoinFromNetworkName(networkName)}{' '}
+                  </Typography>
                 </Box>
-              </Hidden>
+                <ButtonBase
+                  className={classes.visibilityButton}
+                  onClick={handleToggleVisibility}>
+                  {isBalanceVisible ? (
+                    <VisibilityIcon fontSize='inherit' />
+                  ) : (
+                    <VisibilityOffIcon fontSize='inherit' />
+                  )}
+                </ButtonBase>
+                <CopyButton
+                  size='small'
+                  copyText={defaultAccount || ''}
+                  tooltip='Copied!'>
+                  <FileCopy color='inherit' style={{fontSize: 16}} />
+                </CopyButton>
+              </Box>
             </Grid>
           </Grid>
         </Grid>
