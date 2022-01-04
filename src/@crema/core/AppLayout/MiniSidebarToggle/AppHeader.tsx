@@ -249,11 +249,9 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         </Box>
                       </Grid>
                     )}
-                    {!isOnLoginPage() || account ? (
-                      <Grid item>
-                        <WalletInfo />
-                      </Grid>
-                    ) : null}
+                    <Grid item>
+                      <Notifications />
+                    </Grid>
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />

@@ -18,6 +18,7 @@ import {AppState} from 'redux/store';
 import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -48,8 +49,10 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
     }
   }, [onClose]);
 
+  const isMobile = useMobile();
+
   return (
-    <Dialog {...props} fullWidth maxWidth='sm'>
+    <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>
       <DialogTitle>
         <Box
           display='flex'
