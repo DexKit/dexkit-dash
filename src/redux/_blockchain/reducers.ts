@@ -1,10 +1,10 @@
-import {BigNumber} from '@0x/utils';
-import {getType} from 'typesafe-actions';
-import {RootAction} from '../store';
+import { BigNumber } from '@0x/utils';
+import { getType } from 'typesafe-actions';
+import { RootAction } from '../store';
 import * as actions from '../actions';
-import {Web3State} from 'types/blockchain';
-import {TokenBalance} from 'types/app';
-import {ZERO} from 'shared/constants/Blockchain';
+import { Web3State } from 'types/blockchain';
+import { TokenBalance } from 'types/app';
+import { ZERO } from 'shared/constants/Blockchain';
 
 export interface BlockchainState {
   readonly ethAccount: string | undefined;
@@ -24,7 +24,7 @@ const initialBlockchainState: BlockchainState = {
   ethBalance: ZERO,
   wethTokenBalance: undefined,
   blockNumber: 0,
-  chainId: 1,
+  chainId: undefined,
   /* gasInfo: {
       gasPriceInWei: DEFAULT_GAS_PRICE,
       estimatedTimeMs: DEFAULT_ESTIMATED_TRANSACTION_TIME_MS,
@@ -38,15 +38,15 @@ export default (
 ): BlockchainState => {
   switch (action.type) {
     case getType(actions.setEthAccount):
-      return {...state, ethAccount: action.payload};
+      return { ...state, ethAccount: action.payload };
     case getType(actions.setWeb3State):
-      return {...state, web3State: action.payload};
+      return { ...state, web3State: action.payload };
     case getType(actions.setBlockNumber):
-      return {...state, blockNumber: action.payload};
+      return { ...state, blockNumber: action.payload };
     case getType(actions.setTokenBalances):
-      return {...state, tokenBalances: action.payload};
+      return { ...state, tokenBalances: action.payload };
     case getType(actions.setChainId):
-      return {...state, chainId: action.payload};
+      return { ...state, chainId: action.payload };
     case getType(actions.setTokenBalance):
       const tokenBalances = state.tokenBalances;
       const tokenBalance = action.payload;
@@ -54,11 +54,11 @@ export default (
         (t) => t.token.address === tokenBalance.token.address,
       );
       tokenBalances[index] = tokenBalance;
-      return {...state, tokenBalances};
+      return { ...state, tokenBalances };
     case getType(actions.resetWallet):
-      return {...state, web3State: Web3State.NotConnected};
+      return { ...state, web3State: Web3State.NotConnected };
     case getType(actions.setEthBalance):
-      return {...state, ethBalance: action.payload};
+      return { ...state, ethBalance: action.payload };
     default:
       return state;
   }

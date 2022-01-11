@@ -8,13 +8,11 @@
   "coinLeagues.warning.createGame": "Answer all of the options below to continue",
   "coinLeagues.warning.joinGame": "Start join and playing games",
   "coinLeagues.warning.connectWallet": "Please connect your wallet to the supported networks below",
-
   "dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
   "dashboard.swap.info": "In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.",
-
   "shared.copiedClipboard": "Copied to clipboard!",
-
   "app.coinLeagues.waitingWallet": "Waiting Wallet",
+  "app.coinLeagues.maxPrizePool": "Max Prize Pool",
   "app.coinLeagues.error": "Error",
   "app.coinLeagues.gameTime": "Game Time",
   "app.coinLeagues.starts": "Starts",
@@ -142,11 +140,9 @@
   "app.coinLeagues.ranking": "Ranking",
   "app.coinLeagues.wins": "Wins",
   "app.coinLeagues.notEligible": "Not Eligible",
-
   "app.common.tryAgainPlease": "Try again, please",
   "app.common.opsErrorFetchingData": "Ops, error fetching data",
   "app.common.loading": "Loading",
-
   "app.dashboard.infoAboutPage": "Info about this page",
   "app.dashboard.favorites": "Favorites",
   "app.dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
@@ -295,7 +291,6 @@
   "app.dashboard.sharingToken": "Sharing Token",
   "app.dashboard.converted": "Converted",
   "app.dashboard.address": "Address",
-
   "app.dashboard.swap.pleaseSend": "Please, send",
   "app.dashboard.swap.toTheAddressAndWaitTransactionConfirmation": "to the address below and wait for transaction confirmation",
   "app.dashboard.swap.changellyVerificationRequired": "Changelly Verification Required",
@@ -303,7 +298,6 @@
   "app.dashboard.swap.toGetVerified": "To Get Verified",
   "app.dashboard.swap.sendEmailTo": "send an email to",
   "app.dashboard.swap.inTheSubjectLineEnterInformation": "In the subject line, enter the following information",
-
   "app.dashboard.token.tradingPage": "Trading Page",
   "app.dashboard.token.welcomeToTradingPage": "Welcome to the Trading Page! This is where you can place market and limit orders for your favorite tokens across all supported Defi Protocols.",
   "app.dashboard.token.hereYouCanCopyContractAddress": "Here you can copy the contract address for your selected token, share the URL on social media, and click the heart to add it to your favorites",
@@ -314,7 +308,6 @@
   "app.dashboard.token.onceYouHaveConfirmedYourLimitedOrder": "Once you have confirmed your limit order, it will show up in the “My Orders” tab. Here you will see all of your active limit orders that you have placed.",
   "app.dashboard.token.tradeHistoryTabInfo": "In \"Trade History\" tab you can see all of your buys and sells for a token and your calculated profit/loss. There are also links to the block explorer for the transaction.",
   "app.dashboard.token.inThisTabYouCanSeeAnalytics": "In this tab you can see the analytics for your selected token including the market cap, trading volume, 24 hour high and low, as well as links to social platforms and web pages.",
-
   "app.dashboard.wallet.walletPageInfo": "The wallet page is where you can look at your total balances for your connected wallets across the Ethereum and Binance Smart Chain networks.",
   "app.dashboard.wallet.youCanAlsoSeeDefi": "You can also see any Defi assets that you are holding as well.",
   "app.dashboard.wallet.assetChartInfo": "The “Asset Chart” shows you your holdings over a period of time,",
@@ -325,7 +318,6 @@
   "app.dashboard.wallet.accounts.youreAbleToSwitchAccounts": "You are able to switch accounts on the top menu right and the application it will auto update with selected account.",
   "app.dashboard.wallet.accounts.firstAccountIsDefault": "The first account is the default. You can change clicking at the home button in other accounts.",
   "app.dashboard.wallet.accounts.connectWallet": "Connect Wallet in case you need to interact with the network.",
-
   "app.protocolExplorer.wallet": "Wallet",
   "app.protocolExplorer.timestamp": "Timestamp",
   "app.protocolExplorer.type": "Type",
@@ -383,7 +375,6 @@
   "app.protocolExplorer.quoteAmount24": "Quote Amount (24hrs)",
   "app.protocolExplorer.volume24": "Volume Amount (24hrs)",
   "app.protocolExplorer.trades24": "Trade Amount (24hrs)",
-
   "app.affiliate.example": "Example",
   "app.affiliate.time": "Time",
   "app.affiliate.total": "Total",
@@ -394,7 +385,6 @@
   "app.affiliate.affiliate": "Affiliate",
   "app.affiliate.highestCap": "Highest Cap",
   "app.affiliate.buyAmount": "Buy Amount",
-
   "app.affiliate.page.title": "Affiliate page",
   "app.affiliate.page.dashboard": "Dashboard",
   "app.affiliate.page.account": "Account Receive Rewards",
@@ -408,10 +398,8 @@
   "app.affiliate.dialog.about.p2": "Check last fees collected by your affiliate link and total collected rewards. DexKit assumes that all trades done by this address are only related to the affiliate fees, if you trade using this address it will count as well as collected fee.",
   "app.affiliate.dialog.about.p3": "Additional fields are accepted, you can for instance append to your link the inputCurrency and outputCurrency to change the default tokens that show up.",
   "app.affiliate.revenue.title": "Total Affiliate Revenue",
-
   "app.history.tradeHistory": "Trade History",
   "app.history.viewTx": "View TX",
-
   "app.game": "Game",
   "app.coins": "Coins",
   "app.starts": "Starts",
@@ -503,11 +491,9 @@
   "app.waitingPlayers": "Waiting for the players",
   "app.everybodyIsHere": "Everybody is here",
   "app.notSupportedNetwork": "Not Supported Network",
-
   "app.tryAgainPlease": "Try again, please",
   "app.opsErrorFetchingData": "Ops, error fetching data",
   "app.loading": "Loading",
-
   "app.favorites": "Favorites",
   "app.dontHaveFavorites": "You don't have favorites yet",
   "app.goToExplorer": "Go to Explorer",
@@ -537,7 +523,6 @@
   "app.hoursHigh": "Hour High",
   "app.choose": "Choose",
   "app.chartSearchInfo": "Search by name, symbol or paste address",
-
   "app.noBalanceWallet": "No balances found in your wallet",
   "app.noBalanceChosenToken": "No available balance for chosen token",
   "app.insufficientBalanceChoseToken": "Insufficient balance for chosen token",
@@ -589,17 +574,14 @@
   "app.youDontHaveFavoritesYet": "You don't have favorites yet",
   "app.redirectingToWallet": "Redirecting to Wallet",
   "app.youDontHaveDefiAssets": "You don't have DEFI Assets",
-
   "app.procedureInfo": "Procedure information",
   "app.mnemonicInfo": "Mnemonic info",
   "app.mnemonicConfirmation": "Mnemonic confirmation",
   "app.passphraseCreation": "Passphrase creation",
   "app.resultGeneratedWallet": "Result of generated wallet",
-
   "app.noDataAvailableForProtocol": "No data available for this protocol",
   "app.noDataAvailableForToken": "No data available for this token",
   "app.tradeToken": "Trade token",
-
   "app.pooled": "Pooled",
   "app.pairs": "Pairs",
   "app.chart": "Chart",
@@ -620,7 +602,6 @@
   "app.noDataAvailableForPairOn": "No data available for this pair on",
   "app.realTimeFromDEX": "Real Time Price from all DEX's",
   "app.lastUpdate": "Last update",
-
   "app.affiliate": "Affiliate",
   "app.block": "Block",
   "app.chain": "Chain",
@@ -696,36 +677,27 @@
   "app.pool": "Pool",
   "app.kitMarket": "Kit Market",
   "app.topPairs": "Top Pairs",
-
   "app.youSend": "You Send",
   "app.youReceive": "You Receive",
-
   "app.baseAmount24": "Base Amount (24hrs)",
   "app.quoteAmount24": "Quote Amount (24hrs)",
   "app.volume24": "Volume (24hrs)",
   "app.trades24": "Trades (24hrs)",
-
   "app.maker": "Maker",
   "app.makerAmount": "Maker Amount",
   "app.taker": "Taker",
   "app.takerAmount": "Taker Amount",
   "app.expiry": "Expiry",
-
   "app.from": "from",
   "app.to": "to",
-
   "app.connectWalletCheck": "You need to connect your wallet to check this page",
-
   "title.tradesByCurrencies": "Trades By Currencies",
   "title.tokenOrderPairs": "Token Order Pairs",
   "title.tokenInfo": "Token Info",
   "title.tokenStatistics": "Token Statistics",
   "title.orderList": "Order List",
-
   "wizard.launch": "Wizard Launch",
-
   "common.buyKit": "Buy Kit",
-
   "button.click_me": "Click Me",
   "dashboard.quickStats": "Quick Statistics",
   "dashboard.totalClients": "Total Clients",
@@ -946,9 +918,7 @@
   "faq.pricing": "Pricing",
   "faq.licenseTypes": "License Types",
   "faq.support": "Support",
-
   "common.viewMore": "View More",
-
   "common.tokens": "Tokens",
   "common.token": "Token",
   "common.pairs": "Pairs",
@@ -1442,12 +1412,10 @@
   "nfts.detail.listingEventCreated": "Created",
   "nfts.detail.listingEventTransfer": "Transfer",
   "nfts.detail.listingEventSale": "Sale",
-
   "nfts.detail.ordersPriceHeader": "Price",
   "nfts.detail.ordersUSDPriceHeader": "Price (USD)",
   "nfts.detail.ordersExpirationHeader": "Expiration",
   "nfts.detail.ordersFromHeader": "From",
-
   "nfts.detail.offersMakeOffer": "Make Offer",
   "nfts.detail.offersPriceHeader": "Price",
   "nfts.detail.offersUSDPriceHeader": "Price (USD)",
@@ -1714,7 +1682,6 @@
   "app.kittygotchi.viewTransaction": "View transaction",
   "app.kittygotchi.fed": "Kittygotchi Fed",
   "app.kittygotchi.keepComing": "Keep coming back to feed your kittygotchi",
-
   "app.kittygotchi.every24": "every 24h",
   "app.kittygotchi.close": "Close",
   "app.kittygotchi.transactionFailed": "Transaction failed",
@@ -1722,7 +1689,6 @@
   "app.kittygotchi.tryAgain": "Try again",
   "app.kittygotchi.creatingYour": "Creating your Kittygotchi",
   "app.kittygotchi.pleaseWait": "Please, wait for transaction confirmation.",
-
   "app.kittygotchi.created": "Kittygotchi created",
   "app.kittygotchi.canFeedEvery24H": "You can feed your kittygotchi every 24h",
   "app.kittygotchi.view": "View Kittygotchi",
@@ -1736,7 +1702,6 @@
   "app.kittygotchi.atk": "ATK",
   "app.kittygotchi.def": "DEF",
   "app.kittygotchi.run": "RUN",
-
   "app.wizard.wizard": "Wizard",
   "app.wizard.typeOfSmartContract": "What type of smart contract do you need?",
   "app.wizard.cancel": "Cancel",
@@ -1806,7 +1771,6 @@
   "app.wizard.viewSourceOnGithub": "View source on GitHub",
   "app.wizard.nameOfYourToken": "The name of your token",
   "app.wizard.symbolUsedToIdentify": "Symbol used to identify the token in the blockchain",
-
   "app.wizard.supply": "Supply",
   "app.wizard.amountOfTokenSupply": "The amount of token supply",
   "app.wizard.myCollections": "My Collections",
@@ -1814,7 +1778,6 @@
   "app.wizard.createAndManageYourCollections": "Create and manage your collections",
   "app.wizard.createAndManageYourTokens": "Create and manage your tokens",
   "app.wizard.notConnected": "Not connected",
-
   "app.onBoarding.loginToDexkitWallet": "Login to DexKit Wallet",
   "app.onBoarding.enterYourEmailBelow": "Enter your email below to login your wallet.",
   "app.onBoarding.orContinueWithOneOfTheSocial": "Or continue with one of the social networks below:",

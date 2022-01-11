@@ -69,7 +69,7 @@ export const useCoinLeagues = (id?: string) => {
       if (!id || !factoryAddress) {
         return;
       }
-      return getGameAddressFromId(factoryAddress, id);
+      return getGameAddressFromId(factoryAddress, id, provider);
     },
   );
 
@@ -78,6 +78,7 @@ export const useCoinLeagues = (id?: string) => {
       return addressQuery.data;
     }
   }, [addressQuery.data]);
+
 
   const winnerQuery = useQuery(['GET_WINNER', address, account], () => {
     if (!address || !account || web3State !== Web3State.Done) {
@@ -256,7 +257,7 @@ export const useChampionsRoom = (id?: string, isNFT = false) => {
       if (!id || !factoryAddress) {
         return;
       }
-      return getGameAddressFromId(factoryAddress, id);
+      return getGameAddressFromId(factoryAddress, id, provider);
     },
   );
 
