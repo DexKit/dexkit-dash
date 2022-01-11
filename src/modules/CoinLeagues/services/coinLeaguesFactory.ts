@@ -1,11 +1,11 @@
-import {CallInput} from '@indexed-finance/multicall';
-import {ContractTransaction, ethers, providers} from 'ethers';
-import {Interface} from 'ethers/lib/utils';
-import {GameParams} from 'types/coinsleague';
+import { CallInput } from '@indexed-finance/multicall';
+import { ContractTransaction, ethers, providers } from 'ethers';
+import { Interface } from 'ethers/lib/utils';
+import { GameParams } from 'types/coinsleague';
 import coinLeaguesFactoryAbi from '../constants/ABI/coinLeaguesFactory.json';
 import coinLeagueFactoryNFTAbi from '../constants/ABI/coinLeagueFactoryNFT.json';
-import {getMulticallFromProvider} from '../../../services/multicall';
-import {getEthers, getProvider} from '../../../services/web3modal';
+import { getMulticallFromProvider } from '../../../services/multicall';
+import { getEthers, getProvider } from '../../../services/web3modal';
 
 // 0xA9f159D887745264aFe3C0Ba43BEad4255Af34E9
 // 0x1539ffBa6D1c63255dD9F61627c8B4a855E82F2a
@@ -23,6 +23,10 @@ export const getCoinLeaguesFactoryContractWithProvider = async (address: string,
   return new ethers.Contract(address, isNFT ? coinLeagueFactoryNFTAbi : coinLeaguesFactoryAbi, pr);
 };
 
+export const getCoinLeaguesFactoryContractWithNetworkProvider = async (address: string, provider: any, isNFT = false) => {
+  return new ethers.Contract(address, isNFT ? coinLeagueFactoryNFTAbi : coinLeaguesFactoryAbi, provider);
+};
+
 
 
 const GAS_PRICE_MULTIPLIER = 2;
@@ -35,30 +39,30 @@ export const createGame = async (
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
-    if(params.isNFT){
-      return (await getCoinLeaguesFactoryContractWithProvider(address, provider, params.isNFT)).createGame(
-        params.numPlayers,
-        params.duration,
-        params.amountUnit,
-        params.numCoins,
-        params.abortTimestamp,
-        params.startTimestamp,
-        params.type,
-        params.championRoom,
-        {gasPrice},
-      ) as Promise<ContractTransaction>;
-    }else{
-      return (await getCoinLeaguesFactoryContractWithProvider(address, provider, params.isNFT)).createGame(
-        params.numPlayers,
-        params.duration,
-        params.amountUnit,
-        params.numCoins,
-        params.abortTimestamp,
-        params.startTimestamp,
-        params.type,
-        {gasPrice},
-      ) as Promise<ContractTransaction>;
-    }
+  if (params.isNFT) {
+    return (await getCoinLeaguesFactoryContractWithProvider(address, provider, params.isNFT)).createGame(
+      params.numPlayers,
+      params.duration,
+      params.amountUnit,
+      params.numCoins,
+      params.abortTimestamp,
+      params.startTimestamp,
+      params.type,
+      params.championRoom,
+      { gasPrice },
+    ) as Promise<ContractTransaction>;
+  } else {
+    return (await getCoinLeaguesFactoryContractWithProvider(address, provider, params.isNFT)).createGame(
+      params.numPlayers,
+      params.duration,
+      params.amountUnit,
+      params.numCoins,
+      params.abortTimestamp,
+      params.startTimestamp,
+      params.type,
+      { gasPrice },
+    ) as Promise<ContractTransaction>;
+  }
 };
 
 export const getGamesAddressFromFactory = async (
@@ -235,8 +239,9 @@ export const getEndedGamesAddressFromFactory = async (
 export const getGameAddressFromId = async (
   factoryAddress: string,
   id: string,
+  provider: any,
 ): Promise<string> => {
-  return (await getCoinLeaguesFactoryContract(factoryAddress)).allGames(
+  return (await getCoinLeaguesFactoryContractWithNetworkProvider(factoryAddress, provider)).allGames(
     id,
   ) as string;
 };
