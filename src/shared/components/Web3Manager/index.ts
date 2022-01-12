@@ -38,7 +38,7 @@ export const Web3Manager = () => {
       if (
         web3Modal.cachedProvider ||
         (isMobile() && (web3 || ethereum)) ||
-        (ethereum && ethereum.isMetaMask )
+        (ethereum && ethereum?.isMetaMask )
       ) {
         onConnectWeb3();
       }
