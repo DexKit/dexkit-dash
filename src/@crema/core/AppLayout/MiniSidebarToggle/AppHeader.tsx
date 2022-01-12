@@ -128,6 +128,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
+          window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         }
       }
