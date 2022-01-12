@@ -8,11 +8,14 @@
   "coinLeagues.warning.createGame": "Answer all of the options below to continue",
   "coinLeagues.warning.joinGame": "Start join and playing games",
   "coinLeagues.warning.connectWallet": "Please connect your wallet to the supported networks below",
+  "coinLeagues.warning.gameType": "Game Type",
   "dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
   "dashboard.swap.info": "In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.",
   "shared.copiedClipboard": "Copied to clipboard!",
-  "app.coinLeagues.waitingWallet": "Waiting Wallet",
   "app.coinLeagues.maxPrizePool": "Max Prize Pool",
+
+  "app.coinLeagues.waitingWallet": "Waiting Wallet",
+  "app.coinLeagues.warning.createGame": "Create Game",
   "app.coinLeagues.error": "Error",
   "app.coinLeagues.gameTime": "Game Time",
   "app.coinLeagues.starts": "Starts",
@@ -143,6 +146,11 @@
   "app.common.tryAgainPlease": "Try again, please",
   "app.common.opsErrorFetchingData": "Ops, error fetching data",
   "app.common.loading": "Loading",
+  "app.common.wallet": "Wallet",
+  "app.common.favorites": "Favorites",
+  "app.common.customNetworks": "Custom Networks",
+  "app.common.addCustomNetwork": "Add Custom Network",
+
   "app.dashboard.infoAboutPage": "Info about this page",
   "app.dashboard.favorites": "Favorites",
   "app.dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
@@ -1703,6 +1711,8 @@
   "app.kittygotchi.def": "DEF",
   "app.kittygotchi.run": "RUN",
   "app.wizard.wizard": "Wizard",
+  "app.wizard.noCollectionsYet": "No Collections yet",
+  "app.wizard.noTokensYet": "No tokens yet",
   "app.wizard.typeOfSmartContract": "What type of smart contract do you need?",
   "app.wizard.cancel": "Cancel",
   "app.wizard.next": "Next",
@@ -1809,5 +1819,7 @@
   "app.onBoarding.addAccountForReadOnly": "Add account for read-only mode.",
   "app.onBoarding.emailExample": "email@example.com",
   "app.onBoarding.address": "Address",
-  "app.onBoarding.eMail": "E-mail"
+  "app.onBoarding.eMail": "E-mail",
+  "app.wallet.networkIsNotSupported": "is not supported",
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x does not support this network yet. Please, switch to Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom or Celo to trade in our app."
 }

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {
   Badge,
@@ -10,55 +10,55 @@ import {
   Link,
   Typography,
 } from '@material-ui/core';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import {useWeb3} from 'hooks/useWeb3';
+import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 
-import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
 
-import { SupportedNetworkType } from 'types/blockchain';
+import {SupportedNetworkType} from 'types/blockchain';
 import FormControl from '@material-ui/core/FormControl';
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
 
-import { Empty } from 'shared/components/Empty';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { HOME_ROUTE } from 'shared/constants/routes';
+import {Empty} from 'shared/components/Empty';
+import {Link as RouterLink, useHistory} from 'react-router-dom';
+import {HOME_ROUTE} from 'shared/constants/routes';
 import ContainedInput from 'shared/components/ContainedInput';
-import { Search } from '@material-ui/icons';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { setDefaultAccount } from 'redux/_ui/actions';
-import { useDispatch } from 'react-redux';
-import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
+import {Search} from '@material-ui/icons';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
+import {useDispatch} from 'react-redux';
+import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import { ShareButton } from 'shared/components/ShareButton';
+import {ShareButton} from 'shared/components/ShareButton';
 import useDiscord from 'hooks/useDiscord';
-import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
+import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
 import CardGameV2 from 'modules/CoinLeagues/components/CardGame';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import SwapButton from 'shared/components/SwapButton';
-import { GameOrderBy, RoomType } from 'modules/CoinLeagues/constants/enums';
-import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
+import {GameOrderBy, RoomType} from 'modules/CoinLeagues/constants/enums';
+import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
-import { useToggler } from 'hooks/useToggler';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import {useToggler} from 'hooks/useToggler';
 
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const JoinGames = () => {
   const history = useHistory();
-  const { account, chainId } = useWeb3();
+  const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
+  const {tokenSymbol} = useChainInfo();
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
 
   useDiscord();
   const [room, setRoom] = useState(RoomType.Main);
@@ -68,13 +68,16 @@ const JoinGames = () => {
   const [search, setSearch] = useState('');
   const filtersState = useGamesFilters();
 
-  const waitingGamesQuery = useCoinLeagueGames({
-    status: 'Waiting',
-    accounts: account ? [account] : undefined,
-    filters: filtersState,
-  }, isNFT);
+  const waitingGamesQuery = useCoinLeagueGames(
+    {
+      status: 'Waiting',
+      accounts: account ? [account] : undefined,
+      filters: filtersState,
+    },
+    isNFT,
+  );
 
-  const { listGamesRoute, enterGameRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
   const gamesToJoin = useMemo(() => {
     if (waitingGamesQuery.data) {
       return waitingGamesQuery.data.games.filter(
@@ -160,7 +163,10 @@ const JoinGames = () => {
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
                 <IntlMessages id='app.coinLeagues.games' />
               </Link>
-              <Typography>  <IntlMessages id='app.coinLeagues.discoverGames' /></Typography>
+              <Typography>
+                {' '}
+                <IntlMessages id='app.coinLeagues.discoverGames' />
+              </Typography>
             </Breadcrumbs>
           </Grid>
         </Grid>
@@ -168,14 +174,17 @@ const JoinGames = () => {
           <Grid item xs={12}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
             />
           </Grid>
         </Hidden>
         <Grid item xs={6} sm={3} xl={3}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5'>  <IntlMessages id='app.coinLeagues.discoverGames' /></Typography>
+            <Typography variant='h5'>
+              {' '}
+              <IntlMessages id='app.coinLeagues.discoverGames' />
+            </Typography>
             <Box p={2}>
               <FormControl>
                 <Select
@@ -194,7 +203,7 @@ const JoinGames = () => {
           <Grid item xs={12} sm={5} xl={5}>
             <img
               src={CoinsLeagueBanner}
-              style={{ borderRadius: '12px' }}
+              style={{borderRadius: '12px'}}
               alt={'Coinleague Banner'}
             />
           </Grid>
@@ -208,7 +217,10 @@ const JoinGames = () => {
               <ShareButton shareText={`Coin leagues Games`} />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
+              <BuyCryptoButton
+                btnMsg={`Buy ${tokenSymbol}`}
+                defaultCurrency={tokenSymbol}
+              />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />
@@ -239,7 +251,9 @@ const JoinGames = () => {
             justifyContent='space-between'
             spacing={2}>
             <Grid item>
-              <Typography variant='h6'><IntlMessages id='app.coinLeagues.gamesToJoin' /></Typography>
+              <Typography variant='h6'>
+                <IntlMessages id='app.coinLeagues.gamesToJoin' />
+              </Typography>
             </Grid>
             <Grid item>
               <Grid container justifyContent='center' spacing={2}>
@@ -299,7 +313,7 @@ const JoinGames = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{ color: '#fff' }} />
+                      <FilterSearchIcon style={{color: '#fff'}} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>
@@ -327,7 +341,9 @@ const JoinGames = () => {
                   image={<EmptyGame />}
                   title={messages['app.coinLeagues.noGamesJoin'] as string}
                   message={
-                    messages['app.coinLeagues.askAdminCreateGamesJoin'] as string
+                    messages[
+                      'app.coinLeagues.askAdminCreateGamesJoin'
+                    ] as string
                   }
                 />
               </Grid>

@@ -241,7 +241,6 @@ export const Settings: React.FC = () => {
   }, [addNetworkDialogToggler]);
 
   const handleSubmitAddNetwork = useCallback(() => {
-    console.log('submit');
     addNetwork({
       chainId: parseInt(networkValues.chainId),
       name: networkValues.name,

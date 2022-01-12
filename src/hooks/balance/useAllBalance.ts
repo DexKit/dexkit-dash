@@ -2,13 +2,15 @@ import {useMemo} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {getTokens} from 'services/rest/coingecko';
-import {ChainId, MyBalances, Web3State} from 'types/blockchain';
+import {MyBalances, Web3State} from 'types/blockchain';
 import {useQuery} from 'react-query';
 import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
 import {getAllBitqueryBalances} from 'services/bitquery/balances';
 import {getAllBlockchainBalances} from 'services/blockchain/balances';
 import {providers} from 'ethers';
 import {useCustomTokenList} from 'hooks/tokens';
+
+import {useCustomNetworkList} from 'hooks/network';
 
 export const MapBalancesToUSDValue = (
   balances: any,
@@ -38,21 +40,22 @@ export const useAllBalance = (defaultAccount?: string) => {
   const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
   const account = defaultAccount || web3Account;
 
+  const {networks} = useCustomNetworkList();
+
   const myBalancesQuery = useQuery(
-    ['GetMyBalancesQuery', account, chainId, web3State],
+    ['GetMyBalancesQuery', account, chainId, web3State, networks, tokens],
     async () => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
-        if (
-          (chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) &&
-          web3State === Web3State.Done
-        ) {
+
+        if (chainId && web3State === Web3State.Done) {
           const pr = new providers.Web3Provider(getProvider());
 
           const result = await getAllBlockchainBalances(
             chainId,
             account,
             tokens,
+            networks,
             pr,
           );
 

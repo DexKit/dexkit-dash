@@ -27,9 +27,8 @@ import IntlMessages from '../../../../@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {ethers} from 'ethers';
 import {useWeb3} from 'hooks/useWeb3';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -41,6 +40,7 @@ enum Tabs {
 export function Ranking() {
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
+  const {tokenSymbol} = useChainInfo();
 
   const rankingMostWinnedQuery = useRankingMostWinned(isNFT);
   const rankingMostJoinedQuery = useRankingMostJoined(isNFT);
@@ -48,7 +48,7 @@ export function Ranking() {
   const rankingMostProfitQuery = useRankingMostProfit(isNFT);
 
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
-  const {chainId, account} = useWeb3();
+  const {account} = useWeb3();
   const history = useHistory();
   const {messages} = useIntl();
 
@@ -83,7 +83,9 @@ export function Ranking() {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h5'><IntlMessages id='app.coinLeagues.ranking' /></Typography>
+              <Typography variant='h5'>
+                <IntlMessages id='app.coinLeagues.ranking' />
+              </Typography>
               <Box p={2}>
                 <FormControl>
                   <Select
@@ -143,14 +145,18 @@ export function Ranking() {
                       position={index + 1}
                       address={player.id}
                       label={messages['app.coinLeagues.wins'] as string}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalWinnedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
@@ -178,14 +184,18 @@ export function Ranking() {
                       position={index + 1}
                       address={player.id}
                       label={'Joins'}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
@@ -212,16 +222,18 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={`Earned ${GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}:`}
+                      label={`Earned ${tokenSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
@@ -251,10 +263,10 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
-                      label={`Profit ${GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}:`}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
+                      label={`Profit ${tokenSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
@@ -263,7 +275,9 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       count={Number(
                         ethers.utils.formatEther(player.EarnedMinusSpent),
                       )}

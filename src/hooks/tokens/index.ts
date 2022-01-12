@@ -67,7 +67,12 @@ export function useAddCustomAsset() {
   const dispatch = useDispatch();
 
   const addAsset = useCallback(
-    (params: {contractAddress: string; tokenId: string; chainId: number}) => {
+    (params: {
+      contractAddress: string;
+      tokenId: string;
+      chainId: number;
+      metadata?: any;
+    }) => {
       dispatch(addCustomAsset(params));
     },
     [dispatch],

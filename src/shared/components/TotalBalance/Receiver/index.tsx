@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core';
 import {ImportWhiteIcon} from 'shared/components/Icons';
 
+import {useChainInfo} from 'hooks/useChainInfo';
+
 import CloseIcon from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
-import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -48,8 +48,7 @@ const Receiver: React.FC<Props> = (props) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const {chainId} = useWeb3();
-
+  const {chainName} = useChainInfo();
   return (
     <Dialog
       fullWidth
@@ -78,7 +77,7 @@ const Receiver: React.FC<Props> = (props) => {
               alignItems='center'
               display='flex'
               mr={2}>
-              <Chip size='small' label={GET_CHAIN_ID_NAME(chainId)} />
+              <Chip size='small' label={chainName} />
             </Box>
             <IconButton size='small' onClick={handleClose}>
               <CloseIcon />

@@ -4,13 +4,21 @@ import {NFTEmptyStateImage} from 'shared/components/Icons';
 import Paper from '@material-ui/core/Paper';
 import {AppState} from 'redux/store';
 import Box from '@material-ui/core/Box';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import IconButton from '@material-ui/core/IconButton';
+
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 
 import AddIcon from '@material-ui/icons/Add';
 
@@ -37,6 +45,16 @@ import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {useSelector} from 'react-redux';
 import {ownerOf} from 'services/nfts';
 import {isAddressEqual} from 'utils/blockchain';
+import NftsFilterDrawer from '../NftsFilterDrawer';
+
+const INITIAL_PAGE_SIZE = 10;
+
+const PAGE_SIZES = [
+  INITIAL_PAGE_SIZE,
+  2 * INITIAL_PAGE_SIZE,
+  5 * INITIAL_PAGE_SIZE,
+  10 * INITIAL_PAGE_SIZE,
+];
 
 const ASSET_VALUES_EMTPY = {
   address: '',
@@ -46,6 +64,7 @@ const ASSET_VALUES_EMTPY = {
 const AssetCardWithMetadata = (props: {
   contractAddress: string;
   tokenId: string;
+  metadata: any;
   onMenu: (contractAddress: string, tokenId: string, target: any) => void;
   onClick: (contractAddress: string, tokenId: string) => void;
 }) => {
@@ -222,6 +241,45 @@ export const NftsTab: React.FC = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const filterToggler = useToggler();
+
+  const handleShowFilters = useCallback(() => {
+    filterToggler.set(true);
+  }, [filterToggler]);
+
+  const handleCloseFilter = useCallback(() => {
+    filterToggler.set(false);
+  }, [filterToggler]);
+
+  const [itemsPerPage, setItemsPerPage] = useState(INITIAL_PAGE_SIZE);
+  const [page, setPage] = useState(1);
+
+  const handleItemsPerPageChange = useCallback((e) => {
+    setItemsPerPage(e.target.value);
+  }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, []);
+
+  const paginate = useCallback(
+    (array: any[], page_size: number, page_number: number) => {
+      return array.slice(
+        (page_number - 1) * page_size,
+        page_number * page_size,
+      );
+    },
+    [],
+  );
+
+  const handleGoNext = useCallback(() => {
+    setPage((value) => value + 1);
+  }, []);
+
+  const handleGoPrevious = useCallback(() => {
+    setPage((value) => value - 1);
+  }, []);
+
   return (
     <>
       <Menu
@@ -297,6 +355,7 @@ export const NftsTab: React.FC = () => {
         contractAddress={selectedToken?.contractAddress}
         tokenId={selectedToken?.tokenId}
       />
+      <NftsFilterDrawer open={filterToggler.show} onClose={handleCloseFilter} />
       <Box mb={4}>
         <Paper>
           <Box
@@ -319,18 +378,58 @@ export const NftsTab: React.FC = () => {
         </Paper>
       </Box>
       <Box>
-        {assets.length > 0 ? (
+        {paginate(assets, itemsPerPage, page).length > 0 ? (
           <Grid container spacing={4}>
-            {assets.map((asset: any, index: number) => (
-              <Grid key={index} item xs={12} sm={3}>
-                <AssetCardWithMetadata
-                  tokenId={asset.tokenId}
-                  contractAddress={asset.contractAddress}
-                  onClick={handleSelectAsset}
-                  onMenu={handleAssetMenu}
-                />
+            {paginate(assets, itemsPerPage, page).map(
+              (asset: any, index: number) => (
+                <Grid key={index} item xs={12} sm={3}>
+                  <AssetCardWithMetadata
+                    tokenId={asset.tokenId}
+                    contractAddress={asset.contractAddress}
+                    metadata={asset.metadata}
+                    onClick={handleSelectAsset}
+                    onMenu={handleAssetMenu}
+                  />
+                </Grid>
+              ),
+            )}
+            <Grid item xs={12}>
+              <Grid
+                justify='flex-end'
+                container
+                alignItems='center'
+                spacing={2}>
+                <Grid item>
+                  <FormControl variant='outlined' size='small'>
+                    <Select
+                      value={itemsPerPage}
+                      onChange={handleItemsPerPageChange}
+                      variant='outlined'>
+                      {PAGE_SIZES.map((pageSize, i) => (
+                        <MenuItem value={pageSize} key={`menu-${i}`}>
+                          {pageSize}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <IconButton disabled={page === 1} onClick={handleGoPrevious}>
+                    <KeyboardArrowLeftIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    disabled={
+                      page >= 1 &&
+                      paginate(assets, itemsPerPage, page).length < itemsPerPage
+                    }
+                    onClick={handleGoNext}>
+                    <KeyboardArrowRightIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-            ))}
+            </Grid>
           </Grid>
         ) : (
           <Paper>

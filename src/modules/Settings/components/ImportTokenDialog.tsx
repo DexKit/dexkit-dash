@@ -14,11 +14,14 @@ import {
   Divider,
   CircularProgress,
   useTheme,
+  Chip,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {ErrorIcon} from 'shared/components/Icons';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 export interface ImportTokenValues {
   name: string;
@@ -45,8 +48,9 @@ export const ImportTokenDialog: React.FC<Props> = ({
   error,
 }) => {
   const {onClose} = dialogProps;
-
   const theme = useTheme();
+
+  const {chainName} = useChainInfo();
 
   const handleChange = useCallback(
     (e) => {
@@ -191,9 +195,14 @@ export const ImportTokenDialog: React.FC<Props> = ({
               <IntlMessages id='app.settings.importToken' />
             </strong>
           </Typography>
-          <IconButton onClick={handleClickClose} size='small'>
-            <Close />
-          </IconButton>
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box mr={2}>
+              <Chip label={chainName} />
+            </Box>
+            <IconButton onClick={handleClickClose} size='small'>
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
       </DialogTitle>
       <Divider />

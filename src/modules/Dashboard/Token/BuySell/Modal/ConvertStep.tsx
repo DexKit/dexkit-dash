@@ -13,11 +13,11 @@ import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {useNotifications} from 'hooks/useNotifications';
 import {BigNumber} from '@0x/utils';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {tokenAmountInUnits} from 'utils';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 // get tokens ta sendo chamado 3x
 
@@ -49,6 +49,8 @@ const ConvertStep: React.FC<Props> = (props) => {
     onRequestConfirmed,
     onShifting,
   } = props;
+
+  const {tokenSymbol} = useChainInfo();
 
   const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();
@@ -93,7 +95,7 @@ const ConvertStep: React.FC<Props> = (props) => {
 
       let txHash = '';
 
-      if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
+      if (tokenFrom.symbol.toUpperCase() === tokenSymbol) {
         await wethToken
           .deposit()
           .sendTransactionAsync({
@@ -109,16 +111,8 @@ const ConvertStep: React.FC<Props> = (props) => {
 
             if (txHash) {
               createNotification({
-                title: `${
-                  messages['app.dashboard.convert']
-                } ${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.dashboard.to']
-                } W${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `${
-                  messages['app.dashboard.converted']
-                }  ${amountFromUnit} ${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.dashboard.to']
-                } ${amountToUnit} W${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${messages['app.dashboard.convert']} ${tokenSymbol} ${messages['app.dashboard.to']} W${tokenSymbol}`,
+                body: `${messages['app.dashboard.converted']}  ${amountFromUnit} ${tokenSymbol} ${messages['app.dashboard.to']} ${amountToUnit} W${tokenSymbol}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
                 urlCaption: messages['app.dashboard.viewTransaction'] as string,
@@ -148,16 +142,8 @@ const ConvertStep: React.FC<Props> = (props) => {
             const amountToUnit = tokenAmountInUnits(amountFrom);
             if (txHash) {
               createNotification({
-                title: `${
-                  messages['app.dashboard.convert']
-                } W${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.dashboard.to']
-                } ${GET_CHAIN_NATIVE_COIN(chainId)}`,
-                body: `${
-                  messages['app.dashboard.converted']
-                } ${amountFromUnit}  W${GET_CHAIN_NATIVE_COIN(chainId)} ${
-                  messages['app.dashboard.to']
-                } ${amountToUnit} ${GET_CHAIN_NATIVE_COIN(chainId)}`,
+                title: `${messages['app.dashboard.convert']} W${tokenSymbol} ${messages['app.dashboard.to']} ${tokenSymbol}`,
+                body: `${messages['app.dashboard.converted']} ${amountFromUnit}  W${tokenSymbol} ${messages['app.dashboard.to']} ${amountToUnit} ${tokenSymbol}`,
                 timestamp: Date.now(),
                 url: getTransactionScannerUrl(chainId, txHash),
                 urlCaption: messages['app.dashboard.viewTransaction'] as string,
@@ -192,10 +178,7 @@ const ConvertStep: React.FC<Props> = (props) => {
     }
   };
 
-  const to =
-    tokenFrom.symbol === GET_CHAIN_NATIVE_COIN(chainId)
-      ? `W${GET_CHAIN_NATIVE_COIN(chainId)}`
-      : GET_CHAIN_NATIVE_COIN(chainId);
+  const to = tokenFrom.symbol === tokenSymbol ? `W${tokenSymbol}` : tokenSymbol;
 
   return (
     <>

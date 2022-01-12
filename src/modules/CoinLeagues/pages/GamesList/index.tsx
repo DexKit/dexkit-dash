@@ -56,10 +56,9 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useGamesMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -90,8 +89,10 @@ const GamesList = () => {
   const history = useHistory();
   const {messages} = useIntl();
   const {pathname} = useLocation();
-  const {account, chainId} = useWeb3();
+  const {account} = useWeb3();
   const defaultAccount = useDefaultAccount();
+
+  const {tokenSymbol} = useChainInfo();
 
   useDiscord();
 
@@ -321,12 +322,8 @@ const GamesList = () => {
             </Box>
             <Box pr={2}>
               <BuyCryptoButton
-                btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                  GET_LEAGUES_CHAIN_ID(chainId),
-                )}`}
-                defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                  GET_LEAGUES_CHAIN_ID(chainId),
-                )}
+                btnMsg={`Buy ${tokenSymbol}`}
+                defaultCurrency={tokenSymbol}
               />
             </Box>
             <Box pr={2}>
