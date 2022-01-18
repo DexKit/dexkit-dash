@@ -52,6 +52,14 @@ const ContextProvider: React.FC<React.ReactNode> = ({children}) => {
     updateThemeMode(ThemeMode.DARK);
   }, []);
 
+  useEffect(() => {
+    const locale: any = JSON.parse(localStorage.getItem('locale') || '{}');
+
+    if (locale.locale) {
+      changeLocale(locale);
+    }
+  }, []);
+
   return (
     <AppContext.Provider
       value={{

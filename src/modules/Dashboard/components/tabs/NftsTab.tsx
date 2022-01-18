@@ -461,7 +461,7 @@ export const NftsTab: React.FC = () => {
           <Grid container spacing={4}>
             {paginate(filteredAssets, itemsPerPage, page).map(
               (asset: any, index: number) => (
-                <Grid key={index} item xs={12} sm={4}>
+                <Grid key={index} item xs={6} sm={4}>
                   <AssetCardWithMetadata
                     tokenId={asset.tokenId}
                     contractAddress={asset.contractAddress}

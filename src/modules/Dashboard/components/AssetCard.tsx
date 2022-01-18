@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: theme.spacing(50),
     [theme.breakpoints.down('sm')]: {
-      height: theme.spacing(60),
+      height: theme.spacing(30),
     },
   },
   error: {

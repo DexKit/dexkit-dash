@@ -1,7 +1,7 @@
 import IntlMessages from '@crema/utility/IntlMessages';
 import {isAddress} from '@ethersproject/address';
-import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+// import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
+// import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import * as types from '../types';
 
 import languageData from '@crema/core/LanguageSwitcher/data';
@@ -266,7 +266,7 @@ export const Settings: React.FC = () => {
     }
   }, [tokenInfo.data]);
 
-  const [menuSelected, setMenuSelected] = useState(MENU_CUSTOM_TOKENS);
+  const [menuSelected, setMenuSelected] = useState(MENU_LANGUAGE);
 
   const {networks} = useCustomNetworkList();
 
@@ -276,6 +276,7 @@ export const Settings: React.FC = () => {
     (language: types.Language) => {
       if (changeLocale) {
         changeLocale(language);
+        localStorage.setItem('locale', JSON.stringify(language));
       }
     },
     [changeLocale],
@@ -449,7 +450,7 @@ export const Settings: React.FC = () => {
           <Grid item xs={12} sm={3}>
             <Card>
               <List disablePadding>
-                <ListItem
+                {/* <ListItem
                   divider
                   button
                   selected={menuSelected === MENU_CUSTOM_TOKENS}
@@ -471,7 +472,7 @@ export const Settings: React.FC = () => {
                     <SettingsInputAntennaIcon />
                   </ListItemIcon>
                   <ListItemText primary={messages['app.settings.networks']} />
-                </ListItem>
+                </ListItem> */}
                 <ListItem
                   button
                   selected={menuSelected === MENU_LANGUAGE}

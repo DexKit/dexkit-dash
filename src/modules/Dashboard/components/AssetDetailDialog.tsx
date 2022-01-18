@@ -10,6 +10,7 @@ import {truncateAddress} from 'utils';
 
 import Close from '@material-ui/icons/Close';
 import {ErrorIcon} from 'shared/components/Icons';
+import {OpenSeaIcon} from 'shared/components/Icons';
 
 import {
   Dialog,
@@ -24,6 +25,7 @@ import {
   Box,
   IconButton,
   Chip,
+  Tooltip,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -33,10 +35,14 @@ import {useIntl} from 'react-intl';
 import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
 import {useCustomNetworkList} from 'hooks/network';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   image: {
     width: '100%',
     height: 'auto',
+  },
+  openSeaIcon: {
+    width: theme.spacing(8),
+    height: theme.spacing(8),
   },
 }));
 
@@ -124,29 +130,47 @@ export const AssetDetailDialog: React.FC<Props> = ({
           )}
         </Grid>
         <Grid item>
-          <Typography variant='caption'>
-            {isLoading ? (
-              <Skeleton />
-            ) : (
-              <>
-                <Link
-                  href={
-                    tokenChainId && contractAddress
-                      ? `${getScannerUrl(
-                          tokenChainId,
-                        )}/address/${contractAddress}`
-                      : ''
-                  }
+          <Grid
+            container
+            justifyContent='space-between'
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              <Typography variant='caption'>
+                {isLoading ? (
+                  <Skeleton />
+                ) : (
+                  <>
+                    <Link
+                      href={
+                        tokenChainId && contractAddress
+                          ? `${getScannerUrl(
+                              tokenChainId,
+                            )}/address/${contractAddress}`
+                          : ''
+                      }
+                      target='_blank'
+                      rel='noopener noreferrer'>
+                      {metadata?.collectionName} ({metadata?.symbol})
+                    </Link>
+                  </>
+                )}
+              </Typography>
+              <Typography variant='h5'>
+                {isLoading ? <Skeleton /> : metadata?.title}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Tooltip title={<IntlMessages id='app.wallet.viewOnOpenSea' />}>
+                <IconButton
+                  href='https://opensea.io/'
                   target='_blank'
                   rel='noopener noreferrer'>
-                  {metadata?.collectionName} ({metadata?.symbol})
-                </Link>
-              </>
-            )}
-          </Typography>
-          <Typography variant='h5'>
-            {isLoading ? <Skeleton /> : metadata?.title}
-          </Typography>
+                  <OpenSeaIcon className={classes.openSeaIcon} />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item>
           <Typography variant='body2'>

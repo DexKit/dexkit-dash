@@ -1816,5 +1816,11 @@
   "app.onBoarding.addAccountForReadOnly": "Añadir cuenta para modo de solo lectura.",
   "app.onBoarding.emailExample": "correo@ejemplo.com",
   "app.onBoarding.address": "Dirección",
-  "app.onBoarding.eMail": "Correo"
+  "app.onBoarding.eMail": "Correo",
+  "coinLeagues.warning.gameType": "Tipo de juego",
+  "app.coinLeagues.maxPrizePool": "Piscina máxima de premios",
+  "app.coinLeagues.warning.createGame": "Crear juego",
+  "app.dashboard.overview": "Visión general",
+  "app.wallet.networkIsNotSupported": "no es soportada",
+  "app.wallet.zeroXDoesNotSupportThisNetworkYet": "0x aun no permite esta red. Por favor, cambia a Ethereum, Binance Smart Chain, Polygon, Avalanche, Fantom o Celo para comerciar en nuestra app."
 }
