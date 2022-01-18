@@ -70,7 +70,6 @@ import {
   useCoinLeaguesFactoryRoutes,
   useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
 import {useIntl} from 'react-intl';
@@ -139,7 +138,7 @@ function GameEnter(props: Props) {
   const defaultAccount = useDefaultAccount();
   const {balance} = useActiveChainBalance();
 
-  const {tokenSymbol} = useChainInfo();
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
 
   const {search} = useLocation();
   const query = useMemo(() => new URLSearchParams(search), [search]);
@@ -357,6 +356,7 @@ function GameEnter(props: Props) {
       onJoinGameCallback,
       createNotification,
       messages,
+      getTransactionScannerUrl,
     ],
   );
 

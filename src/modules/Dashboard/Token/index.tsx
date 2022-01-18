@@ -14,6 +14,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Paper,
 } from '@material-ui/core';
 
 import {useHistory, Link as RouterLink} from 'react-router-dom';
@@ -216,63 +217,67 @@ const TokenPage = () => {
           <Grid container spacing={3}>
             {isMobile ? (
               <>
-                <Card>
-                  {FEATURE_TRADE_COINS_ZRX(chainId) ? (
-                    <BuySell
-                      tokenAddress={address}
-                      balances={balances}
-                      networkName={networkName}
-                      tokenInfo={tokenInfo}
-                      tokenFromInfo={tokenFromInfo}
-                      onChangeTokens={onChangeTokens}
-                    />
-                  ) : (
-                    <CardContent>
-                      <Grid
-                        container
-                        spacing={2}
-                        direction='column'
-                        alignItems='center'
-                        alignContent='center'
-                        justifyContent='center'>
-                        <Grid item>
-                          <Typography align='center' variant='h6'>
-                            {chainName}{' '}
-                            <IntlMessages id='app.wallet.networkIsNotSupported' />
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography
-                            color='textSecondary'
-                            align='center'
-                            variant='body2'>
-                            <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-                </Card>
-                <Grid item xs={12} className={classes.mobileChartsContainer}>
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ArrowDownIcon />}
-                      aria-controls='panel1a-content'
-                      id='panel1a-header'>
-                      <Typography>
-                        <GraphicsIcon />{' '}
-                        <IntlMessages id='app.dashboard.charts' />
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Charts
-                        chainId={chainId}
-                        tokenInfo={tokenInfo}
+                <Grid item xs={12}>
+                  <Card>
+                    {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                      <BuySell
+                        tokenAddress={address}
+                        balances={balances}
                         networkName={networkName}
+                        tokenInfo={tokenInfo}
+                        tokenFromInfo={tokenFromInfo}
+                        onChangeTokens={onChangeTokens}
                       />
-                    </AccordionDetails>
-                  </Accordion>
+                    ) : (
+                      <CardContent>
+                        <Grid
+                          container
+                          spacing={2}
+                          direction='column'
+                          alignItems='center'
+                          alignContent='center'
+                          justifyContent='center'>
+                          <Grid item>
+                            <Typography align='center' variant='h6'>
+                              {chainName}{' '}
+                              <IntlMessages id='app.wallet.networkIsNotSupported' />
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              color='textSecondary'
+                              align='center'
+                              variant='body2'>
+                              <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    )}
+                  </Card>
                 </Grid>
+                {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                  <Grid item xs={12} className={classes.mobileChartsContainer}>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ArrowDownIcon />}
+                        aria-controls='panel1a-content'
+                        id='panel1a-header'>
+                        <Typography>
+                          <GraphicsIcon />{' '}
+                          <IntlMessages id='app.dashboard.charts' />
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Charts
+                          chainId={chainId}
+                          tokenInfo={tokenInfo}
+                          networkName={networkName}
+                        />
+                      </AccordionDetails>
+                    </Accordion>
+                  </Grid>
+                ) : null}
                 <Grid item xs={12}>
                   <HistoryTables
                     account={account}
@@ -284,11 +289,40 @@ const TokenPage = () => {
             ) : (
               <>
                 <Grid item xs={12} md={8}>
-                  <Charts
-                    chainId={chainId}
-                    tokenInfo={tokenInfo}
-                    networkName={networkName}
-                  />
+                  {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                    <Charts
+                      chainId={chainId}
+                      tokenInfo={tokenInfo}
+                      networkName={networkName}
+                    />
+                  ) : (
+                    <Paper>
+                      <Box p={4}>
+                        <Grid
+                          container
+                          spacing={2}
+                          direction='column'
+                          alignItems='center'
+                          alignContent='center'
+                          justifyContent='center'>
+                          <Grid item>
+                            <Typography align='center' variant='h6'>
+                              {chainName}{' '}
+                              <IntlMessages id='app.wallet.networkIsNotSupported' />
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography
+                              color='textSecondary'
+                              align='center'
+                              variant='body2'>
+                              <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Paper>
+                  )}
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Card>

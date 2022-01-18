@@ -13,7 +13,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useWeb3} from 'hooks/useWeb3';
-import {getScannerUrl} from 'utils/blockchain';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -77,6 +78,8 @@ export const AssetCard: React.FC<AssetCardProps> = ({
 }) => {
   const classes = useStyles();
   const {chainId} = useWeb3();
+
+  const {getScannerUrl} = useChainInfo();
 
   const handleMenu = useCallback(
     (e) => {

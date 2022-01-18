@@ -31,7 +31,6 @@ import {useKittygotchiFeed, useKittygotchiOnChain} from '../hooks';
 import {useMobile} from 'hooks/useMobile';
 import FeedKittygotchiButton from '../components/buttons/FeedKittygotchiButton';
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {FeedingKittygotchiDialog} from '../components/dialogs/FeedingKittygotchiDialog';
@@ -48,6 +47,8 @@ import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from '../constants';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -125,6 +126,8 @@ export const KittyDetail: React.FC = () => {
   const profileKittygotchi = useProfileKittygotchi();
 
   const {chainId, web3State} = useWeb3();
+
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const rewardToggler = useToggler(false);
 

@@ -41,7 +41,6 @@ import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
 import {DISABLE_CHAMPIONS_ID} from 'modules/CoinLeagues/constants';
@@ -133,7 +132,7 @@ const CreateGameModal = (props: Props) => {
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
 
-  const {tokenSymbol} = useChainInfo();
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
 
   const [championRoom, setChampionRoom] = useState<number>(
     Number(DISABLE_CHAMPIONS_ID),

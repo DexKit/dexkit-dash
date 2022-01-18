@@ -20,6 +20,8 @@ import {
 } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
+import {useChainInfo} from 'hooks/useChainInfo';
+
 import HelpIcon from '@material-ui/icons/Help';
 import CloseIcon from '@material-ui/icons/Close';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
@@ -32,7 +34,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useHistory} from 'react-router';
 import clsx from 'clsx';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -82,6 +83,7 @@ export const CreatingCollectionDialog = (
   const theme = useTheme();
 
   const {chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const history = useHistory();
 

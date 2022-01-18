@@ -326,6 +326,7 @@
   "app.dashboard.wallet.accounts.youreAbleToSwitchAccounts": "You are able to switch accounts on the top menu right and the application it will auto update with selected account.",
   "app.dashboard.wallet.accounts.firstAccountIsDefault": "The first account is the default. You can change clicking at the home button in other accounts.",
   "app.dashboard.wallet.accounts.connectWallet": "Connect Wallet in case you need to interact with the network.",
+  "app.dashboard.overview": "Overview",
   "app.protocolExplorer.wallet": "Wallet",
   "app.protocolExplorer.timestamp": "Timestamp",
   "app.protocolExplorer.type": "Type",

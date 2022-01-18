@@ -4,12 +4,18 @@ import {useQuery} from 'react-query';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 
+import {ethers} from 'ethers';
+
 import {
   addCustomAsset,
   addCustomToken,
   removeCustomAsset,
 } from 'redux/_settingsv2/actions';
 import {getTokenBalanceOf} from 'services/blockchain/balances';
+import {ERC721Abi} from 'contracts/abis/ERC721Abi';
+import {getNormalizedUrl} from 'utils/browser';
+import {getTokenMetadata} from 'services/nfts';
+import {AssetData} from 'modules/Dashboard/types';
 
 // por chain ID
 // por redes a parte da evm
@@ -66,16 +72,47 @@ export function useAddCustomToken() {
 export function useAddCustomAsset() {
   const dispatch = useDispatch();
 
+  const {getProvider} = useWeb3();
+
   const addAsset = useCallback(
-    (params: {
+    async (params: {
       contractAddress: string;
       tokenId: string;
       chainId: number;
-      metadata?: any;
     }) => {
-      dispatch(addCustomAsset(params));
+      const {contractAddress, tokenId} = params;
+
+      const contract = new ethers.Contract(
+        contractAddress,
+        ERC721Abi,
+        new ethers.providers.Web3Provider(getProvider()),
+      );
+
+      const uri = await contract.tokenURI(tokenId);
+
+      const tokenMetadata = await getTokenMetadata(uri);
+
+      const owner = await contract.ownerOf(tokenId);
+
+      const collectionName = await contract.name();
+      const symbol = await contract.symbol();
+
+      const data: AssetData = {
+        collectionName,
+        symbol,
+        imageUrl: getNormalizedUrl(
+          tokenMetadata?.image || tokenMetadata.image_url || '',
+        ),
+        contractAddress,
+        tokenId,
+        description: tokenMetadata.description || '',
+        title: tokenMetadata.name || '',
+        owner,
+      };
+
+      dispatch(addCustomAsset({...params, metadata: data}));
     },
-    [dispatch],
+    [dispatch, getProvider],
   );
   return {addAsset};
 }
@@ -93,12 +130,11 @@ export function useRemoveCustomAsset() {
 }
 
 export function useAssetList() {
-  const {chainId} = useWeb3();
   const {assets} = useSelector<AppState, AppState['settingsv2']>(
     ({settingsv2}) => settingsv2,
   );
 
   return {
-    assets: assets?.filter((asset: any) => asset.chainId === chainId) || [],
+    assets: assets || [],
   };
 }

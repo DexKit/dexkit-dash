@@ -13,7 +13,6 @@ import {getProvider, getWeb3Wrapper} from 'services/web3modal';
 import {useContractWrapper} from 'hooks/useContractWrapper';
 import {useNotifications} from 'hooks/useNotifications';
 import {BigNumber} from '@0x/utils';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {tokenAmountInUnits} from 'utils';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
@@ -50,7 +49,7 @@ const ConvertStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-  const {tokenSymbol} = useChainInfo();
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
 
   const {createNotification} = useNotifications();
   const {getContractWrappers} = useContractWrapper();

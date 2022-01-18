@@ -163,7 +163,6 @@ export const GET_CHAIN_ID_NAME_V2 = (
       return networks[index].name;
     }
   }
-
   return GET_CHAIN_ID_NAME(chainId) || '';
 };
 

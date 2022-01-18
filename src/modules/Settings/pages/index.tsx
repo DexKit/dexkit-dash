@@ -230,7 +230,7 @@ export const Settings: React.FC = () => {
           setNetworkValues({...networkValues, [key]: value.trim()});
         }
       } else {
-        setNetworkValues({...networkValues, [key]: value.trim()});
+        setNetworkValues({...networkValues, [key]: value});
       }
     },
     [networkValues],

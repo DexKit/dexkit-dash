@@ -9,10 +9,10 @@ import {
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Error from '@material-ui/icons/Error';
 import FileCopy from '@material-ui/icons/FileCopy';
+import {useChainInfo} from 'hooks/useChainInfo';
 import React from 'react';
 import CopyButton from 'shared/components/CopyButton';
 import {truncateAddress} from 'utils';
-import {getScannerUrl} from 'utils/blockchain';
 
 export interface Props {
   hash: string;
@@ -28,6 +28,8 @@ export const TransactionTableRow: React.FC<Props> = ({
   status,
 }) => {
   const theme = useTheme();
+
+  const {getScannerUrl} = useChainInfo();
 
   return (
     <TableRow>

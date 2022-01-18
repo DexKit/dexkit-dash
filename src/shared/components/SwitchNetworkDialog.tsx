@@ -22,6 +22,8 @@ import {useMobile} from 'hooks/useMobile';
 import {NetworkCodes} from 'utils/blockchain';
 import IntlMessages from '@crema/utility/IntlMessages';
 
+import {isMagicProvider} from 'services/magic';
+
 import {useToggler} from 'hooks/useToggler';
 
 import * as settingsTypes from 'modules/Settings/types';
@@ -296,35 +298,38 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           <ListItemText primary='Polygon' secondary='Mumbai Testnet' />
         </ListItem> */}
         </List>
-
-        <List
-          disablePadding
-          subheader={
-            <ListSubheader component='div' id='nested-list-subheader'>
-              <IntlMessages id='app.common.customNetworks' />
-            </ListSubheader>
-          }>
-          <Divider />
-          {networks.map((network: settingsTypes.Network, index: number) => (
-            <CustomNetworkListItem
-              key={index}
-              network={network}
-              onClick={handleSelectCustomNetwork}
-              selected={network.chainId === selected}
-            />
-          ))}
-        </List>
-        <Divider />
-        <Box p={4}>
-          <Button
-            variant='outlined'
-            onClick={handleOpenAddNetwork}
-            startIcon={<AddIcon />}
-            fullWidth
-            color='primary'>
-            <IntlMessages id='app.common.addCustomNetwork' />
-          </Button>
-        </Box>
+        {!isMagicProvider() ? (
+          <>
+            <List
+              disablePadding
+              subheader={
+                <ListSubheader component='div' id='nested-list-subheader'>
+                  <IntlMessages id='app.common.customNetworks' />
+                </ListSubheader>
+              }>
+              <Divider />
+              {networks.map((network: settingsTypes.Network, index: number) => (
+                <CustomNetworkListItem
+                  key={index}
+                  network={network}
+                  onClick={handleSelectCustomNetwork}
+                  selected={network.chainId === selected}
+                />
+              ))}
+            </List>
+            <Divider />
+            <Box p={4}>
+              <Button
+                variant='outlined'
+                onClick={handleOpenAddNetwork}
+                startIcon={<AddIcon />}
+                fullWidth
+                color='primary'>
+                <IntlMessages id='app.common.addCustomNetwork' />
+              </Button>
+            </Box>
+          </>
+        ) : null}
       </Dialog>
     </>
   );

@@ -26,7 +26,6 @@ export const useNativeSingleBalance = (
     ['GetNativeBalanceNetwork', provider, chainId, account],
     async () => {
       if (chainId && provider && account) {
-        console.log('aquii');
         const ethBalance = await getBalanceWithProvider(account, provider);
         // const coin =  ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
         return Number(ethers.utils.formatEther(ethBalance || '0')) || 0;

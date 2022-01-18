@@ -98,6 +98,7 @@ const BuySell: React.FC<Props> = ({
   const tokensETH = useTokenList(EthereumNetwork.ethereum);
   const tokensBSC = useTokenList(EthereumNetwork.bsc);
   const tokensMATIC = useTokenList(EthereumNetwork.matic);
+
   const [tokenFrom, setTokenFrom] = useState<Token>();
 
   const [tokenTo, setTokenTo] = useState<Token>();
@@ -219,7 +220,9 @@ const BuySell: React.FC<Props> = ({
       let _token;
       if (isNativeCoinWithoutChainId(tokenAddress)) {
         _token = select1.find(
-          (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
+          (t) =>
+            t.symbol.toLowerCase() === tokenAddress.toLowerCase() &&
+            t.networkName === networkName,
         );
       } else {
         _token = select1.find(
@@ -251,7 +254,9 @@ const BuySell: React.FC<Props> = ({
         let _token;
         if (isNativeCoinWithoutChainId(tokenAddress)) {
           _token = select1.find(
-            (t) => t.symbol.toLowerCase() === tokenAddress.toLowerCase() && t.networkName === networkName,
+            (t) =>
+              t.symbol.toLowerCase() === tokenAddress.toLowerCase() &&
+              t.networkName === networkName,
           );
         } else {
           _token = select1.find(
@@ -283,7 +288,7 @@ const BuySell: React.FC<Props> = ({
         (t) =>
           t.symbol.toUpperCase() ===
             GET_NATIVE_COIN_FROM_NETWORK_NAME(networkName).toUpperCase() &&
-          t.networkName === networkName
+          t.networkName === networkName,
       );
       // If token not equal to tokenInfo
       if (
@@ -295,10 +300,9 @@ const BuySell: React.FC<Props> = ({
         const _token = select1.find(
           (t) =>
             t.symbol.toUpperCase() ===
-            GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
-              networkName,
-            ).toUpperCase() &&
-            t.networkName === networkName
+              GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
+                networkName,
+              ).toUpperCase() && t.networkName === networkName,
         );
         if (
           _token &&

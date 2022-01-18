@@ -33,9 +33,9 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {ChainId, Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -59,6 +59,7 @@ import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDi
 export const KittygotchiIndex = () => {
   const history = useHistory();
   const {chainId, web3State} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
@@ -161,6 +162,7 @@ export const KittygotchiIndex = () => {
     mintKittyToggler,
     kittygotchiList,
     mintingToggler,
+    getTransactionScannerUrl,
   ]);
 
   const handleKittygotchiClick = useCallback(

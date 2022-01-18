@@ -4,7 +4,7 @@ import {NFTEmptyStateImage} from 'shared/components/Icons';
 import Paper from '@material-ui/core/Paper';
 import {AppState} from 'redux/store';
 import Box from '@material-ui/core/Box';
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -27,7 +27,9 @@ import SendIcon from '@material-ui/icons/Send';
 
 import AssetCard from 'modules/Dashboard/components/AssetCard';
 import AssetDetailDialog from 'modules/Dashboard/components/AssetDetailDialog';
-import {useAsset} from 'hooks/useAsset';
+
+import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+
 import {
   useAddCustomAsset,
   useAssetList,
@@ -46,6 +48,10 @@ import {useSelector} from 'react-redux';
 import {ownerOf} from 'services/nfts';
 import {isAddressEqual} from 'utils/blockchain';
 import NftsFilterDrawer from '../NftsFilterDrawer';
+import SquaredIconButton from 'shared/components/SquaredIconButton';
+import {Badge} from '@material-ui/core';
+
+const FILTER_EMPTY_STATE: any = {chainId: undefined};
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -65,39 +71,47 @@ const AssetCardWithMetadata = (props: {
   contractAddress: string;
   tokenId: string;
   metadata: any;
-  onMenu: (contractAddress: string, tokenId: string, target: any) => void;
-  onClick: (contractAddress: string, tokenId: string) => void;
+  chainId: number;
+  onMenu: (
+    contractAddress: string,
+    tokenId: string,
+    metadata: any,
+    chainId: number,
+    target: any,
+  ) => void;
+  onClick: (
+    contractAddress: string,
+    tokenId: string,
+    metadata: any,
+    chainId: number,
+  ) => void;
 }) => {
-  const {contractAddress, tokenId, onMenu, onClick} = props;
-
-  const {data, error, isLoading} = useAsset(contractAddress, tokenId);
+  const {contractAddress, tokenId, onMenu, onClick, metadata, chainId} = props;
 
   const handleClick = useCallback(
     (e: any) => {
       e.preventDefault();
-      onClick(contractAddress, tokenId);
+      onClick(contractAddress, tokenId, metadata, chainId);
     },
-    [contractAddress, tokenId, onClick],
+    [contractAddress, tokenId, onClick, metadata, chainId],
   );
 
   const handleMenu = useCallback(
     (target: any) => {
-      onMenu(contractAddress, tokenId, target);
+      onMenu(contractAddress, tokenId, metadata, chainId, target);
     },
-    [contractAddress, tokenId, onMenu],
+    [contractAddress, tokenId, onMenu, metadata, chainId],
   );
 
   return (
     <AssetCard
       contractAddress={contractAddress}
       tokenId={tokenId}
-      loading={isLoading || !data}
-      caption={data?.title}
-      imageUrl={data?.imageUrl}
+      caption={metadata?.title}
+      imageUrl={metadata?.imageUrl}
       onMenu={handleMenu}
       onClick={handleClick}
-      error={error}
-      collectionName={data?.collectionName}
+      collectionName={metadata?.collectionName}
     />
   );
 };
@@ -117,16 +131,25 @@ export const NftsTab: React.FC = () => {
 
   const [canTransfer, setCanTransfer] = useState(false);
 
-  const [selectedToken, setSelectedToken] =
-    useState<{contractAddress: string; tokenId: string}>();
+  const [selectedToken, setSelectedToken] = useState<{
+    contractAddress: string;
+    tokenId: string;
+    metadata: any;
+    chainId: number;
+  }>();
 
   const {addAsset} = useAddCustomAsset();
 
   const {removeAsset} = useRemoveCustomAsset();
 
   const handleSelectAsset = useCallback(
-    (contractAddress: string, tokenId: string) => {
-      setSelectedToken({contractAddress, tokenId});
+    (
+      contractAddress: string,
+      tokenId: string,
+      metadata: any,
+      chainId: number,
+    ) => {
+      setSelectedToken({contractAddress, tokenId, metadata, chainId});
       showDetailToggler.set(true);
     },
     [showDetailToggler],
@@ -191,26 +214,51 @@ export const NftsTab: React.FC = () => {
   const [menuTarget, setMenuTarget] = useState<any>();
 
   const handleAssetMenu = useCallback(
-    (contractAddress: string, tokenId: string, target: any) => {
-      ownerOf(contractAddress, tokenId, getProvider()).then((owner) => {
-        if (owner && account) {
-          if (isAddressEqual(owner, account)) {
-            setCanTransfer(true);
-          } else {
-            setCanTransfer(false);
-          }
-        }
-        setSelectedToken({contractAddress, tokenId});
+    (
+      contractAddress: string,
+      tokenId: string,
+      metadata: any,
+      tokenChainId: number,
+      target: any,
+    ) => {
+      if (chainId === tokenChainId) {
+        ownerOf(contractAddress, tokenId, getProvider())
+          .then((owner) => {
+            if (owner && account) {
+              if (isAddressEqual(owner, account)) {
+                setCanTransfer(true);
+              } else {
+                setCanTransfer(false);
+              }
+            }
+          })
+          .finally(() => {
+            setSelectedToken({
+              contractAddress,
+              tokenId,
+              metadata,
+              chainId: tokenChainId,
+            });
+            setMenuTarget(target);
+            menuToggler.set(true);
+          });
+      } else {
+        setSelectedToken({
+          contractAddress,
+          tokenId,
+          metadata,
+          chainId: tokenChainId,
+        });
         setMenuTarget(target);
-
         menuToggler.set(true);
-      });
+      }
     },
-    [menuToggler, account, getProvider],
+    [menuToggler, account, getProvider, chainId],
   );
 
   const handleCloseAssetMenu = useCallback(() => {
     menuToggler.set(false);
+    setCanTransfer(false);
   }, [menuToggler]);
 
   const handleCloseTransferDialog = useCallback(() => {
@@ -280,6 +328,22 @@ export const NftsTab: React.FC = () => {
     setPage((value) => value - 1);
   }, []);
 
+  const [filterParams, setFilterParams] = useState<any>(FILTER_EMPTY_STATE);
+
+  const handleChangeParam = useCallback((params: any) => {
+    setFilterParams(params);
+  }, []);
+
+  const filteredAssets = useMemo(() => {
+    let newAssets = [...assets];
+
+    if (filterParams.chainId) {
+      newAssets = newAssets.filter((a) => a.chainId === filterParams.chainId);
+    }
+
+    return newAssets;
+  }, [assets, filterParams]);
+
   return (
     <>
       <Menu
@@ -332,6 +396,8 @@ export const NftsTab: React.FC = () => {
         }}
         contractAddress={selectedToken?.contractAddress}
         tokenId={selectedToken?.tokenId}
+        metadata={selectedToken?.metadata}
+        chainId={selectedToken?.chainId}
       />
       <ImportNftTokenDialog
         dialogProps={{
@@ -354,39 +420,53 @@ export const NftsTab: React.FC = () => {
         onConfirm={handleConfirmRemoveAsset}
         contractAddress={selectedToken?.contractAddress}
         tokenId={selectedToken?.tokenId}
+        metadata={selectedToken?.metadata}
+        chainId={selectedToken?.chainId}
       />
-      <NftsFilterDrawer open={filterToggler.show} onClose={handleCloseFilter} />
+      <NftsFilterDrawer
+        open={filterToggler.show}
+        params={filterParams}
+        onClose={handleCloseFilter}
+        onChangeParams={handleChangeParam}
+      />
       <Box mb={4}>
-        <Paper>
-          <Box
-            p={4}
-            display='flex'
-            alignItems='center'
-            alignContent='center'
-            justifyContent='space-between'>
-            <Box>
-              <Button
-                onClick={handleShowImportAsset}
-                variant='contained'
-                startIcon={<AddIcon />}
-                color='primary'>
-                Import
-              </Button>
-            </Box>
-            <Box></Box>
+        <Box
+          display='flex'
+          alignItems='center'
+          alignContent='center'
+          justifyContent='space-between'>
+          <Box>
+            <Button
+              onClick={handleShowImportAsset}
+              variant='contained'
+              startIcon={<AddIcon />}
+              color='primary'>
+              Import
+            </Button>
           </Box>
-        </Paper>
+          <Box>
+            <SquaredIconButton onClick={handleShowFilters}>
+              <Badge
+                color='primary'
+                variant='dot'
+                invisible={filterParams === FILTER_EMPTY_STATE}>
+                <FilterSearchIcon />
+              </Badge>
+            </SquaredIconButton>
+          </Box>
+        </Box>
       </Box>
       <Box>
-        {paginate(assets, itemsPerPage, page).length > 0 ? (
+        {paginate(filteredAssets, itemsPerPage, page).length > 0 ? (
           <Grid container spacing={4}>
-            {paginate(assets, itemsPerPage, page).map(
+            {paginate(filteredAssets, itemsPerPage, page).map(
               (asset: any, index: number) => (
-                <Grid key={index} item xs={12} sm={3}>
+                <Grid key={index} item xs={12} sm={4}>
                   <AssetCardWithMetadata
                     tokenId={asset.tokenId}
                     contractAddress={asset.contractAddress}
                     metadata={asset.metadata}
+                    chainId={asset.chainId}
                     onClick={handleSelectAsset}
                     onMenu={handleAssetMenu}
                   />

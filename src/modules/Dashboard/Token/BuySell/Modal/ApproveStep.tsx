@@ -14,7 +14,6 @@ import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
 
 import {getERC20Contract} from 'utils/ethers';
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useChainInfo} from 'hooks/useChainInfo';
 
@@ -43,7 +42,7 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
-  const {tokenSymbol} = useChainInfo();
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
 
   const {messages} = useIntl();
 
@@ -79,10 +78,10 @@ const ApproveStep: React.FC<Props> = (props) => {
     );
 
     return isApproved;
-  }, [tokenFrom, chainId, getProvider]);
+  }, [tokenFrom, chainId, getProvider, tokenSymbol]);
 
   useEffect(() => {
-    if (step === Steps.APPROVE) {
+    if (step === Steps.APPROVE && tokenSymbol) {
       isApprove()
         .then((value) => {
           if (value) {
@@ -93,7 +92,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         })
         .catch((e) => onNext(false, e));
     }
-  }, [step]);
+  }, [step, tokenSymbol]);
 
   const handleAction = async () => {
     try {

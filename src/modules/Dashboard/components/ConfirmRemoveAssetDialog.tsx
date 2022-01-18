@@ -2,11 +2,13 @@ import React, {useCallback} from 'react';
 
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
-import {getScannerUrl, isAddressEqual} from 'utils/blockchain';
+import {isAddressEqual} from 'utils/blockchain';
 
 import Close from '@material-ui/icons/Close';
 
 import {truncateAddress} from 'utils';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 import {
   Dialog,
@@ -23,15 +25,16 @@ import {
   IconButton,
   Link,
   Paper,
+  Chip,
 } from '@material-ui/core';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {useAsset} from 'hooks/useAsset';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {Skeleton} from '@material-ui/lab';
 import {useIntl} from 'react-intl';
 import DoneIcon from '@material-ui/icons/Done';
 import {useMobile} from 'hooks/useMobile';
+import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -44,6 +47,8 @@ interface Props {
   dialogProps: DialogProps;
   contractAddress?: string;
   tokenId?: string;
+  metadata?: any;
+  chainId?: number;
   onConfirm: () => void;
 }
 
@@ -51,6 +56,8 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
   dialogProps,
   contractAddress,
   tokenId,
+  metadata,
+  chainId: tokenChainId,
   onConfirm,
 }) => {
   const {onClose} = dialogProps;
@@ -61,9 +68,12 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
 
   const {chainId} = useWeb3();
 
+  const {getScannerUrl} = useChainInfo();
+
   const account = useDefaultAccount();
 
-  const {data, isLoading, error} = useAsset(contractAddress, tokenId);
+  const isLoading = false;
+  const error = undefined;
 
   const handleClose = useCallback(() => {
     if (onClose) {
@@ -122,7 +132,7 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
                     ) : (
                       <img
                         alt='Token Imagem'
-                        src={data?.imageUrl}
+                        src={metadata?.imageUrl}
                         className={classes.image}
                       />
                     )}
@@ -130,7 +140,7 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
                   <Grid container xs={12} sm={9} item spacing={2}>
                     <Grid item>
                       <Typography variant='h5'>
-                        {isLoading ? <Skeleton /> : data?.title}
+                        {isLoading ? <Skeleton /> : metadata?.title}
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -146,14 +156,14 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
                               href={
                                 chainId
                                   ? `${getScannerUrl(chainId)}/address/${
-                                      data?.owner
+                                      metadata?.owner
                                     }`
                                   : ''
                               }>
                               {account &&
-                              isAddressEqual(account, data?.owner || '')
+                              isAddressEqual(account, metadata?.owner || '')
                                 ? messages['app.wallet.you']
-                                : truncateAddress(data?.owner)}
+                                : truncateAddress(metadata?.owner)}
                             </Link>
                           </>
                         )}
@@ -161,7 +171,7 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
                     </Grid>
                     <Grid item>
                       <Typography color='textSecondary' variant='body2'>
-                        {isLoading ? <Skeleton /> : data?.description}
+                        {isLoading ? <Skeleton /> : metadata?.description}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -192,9 +202,20 @@ export const ConfirmRemoveAssetDialog: React.FC<Props> = ({
               <IntlMessages id='app.wallet.confirmRemove' />
             </Typography>
           </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <Close />
-          </IconButton>
+          <Box
+            display='flex'
+            alignItems='center'
+            alignContent='center'
+            justifyContent='space-between'>
+            <Box mr={2}>
+              <Chip
+                label={tokenChainId && GET_CHAIN_ID_NAME_V2(tokenChainId)}
+              />
+            </Box>
+            <IconButton size='small' onClick={handleClose}>
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
       </DialogTitle>
       <Divider />

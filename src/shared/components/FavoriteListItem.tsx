@@ -16,6 +16,9 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {FavoriteCoin} from 'redux/_ui/reducers';
 import TokenLogo from './TokenLogo';
 import {useHistory} from 'react-router';
+import {isNativeCoinV2} from 'utils';
+import {useCustomNetworkList} from 'hooks/network';
+import {useWeb3} from 'hooks/useWeb3';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -45,6 +48,9 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
 
   const classes = useStyles();
   const theme = useTheme();
+  const {chainId} = useWeb3();
+
+  const {networks} = useCustomNetworkList();
 
   const handleClick = useCallback(() => {
     if (onClick !== undefined && coin.networkName !== undefined) {
@@ -63,18 +69,6 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
 
     return coin.networkName || EthereumNetwork.ethereum;
   }, [coin]);
-
-  const isNativeCoin = useCallback((coin: any) => {
-    if (coin.symbol.toUpperCase() === 'ETH') {
-      return true;
-    } else if (coin.symbol.toUpperCase() === 'BNB') {
-      return true;
-    } else if (coin.symbol.toUpperCase() === 'MATIC') {
-      return true;
-    }
-
-    return false;
-  }, []);
 
   const getExplorerNativeChainURL = useCallback((coin: FavoriteCoin) => {
     if (coin.symbol.toUpperCase() === 'ETH') {
@@ -120,10 +114,20 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
   }, [history, coin]);
 
   const handleGoExplorer = useCallback(() => {
-    if (isNativeCoin(coin)) {
+    if (
+      chainId &&
+      isNativeCoinV2(
+        coin.address,
+        chainId,
+        networks.map((n) => ({
+          chainId: n.chainId,
+          symbol: n.nativeTokenSymbol,
+        })),
+      )
+    ) {
       history.push(getExplorerNativeChainURL(coin));
     }
-  }, [history, coin, getExplorerNativeChainURL, isNativeCoin]);
+  }, [history, chainId, coin, getExplorerNativeChainURL, networks]);
 
   return (
     <Paper variant={variant} onClick={handleClick} className={classes.paper}>
@@ -154,7 +158,15 @@ export const FavoriteListItem = (props: FavoriteListItemProps) => {
                   alignContent='center'
                   container
                   spacing={2}>
-                  {isNativeCoin(coin) ? (
+                  {chainId &&
+                  isNativeCoinV2(
+                    coin.address,
+                    chainId,
+                    networks.map((n) => ({
+                      chainId: n.chainId,
+                      symbol: n.nativeTokenSymbol,
+                    })),
+                  ) ? (
                     <Grid item>
                       <Chip
                         clickable
