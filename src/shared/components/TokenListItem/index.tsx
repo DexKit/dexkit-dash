@@ -100,7 +100,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
                       ? 'BSC'
                       : network === 'matic'
                       ? 'MATIC'
-                      : ''
+                      : network
                   }
                 />
               </Grid>

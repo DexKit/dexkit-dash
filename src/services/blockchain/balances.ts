@@ -1,7 +1,6 @@
 import {ethers} from 'ethers';
 import {getTokenBalances} from 'services/multicall';
 import {getBalanceWithProvider} from 'services/web3modal';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {ETHEREUM_NATIVE_COINS_BY_CHAIN} from 'shared/constants/Coins';
 import {TOKENS_LIST} from 'shared/constants/tokens';
 import {ChainId, MyBalances} from 'types/blockchain';
@@ -46,7 +45,7 @@ export const getAllBlockchainBalances = async (
           0,
         valueInUsd: 0,
         __typename: 'EthereumBalance',
-        network: GET_NETWORK_NAME(chainId),
+        network: t.name,
         price24hPercentage: 0,
         logoURI: t.logoURI,
       } as MyBalances;
@@ -66,7 +65,7 @@ export const getAllBlockchainBalances = async (
         Number(ethers.utils.formatUnits(tb[t.address] || '0', t.decimals)) || 0,
       valueInUsd: 0,
       __typename: 'EthereumBalance',
-      network: GET_NETWORK_NAME(chainId),
+      network: t.name,
       price24hPercentage: 0,
       logoURI: t.logoURI,
     } as MyBalances;
@@ -103,7 +102,7 @@ export const getAllBlockchainBalances = async (
     value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
     valueInUsd: 0,
     __typename: 'EthereumBalance',
-    network: GET_NETWORK_NAME(chainId),
+    network: coin.name,
     price24hPercentage: 0,
     chainId: chainId,
   };

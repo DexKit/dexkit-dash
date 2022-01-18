@@ -74,15 +74,16 @@ const TokenLogo: React.FC<Props> = (props) => {
     currentNetwork === EthereumNetwork.ethereum
       ? 'ethereum'
       : currentNetwork === EthereumNetwork.bsc
-      ? 'smartchain'
-      : 'polygon';
+      ? 'smartchain' :
+      currentNetwork === EthereumNetwork.matic
+      ? 'polygon' : currentNetwork ;
 
   const currencyLogo =
     networkName === 'ethereum'
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
       : currentNetwork === EthereumNetwork.bsc
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
-      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
+      : currentNetwork === EthereumNetwork.matic ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png' : '';
   const getIconUrl = (address: string, logoUrl?: string) => {
     if (logoUrl) {
       return logoUrl;

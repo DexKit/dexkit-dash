@@ -47,22 +47,28 @@ export const useAllBalance = (defaultAccount?: string) => {
     async () => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
-
+        let result = {
+          balances: [],
+          nftBalances: [],
+        };
         if (chainId && web3State === Web3State.Done) {
           const pr = new providers.Web3Provider(getProvider());
-
-          const result = await getAllBlockchainBalances(
+          // @ts-ignore
+          result = await getAllBlockchainBalances(
             chainId,
             account,
             tokens,
             networks,
             pr,
           );
-
-          return result;
         }
+       
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
-        return getAllBitqueryBalances(account);
+        const bitqueryResult = await getAllBitqueryBalances(account);  
+        const concat = { balances: [...bitqueryResult.balances, ...result.balances], nftBalances: []}
+
+       
+        return concat;
       }
     },
     {staleTime: 1000 * 20},
