@@ -18,7 +18,7 @@ import {truncateIsAddress} from 'utils';
 import {StatusSquare} from '../StatusSquare';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
+import { GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
 import CopyButton from '../CopyButton';
@@ -156,13 +156,13 @@ const ActiveChainBalance = () => {
                           {isLoading ? (
                             <Skeleton />
                           ) : !formattedBalance ? (
-                            `- ${FORMAT_NETWORK_NAME(network)}`
+                            `- ${GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase()}`
                           ) : (
                             <>
                               {isBalanceVisible
-                                ? `${formattedBalance} ${FORMAT_NETWORK_NAME(
+                                ? `${formattedBalance} ${GET_NATIVE_COIN_FROM_NETWORK_NAME(
                                     network,
-                                  )}`
+                                  ).toUpperCase()}`
                                 : '****.**'}
                             </>
                           )}
