@@ -46,6 +46,8 @@ import { getTransactionScannerUrl } from 'utils/blockchain';
 import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 import { useNotifications } from 'hooks/useNotifications';
 import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+import { GET_GAME_LEVEL_AMOUNTS_UNITS } from 'modules/CoinLeagues/utils/game';
+import { GameLevel } from 'modules/CoinLeagues/constants/enums';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -292,28 +294,28 @@ const CreateGameModal = (props: Props) => {
               }}>
             
               {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
-              <MenuItem value={1}>
-              <IntlMessages id='app.coinLeagues.beginner' /> - 1{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}>
+              <IntlMessages id='app.coinLeagues.beginner' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
-              <MenuItem value={5}>
-              <IntlMessages id='app.coinLeagues.intermediate' />- 5{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Intermediate, chainId)}>
+              <IntlMessages id='app.coinLeagues.intermediate' />- {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Intermediate, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
-              <MenuItem value={10}>
-              <IntlMessages id='app.coinLeagues.advanced' /> - 10{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Advanced, chainId)}>
+              <IntlMessages id='app.coinLeagues.advanced' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Advanced, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
-              <MenuItem value={50}>
-              <IntlMessages id='app.coinLeagues.expert' /> - 50{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Expert, chainId)}>
+              <IntlMessages id='app.coinLeagues.expert' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Expert, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
-              <MenuItem value={250}>
-              <IntlMessages id='app.coinLeagues.master' /> - 250{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Master, chainId)}>
+              <IntlMessages id='app.coinLeagues.master' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Master, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
-              <MenuItem value={500}>
-              <IntlMessages id='app.coinLeagues.grandMaster' /> - 500{' '}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.GrandMaster, chainId)}>
+              <IntlMessages id='app.coinLeagues.grandMaster' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.GrandMaster, chainId)}{' '}
                 {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
               </MenuItem>
             </Select>

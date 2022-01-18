@@ -1,11 +1,18 @@
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
+import { useWeb3 } from 'hooks/useWeb3';
 import {useQuery} from 'react-query';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { ChainId } from 'types/blockchain';
 import {getPlayerMultipliers} from '../services/coinLeagues';
+import { GET_LEAGUES_CHAIN_ID } from '../utils/constants';
 import {useCoinLeagues} from './useCoinLeagues';
 
 export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean) => {
-  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+  const {chainId} = useWeb3();
+  const provider = useNetworkProvider(
+    EthereumNetwork.matic,
+    GET_LEAGUES_CHAIN_ID(chainId),
+  );
   const {game} = useCoinLeagues(address);
 
   return useQuery(
@@ -17,7 +24,8 @@ export const usePlayerHoldingTokenBalances = (address?: string, enable?: boolean
       return await getPlayerMultipliers(
         // @ts-ignore
         game.players,
-        networkProvider,
+        provider ,
+        chainId || ChainId.Matic,
       );
     },
   );

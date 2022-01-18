@@ -80,7 +80,7 @@ function CardGame(props: Props): JSX.Element {
   const entryAmount = ethers.utils.formatEther(game.entry);
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
   const [openShowGameMetadataModal, setOpenShowGameMetadataModal] = useState(false);
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);

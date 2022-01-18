@@ -44,7 +44,7 @@ function SimpleCardGame(props: Props): JSX.Element {
   const {duration, amount_to_play, id} = props;
   const intId = id.toNumber();
   const time = duration.toNumber();
-  const gameLevel = GET_GAME_LEVEL(amount_to_play);
+  const gameLevel = GET_GAME_LEVEL(amount_to_play, chainId);
   const entryAmount = ethers.utils.formatEther(amount_to_play);
 
   return (

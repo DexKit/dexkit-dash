@@ -111,7 +111,7 @@ function CardGameProgress(props: Props): JSX.Element {
     1000,
     true,
   );
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
 
   return (
     <Container className={classes.container} maxWidth='xs'>

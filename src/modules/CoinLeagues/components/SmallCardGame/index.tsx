@@ -59,7 +59,7 @@ function SmallCardGame(props: Props): JSX.Element {
     style: 'currency',
     currency: 'USD',
   }).format(props.prizePool);*/
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
 
   const prizeTotalValue = ethers.utils.formatEther(
     BigNumber.from(game.entry).mul(BigNumber.from(game.currentPlayers)),
