@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, {useCallback, useMemo, useState, useEffect} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
@@ -18,7 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TickerTapeTV from '../../components/TickerTapeTV';
 import CardPrize from '../../components/CardPrize';
 import SimpleCardGame from '../../components/SimpleCardGame';
-import { HOME_ROUTE } from 'shared/constants/routes';
+import {HOME_ROUTE} from 'shared/constants/routes';
 import {
   Link as RouterLink,
   RouteComponentProps,
@@ -26,74 +26,72 @@ import {
   useLocation,
 } from 'react-router-dom';
 import CardInfoPlayers from 'modules/CoinLeagues/components/CardInfoPlayers';
-import { useCoinLeagues } from 'modules/CoinLeagues/hooks/useCoinLeagues';
-import { ethers, BigNumber } from 'ethers';
+import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {ethers, BigNumber} from 'ethers';
 import CardInfoPlayersSkeleton from 'modules/CoinLeagues/components/CardInfoPlayers/index.skeleton';
 import CardPrizeSkeleton from 'modules/CoinLeagues/components/CardPrize/index.skeleton';
-import { ReactComponent as CryptocurrencyIcon } from 'assets/images/icons/cryptocurrency.svg';
-import { ChampionMetaItem, CoinFeed } from 'modules/CoinLeagues/utils/types';
+import {ReactComponent as CryptocurrencyIcon} from 'assets/images/icons/cryptocurrency.svg';
+import {ChampionMetaItem, CoinFeed} from 'modules/CoinLeagues/utils/types';
 import SimpleCardGameSkeleton from 'modules/CoinLeagues/components/SimpleCardGame/index.skeleton';
-import { CoinItem } from 'modules/CoinLeagues/components/CoinItem';
-import { ChampionItem } from 'modules/CoinLeagues/components/ChampionItem';
+import {CoinItem} from 'modules/CoinLeagues/components/CoinItem';
+import {ChampionItem} from 'modules/CoinLeagues/components/ChampionItem';
 import IconButton from '@material-ui/core/IconButton';
 
 import Box from '@material-ui/core/Box';
-import { GameType, Player } from 'types/coinsleague';
+import {GameType, Player} from 'types/coinsleague';
 import PlayersTable from 'modules/CoinLeagues/components/PlayersTable';
 import OnePlayerTable from 'modules/CoinLeagues/components/OnePlayerTable';
-import { WaitingPlayers } from 'modules/CoinLeagues/components/WaitingPlayers';
+import {WaitingPlayers} from 'modules/CoinLeagues/components/WaitingPlayers';
 import Chip from '@material-ui/core/Chip';
-import { useWeb3 } from 'hooks/useWeb3';
+import {useWeb3} from 'hooks/useWeb3';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import { ChainId, SupportedNetworkType } from 'types/blockchain';
-import { EndGame } from 'modules/CoinLeagues/components/EndGame';
-import { StartGame } from 'modules/CoinLeagues/components/StartGame';
-import { ButtonState } from 'modules/CoinLeagues/components/ButtonState';
+import {ChainId, SupportedNetworkType} from 'types/blockchain';
+import {EndGame} from 'modules/CoinLeagues/components/EndGame';
+import {StartGame} from 'modules/CoinLeagues/components/StartGame';
+import {ButtonState} from 'modules/CoinLeagues/components/ButtonState';
 import Countdown from 'modules/CoinLeagues/components/Countdown';
 import CountdownStartsAt from 'modules/CoinLeagues/components/CountdownStartsAt';
-import { useNotifications } from 'hooks/useNotifications';
+import {useNotifications} from 'hooks/useNotifications';
 
-import { CopyButton } from 'shared/components/CopyButton';
-import { FileCopy } from '@material-ui/icons';
+import {CopyButton} from 'shared/components/CopyButton';
+import {FileCopy} from '@material-ui/icons';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import Hidden from '@material-ui/core/Hidden';
 import PlayersTableSkeleton from 'modules/CoinLeagues/components/PlayersTable/index.skeleton';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { ShareButton } from 'shared/components/ShareButton';
+import {ShareButton} from 'shared/components/ShareButton';
 import Alert from '@material-ui/lab/Alert';
 import {
   useCoinLeaguesFactoryRoutes,
   useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import SwapButton from 'shared/components/SwapButton';
-import { useIntl } from 'react-intl';
-import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
-import { useDispatch } from 'react-redux';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { setDefaultAccount } from 'redux/_ui/actions';
+import {useIntl} from 'react-intl';
+import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
+import {useDispatch} from 'react-redux';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {setDefaultAccount} from 'redux/_ui/actions';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-import { SelectCoinLeagueDialog } from 'modules/CoinLeagues/components/SelectCoins/index.modal';
+import {SelectCoinLeagueDialog} from 'modules/CoinLeagues/components/SelectCoins/index.modal';
 import SelectChampionDialog from 'modules/CoinLeagues/components/SelectChampion/index.modal';
 import {
   AFFILIATE_FIELD,
   CREATOR_PRIZES_ADDRESSES,
   DISABLE_CHAMPIONS_ID,
 } from 'modules/CoinLeagues/constants';
-import { useTokensMultipliers } from 'modules/CoinLeagues/hooks/useMultipliers';
+import {useTokensMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 import UpdateGameMetadataModal from 'modules/CoinLeagues/components/UpdateGameMetadataModal';
-import { useGameMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
-import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
+import {useGameMetadata} from 'modules/CoinLeagues/hooks/useGameMetadata';
+import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 import ViewGameMetadataModal from 'modules/CoinLeagues/components/ViewGameMetadataModal';
 import RemoveGameMetadataModal from 'modules/CoinLeagues/components/RemoveGameMetadataModal';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -132,26 +130,28 @@ enum SubmitState {
 function GameEnter(props: Props) {
   const classes = useStyles();
   const {
-    match: { params },
+    match: {params},
   } = props;
   const history = useHistory();
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3();
+  const {account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const { balance } = useActiveChainBalance();
+  const {balance} = useActiveChainBalance();
 
-  const { search } = useLocation();
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
+
+  const {search} = useLocation();
   const query = useMemo(() => new URLSearchParams(search), [search]);
 
   const isNFTGame = useIsNFTGame();
-  const { createNotification } = useNotifications();
+  const {createNotification} = useNotifications();
 
-  const { messages } = useIntl();
-  const { id } = params;
-  const { game, gameQuery, refetch, onJoinGameCallback, winner, addressQuery } =
+  const {messages} = useIntl();
+  const {id} = params;
+  const {game, gameQuery, refetch, onJoinGameCallback, winner, addressQuery} =
     useCoinLeagues(id);
 
-  const { listGamesRoute, enterGameRoute } = useCoinLeaguesFactoryRoutes();
+  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const gameMetaQuery = useGameMetadata(id);
   const tokensMultipliersQuery = useTokensMultipliers();
@@ -302,8 +302,9 @@ function GameEnter(props: Props) {
           setTx(tx);
           createNotification({
             title: `Join Game ${isNFTGame ? 'on NFT Room' : 'on Main Room'}`,
-            body: `Joined Game ${id} ${isNFTGame ? 'on NFT Room' : 'Main Room'
-              }`,
+            body: `Joined Game ${id} ${
+              isNFTGame ? 'on NFT Room' : 'Main Room'
+            }`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
             urlCaption: messages['app.coinLeagues.viewTransaction'] as string,
@@ -355,6 +356,7 @@ function GameEnter(props: Props) {
       onJoinGameCallback,
       createNotification,
       messages,
+      getTransactionScannerUrl,
     ],
   );
 
@@ -506,7 +508,7 @@ function GameEnter(props: Props) {
         <Grid item xs={12}>
           <img
             src={CoinsLeagueBanner}
-            style={{ borderRadius: '12px' }}
+            style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
           />
         </Grid>
@@ -516,11 +518,11 @@ function GameEnter(props: Props) {
           <IconButton onClick={handleBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant='h5' style={{ margin: 5 }}>
+          <Typography variant='h5' style={{margin: 5}}>
             {gameMetaQuery.data ? `${gameMetaQuery.data.title} -` : null} Game #
             {id}
             <CopyButton size='small' copyText={urlShare} tooltip='URL Copied!'>
-              <FileCopy color='inherit' style={{ fontSize: 16 }} />
+              <FileCopy color='inherit' style={{fontSize: 16}} />
             </CopyButton>
           </Typography>
           {gameMetaQuery.data && (
@@ -560,7 +562,7 @@ function GameEnter(props: Props) {
         <Grid item sm={5} xl={5}>
           <img
             src={CoinsLeagueBanner}
-            style={{ borderRadius: '12px' }}
+            style={{borderRadius: '12px'}}
             alt={'Coinleague Banner'}
           />
         </Grid>
@@ -577,12 +579,8 @@ function GameEnter(props: Props) {
           </Box>
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}`}
-              defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}
+              btnMsg={`Buy ${tokenSymbol}`}
+              defaultCurrency={tokenSymbol}
             />
           </Box>
           <Box pr={2}>
@@ -604,7 +602,7 @@ function GameEnter(props: Props) {
               justifyContent={'start'}
               alignItems={'center'}
               alignContent={'center'}>
-              <Typography variant='subtitle2' style={{ color: '#7A8398' }}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 <IntlMessages id='app.coinLeagues.gameType' />:
               </Typography>
               <Typography
@@ -625,13 +623,13 @@ function GameEnter(props: Props) {
         {isLoading && (
           <Container className={classes.gameTypePaper}>
             <Box display={'flex'}>
-              <Typography variant='subtitle2' style={{ color: '#7A8398' }}>
+              <Typography variant='subtitle2' style={{color: '#7A8398'}}>
                 <IntlMessages id='app.coinLeagues.gameType' />:
               </Typography>
               <Skeleton>
                 <Typography
                   variant='h5'
-                  style={{ color: '#fff', marginLeft: '20px' }}>
+                  style={{color: '#fff', marginLeft: '20px'}}>
                   <IntlMessages id='app.coinLeagues.winner' />
                 </Typography>
               </Skeleton>
@@ -675,10 +673,10 @@ function GameEnter(props: Props) {
             <Grid item xs={12} md={6} alignContent='space-around'>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography variant='h6' style={{ margin: 5 }}>
+                  <Typography variant='h6' style={{margin: 5}}>
                     {
                       messages[
-                      'coinLeagues.page.gameEnter.captain.chooseCurrency'
+                        'coinLeagues.page.gameEnter.captain.chooseCurrency'
                       ]
                     }{' '}
                     {captainCoin === undefined ? '0' : '1'}/ 1
@@ -712,7 +710,7 @@ function GameEnter(props: Props) {
               {isNFTGame && (
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography variant='h6' style={{ margin: 5 }}>
+                    <Typography variant='h6' style={{margin: 5}}>
                       Choose Champion {champion === undefined ? '0' : '1'}/ 1
                     </Typography>
                   </Grid>
@@ -752,7 +750,7 @@ function GameEnter(props: Props) {
               <Grid item xs={12} md={6} alignContent='space-around'>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography variant='h6' style={{ margin: 5 }}>
+                    <Typography variant='h6' style={{margin: 5}}>
                       <IntlMessages id='coinLeagues.page.gameEnter.chooseCurrencies' />{' '}
                       {selectedCoins?.length}/
                       {(game?.num_coins.toNumber() || 0) - 1}
@@ -807,10 +805,10 @@ function GameEnter(props: Props) {
                           {submitState === SubmitState.Submitted
                             ? 'Submitted Tx'
                             : submitState === SubmitState.Error
-                              ? 'Tx Error'
-                              : submitState === SubmitState.Confirmed
-                                ? 'Confirmed Tx'
-                                : ''}
+                            ? 'Tx Error'
+                            : submitState === SubmitState.Confirmed
+                            ? 'Confirmed Tx'
+                            : ''}
                         </Button>
                       )}
                     </Box>
@@ -838,11 +836,9 @@ function GameEnter(props: Props) {
                           defaultMsg={
                             sufficientFunds
                               ? (messages[
-                                'app.coinLeagues.enterGame'
-                              ] as string)
-                              : `Insufficient ${GET_CHAIN_NATIVE_COIN(
-                                GET_LEAGUES_CHAIN_ID(chainId),
-                              )} Funds`
+                                  'app.coinLeagues.enterGame'
+                                ] as string)
+                              : `Insufficient ${tokenSymbol} Funds`
                           }
                           confirmedMsg={'You Entered Game'}
                         />
@@ -858,7 +854,7 @@ function GameEnter(props: Props) {
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant='h6' style={{ margin: 5 }}>
+              <Typography variant='h6' style={{margin: 5}}>
                 <IntlMessages id='app.coinLeagues.yourCoins' />
               </Typography>
             </Grid>
@@ -885,7 +881,7 @@ function GameEnter(props: Props) {
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant='h6' style={{ margin: 5 }}>
+              <Typography variant='h6' style={{margin: 5}}>
                 <IntlMessages id='app.coinLeagues.players' />
               </Typography>
             </Grid>
@@ -920,7 +916,7 @@ function GameEnter(props: Props) {
           <Grid container>
             <Grid item xs={12}>
               <Skeleton>
-                <Typography variant='h6' style={{ margin: 5 }}>
+                <Typography variant='h6' style={{margin: 5}}>
                   <IntlMessages id='app.coinLeagues.players' />
                 </Typography>
               </Skeleton>

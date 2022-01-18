@@ -5,6 +5,8 @@ import {getNormalizedUrl} from 'utils/browser';
 import {TokenMetadata} from 'types/nfts';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 
+import {AssetData} from '../modules/Dashboard/types';
+
 const abi = [
   {
     inputs: [],
@@ -107,3 +109,37 @@ export const ownerOf = async (
 
   return await contract.ownerOf(tokenId);
 };
+
+export async function getTokenMetadataById(
+  provider: any,
+  contractAddress: string,
+  tokenId: string,
+) {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  const uri = await contract.tokenURI(tokenId);
+
+  const metadata = await getTokenMetadata(uri);
+
+  const owner = await contract.ownerOf(tokenId);
+
+  const collectionName = await contract.name();
+  const symbol = await contract.symbol();
+
+  const data: AssetData = {
+    collectionName,
+    symbol,
+    imageUrl: getNormalizedUrl(metadata?.image || ''),
+    contractAddress,
+    tokenId,
+    description: metadata.description || '',
+    title: metadata.name || '',
+    owner,
+  };
+
+  return data;
+}

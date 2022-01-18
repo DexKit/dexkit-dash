@@ -17,12 +17,12 @@ export const LanguageList: React.FC<Props> = ({
 }) => {
   return (
     <List disablePadding>
-      {languages.map((language: types.Language, index: number) => (
+      {languages.map((language: types.Language) => (
         <LanguageListItem
+          key={language.languageId}
           selected={selected.locale === language.locale}
           onClick={onChange}
           language={language}
-          key={index}
         />
       ))}
     </List>

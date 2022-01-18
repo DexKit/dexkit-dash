@@ -14,9 +14,9 @@ import React, {useCallback} from 'react';
 import {ErrorIcon} from 'shared/components/Icons';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useHistory} from 'react-router';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   kittygotchiImage: {
@@ -47,6 +47,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
   } = props;
 
   const {chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const classes = useStyles();
   const theme = useTheme();
@@ -61,7 +62,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   const history = useHistory();
 
@@ -86,13 +87,13 @@ export const MintingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
-                <IntlMessages id="app.kittygotchi.creatingYour" />
+                  <IntlMessages id='app.kittygotchi.creatingYour' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  <IntlMessages id="app.kittygotchi.pleaseWait"/> 
+                  <IntlMessages id='app.kittygotchi.pleaseWait' />
                 </Typography>
               </Grid>
               {transactionHash ? (
@@ -101,7 +102,7 @@ export const MintingKittygotchiDialog = (props: Props) => {
                     color='primary'
                     onClick={handleViewTransaction}
                     fullWidth>
-                    <IntlMessages id="app.kittygotchi.viewTransaction"/> 
+                    <IntlMessages id='app.kittygotchi.viewTransaction' />
                   </Button>
                 </Grid>
               ) : null}
@@ -124,13 +125,13 @@ export const MintingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages id="app.kittygotchi.created"/> 
+                  <IntlMessages id='app.kittygotchi.created' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  <IntlMessages id="app.kittygotchi.canFeedEvery24H"/> 
+                  <IntlMessages id='app.kittygotchi.canFeedEvery24H' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -139,12 +140,12 @@ export const MintingKittygotchiDialog = (props: Props) => {
                   variant='outlined'
                   onClick={handleViewKittygotchi}
                   fullWidth>
-                  <IntlMessages id="app.kittygotchi.view"/>  #{tokenId}
+                  <IntlMessages id='app.kittygotchi.view' /> #{tokenId}
                 </Button>
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                <IntlMessages id="app.kittygotchi.close"/> 
+                  <IntlMessages id='app.kittygotchi.close' />
                 </Button>
               </Grid>
             </Grid>
@@ -162,13 +163,13 @@ export const MintingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages id="app.kittygotchi.transactionFailed"/> 
+                  <IntlMessages id='app.kittygotchi.transactionFailed' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  <IntlMessages id="app.kittygotchi.pleaseTry"/> 
+                  <IntlMessages id='app.kittygotchi.pleaseTry' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -177,12 +178,12 @@ export const MintingKittygotchiDialog = (props: Props) => {
                   onClick={onTryAgain}
                   color='primary'
                   fullWidth>
-                  <IntlMessages id="app.kittygotchi.tryAgain"/> 
+                  <IntlMessages id='app.kittygotchi.tryAgain' />
                 </Button>
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                <IntlMessages id="app.kittygotchi.close"/> 
+                  <IntlMessages id='app.kittygotchi.close' />
                 </Button>
               </Grid>
             </Grid>

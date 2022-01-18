@@ -117,6 +117,7 @@ const SenderForm: React.FC<Props> = (props) => {
   const [sending, setSending] = useState(false);
 
   const handleSend = () => {
+    console.log('0xaBBC64423FA7d56981b6c5E11Be6e9e6f65AdDFB');
     if (account) {
       try {
         if (token && chainId) {
@@ -134,6 +135,7 @@ const SenderForm: React.FC<Props> = (props) => {
               }
             })
             .catch((err) => {
+              console.log('errr', err);
               if (onResult) {
                 onResult(err);
               }

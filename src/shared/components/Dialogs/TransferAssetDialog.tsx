@@ -28,7 +28,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {useAsset} from 'hooks/useAsset';
 import {transferFrom} from 'services/nfts';
 import {useWeb3} from 'hooks/useWeb3';
-import {getScannerUrl, isAddressEqual} from 'utils/blockchain';
+import {isAddressEqual} from 'utils/blockchain';
 import {useIntl} from 'react-intl';
 import {truncateAddress} from 'utils';
 
@@ -40,6 +40,7 @@ import {Web3Wrapper} from '@0x/web3-wrapper';
 import {ErrorIcon, SuccessIcon} from '../Icons';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -75,6 +76,8 @@ export const TransferAssetDialog: React.FC<Props> = ({
   const classes = useStyles();
 
   const {account, chainId, getProvider} = useWeb3();
+  const {getScannerUrl} = useChainInfo();
+
   const [toAddress, setToAddress] = useState('');
 
   const {createNotification} = useNotifications();
@@ -129,6 +132,7 @@ export const TransferAssetDialog: React.FC<Props> = ({
     removeAsset,
     chainId,
     messages,
+    getScannerUrl,
   ]);
 
   const handleClose = useCallback(() => {

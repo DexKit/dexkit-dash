@@ -18,10 +18,10 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {useWizardApi} from 'modules/Wizard/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {ethers} from 'ethers';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface MintItemsDialogProps extends DialogProps {
   contractAddress: string;
@@ -38,6 +38,8 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
   const wizardApi = useWizardApi();
 
   const {getProvider, chainId} = useWeb3();
+
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const [mintTransactionHash, setMintTransactionHash] = useState('');
   const [items, setItems] = useState<CollectionItemData[]>([]);

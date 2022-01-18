@@ -18,9 +18,9 @@ import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -46,6 +46,7 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
   const {onClose, transactionHash} = props;
 
   const {chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const classes = useStyles();
 
   const theme = useTheme();
@@ -60,7 +61,7 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   return (
     <Dialog {...props} fullWidth maxWidth='xs'>
@@ -78,7 +79,9 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
               alignContent='center'>
               <CheckCircleOutlineIcon className={clsx(classes.icon)} />
             </Box>
-            <Typography variant='body1'><IntlMessages id='app.wizard.transactionCreated' /></Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.wizard.transactionCreated' />
+            </Typography>
           </Box>
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
@@ -101,10 +104,10 @@ export const CreatedDialog = (props: ConfirmDialogProps) => {
             </Box>
             <Box mb={2}>
               <Typography align='center' variant='h5'>
-              <IntlMessages id='app.wizard.transactionCreated' />
+                <IntlMessages id='app.wizard.transactionCreated' />
               </Typography>
               <Typography align='center' variant='body1'>
-              <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
+                <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
               </Typography>
             </Box>
             <Button onClick={handleViewTransaction} color='primary' fullWidth>

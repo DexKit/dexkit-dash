@@ -18,9 +18,8 @@ import CollapsibleTableRow from 'shared/components/CollapsibleTableRow';
 import {ethers} from 'ethers';
 import {ReactComponent as CupIcon} from 'assets/images/icons/cup-white.svg';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {useWeb3} from 'hooks/useWeb3';
+import {useChainInfo} from 'hooks/useChainInfo';
+
 interface TableItemProps {
   row: any;
   isNFT: boolean;
@@ -52,12 +51,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
+const TableItem: React.FC<TableItemProps> = ({row, isNFT}) => {
   const classes = useStyles();
   const {messages} = useIntl();
-  const {chainId} = useWeb3();
+
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const {enterGameRoute} = useCoinLeaguesFactoryRoutes(isNFT);
+
+  const {chainName} = useChainInfo();
 
   const paymentTypeColor = useMemo(() => {
     switch (row.status) {
@@ -106,7 +107,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
           <Box p={2}>
             {`${messages['app.coinLeagues.claimed']} ${ethers.utils.formatEther(
               row.earnings[0].amount,
-            )} ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`}
+            )} ${chainName}`}
           </Box>
         );
       } else {
@@ -123,7 +124,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
       }
     }
     return null;
-  }, [row.earnings,  enterGameRoute, row.intId, chainId, messages]);
+  }, [row.earnings, enterGameRoute, row.intId, messages, chainName]);
 
   const withdrawed = useMemo(() => {
     if (row.status === 'Aborted') {
@@ -171,7 +172,14 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
           Number(row.abortedAt) * 1000,
         ).toLocaleDateString()}`;
     }
-  }, [row.status, row.createdAt, row.endedAt, row.abortedAt, row.startedAt, messages]);
+  }, [
+    row.status,
+    row.createdAt,
+    row.endedAt,
+    row.abortedAt,
+    row.startedAt,
+    messages,
+  ]);
 
   const createdTimeFn = useMemo(() => {
     switch (row.status) {
@@ -186,7 +194,7 @@ const TableItem: React.FC<TableItemProps> = ({row,isNFT}) => {
       case 'Aborted':
         return `${new Date(Number(row.abortedAt) * 1000).toLocaleTimeString()}`;
     }
-  }, [row.status, row.startedAt, row.endedAt, row.createdAt, row.abortedAt ]);
+  }, [row.status, row.startedAt, row.endedAt, row.createdAt, row.abortedAt]);
 
   if (isMobile) {
     const summaryTitle = `${messages['app.coinLeagues.game']} ${row.intId}`;

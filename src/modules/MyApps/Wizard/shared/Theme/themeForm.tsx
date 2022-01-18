@@ -157,7 +157,6 @@ const ThemeForm: React.FC<ThemeFormProps> = (props) => {
       );
     }
     if (changeIssuerForm != null) {
-      console.log('aqui');
       changeIssuerForm('theme', theme);
       changeIssuerForm(selectedOption.value, theme);
     }

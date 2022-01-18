@@ -1,20 +1,21 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LanguageSwitcher from '../../LanguageSwitcher';
-import { setWeb3State, toggleNavCollapsed } from '../../../../redux/actions';
-import { useDispatch } from 'react-redux';
+import {setWeb3State, toggleNavCollapsed} from '../../../../redux/actions';
+import {useDispatch} from 'react-redux';
 import Box from '@material-ui/core/Box';
 import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
+import {useCustomNetworkList} from 'hooks/network';
+
 import WalletInfo from 'shared/components/WalletInfo';
 
-import { useWeb3 } from 'hooks/useWeb3';
-import { GET_CHAIN_ID_NAME } from 'shared/constants/Blockchain';
+import {useWeb3} from 'hooks/useWeb3';
 
 import clsx from 'clsx';
 
@@ -29,29 +30,30 @@ import {
 } from '@material-ui/core';
 import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { ReactComponent as DexkitLogoImage } from 'assets/images/dexkit-logo.svg';
-import { ReactComponent as DexkitLogoIconImage } from 'assets/images/dexkit-logo-icon.svg';
+import {ReactComponent as DexkitLogoImage} from 'assets/images/dexkit-logo.svg';
+import {ReactComponent as DexkitLogoIconImage} from 'assets/images/dexkit-logo-icon.svg';
 
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import SwitchNetworkDialog from 'shared/components/SwitchNetworkDialog';
-import { switchChain } from 'utils/wallet';
-import { GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider } from 'services/magic';
-import { Web3State } from 'types/blockchain';
-import { useMagicProvider } from 'hooks/provider/useMagicProvider';
+import {switchChain} from 'utils/wallet';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+import {Web3State} from 'types/blockchain';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
-import { useProfileKittygotchi } from '../../../../modules/Profile/hooks/index';
+import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
 
-import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
-import { useKittygotchiV2, useKittygotchiList } from 'modules/Kittygotchi/hooks';
-interface AppHeaderProps { }
+import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
+import {useChainInfo} from 'hooks/useChainInfo';
+interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
-  const { chainId, getProvider, account } = useWeb3();
-  const { onSwitchMagicNetwork } = useMagicProvider();
+  const {chainId, getProvider, account} = useWeb3();
+  const {onSwitchMagicNetwork} = useMagicProvider();
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -71,10 +73,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{vertical: 'top', horizontal: 'right'}}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{vertical: 'top', horizontal: 'right'}}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}>
       <MenuItem className={classes.menuItemRoot}>
@@ -109,6 +111,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   // };
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+  const {networks} = useCustomNetworkList();
 
   const handleCloseSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(false);
@@ -123,8 +126,57 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
+
+        const provider = getProvider();
+
         try {
-          await switchChain(getProvider(), chainId);
+          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+
+          if (customIndex > -1) {
+            const params: {
+              chainId: string; // A 0x-prefixed hexadecimal string
+              chainName: string;
+              nativeCurrency?: {
+                name: string;
+                symbol: string; // 2-6 characters long
+                decimals: number;
+              };
+              rpcUrls: string[];
+              blockExplorerUrls?: string[];
+              iconUrls?: string[]; // Currently ignored.
+            } = {
+              chainId: '0x' + networks[customIndex].chainId.toString(16),
+              chainName: networks[customIndex].name,
+              rpcUrls: [networks[customIndex].rpcUrl],
+              blockExplorerUrls: networks[customIndex].explorerUrl
+                ? [networks[customIndex].explorerUrl]
+                : undefined,
+            };
+
+            const nativeCurrency: {
+              name: string;
+              symbol: string;
+              decimals: number;
+            } = {
+              name: networks[customIndex].name,
+              symbol: networks[customIndex].symbol,
+              decimals: 18,
+            };
+
+            if (networks[customIndex].nativeTokenSymbol) {
+              nativeCurrency.symbol = networks[customIndex].nativeTokenSymbol;
+            }
+
+            params.nativeCurrency = nativeCurrency;
+
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [params],
+            });
+          } else {
+            await switchChain(provider, chainId);
+          }
+
           window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
@@ -133,7 +185,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         }
       }
     },
-    [dispatch, getProvider, onSwitchMagicNetwork],
+    [dispatch, getProvider, onSwitchMagicNetwork, networks],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -183,6 +235,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     /* eslint-disable */
   }, [chainId, account]);
 
+  const {chainName} = useChainInfo();
+
   return (
     <>
       {chainId ? (
@@ -199,13 +253,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           style={
             !isMobile
               ? {
-                paddingLeft: theme.spacing(8),
-                paddingRight: theme.spacing(8),
-              }
+                  paddingLeft: theme.spacing(8),
+                  paddingRight: theme.spacing(8),
+                }
               : {
-                paddingLeft: theme.spacing(2),
-                paddingRight: theme.spacing(2),
-              }
+                  paddingLeft: theme.spacing(2),
+                  paddingRight: theme.spacing(2),
+                }
           }>
           {isMobile ? (
             <Box>
@@ -231,7 +285,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                               onClick={handleOpenSwitchNetwork}
                               className={classes.switchNetworkButton}>
                               <Box className={classes.badgeRoot}>
-                                {GET_CHAIN_ID_NAME(chainId)}
+                                {chainName}
                                 <IconButton size='small'>
                                   <ExpandMoreIcon />
                                 </IconButton>
@@ -241,14 +295,16 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         ) : null}
                       </Grid>
                     ) : (
-                      chainId && <Grid item>
-                        <Box
-                          className={classes.badgeRoot}
-                          display={'flex'}
-                          alignItems={'center'}>
-                          {GET_CHAIN_ID_NAME(chainId)}
-                        </Box>
-                      </Grid>
+                      chainId && (
+                        <Grid item>
+                          <Box
+                            className={classes.badgeRoot}
+                            display={'flex'}
+                            alignItems={'center'}>
+                            {chainName}
+                          </Box>
+                        </Grid>
+                      )
                     )}
                     <Grid item>
                       <Notifications />
@@ -292,7 +348,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   alignItems='center'
                   alignContent='center'>
                   {chainId !== undefined &&
-                    (isMetamask() || isMagicProvider()) ? (
+                  (isMetamask() || isMagicProvider()) ? (
                     <Grid item>
                       <ButtonBase
                         onClick={handleOpenSwitchNetwork}
@@ -301,20 +357,22 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           className={classes.badgeRoot}
                           display={'flex'}
                           alignItems={'center'}>
-                          {GET_CHAIN_ID_NAME(chainId)}
+                          {chainName}
                           <ExpandMoreIcon />
                         </Box>
                       </ButtonBase>
                     </Grid>
                   ) : (
-                    chainId && <Grid item>
-                      <Box
-                        className={classes.badgeRoot}
-                        display={'flex'}
-                        alignItems={'center'}>
-                        {GET_CHAIN_ID_NAME(chainId)}
-                      </Box>
-                    </Grid>
+                    chainId && (
+                      <Grid item>
+                        <Box
+                          className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}>
+                          {chainName}
+                        </Box>
+                      </Grid>
+                    )
                   )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
@@ -334,7 +392,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         src={
                           account && chainId
                             ? kittygotchiProfile.getDefault(account, chainId)
-                              ?.image
+                                ?.image
                             : undefined
                         }
                       />

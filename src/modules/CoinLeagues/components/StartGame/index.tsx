@@ -17,9 +17,11 @@ import {
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
 import {useInterval} from 'hooks/utils/useInterval';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
+
+import {useChainInfo} from 'hooks/useChainInfo';
+
 interface Props {
   id?: string;
 }
@@ -27,6 +29,7 @@ interface Props {
 export const StartGame = (props: Props) => {
   const {id} = props;
   const {chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const {game, refetch} = useCoinLeagues(id);
   const {createNotification} = useNotifications();
   const [tx, setTx] = useState<string>();
@@ -91,7 +94,15 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onStartGameCallback, chainId, createNotification, id],
+    [
+      game,
+      refetch,
+      onStartGameCallback,
+      chainId,
+      createNotification,
+      id,
+      getTransactionScannerUrl,
+    ],
   );
   const onAbortGame = useCallback(
     (ev: any) => {
@@ -132,7 +143,15 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onAbortGameCallback, chainId, createNotification, id],
+    [
+      game,
+      refetch,
+      onAbortGameCallback,
+      chainId,
+      createNotification,
+      id,
+      getTransactionScannerUrl,
+    ],
   );
   const abortTime = game?.abort_timestamp;
   const startTime = game?.start_timestamp;

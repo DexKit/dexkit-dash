@@ -40,8 +40,6 @@ import {useAccountsModal} from 'hooks/useAccountsModal';
 import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 
-import {GetNativeCoinFromNetworkName} from 'utils/tokens';
-
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
@@ -51,6 +49,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import {useChainInfo} from 'hooks/useChainInfo';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -120,7 +119,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const networkName = useNetwork();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -207,6 +206,8 @@ const WalletInfo = (props: any) => {
     setBalanceIsVisible();
   }, []);
 
+  const {tokenSymbol} = useChainInfo();
+
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -247,7 +248,7 @@ const WalletInfo = (props: any) => {
                       : isBalanceVisible
                       ? ethBalance && tokenAmountInUnits(ethBalance)
                       : '****.**'}{' '}
-                    {GetNativeCoinFromNetworkName(networkName)}{' '}
+                    {tokenSymbol}{' '}
                   </Typography>
                 </Box>
                 <ButtonBase

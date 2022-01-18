@@ -41,10 +41,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import {useChainInfo} from 'hooks/useChainInfo';
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -133,6 +133,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
   const {createNotification} = useNotifications();
@@ -175,7 +176,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   }, [game]);
 
   const alreadyWithdrawed = useMemo(() => {
-    if (game && amountOnContract) { 
+    if (game && amountOnContract) {
       return game.aborted && amountOnContract.isZero();
     }
   }, [game, amountOnContract]);
@@ -194,7 +195,6 @@ function OnePlayerTable(props: Props): JSX.Element {
   const onViewCoins = useCallback((c: any) => {
     setOpenViewDialog(true);
   }, []);
-
 
   const onClaimGame = useCallback(
     (ev: any) => {
@@ -235,7 +235,16 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [id, account, refetch, onClaimCallback, chainId, createNotification, messages],
+    [
+      id,
+      account,
+      refetch,
+      onClaimCallback,
+      chainId,
+      createNotification,
+      messages,
+      getTransactionScannerUrl,
+    ],
   );
 
   const onWithdrawGame = useCallback(
@@ -267,7 +276,6 @@ function OnePlayerTable(props: Props): JSX.Element {
     [id, account, refetch, onWithdrawCallback],
   );
 
-  
   const goToExplorer = useCallback(() => {
     if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
       window.open(`${ExplorerURL[chainId]}${tx}`);
@@ -335,7 +343,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores && scores.reduce((p, c) => p + c) ;
+          const score = scores && scores.reduce((p, c) => p + c);
           return {
             ...d,
             account: d.hash,
@@ -478,7 +486,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
-                                  !loadingMultiplier && multiplier(account).toFixed(3)
+                                  !loadingMultiplier &&
+                                  multiplier(account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}
@@ -623,7 +632,7 @@ function OnePlayerTable(props: Props): JSX.Element {
                         </Grid>
                       </Grid>
                     )}
-                    {(canWithdraw && !alreadyWithdrawed) && (
+                    {canWithdraw && !alreadyWithdrawed && (
                       <Grid
                         container
                         justifyContent={'center'}

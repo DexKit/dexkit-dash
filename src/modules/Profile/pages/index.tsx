@@ -19,6 +19,9 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import {useProfileKittygotchi, useProfilePoints} from '../hooks';
 
 import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
+
+import {useChainInfo} from 'hooks/useChainInfo';
+
 import {
   useKittygotchiFeed,
   useKittygotchiList,
@@ -26,7 +29,6 @@ import {
   useKittygotchiOnChain,
   useKittygotchiV2,
 } from 'modules/Kittygotchi/hooks';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {ChainId, Web3State} from 'types/blockchain';
@@ -65,6 +67,8 @@ export const ProfileIndex = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const feedingToggler = useToggler();
+
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedingDone, setFeedingDone] = useState(false);

@@ -23,12 +23,13 @@ import {
 import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import { getRarityFromBodyType } from 'modules/CoinLeagues/utils/champions';
+import {getRarityFromBodyType} from 'modules/CoinLeagues/utils/champions';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 export function useChampionMint() {
   const {getProvider, web3State, chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
@@ -98,7 +99,14 @@ export function useChampionMint() {
           return undefined;
         });
     }
-  }, [web3State, chainId, getProvider, clear, createNotification]);
+  }, [
+    web3State,
+    chainId,
+    getProvider,
+    clear,
+    createNotification,
+    getTransactionScannerUrl,
+  ]);
 
   return {mint, loading, error, transactionHash, tokenId, clear};
 }
@@ -362,7 +370,10 @@ export function useMyChampions(chainId?: number, limit: number = 100) {
                 attack: parseInt(t.attack),
                 defense: parseInt(t.defense),
                 run: parseInt(t.run),
-                rarity: getRarityFromBodyType(metadata.attributes.find(att => att.trait_type === 'body')?.value)
+                rarity: getRarityFromBodyType(
+                  metadata.attributes.find((att) => att.trait_type === 'body')
+                    ?.value,
+                ),
               };
               champions.push(champ);
             }

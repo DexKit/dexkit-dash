@@ -152,6 +152,20 @@ export const GET_CHAIN_ID_NAME = (chainId: ChainId | undefined) => {
   }
 };
 
+export const GET_CHAIN_ID_NAME_V2 = (
+  chainId: number,
+  networks?: {chainId: number; name: string}[],
+): string => {
+  if (networks) {
+    const index = networks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return networks[index].name;
+    }
+  }
+  return GET_CHAIN_ID_NAME(chainId) || '';
+};
+
 export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
   const id = Number(chainId);
 
@@ -163,7 +177,7 @@ export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
     case ChainId.Matic:
       return 'MATIC';
     case ChainId.Mumbai:
-        return 'MATIC';
+      return 'MATIC';
     case ChainId.Kovan:
       return 'ETH';
     case ChainId.Ropsten:
@@ -175,6 +189,23 @@ export const GET_CHAIN_NATIVE_COIN = (chainId: ChainId | undefined) => {
     default:
       return undefined;
   }
+};
+
+export const GET_CHAIN_NATIVE_COIN_V2 = (
+  chainId: ChainId | undefined,
+  networks?: {chainId: number; symbol: string}[],
+) => {
+  const symbol = GET_CHAIN_NATIVE_COIN(chainId);
+
+  if (!symbol && networks) {
+    const index = networks?.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return networks[index].symbol;
+    }
+  }
+
+  return symbol;
 };
 
 export const GET_CHAIN_FROM_NETWORK = (network: EthereumNetwork) => {

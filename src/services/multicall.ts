@@ -1,5 +1,5 @@
 import {getWeb3Wrapper} from './web3modal';
-import {providers} from 'ethers';
+import {BigNumber, ethers, providers} from 'ethers';
 import {MultiCall} from '@indexed-finance/multicall';
 
 let multicall: MultiCall;
@@ -27,6 +27,36 @@ export const getTokenBalances = async (
   const multicall = await getMulticallFromProvider(provider);
   const tokensBal = await multicall.getBalances(tokens, account);
   return tokensBal;
+};
+
+export const getTokenBalanceWithProvider = async (
+  provider: any,
+  address: string,
+  tokenAddress: string,
+) => {
+  const contract = new ethers.Contract(
+    tokenAddress,
+    [
+      'function balanceOf(address _owner) public view returns (uint256 balance)',
+    ],
+    provider,
+  );
+
+  return await contract.balanceOf(address);
+};
+
+export const getTokenBalancesWithProvider = async (
+  provider: any,
+  address: string,
+  tokens: string[],
+) => {
+  const result: {[key: string]: ethers.BigNumber} = {};
+
+  for (const token of tokens) {
+    result[token] = await getTokenBalanceWithProvider(provider, address, token);
+  }
+
+  return result;
 };
 
 export const getTokenBalance = async (

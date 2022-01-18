@@ -11,9 +11,9 @@ import {
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
@@ -31,6 +31,8 @@ export const FeedingKittygotchiDialog = (props: Props) => {
 
   const {chainId} = useWeb3();
 
+  const {getTransactionScannerUrl} = useChainInfo();
+
   const theme = useTheme();
 
   const handleClose = useCallback(() => {
@@ -43,7 +45,7 @@ export const FeedingKittygotchiDialog = (props: Props) => {
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   return (
     <Dialog {...dialogProps} onClose={handleClose} fullWidth maxWidth='xs'>

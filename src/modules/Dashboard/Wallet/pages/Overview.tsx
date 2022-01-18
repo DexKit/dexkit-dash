@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import {
   Grid,
   Box,
@@ -10,41 +10,45 @@ import {
   AccordionDetails,
   AccordionSummary,
   Chip,
+  Paper,
+  CardContent,
 } from '@material-ui/core';
 
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 import useFetch from 'use-http';
-import { useWeb3 } from 'hooks/useWeb3';
-import { ZRX_API_URL_FROM_NETWORK } from 'shared/constants/AppConst';
-import { EthereumNetwork } from 'shared/constants/AppEnums';
+import {useWeb3} from 'hooks/useWeb3';
+import {ZRX_API_URL_FROM_NETWORK} from 'shared/constants/AppConst';
+import {EthereumNetwork} from 'shared/constants/AppEnums';
 
-import { Token } from 'types/app';
-import { useAllBalance } from 'hooks/balance/useAllBalance';
-import { useCoingeckoTokenInfo } from 'hooks/useCoingeckoTokenInfo';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from 'redux/store';
-import { toggleFavoriteCoin } from 'redux/_ui/actions';
-import { useDefaultAccount } from 'hooks/useDefaultAccount';
-import { useTokenInfo } from 'hooks/useTokenInfo';
+import {Token} from 'types/app';
+import {useAllBalance} from 'hooks/balance/useAllBalance';
+import {useCoingeckoTokenInfo} from 'hooks/useCoingeckoTokenInfo';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppState} from 'redux/store';
+import {toggleFavoriteCoin} from 'redux/_ui/actions';
+import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import {useTokenInfo} from 'hooks/useTokenInfo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { ReactComponent as GraphicsIcon } from '../../../../assets/images/icons/stats-chart.svg';
-import { ReactComponent as ArrowDownIcon } from '../../../../assets/images/icons/arrow-down.svg';
-import { ReactComponent as ArrowLeftIcon } from '../../../../assets/images/icons/arrow-left.svg';
+import {ReactComponent as GraphicsIcon} from '../../../../assets/images/icons/stats-chart.svg';
+import {ReactComponent as ArrowDownIcon} from '../../../../assets/images/icons/arrow-down.svg';
+import {ReactComponent as ArrowLeftIcon} from '../../../../assets/images/icons/arrow-left.svg';
 
 import BuySell from 'modules/Dashboard/Token/BuySell';
 import Charts from 'modules/Dashboard/Token/Charts';
 import HistoryTables from 'modules/Dashboard/Token/HistoryTables';
 import TokenCard from 'shared/components/TokenCard';
 import CoinTools from 'shared/components/CoinTools';
-import { TokenAnalytics } from 'modules/Dashboard/Token/Analytics';
-import { useTokenPriceUSD } from 'hooks/useTokenPriceUSD';
-import { InfoTab } from 'modules/Dashboard/Token/Tabs/InfoTab';
-import { useTokenLists } from 'hooks/useTokenLists';
+import {TokenAnalytics} from 'modules/Dashboard/Token/Analytics';
+import {useTokenPriceUSD} from 'hooks/useTokenPriceUSD';
+import {InfoTab} from 'modules/Dashboard/Token/Tabs/InfoTab';
+import {useTokenLists} from 'hooks/useTokenLists';
 import TokenLogo from 'shared/components/TokenLogo';
-import { watchAsset } from 'utils/wallet';
+import {watchAsset} from 'utils/wallet';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import { SelectTokenBalanceDialog } from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
+import {SelectTokenBalanceDialog} from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenBalanceDialog';
+import {FEATURE_TRADE_COINS_ZRX} from 'utils/features';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 type Params = {
   address: string;
@@ -55,20 +59,21 @@ type Props = RouteComponentProps<Params>;
 
 const WalletOverviewPage: React.FC<Props> = (props) => {
   const {
-    match: { params },
+    match: {params},
   } = props;
-  const { address, networkName } = params;
-  const { getProvider } = useWeb3();
+  const {address, networkName} = params;
+  const {getProvider} = useWeb3();
+  const {chainName} = useChainInfo();
 
   const dispatch = useDispatch();
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
   );
-  const { account: web3Account, chainId } = useWeb3();
+  const {account: web3Account, chainId} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account: string | undefined = defaultAccount || web3Account || '';
-  const { data: balances } = useAllBalance(account);
-  const { tokenInfo } = useTokenInfo(address);
+  const {data: balances} = useAllBalance(account);
+  const {tokenInfo} = useTokenInfo(address);
   const [token, setToken] = useState<Token>();
 
   const [tokenToAddress, setTokenToAddress] = useState<string>(address);
@@ -77,7 +82,6 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
 
   const [disableSide, setDisableSide] = useState<'from' | 'to'>();
 
-
   const priceUSD = useTokenPriceUSD(
     address,
     networkName,
@@ -85,12 +89,12 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
     1,
     token?.decimals,
   );
-  const { data, loading, error } = useCoingeckoTokenInfo(address, networkName);
+  const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
 
   const history = useHistory();
   const onToggleFavorite = () => {
     if (token && data) {
-      dispatch(toggleFavoriteCoin({ ...token, ...data }));
+      dispatch(toggleFavoriteCoin({...token, ...data}));
     }
   };
 
@@ -140,7 +144,7 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
 
   const [showSelectTokens, setShowSelectTokens] = useState(false);
 
-  const { binanceTokens, ethTokens, maticTokens } = useTokenLists();
+  const {binanceTokens, ethTokens, maticTokens} = useTokenLists();
 
   const handleToggleSelectToken = useCallback(() => {
     setShowSelectTokens((value) => !value);
@@ -166,39 +170,46 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
       if (from) {
         setTokenFromInfo(from);
       }
-    }, [setTokenToInfo, setTokenFromInfo, setTokenToAddress]);
+    },
+    [setTokenToInfo, setTokenFromInfo, setTokenToAddress],
+  );
 
   const onChangeDisableReceiveCallback = useCallback((side: 'from' | 'to') => {
-
     setDisableSide(side);
-  }, [])
+  }, []);
 
+  const handleSelectToken = useCallback(
+    (token: Token) => {
+      setShowSelectTokens(false);
 
-  const handleSelectToken = useCallback((token: Token) => {
-    setShowSelectTokens(false);
+      let isEthereum =
+        token.symbol.toUpperCase() === 'ETH' &&
+        token.networkName === EthereumNetwork.ethereum;
+      let isPolygon =
+        token.symbol.toUpperCase() === 'MATIC' &&
+        token.networkName === EthereumNetwork.matic;
+      let isBsc =
+        token.symbol.toUpperCase() === 'BNB' &&
+        token.networkName === EthereumNetwork.bsc;
 
-    let isEthereum = token.symbol.toUpperCase() === 'ETH' && token.networkName === EthereumNetwork.ethereum;
-    let isPolygon = token.symbol.toUpperCase() === 'MATIC' && token.networkName === EthereumNetwork.matic;
-    let isBsc = token.symbol.toUpperCase() === 'BNB' && token.networkName === EthereumNetwork.bsc;
-
-    if (isEthereum) {
-      history.push(`/wallet/overview/${token.networkName}/eth`);
-    } else if (isPolygon) {
-      history.push(`/wallet/overview/${token.networkName}/matic`);
-    } else if (isBsc) {
-      history.push(`/wallet/overview/${token.networkName}/bnb`);
-    } else {
-      history.push(`/wallet/overview/${token.networkName}/${token.address}`);
-    }
-    if (disableSide == 'from') {
-      setTokenFromInfo(token);
-    } else {
-      setTokenToInfo(token);
-      setTokenToAddress(token.address);
-    }
-
-
-  }, [history, disableSide]);
+      if (isEthereum) {
+        history.push(`/wallet/overview/${token.networkName}/eth`);
+      } else if (isPolygon) {
+        history.push(`/wallet/overview/${token.networkName}/matic`);
+      } else if (isBsc) {
+        history.push(`/wallet/overview/${token.networkName}/bnb`);
+      } else {
+        history.push(`/wallet/overview/${token.networkName}/${token.address}`);
+      }
+      if (disableSide == 'from') {
+        setTokenFromInfo(token);
+      } else {
+        setTokenToInfo(token);
+        setTokenToAddress(token.address);
+      }
+    },
+    [history, disableSide],
+  );
 
   const handleEthereum = useCallback(() => {
     history.push(
@@ -372,19 +383,50 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
             <Grid container spacing={3}>
               {isMobile ? (
                 <>
-                  <Grid item xs={12}>
-                    <Card>
-                      <BuySell
-                        tokenAddress={tokenToAddress}
-                        balances={balances}
-                        networkName={networkName}
-                        tokenInfo={tokenToInfo || tokenInfo}
-                        tokenFromInfo={tokenFromInfo}
-                        onChangeTokens={onChangeTokens}
-                        disableReceive
-                      />
-                    </Card>
-                  </Grid>
+                  {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                    <Grid item xs={12}>
+                      <Card>
+                        <BuySell
+                          tokenAddress={tokenToAddress}
+                          balances={balances}
+                          networkName={networkName}
+                          tokenInfo={tokenToInfo || tokenInfo}
+                          tokenFromInfo={tokenFromInfo}
+                          onChangeTokens={onChangeTokens}
+                          disableReceive
+                        />
+                      </Card>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12}>
+                      <Paper>
+                        <Box p={4}>
+                          <Grid
+                            container
+                            spacing={2}
+                            direction='column'
+                            alignItems='center'
+                            alignContent='center'
+                            justifyContent='center'>
+                            <Grid item>
+                              <Typography align='center' variant='h6'>
+                                {chainName}{' '}
+                                <IntlMessages id='app.wallet.networkIsNotSupported' />
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography
+                                color='textSecondary'
+                                align='center'
+                                variant='body2'>
+                                <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </Paper>
+                    </Grid>
+                  )}
                   <Grid item xs={12}>
                     <Accordion>
                       <AccordionSummary
@@ -418,33 +460,91 @@ const WalletOverviewPage: React.FC<Props> = (props) => {
               ) : (
                 <>
                   <Grid item xs={12} md={8}>
-                    {tokenInfo && (
-                      <Charts
-                        chainId={chainId}
-                        tokenInfo={tokenInfo}
-                        networkName={networkName}
-                      />
+                    {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                      tokenInfo && (
+                        <Charts
+                          chainId={chainId}
+                          tokenInfo={tokenInfo}
+                          networkName={networkName}
+                        />
+                      )
+                    ) : (
+                      <Paper>
+                        <Box p={4}>
+                          <Grid
+                            container
+                            spacing={2}
+                            direction='column'
+                            alignItems='center'
+                            alignContent='center'
+                            justifyContent='center'>
+                            <Grid item>
+                              <Typography align='center' variant='h6'>
+                                {chainName}{' '}
+                                <IntlMessages id='app.wallet.networkIsNotSupported' />
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography
+                                color='textSecondary'
+                                align='center'
+                                variant='body2'>
+                                <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </Paper>
                     )}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <Card>
-                      <BuySell
-                        tokenAddress={tokenToAddress}
-                        balances={balances}
-                        networkName={networkName}
-                        tokenInfo={tokenToInfo || tokenInfo}
-                        tokenFromInfo={tokenFromInfo}
-                        onChangeTokens={onChangeTokens}
-                        onChangeDisableReceiveCallback={onChangeDisableReceiveCallback}
-                        disableReceive
-                      />
+                      {FEATURE_TRADE_COINS_ZRX(chainId) ? (
+                        <BuySell
+                          tokenAddress={tokenToAddress}
+                          balances={balances}
+                          networkName={networkName}
+                          tokenInfo={tokenToInfo || tokenInfo}
+                          tokenFromInfo={tokenFromInfo}
+                          onChangeTokens={onChangeTokens}
+                          onChangeDisableReceiveCallback={
+                            onChangeDisableReceiveCallback
+                          }
+                          disableReceive
+                        />
+                      ) : (
+                        <CardContent>
+                          <Grid
+                            container
+                            spacing={2}
+                            direction='column'
+                            alignItems='center'
+                            alignContent='center'
+                            justifyContent='center'>
+                            <Grid item>
+                              <Typography align='center' variant='h6'>
+                                {chainName}{' '}
+                                <IntlMessages id='app.wallet.networkIsNotSupported' />
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography
+                                color='textSecondary'
+                                align='center'
+                                variant='body2'>
+                                <IntlMessages id='app.wallet.zeroXDoesNotSupportThisNetworkYet' />
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      )}
                     </Card>
                   </Grid>
-                  <Grid item xs={12}>
+                  {FEATURE_TRADE_COINS_ZRX(chainId) ? (
                     <Grid item xs={12}>
                       <InfoTab error={error} loading={loading} data={data} />
                     </Grid>
-                  </Grid>
+                  ) : null}
                   <Grid item xs={12}>
                     <HistoryTables
                       account={account}
