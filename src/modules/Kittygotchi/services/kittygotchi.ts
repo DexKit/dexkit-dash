@@ -43,9 +43,11 @@ export const mint = async (
   price: BigNumber,
 ) => {
   const ethers = getEthers();
+
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
+
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).safeMint({
     gasPrice,
     value: price,

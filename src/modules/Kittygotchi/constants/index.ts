@@ -26,6 +26,14 @@ export const KITTYGOTCHI = {
   [ChainId.Mumbai]: '0xbdd0C521aBb19fA863917e2C807f327957D239ff',
 };
 
+export const GET_KITTYGOTCHI_CONTRACT_ADDR = (chainId?: number) => {
+  if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+    return KITTYGOTCHI[chainId];
+  }
+
+  return undefined;
+};
+
 export enum KittygotchiTraitType {
   ACCESSORIES,
   BODY,

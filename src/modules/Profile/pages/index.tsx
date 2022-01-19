@@ -38,7 +38,13 @@ import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from 'modules/Kittygotchi/constants';
+import {
+  GET_KITTYGOTCHI_CONTRACT_ADDR,
+  GET_KITTY_CHAIN_ID,
+  KITTYGOTCHI,
+} from 'modules/Kittygotchi/constants';
+import {useIntl} from 'react-intl';
+import {ownerOf} from 'services/nfts';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -75,6 +81,8 @@ export const ProfileIndex = () => {
   const [feedErrorMessage, setFeedErrorMessage] = useState<string>();
   const [transactionHash, setTransactionHash] = useState<string>();
 
+  const {messages} = useIntl();
+
   const clearStates = useCallback(() => {
     setFeedLoading(false);
     setFeedingDone(false);
@@ -101,7 +109,7 @@ export const ProfileIndex = () => {
 
   const {createNotification} = useNotifications();
 
-  const {chainId, account, web3State} = useWeb3();
+  const {chainId, account, web3State, getProvider} = useWeb3();
 
   useEffect(() => {
     if (
@@ -139,11 +147,11 @@ export const ProfileIndex = () => {
       onSubmit: (hash?: string) => {
         if (hash && chainId) {
           createNotification({
-            title: 'Mint Kittygotchi',
-            body: `Minting your kittygotchi`,
+            title: messages['app.kittygotchi.mintKittygotchi'] as string,
+            body: messages['app.kittygotchi.mintingYourKittygotchi'] as string,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, hash),
-            urlCaption: 'View transaction',
+            urlCaption: messages['app.kittygotchi.viewTransaction'] as string,
             type: NotificationType.TRANSACTION,
             metadata: {
               chainId: chainId,
@@ -154,18 +162,15 @@ export const ProfileIndex = () => {
         }
       },
       onError: (error: any) => {
-        setErrorMessage(error);
+        if (error.data.message) {
+          setErrorMessage(error.data.message);
+        }
         setMintLoading(false);
       },
     });
-  }, [chainId, account]);
+  }, [chainId, account, messages]);
 
   const {onFeedCallback} = useKittygotchiFeed();
-
-  /* eslint-disable */
-  const handleClearError = useCallback(() => {
-    setErrorMessage(undefined);
-  }, []);
 
   const handleFeed = useCallback(() => {
     clearStates();
@@ -284,9 +289,38 @@ export const ProfileIndex = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const startOwnerChecker = useCallback(() => {
+    let interval = setInterval(async () => {
+      let contractAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
+
+      if (account && chainId) {
+        let kittygotchi = kittyProfile?.getDefault(account, chainId);
+
+        if (contractAddress && kittygotchi) {
+          let owner = await ownerOf(
+            contractAddress,
+            kittygotchi.id,
+            getProvider(),
+          );
+
+          if (owner !== account) {
+            kittyProfile.unsetDefaultKittygothchi(account, chainId);
+            kittygotchiUpdated.clear();
+            clearInterval(interval);
+          }
+        }
+      }
+    }, 2000);
+  }, [account, chainId, getProvider, kittygotchiUpdated]);
+
   const handleCloseTransferDialog = useCallback(() => {
     transferAssetDialogToggler.set(false);
+    startOwnerChecker();
   }, [transferAssetDialogToggler]);
+
+  const handleClearError = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
 
   return (
     <>
@@ -359,14 +393,16 @@ export const ProfileIndex = () => {
                   alignItems='center'
                   alignContent='center'
                   justifyContent='space-between'>
-                  <Typography variant='body1'>My Kittygotchi</Typography>
+                  <Typography variant='body1'>
+                    <IntlMessages id='app.kittygotchi.myKittygotchi' />
+                  </Typography>
 
                   <Button
                     size='small'
                     color='primary'
                     to='/kittygotchi'
                     component={RouterLink}>
-                    View more
+                    <IntlMessages id='app.kittygotchi.viewMore' />
                   </Button>
                 </Box>
                 <ProfileKittygotchiCard
@@ -377,6 +413,8 @@ export const ProfileIndex = () => {
                   loading={mintLoading}
                   loadingKyttie={kittygotchiUpdated.isLoading || loadingKyttie}
                   kittygotchi={kittygotchiUpdated.data}
+                  error={errorMessage}
+                  onClearError={handleClearError}
                 />
               </Grid>
             </Grid>

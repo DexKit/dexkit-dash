@@ -46,9 +46,14 @@ import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from '../constants';
+import {
+  GET_KITTYGOTCHI_CONTRACT_ADDR,
+  GET_KITTY_CHAIN_ID,
+  KITTYGOTCHI,
+} from '../constants';
 
 import {useChainInfo} from 'hooks/useChainInfo';
+import {ownerOf} from 'services/nfts';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -125,7 +130,7 @@ export const KittyDetail: React.FC = () => {
 
   const profileKittygotchi = useProfileKittygotchi();
 
-  const {chainId, web3State} = useWeb3();
+  const {chainId, web3State, account, getProvider} = useWeb3();
 
   const {getTransactionScannerUrl} = useChainInfo();
 
@@ -290,8 +295,35 @@ export const KittyDetail: React.FC = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const startOwnerChecker = useCallback(() => {
+    let interval = setInterval(async () => {
+      console.log('chama');
+      let contractAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
+
+      if (account && chainId) {
+        if (contractAddress && kittygotchi.data) {
+          let owner = await ownerOf(
+            contractAddress,
+            kittygotchi.data.id,
+            getProvider(),
+          );
+
+          if (owner !== account) {
+            if (profileKittygotchi.isDefault(kittygotchi.data)) {
+              profileKittygotchi.unsetDefaultKittygothchi(account, chainId);
+            }
+
+            history.push('/kittygotchi');
+            clearInterval(interval);
+          }
+        }
+      }
+    }, 2000);
+  }, [history, account, kittygotchi, chainId, getProvider]);
+
   const handleCloseTransferDialog = useCallback(() => {
     transferAssetDialogToggler.set(false);
+    startOwnerChecker();
   }, [transferAssetDialogToggler]);
 
   return (

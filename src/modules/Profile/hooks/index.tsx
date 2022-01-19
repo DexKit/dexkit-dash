@@ -6,6 +6,7 @@ import {
   setDefaultKittyOnChain,
   clearOldState,
   updateImage,
+  unsetDefault,
 } from 'redux/_kittygotchi/actions';
 import {Kittygotchi} from 'types/kittygotchi';
 
@@ -42,8 +43,9 @@ export function useProfileKittygotchi() {
     (kittygotchi?: Kittygotchi) => {
       if (account && chainId && kittygotchiState.kittygotchiByChain) {
         return (
-          kittygotchiState.kittygotchiByChain[`${account.toLowerCase()}-${chainId}`]?.id ===
-          kittygotchi?.id
+          kittygotchiState.kittygotchiByChain[
+            `${account.toLowerCase()}-${chainId}`
+          ]?.id === kittygotchi?.id
         );
       }
       return false;
@@ -54,7 +56,9 @@ export function useProfileKittygotchi() {
   const getDefault = useCallback(
     (address: string, chainId: number): Kittygotchi | undefined => {
       if (kittygotchiState?.kittygotchiByChain) {
-        return kittygotchiState.kittygotchiByChain[`${address.toLowerCase()}-${chainId}`];
+        return kittygotchiState.kittygotchiByChain[
+          `${address.toLowerCase()}-${chainId}`
+        ];
       }
     },
     [kittygotchiState.kittygotchiByChain],
@@ -65,6 +69,13 @@ export function useProfileKittygotchi() {
       if (kittygotchiState?.kittygotchiByChain) {
         dispatch(updateImage({url, chainId, address}));
       }
+    },
+    [],
+  );
+
+  const unsetDefaultKittygothchi = useCallback(
+    (address: string, chainId: number) => {
+      dispatch(unsetDefault({address, chainId}));
     },
     [],
   );
@@ -85,6 +96,7 @@ export function useProfileKittygotchi() {
     getDefault,
     setDefaultKittygothchi,
     updateKittygotchiImage,
+    unsetDefaultKittygothchi,
     kittygotchi: kittygotchiState.kittygotchi,
     isDefault,
   };

@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
 import moment from 'moment';
 
+import {ethers} from 'ethers';
+
 import {
   Avatar,
   makeStyles,
@@ -14,7 +16,7 @@ import {
   Tooltip,
   Divider,
 } from '@material-ui/core';
-import {ChainId} from 'types/blockchain';
+
 import {useIntl} from 'react-intl';
 
 import {Alert} from '@material-ui/lab';
@@ -30,11 +32,18 @@ import SendIcon from '@material-ui/icons/Send';
 
 import {Skeleton} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {canFeedKitty, isKittyTired} from 'modules/Kittygotchi/utils';
+import {
+  canFeedKitty,
+  GET_KITTYGOTCHI_CHAIN_SYMBOL,
+  GET_KITTYGOTCHI_MINT_RATE,
+  isKittygotchiNetworkSupported,
+  isKittyTired,
+} from 'modules/Kittygotchi/utils';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import {leftPad} from 'utils';
 
 import EditIcon from '@material-ui/icons/Edit';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -57,11 +66,15 @@ interface ProfileKittygotchiCardProps {
   kittygotchi?: Kittygotchi;
   loadingKyttie?: boolean;
   onTransfer: () => void;
+  error?: any;
+  onClearError: () => void;
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {
     loading,
+    error,
+    onClearError,
     onMint,
     onFeed,
     kittygotchi,
@@ -93,18 +106,16 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+            {!isKittygotchiNetworkSupported(chainId) ? (
               <Grid item xs={12}>
                 <Alert severity='info'>
                   <Typography variant='body2'>
-                    Connect your wallet to <strong>Polygon(MATIC)</strong>{' '}
-                    network to create a Kittygotchi Or see your default minted
-                    Kitty
+                    <IntlMessages id='app.kittygotchi.connectYourWalletToSupportedNetwork' />
                   </Typography>
                 </Alert>
               </Grid>
             ) : null}
-            {chainId === ChainId.Matic || chainId === ChainId.Mumbai ? (
+            {isKittygotchiNetworkSupported(chainId) ? (
               <>
                 <Grid item xs={12}>
                   <Box
@@ -117,28 +128,32 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography gutterBottom align='center' variant='h6'>
-                    You don't have a Kittygotchi NFT yet
+                    <IntlMessages id='app.kittygotchi.youDontHaveKittygotchi' />
                   </Typography>
 
                   <Typography
                     color='textSecondary'
                     align='center'
                     variant='body2'>
-                    You will need <strong>10 MATIC</strong> tokens in your
-                    wallet to create one.
+                    <IntlMessages id='app.kittygotchi.youWillNeddNTokensToCreateOne.1' />{' '}
+                    <strong>
+                      {ethers.utils.formatEther(
+                        GET_KITTYGOTCHI_MINT_RATE(chainId),
+                      )}{' '}
+                      {GET_KITTYGOTCHI_CHAIN_SYMBOL(chainId)}
+                    </strong>{' '}
+                    <IntlMessages id='app.kittygotchi.youWillNeddNTokensToCreateOne.2' />
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Box display='flex' justifyContent='center'>
                     <Button
                       onClick={onMint}
-                      disabled={
-                        chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
-                      }
+                      disabled={!isKittygotchiNetworkSupported(chainId)}
                       startIcon={<GavelIcon />}
                       variant='outlined'
                       color='primary'>
-                      Create Kittygotchi
+                      <IntlMessages id='app.kittygotchi.createKittygotchi' />
                     </Button>
                   </Box>
                 </Grid>{' '}
@@ -297,7 +312,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 <Typography
                   align={isMobile ? 'center' : 'left'}
                   variant='body1'>
-                  Your cat is hungry! Last time you fed him:{' '}
+                  <IntlMessages id='app.kittygotchi.yourCatIsHungry' />:{' '}
                   <strong>
                     {moment.unix(kittygotchi?.lastUpdated || 0).fromNow()}
                   </strong>
@@ -307,7 +322,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 {!canFeedKitty(kittygotchi) ? (
                   kittygotchi?.lastUpdated ? (
                     <>
-                      You can feed your kittygotchi in{' '}
+                      <IntlMessages id='app.kittygotchi.youCanFeedYourKittygotchiIn' />{' '}
                       <strong>
                         <CountdownSpan
                           toDate={moment
@@ -342,10 +357,10 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
         </Grid>
         <Grid item xs={12}>
           <Typography align='center' variant='h6'>
-            Creating your Kittygotchi
+            <IntlMessages id='app.kittygotchi.creatingYourKittygotchi' />
           </Typography>
           <Typography align='center' color='textSecondary' variant='body2'>
-            Please, sign the transaction in your wallet
+            <IntlMessages id='app.kittygotchi.pleaseSignTheTransaction' />
           </Typography>
         </Grid>
       </Grid>
@@ -355,6 +370,16 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   return (
     <Paper>
       <Box p={4}>
+        <Grid container spacing={4}>
+          {error ? (
+            <Grid item xs={12}>
+              <Alert severity='error' onClose={onClearError}>
+                {error}
+              </Alert>
+            </Grid>
+          ) : null}
+          <Grid item xs={12}></Grid>
+        </Grid>
         {loading
           ? renderLoading()
           : kittygotchi || loadingKyttie

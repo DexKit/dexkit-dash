@@ -11,13 +11,14 @@ import {Token} from 'types/app';
 import {
   getImageFromTrait,
   getKittygotchiMetadataEndpoint,
+  GET_KITTYGOTCHI_MINT_RATE,
+  isKittygotchiNetworkSupported,
 } from 'modules/Kittygotchi/utils/index';
 
 import {
   GET_KITTY_CHAIN_ID,
   KITTYGOTCHI,
   KittygotchiTraitType,
-  PRICE,
 } from '../constants';
 import {
   getOnchainAttritbutes,
@@ -186,13 +187,19 @@ export function useKittygotchiMint() {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress
       ) {
         return;
       }
+
       try {
-        const tx = await mint(kittyAddress, getProvider(), PRICE[chainId]);
+        const tx = await mint(
+          kittyAddress,
+          getProvider(),
+          GET_KITTYGOTCHI_MINT_RATE(chainId),
+        );
+
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit(tx.hash);
         }
@@ -220,6 +227,7 @@ export function useKittygotchiMint() {
           }
         }
       } catch (e) {
+        debugger;
         if (callbacks?.onError) {
           callbacks?.onError(e);
         }
@@ -481,7 +489,7 @@ export const useKittygotchiOnChain = () => {
     [chainId, getProvider],
   );
 
-  return {get, data, error, isLoading};
+  return {get, data, error, isLoading, clear};
 };
 
 export const useKitHolding = (account?: string) => {

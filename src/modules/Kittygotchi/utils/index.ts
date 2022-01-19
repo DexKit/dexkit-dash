@@ -1,6 +1,8 @@
 import moment from 'moment';
 import {ChainId} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
+
+import {ethers} from 'ethers';
 import {
   IMAGE_PATHS,
   KittygotchiTraitType,
@@ -125,4 +127,59 @@ export function getKittygotchiMetadataEndpoint(chainId: number) {
   }
 
   return POLYGON_METADATA_KITTY_ENDPOINT;
+}
+
+export function isKittygotchiNetworkSupported(chainId?: number) {
+  if (chainId) {
+    return (
+      chainId === ChainId.Mainnet ||
+      chainId === ChainId.Ropsten ||
+      chainId === ChainId.Matic ||
+      chainId === ChainId.Mumbai ||
+      chainId === ChainId.Binance ||
+      chainId === ChainId.BinanceTest
+    );
+  }
+
+  return false;
+}
+
+export function GET_KITTYGOTCHI_CHAIN_SYMBOL(chainId?: number) {
+  if (chainId) {
+    if (chainId === ChainId.Mainnet) {
+      return 'ETH';
+    } else if (chainId === ChainId.Ropsten) {
+      return 'ETH';
+    } else if (chainId === ChainId.Matic) {
+      return 'MATIC';
+    } else if (chainId === ChainId.Mumbai) {
+      return 'MATIC';
+    } else if (chainId === ChainId.Binance) {
+      return 'BNB';
+    } else if (chainId === ChainId.BinanceTest) {
+      return 'BNB';
+    }
+  }
+
+  return '';
+}
+
+export function GET_KITTYGOTCHI_MINT_RATE(chainId?: number) {
+  if (chainId) {
+    if (chainId === ChainId.Mainnet) {
+      return ethers.utils.parseEther('0.0001');
+    } else if (chainId === ChainId.Ropsten) {
+      return ethers.utils.parseEther('0.0001');
+    } else if (chainId === ChainId.Matic) {
+      return ethers.utils.parseEther('10.0');
+    } else if (chainId === ChainId.Mumbai) {
+      return ethers.utils.parseEther('0.0000000000000001');
+    } else if (chainId === ChainId.Binance) {
+      return ethers.utils.parseEther('0.1');
+    } else if (chainId === ChainId.BinanceTest) {
+      return ethers.utils.parseEther('0.1');
+    }
+  }
+
+  return ethers.utils.parseEther('0');
 }
