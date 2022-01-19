@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -7,17 +7,15 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
-import { BigNumber, ethers } from 'ethers';
-import { useInterval } from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
-import { GameGraph } from 'modules/CoinLeagues/utils/types';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-import { useWeb3 } from 'hooks/useWeb3';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
+import {BigNumber, ethers} from 'ethers';
+import {useInterval} from 'hooks/utils/useInterval';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -56,7 +54,7 @@ const strPad = (str: number): string => {
   return (new Array(3).join('0') + str).slice(-2);
 };
 
-function CardTimer(props: { time: number }) {
+function CardTimer(props: {time: number}) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor(time / 60) - hours * 3600;
@@ -72,8 +70,8 @@ function CardTimer(props: { time: number }) {
 }
 
 function CardGameProgress(props: Props): JSX.Element {
-  const { game, onClick } = props;
-  const { chainId } = useWeb3();
+  const {game, onClick} = props;
+  const {tokenSymbol} = useChainInfo();
 
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
@@ -129,12 +127,12 @@ function CardGameProgress(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='subtitle2'
-                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
-                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {tokenSymbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -145,18 +143,27 @@ function CardGameProgress(props: Props): JSX.Element {
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{ color: '#7a8398' }}>
-            <Typography variant='h6'> <IntlMessages id='app.coinLeagues.gameTime' />:</Typography>
-            <Typography variant='h6' style={{ fontWeight: 500 }}>
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>
+              {' '}
+              <IntlMessages id='app.coinLeagues.gameTime' />:
+            </Typography>
+            <Typography variant='h6' style={{fontWeight: 500}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{ color: '#7a8398' }}>
-            <Typography variant='h6'>&nbsp;<IntlMessages id='app.coinLeagues.gameType' />::</Typography>
-            <Typography variant='h6' style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
+            style={{color: '#7a8398'}}>
+            <Typography variant='h6'>
+              &nbsp;
+              <IntlMessages id='app.coinLeagues.gameType' />
+              ::
+            </Typography>
+            <Typography
+              variant='h6'
+              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
               &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
@@ -195,7 +202,9 @@ function CardGameProgress(props: Props): JSX.Element {
         <Grid item>
           <Typography variant='subtitle2'>
             <IntlMessages id='app.coinLeagues.prizePool' />{' '}
-            <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
+            <Typography variant='subtitle2'>
+              {prizeTotalValue} {tokenSymbol}
+            </Typography>
           </Typography>
         </Grid>
       </Grid>

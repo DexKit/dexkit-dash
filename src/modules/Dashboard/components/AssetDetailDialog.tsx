@@ -1,13 +1,16 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
-import {getScannerUrl, isAddressEqual} from 'utils/blockchain';
+import {isAddressEqual} from 'utils/blockchain';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 import {truncateAddress} from 'utils';
 
 import Close from '@material-ui/icons/Close';
 import {ErrorIcon} from 'shared/components/Icons';
+import {OpenSeaIcon} from 'shared/components/Icons';
 
 import {
   Dialog,
@@ -21,18 +24,25 @@ import {
   Typography,
   Box,
   IconButton,
+  Chip,
+  Tooltip,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
-import {useAsset} from 'hooks/useAsset';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useMobile} from 'hooks/useMobile';
-import {useWeb3} from 'hooks/useWeb3';
-import {useIntl} from 'react-intl';
 
-const useStyles = makeStyles(() => ({
+import {useIntl} from 'react-intl';
+import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
+import {useCustomNetworkList} from 'hooks/network';
+
+const useStyles = makeStyles((theme) => ({
   image: {
     width: '100%',
     height: 'auto',
+  },
+  openSeaIcon: {
+    width: theme.spacing(8),
+    height: theme.spacing(8),
   },
 }));
 
@@ -40,23 +50,32 @@ interface Props {
   dialogProps: DialogProps;
   contractAddress?: string;
   tokenId?: string;
+  metadata?: any;
+  chainId?: number;
 }
 
 export const AssetDetailDialog: React.FC<Props> = ({
   dialogProps,
   contractAddress,
+  metadata,
   tokenId,
+  chainId: tokenChainId,
 }) => {
   const classes = useStyles();
+
+  const {networks} = useCustomNetworkList();
+
+  // eslint-disable-next-line
+  const [error, setError] = useState<any>();
+  // eslint-disable-next-line
+  const [isLoading, setIsLoading] = useState(false);
 
   const {messages} = useIntl();
   const {onClose} = dialogProps;
 
-  const {chainId} = useWeb3();
+  const {getScannerUrl} = useChainInfo();
 
   const account = useDefaultAccount();
-
-  const {data, isLoading, error} = useAsset(contractAddress, tokenId);
 
   const isMobile = useMobile();
 
@@ -105,33 +124,53 @@ export const AssetDetailDialog: React.FC<Props> = ({
           ) : (
             <img
               alt='Token Imagem'
-              src={data?.imageUrl}
+              src={metadata?.imageUrl}
               className={classes.image}
             />
           )}
         </Grid>
         <Grid item>
-          <Typography variant='caption'>
-            {isLoading ? (
-              <Skeleton />
-            ) : (
-              <>
-                <Link
-                  href={
-                    chainId && contractAddress
-                      ? `${getScannerUrl(chainId)}/address/${contractAddress}`
-                      : ''
-                  }
+          <Grid
+            container
+            justifyContent='space-between'
+            alignItems='center'
+            alignContent='center'>
+            <Grid item>
+              <Typography variant='caption'>
+                {isLoading ? (
+                  <Skeleton />
+                ) : (
+                  <>
+                    <Link
+                      href={
+                        tokenChainId && contractAddress
+                          ? `${getScannerUrl(
+                              tokenChainId,
+                            )}/address/${contractAddress}`
+                          : ''
+                      }
+                      target='_blank'
+                      rel='noopener noreferrer'>
+                      {metadata?.collectionName} ({metadata?.symbol})
+                    </Link>
+                  </>
+                )}
+              </Typography>
+              <Typography variant='h5'>
+                {isLoading ? <Skeleton /> : metadata?.title}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Tooltip title={<IntlMessages id='app.wallet.viewOnOpenSea' />}>
+                <IconButton
+                  href='https://opensea.io/'
                   target='_blank'
                   rel='noopener noreferrer'>
-                  {data?.collectionName} ({data?.symbol})
-                </Link>
-              </>
-            )}
-          </Typography>
-          <Typography variant='h5'>
-            {isLoading ? <Skeleton /> : data?.title}
-          </Typography>
+                  <OpenSeaIcon className={classes.openSeaIcon} />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item>
           <Typography variant='body2'>
@@ -144,15 +183,17 @@ export const AssetDetailDialog: React.FC<Props> = ({
                   target='_blank'
                   rel='noopener noreferrer'
                   href={
-                    chainId
-                      ? `${getScannerUrl(chainId)}/address/${data?.owner}`
+                    tokenChainId
+                      ? `${getScannerUrl(tokenChainId)}/address/${
+                          metadata?.owner
+                        }`
                       : ''
                   }>
-                  {account && isAddressEqual(account, data?.owner || '')
+                  {account && isAddressEqual(account, metadata?.owner || '')
                     ? messages['app.wallet.you']
                     : isMobile
-                    ? truncateAddress(data?.owner)
-                    : data?.owner}
+                    ? truncateAddress(metadata?.owner)
+                    : metadata?.owner}
                 </Link>
               </>
             )}
@@ -160,7 +201,7 @@ export const AssetDetailDialog: React.FC<Props> = ({
         </Grid>
         <Grid item>
           <Typography color='textSecondary' variant='body2'>
-            {isLoading ? <Skeleton /> : data?.description}
+            {isLoading ? <Skeleton /> : metadata?.description}
           </Typography>
         </Grid>
       </Grid>
@@ -180,9 +221,22 @@ export const AssetDetailDialog: React.FC<Props> = ({
               <IntlMessages id='app.settings.assetDetails' />
             </Typography>
           </Box>
-          <IconButton size='small' onClick={handleClose}>
-            <Close />
-          </IconButton>
+          <Box
+            display='flex'
+            alignItems='center'
+            alignContent='center'
+            justifyContent='space-between'>
+            <Box mr={2}>
+              <Chip
+                label={
+                  tokenChainId && GET_CHAIN_ID_NAME_V2(tokenChainId, networks)
+                }
+              />
+            </Box>
+            <IconButton size='small' onClick={handleClose}>
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
       </DialogTitle>
       <Divider />

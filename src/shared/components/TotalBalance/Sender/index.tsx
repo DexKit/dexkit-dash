@@ -15,6 +15,7 @@ import {ExportWhiteIcon} from 'shared/components/Icons';
 
 import {Token} from 'types/app';
 import {CustomDialogTitle} from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
 
 interface Props {
   open: boolean;
@@ -89,6 +90,8 @@ const Sender: React.FC<Props> = (props) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const {messages} = useIntl();
+
   return (
     <Dialog
       fullWidth
@@ -98,7 +101,7 @@ const Sender: React.FC<Props> = (props) => {
       onClose={props.onClose}
       aria-labelledby='form-dialog-title'>
       <CustomDialogTitle
-        title={'Creating Champion'}
+        title={messages['app.send'] as string}
         icon={<ExportWhiteIcon className={classes.icon} />}
         onClose={disableClose ? undefined : handleClose}
       />

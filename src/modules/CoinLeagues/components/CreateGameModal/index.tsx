@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useIntl} from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -18,8 +18,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as TransferIcon } from 'assets/images/icons/bitcoin-convert-white.svg';
+import {makeStyles} from '@material-ui/core/styles';
+import {ReactComponent as TransferIcon} from 'assets/images/icons/bitcoin-convert-white.svg';
 import CloseIcon from '@material-ui/icons/Close';
 import {
   useCoinLeaguesFactoryCreateGameCallback,
@@ -27,16 +27,16 @@ import {
   useCoinLeaguesFactoryTotalGames,
   useIsNFTGame,
 } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import { GameParams } from 'types/coinsleague';
-import { ethers } from 'ethers';
-import { ButtonState } from '../ButtonState';
+import {GameParams} from 'types/coinsleague';
+import {ethers} from 'ethers';
+import {ButtonState} from '../ButtonState';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import { ChainId } from 'types/blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
-import { useHistory } from 'react-router-dom';
+import {ChainId} from 'types/blockchain';
+import {useWeb3} from 'hooks/useWeb3';
+import {useHistory} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 
 import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
@@ -114,16 +114,16 @@ enum SubmitState {
 }
 
 const CreateGameModal = (props: Props) => {
-  const { open, setOpen } = props;
+  const {open, setOpen} = props;
   const isNFTGame = useIsNFTGame();
   const classes = useStyles();
-  const { chainId } = useWeb3();
+  const {chainId} = useWeb3();
   const history = useHistory();
   const {messages} = useIntl();
-  const { createNotification } = useNotifications();
-  const { onGameCreateCallback } = useCoinLeaguesFactoryCreateGameCallback();
+  const {createNotification} = useNotifications();
+  const {onGameCreateCallback} = useCoinLeaguesFactoryCreateGameCallback();
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
-  const { enterGameRoute } = useCoinLeaguesFactoryRoutes();
+  const {enterGameRoute} = useCoinLeaguesFactoryRoutes();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const [coins, setCoins] = useState<number>();
   const [gameType, setGameType] = useState('winner-game');
@@ -135,7 +135,10 @@ const CreateGameModal = (props: Props) => {
   const [submittedGames, setSubmittedGames] = useState<number>(0);
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
-  const [championRoom, setChampionRoom] = useState<number>(Number(DISABLE_CHAMPIONS_ID));
+
+  const [championRoom, setChampionRoom] = useState<number>(
+    Number(DISABLE_CHAMPIONS_ID),
+  );
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
@@ -156,8 +159,12 @@ const CreateGameModal = (props: Props) => {
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
             createNotification({
-              title: `Created Game ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
-              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
+              title: `Created Game ${
+                isNFTGame ? 'on NFT room' : 'on Main Room'
+              }`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${
+                isNFTGame ? 'on NFT room' : 'on Main Room'
+              }`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId, tx),
               urlCaption: 'View transaction',
@@ -195,9 +202,7 @@ const CreateGameModal = (props: Props) => {
             duration,
             amountUnit: ethers.utils.parseEther(String(entryAmount)),
             numCoins: coins,
-            abortTimestamp: Math.round(
-              startDate / 1000 + duration * 3,
-            ),
+            abortTimestamp: Math.round(startDate / 1000 + duration * 3),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
             isNFT: isNFTGame,
@@ -227,7 +232,7 @@ const CreateGameModal = (props: Props) => {
       totalFactoryGames,
       totalGames,
       startDate,
-      chainId
+      chainId,
     ],
   );
 
@@ -258,7 +263,7 @@ const CreateGameModal = (props: Props) => {
           </Grid>
           <Grid item xs={1}>
             <IconButton onClick={() => setOpen(false)} size='small'>
-              <CloseIcon style={{ color: '#fff' }} />
+              <CloseIcon style={{color: '#fff'}} />
             </IconButton>
           </Grid>
         </Grid>
@@ -267,8 +272,8 @@ const CreateGameModal = (props: Props) => {
       <DialogContent dividers>
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
-            <Typography variant='h6' style={{ fontWeight: 600 }}>
-            <IntlMessages id='app.coinLeagues.basicInformation' />
+            <Typography variant='h6' style={{fontWeight: 600}}>
+              <IntlMessages id='app.coinLeagues.basicInformation' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -292,7 +297,6 @@ const CreateGameModal = (props: Props) => {
                 borderRadius: 6,
                 backgroundColor: '#3C4255',
               }}>
-            
               {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
               <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}>
               <IntlMessages id='app.coinLeagues.beginner' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}{' '}
@@ -349,11 +353,11 @@ const CreateGameModal = (props: Props) => {
         <Grid
           container
           className={classes.innerContent}
-          style={{ marginRight: 10 }}>
+          style={{marginRight: 10}}>
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-              <IntlMessages id='app.coinLeagues.howManyCoins' />
+              <FormLabel className={classes.label} style={{marginRight: 5}}>
+                <IntlMessages id='app.coinLeagues.howManyCoins' />
               </FormLabel>
               <Select
                 value={coins}
@@ -367,7 +371,7 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: { color: '#fff', backgroundColor: '#3C4255' },
+                  style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
@@ -377,8 +381,8 @@ const CreateGameModal = (props: Props) => {
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-              <IntlMessages id='app.coinLeagues.totalPlayers' />
+              <FormLabel className={classes.label} style={{marginRight: 5}}>
+                <IntlMessages id='app.coinLeagues.totalPlayers' />
               </FormLabel>
               <Select
                 value={totalPlayers}
@@ -394,7 +398,7 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: { color: '#fff', backgroundColor: '#3C4255' },
+                  style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
@@ -413,7 +417,7 @@ const CreateGameModal = (props: Props) => {
           <FormControl fullWidth component='fieldset'>
             <FormLabel
               className={classes.label}
-              style={{ fontSize: '1.25rem', fontWeight: 600 }}>
+              style={{fontSize: '1.25rem', fontWeight: 600}}>
               <IntlMessages id='app.coinLeagues.gameType' />
             </FormLabel>
             <RadioGroup value={gameType}>
@@ -423,7 +427,7 @@ const CreateGameModal = (props: Props) => {
                 onClick={() => setGameType('winner-game')}
                 labelPlacement='start'
                 className={classes.radio}
-                control={<Radio style={{ color: '#ffa552' }} />}
+                control={<Radio style={{color: '#ffa552'}} />}
               />
               <FormControlLabel
                 value='loser-game'
@@ -431,7 +435,7 @@ const CreateGameModal = (props: Props) => {
                 label='Bear'
                 labelPlacement='start'
                 className={classes.radio}
-                control={<Radio style={{ color: '#ffa552' }} />}
+                control={<Radio style={{color: '#ffa552'}} />}
               />
             </RadioGroup>
           </FormControl>
@@ -444,7 +448,7 @@ const CreateGameModal = (props: Props) => {
             <FormControl fullWidth component='fieldset'>
               <FormLabel
                 className={classes.label}
-                style={{ fontSize: '1.25rem', fontWeight: 600 }}>
+                style={{fontSize: '1.25rem', fontWeight: 600}}>
                 Start Date
               </FormLabel>
               <TextField
@@ -466,7 +470,7 @@ const CreateGameModal = (props: Props) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
+              <FormLabel className={classes.label} style={{marginRight: 5}}>
                 How many Games?
               </FormLabel>
               <Select
@@ -481,7 +485,7 @@ const CreateGameModal = (props: Props) => {
                   backgroundColor: '#3C4255',
                 }}
                 inputProps={{
-                  style: { color: '#fff', backgroundColor: '#3C4255' },
+                  style: {color: '#fff', backgroundColor: '#3C4255'},
                 }}>
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
@@ -497,27 +501,33 @@ const CreateGameModal = (props: Props) => {
             </FormControl>
           </Grid>
 
-          {isNFTGame && <Grid item xs={12}>
-            <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                Select Champion Room
-              </FormLabel>
-              <Select
-                value={championRoom}
-                onChange={(event) => setChampionRoom(Number(event.target.value))}
-                variant='outlined'
-                placeholder='Select'
-                style={{
-                  marginRight: 5,
-                  color: '#fff',
-                  borderRadius: 6,
-                  backgroundColor: '#3C4255',
-                }}
-                inputProps={{
-                  style: { color: '#fff', backgroundColor: '#3C4255' },
-                }}>
-                <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
-                {/* <MenuItem value={0}>BITTOKEN</MenuItem>
+          {isNFTGame && (
+            <Grid item xs={12}>
+              <FormControl
+                fullWidth
+                size='small'
+                className={classes.formControl}>
+                <FormLabel className={classes.label} style={{marginRight: 5}}>
+                  Select Champion Room
+                </FormLabel>
+                <Select
+                  value={championRoom}
+                  onChange={(event) =>
+                    setChampionRoom(Number(event.target.value))
+                  }
+                  variant='outlined'
+                  placeholder='Select'
+                  style={{
+                    marginRight: 5,
+                    color: '#fff',
+                    borderRadius: 6,
+                    backgroundColor: '#3C4255',
+                  }}
+                  inputProps={{
+                    style: {color: '#fff', backgroundColor: '#3C4255'},
+                  }}>
+                  <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
+                  {/* <MenuItem value={0}>BITTOKEN</MenuItem>
                 <MenuItem value={1}>BITCOIN</MenuItem>
                 <MenuItem value={2}>ETHEREUM</MenuItem>
                 <MenuItem value={3}>CHAINLINK</MenuItem>
@@ -525,9 +535,10 @@ const CreateGameModal = (props: Props) => {
                 <MenuItem value={5}>UNISWAP</MenuItem>
                 <MenuItem value={6}>CARDANO</MenuItem>
               <MenuItem value={7}>DOGE</MenuItem>*/}
-              </Select>
-            </FormControl>
-          </Grid>}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
         </Grid>
 
         {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
@@ -556,10 +567,10 @@ const CreateGameModal = (props: Props) => {
                 {submitState === SubmitState.Submitted
                   ? 'Submitted Tx'
                   : submitState === SubmitState.Error
-                    ? 'Tx Error'
-                    : submitState === SubmitState.Confirmed
-                      ? 'Confirmed Tx'
-                      : ''}
+                  ? 'Tx Error'
+                  : submitState === SubmitState.Confirmed
+                  ? 'Confirmed Tx'
+                  : ''}
               </Button>
             )}
           </Grid>

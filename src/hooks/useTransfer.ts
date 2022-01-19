@@ -4,10 +4,12 @@ import {Currency} from 'types/myApps';
 import {useDispatch} from 'react-redux';
 import {onAddNotification} from 'redux/actions';
 import {NotificationType} from 'services/notification';
-import {isNativeCoin, truncateAddress} from 'utils';
+import {isNativeCoinV2, truncateAddress} from 'utils';
 import {ChainId} from 'types/blockchain';
 import {useWeb3} from './useWeb3';
 import {Notification} from 'types/models/Notification';
+
+import {useCustomNetworkList} from 'hooks/network';
 
 export enum Web3Status {
   Not_Connected,
@@ -18,6 +20,8 @@ export enum Web3Status {
 
 export const useTransfer = () => {
   const {chainId, getWeb3} = useWeb3();
+
+  const {networks} = useCustomNetworkList();
 
   const dispatch = useDispatch();
 
@@ -36,7 +40,16 @@ export const useTransfer = () => {
 
       const amountFn = fromTokenUnitAmount(amount, currency.decimals);
 
-      if (isNativeCoin(currency.symbol, chainId as ChainId)) {
+      if (
+        isNativeCoinV2(
+          currency.symbol,
+          chainId as ChainId,
+          networks.map((n) => ({
+            symbol: n.nativeTokenSymbol,
+            chainId: n.chainId,
+          })),
+        )
+      ) {
         web3.eth
           .sendTransaction({from, to, value: amountFn.toString()})
           .once('transactionHash', (hash: string) => {

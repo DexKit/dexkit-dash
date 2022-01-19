@@ -4,7 +4,6 @@ import {useIntl} from 'react-intl';
 
 import {useWeb3} from 'hooks/useWeb3';
 import {Button, Typography} from '@material-ui/core';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {SwapQuoteResponse} from 'types/zerox';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
@@ -12,6 +11,8 @@ import {Token} from 'types/app';
 import {tokenAmountInUnits} from 'utils';
 import {BigNumber} from '@0x/utils';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Props {
   account: string;
@@ -37,6 +38,7 @@ const MarketStep: React.FC<Props> = (props) => {
   } = props;
 
   const {getWeb3, chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const {messages} = useIntl();
 
   const {createNotification} = useNotifications();

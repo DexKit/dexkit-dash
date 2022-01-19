@@ -21,8 +21,6 @@ export const Web3Manager = () => {
         history.location.pathname.indexOf('/magic/callback-social') === -1 ||
         history.location.pathname.indexOf('/magic/callback') === -1
       ) {
-        console.log('hello magic');
-
         onConnectMagic()
           .then((acc) => {
             // When we connect wallet we want to see our connected wallet
@@ -40,7 +38,7 @@ export const Web3Manager = () => {
       if (
         web3Modal.cachedProvider ||
         (isMobile() && (web3 || ethereum)) ||
-        (ethereum ? ethereum.isMetaMask : false)
+        (ethereum && ethereum?.isMetaMask )
       ) {
         onConnectWeb3();
       }

@@ -46,13 +46,14 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const GamesInProgress = () => {
   const history = useHistory();
-  const {account, chainId} = useWeb3();
+  const {account} = useWeb3();
   const {messages} = useIntl();
+
+  const {tokenSymbol} = useChainInfo();
 
   const [search, setSearch] = useState('');
 
@@ -135,20 +136,24 @@ const GamesInProgress = () => {
           <Grid container>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              <IntlMessages id='app.coinLeagues.dashboard' />
+                <IntlMessages id='app.coinLeagues.dashboard' />
               </Link>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages id='app.coinLeagues.games' />
+                <IntlMessages id='app.coinLeagues.games' />
               </Link>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              <IntlMessages id='app.coinLeagues.gamesInProgress' />
+                <IntlMessages id='app.coinLeagues.gamesInProgress' />
               </Link>
             </Breadcrumbs>
           </Grid>
         </Grid>
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleagues Banner'} />
+            <img
+              src={CoinsLeagueBanner}
+              style={{borderRadius: '12px'}}
+              alt={'Coinleagues Banner'}
+            />
           </Grid>
         </Hidden>
 
@@ -158,7 +163,7 @@ const GamesInProgress = () => {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant='h6' style={{margin: 5}}>
-            <IntlMessages id='app.coinLeagues.gamesInProgress' />
+              <IntlMessages id='app.coinLeagues.gamesInProgress' />
             </Typography>
           </Box>
         </Grid>
@@ -168,10 +173,17 @@ const GamesInProgress = () => {
               <SwapButton />
             </Box>
             <Box pr={2}>
-              <ShareButton shareText={messages['app.coinLeagues.gamesInProgress'] as string} />
+              <ShareButton
+                shareText={
+                  messages['app.coinLeagues.gamesInProgress'] as string
+                }
+              />
             </Box>
             <Box pr={2}>
-              <BuyCryptoButton btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}`} defaultCurrency={GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))} />
+              <BuyCryptoButton
+                btnMsg={`Buy ${tokenSymbol}`}
+                defaultCurrency={tokenSymbol}
+              />
             </Box>
             <Box pr={2}>
               <MaticBridgeButton />
@@ -184,7 +196,11 @@ const GamesInProgress = () => {
         </Grid>
         <Hidden smDown={true}>
           <Grid item xs={12} sm={8}>
-            <img src={CoinsLeagueBanner} style={{borderRadius: '12px'}} alt={'Coinleagues Banner'} />
+            <img
+              src={CoinsLeagueBanner}
+              style={{borderRadius: '12px'}}
+              alt={'Coinleagues Banner'}
+            />
           </Grid>
         </Hidden>
 
@@ -294,7 +310,9 @@ const GamesInProgress = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={messages['app.coinLeagues.noGamesInProgress'] as string}
+                  title={
+                    messages['app.coinLeagues.noGamesInProgress'] as string
+                  }
                   message={
                     messages['app.coinLeagues.searchCreatedAndEnter'] as string
                   }

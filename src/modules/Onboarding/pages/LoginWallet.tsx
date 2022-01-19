@@ -27,12 +27,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router-dom';
-import {FEE_RECIPIENT, GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {Add as AddIcon} from '@material-ui/icons';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {Alert} from '@material-ui/lab';
 import IntlMessages from '@crema/utility/IntlMessages';
-import { useIntl } from 'react-intl';
+import {useIntl} from 'react-intl';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -138,7 +139,7 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
-  const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
+  const {onConnectWeb3, onCloseWeb3, account} = useWeb3();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -232,7 +233,9 @@ export const CreateWallet = (props: Props) => {
     accountsModal.setShow(!accountsModal.showAccounts);
   }, [accountsModal]);
 
-  const { messages } = useIntl();
+  const {messages} = useIntl();
+
+  const {chainName} = useChainInfo();
 
   return (
     <Box py={{xs: 8}}>
@@ -254,7 +257,7 @@ export const CreateWallet = (props: Props) => {
                   {isMobile && account ? truncateAddress(account) : account}
                 </strong>{' '}
                 <IntlMessages id='app.onBoarding.accountOn' />{' '}
-                <strong>{GET_CHAIN_ID_NAME(chainId)}</strong>{' '}
+                <strong>{chainName}</strong>{' '}
                 <IntlMessages id='app.onBoarding.network' />
               </Typography>
             </Alert>

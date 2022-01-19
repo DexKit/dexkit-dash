@@ -64,6 +64,24 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
   }
 };
 
+export const isNativeCoinV2 = (
+  symbol: string,
+  chainId: ChainId,
+  networks?: {chainId: number; symbol: string}[],
+) => {
+  const isNative = isNativeCoin(symbol, chainId);
+
+  if (!isNative && networks) {
+    const index = networks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return networks[index].symbol.toUpperCase() === symbol;
+    }
+  }
+
+  return false;
+};
+
 export const isNativeCoinFromNetworkName = (
   symbol: string,
   network: EthereumNetwork,
@@ -76,7 +94,7 @@ export const isNativeCoinFromNetworkName = (
       const isBNB = symbol.toLowerCase() === 'bnb';
       return isBNB;
     case EthereumNetwork.matic:
-        return symbol.toLowerCase() === 'matic';
+      return symbol.toLowerCase() === 'matic';
     default:
       return symbol.toLowerCase() === 'eth';
   }

@@ -37,13 +37,14 @@ import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const MyGames = () => {
   const history = useHistory();
-  const {account, chainId} = useWeb3();
+  const {account} = useWeb3();
+  const {tokenSymbol} = useChainInfo();
+
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
@@ -99,7 +100,10 @@ const MyGames = () => {
       </Hidden>
       <Grid item xs={6} xl={6} sm={6}>
         <Box display={'flex'} alignItems={'center'}>
-          <Typography variant='h5'> <IntlMessages id='app.coinLeagues.myGames' /></Typography>
+          <Typography variant='h5'>
+            {' '}
+            <IntlMessages id='app.coinLeagues.myGames' />
+          </Typography>
           <Box p={2}>
             <FormControl>
               <Select
@@ -119,12 +123,8 @@ const MyGames = () => {
           <SwapButton />
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}`}
-              defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}
+              btnMsg={`Buy ${tokenSymbol}`}
+              defaultCurrency={tokenSymbol}
             />
           </Box>
           <Box pr={2}>

@@ -29,7 +29,8 @@ import ButtonCopy from 'shared/components/ButtonCopy';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
 import {ChainId} from 'types/blockchain';
-import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -56,11 +57,13 @@ const AffiliatePage: React.FC = () => {
   const classes = useStyles();
   const {messages} = useIntl();
 
-  const {account: web3Account, chainId} = useWeb3();
+  const {account: web3Account} = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;
 
-  const [chain, setChain] = useState(GET_CHAIN_ID_NAME(chainId));
+  const {chainName} = useChainInfo();
+
+  const [chain, setChain] = useState(chainName);
 
   const selectedChainId = useMemo(() => {
     if (chain === 'ETH') {

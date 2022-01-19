@@ -19,10 +19,8 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 import {Alert} from '@material-ui/lab';
 
-import {
-  getTransactionScannerUrl,
-  hasLondonHardForkSupport,
-} from 'utils/blockchain';
+import {hasLondonHardForkSupport} from 'utils/blockchain';
+
 import {Link as RouterLink} from 'react-router-dom';
 
 import React, {useCallback, useState} from 'react';
@@ -40,6 +38,7 @@ import CreatedDialog from './erc20/dialogs/CreatedDialog';
 import {useDispatch} from 'react-redux';
 import {addToken} from 'redux/_wizard/actions';
 import {useIntl} from 'react-intl';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const ERC20_CONTRACT_DATA_URL =
   'https://raw.githubusercontent.com/DexKit/wizard-contracts/main/artifacts/contracts/ERC20_BASE.sol/Token.json';
@@ -50,6 +49,7 @@ export const TokenSetup = (props: TokenSetupProps) => {
   const history = useHistory();
   const userDefaultAcount = useDefaultAccount();
   const {getWeb3, getProvider, chainId} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const [error, setError] = useState<string>();
 

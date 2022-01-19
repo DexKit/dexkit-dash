@@ -25,11 +25,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {ErrorIcon} from 'shared/components/Icons';
 import {useChampionMetadata} from 'modules/CoinLeagues/hooks/champions';
 import {getNormalizedUrl} from 'utils/browser';
 import ChampionTrait from '../ChampionTrait';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   tokenImage: {
@@ -74,11 +74,13 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
 
   const {chainId} = useWeb3();
 
+  const {getTransactionScannerUrl} = useChainInfo();
+
   const handleViewTransaction = useCallback(() => {
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   const handleTryAgain = useCallback(() => {
     if (tokenId) {

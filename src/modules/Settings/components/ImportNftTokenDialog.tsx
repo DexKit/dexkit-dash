@@ -14,12 +14,14 @@ import {
   Divider,
   CircularProgress,
   useTheme,
+  Chip,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {ErrorIcon} from 'shared/components/Icons';
 import {Web3Wrapper} from '@0x/web3-wrapper';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 export interface ImportNftTokenValues {
   address: string;
@@ -45,6 +47,7 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
 }) => {
   const {onClose} = dialogProps;
 
+  const {chainName} = useChainInfo();
   const theme = useTheme();
   const {messages} = useIntl();
 
@@ -190,9 +193,15 @@ export const ImportNftTokenDialog: React.FC<Props> = ({
               <IntlMessages id='app.settings.importNft' />
             </strong>
           </Typography>
-          <IconButton onClick={handleClickClose} size='small'>
-            <Close />
-          </IconButton>
+
+          <Box display='flex' alignItems='center' alignContent='center'>
+            <Box mr={2}>
+              <Chip label={chainName} />
+            </Box>
+            <IconButton onClick={handleClickClose} size='small'>
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
       </DialogTitle>
       <Divider />

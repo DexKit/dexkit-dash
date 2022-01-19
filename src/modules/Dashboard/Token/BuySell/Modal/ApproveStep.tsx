@@ -13,10 +13,9 @@ import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
 
 import {getERC20Contract} from 'utils/ethers';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Props {
   step: Steps | undefined;
@@ -43,6 +42,8 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
+
   const {messages} = useIntl();
 
   const {getContractWrappers} = useContractWrapper();
@@ -51,7 +52,7 @@ const ApproveStep: React.FC<Props> = (props) => {
 
   /* eslint-disable */
   const isApprove = useCallback(async () => {
-    if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
+    if (tokenFrom.symbol.toUpperCase() === tokenSymbol) {
       return true;
     }
 
@@ -77,10 +78,10 @@ const ApproveStep: React.FC<Props> = (props) => {
     );
 
     return isApproved;
-  }, [tokenFrom, chainId, getProvider]);
+  }, [tokenFrom, chainId, getProvider, tokenSymbol]);
 
   useEffect(() => {
-    if (step === Steps.APPROVE) {
+    if (step === Steps.APPROVE && tokenSymbol) {
       isApprove()
         .then((value) => {
           if (value) {
@@ -91,7 +92,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         })
         .catch((e) => onNext(false, e));
     }
-  }, [step]);
+  }, [step, tokenSymbol]);
 
   const handleAction = async () => {
     try {
@@ -134,7 +135,8 @@ const ApproveStep: React.FC<Props> = (props) => {
           messages['app.dashboard.approve']
         } ${tokenFrom.symbol.toUpperCase()} ${messages['app.dashboard.to']} ${
           messages['app.dashboard.trade']
-        }`,        timestamp: Date.now(),
+        }`,
+        timestamp: Date.now(),
         url: getTransactionScannerUrl(chainId, tx.hash),
         urlCaption: messages['app.dashboard.viewTransaction'] as string,
         type: NotificationType.TRANSACTION,

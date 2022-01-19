@@ -12,6 +12,8 @@ interface Props {
 
 export const FlagIcon: React.FC<Props> = ({id}) => {
   switch (id) {
+    case 'us':
+      return <UnitedStatesFlagIcon width={30} height={20} />;
     case 'es':
       return <SpainFlagIcon width={30} height={20} />;
     case 'br':
@@ -20,8 +22,7 @@ export const FlagIcon: React.FC<Props> = ({id}) => {
       return <KoreaFlagIcon width={30} height={20} />;
     case 'pt':
       return <PortugalFlagIcon width={30} height={20} />;
-    case 'us':
-      return <UnitedStatesFlagIcon width={30} height={20} />;
+
     default:
       return <></>;
   }

@@ -11,7 +11,7 @@ import {
 } from 'utils';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface OrderProps {
   open: boolean;
@@ -45,6 +45,7 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
   } = props;
 
   const {chainId, account} = useWeb3();
+  const {tokenSymbol} = useChainInfo();
 
   const [steps, setSteps] = useState<Steps[]>([]);
   const [currentStep, setCurrentStep] = useState<Steps>();
@@ -76,12 +77,10 @@ const OrderDialog: React.FC<OrderProps> = (props) => {
       });
 
       if (
-        (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
-          tokenTo.symbol.toUpperCase() ===
-            `W${GET_CHAIN_NATIVE_COIN(chainId)}`) ||
-        (tokenTo.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId) &&
-          tokenFrom.symbol.toUpperCase() ===
-            `W${GET_CHAIN_NATIVE_COIN(chainId)}`)
+        (tokenFrom.symbol.toUpperCase() === tokenSymbol &&
+          tokenTo.symbol.toUpperCase() === `W${tokenSymbol}`) ||
+        (tokenTo.symbol.toUpperCase() === tokenSymbol &&
+          tokenFrom.symbol.toUpperCase() === `W${tokenSymbol}`)
       ) {
         setIsConvert(true);
         stepsFn = [Steps.CONVERT];

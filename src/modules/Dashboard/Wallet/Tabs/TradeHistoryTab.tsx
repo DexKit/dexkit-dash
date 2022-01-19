@@ -62,7 +62,7 @@ export const TradeHistoryTab = (props: Props) => {
     setShowFilters((value) => !value);
   }, []);
 
-  const [tab, setTab] = useState(TAB_HISTORY);
+  const [tab, setTab] = useState(TAB_TRANSACTIONS);
 
   const handleToggleHistory = useCallback(() => {
     setTab(TAB_HISTORY);
@@ -160,9 +160,11 @@ export const TradeHistoryTab = (props: Props) => {
               </Grid>
             </Grid>
             <Grid item>
-              <SquaredIconButton onClick={handleToggleFilters}>
-                <FilterSearchIcon />
-              </SquaredIconButton>
+              {tab !== TAB_TRANSACTIONS ? (
+                <SquaredIconButton onClick={handleToggleFilters}>
+                  <FilterSearchIcon />
+                </SquaredIconButton>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
