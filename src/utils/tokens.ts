@@ -206,6 +206,8 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
     case ChainId.BinanceTest:
     case ChainId.Binance:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case ChainId.Matic:
+        return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
   }
 };
 
@@ -222,6 +224,8 @@ export const getNativeCoinWrappedAddressFromNetworkName = (
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
     case EthereumNetwork.bsc:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case EthereumNetwork.matic:
+        return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     default:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
   }
@@ -235,6 +239,8 @@ export const getNativeCoinWrappedFromNetworkName = (
       return 'weth';
     case EthereumNetwork.bsc:
       return 'wbnb';
+    case EthereumNetwork.matic:
+        return 'wmatic';
     default:
       return 'weth';
   }

@@ -31,6 +31,7 @@ import {
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from '../utils/constants';
 import { useIsNFTGame } from './useCoinLeaguesFactory';
+import { useLeaguesChainInfo } from './useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -44,7 +45,9 @@ interface CallbackProps {
  * @returns
  */
 export const useCoinLeagues = (id?: string) => {
-  const { web3State, account, chainId, getProvider } = useWeb3();
+  const { web3State, account,  getProvider } = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
+  
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),

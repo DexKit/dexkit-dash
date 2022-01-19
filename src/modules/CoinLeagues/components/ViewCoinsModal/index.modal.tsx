@@ -22,7 +22,7 @@ import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useWeb3} from 'hooks/useWeb3';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
 
@@ -37,7 +37,7 @@ interface Props extends DialogProps {
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, coins, id, captainCoin, playerAddress} = props;
   const {messages} = useIntl();
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(id);
   const {multiplier, tooltipMessage} = useMultipliers(id);

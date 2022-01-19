@@ -25,7 +25,7 @@ import { ChainId } from 'types/blockchain';
 
 interface Props extends DialogProps {
   title?: string;
-  chainId: ChainId.Matic | ChainId.Mumbai;
+  chainId: ChainId.Matic | ChainId.Mumbai | ChainId.Binance;
   selectedCoins?: CoinFeed[];
   onSelectCoin: (coin: CoinFeed, isCaptainCoin: boolean) => void;
   isCaptainCoin: boolean;

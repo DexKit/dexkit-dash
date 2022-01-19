@@ -62,6 +62,7 @@ import {
 } from 'modules/CoinLeagues/constants';
 import {MintChampionButton} from 'modules/CoinLeagues/components/champions/buttons/MintChampionButton';
 import {getEventHoldingAmount} from '../../utils/champions';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 const useStyles = makeStyles((theme) => ({
   bannerBox: {
     borderRadius: theme.shape.borderRadius,
@@ -92,7 +93,8 @@ export function ChampionsEvent() {
 
   const isMobile = useMobile();
 
-  const {chainId, account, ethBalance, onConnectWeb3} = useWeb3();
+  const { account, ethBalance, onConnectWeb3} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
 
   const myChampions = useMyChampions(chainId, 4);
 

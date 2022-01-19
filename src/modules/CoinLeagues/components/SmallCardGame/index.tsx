@@ -1,21 +1,22 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import {BigNumber, ethers} from 'ethers';
-import {makeStyles} from '@material-ui/core/styles';
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
+import { BigNumber, ethers } from 'ethers';
+import { makeStyles } from '@material-ui/core/styles';
+import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
 
-import {useInterval} from 'hooks/utils/useInterval';
-import {CardTimer} from '../CardTimer';
+import { useInterval } from 'hooks/utils/useInterval';
+import { CardTimer } from '../CardTimer';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-
-import {useChainInfo} from 'hooks/useChainInfo';
+import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
+import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,7 +49,8 @@ interface Props {
 }
 
 function SmallCardGame(props: Props): JSX.Element {
-  const {game, onClick} = props;
+  const { game, onClick } = props;
+  const { chainId } = useLeaguesChainInfo();
   const classes = useStyles();
   const [countdown, setCountdown] = useState<number>();
   /* const value = new Intl.NumberFormat('en-US', {
@@ -56,8 +58,6 @@ function SmallCardGame(props: Props): JSX.Element {
     currency: 'USD',
   }).format(props.prizePool);*/
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
-
-  const {tokenSymbol} = useChainInfo();
 
   const prizeTotalValue = ethers.utils.formatEther(
     BigNumber.from(game.entry).mul(BigNumber.from(game.currentPlayers)),
@@ -99,12 +99,12 @@ function SmallCardGame(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='h6'
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {tokenSymbol}
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
+                    &nbsp;{entryAmount}  {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -119,11 +119,11 @@ function SmallCardGame(props: Props): JSX.Element {
               :&nbsp;
             </Typography>
             <Typography variant='h6'>
-              {prizeTotalValue} {tokenSymbol}
+              {prizeTotalValue}  {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} style={{color: '#7a8398'}}>
+        <Grid item xs={12} style={{ color: '#7a8398' }}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
               {' '}
@@ -132,20 +132,20 @@ function SmallCardGame(props: Props): JSX.Element {
             </Typography>
             <Typography
               variant='h6'
-              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
+              style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
               {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>
 
-        <Grid item xs={12} style={{color: '#7a8398'}}>
+        <Grid item xs={12} style={{ color: '#7a8398' }}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h6'>
               {' '}
               <IntlMessages id='app.coinLeagues.countdown' />
               :&nbsp;
             </Typography>
-            <Typography variant='h6' style={{fontWeight: 500}}>
+            <Typography variant='h6' style={{ fontWeight: 500 }}>
               {countdown && countdown > 0 && <CardTimer time={countdown} />}
               {countdown && countdown < 0 && (
                 <IntlMessages id='app.coinLeagues.ended' />
@@ -153,7 +153,7 @@ function SmallCardGame(props: Props): JSX.Element {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} style={{color: '#7a8398'}}>
+        <Grid item xs={12} style={{ color: '#7a8398' }}>
           <Button className={classes.button} fullWidth onClick={onClickEnter}>
             {props.btnMessage || <IntlMessages id='app.coinLeagues.view' />}
           </Button>

@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import {useIntl} from 'react-intl';
+import { useIntl } from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import {
@@ -12,52 +12,51 @@ import {
   Typography,
   Badge,
 } from '@material-ui/core';
-import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
-import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
 
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {HOME_ROUTE} from 'shared/constants/routes';
+import { HOME_ROUTE } from 'shared/constants/routes';
 
-import {Empty} from 'shared/components/Empty';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import { Empty } from 'shared/components/Empty';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
 import SwapButton from 'shared/components/SwapButton';
 
 import ContainedInput from 'shared/components/ContainedInput';
-import {Search} from '@material-ui/icons';
+import { Search } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import CardGameProgress from 'modules/CoinLeagues/components/CardGameProgress';
 import CardGameProgressSkeleton from 'modules/CoinLeagues/components/CardGameProgress/index.skeleton';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
-import {ReactComponent as EmptyGame} from 'assets/images/icons/empty-game.svg';
+import { ReactComponent as EmptyGame } from 'assets/images/icons/empty-game.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
-import {ShareButton} from 'shared/components/ShareButton';
-import {useCoinLeagueGames} from 'modules/CoinLeagues/hooks/useGames';
-import {GameOrderBy} from 'modules/CoinLeagues/constants/enums';
-import {useGamesFilters} from 'modules/CoinLeagues/hooks/useGamesFilter';
-import {useToggler} from 'hooks/useToggler';
+import { ShareButton } from 'shared/components/ShareButton';
+import { useCoinLeagueGames } from 'modules/CoinLeagues/hooks/useGames';
+import { GameOrderBy } from 'modules/CoinLeagues/constants/enums';
+import { useGamesFilters } from 'modules/CoinLeagues/hooks/useGamesFilter';
+import { useToggler } from 'hooks/useToggler';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import GameFilterDrawer from 'modules/CoinLeagues/components/GameFilterDrawer';
-
-import {useChainInfo} from 'hooks/useChainInfo';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
 
 const GamesInProgress = () => {
   const history = useHistory();
-  const {account} = useWeb3();
-  const {messages} = useIntl();
-
-  const {tokenSymbol} = useChainInfo();
+  const { account } = useWeb3();
+  const { coinSymbol } = useLeaguesChainInfo();
+  const { messages } = useIntl();
 
   const [search, setSearch] = useState('');
 
-  const {listGamesRoute, enterGameRoute} = useCoinLeaguesFactoryRoutes();
+  const { listGamesRoute, enterGameRoute } = useCoinLeaguesFactoryRoutes();
 
   const filtersState = useGamesFilters();
 
@@ -151,7 +150,7 @@ const GamesInProgress = () => {
           <Grid item xs={12}>
             <img
               src={CoinsLeagueBanner}
-              style={{borderRadius: '12px'}}
+              style={{ borderRadius: '12px' }}
               alt={'Coinleagues Banner'}
             />
           </Grid>
@@ -162,9 +161,12 @@ const GamesInProgress = () => {
             <IconButton onClick={handleBack}>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant='h6' style={{margin: 5}}>
+            <Typography variant='h6' style={{ margin: 5 }}>
               <IntlMessages id='app.coinLeagues.gamesInProgress' />
             </Typography>
+            <Box p={2}>
+              <ChainSelect />
+            </Box>
           </Box>
         </Grid>
         <Grid item xs={12} sm={6} xl={6}>
@@ -181,8 +183,8 @@ const GamesInProgress = () => {
             </Box>
             <Box pr={2}>
               <BuyCryptoButton
-                btnMsg={`Buy ${tokenSymbol}`}
-                defaultCurrency={tokenSymbol}
+                btnMsg={`Buy ${coinSymbol}`}
+                defaultCurrency={coinSymbol}
               />
             </Box>
             <Box pr={2}>
@@ -198,7 +200,7 @@ const GamesInProgress = () => {
           <Grid item xs={12} sm={8}>
             <img
               src={CoinsLeagueBanner}
-              style={{borderRadius: '12px'}}
+              style={{ borderRadius: '12px' }}
               alt={'Coinleagues Banner'}
             />
           </Grid>
@@ -280,7 +282,7 @@ const GamesInProgress = () => {
                       color='primary'
                       variant='dot'
                       invisible={!filtersState.isModified()}>
-                      <FilterSearchIcon style={{color: '#fff'}} />
+                      <FilterSearchIcon style={{ color: '#fff' }} />
                     </Badge>
                   </SquaredIconButton>
                 </Grid>

@@ -25,11 +25,13 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {getRarityFromBodyType} from 'modules/CoinLeagues/utils/champions';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 export function useChampionMint() {
-  const {getProvider, web3State, chainId} = useWeb3();
-  const {getTransactionScannerUrl} = useChainInfo();
+  const {getProvider, web3State } = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
+  
 
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
@@ -104,8 +106,7 @@ export function useChampionMint() {
     chainId,
     getProvider,
     clear,
-    createNotification,
-    getTransactionScannerUrl,
+    createNotification
   ]);
 
   return {mint, loading, error, transactionHash, tokenId, clear};

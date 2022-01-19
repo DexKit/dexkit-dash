@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -8,24 +8,24 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
-import {BigNumber, ethers} from 'ethers';
-import {useInterval} from 'hooks/utils/useInterval';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {strPad} from 'modules/CoinLeagues/utils/time';
-import {CardTimer} from '../CardTimer';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
+import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
+import { BigNumber, ethers } from 'ethers';
+import { useInterval } from 'hooks/utils/useInterval';
+import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import { strPad } from 'modules/CoinLeagues/utils/time';
+import { CardTimer } from '../CardTimer';
+import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
 
 import ViewGameMetadataModal from '../ViewGameMetadataModal';
 import IconButton from '@material-ui/core/IconButton';
-import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
+import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
-import { useWeb3 } from 'hooks/useWeb3';
 import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
 import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -68,9 +68,9 @@ interface Props {
 }
 
 function CardGame(props: Props): JSX.Element {
-  const {game, onClick} = props;
+  const { game, onClick } = props;
   const classes = useStyles();
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -146,11 +146,11 @@ function CardGame(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='subtitle2'
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     &nbsp;{entryAmount}  {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
                   </Typography>
                 </Grid>
@@ -162,18 +162,18 @@ function CardGame(props: Props): JSX.Element {
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
+            style={{ color: '#7a8398' }}>
             <Typography variant='h6'>
               <IntlMessages id='app.coinLeagues.gameTime' />
             </Typography>
-            <Typography variant='h6' style={{fontWeight: 500}}>
+            <Typography variant='h6' style={{ fontWeight: 500 }}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
+            style={{ color: '#7a8398' }}>
             <Typography variant='h6'>
               {' '}
               &nbsp;
@@ -181,7 +181,7 @@ function CardGame(props: Props): JSX.Element {
             </Typography>
             <Typography
               variant='h6'
-              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
+              style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
               &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>

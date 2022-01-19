@@ -18,13 +18,13 @@ import IntlMessages from '@crema/utility/IntlMessages';
 
 import {NFTEmptyStateImage} from 'shared/components/Icons';
 
-import {useWeb3} from 'hooks/useWeb3';
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import {useMyChampions} from 'modules/CoinLeagues/hooks/champions';
 
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 export const ChampionsIndex = () => {
   const history = useHistory();
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
 
   const emtpyArrayRef = useRef(new Array(8).fill(null));
 

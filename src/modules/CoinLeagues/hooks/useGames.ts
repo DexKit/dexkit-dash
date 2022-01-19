@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client';
-import { useWeb3 } from 'hooks/useWeb3';
 import { useEffect } from 'react';
 import { POLL_INTERVAL_GAMES } from '../constants';
 import {
@@ -20,6 +19,7 @@ import { GET_DURATION_FROM_FILTER_V2 } from '../utils/time';
 import { GameGraph } from '../utils/types';
 import { useIsNFTGame } from './useCoinLeaguesFactory';
 import { GameFiltersState } from './useGamesFilter';
+import { useLeaguesChainInfo } from './useLeaguesChainInfo';
 
 interface GamesFilterParams {
   accounts?: string[];
@@ -36,7 +36,7 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
 }
 
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false) => {
-  const { chainId } = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
 
   const { accounts, filters, status, first, skip, player } = params;
   const isNFTGame = useIsNFTGame() || isNFT;

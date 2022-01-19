@@ -128,15 +128,15 @@ export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
 export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic) => {
 
   if (chainId === ChainId.Binance) {
-    if (entry.lt(ethers.utils.parseEther('0.5'))) {
+    if (entry.lt(ethers.utils.parseEther('0.01'))) {
       return 'Beginner'
-    } else if (entry.lt(ethers.utils.parseEther('1'))) {
+    } else if (entry.lt(ethers.utils.parseEther('0.05'))) {
       return 'Intermediate'
-    } else if (entry.lt(ethers.utils.parseEther('2'))) {
+    } else if (entry.lt(ethers.utils.parseEther('0.1'))) {
       return 'Advanced'
-    } else if (entry.lt(ethers.utils.parseEther('5'))) {
+    } else if (entry.lt(ethers.utils.parseEther('0.3'))) {
       return 'Expert'
-    } else if (entry.lt(ethers.utils.parseEther('10'))) {
+    } else if (entry.lt(ethers.utils.parseEther('1'))) {
       return 'Master'
     } else {
       return 'Grand Master'
@@ -179,7 +179,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('5')
         case ChainId.Binance:
-          return ethers.utils.parseEther('0.5')
+          return ethers.utils.parseEther('0.05')
         default:
           return ethers.utils.parseEther('5')
       }
@@ -189,7 +189,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('10')
         case ChainId.Binance:
-          return ethers.utils.parseEther('1')
+          return ethers.utils.parseEther('0.1')
         default:
           return ethers.utils.parseEther('10')
       }
@@ -198,7 +198,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('50')
         case ChainId.Binance:
-          return ethers.utils.parseEther('2')
+          return ethers.utils.parseEther('0.3')
         default:
           return ethers.utils.parseEther('50')
       }
@@ -207,7 +207,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('250')
         case ChainId.Binance:
-          return ethers.utils.parseEther('5')
+          return ethers.utils.parseEther('1')
         default:
           return ethers.utils.parseEther('250')
       }
@@ -216,7 +216,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('500')
         case ChainId.Binance:
-          return ethers.utils.parseEther('10')
+          return ethers.utils.parseEther('2')
         default:
           return ethers.utils.parseEther('500')
       }

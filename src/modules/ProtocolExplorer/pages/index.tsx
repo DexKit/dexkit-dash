@@ -102,9 +102,13 @@ const Explorer: React.FC<TokenProps> = (props) => {
   const {tokenInfo, loading: loadingToken} = useTokenInfo(address);
   const {
     loading: loadingTokenMarket,
+    loadingPrice,
     data: tokenMarket,
     priceQuote,
   } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
+  console.log(tokenMarket);
+  console.log(tokenInfo);
+
 
   /* eslint-disable */
   useEffect(() => {
@@ -305,7 +309,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
               alignItems='center'
               spacing={2}>
               <Grid item xs={12} md={6}>
-                {loadingToken || !tokenInfo || !tokenMarket ? (
+                {loadingToken || !tokenInfo || loadingPrice  ? (
                   <Paper>
                     <Box p={4}>
                       <Grid container spacing={4}>

@@ -21,6 +21,7 @@ import {
   COIN_LEAGUES_FACTORY_ADDRESS,
   COIN_LEAGUES_NFT_FACTORY_ADDRESS,
 } from '../constants';
+import { useLeaguesChainInfo } from './useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -29,7 +30,7 @@ interface CallbackProps {
 }
 
 export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
-  const {room} = useParams<{room: string}>();
+  const { room } = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame() || isNFT;
 
   const enterGameRoute = useCallback(
@@ -79,7 +80,7 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
 };
 
 export const useCoinLeaguesFactory = () => {
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
@@ -260,7 +261,7 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
 };
 
 export const useCoinLeaguesFactoryTotalGames = () => {
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),

@@ -44,7 +44,8 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     borderRadius: 6,
@@ -98,7 +99,7 @@ interface Props {
 
 const getIconByCoin = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(
@@ -109,7 +110,7 @@ const getIconByCoin = (
 
 const getIconSymbol = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(
@@ -133,7 +134,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   const classes = useStyles();
   const {messages} = useIntl();
   const {chainId} = useWeb3();
-  const {getTransactionScannerUrl} = useChainInfo();
+
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
   const {createNotification} = useNotifications();
@@ -242,8 +243,7 @@ function OnePlayerTable(props: Props): JSX.Element {
       onClaimCallback,
       chainId,
       createNotification,
-      messages,
-      getTransactionScannerUrl,
+      messages
     ],
   );
 

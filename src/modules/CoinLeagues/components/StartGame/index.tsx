@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
-import {useWeb3} from 'hooks/useWeb3';
+
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
@@ -19,8 +19,8 @@ import {
 import {useInterval} from 'hooks/utils/useInterval';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-
-import {useChainInfo} from 'hooks/useChainInfo';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 interface Props {
   id?: string;
@@ -28,8 +28,7 @@ interface Props {
 
 export const StartGame = (props: Props) => {
   const {id} = props;
-  const {chainId} = useWeb3();
-  const {getTransactionScannerUrl} = useChainInfo();
+  const { chainId } = useLeaguesChainInfo();
   const {game, refetch} = useCoinLeagues(id);
   const {createNotification} = useNotifications();
   const [tx, setTx] = useState<string>();
@@ -100,8 +99,7 @@ export const StartGame = (props: Props) => {
       onStartGameCallback,
       chainId,
       createNotification,
-      id,
-      getTransactionScannerUrl,
+      id
     ],
   );
   const onAbortGame = useCallback(
@@ -149,8 +147,7 @@ export const StartGame = (props: Props) => {
       onAbortGameCallback,
       chainId,
       createNotification,
-      id,
-      getTransactionScannerUrl,
+      id
     ],
   );
   const abortTime = game?.abort_timestamp;
