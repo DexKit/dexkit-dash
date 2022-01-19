@@ -34,6 +34,7 @@ import {useMobile} from 'hooks/useMobile';
 import {useIntl} from 'react-intl';
 import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
 import {useCustomNetworkList} from 'hooks/network';
+import {getOpenSeaLink, isOpenSeaSupported} from 'utils/opensea';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -160,16 +161,22 @@ export const AssetDetailDialog: React.FC<Props> = ({
                 {isLoading ? <Skeleton /> : metadata?.title}
               </Typography>
             </Grid>
-            <Grid item>
-              <Tooltip title={<IntlMessages id='app.wallet.viewOnOpenSea' />}>
-                <IconButton
-                  href='https://opensea.io/'
-                  target='_blank'
-                  rel='noopener noreferrer'>
-                  <OpenSeaIcon className={classes.openSeaIcon} />
-                </IconButton>
-              </Tooltip>
-            </Grid>
+            {tokenChainId && isOpenSeaSupported(tokenChainId) ? (
+              <Grid item>
+                <Tooltip title={<IntlMessages id='app.wallet.viewOnOpenSea' />}>
+                  <IconButton
+                    href={getOpenSeaLink(
+                      tokenChainId,
+                      contractAddress,
+                      tokenId,
+                    )}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    <OpenSeaIcon className={classes.openSeaIcon} />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
         <Grid item>
