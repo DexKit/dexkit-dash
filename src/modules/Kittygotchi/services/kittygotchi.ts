@@ -158,3 +158,9 @@ export const update = (
     myInit,
   );
 };
+
+export function refetchKittygotchiMetadata(tokenId: string, chainId?: number) {
+  if (chainId) {
+    return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${tokenId}`);
+  }
+}

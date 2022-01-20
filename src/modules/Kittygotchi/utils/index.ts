@@ -142,7 +142,6 @@ export function getKittygotchiMetadataEndpoint(
 
     return KITTYGOTCHI_METADATA_ENDPOINT;
   } else if (chainId === ChainId.Mumbai) {
-    console.log('etraaa aqui');
     return MUMBAI_METADATA_KITTY_ENDPOINT;
   }
 

@@ -22,6 +22,8 @@ import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 
+import {refetchKittygotchiMetadata} from 'modules/Kittygotchi/services/kittygotchi';
+
 import {
   useKittygotchiFeed,
   useKittygotchiList,
@@ -209,11 +211,13 @@ export const ProfileIndex = () => {
       }
     };
 
-    const onConfirmation = (hash?: string) => {
+    const onConfirmation = async (hash?: string) => {
       if (chainId && account) {
         let defaultKitty = kittyProfile.getDefault(account, chainId);
 
         if (defaultKitty) {
+          await refetchKittygotchiMetadata(defaultKitty.id, chainId);
+
           kittygotchiUpdated.get(defaultKitty.id);
         }
 

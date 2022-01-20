@@ -58,6 +58,7 @@ import {
 
 import {useChainInfo} from 'hooks/useChainInfo';
 import {ownerOf} from 'services/nfts';
+import {refetchKittygotchiMetadata} from '../services/kittygotchi';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -198,7 +199,9 @@ export const KittyDetail: React.FC = () => {
       }
     };
 
-    const onConfirmation = (hash?: string) => {
+    const onConfirmation = async (hash?: string) => {
+      await refetchKittygotchiMetadata(params.id, chainId);
+
       kittygotchi.get(params.id);
 
       setFeedLoading(false);
