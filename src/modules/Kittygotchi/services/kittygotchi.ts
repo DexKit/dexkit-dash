@@ -152,5 +152,9 @@ export const update = (
       attributes: attributes,
     }),
   };
-  return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`, myInit);
+  // TODO: find a better way to do this
+  return fetch(
+    `${getKittygotchiMetadataEndpoint(chainId, 'update')}${id}`,
+    myInit,
+  );
 };

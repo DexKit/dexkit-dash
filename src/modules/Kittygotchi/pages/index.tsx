@@ -36,6 +36,7 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ChainId, Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
 import {useChainInfo} from 'hooks/useChainInfo';
+import {isKittygotchiNetworkSupported} from '../utils';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -135,8 +136,14 @@ export const KittygotchiIndex = () => {
     };
     const onError = (error: any) => {
       setSubmitState(SubmitState.Error);
-      setErrorMessage(error.message);
-      setMintingError(error.message);
+
+      if (error.data && error.data.message) {
+        setErrorMessage(error.data.message);
+        setMintingError(error.data.message);
+      } else {
+        setErrorMessage(error.message);
+        setMintingError(error.message);
+      }
 
       setMintingDone(false);
 
@@ -263,12 +270,12 @@ export const KittygotchiIndex = () => {
             </Grid>
           )}
 
-          {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+          {!isKittygotchiNetworkSupported(chainId) ? (
             <Grid item xs={12}>
               <Alert severity='info'>
                 <Typography variant='body2'>
-                  <IntlMessages id='app.kittygotchi.connectTo' />{' '}
-                  <strong>Polygon(MATIC)</strong>{' '}
+                  <IntlMessages id='app.kittygotchi.connectTo' /> Ethereum,
+                  Binance Smart Chain or Polygon{' '}
                   <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>
@@ -281,12 +288,7 @@ export const KittygotchiIndex = () => {
                   <Box display='flex' justifyContent='space-between' p={4}>
                     <Box></Box>
                     <Button
-                      disabled={
-                        !(
-                          chainId === ChainId.Matic ||
-                          chainId === ChainId.Mumbai
-                        )
-                      }
+                      disabled={!isKittygotchiNetworkSupported(chainId)}
                       startIcon={<GavelIcon />}
                       variant='contained'
                       color='primary'

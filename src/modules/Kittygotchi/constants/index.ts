@@ -1,7 +1,7 @@
 import {BigNumber} from 'ethers';
 import {ChainId} from 'types/blockchain';
 
-export const POLYGON_METADATA_KITTY_ENDPOINT =
+export const KITTYGOTCHI_METADATA_ENDPOINT =
   'https://kittygotchi.dexkit.com/api/';
 export const MUMBAI_METADATA_KITTY_ENDPOINT = //'http://localhost:3001/api/'
   'https://mumbai-kittygotchi.dexkit.com/api/';
@@ -24,10 +24,16 @@ export const GET_KITTY_CHAIN_ID = (chainId?: ChainId) => {
 export const KITTYGOTCHI = {
   [ChainId.Matic]: '0xEA88540adb1664999524d1a698cb84F6C922D2A1',
   [ChainId.Mumbai]: '0xbdd0C521aBb19fA863917e2C807f327957D239ff',
+  [ChainId.Binance]: '0xa6AC5f4Cb773635Cde7152151085E2d73b79c154',
 };
 
 export const GET_KITTYGOTCHI_CONTRACT_ADDR = (chainId?: number) => {
-  if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+  if (
+    chainId === ChainId.Matic ||
+    chainId === ChainId.Mumbai ||
+    chainId === ChainId.Binance
+    // chainId === ChainId.Mainnet
+  ) {
     return KITTYGOTCHI[chainId];
   }
 

@@ -24,8 +24,14 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 import {useWeb3} from 'hooks/useWeb3';
-import {ChainId} from 'types/blockchain';
+import {ethers} from 'ethers';
+
 import IntlMessages from '@crema/utility/IntlMessages';
+import {
+  GET_KITTYGOTCHI_CHAIN_SYMBOL,
+  GET_KITTYGOTCHI_MINT_RATE,
+  isKittygotchiNetworkSupported,
+} from 'modules/Kittygotchi/utils';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -77,7 +83,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
               <GavelIcon className={classes.icon} />
             </Box>
             <Typography variant='body1'>
-              <IntlMessages id='app.kittygotchi.minting' />
+              <IntlMessages id='app.kittygotchi.creating' />
             </Typography>
           </Box>
           <Box>
@@ -88,7 +94,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
         </Box>
       </DialogTitle>
       <DialogContent dividers className={classes.content}>
-        {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+        {!isKittygotchiNetworkSupported(chainId) ? (
           <Box p={4}>
             <Alert severity='info'>
               <Typography variant='body2'>
@@ -104,7 +110,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  <IntlMessages id='app.kittygotchi.minting' />
+                  <IntlMessages id='app.kittygotchi.creating' />
                 </Typography>
                 <Typography
                   color='textSecondary'
@@ -125,7 +131,12 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
                   align='center'
                   variant='body1'>
                   <IntlMessages id='app.kittygotchi.willNeed' />{' '}
-                  <strong>10 MATIC</strong>{' '}
+                  <strong>
+                    {ethers.utils.formatEther(
+                      GET_KITTYGOTCHI_MINT_RATE(chainId),
+                    )}{' '}
+                    {GET_KITTYGOTCHI_CHAIN_SYMBOL(chainId)}
+                  </strong>{' '}
                   <IntlMessages id='app.kittygotchi.tokensInYourWallet' />
                 </Typography>
               </Grid>

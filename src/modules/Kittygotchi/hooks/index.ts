@@ -32,7 +32,7 @@ import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
-import {DEXKIT} from 'shared/constants/tokens';
+import {GET_DEXKIT} from 'shared/constants/tokens';
 import {getTokenBalances} from 'services/multicall';
 import {KittygotchiTraitItem} from '../types';
 
@@ -74,6 +74,9 @@ const THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT =
 const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchi';
 
+const THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchibsc';
+
 let clientMumbai = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,
   cache: new InMemoryCache(),
@@ -81,6 +84,11 @@ let clientMumbai = new ApolloClient({
 
 let clientMatic = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+let clientBsc = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
@@ -100,9 +108,13 @@ export function useGraphqlClient() {
   const getClient = useCallback((chainId?: ChainId) => {
     if (chainId === ChainId.Mumbai) {
       return clientMumbai;
+    } else if (chainId === ChainId.Binance) {
+      return clientBsc;
+    } else if (chainId === ChainId.Matic) {
+      return clientMatic;
     }
 
-    return clientMatic;
+    return undefined;
   }, []);
 
   return {getClient};
@@ -151,7 +163,7 @@ export function useKittygotchiFeed() {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress
       ) {
         return;
@@ -227,7 +239,6 @@ export function useKittygotchiMint() {
           }
         }
       } catch (e) {
-        debugger;
         if (callbacks?.onError) {
           callbacks?.onError(e);
         }
@@ -259,7 +270,7 @@ export function useKittygotchiUpdate() {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress ||
         !account
       ) {
@@ -312,9 +323,16 @@ export const useKittygotchiList = (address?: string) => {
   const get = useCallback(
     async (address?: string) => {
       return new Promise<Kittygotchi[] | undefined>((resolve, reject) => {
+        const client = getClient(chainId);
+
+        if (!client) {
+          return reject('client not found');
+        }
+
         setIsLoading(true);
-        getClient(chainId)
-          .query<{tokens: any[]}>({
+
+        client
+          ?.query<{tokens: any[]}>({
             query: GET_MY_KITTYGOTCHIES,
             variables: {owner: address?.toLowerCase()},
           })
@@ -367,15 +385,25 @@ export const useKittygotchiV2 = () => {
 
   const get = useCallback(
     async (id?: string) => {
+      const client = getClient(chainId);
+
+      if (!client) {
+        return undefined;
+      }
+
       setIsLoading(true);
 
-      return getClient(chainId)
-        .query<{token: any}>({
+      return client
+        ?.query<{token: any}>({
           query: GET_KITTYGOTCHI,
           variables: {id: id?.toLowerCase()},
         })
         .then(async (result: any) => {
           let resultData = result.data.token;
+
+          if (!result.data.token) {
+            throw new Error('Kittygotchi not found');
+          }
 
           let data: Kittygotchi = {
             id: resultData.id,
@@ -497,14 +525,10 @@ export const useKitHolding = (account?: string) => {
 
   const networkProvider = useNetworkProvider(EthereumNetwork.matic);
 
-  const query = useQuery(
-    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
-    async () => {
-      if (
-        account &&
-        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
-      ) {
-        const DexKit = DEXKIT[chainId];
+  const query = useQuery(['GET_KITTY_HOLDING', account, chainId], async () => {
+    if (account && isKittygotchiNetworkSupported(chainId)) {
+      if (chainId) {
+        const DexKit = GET_DEXKIT(chainId);
 
         const tokens = [DexKit];
         let pr = networkProvider;
@@ -527,8 +551,8 @@ export const useKitHolding = (account?: string) => {
           };
         });
       }
-    },
-  );
+    }
+  });
 
   return query;
 };

@@ -31,7 +31,7 @@ import {
 } from 'modules/Kittygotchi/hooks';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {ChainId, Web3State} from 'types/blockchain';
+import {Web3State} from 'types/blockchain';
 import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
 import {useToggler} from 'hooks/useToggler';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
@@ -45,6 +45,7 @@ import {
 } from 'modules/Kittygotchi/constants';
 import {useIntl} from 'react-intl';
 import {ownerOf} from 'services/nfts';
+import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -115,7 +116,8 @@ export const ProfileIndex = () => {
     if (
       account &&
       web3State === Web3State.Done &&
-      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      chainId &&
+      isKittygotchiNetworkSupported(chainId)
     ) {
       let defaultKitty = kittyProfile.getDefault(account, chainId);
 
@@ -162,8 +164,10 @@ export const ProfileIndex = () => {
         }
       },
       onError: (error: any) => {
-        if (error.data.message) {
-          setErrorMessage(error.data.message);
+        if (error.data) {
+          if (error.data.message) {
+            setErrorMessage(error.data.message);
+          }
         }
         setMintLoading(false);
       },

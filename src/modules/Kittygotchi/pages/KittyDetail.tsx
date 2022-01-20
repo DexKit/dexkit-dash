@@ -34,8 +34,12 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {FeedingKittygotchiDialog} from '../components/dialogs/FeedingKittygotchiDialog';
-import {ChainId, Web3State} from 'types/blockchain';
-import {canFeedKitty, isKittyTired} from '../utils';
+import {Web3State} from 'types/blockchain';
+import {
+  canFeedKitty,
+  isKittygotchiNetworkSupported,
+  isKittyTired,
+} from '../utils';
 import moment from 'moment';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import CheckIcon from '@material-ui/icons/Check';
@@ -227,7 +231,7 @@ export const KittyDetail: React.FC = () => {
     if (
       params.id &&
       web3State === Web3State.Done &&
-      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      isKittygotchiNetworkSupported(chainId)
     ) {
       kittygotchi.get(params.id);
     }
@@ -235,6 +239,7 @@ export const KittyDetail: React.FC = () => {
 
   const goToOpenSea = useCallback(() => {
     if (kittygotchi.data) {
+      // TODO: use the new opensea link.
       window.open(
         `https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.data?.id}`,
       );
