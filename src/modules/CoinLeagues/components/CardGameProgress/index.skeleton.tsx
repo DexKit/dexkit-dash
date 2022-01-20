@@ -12,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {truncateAddress} from 'utils/text';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,7 +62,7 @@ function CardTimer(props: {time: number}) {
 
 function CardGameProgressSkeleton(): JSX.Element {
   const classes = useStyles();
-
+  const { coinSymbol } = useLeaguesChainInfo();
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h5'>
@@ -74,7 +75,7 @@ function CardGameProgressSkeleton(): JSX.Element {
             style={{color: '#fcc591', alignItems: 'baseline'}}>
             <SendIcon />
             <Skeleton>
-              &nbsp;{'0'} {'MATIC'}
+              &nbsp;{'0'} {coinSymbol}
             </Skeleton>
           </Typography>
         </Grid>
@@ -126,7 +127,7 @@ function CardGameProgressSkeleton(): JSX.Element {
             <IntlMessages id='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>
               {' '}
-              <Skeleton>{100} Matic </Skeleton>
+              <Skeleton>{100}  {coinSymbol} </Skeleton>
             </Typography>
           </Typography>
         </Grid>

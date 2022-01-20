@@ -48,6 +48,7 @@ export const update = (
   room: string,
   id: string,
   account: string,
+  chainId: ChainId = ChainId.Matic
 ) => {
   const headers = new Headers({
     'content-type': 'application/json',
@@ -64,6 +65,7 @@ export const update = (
       title: data.title,
       description: data.description,
       smallDescription: data.smallDescription,
+      chainId: chainId
     }),
   };
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
@@ -76,6 +78,7 @@ export const remove = (
   room: string,
   id: string,
   account: string,
+  chainId: ChainId = ChainId.Matic
 ) => {
   const headers = new Headers({
     'content-type': 'application/json',
@@ -92,6 +95,7 @@ export const remove = (
       title: data.title,
       description: data.description,
       smallDescription: data.smallDescription,
+      chainId: chainId
     }),
   };
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);

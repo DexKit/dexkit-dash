@@ -32,6 +32,7 @@ interface CallbackProps {
 export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
   const { room } = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame() || isNFT;
+  const { chainFromSearchName } = useLeaguesChainInfo();
 
   const enterGameRoute = useCallback(
     (address: string) => {
@@ -41,11 +42,16 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
         if (isNFTGame) {
           return `${COINLEAGUENFT_ROUTE}/${address}`;
         } else {
-          return `${COINSLEAGUE_ROUTE}/${address}`;
+          if(chainFromSearchName ){
+            return `${COINSLEAGUE_ROUTE}/${address}?network=${chainFromSearchName}`;
+          }else{
+            return `${COINSLEAGUE_ROUTE}/${address}`;
+          } 
+         
         }
       }
     },
-    [room, isNFTGame],
+    [room, isNFTGame, chainFromSearchName],
   );
 
   const activeGamesRoute = useMemo(() => {
@@ -55,10 +61,14 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}/active-games`;
       } else {
-        return `${COINSLEAGUE_ROUTE}/active-games`;
+        if(chainFromSearchName){
+         return `${COINSLEAGUE_ROUTE}/active-games?network=${chainFromSearchName}`;
+        }else{
+          return `${COINSLEAGUE_ROUTE}/active-games`;
+        }
       }
     }
-  }, [room, isNFTGame]);
+  }, [room, isNFTGame, chainFromSearchName]);
 
   const listGamesRoute = useMemo(() => {
     if (room) {
@@ -67,10 +77,14 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}`;
       } else {
-        return `${COINSLEAGUE_ROUTE}`;
+        if(chainFromSearchName){
+         return `${COINSLEAGUE_ROUTE}?network=${chainFromSearchName}`;
+        }else{
+          return `${COINSLEAGUE_ROUTE}`;
+        }
       }
     }
-  }, [room, isNFTGame]);
+  }, [room, isNFTGame, chainFromSearchName]);
 
   return {
     enterGameRoute,

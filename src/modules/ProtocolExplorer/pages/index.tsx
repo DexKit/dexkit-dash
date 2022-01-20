@@ -106,23 +106,20 @@ const Explorer: React.FC<TokenProps> = (props) => {
     data: tokenMarket,
     priceQuote,
   } = useTokenMarket(networkName, EXCHANGE.ALL, tokenInfo);
-  console.log(tokenMarket);
-  console.log(tokenInfo);
+  const searchNetwork = searchParams.get('network');
 
-
-  /* eslint-disable */
   useEffect(() => {
-    if (searchParams.get('network') !== networkName) {
+    if (searchNetwork !== networkName) {
       setNetworkName(
-        (searchParams.get('network') as EthereumNetwork) ??
+        (searchNetwork as EthereumNetwork) ??
           EthereumNetwork.ethereum,
       );
     }
-  }, [history.location.search]);
+  }, [searchNetwork, networkName]);
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-  const {data, loading, error} = useCoingeckoTokenInfo(address, networkName);
+  const {data} = useCoingeckoTokenInfo(address, networkName);
 
   const onMakeFavorite = () => {
     if (tokenInfo && data) {
@@ -189,7 +186,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
     } else {
       history.push(`/explorer/${token.address}?network=${token?.networkName}`);
     }
-  }, []);
+  }, [history]);
 
   const handleEthereum = useCallback(() => {
     history.push(
@@ -209,7 +206,7 @@ const Explorer: React.FC<TokenProps> = (props) => {
 
   const handleGoBack = useCallback(() => {
     history.push('/wallet');
-  }, []);
+  }, [history]);
 
   return (
     <>

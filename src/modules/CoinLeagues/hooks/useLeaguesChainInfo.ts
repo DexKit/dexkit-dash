@@ -16,13 +16,18 @@ export const useLeaguesChainInfo = () => {
     ChainId.Matic : searchParams.get('network') === EthereumNetwork.bsc ? 
     ChainId.Binance : null;
     const chainId = GET_LEAGUES_CHAIN_ID(chainFromSearch || walletChainId);
+    const chainFromSearchName = 
+    searchParams.get('network') === EthereumNetwork.matic ? 
+    EthereumNetwork.matic : searchParams.get('network') === EthereumNetwork.bsc ? 
+    EthereumNetwork.bsc : null;
 
     const coinSymbol = GET_CHAIN_NATIVE_COIN(chainId);
 
 
     return {
         coinSymbol,
-        chainId: chainId
+        chainId: chainId,
+        chainFromSearchName
     }
 
 

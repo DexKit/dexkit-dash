@@ -7,6 +7,8 @@ import { useHistory } from "react-router-dom";
 import { EthereumNetwork } from "shared/constants/AppEnums";
 import { GET_CHAIN_ID_NAME } from "shared/constants/Blockchain";
 import { ChainId } from "types/blockchain";
+import { Tooltip } from '@material-ui/core';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 
 
@@ -28,7 +30,7 @@ export const ChainSelect = () => {
 
 
     return (
-
+        <Tooltip title={  <IntlMessages id='app.coinLeagues.chainSelected' values={{chainName: `${GET_CHAIN_ID_NAME(chainId)}`}}/>}>
         <FormControl>
             <Select
                 variant='outlined'
@@ -38,7 +40,8 @@ export const ChainSelect = () => {
                 <MenuItem value={ChainId.Matic}>{GET_CHAIN_ID_NAME(ChainId.Matic)} </MenuItem>
                 <MenuItem value={ChainId.Binance}>{GET_CHAIN_ID_NAME(ChainId.Binance)}</MenuItem>
             </Select>
-        </FormControl>)
+        </FormControl>
+        </Tooltip>)
 
 
 }

@@ -13,7 +13,9 @@
   "dashboard.swap.info": "In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.",
   "shared.copiedClipboard": "Copied to clipboard!",
   "app.coinLeagues.maxPrizePool": "Max Prize Pool",
-
+  "app.coinLeagues.chainSelected": "Coinleague on {chainName}",
+  "app.coinLeagues.champion": "Champion",
+  "app.coinLeagues.countdownToStart" : "Countdown to Start",
   "app.coinLeagues.waitingWallet": "Waiting Wallet",
   "app.coinLeagues.warning.createGame": "Create Game",
   "app.coinLeagues.error": "Error",
@@ -327,6 +329,7 @@
   "app.dashboard.wallet.accounts.firstAccountIsDefault": "The first account is the default. You can change clicking at the home button in other accounts.",
   "app.dashboard.wallet.accounts.connectWallet": "Connect Wallet in case you need to interact with the network.",
   "app.dashboard.overview": "Overview",
+  "app.protocolExplorer.pairAnalytics": "Pair Analytics",
   "app.protocolExplorer.wallet": "Wallet",
   "app.protocolExplorer.timestamp": "Timestamp",
   "app.protocolExplorer.type": "Type",

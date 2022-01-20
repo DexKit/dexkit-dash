@@ -23,8 +23,6 @@ import ViewGameMetadataModal from '../ViewGameMetadataModal';
 import IconButton from '@material-ui/core/IconButton';
 import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
 import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +68,7 @@ interface Props {
 function CardGame(props: Props): JSX.Element {
   const { game, onClick } = props;
   const classes = useStyles();
-  const { chainId } = useLeaguesChainInfo();
+  const { chainId, coinSymbol } = useLeaguesChainInfo();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -151,7 +149,7 @@ function CardGame(props: Props): JSX.Element {
                   </Typography>
                   <Typography
                     style={{ color: '#fcc591', alignItems: 'baseline' }}>
-                    &nbsp;{entryAmount}  {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+                    &nbsp;{entryAmount}  {coinSymbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -163,10 +161,10 @@ function CardGame(props: Props): JSX.Element {
             display={'flex'}
             justifyContent='flex-end'
             style={{ color: '#7a8398' }}>
-            <Typography variant='h6'>
-              <IntlMessages id='app.coinLeagues.gameTime' />
+            <Typography variant='subtitle2'>
+              <IntlMessages id='app.coinLeagues.gameTime' />:
             </Typography>
-            <Typography variant='h6' style={{ fontWeight: 500 }}>
+            <Typography variant='subtitle2' style={{ fontWeight: 500 }}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
@@ -174,13 +172,13 @@ function CardGame(props: Props): JSX.Element {
             display={'flex'}
             justifyContent='flex-end'
             style={{ color: '#7a8398' }}>
-            <Typography variant='h6'>
+            <Typography variant='subtitle2'>
               {' '}
               &nbsp;
               <IntlMessages id='app.coinLeagues.type' />:
             </Typography>
             <Typography
-              variant='h6'
+              variant='subtitle2'
               style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
               &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
@@ -223,7 +221,7 @@ function CardGame(props: Props): JSX.Element {
             <IntlMessages id='app.coinLeagues.maxPrizePool' />
           </Typography>
           <Typography variant='subtitle2'>
-            {prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+            {prizeTotalValue} {coinSymbol}
           </Typography>
         </Grid>
       </Grid>

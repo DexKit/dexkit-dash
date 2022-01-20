@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CardPrizeSkeleton(): JSX.Element {
   const classes = useStyles();
-
+  const { coinSymbol } = useLeaguesChainInfo();
   return (
     <Container className={classes.container}>
       <Grid container className={classes.innerContent}>
@@ -34,7 +35,7 @@ function CardPrizeSkeleton(): JSX.Element {
             <IntlMessages id='app.coinLeagues.maxPrizePool' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
-            <Skeleton>- MATIC</Skeleton>
+            <Skeleton>- {coinSymbol}</Skeleton>
           </Typography>
         </Grid>
       </Grid>

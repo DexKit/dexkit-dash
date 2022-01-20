@@ -12,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {truncateAddress} from 'utils/text';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -56,7 +57,7 @@ function CardTimer(props: {time: number}) {
 
 function SmallCardGameSkeleton(): JSX.Element {
   const classes = useStyles();
-
+  const {  coinSymbol } = useLeaguesChainInfo();
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Grid container className={classes.innerContent}>
@@ -78,7 +79,7 @@ function SmallCardGameSkeleton(): JSX.Element {
                 alignItems: 'baseline',
               }}>
               <Skeleton>
-                &nbsp;{0} {'Matic'}
+                &nbsp;{0} {coinSymbol}
               </Skeleton>
             </Typography>
           </Box>
@@ -91,7 +92,7 @@ function SmallCardGameSkeleton(): JSX.Element {
               :&nbsp;
             </Typography>
             <Skeleton>
-              <Typography variant='h6'>{1000} Matic</Typography>
+              <Typography variant='h6'>{1000} {coinSymbol}</Typography>
             </Skeleton>
           </Box>
         </Grid>
