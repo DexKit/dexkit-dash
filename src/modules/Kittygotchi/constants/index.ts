@@ -24,7 +24,7 @@ export const GET_KITTY_CHAIN_ID = (chainId?: ChainId) => {
 export const KITTYGOTCHI = {
   [ChainId.Matic]: '0xEA88540adb1664999524d1a698cb84F6C922D2A1',
   [ChainId.Mumbai]: '0xbdd0C521aBb19fA863917e2C807f327957D239ff',
-  [ChainId.Binance]: '0xa6AC5f4Cb773635Cde7152151085E2d73b79c154',
+  [ChainId.Binance]: '0xf44112926506318e3Aace4381B2D76791D980Ac3',
 };
 
 export const GET_KITTYGOTCHI_CONTRACT_ADDR = (chainId?: number) => {
