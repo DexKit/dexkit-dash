@@ -134,12 +134,6 @@ export function getKittygotchiMetadataEndpoint(
       }eth/`;
     }
 
-    if (chainId === ChainId.Matic) {
-      return `${KITTYGOTCHI_METADATA_ENDPOINT}${
-        prefix ? prefix + '/' : ''
-      }matic/`;
-    }
-
     if (chainId === ChainId.Binance) {
       return `${KITTYGOTCHI_METADATA_ENDPOINT}${
         prefix ? prefix + '/' : ''
