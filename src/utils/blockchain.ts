@@ -190,6 +190,8 @@ export function hasLondonHardForkSupport(chainId: number) {
     case ChainId.Mainnet:
     case ChainId.Goerli:
     case ChainId.Kovan:
+    case ChainId.Matic:
+    case ChainId.Mumbai:
       return true;
 
     default:

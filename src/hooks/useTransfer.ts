@@ -1,15 +1,15 @@
-import {getContractToken} from 'services/transfer-token';
-import {fromTokenUnitAmount} from '@0x/utils';
-import {Currency} from 'types/myApps';
-import {useDispatch} from 'react-redux';
-import {onAddNotification} from 'redux/actions';
-import {NotificationType} from 'services/notification';
-import {isNativeCoinV2, truncateAddress} from 'utils';
-import {ChainId} from 'types/blockchain';
-import {useWeb3} from './useWeb3';
-import {Notification} from 'types/models/Notification';
+import { getContractToken } from 'services/transfer-token';
+import { fromTokenUnitAmount } from '@0x/utils';
+import { Currency } from 'types/myApps';
+import { useDispatch } from 'react-redux';
+import { onAddNotification } from 'redux/actions';
+import { NotificationType } from 'services/notification';
+import { isNativeCoinV2, truncateAddress } from 'utils';
+import { ChainId } from 'types/blockchain';
+import { useWeb3 } from './useWeb3';
+import { Notification } from 'types/models/Notification';
 
-import {useCustomNetworkList} from 'hooks/network';
+import { useCustomNetworkList } from 'hooks/network';
 
 export enum Web3Status {
   Not_Connected,
@@ -19,9 +19,9 @@ export enum Web3Status {
 }
 
 export const useTransfer = () => {
-  const {chainId, getWeb3} = useWeb3();
+  const { chainId, getWeb3 } = useWeb3();
 
-  const {networks} = useCustomNetworkList();
+  const { networks } = useCustomNetworkList();
 
   const dispatch = useDispatch();
 
@@ -51,7 +51,7 @@ export const useTransfer = () => {
         )
       ) {
         web3.eth
-          .sendTransaction({from, to, value: amountFn.toString()})
+          .sendTransaction({ from, to, value: amountFn.toString() })
           .once('transactionHash', (hash: string) => {
             const notification: Notification = {
               title: 'Processing',
@@ -78,11 +78,12 @@ export const useTransfer = () => {
             reject(error.message);
           });
       } else {
+
         const contract = getContractToken(currency.address, web3);
 
         contract.methods
           .transfer(to, amountFn.toString())
-          .send({from: from})
+          .send({ from: from })
           .then((tx: string) => {
             const notification: Notification = {
               title: 'Send',
@@ -103,5 +104,5 @@ export const useTransfer = () => {
     });
   };
 
-  return {onTransfer};
+  return { onTransfer };
 };

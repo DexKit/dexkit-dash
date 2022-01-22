@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -10,22 +10,22 @@ import {
   Link,
   Typography,
 } from '@material-ui/core';
-import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import {SupportedNetworkType} from 'types/blockchain';
+import { SupportedNetworkType } from 'types/blockchain';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { HOME_ROUTE, LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {setDefaultAccount} from 'redux/_ui/actions';
-import {useDispatch} from 'react-redux';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { useDispatch } from 'react-redux';
 
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
@@ -37,13 +37,16 @@ import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
 
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { RoomType } from 'modules/CoinLeagues/constants/enums';
+
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+
 
 const MyGames = () => {
   const history = useHistory();
-  const {account} = useWeb3();
-  const {tokenSymbol} = useChainInfo();
+  const { account } = useWeb3();
+  const { coinSymbol } = useLeaguesChainInfo();
 
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
@@ -53,7 +56,7 @@ const MyGames = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
 
   // TODO: We are doing this to user see connected account
   useEffect(() => {
@@ -93,7 +96,7 @@ const MyGames = () => {
         <Grid item xs={12}>
           <img
             src={CoinsLeagueBanner}
-            style={{borderRadius: '12px'}}
+            style={{ borderRadius: '12px' }}
             alt={'Coinleague Banner'}
           />
         </Grid>
@@ -116,6 +119,9 @@ const MyGames = () => {
               </Select>
             </FormControl>
           </Box>
+          <Box p={2}>
+                <ChainSelect />
+            </Box>
         </Box>
       </Grid>
       <Grid item xs={6} sm={6} xl={6}>
@@ -123,8 +129,8 @@ const MyGames = () => {
           <SwapButton />
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={`Buy ${tokenSymbol}`}
-              defaultCurrency={tokenSymbol}
+              btnMsg={`Buy ${coinSymbol}`}
+              defaultCurrency={coinSymbol}
             />
           </Box>
           <Box pr={2}>
@@ -149,7 +155,7 @@ const MyGames = () => {
         <Grid item xs={12} sm={8}>
           <img
             src={CoinsLeagueBanner}
-            style={{borderRadius: '12px'}}
+            style={{ borderRadius: '12px' }}
             alt={'Coinleague Banner'}
           />
         </Grid>

@@ -15,23 +15,23 @@ import {
   Collapse,
 } from '@material-ui/core';
 
-import {estimateFees} from '@mycrypto/gas-estimation';
+import { estimateFees } from '@mycrypto/gas-estimation';
 
-import React, {useCallback, useState, useEffect, ChangeEvent} from 'react';
+import React, { useCallback, useState, useEffect, ChangeEvent } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import {ReceiptTextIcon} from './Icons';
-import {useNetwork} from 'hooks/useNetwork';
-import {GET_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {GetNativeCoinFromNetworkName, truncateAddress} from 'utils';
+import { ReceiptTextIcon } from './Icons';
+import { useNetwork } from 'hooks/useNetwork';
+import { GET_NETWORK_NAME } from 'shared/constants/Bitquery';
+import { GetNativeCoinFromNetworkName, truncateAddress } from 'utils';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import {ExpandLess} from '@material-ui/icons';
-import {BigNumber, ethers} from 'ethers';
-import {useWeb3} from 'hooks/useWeb3';
-import {Web3State} from 'types/blockchain';
-import {hasLondonHardForkSupport} from 'utils/blockchain';
-import {useNativeCoinPriceUSD} from 'hooks/useNativeCoinPriceUSD';
-import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
-import {Alert} from '@material-ui/lab';
+import { ExpandLess } from '@material-ui/icons';
+import { BigNumber, ethers } from 'ethers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { Web3State } from 'types/blockchain';
+import { hasLondonHardForkSupport } from 'utils/blockchain';
+import { useNativeCoinPriceUSD } from 'hooks/useNativeCoinPriceUSD';
+import { useActiveChainBalance } from 'hooks/balance/useActiveChainBalance';
+import { Alert } from '@material-ui/lab';
 
 interface TransactionConfirmDialogProps extends DialogProps {
   data?: any;
@@ -49,7 +49,7 @@ interface ValuesType {
 export const TransactionConfirmDialog = (
   props: TransactionConfirmDialogProps,
 ) => {
-  const {data, onCancel, onConfirm} = props;
+  const { data, onCancel, onConfirm } = props;
 
   const [isInsufficientFunds, setIsInsufficientFunds] = useState(false);
 
@@ -62,7 +62,7 @@ export const TransactionConfirmDialog = (
     }
   }, [onCancel]);
 
-  const {web3State, getProvider, chainId, account} = useWeb3();
+  const { web3State, getProvider, chainId, account } = useWeb3();
 
   // const isEIP1559Transaction = useCallback(() => {
   //   if (data) {
@@ -80,9 +80,8 @@ export const TransactionConfirmDialog = (
 
   const handleConfirm = useCallback(() => {
     if (onConfirm) {
-      let dataCopy = {...data};
-      let params = {...data.params[0]};
-
+      let dataCopy = { ...data };
+      let params = { ...data.params[0] };
       params.gas = values.gasLimit?.toHexString();
 
       if (chainId && hasLondonHardForkSupport(chainId)) {
@@ -101,7 +100,7 @@ export const TransactionConfirmDialog = (
 
   const network = useNetwork();
 
-  const {balance} = useActiveChainBalance();
+  const { balance } = useActiveChainBalance();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -194,7 +193,7 @@ export const TransactionConfirmDialog = (
         cost = parseFloat(
           ethers.utils.formatEther(
             values.gasLimit?.mul(values.gasPrice || ethers.BigNumber.from(0)) ||
-              BigNumber.from(0),
+            BigNumber.from(0),
           ),
         );
       }
@@ -218,7 +217,7 @@ export const TransactionConfirmDialog = (
                 <ReceiptTextIcon />
               </Typography>
             </Box>
-            <Typography variant='body1' style={{fontWeight: 500}}>
+            <Typography variant='body1' style={{ fontWeight: 500 }}>
               Confirm transaction
             </Typography>
           </Box>
@@ -374,7 +373,7 @@ export const TransactionConfirmDialog = (
         <Button
           disabled={
             Number(ethers.utils.formatEther(balance || '0')) <
-              gasCost(values) || gasCost(values) === 0
+            gasCost(values) || gasCost(values) === 0
           }
           onClick={handleConfirm}
           color='primary'

@@ -1,4 +1,5 @@
 import {useQuery} from '@apollo/client';
+import { ChainId } from 'types/blockchain';
 import {POLL_INTERVAL_GAMES} from '../constants';
 import {
   GET_RANKING_MOST_EARNED,
@@ -6,39 +7,39 @@ import {
   GET_RANKING_MOST_WINNED,
   GET_RANKING_MOST_PROFIT,
 } from '../services/gql/ranking';
-import {client, nftClient} from '../services/graphql';
+import { getGraphClient } from '../services/graphql';
 import {PlayerGraph} from '../utils/types';
 
-export const useRankingMostWinned = (isNFTGame = false) => {
+export const useRankingMostWinned = (isNFTGame = false, chainId = ChainId.Matic) => {
   const query = useQuery<{players: PlayerGraph[]}>(GET_RANKING_MOST_WINNED, {
-    client: isNFTGame ? nftClient: client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
   return query;
 };
 
-export const useRankingMostJoined = (isNFTGame = false) => {
+export const useRankingMostJoined = (isNFTGame = false,  chainId = ChainId.Matic) => {
   const query = useQuery<{players: PlayerGraph[]}>(GET_RANKING_MOST_JOINED, {
-    client: isNFTGame ? nftClient: client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
   return query;
 };
 
-export const useRankingMostEarned = (isNFTGame = false) => {
+export const useRankingMostEarned = (isNFTGame = false,  chainId = ChainId.Matic) => {
   const query = useQuery<{players: PlayerGraph[]}>(GET_RANKING_MOST_EARNED, {
-    client: isNFTGame ? nftClient: client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 
   return query;
 };
 
-export const useRankingMostProfit = (isNFTGame = false) => {
+export const useRankingMostProfit = (isNFTGame = false, chainId = ChainId.Matic) => {
   const query = useQuery<{players: PlayerGraph[]}>(GET_RANKING_MOST_PROFIT, {
-    client: isNFTGame ? nftClient: client,
+    client:  getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 

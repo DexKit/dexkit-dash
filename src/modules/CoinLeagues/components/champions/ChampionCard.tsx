@@ -15,7 +15,7 @@ import {getNormalizedUrl} from 'utils/browser';
 import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
 import {OpenSeaIcon} from 'shared/components/Icons';
 
-import {useWeb3} from 'hooks/useWeb3';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {CHAMPIONS} from 'modules/CoinLeagues/constants';
 import Tooltip from '@material-ui/core/Tooltip';
 import Box from '@material-ui/core/Box';
@@ -57,7 +57,7 @@ export const ChampionCard = (props: ChampionCardProps) => {
 
   const classes = useStyles();
 
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
 
   return (
     <Card className={classes.card}>

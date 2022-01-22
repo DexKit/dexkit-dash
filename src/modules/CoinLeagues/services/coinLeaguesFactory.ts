@@ -29,7 +29,7 @@ export const getCoinLeaguesFactoryContractWithNetworkProvider = async (address: 
 
 
 
-const GAS_PRICE_MULTIPLIER = 2;
+const GAS_PRICE_MULTIPLIER = 1;
 export const createGame = async (
   address: string,
   params: GameParams,

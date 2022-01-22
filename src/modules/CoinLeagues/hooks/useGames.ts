@@ -1,6 +1,6 @@
-import {useQuery} from '@apollo/client';
-import {useEffect} from 'react';
-import {POLL_INTERVAL_GAMES} from '../constants';
+import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
+import { POLL_INTERVAL_GAMES } from '../constants';
 import {
   CoinLeagueGameStatus,
   GameDuration,
@@ -9,23 +9,24 @@ import {
   NumberOfPLayers,
 } from '../constants/enums';
 
-import {client, nftClient} from '../services/graphql';
+import { getGraphClient } from '../services/graphql';
 import {
   getGamesQuery,
   GET_GAME_LEVEL_AMOUNTS,
   GET_GAME_ORDER_VARIABLES,
 } from '../utils/game';
-import {GET_DURATION_FROM_FILTER_V2} from '../utils/time';
-import {GameGraph} from '../utils/types';
+import { GET_DURATION_FROM_FILTER_V2 } from '../utils/time';
+import { GameGraph } from '../utils/types';
 import { useIsNFTGame } from './useCoinLeaguesFactory';
-import {GameFiltersState} from './useGamesFilter';
+import { GameFiltersState } from './useGamesFilter';
+import { useLeaguesChainInfo } from './useLeaguesChainInfo';
 
 interface GamesFilterParams {
   accounts?: string[];
   filters?: GameFiltersState;
 }
 
-export const usePlayerGames = () => {};
+export const usePlayerGames = () => { };
 
 export interface CoinLeagueGamesParams extends GamesFilterParams {
   status: string;
@@ -35,7 +36,9 @@ export interface CoinLeagueGamesParams extends GamesFilterParams {
 }
 
 export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false) => {
-  const {accounts, filters, status, first, skip, player} = params;
+  const { chainId } = useLeaguesChainInfo();
+
+  const { accounts, filters, status, first, skip, player } = params;
   const isNFTGame = useIsNFTGame() || isNFT;
 
   const variables: any = {};
@@ -69,7 +72,7 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false)
 
   if (filters?.gameLevel !== GameLevel.All) {
     let entryAmount = GET_GAME_LEVEL_AMOUNTS(
-      filters?.gameLevel || GameLevel.All,
+      filters?.gameLevel || GameLevel.All, chainId
     ).toString();
 
     variables.entry = entryAmount;
@@ -82,7 +85,7 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false)
   if (filters?.gameType !== GameType.ALL) {
     if (filters?.gameType === GameType.Bull) {
       variables.type = 'Bull';
-    } else if(filters?.gameType === GameType.Bear) {
+    } else if (filters?.gameType === GameType.Bear) {
       variables.type = 'Bear';
     }
   }
@@ -99,9 +102,9 @@ export const useCoinLeagueGames = (params: CoinLeagueGamesParams, isNFT = false)
 
   let gqlQuery = getGamesQuery(variables);
 
-  const query = useQuery<{games: GameGraph[]}>(gqlQuery, {
+  const query = useQuery<{ games: GameGraph[] }>(gqlQuery, {
     variables,
-    client: isNFTGame ? nftClient: client,
+    client: getGraphClient(isNFTGame, chainId),
     pollInterval: POLL_INTERVAL_GAMES,
   });
 

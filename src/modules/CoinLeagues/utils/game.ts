@@ -1,12 +1,13 @@
-import {BigNumber} from '@ethersproject/bignumber';
-import {ethers} from 'ethers';
-import {BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS} from '../constants';
+import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
+import { BITBOY_TEAM, CREATOR_ADDRESSES, CREATOR_LABELS } from '../constants';
 import {
   GameLevel,
   GameOrderBy,
   GameOrderByLabels,
 } from 'modules/CoinLeagues/constants/enums';
-import {gql} from 'graphql-tag';
+import { gql } from 'graphql-tag';
+import { ChainId } from 'types/blockchain';
 
 export const isGameCreator = (address?: string) => {
   if (!address) {
@@ -33,7 +34,7 @@ export const GET_CREATOR_LABELS = (address?: string) => {
   const creator = CREATOR_LABELS.find(
     (a) => a.address.toLowerCase() === address.toLowerCase(),
   );
-  if(creator){
+  if (creator) {
     return creator.label;
   }
 };
@@ -92,70 +93,133 @@ export const GET_GAME_ORDER_OPTIONS = () => {
 
 export const GET_GAME_ORDER_LABELS_OPTIONS = () => {
   return [
-    {value: GameOrderByLabels.Level, label: 'Level'},
-    {value: GameOrderByLabels.Duration, label: 'Duration'},
-    {value: GameOrderByLabels.PlayersNeeded, label: 'Players Needed'},
-    {value: GameOrderByLabels.NumberOfCoins, label: 'Number Of Coins'},
+    { value: GameOrderByLabels.Level, label: 'Level' },
+    { value: GameOrderByLabels.Duration, label: 'Duration' },
+    { value: GameOrderByLabels.PlayersNeeded, label: 'Players Needed' },
+    { value: GameOrderByLabels.NumberOfCoins, label: 'Number Of Coins' },
   ];
 };
 
 export const GET_GAME_ORDER_VARIABLES = (orderBy?: GameOrderBy) => {
   switch (orderBy) {
     case GameOrderBy.HighLevel:
-      return {orderBy: 'entry', orderDirection: 'desc'};
+      return { orderBy: 'entry', orderDirection: 'desc' };
     case GameOrderBy.LowLevel:
-      return {orderBy: 'entry', orderDirection: 'asc'};
+      return { orderBy: 'entry', orderDirection: 'asc' };
     case GameOrderBy.AboutStart:
-      return {orderBy: 'startsAt', orderDirection: 'asc'};
+      return { orderBy: 'startsAt', orderDirection: 'asc' };
     case GameOrderBy.MostFull:
-      return {orderBy: 'currentPlayers', orderDirection: 'desc'};
+      return { orderBy: 'currentPlayers', orderDirection: 'desc' };
     case GameOrderBy.MostEmpty:
-      return {orderBy: 'currentPlayers', orderDirection: 'asc'};
+      return { orderBy: 'currentPlayers', orderDirection: 'asc' };
     case GameOrderBy.HighDuration:
-      return {orderBy: 'duration', orderDirection: 'desc'};
+      return { orderBy: 'duration', orderDirection: 'desc' };
     case GameOrderBy.LowerDuration:
-      return {orderBy: 'duration', orderDirection: 'asc'};
+      return { orderBy: 'duration', orderDirection: 'asc' };
     case GameOrderBy.MoreCoins:
-      return {orderBy: 'numCoins', orderDirection: 'desc'};
+      return { orderBy: 'numCoins', orderDirection: 'desc' };
     case GameOrderBy.LessCoins:
-      return {orderBy: 'numCoins', orderDirection: 'asc'};
+      return { orderBy: 'numCoins', orderDirection: 'asc' };
     default:
-      return {orderBy: 'entry', orderDirection: 'desc'};
+      return { orderBy: 'entry', orderDirection: 'desc' };
   }
 };
 
-export const GET_GAME_LEVEL = (entry: BigNumber) => {
+export const GET_GAME_LEVEL = (entry: BigNumber, chainId = ChainId.Matic) => {
 
-
-    if(entry.lt(ethers.utils.parseEther('5'))){
-        return 'Beginner'
-    }else if(entry.lt(ethers.utils.parseEther('10'))){
-        return 'Intermediate'
-    }else if(entry.lt(ethers.utils.parseEther('50'))){
-        return 'Advanced'
-    }else if(entry.lt(ethers.utils.parseEther('100'))){
-        return 'Expert'
-    }else if(entry.lt(ethers.utils.parseEther('500'))){
-        return 'Master'
-    }else{
-        return 'Grand Master'
+  if (chainId === ChainId.Binance) {
+    if (entry.lt(ethers.utils.parseEther('0.01'))) {
+      return 'Beginner'
+    } else if (entry.lt(ethers.utils.parseEther('0.05'))) {
+      return 'Intermediate'
+    } else if (entry.lt(ethers.utils.parseEther('0.1'))) {
+      return 'Advanced'
+    } else if (entry.lt(ethers.utils.parseEther('0.3'))) {
+      return 'Expert'
+    } else if (entry.lt(ethers.utils.parseEther('1'))) {
+      return 'Master'
+    } else {
+      return 'Grand Master'
     }
+  }
+
+  if (entry.lt(ethers.utils.parseEther('5'))) {
+    return 'Beginner'
+  } else if (entry.lt(ethers.utils.parseEther('10'))) {
+    return 'Intermediate'
+  } else if (entry.lt(ethers.utils.parseEther('50'))) {
+    return 'Advanced'
+  } else if (entry.lt(ethers.utils.parseEther('100'))) {
+    return 'Expert'
+  } else if (entry.lt(ethers.utils.parseEther('500'))) {
+    return 'Master'
+  } else {
+    return 'Grand Master'
+  }
 };
 
-export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel) => {
+export const GET_GAME_LEVEL_AMOUNTS_UNITS = (gameLevel: GameLevel, chainId = ChainId.Matic) => {
+  return ethers.utils.formatEther(GET_GAME_LEVEL_AMOUNTS(gameLevel, chainId))
+};
+
+export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.Matic) => {
   switch (gameLevel) {
     case GameLevel.Beginner:
-      return ethers.utils.parseEther('1');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('1')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('0.0001')
+        default:
+          return ethers.utils.parseEther('1')
+      }
+
     case GameLevel.Intermediate:
-      return ethers.utils.parseEther('5');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('5')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('0.05')
+        default:
+          return ethers.utils.parseEther('5')
+      }
+
     case GameLevel.Advanced:
-      return ethers.utils.parseEther('10');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('10')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('0.1')
+        default:
+          return ethers.utils.parseEther('10')
+      }
     case GameLevel.Expert:
-      return ethers.utils.parseEther('50');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('50')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('0.3')
+        default:
+          return ethers.utils.parseEther('50')
+      }
     case GameLevel.Master:
-      return ethers.utils.parseEther('250');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('250')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('1')
+        default:
+          return ethers.utils.parseEther('250')
+      }
     case GameLevel.GrandMaster:
-      return ethers.utils.parseEther('500');
+      switch (chainId) {
+        case ChainId.Matic:
+          return ethers.utils.parseEther('500')
+        case ChainId.Binance:
+          return ethers.utils.parseEther('2')
+        default:
+          return ethers.utils.parseEther('500')
+      }
     default:
       return ethers.utils.parseEther('0');
   }

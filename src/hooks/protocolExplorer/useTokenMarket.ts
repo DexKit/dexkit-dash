@@ -13,6 +13,7 @@ import {
 } from 'services/graphql/bitquery/protocol/__generated__/GetTokenSingleExplorer';
 import useInterval from 'hooks/useInterval';
 import {getLast24HoursDate} from 'utils/time_utils';
+import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 
 type TokenMarket = {
   volume24Usd: number;
@@ -27,6 +28,7 @@ export const useTokenMarket = (
 ) => {
   const [seconds, setSeconds] = useState(0);
   const [data, setData] = useState<TokenMarket>();
+  const chainId = GET_CHAIN_FROM_NETWORK(networkName);
 
   const {
     priceQuote,
@@ -39,6 +41,7 @@ export const useTokenMarket = (
     1,
     token?.decimals,
     seconds === 0,
+    chainId
   );
 
   const [yesterday, setYesterday] = useState<Date>(getLast24HoursDate());

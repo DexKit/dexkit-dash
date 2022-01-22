@@ -5,6 +5,7 @@ export type MyBalances = GetAllMyBalance_ethereum_address_balances & {
   network: EthereumNetwork;
   price24hPercentage?: number;
   logoURI?: string;
+  chainId?: ChainId
 };
 
 export enum ChainId {

@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {useWeb3} from 'hooks/useWeb3';
 
 import {getTokens} from 'services/rest/coingecko';
-import {MyBalances, Web3State} from 'types/blockchain';
+import {ChainId, MyBalances, Web3State} from 'types/blockchain';
 import {useQuery} from 'react-query';
 import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
 import {getAllBitqueryBalances} from 'services/bitquery/balances';
@@ -48,7 +48,7 @@ export const useAllBalance = (defaultAccount?: string) => {
       if (account) {
         // we use this to be able to test applications on Ropsten testnet
 
-        if (chainId && web3State === Web3State.Done) {
+        if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
           const pr = new providers.Web3Provider(getProvider());
 
           const result = await getAllBlockchainBalances(

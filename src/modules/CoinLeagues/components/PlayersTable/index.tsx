@@ -92,7 +92,7 @@ interface Props {
 
 const getIconByCoin = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(
@@ -103,7 +103,7 @@ const getIconByCoin = (
 
 const getIconSymbol = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(

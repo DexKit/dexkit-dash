@@ -12,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {truncateAddress} from 'utils/text';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SimpleCardGameSkeleton(): JSX.Element {
+  const {  coinSymbol } = useLeaguesChainInfo();
   const classes = useStyles();
 
   return (
@@ -61,7 +63,7 @@ function SimpleCardGameSkeleton(): JSX.Element {
               variant='h6'
               style={{color: '#fcc591', fontWeight: 600}}>
               <Skeleton>
-                &nbsp;{1} {'MATIC'}
+                &nbsp;{1} {coinSymbol}
               </Skeleton>
             </Typography>
           </Box>

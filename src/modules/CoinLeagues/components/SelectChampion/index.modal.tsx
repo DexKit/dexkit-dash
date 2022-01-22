@@ -27,7 +27,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 interface Props extends DialogProps {
   title?: string;
-  chainId: ChainId.Matic | ChainId.Mumbai;
+  chainId: ChainId.Matic | ChainId.Mumbai | ChainId.Binance;
   selectedChampion?: ChampionMetaItem;
   onSelectChampion: (champion: ChampionMetaItem) => void;
 }

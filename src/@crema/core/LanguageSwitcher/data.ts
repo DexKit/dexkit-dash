@@ -18,6 +18,12 @@ const languageData: LanguageProps[] = [
     name: 'Espanõl',
     icon: 'es',
   },
+  {
+    languageId: 'portuguese',
+    locale: 'pt',
+    name: 'Português',
+    icon: 'pt',
+  },
   // {
   //   languageId: 'chinese',
   //   locale: 'zh',

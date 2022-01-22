@@ -3,6 +3,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { ChainId } from 'types/blockchain';
+import { BSCPriceFeeds } from './PriceFeeds/bsc';
 
 export const DEXKIT_MULTIPLIER_HOLDING = BigNumber.from(50).mul(
   BigNumber.from(10).pow(18),
@@ -647,10 +648,12 @@ export const MaticPriceFeeds = [
 export const PriceFeeds = {
   [ChainId.Mumbai]: MumbaiPriceFeeds,
   [ChainId.Matic]: MaticPriceFeeds,
+  [ChainId.Binance]: BSCPriceFeeds,
 };
 
 export const CHAMPIONS = {
   [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
+  [ChainId.Binance]: '',
   [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
 };
 
@@ -702,11 +705,13 @@ export const EVENT_HOLDING_AMOUNT: { [key: number]: BigNumber } = {
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xA67B9dBfb1371DEBB7f60B681A74798f014cb007',
   [ChainId.Matic]: '0xc93f920483Db1122D6Fc7f2f832C3610c73C0C8E',
+  [ChainId.Binance]: '0x34C21825ef6Bfbf69cb8748B4587f88342da7aFb',
 };
 
 export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
   [ChainId.Mumbai]: '0xb95051B17C42DE313F40623dB67D4E8087d7AdFA',
   [ChainId.Matic]: '0xeb1eb51AB02C824f0c6F43cEcb91C474E6a0Ef32',
+  [ChainId.Binance]: '',
 };
 
 
@@ -716,4 +721,4 @@ export const AFFILIATE_FIELD = 'league-affiliate';
 
 
 export const GAME_METADATA_API = 'https://coinleague-app-api-yxwk6.ondigitalocean.app'
-//export const GAME_METADATA_API = 'http://localhost:4001'
+// export const GAME_METADATA_API = 'http://localhost:4001'

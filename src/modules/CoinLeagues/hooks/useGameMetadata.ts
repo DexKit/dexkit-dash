@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { RoomType } from "../constants/enums";
 import { getGameMetadata, getGamesMetadata, remove, signUpdate, update } from "../services/gameMetadataApi";
 import { useIsNFTGame } from "./useCoinLeaguesFactory";
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 interface CallbackProps {
     onSubmit?: (hash?: string) => void;
@@ -12,7 +13,8 @@ interface CallbackProps {
 }
 
 export const useGameMetadataUpdater = () => {
-    const { getProvider, chainId, account } = useWeb3();
+    const { getProvider, account } = useWeb3();
+    const { chainId } = useLeaguesChainInfo();
     const isNFT = useIsNFTGame();
     const chainProvider = getProvider();
     const onPostMetadata = useCallback(async (data: any, id: string, callbacks?: CallbackProps) => {

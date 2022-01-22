@@ -1,6 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import {
   Grid,
   Breadcrumbs,
@@ -21,14 +21,15 @@ import {
   useRankingMostEarned,
   useRankingMostProfit,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
-import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import IntlMessages from '../../../../@crema/utility/IntlMessages';
-import {useIntl} from 'react-intl';
-import {ethers} from 'ethers';
-import {useWeb3} from 'hooks/useWeb3';
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { useIntl } from 'react-intl';
+import { ethers } from 'ethers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { RoomType } from 'modules/CoinLeagues/constants/enums';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -40,17 +41,17 @@ enum Tabs {
 export function Ranking() {
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
-  const {tokenSymbol} = useChainInfo();
+  const { coinSymbol, chainId } = useLeaguesChainInfo();
+  const rankingMostWinnedQuery = useRankingMostWinned(isNFT, chainId);
+  const rankingMostJoinedQuery = useRankingMostJoined(isNFT, chainId);
+  const rankingMostEarnedQuery = useRankingMostEarned(isNFT, chainId);
+  const rankingMostProfitQuery = useRankingMostProfit(isNFT, chainId);
 
-  const rankingMostWinnedQuery = useRankingMostWinned(isNFT);
-  const rankingMostJoinedQuery = useRankingMostJoined(isNFT);
-  const rankingMostEarnedQuery = useRankingMostEarned(isNFT);
-  const rankingMostProfitQuery = useRankingMostProfit(isNFT);
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+  const { account } = useWeb3();
 
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
-  const {account} = useWeb3();
   const history = useHistory();
-  const {messages} = useIntl();
+  const { messages } = useIntl();
 
   const [value, setValue] = React.useState(Tabs.MostWinner);
 
@@ -98,6 +99,9 @@ export function Ranking() {
                   </Select>
                 </FormControl>
               </Box>
+              <Box p={2}>
+                <ChainSelect />
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -109,7 +113,7 @@ export function Ranking() {
             onChange={handleChange}
             variant='standard'
             TabIndicatorProps={{
-              style: {display: 'none'},
+              style: { display: 'none' },
             }}
             aria-label='wallet tabs'>
             <CustomTab value={Tabs.MostWinner} label={Tabs.MostWinner} />
@@ -160,7 +164,7 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -199,7 +203,7 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -222,7 +226,7 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={`Earned ${tokenSymbol}:`}
+                      label={`Earned  ${coinSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
@@ -240,7 +244,7 @@ export function Ranking() {
                       count={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -266,7 +270,7 @@ export function Ranking() {
                       featured={
                         player.id.toLowerCase() === account?.toLowerCase()
                       }
-                      label={`Profit ${tokenSymbol}:`}
+                      label={`Profit  ${coinSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
@@ -281,7 +285,7 @@ export function Ranking() {
                       count={Number(
                         ethers.utils.formatEther(player.EarnedMinusSpent),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {makeStyles} from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,7 +30,7 @@ function CountdownSkeleton(): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+             <IntlMessages id='app.coinLeagues.countdownToStart' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <Skeleton>-</Skeleton>

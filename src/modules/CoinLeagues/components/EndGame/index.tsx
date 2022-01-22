@@ -9,7 +9,6 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
-import {useWeb3} from 'hooks/useWeb3';
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
@@ -17,7 +16,9 @@ import {
 import Typography from '@material-ui/core/Typography';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
 
 interface Props {
   id?: string;
@@ -25,8 +26,7 @@ interface Props {
 
 export const EndGame = (props: Props) => {
   const {id} = props;
-  const {chainId} = useWeb3();
-  const {getTransactionScannerUrl} = useChainInfo();
+  const { chainId } = useLeaguesChainInfo();
   const {game, refetch, refetchWinner} = useCoinLeagues(id);
   const [tx, setTx] = useState<string>();
   const {createNotification} = useNotifications();
@@ -101,8 +101,7 @@ export const EndGame = (props: Props) => {
       chainId,
       createNotification,
       id,
-      refetchWinner,
-      getTransactionScannerUrl,
+      refetchWinner
     ],
   );
 

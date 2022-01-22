@@ -91,7 +91,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<HashtagIcon />}
               amount={liquidity}
-              caption={messages['app.protocolExplorer.totalLiquidy'] as string}
+              caption={messages['app.protocolExplorer.totalLiquidity'] as string}
             />
           </Box>
           <Box className={classes.item}>
