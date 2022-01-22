@@ -1,15 +1,15 @@
-import {BigNumber} from '@0x/utils';
-import {isWeth} from './knownTokens';
-import {ChainId} from 'types/blockchain';
+import { BigNumber } from '@0x/utils';
+import { isWeth } from './knownTokens';
+import { ChainId } from 'types/blockchain';
 import Web3 from 'web3';
 import {
   GET_DEFAULT_QUOTE,
   GET_DEFAULT_BASE,
   GET_CHAIN_FROM_NETWORK,
 } from 'shared/constants/Blockchain';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {Token} from 'types/app';
-import {ethers} from 'ethers';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { Token } from 'types/app';
+import { ethers } from 'ethers';
 
 export const tokenAmountInUnitsToBigNumber = (
   amount: BigNumber,
@@ -67,9 +67,14 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
 export const isNativeCoinV2 = (
   symbol: string,
   chainId: ChainId,
-  networks?: {chainId: number; symbol: string}[],
+  networks?: { chainId: number; symbol: string }[],
 ) => {
+
   const isNative = isNativeCoin(symbol, chainId);
+  
+  if (isNative) {
+    return true;
+  }
 
   if (!isNative && networks) {
     const index = networks.findIndex((n) => n.chainId === chainId);
@@ -207,7 +212,7 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
     case ChainId.Binance:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     case ChainId.Matic:
-        return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
   }
 };
 
@@ -225,7 +230,7 @@ export const getNativeCoinWrappedAddressFromNetworkName = (
     case EthereumNetwork.bsc:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     case EthereumNetwork.matic:
-        return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     default:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
   }
@@ -240,7 +245,7 @@ export const getNativeCoinWrappedFromNetworkName = (
     case EthereumNetwork.bsc:
       return 'wbnb';
     case EthereumNetwork.matic:
-        return 'wmatic';
+      return 'wmatic';
     default:
       return 'weth';
   }
@@ -268,7 +273,7 @@ export const GetNativeCoinFromNetworkName = (network: EthereumNetwork) => {
  */
 export const GET_CORRECT_ADDRESS_FROM_NETWORK = (
   network: EthereumNetwork,
-  token?: {symbol?: string | null; address?: string | null} | null,
+  token?: { symbol?: string | null; address?: string | null } | null,
 ) => {
   if (
     token?.address === '-' &&
@@ -302,7 +307,7 @@ export const extractPairFromAddress = (address: string, chainId: ChainId) => {
       quoteAddress = GET_DEFAULT_QUOTE(chainId);
     }
   }
-  return {baseAddress, quoteAddress};
+  return { baseAddress, quoteAddress };
 };
 
 export const extractPairFromAddressFromNetworkName = (
@@ -329,7 +334,7 @@ export const extractPairFromAddressFromNetworkName = (
       quoteAddress = GET_DEFAULT_QUOTE(chainId);
     }
   }
-  return {baseAddress, quoteAddress};
+  return { baseAddress, quoteAddress };
 };
 
 export const GET_TRADE_TOKEN_URL = (
@@ -339,7 +344,7 @@ export const GET_TRADE_TOKEN_URL = (
   return `/${network}/dashboard/token/${address}`;
 };
 
-export const mapTokenBalancesToNetworkTokenBalances = () => {};
+export const mapTokenBalancesToNetworkTokenBalances = () => { };
 const noFoundSrc = require('assets/images/logo-not-found.png');
 const dexkitLogo = require('assets/images/dexkit-logo.png');
 export const getLogoSrcs = (
@@ -369,16 +374,16 @@ export const getLogoSrcs = (
       return networkName === EthereumNetwork.ethereum
         ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
         : networkName === EthereumNetwork.bsc
-        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
-        : networkName === EthereumNetwork.matic
-        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png'
-        : '';
+          ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
+          : networkName === EthereumNetwork.matic
+            ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png'
+            : '';
     }
     if (
       address.toLowerCase() ===
-        (process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN as string).toLowerCase() ||
+      (process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN as string).toLowerCase() ||
       address.toLowerCase() ===
-        (process.env.REACT_APP_DEFAULT_BSC_KIT_TOKEN as string).toLowerCase()
+      (process.env.REACT_APP_DEFAULT_BSC_KIT_TOKEN as string).toLowerCase()
     ) {
       return dexkitLogo;
     }
@@ -386,8 +391,8 @@ export const getLogoSrcs = (
       networkName === EthereumNetwork.ethereum
         ? 'ethereum'
         : networkName === EthereumNetwork.bsc
-        ? 'smartchain'
-        : 'polygon';
+          ? 'smartchain'
+          : 'polygon';
 
     const addr = ethers.utils.getAddress(address);
 
