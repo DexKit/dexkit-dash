@@ -7,9 +7,12 @@ import {useWeb3} from './useWeb3';
 
 import {useCustomNetworkList} from 'hooks/network';
 import {getScannerUrlV2, getTransactionScannerUrlV2} from 'utils/blockchain';
+import { GET_NETWORK_NAME_V2 } from 'shared/constants/Bitquery';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 
 export function useChainInfo() {
   const [chainName, setChainName] = useState<string>();
+  const [network, setNetwork] = useState<EthereumNetwork>();
   const [tokenSymbol, setTokenSymbol] = useState<string>();
 
   const {chainId} = useWeb3();
@@ -23,6 +26,7 @@ export function useChainInfo() {
         networks.map((n) => ({name: n.name, chainId: n.chainId})),
       );
       setChainName(networkName);
+     
 
       const symbol = GET_CHAIN_NATIVE_COIN_V2(
         chainId,
@@ -33,6 +37,8 @@ export function useChainInfo() {
       );
 
       setTokenSymbol(symbol);
+      // We use this because some functions need the exact network from bitquery
+      setNetwork(GET_NETWORK_NAME_V2(networkName, chainId) as EthereumNetwork)
     }
   }, [chainId, networks]);
 
@@ -58,6 +64,7 @@ export function useChainInfo() {
   );
 
   return {
+    network,
     chainName,
     tokenSymbol,
     getScannerUrl,

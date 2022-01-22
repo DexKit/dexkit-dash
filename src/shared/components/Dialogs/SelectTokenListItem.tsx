@@ -6,12 +6,12 @@ import {
   Chip,
   ListItemSecondaryAction,
 } from '@material-ui/core';
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
   GET_CHAIN_FROM_NETWORK,
   GET_CHAIN_ID_NAME,
 } from 'shared/constants/Blockchain';
-import {Token} from '../../../types/app';
+import { Token } from '../../../types/app';
 
 export interface Props {
   token: Token;
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SelectTokenListItem = (props: Props) => {
-  const {token, onClick, showNetwork} = props;
+  const { token, onClick, showNetwork } = props;
 
   const classes = useStyles();
 
@@ -48,9 +48,11 @@ export const SelectTokenListItem = (props: Props) => {
           <Chip
             size='small'
             label={
-              token.networkName
-                ? GET_CHAIN_ID_NAME(GET_CHAIN_FROM_NETWORK(token.networkName))
-                : ''
+              (token?.isCustomNetwork && token.networkName) ? token.networkName :
+
+                token.networkName
+                  ? GET_CHAIN_ID_NAME(GET_CHAIN_FROM_NETWORK(token.networkName))
+                  : ''
             }
           />
         </ListItemSecondaryAction>

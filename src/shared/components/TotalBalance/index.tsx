@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Paper,
@@ -9,37 +9,38 @@ import {
   Backdrop,
   IconButton,
 } from '@material-ui/core';
-import {Skeleton} from '@material-ui/lab';
+import { Skeleton } from '@material-ui/lab';
 
-import {makeStyles} from '@material-ui/core/styles';
-import {Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
+import { makeStyles } from '@material-ui/core/styles';
+import { Fonts } from 'shared/constants/AppEnums';
+import { CremaTheme } from 'types/AppContextPropsType';
 import Receiver from './Receiver';
 import Sender from './Sender';
-import {Token} from 'types/app';
-import {MyBalances} from 'types/blockchain';
-import {useNetwork} from 'hooks/useNetwork';
+import { Token } from 'types/app';
+import { MyBalances } from 'types/blockchain';
+// import { useNetwork } from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
-import {truncateIsAddress} from 'utils';
-import {TradeToolsSection} from 'modules/Dashboard/Wallet/components/TradeToolsSection';
-import {useTransak} from 'hooks/useTransak';
-import {useRamp} from 'hooks/useRamp';
+import { truncateIsAddress } from 'utils';
+import { TradeToolsSection } from 'modules/Dashboard/Wallet/components/TradeToolsSection';
+import { useTransak } from 'hooks/useTransak';
+import { useRamp } from 'hooks/useRamp';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-import {StatusSquare} from '../StatusSquare';
-import {BuySellModal} from 'modules/Dashboard/Token/BuySell/index.modal';
-import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
-import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import { StatusSquare } from '../StatusSquare';
+import { BuySellModal } from 'modules/Dashboard/Token/BuySell/index.modal';
+import { useUSDFormatter } from 'hooks/utils/useUSDFormatter';
+import { useIsBalanceVisible } from 'hooks/useIsBalanceVisible';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import {useAccountsModal} from 'hooks/useAccountsModal';
+import { useAccountsModal } from 'hooks/useAccountsModal';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
-import {useWeb3} from 'hooks/useWeb3';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
+import { useChainInfo } from 'hooks/useChainInfo';
 
 const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
@@ -129,10 +130,10 @@ const TotalBalance = (props: Props) => {
   } = props;
 
   const theme = useTheme();
-  const {isBalanceVisible, setBalanceIsVisible} = useIsBalanceVisible();
+  const { isBalanceVisible, setBalanceIsVisible } = useIsBalanceVisible();
   const [tokens, setTokens] = useState<MyBalances[]>([]);
 
-  const {account} = useWeb3();
+  const { account } = useWeb3();
 
   const defaultAccount = useDefaultAccount();
   const defaultAccountLabel = useDefaultLabelAccount();
@@ -141,7 +142,9 @@ const TotalBalance = (props: Props) => {
     return account?.toLowerCase() === defaultAccount?.toLowerCase();
   }, [account, defaultAccount]);
 
-  const networkName = useNetwork();
+  // const networkName = useNetwork();
+
+  const { network: networkName } = useChainInfo();
   /* eslint-disable */
   useEffect(() => {
     if (only) {
@@ -151,22 +154,25 @@ const TotalBalance = (props: Props) => {
       );
 
       if (!dataFn) {
-        setTokens([
-          {
-            __typename: 'EthereumBalance',
-            currency: {
-              __typename: 'Currency',
-              address: only.address,
-              decimals: only.decimals,
-              name: only.name || '',
-              symbol: only.symbol || '',
-              tokenType: 'ERC20',
+        if (networkName) {
+          setTokens([
+            {
+              __typename: 'EthereumBalance',
+              currency: {
+                __typename: 'Currency',
+                address: only.address,
+                decimals: only.decimals,
+                name: only.name || '',
+                symbol: only.symbol || '',
+                tokenType: 'ERC20',
+              },
+              network: networkName,
+              value: 0,
+              valueInUsd: 0,
             },
-            network: networkName,
-            value: 0,
-            valueInUsd: 0,
-          },
-        ]);
+          ]);
+        }
+
       } else {
         setTokens([
           {
@@ -246,9 +252,9 @@ const TotalBalance = (props: Props) => {
     setShowReceiver(false);
   }, []);
 
-  const {init} = useTransak({});
+  const { init } = useTransak({});
 
-  const {initRamp} = useRamp({});
+  const { initRamp } = useRamp({});
 
   const handleBuyCryptoTransak = useCallback(() => {
     init();
@@ -276,7 +282,7 @@ const TotalBalance = (props: Props) => {
     setShowTrade(false);
   }, []);
 
-  const {usdFormatter} = useUSDFormatter();
+  const { usdFormatter } = useUSDFormatter();
 
   const accountsModal = useAccountsModal();
 
@@ -297,12 +303,12 @@ const TotalBalance = (props: Props) => {
         onResult={handleResult}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <BuySellModal
+      {networkName && <BuySellModal
         networkName={networkName}
         balances={tokens}
         open={showTrade}
         onClose={handleTradeClose}
-      />
+      />}
 
       <Backdrop className={classes.backdrop} open={showSwap}>
         {/* TODO: transform this in a dialog */}
@@ -345,7 +351,7 @@ const TotalBalance = (props: Props) => {
                               tooltip='Copied!'>
                               <FileCopy
                                 color='inherit'
-                                style={{fontSize: 16}}
+                                style={{ fontSize: 16 }}
                               />
                             </CopyButton>
                             <IconButton
@@ -365,7 +371,7 @@ const TotalBalance = (props: Props) => {
                                 <>
                                   {isBalanceVisible
                                     ? onlyTokenValueInUsd ||
-                                      usdFormatter.format(usdTotalAmount)
+                                    usdFormatter.format(usdTotalAmount)
                                     : '****.**'}
                                 </>
                               )}

@@ -329,6 +329,7 @@
   "app.dashboard.wallet.accounts.firstAccountIsDefault": "The first account is the default. You can change clicking at the home button in other accounts.",
   "app.dashboard.wallet.accounts.connectWallet": "Connect Wallet in case you need to interact with the network.",
   "app.dashboard.overview": "Overview",
+  "app.dashboard.showZeroValueCoin" : "Show Zero Value USD",
   "app.protocolExplorer.pairAnalytics": "Pair Analytics",
   "app.protocolExplorer.wallet": "Wallet",
   "app.protocolExplorer.timestamp": "Timestamp",

@@ -298,7 +298,7 @@ export const SwitchNetworkDialog = (props: SwitchNetworkDialogProps) => {
           <ListItemText primary='Polygon' secondary='Mumbai Testnet' />
         </ListItem> */}
         </List>
-        {!isMagicProvider() && false ? (
+        {!isMagicProvider() && !isMobile ? (
           <>
             <List
               disablePadding

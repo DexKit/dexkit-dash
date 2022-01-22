@@ -58,6 +58,7 @@ export interface Token {
   coingecko_id?: string;
   chainId?: ChainId;
   logoURI?: string;
+  isCustomNetwork?: boolean;
 }
 
 export interface Coin {

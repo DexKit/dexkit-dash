@@ -70,7 +70,8 @@ export function useSenderTokens() {
         networkName: e.network,
         logoURI: tokenLogoUri,
         icon: tokenLogoUri,
-        chainId: getNetworkChainId(e.network) as ChainId,
+        chainId: e.chainId ? e.chainId : getNetworkChainId(e.network) as ChainId,
+        isCustomNetwork: e?.isCustomNetwork,
       } as Token;
     });
   }, [balances, tokensBSC, tokensMATIC, tokensETH]);

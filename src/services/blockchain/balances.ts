@@ -13,7 +13,7 @@ export const getAllBlockchainBalances = async (
   account: string,
   customTokens: any[],
   customNetworks: settingTypes.Network[],
-  provider: any,
+  provider: ethers.providers.JsonRpcProvider,
 ) => {
   const tokens = TOKENS_LIST[chainId] || [];
 
@@ -46,9 +46,10 @@ export const getAllBlockchainBalances = async (
           0,
         valueInUsd: 0,
         __typename: 'EthereumBalance',
-        network: GET_NETWORK_NAME(chainId),
+        network: t.name,
         price24hPercentage: 0,
         logoURI: t.logoURI,
+        isCustomNetwork: true,
       } as MyBalances;
     }) || [];
 
@@ -66,15 +67,16 @@ export const getAllBlockchainBalances = async (
         Number(ethers.utils.formatUnits(tb[t.address] || '0', t.decimals)) || 0,
       valueInUsd: 0,
       __typename: 'EthereumBalance',
-      network: GET_NETWORK_NAME(chainId),
+      network: t.name,
       price24hPercentage: 0,
       logoURI: t.logoURI,
+      isCustomNetwork: true,
     } as MyBalances;
   });
 
   const bal: MyBalances[] = [...tokensWithBalance, ...customTokensWithBalance];
 
-  const ethBalance = await getBalanceWithProvider(account, provider);
+  const ethBalance = await provider.getBalance(account);
 
   let coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
 
@@ -90,6 +92,78 @@ export const getAllBlockchainBalances = async (
       };
     }
   }
+
+  const ethToken = {
+    currency: {
+      __typename: 'Currency',
+      name: coin.name,
+      symbol: coin.symbol,
+      decimals: coin.decimals,
+      address: coin.address.toLowerCase(),
+      tokenType: 'ERC20',
+    },
+    value: Number(ethers.utils.formatEther(ethBalance || '0')) || 0,
+    valueInUsd: 0,
+    __typename: 'EthereumBalance',
+    network: coin.name,
+    price24hPercentage: 0,
+    chainId: chainId,
+    isCustomNetwork: true,
+  };
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  bal.push(ethToken);
+
+  return {balances: bal as MyBalances[], nftBalances: [] as MyBalances[]};
+};
+
+
+export const getAllTestnetBlockchainBalances = async (
+  chainId: ChainId,
+  account: string,
+  provider: any,
+) => {
+  const tokens = TOKENS_LIST[chainId] || [];
+
+  const [, tb] = await getTokenBalances(
+    [
+      ...(tokens?.map((t) => t.address) as string[]),
+   
+    ],
+    account,
+    provider,
+  );
+
+  const tokensWithBalance =
+    tokens?.map((t) => {
+      return {
+        currency: {
+          __typename: 'Currency',
+          name: t.name,
+          symbol: t.symbol,
+          decimals: t.decimals,
+          address: t.address,
+          tokenType: 'ERC20',
+        },
+        value:
+          Number(ethers.utils.formatUnits(tb[t.address] || '0', t.decimals)) ||
+          0,
+        valueInUsd: 0,
+        __typename: 'EthereumBalance',
+        network: t.name,
+        price24hPercentage: 0,
+        logoURI: t.logoURI,
+      } as MyBalances;
+    }) || [];
+
+  
+  const bal: MyBalances[] = [...tokensWithBalance];
+
+  const ethBalance = await getBalanceWithProvider(account, provider);
+
+  let coin = ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
+
 
   const ethToken = {
     currency: {

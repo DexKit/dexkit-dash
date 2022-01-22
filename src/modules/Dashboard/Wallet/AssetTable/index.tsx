@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import {useIntl} from 'react-intl';
+import { useIntl } from 'react-intl';
 import IntlMessages from '@crema/utility/IntlMessages';
 
 import Chip from '@material-ui/core/Chip';
@@ -11,7 +11,7 @@ import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import {useTheme} from '@material-ui/core';
+import { Checkbox, FormControlLabel, FormGroup, useTheme } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -19,13 +19,13 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Badge from '@material-ui/core/Badge';
 
-import {MyBalances} from 'types/blockchain';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { MyBalances } from 'types/blockchain';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
 import Close from '@material-ui/icons/Close';
 import ContainedInput from 'shared/components/ContainedInput';
-import {Search} from '@material-ui/icons';
+import { Search } from '@material-ui/icons';
 
-import {ReactComponent as FilterSearchIcon} from 'assets/images/icons/filter-search.svg';
+import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import AssetList from '../components/AssetList';
 import TokenListItemSkeleton from 'shared/components/TokenListItemSkeleton';
@@ -34,6 +34,7 @@ interface AssetTableProps {
   balances: MyBalances[];
   loading?: boolean;
   hideBalance?: boolean;
+  loadingUsd?: boolean;
 }
 
 enum TokenOrderBy {
@@ -46,16 +47,23 @@ const AssetTable: React.FC<AssetTableProps> = ({
   balances,
   loading,
   hideBalance,
+  loadingUsd,
 }) => {
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
   const [showFilters, setShowFilters] = useState(false);
 
+  const [showZero, setShowZero] = useState(false);
+
   const [filter, setFilter] = useState('all');
 
   const [search, setSearch] = useState('');
 
-  const {messages} = useIntl();
+  const { messages } = useIntl();
+
+  const onSetShowZero = useCallback(()=>{
+    setShowZero(!showZero);
+  },[showZero])
 
   const handleChange = useCallback((e) => {
     setSearch(e.target.value);
@@ -109,9 +117,12 @@ const AssetTable: React.FC<AssetTableProps> = ({
         return 0;
       });
     }
+    if(!showZero && !loadingUsd){
+      return results.filter(r=> r?.valueInUsd && r.valueInUsd > 0);
+    }
 
     return results;
-  }, [orderBy, filter, search, balances]);
+  }, [orderBy, filter, search, balances, showZero, loadingUsd]);
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);
@@ -172,7 +183,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
               <Grid container spacing={1}>
                 <Grid item>
                   <Chip
-                    style={{marginRight: 10}}
+                    style={{ marginRight: 10 }}
                     label={messages['app.dashboard.all'] as string}
                     size='small'
                     clickable
@@ -183,7 +194,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
 
                 <Grid item>
                   <Chip
-                    style={{marginRight: 10}}
+                    style={{ marginRight: 10 }}
                     label='ETH'
                     clickable
                     size='small'
@@ -211,6 +222,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                 </Grid>
               </Grid>
             </Grid>
+
             <Grid item xs={12}>
               <ContainedInput
                 value={search}
@@ -230,7 +242,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
                   <IntlMessages id='app.dashboard.orderBy' />
                 </InputLabel>
                 <Select
-                  style={{backgroundColor: 'transparent'}}
+                  style={{ backgroundColor: 'transparent' }}
                   label={messages['app.dashboard.orderBy'] as string}
                   value={orderBy}
                   variant='outlined'
@@ -258,14 +270,21 @@ const AssetTable: React.FC<AssetTableProps> = ({
             spacing={2}
             justify='space-between'
             alignItems='baseline'>
+
             <Grid item xs={isMobile ? 12 : undefined}>
-              <Typography variant='body1' style={{fontWeight: 600}}>
+              <Typography variant='body1' style={{ fontWeight: 600 }}>
                 {filteredBalances().length}{' '}
                 <IntlMessages id='app.dashboard.assets' />
               </Typography>
             </Grid>
+
             <Grid item xs={isMobile ? 12 : undefined}>
               <Grid container spacing={2} alignItems='center'>
+                <Grid item>
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox value={showZero} onClick={onSetShowZero}  />} label={  <IntlMessages id='app.dashboard.showZeroValueCoin' />} />
+                  </FormGroup>
+                </Grid>
                 <Grid item xs>
                   <ContainedInput
                     value={search}

@@ -6,6 +6,7 @@ import {
   GetAllMyBalance_ethereum_address_balances,
 } from 'services/graphql/bitquery/balance/__generated__/GetAllMyBalance';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
+import { GET_CHAIN_FROM_NETWORK } from 'shared/constants/Blockchain';
 import {MyBalances} from 'types/blockchain';
 
 export const MapBalancesToNetwork = (
@@ -28,6 +29,7 @@ export const MapBalancesToNetwork = (
       },
       network: network,
       value: isNative ? nativeBalance : t.value,
+      chainId: GET_CHAIN_FROM_NETWORK(network),
       // enquanto não vem a solução pela bitquery
     } as MyBalances;
   });

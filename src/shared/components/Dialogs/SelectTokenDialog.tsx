@@ -2,8 +2,6 @@ import React, {useEffect, useCallback, useState} from 'react';
 import {useTheme} from '@material-ui/core/styles';
 
 import {
-  Grid,
-  Chip,
   Divider,
   Dialog,
   DialogProps,
@@ -24,6 +22,7 @@ import SelectTokenListItem from './SelectTokenListItem';
 
 import {Token} from '../../../types/app';
 import {ChainId} from 'types/blockchain';
+import { NetworkChips } from './NetworkChips';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -88,20 +87,8 @@ export const SelectTokenDialog = (props: Props) => {
     chainId,
   );
 
-  const handleAll = useCallback(() => {
-    setSelectedChainId(undefined);
-  }, []);
-
-  const handleEthereum = useCallback(() => {
-    setSelectedChainId(ChainId.Mainnet);
-  }, []);
-
-  const handleBsc = useCallback(() => {
-    setSelectedChainId(ChainId.Binance);
-  }, []);
-
-  const handleMatic = useCallback(() => {
-    setSelectedChainId(ChainId.Matic);
+  const handleSetChainId = useCallback((chainId?: ChainId) => {
+    setSelectedChainId(chainId);
   }, []);
 
   const getFilteredTokens = useCallback(
@@ -137,48 +124,7 @@ export const SelectTokenDialog = (props: Props) => {
             onChange={handleFilterChange}
           />
         </Box>
-        <Box px={4} py={4}>
-          <Grid container spacing={2}>
-            <Grid item>
-              <Chip
-                size='small'
-                label='All'
-                variant={selectedChainId === undefined ? 'default' : 'outlined'}
-                onClick={handleAll}
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                size='small'
-                label='ETH'
-                onClick={handleEthereum}
-                variant={
-                  selectedChainId === ChainId.Mainnet ? 'default' : 'outlined'
-                }
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                size='small'
-                label='BSC'
-                onClick={handleBsc}
-                variant={
-                  selectedChainId === ChainId.Binance ? 'default' : 'outlined'
-                }
-              />
-            </Grid>
-            <Grid item>
-              <Chip
-                size='small'
-                label='Matic'
-                onClick={handleMatic}
-                variant={
-                  selectedChainId === ChainId.Matic ? 'default' : 'outlined'
-                }
-              />
-            </Grid>
-          </Grid>
-        </Box>
+        <NetworkChips selectedChainId={selectedChainId} onSetChainId={handleSetChainId}/>
         <Divider />
         {getFilteredTokens(filteredTokens, selectedChainId).length === 0 ? (
           <Box p={4}>

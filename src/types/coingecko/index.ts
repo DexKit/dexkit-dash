@@ -5,9 +5,12 @@ export interface CoinListItemCoingecko {
   id: string;
   symbol: string;
   name: string;
-  platforms: {
+ /* platforms: {
     ethereum: string | null;
     'binance-smart-chain': string | null;
     'polygon-pos': string | null;
-  };
+  };*/
+  platforms: {
+    [key: string]: string | null
+  }
 }

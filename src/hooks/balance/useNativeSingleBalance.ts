@@ -3,7 +3,6 @@ import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useQuery} from 'react-query';
 // import {ChainId} from 'types/blockchain';
 import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
-import {getBalanceWithProvider} from 'services/web3modal';
 import {ethers} from 'ethers';
 // import {BITQUERY_NATIVE_BALANCE_INFO} from 'services/graphql/bitquery/balance/gql';
 // import {client} from 'services/graphql/bitquery';
@@ -14,7 +13,6 @@ import {ethers} from 'ethers';
 
 // Use to get Native coins from network
 export const useNativeSingleBalance = (
-  address: string,
   networkName: EthereumNetwork,
   defaultAccount?: string,
 ) => {
@@ -23,10 +21,10 @@ export const useNativeSingleBalance = (
   const provider = useNetworkProvider(networkName, chainId);
 
   const nativeBalanceQuery = useQuery(
-    ['GetNativeBalanceNetwork', provider, chainId, account],
+    ['GetNativeBalanceNetwork', networkName, chainId, account],
     async () => {
       if (chainId && provider && account) {
-        const ethBalance = await getBalanceWithProvider(account, provider);
+        const ethBalance = await provider.getBalance(account);
         // const coin =  ETHEREUM_NATIVE_COINS_BY_CHAIN[chainId];
         return Number(ethers.utils.formatEther(ethBalance || '0')) || 0;
         /* return {

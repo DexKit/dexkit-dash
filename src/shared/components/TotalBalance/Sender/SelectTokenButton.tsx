@@ -44,7 +44,6 @@ interface SelectTokenButtonProps extends ButtonBaseProps {
 
 export const SelectTokenButton = (props: SelectTokenButtonProps) => {
   const {token, onClick} = props;
-
   const classes = useStyles();
 
   return (
@@ -69,7 +68,7 @@ export const SelectTokenButton = (props: SelectTokenButtonProps) => {
               <Box>
                 <Chip
                   size='small'
-                  label={GET_CHAIN_ID_NAME(
+                  label={token?.isCustomNetwork ? token.networkName : GET_CHAIN_ID_NAME( 
                     GET_CHAIN_FROM_NETWORK(token?.networkName),
                   )}
                 />

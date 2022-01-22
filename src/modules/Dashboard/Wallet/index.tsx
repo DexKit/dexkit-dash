@@ -168,6 +168,7 @@ const WalletTabs: React.FC<Props> = (props) => {
                         <AssetTableTab
                           account={account as string}
                           loading={loading}
+                          loadingUsd={loadingUsd}
                           error={error}
                           data={data}
                         />

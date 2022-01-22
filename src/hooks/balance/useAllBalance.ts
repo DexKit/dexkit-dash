@@ -1,20 +1,21 @@
-import {useMemo} from 'react';
-import {useWeb3} from 'hooks/useWeb3';
+import { useMemo } from 'react';
+import { useWeb3 } from 'hooks/useWeb3';
 
-import {getTokens} from 'services/rest/coingecko';
-import {ChainId, MyBalances, Web3State} from 'types/blockchain';
-import {useQuery} from 'react-query';
-import {CoinItemCoinGecko} from 'types/coingecko/coin.interface';
-import {getAllBitqueryBalances} from 'services/bitquery/balances';
-import {getAllBlockchainBalances} from 'services/blockchain/balances';
-import {providers} from 'ethers';
-import {useCustomTokenList} from 'hooks/tokens';
+import { getTokens } from 'services/rest/coingecko';
+import { ChainId, MyBalances, Web3State } from 'types/blockchain';
+import { useQuery } from 'react-query';
+import { CoinItemCoinGecko } from 'types/coingecko/coin.interface';
+import { getAllBitqueryBalances } from 'services/bitquery/balances';
+import { getAllBlockchainBalances, getAllTestnetBlockchainBalances } from 'services/blockchain/balances';
+import { providers } from 'ethers';
+import { useCustomTokenList } from 'hooks/tokens';
 
-import {useCustomNetworkList} from 'hooks/network';
+import { useCustomNetworkList } from 'hooks/network';
+import { NetworkParams } from 'redux/_settingsv2/actions';
 
 export const MapBalancesToUSDValue = (
   balances: any,
-  usdValues: {[address: string]: CoinItemCoinGecko},
+  usdValues: { [address: string]: CoinItemCoinGecko },
 ): MyBalances[] => {
   if (!balances) {
     return [];
@@ -23,12 +24,12 @@ export const MapBalancesToUSDValue = (
     return {
       ...t,
       price24hPercentage:
-        usdValues[t.currency?.address || '']?.price_change_percentage_24h || 0,
+        usdValues[t.currency?.address?.toLowerCase() || '']?.price_change_percentage_24h || 0,
       valueInUsd:
         (t.value || 0) *
-        (usdValues[t.currency?.address || '']?.current_price || 0),
+        (usdValues[t.currency?.address?.toLowerCase() || '']?.current_price || 0),
 
-      logoURI: usdValues[t.currency?.address || '']?.image,
+      logoURI: usdValues[t.currency?.address?.toLowerCase() || '']?.image,
       // enquanto não vem a solução pela bitquery
     } as MyBalances;
   });
@@ -36,36 +37,62 @@ export const MapBalancesToUSDValue = (
 
 // Get balance from BSC, ETH, Matic at once
 export const useAllBalance = (defaultAccount?: string) => {
-  const {tokens} = useCustomTokenList();
-  const {account: web3Account, chainId, web3State, getProvider} = useWeb3();
+  const { tokens } = useCustomTokenList();
+  const { account: web3Account, chainId, web3State, getProvider } = useWeb3();
   const account = defaultAccount || web3Account;
 
-  const {networks} = useCustomNetworkList();
+  const { networks } = useCustomNetworkList();
 
   const myBalancesQuery = useQuery(
     ['GetMyBalancesQuery', account, chainId, web3State, networks, tokens],
     async () => {
       if (account) {
-        // we use this to be able to test applications on Ropsten testnet
-
+        // we use this to be able to test applications on Ropsten and Mumbai testnet
         if ((chainId === ChainId.Ropsten || chainId === ChainId.Mumbai) && web3State === Web3State.Done) {
           const pr = new providers.Web3Provider(getProvider());
-
-          const result = await getAllBlockchainBalances(
+          const result = await getAllTestnetBlockchainBalances(
             chainId,
             account,
-            tokens,
-            networks,
             pr,
           );
 
           return result;
         }
+
+        let result: { nftBalances: MyBalances[], balances: MyBalances[] } = {
+          balances: [],
+          nftBalances: [],
+        };
+        // we use this to be able to test applications on Ropsten testnet
+        if (networks && networks.length) {
+          for (let index = 0; index < networks.length; index++) {
+            try {
+              const network = networks[index] as NetworkParams;
+              const pr = new providers.JsonRpcProvider(network.rpcUrl);
+              const balances = await getAllBlockchainBalances(
+                network.chainId,
+                account,
+                tokens,
+                networks,
+                pr,
+              );
+
+              result = { balances: [...balances.balances, ...result.balances], nftBalances: [] }
+
+            } catch {
+
+            }
+
+          }
+        }
+
         // On mainnet we return the normal tokens on BSC, Polygon and ETH
-        return getAllBitqueryBalances(account);
+        const bitqueryResult = await getAllBitqueryBalances(account);
+        const concat = { balances: [...bitqueryResult.balances, ...result.balances], nftBalances: [] }
+        return concat;
       }
     },
-    {staleTime: 1000 * 20},
+    { staleTime: 1000 * 20 },
   );
 
   const usdValuesQuery = useQuery(
@@ -76,16 +103,19 @@ export const useAllBalance = (defaultAccount?: string) => {
         const tokens = myBalances.balances.map((b) => {
           return {
             network: b.network,
+            chainId: b.chainId,
             address: b.currency?.address as string,
           };
         });
         return getTokens(tokens);
       }
     },
-    {staleTime: 1000 * 20},
+    { staleTime: 1000 * 20 },
   );
   const data = useMemo(() => {
     if (usdValuesQuery.data && myBalancesQuery.data?.balances) {
+      console.log(myBalancesQuery.data?.balances);
+      console.log(usdValuesQuery.data);
       return (
         MapBalancesToUSDValue(
           myBalancesQuery.data?.balances,
@@ -99,7 +129,7 @@ export const useAllBalance = (defaultAccount?: string) => {
     return [];
   }, [usdValuesQuery.data, myBalancesQuery.data]);
 
-  const error = myBalancesQuery.isError && {message: 'Error Fetching Data'};
+  const error = myBalancesQuery.isError && { message: 'Error Fetching Data' };
 
   return {
     loading: myBalancesQuery.isLoading,

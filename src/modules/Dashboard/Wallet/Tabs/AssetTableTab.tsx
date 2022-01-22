@@ -15,11 +15,12 @@ type Props = {
   account: string;
   loading: boolean;
   error: any;
+  loadingUsd: boolean;
   data: MyBalances[];
 };
 
 export const AssetTableTab = (props: Props) => {
-  const {loading, error, data} = props;
+  const {loading, error, data, loadingUsd} = props;
 
   // const {defiBalance} = useDefi(account);
 
@@ -69,6 +70,7 @@ export const AssetTableTab = (props: Props) => {
       hideBalance={!isBalanceVisible}
       balances={data}
       loading={loading}
+      loadingUsd={loadingUsd}
     />
   );
 };

@@ -151,7 +151,7 @@
     "app.common.favorites": "Favoritos", 
     "app.common.customNetworks": "Redes personalizadas", 
     "app.common.addCustomNetwork": "Adicionar rede personalizada", 
-  
+    "app.dashboard.showZeroValueCoin" : "Mostrar valores zero USD",
     "app.dashboard.infoAboutPage": "Informações sobre esta página", 
     "app.dashboard.favorites": "Favoritos", 
     "app.dashboard.favorites.info": "Esta página é onde aparecem todos os tokens favoritos da página de trading. Ao clicar nos ícones BSC ou ETH, você será direcionado para a página de trading do token.", 

@@ -37,7 +37,6 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useNetwork} from 'hooks/useNetwork';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
@@ -154,7 +153,6 @@ const WalletInfo = (props: any) => {
   const dispatch = useDispatch();
 
   const {data: balances} = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
     network,
     defaultAccount,
   );
