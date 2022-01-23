@@ -8,6 +8,8 @@ import {
   NetworkParams,
 } from 'redux/_settingsv2/actions';
 
+import * as settingTypes from 'modules/Settings/types';
+
 export function useAddCustomNetwork() {
   const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ export function useAddCustomNetwork() {
 export function useCustomNetworkList() {
   const {networks} = useSelector<AppState, AppState['settingsv2']>(
     ({settingsv2}) => settingsv2,
-  );
+  ) as {networks: settingTypes.Network[]}
 
   return {networks};
 }

@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {useWeb3} from 'hooks/useWeb3';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useWeb3 } from 'hooks/useWeb3';
 import {
   Box,
   Button,
@@ -12,28 +12,29 @@ import {
   Paper,
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
+import { Fonts } from 'shared/constants/AppEnums';
+import { CremaTheme } from 'types/AppContextPropsType';
 import QRCode from 'qrcode.react';
 import FileCopy from '@material-ui/icons/FileCopy';
 import CopyButton from 'shared/components/CopyButton';
-import {useNetwork} from 'hooks/useNetwork';
-import {Token} from 'types/app';
+import { useNetwork } from 'hooks/useNetwork';
+import { Token } from 'types/app';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
-import {useSenderTokens} from 'hooks/useSenderTokens';
+import { useSenderTokens } from 'hooks/useSenderTokens';
 import SelectTokenButton from '../Sender/SelectTokenButton';
 import SelectTokenDialog from 'modules/Dashboard/Token/BuySell/Modal/SelectTokenDialog';
 import ShareDialog from 'shared/components/ShareDialog';
-import {getWindowUrl} from 'utils/browser';
+import { getWindowUrl } from 'utils/browser';
 
 import ShareIcon from '@material-ui/icons/Share';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
+import { useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import { useChainInfo } from 'hooks/useChainInfo';
 
-interface Props {}
+interface Props { }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   root: {
@@ -60,9 +61,10 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 const ReceiverForm: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const {account} = useWeb3();
+  const { account } = useWeb3();
 
   const networkName = useNetwork();
+  const { isCustomNetwork } = useChainInfo();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [inputAddress, setInputAddress] = useState(account);
@@ -73,7 +75,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
   const [token, setToken] = useState<Token>();
   const [shareUrl, setShareURL] = useState('');
   /* eslint-disable */
-  const {tokens, allTokens} = useSenderTokens();
+  const { tokens, allTokens } = useSenderTokens();
 
   const [qrCodeText, setQRCodeText] = useState(inputAddress ?? '');
 
@@ -208,7 +210,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          {!isCustomNetwork && <Grid item xs={12}>
             <Paper variant='outlined'>
               <Box p={4}>
                 <Box
@@ -249,7 +251,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
                 </Collapse>
               </Box>
             </Paper>
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <Button
               fullWidth

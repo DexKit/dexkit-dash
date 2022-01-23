@@ -13,7 +13,7 @@ import {ethers} from 'ethers';
 
 // Use to get Native coins from network
 export const useNativeSingleBalance = (
-  networkName: EthereumNetwork,
+  networkName?: EthereumNetwork,
   defaultAccount?: string,
 ) => {
   const {account: web3Account, chainId} = useWeb3();

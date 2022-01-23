@@ -1,32 +1,44 @@
-import {useState, useEffect, useCallback} from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   GET_CHAIN_ID_NAME_V2,
   GET_CHAIN_NATIVE_COIN_V2,
 } from 'shared/constants/Blockchain';
-import {useWeb3} from './useWeb3';
+import { useWeb3 } from './useWeb3';
 
-import {useCustomNetworkList} from 'hooks/network';
-import {getScannerUrlV2, getTransactionScannerUrlV2} from 'utils/blockchain';
+import { useCustomNetworkList } from 'hooks/network';
+import { getScannerUrlV2, getTransactionScannerUrlV2 } from 'utils/blockchain';
 import { GET_NETWORK_NAME_V2 } from 'shared/constants/Bitquery';
 import { EthereumNetwork } from 'shared/constants/AppEnums';
+
+
+
 
 export function useChainInfo() {
   const [chainName, setChainName] = useState<string>();
   const [network, setNetwork] = useState<EthereumNetwork>();
   const [tokenSymbol, setTokenSymbol] = useState<string>();
 
-  const {chainId} = useWeb3();
+  const { chainId } = useWeb3();
 
-  const {networks} = useCustomNetworkList();
+  const { networks } = useCustomNetworkList();
+
+  const isCustomNetwork = useMemo(() => {
+    const net = networks.find(n => n.name === network);
+    if (net) {
+      return true
+    }
+    return false;
+  }, [network, networks])
+
 
   useEffect(() => {
     if (chainId) {
       const networkName = GET_CHAIN_ID_NAME_V2(
         chainId,
-        networks.map((n) => ({name: n.name, chainId: n.chainId})),
+        networks.map((n) => ({ name: n.name, chainId: n.chainId })),
       );
       setChainName(networkName);
-     
+
 
       const symbol = GET_CHAIN_NATIVE_COIN_V2(
         chainId,
@@ -46,7 +58,7 @@ export function useChainInfo() {
     (chainId: number) => {
       return getScannerUrlV2(
         chainId,
-        networks.map((n) => ({chainId: n.chainId, explorerUrl: n.explorerUrl})),
+        networks.map((n) => ({ chainId: n.chainId, explorerUrl: n.explorerUrl })),
       );
     },
     [networks],
@@ -57,7 +69,7 @@ export function useChainInfo() {
       return getTransactionScannerUrlV2(
         chainId,
         transactionHash,
-        networks.map((n) => ({chainId: n.chainId, explorerUrl: n.explorerUrl})),
+        networks.map((n) => ({ chainId: n.chainId, explorerUrl: n.explorerUrl })),
       );
     },
     [networks],
@@ -69,5 +81,6 @@ export function useChainInfo() {
     tokenSymbol,
     getScannerUrl,
     getTransactionScannerUrl,
+    isCustomNetwork,
   };
 }

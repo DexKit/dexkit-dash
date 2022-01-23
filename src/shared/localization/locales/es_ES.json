@@ -948,6 +948,7 @@
   "app.protocolExplorer.type": "Tipo",
   "app.protocolExplorer.pair": "Par",
   "app.protocolExplorer.price": "Precio",
+  "app.protocolExplorer.lastPrice": "Ultimo Precio",
   "app.protocolExplorer.baseAmount": "Monto base",
   "app.protocolExplorer.quoteAmount": "Monto de cotización",
   "app.protocolExplorer.total": "Total",

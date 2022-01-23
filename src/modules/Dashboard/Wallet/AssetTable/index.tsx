@@ -35,6 +35,7 @@ interface AssetTableProps {
   loading?: boolean;
   hideBalance?: boolean;
   loadingUsd?: boolean;
+  errorUsd?: boolean;
 }
 
 enum TokenOrderBy {
@@ -48,6 +49,7 @@ const AssetTable: React.FC<AssetTableProps> = ({
   loading,
   hideBalance,
   loadingUsd,
+  errorUsd,
 }) => {
   const [orderBy, setOrderBy] = useState(TokenOrderBy.UsdAmount);
 
@@ -117,12 +119,12 @@ const AssetTable: React.FC<AssetTableProps> = ({
         return 0;
       });
     }
-    if(!showZero && !loadingUsd){
+    if(!showZero && !loadingUsd && !errorUsd){
       return results.filter(r=> r?.valueInUsd && r.valueInUsd > 0);
     }
 
     return results;
-  }, [orderBy, filter, search, balances, showZero, loadingUsd]);
+  }, [orderBy, filter, search, balances, showZero, loadingUsd, errorUsd]);
 
   const handleToggleFilters = useCallback(() => {
     setShowFilters((value) => !value);

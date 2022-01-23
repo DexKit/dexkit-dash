@@ -63,7 +63,7 @@ export const useAllBalance = (defaultAccount?: string) => {
           balances: [],
           nftBalances: [],
         };
-        // we use this to be able to test applications on Ropsten testnet
+        // Get all balances at all
         if (networks && networks.length) {
           for (let index = 0; index < networks.length; index++) {
             try {
@@ -114,8 +114,6 @@ export const useAllBalance = (defaultAccount?: string) => {
   );
   const data = useMemo(() => {
     if (usdValuesQuery.data && myBalancesQuery.data?.balances) {
-      console.log(myBalancesQuery.data?.balances);
-      console.log(usdValuesQuery.data);
       return (
         MapBalancesToUSDValue(
           myBalancesQuery.data?.balances,
@@ -137,6 +135,6 @@ export const useAllBalance = (defaultAccount?: string) => {
     data,
     nftBalances: myBalancesQuery.data?.nftBalances,
     loadingUsd: usdValuesQuery.isLoading,
-    errorUSD: usdValuesQuery.error,
+    errorUsd: usdValuesQuery.isError,
   };
 };

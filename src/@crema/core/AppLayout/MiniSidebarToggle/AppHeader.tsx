@@ -159,6 +159,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               decimals: number;
             } = {
               name: networks[customIndex].name,
+              //@ts-ignore
               symbol: networks[customIndex].symbol,
               decimals: 18,
             };
