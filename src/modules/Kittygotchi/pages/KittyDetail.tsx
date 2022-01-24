@@ -50,11 +50,7 @@ import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {
-  GET_KITTYGOTCHI_CONTRACT_ADDR,
-  GET_KITTY_CHAIN_ID,
-  KITTYGOTCHI,
-} from '../constants';
+import {GET_KITTYGOTCHI_CONTRACT_ADDR} from '../constants';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 import {ownerOf} from 'services/nfts';
@@ -368,7 +364,7 @@ export const KittyDetail: React.FC = () => {
           fullWidth: true,
           onClose: handleCloseTransferDialog,
         }}
-        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        contractAddress={GET_KITTYGOTCHI_CONTRACT_ADDR(chainId)}
         tokenId={kittygotchi.data?.id}
       />
       <Box>

@@ -40,11 +40,7 @@ import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
-import {
-  GET_KITTYGOTCHI_CONTRACT_ADDR,
-  GET_KITTY_CHAIN_ID,
-  KITTYGOTCHI,
-} from 'modules/Kittygotchi/constants';
+import {GET_KITTYGOTCHI_CONTRACT_ADDR} from 'modules/Kittygotchi/constants';
 import {useIntl} from 'react-intl';
 import {ownerOf} from 'services/nfts';
 import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
@@ -347,7 +343,7 @@ export const ProfileIndex = () => {
           fullWidth: true,
           onClose: handleCloseTransferDialog,
         }}
-        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        contractAddress={GET_KITTYGOTCHI_CONTRACT_ADDR(chainId)}
         tokenId={
           account && chainId
             ? kittyProfile?.getDefault(account, chainId)?.id

@@ -16,8 +16,7 @@ import {
 } from 'modules/Kittygotchi/utils/index';
 
 import {
-  GET_KITTY_CHAIN_ID,
-  KITTYGOTCHI,
+  GET_KITTYGOTCHI_CONTRACT_ADDR,
   KittygotchiTraitType,
 } from '../constants';
 import {
@@ -123,14 +122,20 @@ export function useGraphqlClient() {
 export function useKittygotchi(id?: string) {
   const {chainId, web3State} = useWeb3();
 
-  const provider = useNetworkProvider(undefined, GET_KITTY_CHAIN_ID(chainId));
+  const provider = useNetworkProvider(undefined, chainId);
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const query = useQuery(
     ['GET_KITTYGOTCHI_META', id, chainId, web3State, kittyAddress],
     () => {
-      if (id && provider && web3State === Web3State.Done && chainId) {
+      if (
+        id &&
+        provider &&
+        web3State === Web3State.Done &&
+        chainId &&
+        kittyAddress
+      ) {
         return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`)
           .then((r) => r.json())
           .then(async (r) => {
@@ -155,7 +160,7 @@ export function useKittygotchi(id?: string) {
 export function useKittygotchiFeed() {
   const {chainId, web3State, getProvider} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   /* eslint-disable */
   const onFeedCallback = useCallback(
@@ -192,7 +197,7 @@ export function useKittygotchiFeed() {
 export function useKittygotchiMint() {
   const {chainId, web3State, getProvider} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const onMintCallback = useCallback(
     async (callbacks?: MintCallbacks) => {
@@ -263,7 +268,7 @@ interface UpdaterParams {
 export function useKittygotchiUpdate() {
   const {chainId, web3State, getProvider, account} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const onUpdateKittyCallback = useCallback(
     async (id: string, params: UpdaterParams, callbacks?: CallbackProps) => {
@@ -475,7 +480,7 @@ export const useKittygotchiOnChain = () => {
 
           let provider = new ethers.providers.Web3Provider(getProvider());
 
-          const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+          const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId) || '';
 
           const contract = new ethers.Contract(
             kittyAddress,
