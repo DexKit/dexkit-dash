@@ -170,7 +170,7 @@ export const ProfileIndex = () => {
         setMintLoading(false);
       },
     });
-  }, [chainId, account, messages]);
+  }, [chainId, account, messages, kittygotchiMint.onMintCallback]);
 
   const {onFeedCallback} = useKittygotchiFeed();
 

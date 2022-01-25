@@ -66,13 +66,13 @@ export function getTransactionScannerBaseUrl(chainId: number) {
       return `https://ropsten.etherscan.io`;
 
     case NetworkCodes.SmartChain:
-      return `https://bscscan.com/tx`;
+      return `https://bscscan.com`;
 
     case NetworkCodes.SmartChainTestnet:
       return `https://testnet.bscscan.com`;
 
     case NetworkCodes.Matic:
-      return `https://polygonscan.com/tx`;
+      return `https://polygonscan.com`;
 
     case NetworkCodes.MaticTestnet:
       return `https://mumbai.polygonscan.com`;

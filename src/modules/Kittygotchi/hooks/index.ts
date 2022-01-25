@@ -3,7 +3,6 @@ import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useState} from 'react';
 import {useQuery} from 'react-query';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
 import {Token} from 'types/app';
@@ -207,6 +206,11 @@ export function useKittygotchiMint() {
         !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress
       ) {
+        if (callbacks?.onError) {
+          callbacks?.onError(
+            new Error('There is no address for Binance Smart Chain'),
+          );
+        }
         return;
       }
 
@@ -528,7 +532,7 @@ export const useKittygotchiOnChain = () => {
 export const useKitHolding = (account?: string) => {
   const {chainId, getProvider} = useWeb3();
 
-  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+  const networkProvider = useNetworkProvider(undefined, chainId);
 
   const query = useQuery(['GET_KITTY_HOLDING', account, chainId], async () => {
     if (account && isKittygotchiNetworkSupported(chainId)) {
@@ -537,7 +541,8 @@ export const useKitHolding = (account?: string) => {
 
         const tokens = [DexKit];
         let pr = networkProvider;
-        if (chainId === ChainId.Mumbai) {
+
+        if (isKittygotchiNetworkSupported(chainId)) {
           pr = new providers.Web3Provider(getProvider());
         }
 
