@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
 import {
   EARLY_ACCESS_BITT_AMOUNT,
   EARLY_ACCESS_KIT_AMOUNT,
@@ -9,9 +9,10 @@ import {
   FIRST_ROUND_DATE,
   SECOND_ROUND_DATE,
   THIRD_ROUND_DATE,
+  CHAMPIONS,
 } from '../constants';
-import { ChampionsEventRound } from './types';
-import { ChainId } from 'types/blockchain';
+import {ChampionsEventRound} from './types';
+import {ChainId} from 'types/blockchain';
 
 export function getEventCurrentRound(): ChampionsEventRound {
   return ChampionsEventRound.FIRST;
@@ -60,22 +61,18 @@ export function getEventEarlyAccessDate(
   offset = 0,
   chainId?: number,
 ): number {
-  let currChain = chainId ? chainId : ChainId.Matic;
+  if (chainId && IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
+    if (round === ChampionsEventRound.FIRST) {
+      return SALE_EARLY_FIRST_ROUND_DATE[chainId] - offset;
+    }
 
-  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
-    currChain = ChainId.Matic;
-  }
+    if (round === ChampionsEventRound.SECOND) {
+      return SALE_EARLY_SECOND_ROUND_DATE[chainId] - offset;
+    }
 
-  if (round === ChampionsEventRound.FIRST) {
-    return SALE_EARLY_FIRST_ROUND_DATE[currChain] - offset;
-  }
-
-  if (round === ChampionsEventRound.SECOND) {
-    return SALE_EARLY_SECOND_ROUND_DATE[currChain] - offset;
-  }
-
-  if (round === ChampionsEventRound.THIRD) {
-    return SALE_EARLY_THIRD_ROUND_DATE[currChain] - offset;
+    if (round === ChampionsEventRound.THIRD) {
+      return SALE_EARLY_THIRD_ROUND_DATE[chainId] - offset;
+    }
   }
 
   return 0;
@@ -85,17 +82,10 @@ export function getEventEarlyAccessDate(
 export function getEventHoldingAmount(
   chainId?: number,
 ): ethers.BigNumber | undefined {
-  let currChain = chainId ? chainId : ChainId.Matic;
-
-  if (currChain !== ChainId.Matic && chainId !== ChainId.Mumbai) {
-    currChain = ChainId.Matic;
+  if (chainId && IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
+    return EVENT_HOLDING_AMOUNT[chainId];
   }
-
-  if (currChain) {
-    return EVENT_HOLDING_AMOUNT[chainId as ChainId];
-  }
-
-  return EVENT_HOLDING_AMOUNT[ChainId.Matic];
+  return ethers.BigNumber.from(0);
 }
 
 export function GET_EVENT_HOLDING_AMOUNT(chanId?: number): number | string {
@@ -110,7 +100,7 @@ export function GET_EVENT_HOLDING_AMOUNT(chanId?: number): number | string {
 
 export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number): number {
   if (chainId) {
-    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+    if (IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
       return EARLY_ACCESS_KIT_AMOUNT[chainId];
     }
   }
@@ -120,14 +110,13 @@ export function GET_EARLY_ACCESS_KIT_AMOUNT(chainId?: number): number {
 
 export function GET_EARLY_ACCESS_BITT_AMOUNT(chainId?: number): number {
   if (chainId) {
-    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
+    if (IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
       return EARLY_ACCESS_BITT_AMOUNT[chainId];
     }
   }
 
   return EARLY_ACCESS_BITT_AMOUNT[ChainId.Matic];
 }
-
 
 export const getChampionsMultiplier = (rarityBN: ethers.BigNumber) => {
   const rarity = rarityBN.toNumber();
@@ -152,80 +141,99 @@ export const getChampionsMultiplier = (rarityBN: ethers.BigNumber) => {
     default:
       return 1;
   }
-}
+};
 
 export const isChampionsFromRarity = (rarityBN: ethers.BigNumber) => {
   const rarity = rarityBN.toNumber();
   switch (rarity) {
     case 0:
-      return true
+      return true;
     case 1:
-      return true
+      return true;
     case 2:
-      return true
+      return true;
     case 3:
-      return true
+      return true;
     case 4:
-      return true
+      return true;
     case 5:
-      return true
+      return true;
     case 6:
-      return true
+      return true;
     case 7:
-      return true
+      return true;
     default:
       return false;
   }
-}
-
-
+};
 
 export const getChampionsCoinSymbol = (rarityBN: ethers.BigNumber) => {
   const rarity = rarityBN.toNumber();
   switch (rarity) {
     case 0:
-      return 'BITT'
+      return 'BITT';
     case 1:
-      return 'BTC'
+      return 'BTC';
     case 2:
-      return 'ETH'
+      return 'ETH';
     case 3:
-      return 'LINK'
+      return 'LINK';
     case 4:
-      return 'DOT'
+      return 'DOT';
     case 5:
-      return 'UNI'
+      return 'UNI';
     case 6:
-      return 'ADA'
+      return 'ADA';
     case 7:
-      return 'DOGE'
+      return 'DOGE';
 
     default:
-      return 'DOGE'
+      return 'DOGE';
   }
-}
+};
 
 export const getRarityFromBodyType = (body?: string) => {
-  
   switch (body) {
     case 'Bittoken':
-      return 0
+      return 0;
     case 'Bitcoin':
-      return 1
+      return 1;
     case 'Ethereum':
-      return 2
+      return 2;
     case 'ChainLink':
-      return 3
+      return 3;
     case 'Polkadot':
-      return 4
+      return 4;
     case 'Uniswap':
-      return 5
+      return 5;
     case 'Cardano':
-      return 6
+      return 6;
     case 'Doge':
-      return 7
+      return 7;
 
     default:
-      return undefined
+      return undefined;
   }
+};
+
+export function IS_CHAMPIONS_SUPPORTED_NETWORK(chainId?: number) {
+  if (chainId) {
+    return (
+      chainId === ChainId.Matic ||
+      chainId === ChainId.Mumbai ||
+      chainId === ChainId.Binance
+    );
+  }
+
+  return false;
+}
+
+export function GET_CHAMPIONS_CONTRACT_ADDR(chainId?: number) {
+  if (chainId) {
+    if (IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
+      return CHAMPIONS[chainId as ChainId];
+    }
+  }
+
+  return undefined;
 }

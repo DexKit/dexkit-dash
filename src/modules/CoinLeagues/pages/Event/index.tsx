@@ -21,10 +21,7 @@ import {Alert, Skeleton} from '@material-ui/lab';
 
 import {useMobile} from 'hooks/useMobile';
 
-import {
-  NFTEmptyStateImage,
-  WalletEmptyImage,
-} from 'shared/components/Icons';
+import {NFTEmptyStateImage, WalletEmptyImage} from 'shared/components/Icons';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -42,6 +39,7 @@ import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {IS_CHAMPIONS_SUPPORTED_NETWORK} from 'modules/CoinLeagues/utils/champions';
 
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import EarlyAccessCountdownSection from 'modules/CoinLeagues/components/champions/EarlyAccessCountdownSection';
@@ -62,7 +60,9 @@ import {
 } from 'modules/CoinLeagues/constants';
 import {MintChampionButton} from 'modules/CoinLeagues/components/champions/buttons/MintChampionButton';
 import {getEventHoldingAmount} from '../../utils/champions';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
 const useStyles = makeStyles((theme) => ({
   bannerBox: {
     borderRadius: theme.shape.borderRadius,
@@ -93,8 +93,8 @@ export function ChampionsEvent() {
 
   const isMobile = useMobile();
 
-  const { account, ethBalance, onConnectWeb3} = useWeb3();
-  const { chainId } = useLeaguesChainInfo();
+  const {account, ethBalance, onConnectWeb3} = useWeb3();
+  const {chainId, coinSymbol} = useLeaguesChainInfo();
 
   const myChampions = useMyChampions(chainId, 4);
 
@@ -147,7 +147,7 @@ export function ChampionsEvent() {
     return false;
   }, [championTokenHolding, chainId]);
 
-  const hasEnoughMatic = useCallback(() => {
+  const hasEnoughAmount = useCallback(() => {
     let amount = getEventHoldingAmount(chainId);
 
     if (amount) {
@@ -176,17 +176,13 @@ export function ChampionsEvent() {
     return moment.utc().isAfter(date);
   }, [isElegibleForEarlyAccess, chainId]);
 
-  const isOnMaticChain = useCallback(() => {
-    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
-      return true;
-    }
-
-    return false;
-  }, [chainId]);
-
   const handleCanMint = useCallback(() => {
-    return isOnMaticChain() && canMintChampion() && hasEnoughMatic();
-  }, [isOnMaticChain, canMintChampion, hasEnoughMatic]);
+    return (
+      IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) &&
+      canMintChampion() &&
+      hasEnoughAmount()
+    );
+  }, [chainId, canMintChampion, hasEnoughAmount]);
 
   return (
     <>
@@ -221,12 +217,11 @@ export function ChampionsEvent() {
                   />
                 </Box>
               </Grid>
-              {!isOnMaticChain() ? (
+              {!IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                 <Grid item xs={12}>
                   <Alert severity='info'>
                     <Typography variant='body2'>
-                      Connect to <strong>Polygon(MATIC)</strong> network to
-                      create a champion.
+                      <IntlMessages id='app.coinLeague.connectToPolygonOrBscNetwork' />
                     </Typography>
                   </Alert>
                 </Grid>
@@ -265,7 +260,7 @@ export function ChampionsEvent() {
                                   access.
                                 </Typography>
                               </Grid>
-                              {isOnMaticChain() ? (
+                              {IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                                 <Grid item xs={12}>
                                   <Box py={{xs: 0, sm: 4}}>
                                     <Grid
@@ -409,33 +404,35 @@ export function ChampionsEvent() {
                         <Grid container spacing={4}>
                           <Grid item xs={12}>
                             <Typography gutterBottom variant='h5'>
-                              Round {getEventCurrentRound() + 1}
+                              <IntlMessages id='app.coinLeague.round' />{' '}
+                              {getEventCurrentRound() + 1}
                             </Typography>
                             <Typography variant='body1'>
-                              In this round, users will be able to create{' '}
+                              <IntlMessages id='app.coinLeague.inThisRoundUsersWill' />{' '}
                               {getMaxSupplyForRound(getEventCurrentRound()) -
                                 1000}{' '}
-                              champions.
+                              <IntlMessages id='app.coinLeague.champions' />
                             </Typography>
                           </Grid>
-                          {isOnMaticChain() ? (
+                          {IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                             <Grid item xs={12}>
                               <Alert severity='info'>
-                                There are only{' '}
+                                <IntlMessages id='app.coinLeague.thereAreOnly' />{' '}
                                 <strong>
                                   {getMaxSupplyForRound(
                                     getEventCurrentRound(),
                                   ) - totalSupply}
                                 </strong>{' '}
-                                champions left to be created.
+                                <IntlMessages id='app.coinLeague.championsLeftToBeCreated' />
                               </Alert>
                             </Grid>
                           ) : null}
-                          {!hasEnoughMatic() && isOnMaticChain() ? (
+                          {!hasEnoughAmount() &&
+                          IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                             <Grid item xs={12}>
                               <Alert severity='warning'>
                                 <IntlMessages id='app.coinLeague.notEnoughMaticStart' />{' '}
-                                {GET_EVENT_HOLDING_AMOUNT(chainId)}{' '}
+                                {GET_EVENT_HOLDING_AMOUNT(chainId)} {coinSymbol}{' '}
                                 <IntlMessages id='app.coinLeague.notEnoughMaticEnd' />
                               </Alert>
                             </Grid>
@@ -487,7 +484,7 @@ export function ChampionsEvent() {
                       ) : (
                         <>
                           {myChampions.data?.length === 0 ||
-                          !isOnMaticChain() ? (
+                          !IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                             <Grid item xs={12}>
                               <Paper>
                                 <Box p={4}>
@@ -503,13 +500,13 @@ export function ChampionsEvent() {
                                     </Grid>
                                     <Grid item>
                                       <Typography align='center' variant='h5'>
-                                        No Champions yet
+                                        <IntlMessages id='app.coinLeague.noChampionsYet' />
                                       </Typography>
                                       <Typography
                                         color='textSecondary'
                                         align='center'
                                         variant='body1'>
-                                        Create one to see it here
+                                        <IntlMessages id='app.coinLeague.createOneToSeeItHere' />
                                       </Typography>
                                     </Grid>
                                   </Grid>

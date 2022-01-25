@@ -1,9 +1,9 @@
 // Mumbai Price Feeds
 
-import { BigNumber } from '@ethersproject/bignumber';
-import { ethers } from 'ethers';
-import { ChainId } from 'types/blockchain';
-import { BSCPriceFeeds } from './PriceFeeds/bsc';
+import {BigNumber} from '@ethersproject/bignumber';
+import {ethers} from 'ethers';
+import {ChainId} from 'types/blockchain';
+import {BSCPriceFeeds} from './PriceFeeds/bsc';
 
 export const DEXKIT_MULTIPLIER_HOLDING = BigNumber.from(50).mul(
   BigNumber.from(10).pow(18),
@@ -47,7 +47,7 @@ export const CREATOR_PRIZES_ADDRESSES = [
   //
   '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
   '0xA27e256CDD086eF88953b941582bB651582c1454',
-  '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f'
+  '0x5265Bde27F57E738bE6c1F6AB3544e82cdc92a8f',
 ];
 
 export const BITBOY_TEAM = [
@@ -77,12 +77,12 @@ export const CREATOR_LABELS = [
   ...BITBOY_TEAM,
   {
     address: '0xA27e256CDD086eF88953b941582bB651582c1454',
-    label: 'Albert Hoffman'
+    label: 'Albert Hoffman',
   },
   {
     address: '0x529be61AF4FD199456A5Bc67B72CD2F2a0A3FD70',
-    label: 'Albert Hoffman'
-  }
+    label: 'Albert Hoffman',
+  },
 ];
 
 export const MumbaiPriceFeeds = [
@@ -643,55 +643,63 @@ export const PriceFeeds = {
   [ChainId.Binance]: BSCPriceFeeds,
 };
 
-export const CHAMPIONS = {
+export const CHAMPIONS: {[key: number]: string} = {
   [ChainId.Matic]: '0xf2a669a2749073e55c56e27c2f4edadb7bd8d95d',
   [ChainId.Binance]: '',
   [ChainId.Mumbai]: '0x6e606c082dEcb1BA4710085a7E2c968f58B484e0',
 };
 
-export const SALE_EARLY_FIRST_ROUND_DATE: { [key: number]: number } = {
+export const SALE_EARLY_FIRST_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1637150592,
   [ChainId.Matic]: 1637211600,
+  [ChainId.Binance]: 0,
 };
 
-export const FIRST_ROUND_DATE: { [key: number]: number } = {
+export const FIRST_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1637236211,
   [ChainId.Matic]: 1637254800,
+  [ChainId.Binance]: 0,
 };
 
-export const SALE_EARLY_SECOND_ROUND_DATE: { [key: number]: number } = {
+export const SALE_EARLY_SECOND_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638421200,
+  [ChainId.Binance]: 0,
 };
 
-export const SECOND_ROUND_DATE: { [key: number]: number } = {
+export const SECOND_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1638422100,
+  [ChainId.Binance]: 0,
 };
 
-export const SALE_EARLY_THIRD_ROUND_DATE: { [key: number]: number } = {
+export const SALE_EARLY_THIRD_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639631700,
+  [ChainId.Binance]: 0,
 };
 
-export const THIRD_ROUND_DATE: { [key: number]: number } = {
+export const THIRD_ROUND_DATE: {[key: number]: number} = {
   [ChainId.Mumbai]: 1636752511,
   [ChainId.Matic]: 1639674000,
 };
 
-export const EARLY_ACCESS_KIT_AMOUNT: { [key: number]: number } = {
+export const EARLY_ACCESS_KIT_AMOUNT: {[key: number]: number} = {
   [ChainId.Matic]: 50,
   [ChainId.Mumbai]: 50,
+  [ChainId.Binance]: 0,
 };
 
-export const EARLY_ACCESS_BITT_AMOUNT: { [key: number]: number } = {
+export const EARLY_ACCESS_BITT_AMOUNT: {[key: number]: number} = {
   [ChainId.Matic]: 200,
   [ChainId.Mumbai]: 200,
+  [ChainId.Binance]: 0,
 };
 
-export const EVENT_HOLDING_AMOUNT: { [key: number]: BigNumber } = {
+export const EVENT_HOLDING_AMOUNT: {[key: number]: BigNumber} = {
   [ChainId.Matic]: ethers.utils.parseUnits('115', 'ether'),
   [ChainId.Mumbai]: ethers.utils.parseUnits('100', 'wei'),
+  [ChainId.Binance]: ethers.utils.parseUnits('0.01', 'ether'),
 };
 
 export const COIN_LEAGUES_FACTORY_ADDRESS = {
@@ -706,11 +714,10 @@ export const COIN_LEAGUES_NFT_FACTORY_ADDRESS = {
   [ChainId.Binance]: '',
 };
 
-
-export const DISABLE_CHAMPIONS_ID = '500000'
+export const DISABLE_CHAMPIONS_ID = '500000';
 
 export const AFFILIATE_FIELD = 'league-affiliate';
 
-
-export const GAME_METADATA_API = 'https://coinleague-app-api-yxwk6.ondigitalocean.app'
-// export const GAME_METADATA_API = 'http://localhost:4001'
+export const GAME_METADATA_API =
+  'https://coinleague-app-api-yxwk6.ondigitalocean.app';
+//export const GAME_METADATA_API = 'http://localhost:4001'

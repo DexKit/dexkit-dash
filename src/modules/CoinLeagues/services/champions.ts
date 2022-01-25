@@ -36,55 +36,59 @@ export function mintCoinLeaguesChampion(
       tx = contract.mintThirdRound(transactionParam);
     }
 
-     tx
-      .then(async (tx: any) => {
-        if (tx.hash && onTransaction) {
-          onTransaction(tx.hash);
-        }
+    tx.then(async (tx: any) => {
+      if (tx.hash && onTransaction) {
+        onTransaction(tx.hash);
+      }
 
-        let result = await tx.wait();
+      let result = await tx.wait();
 
-        let iface = new ethers.utils.Interface([RandomnessRequestAbi]);
+      let iface = new ethers.utils.Interface([RandomnessRequestAbi]);
 
-        let log = result.logs[3];
+      let log = result.logs[3];
 
-        let logResult = iface.parseLog(log);
+      let logResult = iface.parseLog(log);
 
-        let requestId = logResult.args['requestID'];
+      let requestId = logResult.args['requestID'];
 
-        let id = await contract.requestToTokenId(requestId);
+      let id = await contract.requestToTokenId(requestId);
 
-        resolve(id);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        reject(err);
-      });
+      resolve(id);
+    }).catch((err: any) => {
+      console.log(err);
+      reject(err);
+    });
   });
 }
 
-export const getChampionMetadata = (tokenId: string, chainId?: number) => {
-  let url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
-
-  if (chainId === ChainId.Mumbai) {
-    url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
+export const getChampionApiEndpoint = (chainId?: number) => {
+  if (!chainId) {
+    return undefined;
   }
 
-  return axios.get<ChampionMetadata>(url).then((response) => response.data);
+  if (chainId === ChainId.Matic) {
+    return `https://coinleaguechampions.dexkit.com/api`;
+  }
+
+  if (chainId === ChainId.Mumbai) {
+    return `https://coinleaguechampions-mumbai.dexkit.com/api`;
+  }
+
+  if (chainId === ChainId.Binance) {
+    return `https://coinleaguechampions-bsc.dexkit.com/api`;
+  }
 };
 
-const CHAMPIONS_API_URL_MATIC = 'https://coinleaguechampions.dexkit.com';
-const CHAMPIONS_API_URL_MUMBAI =
-  'https://coinleaguechampions-mumbai.dexkit.com';
+export const getChampionMetadata = (tokenId: string, chainId?: number) => {
+  return axios
+    .get<ChampionMetadata>(`${getChampionApiEndpoint(chainId)}/${tokenId}`)
+    .then((response) => response.data);
+};
 
 export const getChampionsTotalSupply = (chainId?: number) => {
-  let url = `${CHAMPIONS_API_URL_MATIC}/api/total-supply`;
-
-  if (chainId === ChainId.Mumbai) {
-    url = `${CHAMPIONS_API_URL_MUMBAI}/api/total-supply`;
-  }
-
   return axios
-    .get<{totalSupply: number}>(url)
+    .get<{totalSupply: number}>(
+      `${getChampionApiEndpoint(chainId)}/total-supply`,
+    )
     .then((response) => response.data);
 };

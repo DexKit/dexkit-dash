@@ -159,6 +159,8 @@ export const TokenSetup = (props: TokenSetupProps) => {
             symbol: values.symbol,
             supply: values.supply,
             chainId: chainId,
+            transactionHash: contract.deployTransaction.hash,
+            address: contract.address,
           }),
         );
       })

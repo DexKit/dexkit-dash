@@ -10,11 +10,12 @@ import {DEXKIT, BITTOKEN} from 'shared/constants/tokens';
 
 import {ChainId, Web3State} from 'types/blockchain';
 import {
+  getChampionApiEndpoint,
   getChampionMetadata,
   getChampionsTotalSupply,
   mintCoinLeaguesChampion,
 } from 'modules/CoinLeagues/services/champions';
-import {CHAMPIONS} from 'modules/CoinLeagues/constants';
+
 import {
   ChampionMetadata,
   CoinLeaguesChampion,
@@ -25,13 +26,21 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {getRarityFromBodyType} from 'modules/CoinLeagues/utils/champions';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
+import {
+  GET_CHAMPIONS_CONTRACT_ADDR,
+  IS_CHAMPIONS_SUPPORTED_NETWORK,
+} from 'modules/CoinLeagues/utils/champions';
+
+import {useIntl} from 'react-intl';
 
 export function useChampionMint() {
-  const {getProvider, web3State } = useWeb3();
-  const { chainId } = useLeaguesChainInfo();
-  
+  const {getProvider, web3State} = useWeb3();
+  const {chainId} = useLeaguesChainInfo();
+
+  const {messages} = useIntl();
 
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
@@ -48,20 +57,16 @@ export function useChampionMint() {
 
   const mint = useCallback(async () => {
     clear();
+
+    const championsAddress = GET_CHAMPIONS_CONTRACT_ADDR(chainId);
+
     if (
       web3State === Web3State.Done &&
-      (chainId === ChainId.Mumbai || chainId === ChainId.Matic)
+      IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) &&
+      championsAddress
     ) {
-      let provider = getProvider();
-      let pr = new ethers.providers.Web3Provider(provider);
-
-      let championsAddress: string = '';
-
-      if (chainId === ChainId.Mumbai) {
-        championsAddress = CHAMPIONS[ChainId.Mumbai];
-      } else if (chainId === ChainId.Matic) {
-        championsAddress = CHAMPIONS[ChainId.Matic];
-      }
+      const provider = getProvider();
+      const pr = new ethers.providers.Web3Provider(provider);
 
       setLoading(true);
 
@@ -73,11 +78,13 @@ export function useChampionMint() {
           setTransactionHash(hash);
 
           createNotification({
-            title: 'Create Champion',
-            body: `Creating a Coin League Champion`,
+            title: messages['app.coinLeague.createChampion'] as string,
+            body: messages[
+              'app.coinLeague.creatingCoinLeagueChampion'
+            ] as string,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, hash),
-            urlCaption: 'View transaction',
+            urlCaption: messages['app.coinLeague.viewTransaction'] as string,
             type: NotificationType.TRANSACTION,
             metadata: {
               chainId: chainId,
@@ -101,13 +108,7 @@ export function useChampionMint() {
           return undefined;
         });
     }
-  }, [
-    web3State,
-    chainId,
-    getProvider,
-    clear,
-    createNotification
-  ]);
+  }, [web3State, chainId, getProvider, clear, createNotification, messages]);
 
   return {mint, loading, error, transactionHash, tokenId, clear};
 }
@@ -131,11 +132,8 @@ export const useChampionMetadata = (tokenId?: string) => {
 
       let url = '';
 
-      if (chainId === ChainId.Mumbai) {
-        url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
-      } else if (chainId === ChainId.Matic) {
-        // TODO: put production url;
-        url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
+      if (IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
+        url = `${getChampionApiEndpoint(chainId)}/${tokenId}`;
       }
 
       axios
@@ -186,14 +184,7 @@ export const useChampionMetadataQuery = (tokenId?: string) => {
       return;
     }
 
-    let url = '';
-
-    if (chainId === ChainId.Mumbai) {
-      url = `https://coinleaguechampions-mumbai.dexkit.com/api/${tokenId}`;
-    } else if (chainId === ChainId.Matic) {
-      // TODO: put production url;
-      url = `https://coinleaguechampions.dexkit.com/api/${tokenId}`;
-    }
+    let url = `${getChampionApiEndpoint(chainId)}/${tokenId}`;
 
     return axios
       .get<ChampionMetadata>(url, {
@@ -249,11 +240,7 @@ export const useChampionTokenHolding = (account?: string) => {
         'function balanceOf(address _owner) public view returns (uint256 balance)',
       ];
 
-      if (
-        account &&
-        chainId &&
-        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
-      ) {
+      if (account && chainId && IS_CHAMPIONS_SUPPORTED_NETWORK(chainId)) {
         const DexKit = DEXKIT[chainId as ChainId];
         const Bitt = BITTOKEN[chainId as ChainId];
 
