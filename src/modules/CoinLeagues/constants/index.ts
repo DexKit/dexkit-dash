@@ -252,14 +252,6 @@ export const MaticPriceFeeds = [
     tv: 'BINANCE:BTGUSD',
   },
   {
-    address: '0x6b7D436583e5fE0874B7310b74D29A13af816860',
-    base: 'BZRX',
-    baseName: 'bZx Protocol',
-    logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x56d811088235F11C8920698a204A5010a788f4b3/logo.png',
-    quote: 'USD',
-    tv: 'BINANCE:BZRXUSD',
-  },
-  {
     address: '0xc9ECF45956f576681bDc01F79602A79bC2667B0c',
     base: 'CEL',
     baseName: 'Celsius Network',

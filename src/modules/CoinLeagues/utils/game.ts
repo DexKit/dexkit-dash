@@ -169,7 +169,7 @@ export const GET_GAME_LEVEL_AMOUNTS = (gameLevel: GameLevel, chainId = ChainId.M
         case ChainId.Matic:
           return ethers.utils.parseEther('1')
         case ChainId.Binance:
-          return ethers.utils.parseEther('0.0001')
+          return ethers.utils.parseEther('0.01')
         default:
           return ethers.utils.parseEther('1')
       }
