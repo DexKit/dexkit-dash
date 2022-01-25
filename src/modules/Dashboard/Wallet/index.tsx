@@ -82,7 +82,7 @@ const WalletTabs: React.FC<Props> = (props) => {
     history.push({search: searchParams.toString()});
     setValue(newValue);
   };
-  const {loading, error, data, nftBalances, loadingUsd} =
+  const {loading, error, data, loadingUsd, errorUsd} =
     useAllBalance(defaultAccount);
 
   useEffect(() => {
@@ -168,6 +168,8 @@ const WalletTabs: React.FC<Props> = (props) => {
                         <AssetTableTab
                           account={account as string}
                           loading={loading}
+                          loadingUsd={loadingUsd}
+                          errorUsd={errorUsd}
                           error={error}
                           data={data}
                         />

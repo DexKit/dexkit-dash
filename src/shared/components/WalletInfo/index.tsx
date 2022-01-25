@@ -37,8 +37,6 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {useNetwork} from 'hooks/useNetwork';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
@@ -141,7 +139,7 @@ const WalletInfo = (props: any) => {
 
   const {account: web3Account, ethBalance, web3State, onCloseWeb3} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const network = useNetwork();
+  const {network} = useChainInfo();
   const defaultAccountLabel = useDefaultLabelAccount();
   const connected = useMemo(() => {
     return web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
@@ -154,7 +152,6 @@ const WalletInfo = (props: any) => {
   const dispatch = useDispatch();
 
   const {data: balances} = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
     network,
     defaultAccount,
   );

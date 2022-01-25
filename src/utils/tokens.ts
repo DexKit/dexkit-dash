@@ -104,6 +104,14 @@ export const isNativeCoinFromNetworkName = (
       return symbol.toLowerCase() === 'eth';
   }
 };
+// Native Coin has same symbol on the address
+export const isNativeCoinFromCustom = (
+  symbol: string,
+  address: string,
+ 
+) => {
+  return symbol.toLowerCase() === address.toLowerCase();
+};
 
 export const isNativeCoinWithoutChainId = (symbol: string) => {
   const lowercaseSymbol = symbol.toLowerCase();

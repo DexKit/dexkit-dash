@@ -1,11 +1,13 @@
 import React from 'react';
-import {Box} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core/styles';
-import {useNetwork} from 'hooks/useNetwork';
-import {utils} from 'ethers';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
-import {GET_DEFAULT_TOKEN_BY_NETWORK} from 'shared/constants/Blockchain';
-import {CremaTheme} from 'types/AppContextPropsType';
+import { Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useNetwork } from 'hooks/useNetwork';
+import { utils } from 'ethers';
+import { EthereumNetwork } from 'shared/constants/AppEnums';
+import { GET_DEFAULT_TOKEN_BY_NETWORK } from 'shared/constants/Blockchain';
+import { CremaTheme } from 'types/AppContextPropsType';
+import { DEXKIT } from 'shared/constants/tokens';
+import { ChainId } from 'types/blockchain';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   pair: {
@@ -74,15 +76,15 @@ const TokenLogo: React.FC<Props> = (props) => {
     currentNetwork === EthereumNetwork.ethereum
       ? 'ethereum'
       : currentNetwork === EthereumNetwork.bsc
-      ? 'smartchain'
-      : 'polygon';
+        ? 'smartchain'
+        : currentNetwork === EthereumNetwork.matic ? 'polygon' : '';
 
   const currencyLogo =
     networkName === 'ethereum'
       ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png'
       : currentNetwork === EthereumNetwork.bsc
-      ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
-      : 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png';
+        ? 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png' : currentNetwork === EthereumNetwork.matic ?
+          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png' : '';
   const getIconUrl = (address: string, logoUrl?: string) => {
     if (logoUrl) {
       return logoUrl;
@@ -105,9 +107,11 @@ const TokenLogo: React.FC<Props> = (props) => {
     }
     if (
       address.toLowerCase() ===
-        (process.env.REACT_APP_DEFAULT_ETH_KIT_TOKEN as string).toLowerCase() ||
+      DEXKIT[ChainId.Mainnet]?.address?.toLowerCase() ||
       address.toLowerCase() ===
-        (process.env.REACT_APP_DEFAULT_BSC_KIT_TOKEN as string).toLowerCase()
+      DEXKIT[ChainId.Binance]?.address.toLowerCase() ||
+      address.toLowerCase() ===
+      DEXKIT[ChainId.Matic]?.address.toLowerCase()
     ) {
       return dexkitLogo;
     }

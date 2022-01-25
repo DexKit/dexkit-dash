@@ -29,6 +29,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     cursor: 'pointer',
   },
+  noClickablePaper: {
+    backgroundColor: '#252836',
+    borderRadius: 6,
+    display: 'block',
+    textAlign: 'left',
+  },
 }));
 
 interface TokenListItemProps {
@@ -38,7 +44,9 @@ interface TokenListItemProps {
   amountUsd?: number;
   dayChange?: number;
   address?: string;
+  logo?: string;
   network?: any;
+  isCustomNetwork?: boolean;
   onClick?: (network: string, address: string) => void;
   onRemove?: () => void;
   hideBalance?: boolean;
@@ -56,6 +64,8 @@ export const TokenListItem = (props: TokenListItemProps) => {
     onClick,
     onRemove,
     hideBalance,
+    isCustomNetwork,
+    logo,
   } = props;
 
   const classes = useStyles();
@@ -65,22 +75,23 @@ export const TokenListItem = (props: TokenListItemProps) => {
     if (
       onClick !== undefined &&
       address !== undefined &&
-      network !== undefined
+      network !== undefined &&
+      isCustomNetwork !== true
     ) {
       onClick(network, address);
     }
-  }, [network, address, onClick]);
+  }, [network, address, onClick, isCustomNetwork]);
 
   const {usdFormatter} = useUSDFormatter();
 
   return (
-    <Paper onClick={handleClick} className={classes.paper}>
+    <Paper onClick={handleClick} className={isCustomNetwork ? classes.noClickablePaper : classes.paper}>
       <Box p={4}>
         <Grid container alignItems='center' justify='space-between'>
           <Grid item>
             <Grid container alignItems='center' spacing={2}>
               <Grid item>
-                <TokenLogo token0={address || ''} networkName={network} />
+                <TokenLogo token0={address || ''} networkName={network} logoURL0={logo} />
               </Grid>
               <Grid item>
                 <Tooltip title={name}>
@@ -100,7 +111,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
                       ? 'BSC'
                       : network === 'matic'
                       ? 'MATIC'
-                      : ''
+                      : network
                   }
                 />
               </Grid>

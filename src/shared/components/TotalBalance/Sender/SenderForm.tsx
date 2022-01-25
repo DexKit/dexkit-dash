@@ -1,11 +1,11 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
-import {CircularProgress, useTheme, Grid} from '@material-ui/core';
+import { CircularProgress, useTheme, Grid } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {Fonts} from 'shared/constants/AppEnums';
-import {CremaTheme} from 'types/AppContextPropsType';
+import { Fonts } from 'shared/constants/AppEnums';
+import { CremaTheme } from 'types/AppContextPropsType';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import {
   FormControl,
@@ -16,31 +16,31 @@ import {
   OutlinedInput,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import {useWeb3} from 'hooks/useWeb3';
+import { useWeb3 } from 'hooks/useWeb3';
 
-import {isAddress} from '@ethersproject/address';
+import { isAddress } from '@ethersproject/address';
 
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
-import {useTransfer} from 'hooks/useTransfer';
+import { GetMyBalance_ethereum_address_balances } from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
+import { useTransfer } from 'hooks/useTransfer';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {useNetwork} from 'hooks/useNetwork';
-import {useSenderTokens} from 'hooks/useSenderTokens';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSenderTokens } from 'hooks/useSenderTokens';
 import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
-import {SelectTokenButton} from './SelectTokenButton';
-import {Token} from 'types/app';
-import {isNativeCoinFromNetworkName} from 'utils';
-import {useAllBalance} from 'hooks/balance/useAllBalance';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
+import { SelectTokenButton } from './SelectTokenButton';
+import { Token } from 'types/app';
+import { isNativeCoinFromNetworkName } from 'utils';
+import { useAllBalance } from 'hooks/balance/useAllBalance';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {AppState} from 'redux/store';
-import {Alert} from '@material-ui/lab';
-import {setDefaultAccount} from 'redux/_ui/actions';
-import {SupportedNetworkType} from 'types/blockchain';
-import {switchAddress, switchChain} from 'utils/wallet';
-import {AccountSelect} from 'shared/components/AccountSelect';
-import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+import { AppState } from 'redux/store';
+import { Alert } from '@material-ui/lab';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { SupportedNetworkType } from 'types/blockchain';
+import { switchAddress, switchChain } from 'utils/wallet';
+import { AccountSelect } from 'shared/components/AccountSelect';
+import { useDefaultLabelAccount } from 'hooks/useDefaultLabelAccount';
+import { useChainInfo } from 'hooks/useChainInfo';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -74,25 +74,25 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const SenderForm: React.FC<Props> = (props) => {
-  const {token: defaultToken, address: defaultAddress, onResult, error} = props;
+  const { token: defaultToken, onResult, error } = props;
   const classes = useStyles();
   const theme = useTheme();
 
   const dispatch = useDispatch();
 
-  const networkName = useNetwork();
+  const { network: networkName, tokenSymbol } = useChainInfo();
 
   const accounts = useSelector<AppState, AppState['ui']['wallet']>(
     (state) => state.ui.wallet,
   );
 
-  const {chainId, account: userAccount, getProvider} = useWeb3();
+  const { chainId, account: userAccount, getProvider } = useWeb3();
 
   const account = useDefaultAccount();
   const accountLabel = useDefaultLabelAccount();
 
-  const {onTransfer} = useTransfer();
-  const {data: balances} = useAllBalance(account);
+  const { onTransfer } = useTransfer();
+  const { data: balances } = useAllBalance(account);
 
   const [amount, setAmount] = useState<string>(String(props.amount || ''));
   const [address, setAddress] = useState<string>('');
@@ -117,7 +117,6 @@ const SenderForm: React.FC<Props> = (props) => {
   const [sending, setSending] = useState(false);
 
   const handleSend = () => {
-    console.log('0xaBBC64423FA7d56981b6c5E11Be6e9e6f65AdDFB');
     if (account) {
       try {
         if (token && chainId) {
@@ -135,7 +134,7 @@ const SenderForm: React.FC<Props> = (props) => {
               }
             })
             .catch((err) => {
-              console.log('errr', err);
+
               if (onResult) {
                 onResult(err);
               }
@@ -175,7 +174,7 @@ const SenderForm: React.FC<Props> = (props) => {
 
   const [showSelectTokenDialog, setShowSelectTokenDialog] = useState(false);
   const [token, setToken] = useState<Token>();
-  const {tokens} = useSenderTokens();
+  const { tokens } = useSenderTokens();
 
   const handleShowDialog = useCallback(() => {
     setShowSelectTokenDialog(true);
@@ -208,7 +207,7 @@ const SenderForm: React.FC<Props> = (props) => {
     if (balances) {
       let value = balances.find((e) => {
         if (
-          token?.symbol &&
+          token?.symbol && networkName &&
           isNativeCoinFromNetworkName(token?.symbol, networkName)
         ) {
           return (
@@ -252,13 +251,22 @@ const SenderForm: React.FC<Props> = (props) => {
     if (defaultToken !== undefined) {
       setToken(defaultToken);
     } else if (tokens.length > 0) {
-      setToken(tokens[0]);
-    }
+      // Check if native exists to put as default
+      const token = tokens.find(t => t.networkName === networkName && t.symbol.toLowerCase() === tokenSymbol?.toLowerCase());
+      if (token) {
+        setToken(token);
+      } else {
+        // If no native, just find one from the selected network
+        const tk = tokens.find(t => t.networkName === networkName);
+        if (tk) {
+          setToken(tk);
+        } else {
+          setToken(tokens[0]);
+        }
+      }
 
-    if (defaultAddress !== undefined) {
-      setAddress(defaultAddress);
     }
-  }, [tokens, defaultToken, defaultAddress]);
+  }, [tokens, defaultToken, networkName, tokenSymbol]);
 
   // default address is not connected
   const notConnected = userAccount !== account;
@@ -292,7 +300,7 @@ const SenderForm: React.FC<Props> = (props) => {
     setShowSenderSelectAddress(false);
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <>
@@ -326,7 +334,7 @@ const SenderForm: React.FC<Props> = (props) => {
               <Grid item xs={12}>
                 <AccountSelect
                   onClick={handleShowSenderSelectAddress}
-                  account={{label: accountLabel, address: account || ''}}
+                  account={{ label: accountLabel, address: account || '' }}
                 />
               </Grid>
             ) : null}
