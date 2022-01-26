@@ -68,7 +68,7 @@ export const getAllBitqueryBalances = (account: string) => {
       variables: {
         address: account,
       },
-      errorPolicy: 'none',
+      errorPolicy: 'ignore',
     })
     .then((balances) => {
       const allMyBalances = MapBalancesToNetwork(
