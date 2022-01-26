@@ -115,7 +115,7 @@ export default {
               'X-API-KEY': process.env.REACT_APP_BITQUERY_API_KEY as string,
           },
           body: queryString
-      }
+       }
 
         const response = await fetch(Bitquery.endpoint, requestHeaders).then(r => r.json());
 
