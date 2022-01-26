@@ -1558,6 +1558,7 @@
   "coinleague.affiliate.game": "Juego",
   "coinleague.affiliate.type": "Tipo",
   "coinleague.affiliate.player": "Jugador",
+  "app.coinLeagues.action" : "Acción",
   "app.coinLeague.errorRemovingMetadata": "Error removiendo este premio, ¿eres el creador? Si el error persiste, contacta al qeuipo",
   "app.coinLeague.remove": "Remover",
   "app.coinLeague.removed": "Removido",
