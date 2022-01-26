@@ -143,7 +143,7 @@ export const getCoingeckoContractUrlFromNetwork = (
     case EthereumNetwork.bsc:
       return 'https://api.coingecko.com/api/v3/coins/binance-smart-chain/contract';
     case EthereumNetwork.matic:
-      return 'https://api.coingecko.com/api/v3/coins/polygon-pos/contract/';
+      return 'https://api.coingecko.com/api/v3/coins/polygon-pos/contract';
 
     default:
       return 'https://api.coingecko.com/api/v3/coins/ethereum/contract';
