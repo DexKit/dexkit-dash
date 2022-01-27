@@ -12,6 +12,7 @@
   "dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
   "dashboard.swap.info": "In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.",
   "shared.copiedClipboard": "Copied to clipboard!",
+  "app.coinLeagues.action" : "Action",
   "app.coinLeagues.maxPrizePool": "Max Prize Pool",
   "app.coinLeagues.chainSelected": "Coinleague on {chainName}",
   "app.coinLeagues.champion": "Champion",

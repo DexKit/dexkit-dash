@@ -8,7 +8,6 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import {Kit} from './kit';
-import clsx from 'clsx';
 import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork, Fonts} from 'shared/constants/AppEnums';
 import ConfirmationDialog from '@crema/core/ConfirmationDialog';
@@ -159,7 +158,6 @@ const KitMarket: React.FC<KitMarketProps> = ({icon, bgColor, heading}) => {
     <>
       <Card>
         <CardHeader
-          className={clsx(classes.statsCard, 'card-hover')}
           // action={
           //   <IconButton aria-label="settings">
           //     <MoreVertIcon />

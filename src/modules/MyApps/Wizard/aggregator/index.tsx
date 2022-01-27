@@ -80,12 +80,13 @@ const initConfig: GeneralConfigAggregator = {
   logo_dark: '',
   domain: '',
   feeRecipient: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
-  buyTokenPercentage: '0.003',
+  buyTokenPercentage: '0.3',
   brand_color: '#ff7149',
   brand_color_dark: '#2172E5',
   support_bsc: true,
   bsc_as_default: false,
   matic_as_default: false,
+  avax_as_default: false,
   fee_waive_for_default_token: false,
   is_dark_mode: false,
   hide_powered_by_dexkit: false,
@@ -94,6 +95,7 @@ const initConfig: GeneralConfigAggregator = {
   default_token_address: '0x7866E48C74CbFB8183cd1a929cd9b95a7a5CB4F4',
   default_token_address_bsc: '0x314593fa9a2fa16432913dbccc96104541d32d11',
   default_token_address_matic: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
+  default_token_address_avax: '',
   default_slippage: 1,
 };
 
@@ -213,7 +215,7 @@ export default function VerticalLinearStepper() {
     const dataType = Object.values(WizardData).find((e) => e === key);
     switch (dataType) {
       case WizardData.GENERAL: {
-        if (data == null) {
+        if (data === null) {
           setData({...value} as ConfigFileAggregator);
         } else {
           type k = keyof typeof value;
@@ -225,7 +227,7 @@ export default function VerticalLinearStepper() {
         break;
       }
       case WizardData.THEME: {
-        if (data != null) {
+        if (data !== null) {
           const theme = value as AggregatorTheme;
           data.is_dark_mode = theme.is_dark_mode;
           data.brand_color = theme.brand_color;
@@ -235,28 +237,28 @@ export default function VerticalLinearStepper() {
         break;
       }
       case WizardData.CONTACT: {
-        if (data != null) {
+        if (data !== null) {
           data.links = value as AggregatorLinks;
           setData(data);
         }
         break;
       }
       case WizardData.TOKENS: {
-        if (data != null) {
+        if (data !== null) {
           data.token_fee_program = value as TokenFeeProgramConfig[];
           setData(data);
         }
         break;
       }
       case WizardData.WALLET: {
-        if (data != null) {
+        if (data !== null) {
           data.wallets = value as AggregatorWallet;
           setData(data);
         }
       }
     }
   };
-  const [textButtonCopy, setTextButtonCopy] = useState('Copy Shortcode');
+  const [textButtonCopy, setTextButtonCopy] = useState('Copy Wordpress Shortcode');
 
   const handleCopyShortcode = () => {
     setTextButtonCopy('Copied');
@@ -279,11 +281,18 @@ export default function VerticalLinearStepper() {
     if (data.default_token_address) {
       text = `${text} default_token_address_eth="${data.default_token_address}"`;
     }
+    if (data.buy_token_percentage) {
+      text = `${text} default_token_address_eth="${data.buy_token_percentage}"`;
+    }
     if (data.default_token_address_bsc) {
       text = `${text} default_token_address_bsc="${data.default_token_address_bsc}"`;
     }
     if (data.default_token_address_matic) {
       text = `${text} default_token_address_matic="${data.default_token_address_matic}"`;
+    }
+
+    if (data.default_token_address_avax) {
+      text = `${text} default_token_address_avax="${data.default_token_address_avax}"`;
     }
     if (data.brand_color) {
       text = `${text} brand_color="${data.brand_color}"`;

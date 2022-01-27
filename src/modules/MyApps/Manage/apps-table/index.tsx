@@ -69,7 +69,7 @@ const AppsTable = () => {
   const [showDialog, setShowDialog] = useState(false);
   const {account} = useWeb3();
   const {configs, loading} = useMyAppsConfig(account);
-  const {error, data: balances} = useBalance();
+  const { data: balances} = useBalance();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -149,8 +149,7 @@ const AppsTable = () => {
       //   body: `deleted ${slug} app successfully`,
       //   timestamp: (new Date()).getTime(),
       // };
-      const config = configs?.splice(index, 1)[0];
-      console.log('removed', config);
+
       const notification = new Notification(`${slug} app deleted`, {
         body: `deleted ${slug} app successfully`,
       });
@@ -326,8 +325,6 @@ const AppsTable = () => {
       )}
 
       {loading ? <Loader /> : null}
-
-      {error ? JSON.stringify(error) : null}
     </>
   );
 };

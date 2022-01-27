@@ -3,7 +3,6 @@ import {wizardConfigs} from './Wizard';
 
 export const myAppsConfigs = [
   {
-    auth: ['connect-wallet'],
     routes: [
       {
         path: '/my-apps/manage',

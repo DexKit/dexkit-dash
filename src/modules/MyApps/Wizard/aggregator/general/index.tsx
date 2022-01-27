@@ -59,7 +59,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   );
 
   const keys = useMemo(() => {
-    const exclude = ['is_dark_mode', 'brand_color', 'brand_color_dark'];
+    const exclude = ['is_dark_mode', 'brand_color', 'brand_color_dark','links'];
     return Object.keys(fields).filter((f) =>
       exclude.every((x) => x !== f),
     ) as k[];
@@ -80,10 +80,7 @@ const GeneralForm: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(fields);
-    console.log(editable);
     if (Boolean(editable)) {
-      console.log('called');
       changeIssuerForm(WizardData.GENERAL, fields);
     }
   }, [fields, changeIssuerForm, editable]);

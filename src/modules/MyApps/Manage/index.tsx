@@ -4,24 +4,23 @@ import {AppState} from 'redux/store';
 import {Grid, Box} from '@material-ui/core';
 import {teal} from '@material-ui/core/colors';
 import GridContainer from '@crema/core/GridContainer';
-import InfoView from '@crema/core/InfoView';
 import IntlMessages from '@crema/utility/IntlMessages';
 import AppsTable from './apps-table';
-import TotalRewards from './TotalRewards';
+//import TotalRewards from './TotalRewards';
 import KitMarket from './kit-market';
 import Ripple from 'assets/images/ripple.png';
-import LockUnlock from './LockUnlock';
+//import LockUnlock from './LockUnlock';
 import Alert from '@material-ui/lab/Alert';
-import {useBalance} from 'hooks/balance/useBalance';
-import ErrorView from 'modules/Common/ErrorView';
+//import {useBalance} from 'hooks/balance/useBalance';
+//import ErrorView from 'modules/Common/ErrorView';
 import AppsIcon from '@material-ui/icons/Apps';
 import {AboutDialog} from './AboutDialog';
 import {Fonts} from 'shared/constants/AppEnums';
-import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
+// import LoadingInfo from 'modules/ProtocolExplorer/Common/InfoToken/LoadingInfo';
 // import { setInsufficientAmountAlert } from 'redux/actions';
 
 const MyApps: React.FC = () => {
-  const {loading, error, data: balances} = useBalance();
+  // const {loading, error, data: balances} = useBalance();
   // const [alertBalance, setAlertBalance] = useState(balances != null && balances.length > 0);
 
   const {insufficientAmountAlert} = useSelector<AppState, AppState['myApps']>(
@@ -64,7 +63,7 @@ const MyApps: React.FC = () => {
           )}
         </Box>
         <GridContainer>
-          <Grid item xs={12} md={6}>
+         {/* <Grid item xs={12} md={6}>
             {loading ? (
               <LoadingInfo />
             ) : error ? (
@@ -76,7 +75,7 @@ const MyApps: React.FC = () => {
 
           <Grid item xs={12} md={6}>
             <TotalRewards />
-          </Grid>
+            </Grid>*/}
 
           <Grid item xs={12} md={8}>
             <AppsTable />
@@ -92,7 +91,6 @@ const MyApps: React.FC = () => {
           </Grid>
         </GridContainer>
       </Box>
-      <InfoView />
     </>
   );
 };

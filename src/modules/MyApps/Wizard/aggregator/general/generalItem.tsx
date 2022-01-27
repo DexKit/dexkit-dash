@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Checkbox,
@@ -8,12 +8,12 @@ import {
   InputAdornment,
   TextField,
 } from '@material-ui/core';
-import {GeneralConfigAggregator} from 'types/myApps';
-import {capitalize, urlValidator} from 'utils/text';
-import {isAddress} from 'ethers/lib/utils';
-import {ZERO_ADDRESS} from 'shared/constants/Blockchain';
-import {InfoComponent} from '../../shared/Buttons/infoComponent';
-import {getFieldProperties} from '../fieldProperties';
+import { GeneralConfigAggregator } from 'types/myApps';
+import { capitalize, urlValidator } from 'utils/text';
+import { isAddress } from 'ethers/lib/utils';
+import { ZERO_ADDRESS } from 'shared/constants/Blockchain';
+import { InfoComponent } from '../../shared/Buttons/infoComponent';
+import { getFieldProperties } from '../fieldProperties';
 
 interface error {
   [key: string]: string | undefined;
@@ -54,7 +54,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
   placeholder,
   helpText,
 }: ItemComponentProps) => {
-  const [error, setError] = useState<error>({[fieldName]: undefined});
+  const [error, setError] = useState<error>({ [fieldName]: undefined });
   const [valid, setValid] = useState<boolean>(startValidation);
   const [value, setValue] = useState(initialValue);
   const [typeElement, setTypeElement] = useState<TypeElement>();
@@ -92,6 +92,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
         'default_token_address',
         'default_token_address_bsc',
         'default_token_address_matic',
+        'default_token_address_avax',
       ].includes(fieldName)
     ) {
       setTypeElement('address');
@@ -109,23 +110,25 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
     case 'checkbox':
       return (
         <Grid item xs={6} md={6} sm={6}>
-          <FormControlLabel
-            value={(value ?? false) as boolean}
-            control={
-              <Checkbox
-                defaultChecked={(value ?? false) as boolean}
-                onChange={($e) => {
-                  setValue(Boolean($e.target.value));
-                  changeField($e, fieldName, 'boolean');
-                }}
-                name={capitalize(fieldName, '_')}
-                color='primary'
-              />
-            }
-            label={capitalize(fieldName, '_')}
-            labelPlacement='end'
-          />
-          {/* <InfoComponent text={helpText}/> */}
+          <Box display={'flex'} alignContent={'center'} alignItems={'center'}>
+            <FormControlLabel
+              value={(value ?? false) as boolean}
+              control={
+                <Checkbox
+                  defaultChecked={(value ?? false) as boolean}
+                  onChange={($e) => {
+                    setValue(Boolean($e.target.value));
+                    changeField($e, fieldName, 'boolean');
+                  }}
+                  name={capitalize(fieldName, '_')}
+                  color='primary'
+                />
+              }
+              label={capitalize(fieldName, '_')}
+              labelPlacement='end'
+            />
+            <InfoComponent text={helpText} />
+          </Box>
         </Grid>
       );
     case 'url': {
@@ -137,28 +140,32 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             required={isRequired}
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
-            helperText={!valid && error != null ? error[fieldName] : undefined}
-            error={(error != null && error[fieldName] != null) as boolean}
+            helperText={!valid && error !== null ? error[fieldName] : undefined}
+            error={(error !== null && error[fieldName] !== null) as boolean}
             onBlur={() => {
-              const url = value != null ? (value as string) : '';
-              const _error =
-                url.length > 0
-                  ? !urlValidator(url)
-                    ? `${capitalize(
+              const url = value !== null ? (value as string) : '';
+              if (value) {
+                const _error =
+                  url.length > 0
+                    ? !urlValidator(url)
+                      ? `${capitalize(
                         fieldName,
                         '_',
                         ' ',
                       )} is invalid. Not valid URL!`
-                    : undefined
-                  : `${capitalize(
+                      : undefined
+                    : `${capitalize(
                       fieldName,
                       '_',
                       ' ',
                     )} is invalid. Not valid URL!`;
-              if (error != null) {
-                setError({[fieldName]: _error});
+                if (_error) {
+                  setError({ [fieldName]: _error });
+                } else {
+                  setError({ [fieldName]: undefined });
+                }
               } else {
-                setError({[fieldName]: undefined});
+                setError({ [fieldName]: undefined });
               }
             }}
             onChange={($e) => {
@@ -174,7 +181,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
               shrink: true,
             }}
             variant='outlined'
-            InputProps={{endAdornment: <InfoComponent text={helpText} />}}
+            InputProps={{ endAdornment: <InfoComponent text={helpText} /> }}
           />
         </Grid>
       );
@@ -194,7 +201,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             InputProps={{
               endAdornment: (
                 <Box component='span'>
-                  <InputAdornment position='end' style={{marginInline: '7px'}}>
+                  <InputAdornment position='end' style={{ marginInline: '7px' }}>
                     %
                   </InputAdornment>
                   <InfoComponent text={helpText} />
@@ -212,9 +219,9 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
                   ? `Percentage in ${capitalize(fieldName, '_')} is invalid`
                   : undefined;
               if (_error != null) {
-                setError({[fieldName]: _error});
+                setError({ [fieldName]: _error });
               } else {
-                setError({[fieldName]: undefined});
+                setError({ [fieldName]: undefined });
               }
             }}
             onChange={($e) => {
@@ -253,7 +260,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
                   )}  is invalid!`,
                 });
               } else {
-                setError({[fieldName]: undefined});
+                setError({ [fieldName]: undefined });
               }
             }}
             onChange={($e) => {
@@ -263,7 +270,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             fullWidth
             label={capitalize(fieldName, '_')}
             variant='outlined'
-            InputProps={{endAdornment: <InfoComponent text={helpText} />}}
+            InputProps={{ endAdornment: <InfoComponent text={helpText} /> }}
           />
         </Grid>
       );
@@ -280,7 +287,8 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             error={(error != null && error[fieldName]) as boolean}
             placeholder={placeholder ?? ZERO_ADDRESS.toString()}
             onBlur={() => {
-              if (value == null || !isAddress(value.toString().trim())) {
+
+              if (value && !isAddress(value.toString().trim())) {
                 setError({
                   [fieldName]: `${capitalize(
                     fieldName,
@@ -288,7 +296,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
                   )} address is invalid!`,
                 });
               } else {
-                setError({[fieldName]: undefined});
+                setError({ [fieldName]: undefined });
               }
             }}
             onChange={($e) => {
@@ -302,7 +310,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             fullWidth
             label={label}
             variant='outlined'
-            InputProps={{endAdornment: <InfoComponent text={helpText} />}}
+            InputProps={{ endAdornment: <InfoComponent text={helpText} /> }}
           />
         </Grid>
       );
@@ -325,9 +333,9 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
                   ? `${capitalize(fieldName, '_', ' ')} is invalid!`
                   : undefined;
               if (error != null) {
-                setError({[fieldName]: _error});
+                setError({ [fieldName]: _error });
               } else {
-                setError({[fieldName]: undefined});
+                setError({ [fieldName]: undefined });
               }
             }}
             onChange={($e) => {
@@ -342,7 +350,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
               // shrink: placeholder != null,
               shrink: true,
             }}
-            InputProps={{endAdornment: <InfoComponent text={helpText} />}}
+            InputProps={{ endAdornment: <InfoComponent text={helpText} /> }}
           />
         </Grid>
       );

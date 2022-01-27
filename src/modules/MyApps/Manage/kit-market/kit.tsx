@@ -39,7 +39,7 @@ interface KitProps {
 }
 
 export const Kit: React.FC<KitProps> = (props) => {
-  const {name, value, button, bgColor, icon} = props;
+  const {name, button, bgColor, icon} = props;
   const classes = useStyles({bgColor});
   return (
     <ListItem>
@@ -49,7 +49,7 @@ export const Kit: React.FC<KitProps> = (props) => {
         </Avatar>
       </ListItemAvatar>
 
-      <ListItemText primary={name} secondary={`${value} KIT`} />
+      <ListItemText primary={name} secondary={`FREE`} />
 
       <ListItemSecondaryAction>
         <Button
