@@ -325,7 +325,6 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 </Grid>
               </Grid>
             ) : null}
-
             <Grid item xs={12}>
               {isKittyTired(kittygotchi) ? (
                 <Typography

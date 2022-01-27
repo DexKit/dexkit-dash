@@ -335,6 +335,7 @@ export const useKittygotchiList = (address?: string) => {
         const client = getClient(chainId);
 
         if (!client) {
+          setError(new Error('client not found'));
           return reject('client not found');
         }
 

@@ -17,6 +17,9 @@ import {
   Breadcrumbs,
   Link,
 } from '@material-ui/core';
+
+import {ChainId} from 'types/blockchain';
+
 import {Alert, Skeleton} from '@material-ui/lab';
 import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
@@ -473,8 +476,19 @@ export const KittyDetail: React.FC = () => {
                             </Tooltip>
                           </Grid>
                           <Grid item>
-                            <Tooltip title='Open on OpenSea'>
-                              <RoundedIconButton onClick={goToOpenSea}>
+                            <Tooltip
+                              title={
+                                chainId === ChainId.Binance
+                                  ? (messages[
+                                      'app.kittygotchi.openSeaIsNotSupported'
+                                    ] as string)
+                                  : (messages[
+                                      'app.kittygotchi.viewOnOpenSea'
+                                    ] as string)
+                              }>
+                              <RoundedIconButton
+                                disabled={chainId === ChainId.Binance}
+                                onClick={goToOpenSea}>
                                 <ShareIcon />
                               </RoundedIconButton>
                             </Tooltip>

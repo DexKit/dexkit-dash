@@ -99,7 +99,7 @@ export const MintKittygotchiDialog = (props: MintKittygotchiDialogProps) => {
             <Alert severity='info'>
               <Typography variant='body2'>
                 <IntlMessages id='app.kittygotchi.connectTo' />{' '}
-                <strong>Polygon(MATIC)</strong>{' '}
+                <strong>Polygon(MATIC) or Binance Smart Chain</strong>{' '}
                 <IntlMessages id='app.kittygotchi.netToCreateKitty' />
               </Typography>
             </Alert>

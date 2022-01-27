@@ -274,8 +274,8 @@ export const KittygotchiIndex = () => {
             <Grid item xs={12}>
               <Alert severity='info'>
                 <Typography variant='body2'>
-                  <IntlMessages id='app.kittygotchi.connectTo' /> Ethereum,
-                  Binance Smart Chain or Polygon{' '}
+                  <IntlMessages id='app.kittygotchi.connectTo' /> Binance Smart
+                  Chain or Polygon{' '}
                   <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>
@@ -309,30 +309,31 @@ export const KittygotchiIndex = () => {
                   </Grid>
                 ) : (
                   <>
-                    {kittygotchiList.data?.length === 0 && (
-                      <Box py={2}>
-                        <Paper>
-                          <Box py={4}>
-                            <Grid container spacing={4}>
-                              <Grid item xs={12}>
-                                <Box
-                                  display='flex'
-                                  justifyContent='center'
-                                  alignContent='center'
-                                  alignItems='center'>
-                                  <NFTEmptyStateImage />
-                                </Box>
+                    {kittygotchiList.data?.length === 0 ||
+                      (kittygotchiList.error && (
+                        <Box py={2}>
+                          <Paper>
+                            <Box py={4}>
+                              <Grid container spacing={4}>
+                                <Grid item xs={12}>
+                                  <Box
+                                    display='flex'
+                                    justifyContent='center'
+                                    alignContent='center'
+                                    alignItems='center'>
+                                    <NFTEmptyStateImage />
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography align='center' variant='h5'>
+                                    <IntlMessages id='nfts.wallet.noItemsFound' />
+                                  </Typography>
+                                </Grid>
                               </Grid>
-                              <Grid item xs={12}>
-                                <Typography align='center' variant='h5'>
-                                  <IntlMessages id='nfts.wallet.noItemsFound' />
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                        </Paper>
-                      </Box>
-                    )}
+                            </Box>
+                          </Paper>
+                        </Box>
+                      ))}
                     <Grid container spacing={4}>
                       {kittygotchiList.data?.map((kittygotchi, index) => (
                         <Grid item xs={12} sm={3} key={index}>

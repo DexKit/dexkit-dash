@@ -151,7 +151,7 @@ export function getKittygotchiMetadataEndpoint(
 export function isKittygotchiNetworkSupported(chainId?: number) {
   if (chainId) {
     return (
-      chainId === ChainId.Mainnet ||
+      // chainId === ChainId.Mainnet ||
       chainId === ChainId.Ropsten ||
       chainId === ChainId.Matic ||
       chainId === ChainId.Mumbai ||

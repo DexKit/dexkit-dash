@@ -1,18 +1,14 @@
 import React, {useCallback} from 'react';
 
 import {
-  Link,
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
-  Typography,
 } from '@material-ui/core';
 import {Skeleton} from '@material-ui/lab';
 
 import {KittygotchiRankingItem} from '../types';
-import {truncateAddress} from 'utils';
-import {useChainInfo} from 'hooks/useChainInfo';
 import {useWeb3} from 'hooks/useWeb3';
 import {KittygotchiRankingListItem} from './KittygotchiRankingListItem';
 import {GET_KITTYGOTCHI_CONTRACT_ADDR} from '../constants';
@@ -75,7 +71,6 @@ export const KittygotchiRankingList: React.FC<Props> = ({
           />
         ))
       )}
-      {}
     </List>
   );
 };

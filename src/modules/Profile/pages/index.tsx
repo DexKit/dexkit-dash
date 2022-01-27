@@ -478,7 +478,7 @@ export const ProfileIndex = () => {
                     />
                   ) : (
                     <CardContent>
-                      <Typography varinat='body1'>
+                      <Typography variant='body1'>
                         <IntlMessages id='app.kittygotchi.notEnoughtKitties' />
                       </Typography>
                     </CardContent>
