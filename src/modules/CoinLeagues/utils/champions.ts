@@ -237,3 +237,19 @@ export function GET_CHAMPIONS_CONTRACT_ADDR(chainId?: number) {
 
   return undefined;
 }
+
+export function IS_CHAMPIONS_NETWORK_ENABLED(chainId?: number): boolean {
+  if (!chainId) {
+    return false;
+  }
+
+  if (chainId === ChainId.Binance) {
+    return false;
+  }
+
+  if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+    return true;
+  }
+
+  return false;
+}
