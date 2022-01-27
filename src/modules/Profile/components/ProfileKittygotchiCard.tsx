@@ -322,6 +322,19 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       {leftPad(kittygotchi?.run, 2)}
                     </Typography>
                   </Grid>
+                  <Grid item>
+                    <Typography color='textSecondary' variant='caption'>
+                      STR
+                    </Typography>
+                    <Typography variant='h5'>
+                      {leftPad(
+                        kittygotchi?.run +
+                          kittygotchi?.defense +
+                          kittygotchi?.attack,
+                        2,
+                      )}
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             ) : null}

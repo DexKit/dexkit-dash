@@ -58,6 +58,7 @@ import {GET_KITTYGOTCHI_CONTRACT_ADDR} from '../constants';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {ownerOf} from 'services/nfts';
 import {refetchKittygotchiMetadata} from '../services/kittygotchi';
+import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -580,7 +581,7 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.attack
+                                    leftPad(kittygotchi.data?.attack || 0, 2)
                                   )}
                                 </Typography>
                               </Grid>
@@ -596,7 +597,7 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.defense
+                                    leftPad(kittygotchi.data?.defense || 0, 2)
                                   )}
                                 </Typography>
                               </Grid>
@@ -612,7 +613,28 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.run
+                                    leftPad(kittygotchi.data?.run || 0, 2)
+                                  )}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                {!kittygotchi.isLoading ? (
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='caption'>
+                                    <IntlMessages id='app.kittygotchi.str' />
+                                  </Typography>
+                                ) : null}
+                                <Typography variant='h5'>
+                                  {kittygotchi.isLoading ? (
+                                    <Skeleton width={theme.spacing(10)} />
+                                  ) : (
+                                    leftPad(
+                                      (kittygotchi.data?.run || 0) +
+                                        (kittygotchi.data?.attack || 0) +
+                                        (kittygotchi.data?.defense || 0),
+                                      2,
+                                    )
                                   )}
                                 </Typography>
                               </Grid>

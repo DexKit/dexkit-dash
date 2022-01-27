@@ -1692,6 +1692,7 @@
   "app.kittygotchi.notEnoughtKitties": "Not enough kitties",
   "app.kittygotchi.viewOnOpenSea": "View On OpenSea",
   "app.kittygotchi.connectTo": "Connect to",
+  "app.kittygotchi.str": "STR",
   "app.kittygotchi.netToCreateKitty": "network to create a Kittygotchi",
   "app.kittygotchi.setDefault": "Set Default",
   "app.kittygotchi.kittyHungry": "Your kittygotchi is hungry! Last time you fed him:",
