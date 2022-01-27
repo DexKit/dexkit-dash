@@ -17,6 +17,7 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useChainInfo} from 'hooks/useChainInfo';
 
+
 interface Props {
   step: Steps | undefined;
   tokenFrom: Token;
@@ -128,7 +129,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         allowanceTarget,
         maxApproval.toString(),
       );
-
+  
       createNotification({
         title: messages['app.dashboard.approve'] as string,
         body: `${

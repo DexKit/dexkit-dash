@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import {
   Grid,
@@ -14,11 +14,11 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import NotificationItem from '@crema/core/Notifications/NotificationItem';
-import {AppState} from 'redux/store';
-import {useSelector} from 'react-redux';
+import { AppState } from 'redux/store';
+import { useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
-import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
-import {useMobile} from 'hooks/useMobile';
+import { ConnectivityImage, NotificationOutlinedIcon } from './Icons';
+import { useMobile } from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -30,18 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface NotificationsDialogProps extends DialogProps {}
+interface NotificationsDialogProps extends DialogProps { }
 
 export const NotificationsDialog = (props: NotificationsDialogProps) => {
-  const {onClose} = props;
+  const { onClose } = props;
 
   const classes = useStyles();
 
-  const {notifications} = useSelector<AppState, AppState['notification']>(
-    ({notification}) => notification,
+  const { notifications } = useSelector<AppState, AppState['notification']>(
+    ({ notification }) => notification,
   );
 
-  const handleClick = useCallback(() => {}, []);
+  const handleClick = useCallback(() => { }, []);
 
   const handleClose = useCallback(() => {
     if (onClose) {
@@ -50,6 +50,10 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
   }, [onClose]);
 
   const isMobile = useMobile();
+
+  const reversedNotifications = useMemo(() => {
+    return [...notifications].reverse();
+  }, [notifications])
 
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>
@@ -78,7 +82,7 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
       <DialogContent className={classes.noPadding}>
         {notifications.length > 0 ? (
           <List disablePadding>
-            {notifications.map((item, i) => (
+            {reversedNotifications.map((item, i) => (
               <NotificationItem
                 onClick={handleClick}
                 id={Number(item?.id || i)}
