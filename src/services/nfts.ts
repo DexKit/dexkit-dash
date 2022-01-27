@@ -143,3 +143,37 @@ export async function getTokenMetadataById(
 
   return data;
 }
+
+export async function getAssetMetadata(
+  contractAddress: string,
+  provider: () => any,
+  tokenId: string,
+) {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  const uri = await contract.tokenURI(tokenId);
+
+  const metadata = await getTokenMetadata(uri);
+
+  const owner = await contract.ownerOf(tokenId);
+
+  const collectionName = await contract.name();
+  const symbol = await contract.symbol();
+
+  const data: AssetData = {
+    collectionName,
+    symbol,
+    imageUrl: getNormalizedUrl(metadata?.image || ''),
+    contractAddress,
+    tokenId,
+    description: metadata.description || '',
+    title: metadata.name || '',
+    owner,
+  };
+
+  return data;
+}

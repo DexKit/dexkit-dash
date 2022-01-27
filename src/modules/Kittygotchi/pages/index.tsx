@@ -310,23 +310,27 @@ export const KittygotchiIndex = () => {
                 ) : (
                   <>
                     {kittygotchiList.data?.length === 0 && (
-                      <Box py={4}>
-                        <Grid container spacing={4}>
-                          <Grid item xs={12}>
-                            <Box
-                              display='flex'
-                              justifyContent='center'
-                              alignContent='center'
-                              alignItems='center'>
-                              <NFTEmptyStateImage />
-                            </Box>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography align='center' variant='h5'>
-                              <IntlMessages id='nfts.wallet.noItemsFound' />
-                            </Typography>
-                          </Grid>
-                        </Grid>
+                      <Box py={2}>
+                        <Paper>
+                          <Box py={4}>
+                            <Grid container spacing={4}>
+                              <Grid item xs={12}>
+                                <Box
+                                  display='flex'
+                                  justifyContent='center'
+                                  alignContent='center'
+                                  alignItems='center'>
+                                  <NFTEmptyStateImage />
+                                </Box>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography align='center' variant='h5'>
+                                  <IntlMessages id='nfts.wallet.noItemsFound' />
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Paper>
                       </Box>
                     )}
                     <Grid container spacing={4}>

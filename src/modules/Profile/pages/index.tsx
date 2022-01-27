@@ -3,12 +3,17 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {
   Box,
   Grid,
+  Divider,
   Typography,
-  Button,
+  CardContent,
   IconButton,
   Breadcrumbs,
   Link,
+  Card,
+  CardHeader,
 } from '@material-ui/core';
+
+import AssetDetailDialog from 'modules/Dashboard/components/AssetDetailDialog';
 
 import {useNotifications} from 'hooks/useNotifications';
 
@@ -30,6 +35,7 @@ import {
   useKittygotchiMint,
   useKittygotchiOnChain,
   useKittygotchiV2,
+  useKittygotchiRanking,
 } from 'modules/Kittygotchi/hooks';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
@@ -40,10 +46,13 @@ import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
+
 import {GET_KITTYGOTCHI_CONTRACT_ADDR} from 'modules/Kittygotchi/constants';
 import {useIntl} from 'react-intl';
 import {ownerOf} from 'services/nfts';
 import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
+
+import KittygotchiRankingList from 'modules/Kittygotchi/components/KittygotchiRankingList';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -73,7 +82,7 @@ export const ProfileIndex = () => {
 
   const feedingToggler = useToggler();
 
-  const {getTransactionScannerUrl} = useChainInfo();
+  const {getTransactionScannerUrl, chainName} = useChainInfo();
 
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedingDone, setFeedingDone] = useState(false);
@@ -109,6 +118,8 @@ export const ProfileIndex = () => {
   const {createNotification} = useNotifications();
 
   const {chainId, account, web3State, getProvider} = useWeb3();
+
+  const kittygotchiRanking = useKittygotchiRanking(chainId);
 
   useEffect(() => {
     if (
@@ -326,8 +337,47 @@ export const ProfileIndex = () => {
     setErrorMessage(undefined);
   }, []);
 
+  const [selectedToken, setSelectedToken] = useState<{
+    contractAddress: string;
+    tokenId: string;
+    metadata: any;
+    chainId: number;
+  }>();
+
+  const showDetailToggler = useToggler();
+
+  const handleSelectAsset = useCallback(
+    (
+      contractAddress: string,
+      tokenId: string,
+      metadata: any,
+      chainId: number,
+    ) => {
+      setSelectedToken({contractAddress, tokenId, metadata, chainId});
+      showDetailToggler.set(true);
+    },
+    [showDetailToggler],
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    showDetailToggler.set(false);
+    setSelectedToken(undefined);
+  }, [showDetailToggler]);
+
   return (
     <>
+      <AssetDetailDialog
+        dialogProps={{
+          open: showDetailToggler.show,
+          onClose: handleCloseDialog,
+          maxWidth: 'xs',
+          fullWidth: true,
+        }}
+        contractAddress={selectedToken?.contractAddress}
+        tokenId={selectedToken?.tokenId}
+        metadata={selectedToken?.metadata}
+        chainId={selectedToken?.chainId}
+      />
       <SelectAddressDialog
         open={selectAddressDialogToggler.show}
         accounts={accounts.evm}
@@ -391,24 +441,6 @@ export const ProfileIndex = () => {
           <Grid item xs={12} sm={12}>
             <Grid container spacing={4} justifyContent={'center'}>
               <Grid item xs={12} sm={6}>
-                <Box
-                  mb={2}
-                  display='flex'
-                  alignItems='center'
-                  alignContent='center'
-                  justifyContent='space-between'>
-                  <Typography variant='body1'>
-                    <IntlMessages id='app.kittygotchi.myKittygotchi' />
-                  </Typography>
-
-                  <Button
-                    size='small'
-                    color='primary'
-                    to='/kittygotchi'
-                    component={RouterLink}>
-                    <IntlMessages id='app.kittygotchi.viewMore' />
-                  </Button>
-                </Box>
                 <ProfileKittygotchiCard
                   onMint={handleMint}
                   onFeed={handleFeed}
@@ -420,6 +452,38 @@ export const ProfileIndex = () => {
                   error={errorMessage}
                   onClearError={handleClearError}
                 />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Card>
+                  <CardHeader
+                    title={messages['app.kittygotchi.top5Ranking'] as string}
+                  />
+                  <Divider />
+                  {kittygotchiRanking.error ? (
+                    <CardContent>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Typography variant='h5'>
+                            <IntlMessages id='app.kittygotchi.oopsAnErrorOccurred' />
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}></Grid>
+                      </Grid>
+                    </CardContent>
+                  ) : kittygotchiRanking.results.length > 0 ? (
+                    <KittygotchiRankingList
+                      items={kittygotchiRanking.results}
+                      loading={kittygotchiRanking.isLoading}
+                      onSelect={handleSelectAsset}
+                    />
+                  ) : (
+                    <CardContent>
+                      <Typography varinat='body1'>
+                        <IntlMessages id='app.kittygotchi.notEnoughtKitties' />
+                      </Typography>
+                    </CardContent>
+                  )}
+                </Card>
               </Grid>
             </Grid>
           </Grid>

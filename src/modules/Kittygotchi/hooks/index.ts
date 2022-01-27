@@ -75,17 +75,17 @@ const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
 const THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchibsc';
 
-let clientMumbai = new ApolloClient({
+const clientMumbai = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
-let clientMatic = new ApolloClient({
+const clientMatic = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
-let clientBsc = new ApolloClient({
+const clientBsc = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT,
   cache: new InMemoryCache(),
 });
@@ -779,4 +779,64 @@ export function useKittygotchiStyleEdit() {
       accessories: values?.accessory,
     },
   };
+}
+
+export function useKittygotchiMetadata(chainId: number, tokenId: string) {
+  const {data} = useQuery([tokenId, chainId]);
+  return {};
+}
+
+export const GET_KITTYGOTCHI_RANKING = gql`
+  query QueryKittygotchiRanking($offset: Int!, $limit: Int!) {
+    tokens(
+      first: $limit
+      skip: $offset
+      orderBy: totalStrength
+      orderDirection: desc
+    ) {
+      id
+      owner {
+        id
+      }
+      uri
+      attack
+      totalStrength
+    }
+  }
+`;
+
+export function useKittygotchiRanking(
+  chainId?: number,
+  offset: number = 0,
+  limit: number = 5,
+) {
+  const {getClient} = useGraphqlClient();
+
+  const {data, isLoading, error} = useQuery(
+    [chainId, offset, limit, getClient],
+    async () => {
+      if (chainId) {
+        const client = getClient(chainId);
+
+        const result = (
+          await client?.query<{tokens: any[]}>({
+            query: GET_KITTYGOTCHI_RANKING,
+            variables: {offset, limit},
+          })
+        )?.data.tokens;
+
+        return (
+          result?.map((r: any) => ({
+            tokenId: r.id,
+            owner: r.owner.id,
+            strength: parseInt(r.totalStrength),
+          })) || []
+        );
+      }
+
+      return [];
+    },
+  );
+
+  return {results: data || [], isLoading, error};
 }

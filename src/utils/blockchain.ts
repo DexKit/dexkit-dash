@@ -172,7 +172,8 @@ export async function isTransactionMined(
   transactionHash: string,
 ) {
   if (provider) {
-    let pr = new ethers.providers.Web3Provider(provider);
+    const pr = new ethers.providers.Web3Provider(provider);
+
     const txReceipt = await pr.getTransactionReceipt(transactionHash);
 
     if (txReceipt && txReceipt.blockNumber) {

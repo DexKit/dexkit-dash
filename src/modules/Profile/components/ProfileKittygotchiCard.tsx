@@ -1,6 +1,9 @@
 import React, {useCallback} from 'react';
 import moment from 'moment';
 
+import {ChainId} from 'types/blockchain';
+import {Link as RouterLink} from 'react-router-dom';
+
 import {ethers} from 'ethers';
 
 import {
@@ -15,6 +18,8 @@ import {
   useTheme,
   Tooltip,
   Divider,
+  CardHeader,
+  Chip,
 } from '@material-ui/core';
 
 import {useIntl} from 'react-intl';
@@ -44,6 +49,7 @@ import {leftPad} from 'utils';
 
 import EditIcon from '@material-ui/icons/Edit';
 import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -84,6 +90,8 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   } = props;
 
   const theme = useTheme();
+
+  const {chainName} = useChainInfo();
 
   const classes = useStyles();
 
@@ -246,8 +254,19 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       height={theme.spacing(8)}
                     />
                   ) : (
-                    <Tooltip title='View on Opensea'>
-                      <RoundedIconButton onClick={goToOpenSea}>
+                    <Tooltip
+                      title={
+                        chainId === ChainId.Binance
+                          ? (messages[
+                              'app.kittygotchi.openSeaIsNotSupported'
+                            ] as string)
+                          : (messages[
+                              'app.kittygotchi.viewOnOpenSea'
+                            ] as string)
+                      }>
+                      <RoundedIconButton
+                        disabled={chainId === ChainId.Binance}
+                        onClick={goToOpenSea}>
                         <ShareIcon />
                       </RoundedIconButton>
                     </Tooltip>
@@ -369,6 +388,36 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
 
   return (
     <Paper>
+      <CardHeader
+        title={
+          <Box
+            display='flex'
+            alignItems='center'
+            alignContent='center'
+            justifyContent='space-between'>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Box mr={2}>
+                <Typography variant='h5'>
+                  {messages['app.kittygotchi.myKittygotchi'] as string}
+                </Typography>
+              </Box>
+              <Chip label={chainName} />
+            </Box>
+            <Button
+              size='medium'
+              color='primary'
+              to='/kittygotchi'
+              component={RouterLink}>
+              <IntlMessages id='app.kittygotchi.viewMore' />
+            </Button>
+          </Box>
+        }
+      />
+      <Divider />
       <Box p={4}>
         <Grid container spacing={4}>
           {error ? (

@@ -8,6 +8,7 @@ import {
   TableCell,
   FormControl,
   Select,
+  Paper,
   MenuItem,
   IconButton,
   Grid,
@@ -79,7 +80,7 @@ export const TransactionsTab: React.FC<Props> = () => {
     return (
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <TableContainer>
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableCell>
@@ -90,6 +91,9 @@ export const TransactionsTab: React.FC<Props> = () => {
                 </TableCell>
                 <TableCell>
                   <IntlMessages id='app.wallet.status' />
+                </TableCell>
+                <TableCell>
+                  <IntlMessages id='app.wallet.network' />
                 </TableCell>
                 <TableCell></TableCell>
               </TableHead>
@@ -162,23 +166,27 @@ export const TransactionsTab: React.FC<Props> = () => {
     );
   } else {
     return (
-      <Box>
-        <Grid
-          container
-          spacing={4}
-          alignItems='center'
-          alignContent='center'
-          justifyContent='center'
-          direction='column'>
-          <Grid item>
-            <WalletEmptyImage />
-          </Grid>
-          <Grid item>
-            <Typography variant='h5' align='center' color='primary'>
-              <IntlMessages id='app.wallet.noTransactionsYet' />
-            </Typography>
-          </Grid>
-        </Grid>
+      <Box py={4}>
+        <Paper>
+          <Box py={4}>
+            <Grid
+              container
+              spacing={4}
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'
+              direction='column'>
+              <Grid item>
+                <WalletEmptyImage />
+              </Grid>
+              <Grid item>
+                <Typography variant='h5' align='center'>
+                  <IntlMessages id='app.wallet.noTransactionsYet' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
       </Box>
     );
   }
