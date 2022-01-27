@@ -64,8 +64,7 @@ const MarketStep: React.FC<Props> = (props) => {
         gasPrice: selectedGasPrice,
         data: quote.data,
         value: quote.value,
-      })
-      .then((e) => {
+      }).once('transactionHash', (hash) => {
         const tokenFromQuantity = tokenAmountInUnits(
           new BigNumber(quote.sellAmount),
           tokenFrom.decimals,
@@ -74,22 +73,23 @@ const MarketStep: React.FC<Props> = (props) => {
           new BigNumber(quote.buyAmount),
           tokenTo.decimals,
         );
-
         createNotification({
           title: messages['app.dashboard.marketOrder'] as string,
           body: `${
             messages['app.dashboard.swap']
           } ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
           timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, e.transactionHash),
+          url: getTransactionScannerUrl(chainId, hash),
           urlCaption: messages['app.dashboard.viewTransaction'] as string,
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,
-            transactionHash: e.transactionHash,
-            status: 'done',
+            transactionHash: hash,
+            status: 'pending',
           } as TxNotificationMetadata,
         });
+      })
+      .then((e) => {    
         onNext(true);
       })
       .catch((e) => {

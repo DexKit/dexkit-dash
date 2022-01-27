@@ -35,6 +35,7 @@ import {ReactComponent as CloseCircleIcon} from 'assets/images/icons/close-circl
 import ContainedInput from 'shared/components/ContainedInput';
 import {useHistory} from 'react-router-dom';
 import {useMobile} from 'hooks/useMobile';
+import { LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
 
 const Accounts = () => {
   const theme = useTheme();
@@ -248,9 +249,12 @@ const Accounts = () => {
       if (index > -1) {
         newAccounts.splice(index, 1);
         setSelectedAccounts(newAccounts);
+        if(newAccounts.length === 0){
+          history.push(LOGIN_WALLET_ROUTE);
+        }
       }
     }
-  }, [selectedAccounts]);
+  }, [selectedAccounts, history]);
 
   return (
     <Box pt={{xl: 4}}>

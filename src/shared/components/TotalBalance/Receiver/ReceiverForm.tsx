@@ -210,7 +210,8 @@ const ReceiverForm: React.FC<Props> = (props) => {
               }}
             />
           </Grid>
-          {!isCustomNetwork && <Grid item xs={12}>
+          {/* Removed for now, because not working good*/}
+          {!isCustomNetwork && false && <Grid item xs={12}>
             <Paper variant='outlined'>
               <Box p={4}>
                 <Box
@@ -252,7 +253,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
               </Box>
             </Paper>
           </Grid>}
-          <Grid item xs={12}>
+          {false && <Grid item xs={12}>
             <Button
               fullWidth
               variant='contained'
@@ -262,7 +263,7 @@ const ReceiverForm: React.FC<Props> = (props) => {
               size='large'>
               Share address
             </Button>
-          </Grid>
+          </Grid>}
         </Grid>
       </Box>
     </>
