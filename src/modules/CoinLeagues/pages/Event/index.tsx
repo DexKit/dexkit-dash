@@ -97,7 +97,13 @@ export function ChampionsEvent() {
 
   const isMobile = useMobile();
 
-  const {account, ethBalance, onConnectWeb3, getProvider} = useWeb3();
+  const {
+    account,
+    ethBalance,
+    onConnectWeb3,
+    getProvider,
+    chainId: web3ChainId,
+  } = useWeb3();
   const {chainId, coinSymbol} = useLeaguesChainInfo();
 
   const myChampions = useMyChampions(chainId, 4);
@@ -241,7 +247,7 @@ export function ChampionsEvent() {
                   </Alert>
                 </Grid>
               ) : null}
-              {IS_CHAMPIONS_NETWORK_ENABLED(chainId) ? (
+              {IS_CHAMPIONS_NETWORK_ENABLED(web3ChainId) ? (
                 <Grid item xs={12}>
                   <Paper>
                     <Box p={4}>
@@ -504,6 +510,7 @@ export function ChampionsEvent() {
                           <Grid item>
                             <Button
                               color='primary'
+                              variant='contained'
                               onClick={handleSwitchToMatic}>
                               <IntlMessages id='app.coinLeague.switchToMaticNetwork' />
                             </Button>
@@ -514,7 +521,7 @@ export function ChampionsEvent() {
                   </Grid>
                 </Grid>
               )}
-              {IS_CHAMPIONS_NETWORK_ENABLED(chainId) ? (
+              {IS_CHAMPIONS_NETWORK_ENABLED(web3ChainId) ? (
                 <Grid item xs={12}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
