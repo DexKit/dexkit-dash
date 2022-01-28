@@ -55,6 +55,7 @@ interface Props {
   tokenId?: string;
   defaultAddress?: string;
   onSelectAddress: () => void;
+  onSuccess?: () => void;
 }
 
 export const TransferAssetDialog: React.FC<Props> = ({

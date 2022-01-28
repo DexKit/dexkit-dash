@@ -1,6 +1,11 @@
 import React, {useCallback} from 'react';
 import moment from 'moment';
 
+import {ChainId} from 'types/blockchain';
+import {Link as RouterLink} from 'react-router-dom';
+
+import {ethers} from 'ethers';
+
 import {
   Avatar,
   makeStyles,
@@ -13,8 +18,10 @@ import {
   useTheme,
   Tooltip,
   Divider,
+  CardHeader,
+  Chip,
 } from '@material-ui/core';
-import {ChainId} from 'types/blockchain';
+
 import {useIntl} from 'react-intl';
 
 import {Alert} from '@material-ui/lab';
@@ -30,11 +37,19 @@ import SendIcon from '@material-ui/icons/Send';
 
 import {Skeleton} from '@material-ui/lab';
 import {useMobile} from 'hooks/useMobile';
-import {canFeedKitty, isKittyTired} from 'modules/Kittygotchi/utils';
+import {
+  canFeedKitty,
+  GET_KITTYGOTCHI_CHAIN_SYMBOL,
+  GET_KITTYGOTCHI_MINT_RATE,
+  isKittygotchiNetworkSupported,
+  isKittyTired,
+} from 'modules/Kittygotchi/utils';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import {leftPad} from 'utils';
 
 import EditIcon from '@material-ui/icons/Edit';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -57,11 +72,15 @@ interface ProfileKittygotchiCardProps {
   kittygotchi?: Kittygotchi;
   loadingKyttie?: boolean;
   onTransfer: () => void;
+  error?: any;
+  onClearError: () => void;
 }
 
 export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   const {
     loading,
+    error,
+    onClearError,
     onMint,
     onFeed,
     kittygotchi,
@@ -71,6 +90,8 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
   } = props;
 
   const theme = useTheme();
+
+  const {chainName} = useChainInfo();
 
   const classes = useStyles();
 
@@ -93,18 +114,16 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Grid container spacing={4}>
-            {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+            {!isKittygotchiNetworkSupported(chainId) ? (
               <Grid item xs={12}>
                 <Alert severity='info'>
                   <Typography variant='body2'>
-                    Connect your wallet to <strong>Polygon(MATIC)</strong>{' '}
-                    network to create a Kittygotchi Or see your default minted
-                    Kitty
+                    <IntlMessages id='app.kittygotchi.connectYourWalletToSupportedNetwork' />
                   </Typography>
                 </Alert>
               </Grid>
             ) : null}
-            {chainId === ChainId.Matic || chainId === ChainId.Mumbai ? (
+            {isKittygotchiNetworkSupported(chainId) ? (
               <>
                 <Grid item xs={12}>
                   <Box
@@ -117,28 +136,32 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography gutterBottom align='center' variant='h6'>
-                    You don't have a Kittygotchi NFT yet
+                    <IntlMessages id='app.kittygotchi.youDontHaveKittygotchi' />
                   </Typography>
 
                   <Typography
                     color='textSecondary'
                     align='center'
                     variant='body2'>
-                    You will need <strong>10 MATIC</strong> tokens in your
-                    wallet to create one.
+                    <IntlMessages id='app.kittygotchi.youWillNeddNTokensToCreateOne.1' />{' '}
+                    <strong>
+                      {ethers.utils.formatEther(
+                        GET_KITTYGOTCHI_MINT_RATE(chainId),
+                      )}{' '}
+                      {GET_KITTYGOTCHI_CHAIN_SYMBOL(chainId)}
+                    </strong>{' '}
+                    <IntlMessages id='app.kittygotchi.youWillNeddNTokensToCreateOne.2' />
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Box display='flex' justifyContent='center'>
                     <Button
                       onClick={onMint}
-                      disabled={
-                        chainId !== ChainId.Matic && chainId !== ChainId.Mumbai
-                      }
+                      disabled={!isKittygotchiNetworkSupported(chainId)}
                       startIcon={<GavelIcon />}
                       variant='outlined'
                       color='primary'>
-                      Create Kittygotchi
+                      <IntlMessages id='app.kittygotchi.createKittygotchi' />
                     </Button>
                   </Box>
                 </Grid>{' '}
@@ -231,8 +254,19 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       height={theme.spacing(8)}
                     />
                   ) : (
-                    <Tooltip title='View on Opensea'>
-                      <RoundedIconButton onClick={goToOpenSea}>
+                    <Tooltip
+                      title={
+                        chainId === ChainId.Binance
+                          ? (messages[
+                              'app.kittygotchi.openSeaIsNotSupported'
+                            ] as string)
+                          : (messages[
+                              'app.kittygotchi.viewOnOpenSea'
+                            ] as string)
+                      }>
+                      <RoundedIconButton
+                        disabled={chainId === ChainId.Binance}
+                        onClick={goToOpenSea}>
                         <ShareIcon />
                       </RoundedIconButton>
                     </Tooltip>
@@ -288,16 +322,28 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                       {leftPad(kittygotchi?.run, 2)}
                     </Typography>
                   </Grid>
+                  <Grid item>
+                    <Typography color='textSecondary' variant='caption'>
+                      STR
+                    </Typography>
+                    <Typography variant='h5'>
+                      {leftPad(
+                        kittygotchi?.run +
+                          kittygotchi?.defense +
+                          kittygotchi?.attack,
+                        2,
+                      )}
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             ) : null}
-
             <Grid item xs={12}>
               {isKittyTired(kittygotchi) ? (
                 <Typography
                   align={isMobile ? 'center' : 'left'}
                   variant='body1'>
-                  Your cat is hungry! Last time you fed him:{' '}
+                  <IntlMessages id='app.kittygotchi.yourCatIsHungry' />:{' '}
                   <strong>
                     {moment.unix(kittygotchi?.lastUpdated || 0).fromNow()}
                   </strong>
@@ -307,7 +353,7 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
                 {!canFeedKitty(kittygotchi) ? (
                   kittygotchi?.lastUpdated ? (
                     <>
-                      You can feed your kittygotchi in{' '}
+                      <IntlMessages id='app.kittygotchi.youCanFeedYourKittygotchiIn' />{' '}
                       <strong>
                         <CountdownSpan
                           toDate={moment
@@ -342,10 +388,10 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
         </Grid>
         <Grid item xs={12}>
           <Typography align='center' variant='h6'>
-            Creating your Kittygotchi
+            <IntlMessages id='app.kittygotchi.creatingYourKittygotchi' />
           </Typography>
           <Typography align='center' color='textSecondary' variant='body2'>
-            Please, sign the transaction in your wallet
+            <IntlMessages id='app.kittygotchi.pleaseSignTheTransaction' />
           </Typography>
         </Grid>
       </Grid>
@@ -354,7 +400,47 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
 
   return (
     <Paper>
+      <CardHeader
+        title={
+          <Box
+            display='flex'
+            alignItems='center'
+            alignContent='center'
+            justifyContent='space-between'>
+            <Box
+              display='flex'
+              alignItems='center'
+              alignContent='center'
+              justifyContent='space-between'>
+              <Box mr={2}>
+                <Typography variant='h5'>
+                  {messages['app.kittygotchi.myKittygotchi'] as string}
+                </Typography>
+              </Box>
+              <Chip label={chainName} />
+            </Box>
+            <Button
+              size='medium'
+              color='primary'
+              to='/kittygotchi'
+              component={RouterLink}>
+              <IntlMessages id='app.kittygotchi.viewMore' />
+            </Button>
+          </Box>
+        }
+      />
+      <Divider />
       <Box p={4}>
+        <Grid container spacing={4}>
+          {error ? (
+            <Grid item xs={12}>
+              <Alert severity='error' onClose={onClearError}>
+                {error}
+              </Alert>
+            </Grid>
+          ) : null}
+          <Grid item xs={12}></Grid>
+        </Grid>
         {loading
           ? renderLoading()
           : kittygotchi || loadingKyttie

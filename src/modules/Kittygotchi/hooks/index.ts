@@ -3,7 +3,6 @@ import {useNetworkProvider} from 'hooks/provider/useNetworkProvider';
 import {useWeb3} from 'hooks/useWeb3';
 import {useCallback, useState} from 'react';
 import {useQuery} from 'react-query';
-import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {ChainId, Web3State} from 'types/blockchain';
 import {Kittygotchi} from 'types/kittygotchi';
 import {Token} from 'types/app';
@@ -11,13 +10,13 @@ import {Token} from 'types/app';
 import {
   getImageFromTrait,
   getKittygotchiMetadataEndpoint,
+  GET_KITTYGOTCHI_MINT_RATE,
+  isKittygotchiNetworkSupported,
 } from 'modules/Kittygotchi/utils/index';
 
 import {
-  GET_KITTY_CHAIN_ID,
-  KITTYGOTCHI,
+  GET_KITTYGOTCHI_CONTRACT_ADDR,
   KittygotchiTraitType,
-  PRICE,
 } from '../constants';
 import {
   getOnchainAttritbutes,
@@ -31,7 +30,7 @@ import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
 import {getTokenMetadata} from 'services/nfts';
 import {getNormalizedUrl} from 'utils/browser';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
-import {DEXKIT} from 'shared/constants/tokens';
+import {GET_DEXKIT} from 'shared/constants/tokens';
 import {getTokenBalances} from 'services/multicall';
 import {KittygotchiTraitItem} from '../types';
 
@@ -73,13 +72,21 @@ const THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT =
 const THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT =
   'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchi';
 
-let clientMumbai = new ApolloClient({
+const THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT =
+  'https://api.thegraph.com/subgraphs/name/joaocampos89/kittygotchibsc';
+
+const clientMumbai = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MUMBAI_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
-let clientMatic = new ApolloClient({
+const clientMatic = new ApolloClient({
   uri: THEGRAPH_KITTYGOTCHI_MATIC_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+const clientBsc = new ApolloClient({
+  uri: THEGRAPH_KITTYGOTCHI_BSC_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
@@ -99,9 +106,13 @@ export function useGraphqlClient() {
   const getClient = useCallback((chainId?: ChainId) => {
     if (chainId === ChainId.Mumbai) {
       return clientMumbai;
+    } else if (chainId === ChainId.Binance) {
+      return clientBsc;
+    } else if (chainId === ChainId.Matic) {
+      return clientMatic;
     }
 
-    return clientMatic;
+    return undefined;
   }, []);
 
   return {getClient};
@@ -110,14 +121,20 @@ export function useGraphqlClient() {
 export function useKittygotchi(id?: string) {
   const {chainId, web3State} = useWeb3();
 
-  const provider = useNetworkProvider(undefined, GET_KITTY_CHAIN_ID(chainId));
+  const provider = useNetworkProvider(undefined, chainId);
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const query = useQuery(
     ['GET_KITTYGOTCHI_META', id, chainId, web3State, kittyAddress],
     () => {
-      if (id && provider && web3State === Web3State.Done && chainId) {
+      if (
+        id &&
+        provider &&
+        web3State === Web3State.Done &&
+        chainId &&
+        kittyAddress
+      ) {
         return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`)
           .then((r) => r.json())
           .then(async (r) => {
@@ -142,7 +159,7 @@ export function useKittygotchi(id?: string) {
 export function useKittygotchiFeed() {
   const {chainId, web3State, getProvider} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   /* eslint-disable */
   const onFeedCallback = useCallback(
@@ -150,7 +167,7 @@ export function useKittygotchiFeed() {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress
       ) {
         return;
@@ -179,20 +196,31 @@ export function useKittygotchiFeed() {
 export function useKittygotchiMint() {
   const {chainId, web3State, getProvider} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const onMintCallback = useCallback(
     async (callbacks?: MintCallbacks) => {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress
       ) {
+        if (callbacks?.onError) {
+          callbacks?.onError(
+            new Error('There is no address for Binance Smart Chain'),
+          );
+        }
         return;
       }
+
       try {
-        const tx = await mint(kittyAddress, getProvider(), PRICE[chainId]);
+        const tx = await mint(
+          kittyAddress,
+          getProvider(),
+          GET_KITTYGOTCHI_MINT_RATE(chainId),
+        );
+
         if (callbacks?.onSubmit) {
           callbacks?.onSubmit(tx.hash);
         }
@@ -244,14 +272,14 @@ interface UpdaterParams {
 export function useKittygotchiUpdate() {
   const {chainId, web3State, getProvider, account} = useWeb3();
 
-  const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+  const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
 
   const onUpdateKittyCallback = useCallback(
     async (id: string, params: UpdaterParams, callbacks?: CallbackProps) => {
       if (
         web3State !== Web3State.Done ||
         !chainId ||
-        (chainId !== ChainId.Mumbai && chainId !== ChainId.Matic) ||
+        !isKittygotchiNetworkSupported(chainId) ||
         !kittyAddress ||
         !account
       ) {
@@ -304,9 +332,17 @@ export const useKittygotchiList = (address?: string) => {
   const get = useCallback(
     async (address?: string) => {
       return new Promise<Kittygotchi[] | undefined>((resolve, reject) => {
+        const client = getClient(chainId);
+
+        if (!client) {
+          setError(new Error('client not found'));
+          return reject('client not found');
+        }
+
         setIsLoading(true);
-        getClient(chainId)
-          .query<{tokens: any[]}>({
+
+        client
+          ?.query<{tokens: any[]}>({
             query: GET_MY_KITTYGOTCHIES,
             variables: {owner: address?.toLowerCase()},
           })
@@ -359,15 +395,25 @@ export const useKittygotchiV2 = () => {
 
   const get = useCallback(
     async (id?: string) => {
+      const client = getClient(chainId);
+
+      if (!client) {
+        return undefined;
+      }
+
       setIsLoading(true);
 
-      return getClient(chainId)
-        .query<{token: any}>({
+      return client
+        ?.query<{token: any}>({
           query: GET_KITTYGOTCHI,
           variables: {id: id?.toLowerCase()},
         })
         .then(async (result: any) => {
           let resultData = result.data.token;
+
+          if (!result.data.token) {
+            throw new Error('Kittygotchi not found');
+          }
 
           let data: Kittygotchi = {
             id: resultData.id,
@@ -439,7 +485,7 @@ export const useKittygotchiOnChain = () => {
 
           let provider = new ethers.providers.Web3Provider(getProvider());
 
-          const kittyAddress = KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)];
+          const kittyAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId) || '';
 
           const contract = new ethers.Contract(
             kittyAddress,
@@ -481,26 +527,23 @@ export const useKittygotchiOnChain = () => {
     [chainId, getProvider],
   );
 
-  return {get, data, error, isLoading};
+  return {get, data, error, isLoading, clear};
 };
 
 export const useKitHolding = (account?: string) => {
   const {chainId, getProvider} = useWeb3();
 
-  const networkProvider = useNetworkProvider(EthereumNetwork.matic);
+  const networkProvider = useNetworkProvider(undefined, chainId);
 
-  const query = useQuery(
-    ['GET_COIN_LEAGUES_BALANCES', account, chainId],
-    async () => {
-      if (
-        account &&
-        (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
-      ) {
-        const DexKit = DEXKIT[chainId];
+  const query = useQuery(['GET_KITTY_HOLDING', account, chainId], async () => {
+    if (account && isKittygotchiNetworkSupported(chainId)) {
+      if (chainId) {
+        const DexKit = GET_DEXKIT(chainId);
 
         const tokens = [DexKit];
         let pr = networkProvider;
-        if (chainId === ChainId.Mumbai) {
+
+        if (isKittygotchiNetworkSupported(chainId)) {
           pr = new providers.Web3Provider(getProvider());
         }
 
@@ -519,8 +562,8 @@ export const useKitHolding = (account?: string) => {
           };
         });
       }
-    },
-  );
+    }
+  });
 
   return query;
 };
@@ -737,4 +780,64 @@ export function useKittygotchiStyleEdit() {
       accessories: values?.accessory,
     },
   };
+}
+
+export function useKittygotchiMetadata(chainId: number, tokenId: string) {
+  const {data} = useQuery([tokenId, chainId]);
+  return {};
+}
+
+export const GET_KITTYGOTCHI_RANKING = gql`
+  query QueryKittygotchiRanking($offset: Int!, $limit: Int!) {
+    tokens(
+      first: $limit
+      skip: $offset
+      orderBy: totalStrength
+      orderDirection: desc
+    ) {
+      id
+      owner {
+        id
+      }
+      uri
+      attack
+      totalStrength
+    }
+  }
+`;
+
+export function useKittygotchiRanking(
+  chainId?: number,
+  offset: number = 0,
+  limit: number = 5,
+) {
+  const {getClient} = useGraphqlClient();
+
+  const {data, isLoading, error} = useQuery(
+    [chainId, offset, limit, getClient],
+    async () => {
+      if (chainId) {
+        const client = getClient(chainId);
+
+        const result = (
+          await client?.query<{tokens: any[]}>({
+            query: GET_KITTYGOTCHI_RANKING,
+            variables: {offset, limit},
+          })
+        )?.data.tokens;
+
+        return (
+          result?.map((r: any) => ({
+            tokenId: r.id,
+            owner: r.owner.id,
+            strength: parseInt(r.totalStrength),
+          })) || []
+        );
+      }
+
+      return [];
+    },
+  );
+
+  return {results: data || [], isLoading, error};
 }

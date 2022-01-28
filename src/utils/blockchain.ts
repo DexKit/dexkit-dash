@@ -66,13 +66,13 @@ export function getTransactionScannerBaseUrl(chainId: number) {
       return `https://ropsten.etherscan.io`;
 
     case NetworkCodes.SmartChain:
-      return `https://bscscan.com/tx`;
+      return `https://bscscan.com`;
 
     case NetworkCodes.SmartChainTestnet:
       return `https://testnet.bscscan.com`;
 
     case NetworkCodes.Matic:
-      return `https://polygonscan.com/tx`;
+      return `https://polygonscan.com`;
 
     case NetworkCodes.MaticTestnet:
       return `https://mumbai.polygonscan.com`;
@@ -172,7 +172,8 @@ export async function isTransactionMined(
   transactionHash: string,
 ) {
   if (provider) {
-    let pr = new ethers.providers.Web3Provider(provider);
+    const pr = new ethers.providers.Web3Provider(provider);
+
     const txReceipt = await pr.getTransactionReceipt(transactionHash);
 
     if (txReceipt && txReceipt.blockNumber) {

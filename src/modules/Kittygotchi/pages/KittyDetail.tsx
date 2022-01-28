@@ -17,6 +17,9 @@ import {
   Breadcrumbs,
   Link,
 } from '@material-ui/core';
+
+import {ChainId} from 'types/blockchain';
+
 import {Alert, Skeleton} from '@material-ui/lab';
 import {ShareIcon} from 'shared/components/Icons';
 import RoundedIconButton from 'shared/components/ActionsButtons/RoundedIconButton';
@@ -34,8 +37,12 @@ import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
 import {FeedingKittygotchiDialog} from '../components/dialogs/FeedingKittygotchiDialog';
-import {ChainId, Web3State} from 'types/blockchain';
-import {canFeedKitty, isKittyTired} from '../utils';
+import {Web3State} from 'types/blockchain';
+import {
+  canFeedKitty,
+  isKittygotchiNetworkSupported,
+  isKittyTired,
+} from '../utils';
 import moment from 'moment';
 import CountdownSpan from 'shared/components/CountdownSpan';
 import CheckIcon from '@material-ui/icons/Check';
@@ -46,9 +53,12 @@ import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from '../constants';
+import {GET_KITTYGOTCHI_CONTRACT_ADDR} from '../constants';
 
 import {useChainInfo} from 'hooks/useChainInfo';
+import {ownerOf} from 'services/nfts';
+import {refetchKittygotchiMetadata} from '../services/kittygotchi';
+import {leftPad} from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   atkLinearColor: {
@@ -125,7 +135,7 @@ export const KittyDetail: React.FC = () => {
 
   const profileKittygotchi = useProfileKittygotchi();
 
-  const {chainId, web3State} = useWeb3();
+  const {chainId, web3State, account, getProvider} = useWeb3();
 
   const {getTransactionScannerUrl} = useChainInfo();
 
@@ -189,7 +199,9 @@ export const KittyDetail: React.FC = () => {
       }
     };
 
-    const onConfirmation = (hash?: string) => {
+    const onConfirmation = async (hash?: string) => {
+      await refetchKittygotchiMetadata(params.id, chainId);
+
       kittygotchi.get(params.id);
 
       setFeedLoading(false);
@@ -222,7 +234,7 @@ export const KittyDetail: React.FC = () => {
     if (
       params.id &&
       web3State === Web3State.Done &&
-      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      isKittygotchiNetworkSupported(chainId)
     ) {
       kittygotchi.get(params.id);
     }
@@ -230,6 +242,7 @@ export const KittyDetail: React.FC = () => {
 
   const goToOpenSea = useCallback(() => {
     if (kittygotchi.data) {
+      // TODO: use the new opensea link.
       window.open(
         `https://opensea.io/assets/matic/0xea88540adb1664999524d1a698cb84f6c922d2a1/${kittygotchi.data?.id}`,
       );
@@ -290,8 +303,35 @@ export const KittyDetail: React.FC = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const startOwnerChecker = useCallback(() => {
+    let interval = setInterval(async () => {
+      console.log('chama');
+      let contractAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
+
+      if (account && chainId) {
+        if (contractAddress && kittygotchi.data) {
+          let owner = await ownerOf(
+            contractAddress,
+            kittygotchi.data.id,
+            getProvider(),
+          );
+
+          if (owner !== account) {
+            if (profileKittygotchi.isDefault(kittygotchi.data)) {
+              profileKittygotchi.unsetDefaultKittygothchi(account, chainId);
+            }
+
+            history.push('/kittygotchi');
+            clearInterval(interval);
+          }
+        }
+      }
+    }, 2000);
+  }, [history, account, kittygotchi, chainId, getProvider]);
+
   const handleCloseTransferDialog = useCallback(() => {
     transferAssetDialogToggler.set(false);
+    startOwnerChecker();
   }, [transferAssetDialogToggler]);
 
   return (
@@ -328,7 +368,7 @@ export const KittyDetail: React.FC = () => {
           fullWidth: true,
           onClose: handleCloseTransferDialog,
         }}
-        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        contractAddress={GET_KITTYGOTCHI_CONTRACT_ADDR(chainId)}
         tokenId={kittygotchi.data?.id}
       />
       <Box>
@@ -437,8 +477,19 @@ export const KittyDetail: React.FC = () => {
                             </Tooltip>
                           </Grid>
                           <Grid item>
-                            <Tooltip title='Open on OpenSea'>
-                              <RoundedIconButton onClick={goToOpenSea}>
+                            <Tooltip
+                              title={
+                                chainId === ChainId.Binance
+                                  ? (messages[
+                                      'app.kittygotchi.openSeaIsNotSupported'
+                                    ] as string)
+                                  : (messages[
+                                      'app.kittygotchi.viewOnOpenSea'
+                                    ] as string)
+                              }>
+                              <RoundedIconButton
+                                disabled={chainId === ChainId.Binance}
+                                onClick={goToOpenSea}>
                                 <ShareIcon />
                               </RoundedIconButton>
                             </Tooltip>
@@ -530,7 +581,7 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.attack
+                                    leftPad(kittygotchi.data?.attack || 0, 2)
                                   )}
                                 </Typography>
                               </Grid>
@@ -546,7 +597,7 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.defense
+                                    leftPad(kittygotchi.data?.defense || 0, 2)
                                   )}
                                 </Typography>
                               </Grid>
@@ -562,7 +613,28 @@ export const KittyDetail: React.FC = () => {
                                   {kittygotchi.isLoading ? (
                                     <Skeleton width={theme.spacing(10)} />
                                   ) : (
-                                    kittygotchi.data?.run
+                                    leftPad(kittygotchi.data?.run || 0, 2)
+                                  )}
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                {!kittygotchi.isLoading ? (
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='caption'>
+                                    <IntlMessages id='app.kittygotchi.str' />
+                                  </Typography>
+                                ) : null}
+                                <Typography variant='h5'>
+                                  {kittygotchi.isLoading ? (
+                                    <Skeleton width={theme.spacing(10)} />
+                                  ) : (
+                                    leftPad(
+                                      (kittygotchi.data?.run || 0) +
+                                        (kittygotchi.data?.attack || 0) +
+                                        (kittygotchi.data?.defense || 0),
+                                      2,
+                                    )
                                   )}
                                 </Typography>
                               </Grid>
