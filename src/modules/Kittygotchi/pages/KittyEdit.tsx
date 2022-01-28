@@ -192,16 +192,18 @@ export const KittyEdit = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-                <Link color='inherit' component={RouterLink} to='/profile'>
-                  <IntlMessages id='app.kittygotchi.kittygotchi' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                  <Link color='inherit' component={RouterLink} to='/profile'>
+                    <IntlMessages id='app.kittygotchi.kittygotchi' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box

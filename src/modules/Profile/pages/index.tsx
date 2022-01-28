@@ -53,6 +53,7 @@ import {ownerOf} from 'services/nfts';
 import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
 
 import KittygotchiRankingList from 'modules/Kittygotchi/components/KittygotchiRankingList';
+import {useMobile} from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -82,6 +83,7 @@ export const ProfileIndex = () => {
 
   const feedingToggler = useToggler();
 
+  const isMobile = useMobile();
   const {getTransactionScannerUrl, chainName} = useChainInfo();
 
   const [feedLoading, setFeedLoading] = useState(false);
@@ -414,13 +416,15 @@ export const ProfileIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box

@@ -23,7 +23,7 @@ import {useSelector} from 'react-redux';
 import {AppState} from '../../../../redux/store';
 
 export function TradingAnalysis() {
-
+  const isMobile = useMobile();
   const [charts, setCharts] = useState(2);
   const {listGamesRoute} = useCoinLeaguesFactoryRoutes();
   const history = useHistory();
@@ -32,7 +32,6 @@ export function TradingAnalysis() {
   const {navCollapsed} = useSelector<AppState, AppState['settings']>(
     ({settings}) => settings,
   );
-  const isMobile = useMobile();
 
 
   const widthComp = isMobile ? 0 : navCollapsed ? 150 : 450;
@@ -40,13 +39,13 @@ export function TradingAnalysis() {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12}>
+    {!isMobile &&  <Grid item xs={12}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={listGamesRoute}>
             Coin League
           </Link>
         </Breadcrumbs>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <Box display='flex' alignItems='center' alignContent='center'>
           <Box display='flex' alignItems='center' alignContent='center' mr={2}>

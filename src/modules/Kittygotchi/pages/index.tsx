@@ -37,6 +37,7 @@ import {ChainId, Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
 import {useChainInfo} from 'hooks/useChainInfo';
 import {isKittygotchiNetworkSupported} from '../utils';
+import {useMobile} from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -59,6 +60,7 @@ import {isKittygotchiNetworkSupported} from '../utils';
 
 export const KittygotchiIndex = () => {
   const history = useHistory();
+  const isMobile = useMobile();
   const {chainId, web3State} = useWeb3();
   const {getTransactionScannerUrl} = useChainInfo();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
@@ -236,13 +238,15 @@ export const KittygotchiIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box
