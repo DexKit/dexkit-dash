@@ -6,6 +6,7 @@ import {
   Breadcrumbs,
   Grid,
   Hidden,
+  IconButton,
   InputAdornment,
   Link,
   Typography,
@@ -23,6 +24,7 @@ import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 import CardGameSkeleton from 'modules/CoinLeagues/components/CardGame/index.skeleton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { Empty } from 'shared/components/Empty';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
@@ -52,6 +54,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 const JoinGames = () => {
   const history = useHistory();
@@ -68,6 +71,7 @@ const JoinGames = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const filtersState = useGamesFilters();
+  const isMobile = useMobile();
 
   const waitingGamesQuery = useCoinLeagueGames(
     {
@@ -144,6 +148,15 @@ const JoinGames = () => {
     filterToggler.set(true);
   }, [filterToggler]);
 
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute);
+  }, [listGamesRoute, history]);
+
   return (
     <>
       <GameFilterDrawer
@@ -155,7 +168,7 @@ const JoinGames = () => {
         <Grid item xs={12} sm={12} xl={12}>
           <TickerTapeTV />
         </Grid>
-        <Grid item xs={12} sm={12} xl={12}>
+        {!isMobile && <Grid item xs={12} sm={12} xl={12}>
           <Grid container>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
@@ -170,7 +183,7 @@ const JoinGames = () => {
               </Typography>
             </Breadcrumbs>
           </Grid>
-        </Grid>
+        </Grid>}
         <Hidden smUp={true}>
           <Grid item xs={12}>
             <img
@@ -180,8 +193,11 @@ const JoinGames = () => {
             />
           </Grid>
         </Hidden>
-        <Grid item xs={6} sm={3} xl={3}>
+        <Grid item xs={12} sm={3} xl={4}>
           <Box display={'flex'} alignItems={'center'}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
             <Typography variant='h5'>
               {' '}
               <IntlMessages id='app.coinLeagues.discoverGames' />
@@ -199,12 +215,12 @@ const JoinGames = () => {
               </FormControl>
             </Box>
             <Box p={2}>
-                <ChainSelect />
-              </Box>
+              <ChainSelect />
+            </Box>
           </Box>
         </Grid>
         <Hidden xsDown={true}>
-          <Grid item xs={12} sm={5} xl={5}>
+          <Grid item xs={12} sm={5} xl={4}>
             <img
               src={CoinsLeagueBanner}
               style={{ borderRadius: '12px' }}
@@ -234,7 +250,7 @@ const JoinGames = () => {
 
         <CreateGameModal open={open} setOpen={setOpen} />
 
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <ContainedInput
             value={search}
             onChange={handleSearch}

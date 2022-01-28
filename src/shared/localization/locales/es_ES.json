@@ -1619,6 +1619,7 @@
   "app.kittygotchi.edit": "Editar",
   "app.kittygotchi.cancel": "Cancelar",
   "app.kittygotchi.transfer": "Transferir",
+  "app.settings.settings": "Ajustes",
   "app.settings.importToken": "Importar moneda",
   "app.settings.importNft": "Importar NFT",
   "app.settings.contractAddress": "Dirección de contrato",

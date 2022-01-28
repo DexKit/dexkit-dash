@@ -1,6 +1,6 @@
-import React, {useMemo, useState} from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import {useIntl} from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -13,24 +13,28 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
-import {Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import AffiliateTotalCard from '../components/AffiliateTotalCard';
-import {useWeb3} from '../../../hooks/useWeb3';
-import {useDefaultAccount} from '../../../hooks/useDefaultAccount';
-import {useAffiliateTrades} from '../../../hooks/affiliate/useAffiliateTrades';
-import {useTokenBalancesAffiliate} from '../../../hooks/affiliate/useTokenBalances';
-import {Skeleton} from '@material-ui/lab';
+import { useWeb3 } from '../../../hooks/useWeb3';
+import { useDefaultAccount } from '../../../hooks/useDefaultAccount';
+import { useAffiliateTrades } from '../../../hooks/affiliate/useAffiliateTrades';
+import { useTokenBalancesAffiliate } from '../../../hooks/affiliate/useTokenBalances';
+import { Skeleton } from '@material-ui/lab';
 import AffiliateHistory from '../history';
 import ButtonCopy from 'shared/components/ButtonCopy';
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
-import {ChainId} from 'types/blockchain';
+import { ChainId } from 'types/blockchain';
 
-import {useChainInfo} from 'hooks/useChainInfo';
+import { useChainInfo } from 'hooks/useChainInfo';
+import { useMobile } from 'hooks/useMobile';
+import { WALLET_ROUTE } from 'shared/constants/routes';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -54,14 +58,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AffiliatePage: React.FC = () => {
+  const isMobile = useMobile();
+  const history = useHistory();
   const classes = useStyles();
-  const {messages} = useIntl();
+  const { messages } = useIntl();
 
-  const {account: web3Account} = useWeb3();
+  const { account: web3Account } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = defaultAccount || web3Account;
 
-  const {chainName} = useChainInfo();
+  const { chainName } = useChainInfo();
 
   const [chain, setChain] = useState(chainName);
 
@@ -90,20 +96,20 @@ const AffiliatePage: React.FC = () => {
     valueTotalUSD,
   } = useAffiliateTrades(account ?? '', selectedChainId);
 
-  const {kitBalance} = useTokenBalancesAffiliate(
+  const { kitBalance } = useTokenBalancesAffiliate(
     account ?? '',
     selectedChainId,
   );
 
   const AffiliateSkeleton = (props: any) => (
     <React.Fragment {...props}>
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
     </React.Fragment>
   );
   const selectedChain = useMemo(() => {
@@ -124,32 +130,48 @@ const AffiliatePage: React.FC = () => {
 
   const kitValue = Number(kitBalance && kitBalance.value?.toFixed(3)) || 0;
 
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+  }, [history]);
+
   return (
     <Container maxWidth='xl' className={classes.container}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Grid container spacing={2}
+         style={{ marginBottom: 10 }}
+      >
+        {!isMobile && <Grid item xs={12}>
           <Breadcrumbs>
             <Link to='/wallet' component={RouterLink}>
               <Typography variant='body2' color='textSecondary'>
                 <IntlMessages id='app.affiliate.page.dashboard' />
               </Typography>
             </Link>
-            <Typography variant='body2' style={{color: '#2e3243'}}>
+            <Typography variant='body2' style={{ color: '#2e3243' }}>
               <IntlMessages id='app.affiliate.page.title' />
             </Typography>
           </Breadcrumbs>
-        </Grid>
+        </Grid>}
         <Grid item xs={12} sm={10} alignContent='center'>
-          <Typography variant='h5' style={{margin: 5, marginBottom: 20}}>
-            <IntlMessages id='app.affiliate.page.title' />
-          </Typography>
+          <Box display={'flex'} alignItems={'center'}>
+            <IconButton size='small' onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant='h5' >
+              <IntlMessages id='app.affiliate.page.title' />
+            </Typography>
+          </Box>
         </Grid>
+
       </Grid>
 
       <Grid
         container
         spacing={5}
-        style={{marginBottom: 20}}
+        style={{ marginBottom: 20 }}
         justifyContent='space-between'>
         <Grid item md={6} xs={12}>
           <AffiliateTotalCard total={valueTotalUSD || 0} />
@@ -157,7 +179,7 @@ const AffiliatePage: React.FC = () => {
         <Grid item md={4} xs={10}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography style={{color: '#B3B7C0'}}>
+              <Typography style={{ color: '#B3B7C0' }}>
                 <IntlMessages id='app.affiliate.page.account' />:
               </Typography>
             </Grid>
@@ -179,7 +201,7 @@ const AffiliatePage: React.FC = () => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='subtitle1' style={{color: '#B3B7C0'}}>
+              <Typography variant='subtitle1' style={{ color: '#B3B7C0' }}>
                 You need to have 200 KIT in your wallet on {chain} network to
                 earn money from referrals on {chain} network
               </Typography>
@@ -202,9 +224,9 @@ const AffiliatePage: React.FC = () => {
 
         <Grid item md={12} xs={12}>
           <Grid container spacing={2} justifyContent='space-between'>
-            <Grid item md={5} xs={12} style={{marginBottom: 10}}>
+            <Grid item md={5} xs={12} style={{ marginBottom: 10 }}>
               <FormControl fullWidth>
-                <Typography style={{marginBottom: 10}}>
+                <Typography style={{ marginBottom: 10 }}>
                   <IntlMessages id='app.affiliate.page.swap.chain' />
                 </Typography>
                 <Select
@@ -219,7 +241,7 @@ const AffiliatePage: React.FC = () => {
               </FormControl>
             </Grid>
             <Grid item md={7} xs={12}>
-              <Typography style={{marginBottom: 10}}>
+              <Typography style={{ marginBottom: 10 }}>
                 <IntlMessages id='app.affiliate.page.swap.link' />
               </Typography>
               <Box
@@ -243,7 +265,7 @@ const AffiliatePage: React.FC = () => {
               fullWidth
               href={affiliateLink}
               target='_blank'
-              style={{backgroundColor: '#FFA552', marginBottom: 15}}>
+              style={{ backgroundColor: '#FFA552', marginBottom: 15 }}>
               <LinkIcon />
               <IntlMessages id='app.affiliate.page.swap.openBtn' />
             </Button>
@@ -260,7 +282,7 @@ const AffiliatePage: React.FC = () => {
         }}
       />
 
-      <Grid container spacing={2} style={{marginTop: 15}}>
+      <Grid container spacing={2} style={{ marginTop: 15 }}>
         {/* FIXME: Change to the pagination component */}
         <Grid item xs={12}>
           {loading ? (
@@ -278,7 +300,7 @@ const AffiliatePage: React.FC = () => {
           )}
         </Grid>
       </Grid>
-    </Container>
+    </Container >
   );
 };
 
