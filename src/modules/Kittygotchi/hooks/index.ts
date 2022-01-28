@@ -371,6 +371,7 @@ export const useKittygotchiList = (address?: string) => {
 
             setData(data);
             resolve(data);
+            setError(false);
             setIsLoading(false);
           })
           .catch((err: any) => {
