@@ -1,4 +1,4 @@
-import React, {useRef, useState, useCallback, useEffect} from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 
 import {
   Box,
@@ -11,31 +11,32 @@ import {
   Link,
 } from '@material-ui/core';
 
-import {Alert} from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {RewardDialog} from '../components/dialogs/RewardDialog';
-import {MintKittygotchiDialog} from '../components/dialogs/MintKittygotchiDialog';
+import { RewardDialog } from '../components/dialogs/RewardDialog';
+import { MintKittygotchiDialog } from '../components/dialogs/MintKittygotchiDialog';
 
 import GavelIcon from '@material-ui/icons/Gavel';
 
-import {NFTEmptyStateImage} from 'shared/components/Icons';
+import { NFTEmptyStateImage } from 'shared/components/Icons';
 
-import {useToggler} from 'hooks/useToggler';
-import {useKittygotchiList, useKittygotchiMint} from '../hooks/index';
-import {KittygotchiCard} from '../components/KittygotchiCard';
-import {Kittygotchi} from 'types/kittygotchi';
-import {SubmitState} from '../components/ButtonState';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {useNotifications} from 'hooks/useNotifications';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useWeb3} from 'hooks/useWeb3';
-import {ChainId, Web3State} from 'types/blockchain';
+import { useToggler } from 'hooks/useToggler';
+import { useKittygotchiList, useKittygotchiMint } from '../hooks/index';
+import { KittygotchiCard } from '../components/KittygotchiCard';
+import { Kittygotchi } from 'types/kittygotchi';
+import { SubmitState } from '../components/ButtonState';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { useNotifications } from 'hooks/useNotifications';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ChainId, Web3State } from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
-import {useChainInfo} from 'hooks/useChainInfo';
+import { useChainInfo } from 'hooks/useChainInfo';
+import { useMobile } from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -58,8 +59,9 @@ import {useChainInfo} from 'hooks/useChainInfo';
 
 export const KittygotchiIndex = () => {
   const history = useHistory();
-  const {chainId, web3State} = useWeb3();
-  const {getTransactionScannerUrl} = useChainInfo();
+  const isMobile = useMobile();
+  const { chainId, web3State } = useWeb3();
+  const { getTransactionScannerUrl } = useChainInfo();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
@@ -72,11 +74,11 @@ export const KittygotchiIndex = () => {
 
   const kittygotchiList = useKittygotchiList();
 
-  const {onMintCallback} = useKittygotchiMint();
+  const { onMintCallback } = useKittygotchiMint();
 
   const [transactionHash, setTransactionHash] = useState<string>();
 
-  const {createNotification} = useNotifications();
+  const { createNotification } = useNotifications();
 
   const mintingToggler = useToggler();
 
@@ -229,13 +231,13 @@ export const KittygotchiIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            {!isMobile && <Grid item xs={12}>
               <Breadcrumbs>
                 <Link color='inherit' component={RouterLink} to='/'>
                   <IntlMessages id='nfts.walletBreadcrumbDashboard' />
                 </Link>
               </Breadcrumbs>
-            </Grid>
+            </Grid>}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box

@@ -60,6 +60,7 @@ import IntlMessages from '@crema/utility/IntlMessages';
 import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
 import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -93,6 +94,7 @@ const GamesList = () => {
   const { account } = useWeb3();
   const { coinSymbol } = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
+  const isMobile = useMobile();
 
 
   useDiscord();
@@ -288,7 +290,7 @@ const GamesList = () => {
           <TickerTapeTV />
         </Grid>
 
-        <Grid item xs={12}>
+        {!isMobile && <Grid item xs={12}>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
               <IntlMessages id='app.coinLeagues.dashboard' />
@@ -297,7 +299,7 @@ const GamesList = () => {
               <IntlMessages id='app.coinLeagues.games' />
             </Link>
           </Breadcrumbs>
-        </Grid>
+        </Grid>}
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
@@ -308,7 +310,7 @@ const GamesList = () => {
             />
           </Grid>
         </Hidden>
-        <Grid item xs={6} xl={6} sm={6}>
+        <Grid item xs={12} xl={6} sm={6}>
           <Box display={'flex'} alignItems={'center'}>
             <Typography variant='h5'>
               Coin League {isNFTGame && '- NFT Room'}

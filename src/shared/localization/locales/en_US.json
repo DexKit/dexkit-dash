@@ -1623,6 +1623,7 @@
   "app.kittygotchi.edit": "Edit",
   "app.kittygotchi.cancel": "Cancel",
   "app.kittygotchi.transfer": "Transfer",
+  "app.settings.settings": "Settings",
   "app.settings.importToken": "Import Token",
   "app.settings.importNft": "Import NFT",
   "app.settings.contractAddress": "Contract Address",

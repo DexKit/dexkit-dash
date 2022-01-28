@@ -1,14 +1,14 @@
 import IntlMessages from '@crema/utility/IntlMessages';
-import {isAddress} from '@ethersproject/address';
+import { isAddress } from '@ethersproject/address';
 import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+//import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import * as types from '../types';
 
 import languageData from '@crema/core/LanguageSwitcher/data';
 import TranslateIcon from '@material-ui/icons/Translate';
-import {ReactComponent as EmptyNetwork} from 'assets/images/icons/empty-network.svg';
-import {ReactComponent as EmptyWallet} from 'assets/images/icons/empty-wallet.svg';
-
+import { ReactComponent as EmptyNetwork } from 'assets/images/icons/empty-network.svg';
+import { ReactComponent as EmptyWallet } from 'assets/images/icons/empty-wallet.svg';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import {
   Box,
   Fade,
@@ -23,6 +23,8 @@ import {
   Divider,
   Typography,
   List,
+  Breadcrumbs,
+  Link,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -35,11 +37,11 @@ import {
   useCustomNetworkList,
   useRemoveCustomNetwork,
 } from 'hooks/network';
-import {useToggler} from 'hooks/useToggler';
-import {useWeb3} from 'hooks/useWeb3';
+import { useToggler } from 'hooks/useToggler';
+import { useWeb3 } from 'hooks/useWeb3';
 import _ from 'lodash';
-import React, {useCallback, useEffect, useState, useContext} from 'react';
-import {useIntl} from 'react-intl';
+import React, { useCallback, useEffect, useState, useContext } from 'react';
+import { useIntl } from 'react-intl';
 import {
   NetworkFormDialog,
   NetworkFormState,
@@ -50,13 +52,16 @@ import ImportNftTokenDialog, {
 import ImportTokenDialog, {
   ImportTokenValues,
 } from '../components/ImportTokenDialog';
-import {TokenList} from '../components/TokenList';
-import {useTokenInfo} from '../hooks';
-import {NetworkList} from '../components/NetworkList';
+import { TokenList } from '../components/TokenList';
+import { useTokenInfo } from '../hooks';
+import { NetworkList } from '../components/NetworkList';
 import ConfirmRemoveNetworkDialog from '../components/ConfirmRemoveNetworkDialog';
-import {LanguageList} from '../components/LanguageList';
-import {AppContext} from '@crema';
+import { LanguageList } from '../components/LanguageList';
+import { AppContext } from '@crema';
 import AppContextPropsType from 'types/AppContextPropsType';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { WALLET_ROUTE } from 'shared/constants/routes';
+import { useMobile } from 'hooks/useMobile';
 
 const MENU_CUSTOM_TOKENS = 'MENU_CUSTOM_TOKENS';
 const MENU_CUSTOM_NETWORKS = 'MENU_CUSTOM_NETWORKS';
@@ -78,16 +83,26 @@ export const ADD_NETWORK_VALUES_EMPTY: NetworkFormState = {
 };
 
 export const Settings: React.FC = () => {
-  const {account} = useWeb3();
+  const { account } = useWeb3();
   const [address, setAddress] = useState<string>();
-  const {chainId} = useWeb3();
-  const {addToken} = useAddCustomToken();
-  const {addNetwork} = useAddCustomNetwork();
-  const {tokens} = useCustomTokenList();
+  const history = useHistory();
+  const { chainId } = useWeb3();
+  const { addToken } = useAddCustomToken();
+  const { addNetwork } = useAddCustomNetwork();
+  const { tokens } = useCustomTokenList();
+  const isMobile = useMobile();
 
-  const {addAsset} = useAddCustomAsset();
+  const { addAsset } = useAddCustomAsset();
 
-  const {removeNetwork} = useRemoveCustomNetwork();
+  const { removeNetwork } = useRemoveCustomNetwork();
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(WALLET_ROUTE);
+    }
+  }, [history]);
 
   const importDialogToggler = useToggler(false);
   const importNftDialogToggler = useToggler(false);
@@ -116,7 +131,7 @@ export const Settings: React.FC = () => {
 
   const handleAddTokenChange = useCallback(
     (key: string, value: string) => {
-      setTokenValues({...tokenValues, [key]: value.trim()});
+      setTokenValues({ ...tokenValues, [key]: value.trim() });
 
       if (key === 'address') {
         if (isAddress(value)) {
@@ -130,7 +145,7 @@ export const Settings: React.FC = () => {
   const handleAddNftChange = useCallback(
     (key: string, value: string) => {
       console.log('he');
-      setNftTokenValues({...nftTokenValues, [key]: value.trim()});
+      setNftTokenValues({ ...nftTokenValues, [key]: value.trim() });
     },
     [nftTokenValues],
   );
@@ -223,14 +238,14 @@ export const Settings: React.FC = () => {
       if (key === 'nativeTokenSymbol') {
         const newValue = value.toUpperCase();
         if (/^[A-Z]+$/.test(newValue) || newValue === '') {
-          setNetworkValues({...networkValues, [key]: newValue});
+          setNetworkValues({ ...networkValues, [key]: newValue });
         }
       } else if (key === 'chainId') {
         if (/^[0-9]+$/.test(value) || value === '') {
-          setNetworkValues({...networkValues, [key]: value.trim()});
+          setNetworkValues({ ...networkValues, [key]: value.trim() });
         }
       } else {
-        setNetworkValues({...networkValues, [key]: value});
+        setNetworkValues({ ...networkValues, [key]: value });
       }
     },
     [networkValues],
@@ -251,11 +266,11 @@ export const Settings: React.FC = () => {
     addNetworkDialogToggler.set(false);
   }, [addNetwork, addNetworkDialogToggler, networkValues]);
 
-  const {messages} = useIntl();
+  const { messages } = useIntl();
 
   useEffect(() => {
     if (tokenInfo.data) {
-      const {symbol, decimals, name} = tokenInfo.data;
+      const { symbol, decimals, name } = tokenInfo.data;
 
       setTokenValues((values) => ({
         ...values,
@@ -266,11 +281,11 @@ export const Settings: React.FC = () => {
     }
   }, [tokenInfo.data]);
 
-  const [menuSelected, setMenuSelected] = useState(MENU_CUSTOM_TOKENS);
+  const [menuSelected, setMenuSelected] = useState(MENU_LANGUAGE);
 
-  const {networks} = useCustomNetworkList();
+  const { networks } = useCustomNetworkList();
 
-  const {changeLocale, locale} = useContext<AppContextPropsType>(AppContext);
+  const { changeLocale, locale } = useContext<AppContextPropsType>(AppContext);
 
   const handleChangeLanguage = useCallback(
     (language: types.Language) => {
@@ -447,10 +462,36 @@ export const Settings: React.FC = () => {
       />
       <Box>
         <Grid container spacing={4}>
+          {!isMobile && <Grid item xs={12}>
+            <Breadcrumbs>
+              <Link color='inherit' to='/' component={RouterLink}>
+                <IntlMessages id='app.dashboard' />
+              </Link>
+              <Typography color='inherit'>
+                <IntlMessages id='app.settings.settings' />
+              </Typography>
+            </Breadcrumbs>
+          </Grid>}
+          <Grid item xs={12}>
+            <Box display='flex' alignItems='center' alignContent='center'>
+              <Box
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                mr={2}>
+                <IconButton size='small' onClick={handleBack}>
+                  <ArrowBackIcon />
+                </IconButton>
+              </Box>
+              <Typography variant='h5'>
+                <IntlMessages id='app.settings.settings' />
+              </Typography>
+            </Box>
+          </Grid>
           <Grid item xs={12} sm={3}>
             <Card>
               <List disablePadding>
-               <ListItem
+                {/*   <ListItem
                   divider
                   button
                   selected={menuSelected === MENU_CUSTOM_TOKENS}
@@ -461,18 +502,7 @@ export const Settings: React.FC = () => {
                   <ListItemText
                     primary={messages['app.settings.customTokens'] as string}
                   />
-                </ListItem> 
-
-                <ListItem
-                  divider
-                  button
-                  selected={menuSelected === MENU_CUSTOM_NETWORKS}
-                  onClick={() => setMenuSelected(MENU_CUSTOM_NETWORKS)}>
-                  <ListItemIcon>
-                    <SettingsInputAntennaIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={messages['app.settings.networks']} />
-                </ListItem>
+            </ListItem> */}
                 <ListItem
                   button
                   selected={menuSelected === MENU_LANGUAGE}
@@ -483,6 +513,16 @@ export const Settings: React.FC = () => {
                   <ListItemText
                     primary={messages['app.settings.language'] as string}
                   />
+                </ListItem>
+                <ListItem
+                  divider
+                  button
+                  selected={menuSelected === MENU_CUSTOM_NETWORKS}
+                  onClick={() => setMenuSelected(MENU_CUSTOM_NETWORKS)}>
+                  <ListItemIcon>
+                    <SettingsInputAntennaIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={messages['app.settings.networks']} />
                 </ListItem>
               </List>
             </Card>

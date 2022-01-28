@@ -19,10 +19,13 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {removeFavoriteCoin} from 'redux/_ui/actions';
 import {FavoriteCoin} from 'redux/_ui/reducers';
 import {TokenListItemSkeleton} from 'shared/components/TokenListItemSkeleton';
+import { useMobile } from 'hooks/useMobile';
 
 export const Favorites = () => {
   const dispatch = useDispatch();
   const {data, loading} = useFavoriteCoinsData();
+
+  const isMobile = useMobile();
 
   const favoriteCoins = useSelector<AppState, AppState['ui']['favoriteCoins']>(
     (state) => state.ui.favoriteCoins,
@@ -36,8 +39,8 @@ export const Favorites = () => {
   );
 
   return (
-    <Box py={{xs: 8}}>
-      <Box mb={2}>
+    <Box>
+    {!isMobile &&  <Box mb={2}>
         <Breadcrumbs>
           <Link color='inherit' component={RouterLink} to={'/wallet'}>
             <IntlMessages id='app.common.wallet' />
@@ -46,7 +49,7 @@ export const Favorites = () => {
             <IntlMessages id='app.common.favorites' />
           </Link>
         </Breadcrumbs>
-      </Box>
+      </Box>}
       <Box mb={2} display='flex' alignItems='center' alignContent='center'>
         <Box mr={2}>
           <IconButton size='small' component={RouterLink} to={'/wallet'}>

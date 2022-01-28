@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import {
   Box,
@@ -10,17 +10,17 @@ import {
   Link,
 } from '@material-ui/core';
 
-import {useNotifications} from 'hooks/useNotifications';
+import { useNotifications } from 'hooks/useNotifications';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {useProfileKittygotchi, useProfilePoints} from '../hooks';
+import { useProfileKittygotchi, useProfilePoints } from '../hooks';
 
-import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
+import { ProfileKittygotchiCard } from '../components/ProfileKittygotchiCard';
 
-import {useChainInfo} from 'hooks/useChainInfo';
+import { useChainInfo } from 'hooks/useChainInfo';
 
 import {
   useKittygotchiFeed,
@@ -29,16 +29,17 @@ import {
   useKittygotchiOnChain,
   useKittygotchiV2,
 } from 'modules/Kittygotchi/hooks';
-import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import {useWeb3} from 'hooks/useWeb3';
-import {ChainId, Web3State} from 'types/blockchain';
-import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
-import {useToggler} from 'hooks/useToggler';
+import { NotificationType, TxNotificationMetadata } from 'types/notifications';
+import { useWeb3 } from 'hooks/useWeb3';
+import { ChainId, Web3State } from 'types/blockchain';
+import { FeedingKittygotchiDialog } from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
+import { useToggler } from 'hooks/useToggler';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
-import {useSelector} from 'react-redux';
-import {AppState} from 'redux/store';
+import { useSelector } from 'react-redux';
+import { AppState } from 'redux/store';
 import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from 'modules/Kittygotchi/constants';
+import { GET_KITTY_CHAIN_ID, KITTYGOTCHI } from 'modules/Kittygotchi/constants';
+import { useMobile } from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -67,8 +68,8 @@ export const ProfileIndex = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const feedingToggler = useToggler();
-
-  const {getTransactionScannerUrl} = useChainInfo();
+  const isMobile = useMobile();
+  const { getTransactionScannerUrl } = useChainInfo();
 
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedingDone, setFeedingDone] = useState(false);
@@ -99,9 +100,9 @@ export const ProfileIndex = () => {
 
   const kittyProfile = useProfileKittygotchi();
 
-  const {createNotification} = useNotifications();
+  const { createNotification } = useNotifications();
 
-  const {chainId, account, web3State} = useWeb3();
+  const { chainId, account, web3State } = useWeb3();
 
   useEffect(() => {
     if (
@@ -160,7 +161,7 @@ export const ProfileIndex = () => {
     });
   }, [chainId, account]);
 
-  const {onFeedCallback} = useKittygotchiFeed();
+  const { onFeedCallback } = useKittygotchiFeed();
 
   /* eslint-disable */
   const handleClearError = useCallback(() => {
@@ -326,13 +327,13 @@ export const ProfileIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            {!isMobile && <Grid item xs={12}>
               <Breadcrumbs>
                 <Link color='inherit' component={RouterLink} to='/'>
                   <IntlMessages id='nfts.walletBreadcrumbDashboard' />
                 </Link>
               </Breadcrumbs>
-            </Grid>
+            </Grid>}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box
