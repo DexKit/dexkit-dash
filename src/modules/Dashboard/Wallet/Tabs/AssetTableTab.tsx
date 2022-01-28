@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Box, Typography, Button} from '@material-ui/core';
+import {Box, Typography, Button, Paper} from '@material-ui/core';
 import ErrorView from 'modules/Common/ErrorView';
 import {MyBalances} from 'types/blockchain';
 import AssetTable from '../AssetTable';
@@ -39,27 +39,31 @@ export const AssetTableTab = (props: Props) => {
 
   if (data.length === 0 && !loading) {
     return (
-      <Box
-        py={4}
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        alignContent='center'
-        justifyContent='center'>
-        <Box mb={2}>
-          <WalletEmptyImage />
-        </Box>
-        <Box mb={4}>
-          <Typography align='center' variant='h5'>
-            <IntlMessages id='app.dashboard.noAssets' />
-          </Typography>
-        </Box>
-        <Button
-          variant='outlined'
-          startIcon={<MonetizationOnIcon />}
-          onClick={handleTransak}>
-          <IntlMessages id='app.dashboard.buyCrypto' />
-        </Button>
+      <Box>
+        <Paper>
+          <Box
+            py={4}
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            alignContent='center'
+            justifyContent='center'>
+            <Box mb={2}>
+              <WalletEmptyImage />
+            </Box>
+            <Box mb={4}>
+              <Typography align='center' variant='h5'>
+                <IntlMessages id='app.dashboard.noAssets' />
+              </Typography>
+            </Box>
+            <Button
+              variant='outlined'
+              startIcon={<MonetizationOnIcon />}
+              onClick={handleTransak}>
+              <IntlMessages id='app.dashboard.buyCrypto' />
+            </Button>
+          </Box>
+        </Paper>
       </Box>
     );
   }

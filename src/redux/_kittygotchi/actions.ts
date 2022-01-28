@@ -21,4 +21,8 @@ export const updateImage = createAction<{
   address: string;
 }>('kittygotchi/updateImage');
 
+export const unsetDefault = createAction<{address: string; chainId: number}>(
+  'kittygotchi/unsetDefault',
+);
+
 export const clearOldState = createAction('kittygotchi/clearOldState');

@@ -43,9 +43,11 @@ export const mint = async (
   price: BigNumber,
 ) => {
   const ethers = getEthers();
+
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
+
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).safeMint({
     gasPrice,
     value: price,
@@ -150,5 +152,15 @@ export const update = (
       attributes: attributes,
     }),
   };
-  return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`, myInit);
+  // TODO: find a better way to do this
+  return fetch(
+    `${getKittygotchiMetadataEndpoint(chainId, 'update')}${id}`,
+    myInit,
+  );
 };
+
+export function refetchKittygotchiMetadata(tokenId: string, chainId?: number) {
+  if (chainId) {
+    return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${tokenId}`);
+  }
+}
