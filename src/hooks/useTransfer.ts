@@ -1,18 +1,16 @@
-import { getContractToken } from 'services/transfer-token';
-import { fromTokenUnitAmount } from '@0x/utils';
-import { Currency } from 'types/myApps';
+import {getContractToken} from 'services/transfer-token';
+import {fromTokenUnitAmount} from '@0x/utils';
+import {Currency} from 'types/myApps';
 
-import { isNativeCoinV2,  truncateIsAddress } from 'utils';
-import { ChainId } from 'types/blockchain';
-import { useWeb3 } from './useWeb3';
+import {isNativeCoinV2, truncateIsAddress} from 'utils';
+import {ChainId} from 'types/blockchain';
+import {useWeb3} from './useWeb3';
 
-
-import { useCustomNetworkList } from 'hooks/network';
-import { useNotifications } from './useNotifications';
-import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
-import { useIntl } from 'react-intl';
-
+import {useCustomNetworkList} from 'hooks/network';
+import {useNotifications} from './useNotifications';
+import {getTransactionScannerUrl} from 'utils/blockchain';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useIntl} from 'react-intl';
 
 export enum Web3Status {
   Not_Connected,
@@ -22,10 +20,10 @@ export enum Web3Status {
 }
 
 export const useTransfer = () => {
-  const { chainId, getWeb3 } = useWeb3();
+  const {chainId, getWeb3} = useWeb3();
   const {messages} = useIntl();
 
-  const { networks } = useCustomNetworkList();
+  const {networks} = useCustomNetworkList();
   const {createNotification} = useNotifications();
 
   const onTransfer = async (
@@ -54,11 +52,13 @@ export const useTransfer = () => {
         )
       ) {
         web3.eth
-          .sendTransaction({ from, to, value: amountFn.toString() })
+          .sendTransaction({from, to, value: amountFn.toString()})
           .once('transactionHash', (hash: string) => {
             createNotification({
-              title:  `Transfer ${currency.symbol.toUpperCase()}`,
-              body: `Transferred ${amount} ${currency.symbol.toUpperCase()} to ${truncateIsAddress(to)}`,
+              title: `Transfer ${currency.symbol.toUpperCase()}`,
+              body: `Transferred ${amount} ${currency.symbol.toUpperCase()} to ${truncateIsAddress(
+                to,
+              )}`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId as ChainId, hash),
               urlCaption: messages['app.dashboard.viewTransaction'] as string,
@@ -69,24 +69,23 @@ export const useTransfer = () => {
                 status: 'pending',
               } as TxNotificationMetadata,
             });
-          })
-          .then((e: any) => {
-            resolve(e);
+            resolve(hash);
           })
           .catch((error: Error) => {
             reject(error.message);
           });
       } else {
-
         const contract = getContractToken(currency.address, web3);
 
         contract.methods
           .transfer(to, amountFn.toString())
-          .send({ from: from })
+          .send({from: from})
           .once('transactionHash', (hash: string) => {
             createNotification({
-              title:  `Transfer ${currency.symbol.toUpperCase()}`,
-              body: `Transferred ${amount} ${currency.symbol.toUpperCase()} to ${truncateIsAddress(to)}`,
+              title: `Transfer ${currency.symbol.toUpperCase()}`,
+              body: `Transferred ${amount} ${currency.symbol.toUpperCase()} to ${truncateIsAddress(
+                to,
+              )}`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId as ChainId, hash),
               urlCaption: messages['app.dashboard.viewTransaction'] as string,
@@ -98,9 +97,7 @@ export const useTransfer = () => {
               } as TxNotificationMetadata,
             });
 
-          })
-          .then((tx: string) => {      
-            resolve(tx);
+            resolve(hash);
           })
           .catch((error: any) => {
             reject(error.message);
@@ -109,5 +106,5 @@ export const useTransfer = () => {
     });
   };
 
-  return { onTransfer };
+  return {onTransfer};
 };

@@ -84,6 +84,9 @@ export const TransactionsTab: React.FC<Props> = () => {
             <Table>
               <TableHead>
                 <TableCell>
+                  <IntlMessages id='app.wallet.title' />
+                </TableCell>
+                <TableCell>
                   <IntlMessages id='app.wallet.transactionHash' />
                 </TableCell>
                 <TableCell>
@@ -101,6 +104,7 @@ export const TransactionsTab: React.FC<Props> = () => {
                 {paginate(notifications, itemsPerPage, page).map(
                   (notification, index: number) => (
                     <TransactionTableRow
+                      title={notification.title}
                       chainId={
                         (notification.metadata as TxNotificationMetadata)
                           .chainId

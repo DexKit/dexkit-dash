@@ -22,9 +22,11 @@ export interface Props {
   date: string;
   status: string;
   chainId: number;
+  title: string;
 }
 
 export const TransactionTableRow: React.FC<Props> = ({
+  title,
   hash,
   date,
   chainId,
@@ -38,6 +40,7 @@ export const TransactionTableRow: React.FC<Props> = ({
 
   return (
     <TableRow>
+      <TableCell>{title}</TableCell>
       <TableCell>
         {truncateAddress(hash)}{' '}
         <CopyButton size='small' copyText={hash || ''} tooltip='Copied!'>
