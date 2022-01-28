@@ -21,10 +21,7 @@ import {Alert, Skeleton} from '@material-ui/lab';
 
 import {useMobile} from 'hooks/useMobile';
 
-import {
-  NFTEmptyStateImage,
-  WalletEmptyImage,
-} from 'shared/components/Icons';
+import {NFTEmptyStateImage, WalletEmptyImage} from 'shared/components/Icons';
 
 import {Link as RouterLink} from 'react-router-dom';
 
@@ -36,12 +33,14 @@ import {
   GET_EARLY_ACCESS_KIT_AMOUNT,
   GET_EVENT_HOLDING_AMOUNT,
   getMaxSupplyForRound,
+  IS_CHAMPIONS_NETWORK_ENABLED,
 } from 'modules/CoinLeagues/utils/champions';
 
 import coinsLeagueBannerPath from 'assets/images/banners/coinleague.svg';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {IS_CHAMPIONS_SUPPORTED_NETWORK} from 'modules/CoinLeagues/utils/champions';
 
 import ChampionCard from 'modules/CoinLeagues/components/champions/ChampionCard';
 import EarlyAccessCountdownSection from 'modules/CoinLeagues/components/champions/EarlyAccessCountdownSection';
@@ -62,7 +61,12 @@ import {
 } from 'modules/CoinLeagues/constants';
 import {MintChampionButton} from 'modules/CoinLeagues/components/champions/buttons/MintChampionButton';
 import {getEventHoldingAmount} from '../../utils/champions';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {switchChain} from 'utils/wallet';
+import {useMagicProvider} from 'hooks/provider/useMagicProvider';
+import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
+
 const useStyles = makeStyles((theme) => ({
   bannerBox: {
     borderRadius: theme.shape.borderRadius,
@@ -93,8 +97,14 @@ export function ChampionsEvent() {
 
   const isMobile = useMobile();
 
-  const { account, ethBalance, onConnectWeb3} = useWeb3();
-  const { chainId } = useLeaguesChainInfo();
+  const {
+    account,
+    ethBalance,
+    onConnectWeb3,
+    getProvider,
+    chainId: web3ChainId,
+  } = useWeb3();
+  const {chainId, coinSymbol} = useLeaguesChainInfo();
 
   const myChampions = useMyChampions(chainId, 4);
 
@@ -147,7 +157,7 @@ export function ChampionsEvent() {
     return false;
   }, [championTokenHolding, chainId]);
 
-  const hasEnoughMatic = useCallback(() => {
+  const hasEnoughAmount = useCallback(() => {
     let amount = getEventHoldingAmount(chainId);
 
     if (amount) {
@@ -176,17 +186,24 @@ export function ChampionsEvent() {
     return moment.utc().isAfter(date);
   }, [isElegibleForEarlyAccess, chainId]);
 
-  const isOnMaticChain = useCallback(() => {
-    if (chainId === ChainId.Matic || chainId === ChainId.Mumbai) {
-      return true;
-    }
-
-    return false;
-  }, [chainId]);
-
   const handleCanMint = useCallback(() => {
-    return isOnMaticChain() && canMintChampion() && hasEnoughMatic();
-  }, [isOnMaticChain, canMintChampion, hasEnoughMatic]);
+    return (
+      IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) &&
+      canMintChampion() &&
+      hasEnoughAmount()
+    );
+  }, [chainId, canMintChampion, hasEnoughAmount]);
+
+  const {onSwitchMagicNetwork} = useMagicProvider();
+
+  const handleSwitchToMatic = useCallback(() => {
+    if (isMagicProvider()) {
+      const network = GET_MAGIC_NETWORK_FROM_CHAIN_ID(chainId as ChainId);
+      onSwitchMagicNetwork(network);
+    } else {
+      switchChain(getProvider(), ChainId.Matic);
+    }
+  }, [getProvider]);
 
   return (
     <>
@@ -221,352 +238,402 @@ export function ChampionsEvent() {
                   />
                 </Box>
               </Grid>
-              {!isOnMaticChain() ? (
+              {!IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
                 <Grid item xs={12}>
                   <Alert severity='info'>
                     <Typography variant='body2'>
-                      Connect to <strong>Polygon(MATIC)</strong> network to
-                      create a champion.
+                      <IntlMessages id='app.coinLeague.connectToPolygonOrBscNetwork' />
                     </Typography>
                   </Alert>
                 </Grid>
               ) : null}
-              <Grid item xs={12}>
-                <Paper>
-                  <Box p={4}>
-                    <Grid container spacing={4}>
-                      <Grid item xs={isMobile ? 12 : true}>
-                        <Grid container spacing={4} alignItems='stretch'>
-                          <Grid item xs={12}>
-                            <Grid justifyContent='center' container spacing={4}>
-                              <Grid item xs={12}>
-                                <EarlyAccessCountdownSection
-                                  elegible={isElegibleForEarlyAccess()}
-                                />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant='h6'>
-                                  How to Unlock Early Access
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography
-                                  color='textSecondary'
-                                  variant='body2'>
-                                  You will need{' '}
-                                  <strong>
-                                    {GET_EARLY_ACCESS_KIT_AMOUNT(chainId)} KIT
-                                  </strong>{' '}
-                                  or{' '}
-                                  <strong>
-                                    {GET_EARLY_ACCESS_BITT_AMOUNT(chainId)} BITT
-                                  </strong>{' '}
-                                  tokens to unlock Coin League Champion early
-                                  access.
-                                </Typography>
-                              </Grid>
-                              {isOnMaticChain() ? (
+              {IS_CHAMPIONS_NETWORK_ENABLED(web3ChainId) ? (
+                <Grid item xs={12}>
+                  <Paper>
+                    <Box p={4}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={isMobile ? 12 : true}>
+                          <Grid container spacing={4} alignItems='stretch'>
+                            <Grid item xs={12}>
+                              <Grid
+                                justifyContent='center'
+                                container
+                                spacing={4}>
                                 <Grid item xs={12}>
-                                  <Box py={{xs: 0, sm: 4}}>
-                                    <Grid
-                                      container
-                                      spacing={8}
-                                      justifyContent='center'
-                                      alignItems='center'
-                                      alignContent='center'>
-                                      <Grid item>
-                                        <Box>
-                                          {championTokenHolding.isLoading ? (
-                                            <Skeleton />
-                                          ) : (
-                                            <>
-                                              <Grid
-                                                container
-                                                spacing={2}
-                                                justifyContent='center'
-                                                alignItems='center'
-                                                alignContent='center'>
-                                                <Grid item>
-                                                  <Box
-                                                    className={
-                                                      classes.coinsLogoWrapper
-                                                    }>
-                                                    <img
-                                                      alt=''
+                                  <EarlyAccessCountdownSection
+                                    elegible={isElegibleForEarlyAccess()}
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography variant='h6'>
+                                    How to Unlock Early Access
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography
+                                    color='textSecondary'
+                                    variant='body2'>
+                                    You will need{' '}
+                                    <strong>
+                                      {GET_EARLY_ACCESS_KIT_AMOUNT(chainId)} KIT
+                                    </strong>{' '}
+                                    or{' '}
+                                    <strong>
+                                      {GET_EARLY_ACCESS_BITT_AMOUNT(chainId)}{' '}
+                                      BITT
+                                    </strong>{' '}
+                                    tokens to unlock Coin League Champion early
+                                    access.
+                                  </Typography>
+                                </Grid>
+                                {IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
+                                  <Grid item xs={12}>
+                                    <Box py={{xs: 0, sm: 4}}>
+                                      <Grid
+                                        container
+                                        spacing={8}
+                                        justifyContent='center'
+                                        alignItems='center'
+                                        alignContent='center'>
+                                        <Grid item>
+                                          <Box>
+                                            {championTokenHolding.isLoading ? (
+                                              <Skeleton />
+                                            ) : (
+                                              <>
+                                                <Grid
+                                                  container
+                                                  spacing={2}
+                                                  justifyContent='center'
+                                                  alignItems='center'
+                                                  alignContent='center'>
+                                                  <Grid item>
+                                                    <Box
                                                       className={
-                                                        classes.coinsLogo
-                                                      }
-                                                      src={require('assets/images/dexkit-logo-icon.svg')}
-                                                    />
-                                                  </Box>
-                                                </Grid>
-                                                <Grid item>
-                                                  <Typography variant='h4'>
-                                                    {championTokenHolding.data
-                                                      ? leftPad(
-                                                          championTokenHolding
-                                                            .data?.kit,
-                                                          2,
-                                                        )
-                                                      : leftPad(0, 2)}{' '}
-                                                  </Typography>
-                                                </Grid>
-                                                <Grid item>
-                                                  {hasEnoughKit() ? (
-                                                    <Typography variant='h4'>
-                                                      <CheckCircleOutlineIcon
-                                                        style={{
-                                                          color:
-                                                            theme.palette
-                                                              .success.main,
-                                                        }}
+                                                        classes.coinsLogoWrapper
+                                                      }>
+                                                      <img
+                                                        alt=''
+                                                        className={
+                                                          classes.coinsLogo
+                                                        }
+                                                        src={require('assets/images/dexkit-logo-icon.svg')}
                                                       />
-                                                    </Typography>
-                                                  ) : (
+                                                    </Box>
+                                                  </Grid>
+                                                  <Grid item>
                                                     <Typography variant='h4'>
-                                                      <HighlightOffIcon color='error' />
+                                                      {championTokenHolding.data
+                                                        ? leftPad(
+                                                            championTokenHolding
+                                                              .data?.kit,
+                                                            2,
+                                                          )
+                                                        : leftPad(0, 2)}{' '}
                                                     </Typography>
-                                                  )}
+                                                  </Grid>
+                                                  <Grid item>
+                                                    {hasEnoughKit() ? (
+                                                      <Typography variant='h4'>
+                                                        <CheckCircleOutlineIcon
+                                                          style={{
+                                                            color:
+                                                              theme.palette
+                                                                .success.main,
+                                                          }}
+                                                        />
+                                                      </Typography>
+                                                    ) : (
+                                                      <Typography variant='h4'>
+                                                        <HighlightOffIcon color='error' />
+                                                      </Typography>
+                                                    )}
+                                                  </Grid>
                                                 </Grid>
-                                              </Grid>
-                                            </>
-                                          )}
-                                        </Box>
+                                              </>
+                                            )}
+                                          </Box>
+                                        </Grid>
+                                        <Grid item>
+                                          <Box>
+                                            {championTokenHolding.isLoading ? (
+                                              <Skeleton />
+                                            ) : (
+                                              <>
+                                                <Grid
+                                                  container
+                                                  spacing={2}
+                                                  justifyContent='center'
+                                                  alignItems='center'
+                                                  alignContent='center'>
+                                                  <Grid item>
+                                                    <Box
+                                                      className={
+                                                        classes.coinsLogoWrapper
+                                                      }>
+                                                      <img
+                                                        alt=''
+                                                        className={
+                                                          classes.coinsLogo
+                                                        }
+                                                        src={require('assets/images/logos/bittoken-logo.png')}
+                                                      />
+                                                    </Box>
+                                                  </Grid>
+                                                  <Grid item>
+                                                    <Typography variant='h4'>
+                                                      {championTokenHolding.data
+                                                        ? leftPad(
+                                                            championTokenHolding
+                                                              .data?.bitt,
+                                                            2,
+                                                          )
+                                                        : leftPad(0, 2)}{' '}
+                                                    </Typography>
+                                                  </Grid>
+                                                  <Grid item>
+                                                    {hasEnoughBitt() ? (
+                                                      <Typography variant='h4'>
+                                                        <CheckCircleOutlineIcon
+                                                          style={{
+                                                            color:
+                                                              theme.palette
+                                                                .success.main,
+                                                          }}
+                                                        />
+                                                      </Typography>
+                                                    ) : (
+                                                      <Typography variant='h4'>
+                                                        <HighlightOffIcon color='error' />
+                                                      </Typography>
+                                                    )}
+                                                  </Grid>
+                                                </Grid>
+                                              </>
+                                            )}
+                                          </Box>
+                                        </Grid>
+                                      </Grid>
+                                    </Box>
+                                  </Grid>
+                                ) : null}
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={isMobile ? 12 : undefined}>
+                          <Divider
+                            orientation={isMobile ? 'horizontal' : 'vertical'}
+                          />
+                        </Grid>
+                        <Grid item xs={isMobile ? 12 : true}>
+                          <Grid container spacing={4}>
+                            <Grid item xs={12}>
+                              <Typography gutterBottom variant='h5'>
+                                <IntlMessages id='app.coinLeague.round' />{' '}
+                                {getEventCurrentRound() + 1}
+                              </Typography>
+                              <Typography variant='body1'>
+                                <IntlMessages id='app.coinLeague.inThisRoundUsersWill' />{' '}
+                                {getMaxSupplyForRound(getEventCurrentRound()) -
+                                  1000}{' '}
+                                <IntlMessages id='app.coinLeague.champions' />
+                              </Typography>
+                            </Grid>
+                            {IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
+                              <Grid item xs={12}>
+                                <Alert severity='info'>
+                                  <IntlMessages id='app.coinLeague.thereAreOnly' />{' '}
+                                  <strong>
+                                    {getMaxSupplyForRound(
+                                      getEventCurrentRound(),
+                                    ) - totalSupply}
+                                  </strong>{' '}
+                                  <IntlMessages id='app.coinLeague.championsLeftToBeCreated' />
+                                </Alert>
+                              </Grid>
+                            ) : null}
+                            {!hasEnoughAmount() &&
+                            IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
+                              <Grid item xs={12}>
+                                <Alert severity='warning'>
+                                  <IntlMessages id='app.coinLeague.notEnoughMaticStart' />{' '}
+                                  {GET_EVENT_HOLDING_AMOUNT(chainId)}{' '}
+                                  {coinSymbol}{' '}
+                                  <IntlMessages id='app.coinLeague.notEnoughMaticEnd' />
+                                </Alert>
+                              </Grid>
+                            ) : null}
+                            <Grid item xs={12}>
+                              <MintChampionButton
+                                soldOut={
+                                  totalSupply ===
+                                  getMaxSupplyForRound(getEventCurrentRound())
+                                }
+                                onMintChampion={handleMintChampion}
+                                canMintChampion={handleCanMint}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ) : (
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <Paper>
+                      <Box p={4}>
+                        <Grid
+                          container
+                          direction='column'
+                          alignItems='center'
+                          alignContent='center'
+                          justifyContent='center'
+                          spacing={4}>
+                          <Grid item>
+                            <Typography
+                              align='center'
+                              gutterBottom
+                              variant='h5'>
+                              <IntlMessages id='app.coinLeague.comingSoon' />
+                            </Typography>
+                            <Typography
+                              align='center'
+                              color='textSecondary'
+                              variant='body1'>
+                              <IntlMessages id='app.coinLeague.coinLeagueChampionsAreComingSoonToBSC' />
+                            </Typography>
+                          </Grid>
+
+                          <Grid item>
+                            <Button
+                              color='primary'
+                              variant='contained'
+                              onClick={handleSwitchToMatic}>
+                              <IntlMessages id='app.coinLeague.switchToMaticNetwork' />
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              )}
+              {IS_CHAMPIONS_NETWORK_ENABLED(web3ChainId) ? (
+                <Grid item xs={12}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <Box
+                        display='flex'
+                        alignItems='center'
+                        alignContent='center'
+                        justifyContent='space-between'>
+                        <Typography variant='h6'>
+                          <IntlMessages id='app.coinLeague.myChampions' />
+                        </Typography>
+                        <Button
+                          component={RouterLink}
+                          to='/champions'
+                          disabled={myChampions.data?.length === 0}
+                          color='primary'>
+                          <IntlMessages id='app.coinLeague.viewMore' />
+                        </Button>
+                      </Box>
+                    </Grid>
+                    {account ? (
+                      <>
+                        {myChampions.loading ? (
+                          new Array(8).fill(null).map((item, index) => (
+                            <Grid key={index} item xs={12} sm={3}>
+                              <ChampionCard loading />
+                            </Grid>
+                          ))
+                        ) : (
+                          <>
+                            {myChampions.data?.length === 0 ||
+                            !IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) ? (
+                              <Grid item xs={12}>
+                                <Paper>
+                                  <Box p={4}>
+                                    <Grid
+                                      direction='column'
+                                      alignItems='center'
+                                      alignContent='center'
+                                      justifyContent='center'
+                                      container
+                                      spacing={4}>
+                                      <Grid item>
+                                        <NFTEmptyStateImage />
                                       </Grid>
                                       <Grid item>
-                                        <Box>
-                                          {championTokenHolding.isLoading ? (
-                                            <Skeleton />
-                                          ) : (
-                                            <>
-                                              <Grid
-                                                container
-                                                spacing={2}
-                                                justifyContent='center'
-                                                alignItems='center'
-                                                alignContent='center'>
-                                                <Grid item>
-                                                  <Box
-                                                    className={
-                                                      classes.coinsLogoWrapper
-                                                    }>
-                                                    <img
-                                                      alt=''
-                                                      className={
-                                                        classes.coinsLogo
-                                                      }
-                                                      src={require('assets/images/logos/bittoken-logo.png')}
-                                                    />
-                                                  </Box>
-                                                </Grid>
-                                                <Grid item>
-                                                  <Typography variant='h4'>
-                                                    {championTokenHolding.data
-                                                      ? leftPad(
-                                                          championTokenHolding
-                                                            .data?.bitt,
-                                                          2,
-                                                        )
-                                                      : leftPad(0, 2)}{' '}
-                                                  </Typography>
-                                                </Grid>
-                                                <Grid item>
-                                                  {hasEnoughBitt() ? (
-                                                    <Typography variant='h4'>
-                                                      <CheckCircleOutlineIcon
-                                                        style={{
-                                                          color:
-                                                            theme.palette
-                                                              .success.main,
-                                                        }}
-                                                      />
-                                                    </Typography>
-                                                  ) : (
-                                                    <Typography variant='h4'>
-                                                      <HighlightOffIcon color='error' />
-                                                    </Typography>
-                                                  )}
-                                                </Grid>
-                                              </Grid>
-                                            </>
-                                          )}
-                                        </Box>
+                                        <Typography align='center' variant='h5'>
+                                          <IntlMessages id='app.coinLeague.noChampionsYet' />
+                                        </Typography>
+                                        <Typography
+                                          color='textSecondary'
+                                          align='center'
+                                          variant='body1'>
+                                          <IntlMessages id='app.coinLeague.createOneToSeeItHere' />
+                                        </Typography>
                                       </Grid>
                                     </Grid>
                                   </Box>
-                                </Grid>
-                              ) : null}
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={isMobile ? 12 : undefined}>
-                        <Divider
-                          orientation={isMobile ? 'horizontal' : 'vertical'}
-                        />
-                      </Grid>
-                      <Grid item xs={isMobile ? 12 : true}>
-                        <Grid container spacing={4}>
-                          <Grid item xs={12}>
-                            <Typography gutterBottom variant='h5'>
-                              Round {getEventCurrentRound() + 1}
-                            </Typography>
-                            <Typography variant='body1'>
-                              In this round, users will be able to create{' '}
-                              {getMaxSupplyForRound(getEventCurrentRound()) -
-                                1000}{' '}
-                              champions.
-                            </Typography>
-                          </Grid>
-                          {isOnMaticChain() ? (
-                            <Grid item xs={12}>
-                              <Alert severity='info'>
-                                There are only{' '}
-                                <strong>
-                                  {getMaxSupplyForRound(
-                                    getEventCurrentRound(),
-                                  ) - totalSupply}
-                                </strong>{' '}
-                                champions left to be created.
-                              </Alert>
-                            </Grid>
-                          ) : null}
-                          {!hasEnoughMatic() && isOnMaticChain() ? (
-                            <Grid item xs={12}>
-                              <Alert severity='warning'>
-                                <IntlMessages id='app.coinLeague.notEnoughMaticStart' />{' '}
-                                {GET_EVENT_HOLDING_AMOUNT(chainId)}{' '}
-                                <IntlMessages id='app.coinLeague.notEnoughMaticEnd' />
-                              </Alert>
-                            </Grid>
-                          ) : null}
-                          <Grid item xs={12}>
-                            <MintChampionButton
-                              soldOut={
-                                totalSupply ===
-                                getMaxSupplyForRound(getEventCurrentRound())
-                              }
-                              onMintChampion={handleMintChampion}
-                              canMintChampion={handleCanMint}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={4}>
-                  <Grid item xs={12}>
-                    <Box
-                      display='flex'
-                      alignItems='center'
-                      alignContent='center'
-                      justifyContent='space-between'>
-                      <Typography variant='h6'>
-                        <IntlMessages id='app.coinLeague.myChampions' />
-                      </Typography>
-                      <Button
-                        component={RouterLink}
-                        to='/champions'
-                        disabled={myChampions.data?.length === 0}
-                        color='primary'>
-                        <IntlMessages id='app.coinLeague.viewMore' />
-                      </Button>
-                    </Box>
-                  </Grid>
-                  {account ? (
-                    <>
-                      {myChampions.loading ? (
-                        new Array(8).fill(null).map((item, index) => (
-                          <Grid key={index} item xs={12} sm={3}>
-                            <ChampionCard loading />
-                          </Grid>
-                        ))
-                      ) : (
-                        <>
-                          {myChampions.data?.length === 0 ||
-                          !isOnMaticChain() ? (
-                            <Grid item xs={12}>
-                              <Paper>
-                                <Box p={4}>
-                                  <Grid
-                                    direction='column'
-                                    alignItems='center'
-                                    alignContent='center'
-                                    justifyContent='center'
-                                    container
-                                    spacing={4}>
-                                    <Grid item>
-                                      <NFTEmptyStateImage />
-                                    </Grid>
-                                    <Grid item>
-                                      <Typography align='center' variant='h5'>
-                                        No Champions yet
-                                      </Typography>
-                                      <Typography
-                                        color='textSecondary'
-                                        align='center'
-                                        variant='body1'>
-                                        Create one to see it here
-                                      </Typography>
-                                    </Grid>
+                                </Paper>
+                              </Grid>
+                            ) : (
+                              <>
+                                {myChampions.data?.map((champion, index) => (
+                                  <Grid key={index} item xs={12} sm={3}>
+                                    <ChampionCard champion={champion} />
                                   </Grid>
-                                </Box>
-                              </Paper>
-                            </Grid>
-                          ) : (
-                            <>
-                              {myChampions.data?.map((champion, index) => (
-                                <Grid key={index} item xs={12} sm={3}>
-                                  <ChampionCard champion={champion} />
-                                </Grid>
-                              ))}
-                            </>
-                          )}
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <Grid item xs={12}>
-                      <Paper>
-                        <Box p={4}>
-                          <Grid
-                            container
-                            spacing={4}
-                            alignItems='center'
-                            alignContent='center'
-                            justifyContent='center'
-                            direction='column'>
-                            <Grid item>
-                              <WalletEmptyImage />
-                            </Grid>
-                            <Grid item>
-                              <Typography align='center' variant='h5'>
-                                Connect wallet
-                              </Typography>
+                                ))}
+                              </>
+                            )}
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <Grid item xs={12}>
+                        <Paper>
+                          <Box p={4}>
+                            <Grid
+                              container
+                              spacing={4}
+                              alignItems='center'
+                              alignContent='center'
+                              justifyContent='center'
+                              direction='column'>
+                              <Grid item>
+                                <WalletEmptyImage />
+                              </Grid>
+                              <Grid item>
+                                <Typography align='center' variant='h5'>
+                                  Connect wallet
+                                </Typography>
 
-                              <Typography align='center' variant='body1'>
-                                Connect your wallet to Polygon(MATIC) network to
-                                see your champions.
-                              </Typography>
+                                <Typography align='center' variant='body1'>
+                                  Connect your wallet to Polygon(MATIC) network
+                                  to see your champions.
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Button
+                                  onClick={handleConnect}
+                                  variant='contained'
+                                  color='primary'>
+                                  Connect wallet
+                                </Button>
+                              </Grid>
                             </Grid>
-                            <Grid item>
-                              <Button
-                                onClick={handleConnect}
-                                variant='contained'
-                                color='primary'>
-                                Connect wallet
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Box>
-                      </Paper>
-                    </Grid>
-                  )}
+                          </Box>
+                        </Paper>
+                      </Grid>
+                    )}
+                  </Grid>
                 </Grid>
-              </Grid>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>

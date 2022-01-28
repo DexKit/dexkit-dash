@@ -9,11 +9,14 @@ import {useHistory} from 'react-router';
 import {chainIdToSlug} from 'utils/nft';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {NFTEmptyStateImage} from 'shared/components/Icons';
+import {useWeb3} from 'hooks/useWeb3';
 
 export const CollectionsList = () => {
   const {data} = useCollectionList();
 
   const history = useHistory();
+
+  const {chainId} = useWeb3();
 
   const handleClick = useCallback(
     (collection: Collection) => {
@@ -31,13 +34,15 @@ export const CollectionsList = () => {
   if (data.length > 0) {
     return (
       <List disablePadding>
-        {data.map((collection: any, index: number) => (
-          <CollectionsListItem
-            collection={collection}
-            key={index}
-            onClick={handleClick}
-          />
-        ))}
+        {data
+          .filter((c) => c.chainId === chainId)
+          .map((collection: any, index: number) => (
+            <CollectionsListItem
+              collection={collection}
+              key={index}
+              onClick={handleClick}
+            />
+          ))}
       </List>
     );
   } else {

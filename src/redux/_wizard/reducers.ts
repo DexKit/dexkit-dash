@@ -23,6 +23,8 @@ export interface Token {
   symbol: string;
   supply: number;
   chainId?: number;
+  transactionHash?: string;
+  address?: string;
 }
 
 export interface WizardState {

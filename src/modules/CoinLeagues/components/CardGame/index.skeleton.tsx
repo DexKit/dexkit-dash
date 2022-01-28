@@ -7,12 +7,12 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
-import { ReactComponent as SendIcon } from 'assets/images/icons/send-square.svg';
-import { truncateAddress } from 'utils/text';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
+import {truncateAddress} from 'utils/text';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -45,7 +45,7 @@ const strPad = (str: number): string => {
   return (new Array(3).join('0') + str).slice(-2);
 };
 
-function CardTimer(props: { time: number }) {
+function CardTimer(props: {time: number}) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor(time / 60) - hours * 3600;
@@ -62,7 +62,7 @@ function CardTimer(props: { time: number }) {
 
 function CardGameSkeleton(): JSX.Element {
   const classes = useStyles();
-  const { coinSymbol } = useLeaguesChainInfo();
+  const {coinSymbol} = useLeaguesChainInfo();
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -73,18 +73,18 @@ function CardGameSkeleton(): JSX.Element {
         <Grid xs={5} item>
           <Typography
             variant='h6'
-            style={{ color: '#fcc591', alignItems: 'baseline' }}>
+            style={{color: '#fcc591', alignItems: 'baseline'}}>
             <SendIcon />
             <Skeleton>
               &nbsp;{'0'} {coinSymbol}
             </Skeleton>
           </Typography>
         </Grid>
-        <Grid item xs={7} style={{ color: '#7a8398' }}>
+        <Grid item xs={7} style={{color: '#7a8398'}}>
           <Typography variant='h6'>
             <IntlMessages id='app.coinLeagues.gameTime' />:
           </Typography>
-          <Typography variant='h6' style={{ fontWeight: 600 }}>
+          <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
         </Grid>
@@ -125,7 +125,9 @@ function CardGameSkeleton(): JSX.Element {
           </Typography>
           <Typography variant='subtitle2'>
             {' '}
-            <Skeleton>{100}  {coinSymbol} </Skeleton>
+            <Skeleton>
+              {100} {coinSymbol}{' '}
+            </Skeleton>
           </Typography>
         </Grid>
       </Grid>
