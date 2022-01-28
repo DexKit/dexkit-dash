@@ -521,6 +521,7 @@ export const useKittygotchiOnChain = () => {
           setIsLoading(false);
         } catch (err) {
           reject(err);
+          setIsLoading(false);
         }
       });
     },
