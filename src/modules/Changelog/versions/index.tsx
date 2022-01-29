@@ -44,20 +44,38 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.15'
           id='panelv0.0.6.15-header'>
           <Typography className={classes.heading}>
-            v0.0.6.15 - Upcoming Version{' '}
+            v0.0.6.15 -  28-01-2021{' '}
           </Typography>
         </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Kittygotchi on BSC, added ranking for KItty
+            </Typography>
+          </Box>
+        </AccordionDetails>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>
+              Added Import NFT's on any supported networks
+            </Typography>
+          </Box>
+        </AccordionDetails>
         <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
               Added Custom Networks support and Import Tokens
             </Typography>
           </Box>
+        </AccordionDetails>
+        <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
               Added Portuguese and Spanish Languages
             </Typography>
           </Box>
+        </AccordionDetails>
+        <AccordionDetails>
           <Box display={'flex'} flexDirection={'column'}>
             <Typography className={classes.item}>
               Several bugs fix's and designs tweaks
@@ -67,7 +85,7 @@ const Changelog = () => {
       </Accordion>
 
 
-      <Accordion defaultExpanded={true}>
+      <Accordion >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.14'
@@ -84,7 +102,7 @@ const Changelog = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={true}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls='panelv0.0.6.13'

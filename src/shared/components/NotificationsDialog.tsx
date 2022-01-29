@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   Grid,
@@ -14,11 +14,11 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import NotificationItem from '@crema/core/Notifications/NotificationItem';
-import { AppState } from 'redux/store';
-import { useSelector } from 'react-redux';
+import {AppState} from 'redux/store';
+import {useSelector} from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
-import { ConnectivityImage, NotificationOutlinedIcon } from './Icons';
-import { useMobile } from 'hooks/useMobile';
+import {ConnectivityImage, NotificationOutlinedIcon} from './Icons';
+import {useMobile} from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -30,18 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface NotificationsDialogProps extends DialogProps { }
+interface NotificationsDialogProps extends DialogProps {}
 
 export const NotificationsDialog = (props: NotificationsDialogProps) => {
-  const { onClose } = props;
+  const {onClose} = props;
 
   const classes = useStyles();
 
-  const { notifications } = useSelector<AppState, AppState['notification']>(
-    ({ notification }) => notification,
+  const {notifications} = useSelector<AppState, AppState['notification']>(
+    ({notification}) => notification,
   );
 
-  const handleClick = useCallback(() => { }, []);
+  const handleClick = useCallback(() => {}, []);
 
   const handleClose = useCallback(() => {
     if (onClose) {
@@ -53,7 +53,8 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
 
   const reversedNotifications = useMemo(() => {
     return [...notifications].reverse();
-  }, [notifications])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [String(notifications)]);
 
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>

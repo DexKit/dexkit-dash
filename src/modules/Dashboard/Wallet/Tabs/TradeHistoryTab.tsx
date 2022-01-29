@@ -146,7 +146,7 @@ export const TradeHistoryTab = (props: Props) => {
                     clickable
                     onClick={handleToggleHistory}
                     variant={tab === TAB_HISTORY ? 'default' : 'outlined'}
-                    label={messages['app.wallet.tradeHistory'] as string}
+                    label={messages['app.wallet.trade'] as string}
                   />
                 </Grid>
                 <Grid item>

@@ -1656,6 +1656,7 @@
   "app.wallet.cancel": "Cancelar",
   "app.wallet.transfer": "Transferir",
   "app.wallet.remove": "Remover",
+  "app.wallet.trade": "Comercio",
   "app.settings.transferAsser": "Transferir activo",
   "app.wallet.invalidAddress": "Dirección inválida",
   "app.wallet.cannotTransferToOwner": "El recipiente no puede ser el dueño del activo",
