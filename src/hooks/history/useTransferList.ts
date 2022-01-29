@@ -1,6 +1,5 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 import {useQuery} from '@apollo/client';
-import {POLL_INTERVAL} from 'shared/constants/AppConst';
 import usePagination from 'hooks/usePagination';
 import {BITQUERY_TRANSFER_LIST} from 'services/graphql/bitquery/history/gql';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
@@ -28,6 +27,11 @@ export const useTransferList = ({address, networkName}: Props) => {
 
   const [data, setData] = useState<Transfers[]>();
 
+  const from = useMemo(()=>{
+    return new Date(new Date().getTime() - 90 * 24 * 3600 * 1000);
+  },[])
+
+  
   const {
     loading,
     error,
@@ -40,8 +44,8 @@ export const useTransferList = ({address, networkName}: Props) => {
         address: address,
         limit: Math.floor(rowsPerPage),
         offset: Math.floor(skipRows),
-      },
-      pollInterval: POLL_INTERVAL,
+        from
+      }
     },
   );
 
