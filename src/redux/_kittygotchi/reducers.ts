@@ -5,6 +5,7 @@ import {
   setDefaultKittyOnChain,
   updateImage,
   clearOldState,
+  unsetDefault,
 } from './actions';
 
 export interface KittygotchiState {
@@ -24,26 +25,41 @@ export default createReducer(initialState, (builder) =>
       state.kittygotchi = action.payload;
     })
     .addCase(setDefaultKittyOnChain, (state, action) => {
-      let param = action.payload;
+      const param = action.payload;
 
       if (!state.kittygotchiByChain) {
         state.kittygotchiByChain = {};
       }
 
-      state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`] =
-        param.kittygotchi;
+      state.kittygotchiByChain[
+        `${param.address?.toLowerCase()}-${param.chainId}`
+      ] = param.kittygotchi;
     })
     .addCase(updateImage, (state, action) => {
-      let param = action.payload;
+      const param = action.payload;
 
       if (state.kittygotchiByChain) {
-        if (state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`]) {
-          state.kittygotchiByChain[`${param.address?.toLowerCase()}-${param.chainId}`].image =
-            param.url;
+        if (
+          state.kittygotchiByChain[
+            `${param.address?.toLowerCase()}-${param.chainId}`
+          ]
+        ) {
+          state.kittygotchiByChain[
+            `${param.address?.toLowerCase()}-${param.chainId}`
+          ].image = param.url;
         }
       }
     })
     .addCase(clearOldState, (state, action) => {
       state.kittygotchi = undefined;
+    })
+    .addCase(unsetDefault, (state, action) => {
+      const param = action.payload;
+
+      if (state.kittygotchiByChain) {
+        delete state.kittygotchiByChain[
+          `${param.address?.toLowerCase()}-${param.chainId}`
+        ];
+      }
     }),
 );

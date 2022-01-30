@@ -5,13 +5,16 @@ import {
   Link,
   CircularProgress,
   useTheme,
+  Chip,
 } from '@material-ui/core';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Error from '@material-ui/icons/Error';
 import FileCopy from '@material-ui/icons/FileCopy';
+import {useCustomNetworkList} from 'hooks/network';
 import {useChainInfo} from 'hooks/useChainInfo';
 import React from 'react';
 import CopyButton from 'shared/components/CopyButton';
+import {GET_CHAIN_ID_NAME_V2} from 'shared/constants/Blockchain';
 import {truncateAddress} from 'utils';
 
 export interface Props {
@@ -19,9 +22,11 @@ export interface Props {
   date: string;
   status: string;
   chainId: number;
+  title: string;
 }
 
 export const TransactionTableRow: React.FC<Props> = ({
+  title,
   hash,
   date,
   chainId,
@@ -31,8 +36,11 @@ export const TransactionTableRow: React.FC<Props> = ({
 
   const {getScannerUrl} = useChainInfo();
 
+  const {networks} = useCustomNetworkList();
+
   return (
     <TableRow>
+      <TableCell>{title}</TableCell>
       <TableCell>
         {truncateAddress(hash)}{' '}
         <CopyButton size='small' copyText={hash || ''} tooltip='Copied!'>
@@ -48,6 +56,9 @@ export const TransactionTableRow: React.FC<Props> = ({
         ) : (
           <CircularProgress color='primary' />
         )}
+      </TableCell>
+      <TableCell>
+        <Chip label={GET_CHAIN_ID_NAME_V2(chainId, networks)} />
       </TableCell>
       <TableCell>
         <Link

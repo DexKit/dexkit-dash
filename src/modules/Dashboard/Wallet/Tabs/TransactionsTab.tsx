@@ -8,6 +8,7 @@ import {
   TableCell,
   FormControl,
   Select,
+  Paper,
   MenuItem,
   IconButton,
   Grid,
@@ -79,9 +80,12 @@ export const TransactionsTab: React.FC<Props> = () => {
     return (
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <TableContainer>
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
+                <TableCell>
+                  <IntlMessages id='app.wallet.title' />
+                </TableCell>
                 <TableCell>
                   <IntlMessages id='app.wallet.transactionHash' />
                 </TableCell>
@@ -91,12 +95,16 @@ export const TransactionsTab: React.FC<Props> = () => {
                 <TableCell>
                   <IntlMessages id='app.wallet.status' />
                 </TableCell>
+                <TableCell>
+                  <IntlMessages id='app.wallet.network' />
+                </TableCell>
                 <TableCell></TableCell>
               </TableHead>
               <TableBody>
                 {paginate(notifications, itemsPerPage, page).map(
                   (notification, index: number) => (
                     <TransactionTableRow
+                      title={notification.title}
                       chainId={
                         (notification.metadata as TxNotificationMetadata)
                           .chainId
@@ -162,23 +170,27 @@ export const TransactionsTab: React.FC<Props> = () => {
     );
   } else {
     return (
-      <Box>
-        <Grid
-          container
-          spacing={4}
-          alignItems='center'
-          alignContent='center'
-          justifyContent='center'
-          direction='column'>
-          <Grid item>
-            <WalletEmptyImage />
-          </Grid>
-          <Grid item>
-            <Typography variant='h5' align='center' color='primary'>
-              <IntlMessages id='app.wallet.noTransactionsYet' />
-            </Typography>
-          </Grid>
-        </Grid>
+      <Box py={4}>
+        <Paper>
+          <Box py={4}>
+            <Grid
+              container
+              spacing={4}
+              alignItems='center'
+              alignContent='center'
+              justifyContent='center'
+              direction='column'>
+              <Grid item>
+                <WalletEmptyImage />
+              </Grid>
+              <Grid item>
+                <Typography variant='h5' align='center'>
+                  <IntlMessages id='app.wallet.noTransactionsYet' />
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
       </Box>
     );
   }

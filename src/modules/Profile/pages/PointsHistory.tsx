@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -15,19 +15,21 @@ import moment from 'moment';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PointsHistoryCard from '../components/buttons/PointsHistoryCard';
 import ProfilePointsCard from '../components/ProfilePointsCard';
+import { useMobile } from 'hooks/useMobile';
 
 export function Ranking() {
+  const isMobile = useMobile();
   return (
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {isMobile && <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to='/profile'>
                 Profile
               </Link>
             </Breadcrumbs>
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box

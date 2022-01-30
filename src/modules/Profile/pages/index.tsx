@@ -3,12 +3,17 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {
   Box,
   Grid,
+  Divider,
   Typography,
-  Button,
+  CardContent,
   IconButton,
   Breadcrumbs,
   Link,
+  Card,
+  CardHeader,
 } from '@material-ui/core';
+
+import AssetDetailDialog from 'modules/Dashboard/components/AssetDetailDialog';
 
 import {useNotifications} from 'hooks/useNotifications';
 
@@ -22,23 +27,33 @@ import {ProfileKittygotchiCard} from '../components/ProfileKittygotchiCard';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 
+import {refetchKittygotchiMetadata} from 'modules/Kittygotchi/services/kittygotchi';
+
 import {
   useKittygotchiFeed,
   useKittygotchiList,
   useKittygotchiMint,
   useKittygotchiOnChain,
   useKittygotchiV2,
+  useKittygotchiRanking,
 } from 'modules/Kittygotchi/hooks';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {ChainId, Web3State} from 'types/blockchain';
+import {Web3State} from 'types/blockchain';
 import {FeedingKittygotchiDialog} from 'modules/Kittygotchi/components/dialogs/FeedingKittygotchiDialog';
 import {useToggler} from 'hooks/useToggler';
 import SelectAddressDialog from 'shared/components/SelectAddressDialog';
 import {useSelector} from 'react-redux';
 import {AppState} from 'redux/store';
 import TransferAssetDialog from 'shared/components/Dialogs/TransferAssetDialog';
-import {GET_KITTY_CHAIN_ID, KITTYGOTCHI} from 'modules/Kittygotchi/constants';
+
+import {GET_KITTYGOTCHI_CONTRACT_ADDR} from 'modules/Kittygotchi/constants';
+import {useIntl} from 'react-intl';
+import {ownerOf} from 'services/nfts';
+import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
+
+import KittygotchiRankingList from 'modules/Kittygotchi/components/KittygotchiRankingList';
+import {useMobile} from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -68,12 +83,15 @@ export const ProfileIndex = () => {
 
   const feedingToggler = useToggler();
 
-  const {getTransactionScannerUrl} = useChainInfo();
+  const isMobile = useMobile();
+  const {getTransactionScannerUrl, chainName} = useChainInfo();
 
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedingDone, setFeedingDone] = useState(false);
   const [feedErrorMessage, setFeedErrorMessage] = useState<string>();
   const [transactionHash, setTransactionHash] = useState<string>();
+
+  const {messages} = useIntl();
 
   const clearStates = useCallback(() => {
     setFeedLoading(false);
@@ -101,13 +119,16 @@ export const ProfileIndex = () => {
 
   const {createNotification} = useNotifications();
 
-  const {chainId, account, web3State} = useWeb3();
+  const {chainId, account, web3State, getProvider} = useWeb3();
+
+  const kittygotchiRanking = useKittygotchiRanking(chainId);
 
   useEffect(() => {
     if (
       account &&
       web3State === Web3State.Done &&
-      (chainId === ChainId.Matic || chainId === ChainId.Mumbai)
+      chainId &&
+      isKittygotchiNetworkSupported(chainId)
     ) {
       let defaultKitty = kittyProfile.getDefault(account, chainId);
 
@@ -139,11 +160,11 @@ export const ProfileIndex = () => {
       onSubmit: (hash?: string) => {
         if (hash && chainId) {
           createNotification({
-            title: 'Mint Kittygotchi',
-            body: `Minting your kittygotchi`,
+            title: messages['app.kittygotchi.mintKittygotchi'] as string,
+            body: messages['app.kittygotchi.mintingYourKittygotchi'] as string,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, hash),
-            urlCaption: 'View transaction',
+            urlCaption: messages['app.kittygotchi.viewTransaction'] as string,
             type: NotificationType.TRANSACTION,
             metadata: {
               chainId: chainId,
@@ -154,18 +175,17 @@ export const ProfileIndex = () => {
         }
       },
       onError: (error: any) => {
-        setErrorMessage(error);
+        if (error.data) {
+          if (error.data.message) {
+            setErrorMessage(error.data.message);
+          }
+        }
         setMintLoading(false);
       },
     });
-  }, [chainId, account]);
+  }, [chainId, account, messages, kittygotchiMint.onMintCallback]);
 
   const {onFeedCallback} = useKittygotchiFeed();
-
-  /* eslint-disable */
-  const handleClearError = useCallback(() => {
-    setErrorMessage(undefined);
-  }, []);
 
   const handleFeed = useCallback(() => {
     clearStates();
@@ -200,11 +220,13 @@ export const ProfileIndex = () => {
       }
     };
 
-    const onConfirmation = (hash?: string) => {
+    const onConfirmation = async (hash?: string) => {
       if (chainId && account) {
         let defaultKitty = kittyProfile.getDefault(account, chainId);
 
         if (defaultKitty) {
+          await refetchKittygotchiMetadata(defaultKitty.id, chainId);
+
           kittygotchiUpdated.get(defaultKitty.id);
         }
 
@@ -284,12 +306,80 @@ export const ProfileIndex = () => {
     selectAddressDialogToggler.set(false);
   }, [selectAddressDialogToggler]);
 
+  const startOwnerChecker = useCallback(() => {
+    let interval = setInterval(async () => {
+      let contractAddress = GET_KITTYGOTCHI_CONTRACT_ADDR(chainId);
+
+      if (account && chainId) {
+        let kittygotchi = kittyProfile?.getDefault(account, chainId);
+
+        if (contractAddress && kittygotchi) {
+          let owner = await ownerOf(
+            contractAddress,
+            kittygotchi.id,
+            getProvider(),
+          );
+
+          if (owner !== account) {
+            kittyProfile.unsetDefaultKittygothchi(account, chainId);
+            kittygotchiUpdated.clear();
+            clearInterval(interval);
+          }
+        }
+      }
+    }, 2000);
+  }, [account, chainId, getProvider, kittygotchiUpdated]);
+
   const handleCloseTransferDialog = useCallback(() => {
     transferAssetDialogToggler.set(false);
+    startOwnerChecker();
   }, [transferAssetDialogToggler]);
+
+  const handleClearError = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+
+  const [selectedToken, setSelectedToken] = useState<{
+    contractAddress: string;
+    tokenId: string;
+    metadata: any;
+    chainId: number;
+  }>();
+
+  const showDetailToggler = useToggler();
+
+  const handleSelectAsset = useCallback(
+    (
+      contractAddress: string,
+      tokenId: string,
+      metadata: any,
+      chainId: number,
+    ) => {
+      setSelectedToken({contractAddress, tokenId, metadata, chainId});
+      showDetailToggler.set(true);
+    },
+    [showDetailToggler],
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    showDetailToggler.set(false);
+    setSelectedToken(undefined);
+  }, [showDetailToggler]);
 
   return (
     <>
+      <AssetDetailDialog
+        dialogProps={{
+          open: showDetailToggler.show,
+          onClose: handleCloseDialog,
+          maxWidth: 'xs',
+          fullWidth: true,
+        }}
+        contractAddress={selectedToken?.contractAddress}
+        tokenId={selectedToken?.tokenId}
+        metadata={selectedToken?.metadata}
+        chainId={selectedToken?.chainId}
+      />
       <SelectAddressDialog
         open={selectAddressDialogToggler.show}
         accounts={accounts.evm}
@@ -305,7 +395,7 @@ export const ProfileIndex = () => {
           fullWidth: true,
           onClose: handleCloseTransferDialog,
         }}
-        contractAddress={KITTYGOTCHI[GET_KITTY_CHAIN_ID(chainId)]}
+        contractAddress={GET_KITTYGOTCHI_CONTRACT_ADDR(chainId)}
         tokenId={
           account && chainId
             ? kittyProfile?.getDefault(account, chainId)?.id
@@ -326,13 +416,15 @@ export const ProfileIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box
@@ -353,22 +445,6 @@ export const ProfileIndex = () => {
           <Grid item xs={12} sm={12}>
             <Grid container spacing={4} justifyContent={'center'}>
               <Grid item xs={12} sm={6}>
-                <Box
-                  mb={2}
-                  display='flex'
-                  alignItems='center'
-                  alignContent='center'
-                  justifyContent='space-between'>
-                  <Typography variant='body1'>My Kittygotchi</Typography>
-
-                  <Button
-                    size='small'
-                    color='primary'
-                    to='/kittygotchi'
-                    component={RouterLink}>
-                    View more
-                  </Button>
-                </Box>
                 <ProfileKittygotchiCard
                   onMint={handleMint}
                   onFeed={handleFeed}
@@ -377,7 +453,41 @@ export const ProfileIndex = () => {
                   loading={mintLoading}
                   loadingKyttie={kittygotchiUpdated.isLoading || loadingKyttie}
                   kittygotchi={kittygotchiUpdated.data}
+                  error={errorMessage}
+                  onClearError={handleClearError}
                 />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Card>
+                  <CardHeader
+                    title={messages['app.kittygotchi.top5Ranking'] as string}
+                  />
+                  <Divider />
+                  {kittygotchiRanking.error ? (
+                    <CardContent>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                          <Typography variant='h5'>
+                            <IntlMessages id='app.kittygotchi.oopsAnErrorOccurred' />
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}></Grid>
+                      </Grid>
+                    </CardContent>
+                  ) : kittygotchiRanking.results.length > 0 ? (
+                    <KittygotchiRankingList
+                      items={kittygotchiRanking.results}
+                      loading={kittygotchiRanking.isLoading}
+                      onSelect={handleSelectAsset}
+                    />
+                  ) : (
+                    <CardContent>
+                      <Typography variant='body1'>
+                        <IntlMessages id='app.kittygotchi.notEnoughtKitties' />
+                      </Typography>
+                    </CardContent>
+                  )}
+                </Card>
               </Grid>
             </Grid>
           </Grid>

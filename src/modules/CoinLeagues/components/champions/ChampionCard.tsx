@@ -1,26 +1,28 @@
 import React from 'react';
 
-import IntlMessages from '@crema/utility/IntlMessages';
-
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-
-
-import {ChainId} from 'types/blockchain';
 
 import {Skeleton} from '@material-ui/lab';
 import {getNormalizedUrl} from 'utils/browser';
 import {CoinLeaguesChampion} from 'modules/CoinLeagues/utils/types';
 import {OpenSeaIcon} from 'shared/components/Icons';
 
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
-import {CHAMPIONS} from 'modules/CoinLeagues/constants';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
 import Tooltip from '@material-ui/core/Tooltip';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
+
+import {
+  GET_CHAMPIONS_CONTRACT_ADDR,
+  IS_CHAMPIONS_SUPPORTED_NETWORK,
+} from 'modules/CoinLeagues/utils/champions';
+import {getOpenSeaLink} from 'utils/opensea';
+import {useIntl} from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -55,24 +57,24 @@ interface ChampionCardProps {
 export const ChampionCard = (props: ChampionCardProps) => {
   const {loading, champion} = props;
 
+  const {messages} = useIntl();
+
   const classes = useStyles();
 
-  const { chainId } = useLeaguesChainInfo();
+  const {chainId} = useLeaguesChainInfo();
 
   return (
     <Card className={classes.card}>
-      {chainId &&
-      (chainId === ChainId.Matic || chainId === ChainId.Mumbai) &&
-      !loading ? (
+      {chainId && IS_CHAMPIONS_SUPPORTED_NETWORK(chainId) && !loading ? (
         <Box className={classes.action}>
-          <Tooltip title='view on OpenSea'>
+          <Tooltip title={messages['app.coinLeague.viewOnOpenSea'] as string}>
             <IconButton
               target='_blank'
-              href={`${
-                chainId === ChainId.Matic ? 'https://' : 'https://testnets.'
-              }opensea.io/assets/${
-                chainId === ChainId.Matic ? 'matic' : 'mumbai'
-              }/${CHAMPIONS[chainId]}/${champion?.id}`}
+              href={`${getOpenSeaLink(
+                chainId,
+                GET_CHAMPIONS_CONTRACT_ADDR(chainId),
+                champion?.id,
+              )}`}
               className={classes.button}>
               <OpenSeaIcon className={classes.icon} />
             </IconButton>
@@ -91,13 +93,6 @@ export const ChampionCard = (props: ChampionCardProps) => {
       )}
       <CardContent>
         <Typography variant='body1'>
-          {loading ? (
-            <Skeleton />
-          ) : (
-            <>
-              <IntlMessages id='app.coinLeagues.champion' /> #{champion?.id}
-            </>
-          )}
           {loading ? <Skeleton /> : <>{champion?.name}</>}
         </Typography>
       </CardContent>

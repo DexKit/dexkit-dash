@@ -8,9 +8,9 @@ import {SwapQuoteResponse} from 'types/zerox';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useNotifications} from 'hooks/useNotifications';
 import {Token} from 'types/app';
-import {tokenAmountInUnits} from 'utils';
-import {BigNumber} from '@0x/utils';
 import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+
+import {ethers} from 'ethers';
 
 import {useChainInfo} from 'hooks/useChainInfo';
 
@@ -23,6 +23,7 @@ interface Props {
   onNext: (hasNext: boolean, errorMesage?: string) => void;
   onLoading: (value: boolean) => void;
   onRequestConfirmed: (value: boolean) => void;
+  onHash?: (hash: string) => void;
 }
 
 const MarketStep: React.FC<Props> = (props) => {
@@ -35,6 +36,7 @@ const MarketStep: React.FC<Props> = (props) => {
     onRequestConfirmed,
     tokenFrom,
     tokenTo,
+    onHash,
   } = props;
 
   const {getWeb3, chainId} = useWeb3();
@@ -65,13 +67,18 @@ const MarketStep: React.FC<Props> = (props) => {
         data: quote.data,
         value: quote.value,
       })
-      .then((e) => {
-        const tokenFromQuantity = tokenAmountInUnits(
-          new BigNumber(quote.sellAmount),
+      .once('transactionHash', (hash) => {
+        if (onHash) {
+          onHash(hash);
+        }
+
+        const tokenFromQuantity = ethers.utils.formatUnits(
+          ethers.BigNumber.from(quote.sellAmount),
           tokenFrom.decimals,
         );
-        const tokenToQuantity = tokenAmountInUnits(
-          new BigNumber(quote.buyAmount),
+
+        const tokenToQuantity = ethers.utils.formatUnits(
+          ethers.BigNumber.from(quote.buyAmount),
           tokenTo.decimals,
         );
 
@@ -81,15 +88,17 @@ const MarketStep: React.FC<Props> = (props) => {
             messages['app.dashboard.swap']
           } ${tokenFromQuantity} ${tokenFrom.symbol.toUpperCase()} to ${tokenToQuantity} ${tokenTo.symbol.toUpperCase()}`,
           timestamp: Date.now(),
-          url: getTransactionScannerUrl(chainId, e.transactionHash),
+          url: getTransactionScannerUrl(chainId, hash),
           urlCaption: messages['app.dashboard.viewTransaction'] as string,
           type: NotificationType.TRANSACTION,
           metadata: {
             chainId: chainId,
-            transactionHash: e.transactionHash,
-            status: 'done',
+            transactionHash: hash,
+            status: 'pending',
           } as TxNotificationMetadata,
         });
+      })
+      .then((e) => {
         onNext(true);
       })
       .catch((e) => {

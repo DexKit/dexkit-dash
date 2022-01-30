@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -7,6 +7,7 @@ import {
   Button,
   Grid,
   Hidden,
+  IconButton,
   Link,
   Typography,
 } from '@material-ui/core';
@@ -30,6 +31,7 @@ import { useDispatch } from 'react-redux';
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import useDiscord from 'hooks/useDiscord';
 
@@ -41,12 +43,14 @@ import { RoomType } from 'modules/CoinLeagues/constants/enums';
 
 import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 
 const MyGames = () => {
   const history = useHistory();
   const { account } = useWeb3();
   const { coinSymbol } = useLeaguesChainInfo();
+  const isMobile = useMobile();
 
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
@@ -57,6 +61,15 @@ const MyGames = () => {
   const [open, setOpen] = useState(false);
 
   const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute);
+  }, [listGamesRoute, history]);
 
   // TODO: We are doing this to user see connected account
   useEffect(() => {
@@ -77,7 +90,7 @@ const MyGames = () => {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
-      <Grid item xs={12} sm={12} xl={12}>
+      {!isMobile && <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
@@ -91,7 +104,7 @@ const MyGames = () => {
             </Typography>
           </Breadcrumbs>
         </Grid>
-      </Grid>
+      </Grid>}
       <Hidden smUp={true}>
         <Grid item xs={12}>
           <img
@@ -101,8 +114,11 @@ const MyGames = () => {
           />
         </Grid>
       </Hidden>
-      <Grid item xs={6} xl={6} sm={6}>
+      <Grid item xs={12} xl={6} sm={6}>
         <Box display={'flex'} alignItems={'center'}>
+          <IconButton onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
           <Typography variant='h5'>
             {' '}
             <IntlMessages id='app.coinLeagues.myGames' />
@@ -120,11 +136,11 @@ const MyGames = () => {
             </FormControl>
           </Box>
           <Box p={2}>
-                <ChainSelect />
-            </Box>
+            <ChainSelect />
+          </Box>
         </Box>
       </Grid>
-      <Grid item xs={6} sm={6} xl={6}>
+      <Grid item xs={12} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
           <SwapButton />
           <Box pr={2}>

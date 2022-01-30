@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   Grid,
@@ -51,6 +51,11 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
 
   const isMobile = useMobile();
 
+  const reversedNotifications = useMemo(() => {
+    return [...notifications].reverse();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [String(notifications)]);
+
   return (
     <Dialog {...props} fullScreen={isMobile} fullWidth maxWidth='sm'>
       <DialogTitle>
@@ -78,7 +83,7 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
       <DialogContent className={classes.noPadding}>
         {notifications.length > 0 ? (
           <List disablePadding>
-            {notifications.map((item, i) => (
+            {reversedNotifications.map((item, i) => (
               <NotificationItem
                 onClick={handleClick}
                 id={Number(item?.id || i)}

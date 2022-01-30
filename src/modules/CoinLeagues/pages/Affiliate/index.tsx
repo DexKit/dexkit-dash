@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +17,7 @@ import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
 import { useIntl } from 'react-intl';
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import AffiliateTotalCard from './components/AffiliateTotalCard';
 import AffiliateTotalCardSkeleton from './components/AffiliateTotalCard/index.skeleton';
 import { Skeleton } from '@material-ui/lab';
@@ -36,6 +36,10 @@ import { AFFILIATE_FIELD } from 'modules/CoinLeagues/constants';
 import { RoomType } from 'modules/CoinLeagues/constants/enums';
 import { ethers } from 'ethers';
 import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,8 +67,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AffiliatePage: React.FC = () => {
+  const history = useHistory();
   const classes = useStyles();
   const { messages } = useIntl();
+  const isMobile = useMobile();
 
   const { account: web3Account } = useWeb3();
   const defaultAccount = useDefaultAccount();
@@ -81,11 +87,20 @@ const AffiliatePage: React.FC = () => {
     { address: account?.toLowerCase() ?? '', first: rowsPerPage, skip: page * rowsPerPage },
     isNFT,
   );
-
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
   const queryPlayer = useAffiliatePlayer(
     account?.toLowerCase() ?? '',
     isNFT,
   );
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute);
+  }, [listGamesRoute, history]);
 
   const AffiliateSkeleton = (props: any) => (
     <React.Fragment {...props}>
@@ -113,7 +128,7 @@ const AffiliatePage: React.FC = () => {
   return (
     <Container maxWidth='xl' className={classes.container}>
       <Grid container spacing={6} alignItems={'center'}>
-        <Grid item xs={12}>
+        {!isMobile && <Grid item xs={12}>
           <Breadcrumbs>
             <Link to={COINSLEAGUE_ROUTE} component={RouterLink}>
               <Typography variant='body2' color='textSecondary'>
@@ -124,10 +139,13 @@ const AffiliatePage: React.FC = () => {
               {messages['affiliate.page.title']}
             </Typography>
           </Breadcrumbs>
-        </Grid>
+        </Grid>}
         <Grid item xs={12} sm={10}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h5' style={{ margin: 5, marginBottom: 20 }}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant='h5' >
               {messages['coinleague.affiliate.page.title']}
             </Typography>
             <Box p={2}>

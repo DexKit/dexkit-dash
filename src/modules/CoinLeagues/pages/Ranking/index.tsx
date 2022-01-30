@@ -30,6 +30,7 @@ import { useWeb3 } from 'hooks/useWeb3';
 import { RoomType } from 'modules/CoinLeagues/constants/enums';
 import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -39,6 +40,7 @@ enum Tabs {
 }
 
 export function Ranking() {
+  const isMobile = useMobile();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
   const { coinSymbol, chainId } = useLeaguesChainInfo();
@@ -66,13 +68,13 @@ export function Ranking() {
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {!isMobile && <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
                 <IntlMessages id='app.coinLeagues.coinLeague' />
               </Link>
             </Breadcrumbs>
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box

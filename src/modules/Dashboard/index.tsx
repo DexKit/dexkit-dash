@@ -53,14 +53,14 @@ export const dashBoardConfigs = [
       },
     ],
   },
-  {
+ /* {
     routes: [
       {
         path: '/wallet/manage-accounts',
         component: React.lazy(() => import('./Wallet/Accounts')),
       },
     ],
-  },
+  },*/
   {
     routes: [
       {

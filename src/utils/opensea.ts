@@ -56,6 +56,8 @@ export function getOpenSeaLink(
     return `https://opensea.io/assets/matic/${contractAddress}/${tokenId}`;
   } else if (chainId === KLAYTN_CHAIN_ID) {
     return `https://opensea.io/assets/klaytn/${contractAddress}/${tokenId}`;
+  } else if (chainId === ChainId.Mumbai) {
+    return `https://testnets.opensea.io/assets/mumbai/${contractAddress}/${tokenId}`;
   }
 
   return '';

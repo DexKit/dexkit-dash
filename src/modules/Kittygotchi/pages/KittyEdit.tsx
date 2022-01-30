@@ -32,6 +32,8 @@ import {
   useKittygotchiV2,
 } from '../hooks';
 
+import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils/index';
+
 import {UpdateKittygotchiDialog} from '../components/dialogs/UpdateKittygotchiDialog';
 
 import {SubmitState} from '../components/ButtonState';
@@ -45,10 +47,10 @@ import {
 import {useIntl} from 'react-intl';
 import {useMobile} from 'hooks/useMobile';
 import {useWeb3} from 'hooks/useWeb3';
-import {ChainId} from 'types/blockchain';
 import {ethers} from 'ethers';
 import {Edit} from '@material-ui/icons';
 import KittygotchiTrait from '../components/KittygotchiTrait';
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -87,6 +89,8 @@ export const KittyEdit = () => {
   const theme = useTheme();
 
   const params = useParams<Params>();
+
+  const history = useHistory();
 
   const updateToggler = useToggler();
 
@@ -174,7 +178,7 @@ export const KittyEdit = () => {
   }, []);
 
   useEffect(() => {
-    if (chainId && (chainId === ChainId.Matic || chainId === ChainId.Mumbai)) {
+    if (isKittygotchiNetworkSupported(chainId)) {
       kittygotchi.get(params.id).then((data: any) => {
         if (data) {
           kittyStyles.fromTraits(data.attributes);
@@ -183,29 +187,23 @@ export const KittyEdit = () => {
     }
   }, [chainId, params.id]);
 
-  return (
-    <>
-      <UpdateKittygotchiDialog
-        dialogProps={{
-          open: updateToggler.show,
-          onClose: updateToggler.toggle,
-        }}
-        done={isConfirmed()}
-        loading={isSubmitting()}
-      />
+  function renderBody() {
+    return (
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-                <Link color='inherit' component={RouterLink} to='/profile'>
-                <IntlMessages id="app.kittygotchi.kittygotchi" />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                  <Link color='inherit' component={RouterLink} to='/profile'>
+                    <IntlMessages id='app.kittygotchi.kittygotchi' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box
@@ -239,7 +237,7 @@ export const KittyEdit = () => {
               </Alert>
             </Grid>
           ) : null}
-          {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+          {!isKittygotchiNetworkSupported(chainId) ? (
             <Grid item xs={12} sm={10}>
               <Alert severity='info'>
                 <Typography variant='body2'>
@@ -249,13 +247,12 @@ export const KittyEdit = () => {
             </Grid>
           ) : null}
           {kitAmount < KITTYGOTCHI_EDIT_MIN_AMOUNT &&
-          (chainId === ChainId.Matic || chainId === ChainId.Mumbai) ? (
+          isKittygotchiNetworkSupported(chainId) ? (
             <Grid item xs={12} sm={10}>
               <Alert severity='info'>
                 <IntlMessages id='app.kittygotchi.atLeast' />{' '}
                 <strong>{KITTYGOTCHI_EDIT_MIN_AMOUNT} KIT</strong>{' '}
                 <IntlMessages id='app.kittygotchi.toEdit' />
-                
               </Alert>
             </Grid>
           ) : null}
@@ -352,7 +349,7 @@ export const KittyEdit = () => {
                       value={kittyStyles?.body}
                     />
                   </Grid> */}
-                  {chainId == ChainId.Matic || chainId === ChainId.Mumbai ? (
+                  {isKittygotchiNetworkSupported(chainId) ? (
                     <Grid item xs={12}>
                       <Paper>
                         <Box p={4}>
@@ -361,7 +358,8 @@ export const KittyEdit = () => {
                               <Typography
                                 color='textSecondary'
                                 variant='overline'>
-                                KIT <IntlMessages id='app.kittygotchi.kitBalance' />
+                                KIT{' '}
+                                <IntlMessages id='app.kittygotchi.kitBalance' />
                               </Typography>
 
                               <Grid
@@ -618,6 +616,51 @@ export const KittyEdit = () => {
           </Grid>
         </Grid>
       </Box>
+    );
+  }
+
+  const handleGoToList = useCallback(() => {
+    history.push('/kittygotchi');
+  }, [history]);
+
+  function renderError() {
+    return (
+      <Box py={4}>
+        <Grid
+          container
+          direction='column'
+          spacing={4}
+          alignItems='center'
+          alignContent='center'>
+          <Grid item>
+            <Typography align='center' gutterBottom variant='h5'>
+              <IntlMessages id='app.kittygotchi.errorWhileLoadingKittygotchi' />
+            </Typography>
+            <Typography align='center' variant='body1' color='textSecondary'>
+              <IntlMessages id='app.kittygotchi.pleaseGobackToYourKittygotchiList' />
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button onClick={handleGoToList} color='primary'>
+              <IntlMessages id='app.kittygotchi.goToList' />
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    );
+  }
+
+  return (
+    <>
+      <UpdateKittygotchiDialog
+        dialogProps={{
+          open: updateToggler.show,
+          onClose: updateToggler.toggle,
+        }}
+        done={isConfirmed()}
+        loading={isSubmitting()}
+      />
+      {kittygotchi.error ? renderError() : renderBody()}
     </>
   );
 };
