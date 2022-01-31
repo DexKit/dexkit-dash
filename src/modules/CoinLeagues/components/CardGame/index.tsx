@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 
 import IntlMessages from '@crema/utility/IntlMessages';
 
@@ -8,22 +8,22 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
-import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
-import { BigNumber, ethers } from 'ethers';
-import { useInterval } from 'hooks/utils/useInterval';
-import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
-import { strPad } from 'modules/CoinLeagues/utils/time';
-import { CardTimer } from '../CardTimer';
-import { GameGraph } from 'modules/CoinLeagues/utils/types';
-import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
+import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
+import {BigNumber, ethers} from 'ethers';
+import {useInterval} from 'hooks/utils/useInterval';
+import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
+import {strPad} from 'modules/CoinLeagues/utils/time';
+import {CardTimer} from '../CardTimer';
+import {GameGraph} from 'modules/CoinLeagues/utils/types';
+import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
 
 import ViewGameMetadataModal from '../ViewGameMetadataModal';
 import IconButton from '@material-ui/core/IconButton';
-import { ReactComponent as CrownIcon } from 'assets/images/icons/crown.svg';
+import {ReactComponent as CrownIcon} from 'assets/images/icons/crown.svg';
 
-import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -66,9 +66,9 @@ interface Props {
 }
 
 function CardGame(props: Props): JSX.Element {
-  const { game, onClick } = props;
+  const {game, onClick} = props;
   const classes = useStyles();
-  const { chainId, coinSymbol } = useLeaguesChainInfo();
+  const {chainId, coinSymbol} = useLeaguesChainInfo();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -81,7 +81,8 @@ function CardGame(props: Props): JSX.Element {
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
   const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
-  const [openShowGameMetadataModal, setOpenShowGameMetadataModal] = useState(false);
+  const [openShowGameMetadataModal, setOpenShowGameMetadataModal] =
+    useState(false);
   // Format number values
   const entriesIn = strPad(Number(game.currentPlayers) || 0);
   const entriesOut = strPad(Number(game.numPlayers) || 0);
@@ -144,12 +145,12 @@ function CardGame(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='subtitle2'
-                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
-                    &nbsp;{entryAmount}  {coinSymbol}
+                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    &nbsp;{entryAmount} {coinSymbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -160,18 +161,18 @@ function CardGame(props: Props): JSX.Element {
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{ color: '#7a8398' }}>
+            style={{color: '#7a8398'}}>
             <Typography variant='subtitle2'>
               <IntlMessages id='app.coinLeagues.gameTime' />:
             </Typography>
-            <Typography variant='subtitle2' style={{ fontWeight: 500 }}>
+            <Typography variant='subtitle2' style={{fontWeight: 500}}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{ color: '#7a8398' }}>
+            style={{color: '#7a8398'}}>
             <Typography variant='subtitle2'>
               {' '}
               &nbsp;
@@ -179,7 +180,7 @@ function CardGame(props: Props): JSX.Element {
             </Typography>
             <Typography
               variant='subtitle2'
-              style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
+              style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
               &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
