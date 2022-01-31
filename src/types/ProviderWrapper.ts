@@ -30,7 +30,10 @@ export class ProviderWrapper {
       this._eventEmitter?.emit('request', args);
       return new Promise((resolve, reject) => {
         this._eventEmitter?.on('confirm', (newArgs) => {
-          resolve(this.provider.request(newArgs));
+          this.provider
+            .request(newArgs)
+            .then((res: any) => resolve(res))
+            .catch((err: any) => reject(err));
         });
 
         this._eventEmitter?.on('cancel', () => {

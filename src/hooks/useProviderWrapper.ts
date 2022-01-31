@@ -35,7 +35,6 @@ class ProviderWrapper {
   }
 
   async request(args: RequestArguments) {
-    console.log(args);
     if (args.method === 'eth_sendTransaction') {
       this.eventEmitter.emit(EVENT_REQUEST, args);
 

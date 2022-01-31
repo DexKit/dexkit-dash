@@ -180,6 +180,11 @@ export const ProfileIndex = () => {
             setErrorMessage(error.data.message);
           }
         }
+
+        if (error.message) {
+          setErrorMessage(error.message);
+        }
+
         setMintLoading(false);
       },
     });

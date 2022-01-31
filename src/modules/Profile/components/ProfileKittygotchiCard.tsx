@@ -435,7 +435,11 @@ export const ProfileKittygotchiCard = (props: ProfileKittygotchiCardProps) => {
           {error ? (
             <Grid item xs={12}>
               <Alert severity='error' onClose={onClearError}>
-                {error}
+                <Typography
+                  noWrap
+                  style={{textOverflow: 'ellipsis', overflow: 'hidden'}}>
+                  {error}
+                </Typography>
               </Alert>
             </Grid>
           ) : null}
