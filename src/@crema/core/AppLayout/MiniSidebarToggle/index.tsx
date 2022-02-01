@@ -59,8 +59,6 @@ const MiniSidebarToggle: React.FC<MiniSidebarToggleProps> = (props) => {
 
   const globalState = useAppGlobalState();
 
-  console.log(globalState.signData);
-
   return (
     <>
       <TransactionConfirmDialog

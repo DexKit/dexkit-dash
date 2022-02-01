@@ -23,7 +23,6 @@ export class ProviderWrapper {
   }
 
   async request(args: RequestArguments) {
-    console.log(args);
     if (
       args.method === 'eth_sendTransaction' ||
       args.method === 'eth_sendRawTransaction'
