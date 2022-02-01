@@ -21,12 +21,16 @@ import {providers} from 'ethers';
 
 export interface GlobalState {
   showTransactionModal: boolean;
+  showSignDataDialog: boolean;
   handleShowTransactionModal: () => void;
   handleCloseTransactionModal: () => void;
   handleTransactionConfirm?: (data: any) => void;
   handleTransactionCancel?: () => void;
+  handleSignConfirm?: () => void;
+  handleSignCancel?: () => void;
   handleChangeWeb3State: (web3State: Web3State) => void;
   data?: any;
+  signData?: any;
   getProvider(): any;
   getEthersProvider(): any;
   getWeb3(): Web3 | null;
@@ -36,13 +40,23 @@ export function useGlobalState(): GlobalState {
   const [web3State, setWeb3State] = useState<Web3State>();
 
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  // data for transactions
   const [data, setData] = useState<any>();
+
+  const [showSignDataDialog, setShowSignDataDialog] = useState(false);
+  // data for sign data RPC
+  const [signData, setSignData] = useState<any>();
 
   const providerRef = useRef<any>(getWeb3Provider());
   const eventEmitterRef = useRef<EventEmitter>(new EventEmitter());
 
+  // prefer "Dialog" instead of "Modal"
   const handleShowTransactionModal = useCallback(() => {
     setShowTransactionModal(true);
+  }, []);
+
+  const handleShowSignDataDialog = useCallback(() => {
+    setShowSignDataDialog(true);
   }, []);
 
   const resetEvents = useCallback(() => {
@@ -52,7 +66,12 @@ export function useGlobalState(): GlobalState {
       setData(args);
       handleShowTransactionModal();
     });
-  }, [handleShowTransactionModal]);
+
+    eventEmitterRef.current?.on('sign', (args: any) => {
+      setSignData(args);
+      handleShowSignDataDialog();
+    });
+  }, [handleShowTransactionModal, handleShowSignDataDialog]);
 
   const handleCloseTransactionModal = useCallback(() => {
     setShowTransactionModal(false);
@@ -68,6 +87,16 @@ export function useGlobalState(): GlobalState {
   const handleTransactionCancel = useCallback(() => {
     eventEmitterRef.current?.emit('cancel');
     setShowTransactionModal(false);
+  }, []);
+
+  const handleSignConfirm = useCallback(() => {
+    eventEmitterRef.current?.emit('sign.confirm');
+    setShowSignDataDialog(false);
+  }, []);
+
+  const handleSignCancel = useCallback(() => {
+    eventEmitterRef.current?.emit('sign.cancel');
+    setShowSignDataDialog(false);
   }, []);
 
   const getProvider = useCallback((): any => {
@@ -112,13 +141,17 @@ export function useGlobalState(): GlobalState {
   return {
     getProvider,
     showTransactionModal,
+    showSignDataDialog,
     handleChangeWeb3State,
     handleShowTransactionModal,
     handleCloseTransactionModal,
     handleTransactionConfirm,
     handleTransactionCancel,
+    handleSignConfirm,
+    handleSignCancel,
     getEthersProvider,
     data,
+    signData,
     getWeb3,
   };
 }
@@ -129,6 +162,9 @@ export const GlobalStateContext = React.createContext<GlobalState>({
   handleCloseTransactionModal: () => {},
   handleShowTransactionModal: () => {},
   showTransactionModal: false,
+  showSignDataDialog: false,
+  handleSignCancel: () => {},
+  handleSignConfirm: () => {},
   handleChangeWeb3State: (web3State: Web3State) => {},
   getWeb3: () => {
     return null;
