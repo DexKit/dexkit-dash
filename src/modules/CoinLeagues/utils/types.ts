@@ -1,4 +1,5 @@
 import {BigNumber} from 'ethers';
+import {ChainId} from 'types/blockchain';
 
 export interface CoinFeed {
   base: string;
@@ -78,6 +79,18 @@ export interface GameMetadata {
   description: string;
   creator: string;
 }
+
+export interface GameProfile {
+  id: string;
+  address: string;
+  username: string;
+  profileImage: string;
+  coverImage: string;
+  tokenAddress: string;
+  tokenId: string;
+  chainId: ChainId;
+}
+
 export interface MultiplierInterface {
   playerAddress: string;
   kitBalance: BigNumber;
