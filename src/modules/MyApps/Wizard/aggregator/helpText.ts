@@ -16,6 +16,7 @@ export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   bsc_as_default: ['Bsc as default network on Aggregator'],
   matic_as_default: ['Matic as default network on Aggregator'],
   avax_as_default: ['Avax as default network on Aggregator'],
+  fantom_as_default: ['Fantom as default network on Aggregator'],
   buyTokenPercentage: [
     'Percentage you receive as affiliate from trades. From 0 to 5%',
   ],
@@ -23,6 +24,7 @@ export const HELP_TEXT: HelpText<ConfigFileAggregator> = {
   default_token_address_bsc: ['Default token address on Binance Smart Chain'],
   default_token_address_matic: ['Default token address on Matic'],
   default_token_address_avax: ['Default token address on Avax'],
+  default_token_address_fantom: ['Default token address on Fantom'],
   default_token_list: ['Default token list on ethereum'],
   fee_waive_for_default_token: [],
   hide_powered_by_dexkit: ["Hide logo of DexKit on app"],

@@ -93,6 +93,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
         'default_token_address_bsc',
         'default_token_address_matic',
         'default_token_address_avax',
+        'default_token_address_fantom',
       ].includes(fieldName)
     ) {
       setTypeElement('address');
@@ -141,7 +142,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error !== null ? error[fieldName] : undefined}
-            error={(error !== null && error[fieldName] !== null) as boolean}
+            error={!!(error && error[fieldName])}
             onBlur={() => {
               const url = value !== null ? (value as string) : '';
               if (value) {
@@ -167,6 +168,8 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
               } else {
                 setError({ [fieldName]: undefined });
               }
+              console.log(error);
+
             }}
             onChange={($e) => {
               setValue($e.target.value);
@@ -211,7 +214,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
-            error={(error != null && error[fieldName]) as boolean}
+            error={!!(error && error[fieldName])}
             onBlur={() => {
               const perc = Number(value ?? 0);
               const _error =
@@ -247,7 +250,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
-            error={(error != null && error[fieldName]) as boolean}
+            error={!!(error && error[fieldName])}
             onBlur={() => {
               if (
                 error != null &&
@@ -284,7 +287,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
-            error={(error != null && error[fieldName]) as boolean}
+            error={!!(error && error[fieldName])}
             placeholder={placeholder ?? ZERO_ADDRESS.toString()}
             onBlur={() => {
 
@@ -325,7 +328,7 @@ export const ItemComponent: React.FC<ItemComponentProps> = ({
             key={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             id={`aggregator-${fieldName.replace('_', '-').toLowerCase()}`}
             helperText={!valid && error != null ? error[fieldName] : undefined}
-            error={(error != null && error[fieldName]) as boolean}
+            error={!!(error && error[fieldName])}
             onBlur={() => {
               const _text = value != null ? (value as string) : '';
               const _error =

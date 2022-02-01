@@ -34,7 +34,7 @@ export class ProviderWrapper {
         });
 
         this._eventEmitter?.on('cancel', () => {
-          reject({message: 'Rejected by the user'});
+          reject({ message: 'Rejected by the user' });
         });
       });
     }

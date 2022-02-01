@@ -277,6 +277,7 @@ export interface GeneralConfigAggregator {
   bsc_as_default?: boolean;
   matic_as_default?: boolean;
   avax_as_default?: boolean;
+  fantom_as_default?: boolean;
   fee_waive_for_default_token?: boolean;
   hide_powered_by_dexkit?: boolean;
   default_token_list?: string;
@@ -285,6 +286,7 @@ export interface GeneralConfigAggregator {
   default_token_address_bsc?: string;
   default_token_address_matic?: string;
   default_token_address_avax?: string;
+  default_token_address_fantom?: string;
   default_slippage?: number;
   buy_token_percentage?: number;
 }

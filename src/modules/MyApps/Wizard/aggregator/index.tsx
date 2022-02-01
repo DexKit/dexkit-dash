@@ -28,7 +28,6 @@ import {NavigationButton} from '../shared/Buttons/navigationButton';
 
 import GeneralForm from './general';
 import ThemeForm from './theme';
-import LinksForm from './links';
 import {useWeb3} from 'hooks/useWeb3';
 import {useHistory} from 'react-router-dom';
 
@@ -69,16 +68,16 @@ export enum WizardData {
 
 function getSteps() {
   // return ['General', 'Theme', 'Tokens', 'Links', 'Wallets and Deploy'];
-  return ['General', 'Theme', 'Links'];
+  return ['General', 'Theme'];
 }
 
 // const defaultTheme = new DefaultTheme();
 
 const initConfig: GeneralConfigAggregator = {
-  name: '',
-  logo: '',
-  logo_dark: '',
-  domain: '',
+  name: 'Swap',
+  logo: 'https://swap.dexkit.com/logos/logo_white.svg',
+  logo_dark: 'https://swap.dexkit.com/logos/logo.svg',
+  domain: 'https://swap.dexkit.com/',
   feeRecipient: '0x5bD68B4d6f90Bcc9F3a9456791c0Db5A43df676d',
   buyTokenPercentage: '0.3',
   brand_color: '#ff7149',
@@ -87,6 +86,7 @@ const initConfig: GeneralConfigAggregator = {
   bsc_as_default: false,
   matic_as_default: false,
   avax_as_default: false,
+  fantom_as_default: false,
   fee_waive_for_default_token: false,
   is_dark_mode: false,
   hide_powered_by_dexkit: false,
@@ -96,6 +96,7 @@ const initConfig: GeneralConfigAggregator = {
   default_token_address_bsc: '0x314593fa9a2fa16432913dbccc96104541d32d11',
   default_token_address_matic: '0x4d0def42cf57d6f27cd4983042a55dce1c9f853c',
   default_token_address_avax: '',
+  default_token_address_fantom: '',
   default_slippage: 1,
 };
 
@@ -140,7 +141,7 @@ function getStepContent(
           editable={editable}
         />
       );
-    case 2: {
+    /*  case 2: {
       const data =
         config?.links ??
         ({
@@ -161,7 +162,7 @@ function getStepContent(
           editable={editable}
         />
       );
-    }
+    }*/
     default:
       return <Typography>{'Unknown step'}</Typography>;
   }
@@ -258,7 +259,9 @@ export default function VerticalLinearStepper() {
       }
     }
   };
-  const [textButtonCopy, setTextButtonCopy] = useState('Copy Wordpress Shortcode');
+  const [textButtonCopy, setTextButtonCopy] = useState(
+    'Copy Wordpress Shortcode',
+  );
 
   const handleCopyShortcode = () => {
     setTextButtonCopy('Copied');
@@ -273,6 +276,12 @@ export default function VerticalLinearStepper() {
       text = `${text} bsc_as_default="true"`;
     }
     if (data.matic_as_default) {
+      text = `${text} matic_as_default="true"`;
+    }
+    if (data.avax_as_default) {
+      text = `${text} matic_as_default="true"`;
+    }
+    if (data.fantom_as_default) {
       text = `${text} matic_as_default="true"`;
     }
     if (data.is_dark_mode) {
@@ -293,6 +302,10 @@ export default function VerticalLinearStepper() {
 
     if (data.default_token_address_avax) {
       text = `${text} default_token_address_avax="${data.default_token_address_avax}"`;
+    }
+
+    if (data.default_token_address_fantom) {
+      text = `${text} default_token_address_fantom="${data.default_token_address_fantom}"`;
     }
     if (data.brand_color) {
       text = `${text} brand_color="${data.brand_color}"`;

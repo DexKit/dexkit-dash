@@ -26,6 +26,9 @@ export const Field_Properties: {[key: string]: Properties} = {
   default_token_address_avax: {
     isRequired: false,
   },
+  default_token_address_fantom: {
+    isRequired: false,
+  },
   buyTokenPercentage: {
     isRequired: true,
     min: 0.0,

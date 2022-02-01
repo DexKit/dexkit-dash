@@ -115,7 +115,7 @@ const AppsTable = () => {
   };
   const classes = useStyles();
   const onEditConfig = (slug: string) => {
-    history.push(`/my-apps/wizard/marketplace/${slug}`);
+    history.push(`/my-apps/wizard/aggregator/${slug}`);
   };
 
   const onOpenApp = (slug: string, type: WhitelabelTypes) => {
