@@ -1856,6 +1856,7 @@
   "app.wizard.createAndManageYourTokens": "Create and manage your tokens",
   "app.wizard.notConnected": "Not connected",
   "app.onBoarding.loginToDexkitWallet": "Login to DexKit Wallet",
+  "app.onBoarding.loginToCoinleagueWallet": "Login to Coinleague Wallet",
   "app.onBoarding.enterYourEmailBelow": "Enter your email below to login your wallet.",
   "app.onBoarding.orContinueWithOneOfTheSocial": "Or continue with one of the social networks below:",
   "app.onBoarding.twitter": "Twitter",

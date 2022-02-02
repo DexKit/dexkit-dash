@@ -1800,6 +1800,7 @@
   "app.wizard.createAndManageYourTokens": "Crea y gestiona tus monedas",
   "app.wizard.notConnected": "No conectado",
   "app.onBoarding.loginToDexkitWallet": "Ingresar a la billetera DexKit",
+  "app.onBoarding.loginToCoinleagueWallet": "Ingresar a la billetera Coinleague",
   "app.onBoarding.enterYourEmailBelow": "Coloca tu dirección de correo debajo paara ingresar en tu billetera.",
   "app.onBoarding.orContinueWithOneOfTheSocial": "O continúa con una de las redes sociales debajo:",
   "app.onBoarding.twitter": "Twitter",
