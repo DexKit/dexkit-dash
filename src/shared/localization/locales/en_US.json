@@ -159,7 +159,7 @@
   "app.common.transactionFailed": "Transaction Failed",
   "app.common.transactionConfirmed": "Transaction confirmed",
   "app.common.enableNotifications": "Enable notifications",
-  "app.common.pleaseEnableBrowserNotifications": "Please enable browser notifications, so we can notify you about new features and transaction status",
+  "app.common.pleaseEnableBrowserNotifications": "Please enable browser notifications so we can notify you about new features and transaction status.",
   "app.dashboard.infoAboutPage": "Info about this page",
   "app.dashboard.favorites": "Favorites",
   "app.dashboard.favorites.info": "This page is where all of the tokens that you favorite from the trading page show up. By clicking the “BSC” or “ETH” icons you will be directed to the trading page for the token.",
