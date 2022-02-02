@@ -171,17 +171,23 @@ export async function isTransactionMined(
   provider: any,
   transactionHash: string,
 ) {
-  if (provider) {
-    const pr = new ethers.providers.Web3Provider(provider);
+  return new Promise<ethers.providers.TransactionReceipt | undefined>(
+    async (resolve, reject) => {
+      if (provider) {
+        const pr = new ethers.providers.Web3Provider(provider);
 
-    const txReceipt = await pr.getTransactionReceipt(transactionHash);
+        const txReceipt = await pr
+          .waitForTransaction(transactionHash)
+          .catch((err) => reject(err));
 
-    if (txReceipt && txReceipt.blockNumber) {
-      return txReceipt;
-    }
-  }
+        if (txReceipt && txReceipt.blockNumber) {
+          resolve(txReceipt);
+        }
 
-  return null;
+        resolve(undefined);
+      }
+    },
+  );
 }
 
 export function hasLondonHardForkSupport(chainId: number) {
