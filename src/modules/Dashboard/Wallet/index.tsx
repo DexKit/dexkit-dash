@@ -1,10 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 
-import {
-  Link as RouterLink,
-  RouteComponentProps,
-  useHistory,
-} from 'react-router-dom';
+import {RouteComponentProps, useHistory} from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 

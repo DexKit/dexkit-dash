@@ -6,7 +6,7 @@ import {
   GET_PLAYER_AFFILIATE,
 } from '../services/gql/affiliate';
 
-import {client, getGraphClient, nftClient} from '../services/graphql';
+import {getGraphClient} from '../services/graphql';
 
 import {useIsNFTGame} from './useCoinLeaguesFactory';
 import {useLeaguesChainInfo} from './useLeaguesChainInfo';

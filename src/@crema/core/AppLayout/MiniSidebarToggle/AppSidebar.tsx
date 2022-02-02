@@ -12,20 +12,18 @@ import AppContext from '../../../utility/AppContext';
 import AppContextPropsType from '../../../../types/AppContextPropsType';
 import {AppState} from '../../../../redux/store';
 
-import {Grid, IconButton, Divider, ButtonBase, Avatar} from '@material-ui/core';
+import {Grid, IconButton, Divider} from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import Close from '@material-ui/icons/Close';
-import {useProfileKittygotchi} from 'modules/Profile/hooks';
 
 import {useWeb3} from 'hooks/useWeb3';
 import WalletInfo from 'shared/components/WalletInfo';
 
 import {useHistory} from 'react-router';
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
 
 interface AppSidebarProps {
   variant?: string;
@@ -48,11 +46,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const classes = useStyles({themeMode});
   const sidebarClasses = classes.sidebarStandard;
-  const defaultAddress = useDefaultAccount();
 
   /* const kittygotchiProfile = useProfileKittygotchi();*/
 
-  const {account, chainId} = useWeb3();
+  const {account} = useWeb3();
 
   const history = useHistory();
 
