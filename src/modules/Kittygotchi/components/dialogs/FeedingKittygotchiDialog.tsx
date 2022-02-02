@@ -11,9 +11,10 @@ import {
 } from '@material-ui/core';
 import React, {useCallback} from 'react';
 import {ErrorIcon, SuccessIcon} from 'shared/components/Icons';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   loading?: boolean;
@@ -30,6 +31,8 @@ export const FeedingKittygotchiDialog = (props: Props) => {
 
   const {chainId} = useWeb3();
 
+  const {getTransactionScannerUrl} = useChainInfo();
+
   const theme = useTheme();
 
   const handleClose = useCallback(() => {
@@ -42,7 +45,7 @@ export const FeedingKittygotchiDialog = (props: Props) => {
     if (chainId && transactionHash) {
       window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
     }
-  }, [chainId, transactionHash]);
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   return (
     <Dialog {...dialogProps} onClose={handleClose} fullWidth maxWidth='xs'>
@@ -61,14 +64,13 @@ export const FeedingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography align='center' variant='h6'>
-                  Feeding your kittygotchi
+                  <IntlMessages id='app.kittygotchi.feedingYour' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  Please, sign the transaction in your wallet and wait for
-                  confirmation.
+                  <IntlMessages id='app.kittygotchi.pleaseSign' />
                 </Typography>
               </Grid>
               {transactionHash ? (
@@ -77,7 +79,7 @@ export const FeedingKittygotchiDialog = (props: Props) => {
                     color='primary'
                     onClick={handleViewTransaction}
                     fullWidth>
-                    View transaction
+                    <IntlMessages id='app.kittygotchi.viewTransaction' />
                   </Button>
                 </Grid>
               ) : null}
@@ -96,13 +98,14 @@ export const FeedingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Kittygotchi Fed
+                  <IntlMessages id='app.kittygotchi.fed' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  Keep coming back to feed your kittygotchi every 24h
+                  <IntlMessages id='app.kittygotchi.keepComing' />{' '}
+                  <IntlMessages id='app.kittygotchi.every24' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -111,12 +114,12 @@ export const FeedingKittygotchiDialog = (props: Props) => {
                   color='primary'
                   onClick={handleViewTransaction}
                   fullWidth>
-                  View transaction
+                  <IntlMessages id='app.kittygotchi.viewTransaction' />
                 </Button>
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  Close
+                  <IntlMessages id='app.kittygotchi.close' />
                 </Button>
               </Grid>
             </Grid>
@@ -134,13 +137,13 @@ export const FeedingKittygotchiDialog = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom align='center' variant='h6'>
-                  Transaction failed
+                  <IntlMessages id='app.kittygotchi.transactionFailed' />
                 </Typography>
                 <Typography
                   align='center'
                   variant='body1'
                   color='textSecondary'>
-                  Please, try again in a few seconds.
+                  <IntlMessages id='app.kittygotchi.pleaseTry' />
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -149,12 +152,12 @@ export const FeedingKittygotchiDialog = (props: Props) => {
                   onClick={onTryAgain}
                   color='primary'
                   fullWidth>
-                  Try again
+                  <IntlMessages id='app.kittygotchi.tryAgain' />
                 </Button>
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose} color='primary' fullWidth>
-                  Close
+                  <IntlMessages id='app.kittygotchi.close' />
                 </Button>
               </Grid>
             </Grid>

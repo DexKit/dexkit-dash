@@ -1,13 +1,13 @@
-import {ContractTransaction, ethers, providers, BigNumber} from 'ethers';
-import {_TypedDataEncoder} from '@ethersproject/hash';
-import {getMulticallFromProvider} from 'services/multicall';
-import {getEthers} from 'services/web3modal';
-import {ChainId} from 'types/blockchain';
-import {GAS_PRICE_MULTIPLIER} from '../constants';
+import { ContractTransaction, ethers, providers, BigNumber } from 'ethers';
+import { _TypedDataEncoder } from '@ethersproject/hash';
+import { getMulticallFromProvider } from 'services/multicall';
+import { getEthers } from 'services/web3modal';
+import { ChainId } from 'types/blockchain';
+import { GAS_PRICE_MULTIPLIER } from '../constants';
 import kittygotchiAbi from '../constants/ABI/kittygotchi.json';
-import {Interface} from 'ethers/lib/utils';
-import {CallInput} from '@indexed-finance/multicall';
-import {getKittygotchiMetadataEndpoint} from '../utils';
+import { Interface } from 'ethers/lib/utils';
+import { CallInput } from '@indexed-finance/multicall';
+import { getKittygotchiMetadataEndpoint } from '../utils';
 
 export const getKittyGotchiContractSigner = async (
   address: string,
@@ -43,9 +43,11 @@ export const mint = async (
   price: BigNumber,
 ) => {
   const ethers = getEthers();
+
   const gasPrice = await (
     await ethers?.getGasPrice()
   )?.mul(GAS_PRICE_MULTIPLIER);
+
   return (await getKittyGotchiContractSigner(kittyAddress, provider)).safeMint({
     gasPrice,
     value: price,
@@ -64,8 +66,8 @@ export const signUpdate = async (provider: any, chainId: ChainId) => {
 
   const types = {
     Message: [
-      {name: 'message', type: 'string'},
-      {name: 'powered', type: 'string'},
+      { name: 'message', type: 'string' },
+      { name: 'powered', type: 'string' },
     ],
   };
   const message = {
@@ -84,7 +86,7 @@ export const signUpdate = async (provider: any, chainId: ChainId) => {
     _TypedDataEncoder.getPayload(populated.domain, types, populated.value),
   );
   const sig = await signer._signTypedData(domain, types, message);
-  return {sig, messageSigned};
+  return { sig, messageSigned };
 };
 
 export const getOnchainAttritbutes = async (
@@ -150,5 +152,15 @@ export const update = (
       attributes: attributes,
     }),
   };
-  return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${id}`, myInit);
+  // TODO: find a better way to do this
+  return fetch(
+    `${getKittygotchiMetadataEndpoint(chainId)}${id}`,
+    myInit,
+  );
 };
+
+export function refetchKittygotchiMetadata(tokenId: string, chainId?: number) {
+  if (chainId) {
+    return fetch(`${getKittygotchiMetadataEndpoint(chainId)}${tokenId}`);
+  }
+}

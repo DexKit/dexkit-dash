@@ -1,4 +1,4 @@
-import { COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE } from "shared/constants/routes";
+import {COINLEAGUENFT_ROUTE, COINSLEAGUE_ROUTE} from 'shared/constants/routes';
 
 export interface IconProps {
   src: string;
@@ -215,6 +215,23 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },*/
+    {
+      id: 'settings',
+      title: 'Settings',
+      messageId: 'sidebar.settings',
+      type: 'group',
+      children: [
+        {
+          id: 'settings-general',
+          title: 'General',
+          messageId: 'sidebar.settings.general',
+          type: 'item',
+          customIcon: true,
+          icon: 'settings',
+          url: '/settings',
+        },
+      ],
+    },
     {
       id: 'apps',
       title: 'Apps',

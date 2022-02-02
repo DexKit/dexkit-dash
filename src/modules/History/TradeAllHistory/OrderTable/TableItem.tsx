@@ -88,7 +88,7 @@ const TableItem: React.FC<TableItemProps> = ({row, networkName}) => {
           component={RouterLink}>
           <SearchIcon />
        </Link>*/}
-        <Tooltip title={messages['app.viewTx']} placement='top'>
+        <Tooltip title={messages['app.history.viewTx']} placement='top'>
           <a
             href={`${ETHERSCAN_API_URL_FROM_NETWORK(networkName)}/tx/${
               row.transaction?.hash

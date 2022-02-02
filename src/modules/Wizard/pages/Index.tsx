@@ -21,9 +21,12 @@ import TokensList from '../components/setups/erc20/TokensList';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Web3State} from 'types/blockchain';
 import {useWeb3} from 'hooks/useWeb3';
+import {useIntl} from 'react-intl';
+import { useMobile } from 'hooks/useMobile';
 
 export default () => {
   const history = useHistory();
+  const isMobile = useMobile();
 
   const handleCreateCollection = useCallback(
     (e) => {
@@ -40,20 +43,22 @@ export default () => {
 
   const isNotConnected = web3State === Web3State.NotConnected;
 
+  const {messages} = useIntl();
+
   return (
-    <Box py={{xs: 8}}>
+    <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+        {!isMobile && <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to='/'>
                 <IntlMessages id='nfts.walletBreadcrumbDashboard' />
               </Link>
               <Link color='inherit' component={RouterLink} to='/wizard'>
-                Wizard
+                <IntlMessages id='app.wizard.wizard' />
               </Link>
             </Breadcrumbs>
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box
@@ -65,7 +70,9 @@ export default () => {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h5'>Wizard</Typography>
+              <Typography variant='h5'>
+                <IntlMessages id='app.wizard.wizard' />
+              </Typography>
             </Box>
           </Grid>
         </Grid>
@@ -74,14 +81,14 @@ export default () => {
         <Grid item xs={12} sm={6}>
           <Card>
             <CardHeader
-              title='My Collections'
-              subheader='Create and manage your collections'
+              title={messages['app.wizard.myCollections']}
+              subheader={messages['app.wizard.createAndManageYourCollections']}
               subheaderTypographyProps={{
                 variant: 'body2',
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'
@@ -98,14 +105,14 @@ export default () => {
         <Grid item xs={12} sm={6}>
           <Card>
             <CardHeader
-              title='My Tokens'
-              subheader='Create and manage your tokens'
+              title={messages['app.wizard.myTokens']}
+              subheader={messages['app.wizard.createAndManageYourTokens']}
               subheaderTypographyProps={{
                 variant: 'body2',
                 color: 'textSecondary',
               }}
               action={
-                <Tooltip title={isNotConnected ? 'Not connected' : ''}>
+                <Tooltip title={isNotConnected ? <IntlMessages id='app.wizard.notConnected' />  : ''}>
                   <IconButton
                     disabled={isNotConnected}
                     color='primary'

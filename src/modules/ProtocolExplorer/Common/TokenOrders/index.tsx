@@ -14,6 +14,7 @@ import FilterList from 'shared/components/Filter/list';
 import ErrorView from 'modules/Common/ErrorView';
 import TokenOrdersTable from './TokenOrdersTable';
 import LoadingTable from 'modules/Common/LoadingTable';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 interface Props {
   baseAddress: string | null;
@@ -49,7 +50,7 @@ const TokenOrders: React.FC<Props> = (props) => {
         alignItems='center'
         alignContent='center'>
         <Typography variant='h5' display={'block'} align={'center'}>
-          {messages['app.tradeHistory']}
+          <IntlMessages id='app.protocolExplorer.tradeHistory' />
         </Typography>
         <Hidden mdDown>
           <Box display='flex' justifyContent='flex-end' alignItems='center'>
@@ -61,7 +62,8 @@ const TokenOrders: React.FC<Props> = (props) => {
               <FilterList />
               <FilterMenu />
             </Box>
-            <Tooltip title={`Last update ${seconds} s `}>
+            <Tooltip
+              title={`${messages['app.protocolExplorer.lastUpdate']} ${seconds}s `}>
               <CircularProgress
                 size={20}
                 variant='determinate'

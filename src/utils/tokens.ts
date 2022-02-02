@@ -60,8 +60,31 @@ export const isNativeCoin = (symbol: string, chainId: ChainId) => {
       const isBNB = symbol.toLowerCase() === 'bnb';
       return isBNB;
     case ChainId.Matic:
+    case ChainId.Mumbai:
       return symbol.toLowerCase() === 'matic';
   }
+};
+
+export const isNativeCoinV2 = (
+  symbol: string,
+  chainId: ChainId,
+  networks?: {chainId: number; symbol: string}[],
+) => {
+  const isNative = isNativeCoin(symbol, chainId);
+
+  if (isNative) {
+    return true;
+  }
+
+  if (!isNative && networks) {
+    const index = networks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return networks[index].symbol.toUpperCase() === symbol;
+    }
+  }
+
+  return false;
 };
 
 export const isNativeCoinFromNetworkName = (
@@ -76,10 +99,14 @@ export const isNativeCoinFromNetworkName = (
       const isBNB = symbol.toLowerCase() === 'bnb';
       return isBNB;
     case EthereumNetwork.matic:
-        return symbol.toLowerCase() === 'matic';
+      return symbol.toLowerCase() === 'matic';
     default:
       return symbol.toLowerCase() === 'eth';
   }
+};
+// Native Coin has same symbol on the address
+export const isNativeCoinFromCustom = (symbol: string, address: string) => {
+  return symbol.toLowerCase() === address.toLowerCase();
 };
 
 export const isNativeCoinWithoutChainId = (symbol: string) => {
@@ -188,6 +215,8 @@ export const getNativeCoinWrappedAddress = (chainId: ChainId) => {
     case ChainId.BinanceTest:
     case ChainId.Binance:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case ChainId.Matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
   }
 };
 
@@ -204,6 +233,8 @@ export const getNativeCoinWrappedAddressFromNetworkName = (
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
     case EthereumNetwork.bsc:
       return '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+    case EthereumNetwork.matic:
+      return '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
     default:
       return '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
   }
@@ -217,6 +248,8 @@ export const getNativeCoinWrappedFromNetworkName = (
       return 'weth';
     case EthereumNetwork.bsc:
       return 'wbnb';
+    case EthereumNetwork.matic:
+      return 'wmatic';
     default:
       return 'weth';
   }

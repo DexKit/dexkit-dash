@@ -11,10 +11,11 @@ import useStyles from './AppHeader.style';
 import HeaderMessages from '../../HeaderMessages';
 import Notifications from '../../Notifications';
 
+import {useCustomNetworkList} from 'hooks/network';
+
 import WalletInfo from 'shared/components/WalletInfo';
 
 import {useWeb3} from 'hooks/useWeb3';
-import {GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
 
 import clsx from 'clsx';
 
@@ -30,7 +31,6 @@ import AppBarButton from 'shared/components/AppBar/AppBarButton';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
 import {ReactComponent as LeagueLogoImage} from 'assets/images/dashboard/league-logo.svg';
 import {ReactComponent as LeagueIconLogoImage} from 'assets/images/dashboard/league-icon-logo.svg';
 
@@ -41,10 +41,9 @@ import {GET_MAGIC_NETWORK_FROM_CHAIN_ID, isMagicProvider} from 'services/magic';
 import {Web3State} from 'types/blockchain';
 import {useMagicProvider} from 'hooks/provider/useMagicProvider';
 
-import {useProfileKittygotchi} from '../../../../modules/Profile/hooks/index';
-
 import {LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
-import {useKittygotchiV2, useKittygotchiList} from 'modules/Kittygotchi/hooks';
+
+import {useChainInfo} from 'hooks/useChainInfo';
 interface AppHeaderProps {}
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
@@ -107,6 +106,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   // };
 
   const [showSwitchNetwork, setShowSwitchNetwork] = useState(false);
+  const {networks} = useCustomNetworkList();
 
   const handleCloseSwitchNetwork = useCallback(() => {
     setShowSwitchNetwork(false);
@@ -121,16 +121,67 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         onSwitchMagicNetwork(magicNetwork);
       } else {
         dispatch(setWeb3State(Web3State.Connecting));
+
+        const provider = getProvider();
+
         try {
-          await switchChain(getProvider(), chainId);
+          const customIndex = networks.findIndex((n) => n.chainId === chainId);
+
+          if (customIndex > -1) {
+            const params: {
+              chainId: string; // A 0x-prefixed hexadecimal string
+              chainName: string;
+              nativeCurrency?: {
+                name: string;
+                symbol: string; // 2-6 characters long
+                decimals: number;
+              };
+              rpcUrls: string[];
+              blockExplorerUrls?: string[];
+              iconUrls?: string[]; // Currently ignored.
+            } = {
+              chainId: '0x' + networks[customIndex].chainId.toString(16),
+              chainName: networks[customIndex].name,
+              rpcUrls: [networks[customIndex].rpcUrl],
+              blockExplorerUrls: networks[customIndex].explorerUrl
+                ? [networks[customIndex].explorerUrl]
+                : undefined,
+            };
+
+            const nativeCurrency: {
+              name: string;
+              symbol: string;
+              decimals: number;
+            } = {
+              name: networks[customIndex].name,
+              //@ts-ignore
+              symbol: networks[customIndex].symbol,
+              decimals: 18,
+            };
+
+            if (networks[customIndex].nativeTokenSymbol) {
+              nativeCurrency.symbol = networks[customIndex].nativeTokenSymbol;
+            }
+
+            params.nativeCurrency = nativeCurrency;
+
+            await provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [params],
+            });
+          } else {
+            await switchChain(provider, chainId);
+          }
+
           window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         } catch {
+          window.location.reload();
           dispatch(setWeb3State(Web3State.Done));
         }
       }
     },
-    [dispatch, getProvider, onSwitchMagicNetwork],
+    [dispatch, getProvider, onSwitchMagicNetwork, networks],
   );
 
   const handleOpenSwitchNetwork = useCallback(() => {
@@ -151,7 +202,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
     return false;
   }, []);
 
-  const kittygotchiProfile = useProfileKittygotchi();
+  /* const kittygotchiProfile = useProfileKittygotchi();
   const kittygotchi = useKittygotchiV2();
   const kittyGotchiList = useKittygotchiList();
 
@@ -177,8 +228,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
         });
       }
     }
-    /* eslint-disable */
-  }, [chainId, account]);
+
+  }, [chainId, account]);*/
+
+  const {chainName} = useChainInfo();
 
   return (
     <>
@@ -228,7 +281,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                               onClick={handleOpenSwitchNetwork}
                               className={classes.switchNetworkButton}>
                               <Box className={classes.badgeRoot}>
-                                {GET_CHAIN_ID_NAME(chainId)}
+                                {chainName}
                                 <IconButton size='small'>
                                   <ExpandMoreIcon />
                                 </IconButton>
@@ -238,20 +291,36 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         ) : null}
                       </Grid>
                     ) : (
-                      <Grid item>
-                        <Box
-                          className={classes.badgeRoot}
-                          display={'flex'}
-                          alignItems={'center'}>
-                          {GET_CHAIN_ID_NAME(chainId)}
-                        </Box>
-                      </Grid>
+                      chainId && (
+                        <Grid item>
+                          <Box
+                            className={classes.badgeRoot}
+                            display={'flex'}
+                            alignItems={'center'}>
+                            {chainName}
+                          </Box>
+                        </Grid>
+                      )
                     )}
-                    {!isOnLoginPage() || account ? (
-                      <Grid item>
-                        <WalletInfo />
-                      </Grid>
-                    ) : null}
+                    <Grid item>
+                      <Notifications />
+                    </Grid>
+                    {/* <Grid item>
+                      <ButtonBase
+                        className={classes.avatarButton}
+                        to='/profile'
+                        component={RouterLink}>
+                        <Avatar
+                          className={classes.avatar}
+                          src={
+                            account && chainId
+                              ? kittygotchiProfile.getDefault(account, chainId)
+                                ?.image
+                              : undefined
+                          }
+                        />
+                      </ButtonBase>
+                    </Grid>*/}
                     <Grid item>
                       <AppBarButton onClick={handleMobileMenuToggle}>
                         <MenuIcon />
@@ -269,7 +338,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
               spacing={2}>
               <Grid item>
                 <Box mr={4}>
-                  <LeagueLogoImage /> 
+                  <LeagueLogoImage />
                 </Box>
               </Grid>
               <Grid item xs>
@@ -300,20 +369,22 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                           className={classes.badgeRoot}
                           display={'flex'}
                           alignItems={'center'}>
-                          {GET_CHAIN_ID_NAME(chainId)}
+                          {chainName}
                           <ExpandMoreIcon />
                         </Box>
                       </ButtonBase>
                     </Grid>
                   ) : (
-                    <Grid item>
-                      <Box
-                        className={classes.badgeRoot}
-                        display={'flex'}
-                        alignItems={'center'}>
-                        {GET_CHAIN_ID_NAME(chainId)}
-                      </Box>
-                    </Grid>
+                    chainId && (
+                      <Grid item>
+                        <Box
+                          className={classes.badgeRoot}
+                          display={'flex'}
+                          alignItems={'center'}>
+                          {chainName}
+                        </Box>
+                      </Grid>
+                    )
                   )}
                   {!isOnLoginPage() || account ? (
                     <Grid item>
@@ -323,7 +394,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                   <Grid item>
                     <Notifications />
                   </Grid>
-                 {/* <Grid item>
+                  {/* <Grid item>
                     <ButtonBase
                       className={classes.avatarButton}
                       to='/profile'
@@ -333,7 +404,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
                         src={
                           account && chainId
                             ? kittygotchiProfile.getDefault(account, chainId)
-                                ?.image
+                              ?.image
                             : undefined
                         }
                       />

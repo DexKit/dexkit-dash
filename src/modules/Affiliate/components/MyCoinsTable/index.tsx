@@ -1,6 +1,6 @@
-import React, {useState, useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {GridContainer} from '@crema';
+import {useIntl} from 'react-intl';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,6 +17,7 @@ import {makeStyles} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {Search} from '@material-ui/icons';
 import ContainedInput from 'shared/components/ContainedInput';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles(() => ({
   tableCell: {
@@ -40,6 +41,7 @@ interface Props {
 
 function MyCoinsTable(props: Props) {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   const [search, setSearch] = useState('');
 
@@ -48,7 +50,7 @@ function MyCoinsTable(props: Props) {
   }, []);
 
   return (
-    <GridContainer>
+    <Grid container>
       <Grid item xs={12}>
         <Grid container spacing={8}>
           <Grid item md={4} xs={12}>
@@ -61,14 +63,17 @@ function MyCoinsTable(props: Props) {
                   <Search />
                 </InputAdornment>
               }
-              placeholder='Search'
+              placeholder={messages['app.coinLeagues.search'] as string}
             />
           </Grid>
           <Grid item md={7} xs={11}>
             <Typography variant='h5'>
               {props.coins?.length || 0} coins
             </Typography>
-            <Typography variant='h6'>Highest Cap &darr;</Typography>
+            <Typography variant='h6'>
+              <IntlMessages id='app.affiliate.highestCap' />
+              &darr;
+            </Typography>
           </Grid>
           <Grid item md={1} xs={1}>
             <IconButton className={classes.filterBtn}>
@@ -82,9 +87,15 @@ function MyCoinsTable(props: Props) {
           <Table>
             <TableHead className={classes.tableHead}>
               <TableRow>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
-                <TableCell className={classes.tableCell}>Buy Amount</TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <IntlMessages id='app.affiliate.buyAmount' />
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -99,7 +110,7 @@ function MyCoinsTable(props: Props) {
           </Table>
         </TableContainer>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 }
 

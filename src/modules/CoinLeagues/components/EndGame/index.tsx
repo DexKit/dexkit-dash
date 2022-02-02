@@ -1,16 +1,24 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {useCoinLeagues, useCoinLeaguesCallbacks} from 'modules/CoinLeagues/hooks/useCoinLeagues';
+import {useIntl} from 'react-intl';
+import {
+  useCoinLeagues,
+  useCoinLeaguesCallbacks,
+} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
-import {useWeb3} from 'hooks/useWeb3';
-import {ExplorerURL, IS_SUPPORTED_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
+import {
+  ExplorerURL,
+  IS_SUPPORTED_LEAGUES_CHAIN_ID,
+} from 'modules/CoinLeagues/utils/constants';
 import Typography from '@material-ui/core/Typography';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
-import { useNotifications } from 'hooks/useNotifications';
+import {useNotifications} from 'hooks/useNotifications';
+import { getTransactionScannerUrl } from 'utils/blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
 
 interface Props {
   id?: string;
@@ -18,14 +26,12 @@ interface Props {
 
 export const EndGame = (props: Props) => {
   const {id} = props;
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const {game, refetch, refetchWinner} = useCoinLeagues(id);
   const [tx, setTx] = useState<string>();
   const {createNotification} = useNotifications();
-  const [submitState, setSubmitState] = useState<SubmitState>(
-    SubmitState.None,
-  );
-  const {onEndGameCallback } = useCoinLeaguesCallbacks(game?.address);
+  const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
+  const {onEndGameCallback} = useCoinLeaguesCallbacks(game?.address);
 
   const goToExplorer = useCallback(
     (_ev: any) => {
@@ -36,6 +42,7 @@ export const EndGame = (props: Props) => {
     },
     [tx, chainId],
   );
+  const {messages} = useIntl();
   const startTimestamp = game?.start_timestamp;
   const durationBN = game?.duration;
 
@@ -47,7 +54,7 @@ export const EndGame = (props: Props) => {
     }
   }, [startTimestamp, durationBN]);
 
-   const onEndGame = useCallback(
+  const onEndGame = useCallback(
     (ev: any) => {
       if (game?.amount_to_play && chainId) {
         setSubmitState(SubmitState.WaitingWallet);
@@ -87,7 +94,15 @@ export const EndGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onEndGameCallback, chainId, createNotification, id, refetchWinner],
+    [
+      game,
+      refetch,
+      onEndGameCallback,
+      chainId,
+      createNotification,
+      id,
+      refetchWinner
+    ],
   );
 
   return (
@@ -119,25 +134,36 @@ export const EndGame = (props: Props) => {
                       </Box>
                     </Grid>
                     <Grid item xs={12} md={12}>
-                    <Button
-                    onClick={onEndGame}
-                    fullWidth
-                    disabled={!canEndGame ||  submitState !== SubmitState.None || !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)}
-                    variant={'contained'}
-                    color={
-                      submitState === SubmitState.Error ? 'default' : 'primary'
-                    }>
-                    <ButtonState
-                      state={submitState}
-                      defaultMsg={'END GAME'}
-                      confirmedMsg={'Game Finished'}
-                    />
-                  </Button>
+                      <Button
+                        onClick={onEndGame}
+                        fullWidth
+                        disabled={
+                          !canEndGame ||
+                          submitState !== SubmitState.None ||
+                          !IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
+                        }
+                        variant='contained'
+                        color={
+                          submitState === SubmitState.Error
+                            ? 'default'
+                            : 'primary'
+                        }>
+                        <ButtonState
+                          state={submitState}
+                          defaultMsg={
+                            messages['app.coinLeagues.endGame'] as string
+                          }
+                          confirmedMsg={
+                            messages['app.coinLeagues.gameFinished'] as string
+                          }
+                        />
+                      </Button>
 
                       <Paper>
                         <Box display={'flex'} justifyContent={'center'} p={2}>
                           <Typography>
-                            &nbsp; Game will auto end soon or you can manually end it
+                            &nbsp; Game will auto end soon or you can manually
+                            end it
                           </Typography>
                         </Box>
                       </Paper>

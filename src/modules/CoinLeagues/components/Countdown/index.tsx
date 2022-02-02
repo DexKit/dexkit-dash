@@ -1,5 +1,7 @@
 import React, {useMemo} from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -74,7 +76,7 @@ function Countdown(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+            <IntlMessages id='app.coinLeagues.countdown' />
           </Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
             <CardTimer time={count} />

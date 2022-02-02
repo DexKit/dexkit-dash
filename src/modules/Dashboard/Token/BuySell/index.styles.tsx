@@ -1,8 +1,7 @@
-import {CremaTheme} from 'types/AppContextPropsType';
 import {makeStyles} from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 
-export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
+export const marketFormStyles = makeStyles((theme) => ({
   marketContainer: {
     '& .MuiOutlinedInput-input': {
       padding: '14px',
@@ -68,7 +67,7 @@ export const marketFormStyles = makeStyles((theme: CremaTheme) => ({
   },
 }));
 
-export const limitFormStyles = makeStyles((theme: CremaTheme) => ({
+export const limitFormStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.secondary.main,
     fontSize: 18,

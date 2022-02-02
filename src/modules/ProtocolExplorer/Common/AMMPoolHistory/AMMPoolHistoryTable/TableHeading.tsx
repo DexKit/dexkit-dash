@@ -36,41 +36,51 @@ const TableHeading: React.FC<Props> = (props) => {
 
   return (
     <TableRow className={classes.tableRowRoot}>
-      <Tooltip title={messages['app.time']} placement='top'>
+      <Tooltip title={messages['app.protocolExplorer.time']} placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.time' />
+          <IntlMessages id='app.protocolExplorer.time' />
         </TableCell>
       </Tooltip>
-      <Tooltip title={messages['app.type']} placement='top'>
+      <Tooltip title={messages['app.protocolExplorer.type']} placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.type' />
+          <IntlMessages id='app.protocolExplorer.type' />
         </TableCell>
       </Tooltip>
-      <Tooltip title={messages['app.baseAmount']} placement='top'>
+      <Tooltip
+        title={messages['app.protocolExplorer.baseAmount']}
+        placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.baseAmount' />
+          <IntlMessages id='app.protocolExplorer.baseAmount' />
         </TableCell>
       </Tooltip>
-      <Tooltip title={messages['app.quoteAmount']} placement='top'>
+      <Tooltip
+        title={messages['app.protocolExplorer.quoteAmount']}
+        placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.quoteAmount' />
+          <IntlMessages id='app.protocolExplorer.quoteAmount' />
         </TableCell>
       </Tooltip>
-      <Tooltip title={messages['app.poolVariation']} placement='top'>
+      <Tooltip
+        title={messages['app.protocolExplorer.poolVariation']}
+        placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.poolVariation' />
+          <IntlMessages id='app.protocolExplorer.poolVariation' />
         </TableCell>
       </Tooltip>
 
-      <Tooltip title={messages['app.baseRemaining']} placement='top'>
+      <Tooltip
+        title={messages['app.protocolExplorer.baseRemaining']}
+        placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.baseRemaining' />
+          <IntlMessages id='app.protocolExplorer.baseRemaining' />
         </TableCell>
       </Tooltip>
 
-      <Tooltip title={messages['app.quoteRemaining']} placement='top'>
+      <Tooltip
+        title={messages['app.protocolExplorer.quoteRemaining']}
+        placement='top'>
         <TableCell align='left' className={classes.tableCellRoot}>
-          <IntlMessages id='app.quoteRemaining' />
+          <IntlMessages id='app.protocolExplorer.quoteRemaining' />
         </TableCell>
       </Tooltip>
     </TableRow>

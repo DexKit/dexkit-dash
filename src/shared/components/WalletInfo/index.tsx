@@ -6,7 +6,6 @@ import {
   IconButton,
   Tooltip,
   Grid,
-  Hidden,
   Typography,
   useTheme,
   useMediaQuery,
@@ -38,10 +37,6 @@ import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
 
 import {ReactComponent as WalletAddIcon} from 'assets/images/icons/wallet-add.svg';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {GET_NATIVE_COIN_FROM_NETWORK_NAME} from 'shared/constants/Bitquery';
-import {useNetwork} from 'hooks/useNetwork';
-
-import {GetNativeCoinFromNetworkName} from 'utils/tokens';
 
 import {useNativeSingleBalance} from 'hooks/balance/useNativeSingleBalance';
 import {StatusSquare} from '../StatusSquare';
@@ -52,6 +47,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import CopyButton from '../CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import {useChainInfo} from 'hooks/useChainInfo';
 const useStyles = makeStyles((theme: CremaTheme) => {
   return {
     crUserInfo: {
@@ -121,7 +117,7 @@ const useStyles = makeStyles((theme: CremaTheme) => {
 
 const WalletInfo = (props: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const networkName = useNetwork();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -143,7 +139,7 @@ const WalletInfo = (props: any) => {
 
   const {account: web3Account, ethBalance, web3State, onCloseWeb3} = useWeb3();
   const defaultAccount = useDefaultAccount();
-  const network = useNetwork();
+  const {network} = useChainInfo();
   const defaultAccountLabel = useDefaultLabelAccount();
   const connected = useMemo(() => {
     return web3Account?.toLowerCase() === defaultAccount?.toLowerCase();
@@ -156,7 +152,6 @@ const WalletInfo = (props: any) => {
   const dispatch = useDispatch();
 
   const {data: balances} = useNativeSingleBalance(
-    GET_NATIVE_COIN_FROM_NETWORK_NAME(network).toUpperCase(),
     network,
     defaultAccount,
   );
@@ -208,6 +203,8 @@ const WalletInfo = (props: any) => {
     setBalanceIsVisible();
   }, []);
 
+  const {tokenSymbol} = useChainInfo();
+
   return web3State === Web3State.Done || defaultAccount ? (
     <Box className={classes.walletBalance}>
       <Grid
@@ -238,37 +235,35 @@ const WalletInfo = (props: any) => {
                   ? truncateIsAddress(defaultAccountLabel)
                   : '******'}{' '}
               </Typography>
-              <Hidden smDown={true}>
-                <Box display='flex' alignItems='center' alignContent='center'>
-                  <Box mr={1}>
-                    <Typography variant='caption'>
-                      {ethBalanceValue
-                        ? isBalanceVisible
-                          ? ethBalanceValue.toFixed(4)
-                          : '****.**'
-                        : isBalanceVisible
-                        ? ethBalance && tokenAmountInUnits(ethBalance)
-                        : '****.**'}{' '}
-                      {GetNativeCoinFromNetworkName(networkName)}{' '}
-                    </Typography>
-                  </Box>
-                  <ButtonBase
-                    className={classes.visibilityButton}
-                    onClick={handleToggleVisibility}>
-                    {isBalanceVisible ? (
-                      <VisibilityIcon fontSize='inherit' />
-                    ) : (
-                      <VisibilityOffIcon fontSize='inherit' />
-                    )}
-                  </ButtonBase>
-                  <CopyButton
-                    size='small'
-                    copyText={defaultAccount || ''}
-                    tooltip='Copied!'>
-                    <FileCopy color='inherit' style={{fontSize: 16}} />
-                  </CopyButton>
+              <Box display='flex' alignItems='center' alignContent='center'>
+                <Box mr={1}>
+                  <Typography variant='caption'>
+                    {ethBalanceValue
+                      ? isBalanceVisible
+                        ? ethBalanceValue.toFixed(4)
+                        : '****.**'
+                      : isBalanceVisible
+                      ? ethBalance && tokenAmountInUnits(ethBalance)
+                      : '****.**'}{' '}
+                    {tokenSymbol}{' '}
+                  </Typography>
                 </Box>
-              </Hidden>
+                <ButtonBase
+                  className={classes.visibilityButton}
+                  onClick={handleToggleVisibility}>
+                  {isBalanceVisible ? (
+                    <VisibilityIcon fontSize='inherit' />
+                  ) : (
+                    <VisibilityOffIcon fontSize='inherit' />
+                  )}
+                </ButtonBase>
+                <CopyButton
+                  size='small'
+                  copyText={defaultAccount || ''}
+                  tooltip='Copied!'>
+                  <FileCopy color='inherit' style={{fontSize: 16}} />
+                </CopyButton>
+              </Box>
             </Grid>
           </Grid>
         </Grid>

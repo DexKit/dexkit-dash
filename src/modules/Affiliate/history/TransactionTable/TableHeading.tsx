@@ -1,10 +1,10 @@
 import React from 'react';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
 import {grey} from '@material-ui/core/colors';
 import IntlMessages from '@crema/utility/IntlMessages';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const TableHeading: React.FC<Props> = (props) => {
-  const useStyles = makeStyles((theme: CremaTheme) => ({
+  const useStyles = makeStyles((theme) => ({
     tableRowRoot: {
       color: grey[500],
     },
@@ -46,18 +46,18 @@ const TableHeading: React.FC<Props> = (props) => {
   return (
     <TableRow className={classes.tableRowRoot}>
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.time' />
+        <IntlMessages id='app.affiliate.time' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.baseAmount' />
+        <IntlMessages id='app.affiliate.baseAmount' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        <IntlMessages id='app.tradeAmount' />
+        <IntlMessages id='app.affiliate.tradeAmount' />
       </TableCell>
 
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };

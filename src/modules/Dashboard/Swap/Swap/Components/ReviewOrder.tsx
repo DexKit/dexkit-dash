@@ -1,18 +1,20 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  Paper,
-  InputAdornment,
-  TextField,
-  LinearProgress,
-  Button,
-  Link,
-} from '@material-ui/core';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import useInterval from 'hooks/useInterval';
 import useIsWindowVisible from 'hooks/useIsWindowVisible';
 import {useWeb3} from 'hooks/useWeb3';
-import React, {useEffect, useState, useCallback} from 'react';
 import {Changelly} from 'services/rest/changelly';
 import ButtonCopy from 'shared/components/ButtonCopy';
 import {ChainId} from 'types/blockchain';
@@ -41,6 +43,7 @@ export const ReviewOrder = (props: Props) => {
   const {updateStatus} = useSwapTransactions();
 
   const {chainId} = useWeb3();
+  const {messages} = useIntl();
 
   const isWindowVisible = useIsWindowVisible();
 
@@ -90,24 +93,29 @@ export const ReviewOrder = (props: Props) => {
             <Paper variant='outlined'>
               <Box p={4}>
                 <Typography align='center' gutterBottom variant='subtitle2'>
-                  Changelly Verification Required
+                  <IntlMessages id='app.dashboard.swap.changellyVerificationRequired' />
                 </Typography>
                 <Typography gutterBottom variant='body2'>
-                  Changelly is a third party application. The transaction you
-                  requested will be held for you until you are verified.
+                  <IntlMessages id='app.dashboard.swap.changellyIsThirdPartyApp' />
                 </Typography>
                 <Typography align='center' gutterBottom variant='subtitle1'>
-                  To Get Verified
+                  <IntlMessages id='app.dashboard.swap.toGetVerified' />
                 </Typography>
                 <Typography variant='body2'>
-                  1. send an email to{' '}
+                  1.
+                  <IntlMessages id='app.dashboard.swap.sendEmailTo' />{' '}
                   <Link href='mailto:security@changelly.com'>
                     security@changelly.com
                   </Link>
                 </Typography>
                 <Typography variant='body2'>
-                  2. In the subject line, enter the following information:{' '}
-                  <strong>Transaction ID: {transaction?.id}</strong>
+                  2.{' '}
+                  <IntlMessages id='app.dashboard.swap.inTheSubjectLineEnterInformation' />{' '}
+                  ID: :{' '}
+                  <strong>
+                    <IntlMessages id='app.dashboard.transaction' /> ID:{' '}
+                    {transaction?.id}
+                  </strong>
                 </Typography>
               </Box>
             </Paper>
@@ -150,7 +158,9 @@ export const ReviewOrder = (props: Props) => {
         </Grid>
       )}
       <Grid item xs={12}>
-        <Typography variant='caption'>You send</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.youSend' />
+        </Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedFrom}{' '}
           {transaction?.currencyFrom?.toUpperCase()}{' '}
@@ -161,18 +171,24 @@ export const ReviewOrder = (props: Props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>You Receive</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.youReceived' />
+        </Typography>
         <Typography variant='h5'>
           {transaction?.amountExpectedTo}{' '}
           {transaction?.currencyTo?.toUpperCase()}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>Receive Address</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.receiveAddress' />
+        </Typography>
         <Typography variant='body1'>{transaction?.payoutAddress}</Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='caption'>Transaction ID</Typography>
+        <Typography variant='caption'>
+          <IntlMessages id='app.dashboard.transaction' /> ID
+        </Typography>
         <Typography variant='h5'>
           {transaction?.id}{' '}
           <ButtonCopy
@@ -188,12 +204,12 @@ export const ReviewOrder = (props: Props) => {
             gutterBottom
             align='center'
             variant='body1'>
-            Please, send{' '}
+            <IntlMessages id='app.dashboard.swap.pleaseSend' />{' '}
             <strong>
               {transaction?.amountExpectedFrom}{' '}
               {transaction?.currencyFrom.toUpperCase()}
             </strong>{' '}
-            to the address below and wait for transaction confirmation
+            <IntlMessages id='app.dashboard.swap.toTheAddressAndWaitTransactionConfirmation' />{' '}
           </Typography>
           <TextField
             fullWidth
@@ -203,7 +219,9 @@ export const ReviewOrder = (props: Props) => {
                 <InputAdornment position='end'>
                   <ButtonCopy
                     copyText={transaction?.payinAddress || ''}
-                    titleText='Address copied!'
+                    titleText={
+                      messages['app.dashboard.addressCopied'] as string
+                    }
                   />
                 </InputAdornment>
               ),
@@ -221,7 +239,7 @@ export const ReviewOrder = (props: Props) => {
             fullWidth
             variant='contained'
             color='primary'>
-            Transfer now
+            <IntlMessages id='app.dashboard.transferNow' />
           </Button>
         </Grid>
       ) : null}

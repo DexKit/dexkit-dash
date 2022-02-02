@@ -7,6 +7,7 @@ import {useCountdown} from 'hooks/utils/useCountdown';
 import {makeStyles} from '@material-ui/core/styles';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {strPad} from 'modules/CoinLeagues/utils/time';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -68,7 +69,7 @@ function CountdownStartsAt(props: Props): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-           Countdown to Start
+             <IntlMessages id='app.coinLeagues.countdownToStart' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <CardTimer time={count} />

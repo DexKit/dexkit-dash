@@ -1,17 +1,20 @@
+import React, { useEffect } from 'react';
+
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import {useMagicProvider} from 'hooks/provider/useMagicProvider';
-import React, {useEffect} from 'react';
-import {useHistory} from 'react-router';
-import {getMagic, getCachedMagicNetwork} from 'services/magic';
+import { useMagicProvider } from 'hooks/provider/useMagicProvider';
+import { useHistory } from 'react-router';
+import { getMagic, getCachedMagicNetwork } from 'services/magic';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MoneyWalletIcon from 'assets/images/icons/wallet-money.svg';
-import {useWelcomeModal} from 'hooks/useWelcomeModal';
+import { useWelcomeModal } from 'hooks/useWelcomeModal';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 const MagicCallbackSocial = () => {
-  const {onConnectMagic} = useMagicProvider();
-  const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
+  const { onConnectMagic } = useMagicProvider();
+  const { loginBackRoute, onSetLoginBackRoute } = useWelcomeModal();
   const history = useHistory();
 
   //TODO: colocar loading nos callbacks
@@ -46,13 +49,15 @@ const MagicCallbackSocial = () => {
         <Grid item>
           <img
             src={MoneyWalletIcon}
-            style={{height: 150, width: 150}}
+            style={{ height: 150, width: 150 }}
             alt='Wallet'
           />
         </Grid>
         <Grid item>
           <Box display={'flex'} alignItems='center'>
-            <Typography variant={'body1'}>Redirecting to Wallet ...</Typography>
+            <Typography variant={'body1'}>
+              <IntlMessages id='app.dashboard.redirectingToWallet' />
+            </Typography>
             <Box p={4}>
               <CircularProgress color='inherit' />
             </Box>

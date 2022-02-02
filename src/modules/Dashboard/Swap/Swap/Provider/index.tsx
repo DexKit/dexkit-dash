@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {ChangellyCoin} from 'types/changelly';
+
 //NOTE: Study if it worth use this at the moment
 export enum Steps {
   Exchange,

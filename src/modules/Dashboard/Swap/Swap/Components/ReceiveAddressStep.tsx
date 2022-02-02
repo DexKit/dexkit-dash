@@ -1,13 +1,14 @@
-import {
-  Button,
-  Grid,
-  Typography,
-  Checkbox,
-  CircularProgress,
-  useTheme,
-  Link,
-} from '@material-ui/core';
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {useTheme} from '@material-ui/core';
+import Link from '@material-ui/core/Link';
 import {ReceiveAddressInput} from './ReceiveAddressInput';
 
 import SwapVertIcon from '@material-ui/icons/SwapVert';
@@ -66,7 +67,7 @@ export const ReceiveAddressStep = (props: Props) => {
         </Alert>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant='body1'>Receive Address</Typography>
+        <Typography variant='body1'> <IntlMessages id='app.dashboard.receiveAddress' /></Typography>
       </Grid>
       <Grid item xs={12}>
         <ReceiveAddressInput
@@ -120,7 +121,7 @@ export const ReceiveAddressStep = (props: Props) => {
           {loading ? (
             <CircularProgress size={theme.spacing(6)} color='inherit' />
           ) : (
-            'Swap'
+            <IntlMessages id='app.dashboard.swap' />
           )}
         </Button>
       </Grid>

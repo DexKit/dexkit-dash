@@ -1,14 +1,20 @@
-import {MaticPriceFeeds} from 'modules/CoinLeagues/constants';
 import React from 'react';
-import {TickerTape} from 'react-ts-tradingview-widgets';
+
+import { PriceFeeds } from 'modules/CoinLeagues/constants';
+import { TickerTape } from 'react-ts-tradingview-widgets';
+import { ChainId } from 'types/blockchain';
+
 
 const TickerTapeTV = () => {
-  const symbols = MaticPriceFeeds.filter((s) => s.tv).map((s) => {
+
+
+  const symbols = PriceFeeds[ChainId.Matic].concat(PriceFeeds[ChainId.Binance]).filter((s) => s.tv).map((s) => {
     return {
       proName: s.tv as string,
       title: (s.tv as string).split(':')[1],
     };
   });
+
   return (
     <>
       <TickerTape

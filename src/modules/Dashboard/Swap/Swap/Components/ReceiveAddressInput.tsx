@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
+import {useIntl} from 'react-intl';
 
 import {
   TextField,
@@ -27,6 +28,7 @@ interface Props {
 
 export const ReceiveAddressInput = (props: Props) => {
   const {address, coin, onChange, onPaste} = props;
+  const {messages} = useIntl();
 
   const {wallet} = useSelector<AppState, AppState['ui']>((state) => state.ui);
 
@@ -134,12 +136,12 @@ export const ReceiveAddressInput = (props: Props) => {
             <InputAdornment position='end' variant='outlined'>
               {coin?.ticker?.toLowerCase() == 'eth' ? (
                 <>
-                  <Tooltip title='Accounts'>
+                  <Tooltip title={messages['app.dashboard.accounts'] as string}>
                     <IconButton size='small' onClick={handleOpenMenu}>
                       <AccountBalanceWalletIcon />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title='Paste'>
+                  <Tooltip title={messages['app.dashboard.paste'] as string}>
                     <PasteIconButton onPaste={onPaste} />
                   </Tooltip>
                 </>

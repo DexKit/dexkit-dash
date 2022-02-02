@@ -1,15 +1,15 @@
 import React, {useMemo} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {GetTokenTrades_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenTrades';
 import Box from '@material-ui/core/Box';
-import {
-  TableRow,
-  TableCell,
-  makeStyles,
-  Chip,
-  useMediaQuery,
-} from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
+import {makeStyles} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import {CremaTheme} from 'types/AppContextPropsType';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import TokenLogo from 'shared/components/TokenLogo';
 
@@ -27,7 +27,7 @@ interface TableItemProps {
   type: 'pair' | 'token';
 }
 
-const useStyles = makeStyles((theme: CremaTheme) => ({
+const useStyles = makeStyles((theme) => ({
   tableCell: {
     fontSize: 16,
     padding: '12px 8px',
@@ -61,6 +61,7 @@ const TableItem: React.FC<TableItemProps> = ({
 }) => {
   const classes = useStyles();
   const {usdFormatter} = useUSDFormatter();
+  const {messages} = useIntl();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
   const timestamp = row.block?.timestamp?.time
     ? new Date(row.block?.timestamp?.time).toLocaleString()
@@ -108,7 +109,11 @@ const TableItem: React.FC<TableItemProps> = ({
     const summaryTitle = (
       <Chip
         style={{backgroundColor: paymentTypeColor, color: 'white'}}
-        label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+        label={
+          row.side === 'SELL'
+            ? messages['app.protocolExplorer.buy']
+            : messages['app.protocolExplorer.sell']
+        }
       />
     );
     const summaryValue = `${row.baseAmount?.toFixed(2)} ${
@@ -117,7 +122,7 @@ const TableItem: React.FC<TableItemProps> = ({
     const data = [
       {
         id: 'exchange',
-        title: <IntlMessages id='app.exchange' />,
+        title: <IntlMessages id='app.protocolExplorer.exchange' />,
         value: row.exchange ? (
           <ExchangeLogo exchange={row.exchange.fullName} />
         ) : (
@@ -126,37 +131,41 @@ const TableItem: React.FC<TableItemProps> = ({
       },
       {
         id: 'side',
-        title: <IntlMessages id='app.side' />,
+        title: <IntlMessages id='app.protocolExplorer.side' />,
         value: (
           <Chip
             style={{backgroundColor: paymentTypeColor, color: 'white'}}
-            label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+            label={
+              row.side === 'SELL'
+                ? messages['app.protocolExplorer.buy']
+                : messages['app.protocolExplorer.sell']
+            }
           />
         ),
       },
       {
         id: 'baseAmount',
-        title: <IntlMessages id='app.baseAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.baseAmount' />,
         value: baseAmountRow,
       },
       {
         id: 'quoteAmount',
-        title: <IntlMessages id='app.quoteAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.quoteAmount' />,
         value: quoteAmountRow,
       },
       {
         id: 'price',
-        title: <IntlMessages id='app.price' />,
+        title: <IntlMessages id='app.protocolExplorer.price' />,
         value: priceUsd,
       },
       {
         id: 'tradeAmount',
-        title: <IntlMessages id='app.tradeAmount' />,
+        title: <IntlMessages id='app.protocolExplorer.tradeAmount' />,
         value: usdFormatter.format(row.tradeAmountIsUsd || 0),
       },
       {
         id: 'created',
-        title: <IntlMessages id='app.created' />,
+        title: <IntlMessages id='app.protocolExplorer.created' />,
         value: timestamp,
       },
       {
@@ -188,7 +197,11 @@ const TableItem: React.FC<TableItemProps> = ({
       <TableCell align='left' className={classes.tableCell}>
         <Chip
           style={{backgroundColor: paymentTypeColor, color: 'white'}}
-          label={row.side === 'SELL' ? 'BUY' : 'SELL'}
+          label={
+            row.side === 'SELL'
+              ? messages['app.protocolExplorer.buy']
+              : messages['app.protocolExplorer.sell']
+          }
         />
       </TableCell>
       {type === 'token' && (
@@ -198,7 +211,8 @@ const TableItem: React.FC<TableItemProps> = ({
               <TokenLogo
                 token0={row.baseCurrency?.address || ''}
                 token1={row.quoteCurrency?.address || ''}
-                networkName={networkName}></TokenLogo>
+                networkName={networkName}
+              />
             )}
             {row.baseCurrency?.symbol}/{row.quoteCurrency?.symbol}
           </Box>

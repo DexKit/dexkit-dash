@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import * as bip39 from 'bip39';
+import {useIntl} from 'react-intl';
 
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -20,8 +21,10 @@ import GeneratedWallet from './steps/GeneratedWallet';
 import MnemonicConfirm from './steps/MnemonicConfirm';
 import MnemonicGeneration from './steps/MnemonicGeneration';
 import {useHistory} from 'react-router-dom';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const mnemonicsGen = bip39.generateMnemonic().split(' ');
+
 interface IStep {
   description: string;
   component: React.ReactElement;
@@ -39,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateBTCWallet: React.FC = () => {
   const classes = useStyles();
+  const {messages} = useIntl();
   const [activeStep, setActiveStep] = useState(0);
   const [allowStep, setAllowStep] = useState(true);
   const [passphrase, setPass] = useState<string>();
@@ -64,11 +68,11 @@ const CreateBTCWallet: React.FC = () => {
 
   const steps: IStep[] = [
     {
-      description: 'Procedure information',
+      description: messages['app.dashboard.procedureInfo'] as string,
       component: <InfoPage setHasSeed={setHasSeed} />,
     },
     {
-      description: 'Mnemonic info',
+      description: messages['app.dashboard.mnemonicInfo'] as string,
       component: hasSeed ? (
         <MnemonicInsert
           setAllowStep={setAllowStep}
@@ -82,17 +86,17 @@ const CreateBTCWallet: React.FC = () => {
       ),
     },
     {
-      description: 'Mnemonic confirmation',
+      description: messages['app.dashboard.mnemonicConfirmation'] as string,
       component: (
         <MnemonicConfirm mnemonics={mnemonics} setAllowStep={setAllowStep} />
       ),
     },
     {
-      description: 'Passphrase creation',
+      description: messages['app.dashboard.passphraseCreation'] as string,
       component: <Passphrase setAllowStep={setAllowStep} setPass={setPass} />,
     },
     {
-      description: 'Result of generated wallet',
+      description: messages['app.dashboard.resultGeneratedWallet'] as string,
       component: (
         <GeneratedWallet mnemonics={mnemonics} passphrase={passphrase} />
       ),
@@ -128,7 +132,9 @@ const CreateBTCWallet: React.FC = () => {
                   paddingTop: '17vh',
                 }}>
                 <Box style={{flex: '1 1 auto'}} />
-                <Button onClick={goToWallet}>FINISH</Button>
+                <Button onClick={goToWallet}>
+                  <IntlMessages id='app.dashboard.finish' />
+                </Button>
               </Box>
             ) : (
               <Box
@@ -141,15 +147,17 @@ const CreateBTCWallet: React.FC = () => {
                   color='inherit'
                   disabled={activeStep === 0}
                   onClick={handleBack}>
-                  BACK
+                  <IntlMessages id='app.dashboard.back' />
                 </Button>
                 <Box style={{flex: '1 1 auto', textAlign: 'center'}}>
                   <Button color='primary' onClick={() => history.goBack()}>
-                    EXIT
+                    <IntlMessages id='app.dashboard.exit' />
                   </Button>
                 </Box>
                 <Button onClick={handleNext} disabled={!allowStep}>
-                  {activeStep === steps.length - 1 ? 'FINISH' : 'NEXT'}
+                  {activeStep === steps.length - 1
+                    ? messages['app.dashboard.finish']
+                    : messages['app.dashboard.next']}
                 </Button>
               </Box>
             )}

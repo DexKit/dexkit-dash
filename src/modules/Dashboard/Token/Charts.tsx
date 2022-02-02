@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
+import {useIntl} from 'react-intl';
 import {
   makeStyles,
   Tabs,
@@ -69,6 +70,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
   const [chartSource, setChartSource] = useState<ChartSource>(ChartSource.DEX);
   const [chartSymbol, setChartSymbol] = useState<string>();
   const classes = useStyles();
+  const {messages} = useIntl();
   const {theme} = useContext<AppContextPropsType>(AppContext);
   const isDark = theme.palette.type === ThemeMode.DARK;
 
@@ -115,7 +117,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
             indicatorColor='primary'>
             <Tab
               label={
-                <Tooltip title='Chart from Decentralized Exchanges'>
+                <Tooltip title={messages['app.dashboard.chartDexExchange']}>
                   <span>DEX</span>
                 </Tooltip>
               }
@@ -123,7 +125,7 @@ const Charts: React.FC<ChartsProps> = ({tokenInfo, networkName, chainId}) => {
             />
             <Tab
               label={
-                <Tooltip title='Chart from Binance Exchange'>
+                <Tooltip title={messages['app.dashboard.chartBinanceExchange']}>
                   <span>Binance</span>
                 </Tooltip>
               }

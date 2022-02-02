@@ -18,9 +18,10 @@ import {useWeb3} from 'hooks/useWeb3';
 import {ERC721Abi} from 'contracts/abis/ERC721Abi';
 import {useWizardApi} from 'modules/Wizard/hooks';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {ethers} from 'ethers';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface MintItemsDialogProps extends DialogProps {
   contractAddress: string;
@@ -37,6 +38,8 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
   const wizardApi = useWizardApi();
 
   const {getProvider, chainId} = useWeb3();
+
+  const {getTransactionScannerUrl} = useChainInfo();
 
   const [mintTransactionHash, setMintTransactionHash] = useState('');
   const [items, setItems] = useState<CollectionItemData[]>([]);
@@ -169,13 +172,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     onFinish();
     setShowSuccess(true);
     setLoading(false);
-  }, [
-    mintItems,
-    sendItemsMetadata,
-    contractAddress,
-    onFinish,
-    uploadImages,
-  ]);
+  }, [mintItems, sendItemsMetadata, contractAddress, onFinish, uploadImages]);
 
   const handleCancel = useCallback(
     (e) => {
@@ -214,17 +211,15 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
     onFinish();
     setShowSuccess(true);
     setLoading(false);
-  }, [
-    mintItems,
-    sendItemsMetadata,
-    contractAddress,
-    onFinish,
-    uploadImages,
-  ]);
+  }, [mintItems, sendItemsMetadata, contractAddress, onFinish, uploadImages]);
 
   return (
     <Dialog {...props} disableBackdropClick>
-      {!loading && !showSuccess ? <DialogTitle>Mint items</DialogTitle> : null}
+      {!loading && !showSuccess ? (
+        <DialogTitle>
+          <IntlMessages id='app.wizard.mintItems' />
+        </DialogTitle>
+      ) : null}
       {showSuccess ? (
         <DialogContent>
           <Box py={4}>
@@ -236,10 +231,10 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h5' align='center'>
-                  Items minted
+                  <IntlMessages id='app.wizard.itemsMinted' />
                 </Typography>
                 <Typography variant='body1' align='center'>
-                  Items minted successfully
+                  <IntlMessages id='app.wizard.itemsMintedSuccessfully' />
                 </Typography>
               </Grid>
               {mintTransactionHash && chainId ? (
@@ -253,13 +248,13 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
                     color='primary'
                     variant='outlined'
                     fullWidth>
-                    View transaction
+                    <IntlMessages id='app.wizard.viewTransaction' />
                   </Button>
                 </Grid>
               ) : null}
               <Grid item xs={12}>
                 <Button onClick={handleCancel} color='primary' fullWidth>
-                  Close
+                  <IntlMessages id='app.wizard.close' />
                 </Button>
               </Grid>
             </Grid>
@@ -277,11 +272,10 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h5' align='center'>
-                  Minting items
+                  <IntlMessages id='app.wizard.mintingItems' />
                 </Typography>
                 <Typography variant='body1' align='center'>
-                  Please, sign the transaction in your wallet and wait for
-                  confirmation.
+                  <IntlMessages id='app.wizard.pleaseSignTheTransactionInYourWalletAndWait' />
                 </Typography>
               </Grid>
               {errorMessage ? (
@@ -297,7 +291,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
                       </Typography>
                     </Box>
                     <Button onClick={handleTryAgain} color='primary'>
-                      Try Again
+                      <IntlMessages id='app.wizard.tryAgain' />
                     </Button>
                   </Box>
                 </Grid>
@@ -313,7 +307,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
                     color='primary'
                     variant='outlined'
                     fullWidth>
-                    View transaction
+                    <IntlMessages id='app.wizard.viewTransaction' />
                   </Button>
                 </Grid>
               ) : null}
@@ -342,7 +336,7 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
                   onClick={handleAddItem}
                   variant='outlined'
                   color='primary'>
-                  Add item
+                  <IntlMessages id='app.wizard.addItem' />
                 </Button>
               </Grid>
             </Grid>
@@ -353,10 +347,10 @@ export const MintItemsDialog = (props: MintItemsDialogProps) => {
               onClick={handleConfirm}
               variant='contained'
               color='primary'>
-              Mint items
+              <IntlMessages id='app.wizard.mintItems' />
             </Button>
             <Button onClick={handleCancel} variant='contained'>
-              Cancel
+              <IntlMessages id='app.wizard.cancel' />
             </Button>
           </DialogActions>
         </>

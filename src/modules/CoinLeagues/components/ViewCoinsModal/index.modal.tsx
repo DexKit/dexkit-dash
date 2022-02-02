@@ -1,30 +1,31 @@
-import React, {useEffect, useCallback, useState, useMemo} from 'react';
-import {useTheme} from '@material-ui/core/styles';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {
-  Dialog,
-  DialogProps,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  useMediaQuery,
-  List,
-  Box,
-  IconButton,
-} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import {useTheme} from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import {DialogProps} from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import CloseIcon from '@material-ui/icons/Close';
-
 import {ReactComponent as MoneySendIcon} from 'assets/images/icons/money-send.svg';
 import {ViewCoinListItem} from './ViewCoinItem';
 import {useCoinLeagues} from 'modules/CoinLeagues/hooks/useCoinLeagues';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
 import {PriceFeeds} from 'modules/CoinLeagues/constants';
-import {useWeb3} from 'hooks/useWeb3';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
 import {useMultipliers} from 'modules/CoinLeagues/hooks/useMultipliers';
+
 interface Props extends DialogProps {
   title?: string;
   id: string;
@@ -35,7 +36,8 @@ interface Props extends DialogProps {
 
 export const ViewCoinLeagueDialog = (props: Props) => {
   const {onClose, coins, id, captainCoin, playerAddress} = props;
-  const {chainId} = useWeb3();
+  const {messages} = useIntl();
+  const { chainId } = useLeaguesChainInfo();
   const theme = useTheme();
   const {allFeeds, currentPrices, game} = useCoinLeagues(id);
   const {multiplier, tooltipMessage} = useMultipliers(id);
@@ -136,7 +138,9 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             <Box display='flex' pr={2}>
               <MoneySendIcon />
             </Box>
-            <Typography variant='body1'>{'Select a Coin'}</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.coinLeagues.selectCoin' />
+            </Typography>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
@@ -149,7 +153,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
             autoComplete='off'
             autoFocus
             id='name'
-            placeholder='Search tokens'
+            placeholder={messages['app.coinLeagues.searchTokens'] as string}
             fullWidth
             value={filterText}
             variant='outlined'
@@ -157,7 +161,7 @@ export const ViewCoinLeagueDialog = (props: Props) => {
           />
         </Box>
         {filteredCoins.length === 0 ? (
-          <Typography variant='body1'>No coins found</Typography>
+          <Typography variant='body1'> <IntlMessages id='app.coinLeagues.noCoinsFound' /></Typography>
         ) : (
           <List>
             {filteredCoins.map((coin, i) => (

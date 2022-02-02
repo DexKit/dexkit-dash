@@ -1,6 +1,9 @@
 import React from 'react';
-import {Typography, CircularProgress, Button} from '@material-ui/core';
-// import {useStyles} from './index.style';
+
+import {Button, CircularProgress, Typography} from '@material-ui/core';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+
+
 
 interface Props {
   currentStepIndex: number;
@@ -8,14 +11,13 @@ interface Props {
 
 const LoadingStep: React.FC<Props> = (props) => {
   const {currentStepIndex} = props;
-  // const classes = useStyles();
+
 
   return (
     <>
       {currentStepIndex !== -1 && (
         <Typography align='center' style={{paddingBottom: 10}}>
-          Please confirm on your wallet and wait while your request is being
-          processed
+          <IntlMessages id='app.dashboard.confirmWalletAndWait' />
         </Typography>
       )}
       <Button

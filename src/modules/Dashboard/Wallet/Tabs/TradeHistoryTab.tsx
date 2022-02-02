@@ -1,3 +1,4 @@
+import {useIntl} from 'react-intl';
 import NoWallet from 'modules/ErrorPages/NoWallet';
 import TradeAllHistoryContainer from 'modules/History/TradeAllHistory/container';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
@@ -21,6 +22,13 @@ import Close from '@material-ui/icons/Close';
 import SquaredIconButton from 'shared/components/SquaredIconButton';
 import {TransferTab} from './TransfersTab';
 
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import TransactionsTab from './TransactionsTab';
+
+const TAB_TRANSACTIONS = 'TAB_TRANSACTIONS';
+const TAB_HISTORY = 'TAB_HISTORY';
+const TAB_TRANSFERS = 'TAB_TRANSFERS';
+
 type Props = {
   address?: string;
   token?: string;
@@ -30,6 +38,7 @@ type Props = {
 
 export const TradeHistoryTab = (props: Props) => {
   const history = useHistory();
+  const {messages} = useIntl();
   const searchParams = useMemo(() => {
     return new URLSearchParams(history.location.search);
   }, [history.location.search]);
@@ -53,10 +62,18 @@ export const TradeHistoryTab = (props: Props) => {
     setShowFilters((value) => !value);
   }, []);
 
-  const [showTransfers, setShowTransfers] = useState(false);
+  const [tab, setTab] = useState(TAB_TRANSACTIONS);
+
+  const handleToggleHistory = useCallback(() => {
+    setTab(TAB_HISTORY);
+  }, []);
 
   const handleToggleTransfers = useCallback(() => {
-    setShowTransfers((value) => !value);
+    setTab(TAB_TRANSFERS);
+  }, []);
+
+  const handleToggleTransactions = useCallback(() => {
+    setTab(TAB_TRANSACTIONS);
   }, []);
 
   return address ? (
@@ -73,7 +90,9 @@ export const TradeHistoryTab = (props: Props) => {
                         <FilterSearchIcon />
                       </Grid>
                       <Grid item>
-                        <Typography variant='body1'>Filter</Typography>
+                        <Typography variant='body1'>
+                          <IntlMessages id='app.dashboard.filter' />
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -89,7 +108,7 @@ export const TradeHistoryTab = (props: Props) => {
 
             <Grid item xs={12}>
               <Typography gutterBottom variant='body1'>
-                Network
+                <IntlMessages id='app.dashboard.network' />
               </Typography>
             </Grid>
             {enableNetworkChips ? (
@@ -111,36 +130,50 @@ export const TradeHistoryTab = (props: Props) => {
             spacing={2}
             justify='space-between'
             alignItems='baseline'>
-            <Grid item></Grid>
+            <Grid item />
             <Grid item>
               <Grid container spacing={4}>
                 <Grid item>
                   <Chip
                     clickable
-                    onClick={handleToggleTransfers}
-                    variant={!showTransfers ? 'default' : 'outlined'}
-                    label='History'
+                    onClick={handleToggleTransactions}
+                    variant={tab === TAB_TRANSACTIONS ? 'default' : 'outlined'}
+                    label={messages['app.wallet.transactions'] as string}
+                  />
+                </Grid>
+                <Grid item>
+                  <Chip
+                    clickable
+                    onClick={handleToggleHistory}
+                    variant={tab === TAB_HISTORY ? 'default' : 'outlined'}
+                    label={messages['app.wallet.trade'] as string}
                   />
                 </Grid>
                 <Grid item>
                   <Chip
                     clickable
                     onClick={handleToggleTransfers}
-                    variant={showTransfers ? 'default' : 'outlined'}
-                    label='Transfers'
+                    variant={tab === TAB_TRANSFERS ? 'default' : 'outlined'}
+                    label={messages['app.wallet.transfers'] as string}
                   />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item>
-              <SquaredIconButton onClick={handleToggleFilters}>
-                <FilterSearchIcon />
-              </SquaredIconButton>
+              {tab !== TAB_TRANSACTIONS ? (
+                <SquaredIconButton onClick={handleToggleFilters}>
+                  <FilterSearchIcon />
+                </SquaredIconButton>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
-        {showTransfers ? (
+        {tab === TAB_TRANSFERS ? (
           <TransferTab address={address} networkName={networkName} />
+        ) : tab === TAB_TRANSACTIONS ? (
+          <Grid item xs={12}>
+            <TransactionsTab />
+          </Grid>
         ) : (
           <>
             {token ? (

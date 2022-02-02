@@ -1,10 +1,15 @@
-import { providers } from "ethers";
-import { _TypedDataEncoder } from "ethers/lib/utils";
-import { ChainId } from "types/blockchain";
-import { GAME_METADATA_API } from "../constants";
-import { GameMetadata } from "../utils/types";
+import {providers} from 'ethers';
+import {_TypedDataEncoder} from 'ethers/lib/utils';
+import {ChainId} from 'types/blockchain';
+import {GAME_METADATA_API} from '../constants';
+import {GameMetadata} from '../utils/types';
 
-
+export const GET_API_PREFIX = (chainId: ChainId) => {
+  if (chainId === ChainId.Binance) {
+    return `${ChainId.Binance}/`;
+  }
+  return '';
+};
 
 export const signUpdate = async (provider: any, chainId: ChainId) => {
   const pr = new providers.Web3Provider(provider);
@@ -18,8 +23,8 @@ export const signUpdate = async (provider: any, chainId: ChainId) => {
 
   const types = {
     Message: [
-      { name: 'message', type: 'string' },
-      { name: 'powered', type: 'string' },
+      {name: 'message', type: 'string'},
+      {name: 'powered', type: 'string'},
     ],
   };
   const message = {
@@ -38,7 +43,7 @@ export const signUpdate = async (provider: any, chainId: ChainId) => {
     _TypedDataEncoder.getPayload(populated.domain, types, populated.value),
   );
   const sig = await signer._signTypedData(domain, types, message);
-  return { sig, messageSigned };
+  return {sig, messageSigned};
 };
 
 export const update = (
@@ -48,6 +53,7 @@ export const update = (
   room: string,
   id: string,
   account: string,
+  chainId: ChainId = ChainId.Matic,
 ) => {
   const headers = new Headers({
     'content-type': 'application/json',
@@ -64,6 +70,7 @@ export const update = (
       title: data.title,
       description: data.description,
       smallDescription: data.smallDescription,
+      chainId: chainId,
     }),
   };
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
@@ -76,6 +83,7 @@ export const remove = (
   room: string,
   id: string,
   account: string,
+  chainId: ChainId = ChainId.Matic,
 ) => {
   const headers = new Headers({
     'content-type': 'application/json',
@@ -92,27 +100,50 @@ export const remove = (
       title: data.title,
       description: data.description,
       smallDescription: data.smallDescription,
+      chainId: chainId,
     }),
   };
   return fetch(`${GAME_METADATA_API}/api/${id}`, myInit);
 };
 
-export const getGameMetadata = async (id: string, room: string) => {
-  try{
-    const response = await fetch(`${GAME_METADATA_API}/api/${room}/${id}`);
-    if(response.ok && response.status === 200){
-      return await response.json() as GameMetadata
+export const getGameMetadata = async (
+  id: string,
+  room: string,
+  chainId: ChainId = ChainId.Matic,
+) => {
+  try {
+    const response = await fetch(
+      `${GAME_METADATA_API}/api/${room}/${GET_API_PREFIX(chainId)}${id}`,
+    );
+    if (response.ok && response.status === 200) {
+      return (await response.json()) as GameMetadata;
     }
-  }catch{
-    return
+  } catch {
+    return;
   }
-}
+};
 
+export const getGamesMetadata = (
+  ids: string,
+  room: string,
+  chainId: ChainId = ChainId.Matic,
+) => {
+  return fetch(
+    `${GAME_METADATA_API}/api/${room}/all-games/${GET_API_PREFIX(
+      chainId,
+    )}${ids}`,
+  )
+    .then((r) => r.json())
+    .then((r) => r as GameMetadata[]);
+};
 
-export const getGamesMetadata = (ids: string, room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/all-games/${ids}`).then(r => r.json()).then(r => r as GameMetadata[]);
-}
-
-export const getAllGamesMetadata = (room: string) => {
-  return fetch(`${GAME_METADATA_API}/api/${room}/all-games`).then(r => r.json()).then(r => r as GameMetadata[]);
-}
+export const getAllGamesMetadata = (
+  room: string,
+  chainId: ChainId = ChainId.Matic,
+) => {
+  return fetch(
+    `${GAME_METADATA_API}/api/${room}/${GET_API_PREFIX(chainId)}all-games`,
+  )
+    .then((r) => r.json())
+    .then((r) => r as GameMetadata[]);
+};

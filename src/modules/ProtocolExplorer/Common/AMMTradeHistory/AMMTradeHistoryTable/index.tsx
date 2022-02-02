@@ -1,18 +1,18 @@
 import React from 'react';
+
 import {GetContractOrders_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetContractOrders';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
-import {
-  Box,
-  Table,
-  TableBody,
-  TableHead,
-  TablePagination,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   exchange: EXCHANGE;
@@ -39,6 +39,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+
   return (
     <>
       <Box className={classes.tableResponsiveMaterial}>
@@ -59,7 +60,7 @@ const AMMTradeHistoryTable: React.FC<Props> = ({
       </Box>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          No data available for this protocol
+          <IntlMessages id='app.protocolExplorer.noDataAvailableForProtocol' />
         </Typography>
       )}
       <TablePagination

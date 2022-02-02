@@ -1,7 +1,9 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {Token} from 'types/app';
-import {makeStyles, Button, withStyles} from '@material-ui/core';
+import {Button, makeStyles, withStyles} from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Logo from 'shared/components/Logo';
@@ -65,7 +67,7 @@ const SelectTokenV2: React.FC<Props> = ({
       endIcon={<ExpandMoreIcon />}
       variant='outlined'
       onClick={onClick}>
-      Choose
+      <IntlMessages id='app.dashboard.choose' />
     </StyledButton>
   );
 };

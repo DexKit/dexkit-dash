@@ -44,6 +44,7 @@ interface ValuesType {
   maxFeePerGas?: ethers.BigNumber | null;
   gasPrice?: ethers.BigNumber | null;
   gasLimit?: ethers.BigNumber | null;
+  value?: ethers.BigNumber | null;
 }
 
 export const TransactionConfirmDialog = (
@@ -82,7 +83,6 @@ export const TransactionConfirmDialog = (
     if (onConfirm) {
       let dataCopy = {...data};
       let params = {...data.params[0]};
-
       params.gas = values.gasLimit?.toHexString();
 
       if (chainId && hasLondonHardForkSupport(chainId)) {
@@ -157,6 +157,10 @@ export const TransactionConfirmDialog = (
                 vals.gasLimit = BigNumber.from(21000);
                 setIsInsufficientFunds(true);
               }
+            }
+
+            if (params.value) {
+              vals.value = BigNumber.from(params.value);
             }
 
             if (chainId && hasLondonHardForkSupport(chainId)) {
@@ -266,6 +270,21 @@ export const TransactionConfirmDialog = (
               </Typography>
             </Box>
           </Grid>
+          {values.value ? (
+            <Grid item xs={12}>
+              <Box
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                justifyContent='space-between'>
+                <Typography variant='body1'>Send amount</Typography>
+                <Typography variant='body1' color='textSecondary'>
+                  {values.value ? ethers.utils.formatEther(values.value) : 0}{' '}
+                  {GetNativeCoinFromNetworkName(network)}
+                </Typography>
+              </Box>
+            </Grid>
+          ) : null}
           <Grid item xs={12}>
             <Divider />
           </Grid>
@@ -277,7 +296,15 @@ export const TransactionConfirmDialog = (
               justifyContent='space-between'>
               <Typography variant='body1'>Total cost</Typography>
               <Typography variant='body1' color='textSecondary'>
-                ${(coinPrice.data || 0) * gasCost(values)} USD
+                $
+                {(coinPrice.data || 0) *
+                  (gasCost(values) +
+                    parseInt(
+                      values.value
+                        ? ethers.utils.formatEther(values.value)
+                        : '0',
+                    ))}{' '}
+                USD
               </Typography>
             </Box>
           </Grid>
@@ -374,7 +401,10 @@ export const TransactionConfirmDialog = (
         <Button
           disabled={
             Number(ethers.utils.formatEther(balance || '0')) <
-              gasCost(values) || gasCost(values) === 0
+              gasCost(values) +
+                parseInt(
+                  values.value ? ethers.utils.formatEther(values.value) : '0',
+                ) || gasCost(values) === 0
           }
           onClick={handleConfirm}
           color='primary'

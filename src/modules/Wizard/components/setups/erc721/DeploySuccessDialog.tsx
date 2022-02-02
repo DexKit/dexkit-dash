@@ -9,11 +9,11 @@ import {
   useTheme,
   Button,
 } from '@material-ui/core';
-
+import {useChainInfo} from 'hooks/useChainInfo';
 import {Link as RouterLink} from 'react-router-dom';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface DeploySuccessDialogProps extends DialogProps {
   transactionHash: string;
@@ -23,7 +23,10 @@ interface DeploySuccessDialogProps extends DialogProps {
 export const DeploySuccessDialog = (props: DeploySuccessDialogProps) => {
   const theme = useTheme();
   const {transactionHash, contractAddress} = props;
+
   const {chainId} = useWeb3();
+
+  const {getTransactionScannerUrl} = useChainInfo();
 
   return (
     <Dialog {...props} disableBackdropClick>
@@ -45,10 +48,10 @@ export const DeploySuccessDialog = (props: DeploySuccessDialogProps) => {
           </Grid>
           <Grid item>
             <Typography gutterBottom align='center' variant='h5'>
-              Smart contract deployed
+              <IntlMessages id='app.wizard.smartContractDeployed' />
             </Typography>
             <Typography align='center' variant='body1'>
-              See the transaction for more details
+              <IntlMessages id='app.wizard.seeTheTransactionForMoreDetails' />
             </Typography>
           </Grid>
           <Grid item>
@@ -61,7 +64,7 @@ export const DeploySuccessDialog = (props: DeploySuccessDialogProps) => {
                     fullWidth
                     color='primary'
                     variant='contained'>
-                    View contract
+                    <IntlMessages id='app.wizard.viewContract' />
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -74,7 +77,7 @@ export const DeploySuccessDialog = (props: DeploySuccessDialogProps) => {
                     fullWidth
                     color='primary'
                     variant='outlined'>
-                    View transaction
+                    <IntlMessages id='app.wizard.viewTransaction' />
                   </Button>
                 </Grid>
               </Grid>

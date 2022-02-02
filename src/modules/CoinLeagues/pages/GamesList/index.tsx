@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Badge,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Hidden,
-  InputAdornment,
-  Link,
-  Typography,
-} from '@material-ui/core';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Badge from '@material-ui/core/Badge';
+import Hidden from '@material-ui/core/Hidden';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
 
 import { ReactComponent as FilterSearchIcon } from 'assets/images/icons/filter-search.svg';
 
@@ -58,9 +56,11 @@ import SquaredIconButton from 'shared/components/SquaredIconButton';
 import GameOrderBySelect from 'modules/CoinLeagues/components/GameOrderBySelect';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
+import IntlMessages from '@crema/utility/IntlMessages';
 import { useGamesMetadata } from 'modules/CoinLeagues/hooks/useGameMetadata';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,9 +89,13 @@ enum Tabs {
 const GamesList = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { messages } = useIntl();
   const { pathname } = useLocation();
-  const { account, chainId } = useWeb3();
+  const { account } = useWeb3();
+  const { coinSymbol } = useLeaguesChainInfo();
   const defaultAccount = useDefaultAccount();
+  const isMobile = useMobile();
+
 
   useDiscord();
 
@@ -106,9 +110,7 @@ const GamesList = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [value, setValue] = React.useState(Tabs.Games);
-
-  const { messages } = useIntl();
+  const [value, setValue] = useState(Tabs.Games);
 
   const handleChange = useCallback(
     (_event: React.ChangeEvent<{}>, _newValue: string) => {
@@ -145,47 +147,56 @@ const GamesList = () => {
   const waitingGamesIds = useMemo(() => {
     if (waitingGamesData) {
       if (waitingGamesData.length) {
-        return waitingGamesData?.map(g => g.intId).reduce((p, c) => `${p},${c}`);
+        return waitingGamesData
+          ?.map((g) => g.intId)
+          .reduce((p, c) => `${p},${c}`);
       }
     }
-  }, [waitingGamesData])
-
-
+  }, [waitingGamesData]);
 
   const gamesMetadata = useGamesMetadata(waitingGamesIds);
-
 
   const gamesToJoin = useMemo(() => {
     if (waitingGamesQuery.data) {
       if (gamesMetadata.data) {
         const metadata = gamesMetadata.data;
         // We merge the metadata with the game
-        return waitingGamesQuery.data.games.map(g => {
-          const withMetadata = metadata.find(m => Number(m.gameId) === Number(g.intId));
-          if (withMetadata) {
-            return {
-              ...withMetadata,
-              ...g,
+        return waitingGamesQuery.data.games
+          .map((g) => {
+            const withMetadata = metadata.find(
+              (m) => Number(m.gameId) === Number(g.intId),
+            );
+            if (withMetadata) {
+              return {
+                ...withMetadata,
+                ...g,
+              };
+            } else {
+              return g;
             }
-          } else {
-            return g;
-          }
-        }).filter(g => {
-          if (filtersState.isJackpot) {
-            return !!g.title;
-          }
-          return true;
-        }).filter(
-          (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1 
-        )
+          })
+          .filter((g) => {
+            if (filtersState.isJackpot) {
+              return !!g.title;
+            }
+            return true;
+          })
+          .filter(
+            (g) =>
+              g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
+          );
       } else {
         return waitingGamesQuery.data.games.filter(
           (g) => g?.intId?.toLowerCase().indexOf(search?.toLowerCase()) !== -1,
         );
       }
     }
-  }, [search, waitingGamesQuery.data, gamesMetadata.data, filtersState.isJackpot]);
-
+  }, [
+    search,
+    waitingGamesQuery.data,
+    gamesMetadata.data,
+    filtersState.isJackpot,
+  ]);
 
   const isLoadingStarted = activeGamesQuery.loading;
   const isLoadingCreated = waitingGamesQuery.loading;
@@ -279,26 +290,35 @@ const GamesList = () => {
           <TickerTapeTV />
         </Grid>
 
-        <Grid item xs={12}>
+        {!isMobile && <Grid item xs={12}>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
           </Breadcrumbs>
-        </Grid>
+        </Grid>}
 
         <Hidden smUp={true}>
           <Grid item xs={12}>
-            <img src={CoinsLeagueBanner} style={{ borderRadius: '12px' }} alt={'banner'} />
+            <img
+              src={CoinsLeagueBanner}
+              style={{ borderRadius: '12px' }}
+              alt={'banner'}
+            />
           </Grid>
         </Hidden>
-        <Grid item xs={6} xl={6} sm={6}>
-          <Typography variant='h5'>
-            Coin League {isNFTGame && '- NFT Room'}
-          </Typography>
+        <Grid item xs={12} xl={6} sm={6}>
+          <Box display={'flex'} alignItems={'center'}>
+            <Typography variant='h5'>
+              Coin League {isNFTGame && '- NFT Room'}
+            </Typography>
+            <Box p={2}>
+              <ChainSelect />
+            </Box>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6} xl={6}>
           <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
@@ -310,12 +330,8 @@ const GamesList = () => {
             </Box>
             <Box pr={2}>
               <BuyCryptoButton
-                btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                  GET_LEAGUES_CHAIN_ID(chainId),
-                )}`}
-                defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                  GET_LEAGUES_CHAIN_ID(chainId),
-                )}
+                btnMsg={`Buy ${coinSymbol}`}
+                defaultCurrency={coinSymbol}
               />
             </Box>
             <Box pr={2}>
@@ -346,13 +362,17 @@ const GamesList = () => {
 
         <Grid item xs={6}>
           <Typography variant='h6' style={{ margin: 5 }}>
-            Games in Progress: {gamesInProgress?.length || 0}
+            <IntlMessages id='app.coinLeagues.gamesInProgress' />:{' '}
+            {gamesInProgress?.length || 0}
           </Typography>
         </Grid>
         <Grid item xs={6}>
           <Box display={'flex'} justifyContent={'flex-end'}>
-            <Button variant={'text'} onClick={onClickGoGamesInProgress} endIcon={<ArrowForwardIosIcon />}>
-              View More
+            <Button
+              variant={'text'}
+              onClick={onClickGoGamesInProgress}
+              endIcon={<ArrowForwardIosIcon />}>
+              <IntlMessages id='app.coinLeagues.viewMore' />
             </Button>
           </Box>
         </Grid>
@@ -374,8 +394,12 @@ const GamesList = () => {
               <Grid item xs={12}>
                 <Empty
                   image={<EmptyGame />}
-                  title={'No games in progress'}
-                  message={'Search created games and enter to start games'}
+                  title={
+                    messages['app.coinLeagues.noGamesInProgress'] as string
+                  }
+                  message={
+                    messages['app.coinLeagues.searchCreatedAndEnter'] as string
+                  }
                 />
               </Grid>
             )}
@@ -433,7 +457,10 @@ const GamesList = () => {
             spacing={2}>
             <Grid item>
               {value === Tabs.Games ? (
-                <Typography variant='h6'>Games</Typography>
+                <Typography variant='h6'>
+                  {' '}
+                  <IntlMessages id='app.coinLeagues.games' />
+                </Typography>
               ) : (
                 <Typography variant='h6'>Last Games</Typography>
               )}
@@ -455,7 +482,9 @@ const GamesList = () => {
                   <Chip
                     onClick={handleSelectAll}
                     color={
-                      !filtersState.isBitboy && !filtersState.isMyGames && !filtersState.isJackpot
+                      !filtersState.isBitboy &&
+                        !filtersState.isMyGames &&
+                        !filtersState.isJackpot
                         ? 'primary'
                         : 'default'
                     }
@@ -539,8 +568,10 @@ const GamesList = () => {
                 <Grid item xs={12}>
                   <Empty
                     image={<EmptyGame />}
-                    title={'No games to join'}
-                    message={'Create games to join'}
+                    title={messages['app.coinLeagues.noHistory'] as string}
+                    message={
+                      messages['app.coinLeagues.joinAndPlayGames'] as string
+                    }
                   />
                 </Grid>
               )}

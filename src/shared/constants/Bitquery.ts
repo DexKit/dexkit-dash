@@ -21,6 +21,26 @@ export const GET_NETWORK_NAME = (chainId?: ChainId) => {
   }
 };
 
+export const GET_NETWORK_NAME_V2 = (networkName: string, chainId?: ChainId, ) => {
+  switch (Number(chainId)) {
+    case ChainId.Mainnet:
+    case ChainId.Ropsten:
+    case ChainId.Rinkeby:
+    case ChainId.Kovan:
+    case ChainId.Goerli:
+      return EthereumNetwork.ethereum;
+    case ChainId.Mumbai:
+    case ChainId.Matic:
+      return EthereumNetwork.matic;
+    case ChainId.Binance:
+      return EthereumNetwork.bsc;
+    case ChainId.BinanceTest:
+      return EthereumNetwork.bsc_testnet;
+    default:
+      return networkName;
+  }
+};
+
 export const GET_NATIVE_COIN_FROM_NETWORK_NAME = (
   networkName: EthereumNetwork,
 ) => {

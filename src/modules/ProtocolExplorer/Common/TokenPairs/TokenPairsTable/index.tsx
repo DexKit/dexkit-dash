@@ -1,13 +1,17 @@
 import React from 'react';
-import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
-import {EXCHANGE, EthereumNetwork} from 'shared/constants/AppEnums';
 
-import {Box, Table, TableCell, TableRow, Typography} from '@material-ui/core';
+import {useIntl} from 'react-intl';
+
+import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
+import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
+
+import {Box, Table, Typography} from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import {useStyles} from './index.style';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -22,6 +26,7 @@ interface Props {
 
 const TokenPairsTable: React.FC<Props> = ({data, exchange, networkName}) => {
   const classes = useStyles();
+  const {messages} = useIntl();
 
   return (
     <Box className={classes.tableResponsiveMaterial}>
@@ -54,7 +59,7 @@ const TokenPairsTable: React.FC<Props> = ({data, exchange, networkName}) => {
       </Table>
       {!data?.length && (
         <Typography component='h1' color={'primary'}>
-          No Data available for this token
+          <IntlMessages id='app.protocolExplorer.noDataAvailableForToken' />
         </Typography>
       )}
     </Box>

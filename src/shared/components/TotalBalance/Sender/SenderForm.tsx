@@ -25,7 +25,6 @@ import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/
 import {useTransfer} from 'hooks/useTransfer';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {useNetwork} from 'hooks/useNetwork';
 import {useSenderTokens} from 'hooks/useSenderTokens';
 import SelectTokenDialog from 'shared/components/Dialogs/SelectTokenDialog';
 import {SelectTokenButton} from './SelectTokenButton';
@@ -41,6 +40,7 @@ import {SupportedNetworkType} from 'types/blockchain';
 import {switchAddress, switchChain} from 'utils/wallet';
 import {AccountSelect} from 'shared/components/AccountSelect';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Props {
   balances: GetMyBalance_ethereum_address_balances[];
@@ -49,6 +49,7 @@ interface Props {
   address?: string;
   onResult?: (err?: any) => void;
   error?: string;
+  onHash?: (hash: string) => void;
 }
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
@@ -74,13 +75,13 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const SenderForm: React.FC<Props> = (props) => {
-  const {token: defaultToken, address: defaultAddress, onResult, error} = props;
+  const {token: defaultToken, onResult, onHash, error} = props;
   const classes = useStyles();
   const theme = useTheme();
 
   const dispatch = useDispatch();
 
-  const networkName = useNetwork();
+  const {network: networkName, tokenSymbol} = useChainInfo();
 
   const accounts = useSelector<AppState, AppState['ui']['wallet']>(
     (state) => state.ui.wallet,
@@ -128,7 +129,11 @@ const SenderForm: React.FC<Props> = (props) => {
             symbol: token?.symbol,
             chainId: chainId,
           })
-            .then((result) => {
+            .then((hash: string) => {
+              if (onHash) {
+                onHash(hash);
+              }
+
               if (onResult) {
                 onResult();
               }
@@ -207,6 +212,7 @@ const SenderForm: React.FC<Props> = (props) => {
       let value = balances.find((e) => {
         if (
           token?.symbol &&
+          networkName &&
           isNativeCoinFromNetworkName(token?.symbol, networkName)
         ) {
           return (
@@ -250,13 +256,25 @@ const SenderForm: React.FC<Props> = (props) => {
     if (defaultToken !== undefined) {
       setToken(defaultToken);
     } else if (tokens.length > 0) {
-      setToken(tokens[0]);
+      // Check if native exists to put as default
+      const token = tokens.find(
+        (t) =>
+          t.networkName === networkName &&
+          t.symbol.toLowerCase() === tokenSymbol?.toLowerCase(),
+      );
+      if (token) {
+        setToken(token);
+      } else {
+        // If no native, just find one from the selected network
+        const tk = tokens.find((t) => t.networkName === networkName);
+        if (tk) {
+          setToken(tk);
+        } else {
+          setToken(tokens[0]);
+        }
+      }
     }
-
-    if (defaultAddress !== undefined) {
-      setAddress(defaultAddress);
-    }
-  }, [tokens, defaultToken, defaultAddress]);
+  }, [tokens, defaultToken, networkName, tokenSymbol]);
 
   // default address is not connected
   const notConnected = userAccount !== account;
@@ -340,6 +358,7 @@ const SenderForm: React.FC<Props> = (props) => {
                 {tokenBalance} {token?.symbol?.toUpperCase()}
               </Box>
               <FormControl
+                disabled={sending}
                 className={clsx(classes.inputText)}
                 variant='outlined'>
                 <InputLabel htmlFor='outlined-adornment-amount'>
@@ -350,6 +369,7 @@ const SenderForm: React.FC<Props> = (props) => {
                   fullWidth
                   type='text'
                   label='Amount'
+                  disabled={sending}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   error={amountError() !== undefined}
@@ -368,6 +388,7 @@ const SenderForm: React.FC<Props> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <FormControl
+                disabled={sending}
                 className={clsx(classes.inputText)}
                 variant='outlined'>
                 <InputLabel htmlFor='outlined-adornment-to'>To</InputLabel>
@@ -376,6 +397,7 @@ const SenderForm: React.FC<Props> = (props) => {
                   fullWidth
                   type={'text'}
                   label='To'
+                  disabled={sending}
                   value={address}
                   error={address.length > 0 && !isAddress(address ?? '')}
                   onChange={(e) => setAddress(e.target.value)}

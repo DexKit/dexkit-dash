@@ -1,11 +1,13 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,7 +31,7 @@ function CountdownSkeleton(): JSX.Element {
       <Grid container className={classes.innerContent}>
         <Grid item>
           <Typography variant='subtitle2' style={{color: '#7A8398'}}>
-            Countdown
+            <IntlMessages id='app.coinLeagues.countdown' />
           </Typography>
           <Typography variant='h4' style={{color: '#fff'}}>
             <Skeleton>-</Skeleton>

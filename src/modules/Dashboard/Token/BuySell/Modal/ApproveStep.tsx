@@ -1,4 +1,8 @@
 import React, {useEffect, useCallback} from 'react';
+
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Button from '@material-ui/core/Button';
 import {Steps, Token} from 'types/app';
 import {ChainId} from 'types/blockchain';
@@ -9,10 +13,10 @@ import {Typography} from '@material-ui/core';
 import {fromTokenUnitAmount, BigNumber} from '@0x/utils';
 
 import {getERC20Contract} from 'utils/ethers';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useChainInfo} from 'hooks/useChainInfo';
+
 
 interface Props {
   step: Steps | undefined;
@@ -39,13 +43,17 @@ const ApproveStep: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
+  const {tokenSymbol, getTransactionScannerUrl} = useChainInfo();
+
+  const {messages} = useIntl();
+
   const {getContractWrappers} = useContractWrapper();
   const {createNotification} = useNotifications();
   const amountFn = fromTokenUnitAmount(amountFrom, tokenFrom.decimals);
 
   /* eslint-disable */
   const isApprove = useCallback(async () => {
-    if (tokenFrom.symbol.toUpperCase() === GET_CHAIN_NATIVE_COIN(chainId)) {
+    if (tokenFrom.symbol.toUpperCase() === tokenSymbol) {
       return true;
     }
 
@@ -71,10 +79,10 @@ const ApproveStep: React.FC<Props> = (props) => {
     );
 
     return isApproved;
-  }, [tokenFrom, chainId, getProvider]);
+  }, [tokenFrom, chainId, getProvider, tokenSymbol]);
 
   useEffect(() => {
-    if (step === Steps.APPROVE) {
+    if (step === Steps.APPROVE && tokenSymbol) {
       isApprove()
         .then((value) => {
           if (value) {
@@ -85,7 +93,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         })
         .catch((e) => onNext(false, e));
     }
-  }, [step]);
+  }, [step, tokenSymbol]);
 
   const handleAction = async () => {
     try {
@@ -121,13 +129,17 @@ const ApproveStep: React.FC<Props> = (props) => {
         allowanceTarget,
         maxApproval.toString(),
       );
-
+  
       createNotification({
-        title: 'Approve',
-        body: `Approve ${tokenFrom.symbol.toUpperCase()} to Trade`,
+        title: messages['app.dashboard.approve'] as string,
+        body: `${
+          messages['app.dashboard.approve']
+        } ${tokenFrom.symbol.toUpperCase()} ${messages['app.dashboard.to']} ${
+          messages['app.dashboard.trade']
+        }`,
         timestamp: Date.now(),
         url: getTransactionScannerUrl(chainId, tx.hash),
-        urlCaption: 'View transaction',
+        urlCaption: messages['app.dashboard.viewTransaction'] as string,
         type: NotificationType.TRANSACTION,
         metadata: {
           chainId: chainId,
@@ -161,7 +173,7 @@ const ApproveStep: React.FC<Props> = (props) => {
         color='primary'
         size='large'
         onClick={handleAction}>
-        Approve
+        <IntlMessages id='app.dashboard.approve' />
       </Button>
     </>
   );

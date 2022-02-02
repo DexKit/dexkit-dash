@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useIntl} from 'react-intl';
 import {BigNumber, fromTokenUnitAmount, toTokenUnitAmount} from '@0x/utils';
 import {ChainId} from 'types/blockchain';
 import {GasInfo, OrderSide, Steps, Token} from 'types/app';
@@ -17,6 +18,8 @@ import {
   Paper,
   Chip,
   LinearProgress,
+  Button,
+  useTheme,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
@@ -46,6 +49,8 @@ import {ErrorIcon, WalletAddIcon} from 'shared/components/Icons';
 
 import {ReactComponent as EmptyWalletImage} from 'assets/images/empty-wallet.svg';
 import {SwapQuoteResponse} from 'types/zerox';
+import IntlMessages from '../../../../../@crema/utility/IntlMessages';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 interface Props {
   isMarket: boolean;
@@ -101,7 +106,23 @@ const OrderContent: React.FC<Props> = (props) => {
     onShifting,
   } = props;
 
+  const theme = useTheme();
+
+  const {getTransactionScannerUrl} = useChainInfo();
+  const [transactionHash, setTransactionHash] = useState<string>();
+
+  const handleHash = useCallback((hash: string) => {
+    setTransactionHash(hash);
+  }, []);
+
+  const handleOpenTransaction = useCallback(() => {
+    if (transactionHash) {
+      window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
+    }
+  }, [transactionHash, chainId, getTransactionScannerUrl]);
+
   const classes = useStyles();
+  const {messages} = useIntl();
   const {data} = useNativeCoinPriceUSD(networkName);
   const [quote, setQuote] = useState<SwapQuoteResponse>();
   const [buyAmount, setBuyAmount] = useState(0);
@@ -161,7 +182,6 @@ const OrderContent: React.FC<Props> = (props) => {
     if (isConvert) {
       getGasInfo()
         .then((e) => {
-      
           updateSelectedGasPrice(e.gasPriceInWei);
 
           setSellAmount(amountFrom);
@@ -349,9 +369,22 @@ const OrderContent: React.FC<Props> = (props) => {
               <WalletAddIcon className={classes.iconColor} />
             </Box>
             <Typography variant='body1'>
-              {isConvert
-                ? `Convert ${tokenFrom.symbol} to ${tokenTo.symbol}`
-                : 'Review ' + (isMarket ? 'Market' : 'Limit') + ' Order'}
+              {isConvert ? (
+                <>
+                  <IntlMessages id='app.dashboard.convert' /> {tokenFrom.symbol}{' '}
+                  <IntlMessages id='app.dashboard.to' /> {tokenTo.symbol}{' '}
+                </>
+              ) : (
+                <>
+                  <IntlMessages id='app.dashboard.review' />{' '}
+                  {isMarket ? (
+                    <IntlMessages id='app.dashboard.market' />
+                  ) : (
+                    <IntlMessages id='app.dashboard.limit' />
+                  )}
+                </>
+              )}
+              <IntlMessages id='app.dashboard.order' />
             </Typography>
           </Box>
           <Box>
@@ -381,7 +414,7 @@ const OrderContent: React.FC<Props> = (props) => {
             alignContent='center'
             justifyContent='center'>
             <Typography variant='h6' align='center'>
-              Loading your order...
+              <IntlMessages id='app.coinLeagues.loadingYourOrder' />{' '}
             </Typography>
           </Box>
         ) : (
@@ -397,15 +430,15 @@ const OrderContent: React.FC<Props> = (props) => {
                 {currentStep === Steps.CONVERT && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are converting{' '}
+                      <IntlMessages id='app.dashboard.youreConverting' />
                       {GET_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      to{' '}
+                      <IntlMessages id='app.dashboard.to' />
                       {GET_WRAPPED_NATIVE_COIN_FROM_NETWORK_NAME(
                         networkName,
                       ).toUpperCase()}{' '}
-                      for trading on DexKit
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -419,15 +452,18 @@ const OrderContent: React.FC<Props> = (props) => {
                       <EmptyWalletImage />
                     </Box>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenFrom.symbol} for trading on DexKit
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenFrom.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </Box>
                 )}
                 {currentStep === Steps.APPROVE_WRAPPER && (
                   <>
                     <Typography variant='h6' align='center'>
-                      You are approving {tokenWrapper.symbol} for trading on
-                      DexKit
+                      <IntlMessages id='app.dashboard.youreApproving' />{' '}
+                      {tokenWrapper.symbol}{' '}
+                      <IntlMessages id='app.dashboard.forTradingOnDexKit' />
                     </Typography>
                   </>
                 )}
@@ -457,7 +493,7 @@ const OrderContent: React.FC<Props> = (props) => {
                     </Box>
 
                     <Typography gutterBottom variant='h5' align='center'>
-                      An error has happened
+                      <IntlMessages id='app.dashboard.errorHappened' />
                     </Typography>
                     <Typography align='center' variant='body1'>
                       {String(error)}
@@ -472,30 +508,52 @@ const OrderContent: React.FC<Props> = (props) => {
                     alignContent='center'
                     justifyContent='center'>
                     <Typography variant='h6' align='center'>
-                      To proceed with this request,
+                      <IntlMessages id='app.dashboard.toProceedWithRequest' />,
                     </Typography>
                     <Typography variant='h6' align='center'>
-                      we would like to request for your approval to use{' '}
+                      <IntlMessages id='app.dashboard.weWouldLikeToRequestYourApprovalToUse' />{' '}
                       {tokenFrom.symbol}
                     </Typography>
                   </Box>
                 )}
 
                 {currentStep === Steps.DONE && (
-                  <Box
-                    display='flex'
-                    flexDirection='column'
-                    alignContent='center'
-                    justifyContent='center'>
-                    <Typography align='center'>
-                      <CheckCircleOutlineIcon
-                        style={{marginBottom: 20, width: 100, height: 100}}
-                      />
-                    </Typography>
-
-                    <Typography variant='h6' align='center'>
-                      {isConvert ? 'Conversion ' : 'Order '}completed!
-                    </Typography>
+                  <Box>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems='center'
+                      alignContent='center'
+                      justifyContent='center'
+                      direction='column'>
+                      <Grid item>
+                        <CheckCircleOutlineIcon
+                          style={{
+                            color: theme.palette.success.main,
+                            width: theme.spacing(12),
+                            height: theme.spacing(12),
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography gutterBottom variant='h6' align='center'>
+                          {isConvert ? (
+                            <IntlMessages id='app.dashboard.conversion' />
+                          ) : (
+                            <IntlMessages id='app.dashboard.order' />
+                          )}{' '}
+                          <IntlMessages id='app.dashboard.completed' />!
+                        </Typography>
+                        <Typography variant='body1' color='textSecondary'>
+                          <IntlMessages id='app.dashboard.yourOrderFinishedSuccessfully' />
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Button onClick={handleOpenTransaction} color='primary'>
+                          <IntlMessages id='app.dashboard.viewTransaction' />
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Box>
                 )}
 
@@ -510,7 +568,9 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'Convert' : 'Send'}
+                            {isConvert
+                              ? messages['app.dashboard.convert']
+                              : messages['app.dashboard.send']}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -529,7 +589,11 @@ const OrderContent: React.FC<Props> = (props) => {
                         alignItems='center'>
                         <Grid item>
                           <Typography className={classes.label} variant='body1'>
-                            {isConvert ? 'To' : 'Receive'}
+                            {isConvert ? (
+                              <IntlMessages id='app.dashboard.to' />
+                            ) : (
+                              <IntlMessages id='app.dashboard.receive' />
+                            )}
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -553,7 +617,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 className={classes.label}
                                 variant='body1'>
-                                At Price
+                                <IntlMessages id='app.dashboard.atPrice' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -582,7 +646,7 @@ const OrderContent: React.FC<Props> = (props) => {
                               <Typography
                                 variant='body1'
                                 className={classes.label}>
-                                Estimated Fee
+                                <IntlMessages id='app.dashboard.estimatedFee' />
                               </Typography>
                             </Grid>
                             <Grid item>
@@ -610,7 +674,9 @@ const OrderContent: React.FC<Props> = (props) => {
                           alignItems='center'
                           justify='space-between'>
                           <Grid item>
-                            <Typography variant='body1'>Expiry</Typography>
+                            <Typography variant='body1'>
+                              <IntlMessages id='app.dashboard.expiry' />
+                            </Typography>
                           </Grid>
                           <Grid item>
                             <Typography variant='body1'>
@@ -633,7 +699,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                 justifyContent='space-between'
                                 alignItems='center'>
                                 <Typography variant='body1'>
-                                  Advanced
+                                  <IntlMessages id='app.dashboard.advanced' />
                                 </Typography>
                                 <IconButton
                                   size='small'
@@ -654,7 +720,7 @@ const OrderContent: React.FC<Props> = (props) => {
                                     spacing={2}>
                                     <Grid item xs={12}>
                                       <Typography>
-                                        Slippage{' '}
+                                        <IntlMessages id='app.dashboard.slippage' />{' '}
                                         <IconButton
                                           size='small'
                                           className={classes.textSecondary}
@@ -679,12 +745,15 @@ const OrderContent: React.FC<Props> = (props) => {
                                         <Box padding={3}>
                                           <Typography
                                             className={classes.textSecondary}>
-                                            Guaranteed Price
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />
                                           </Typography>
                                           <Typography
                                             className={classes.textPrimary}
                                             align='right'>
-                                            {`${displayGuaranteedPrice} ${firstSymbol} per ${secondSymbol}`}
+                                            {displayGuaranteedPrice} $
+                                            {firstSymbol}{' '}
+                                            <IntlMessages id='app.coinLeagues.guaranteedPrice' />{' '}
+                                            ${secondSymbol}
                                           </Typography>
                                         </Box>
                                       </Popover>
@@ -781,6 +850,7 @@ const OrderContent: React.FC<Props> = (props) => {
                   onNext={onNext}
                   onLoading={onLoading}
                   onRequestConfirmed={onRequestConfirmed}
+                  onHash={handleHash}
                 />
               )}
               {currentStep === Steps.LIMIT && (

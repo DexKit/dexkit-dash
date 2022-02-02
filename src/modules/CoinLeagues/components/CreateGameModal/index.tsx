@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import { useIntl } from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import Dialog from '@material-ui/core/Dialog';
@@ -32,17 +35,15 @@ import {
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
 import { ChainId } from 'types/blockchain';
-import { useWeb3 } from 'hooks/useWeb3';
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-
 import { getTransactionScannerUrl } from 'utils/blockchain';
 import { NotificationType, TxNotificationMetadata } from 'types/notifications';
 import { useNotifications } from 'hooks/useNotifications';
 import { DISABLE_CHAMPIONS_ID } from 'modules/CoinLeagues/constants';
+import { GET_GAME_LEVEL_AMOUNTS_UNITS } from 'modules/CoinLeagues/utils/game';
+import { GameLevel } from 'modules/CoinLeagues/constants/enums';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -112,8 +113,9 @@ const CreateGameModal = (props: Props) => {
   const { open, setOpen } = props;
   const isNFTGame = useIsNFTGame();
   const classes = useStyles();
-  const { chainId } = useWeb3();
+  const { chainId, coinSymbol } = useLeaguesChainInfo();
   const history = useHistory();
+  const { messages } = useIntl();
   const { createNotification } = useNotifications();
   const { onGameCreateCallback } = useCoinLeaguesFactoryCreateGameCallback();
   const totalFactoryGames = useCoinLeaguesFactoryTotalGames();
@@ -129,7 +131,10 @@ const CreateGameModal = (props: Props) => {
   const [submittedGames, setSubmittedGames] = useState<number>(0);
   const [confirmedGames, setConfirmedGames] = useState<number>(0);
   const [tx, setTx] = useState<string>('asda');
-  const [championRoom, setChampionRoom] = useState<number>(Number(DISABLE_CHAMPIONS_ID));
+
+  const [championRoom, setChampionRoom] = useState<number>(
+    Number(DISABLE_CHAMPIONS_ID),
+  );
   /* function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setGameType((event.target as HTMLInputElement).value);
   }*/
@@ -150,8 +155,10 @@ const CreateGameModal = (props: Props) => {
             setTx(tx);
             setSubmitState(SubmitState.Submitted);
             createNotification({
-              title: `Created Game ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
-              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame ? 'on NFT room' : 'on Main Room'}`,
+              title: `Created Game ${isNFTGame ? 'on NFT room' : 'on Main Room'
+                }`,
+              body: `Created Game at ${new Date().toLocaleTimeString()} ${isNFTGame ? 'on NFT room' : 'on Main Room'
+                }`,
               timestamp: Date.now(),
               url: getTransactionScannerUrl(chainId, tx),
               urlCaption: 'View transaction',
@@ -189,9 +196,7 @@ const CreateGameModal = (props: Props) => {
             duration,
             amountUnit: ethers.utils.parseEther(String(entryAmount)),
             numCoins: coins,
-            abortTimestamp: Math.round(
-              startDate / 1000 + duration * 3,
-            ),
+            abortTimestamp: Math.round(startDate / 1000 + duration * 3),
             startTimestamp: Math.floor(startDate / 1000),
             type: gameType === 'winner-game' ? 0 : 1,
             isNFT: isNFTGame,
@@ -221,13 +226,13 @@ const CreateGameModal = (props: Props) => {
       totalFactoryGames,
       totalGames,
       startDate,
-      chainId
+      chainId,
     ],
   );
 
   const goToExplorer = useCallback(
     (_ev: any) => {
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic || chainId === ChainId.Binance) {
         window.open(`${ExplorerURL[chainId]}${tx}`);
       }
     },
@@ -244,7 +249,9 @@ const CreateGameModal = (props: Props) => {
                 <TransferIcon />
               </Grid>
               <Grid item>
-                <Typography variant='h6'>Create a game</Typography>
+                <Typography variant='h6'>
+                  <IntlMessages id='app.coinLeagues.createGame' />
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -260,22 +267,24 @@ const CreateGameModal = (props: Props) => {
         <Grid container className={classes.innerContent} spacing={2}>
           <Grid item xs={12}>
             <Typography variant='h6' style={{ fontWeight: 600 }}>
-              Basic information
+              <IntlMessages id='app.coinLeagues.basicInformation' />
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant='subtitle2'>
-              Answer all of the options below to continue
+              <IntlMessages id='app.coinLeagues.warning.createGame' />
             </Typography>
           </Grid>
         </Grid>
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Select Level</FormLabel>
+            <FormLabel className={classes.label}>
+              <IntlMessages id='app.coinLeagues.selectLevel' />
+            </FormLabel>
             <Select
               variant='outlined'
-              placeholder='Select'
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setEntryAmount(Number(event.target.value))}
               style={{
                 color: '#fff',
@@ -283,29 +292,29 @@ const CreateGameModal = (props: Props) => {
                 backgroundColor: '#3C4255',
               }}>
               {/* <MenuItem value={0.1}>Beginner - 0.1 Matic</MenuItem>*/}
-              <MenuItem value={1}>
-                Beginner - 1{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}>
+                <IntlMessages id='app.coinLeagues.beginner' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Beginner, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
-              <MenuItem value={5}>
-                Intermediate - 5{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Intermediate, chainId)}>
+                <IntlMessages id='app.coinLeagues.intermediate' />- {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Intermediate, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
-              <MenuItem value={10}>
-                Advanced - 10{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Advanced, chainId)}>
+                <IntlMessages id='app.coinLeagues.advanced' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Advanced, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
-              <MenuItem value={50}>
-                Expert - 50{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Expert, chainId)}>
+                <IntlMessages id='app.coinLeagues.expert' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Expert, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
-              <MenuItem value={250}>
-                Master - 250{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Master, chainId)}>
+                <IntlMessages id='app.coinLeagues.master' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.Master, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
-              <MenuItem value={500}>
-                Grand Master - 500{' '}
-                {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+              <MenuItem value={GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.GrandMaster, chainId)}>
+                <IntlMessages id='app.coinLeagues.grandMaster' /> - {GET_GAME_LEVEL_AMOUNTS_UNITS(GameLevel.GrandMaster, chainId)}{' '}
+                {coinSymbol}
               </MenuItem>
             </Select>
           </FormControl>
@@ -313,10 +322,12 @@ const CreateGameModal = (props: Props) => {
 
         <Grid container className={classes.innerContent}>
           <FormControl fullWidth size='small' className={classes.formControl}>
-            <FormLabel className={classes.label}>Game duration</FormLabel>
+            <FormLabel className={classes.label}>
+              <IntlMessages id='app.coinLeagues.gameDuration' />
+            </FormLabel>
             <Select
               variant='outlined'
-              placeholder='Select'
+              placeholder={messages['app.coinLeagues.select'] as string}
               onChange={(event) => setGameDuration(Number(event.target.value))}
               style={{
                 color: '#fff',
@@ -340,12 +351,12 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                How many coins?
+                <IntlMessages id='app.coinLeagues.howManyCoins' />
               </FormLabel>
               <Select
                 value={coins}
                 variant='outlined'
-                placeholder='Select'
+                placeholder={messages['app.coinLeagues.select'] as string}
                 onChange={(event) => setCoins(Number(event.target.value))}
                 style={{
                   marginRight: 5,
@@ -365,7 +376,7 @@ const CreateGameModal = (props: Props) => {
           <Grid item xs={6}>
             <FormControl fullWidth size='small' className={classes.formControl}>
               <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                Total players
+                <IntlMessages id='app.coinLeagues.totalPlayers' />
               </FormLabel>
               <Select
                 value={totalPlayers}
@@ -373,7 +384,7 @@ const CreateGameModal = (props: Props) => {
                   setTotalPlayers(Number(event.target.value))
                 }
                 variant='outlined'
-                placeholder='Select'
+                placeholder={messages['app.coinLeagues.select'] as string}
                 style={{
                   marginRight: 5,
                   color: '#fff',
@@ -401,7 +412,7 @@ const CreateGameModal = (props: Props) => {
             <FormLabel
               className={classes.label}
               style={{ fontSize: '1.25rem', fontWeight: 600 }}>
-              Game type
+              <IntlMessages id='app.coinLeagues.gameType' />
             </FormLabel>
             <RadioGroup value={gameType}>
               <FormControlLabel
@@ -484,27 +495,33 @@ const CreateGameModal = (props: Props) => {
             </FormControl>
           </Grid>
 
-          {isNFTGame && <Grid item xs={12}>
-            <FormControl fullWidth size='small' className={classes.formControl}>
-              <FormLabel className={classes.label} style={{ marginRight: 5 }}>
-                Select Champion Room
-              </FormLabel>
-              <Select
-                value={championRoom}
-                onChange={(event) => setChampionRoom(Number(event.target.value))}
-                variant='outlined'
-                placeholder='Select'
-                style={{
-                  marginRight: 5,
-                  color: '#fff',
-                  borderRadius: 6,
-                  backgroundColor: '#3C4255',
-                }}
-                inputProps={{
-                  style: { color: '#fff', backgroundColor: '#3C4255' },
-                }}>
-                <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
-                {/* <MenuItem value={0}>BITTOKEN</MenuItem>
+          {isNFTGame && (
+            <Grid item xs={12}>
+              <FormControl
+                fullWidth
+                size='small'
+                className={classes.formControl}>
+                <FormLabel className={classes.label} style={{ marginRight: 5 }}>
+                  Select Champion Room
+                </FormLabel>
+                <Select
+                  value={championRoom}
+                  onChange={(event) =>
+                    setChampionRoom(Number(event.target.value))
+                  }
+                  variant='outlined'
+                  placeholder='Select'
+                  style={{
+                    marginRight: 5,
+                    color: '#fff',
+                    borderRadius: 6,
+                    backgroundColor: '#3C4255',
+                  }}
+                  inputProps={{
+                    style: { color: '#fff', backgroundColor: '#3C4255' },
+                  }}>
+                  <MenuItem value={Number(DISABLE_CHAMPIONS_ID)}>All</MenuItem>
+                  {/* <MenuItem value={0}>BITTOKEN</MenuItem>
                 <MenuItem value={1}>BITCOIN</MenuItem>
                 <MenuItem value={2}>ETHEREUM</MenuItem>
                 <MenuItem value={3}>CHAINLINK</MenuItem>
@@ -512,9 +529,10 @@ const CreateGameModal = (props: Props) => {
                 <MenuItem value={5}>UNISWAP</MenuItem>
                 <MenuItem value={6}>CARDANO</MenuItem>
               <MenuItem value={7}>DOGE</MenuItem>*/}
-              </Select>
-            </FormControl>
-          </Grid>}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
         </Grid>
 
         {submitState === SubmitState.WaitingWallet && totalGames > 1 && (
@@ -570,10 +588,12 @@ const CreateGameModal = (props: Props) => {
             state={submitState}
             defaultMsg={
               IS_SUPPORTED_LEAGUES_CHAIN_ID(chainId)
-                ? 'CREATE GAME'
-                : 'Connect Wallet on Polygon'
+                ? (
+                  messages['app.coinLeagues.createGame'] as string
+                ).toUpperCase()
+                : (messages['app.coinLeagues.connectWalletPolygon'] as string)
             }
-            confirmedMsg={'Game Created'}
+            confirmedMsg={messages['app.coinLeagues.gameCreated'] as string}
           />
         </Button>
       </DialogContent>

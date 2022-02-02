@@ -7,10 +7,12 @@ import UI from '../_ui/reducers';
 import Wizard from '../_wizard/reducers';
 import Swap from '../_swap/reducers';
 import Kittygotchi from '../_kittygotchi/reducers';
+import SettingsV2 from '../_settingsv2/reducers';
 
 const reducers = {
   common: Common,
   settings: Settings,
+  settingsv2: SettingsV2,
   notification: Notification,
   blockchain: Blockchain,
   myApps: MyApps,

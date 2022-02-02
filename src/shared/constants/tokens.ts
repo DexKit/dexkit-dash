@@ -1,6 +1,7 @@
 import {ChainId} from 'types/blockchain';
 import {Token} from 'types/app';
 import {EthereumNetwork} from './AppEnums';
+import {isKittygotchiNetworkSupported} from 'modules/Kittygotchi/utils';
 
 // const WETH: Token = {
 //   address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -91,10 +92,20 @@ export const DEXKIT: Partial<DexKitTokenList> = {
   [ChainId.Mumbai]: DEXKIT_MUMBAI,
 };
 
+export const GET_DEXKIT = (chainId?: ChainId) => {
+  if (chainId) {
+    if (isKittygotchiNetworkSupported(chainId)) {
+      return DEXKIT[chainId];
+    }
+  }
+
+  return undefined;
+};
+
 export const USDC_ADDRESSES = {
-  [ChainId.Mainnet]: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  [ChainId.Binance]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
-  [ChainId.Matic]: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  [ChainId.Mainnet]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  [ChainId.Binance]: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+  [ChainId.Matic]: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
 };
 
 export const BITTOKEN: Partial<DexKitTokenList> = {

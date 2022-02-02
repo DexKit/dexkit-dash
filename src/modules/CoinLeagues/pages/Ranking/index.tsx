@@ -1,6 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import {
   Grid,
   Breadcrumbs,
@@ -21,13 +21,16 @@ import {
   useRankingMostEarned,
   useRankingMostProfit,
 } from 'modules/CoinLeagues/hooks/useRankingLeagues';
-import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
-import {ethers} from 'ethers';
-import {useWeb3} from 'hooks/useWeb3';
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import { CustomTab, CustomTabs } from 'shared/components/Tabs/CustomTabs';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
+import { useIntl } from 'react-intl';
+import { ethers } from 'ethers';
+import { useWeb3 } from 'hooks/useWeb3';
+import { RoomType } from 'modules/CoinLeagues/constants/enums';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
 
 enum Tabs {
   MostWinner = 'Most Winner',
@@ -37,17 +40,20 @@ enum Tabs {
 }
 
 export function Ranking() {
+  const isMobile = useMobile();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
+  const { coinSymbol, chainId } = useLeaguesChainInfo();
+  const rankingMostWinnedQuery = useRankingMostWinned(isNFT, chainId);
+  const rankingMostJoinedQuery = useRankingMostJoined(isNFT, chainId);
+  const rankingMostEarnedQuery = useRankingMostEarned(isNFT, chainId);
+  const rankingMostProfitQuery = useRankingMostProfit(isNFT, chainId);
 
-  const rankingMostWinnedQuery = useRankingMostWinned(isNFT);
-  const rankingMostJoinedQuery = useRankingMostJoined(isNFT);
-  const rankingMostEarnedQuery = useRankingMostEarned(isNFT);
-  const rankingMostProfitQuery = useRankingMostProfit(isNFT);
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+  const { account } = useWeb3();
 
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
-  const {chainId, account} = useWeb3();
   const history = useHistory();
+  const { messages } = useIntl();
 
   const [value, setValue] = React.useState(Tabs.MostWinner);
 
@@ -62,13 +68,13 @@ export function Ranking() {
     <Box>
       <Box mb={4}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {!isMobile && <Grid item xs={12}>
             <Breadcrumbs>
               <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-                Coin League
+                <IntlMessages id='app.coinLeagues.coinLeague' />
               </Link>
             </Breadcrumbs>
-          </Grid>
+          </Grid>}
           <Grid item xs={12}>
             <Box display='flex' alignItems='center' alignContent='center'>
               <Box
@@ -80,7 +86,9 @@ export function Ranking() {
                   <ArrowBackIcon />
                 </IconButton>
               </Box>
-              <Typography variant='h5'>Ranking</Typography>
+              <Typography variant='h5'>
+                <IntlMessages id='app.coinLeagues.ranking' />
+              </Typography>
               <Box p={2}>
                 <FormControl>
                   <Select
@@ -93,6 +101,9 @@ export function Ranking() {
                   </Select>
                 </FormControl>
               </Box>
+              <Box p={2}>
+                <ChainSelect />
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -104,7 +115,7 @@ export function Ranking() {
             onChange={handleChange}
             variant='standard'
             TabIndicatorProps={{
-              style: {display: 'none'},
+              style: { display: 'none' },
             }}
             aria-label='wallet tabs'>
             <CustomTab value={Tabs.MostWinner} label={Tabs.MostWinner} />
@@ -131,7 +142,7 @@ export function Ranking() {
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom variant='h6'>
-                Ranking
+                <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
                 {rankingMostWinnedQuery.data?.players?.map((player, index) => (
@@ -139,19 +150,23 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={'Wins'}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      label={messages['app.coinLeagues.wins'] as string}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalWinnedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -166,7 +181,7 @@ export function Ranking() {
             </Grid>
             <Grid item xs={12}>
               <Typography gutterBottom variant='h6'>
-                Ranking
+                <IntlMessages id='app.coinLeagues.ranking' />
               </Typography>
               <Grid container spacing={4}>
                 {rankingMostJoinedQuery.data?.players?.map((player, index) => (
@@ -175,18 +190,22 @@ export function Ranking() {
                       position={index + 1}
                       address={player.id}
                       label={'Joins'}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
                       count={Number(player.totalJoinedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -209,23 +228,25 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      label={`Earned ${GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}:`}
+                      label={`Earned  ${coinSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
                       secondCount={Number(player.totalSecondWinnedGames)}
                       thirdCount={Number(player.totalThirdWinnedGames)}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
                       count={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}
@@ -248,10 +269,10 @@ export function Ranking() {
                     <RankingButton
                       position={index + 1}
                       address={player.id}
-                      featured={player.id.toLowerCase() === account?.toLowerCase()}
-                      label={`Profit ${GET_CHAIN_NATIVE_COIN(
-                        GET_LEAGUES_CHAIN_ID(chainId),
-                      )}:`}
+                      featured={
+                        player.id.toLowerCase() === account?.toLowerCase()
+                      }
+                      label={`Profit  ${coinSymbol}:`}
                       joinsCount={Number(player.totalJoinedGames)}
                       winsCount={Number(player.totalWinnedGames)}
                       firstCount={Number(player.totalFirstWinnedGames)}
@@ -260,11 +281,13 @@ export function Ranking() {
                       totalEarned={Number(
                         ethers.utils.formatEther(player.totalEarned),
                       )}
-                      EarnedMinusSpent={Number(ethers.utils.formatEther(player.EarnedMinusSpent))}
+                      EarnedMinusSpent={Number(
+                        ethers.utils.formatEther(player.EarnedMinusSpent),
+                      )}
                       count={Number(
                         ethers.utils.formatEther(player.EarnedMinusSpent),
                       )}
-                      onClick={(address) => {}}
+                      onClick={(address) => { }}
                     />
                   </Grid>
                 ))}

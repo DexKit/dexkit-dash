@@ -14,6 +14,8 @@ import {initialUrl} from '../shared/constants/AppConst';
 //import {wizardConfig} from './Wizard';
 import {onboardingConfig} from './Onboarding';
 
+import {settingsConfig} from './Settings';
+
 const routeConfigs = [
   ...errorPagesConfigs,
   ...dashBoardConfigs,
@@ -26,8 +28,9 @@ const routeConfigs = [
   ...changelogConfigs,
   ...coinLeaguesConfigs,
   ...onboardingConfig,
- // ...kittygotchiConfig,
- // ...profileConfig,
+  //...kittygotchiConfig,
+  //...profileConfig,
+  ...settingsConfig,
 ];
 
 const routes = [

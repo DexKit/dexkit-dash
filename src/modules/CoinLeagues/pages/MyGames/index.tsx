@@ -1,32 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   Breadcrumbs,
   Button,
   Grid,
   Hidden,
+  IconButton,
   Link,
   Typography,
 } from '@material-ui/core';
-import {useWeb3} from 'hooks/useWeb3';
-import {useCoinLeaguesFactoryRoutes} from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import {SupportedNetworkType} from 'types/blockchain';
+import { SupportedNetworkType } from 'types/blockchain';
 import Box from '@material-ui/core/Box';
 import CreateGameModal from 'modules/CoinLeagues/components/CreateGameModal';
 
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {HOME_ROUTE, LOGIN_WALLET_ROUTE} from 'shared/constants/routes';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { HOME_ROUTE, LOGIN_WALLET_ROUTE } from 'shared/constants/routes';
 import ActiveChainBalance from 'shared/components/ActiveChainBalance';
 
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {setDefaultAccount} from 'redux/_ui/actions';
-import {useDispatch} from 'react-redux';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { setDefaultAccount } from 'redux/_ui/actions';
+import { useDispatch } from 'react-redux';
 
 import CoinsLeagueBanner from 'assets/images/banners/coinleague.svg';
 import BuyCryptoButton from 'shared/components/BuyCryptoButton';
 import MaticBridgeButton from 'shared/components/MaticBridgeButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import useDiscord from 'hooks/useDiscord';
 
@@ -34,13 +39,19 @@ import MyGamesTable from 'modules/CoinLeagues/components/MyGamesTable';
 
 import SwapButton from 'shared/components/SwapButton';
 
-import {GET_CHAIN_NATIVE_COIN} from 'shared/constants/Blockchain';
-import {GET_LEAGUES_CHAIN_ID} from 'modules/CoinLeagues/utils/constants';
-import {RoomType} from 'modules/CoinLeagues/constants/enums';
+import { RoomType } from 'modules/CoinLeagues/constants/enums';
+
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
+
 
 const MyGames = () => {
   const history = useHistory();
-  const {account, chainId} = useWeb3();
+  const { account } = useWeb3();
+  const { coinSymbol } = useLeaguesChainInfo();
+  const isMobile = useMobile();
+
   const defaultAccount = useDefaultAccount();
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
@@ -49,7 +60,16 @@ const MyGames = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
-  const {listGamesRoute} = useCoinLeaguesFactoryRoutes(isNFT);
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute);
+  }, [listGamesRoute, history]);
 
   // TODO: We are doing this to user see connected account
   useEffect(() => {
@@ -70,31 +90,39 @@ const MyGames = () => {
 
   return (
     <Grid container spacing={4} alignItems={'center'}>
-      <Grid item xs={12} sm={12} xl={12}>
+      {!isMobile && <Grid item xs={12} sm={12} xl={12}>
         <Grid container>
           <Breadcrumbs>
             <Link color='inherit' component={RouterLink} to={HOME_ROUTE}>
-              Dashboard
+              <IntlMessages id='app.coinLeagues.dashboard' />
             </Link>
             <Link color='inherit' component={RouterLink} to={listGamesRoute}>
-              Games
+              <IntlMessages id='app.coinLeagues.games' />
             </Link>
-            <Typography>My Games</Typography>
+            <Typography>
+              <IntlMessages id='app.coinLeagues.myGames' />
+            </Typography>
           </Breadcrumbs>
         </Grid>
-      </Grid>
+      </Grid>}
       <Hidden smUp={true}>
         <Grid item xs={12}>
           <img
             src={CoinsLeagueBanner}
-            style={{borderRadius: '12px'}}
+            style={{ borderRadius: '12px' }}
             alt={'Coinleague Banner'}
           />
         </Grid>
       </Hidden>
-      <Grid item xs={6} xl={6} sm={6}>
+      <Grid item xs={12} xl={6} sm={6}>
         <Box display={'flex'} alignItems={'center'}>
-          <Typography variant='h5'>My Games</Typography>
+          <IconButton onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant='h5'>
+            {' '}
+            <IntlMessages id='app.coinLeagues.myGames' />
+          </Typography>
           <Box p={2}>
             <FormControl>
               <Select
@@ -107,19 +135,18 @@ const MyGames = () => {
               </Select>
             </FormControl>
           </Box>
+          <Box p={2}>
+            <ChainSelect />
+          </Box>
         </Box>
       </Grid>
-      <Grid item xs={6} sm={6} xl={6}>
+      <Grid item xs={12} sm={6} xl={6}>
         <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
           <SwapButton />
           <Box pr={2}>
             <BuyCryptoButton
-              btnMsg={`Buy ${GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}`}
-              defaultCurrency={GET_CHAIN_NATIVE_COIN(
-                GET_LEAGUES_CHAIN_ID(chainId),
-              )}
+              btnMsg={`Buy ${coinSymbol}`}
+              defaultCurrency={coinSymbol}
             />
           </Box>
           <Box pr={2}>
@@ -136,7 +163,7 @@ const MyGames = () => {
           <Button
             variant={'contained'}
             onClick={() => history.push(LOGIN_WALLET_ROUTE)}>
-            Connect Wallet{' '}
+            <IntlMessages id='app.coinLeagues.connectWallet' />
           </Button>
         )}
       </Grid>
@@ -144,7 +171,7 @@ const MyGames = () => {
         <Grid item xs={12} sm={8}>
           <img
             src={CoinsLeagueBanner}
-            style={{borderRadius: '12px'}}
+            style={{ borderRadius: '12px' }}
             alt={'Coinleague Banner'}
           />
         </Grid>

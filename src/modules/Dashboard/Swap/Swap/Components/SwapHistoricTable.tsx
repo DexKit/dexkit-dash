@@ -8,6 +8,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import React from 'react';
+import IntlMessages from '@crema/utility/IntlMessages';
 import {ChangellyTransaction} from 'types/changelly';
 import {SwapHistoricTableRow} from './SwapHistoricTableRow';
 
@@ -26,11 +27,19 @@ export const SwapHistoricTable = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>Send</TableCell>
-            <TableCell>Receive</TableCell>
-            <TableCell>Created</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell></TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.send' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.receive' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.created' />
+            </TableCell>
+            <TableCell>
+              <IntlMessages id='app.dashboard.status' />
+            </TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

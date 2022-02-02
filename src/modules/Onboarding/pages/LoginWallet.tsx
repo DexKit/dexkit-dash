@@ -27,10 +27,13 @@ import {useWeb3} from 'hooks/useWeb3';
 import {isEmailValid, truncateAddress} from 'utils';
 import {useMobile} from 'hooks/useMobile';
 import {useHistory} from 'react-router-dom';
-import {FEE_RECIPIENT, GET_CHAIN_ID_NAME} from 'shared/constants/Blockchain';
+import {FEE_RECIPIENT} from 'shared/constants/Blockchain';
 import {Add as AddIcon} from '@material-ui/icons';
 import {useAccountsModal} from 'hooks/useAccountsModal';
 import {Alert} from '@material-ui/lab';
+import IntlMessages from '@crema/utility/IntlMessages';
+import {useIntl} from 'react-intl';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -136,7 +139,7 @@ export const CreateWallet = (props: Props) => {
   const classes = useStyles();
   const {onConnectMagicEmail, onConnectMagicSocial} = useMagicProvider();
   const isMobile = useMobile();
-  const {onConnectWeb3, onCloseWeb3, account, chainId} = useWeb3();
+  const {onConnectWeb3, onCloseWeb3, account} = useWeb3();
   const {loginBackRoute, onSetLoginBackRoute} = useWelcomeModal();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -230,12 +233,18 @@ export const CreateWallet = (props: Props) => {
     accountsModal.setShow(!accountsModal.showAccounts);
   }, [accountsModal]);
 
+  const {messages} = useIntl();
+
+  const {chainName} = useChainInfo();
+
   return (
     <Box py={{xs: 8}}>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color='inherit' />
         <Box pl={2}>
-          <Typography variant='body1'>Connecting to Wallet...</Typography>
+          <Typography variant='body1'>
+            <IntlMessages id='app.onBoarding.connectingToWallet' />
+          </Typography>
         </Box>
       </Backdrop>
       <Grid container spacing={4}>
@@ -243,12 +252,13 @@ export const CreateWallet = (props: Props) => {
           <Grid item xs={12}>
             <Alert severity='info'>
               <Typography variant='body1'>
-                You are already connected to{' '}
+                <IntlMessages id='app.onBoarding.youAreAlreadyConnected' />{' '}
                 <strong>
                   {isMobile && account ? truncateAddress(account) : account}
                 </strong>{' '}
-                account on <strong>{GET_CHAIN_ID_NAME(chainId)}</strong>{' '}
-                network.
+                <IntlMessages id='app.onBoarding.accountOn' />{' '}
+                <strong>{chainName}</strong>{' '}
+                <IntlMessages id='app.onBoarding.network' />
               </Typography>
             </Alert>
           </Grid>
@@ -256,11 +266,11 @@ export const CreateWallet = (props: Props) => {
         <Grid item xs={12}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Typography variant='h5'>Login to Coinleague Wallet</Typography>
+              <Typography variant='h5'> <IntlMessages id='app.onBoarding.loginToCoinleagueWallet' /></Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body2'>
-                Enter your email below to login your wallet.
+                <IntlMessages id='app.onBoarding.enterYourEmailBelow' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -268,7 +278,7 @@ export const CreateWallet = (props: Props) => {
                 <TextField
                   value={email}
                   onChange={handleChange}
-                  label='E-mail'
+                  label={messages['app.onBoarding.eMail']}
                   variant='outlined'
                   size='small'
                   error={!isEmailValid(email) && email !== ''}
@@ -284,14 +294,14 @@ export const CreateWallet = (props: Props) => {
                     disabled={email === '' || !isEmailValid(email)}
                     variant='contained'
                     onClick={handleEmail}>
-                    login
+                    <IntlMessages id='app.onBoarding.login' />
                   </Button>
                 </Box>
               </Box>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>
-                Or continue with one of the social networks below:
+                <IntlMessages id='app.onBoarding.orContinueWithOneOfTheSocial' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -323,7 +333,7 @@ export const CreateWallet = (props: Props) => {
                               className={classes.walletActionButtonText}
                               align='center'
                               variant='body1'>
-                              Google
+                              <IntlMessages id='app.onBoarding.google' />
                             </Typography>
                           </Box>
                         </Paper>
@@ -356,7 +366,7 @@ export const CreateWallet = (props: Props) => {
                               className={classes.walletActionButtonText}
                               align='center'
                               variant='body1'>
-                              Twitter
+                              <IntlMessages id='app.onBoarding.twitter' />
                             </Typography>
                           </Box>
                         </Paper>
@@ -389,7 +399,7 @@ export const CreateWallet = (props: Props) => {
                               className={classes.walletActionButtonText}
                               align='center'
                               variant='body1'>
-                              Discord
+                              <IntlMessages id='app.onBoarding.discord' />
                             </Typography>
                           </Box>
                         </Paper>
@@ -427,7 +437,7 @@ export const CreateWallet = (props: Props) => {
                             className={classes.walletActionButtonText}
                             align='center'
                             variant='body1'>
-                            Google
+                            <IntlMessages id='app.onBoarding.google' />
                           </Typography>
                         </Box>
                       </Paper>
@@ -458,7 +468,7 @@ export const CreateWallet = (props: Props) => {
                             className={classes.walletActionButtonText}
                             align='center'
                             variant='body1'>
-                            Twitter
+                            <IntlMessages id='app.onBoarding.twitter' />
                           </Typography>
                         </Box>
                       </Paper>
@@ -489,7 +499,7 @@ export const CreateWallet = (props: Props) => {
                             className={classes.walletActionButtonText}
                             align='center'
                             variant='body1'>
-                            Discord
+                            <IntlMessages id='app.onBoarding.discord' />
                           </Typography>
                         </Box>
                       </Paper>
@@ -500,7 +510,7 @@ export const CreateWallet = (props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>
-                Or connect an external wallet like Metamask
+                <IntlMessages id='app.onBoarding.orConnectAnExternalWallet' />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -521,10 +531,10 @@ export const CreateWallet = (props: Props) => {
                       </Grid>
                       <Grid item xs>
                         <Typography variant='body1' style={{fontWeight: 500}}>
-                          Connect the external wallet
+                          <IntlMessages id='app.onBoarding.connectTheExternalWallet' />
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                          Click here to choose external wallets like Metamask
+                          <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
                         </Typography>
                       </Grid>
 
@@ -554,10 +564,10 @@ export const CreateWallet = (props: Props) => {
                       </Grid>
                       <Grid item xs>
                         <Typography variant='body1' style={{fontWeight: 500}}>
-                          Connect the wallet later
+                          <IntlMessages id='app.onBoarding.connectTheWalletLater' />
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                          Click here to open the app with a demo wallet.
+                          <IntlMessages id='app.onBoarding.clickHereToOpenTheApp' />
                         </Typography>
                       </Grid>
 
@@ -587,10 +597,10 @@ export const CreateWallet = (props: Props) => {
                       </Grid>
                       <Grid item xs>
                         <Typography variant='body1' style={{fontWeight: 500}}>
-                          Add account
+                          <IntlMessages id='app.onBoarding.addAccount' />
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                          Add account for read-only mode.
+                          <IntlMessages id='app.onBoarding.addAccountForReadOnly' />
                         </Typography>
                       </Grid>
                       <Grid item>

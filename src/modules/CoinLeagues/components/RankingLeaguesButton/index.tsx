@@ -22,6 +22,7 @@ import {truncateAddress} from 'utils';
 import CopyButton from 'shared/components/CopyButton';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -58,6 +59,7 @@ interface RankingButtonProps {
 
 export const RankingButton = (props: RankingButtonProps) => {
   const classes = useStyles();
+  const {coinSymbol} = useLeaguesChainInfo();
 
   const {address, featured, position, label, count} = props;
 
@@ -189,12 +191,12 @@ export const RankingButton = (props: RankingButtonProps) => {
             </Grid>
             <Grid item>
               <Typography variant={'body1'} className={classes.paragraphMargin}>
-                Earned Matic: {props?.totalEarned}
+                Earned {coinSymbol}: {props?.totalEarned}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant={'body1'} className={classes.paragraphMargin}>
-                 Matic Profit: {props?.EarnedMinusSpent}
+                 {coinSymbol} Profit: {props?.EarnedMinusSpent}
               </Typography>
             </Grid>
           </Grid>

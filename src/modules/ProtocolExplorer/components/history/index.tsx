@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {makeStyles} from '@material-ui/core';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
@@ -41,6 +44,8 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
   const {mobileTabsContainer, tabsContainer} = useStyles();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
+  const {messages} = useIntl();
+
   return (
     <>
       <CustomTabs
@@ -49,8 +54,8 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         value={tableActive}
         onChange={onChangeTab}
         variant='standard'>
-        <CustomTab label='History' />
-        <CustomTab label='Pairs' />
+        <CustomTab label={messages['app.protocolExplorer.history'] as string} />
+        <CustomTab label={messages['app.protocolExplorer.pairs'] as string} />
       </CustomTabs>
       {tableActive === 0 && (
         <TokenOrders

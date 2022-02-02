@@ -1,10 +1,12 @@
 import axios from 'axios';
-import {COINGECKO_URL} from 'shared/constants/AppConst';
+import { COINGECKO_URL } from 'shared/constants/AppConst';
+import { ChainId } from 'types/blockchain';
 import {
   CoinDetailCoinGecko,
   CoinItemCoinGecko,
   CoinListItemCoingecko,
 } from 'types/coingecko';
+import { AssetPlatforms } from './constants';
 
 const coinGecko = axios.create({
   baseURL: COINGECKO_URL,
@@ -71,98 +73,85 @@ export async function getCoinsData(
 let coingeckoIdTokens: CoinListItemCoingecko[];
 
 export async function getTokens(
-  tokensMetadata: {address: string}[],
-): Promise<{[address: string]: CoinItemCoinGecko}> {
+  tokensMetadata: { address: string, chainId?: ChainId }[],
+): Promise<{ [address: string]: CoinItemCoinGecko }> {
   if (!coingeckoIdTokens) {
     coingeckoIdTokens = await getAllCoinsId();
   }
 
+  // const chainPlatforms = AssetPlatforms.filter(a=> a.chain_identifier).map(a=> a.id);
+  const chainIds = tokensMetadata.filter(t => t.chainId).map(t => t.chainId);
+  const supportedChainPlatforms = AssetPlatforms.filter(a => a.chain_identifier)
+    .filter(a => chainIds.includes(a.chain_identifier as ChainId));
+  const nativeCoinsCids = supportedChainPlatforms.filter(c => c?.c_id).map(c => c?.c_id as string);
+  const supportedChainIds = supportedChainPlatforms.map(s => s.id);
+
   const geckoData = coingeckoIdTokens
     .filter(
       (c) =>
-        c.platforms.ethereum ||
-        c.platforms['binance-smart-chain'] ||
-        c.platforms['polygon-pos'],
-    )
+        c.platforms
+    ).filter(c => Object.keys(c.platforms).filter(p => supportedChainPlatforms.map(a => a.id).includes(p)))
     .map((c) => {
+      const platf: { [key: string]: string } = {};
+      for (const pl of Object.keys(c.platforms)) {
+        if (supportedChainIds.includes(pl)) {
+          platf[`${pl}`] = c.platforms[pl] as string;
+        }
+      }
       return {
-        address_eth: c.platforms.ethereum?.toLowerCase() as string,
-        address_bnb: c.platforms[
-          'binance-smart-chain'
-        ]?.toLowerCase() as string,
-        address_polygon: c.platforms['polygon-pos']?.toLowerCase() as string,
+        platforms: platf,
         id: c.id,
         symbol: c.symbol,
       };
     });
+
   const addresses = tokensMetadata
     .map((t) => t.address)
     .map((ad) => ad.toLowerCase());
   // get only coins with active coingecko id
+
   const geckoIds = geckoData
     .filter(
-      (a) =>
-        addresses.includes(a.address_eth?.toLowerCase()) ||
-        addresses.includes(a.address_bnb?.toLowerCase()) ||
-        addresses.includes(a.address_polygon?.toLowerCase()),
+      (a) => {
+        let isPlatform = false;
+        for (const platform of Object.keys(a.platforms)) {
+          isPlatform = isPlatform || addresses.includes(a?.platforms[platform] || '')
+        }
+        return isPlatform;
+      }
     )
     .map((a) => a.id)
-    .concat(['ethereum', 'binancecoin', 'matic-network']);
+    .concat(nativeCoinsCids);
 
   const uniqueGeckoIds = [...new Set(geckoIds)];
 
   const geckoCoins = geckoData.filter(
-    (a) =>
-      addresses.includes(a.address_eth?.toLowerCase()) ||
-      addresses.includes(a.address_bnb?.toLowerCase()) ||
-      addresses.includes(a.address_polygon?.toLowerCase()),
-  );
+    (a) => {
+      let isPlatform = nativeCoinsCids.includes(a.id);
+      for (const platform of Object.keys(a.platforms)) {
+        isPlatform = isPlatform || addresses.includes(a?.platforms[platform]?.toLowerCase())
+      }
+      return isPlatform;
+    });
 
   const concatId = `${uniqueGeckoIds.reduce((p, c) => `${p},${c}`)}`;
 
   const coinsUsd = await getCoinsData(concatId);
   //const coinsNative = await getCoinsData(concatId, 'eth');
 
-  const allCoins = geckoCoins
-    .concat({
-      address_eth: 'eth',
-      address_bnb: '',
-      address_polygon: '',
-      id: 'ethereum',
-      symbol: 'ETH',
-    })
-    .concat({
-      address_eth: '',
-      address_bnb: 'bnb',
-      address_polygon: '',
-      id: 'binancecoin',
-      symbol: 'BNB',
-    })
-    .concat({
-      address_eth: '',
-      address_bnb: '',
-      address_polygon: 'matic',
-      id: 'matic-network',
-      symbol: 'MATIC',
-    });
-
-  return allCoins.reduce<any>((acc, current) => {
-    const address_eth = current.address_eth;
-    const address_bnb = current.address_bnb;
-    const address_polygon = current.address_polygon;
-    if (address_eth) {
-      acc[address_eth] = coinsUsd.find((c) => c.id === current.id);
+  return geckoCoins.reduce<any>((acc, current) => {
+    for (const platform of Object.keys(current.platforms)) {
+      const platf = current.platforms[platform]
+      if (platf) {
+        acc[platf] = coinsUsd.find((c) => c.id === current.id);
+      }
     }
-    if (address_bnb) {
-      acc[address_bnb] = coinsUsd.find((c) => c.id === current.id);
+    if (nativeCoinsCids.includes(current.id)) {
+      acc[current.symbol.toLowerCase()] = coinsUsd.find((c) => c.id === current.id);
     }
-    if (address_polygon) {
-      acc[address_polygon] = coinsUsd.find((c) => c.id === current.id);
-    }
-
-    // acc[current.address ?? 'eth'].currency_native = coinsNative.find(c=> c.id === current.id);
     return acc;
   }, {});
+
 }
 
 export async function getTokenCoingeckoItemList(
@@ -182,7 +171,7 @@ export async function getTokenCoingeckoItemList(
     (c) =>
       c?.platforms?.ethereum?.toLowerCase() === address.toLowerCase() ||
       c?.platforms['binance-smart-chain']?.toLowerCase() ===
-        address.toLowerCase() ||
+      address.toLowerCase() ||
       c?.platforms['polygon-pos']?.toLowerCase() === address.toLowerCase(),
   );
   if (findToken) {

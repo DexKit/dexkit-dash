@@ -35,7 +35,7 @@ export const useMultipliers = (address?: string) => {
         multiplierTokens &&
         addr &&
         multiplierTokens.find(
-          (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
+          (a:any) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
         );
       if (multi && isNFTGame) {
         if (multi) {
@@ -59,7 +59,7 @@ export const useMultipliers = (address?: string) => {
         multiplierTokens &&
         addr &&
         multiplierTokens.find(
-          (a) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
+          (a: any) => a.playerAddress.toLowerCase() === addr.toLowerCase(),
         );
 
       if (multi && isNFTGame && addr) {

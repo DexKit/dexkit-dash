@@ -45,7 +45,7 @@ export const useTokenPriceUSD = (
         const quote: QuotePriceParams = {
           baseToken: address.toLowerCase(),
           //@ts-ignore
-          quoteToken: USDC_ADDRESSES[chainId as ChainId]?.toLowerCase() === address.toLowerCase() ? 'USDT' : 'USDC',
+          quoteToken: USDC_ADDRESSES[chainId as ChainId]?.toLowerCase() === address.toLowerCase() ? 'USDT' : chainId  ? USDC_ADDRESSES[chainId as ChainId]?.toLowerCase() : 'USDC',
           orderSide: side === OrderSide.Sell ? OrderSide.Sell : OrderSide.Buy,
           baseAmount: amountAPI,
         };

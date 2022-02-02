@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {GridContainer} from '@crema';
 import {Grid, LinearProgress, Typography} from '@material-ui/core';
 
 type Props = {to: number; from: number};
@@ -9,7 +8,8 @@ const LinearProgressWithLabel: React.FC<Props> = (props) => {
   const {to, from} = props;
 
   return (
-    <GridContainer
+    <Grid
+      container
       spacing={2}
       style={{
         padding: 5,
@@ -40,7 +40,7 @@ const LinearProgressWithLabel: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       </Grid>
-    </GridContainer>
+    </Grid>
   );
 };
 

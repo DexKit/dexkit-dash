@@ -3,6 +3,9 @@ import {getEthers} from './web3modal';
 import axios from 'axios';
 import {getNormalizedUrl} from 'utils/browser';
 import {TokenMetadata} from 'types/nfts';
+import {ERC721Abi} from 'contracts/abis/ERC721Abi';
+
+import {AssetData} from '../modules/Dashboard/types';
 
 const abi = [
   {
@@ -74,3 +77,103 @@ export const getTokenMetadata = async (url: string) => {
     .get<TokenMetadata>(getNormalizedUrl(url))
     .then((response) => response.data);
 };
+
+export const transferFrom = async (
+  contractAddress: string,
+  fromAddress: string,
+  toAddress: string,
+  tokenId: string,
+  provider: any,
+) => {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider).getSigner(),
+  );
+
+  const result = await contract.transferFrom(fromAddress, toAddress, tokenId);
+
+  return result;
+};
+
+export const ownerOf = async (
+  contractAddress: string,
+  tokenId: string,
+  provider: any,
+) => {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  return await contract.ownerOf(tokenId);
+};
+
+export async function getTokenMetadataById(
+  provider: any,
+  contractAddress: string,
+  tokenId: string,
+) {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  const uri = await contract.tokenURI(tokenId);
+
+  const metadata = await getTokenMetadata(uri);
+
+  const owner = await contract.ownerOf(tokenId);
+
+  const collectionName = await contract.name();
+  const symbol = await contract.symbol();
+
+  const data: AssetData = {
+    collectionName,
+    symbol,
+    imageUrl: getNormalizedUrl(metadata?.image || ''),
+    contractAddress,
+    tokenId,
+    description: metadata.description || '',
+    title: metadata.name || '',
+    owner,
+  };
+
+  return data;
+}
+
+export async function getAssetMetadata(
+  contractAddress: string,
+  provider: () => any,
+  tokenId: string,
+) {
+  const contract = new ethers.Contract(
+    contractAddress,
+    ERC721Abi,
+    new ethers.providers.Web3Provider(provider),
+  );
+
+  const uri = await contract.tokenURI(tokenId);
+
+  const metadata = await getTokenMetadata(uri);
+
+  const owner = await contract.ownerOf(tokenId);
+
+  const collectionName = await contract.name();
+  const symbol = await contract.symbol();
+
+  const data: AssetData = {
+    collectionName,
+    symbol,
+    imageUrl: getNormalizedUrl(metadata?.image || ''),
+    contractAddress,
+    tokenId,
+    description: metadata.description || '',
+    title: metadata.name || '',
+    owner,
+  };
+
+  return data;
+}

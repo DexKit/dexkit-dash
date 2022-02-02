@@ -1,15 +1,18 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
+import clsx from 'clsx';
+
 import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
-  Box,
   Dialog,
   makeStyles,
-  Typography,
-  DialogTitle,
   DialogContent,
-  IconButton,
   useMediaQuery,
   useTheme,
+  Box,
+  Grid,
+  Typography,
+  Button,
 } from '@material-ui/core';
 import {Fonts} from 'shared/constants/AppEnums';
 import {CremaTheme} from 'types/AppContextPropsType';
@@ -17,8 +20,14 @@ import SenderForm from './SenderForm';
 import {GetMyBalance_ethereum_address_balances} from 'services/graphql/bitquery/balance/__generated__/GetMyBalance';
 import {ExportWhiteIcon} from 'shared/components/Icons';
 
-import CloseIcon from '@material-ui/icons/Close';
 import {Token} from 'types/app';
+import {CustomDialogTitle} from 'shared/components/CustomDialogTitle';
+import {useIntl} from 'react-intl';
+
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
+import {useChainInfo} from 'hooks/useChainInfo';
+import {useWeb3} from 'hooks/useWeb3';
 
 interface Props {
   open: boolean;
@@ -63,21 +72,25 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
     width: theme.spacing(6),
     height: theme.spacing(6),
   },
+
+  iconLarge: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+  },
+  iconSmall: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
+  },
 }));
 
 const Sender: React.FC<Props> = (props) => {
   const {token: defaultToken, disableClose, onResult, error} = props;
 
+  const [transactionHash, setTransactioHash] = useState<string>();
+
   const classes = useStyles();
-  // const networkName = useNetwork();
 
-  // const a11yProps = (index: number) => {
-  //   return {
-  //     id: `simple-tab-${index}`,
-  //     'aria-controls': `simple-tabpanel-${index}`,
-  //   };
-  // };
-
+  const {chainId} = useWeb3();
   const {onClose} = props;
 
   const handleClose = useCallback(
@@ -85,6 +98,8 @@ const Sender: React.FC<Props> = (props) => {
       if (onClose) {
         onClose();
       }
+
+      setTransactioHash(undefined);
     },
     [onClose],
   );
@@ -92,6 +107,20 @@ const Sender: React.FC<Props> = (props) => {
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const {messages} = useIntl();
+
+  const handleHash = useCallback((hash: string) => {
+    setTransactioHash(hash);
+  }, []);
+
+  const {getTransactionScannerUrl} = useChainInfo();
+
+  const handleViewTransaction = useCallback(() => {
+    if (chainId && transactionHash) {
+      window.open(getTransactionScannerUrl(chainId, transactionHash), '_blank');
+    }
+  }, [chainId, transactionHash, getTransactionScannerUrl]);
 
   return (
     <Dialog
@@ -101,39 +130,51 @@ const Sender: React.FC<Props> = (props) => {
       open={props.open}
       onClose={props.onClose}
       aria-labelledby='form-dialog-title'>
-      <DialogTitle>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Box display='flex' alignItems='center' alignContent='center'>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-              alignContent='center'
-              mr={2}>
-              <ExportWhiteIcon className={classes.icon} />
-            </Box>
-            <Typography variant='body1'>
-              <IntlMessages id='Send' />
-            </Typography>
-          </Box>
-          <Box>
-            {disableClose ? null : (
-              <IconButton size='small' onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
-            )}
-          </Box>
-        </Box>
-      </DialogTitle>
+      <CustomDialogTitle
+        title={messages['app.send'] as string}
+        icon={<ExportWhiteIcon className={classes.icon} />}
+        onClose={disableClose ? undefined : handleClose}
+      />
+
       <DialogContent dividers>
-        <SenderForm
-          balances={props.balances}
-          amount={props.amount}
-          token={defaultToken}
-          address={props.address}
-          onResult={onResult}
-          error={error}
-        />
+        {transactionHash ? (
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Box
+                py={4}
+                display='flex'
+                alignItems='center'
+                alignContent='center'
+                justifyContent='center'>
+                <CheckCircleOutlineIcon
+                  style={{color: theme.palette.success.main}}
+                  className={clsx(classes.iconLarge)}
+                />
+              </Box>
+              <Box mb={2}>
+                <Typography align='center' variant='h5'>
+                  <IntlMessages id='app.wizard.transactionCreated' />
+                </Typography>
+                <Typography align='center' variant='body1'>
+                  <IntlMessages id='app.wizard.pleaseViewTheTransaction' />
+                </Typography>
+              </Box>
+              <Button onClick={handleViewTransaction} color='primary' fullWidth>
+                <IntlMessages id='app.wizard.viewTransaction' />
+              </Button>
+            </Grid>
+          </Grid>
+        ) : (
+          <SenderForm
+            balances={props.balances}
+            amount={props.amount}
+            token={defaultToken}
+            address={props.address}
+            onResult={onResult}
+            onHash={handleHash}
+            error={error}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

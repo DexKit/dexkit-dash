@@ -1,5 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {useIntl} from 'react-intl';
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Chip from '@material-ui/core/Chip';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -38,10 +41,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 
 import {useNotifications} from 'hooks/useNotifications';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {GET_BITBOY_NAME} from 'modules/CoinLeagues/utils/game';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
+import { getTransactionScannerUrl } from 'utils/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -96,7 +99,7 @@ interface Props {
 
 const getIconByCoin = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(
@@ -107,7 +110,7 @@ const getIconByCoin = (
 
 const getIconSymbol = (
   coin: string,
-  chainId: ChainId.Mumbai | ChainId.Matic,
+  chainId: ChainId.Mumbai | ChainId.Matic | ChainId.Binance,
 ) => {
   return (
     PriceFeeds[chainId].find(
@@ -129,7 +132,9 @@ const USD_POWER_NUMBER = 10 ** 8;
 function OnePlayerTable(props: Props): JSX.Element {
   const {id, account, winner, data, type} = props;
   const classes = useStyles();
+  const {messages} = useIntl();
   const {chainId} = useWeb3();
+
   const [tx, setTx] = useState<string>();
   const accountLabels = useLabelAccounts();
   const {createNotification} = useNotifications();
@@ -172,7 +177,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   }, [game]);
 
   const alreadyWithdrawed = useMemo(() => {
-    if (game && amountOnContract) { 
+    if (game && amountOnContract) {
       return game.aborted && amountOnContract.isZero();
     }
   }, [game, amountOnContract]);
@@ -184,7 +189,7 @@ function OnePlayerTable(props: Props): JSX.Element {
   }, [isWinner, winner, data]);
 
   const [openViewDialog, setOpenViewDialog] = useState(false);
-  const onCloseViewCoinsDialog = useCallback((ev: any) => {
+  const onCloseViewCoinsDialog = useCallback(() => {
     setOpenViewDialog(false);
   }, []);
 
@@ -200,7 +205,7 @@ function OnePlayerTable(props: Props): JSX.Element {
           setTx(tx);
           setSubmitState(SubmitState.Submitted);
           createNotification({
-            title: 'Claim',
+            title: messages['app.coinLeagues.claim'] as string,
             body: `Claimed for Game ${id}`,
             timestamp: Date.now(),
             url: getTransactionScannerUrl(chainId, tx),
@@ -231,8 +236,17 @@ function OnePlayerTable(props: Props): JSX.Element {
         });
       }
     },
-    [id, account, refetch, onClaimCallback, chainId, createNotification],
+    [
+      id,
+      account,
+      refetch,
+      onClaimCallback,
+      chainId,
+      createNotification,
+      messages
+    ],
   );
+
   const onWithdrawGame = useCallback(
     (ev: any) => {
       if (id && account) {
@@ -262,14 +276,11 @@ function OnePlayerTable(props: Props): JSX.Element {
     [id, account, refetch, onWithdrawCallback],
   );
 
-  const goToExplorer = useCallback(
-    (_ev: any) => {
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
-        window.open(`${ExplorerURL[chainId]}${tx}`);
-      }
-    },
-    [tx, chainId],
-  );
+  const goToExplorer = useCallback(() => {
+    if (chainId === ChainId.Mumbai || chainId === ChainId.Matic) {
+      window.open(`${ExplorerURL[chainId]}${tx}`);
+    }
+  }, [tx, chainId]);
   const playerRowData = useMemo(() => {
     if (game && !game.finished && game.started && !game.aborted) {
       return props?.data?.map((d) => {
@@ -332,7 +343,7 @@ function OnePlayerTable(props: Props): JSX.Element {
               (p) =>
                 ((p.endPrice - p.startPrice) / p.endPrice) * p.multiplier * 100,
             );
-          const score = scores && scores.reduce((p, c) => p + c) ;
+          const score = scores && scores.reduce((p, c) => p + c);
           return {
             ...d,
             account: d.hash,
@@ -406,14 +417,24 @@ function OnePlayerTable(props: Props): JSX.Element {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.header}>Position</TableCell>
-              <TableCell className={classes.header}>Captain</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.position' />
+              </TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.captain' />
+              </TableCell>
               {playerData?.coins && playerData?.coins.length > 0 && (
-                <TableCell className={classes.header}>Coins</TableCell>
+                <TableCell className={classes.header}>
+                  <IntlMessages id='app.coinLeagues.coins' />
+                </TableCell>
               )}
-              <TableCell className={classes.header}>Score</TableCell>
+              <TableCell className={classes.header}>
+                <IntlMessages id='app.coinLeagues.score' />
+              </TableCell>
               {(canClaim || claimed) && (
-                <TableCell className={classes.header}>Action</TableCell>
+                <TableCell className={classes.header}>
+                  <IntlMessages id='app.coinLeagues.action' />
+                </TableCell>
               )}
             </TableRow>
           </TableHead>
@@ -425,7 +446,9 @@ function OnePlayerTable(props: Props): JSX.Element {
                   colSpan={4}
                   className={classes.noBorder}
                   style={{textAlign: 'center', color: '#ffa552'}}>
-                  <Typography variant='h5'>No data was found!</Typography>
+                  <Typography variant='h5'>
+                    <IntlMessages id='app.coinLeagues.noDataFound' />!
+                  </Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -463,7 +486,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                                 color={'primary'}
                                 overlap='circular'
                                 badgeContent={
-                                  !loadingMultiplier && multiplier(account).toFixed(3)
+                                  !loadingMultiplier &&
+                                  multiplier(account).toFixed(3)
                                 }>
                                 <Avatar
                                   className={classes.chip}
@@ -483,7 +507,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                             <Badge color={'primary'} overlap='circular'>
                               <Avatar
                                 className={classes.chip}
-                                style={{height: 35, width: 35}}></Avatar>
+                                style={{height: 35, width: 35}}
+                              />
                             </Badge>
                           )}
                           {playerData?.coins.length === 0 && (
@@ -521,7 +546,8 @@ function OnePlayerTable(props: Props): JSX.Element {
                               <Badge color={'primary'} overlap='circular'>
                                 <Avatar
                                   className={classes.chip}
-                                  style={{height: 35, width: 35}}></Avatar>
+                                  style={{height: 35, width: 35}}
+                                />
                               </Badge>
                             ),
                           )}
@@ -570,13 +596,15 @@ function OnePlayerTable(props: Props): JSX.Element {
                         <Grid item xs={12} md={12}>
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
-                              {submitState === SubmitState.Submitted
-                                ? 'Submitted Tx'
-                                : submitState === SubmitState.Error
-                                ? 'Tx Error'
-                                : submitState === SubmitState.Confirmed
-                                ? 'Confirmed Tx'
-                                : ''}
+                              {submitState === SubmitState.Submitted ? (
+                                <IntlMessages id='app.coinLeagues.submittedTx' />
+                              ) : submitState === SubmitState.Error ? (
+                                <IntlMessages id='app.coinLeagues.txError' />
+                              ) : submitState === SubmitState.Confirmed ? (
+                                <IntlMessages id='app.coinLeagues.confirmedTx' />
+                              ) : (
+                                ''
+                              )}
                             </Button>
                           )}
                         </Grid>
@@ -593,14 +621,18 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitState}
-                              defaultMsg={'CLAIM'}
-                              confirmedMsg={'Claimed'}
+                              defaultMsg={
+                                messages['app.coinLeagues.claim'] as string
+                              }
+                              confirmedMsg={
+                                messages['app.coinLeagues.claimed'] as string
+                              }
                             />
                           </Button>
                         </Grid>
                       </Grid>
                     )}
-                    {(canWithdraw && !alreadyWithdrawed) && (
+                    {canWithdraw && !alreadyWithdrawed && (
                       <Grid
                         container
                         justifyContent={'center'}
@@ -609,13 +641,16 @@ function OnePlayerTable(props: Props): JSX.Element {
                         <Grid item xs={12} md={12}>
                           {tx && (
                             <Button variant={'text'} onClick={goToExplorer}>
-                              {submitWithdrawState === SubmitState.Submitted
-                                ? 'Submitted Tx'
-                                : submitWithdrawState === SubmitState.Error
-                                ? 'Tx Error'
-                                : submitWithdrawState === SubmitState.Confirmed
-                                ? 'Confirmed Tx'
-                                : ''}
+                              {submitWithdrawState === SubmitState.Submitted ? (
+                                <IntlMessages id='app.coinLeagues.submittedTx' />
+                              ) : submitWithdrawState === SubmitState.Error ? (
+                                <IntlMessages id='app.coinLeagues.txError' />
+                              ) : submitWithdrawState ===
+                                SubmitState.Confirmed ? (
+                                <IntlMessages id='app.coinLeagues.confirmedTx' />
+                              ) : (
+                                ''
+                              )}
                             </Button>
                           )}
                         </Grid>
@@ -632,14 +667,18 @@ function OnePlayerTable(props: Props): JSX.Element {
                             }>
                             <ButtonState
                               state={submitWithdrawState}
-                              defaultMsg={'WITHDRAW'}
-                              confirmedMsg={'Withdrawed'}
+                              defaultMsg={
+                                messages['app.coinLeagues.withdraw'] as string
+                              }
+                              confirmedMsg={
+                                messages['app.coinLeagues.withdrawed'] as string
+                              }
                             />
                           </Button>
                         </Grid>
                       </Grid>
                     )}
-                    {claimed && 'Claimed'}
+                    {claimed && <IntlMessages id='app.coinLeagues.claimed' />}
                     {alreadyWithdrawed && 'Withdrawed'}
                   </TableCell>
                 )}

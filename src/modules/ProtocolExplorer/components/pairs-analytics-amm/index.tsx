@@ -1,6 +1,9 @@
+import React, {useMemo} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import React, {useMemo} from 'react';
 import AnalyticsAmountCard from 'shared/components/AnalyticsAmountCard';
 import {GetTokenPairs_ethereum_dexTrades} from 'services/graphql/bitquery/protocol/__generated__/GetTokenPairs';
 import {ReactComponent as PresentationChartIcon} from 'assets/images/icons/presentation-chart.svg';
@@ -12,6 +15,7 @@ import {useAMMPairExplorer} from 'hooks/protocolExplorer/useAMMPairExplorer';
 import {EthereumNetwork, EXCHANGE} from 'shared/constants/AppEnums';
 import {useUSDFormatter} from 'hooks/utils/useUSDFormatter';
 import {Box, makeStyles} from '@material-ui/core';
+import IntlMessages from '../../../../@crema/utility/IntlMessages';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -53,6 +57,7 @@ export const PairAnalyticsAMM = (props: Props) => {
   });
 
   const {usdFormatter} = useUSDFormatter();
+  const {messages} = useIntl();
 
   /* eslint-disable */
   const volumeUSD = useMemo(() => {
@@ -67,7 +72,9 @@ export const PairAnalyticsAMM = (props: Props) => {
   return (
     <Grid container alignItems='center' spacing={2}>
       <Grid item xs={12}>
-        <Typography variant='h6'>Pair Analytics</Typography>
+        <Typography variant='h6'>
+          <IntlMessages id='app.protocolExplorer.pairAnalytics' />
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Box className={classes.container}>
@@ -76,7 +83,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<ChartSuccessIcon />}
               amount={volumeUSD}
-              caption={'Daily Volume'}
+              caption={messages['app.protocolExplorer.dailyVolume'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -84,7 +91,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<HashtagIcon />}
               amount={liquidity}
-              caption={'Total Liquidity'}
+              caption={messages['app.protocolExplorer.totalLiquidity'] as string}
             />
           </Box>
           <Box className={classes.item}>
@@ -92,7 +99,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={data?.baseAmount.toFixed(4) || '-'}
-              caption={`Amount ${pair.baseCurrency?.symbol} (24h)`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.baseCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -100,7 +107,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<PresentationChartIcon />}
               amount={data?.quoteAmount.toFixed(4) || '-'}
-              caption={`Amount ${pair.quoteCurrency?.symbol} (24h)`}
+              caption={`${messages['app.protocolExplorer.amount']} ${pair.quoteCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -108,7 +115,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<StatusUpIcon />}
               amount={data?.basePooled.toFixed(4) || '-'}
-              caption={`Pooled ${pair.baseCurrency?.symbol} (24h)`}
+              caption={`${messages['app.protocolExplorer.pooled']} ${pair.baseCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -116,7 +123,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<StatusUpIcon />}
               amount={data?.quotePooled.toFixed(4) || '-'}
-              caption={`Pooled ${pair.quoteCurrency?.symbol} (24h)`}
+              caption={`${messages['app.protocolExplorer.pooled']} ${pair.quoteCurrency?.symbol} (${messages['app.protocolExplorer.24Hrs']})`}
             />
           </Box>
           <Box className={classes.item}>
@@ -124,7 +131,7 @@ export const PairAnalyticsAMM = (props: Props) => {
               isLoading={loading}
               icon={<GraphIcon />}
               amount={loading ? '-' : data?.trades ? String(data?.trades) : '-'}
-              caption={'Total Trades (24h)'}
+              caption={messages['app.protocolExplorer.dailyTrades'] as string}
             />
           </Box>
         </Box>

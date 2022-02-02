@@ -1,5 +1,7 @@
-import {Box, makeStyles, useTheme, Grid, Typography} from '@material-ui/core';
 import React, {useMemo} from 'react';
+import IntlMessages from '@crema/utility/IntlMessages';
+
+import {Box, Grid, makeStyles, Typography, useTheme} from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import {CoinFeed} from 'modules/CoinLeagues/utils/types';
 import {CoinFeed as CoinFeedOnChain} from 'types/coinsleague';
@@ -145,21 +147,27 @@ export const ViewCoinListItem = (props: Props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant='body1'>{`Start`}</Typography>
+          <Typography variant='body1'>
+            <IntlMessages id='app.coinLeagues.start' />
+          </Typography>
           <Typography variant='body2' color='textSecondary'>
             {priceStart}
           </Typography>
         </Grid>
         {started ? (
           <Grid item xs>
-            <Typography variant='body1'>{`Current`}</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.coinLeagues.current' />
+            </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
             </Typography>
           </Grid>
         ) : (
           <Grid item xs>
-            <Typography variant='body1'>{`End`}</Typography>
+            <Typography variant='body1'>
+              <IntlMessages id='app.coinLeagues.end' />
+            </Typography>
             <Typography variant='body2' color='textSecondary'>
               {priceEnd}
             </Typography>

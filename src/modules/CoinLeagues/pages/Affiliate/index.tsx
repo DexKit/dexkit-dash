@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -11,30 +11,35 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import FormControl from '@material-ui/core/FormControl';
 import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import LinkIcon from '@material-ui/icons/CallMadeOutlined';
 
-import {useIntl} from 'react-intl';
+import { useIntl } from 'react-intl';
 
-import {Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import AffiliateTotalCard from './components/AffiliateTotalCard';
 import AffiliateTotalCardSkeleton from './components/AffiliateTotalCard/index.skeleton';
-import {Skeleton} from '@material-ui/lab';
+import { Skeleton } from '@material-ui/lab';
 import AffiliateHistory from './history';
-import {GridContainer} from '@crema';
+import { GridContainer } from '@crema';
 import ButtonCopy from 'shared/components/ButtonCopy';
-import {useWeb3} from 'hooks/useWeb3';
-import {useDefaultAccount} from 'hooks/useDefaultAccount';
-import {useAffiliateEntries, useAffiliatePlayer} from 'modules/CoinLeagues/hooks/useAffiliate';
+import { useWeb3 } from 'hooks/useWeb3';
+import { useDefaultAccount } from 'hooks/useDefaultAccount';
+import { useAffiliateEntries, useAffiliatePlayer } from 'modules/CoinLeagues/hooks/useAffiliate';
 import {
   COINLEAGUENFT_ROUTE,
   COINSLEAGUE_ROUTE,
   BASE_PATH_ROUTE,
 } from 'shared/constants/routes';
-import {AFFILIATE_FIELD} from 'modules/CoinLeagues/constants';
+import { AFFILIATE_FIELD } from 'modules/CoinLeagues/constants';
 import { RoomType } from 'modules/CoinLeagues/constants/enums';
 import { ethers } from 'ethers';
+import { ChainSelect } from 'modules/CoinLeagues/components/ChainSelect';
+import { useMobile } from 'hooks/useMobile';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useCoinLeaguesFactoryRoutes } from 'modules/CoinLeagues/hooks/useCoinLeaguesFactory';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -62,10 +67,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AffiliatePage: React.FC = () => {
+  const history = useHistory();
   const classes = useStyles();
-  const {messages} = useIntl();
+  const { messages } = useIntl();
+  const isMobile = useMobile();
 
-  const {account: web3Account} = useWeb3();
+  const { account: web3Account } = useWeb3();
   const defaultAccount = useDefaultAccount();
   const account = web3Account || defaultAccount;
 
@@ -76,25 +83,34 @@ const AffiliatePage: React.FC = () => {
 
   const [room, setRoom] = useState(RoomType.Main);
   const isNFT = room === RoomType.Main ? false : true;
-  const {loading, data} = useAffiliateEntries(
-    {address: account?.toLowerCase() ?? '', first: rowsPerPage, skip: page * rowsPerPage},
+  const { loading, data } = useAffiliateEntries(
+    { address: account?.toLowerCase() ?? '', first: rowsPerPage, skip: page * rowsPerPage },
+    isNFT,
+  );
+  const { listGamesRoute } = useCoinLeaguesFactoryRoutes(isNFT);
+  const queryPlayer = useAffiliatePlayer(
+    account?.toLowerCase() ?? '',
     isNFT,
   );
 
-  const queryPlayer = useAffiliatePlayer(
-   account?.toLowerCase() ?? '',
-    isNFT,
-  );
+  const handleBack = useCallback(() => {
+    if (history.length > 0) {
+      history.goBack();
+    } else {
+      history.push(listGamesRoute);
+    }
+    //history.push(listGamesRoute);
+  }, [listGamesRoute, history]);
 
   const AffiliateSkeleton = (props: any) => (
     <React.Fragment {...props}>
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
-      <Skeleton style={{marginBottom: 8}} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
+      <Skeleton style={{ marginBottom: 8 }} variant='rect' height={50} />
     </React.Fragment>
   );
   const selectedRoom = useMemo(() => {
@@ -112,7 +128,7 @@ const AffiliatePage: React.FC = () => {
   return (
     <Container maxWidth='xl' className={classes.container}>
       <Grid container spacing={6} alignItems={'center'}>
-        <Grid item xs={12}>
+        {!isMobile && <Grid item xs={12}>
           <Breadcrumbs>
             <Link to={COINSLEAGUE_ROUTE} component={RouterLink}>
               <Typography variant='body2' color='textSecondary'>
@@ -123,23 +139,31 @@ const AffiliatePage: React.FC = () => {
               {messages['affiliate.page.title']}
             </Typography>
           </Breadcrumbs>
-        </Grid>
+        </Grid>}
         <Grid item xs={12} sm={10}>
-          <Typography variant='h5' style={{margin: 5, marginBottom: 20}}>
-            {messages['coinleague.affiliate.page.title']}
-          </Typography>
+          <Box display={'flex'} alignItems={'center'}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant='h5' >
+              {messages['coinleague.affiliate.page.title']}
+            </Typography>
+            <Box p={2}>
+              <ChainSelect />
+            </Box>
+          </Box>
         </Grid>
 
         <Grid item xs={12}>
           <Grid container justifyContent='space-between' spacing={4}>
             <Grid item xs={12} md={4}>
-              {queryPlayer.loading ? <AffiliateTotalCardSkeleton/> :
-              <AffiliateTotalCard total={ethers.utils.formatEther(queryPlayer.data?.player?.estimatedAffiliateEarnings || '0')} />}
+              {queryPlayer.loading ? <AffiliateTotalCardSkeleton /> :
+                <AffiliateTotalCard total={ethers.utils.formatEther(queryPlayer.data?.player?.estimatedAffiliateEarnings || '0')} />}
             </Grid>
             <Grid item xs={12} md={4}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography style={{color: '#B3B7C0'}}>
+                  <Typography style={{ color: '#B3B7C0' }}>
                     Account Receive Rewards:
                   </Typography>
                 </Grid>
@@ -173,9 +197,9 @@ const AffiliatePage: React.FC = () => {
 
             <Grid item md={12} xs={12}>
               <GridContainer spacing={2} justifyContent='space-between'>
-                <Grid item md={5} xs={12} style={{marginBottom: 10}}>
+                <Grid item md={5} xs={12} style={{ marginBottom: 10 }}>
                   <FormControl fullWidth>
-                    <Typography style={{marginBottom: 10}}>Room</Typography>
+                    <Typography style={{ marginBottom: 10 }}>Room</Typography>
                     <Select
                       variant='outlined'
                       value={room}
@@ -187,7 +211,7 @@ const AffiliatePage: React.FC = () => {
                   </FormControl>
                 </Grid>
                 <Grid item md={7} xs={12}>
-                  <Typography style={{marginBottom: 10}}>
+                  <Typography style={{ marginBottom: 10 }}>
                     Affiliate link
                   </Typography>
                   <Box
@@ -231,7 +255,7 @@ const AffiliatePage: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Grid container spacing={2} style={{marginTop: 15}}>
+          <Grid container spacing={2} style={{ marginTop: 15 }}>
             {/* FIXME: Change to the pagination component */}
             <Grid item xs={12}>
               {loading ? (

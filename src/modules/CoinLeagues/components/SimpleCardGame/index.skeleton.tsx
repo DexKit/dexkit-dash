@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -10,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {truncateAddress} from 'utils/text';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -25,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SimpleCardGameSkeleton(): JSX.Element {
+  const {  coinSymbol } = useLeaguesChainInfo();
   const classes = useStyles();
 
   return (
@@ -32,7 +36,9 @@ function SimpleCardGameSkeleton(): JSX.Element {
       <Grid container style={{color: '#7a8398'}}>
         <Grid item xs={12}>
           <Box display={'flex'} alignItems={'center'}>
-            <Typography variant='h6'>Game Time:</Typography>
+            <Typography variant='h6'>
+              <IntlMessages id='app.coinLeagues.gameTime' />:
+            </Typography>
             <Typography variant='h6' style={{fontWeight: 600}}>
               <Skeleton>&nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
             </Typography>
@@ -57,7 +63,7 @@ function SimpleCardGameSkeleton(): JSX.Element {
               variant='h6'
               style={{color: '#fcc591', fontWeight: 600}}>
               <Skeleton>
-                &nbsp;{1} {'MATIC'}
+                &nbsp;{1} {coinSymbol}
               </Skeleton>
             </Typography>
           </Box>

@@ -51,6 +51,107 @@ export function getTransactionScannerUrl(
   }
 }
 
+export function getTransactionScannerBaseUrl(chainId: number) {
+  switch (chainId) {
+    case NetworkCodes.Ethereum:
+      return `https://etherscan.io`;
+
+    case NetworkCodes.Goerli:
+      return `https://goerli.etherscan.io`;
+
+    case NetworkCodes.Kovan:
+      return `https://kovan.etherscan.io`;
+
+    case NetworkCodes.Ropsten:
+      return `https://ropsten.etherscan.io`;
+
+    case NetworkCodes.SmartChain:
+      return `https://bscscan.com`;
+
+    case NetworkCodes.SmartChainTestnet:
+      return `https://testnet.bscscan.com`;
+
+    case NetworkCodes.Matic:
+      return `https://polygonscan.com`;
+
+    case NetworkCodes.MaticTestnet:
+      return `https://mumbai.polygonscan.com`;
+
+    case NetworkCodes.Rinkeby:
+      return `https://rinkeby.etherscan.io`;
+    default:
+      return '';
+  }
+}
+
+export function getTransactionScannerUrlV2(
+  chainId: number,
+  transactionHash: string,
+  networks: {chainId: number; explorerUrl: string}[],
+) {
+  const url = getTransactionScannerBaseUrl(chainId);
+
+  if (url === '') {
+    const index = networks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return `${networks[index].explorerUrl}/tx/${transactionHash}`;
+    }
+  }
+
+  return `${url}/tx/${transactionHash}`;
+}
+
+export function getScannerUrl(chainId: number) {
+  switch (chainId) {
+    case NetworkCodes.Ethereum:
+      return `https://etherscan.io`;
+
+    case NetworkCodes.Goerli:
+      return `https://goerli.etherscan.io`;
+
+    case NetworkCodes.Kovan:
+      return `https://kovan.etherscan.io`;
+
+    case NetworkCodes.Ropsten:
+      return `https://ropsten.etherscan.io`;
+
+    case NetworkCodes.SmartChain:
+      return `https://bscscan.com/`;
+
+    case NetworkCodes.SmartChainTestnet:
+      return `https://testnet.bscscan.com`;
+
+    case NetworkCodes.Matic:
+      return `https://polygonscan.com`;
+
+    case NetworkCodes.MaticTestnet:
+      return `https://mumbai.polygonscan.com`;
+
+    case NetworkCodes.Rinkeby:
+      return `https://rinkeby.etherscan.io`;
+    default:
+      return '';
+  }
+}
+
+export function getScannerUrlV2(
+  chainId: number,
+  networks: {chainId: number; explorerUrl: string}[],
+) {
+  const explorerUrl = getScannerUrl(chainId);
+
+  if (explorerUrl === '') {
+    const index = networks.findIndex((n) => n.chainId === chainId);
+
+    if (index > -1) {
+      return networks[index].explorerUrl;
+    }
+  }
+
+  return explorerUrl;
+}
+
 export function getNetworkChainId(networkName: EthereumNetwork) {
   switch (networkName) {
     case EthereumNetwork.bsc:
@@ -71,7 +172,8 @@ export async function isTransactionMined(
   transactionHash: string,
 ) {
   if (provider) {
-    let pr = new ethers.providers.Web3Provider(provider);
+    const pr = new ethers.providers.Web3Provider(provider);
+
     const txReceipt = await pr.getTransactionReceipt(transactionHash);
 
     if (txReceipt && txReceipt.blockNumber) {
@@ -89,9 +191,15 @@ export function hasLondonHardForkSupport(chainId: number) {
     case ChainId.Mainnet:
     case ChainId.Goerli:
     case ChainId.Kovan:
+    case ChainId.Matic:
+    case ChainId.Mumbai:
       return true;
 
     default:
       return false;
   }
+}
+
+export function isAddressEqual(address: string, another: string) {
+  return address.toLowerCase() === another.toLowerCase();
 }

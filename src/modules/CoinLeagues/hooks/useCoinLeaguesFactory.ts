@@ -21,6 +21,7 @@ import {
   COIN_LEAGUES_FACTORY_ADDRESS,
   COIN_LEAGUES_NFT_FACTORY_ADDRESS,
 } from '../constants';
+import { useLeaguesChainInfo } from './useLeaguesChainInfo';
 
 interface CallbackProps {
   onSubmit?: any;
@@ -29,8 +30,9 @@ interface CallbackProps {
 }
 
 export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
-  const {room} = useParams<{room: string}>();
+  const { room } = useParams<{room: string}>();
   const isNFTGame = useIsNFTGame() || isNFT;
+  const { chainFromSearchName } = useLeaguesChainInfo();
 
   const enterGameRoute = useCallback(
     (address: string) => {
@@ -40,11 +42,16 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
         if (isNFTGame) {
           return `${COINLEAGUENFT_ROUTE}/${address}`;
         } else {
-          return `${COINSLEAGUE_ROUTE}/${address}`;
+          if(chainFromSearchName ){
+            return `${COINSLEAGUE_ROUTE}/${address}?network=${chainFromSearchName}`;
+          }else{
+            return `${COINSLEAGUE_ROUTE}/${address}`;
+          } 
+         
         }
       }
     },
-    [room, isNFTGame],
+    [room, isNFTGame, chainFromSearchName],
   );
 
   const activeGamesRoute = useMemo(() => {
@@ -54,10 +61,14 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}/active-games`;
       } else {
-        return `${COINSLEAGUE_ROUTE}/active-games`;
+        if(chainFromSearchName){
+         return `${COINSLEAGUE_ROUTE}/active-games?network=${chainFromSearchName}`;
+        }else{
+          return `${COINSLEAGUE_ROUTE}/active-games`;
+        }
       }
     }
-  }, [room, isNFTGame]);
+  }, [room, isNFTGame, chainFromSearchName]);
 
   const listGamesRoute = useMemo(() => {
     if (room) {
@@ -66,10 +77,14 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
       if (isNFTGame) {
         return `${COINLEAGUENFT_ROUTE}`;
       } else {
-        return `${COINSLEAGUE_ROUTE}`;
+        if(chainFromSearchName){
+         return `${COINSLEAGUE_ROUTE}?network=${chainFromSearchName}`;
+        }else{
+          return `${COINSLEAGUE_ROUTE}`;
+        }
       }
     }
-  }, [room, isNFTGame]);
+  }, [room, isNFTGame, chainFromSearchName]);
 
   return {
     enterGameRoute,
@@ -79,7 +94,7 @@ export const useCoinLeaguesFactoryRoutes = (isNFT = false) => {
 };
 
 export const useCoinLeaguesFactory = () => {
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),
@@ -260,7 +275,7 @@ export const useCoinLeaguesFactoryCreateGameCallback = () => {
 };
 
 export const useCoinLeaguesFactoryTotalGames = () => {
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
   const provider = useNetworkProvider(
     EthereumNetwork.matic,
     GET_LEAGUES_CHAIN_ID(chainId),

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -10,6 +12,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as SendIcon} from 'assets/images/icons/send-square.svg';
 import {truncateAddress} from 'utils/text';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,7 +62,7 @@ function CardTimer(props: {time: number}) {
 
 function CardGameProgressSkeleton(): JSX.Element {
   const classes = useStyles();
-
+  const { coinSymbol } = useLeaguesChainInfo();
   return (
     <Container className={classes.container} maxWidth='xs'>
       <Typography variant='h5'>
@@ -72,7 +75,7 @@ function CardGameProgressSkeleton(): JSX.Element {
             style={{color: '#fcc591', alignItems: 'baseline'}}>
             <SendIcon />
             <Skeleton>
-              &nbsp;{'0'} {'MATIC'}
+              &nbsp;{'0'} {coinSymbol}
             </Skeleton>
           </Typography>
         </Grid>
@@ -81,8 +84,9 @@ function CardGameProgressSkeleton(): JSX.Element {
           container
           justifyContent='flex-end'
           style={{color: '#7a8398'}}>
-          <Typography variant='h6'>Game Time:</Typography>
-
+          <Typography variant='h6'>
+            <IntlMessages id='app.coinLeagues.gameTime' />:
+          </Typography>
           <Typography variant='h6' style={{fontWeight: 600}}>
             <Skeleton> &nbsp;{Math.floor(1 / 3600)}Hrs</Skeleton>
           </Typography>
@@ -93,12 +97,14 @@ function CardGameProgressSkeleton(): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Countdown</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages id='app.coinLeagues.countdown' />
+          </Typography>
           <CardTimer time={100} />
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Entries
+            <IntlMessages id='app.coinLeagues.entries' />
             <Typography variant='subtitle2'>
               <Skeleton>
                 {' '}
@@ -109,7 +115,7 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Coins
+            <IntlMessages id='app.coinLeagues.coins' />
             <Typography variant='subtitle2'>
               {' '}
               <Skeleton>{strPad(1)} </Skeleton>
@@ -118,17 +124,19 @@ function CardGameProgressSkeleton(): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Prize Pool
+            <IntlMessages id='app.coinLeagues.prizePool' />
             <Typography variant='subtitle2'>
               {' '}
-              <Skeleton>{100} Matic </Skeleton>
+              <Skeleton>{100}  {coinSymbol} </Skeleton>
             </Typography>
           </Typography>
         </Grid>
       </Grid>
 
       <Button className={classes.button} fullWidth>
-        <Skeleton>{'ENTER THE GAME'}</Skeleton>
+        <Skeleton>
+          <IntlMessages id='app.coinLeagues.enterGame' />
+        </Skeleton>
       </Button>
     </Container>
   );

@@ -104,6 +104,8 @@ export const AssetList = (props: AssetListProps) => {
                 <TokenListItem
                   address={balance.currency?.address || ''}
                   network={balance.network}
+                  logo={balance.logoURI}
+                  isCustomNetwork={balance?.isCustomNetwork}
                   symbol={balance.currency?.symbol || ''}
                   name={balance.currency?.name || ''}
                   amount={balance?.value || 0}

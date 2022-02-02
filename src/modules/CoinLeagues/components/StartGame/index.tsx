@@ -1,4 +1,6 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, {useCallback, useState, useMemo} from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
 import {
   useCoinLeagues,
   useCoinLeaguesCallbacks,
@@ -7,26 +9,28 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { ButtonState, SubmitState } from '../ButtonState';
+import {ButtonState, SubmitState} from '../ButtonState';
 import Button from '@material-ui/core/Button';
-import { useWeb3 } from 'hooks/useWeb3';
+
 import {
   ExplorerURL,
   IS_SUPPORTED_LEAGUES_CHAIN_ID,
 } from 'modules/CoinLeagues/utils/constants';
-import { useInterval } from 'hooks/utils/useInterval';
+import {useInterval} from 'hooks/utils/useInterval';
+import {NotificationType, TxNotificationMetadata} from 'types/notifications';
+import {useNotifications} from 'hooks/useNotifications';
 import { getTransactionScannerUrl } from 'utils/blockchain';
-import { NotificationType, TxNotificationMetadata } from 'types/notifications';
-import { useNotifications } from 'hooks/useNotifications';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
+
 interface Props {
   id?: string;
 }
 
 export const StartGame = (props: Props) => {
-  const { id } = props;
-  const { chainId } = useWeb3();
-  const { game, refetch } = useCoinLeagues(id);
-  const { createNotification } = useNotifications();
+  const {id} = props;
+  const { chainId } = useLeaguesChainInfo();
+  const {game, refetch} = useCoinLeagues(id);
+  const {createNotification} = useNotifications();
   const [tx, setTx] = useState<string>();
   const [actualTimestamp, setActualTimestamp] = useState<number>(
     new Date().getTime(),
@@ -36,7 +40,7 @@ export const StartGame = (props: Props) => {
     SubmitState.None,
   );
 
-  const { onStartGameCallback, onAbortGameCallback } = useCoinLeaguesCallbacks(
+  const {onStartGameCallback, onAbortGameCallback} = useCoinLeaguesCallbacks(
     game?.address,
   );
 
@@ -89,7 +93,14 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onStartGameCallback, chainId, createNotification, id],
+    [
+      game,
+      refetch,
+      onStartGameCallback,
+      chainId,
+      createNotification,
+      id
+    ],
   );
   const onAbortGame = useCallback(
     (ev: any) => {
@@ -130,11 +141,17 @@ export const StartGame = (props: Props) => {
         });
       }
     },
-    [game, refetch, onAbortGameCallback, chainId, createNotification, id],
+    [
+      game,
+      refetch,
+      onAbortGameCallback,
+      chainId,
+      createNotification,
+      id
+    ],
   );
   const abortTime = game?.abort_timestamp;
-  const startTime = game?.start_timestamp
-
+  const startTime = game?.start_timestamp;
 
   const abortTimestamp = useMemo(() => {
     if (abortTime) {
@@ -158,9 +175,13 @@ export const StartGame = (props: Props) => {
     }
   }, [totalPlayers, currentPlayers]);
 
-  useInterval(() => {
-    setActualTimestamp(new Date().getTime());
-  }, 1000, true);
+  useInterval(
+    () => {
+      setActualTimestamp(new Date().getTime());
+    },
+    1000,
+    true,
+  );
 
   const gameCanStart = useMemo(() => {
     if (currentPlayers && startTimestamp) {
@@ -184,16 +205,16 @@ export const StartGame = (props: Props) => {
         <Grid container spacing={4}>
           <Grid item xs={12} md={9}>
             {!gameFull && (
-              <Typography variant='h6' style={{ margin: 5 }}>
-                Waiting For Players
+              <Typography variant='h6' style={{margin: 5}}>
+                <IntlMessages id='app.coinLeagues.waitingPlayers' />
               </Typography>
             )}
-            <Typography variant='h6' style={{ margin: 5 }}>
+            <Typography variant='h6' style={{margin: 5}}>
               {currentPlayers} / {totalPlayers}
             </Typography>
             {gameFull && (
-              <Typography variant='h6' style={{ margin: 5 }}>
-                Everybody is here
+              <Typography variant='h6' style={{margin: 5}}>
+                <IntlMessages id='app.coinLeagues.everybodyIsHere' />
               </Typography>
             )}
           </Grid>
@@ -209,13 +230,15 @@ export const StartGame = (props: Props) => {
                   <Box display={'flex'} justifyContent={'center'}>
                     {tx && (
                       <Button variant={'text'} onClick={goToExplorer}>
-                        {submitState === SubmitState.Submitted
-                          ? 'Submitted Tx'
-                          : submitState === SubmitState.Error
-                            ? 'Tx Error'
-                            : submitState === SubmitState.Confirmed
-                              ? 'Confirmed Tx'
-                              : ''}
+                        {submitState === SubmitState.Submitted ? (
+                          <IntlMessages id='app.coinLeagues.submittedTx' />
+                        ) : submitState === SubmitState.Error ? (
+                          <IntlMessages id='app.coinLeagues.txError' />
+                        ) : submitState === SubmitState.Confirmed ? (
+                          <IntlMessages id='app.coinLeagues.confirmedTx' />
+                        ) : (
+                          ''
+                        )}
                       </Button>
                     )}
                   </Box>

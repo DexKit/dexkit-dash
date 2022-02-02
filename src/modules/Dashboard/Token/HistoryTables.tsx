@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+
+import {useIntl} from 'react-intl';
+
 import {makeStyles} from '@material-ui/core';
 import {CustomTab, CustomTabs} from 'shared/components/Tabs/CustomTabs';
 import TradeHistoryContainer from 'modules/History/TradeHistory/container';
@@ -34,6 +37,7 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
     setTableActive(newValue);
   const {mobileTabsContainer, tabsContainer} = useStyles();
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+  const {messages} = useIntl();
 
   return (
     <>
@@ -43,8 +47,8 @@ const HistoryTables: React.FC<HistoryTablesProps> = ({
         value={tableActive}
         onChange={onChangeTab}
         variant='standard'>
-        <CustomTab label={'Orders'} />
-        <CustomTab label={'Trade'} />
+        <CustomTab label={messages['app.dashboard.orders']} />
+        <CustomTab label={messages['app.dashboard.trade']} />
       </CustomTabs>
       {tableActive === 0 && (
         <MyOrdersTab address={address} networkName={networkName} />

@@ -164,6 +164,7 @@ export const getCurrentCoinFeedsPrice = async (
 export const getPlayerMultipliers = async (
   players: any[],
   provider: any,
+  chainId: ChainId.Binance | ChainId.Matic
 ) => {
   const iface = new Interface(balanceOfAbi);
   const ifaceChampions = new Interface(getRarityOfAbi);
@@ -172,9 +173,9 @@ export const getPlayerMultipliers = async (
   if (players.length === 0) {
     return [];
   }
-  const DexKit = DEXKIT[ChainId.Matic] as Token;
-  const Bittoken = BITTOKEN[ChainId.Matic] as Token;
-  const Champions = CHAMPIONS[ChainId.Matic];
+  const DexKit = DEXKIT[chainId] as Token;
+  const Bittoken = BITTOKEN[chainId] as Token;
+  const Champions = CHAMPIONS[chainId];
   let mappedMultipliers: MultiplierInterface[] = [];
 
   const playersBatch = 11;

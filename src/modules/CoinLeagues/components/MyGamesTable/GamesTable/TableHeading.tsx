@@ -1,9 +1,12 @@
 import React from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from '@material-ui/core/styles';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {Fonts} from 'shared/constants/AppEnums';
+import { CremaTheme } from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableCellRoot: {
@@ -31,17 +34,18 @@ const TableHeading: React.FC = () => {
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Game'}
+        <IntlMessages id='app.coinLeagues.games' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Status'}
+        <IntlMessages id='app.coinLeagues.status' />
       </TableCell>
 
       <TableCell align='left' className={classes.tableCellRoot}>
-        {'Place'}
+        <IntlMessages id='app.coinLeagues.place' />
       </TableCell>
-      <TableCell align='left' className={classes.tableCellRoot}></TableCell>
+
+      <TableCell align='left' className={classes.tableCellRoot} />
     </TableRow>
   );
 };

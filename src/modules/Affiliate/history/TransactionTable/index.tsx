@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,8 +9,8 @@ import TableItem from './TableItem';
 
 import Loader from '@crema/core/Loader';
 import {grey} from '@material-ui/core/colors';
-import {CremaTheme} from 'types/AppContextPropsType';
 import {GetAffiliateTrades} from 'services/graphql/bitquery/affiliate/__generated__/GetAffiliateTrades';
+import { CremaTheme } from 'types/AppContextPropsType';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   tableResponsiveMaterial: {

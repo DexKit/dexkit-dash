@@ -1,21 +1,21 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
+
+import IntlMessages from '@crema/utility/IntlMessages';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import {ReactComponent as SendIcon} from 'assets/images/icons/send-square-small.svg';
-import {BigNumber, ethers} from 'ethers';
-import {useInterval} from 'hooks/utils/useInterval';
-import {GET_LABEL_FROM_DURATION} from 'modules/CoinLeagues/utils/time';
-import {GET_GAME_LEVEL} from 'modules/CoinLeagues/utils/game';
-import {GameGraph} from 'modules/CoinLeagues/utils/types';
-import { GET_CHAIN_NATIVE_COIN } from 'shared/constants/Blockchain';
-import { GET_LEAGUES_CHAIN_ID } from 'modules/CoinLeagues/utils/constants';
-import { useWeb3 } from 'hooks/useWeb3';
+import { ReactComponent as SendIcon } from 'assets/images/icons/send-square-small.svg';
+import { BigNumber, ethers } from 'ethers';
+import { useInterval } from 'hooks/utils/useInterval';
+import { GET_LABEL_FROM_DURATION } from 'modules/CoinLeagues/utils/time';
+import { GET_GAME_LEVEL } from 'modules/CoinLeagues/utils/game';
+import { GameGraph } from 'modules/CoinLeagues/utils/types';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -54,7 +54,7 @@ const strPad = (str: number): string => {
   return (new Array(3).join('0') + str).slice(-2);
 };
 
-function CardTimer(props: {time: number}) {
+function CardTimer(props: { time: number }) {
   const time = props.time;
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor(time / 60) - hours * 3600;
@@ -70,16 +70,15 @@ function CardTimer(props: {time: number}) {
 }
 
 function CardGameProgress(props: Props): JSX.Element {
-  const {game, onClick} = props;
-  const {chainId} = useWeb3();
-
+  const { game, onClick } = props;
+  const { chainId, coinSymbol } = useLeaguesChainInfo();
   const classes = useStyles();
   /* const value = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(game.amount_to_play.toNumber()  );*/
   const [countdown, setCountdown] = useState<number>();
-  
+
   const entryAmount = ethers.utils.formatEther(game.entry);
   const time = Number(game.duration);
   const coins = Number(game.numCoins);
@@ -109,7 +108,7 @@ function CardGameProgress(props: Props): JSX.Element {
     1000,
     true,
   );
-  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry));
+  const gameLevel = GET_GAME_LEVEL(BigNumber.from(game.entry), chainId);
 
   return (
     <Container className={classes.container} maxWidth='xs'>
@@ -127,12 +126,12 @@ function CardGameProgress(props: Props): JSX.Element {
                 <Grid xs={12} item>
                   <Typography
                     variant='subtitle2'
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
                     {gameLevel}
                   </Typography>
                   <Typography
-                    style={{color: '#fcc591', alignItems: 'baseline'}}>
-                    &nbsp;{entryAmount} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}
+                    style={{ color: '#fcc591', alignItems: 'baseline' }}>
+                    &nbsp;{entryAmount}  {coinSymbol}
                   </Typography>
                 </Grid>
               </Grid>
@@ -143,19 +142,28 @@ function CardGameProgress(props: Props): JSX.Element {
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
-            <Typography variant='h6'>Duration:</Typography>
-            <Typography variant='h6' style={{fontWeight: 500}}>
+            style={{ color: '#7a8398' }}>
+            <Typography variant='h6'>
+              {' '}
+              <IntlMessages id='app.coinLeagues.gameTime' />:
+            </Typography>
+            <Typography variant='h6' style={{ fontWeight: 500 }}>
               &nbsp;{GET_LABEL_FROM_DURATION(time)}
             </Typography>
           </Box>
           <Box
             display={'flex'}
             justifyContent='flex-end'
-            style={{color: '#7a8398'}}>
-            <Typography variant='h6'>&nbsp;Type:</Typography>
-            <Typography variant='h6'  style={{color: game.type === 'Bull' ? '#60A561' : '#F76F8E'}}>
-             &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
+            style={{ color: '#7a8398' }}>
+            <Typography variant='h6'>
+              &nbsp;
+              <IntlMessages id='app.coinLeagues.gameType' />
+              ::
+            </Typography>
+            <Typography
+              variant='h6'
+              style={{ color: game.type === 'Bull' ? '#60A561' : '#F76F8E' }}>
+              &nbsp; {game.type === 'Bull' ? 'Bull' : 'Bear'}
             </Typography>
           </Box>
         </Grid>
@@ -165,16 +173,20 @@ function CardGameProgress(props: Props): JSX.Element {
         container
         className={`${classes.innerContent} ${classes.smallContent}`}>
         <Grid item>
-          <Typography variant='subtitle2'>Countdown</Typography>
+          <Typography variant='subtitle2'>
+            <IntlMessages id='app.coinLeagues.countdown' />
+          </Typography>
           {countdown && countdown > 0 ? (
             <CardTimer time={countdown} />
           ) : (
-            <Typography variant='subtitle2'>Ended </Typography>
+            <Typography variant='subtitle2'>
+              <IntlMessages id='app.coinLeagues.ended' />{' '}
+            </Typography>
           )}
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Entries
+            <IntlMessages id='app.coinLeagues.entries' />{' '}
             <Typography variant='subtitle2'>
               {entriesIn}/{entriesOut}
             </Typography>
@@ -182,14 +194,16 @@ function CardGameProgress(props: Props): JSX.Element {
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Coins
+            <IntlMessages id='app.coinLeagues.coins' />{' '}
             <Typography variant='subtitle2'>{strPad(coins)}</Typography>
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant='subtitle2'>
-            Prize Pool
-            <Typography variant='subtitle2'>{prizeTotalValue} {GET_CHAIN_NATIVE_COIN(GET_LEAGUES_CHAIN_ID(chainId))}</Typography>
+            <IntlMessages id='app.coinLeagues.prizePool' />{' '}
+            <Typography variant='subtitle2'>
+              {prizeTotalValue}  {coinSymbol}
+            </Typography>
           </Typography>
         </Grid>
       </Grid>

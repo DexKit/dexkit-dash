@@ -33,9 +33,11 @@ import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useNotifications} from 'hooks/useNotifications';
 import {NotificationType, TxNotificationMetadata} from 'types/notifications';
 import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
 import {ChainId, Web3State} from 'types/blockchain';
 import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDialog';
+import {useChainInfo} from 'hooks/useChainInfo';
+import {isKittygotchiNetworkSupported} from '../utils';
+import {useMobile} from 'hooks/useMobile';
 
 // const useStyles = makeStyles((theme) => ({
 //   iconWrapper: {
@@ -58,7 +60,9 @@ import MintingKittygotchiDialog from '../components/dialogs/MintingKittygotchiDi
 
 export const KittygotchiIndex = () => {
   const history = useHistory();
+  const isMobile = useMobile();
   const {chainId, web3State} = useWeb3();
+  const {getTransactionScannerUrl} = useChainInfo();
   const [submitState, setSubmitState] = useState<SubmitState>(SubmitState.None);
   const rewardToggler = useToggler(false);
   const mintKittyToggler = useToggler(false);
@@ -134,8 +138,14 @@ export const KittygotchiIndex = () => {
     };
     const onError = (error: any) => {
       setSubmitState(SubmitState.Error);
-      setErrorMessage(error.message);
-      setMintingError(error.message);
+
+      if (error.data && error.data.message) {
+        setErrorMessage(error.data.message);
+        setMintingError(error.data.message);
+      } else {
+        setErrorMessage(error.message);
+        setMintingError(error.message);
+      }
 
       setMintingDone(false);
 
@@ -161,6 +171,7 @@ export const KittygotchiIndex = () => {
     mintKittyToggler,
     kittygotchiList,
     mintingToggler,
+    getTransactionScannerUrl,
   ]);
 
   const handleKittygotchiClick = useCallback(
@@ -227,13 +238,15 @@ export const KittygotchiIndex = () => {
       <Box>
         <Box mb={4}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                <Link color='inherit' component={RouterLink} to='/'>
-                  <IntlMessages id='nfts.walletBreadcrumbDashboard' />
-                </Link>
-              </Breadcrumbs>
-            </Grid>
+            {!isMobile && (
+              <Grid item xs={12}>
+                <Breadcrumbs>
+                  <Link color='inherit' component={RouterLink} to='/'>
+                    <IntlMessages id='nfts.walletBreadcrumbDashboard' />
+                  </Link>
+                </Breadcrumbs>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Box display='flex' alignItems='center' alignContent='center'>
                 <Box
@@ -245,7 +258,9 @@ export const KittygotchiIndex = () => {
                     <ArrowBackIcon />
                   </IconButton>
                 </Box>
-                <Typography variant='h5'>My Kitties</Typography>
+                <Typography variant='h5'>
+                  <IntlMessages id='app.kittygotchi.myKitties' />{' '}
+                </Typography>
               </Box>
             </Grid>
           </Grid>
@@ -259,12 +274,13 @@ export const KittygotchiIndex = () => {
             </Grid>
           )}
 
-          {chainId !== ChainId.Matic && chainId !== ChainId.Mumbai ? (
+          {!isKittygotchiNetworkSupported(chainId) ? (
             <Grid item xs={12}>
               <Alert severity='info'>
                 <Typography variant='body2'>
-                  Connect to <strong>Polygon(MATIC)</strong> network to create a
-                  Kittygotchi
+                  <IntlMessages id='app.kittygotchi.connectTo' /> Binance Smart
+                  Chain or Polygon{' '}
+                  <IntlMessages id='app.kittygotchi.netToCreateKitty' />
                 </Typography>
               </Alert>
             </Grid>
@@ -276,17 +292,12 @@ export const KittygotchiIndex = () => {
                   <Box display='flex' justifyContent='space-between' p={4}>
                     <Box></Box>
                     <Button
-                      disabled={
-                        !(
-                          chainId === ChainId.Matic ||
-                          chainId === ChainId.Mumbai
-                        )
-                      }
+                      disabled={!isKittygotchiNetworkSupported(chainId)}
                       startIcon={<GavelIcon />}
                       variant='contained'
                       color='primary'
                       onClick={mintKittyToggler.toggle}>
-                      Create Kitty
+                      <IntlMessages id='app.kittygotchi.create' />
                     </Button>
                   </Box>
                 </Paper>
@@ -302,26 +313,31 @@ export const KittygotchiIndex = () => {
                   </Grid>
                 ) : (
                   <>
-                    {kittygotchiList.data?.length === 0 && (
-                      <Box py={4}>
-                        <Grid container spacing={4}>
-                          <Grid item xs={12}>
-                            <Box
-                              display='flex'
-                              justifyContent='center'
-                              alignContent='center'
-                              alignItems='center'>
-                              <NFTEmptyStateImage />
+                    {kittygotchiList.data?.length === 0 ||
+                      (kittygotchiList.error && (
+                        <Box py={2}>
+                          <Paper>
+                            <Box py={4}>
+                              <Grid container spacing={4}>
+                                <Grid item xs={12}>
+                                  <Box
+                                    display='flex'
+                                    justifyContent='center'
+                                    alignContent='center'
+                                    alignItems='center'>
+                                    <NFTEmptyStateImage />
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Typography align='center' variant='h5'>
+                                    <IntlMessages id='nfts.wallet.noItemsFound' />
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                             </Box>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Typography align='center' variant='h5'>
-                              <IntlMessages id='nfts.wallet.noItemsFound' />
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    )}
+                          </Paper>
+                        </Box>
+                      ))}
                     <Grid container spacing={4}>
                       {kittygotchiList.data?.map((kittygotchi, index) => (
                         <Grid item xs={12} sm={3} key={index}>

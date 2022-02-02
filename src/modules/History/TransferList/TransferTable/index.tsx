@@ -5,6 +5,9 @@ import {
   TableHead,
   TableBody,
   TablePagination,
+  TableContainer,
+  Paper,
+  Grid,
   Typography,
 } from '@material-ui/core';
 import TableHeading from './TableHeading';
@@ -12,6 +15,9 @@ import TableItem from './TableItem';
 import {Transfers} from 'types/app';
 import {EthereumNetwork} from 'shared/constants/AppEnums';
 import {useStyles} from './index.style';
+
+import {WalletEmptyImage} from 'shared/components/Icons';
+import IntlMessages from '@crema/utility/IntlMessages';
 
 interface Props {
   networkName: EthereumNetwork;
@@ -34,20 +40,22 @@ const TransferTable: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
 
-  return (
+  return data && data.length > 0 ? (
     <>
       <Box mb={4}>
-        <Table>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {data &&
-              data.map((row, index) => (
-                <TableItem row={row} networkName={networkName} key={index} />
-              ))}
-          </TableBody>
-        </Table>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {data &&
+                data.map((row, index) => (
+                  <TableItem row={row} networkName={networkName} key={index} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         {data && data.length === 0 && (
           <Typography
             variant='h5'
@@ -85,6 +93,29 @@ const TransferTable: React.FC<Props> = ({
         }
       />
     </>
+  ) : (
+    <Box py={4}>
+      <Paper>
+        <Box py={4}>
+          <Grid
+            container
+            spacing={4}
+            alignItems='center'
+            alignContent='center'
+            justifyContent='center'
+            direction='column'>
+            <Grid item>
+              <WalletEmptyImage />
+            </Grid>
+            <Grid item>
+              <Typography variant='h5' align='center'>
+                <IntlMessages id='app.wallet.youDontHaveTransfersYet' />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

@@ -18,7 +18,7 @@ import Receiver from './Receiver';
 import Sender from './Sender';
 import {Token} from 'types/app';
 import {MyBalances} from 'types/blockchain';
-import {useNetwork} from 'hooks/useNetwork';
+// import { useNetwork } from 'hooks/useNetwork';
 // import {tokenSymbolToDisplayString} from 'utils';
 
 import {truncateIsAddress} from 'utils';
@@ -40,6 +40,7 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import {useWeb3} from 'hooks/useWeb3';
 import {useDefaultAccount} from 'hooks/useDefaultAccount';
 import {useDefaultLabelAccount} from 'hooks/useDefaultLabelAccount';
+import {useChainInfo} from 'hooks/useChainInfo';
 
 const SwapComponent = React.lazy(() => import('modules/Dashboard/Swap/Swap'));
 
@@ -141,7 +142,9 @@ const TotalBalance = (props: Props) => {
     return account?.toLowerCase() === defaultAccount?.toLowerCase();
   }, [account, defaultAccount]);
 
-  const networkName = useNetwork();
+  // const networkName = useNetwork();
+
+  const {network: networkName} = useChainInfo();
   /* eslint-disable */
   useEffect(() => {
     if (only) {
@@ -151,22 +154,24 @@ const TotalBalance = (props: Props) => {
       );
 
       if (!dataFn) {
-        setTokens([
-          {
-            __typename: 'EthereumBalance',
-            currency: {
-              __typename: 'Currency',
-              address: only.address,
-              decimals: only.decimals,
-              name: only.name || '',
-              symbol: only.symbol || '',
-              tokenType: 'ERC20',
+        if (networkName) {
+          setTokens([
+            {
+              __typename: 'EthereumBalance',
+              currency: {
+                __typename: 'Currency',
+                address: only.address,
+                decimals: only.decimals,
+                name: only.name || '',
+                symbol: only.symbol || '',
+                tokenType: 'ERC20',
+              },
+              network: networkName,
+              value: 0,
+              valueInUsd: 0,
             },
-            network: networkName,
-            value: 0,
-            valueInUsd: 0,
-          },
-        ]);
+          ]);
+        }
       } else {
         setTokens([
           {
@@ -280,9 +285,7 @@ const TotalBalance = (props: Props) => {
 
   const accountsModal = useAccountsModal();
 
-  const handleResult = useCallback(() => {
-    setShowSender(false);
-  }, []);
+  const handleResult = useCallback(() => {}, []);
 
   const handleShowAccounts = useCallback(() => {
     accountsModal.setShow(true);
@@ -297,12 +300,14 @@ const TotalBalance = (props: Props) => {
         onResult={handleResult}
       />
       <Receiver open={showReceiver} onClose={handleCloseReceiver} />
-      <BuySellModal
-        networkName={networkName}
-        balances={tokens}
-        open={showTrade}
-        onClose={handleTradeClose}
-      />
+      {networkName && (
+        <BuySellModal
+          networkName={networkName}
+          balances={tokens}
+          open={showTrade}
+          onClose={handleTradeClose}
+        />
+      )}
 
       <Backdrop className={classes.backdrop} open={showSwap}>
         {/* TODO: transform this in a dialog */}

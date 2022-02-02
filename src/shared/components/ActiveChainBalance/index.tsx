@@ -18,7 +18,6 @@ import {truncateIsAddress} from 'utils';
 import {StatusSquare} from '../StatusSquare';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useAccountsModal} from 'hooks/useAccountsModal';
-import {FORMAT_NETWORK_NAME} from 'shared/constants/Bitquery';
 import {useActiveChainBalance} from 'hooks/balance/useActiveChainBalance';
 import {ethers} from 'ethers';
 import CopyButton from '../CopyButton';
@@ -27,6 +26,7 @@ import {useAccountLabel} from 'hooks/useAccountLabel';
 import {useIsBalanceVisible} from 'hooks/useIsBalanceVisible';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { useChainInfo } from 'hooks/useChainInfo';
 
 const useStyles = makeStyles((theme: CremaTheme) => ({
   greenSquare: {
@@ -90,7 +90,8 @@ const useStyles = makeStyles((theme: CremaTheme) => ({
 }));
 
 const ActiveChainBalance = () => {
-  const {account, balance, isLoading, network} = useActiveChainBalance();
+  const {account, balance, isLoading} = useActiveChainBalance();
+  const {tokenSymbol} = useChainInfo();
   const theme = useTheme();
   const classes = useStyles();
   const formattedBalance = useMemo(() => {
@@ -156,13 +157,11 @@ const ActiveChainBalance = () => {
                           {isLoading ? (
                             <Skeleton />
                           ) : !formattedBalance ? (
-                            `- ${FORMAT_NETWORK_NAME(network)}`
+                            `- ${tokenSymbol}`
                           ) : (
                             <>
                               {isBalanceVisible
-                                ? `${formattedBalance} ${FORMAT_NETWORK_NAME(
-                                    network,
-                                  )}`
+                                ? `${formattedBalance} ${tokenSymbol}`
                                 : '****.**'}
                             </>
                           )}

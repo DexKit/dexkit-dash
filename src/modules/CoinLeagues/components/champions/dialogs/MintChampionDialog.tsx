@@ -1,5 +1,7 @@
 import React, {useCallback} from 'react';
 
+import IntlMessages from '@crema/utility/IntlMessages';
+
 import {
   Dialog,
   CircularProgress,
@@ -22,12 +24,12 @@ import {Skeleton} from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
-import {useWeb3} from 'hooks/useWeb3';
-import {getTransactionScannerUrl} from 'utils/blockchain';
+import { useLeaguesChainInfo } from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 import {ErrorIcon} from 'shared/components/Icons';
 import {useChampionMetadata} from 'modules/CoinLeagues/hooks/champions';
 import {getNormalizedUrl} from 'utils/browser';
 import ChampionTrait from '../ChampionTrait';
+import { getTransactionScannerUrl } from 'utils/blockchain';
 
 const useStyles = makeStyles((theme) => ({
   tokenImage: {
@@ -70,7 +72,8 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
     }
   }, [championMetadata, dialogProps]);
 
-  const {chainId} = useWeb3();
+  const { chainId } = useLeaguesChainInfo();
+
 
   const handleViewTransaction = useCallback(() => {
     if (chainId && transactionHash) {
@@ -293,8 +296,11 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               justifyContent='space-between'
               alignItems='center'
               alignContent='center'
-              mr={2}></Box>
-            <Typography variant='body1'>Creating Champion</Typography>
+              mr={2}
+            />
+            <Typography variant='body1'>
+              <IntlMessages id='app.coinLeagues.createChampion' />
+            </Typography>
           </Box>
           <Box>
             <IconButton size='small' onClick={handleClose}>
@@ -326,10 +332,10 @@ export const MintChampionDialog = (props: MintChampionDialogProps) => {
               onClick={onConfirm}
               variant='contained'
               color='primary'>
-              Confirm
+              <IntlMessages id='app.coinLeagues.confirm' />
             </Button>
             <Button startIcon={<CloseIcon />} onClick={handleClose}>
-              Cancel
+              <IntlMessages id='app.coinLeagues.cancel' />{' '}
             </Button>
           </DialogActions>
         </>
