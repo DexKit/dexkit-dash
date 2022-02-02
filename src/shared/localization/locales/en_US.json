@@ -13,6 +13,7 @@
   "dashboard.swap.info": "In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.",
   "shared.copiedClipboard": "Copied to clipboard!",
   "app.coinLeagues.action": "Action",
+  "app.coinLeague.pleaseSwitchCorrectChain": "Please switch wallet to {chainName}",
   "app.coinLeagues.maxPrizePool": "Max Prize Pool",
   "app.coinLeagues.chainSelected": "Coinleague on {chainName}",
   "app.coinLeagues.champion": "Champion",
