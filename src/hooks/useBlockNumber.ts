@@ -8,26 +8,19 @@ export function useBlockNumber() {
 
   const {getProvider, web3State} = useWeb3();
 
-  // useEffect(() => {
-  //   let interval: any = null;
+  useEffect(() => {
+    const pr = getProvider();
 
-  //   if (web3State === Web3State.Done) {
-  //     let provider = getProvider();
+    if (web3State === Web3State.Done && pr) {
+      debugger;
 
-  //     if (provider) {
-  //       let pr = new ethers.providers.Web3Provider(provider);
+      const provider = new ethers.providers.Web3Provider(pr);
 
-  //       setInterval(async () => {
-  //         setBlockNumer(await pr.getBlockNumber());
-  //       }, 5000);
-  //     }
-  //   }
-  //   return () => {
-  //     if (interval) {
-  //       clearInterval(interval);
-  //     }
-  //   };
-  // }, [web3State, getProvider]);
+      provider.on('block', (block: number) => {
+        setBlockNumer(block);
+      });
+    }
+  }, [web3State, getProvider]);
 
-  return {blockNumber: 0};
+  return {blockNumber: blockNumber || 0};
 }

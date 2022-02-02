@@ -14,7 +14,7 @@ export default (state = initialState, action: any): NotificationState => {
   switch (action.type) {
     case NotificationAction.ADD_NOTIFICATION: {
       const {notifications: newNotifications} = action.payload;
-      const newAddNotifications = [...state.notifications, ...newNotifications];
+      const newAddNotifications = [...newNotifications, ...state.notifications];
 
       return {
         ...state,
