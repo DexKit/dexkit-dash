@@ -9,6 +9,7 @@ import MoneyIcon from '@material-ui/icons/MonetizationOnTwoTone';
 import {makeStyles} from '@material-ui/core/styles';
 import {ReactComponent as WalletIcon} from 'assets/images/icons/wallet-white.svg';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {useLeaguesChainInfo} from 'modules/CoinLeagues/hooks/useLeaguesChainInfo';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,9 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 function AffiliateTotalCardSkeleton(): JSX.Element {
+  const {coinSymbol} = useLeaguesChainInfo();
   const classes = useStyles();
 
   return (
@@ -41,7 +41,7 @@ function AffiliateTotalCardSkeleton(): JSX.Element {
         <Grid item xs={8}>
           <Typography variant='subtitle2'>Estimated Earnings</Typography>
           <Typography variant='h5' style={{color: '#fff'}}>
-            <Skeleton> - MATIC </Skeleton>
+            <Skeleton> - {coinSymbol} </Skeleton>
           </Typography>
         </Grid>
         <Grid item xs={2}>
