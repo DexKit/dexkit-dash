@@ -55,3 +55,27 @@ export function getNormalizedUrl(url: string) {
 
   return fetchUrl;
 }
+
+export function isMetamaskWallet() {
+  if (
+    typeof window !== 'undefined' &&
+    window.ethereum &&
+    typeof window.ethereum.isMetamask !== 'undefined'
+  ) {
+    return window.ethereum.isMetamask;
+  }
+
+  return false;
+}
+
+export function isTrustWallet() {
+  if (
+    typeof window !== 'undefined' &&
+    window.ethereum &&
+    typeof window.ethereum.isTrust !== 'undefined'
+  ) {
+    return window.ethereum.isTrust;
+  }
+
+  return false;
+}
