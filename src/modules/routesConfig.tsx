@@ -37,7 +37,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'money.wallet',
           url: `/wallet`,
         },
-      /*  {
+        /*  {
           id: 'trade',
           title: 'Trade',
           messageId: 'app.trade',
@@ -75,7 +75,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },*/
       ],
     },
-  /*  {
+    /*  {
       id: 'protocols',
       title: 'Protocol Explorer',
       messageId: 'sidebar.protocols',
@@ -198,7 +198,7 @@ const useRoutesConfig = (): NavItemProps[] => {
         },
       ],
     },*/
- /*   {
+    /*   {
       id: 'affiliate',
       title: 'Affiliates',
       messageId: 'sidebar.affiliate',
@@ -247,7 +247,7 @@ const useRoutesConfig = (): NavItemProps[] => {
           icon: 'coinleague',
           url: `https://coinleagues.games`,
         },
-      /* {
+        /* {
           id: 'dashboard',
           title: 'DexKit Dashboard',
           messageId: 'sidebar.app.dexkit-dash',

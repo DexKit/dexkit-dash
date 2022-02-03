@@ -63,7 +63,7 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
       return;
     }
 
-    Notification.requestPermission().then(function (permission: string) {
+    window.Notification.requestPermission().then(function (permission: string) {
       // If the user accepts, let's create a notification
 
       if (permission === 'granted') {
@@ -80,10 +80,7 @@ export const NotificationsDialog = (props: NotificationsDialogProps) => {
   const isMobile = useMobile();
 
   const canEnableNotifications = useCallback(() => {
-    return (
-      Notification.permission === 'default' ||
-      Notification.permission === 'denied'
-    );
+    return false;
   }, []);
 
   return (

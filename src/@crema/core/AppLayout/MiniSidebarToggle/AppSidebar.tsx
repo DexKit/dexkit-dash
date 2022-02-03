@@ -88,6 +88,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                           <ButtonBase
                             className={classes.avatarButton}
                             to='/profile'
+                            onClick={handleToggleDrawer}
                             component={RouterLink}>
                             <Avatar
                               className={classes.avatar}
@@ -127,7 +128,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
                         {!isOnLoginPage() || account ? (
                           <Grid item xs>
-                            <WalletInfo />
+                            <WalletInfo onClick={handleToggleDrawer} />
                           </Grid>
                         ) : null}
                       </Grid>
