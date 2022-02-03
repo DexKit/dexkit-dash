@@ -162,25 +162,33 @@ const WalletInfo: React.FC<Props> = (props) => {
   const onGoToWallet = () => {
     handleClose();
     history.push('/wallet');
-    onClick!();
+    if (onClick) {
+      onClick();
+    }
   };
 
   const handleShowAccounts = useCallback(() => {
     handleClose();
     accountsModal.setShow(true);
-    onClick!();
+    if (onClick) {
+      onClick();
+    }
   }, [handleClose, accountsModal, onClick]);
 
   const onGoToManageWallet = () => {
     handleClose();
     history.push('/onboarding/login-wallet');
-    onClick!();
+    if (onClick) {
+      onClick();
+    }
   };
 
   const onGoToLoginWallet = () => {
     handleClose();
     history.push('/onboarding/login-wallet');
-    onClick!();
+    if (onClick) {
+      onClick();
+    }
   };
 
   let ethBalanceValue;
