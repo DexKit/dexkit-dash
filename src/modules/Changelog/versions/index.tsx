@@ -44,6 +44,21 @@ const Changelog = () => {
           aria-controls='panelv0.0.6.16'
           id='panelv0.0.6.16-header'>
           <Typography className={classes.heading}>
+            v0.0.6.17- 03-02-2021{' '}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography className={classes.item}>Bug fix's</Typography>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls='panelv0.0.6.16'
+          id='panelv0.0.6.16-header'>
+          <Typography className={classes.heading}>
             v0.0.6.16 - 02-02-2021{' '}
           </Typography>
         </AccordionSummary>

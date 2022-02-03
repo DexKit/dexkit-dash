@@ -54,4 +54,8 @@ export const useStyles = makeStyles((theme: CremaTheme) => ({
     height: theme.spacing(6),
     width: theme.spacing(6),
   },
+  backdrop: {
+    zIndex: theme.zIndex.modal + 1,
+    color: '#fff',
+  },
 }));

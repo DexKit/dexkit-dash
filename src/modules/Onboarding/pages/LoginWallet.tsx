@@ -34,7 +34,6 @@ import {Alert} from '@material-ui/lab';
 import IntlMessages from '@crema/utility/IntlMessages';
 import {useIntl} from 'react-intl';
 import {useChainInfo} from 'hooks/useChainInfo';
-import {isMetamaskWallet, isTrustWallet} from 'utils/browser';
 
 const useStyles = makeStyles((theme) => ({
   primaryCard: {
@@ -543,7 +542,6 @@ export const CreateWallet = (props: Props) => {
                             <IntlMessages id='app.onBoarding.clickHereToChooseExternal' />
                           </Typography>
                         </Grid>
-
                         <Grid item>
                           <NavigateNextIcon />
                         </Grid>
@@ -553,7 +551,6 @@ export const CreateWallet = (props: Props) => {
                 </ButtonBase>
               </Grid>
             ) : null}
-
             <Grid item xs={12}>
               <ButtonBase
                 onClick={handleConnectWalletLater}
